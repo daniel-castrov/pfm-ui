@@ -1,0 +1,81 @@
+<div class="header">
+  <div class="container-fluid">
+    <a href="#" routerLink="/"><img src="assets/img/JSCBIS-logo-55x.png" class="dod-logo"></a>
+    <div class="row">
+      <div class="col-6 col-md-1">
+        <div class="header-title">
+          JSCBIS
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+      </div>
+      <div class="col-6 col-md-8">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 col-md-6">
+        <div class="sub-title">
+          Supporting the Nuclear, Chemical, and Biological (NCB) Enterprise
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+      </div>
+      <div class="col-6 col-md-4">
+        <span class="dropdown show">
+          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">Library</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Help</a>
+          </div>
+        </span>
+        <span class="dropdown show">
+          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          User {{ id }}
+            <i class="fa fa-user" aria-hidden="true"></i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">User {{ name }}{{ id }}</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="user/1">Profile</a>
+            <a class="dropdown-item" href="#">Community</a>
+            <a class="dropdown-item" href="#">Preferences</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Logout</a>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLink="/programs">Programs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Execution</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Exhibits</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Reports</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLink="/user{{ id }}">Admin</a>
+      </li>
+    </ul>
+  </div>
+</nav>
