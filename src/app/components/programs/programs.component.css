@@ -81,8 +81,11 @@ th {
   .tg { width: 100%; }
 }
 
+.tg .tg-yw40 { font-size: 14px;
+  vertical-align:top; border: 1px solid #fff;
+  padding: 0px;
+}
 
-.tg .tg-yw40 { font-size: 14px; vertical-align:top; border: 1px solid #fff; padding: 0px;}
 .tg .fyear {
   vertical-align: middle;
   width: 16px;
@@ -90,7 +93,11 @@ th {
   text-align: left;
   border: 1px solid #23527c;
 }
-.tg .tg-yw44 { font-size: 10px; padding: 0;}
+
+.tg .tg-yw44 {
+  font-size: 10px;
+  padding: 0;
+}
 
 .tg td {
   padding: 0 10px;
@@ -110,7 +117,6 @@ th {
   width: 360px;
   border: 1px #23527c solid;
 }
-
 
 .controls > i {
   padding: 0 5px;
@@ -225,6 +231,7 @@ i.fa.fa-star-o {
   box-shadow: 0 6px 12px rgba(0,0,0,.175);
   width: 412px;
 }
+
 .input-group-btn .btn-group {
     display: flex !important;
 }

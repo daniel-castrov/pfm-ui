@@ -1,141 +1,140 @@
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-10 col-md-7">
-      <div class="row">
-        <div class="col-10 col-md-7">
-          <div class="input-group" id="adv-search">
-            <input type="text" class="form-control" (focus)="fireEvent($event)" placeholder="Search for ..." />
-            <div class="input-group-btn">
-              <div class="btn-group" role="group">
-                <div class="dropdown dropdown-lg">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret advanced"></span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right" role="menu">
-                    <form class="form-horizontal" role="form">
-                      <div class="search-title">My Programs</div>
-                      <div class="form-group">
-                       <select>
-                         <option value="0" selected>All Programs</option>
-                         <option value="1">AAS</option>
-                         <option value="2">AUTOINJ</option>
-                         <option value="3">AV TX</option>
-                         <option value="4">BSCAV-P</option>
-                       </select>
-                     </div>
-                     <div class="form-group">
-                      <select>
-                        <option value="0" selected>View</option>
-                        <option value="1">AAS</option>
-                        <option value="2">AUTOINJ</option>
-                        <option value="3">AV TX</option>
-                        <option value="4">BSCAV-P</option>
-                      </select>
-                    </div>
+<div class="row main-content">
+  <div class="col-10 col-md-7">
+    <div class="row">
+      <div class="col-10 col-md-7">
+        <div class="input-group" id="adv-search">
+          <input type="text" class="form-control" (focus)="fireEvent($event)" placeholder="Search for ..." />
+          <div class="input-group-btn">
+            <div class="btn-group" role="group">
+              <div class="dropdown dropdown-lg">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <span class="caret advanced"></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                  <form class="form-horizontal" role="form">
+                    <div class="search-title">My Programs</div>
                     <div class="form-group">
                      <select>
-                       <option value="0" selected>Edit</option>
+                       <option value="0" selected>All Programs</option>
                        <option value="1">AAS</option>
                        <option value="2">AUTOINJ</option>
                        <option value="3">AV TX</option>
                        <option value="4">BSCAV-P</option>
                      </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                      <span class="fa fa-search" aria-hidden="true"></span>
-                    </button>
-                  </form>
-                </div>
+                   </div>
+                   <div class="form-group">
+                    <select>
+                      <option value="0" selected>View</option>
+                      <option value="1">AAS</option>
+                      <option value="2">AUTOINJ</option>
+                      <option value="3">AV TX</option>
+                      <option value="4">BSCAV-P</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                   <select>
+                     <option value="0" selected>Edit</option>
+                     <option value="1">AAS</option>
+                     <option value="2">AUTOINJ</option>
+                     <option value="3">AV TX</option>
+                     <option value="4">BSCAV-P</option>
+                   </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    <span class="fa fa-search" aria-hidden="true"></span>
+                  </button>
+                </form>
               </div>
-              <button type="button" class="btn btn-primary">
-                <span class="fa fa-search" aria-hidden="true"></span>
-              </button>
             </div>
+            <button type="button" class="btn btn-primary">
+              <span class="fa fa-search" aria-hidden="true"></span>
+            </button>
           </div>
         </div>
       </div>
-      <div class="col-3 col-md-3">
-      </div>
-      <div class="col-1 col-md-1">
-      </div>
-      <div class="col-1 col-md-1">
-          <a class="main-content" data-toggle="tooltip" data-placement="bottom">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-          </a>
-      </div>
     </div>
-    <div class="programs-table">
-      <table class="tg table-responsive">
-        <tbody>
+    <div class="col-3 col-md-3">
+    </div>
+    <div class="col-1 col-md-1">
+    </div>
+    <div class="col-1 col-md-1">
+        <a class="main-content" data-toggle="tooltip" data-placement="bottom">
+          <i class="fa fa-info-circle" aria-hidden="true"></i>
+        </a>
+    </div>
+  </div>
+  <div class="programs-table">
+    <table class="tg table-responsive">
+      <tbody>
+        <tr>
+          <th class="program-acr">
+            <span><i class="fa fa-sort" aria-hidden="true"></i></span>
+            <span>Program</span>
+          </th>
+          <th class="program-name">
+            <span><i class="fa fa-sort" aria-hidden="true"></i></span>
+            <span>Name</span>
+          </th>
+          <th class="tg-yw4"></th>
+          <th class="fyear">FY16</th>
+          <th class="fyear">FY17</th>
+          <th class="fyear">FY18</th>
+        </tr>
+        <tr cellpadding=0 cellspacing=0>
+          <td class="tg-yw4l"><i class="fa fa-star-o" aria-hidden="true"></i><a href="aas.html">AAS</a></td>
+          <td class="tg-yw4l">Advanced Anticonvulsant System (AAS)</td>
+          <td class="tg-yw44" colspan="4">
+            <table class="table-data-start" cellpadding=0 cellspacing=0>
+              <tbody>
+                <tr>
+                  <td>TOA</td>
+                  <td class="data-v">$15,000</td>
+                  <td class="data-v">$2,000</td>
+                  <td class="data-v">$18,000</td>
+                </tr>
+                <tr>
+                  <td>OBS</td>
+                  <td class="data-v">$15,000</td>
+                  <td class="data-v">$2,000</td>
+                  <td class="data-v">$18,000</td>
+                </tr>
+                <tr>
+                  <td>EXP</td>
+                  <td class="data-v">$15,000</td>
+                  <td class="data-v">$2,000</td>
+                  <td class="data-v">$18,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
           <tr>
-            <th class="program-acr">
-              <span><i class="fa fa-sort" aria-hidden="true"></i></span>
-              <span>Program</span>
-            </th>
-            <th class="program-name">
-              <span><i class="fa fa-sort" aria-hidden="true"></i></span>
-              <span>Name</span>
-            </th>
-            <th class="tg-yw4"></th>
-            <th class="fyear">FY16</th>
-            <th class="fyear">FY17</th>
-            <th class="fyear">FY18</th>
-          </tr>
-          <tr cellpadding=0 cellspacing=0>
-            <td class="tg-yw4l"><i class="fa fa-star-o" aria-hidden="true"></i><a href="aas.html">AAS</a></td>
-            <td class="tg-yw4l">Advanced Anticonvulsant System (AAS)</td>
-            <td class="tg-yw44" colspan="4">
-              <table class="table-data-start" cellpadding=0 cellspacing=0>
-                <tbody>
-                  <tr>
-                    <td>TOA</td>
-                    <td class="data-v">$15,000</td>
-                    <td class="data-v">$2,000</td>
-                    <td class="data-v">$18,000</td>
-                  </tr>
-                  <tr>
-                    <td>OBS</td>
-                    <td class="data-v">$15,000</td>
-                    <td class="data-v">$2,000</td>
-                    <td class="data-v">$18,000</td>
-                  </tr>
-                  <tr>
-                    <td>EXP</td>
-                    <td class="data-v">$15,000</td>
-                    <td class="data-v">$2,000</td>
-                    <td class="data-v">$18,000</td>
-                  </tr>
-                </tbody>
-              </table>
+            <td class="tg-yw40"></td>
+            <td class="tg-yw40"><span class="total">Total</span></td>
+            <td class="tg-yw40" colspan="4">
+              <table class="table-data-end" cellpadding=0 cellspacing=0>
+                <tr height=10>
+                  <td class="data-t">TOA</td>
+                  <td>$15,000</td>
+                  <td>$2,000</td>
+                  <td>$18,000</td>
+                </tr>
+                <tr height=10>
+                  <td class="data-t">OBS</td>
+                  <td>$15,000</td>
+                  <td>$2,000</td>
+                  <td>$18,000</td>
+                </tr>
+                <tr height=10>
+                  <td class="data-t">EXP</td>
+                  <td>$15,000</td>
+                  <td>$2,000</td>
+                  <td>$18,000</td>
+                </tr>
+              </table> 
             </td>
-            <tr>
-              <td class="tg-yw40"></td>
-              <td class="tg-yw40"><span class="total">Total</span></td>
-              <td class="tg-yw40" colspan="4">
-                <table class="table-data-end" cellpadding=0 cellspacing=0>
-                  <tr height=10>
-                    <td class="data-t">TOA</td>
-                    <td>$15,000</td>
-                    <td>$2,000</td>
-                    <td>$18,000</td>
-                  </tr>
-                  <tr height=10>
-                    <td class="data-t">OBS</td>
-                    <td>$15,000</td>
-                    <td>$2,000</td>
-                    <td>$18,000</td>
-                  </tr>
-                  <tr height=10>
-                    <td class="data-t">EXP</td>
-                    <td>$15,000</td>
-                    <td>$2,000</td>
-                    <td>$18,000</td>
-                  </tr>
-                </table> 
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="col-2 col-md-5">
