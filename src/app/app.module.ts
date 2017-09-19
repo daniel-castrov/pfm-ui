@@ -10,11 +10,13 @@ import { UserComponent } from './components/user/user.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { FilterComponent } from './components/filter/filter.component';
+import { AboutComponent } from './components/about/about.component';
 
 const appRoutes: Routes = [
   {path:'', component:HomeComponent},
   {path:'user/:id', component:UserComponent},
   {path:'header', component:HeaderComponent},
+  {path:'about', component:AboutComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'filter', component:FilterComponent}
 ];
@@ -26,7 +28,8 @@ const appRoutes: Routes = [
     UserComponent,
     HeaderComponent,
     ProgramsComponent,
-    FilterComponent
+    FilterComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
