@@ -17,7 +17,7 @@ import { LoginComponent } from './components/login/login.component';
 const appRoutes: Routes = [
   {path:'', component:HomeComponent},
   {path:'login', component:LoginComponent},
-  {path:'header', component:HeaderComponent}
+  {path:'header', component:HeaderComponent},
   {path:'about', component:AboutComponent},
   {path:'apply', component:ApplyComponent},
   {path:'contact', component:ContactComponent},
@@ -33,9 +33,9 @@ const appRoutes: Routes = [
     HeaderComponent,
     ProgramsComponent,
     FilterComponent,
-    AboutComponent
+    AboutComponent,
     ApplyComponent,
-    ContactComponent
+    ContactComponent,
     LoginComponent
   ],
   imports: [
