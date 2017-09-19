@@ -1,4 +1,4 @@
-.apply-box {
+.contact-box {
   background-color: #23527c !important;
   padding: 10px;
   color: #fff;
@@ -6,20 +6,15 @@
   margin-bottom: 1rem;
 }
 
-.apply-box a {
+.contact-box a {
   color: #fff;
   text-decoration: underline;
   cursor: pointer;
 }
 
-.apply a:hover {
+.contact-box a:hover {
   color: #fff;
   text-decoration: none;
-}
-
-.nda {
-  color: red;
-  font-size: .8rem;
 }
 
 .btn {

@@ -1,0 +1,79 @@
+<div class="row main-content">
+  <div class="col-lg-3 col-sm-5">
+    <div class="contact-box">
+      <h5>Contact Us</h5>
+      <p>Kevin McGowan<br>
+      703-416-5810<br>
+      <a href="mailto:mcgowank@battelle.org">mcgowank@battelle.org</a>
+      <hr>
+      <h6>Supporting Office:</h6>
+      Program Analysis and Integration Office
+      (PA&amp;IO)<br>
+      Point of Contact: Anna Young<br>
+      410-417-3755<br>
+      <a href="mailto:anna.d.young5.civ@mail.mil">anna.d.young5.civ@mail.mil</a>
+    </div>
+  </div>
+  <div class="col-lg-4 col-sm-5">
+    <h5>or Submit a Request</h5>
+    <hr>
+    <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <div class="form-group">
+          <label>First Name</label>
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="user.firstname"
+              name="firstname"
+              #userFirstname="ngModel"
+              minlength="2"
+              required
+          >
+          <div *ngIf="userFirstname.errors?.required && userFirstname.touched" class="alert alert-danger">First Name is required</div>
+          <div *ngIf="userFirstname.errors?.minlength && userFirstname.touched" class="alert alert-danger">First Name should be at least 2 characters</div>
+      </div>
+      <div class="form-group">
+          <label>Last Name</label>
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="user.lastname"
+              name="lastname"
+              #userLastname="ngModel"
+              minlength="2"
+              required
+          >
+          <div *ngIf="userLastname.errors?.required && userLastname.touched" class="alert alert-danger">Last Name is required</div>
+          <div *ngIf="userLastname.errors?.minlength && userLastname.touched" class="alert alert-danger">Last Name should be at least 2 characters</div>
+      </div>
+      <small class="well">Select preferred method of contact.</small>
+      <div class="form-group">
+          <label>Email</label>
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="user.email"
+              name="email"
+              #userEmail="ngModel"
+              required
+          >
+          <div *ngIf="userEmail.errors?.required && userEmail.touched" class="alert alert-danger">Email is required</div>
+      </div>
+      <div class="form-group">
+          <label>Phone</label>
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="user.phone"
+              name="phone"
+              #userPhone="ngModel"
+              minlength="10"
+          >
+          <div *ngIf="userPhone.errors?.minlength && userPhone.touched" class="alert alert-danger">Enter a valid phone number</div>
+      </div>
+      <input type="submit" class="btn btn-success" value="Submit">
+    </form>
+  </div>
+  <div class="col-5 col-md-2">
+  </div>
+</div>
