@@ -12,10 +12,11 @@ import { ProgramsComponent } from './components/programs/programs.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { LoginComponent } from './components/login/login.component';
 
 const appRoutes: Routes = [
   {path:'', component:HomeComponent},
-  {path:'user/:id', component:UserComponent},
+  {path:'login', component:LoginComponent},
   {path:'header', component:HeaderComponent},
   {path:'apply', component:ApplyComponent},
   {path:'contact', component:ContactComponent},
@@ -33,6 +34,7 @@ const appRoutes: Routes = [
     FilterComponent,
     ApplyComponent,
     ContactComponent
+    LoginComponent
   ],
   imports: [
     BrowserModule,
