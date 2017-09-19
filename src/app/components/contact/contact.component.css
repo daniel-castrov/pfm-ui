@@ -1,0 +1,22 @@
+.contact-box {
+  background-color: #23527c !important;
+  padding: 10px;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.contact-box a {
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.contact-box a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn {
+  cursor: pointer;
+}

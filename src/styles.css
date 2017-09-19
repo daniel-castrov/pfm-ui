@@ -63,11 +63,22 @@ hr {
     border-bottom-left-radius: 4px;
 }
 
+.btn {
+  cursor: pointer;
+}
+
 .btn-primary {
     color: #fff;
-    background-color: #23527c;
+    background-color: #23527c !important;
+    border-color: #23527c !important;
 }
 
 .btn-primary:hover {
     opacity: .7;
+}
+
+.main-content {
+  width: 100%;
+  margin: auto 0;
+  padding: 0;
 }
