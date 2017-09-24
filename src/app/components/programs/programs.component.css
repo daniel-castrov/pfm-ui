@@ -1,19 +1,12 @@
-.container-fluid {
-    width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 0px;
-    padding-left: 0px;
-    width: 100%;
+.program-data {
+  width: 100%;
+  margin-top: 10px;
+  font-size: 1rem;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #23527c;
-}
-
-.btn-primary:hover {
-    opacity: .7;
+li.list-group-item span {
+  color: #23527c;
+  font-size: .9rem;
 }
 
 table a {

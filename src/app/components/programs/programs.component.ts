@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-programs',
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.css']
 })
+
 export class ProgramsComponent {
-
-  fireEvent(e){
-    //console.log('button clicked');
-    console.log(e.type);
+  program:any[];
+  
+  constructor(public dataService:DataService)
+  {
+      this.dataService.getProgram().subscribe(program => {
+          console.log(program);
+          this.program = program;
+      });
   }
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }
