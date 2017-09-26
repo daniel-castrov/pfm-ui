@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { Program, ProgramApi } from '../../generated';
 
 @Component({
   selector: 'app-programs',
@@ -7,14 +7,21 @@ import { DataService } from '../../services/data.service';
   styleUrls: ['./programs.component.css']
 })
 
-export class ProgramsComponent {
-  program:any[];
+export class ProgramsComponent implements OnInit {
   
-  constructor(public dataService:DataService)
-  {
-      this.dataService.getProgram().subscribe(program => {
-          console.log(program);
-          this.program = program;
-      });
+  public program: Program[] = [];
+  public singleProgram: Program;
+
+  constructor(public programApi:ProgramApi) {
+
   }
+
+  ngOnInit() {
+    this.programApi.findAll().subscribe(c => this.program = c);
+  }
+
+  getOneProgram(id){
+    this.programApi.find(id).subscribe(c => this.singleProgram = c);
+  }
+
 }
