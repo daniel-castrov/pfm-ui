@@ -8,7 +8,6 @@ import { Program, ProgramApi } from '../../generated';
 })
 
 export class ProgramsComponent implements OnInit {
-  
   public program: Program[] = [];
   public singleProgram: Program;
 

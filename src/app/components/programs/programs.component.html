@@ -64,6 +64,11 @@
       </div>
     </div>
     <div class="program-data">
+      <div class="well">
+        <div *ngFor="let singleProgram of program">
+          <h6>ID: {{ singleProgram.id }}</h6>
+        </div>
+      </div>
       <div *ngFor="let program of program">
         <div class="well">
             <ul class="list-group">
