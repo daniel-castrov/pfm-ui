@@ -8,7 +8,7 @@ import { Program, ProgramApi } from '../../generated';
 })
 
 export class ProgramsComponent implements OnInit {
-  public program: Program[] = [];
+  public programs: Program[] = [];
   public singleProgram: Program;
 
   constructor(public programApi:ProgramApi) {
@@ -16,7 +16,12 @@ export class ProgramsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.programApi.findAll().subscribe(c => this.program = c);
+    this.getAllPrograms();
+    this.getOneProgram(1);
+  }
+
+  getAllPrograms() {
+    this.programApi.findAll().subscribe(c => this.programs = c);
   }
 
   getOneProgram(id){

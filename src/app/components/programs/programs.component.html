@@ -64,31 +64,26 @@
       </div>
     </div>
     <div class="program-data">
-      <div class="well">
-        <div *ngFor="let singleProgram of program">
-          <h6>ID: {{ singleProgram.id }}</h6>
-        </div>
-      </div>
-      <div *ngFor="let program of program">
+      <h5>ID: {{ singleProgram.id }}</h5>
+      <div *ngFor="let program of programs">
         <div class="well">
-            <ul class="list-group">
-              <li class="list-group-item">Program ID: <span>{{ program.programId }}</span></li>
-              <li class="list-group-item">Program Name: <span>{{ program.programName }}</span></li>
-              <!-- <li class="list-group-item">Image:  <span>{{ program.image }}</span></li> -->
-              <li class="list-group-item">POC: <span>{{ program.poc }}</span></li>
-              <li class="list-group-item">Program Manager: <span>{{ program.programManager }}</span></li>
-              <li class="list-group-item">Description: <span>{{ program.descr }}</span></li>
-              <li class="list-group-item">Notes: <span>{{ program.notes }}</span></li>
-              <!-- <li class="list-group-item">Tags: <span>{{ program.tags }}</span></li> -->
-              <li class="list-group-item">Functional Area: <span>{{ program.functionalArea.name }}</span></li>
-              <li class="list-group-item">Core Capability: <span>{{ program.coreCapability.name }}</span></li>
-              <li class="list-group-item">Primary Capability: <span>{{ program.primaryCapability.name }}</span></li>
-              <li class="list-group-item">Secondary Capability: <span>{{ program.secondaryCapability.name }}</span></li>
-              <li class="list-group-item">Tertiary Capability: <span>{{ program.tertiaryCapability.name }}</span></li>
-              <li class="list-group-item">Medical Category: <span>{{ program.medicalCategory.name }}</span></li>
-              <li class="list-group-item">NBC Category: <span>{{ program.nbcCategory.name }}</span></li>
+          <ul class="list-group">
+            <li class="list-group-item">Program ID: <span>{{ program.programId }}</span></li>
+            <li class="list-group-item">Program Name: <span>{{ program.programName }}</span></li>
+            <!-- <li class="list-group-item">Image:  <span>{{ program.image }}</span></li> -->
+            <li class="list-group-item">POC: <span>{{ program.poc }}</span></li>
+            <li class="list-group-item">Program Manager: <span>{{ program.programManager }}</span></li>
+            <li class="list-group-item">Description: <span>{{ program.descr }}</span></li>
+            <li class="list-group-item">Notes: <span>{{ program.notes }}</span></li>
+            <!-- <li class="list-group-item">Tags: <span>{{ program.tags }}</span></li> -->
+            <li class="list-group-item">Functional Area: <span>{{ program.functionalArea.name }}</span></li>
+            <li class="list-group-item">Core Capability: <span>{{ program.coreCapability.name }}</span></li>
+            <li class="list-group-item">Primary Capability: <span>{{ program.primaryCapability.name }}</span></li>
+            <li class="list-group-item">Secondary Capability: <span>{{ program.secondaryCapability.name }}</span></li>
+            <li class="list-group-item">Tertiary Capability: <span>{{ program.tertiaryCapability.name }}</span></li>
+            <li class="list-group-item">Medical Category: <span>{{ program.medicalCategory.name }}</span></li>
+            <li class="list-group-item">NBC Category: <span>{{ program.nbcCategory.name }}</span></li>
             </ul>
-            <br>
         </div>
       </div>
     </div>
