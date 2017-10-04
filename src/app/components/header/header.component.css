@@ -11,6 +11,7 @@
   background: -moz-linear-gradient(#325F96, #083361);
   background: linear-gradient(#325F96, #083361);
   color: #fff;
+  height: 80px;
 }
 
 .dod-logo {
@@ -80,7 +81,7 @@
   font-family: Calibri;
   background-color: #23527c !important;
   padding: 0 10px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.4rem;
 }
 
 .navbar-dark .navbar-nav .nav-link {

@@ -19,8 +19,8 @@ import { ContactComponent } from './components/contact/contact.component';
 import { LoginComponent } from './components/login/login.component';
 
 const appRoutes: Routes = [
-  {path:'', component:HomeComponent},
-  {path:'login', component:LoginComponent},
+  {path:'', component:LoginComponent},
+  {path:'home', component:HomeComponent},
   {path:'header', component:HeaderComponent},
   {path:'about', component:AboutComponent},
   {path:'apply', component:ApplyComponent},

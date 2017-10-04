@@ -1,6 +1,7 @@
 <div class="header">
   <div class="container-fluid">
-    <a href="#" routerLink="/"><img src="assets/img/JSCBIS-logo-55x.png" class="dod-logo"></a>
+    <a href="#" routerLink="/home" *ngIf="isUserLoggedIn"><img src="assets/img/JSCBIS-logo-55x.png" class="dod-logo"></a>
+    <a href="#" routerLink="/" *ngIf="!isUserLoggedIn"><img src="assets/img/JSCBIS-logo-55x.png" class="dod-logo"></a>
     <div class="row">
       <div class="col-6 col-md-1">
         <div class="header-title">
@@ -20,7 +21,7 @@
       </div>
       <div class="col-6 col-md-2">
       </div>
-      <div class="col-6 col-md-4">
+      <div class="col-6 col-md-4" *ngIf="isUserLoggedIn">
         <span class="dropdown show">
           <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
@@ -51,8 +52,28 @@
     </div>
   </div>
 </div>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+<!-- public header for authorization -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="!isUserLoggedIn">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLink="/about">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLink="/apply">Apply</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" routerLink="/contact">Contact Us</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<!-- private header for user login -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isUserLoggedIn">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>

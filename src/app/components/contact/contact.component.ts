@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class ContactComponent implements OnInit {
 
   user = {
-    firstname:'', 
+    firstname:'',
     lastname:'',
     email:'',
     phone:''
