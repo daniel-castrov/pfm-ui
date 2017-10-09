@@ -8,8 +8,27 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent  {
+export class HeaderComponent implements OnInit {
+
   @Input() public title: string;
   @Input() public isUserLoggedIn: boolean;
 
+  id: number;
+  name:string;
+
+  constructor(
+    private route:ActivatedRoute,
+    private router:Router
+  ) {
+    this.route.params.subscribe((params:Params) => {
+      // console.log(params);
+      this.id = params.id;
+    });
+  }
+
+  ngOnInit() {
+    // console.log('OnInit ran...');
+    this.name = 'Elmer Fudd';
+
+  }
 }

@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     // console.log('OnInit ran...');
-    this.name = 'Gaby';
+    this.name = 'Elmer Fudd';
     this.age = 35;
     this.email = 'gaby.campagna@p-exchange.com';
     this.address = {

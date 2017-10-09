@@ -6,7 +6,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
   fireEvent(e){
     //console.log('button clicked');
@@ -14,6 +14,10 @@ export class HomeComponent {
   }
 
   id: number;
+  name:string;
+  age:number;
+  email:string;
+  address:Address;
 
   constructor(
     private route:ActivatedRoute,
@@ -26,6 +30,25 @@ export class HomeComponent {
   }
 
   ngOnInit() {
+    // console.log('OnInit ran...');
+    this.name = 'Elmer Fudd';
+    this.age = 35;
+    this.email = 'elmerfudd@domain.com';
+    this.address = {
+      street: '50 Main Street',
+      city: 'Boston',
+      state: 'MA'
+    }
   }
 
+  onClick(){
+    // console.log('hello');
+    this.name='Mike';
+    }
+}
+
+interface Address{
+  street:string,
+  city:string,
+  state:string
 }
