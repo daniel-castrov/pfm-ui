@@ -26,6 +26,7 @@ const appRoutes: Routes = [
   {path:'apply', component:ApplyComponent},
   {path:'contact', component:ContactComponent},
   {path:'programs', component:ProgramsComponent},
+  {path:'user/:id', component:UserComponent},
   {path:'filter', component:FilterComponent}
 ];
 

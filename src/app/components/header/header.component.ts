@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { UserComponent } from '../user/user.component';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit {
+export class HeaderComponent  {
 
   @Input() public title: string;
   @Input() public isUserLoggedIn: boolean;
