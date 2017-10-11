@@ -1,68 +1,72 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-
 export class UserComponent implements OnInit {
-  id: number;
   name:string;
   age:number;
   email:string;
   address:Address;
   hobbies:string[];
-  hello:string;
+  hello:any;
+  posts:Post[];
+  isEdit:boolean = false;
 
-  constructor(
-    private route:ActivatedRoute,
-    private router:Router
-  ) {
-    this.route.params.subscribe((params:Params) => {
-      // console.log(params);
-      this.id = params.id;
-    });
+  constructor() {
+    // console.log('constructor ran..');
+
   }
 
   ngOnInit() {
-    // console.log('OnInit ran...');
+    // console.log('ngOnInit ran...');
+
     this.name = 'Elmer Fudd';
-    this.age = 35;
-    this.email = 'gaby.campagna@p-exchange.com';
+    this.email = 'test@test.com';
+    this.age = 30;
     this.address = {
-      street: '50 Main Street',
+      street:'50 Main st',
       city: 'Boston',
-      state: 'MA'
+      state:'MA'
     }
-    this.hobbies = ['pilates', 'travel', 'design', 'watch movies'];
-    this.hello = 'hello';
+    this.hobbies = ['Write code', 'Watch movies', 'Listen to music'];
+    this.hello ='hello';
+
   }
 
   onClick(){
-    // console.log('hello');
-    this.name='Mike';
+    this.name='Elmer';
     this.hobbies.push('New Hobby');
-    }
+  }
 
-    addHobby(hobby){
-      // console.log(hobby);
-      this.hobbies.unshift(hobby);
-      return false;
-    }
+  addHobby(hobby){
+    console.log(hobby);
+    this.hobbies.unshift(hobby);
+    return false;
+  }
 
-    deleteHobby(hobby){
-      for(let i= 0;i < this.hobbies.length; i++){
-        if(this.hobbies[i] == hobby){
-          this.hobbies.splice(i, 1);
-        }
-      }
-    }
+  deleteHobby(i){
+    this.hobbies.splice(i, 1);
+  }
+
+  toggleEdit(){
+    this.isEdit = !this.isEdit;
+  }
+
 }
+
 
 interface Address{
   street:string,
   city:string,
   state:string
+}
+
+interface Post{
+  id: number,
+  title:string,
+  body:string,
+  userId:number
 }

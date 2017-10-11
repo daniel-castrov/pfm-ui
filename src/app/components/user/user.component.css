@@ -1,2 +1,7 @@
 
-h1 { font-size: 1rem; }
+h1 { font-size: 1.3rem; }
+
+.delete {
+  padding: 2px 4px;
+  font-size: .5rem;
+}
