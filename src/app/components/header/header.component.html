@@ -34,18 +34,22 @@
           </div>
         </span>
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="super-user dropdown-toggle" *ngIf="isUserLoggedIn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ name }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
+          <a class="super-user dropdown-toggle" *ngIf="!isUserLoggedIn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user" aria-hidden="true"></i>
+          </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" routerLink="/user/:id">{{ name }}</a>
+            <a *ngIf="isUserLoggedIn" class="dropdown-item" routerLink="/user/:id">{{ name }}</a>
+            <a *ngIf="!isUserLoggedIn" class="dropdown-item" routerLink="/user/:id"></a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" routerLink="/user/:id">Profile</a>
             <a class="dropdown-item" href="#">Community</a>
             <a class="dropdown-item" href="#">Preferences</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Logout</a>
+            <a class="dropdown-item" href="/">Logout</a>
           </div>
         </span>
       </div>
