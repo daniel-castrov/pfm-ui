@@ -1,14 +1,202 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-lg-12 col-sm-5">
-      <div class="apply-box">
-        <h6>Placeholder for Apply page and form</h6>
-      </div>
-      <hr>
+  <div class="row">
+    <div class="col-lg-3 col-md-12">
       <p class="nda">
         Notice for Contractors: Along with completing the application below, contractors must sign and submit this <a href="assets/pdf/NON_DISCLOSURE_FOR_CONTRACTORS.pdf" target="blank">Non-Disclosure Certification.</a> Scan and email or fax to the appropriate office. Office contact information provided at the bottom of the application form.
       </p>
+    </div>
+    <div class="col-lg-4 col-md-7">
+      <h5>New User Application</h5>
+      <p class="font-italic">* Indicates Required Field</p>
+      <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.firstname"
+              name="firstname"
+              #applyFirstname="ngModel"
+              minlength="2"
+              placeholder="*Enter First Name"
+              required
+          >
+          <div *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger">First Name is required</div>
+          <div *ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger">First Name should be at least 2 characters</div>
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.middlename"
+              name="middlename"
+              #applyMiddlename="ngModel"
+              placeholder="Middle Name"
+          >
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.lastname"
+              name="lastname"
+              #applyLastname="ngModel"
+              minlength="2"
+              placeholder="*Last Name"
+              required
+          >
+          <div *ngIf="applyLastname.errors?.required && applyLastname.touched" class="alert alert-danger">Last Name is required</div>
+          <div *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger">Last Name should be at least 2 characters</div>
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.rank"
+              name="rank"
+              #applyRank="ngModel"
+              placeholder="Title/Rank"
+          >
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.job"
+              name="rank"
+              #applyJob="ngModel"
+              placeholder="Duty/Job"
+          >
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.email"
+              name="email"
+              #applyEmail="ngModel"
+              minlength="15"
+              placeholder="*Email"
+              required
+          >
+          <div *ngIf="applyEmail.errors?.required && applyEmail.touched" class="alert alert-danger">Email is required</div>
+          <div *ngIf="applyEmail.errors?.minlength && applyEmail.touched" class="alert alert-danger">Email should be at least 4 characters</div>
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.phone"
+              name="phone"
+              #applyPhone="ngModel"
+              minlength="10"
+              placeholder="*Phone"
+              required
+          >
+          <div *ngIf="applyPhone.errors?.required && applyPhone.touched" class="alert alert-danger">Phone is required</div>
+          <div *ngIf="applyPhone.errors?.minlength && applyPhone.touched" class="alert alert-danger">Phone should be at least 10 characters</div>
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="apply.address"
+            name="address"
+            #applyAddress="ngModel"
+            placeholder="Street, City, State, Zipcode"
+          >
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.organization"
+              name="organization"
+              #applyOrganization="ngModel"
+              minlength="10"
+              placeholder="*Organization Name"
+              required
+          >
+          <div *ngIf="applyOrganization.errors?.required && applyOrganization.touched" class="alert alert-danger">Organization is required</div>
+          <div *ngIf="applyOrganization.errors?.minlength && applyOrganization.touched" class="alert alert-danger">Organization should be at least 10 characters</div>
+        </div>
+        <div class="form-group">
+          <select class="custom-select"
+            class="form-control"
+            [(ngModel)]="apply.branch"
+            name="branch"
+            #applyBrnach="ngModel"
+          >
+            <option selected>Select Branch</option>
+            <option value="army">Army</option>
+            <option value="airforce">Air Force</option>
+            <option value="navy">Navy</option>
+            <option value="marines">Marine Corps</option>
+            <option value="national">National Gaurd</option>
+            <option value="coast">Coast Gaurd</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="custom-select"
+            class="form-control"
+            [(ngModel)]="apply.orgrequest"
+            name="orgrequest"
+            #applyOrgrequest="ngModel"
+          >
+            <option selected>Organization Access Request</option>
+            <option value="JPEO-CBO">JPEO-CBD</option>
+            <option value="JSTO-CBO">JSTO-CBD</option>
+            <option value="CBDP">CBDP</option>
+            <option value="TRAC-CWMD">TRAC-CWMD</option>
+            <option value="TRAC-CDP">TRAC-CDP</option>
+            <option value="NM">NM</option>
+            <option value="DTRA">DTRA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.sponsorname"
+              name="sponsorname"
+              #applySponsorname="ngModel"
+              minlength="2"
+              placeholder="*Sponsor Name"
+              required
+          >
+          <div *ngIf="applySponsorname.errors?.required && applySponsorname.touched" class="alert alert-danger">Sponsor Name is required</div>
+          <div *ngIf="applySponsorname.errors?.minlength && applySponsorname.touched" class="alert alert-danger">Sponsor Name should be at least 2 characters</div>
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.sponsorphone"
+              name="sponsorphone"
+              #applySponsorphone="ngModel"
+              minlength="10"
+              placeholder="*Sponsor Phone"
+              required
+          >
+          <div *ngIf="applySponsorphone.errors?.required && applySponsorphone.touched" class="alert alert-danger">Sponsor Phone is required</div>
+          <div *ngIf="applySponsorphone.errors?.minlength && applySponsorphone.touched" class="alert alert-danger">Sponsor should be at least 10 characters</div>
+        </div>
+        <div class="form-group">
+          <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="apply.sponsoremail"
+              name="sponsoremail"
+              #applySponsoremail="ngModel"
+              minlength="4"
+              placeholder="*Sponsor Email"
+              required
+          >
+          <div *ngIf="applySponsoremail.errors?.required && applySponsoremail.touched" class="alert alert-danger">Sponsor Email is required</div>
+          <div *ngIf="applySponsoremail.errors?.minlength && applySponsoremail.touched" class="alert alert-danger">Sponsor Email should be at least 4 characters</div>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Submit">
+      </form>
     </div>
   </div>
 </div>

@@ -7,9 +7,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ApplyComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
+    apply = {
+      firstname:'',
+      middlename:'',
+      lastname:'',
+      rank:'',
+      job:'',
+      email:'',
+      phone:'',
+      address:'',
+      organization:'',
+      orgrequest:'',
+      branch:'',
+      sponsorname:'',
+      sponsoremail:'',
+      sponsorphone:''
   }
 
-}
+  onSubmit({value, valid}){
+   if(valid){
+       console.log(value);
+   } else {
+       console.log('Form is invalid');
+   }
+  }
+
+    constructor() { }
+
+    ngOnInit() {
+    }
+
+  }
