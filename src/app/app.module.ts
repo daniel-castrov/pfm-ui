@@ -17,12 +17,14 @@ import { AboutComponent } from './components/about/about.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { LoginComponent } from './components/login/login.component';
+import { AboutPrivateComponent } from './components/about-private/about-private.component';
 
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
   {path:'home', component:HomeComponent},
   {path:'header', component:HeaderComponent},
   {path:'about', component:AboutComponent},
+  {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
   {path:'contact', component:ContactComponent},
   {path:'programs', component:ProgramsComponent},
@@ -39,9 +41,11 @@ const appRoutes: Routes = [
     ProgramsComponent,
     FilterComponent,
     AboutComponent,
+    AboutPrivateComponent,
     ApplyComponent,
     ContactComponent,
-    LoginComponent
+    LoginComponent,
+    AboutPrivateComponent
   ],
   imports: [
     BrowserModule,
@@ -50,9 +54,13 @@ const appRoutes: Routes = [
     NgbModule.forRoot(),
     HttpModule
   ],
+  // providers: [
+  //   ProgramApi,
+  //   {  provide: BASE_PATH, useValue: 'http://ec2-34-231-125-182.compute-1.amazonaws.com:8080/jscbis' }
+  // ],
   providers: [
     ProgramApi,
-    {  provide: BASE_PATH, useValue: 'http://ec2-34-231-125-182.compute-1.amazonaws.com:8080/jscbis' }
+    {  provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com/jscbis' }
   ],
   bootstrap: [AppComponent]
 })

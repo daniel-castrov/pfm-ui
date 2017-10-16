@@ -30,7 +30,8 @@
             <a class="dropdown-item" href="#">Library</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">Help</a>
-            <a class="dropdown-item" routerLink="/about">About Us</a>
+            <a class="dropdown-item" *ngIf="isUserLoggedIn" routerLink="/about-private" >About Us</a>
+            <a class="dropdown-item" *ngIf="!isUserLoggedIn" routerLink="/about">About Us</a>
           </div>
         </span>
         <span class="dropdown show">
