@@ -18,6 +18,8 @@ import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { LoginComponent } from './components/login/login.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { NoAccessComponent } from './components/no-access/no-access.component';
 
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -29,7 +31,8 @@ const appRoutes: Routes = [
   {path:'contact', component:ContactComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'user/:id', component:UserComponent},
-  {path:'filter', component:FilterComponent}
+  {path:'filter', component:FilterComponent},
+  {path:'no-access', component:NoAccessComponent}
 ];
 
 @NgModule({
@@ -45,7 +48,9 @@ const appRoutes: Routes = [
     ApplyComponent,
     ContactComponent,
     LoginComponent,
-    AboutPrivateComponent
+    AboutPrivateComponent,
+    NotFoundComponent,
+    NoAccessComponent
   ],
   imports: [
     BrowserModule,
