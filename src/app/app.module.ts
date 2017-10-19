@@ -20,6 +20,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
+import { NComponent } from './components/n/n.component';
 
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -51,7 +52,8 @@ const appRoutes: Routes = [
     LoginComponent,
     AboutPrivateComponent,
     NotFoundComponent,
-    NoAccessComponent
+    NoAccessComponent,
+    NComponent
   ],
   imports: [
     BrowserModule,
