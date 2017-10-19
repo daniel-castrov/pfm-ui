@@ -32,7 +32,8 @@ const appRoutes: Routes = [
   {path:'programs', component:ProgramsComponent},
   {path:'user/:id', component:UserComponent},
   {path:'filter', component:FilterComponent},
-  {path:'no-access', component:NoAccessComponent}
+  {path:'no-access', component:NoAccessComponent},
+  {path:'not-found', component:NotFoundComponent}
 ];
 
 @NgModule({
