@@ -33,8 +33,7 @@ const appRoutes: Routes = [
   {path:'programs', component:ProgramsComponent},
   {path:'user/:id', component:UserComponent},
   {path:'filter', component:FilterComponent},
-  {path:'no-access', component:NoAccessComponent},
-  {path:'not-found', component:NotFoundComponent}
+  {path:'no-access', component:NoAccessComponent}
 ];
 
 @NgModule({
@@ -52,8 +51,7 @@ const appRoutes: Routes = [
     LoginComponent,
     AboutPrivateComponent,
     NotFoundComponent,
-    NoAccessComponent,
-    NComponent
+    NoAccessComponent
   ],
   imports: [
     BrowserModule,
