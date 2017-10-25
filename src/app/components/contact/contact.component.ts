@@ -11,7 +11,8 @@ export class ContactComponent implements OnInit {
     firstname:'',
     lastname:'',
     email:'',
-    phone:''
+    phone:'',
+    comment:''
 }
 
 onSubmit({value, valid}){
