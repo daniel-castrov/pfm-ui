@@ -1,3 +1,8 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
+
 .banner {
   background: -webkit-linear-gradient(#325F96, #083361);
   background: -o-linear-gradient(#325F96, #083361);
@@ -26,27 +31,30 @@
   font-size: 1.5rem;
 }
 
-@media (max-width: 960px) {
-  .dod-logo {
-    padding: 15px 0 0 10px;
-  }
 
-  .header-title {
-    margin: 25px 10px 0 10px;
+@media (max-width: 960px) {
+
+  .header {
+    color: #fff;
+    height: 86px;
   }
-  /* sub title removed at 960px */
   .sub-title {
-    display: none;
+    font-size: 1px;
   }
 }
 
 .sub-title {
   float: left;
-  margin: 0px 0px 0px 10px;
-  font-size: 1rem;
+  margin-left: 10px;
+  font-size: 15px;
   color: #708CA7;
   font-style: italic;
-  border: 0px white solid;
+}
+
+@media (max-width: 960px) {
+.sub-title {
+  font-size: 13px;
+  }
 }
 
 .external-links {
@@ -62,7 +70,7 @@
 
 .super-user {
   color: #fff;
-  font-size: 15px;
+  font-size: 14px;
   float: right;
   padding: 0 10px 10px;
 }
@@ -78,7 +86,7 @@
 }
 
 .navbar {
-  font-family: Calibri;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #23527c !important;
   padding: 0 10px;
   margin-bottom: 1.4rem;
@@ -86,7 +94,7 @@
 
 .navbar-dark .navbar-nav .nav-link {
   color: #fff;
-  font-size: 1rem;
+  font-size: 14px;
 }
 
 .navbar {

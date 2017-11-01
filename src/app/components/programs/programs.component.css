@@ -1,7 +1,7 @@
 .program-data {
   width: 100%;
   margin-top: 20px;
-  font-size: 1rem;
+  font-size: 12px;
 }
 
 li.list-group-item span {
@@ -53,7 +53,7 @@ td.data-t {
 
 .total {
   margin-left: 86%;
-  font-size: 1rem;
+  font-size: 12px;
 }
 
 th {
@@ -129,12 +129,12 @@ th {
 .programs-ui h1 {
   margin-top: 20px;
   color: #000;
-  font-size: 1rem;
+  font-size: 12px;
 }
 
 .programs-page h1 {
   color: #000;
-  font-size: 1rem;
+  font-size: 12px;
   font-weight: bold;
 }
 
