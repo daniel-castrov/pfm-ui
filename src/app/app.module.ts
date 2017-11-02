@@ -28,14 +28,14 @@ const appRoutes: Routes = [
   {path:'home', component:HomeComponent},
   {path:'header', component:HeaderComponent},
   {path:'about', component:AboutComponent},
-  {path:'planning', component:PlanningComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
   {path:'contact', component:ContactComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'user/:id', component:UserComponent},
   {path:'filter', component:FilterComponent},
-  {path:'no-access', component:NoAccessComponent}
+  {path:'no-access', component:NoAccessComponent},
+  {path:'planning', component:PlanningComponent}
 ];
 
 @NgModule({
