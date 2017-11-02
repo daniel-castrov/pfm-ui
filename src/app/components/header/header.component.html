@@ -27,10 +27,11 @@
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">Documentation</a>
             <a class="dropdown-item" href="#">Library</a>
+            <a class="dropdown-item" href="#">Support Request</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Help</a>
-            <a class="dropdown-item" *ngIf="isUserLoggedIn" routerLink="/about-private" >About Us</a>
+            <a class="dropdown-item" *ngIf="isUserLoggedIn" routerLink="/about-private">About Us</a>
             <a class="dropdown-item" *ngIf="!isUserLoggedIn" routerLink="/about">About Us</a>
           </div>
         </span>
@@ -43,10 +44,8 @@
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a *ngIf="isUserLoggedIn" class="dropdown-item" routerLink="/user/:id">{{ name }}</a>
+            <a *ngIf="isUserLoggedIn" class="dropdown-item" routerLink="/user/:id">Profile</a>
             <a *ngIf="!isUserLoggedIn" class="dropdown-item" routerLink="/user/:id"></a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Community</a>
             <a class="dropdown-item" href="#">Preferences</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/">Logout</a>
@@ -85,16 +84,23 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/programs">Planning</a>
+        <a class="nav-link" href="#" routerLink="/planning">Planning</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Budget</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Execution</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Exhibits</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Reports</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown02">
+          <a class="dropdown-item" href="#">Planning</a>
+          <a class="dropdown-item" href="#">Execution</a>
+          <a class="dropdown-item" href="#">Budget</a>
+          <a class="dropdown-item" href="#" routerLink="/programs">Programs</a>
+          <a class="dropdown-item" href="#">System</a>
+        </div>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Search</a>

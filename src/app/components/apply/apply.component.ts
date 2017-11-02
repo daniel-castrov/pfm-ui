@@ -9,8 +9,6 @@ export class ApplyComponent implements OnInit {
 
     apply = {
       firstname:'',
-      middlename:'',
-      lastname:'',
       rank:'',
       job:'',
       email:'',

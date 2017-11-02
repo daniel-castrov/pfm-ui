@@ -21,3 +21,8 @@
   color: red;
   font-size: .8rem;
 }
+
+label,
+select {
+  color: #868e9b;
+}

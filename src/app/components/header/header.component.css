@@ -144,3 +144,14 @@ nav a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
 nav a:not([href]):not([tabindex]):focus {
   outline: 0;
 }
+
+nav a:hover {
+  color: #ffffff !important;
+  background: #23527c;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a.dropdown-item {
+    color: #24537b !important;
+}
