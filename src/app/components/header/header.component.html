@@ -83,8 +83,18 @@
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/planning">Planning</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Planning</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
+          <a class="dropdown-item" href="#">Submit Funds Request</a>
+          <a class="dropdown-item" href="#">Approve Fund Request</a>
+          <a class="dropdown-item" href="#">Create/Update Program Schedule</a>
+          <a class="dropdown-item" href="#">Create/Update Program Justificaton</a>
+          <a class="dropdown-item" href="#">Summary of Request</a>
+          <a class="dropdown-item" href="#">Create UFR</a>
+          <a class="dropdown-item" href="#">Generate POM Submission</a>
+        </div>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Budget</a>
@@ -105,8 +115,18 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Search</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/user{{ id }}">Admin</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown03">
+          <a class="dropdown-item" href="#">Approve User Access</a>
+          <a class="dropdown-item" href="#">Request User Access Changes</a>
+          <a class="dropdown-item" href="#">Approve User Access Changes</a>
+          <a class="dropdown-item" href="#">Create Role</a>
+          <a class="dropdown-item" href="#">Delete Role</a>
+          <a class="dropdown-item" href="#">Assign Role (+/-)</a>
+          <a class="dropdown-item" href="#">Suspend/Delete User</a>
+          <a class="dropdown-item" href="#">Access NDA</a>
+        </div>
       </li>
     </ul>
   </div>
