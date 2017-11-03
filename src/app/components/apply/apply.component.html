@@ -1,26 +1,55 @@
-<app-header title="JSCBIS Login"></app-header>
+<app-header title="JSCBIS Login"
+  [isUserLoggedIn]="false"></app-header>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-3 col-md-12">
+  <div class="row main-content">
+    <div class="col-lg-3">
     </div>
-    <div class="col-lg-4 col-md-7">
-      <h5>New User Application</h5>
-      <p class="font-italic">* Indicates Required Field</p>
+    <div class="col-lg-5">
       <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
-        <div class="form-group">
+        <h5>New User Application</h5>
+        <p class="font-italic">* Indicates Required Field</p>
+        <span class="form-group firstname">
           <input
               type="text"
-              class="form-control"
+              class="form-control firstname"
               [(ngModel)]="apply.firstname"
               name="firstname"
               #applyFirstname="ngModel"
               minlength="2"
-              placeholder="*Enter Full Name"
+              placeholder="*First Name"
               required
           >
           <div *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger">First Name is required</div>
           <div *ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger">First Name should be at least 2 characters</div>
-        </div>
+        </span>
+        <span class="form-group">
+          <input
+              type="text"
+              class="form-control middle"
+              [(ngModel)]="apply.middlename"
+              name="middlename"
+              #applyMiddlename="ngModel"
+              minlength="1"
+              placeholder="*MI"
+              required
+          >
+          <div *ngIf="applyMiddlename.errors?.required && applyMiddlename.touched" class="alert alert-danger">Middle Initial is required</div>
+          <div *ngIf="applyMiddlename.errors?.minlength && applyMiddlename.touched" class="alert alert-danger">Middle Initial should be at least 1 character</div>
+        </span>
+        <span class="form-group lastname">
+          <input
+              type="text"
+              class="form-control lastname"
+              [(ngModel)]="apply.lastname"
+              name="lastname"
+              #applyLastname="ngModel"
+              minlength="2"
+              placeholder="*Last Name"
+              required
+          >
+          <div *ngIf="applyLastname.errors?.required && applyLastname.touched" class="alert alert-danger">Last Name is required</div>
+          <div *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger">Last Name should be at least 2 characters</div>
+        </span>
         <div class="form-group">
           <input
               type="text"
@@ -170,6 +199,8 @@
         </div>
         <input type="submit" class="btn btn-primary" value="Submit">
       </form>
+      </div>
+      <div class="col-lg-4">
     </div>
   </div>
 </div>

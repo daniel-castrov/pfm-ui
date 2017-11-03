@@ -26,3 +26,19 @@ label,
 select {
   color: #868e9b;
 }
+
+.firstname,
+.lastname {
+  display: inline;
+  width: 240px;
+  margin-bottom: 10px
+}
+
+.middle {
+  display: inline;
+  width: 60px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
