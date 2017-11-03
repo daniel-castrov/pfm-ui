@@ -19,8 +19,8 @@
               placeholder="*First Name"
               required
           >
-          <div *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger">First Name is required</div>
-          <div *ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger">First Name should be at least 2 characters</div>
+          <div *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger name-error">First Name is required</div>
+          <div *ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger name-error">First Name should be at least 2 characters</div>
         </span>
         <span class="form-group">
           <input
@@ -33,8 +33,8 @@
               placeholder="*MI"
               required
           >
-          <div *ngIf="applyMiddlename.errors?.required && applyMiddlename.touched" class="alert alert-danger">Middle Initial is required</div>
-          <div *ngIf="applyMiddlename.errors?.minlength && applyMiddlename.touched" class="alert alert-danger">Middle Initial should be at least 1 character</div>
+          <div *ngIf="applyMiddlename.errors?.required && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial is required</div>
+          <div *ngIf="applyMiddlename.errors?.minlength && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial should be at least 1 character</div>
         </span>
         <span class="form-group lastname">
           <input
@@ -47,8 +47,8 @@
               placeholder="*Last Name"
               required
           >
-          <div *ngIf="applyLastname.errors?.required && applyLastname.touched" class="alert alert-danger">Last Name is required</div>
-          <div *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger">Last Name should be at least 2 characters</div>
+          <div *ngIf="applyLastname.errors?.required && applyLastname.touched" class="alert alert-danger name-error">Last Name is required</div>
+          <div *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger name-error">Last Name should be at least 2 characters</div>
         </span>
         <div class="form-group">
           <input

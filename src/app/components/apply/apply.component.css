@@ -39,6 +39,11 @@ select {
   width: 60px;
 }
 
+.name-error {
+  display: block;
+  width: 240px !important;
+}
+
 .form-group {
   margin-bottom: 10px;
 }
