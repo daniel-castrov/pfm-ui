@@ -8,7 +8,7 @@
       <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
         <h5>New User Application</h5>
         <p class="font-italic">* Indicates Required Field</p>
-        <span class="form-group firstname">
+        <span class="form-group">
           <input
               type="text"
               class="form-control firstname"
@@ -19,8 +19,8 @@
               placeholder="*First Name"
               required
           >
-          <div *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger name-error">First Name is required</div>
-          <div *ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger name-error">First Name should be at least 2 characters</div>
+          <span *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger name-error">First Name is required</span>
+          <span hidden=""*ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger name-error">First Name should be at least 2 characters</span>
         </span>
         <span class="form-group">
           <input
@@ -36,7 +36,7 @@
           <div *ngIf="applyMiddlename.errors?.required && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial is required</div>
           <div *ngIf="applyMiddlename.errors?.minlength && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial should be at least 1 character</div>
         </span>
-        <span class="form-group lastname">
+        <span class="form-group">
           <input
               type="text"
               class="form-control lastname"
@@ -53,7 +53,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.rank"
               name="rank"
               #applyRank="ngModel"
@@ -63,7 +63,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.job"
               name="rank"
               #applyJob="ngModel"
@@ -79,7 +79,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.email"
               name="email"
               #applyEmail="ngModel"
@@ -93,7 +93,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.phone"
               name="phone"
               #applyPhone="ngModel"
@@ -107,7 +107,7 @@
         <div class="form-group">
           <input
             type="text"
-            class="form-control"
+            class="form-control applyinput"
             [(ngModel)]="apply.address"
             name="address"
             #applyAddress="ngModel"
@@ -117,7 +117,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.organization"
               name="organization"
               #applyOrganization="ngModel"
@@ -130,7 +130,7 @@
         </div>
         <div class="form-group">
           <select class="custom-select"
-            class="form-control"
+            class="form-control applyinput"
           >
             <option selected>Select Branch</option>
             <option value="army">Army</option>
@@ -143,7 +143,7 @@
         </div>
         <div class="form-group">
           <select class="custom-select"
-            class="form-control"
+            class="form-control applyinput"
           >
             <option selected>Organization Access Request</option>
             <option value="JPEO-CBO">JPEO-CBD</option>
@@ -158,7 +158,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.sponsorname"
               name="sponsorname"
               #applySponsorname="ngModel"
@@ -172,7 +172,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.sponsorphone"
               name="sponsorphone"
               #applySponsorphone="ngModel"
@@ -186,7 +186,7 @@
         <div class="form-group">
           <input
               type="text"
-              class="form-control"
+              class="form-control applyinput"
               [(ngModel)]="apply.sponsoremail"
               name="sponsoremail"
               #applySponsoremail="ngModel"
