@@ -29,7 +29,7 @@ export class HeaderComponent  {
 
   ngOnInit() {
     // console.log('OnInit ran...');
-    this.name = 'Elmer Fudd';
+    this.name = 'Jane Doe';
 
   }
 }

@@ -32,9 +32,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     // console.log('OnInit ran...');
-    this.name = 'Elmer Fudd';
-    this.age = 35;
-    this.email = 'elmerfudd@domain.com';
+    this.name = 'Jane Doe';
+    this.age = 30;
+    this.email = 'janedoe@test.com';
     this.address = {
       street: '50 Main Street',
       city: 'Boston',
