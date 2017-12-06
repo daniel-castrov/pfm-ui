@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
 
   id: number;
   pexUser:PexUser;
+  jsonUser:string;
 
   constructor(
     private route:ActivatedRoute,
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit {
           var authHeader = r.headers.get('Authorization')
           var jsonuser = atob(authHeader);
           this.pexUser = JSON.parse(jsonuser);
+          this.jsonUser = jsonuser;
       });
     }
 

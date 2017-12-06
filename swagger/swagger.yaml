@@ -135,19 +135,19 @@ definitions:
         type: "boolean"
       enabled:
         type: "boolean"
-      fname:
+      firstName:
         type: "string"
-      lname:
+      lastName:
         type: "string"
       cn:
         type: "string"
       organization:
         type: "string"
-      comms:
+      communications:
         type: "array"
         items:
           $ref: '#/definitions/Communication'
-      prefs:
+      preferences:
         type: "object"
         additionalProperties:
             type: string
