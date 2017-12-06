@@ -11,11 +11,14 @@ import { UserComponent } from '../user/user.component';
 
 export class HeaderComponent  {
 
-  @Input() public title: string;
+  //@Input() public title: string;
   @Input() public isUserLoggedIn: boolean;
+  @Input() public currentusername: string;
+
+
 
   id: number;
-  name:string;
+  //name:string;
 
   constructor(
     private route:ActivatedRoute,
@@ -29,7 +32,7 @@ export class HeaderComponent  {
 
   ngOnInit() {
     // console.log('OnInit ran...');
-    this.name = 'Elmer Fudd';
+    //this.name = 'Elmer Fudd';
 
   }
 }

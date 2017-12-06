@@ -3,10 +3,33 @@
 <div class="row main-content">
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
-       This is user {{name}}
+       Welcome back: {{ pexUser.cn }}
     </div>
     <div class="card-container">
-      This page will have content that is customized for the user.
+      <ul>
+        <li>CN: {{ pexUser.cn }}</li> 
+        <li>Username: {{ pexUser.username }}</li>  
+        <li>First Name: {{ pexUser.fname }}</li>
+        <li>Last Name: {{ pexUser.lname }}</li>
+        <li>Account non-expired: {{ pexUser.accountNonExpired }}</li>
+        <li>Account non-locked: {{ pexUser.accountNonLocked }}</li>
+        <li>Credentials non-exipred: {{ pexUser.credentialsNonExpired }}</li>
+        <li>Account Enabled: {{ pexUser.enabled }}</li>
+        <li>Community: {{ pexUser.organization }}</li> 
+        <li>Communications: 
+          <!--
+            <ul *ngFor="let comm of pexUser.comms">
+              <li>{{ comms.type }} {{ comms.subtype }} {{ comms.value }}</li> 
+            </ul>
+          -->
+        <li>Preferences: 
+          <!--
+            <ul *ngFor="let pref of pexUser.prefs">
+              <li>{{ pexUser.pref }}</li> 
+            </ul>
+          -->
+        </li>
+    </ul>
     </div>
   </div>
   <div class="col-lg-5 col-sm-10">
