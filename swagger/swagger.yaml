@@ -5,188 +5,37 @@ info:
   description: API services for JSCBIS
 basePath: "/api"
 tags:
-- name: "LabelType"
-- name: "Label"
+- name: "Tag"
+- name: "Fund"
+- name: "FundLine"
+- name: "Increment"
 - name: "Program"
 paths:
-  /lt/all:
+  /blank:
     get:
       tags:
-      - "LabelType"
-      summary: "List labelTypes"
-      description: "Returns a list containing all labelTypess"
-      operationId: "findAll"
+      - "blank"
+      summary: ""
+      description: ""
+      operationId: "blank"
       produces:
       - "application/json"
       responses:
         200:
-          description: "A list of labelTypes"
+          description: "OK"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/LabelType"
+            type: "string"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /lt/find/{id}:
-    get:
-      tags:
-      - "LabelType"
-      summary: "Get A labelType by id"
-      description: "Returns a labelType with the given id"
-      operationId: "find"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "A labelType"
-          schema:
-            $ref: "#/definitions/LabelType"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /lt/save:
-    post:
-      tags:
-      - "LabelType"
-      summary: "Upload a new LabelType"
-      description: "Upload a LabelType"
-      operationId: "save"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/LabelType"
-      responses:
-        200:
-          description: "A LabelType succesfully created."
-          schema:
-            $ref: "#/definitions/LabelType"
-        400:
-          description: "A LabelType couldn't have been created."
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "A Insufficient permissions response"
-  /label/all:
-    get:
-      tags:
-      - "Label"
-      summary: "List labels"
-      description: "Returns a list containing all labels"
-      operationId: "findLabels"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of labels"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Label"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /label/find/{id}:
-    get:
-      tags:
-      - "Label"
-      summary: "Get A label by id"
-      description: "Returns a label with the given id"
-      operationId: "find"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "A label by id"
-          schema:
-            items:
-              $ref: "#/definitions/Label"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /label/type/{labelTypeId}:
-    get:
-      tags:
-      - "Label"
-      summary: "List labels by type"
-      description: "Returns a list containing all labels of a type"
-      operationId: "findByType"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "labelTypeId"
-        in: "path"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "A list of labels by type"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Label"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /label/save:
-    post:
-      tags:
-      - "Label"
-      summary: "Upload a new Label"
-      description: "Upload a label"
-      operationId: "save"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/Label"
-      responses:
-        200:
-          description: "A label succesfully created."
-          schema:
-            $ref: "#/definitions/Label"
-        400:
-          description: "A label couldn't have been created."
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "A Insufficient permissions response"
-  /program/all:
+  /program/findall:
     get:
       tags:
       - "Program"
       summary: "List of Programs"
       description: "Returns a list containing all Programs"
-      operationId: "findAll"
+      operationId: "findall"
       produces:
       - "application/json"
       responses:
@@ -200,61 +49,109 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /program/find/{id}:
+  /fundLine/findall:
     get:
       tags:
-      - "Program"
-      summary: "Get A Program by id"
-      description: "Returns a Program with the given id"
-      operationId: "find"
+      - "FundLine"
+      summary: "List of FundLine"
+      description: "Returns a list containing all FundLine"
+      operationId: "findall"
       produces:
       - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "integer"
-        format: "int64"
       responses:
         200:
-          description: "A Program by id"
+          description: "A list of FundLine"
           schema:
+            type: "array"
             items:
-              $ref: "#/definitions/Program"
+              $ref: "#/definitions/FundLine"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /program/save:
-    post:
+  /tag/find/{type}:
+    get:
       tags:
-      - "Program"
-      summary: "Upload a new Program"
-      description: "Upload a Program"
-      operationId: "save"
-      consumes:
-      - "application/json"
+      - "Tag"
+      summary: "Get Tags by type"
+      description: "Returns a List of Tags with the given type"
+      operationId: "findTagsByType"
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
+      - name: "type"
+        in: "path"
         required: true
-        schema:
-          $ref: "#/definitions/Program"
+        type: "string"
       responses:
         200:
-          description: "A Program succesfully created."
+          description: "A List of Tags"
           schema:
-            $ref: "#/definitions/Program"
-        400:
-          description: "A Program couldn't have been created."
+            type: "array"
+            items:
+              $ref: "#/definitions/Tag"
         500:
           description: "An unexpected error occured."
         403:
-          description: "A Insufficient permissions response"
+          description: "Forbidden/not authorized"
+  /tag/findname/{name}:
+    get:
+      tags:
+      - "Tag"
+      summary: "Get Tags by name"
+      description: "Returns a List of Tags with the given type"
+      operationId: "findTagsByName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A List of Tags"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Tag"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
 definitions:
-  LabelType:
+  PexUser:
+    type: "object"
+    properties:
+      password:
+        type: "string"
+      username:
+        type: "string"
+      accountNonExpired:
+        type: "boolean"
+      accountNonLocked:
+        type: "boolean"
+      credentialsNonExpired:
+        type: "boolean"
+      enabled:
+        type: "boolean"
+      fname:
+        type: "string"
+      lname:
+        type: "string"
+      cn:
+        type: "string"
+      organization:
+        type: "string"
+      comms:
+        type: "array"
+        items:
+          $ref: '#/definitions/Communication'
+      prefs:
+        type: "object"
+        additionalProperties:
+            type: string
+  Communication:
     type: "object"
     properties:
       id:
@@ -262,23 +159,82 @@ definitions:
         format: "int64"
       type:
         type: "string"
-      descrption:
+        emun:
+          - PHONE
+          - EMAIL
+      subtype:
         type: "string"
-  Label:
+        emun:
+          - PRIMARY
+          - SECONDARY
+          - ALTERNATE
+      value:
+        type: "string"
+      confirmed:
+        type: "boolean"
+      preferred:
+        type: "boolean"
+  Tag:
     type: "object"
     properties:
       id:
         type: "integer"
         format: "int64"
-      labeltype:
-        $ref: "#/definitions/LabelType"
-      name:
+      type:
         type: "string"
       abbr:
         type: "string"
-      desc:
+      abbr:
+        type: "name"
+  Fund:
+    type: "object"
+    properties:
+      year:
+        type: "integer"
+      amount:
+        type: "number"
+        format: "float"
+  FundLine:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      prgranId:
+        type: "integer"
+        format: "int64"
+      incrementNumber:
+        type: "integer"
+      description:
         type: "string"
+      fiscalYear:
+        type: "integer"
+      tags:
+        type: "array"
+        items:
+          $ref: '#/definitions/Tag'
+      funds:
+        type: "array"
+        items:
+          $ref: '#/definitions/Fund'
+  Increment:
+    type: "object"
+    properties:
+      incrementNumber:
+        type: "integer"
+      description:
+        type: "string"
+      tags:
+        type: "array"
+        items:
+          $ref: '#/definitions/Tag'
+      fundingLineIds:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
   Program:
+    Program:
     type: "object"
     properties:
       id:
@@ -288,25 +244,18 @@ definitions:
         type: "string"
       programName:
         type: "string"
+      description:
+        type: "string"
+      tags:
+        type: "array"
+        items:
+          $ref: '#/definitions/Tag'
       poc:
-        type: "string"
-      programManager:
-        type: "string"
-      descr:
-        type: "string"
-      notes:
-        type: "string"
-      functionalArea:
-        $ref: "#/definitions/Label"
-      medicalCategory:
-        $ref: "#/definitions/Label"
-      nbcCategory:
-        $ref: "#/definitions/Label"
-      coreCapability:
-        $ref: "#/definitions/Label"
-      primaryCapability:
-        $ref: "#/definitions/Label"
-      secondaryCapability:
-        $ref: "#/definitions/Label"
-      tertiaryCapability:
-        $ref: "#/definitions/Label"
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+      increments:
+        type: "array"
+        items:
+          $ref: '#/definitions/Increment'

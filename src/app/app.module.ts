@@ -5,6 +5,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpModule } from '@angular/http';
 import { ProgramApi } from './generated';
+import { TagApi } from './generated/api/TagApi';
+import { FundLineApi } from './generated/api/FundLineApi';
+import { BlankApi } from './generated/api/BlankApi';
+
+
 import { BASE_PATH } from './generated/variables';
 
 import { AppComponent } from './app.component';
@@ -68,8 +73,14 @@ const appRoutes: Routes = [
   //   {  provide: BASE_PATH, useValue: 'http://ec2-34-231-125-182.compute-1.amazonaws.com:8080/jscbis' }
   // ],
   providers: [
-    ProgramApi,
-    {  provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' }
+    ProgramApi, 
+    TagApi, 
+    FundLineApi, 
+    BlankApi,
+    {  
+      //provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' 
+      provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' 
+    }
   ],
   bootstrap: [AppComponent]
 })

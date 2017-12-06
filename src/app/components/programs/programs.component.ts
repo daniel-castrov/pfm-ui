@@ -17,15 +17,10 @@ export class ProgramsComponent implements OnInit {
 
   ngOnInit() {
     this.getAllPrograms();
-    this.getOneProgram(1);
   }
 
   getAllPrograms() {
-    this.programApi.findAll().subscribe(c => this.programs = c);
-  }
-
-  getOneProgram(id){
-    this.programApi.find(id).subscribe(c => this.singleProgram = c);
+    this.programApi.findall().subscribe(c => this.programs = c);
   }
 
 }
