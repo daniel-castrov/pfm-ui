@@ -14,6 +14,7 @@ We recommend installing Node.js through https://nodejs.org/en/
 
 * `git clone git@bitbucket.org:pexchange/jscbis.git`
 * change into the directory `cd client`
+* `swagger-codegen.sh`
 * `npm install`
 * `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
