@@ -25,17 +25,15 @@ export class ProgramsComponent implements OnInit {
 
   getAllPrograms() {
     this.programApi.findall().subscribe(c => this.programs = c);
-
     let s = this.programApi.findall();
-
-    s.subscribe(c => this.programs = c);
+     s.subscribe(c => this.programs = c);
 
   }
 
+  // TODO this gets all fundLines ... not just for this program
   getAllFundLines() {
     this.fundLineApi.findall().subscribe(c => this.fundLines = c);
   }
-
 
   getFundLines(fundLineId) {
     let fundLine:FundLine;
@@ -43,53 +41,6 @@ export class ProgramsComponent implements OnInit {
     this.fundLines.push(fundLine);
 
     console.log(fundLine);
-  }
-
-  donothing(){
-    for ( let program of this.programs ){
-      program.id
-      program.programId
-      program.programName
-      program.description
-      for ( let pocid of  program.pocId){
-        pocid
-      } // array of int
-      for ( let tag of  program.tags){
-        tag.id
-        tag.type
-        tag.name
-        tag.abbr
-      }
-      for( let inc of program.increments ){
-        inc.description
-        inc.incrementNumber
-        for ( let tag of inc.tags){
-          tag.id
-          tag.type
-          tag.name
-          tag.abbr
-        }
-        for (let fundLineId of inc.fundingLineIds){
-          this.getFundLines(fundLineId);
-        }
-        
-        for ( let fundLine of this.fundLines ){
-          fundLine.id
-          fundLine.fiscalYear
-          fundLine.description
-          for ( let tag of  fundLine.tags){
-            tag.id
-            tag.type
-            tag.name
-            tag.abbr
-          }
-          for (let fund of fundLine.funds){
-            fund.year
-            fund.amount
-          }
-        }
-      }
-    }
   }
 
 }

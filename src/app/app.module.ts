@@ -3,7 +3,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-//import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
@@ -15,7 +14,6 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
-
 import { FilterComponent } from './components/filter/filter.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
@@ -28,18 +26,11 @@ import { ProgramsComponent } from './components/programs/programs.component';
 import { UserComponent } from './components/user/user.component';
 
 // GENERATED APIs AND MODELS
-// import { BASE_PATH } from './generated/variables';
-// import { BlankApi } from './generated/api/BlankApi';
-// import { FundLineApi } from './generated/api/FundLineApi';
-// import { ProgramApi } from './generated';
-// import { TagApi } from './generated/api/TagApi';
-
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { FundLineService } from './generated/api/fundLine.service';
 import { ProgramService } from './generated/api/program.service';
 import { TagService } from './generated/api/tag.service';
-
 
 // ROUTES
 const appRoutes: Routes = [
@@ -78,7 +69,6 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    //HttpModule,
     HttpClientModule,
     NgbModule.forRoot(),    
     RouterModule.forRoot(appRoutes),

@@ -43,12 +43,9 @@ export class HomeComponent implements OnInit {
   }
 
     getCurrentUser() {
-
-      console.log("getCurrentUser");
+      //console.log("getCurrentUser");
       
-
       let resp = this.blankService.blank("response", true);
-
 
       resp.subscribe(
         (r: HttpResponse<string>) => {
@@ -60,27 +57,6 @@ export class HomeComponent implements OnInit {
         }
 
       );
-
-
-      //this.blankService.blank("response", true).subscribe(
-          //(r: HttpResponse<string>) => {
-            //var authHeader = r.headers.get('Authorization');
-
-          //  console.log("HELLO"+authHeader);
-
-            //var jsonuser = atob(authHeader);
-            //this.pexUser = JSON.parse(jsonuser);
-            //this.jsonUser = jsonuser;
-        //});
-
-
-      // this.blankService.blankWithHttpInfo().subscribe(
-      //   (r: Response) => {
-      //     var authHeader = r.headers.get('Authorization')
-      //     var jsonuser = atob(authHeader);
-      //     this.pexUser = JSON.parse(jsonuser);
-      //     this.jsonUser = jsonuser;
-      // });
     }
 
   }
