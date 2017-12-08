@@ -21,7 +21,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
-import { NoopInterceptor } from './components/interceptors/noopInterceptor.component';
+import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
@@ -90,7 +90,7 @@ const appRoutes: Routes = [
     TagService, 
     // { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' }
     { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
-    { provide: HTTP_INTERCEPTORS, useClass: NoopInterceptor, multi: true, },
+    { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
     
   ],
   bootstrap: [AppComponent]
