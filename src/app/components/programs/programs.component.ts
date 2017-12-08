@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Program, ProgramApi, Increment, FundLine, Fund, FundLineApi } from '../../generated';
+import { Program, ProgramService, Increment, FundLine, Fund, FundLineService } from '../../generated';
 
 @Component({
   selector: 'app-programs',
@@ -12,8 +12,8 @@ export class ProgramsComponent implements OnInit {
   public fundLines:FundLine[] = [];
 
   constructor(
-    public programApi:ProgramApi,
-    public fundLineApi:FundLineApi
+    public programApi:ProgramService,
+    public fundLineApi:FundLineService
   ) {
 
   }

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
-import { PexUser } from '../../generated/model/PexUser';
-import { BlankApi } from '../../generated/api/BlankApi';
+import { PexUser } from '../../generated/model/pexUser';
+import { BlankService } from '../../generated/api/blank.service';
 
 import { Response, ResponseContentType }                     from '@angular/http';
+
+import { HttpClient, HttpHeaders, HttpParams,
+  HttpResponse, HttpEvent }                           from '@angular/common/http';
 
 import { Observable }                                        from 'rxjs/Observable';
 
@@ -28,7 +31,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private route:ActivatedRoute,
     private router:Router,
-    private blankApi:BlankApi,
+    private blankService:BlankService,
   ) {
     this.route.params.subscribe((params:Params) => {
       this.id = params.id;
@@ -40,13 +43,44 @@ export class HomeComponent implements OnInit {
   }
 
     getCurrentUser() {
-      this.blankApi.blankWithHttpInfo().subscribe(
-        (r: Response) => {
-          var authHeader = r.headers.get('Authorization')
+
+      console.log("getCurrentUser");
+      
+
+      let resp = this.blankService.blank("response", true);
+
+
+      resp.subscribe(
+        (r: HttpResponse<string>) => {
+          var authHeader = r.headers.get('Authorization');
+          console.log("HELLO"+authHeader);
           var jsonuser = atob(authHeader);
           this.pexUser = JSON.parse(jsonuser);
           this.jsonUser = jsonuser;
-      });
+        }
+
+      );
+
+
+      //this.blankService.blank("response", true).subscribe(
+          //(r: HttpResponse<string>) => {
+            //var authHeader = r.headers.get('Authorization');
+
+          //  console.log("HELLO"+authHeader);
+
+            //var jsonuser = atob(authHeader);
+            //this.pexUser = JSON.parse(jsonuser);
+            //this.jsonUser = jsonuser;
+        //});
+
+
+      // this.blankService.blankWithHttpInfo().subscribe(
+      //   (r: Response) => {
+      //     var authHeader = r.headers.get('Authorization')
+      //     var jsonuser = atob(authHeader);
+      //     this.pexUser = JSON.parse(jsonuser);
+      //     this.jsonUser = jsonuser;
+      // });
     }
 
   }

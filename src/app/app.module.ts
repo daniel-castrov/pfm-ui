@@ -3,7 +3,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
+//import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -27,11 +28,18 @@ import { ProgramsComponent } from './components/programs/programs.component';
 import { UserComponent } from './components/user/user.component';
 
 // GENERATED APIs AND MODELS
+// import { BASE_PATH } from './generated/variables';
+// import { BlankApi } from './generated/api/BlankApi';
+// import { FundLineApi } from './generated/api/FundLineApi';
+// import { ProgramApi } from './generated';
+// import { TagApi } from './generated/api/TagApi';
+
 import { BASE_PATH } from './generated/variables';
-import { BlankApi } from './generated/api/BlankApi';
-import { FundLineApi } from './generated/api/FundLineApi';
-import { ProgramApi } from './generated';
-import { TagApi } from './generated/api/TagApi';
+import { BlankService } from './generated/api/blank.service';
+import { FundLineService } from './generated/api/fundLine.service';
+import { ProgramService } from './generated/api/program.service';
+import { TagService } from './generated/api/tag.service';
+
 
 // ROUTES
 const appRoutes: Routes = [
@@ -70,15 +78,16 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    //HttpModule,
+    HttpClientModule,
     NgbModule.forRoot(),    
     RouterModule.forRoot(appRoutes),
   ],
   providers: [
-    BlankApi,
-    FundLineApi,  
-    ProgramApi, 
-    TagApi, 
+    BlankService,
+    FundLineService,  
+    ProgramService, 
+    TagService, 
     // { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' }
     { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoopInterceptor, multi: true, },

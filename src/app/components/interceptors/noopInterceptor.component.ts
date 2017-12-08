@@ -6,7 +6,7 @@ import { Observable }                                        from 'rxjs/Observab
 export class NoopInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    alert("HA");
+    //alert("HA");
     return next.handle(req);
   }
 }
