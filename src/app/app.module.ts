@@ -1,86 +1,88 @@
+// app.modules  
+// ANGULAR IMPORTS
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-import { ProgramApi } from './generated';
-import { TagApi } from './generated/api/TagApi';
-import { FundLineApi } from './generated/api/FundLineApi';
-import { BlankApi } from './generated/api/BlankApi';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-
-import { BASE_PATH } from './generated/variables';
-
-import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
-import { UserComponent } from './components/user/user.component';
-import { HeaderComponent } from './components/header/header.component';
-import { ProgramsComponent } from './components/programs/programs.component';
-import { FilterComponent } from './components/filter/filter.component';
+// COMPONENTS
 import { AboutComponent } from './components/about/about.component';
+import { AboutPrivateComponent } from './components/about-private/about-private.component';
+import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
+
+import { FilterComponent } from './components/filter/filter.component';
+import { HeaderComponent } from './components/header/header.component';
+import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { AboutPrivateComponent } from './components/about-private/about-private.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
+import { NoopInterceptor } from './components/interceptors/noopInterceptor.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
+import { ProgramsComponent } from './components/programs/programs.component';
+import { UserComponent } from './components/user/user.component';
 
+// GENERATED APIs AND MODELS
+import { BASE_PATH } from './generated/variables';
+import { BlankApi } from './generated/api/BlankApi';
+import { FundLineApi } from './generated/api/FundLineApi';
+import { ProgramApi } from './generated';
+import { TagApi } from './generated/api/TagApi';
 
+// ROUTES
 const appRoutes: Routes = [
-  {path:'', component:LoginComponent},
-  {path:'home', component:HomeComponent},
-  {path:'header', component:HeaderComponent},
+  {path:'', component:LoginComponent},  
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
-  {path:'contact', component:ContactComponent},
-  {path:'programs', component:ProgramsComponent},
-  {path:'user/:id', component:UserComponent},
+  {path:'contact', component:ContactComponent},  
   {path:'filter', component:FilterComponent},
+  {path:'header', component:HeaderComponent},
+  {path:'home', component:HomeComponent},  
   {path:'no-access', component:NoAccessComponent},
-  {path:'planning', component:PlanningComponent}
+  {path:'not-found', component:NotFoundComponent},
+  {path:'planning', component:PlanningComponent},
+  {path:'programs', component:ProgramsComponent},  
+  {path:'user/:id', component:UserComponent}
 ];
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent,
-    UserComponent,
-    HeaderComponent,
-    ProgramsComponent,
-    FilterComponent,
     AboutComponent,
     AboutPrivateComponent,
+    AppComponent,
     ApplyComponent,
     ContactComponent,
-    LoginComponent,
-    AboutPrivateComponent,
-    NotFoundComponent,
+    HeaderComponent,    
+    HomeComponent,
+    LoginComponent,    
+    FilterComponent,
     NoAccessComponent,
-    PlanningComponent
+    NotFoundComponent,    
+    PlanningComponent,
+    ProgramsComponent,        
+    UserComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpModule,
+    NgbModule.forRoot(),    
     RouterModule.forRoot(appRoutes),
-    NgbModule.forRoot(),
-    HttpModule
   ],
-  // providers: [
-  //   ProgramApi,
-  //   {  provide: BASE_PATH, useValue: 'http://ec2-34-231-125-182.compute-1.amazonaws.com:8080/jscbis' }
-  // ],
   providers: [
+    BlankApi,
+    FundLineApi,  
     ProgramApi, 
     TagApi, 
-    FundLineApi, 
-    BlankApi,
-    {  
-      //provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' 
-      provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' 
-    }
+    // { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' }
+    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+    { provide: HTTP_INTERCEPTORS, useClass: NoopInterceptor, multi: true, },
+    
   ],
   bootstrap: [AppComponent]
 })

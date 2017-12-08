@@ -69,6 +69,30 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /fundLine/find/{id}:
+    get:
+      tags:
+      - "FundLine"
+      summary: "Get FundLine by Id"
+      description: "Returns a FundLine with the given id"
+      operationId: "find"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A FundLine"
+          schema:
+            type: "FundLine"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+
   /tag/find/{type}:
     get:
       tags:
@@ -182,10 +206,10 @@ definitions:
         format: "int64"
       type:
         type: "string"
-      abbr:
+      name:
         type: "string"
       abbr:
-        type: "name"
+        type: "string"
   Fund:
     type: "object"
     properties:
@@ -250,11 +274,10 @@ definitions:
         type: "array"
         items:
           $ref: '#/definitions/Tag'
-      poc:
+      pocId:
         type: "array"
         items:
-          type: "integer"
-          format: "int64"
+          type: "string"
       increments:
         type: "array"
         items:
