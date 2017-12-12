@@ -175,6 +175,15 @@ definitions:
         type: "object"
         additionalProperties:
             type: string
+      authorities:
+        type: "array"
+        items:
+          $ref: '#/definitions/GrantedAuthority'
+  GrantedAuthority:
+    type: "object"
+    properties:
+      authority:
+        type: "string"
   Communication:
     type: "object"
     properties:

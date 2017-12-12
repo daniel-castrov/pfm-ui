@@ -20,7 +20,7 @@
         <li>Authorities: 
             <ul>
               <li *ngFor="let auth of pexUser.authorities">
-                {{ auth['authority'] }}
+                {{ auth.authority }}
               </li> 
             </ul>
         </li>
@@ -33,9 +33,9 @@
         </li>
         <li>Preferences:           
             <ul>
-                <li>
-                   {{ pexUser.preferences }}
-                </li>
+                <li> defaultColor: {{ pexUser.preferences.defaultColor }} </li>
+                <li> clock: {{ pexUser.preferences.clock }} </li>
+                <li> landingPage: {{ pexUser.preferences.landingPage }} </li>
             </ul>
         </li>
     </ul>

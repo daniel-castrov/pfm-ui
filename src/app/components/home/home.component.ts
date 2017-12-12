@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
 import { PexUser } from '../../generated/model/pexUser';
+import { Communication } from '../../generated/model/communication';
+import { GrantedAuthority } from '../../generated/model/grantedAuthority';
+
 import { BlankService } from '../../generated/api/blank.service';
 
 import { Response, ResponseContentType }                     from '@angular/http';
@@ -50,13 +53,29 @@ export class HomeComponent implements OnInit {
       resp.subscribe(
         (r: HttpResponse<string>) => {
           var authHeader = r.headers.get('Authorization');
-          console.log("HELLO"+authHeader);
+          //console.log("HELLO"+authHeader);
           var jsonuser = atob(authHeader);
           this.pexUser = JSON.parse(jsonuser);
+
+          console.log(this.pexUser.preferences);
+
+
+          console.log(this.pexUser.preferences[0]);
+
           this.jsonUser = jsonuser;
         }
 
       );
     }
+
+    donothing(){
+
+    
+    for (let i of this.pexUser.authorities){
+      i.authority;
+    }    
+
+    console.log(this.pexUser.preferences);
+  }
 
   }
