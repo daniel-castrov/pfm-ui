@@ -54,28 +54,19 @@ export class HomeComponent implements OnInit {
         (r: HttpResponse<string>) => {
           var authHeader = r.headers.get('Authorization');
           //console.log("HELLO"+authHeader);
-          var jsonuser = atob(authHeader);
-          this.pexUser = JSON.parse(jsonuser);
+          this.jsonUser = atob(authHeader);
+          this.pexUser = JSON.parse(this.jsonUser);
+          this.donothing();
 
-          console.log(this.pexUser.preferences);
-
-
-          console.log(this.pexUser.preferences[0]);
-
-          this.jsonUser = jsonuser;
         }
 
       );
     }
 
     donothing(){
-
-    
-    for (let i of this.pexUser.authorities){
-      i.authority;
-    }    
-
-    console.log(this.pexUser.preferences);
-  }
+      for (let key in this.pexUser.preferences) {
+        console.log(key + "," + this.pexUser.preferences[key]);
+      }
+    }
 
   }
