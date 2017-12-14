@@ -21,10 +21,9 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    // console.log('ngOnInit ran...');
 
-    //this.name = 'Elmer Fudd';
-    //this.email = 'test@test.com';
+    this.name = 'Jane Doe';
+    this.email = 'janedoe@test.com';
     this.age = 30;
     this.address = {
       street:'50 Main st',
@@ -37,7 +36,7 @@ export class UserComponent implements OnInit {
   }
 
   onClick(){
-    //this.name='Elmer';
+    this.name='Hobby';
     this.hobbies.push('New Hobby');
   }
 
