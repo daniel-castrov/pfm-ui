@@ -1,0 +1,31 @@
+<app-header title="JSCBIS Login" [isUserLoggedIn]="true"></app-header>
+<div class="container-fluid">
+  <div class="row main-content">
+    <div class="col-10 col-md-7">
+      <div class="community-data">
+        <form class="form-inline">
+          <span class="form-label">Create New Community</span>
+          <div class="form-group">
+            <label class="sr-only">Create New Community</label>
+          </div>
+          <div class="form-group mx-sm-3">
+            <label class="sr-only">Create new community</label>
+            <input type="community" class="form-control" id="inputCommunity">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <hr>
+        <h5>List of Communities</h5>
+        <div class="well">
+          <ul class="list-group">
+            <li class="list-group-item">
+              Community
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-2 col-md-5">
+    </div>
+  </div>
+</div>

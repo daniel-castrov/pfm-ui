@@ -1,4 +1,4 @@
-// app.modules  
+// app.modules
 // ANGULAR IMPORTS
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { UserComponent } from './components/user/user.component';
+import { CreateCommunityComponent } from './components/create-community/create-community.component';
 
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
@@ -34,18 +35,19 @@ import { TagService } from './generated/api/tag.service';
 
 // ROUTES
 const appRoutes: Routes = [
-  {path:'', component:LoginComponent},  
+  {path:'', component:LoginComponent},
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
-  {path:'contact', component:ContactComponent},  
+  {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
-  {path:'home', component:HomeComponent},  
+  {path:'home', component:HomeComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
-  {path:'programs', component:ProgramsComponent},  
+  {path:'programs', component:ProgramsComponent},
+  {path:'create-community', component:CreateCommunityComponent},
   {path:'user/:id', component:UserComponent}
 ];
 
@@ -56,32 +58,34 @@ const appRoutes: Routes = [
     AppComponent,
     ApplyComponent,
     ContactComponent,
-    HeaderComponent,    
+    HeaderComponent,
     HomeComponent,
-    LoginComponent,    
+    LoginComponent,
     FilterComponent,
     NoAccessComponent,
-    NotFoundComponent,    
+    NotFoundComponent,
     PlanningComponent,
-    ProgramsComponent,        
-    UserComponent
+    ProgramsComponent,
+    CreateCommunityComponent,
+    UserComponent,
+
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    NgbModule.forRoot(),    
+    NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
   ],
   providers: [
     BlankService,
-    FundLineService,  
-    ProgramService, 
-    TagService, 
-    // { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' }
-    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+    FundLineService,
+    ProgramService,
+    TagService,
+    { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
+    //{ provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
-    
+
   ],
   bootstrap: [AppComponent]
 })

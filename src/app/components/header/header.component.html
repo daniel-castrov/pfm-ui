@@ -38,7 +38,7 @@
         </span>
         <span class="dropdown show">
           <a class="super-user dropdown-toggle" *ngIf="isUserLoggedIn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ currentusername }}
+            {{ pexUser.firstName }} {{ pexUser.lastName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
           <a class="super-user dropdown-toggle" *ngIf="!isUserLoggedIn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -127,7 +127,7 @@
           <a class="dropdown-item" href="#" routerLink="/home">Assign Role (+/-)</a>
           <a class="dropdown-item" href="#" routerLink="/home">Suspend/Delete User</a>
           <a class="dropdown-item" href="#" routerLink="/home">Access NDA</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Create Community</a>
+          <a class="dropdown-item" href="#" routerLink="/create-community">Create New Community</a>
         </div>
       </li>
     </ul>
