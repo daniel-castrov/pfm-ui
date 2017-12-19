@@ -3,14 +3,24 @@
   <div class="row main-content">
     <div class="col-10 col-md-7">
       <div class="community-data">
-        <form class="form-inline">
+        <form class="form-inline" novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
           <span class="form-label">Create New Community</span>
           <div class="form-group">
             <label class="sr-only">Create New Community</label>
           </div>
           <div class="form-group mx-sm-3">
             <label class="sr-only">Create new community</label>
-            <input type="community" class="form-control" id="inputCommunity">
+            <input class="form-control"
+                type="text"
+                class="form-control"
+                [(ngModel)]="community.communityname"
+                name="communityCommunityname"
+                #communityName="ngModel"
+                minlength="5"
+                required
+            >
+            <!-- <div *ngIf="communityCommunityname.errors?.minlength && communityCommunityname.touched" class="alert alert-danger">Community Name should be at least 5 characters</div>
+        </div> -->
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
