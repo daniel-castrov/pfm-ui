@@ -27,7 +27,6 @@ export class ProgramsComponent implements OnInit {
     this.programApi.findall().subscribe(c => this.programs = c);
     let s = this.programApi.findall();
      s.subscribe(c => this.programs = c);
-
   }
 
   // TODO this gets all fundLines ... not just for this program
