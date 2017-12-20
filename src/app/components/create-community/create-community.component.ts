@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { FormsModule } from '@angular/forms';
-import { CommunityService } from '../../generated';
-import { Community } from '../../generated';
+import { CommunityService, RestResult } from '../../generated';
+import { NgForOf } from '@angular/common/src/directives';
+
 
 @Component({
   selector: 'app-create-community',
@@ -12,30 +12,17 @@ import { Community } from '../../generated';
 })
 export class CreateCommunityComponent implements OnInit {
 
-public communties: Community[] = [];
-
-  community = {
-    communityname:''
-}
-
-onSubmit({value, valid}){
- if(valid){
-     console.log(value);
- } else {
-     console.log('Form is invalid');
- }
-}
+  private restResult: RestResult;
 
   constructor(
-    public communityService: CommunityService
-  )
-    {
+    public communityService: CommunityService,
+  ){
+
   }
 
   ngOnInit() {
-
-    // this.communities = this.communityService.getAll();
-
+    let s = this.communityService.findall();
+    s.subscribe(c => this.restResult = c);
   }
 
 }

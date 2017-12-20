@@ -24,7 +24,7 @@ paths:
         200:
           description: "OK"
           schema:
-            type: "string"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -35,67 +35,18 @@ paths:
       - "Community"
       summary: "Get Communities"
       description: "Get all the communities"
-      operationId: "getAll"
+      operationId: "findall"
       produces:
       - "application/json"
       responses:
         200:
-          description: "OK"
+          description: "A list of Programs"
           schema:
-            type: "string"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /community:
-    post:
-      tags:
-      - "Community"
-      summary: "Creates a Community"
-      description: "Adds a new Community."
-      operationId: "create"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        required: false
-        schema:
-          $ref: "#/definitions/Community"
-      responses:
-        201:
-          description: "A community succesfully created."
-          schema:
-            $ref: "#/definitions/Community"
-        400:
-          description: "A community couldn't have been created."
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "A Insufficient permissions response"
-  community/{id}:
-    delete:
-      tags:
-      - "Community"
-      summary: "Deletes a community"
-      description: "Delete a single community identified via its id"
-      operationId: "deleteById"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        500:
-          description: "An unexpected error occured."
-        204:
-          description: "The community successfully deleted."
-        403:
-          description: "A insufficient permissions response"
-        404:
-          description: "The community does not exist."
   /program/findall:
     get:
       tags:
@@ -109,9 +60,7 @@ paths:
         200:
           description: "A list of Programs"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Program"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -129,9 +78,7 @@ paths:
         200:
           description: "A list of FundLine"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/FundLine"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -154,7 +101,7 @@ paths:
         200:
           description: "A FundLine"
           schema:
-            $ref: "#/definitions/FundLine"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -177,9 +124,7 @@ paths:
         200:
           description: "A List of Tags"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Tag"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -202,9 +147,7 @@ paths:
         200:
           description: "A List of Tags"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Tag"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
