@@ -1,4 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { Input } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { PexUser } from '../../generated/model/pexUser';
+import { Communication } from '../../generated/model/communication';
+import { GrantedAuthority } from '../../generated/model/grantedAuthority';
+import { BlankService } from '../../generated/api/blank.service';
+import { Response, ResponseContentType } from '@angular/http';
+
+import {
+  HttpClient, HttpHeaders, HttpParams,
+  HttpResponse, HttpEvent
+} from '@angular/common/http';
+
+import { Observable } from 'rxjs/Observable';
+
 
 @Component({
   selector: 'app-user',
@@ -6,67 +21,50 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  name:string;
-  age:number;
-  email:string;
-  address:Address;
-  hobbies:string[];
-  hello:any;
-  posts:Post[];
-  isEdit:boolean = false;
+  //@Input() public title: string;
+  @Input() public isUserLoggedIn: boolean;
+  @Input() public currentusername: string;
 
-  constructor() {
-    // console.log('constructor ran..');
+  id: number;
+  pexUser: PexUser;
+  jsonUser: string;
 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private blankService: BlankService,
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.id = params.id;
+    });
   }
 
   ngOnInit() {
-    // console.log('ngOnInit ran...');
+    this.getCurrentUser();
+  }
 
-    //this.name = 'Elmer Fudd';
-    //this.email = 'test@test.com';
-    this.age = 30;
-    this.address = {
-      street:'50 Main st',
-      city: 'Boston',
-      state:'MA'
+  getCurrentUser() {
+    //console.log("getCurrentUser");
+
+    let resp = this.blankService.blank("response", true);
+
+    resp.subscribe(
+      (r: HttpResponse<string>) => {
+        var authHeader = r.headers.get('Authorization');
+        //console.log("HELLO"+authHeader);
+        this.jsonUser = atob(authHeader);
+        this.pexUser = JSON.parse(this.jsonUser);
+        this.donothing();
+
+      }
+
+    );
+  }
+
+  donothing() {
+    for (let key in this.pexUser.preferences) {
+      console.log(key + "," + this.pexUser.preferences[key]);
     }
-    this.hobbies = ['Write code', 'Watch movies', 'Listen to music'];
-    this.hello ='hello';
-
   }
 
-  onClick(){
-    //this.name='Elmer';
-    this.hobbies.push('New Hobby');
-  }
-
-  addHobby(hobby){
-    console.log(hobby);
-    this.hobbies.unshift(hobby);
-    return false;
-  }
-
-  deleteHobby(i){
-    this.hobbies.splice(i, 1);
-  }
-
-  toggleEdit(){
-    this.isEdit = !this.isEdit;
-  }
-
-}
-
-
-interface Address{
-  street:string,
-  city:string,
-  state:string
-}
-
-interface Post{
-  id: number,
-  title:string,
-  body:string,
-  userId:number
 }
