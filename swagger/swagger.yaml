@@ -40,13 +40,64 @@ paths:
       - "application/json"
       responses:
         200:
-          description: "A list of Programs"
+          description: "A list of Communities"
           schema:
             $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /community:  
+    post:
+      tags:
+      - "Community"
+      summary: "Creates a Community"
+      description: "Adds a Community to the Communitylist."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create a Community"
+        required: true
+        schema:
+          $ref: "#/definitions/Community"
+      responses:
+        201:
+          description: "Community successfully created."
+        400:
+          description: "Community couldn't be created."
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden"
+          
+  /community/{id}:
+    delete:
+      tags:
+      - "Community"
+      summary: "Deletes a Community"
+      description: "Delete a Community user identified via its id"
+      operationId: "deleteById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      responses:
+        500:
+          description: "An unexpected error occurred."
+        204:
+          description: "Community successfully deleted."
+        403:
+          description: "Forbidden"
+        404:
+          description: "Community does not exist."
+          
   /program/findall:
     get:
       tags:
