@@ -147,3 +147,7 @@
   background: #fff;
   min-height: 460px;
 }
+
+.modal-title {
+  font-size: 15px;
+}
