@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { UserComponent } from '../user/user.component';
 import { Observable } from 'rxjs/Observable';
-import { } from '../../generated';
-import { FormsModule } from '@angular/forms'
-
+import { FormsModule } from '@angular/forms';
+import { CommunityService } from '../../generated';
+import { Community } from '../../generated';
 
 @Component({
   selector: 'app-create-community',
@@ -12,6 +11,8 @@ import { FormsModule } from '@angular/forms'
   styleUrls: ['./create-community.component.css']
 })
 export class CreateCommunityComponent implements OnInit {
+
+public communties: Community[] = [];
 
   community = {
     communityname:''
@@ -25,9 +26,16 @@ onSubmit({value, valid}){
  }
 }
 
-  constructor() { }
+  constructor(
+    public communityService: CommunityService
+  )
+    {
+  }
 
   ngOnInit() {
+
+    // this.communities = this.communityService.getAll();
+
   }
 
 }
