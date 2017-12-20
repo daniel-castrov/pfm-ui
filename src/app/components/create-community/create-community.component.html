@@ -14,13 +14,16 @@
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <div>
+          {{ restResult?.error }}
+        </div>
         <hr>
         <h5>List of Communities</h5>
         <div class="well">
           <ul class="list-group">
-            <li class="list-group-item">
-              Community
-            </li>
+                <li *ngFor="let comm of restResult?.result">
+                    {{ comm?.name }}
+                  </li> 
           </ul>
         </div>
       </div>

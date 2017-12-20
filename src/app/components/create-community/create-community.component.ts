@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
 import { Observable } from 'rxjs/Observable';
-import { } from '../../generated';
+import { CommunityService, RestResult } from '../../generated';
+import { NgForOf } from '@angular/common/src/directives';
 
 
 @Component({
@@ -12,9 +13,17 @@ import { } from '../../generated';
 })
 export class CreateCommunityComponent implements OnInit {
 
-  constructor() { }
+  private restResult: RestResult;
+
+  constructor(
+    public communityService: CommunityService,
+  ){ 
+
+  }
 
   ngOnInit() {
+    let s = this.communityService.findall();
+    s.subscribe(c => this.restResult = c);
   }
 
 }

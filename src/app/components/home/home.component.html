@@ -7,35 +7,35 @@
     </div>
     <div class="card-container">
       <ul>
-        <li>CN: {{ pexUser.cn }}</li> 
-        <li>Username: {{ pexUser.username }}</li>  
-        <li>password: {{ pexUser.password }}</li>  
-        <li>First Name: {{ pexUser.firstName }}</li>
-        <li>Last Name: {{ pexUser.lastName }}</li>
-        <li>Account non-expired: {{ pexUser.accountNonExpired }}</li>
-        <li>Account non-locked: {{ pexUser.accountNonLocked }}</li>
-        <li>Credentials non-exipred: {{ pexUser.credentialsNonExpired }}</li>
-        <li>Account Enabled: {{ pexUser.enabled }}</li>
-        <li>Community: {{ pexUser.organization }}</li> 
+        <li>CN: {{ pexUser?.cn }}</li> 
+        <li>Username: {{ pexUser?.username }}</li>  
+        <li>password: {{ pexUser?.password }}</li>  
+        <li>First Name: {{ pexUser?.firstName }}</li>
+        <li>Last Name: {{ pexUser?.lastName }}</li>
+        <li>Account non-expired: {{ pexUser?.accountNonExpired }}</li>
+        <li>Account non-locked: {{ pexUser?.accountNonLocked }}</li>
+        <li>Credentials non-exipred: {{ pexUser?.credentialsNonExpired }}</li>
+        <li>Account Enabled: {{ pexUser?.enabled }}</li>
+        <li>Community: {{ pexUser?.organization }}</li> 
         <li>Authorities: 
             <ul>
-              <li *ngFor="let auth of pexUser.authorities">
+              <li *ngFor="let auth of pexUser?.authorities">
                 {{ auth.authority }}
               </li> 
             </ul>
         </li>
         <li>Communications: 
             <ul>
-              <li *ngFor="let comm of pexUser.communications">
+              <li *ngFor="let comm of pexUser?.communications">
                 {{ comm.type }} {{ comm.subtype }} {{ comm.value }} {{ comm.confirmed }} {{ comm.preferred }}
               </li> 
             </ul>
         </li>
         <li>Preferences:           
             <ul>
-                <li> defaultColor: {{ pexUser.preferences.defaultColor }} </li>
-                <li> clock: {{ pexUser.preferences.clock }} </li>
-                <li> landingPage: {{ pexUser.preferences.landingPage }} </li>
+                <li> defaultColor: {{ pexUser?.preferences.defaultColor }} </li>
+                <li> clock: {{ pexUser?.preferences.clock }} </li>
+                <li> landingPage: {{ pexUser?.preferences.landingPage }} </li>
             </ul>
         </li>
     </ul>
