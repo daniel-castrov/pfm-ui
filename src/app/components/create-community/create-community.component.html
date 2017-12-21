@@ -3,26 +3,44 @@
   <div class="row main-content">
     <div class="col-10 col-md-7">
       <div class="community-data">
-        <form class="form-inline">
-          <span class="form-label">Create New Community</span>
-          <div class="form-group">
-            <label class="sr-only">Create New Community</label>
-          </div>
-          <div class="form-group mx-sm-3">
-            <label class="sr-only">Create new community</label>
-            <input type="community" class="form-control" id="inputCommunity">
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <hr>
-        <h5>List of Communities</h5>
-        <div class="well">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Community
+
+        <!--
+          <form class="form-inline" (submit)="onSubmit()">
+            <div class="form-group">
+              <span class="form-label" >Create New Community</span>
+            </div>
+
+            <div class="form-group mx-sm-3">
+              <input class="form-control" [(ngModel)]="community.name" name="community.name">
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary">
+          </form>
+        -->
+
+        <div class="card-header">
+          List of Communities
+          <button (click)="findAll()" class="btn btn-card-header">
+                <span class="icon-pad"><i class="fa fa-refresh" aria-hidden="true"></i></span>Reload
+          </button>
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let comm of communities">
+              {{ comm?.name }}
             </li>
           </ul>
         </div>
+      </div>
+      <div>
+        {{ resultError }}
+      </div>
+      <div class="card-container">
+        <label>Community Name:</label>
+        <input #communityName />
+        <!-- (click) passes input value to add() and then clears the input -->
+        <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+          <span class="icon-pad"><i class="fa fa-plus-square" aria-hidden="true"></i></span>Add
+        </button>
       </div>
     </div>
     <div class="col-2 col-md-5">

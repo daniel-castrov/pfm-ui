@@ -5,16 +5,16 @@ info:
   description: API services for JSCBIS
 basePath: "/api"
 tags:
-- name: "Tag"
-- name: "Fund"
-- name: "FundLine"
-- name: "Increment"
+- name: "Blank"
+- name: "Community"
 - name: "Program"
+- name: "FundLine"
+- name: "Tag"
 paths:
   /blank:
     get:
       tags:
-      - "blank"
+      - "Blank"
       summary: ""
       description: ""
       operationId: "blank"
@@ -24,11 +24,80 @@ paths:
         200:
           description: "OK"
           schema:
-            type: "string"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /communities:
+    get:
+      tags:
+      - "Community"
+      summary: "Get Communities"
+      description: "Get all the communities"
+      operationId: "findall"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Communities"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /community:  
+    post:
+      tags:
+      - "Community"
+      summary: "Creates a Community"
+      description: "Adds a Community to the Communitylist."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create a Community"
+        required: true
+        schema:
+          $ref: "#/definitions/Community"
+      responses:
+        201:
+          description: "Community successfully created."
+        400:
+          description: "Community couldn't be created."
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden"
+          
+  /community/{id}:
+    delete:
+      tags:
+      - "Community"
+      summary: "Deletes a Community"
+      description: "Delete a Community user identified via its id"
+      operationId: "deleteById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      responses:
+        500:
+          description: "An unexpected error occurred."
+        204:
+          description: "Community successfully deleted."
+        403:
+          description: "Forbidden"
+        404:
+          description: "Community does not exist."
+          
   /program/findall:
     get:
       tags:
@@ -42,9 +111,7 @@ paths:
         200:
           description: "A list of Programs"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Program"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -62,9 +129,7 @@ paths:
         200:
           description: "A list of FundLine"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/FundLine"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -87,12 +152,11 @@ paths:
         200:
           description: "A FundLine"
           schema:
-            type: "FundLine"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-
   /tag/find/{type}:
     get:
       tags:
@@ -111,9 +175,7 @@ paths:
         200:
           description: "A List of Tags"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Tag"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
@@ -136,14 +198,19 @@ paths:
         200:
           description: "A List of Tags"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Tag"
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
 definitions:
+  RestResult:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+      result:
+        type: "object"
   PexUser:
     type: "object"
     properties:
@@ -211,8 +278,7 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: "string"
       type:
         type: "string"
       name:
@@ -231,11 +297,9 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int64"
-      prgranId:
-        type: "integer"
-        format: "int64"
+        type: "string"
+      programId:
+        type: "string"
       incrementNumber:
         type: "integer"
       description:
@@ -264,15 +328,12 @@ definitions:
       fundingLineIds:
         type: "array"
         items:
-          type: "integer"
-          format: "int64"
+          type: "string"
   Program:
-    Program:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: "string"
       programId:
         type: "string"
       programName:
@@ -291,3 +352,10 @@ definitions:
         type: "array"
         items:
           $ref: '#/definitions/Increment'
+  Community:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
