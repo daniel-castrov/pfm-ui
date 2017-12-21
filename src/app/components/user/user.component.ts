@@ -29,6 +29,11 @@ export class UserComponent implements OnInit {
   pexUser: PexUser;
   jsonUser: string;
 
+  communicationsType = {
+    phone: '',
+    email: ''
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -65,6 +70,10 @@ export class UserComponent implements OnInit {
     for (let key in this.pexUser.preferences) {
       console.log(key + "," + this.pexUser.preferences[key]);
     }
+  }
+
+  onSubmit() {
+
   }
 
 }
