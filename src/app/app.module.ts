@@ -40,7 +40,7 @@ const appRoutes: Routes = [
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
-  {path:'create-community', component:CreateCommunityComponent},  
+  {path:'create-community', component:CreateCommunityComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
