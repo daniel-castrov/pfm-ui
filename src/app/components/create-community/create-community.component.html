@@ -4,26 +4,43 @@
     <div class="col-10 col-md-7">
       <div class="community-data">
         <div class="card-container">
+          <!--
           <form class="form-inline" (submit)="onSubmit()">
             <div class="form-group">
               <span class="form-label" >Create New Community</span>
             </div>
+            
             <div class="form-group mx-sm-3">
               <input class="form-control" [(ngModel)]="community.name" name="community.name">
             </div>
             <input type="submit" value="Submit" class="btn btn-primary">
           </form>
+        -->
         </div>
+        
         <div class="card-header">
-          List of Communities {{ restResult?.error }}
+          List of Communities <button (click)="findAll()">show all</button>
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let comm of restResult?.result">
+            <li *ngFor="let comm of communities">
               {{ comm?.name }}
+              <button (click)="delete(comm)">x</button>
             </li>
           </ul>
         </div>
+      </div>
+      <div>
+        {{ resultError }}
+      </div>
+      <div>
+        <label>Community Name:
+          <input #communityName />
+        </label>
+        <!-- (click) passes input value to add() and then clears the input -->
+        <button (click)="add(communityName.value); communityName.value=''">
+          add
+        </button>  
       </div>
     </div>
     <div class="col-2 col-md-5">
