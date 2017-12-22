@@ -38,10 +38,11 @@
       <div *ngIf="isdEditMode" class="card-container">
         <ul>
           <li *ngFor="let comm of communications">
-            <select [(ngModel)]="comm.type">
-                <option value="EMAIL">Email</option>
-                <option value="PHONE">Phone</option>
-              </select>
+            <select [(ngModel)]="comm.type" id="cusSelectbox">
+              <option value="Select">Select</option>
+              <option value="EMAIL">Email</option>
+              <option value="PHONE">Phone</option>
+            </select>
             <select [(ngModel)]="comm.subtype">
               <option value="PRIMARY">Primary</option>
               <option value="SECONDARY">Secondary</option>
