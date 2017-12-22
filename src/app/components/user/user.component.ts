@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   currentusername: number;
   pexUser: PexUser;
   communications:Communication[]=[];
-
+  refcommunications:Communication[]=[];
 
   isdEditMode: boolean = false;
 
@@ -51,34 +51,28 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.getCurrentUser();
+    //this.getLoggedInUser();
+      
   }
 
-  getCurrentUser() {
-    let resp = this.blankService.blank("response", true);
-    resp.subscribe(
-      (r: HttpResponse<RestResult>) => {
-        var authHeader = r.headers.get('Authorization');
-        this.pexUser = JSON.parse(atob(authHeader));
+  getCurrentUser(){
 
-        let comm:Communication;
-        for (comm  of this.pexUser.communications ){
-          console.log(comm.value);
-          this.communications.push(comm);
-        }
-
-
-      },error => {
-      }
-    );
+    var result:RestResult;
+    this.userDetailsService.getMyCommunications()
+    .subscribe((c) => { 
+      result = c;
+      this.communications = result.result; 
+      this.refcommunications = this.communications;
+    });
+    for (let comm  of this.communications ){console.log(comm.value);}
   }
-
 
   editMode():void{
     this.isdEditMode=true;
   }
 
   cancelEdit():void{
-    this.communications = this.pexUser.communications ;
+    this.communications = this.refcommunications;
     this.isdEditMode=false;
   }
 
@@ -104,6 +98,7 @@ export class UserComponent implements OnInit {
       result=r;
     });
 
+    this.isdEditMode=false;
   }
 
 }
