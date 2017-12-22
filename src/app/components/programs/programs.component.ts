@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Program, ProgramService, Increment, FundLine, Fund, FundLineService } from '../../generated';
+import { Observable } from 'rxjs/Observable';
+import { ProgramService } from '../../generated/api/program.service';
+import { FundLineService } from '../../generated/api/fundLine.service';
+import { RestResult } from '../../generated/model/restResult';
+import { Program } from '../../generated/model/program'
+import { Increment } from '../../generated/model/increment'
+import { FundLine } from '../../generated/model/fundLine'
+import { NgFor } from '@angular/common/src/directives/ng_for_of';
+
 
 @Component({
   selector: 'app-programs',
@@ -11,6 +19,9 @@ export class ProgramsComponent implements OnInit {
   public programs: Program[] = [];
   public fundLines:FundLine[] = [];
 
+  public programResult: RestResult;
+  public fundLineResult: RestResult;
+  
   constructor(
     public programApi:ProgramService,
     public fundLineApi:FundLineService
@@ -19,28 +30,65 @@ export class ProgramsComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    let fundLineResult:RestResult;
+    fundLineResult = new Object();
+    fundLineResult.error=null;
+    fundLineResult.result=[];
+    this.fundLineResult = fundLineResult;
+
     this.getAllPrograms();
-    this.getAllFundLines();
+    //this.getAllFundLines();
   }
 
   getAllPrograms() {
-    this.programApi.findall().subscribe(c => this.programs = c);
-    let s = this.programApi.findall();
-     s.subscribe(c => this.programs = c);
 
+    let my = this;
+    var result1;
+
+    my.programApi.findall().subscribe((c) => {
+      result1 = c;
+      my.programResult=result1;      
+
+      let prog:Program;
+      for ( prog of result1.result ){
+
+        let inc:Increment;        
+        for ( inc of prog.increments ){
+
+          for ( let num of inc.fundingLineIds ){
+            var result2;
+            my.fundLineApi.find(num).subscribe( (c) => 
+              { result2 = c;
+                my.fundLineResult.result.push(result2.result);                
+              }
+            );
+          }
+
+        }
+
+      }
+      my.processSomething();
+    });
   }
 
   // TODO this gets all fundLines ... not just for this program
   getAllFundLines() {
-    this.fundLineApi.findall().subscribe(c => this.fundLines = c);
+    this.fundLineApi.findall().subscribe(c => this.fundLineResult = c);
   }
 
-  getFundLines(fundLineId) {
-    let fundLine:FundLine;
-    this.fundLineApi.find(fundLineId).subscribe(c => fundLine = c);
-    this.fundLines.push(fundLine);
-
-    console.log(fundLine);
+  getFundLine(id) {
+    let x:RestResult;
+    this.fundLineApi.find(id).subscribe(c => x = c);
   }
+
+  // TODO This does not work because this.programResult is undefined
+  processSomething(){
+    this.programs = this.programResult.result;
+    for ( let program of this.programs ){
+      console.log( program.programName );
+    }
+  }
+
 
 }

@@ -1,0 +1,37 @@
+<app-header title="JSCBIS Login" [isUserLoggedIn]="true"></app-header>
+<div class="container-fluid">
+  <div class="row main-content">
+    <div class="col-10 col-md-7">
+      <div class="community-data">
+        <div class="card-header">
+          List of Communities
+          <button (click)="findAll()" title="Reload List" class="btn btn-card-header">
+            <i class="fa fa-refresh icon-pad" aria-hidden="true"></i>
+            Reload
+          </button>
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let comm of communities">
+              {{ comm?.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        {{ resultError }}
+      </div>
+      <div class="card-container">
+        <label>Community Name:</label>
+        <input #communityName />
+        <!-- (click) passes input value to add() and then clears the input -->
+        <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+          <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+          Add Community
+        </button>
+      </div>
+    </div>
+    <div class="col-2 col-md-5">
+    </div>
+  </div>
+</div>
