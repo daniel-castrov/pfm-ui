@@ -18,20 +18,20 @@
     </div>
     <div class="col-md-9">
       <div class="card-header">
-        Communications:
-        <button class="btn-card-header" title="Edit" (click)="editMode()">
-          <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
-          Edit
+        My Communications:
+        <button *ngIf="!isdEditMode" class="btn-card-header" title="Edit" (click)="editMode()">
+          <i class="fa fa-pencil icon-pad" aria-hidden="true">
+          Edit</i>
         </button>
-        <button class="btn-card-header" title="Cancel" (click)="cancelEdit()">
-          <i class="fa fa-ban icon-pad" aria-hidden="true"></i>
-          Cancel
+        <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+          <i class="fa fa-ban icon-pad" aria-hidden="true">
+          Cancel</i>
         </button>
       </div>
       <div *ngIf="!isdEditMode" class="card-container">
         <ul>
           <li *ngFor="let comm of communications">
-            {{ comm.type }} {{ comm.subtype }} {{ comm.value }} {{ comm.confirmed }} {{ comm.preferred }}
+            {{ comm.type }} {{ comm.subtype }} {{ comm.value }} <!--{{ comm.confirmed }} {{ comm.preferred }}-->
           </li>
         </ul>
       </div>
@@ -68,6 +68,7 @@
           </li>
         </ul>
       </div>
+      <!--
       <div class="card-header">
         User Information:
       </div>
@@ -101,6 +102,7 @@
           <li>Landing Page: {{ pexUser?.preferences.landingPage }} </li>
         </ul>
       </div>
+    -->
     </div>
   </div>
 </div>

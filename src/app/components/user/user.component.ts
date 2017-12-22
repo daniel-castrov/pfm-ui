@@ -15,7 +15,6 @@ import {
 
 import { Observable } from 'rxjs/Observable';
 
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -62,7 +61,7 @@ export class UserComponent implements OnInit {
     .subscribe((c) => { 
       result = c;
       this.communications = result.result; 
-      this.refcommunications = this.communications;
+      this.refcommunications = this.communications.slice();
     });
     for (let comm  of this.communications ){console.log(comm.value);}
   }
@@ -72,7 +71,7 @@ export class UserComponent implements OnInit {
   }
 
   cancelEdit():void{
-    this.communications = this.refcommunications;
+    this.communications = this.refcommunications.slice();
     this.isdEditMode=false;
   }
 
@@ -91,6 +90,13 @@ export class UserComponent implements OnInit {
     for (let comm  of this.communications ){
       console.log(comm.type + comm.subtype + comm.value + comm.confirmed + comm.preferred);
     }
+
+    for(var i = this.communications.length - 1; i >= 0; i--) {
+      if(this.communications[i].value === "") {
+        this.communications.splice(i, 1);
+      }
+  }
+
 
     let result:RestResult;
     this.userDetailsService.updateMyCommunications(this.communications)
