@@ -33,6 +33,7 @@ import { CommunityService } from './generated/api/community.service';
 import { FundLineService } from './generated/api/fundLine.service';
 import { ProgramService } from './generated/api/program.service';
 import { TagService } from './generated/api/tag.service';
+import { UserDetailsService } from './generated/api/userDetails.service';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -84,6 +85,7 @@ const appRoutes: Routes = [
     FundLineService,
     ProgramService,
     TagService,
+    UserDetailsService,
     //{ provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
     { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },

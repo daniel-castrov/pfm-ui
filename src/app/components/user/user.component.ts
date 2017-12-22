@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Input } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { PexUser } from '../../generated/model/pexUser';
-import { Communication } from '../../generated/model/communication';
-import { GrantedAuthority } from '../../generated/model/grantedAuthority';
-import { BlankService } from '../../generated/api/blank.service';
+import { Component, OnInit, Input } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import { BlankService } from '../../generated/api/blank.service';
+import { Communication } from '../../generated/model/communication';
+import { PexUser } from '../../generated/model/pexUser';
+import { RestResult } from '../../generated/model/restResult';
+import { UserDetailsService } from '../../generated/api/userDetails.service';
 
 import {
   HttpClient, HttpHeaders, HttpParams,
@@ -22,12 +23,15 @@ import { Observable } from 'rxjs/Observable';
 })
 export class UserComponent implements OnInit {
   //@Input() public title: string;
-  @Input() public isUserLoggedIn: boolean;
-  @Input() public currentusername: string;
+  //@Input() public isUserLoggedIn: boolean;
+  //@Input() public currentusername: string;
 
-  id: number;
+  currentusername: number;
   pexUser: PexUser;
-  jsonUser: string;
+  communications:Communication[]=[];
+
+
+  isdEditMode: boolean = false;
 
   communicationsType = {
     phone: '',
@@ -37,10 +41,11 @@ export class UserComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private userDetailsService: UserDetailsService,
     private blankService: BlankService,
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
+      this.currentusername = params.id;
     });
   }
 
@@ -49,30 +54,55 @@ export class UserComponent implements OnInit {
   }
 
   getCurrentUser() {
-    //console.log("getCurrentUser");
-
     let resp = this.blankService.blank("response", true);
-
     resp.subscribe(
-      (r: HttpResponse<string>) => {
+      (r: HttpResponse<RestResult>) => {
         var authHeader = r.headers.get('Authorization');
-        //console.log("HELLO"+authHeader);
-        this.jsonUser = atob(authHeader);
-        this.pexUser = JSON.parse(this.jsonUser);
-        this.donothing();
+        this.pexUser = JSON.parse(atob(authHeader));
 
+        let comm:Communication;
+        for (comm  of this.pexUser.communications ){
+          console.log(comm.value);
+          this.communications.push(comm);
+        }
+
+
+      },error => {
       }
-
     );
   }
 
-  donothing() {
-    for (let key in this.pexUser.preferences) {
-      console.log(key + "," + this.pexUser.preferences[key]);
-    }
+
+  editMode():void{
+    this.isdEditMode=true;
   }
 
-  onSubmit() {
+  cancelEdit():void{
+    this.communications = this.pexUser.communications ;
+    this.isdEditMode=false;
+  }
+
+  addCommunication():void{
+    let newCom:Communication;
+    newCom = new Object;
+    newCom.type = "EMAIL";
+    newCom.confirmed = false;
+    newCom.preferred = false;
+    newCom.subtype = "SECONDARY";
+    newCom.value = "";
+    this.communications.push(newCom);
+  }
+
+  saveCommunications():void{
+    for (let comm  of this.communications ){
+      console.log(comm.type + comm.subtype + comm.value + comm.confirmed + comm.preferred);
+    }
+
+    let result:RestResult;
+    this.userDetailsService.updateMyCommunications(this.communications)
+    .subscribe(r => {
+      result=r;
+    });
 
   }
 
