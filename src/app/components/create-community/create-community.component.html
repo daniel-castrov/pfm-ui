@@ -3,24 +3,11 @@
   <div class="row main-content">
     <div class="col-10 col-md-7">
       <div class="community-data">
-
-        <!--
-          <form class="form-inline" (submit)="onSubmit()">
-            <div class="form-group">
-              <span class="form-label" >Create New Community</span>
-            </div>
-
-            <div class="form-group mx-sm-3">
-              <input class="form-control" [(ngModel)]="community.name" name="community.name">
-            </div>
-            <input type="submit" value="Submit" class="btn btn-primary">
-          </form>
-        -->
-
         <div class="card-header">
           List of Communities
           <button (click)="findAll()" class="btn btn-card-header">
-                <span class="icon-pad"><i class="fa fa-refresh" aria-hidden="true"></i></span>Reload
+            <i class="fa fa-refresh icon-pad" aria-hidden="true"></i>
+            Reload
           </button>
         </div>
         <div class="card-container">
@@ -39,7 +26,8 @@
         <input #communityName />
         <!-- (click) passes input value to add() and then clears the input -->
         <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
-          <span class="icon-pad"><i class="fa fa-plus-square" aria-hidden="true"></i></span>Add
+          <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+          Add Community
         </button>
       </div>
     </div>
