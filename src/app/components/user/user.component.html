@@ -1,34 +1,108 @@
-<app-header title="JSCBIS Login"
-  [isUserLoggedIn]="true"></app-header>
+<app-header title="JSCBIS Login" [isUserLoggedIn]="true"></app-header>
 <div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-lg-12 col-sm-5">
-      <div class="main-content">
-        <div class="well">
-        <h1>{{name}}</h1>
-        <ul>
-          <li>Age: {{age}}</li>
-          <li>Email: {{email}}</li>
-          <li>{{address.street}} {{address.city}}, {{address.state}}</li>
-        </ul>
-
-        <!-- <button class="btn btn-success" (click)="onClick()">Click Me</button> -->
-        <hr>
-        <h1>Hobbies</h1>
-        <hr>
-        <form (submit)="addHobby(hobby.value)">
-          <div>
-            <label for="hobby">Hobby:</label>
-            <input type="text" #hobby>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="profile-sidebar">
+        <div class="profile-userpic">
+          <img src="assets/img/user.png" alt="User">
+        </div>
+        <div class="profile-usertitle">
+          <div class="profile-usertitle-name">
+            {{ pexUser?.cn }}
           </div>
-        </form>
-
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let hobby of hobbies; let i = index">
-            {{i + 1}}: {{hobby}}
-            <button class="btn btn-danger delete" (click)="deleteHobby(i)">x</button>
+          <div class="profile-usertitle-job">
+            Developer
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="card-header">
+        My Communications:
+        <button *ngIf="!isdEditMode" class="btn-card-header" title="Edit" (click)="editMode()">
+          <i class="fa fa-pencil icon-pad" aria-hidden="true">
+          Edit</i>
+        </button>
+        <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+          <i class="fa fa-ban icon-pad" aria-hidden="true">
+          Cancel</i>
+        </button>
+      </div>
+      <div *ngIf="!isdEditMode" class="card-container">
+        <ul>
+          <li *ngFor="let comm of communications">
+            {{ comm.type }} {{ comm.subtype }} {{ comm.value }} <!--{{ comm.confirmed }} {{ comm.preferred }}-->
           </li>
         </ul>
+      </div>
+      <div *ngIf="isdEditMode" class="card-container">
+        <ul>
+          <li *ngFor="let comm of communications">
+            <select [(ngModel)]="comm.type" id="cusSelectbox">
+              <option value="Select">Select</option>
+              <option value="EMAIL">Email</option>
+              <option value="PHONE">Phone</option>
+            </select>
+            <select [(ngModel)]="comm.subtype">
+              <option value="PRIMARY">Primary</option>
+              <option value="SECONDARY">Secondary</option>
+              <option value="ALTERNATE">Alternate</option>
+            </select>
+            <input [(ngModel)]="comm.value" placeholder="value">
+            <select [(ngModel)]="comm.confirmed">
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+            <select [(ngModel)]="comm.preferred">
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </li>
+          <li>
+            <button class="btn btn-primary" title="Add Communication Type" (click)="addCommunication()">
+              <i class="fa fa-plus-square" aria-hidden="true"></i>
+            </button>
+            <button class="btn btn-primary" title="Save" (click)="saveCommunications()">
+              <i class="fa fa-floppy-o" aria-hidden="true"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <!--
+      <div class="card-header">
+        User Information:
+      </div>
+      <div class="card-container">
+        <ul>
+          <li>First Name: <span class="">{{ pexUser?.firstName }}</span></li>
+          <li>Last Name: {{ pexUser?.lastName }}</li>
+          <li>CN: {{ pexUser?.cn }}</li>
+          <li>password: {{ pexUser?.password }}</li>
+          <li>Account non-expired: {{ pexUser?.accountNonExpired }}</li>
+          <li>Account non-locked: {{ pexUser?.accountNonLocked }}</li>
+          <li>Credentials non-exipred: {{ pexUser?.credentialsNonExpired }}</li>
+          <li>Account Enabled: {{ pexUser?.enabled }}</li>
+          <li>Community: {{ pexUser?.organization }}</li>
+          <li>Authorities:
+            <ul>
+              <li *ngFor="let auth of pexUser?.authorities">
+                {{ auth?.authority }}
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="card-header">
+        Preferences:
+      </div>
+      <div class="card-container">
+        <ul>
+          <li>Default Color: {{ pexUser?.preferences.defaultColor }} </li>
+          <li>Clock: {{ pexUser?.preferences.clock }} </li>
+          <li>Landing Page: {{ pexUser?.preferences.landingPage }} </li>
+        </ul>
+      </div>
+    -->
     </div>
   </div>
 </div>

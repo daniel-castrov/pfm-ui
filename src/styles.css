@@ -68,17 +68,26 @@ hr {
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #23527c !important;
-    border-color: #23527c !important;
+  color: #fff;
+  background-color: #23527c !important;
+  border-color: #23527c !important;
+  opacity: .9
 }
 
 .btn-primary:hover {
-    opacity: .7;
+  opacity: 1;
 }
 
 .main-content {
   width: 100%;
   margin: auto 0;
   padding: 0;
+}
+
+.btn {
+    margin: 0 5px;
+}
+
+.icon-pad {
+  margin-right: 5px;
 }

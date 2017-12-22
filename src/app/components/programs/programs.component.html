@@ -65,53 +65,60 @@
           </a>
         </div>
       </div>
+      <div>
+        HELLO
+        {{ programResult?.error }}
+        {{ fundLineResult?.error }}
+      </div>
+
+
       <div class="program-data">
-        <div *ngFor="let program of programs">
+        <div *ngFor="let program of programResult?.result">
           <div class="well">
             <ul class="list-group">
               <li class="list-group-item">ID:
-                <span>{{ program.id }}</span>
+                <span>{{ program?.id }}</span>
               </li>
               <li class="list-group-item">Program ID:
-                <span>{{ program.programId }}</span>
+                <span>{{ program?.programId }}</span>
               </li>
               <li class="list-group-item">Program Name:
-                <span>{{ program.programName }}</span>
+                <span>{{ program?.programName }}</span>
               </li>
               <li class="list-group-item">Description:
-                <span>{{ program.description }}</span>
+                <span>{{ program?.description }}</span>
               </li>
               <li class="list-group-item">POC:
                 <ul>
-                  <li *ngFor="let pocId of program.pocIds">{{ pocId }}</li>
+                  <li *ngFor="let pocId of program?.pocIds">{{ pocId }}</li>
                 </ul>
               </li>
               <li class="list-group-item">Program tags:
                 <ul>
-                  <li *ngFor="let tag of program.tags">{{ tag.type }} {{ tag.name }} {{ tag.abbr }}</li>
+                  <li *ngFor="let tag of program?.tags">{{ tag.type }} {{ tag.name }} {{ tag.abbr }}</li>
                 </ul>
               </li>
               <li class="list-group-item">Increments
-                <div *ngFor="let inc of program.increments">
+                <div *ngFor="let inc of program?.increments">
                   <ul>
                     <li># {{ inc.incrementNumber }} - {{ inc.description }}</li>
                     <li class="list-group-item">Increment tags:
                       <ul>
-                        <li *ngFor="let tag of inc.tags">{{ tag.type }} {{ tag.name }} {{ tag.abbr }}</li>
+                        <li *ngFor="let tag of inc?.tags">{{ tag.type }} {{ tag.name }} {{ tag.abbr }}</li>
                       </ul>
                     </li>
                     <li class="list-group-item">Funding Lines
-                      <div *ngFor="let fundLine of fundLines">
+                      <div *ngFor="let fundLine of fundLineResult?.result">
                         <ul>
-                          <li> {{ fundLine.fiscalYear }} {{ fundLine.description }}</li>
+                          <li> {{ fundLine?.fiscalYear }} {{ fundLine?.description }}</li>
                           <li class="list-group-item">FundLine tags:
                             <ul>
-                              <li *ngFor="let tag of fundLine.tags">{{ tag.type }} {{ tag.name }} {{ tag.abbr }}</li>
+                              <li *ngFor="let tag of fundLine?.tags">{{ tag.type }} {{ tag.name }} {{ tag.abbr }}</li>
                             </ul>
                           </li>
                           <li class="list-group-item">Funds:
                             <ul>
-                              <li *ngFor="let fund of fundLine.funds">{{ fund.year }} - ${{ fund.amount }}</li>
+                              <li *ngFor="let fund of fundLine?.funds">{{ fund.year }} - ${{ fund.amount }}</li>
                             </ul>
                           </li>
                         </ul>
