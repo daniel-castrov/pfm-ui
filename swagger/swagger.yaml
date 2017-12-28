@@ -10,7 +10,7 @@ tags:
 - name: "Program"
 - name: "FundLine"
 - name: "Tag"
-- name: "UserDetails"
+- name: "MyDetails"
 paths:
   /blank:
     get:
@@ -97,18 +97,18 @@ paths:
           description: "Forbidden"
         404:
           description: "Community does not exist."
-  /mydetails/communications:
+  /mydetails:
     get:
       tags:
-      - "UserDetails"
-      summary: "Get the current user's communications"
-      description: "Get the current user's communications"
-      operationId: "getMyCommunications"
+      - "MyDetails"
+      summary: "Get the current user"
+      description: "Get the current user"
+      operationId: "getCurrentUser"
       produces:
       - "application/json"
       responses:
         200:
-          description: "A list of Communications"
+          description: "current User"
           schema:
             $ref: "#/definitions/RestResult"
         500:
@@ -117,30 +117,28 @@ paths:
           description: "Forbidden/not authorized"
     put:
       tags:
-      - "UserDetails"
+      - "MyDetails"
       summary: "Update "
-      description: "Update the current user's communications"
-      operationId: "updateMyCommunications"
+      description: "Update the current user"
+      operationId: "updateCurrentUser"
       consumes:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "List of Communications"
+        description: "the Current User"
         required: true
         schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/Communication"
+          $ref: "#/definitions/User"
       responses:
-        500:
-          description: "An unexpected error occured."
         204:
           description: "Successfully updated Communication"
         403:
           description: "Forbidden"
         404:
           description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
   /program/findall:
     get:
       tags:
@@ -254,12 +252,18 @@ definitions:
         type: "string"
       result:
         type: "object"
-  PexUser:
+  User:
     type: "object"
     properties:
-      password:
+      email:
         type: "string"
-      username:
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      cn:
+        type: "string"
+      organization:
         type: "string"
       accountNonExpired:
         type: "boolean"
@@ -269,14 +273,6 @@ definitions:
         type: "boolean"
       enabled:
         type: "boolean"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      cn:
-        type: "string"
-      organization:
-        type: "string"
       communications:
         type: "array"
         items:

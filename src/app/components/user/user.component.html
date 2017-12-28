@@ -30,14 +30,14 @@
       </div>
       <div *ngIf="!isdEditMode" class="card-container">
         <ul>
-          <li *ngFor="let comm of communications">
+          <li *ngFor="let comm of currentUser?.communications">
             {{ comm.type }} {{ comm.subtype }} {{ comm.value }} <!--{{ comm.confirmed }} {{ comm.preferred }}-->
           </li>
         </ul>
       </div>
       <div *ngIf="isdEditMode" class="card-container">
         <ul>
-          <li *ngFor="let comm of communications">
+          <li *ngFor="let comm of currentUser?.communications">
             <select [(ngModel)]="comm.type" id="cusSelectbox">
               <option value="Select">Select</option>
               <option value="EMAIL">Email</option>

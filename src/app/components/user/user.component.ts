@@ -25,10 +25,13 @@ export class UserComponent implements OnInit {
   //@Input() public isUserLoggedIn: boolean;
   //@Input() public currentusername: string;
 
-  currentusername: number;
-  pexUser: PexUser;
-  communications:Communication[]=[];
-  refcommunications:Communication[]=[];
+  currentusername: string;
+  currentUser: PexUser;
+  refcurrentUser: PexUser;
+
+  //pexUser: PexUser;
+  //communications:Communication[]=[];
+  //refcommunications:Communication[]=[];
 
   isdEditMode: boolean = false;
 
@@ -49,21 +52,19 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCurrentUser();
-    //this.getLoggedInUser();
-      
+    this.getCurrentUser();      
   }
 
   getCurrentUser(){
 
     var result:RestResult;
-    this.userDetailsService.getMyCommunications()
+    this.userDetailsService.getCurrentUser()
     .subscribe((c) => { 
       result = c;
-      this.communications = result.result; 
-      this.refcommunications = this.communications.slice();
+      this.currentUser = result.result; 
+      this.refcurrentUser = JSON.parse(JSON.stringify(this.currentUser));
     });
-    for (let comm  of this.communications ){console.log(comm.value);}
+    
   }
 
   editMode():void{
@@ -71,7 +72,7 @@ export class UserComponent implements OnInit {
   }
 
   cancelEdit():void{
-    this.communications = this.refcommunications.slice();
+    this.currentUser = JSON.parse(JSON.stringify(this.refcurrentUser));
     this.isdEditMode=false;
   }
 
@@ -83,23 +84,26 @@ export class UserComponent implements OnInit {
     newCom.preferred = false;
     newCom.subtype = "SECONDARY";
     newCom.value = "";
-    this.communications.push(newCom);
+    this.currentUser.communications.push(newCom);
   }
 
   saveCommunications():void{
-    for (let comm  of this.communications ){
+    for (let comm  of this.currentUser.communications ){
       console.log(comm.type + comm.subtype + comm.value + comm.confirmed + comm.preferred);
     }
 
-    for(var i = this.communications.length - 1; i >= 0; i--) {
-      if(this.communications[i].value === "") {
-        this.communications.splice(i, 1);
+    console.log(JSON.stringify(this.currentUser));
+
+
+    for(var i = this.currentUser.communications.length - 1; i >= 0; i--) {
+      if(this.currentUser.communications[i].value === "") {
+        this.currentUser.communications.splice(i, 1);
       }
-  }
+    }
 
 
     let result:RestResult;
-    this.userDetailsService.updateMyCommunications(this.communications)
+    this.userDetailsService.updateCurrentUser(this.currentUser)
     .subscribe(r => {
       result=r;
     });
