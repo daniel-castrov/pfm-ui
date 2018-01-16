@@ -1,19 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-
-import { BlankService } from '../../generated/api/blank.service';
-import { Communication } from '../../generated/model/communication';
-import { PexUser } from '../../generated/model/pexUser';
-import { RestResult } from '../../generated/model/restResult';
-import { UserDetailsService } from '../../generated/api/userDetails.service';
-
 import {
   HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent
 } from '@angular/common/http';
-
 import { Observable } from 'rxjs/Observable';
+
+import { Communication } from '../../generated/model/communication';
+import { PexUser } from '../../generated/model/pexUser';
+import { RestResult } from '../../generated/model/restResult';
+import { UserDetailsService } from '../../generated/api/userDetails.service';
 
 @Component({
   selector: 'app-user',
@@ -21,14 +18,10 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  //@Input() public title: string;
-  //@Input() public isUserLoggedIn: boolean;
-  //@Input() public currentusername: string;
 
-  currentusername: number;
-  pexUser: PexUser;
-  communications:Communication[]=[];
-  refcommunications:Communication[]=[];
+  currentusername: string;
+  currentUser: PexUser;
+  refcurrentUser: PexUser;
 
   isdEditMode: boolean = false;
 
@@ -41,7 +34,6 @@ export class UserComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userDetailsService: UserDetailsService,
-    private blankService: BlankService,
   ) {
     this.route.params.subscribe((params: Params) => {
       this.currentusername = params.id;
@@ -49,33 +41,53 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCurrentUser();
-    //this.getLoggedInUser();
-      
+    this.getCurrentUser();      
   }
 
   getCurrentUser(){
-
     var result:RestResult;
-    this.userDetailsService.getMyCommunications()
+    this.userDetailsService.getCurrentUser()
     .subscribe((c) => { 
       result = c;
-      this.communications = result.result; 
-      this.refcommunications = this.communications.slice();
+      this.currentUser = result.result; 
+      // Make a copy of the current user so we can revert changes
+      this.refcurrentUser = JSON.parse(JSON.stringify(this.currentUser));
     });
-    for (let comm  of this.communications ){console.log(comm.value);}
   }
 
+  saveCurrentUser():void{
+    
+    // clean up empty communications
+    for(var i = this.currentUser.communications.length - 1; i >= 0; i--) {
+      if(this.currentUser.communications[i].value === "") {
+        this.currentUser.communications.splice(i, 1);
+      }
+    }
+
+    // FIX ME
+    this.currentUser.authorities=[];
+    console.log(JSON.stringify(this.currentUser));
+
+    let result:RestResult;
+    this.userDetailsService.updateCurrentUser(this.currentUser)
+    .subscribe(r => {
+      result=r;
+    });
+
+    this.isdEditMode=false;
+  }
+
+  // toggle edit mode
   editMode():void{
     this.isdEditMode=true;
   }
 
   cancelEdit():void{
-    this.communications = this.refcommunications.slice();
+    // revert changes
+    this.currentUser = JSON.parse(JSON.stringify(this.refcurrentUser));
     this.isdEditMode=false;
   }
-
-  addCommunication():void{
+  createNewCommunication():void{
     let newCom:Communication;
     newCom = new Object;
     newCom.type = "EMAIL";
@@ -83,28 +95,7 @@ export class UserComponent implements OnInit {
     newCom.preferred = false;
     newCom.subtype = "SECONDARY";
     newCom.value = "";
-    this.communications.push(newCom);
-  }
-
-  saveCommunications():void{
-    for (let comm  of this.communications ){
-      console.log(comm.type + comm.subtype + comm.value + comm.confirmed + comm.preferred);
-    }
-
-    for(var i = this.communications.length - 1; i >= 0; i--) {
-      if(this.communications[i].value === "") {
-        this.communications.splice(i, 1);
-      }
-  }
-
-
-    let result:RestResult;
-    this.userDetailsService.updateMyCommunications(this.communications)
-    .subscribe(r => {
-      result=r;
-    });
-
-    this.isdEditMode=false;
+    this.currentUser.communications.push(newCom);
   }
 
 }
