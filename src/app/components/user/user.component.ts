@@ -8,9 +8,9 @@ import {
 import { Observable } from 'rxjs/Observable';
 
 import { Communication } from '../../generated/model/communication';
-import { PexUser } from '../../generated/model/pexUser';
+import { User } from '../../generated/model/user';
 import { RestResult } from '../../generated/model/restResult';
-import { UserDetailsService } from '../../generated/api/userDetails.service';
+import { MyDetailsService } from '../../generated/api/myDetails.service';
 
 @Component({
   selector: 'app-user',
@@ -20,8 +20,8 @@ import { UserDetailsService } from '../../generated/api/userDetails.service';
 export class UserComponent implements OnInit {
 
   currentusername: string;
-  currentUser: PexUser;
-  refcurrentUser: PexUser;
+  currentUser: User;
+  refcurrentUser: User;
 
   isdEditMode: boolean = false;
 
@@ -33,7 +33,7 @@ export class UserComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private userDetailsService: UserDetailsService,
+    private userDetailsService: MyDetailsService,
   ) {
     this.route.params.subscribe((params: Params) => {
       this.currentusername = params.id;

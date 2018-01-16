@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
-import { PexUser } from '../../generated/model/pexUser';
+import { User } from '../../generated/model/user';
 import { RestResult } from '../../generated/model/restResult';
 import { Communication } from '../../generated/model/communication';
 import { GrantedAuthority } from '../../generated/model/grantedAuthority';
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
   }
 
   id: number;
-  pexUser:PexUser;
+  pexUser:User;
   jsonUser:string;
 
   constructor(
