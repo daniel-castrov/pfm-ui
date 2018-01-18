@@ -37,14 +37,14 @@
           </div>
         </span>
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" *ngIf="isUserLoggedIn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="super-user dropdown-toggle" *ngIf="isUserLoggedIn" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ pexUser?.firstName }} {{ pexUser?.lastName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
-          <a class="super-user dropdown-toggle" *ngIf="!isUserLoggedIn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="super-user dropdown-toggle" *ngIf="!isUserLoggedIn" href="#" role="button" id="dropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
             <a *ngIf="isUserLoggedIn" class="dropdown-item" routerLink="/user/{{ pexUser?.username }}">Profile</a>
             <!--<a *ngIf="!isUserLoggedIn" class="dropdown-item" routerLink="/user/:id"></a>-->
             <a class="dropdown-item" href="#" routerLink="/home">Preferences</a>
@@ -81,7 +81,6 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
@@ -131,5 +130,16 @@
         </div>
       </li>
     </ul>
+  </div>
+  <div class="col-3" *ngIf="isUserLoggedIn">
+    <span class="dropdown show actions-menu">
+      <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Actions
+        <i class="fa fa-globe" aria-hidden="true"></i>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
+        <a class="dropdown-item" href="#" routerLink="/roles">User Role Change Request</a>
+      </div>
+    </span>
   </div>
 </nav>

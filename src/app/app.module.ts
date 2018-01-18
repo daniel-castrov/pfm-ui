@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
@@ -24,6 +25,7 @@ import { NoAccessInterceptor } from './components/interceptors/noAccessIntercept
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
+import { RolesComponent } from './components/roles/roles.component';
 import { UserComponent } from './components/user/user.component';
 
 // GENERATED APIs AND MODELS
@@ -51,6 +53,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
+  {path:'roles', component:RolesComponent},
   {path:'user/:id', component:UserComponent}
 ];
 
@@ -70,10 +73,12 @@ const appRoutes: Routes = [
     NotFoundComponent,
     PlanningComponent,
     ProgramsComponent,
-    UserComponent,
+    RolesComponent,
+    UserComponent
 
   ],
   imports: [
+    AccordionModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpClientModule,
