@@ -17,21 +17,31 @@
   text-decoration: none;
 }
 
+.controls {
+  clear: both;
+}
+
 .nda {
   color: red;
   font-size: .8rem;
 }
 
-label,
-select {
+label, select {
   color: #868e9b;
 }
 
-.firstname,
-.lastname {
+.firstname, .lastname {
   display: inline;
   width: 230px;
   margin-bottom: 10px;
+  padding: 6px 4px;
+}
+
+.sponsor {
+  display: inline;
+  width: 230px;
+  float: left;
+  margin-right: 77px;
   padding: 6px 4px;
 }
 

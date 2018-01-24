@@ -4,10 +4,89 @@
   font-weight: 500;
 }
 
+.controls {
+  clear: both;
+}
+
+.apply-box {
+  background-color: #23527c !important;
+  padding: 10px;
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.apply-box a {
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.apply a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.nda {
+  color: red;
+  font-size: .8rem;
+}
+
+label,
+select {
+  color: #868e9b;
+}
+
+.firstname,
+.lastname {
+  display: inline;
+  width: 230px;
+  margin-bottom: 10px;
+  padding: 6px 4px;
+}
+
+.applyinput {
+  width: 300px;
+  padding: 5px;
+}
+
+.middle {
+  display: inline;
+  width: 60px;
+  padding: 6px 4px;
+}
+
+.name-error {
+  display: block;
+  position: absolute;
+  margin-top: -8px;
+  width: 230px !important;
+}
+
+.alert-danger {
+  color: #721c24;
+  width: 300px;
+}
+
+.alert {
+  margin-top: -8px;
+  padding: 0 5px;
+  margin-bottom: 2px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
 .community-data {
   width: 100%;
   margin-top: 20px;
   font-size: 14px;
+}
+
+
+select {
+    margin-bottom: 14px;
 }
 
 input {
