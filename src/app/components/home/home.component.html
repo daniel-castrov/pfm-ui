@@ -1,5 +1,4 @@
-<app-header title="JSCBIS Login"
-  [isUserLoggedIn]="true"></app-header>
+<app-header title="JSCBIS Login"></app-header>
 <div class="row main-content">
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
@@ -7,31 +6,31 @@
     </div>
     <div class="card-container">
       <ul>
-        <li>CN: {{ pexUser?.cn }}</li> 
-        <li>Username: {{ pexUser?.username }}</li>  
-        <li>password: {{ pexUser?.password }}</li>  
+        <li>CN: {{ pexUser?.cn }}</li>
+        <li>Username: {{ pexUser?.username }}</li>
+        <li>password: {{ pexUser?.password }}</li>
         <li>First Name: {{ pexUser?.firstName }}</li>
         <li>Last Name: {{ pexUser?.lastName }}</li>
         <li>Account non-expired: {{ pexUser?.accountNonExpired }}</li>
         <li>Account non-locked: {{ pexUser?.accountNonLocked }}</li>
         <li>Credentials non-exipred: {{ pexUser?.credentialsNonExpired }}</li>
         <li>Account Enabled: {{ pexUser?.enabled }}</li>
-        <li>Community: {{ pexUser?.organization }}</li> 
-        <li>Authorities: 
+        <li>Community: {{ pexUser?.organization }}</li>
+        <li>Authorities:
             <ul>
               <li *ngFor="let auth of pexUser?.authorities">
                 {{ auth.authority }}
-              </li> 
+              </li>
             </ul>
         </li>
-        <li>Communications: 
+        <li>Communications:
             <ul>
               <li *ngFor="let comm of pexUser?.communications">
                 {{ comm.type }} {{ comm.subtype }} {{ comm.value }} {{ comm.confirmed }} {{ comm.preferred }}
-              </li> 
+              </li>
             </ul>
         </li>
-        <li>Preferences:           
+        <li>Preferences:
             <ul>
                 <li> defaultColor: {{ pexUser?.preferences.defaultColor }} </li>
                 <li> clock: {{ pexUser?.preferences.clock }} </li>
@@ -46,7 +45,7 @@
        User (Json)
     </div>
     <div class="card-container">
-      {{ jsonUser }} 
+      {{ jsonUser }}
     </div>
   </div>
   <div class="col-2 col-md-2">
