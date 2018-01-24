@@ -21,63 +21,17 @@
       <div>
         {{ resultError }}
       </div>
-      <accordion>
-        <accordion-group heading="Add Community">
-          <label>Community Name:</label>
-          <input #communityName />
-          <label>New Community Identifier:</label>
-          <input>
-          <!-- (click) passes input value to add() and then clears the input -->
-          <hr>
-          <label>Assign User Approver</label>
-          <form>
-            <div class="form-group">
-              <select class="form-control applyinput form-field">
-                  <option selected>Select User Approver</option>
-                  <option value="Jane Doe">Jane Doe</option>
-                  <option value="John Doe">John Doe</option>
-                  <option value="John Doe">Deanna Gross</option>
-                  <option value="John Doe">Enrico Serafini</option>
-                </select>
-            </div>
-            <label>OR: Create New User as User Approver</label><br>
-            <input type="text" required="" placeholder="*First Name" value="" name="name" class="txt form-field">
-            <input type="text" required="" placeholder="MI" value="" name="" class="txt middle-name">
-            <input type="text" required="" placeholder="*Last Name" value="" name="email" class="txt form-field"><br>
-            <input type="text" required="" placeholder="Title/Rank" value="" name="phone" class="txt form-field"><br>
-            <input type="text" required="" placeholder="Duty/Job Title" value="" name="phone" class="txt form-field"><br>
-            <input type="text" required="" placeholder="*Email" value="" name="email" class="txt form-field"><br>
-            <input type="text" required="" placeholder="*Phone" value="" name="phone" class="txt form-field"><br>
-            <input type="text" required="" placeholder="Street, City, State, Zip" value="" name="address" class="txt form-field"><br>
-            <input type="text" required="" placeholder="*Community" value="" name="community" class="txt form-field">
-            <div class="form-group">
-              <select class="form-control form-field">
-                  <option selected>Select Branch</option>
-                  <option value="army">Army</option>
-                  <option value="airforce">Air Force</option>
-                  <option value="navy">Navy</option>
-                  <option value="marines">Marine Corps</option>
-                  <option value="national">National Guard</option>
-                  <option value="coast">Coast Guard</option>
-                </select>
-              <input type="text" required="" placeholder="*Sponsor Name" value="" name="name" class="txt form-field">
-              <input type="text" required="" placeholder="*Phone" value="" name="phone" class="txt form-field">
-              <input type="text" required="" placeholder="*Email" value="" name="email" class="txt form-field">
-              <br><br>
-              <button class="btn btn-default" value="Cancel">Cancel</button>
-              <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
-                <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
-                Add Community
-              </button>
-            </div>
-          </form>
-
-
-        </accordion-group>
-      </accordion>
+      <div class="card-container">
+        <label>Community Name:</label>
+        <input #communityName />
+        <!-- (click) passes input value to add() and then clears the input -->
+        <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+          <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+          Add Community
+        </button>
+      </div>
     </div>
     <div class="col-2 col-md-5">
-
     </div>
   </div>
 </div>

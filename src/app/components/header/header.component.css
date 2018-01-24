@@ -160,7 +160,13 @@ a.dropdown-item {
     color: #24537b !important;
 }
 
+
+
 .actions-menu {
-  top: 40px;
-  left: 195px;
+  top: 41px;
+  left: 255px;
+}
+
+.actions-menu > a > i {
+  font-size: 16px;
 }
