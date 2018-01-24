@@ -89,8 +89,8 @@ const appRoutes: Routes = [
     ProgramService,
     TagService,
     MyDetailsService,
-    { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
-    //{ provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+    //{ provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
+    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
   ],
