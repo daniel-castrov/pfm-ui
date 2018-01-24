@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-about-private',
@@ -9,7 +10,12 @@ export class AboutPrivateComponent implements OnInit {
 
   constructor() { }
 
+  isloggedin: boolean;
+
   ngOnInit() {
+    this.isloggedin = true;
+    // this.isloggedin = this.header.isloggedin;
+
   }
 
 }
