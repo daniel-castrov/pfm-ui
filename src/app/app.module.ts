@@ -1,5 +1,6 @@
 // app.modules
 // ANGULAR IMPORTS
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -14,6 +15,7 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { CommunityDetailsComponent } from './components/community-details/community-details.component';
 import { CreateCommunityComponent } from './components/create-community/create-community.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -42,6 +44,7 @@ const appRoutes: Routes = [
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
+  {path:'community-details', component:CommunityDetailsComponent},
   {path:'create-community', component:CreateCommunityComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
@@ -61,6 +64,7 @@ const appRoutes: Routes = [
     AppComponent,
     ApplyComponent,
     ContactComponent,
+    CommunityDetailsComponent,
     CreateCommunityComponent,
     HeaderComponent,
     HomeComponent,
@@ -70,10 +74,11 @@ const appRoutes: Routes = [
     NotFoundComponent,
     PlanningComponent,
     ProgramsComponent,
-    UserComponent,
+    UserComponent
 
   ],
   imports: [
+    AccordionModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpClientModule,

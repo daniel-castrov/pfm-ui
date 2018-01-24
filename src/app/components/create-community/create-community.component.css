@@ -17,6 +17,10 @@ input {
   width: 355px;
 }
 
+select {
+  width: 355px;
+}
+
 .card-container ul {
   margin-top: 10px;
   margin: 0;
