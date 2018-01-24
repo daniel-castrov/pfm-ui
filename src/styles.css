@@ -21,6 +21,10 @@ hr {
   margin: 5px 0;
 }
 
+accordion {
+  cursor: pointer;
+}
+
 .container-fluid {
   padding-right: 0;
   padding-left: 0;

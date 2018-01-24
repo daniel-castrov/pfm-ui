@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { CommunityService, RestResult, Community } from '../../generated';
 import { NgForOf } from '@angular/common/src/directives';
+import { AccordionModule } from 'primeng/accordion';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class CreateCommunityComponent implements OnInit {
 
   communities: Community[]=[];
   resultError: string;
-  
+
   constructor(
     public communityService: CommunityService,
   ) {
@@ -70,7 +71,7 @@ export class CreateCommunityComponent implements OnInit {
       result=r;
       this.resultError=result.error;
       if ( this.resultError == null ){
-        this.communities.push(community);        
+        this.communities.push(community);
       }
     });
   }
