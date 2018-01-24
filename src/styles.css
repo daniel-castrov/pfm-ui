@@ -32,6 +32,11 @@ hr {
   padding: 0 15px;
 }
 
+accordion-group {
+  margin: 20px 0;
+  cursor: pointer;
+}
+
 .btn-default {
   background-color: #ccc;
 }
