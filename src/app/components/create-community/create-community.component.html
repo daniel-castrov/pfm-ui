@@ -22,7 +22,11 @@
         {{ resultError }}
       </div>
       <accordion>
-        <accordion-group heading="Add Community">
+        <accordion-group #group>
+			    <div accordion-heading class="clearfix">
+						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
+						<span class="accordion-heading">Add Community</span>
+					</div>
           <label>Community Name:</label>
           <input #communityName />
           <label>New Community Identifier:</label>
@@ -39,37 +43,50 @@
                   <option value="John Doe">Deanna Gross</option>
                   <option value="John Doe">Enrico Serafini</option>
                 </select>
+                <br><br>
+                <button class="btn btn-default" value="Cancel">Cancel</button>
+                <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+                  <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+                  Add Community
+                </button>
             </div>
-            <label>OR: Create New User as User Approver</label><br>
-            <input type="text" required="" placeholder="*First Name" value="" name="name">
-            <input type="text" required="" placeholder="MI" value="" name="">
-            <input type="text" required="" placeholder="*Last Name" value="" name=""><br>
-            <input type="text" required="" placeholder="Title/Rank" value="" name=""><br>
-            <input type="text" required="" placeholder="Duty/Job Title" value="" name=""><br>
-            <input type="text" required="" placeholder="*Email" value="" name=""><br>
-            <input type="text" required="" placeholder="*Phone" value="" name=""><br>
-            <input type="text" required="" placeholder="Street, City, State, Zip" value="" name=""><br>
-            <input type="text" required="" placeholder="*Community" value="" name="">
-            <div class="form-group">
-              <select class="form-control form-field">
-                  <option selected>Select Branch</option>
-                  <option value="army">Army</option>
-                  <option value="airforce">Air Force</option>
-                  <option value="navy">Navy</option>
-                  <option value="marines">Marine Corps</option>
-                  <option value="national">National Guard</option>
-                  <option value="coast">Coast Guard</option>
-                </select>
-              <input type="text" required="" placeholder="*Sponsor Name" value="" name="">
-              <input type="text" required="" placeholder="*Phone" value="" name="">
-              <input type="text" required="" placeholder="*Email" value="" name="">
-              <br><br>
-              <button class="btn btn-default" value="Cancel">Cancel</button>
-              <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
-                <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
-                Add Community
-              </button>
-            </div>
+          </form>
+          </accordion-group>
+          <accordion-group #group>
+  			     <div accordion-heading class="clearfix">
+  						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
+  						<span class="accordion-heading">OR: Create New User as User Approver</span>
+  					</div>
+            <form>
+              <input type="text" required="" placeholder="*First Name" value="" name="name">
+              <input type="text" required="" placeholder="MI" value="" name="">
+              <input type="text" required="" placeholder="*Last Name" value="" name=""><br>
+              <input type="text" required="" placeholder="Title/Rank" value="" name=""><br>
+              <input type="text" required="" placeholder="Duty/Job Title" value="" name=""><br>
+              <input type="text" required="" placeholder="*Email" value="" name=""><br>
+              <input type="text" required="" placeholder="*Phone" value="" name=""><br>
+              <input type="text" required="" placeholder="Street, City, State, Zip" value="" name=""><br>
+              <input type="text" required="" placeholder="*Community" value="" name="">
+              <div class="form-group">
+                <select class="form-control form-field">
+                    <option selected>Select Branch</option>
+                    <option value="army">Army</option>
+                    <option value="airforce">Air Force</option>
+                    <option value="navy">Navy</option>
+                    <option value="marines">Marine Corps</option>
+                    <option value="national">National Guard</option>
+                    <option value="coast">Coast Guard</option>
+                  </select>
+                <input type="text" required="" placeholder="*Sponsor Name" value="" name="">
+                <input type="text" required="" placeholder="*Phone" value="" name="">
+                <input type="text" required="" placeholder="*Email" value="" name="">
+                <br><br>
+                <button class="btn btn-default" value="Cancel">Cancel</button>
+                <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+                  <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+                  Add Community
+                </button>
+              </div>
           </form>
         </accordion-group>
       </accordion>
