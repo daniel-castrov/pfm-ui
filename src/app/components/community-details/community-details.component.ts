@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-community-details',
@@ -7,6 +8,8 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
   styleUrls: ['./community-details.component.css']
 })
 export class CommunityDetailsComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
 
   constructor() { }
 
