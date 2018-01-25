@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
@@ -22,11 +22,9 @@ import {
 
 export class HeaderComponent implements OnInit {
 
-  //@Input() public title: string;
-  @Input() public isUserLoggedIn: boolean;
-
   id: number;
   pexUser:User;
+  isloggedin:boolean=false;
 
   constructor(
     private route:ActivatedRoute,
@@ -42,6 +40,10 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
   }
 
+  ngAfterViewInit() {
+    this.isloggedin = true; 
+  }
+
     getCurrentUser() {
       //console.log("getCurrentUser");
 
@@ -51,8 +53,8 @@ export class HeaderComponent implements OnInit {
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
           this.pexUser = JSON.parse(atob(authHeader));
+          console.log(this.pexUser);
         }
-
       );
-    } 
   }
+}

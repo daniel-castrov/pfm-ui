@@ -1,6 +1,6 @@
-<app-header title="JSCBIS Login" [isUserLoggedIn]="true"></app-header>
+<app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
-  <div class="row">
+  <div class="row" *ngIf="header.isloggedin">
     <div class="col-md-2">
       <div class="profile-sidebar">
         <div class="profile-userpic">
@@ -19,7 +19,7 @@
 
       <!-- NOT EDITIING MODE-->
       <div *ngIf="!isdEditMode">
-      
+
         <div class="card-header">
           User Information:
           <button class="btn-card-header" title="Edit" (click)="editMode()">
@@ -149,7 +149,7 @@
             <li>Default Color:
               <input type="text" [(ngModel)]="currentUser.preferences.defaultColor">
             </li>
-            <li>Clock: 
+            <li>Clock:
               <input type="text" [(ngModel)]="currentUser.preferences.clock">
             </li>
             <li>Landing Page:

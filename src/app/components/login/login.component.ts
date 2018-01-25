@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
