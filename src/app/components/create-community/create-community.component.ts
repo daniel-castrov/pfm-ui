@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommunityService, RestResult, Community } from '../../generated';
+import { HeaderComponent } from '../../components/header/header.component';
+import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
 import { AccordionModule } from 'primeng/accordion';
 
@@ -12,6 +12,8 @@ import { AccordionModule } from 'primeng/accordion';
   styleUrls: ['./create-community.component.css']
 })
 export class CreateCommunityComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
 
   //private restResult: RestResult;
 

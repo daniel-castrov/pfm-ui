@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild  } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import {
@@ -6,7 +6,7 @@ import {
   HttpResponse, HttpEvent
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+import { HeaderComponent } from '../../components/header/header.component';
 import { Communication } from '../../generated/model/communication';
 import { User } from '../../generated/model/user';
 import { RestResult } from '../../generated/model/restResult';
@@ -18,6 +18,8 @@ import { MyDetailsService } from '../../generated/api/myDetails.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
 
   currentusername: string;
   currentUser: User;
@@ -41,22 +43,22 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCurrentUser();      
+    this.getCurrentUser();
   }
 
   getCurrentUser(){
     var result:RestResult;
     this.userDetailsService.getCurrentUser()
-    .subscribe((c) => { 
+    .subscribe((c) => {
       result = c;
-      this.currentUser = result.result; 
+      this.currentUser = result.result;
       // Make a copy of the current user so we can revert changes
       this.refcurrentUser = JSON.parse(JSON.stringify(this.currentUser));
     });
   }
 
   saveCurrentUser():void{
-    
+
     // clean up empty communications
     for(var i = this.currentUser.communications.length - 1; i >= 0; i--) {
       if(this.currentUser.communications[i].value === "") {

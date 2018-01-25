@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeaderComponent } from '../../components/header/header.component';
 import { PickListModule } from 'primeng/picklist';
-import { AccordionModule } from 'primeng/accordion';
 import { MenuItem } from 'primeng/api';
 import * as $ from 'jquery/dist/jquery.min.js';
 
@@ -11,6 +11,9 @@ import * as $ from 'jquery/dist/jquery.min.js';
 })
 
 export class RolesComponent {
+
+  @ViewChild(HeaderComponent) header;
+
   status: any = {
     isFirstOpen: true,
     isFirstDisabled: false

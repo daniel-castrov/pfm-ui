@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-about-private',
   templateUrl: './about-private.component.html',
   styleUrls: ['./about-private.component.css']
 })
-export class AboutPrivateComponent implements OnInit {
+export class AboutPrivateComponent {
 
-  constructor() { }
+  @ViewChild(HeaderComponent) header;
+
+  constructor() {
+    // This is a static page
+  }
 
   ngOnInit() {
   }

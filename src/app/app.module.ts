@@ -18,6 +18,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { CreateCommunityComponent } from './components/create-community/create-community.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { HeaderComponent } from './components/header/header.component';
+import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
@@ -48,6 +49,7 @@ const appRoutes: Routes = [
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
+  {path:'header-nologin', component:HeaderNologinComponent},
   {path:'home', component:HomeComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
@@ -67,6 +69,7 @@ const appRoutes: Routes = [
     ContactComponent,
     CreateCommunityComponent,
     HeaderComponent,
+    HeaderNologinComponent,
     HomeComponent,
     LoginComponent,
     FilterComponent,
