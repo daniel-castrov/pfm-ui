@@ -5,42 +5,9 @@
   <div class="col-4">
     <div class="login-info">
       <p>Proceed to JSCBIS</p>
-      <!-- Login Button trigger modal -->
-      <div id="myModal" class="modal fade in modal-no-access">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <a class="btn btn-default" data-dismiss="modal">
-                <span><i class="fa fa-times" aria-hidden="true"></i>
-                </span>
-              </a>
-              <h4 class="modal-title">JSCBIS</h4>
-            </div>
-            <div class="modal-body">
-              <h4>Unauthorized Access</h4>
-              <p>Warning!</p>
-            </div>
-            <div class="modal-footer">
-              <div class="btn-group">
-                <button class="btn btn-danger" data-dismiss="modal">
-                  <span>
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                  </span>
-                   Close
-                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /.modal -->
-      <button data-toggle="modal" href="#myModal" *ngIf="!isUserLoggedIn" class="btn btn-primary">JSCBIS</button>
-      <button type="button" *ngIf="isUserLoggedIn" class="btn btn-primary" (click)="onLoginClick()">
+      <button type="button" class="btn btn-primary" (click)="onLoginClick()">
         JSCBIS
       </button>
-      <!-- <button type="button" class="btn btn-primary" (click)="onLoginClick()">
-        JSCBIS
-      </button> -->
     </div>
   </div>
   <div class="col-4">
