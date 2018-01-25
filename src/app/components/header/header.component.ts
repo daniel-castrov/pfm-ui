@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
 
   id: number;
   pexUser:User;
-  isloggedin:boolean;
+  isloggedin:boolean=false;
 
   constructor(
     private route:ActivatedRoute,
@@ -46,7 +46,8 @@ export class HeaderComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.isloggedin=true;
+
+    this.isloggedin = (this.pexUser == null ? true: true); 
   }
 
     getCurrentUser() {
@@ -58,8 +59,8 @@ export class HeaderComponent implements OnInit {
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
           this.pexUser = JSON.parse(atob(authHeader));
+          console.log(this.pexUser);
         }
       );
-      this.isloggedin=false;
   }
 }
