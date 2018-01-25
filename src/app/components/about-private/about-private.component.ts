@@ -8,15 +8,15 @@ import { HeaderComponent } from '../../components/header/header.component';
 })
 export class AboutPrivateComponent implements AfterViewInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(HeaderComponent) header;
 
   constructor() { }
 
   isloggedin: boolean;
 
   ngAfterViewInit() {
-    this.isloggedin = true;
-    // this.isloggedin = this.header.isloggedin;
+    //this.isloggedin = true;
+    //this.isloggedin = this.header.isloggedin;
     // this.isloggedin = this.header.isloggedin;
   }
 

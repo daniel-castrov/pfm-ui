@@ -24,10 +24,12 @@ export class HeaderComponent implements OnInit {
 
   //@Input() public title: string;
   //@Input() public isUserLoggedIn: boolean;
-  isloggedin:boolean;
+  //isloggedin:boolean;
+  //@output() loggedin: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   id: number;
   pexUser:User;
+  isloggedin:boolean;
 
   constructor(
     private route:ActivatedRoute,
@@ -43,6 +45,10 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
   }
 
+  ngAfterViewInit() {
+    this.isloggedin=true;
+  }
+
     getCurrentUser() {
       //console.log("getCurrentUser");
 
@@ -53,7 +59,7 @@ export class HeaderComponent implements OnInit {
           var authHeader = r.headers.get('Authorization');
           this.pexUser = JSON.parse(atob(authHeader));
         }
-
       );
-    }
+      this.isloggedin=false;
   }
+}
