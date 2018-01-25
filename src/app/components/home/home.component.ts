@@ -1,19 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserComponent } from '../user/user.component';
 import { User } from '../../generated/model/user';
 import { RestResult } from '../../generated/model/restResult';
 import { Communication } from '../../generated/model/communication';
 import { GrantedAuthority } from '../../generated/model/grantedAuthority';
-
+import { HeaderComponent } from '../../components/header/header.component';
 import { BlankService } from '../../generated/api/blank.service';
-
-import { Response, ResponseContentType }                     from '@angular/http';
-
+import { Response, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent }                           from '@angular/common/http';
-
-import { Observable }                                        from 'rxjs/Observable';
+  HttpResponse, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 
 @Component({
@@ -22,6 +19,8 @@ import { Observable }                                        from 'rxjs/Observab
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
 
   fireEvent(e){
     //console.log('button clicked');
@@ -48,7 +47,7 @@ export class HomeComponent implements OnInit {
 
     getCurrentUser() {
       //console.log("getCurrentUser");
-      
+
       let resp = this.blankService.blank("response", true);
 
       resp.subscribe(

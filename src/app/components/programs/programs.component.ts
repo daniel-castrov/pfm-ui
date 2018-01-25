@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ProgramService } from '../../generated/api/program.service';
 import { FundLineService } from '../../generated/api/fundLine.service';
-import { RestResult } from '../../generated/model/restResult';
 import { Program } from '../../generated/model/program'
+import { HeaderComponent } from '../../components/header/header.component';
 import { Increment } from '../../generated/model/increment'
 import { FundLine } from '../../generated/model/fundLine'
 import { NgFor } from '@angular/common/src/directives/ng_for_of';
-
+import { RestResult } from '../../generated/model/restResult';
 
 @Component({
   selector: 'app-programs',
@@ -16,12 +16,15 @@ import { NgFor } from '@angular/common/src/directives/ng_for_of';
 })
 
 export class ProgramsComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
+
   public programs: Program[] = [];
   public fundLines:FundLine[] = [];
 
   public programResult: RestResult;
   public fundLineResult: RestResult;
-  
+
   constructor(
     public programApi:ProgramService,
     public fundLineApi:FundLineService
@@ -48,19 +51,19 @@ export class ProgramsComponent implements OnInit {
 
     my.programApi.findall().subscribe((c) => {
       result1 = c;
-      my.programResult=result1;      
+      my.programResult=result1;
 
       let prog:Program;
       for ( prog of result1.result ){
 
-        let inc:Increment;        
+        let inc:Increment;
         for ( inc of prog.increments ){
 
           for ( let num of inc.fundingLineIds ){
             var result2;
-            my.fundLineApi.find(num).subscribe( (c) => 
+            my.fundLineApi.find(num).subscribe( (c) =>
               { result2 = c;
-                my.fundLineResult.result.push(result2.result);                
+                my.fundLineResult.result.push(result2.result);
               }
             );
           }

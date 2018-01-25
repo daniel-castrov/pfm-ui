@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommunityService, RestResult, Community } from '../../generated';
+import { HeaderComponent } from '../../components/header/header.component';
+import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
-
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-create-community',
@@ -12,11 +12,13 @@ import { NgForOf } from '@angular/common/src/directives';
 })
 export class CreateCommunityComponent implements OnInit {
 
+    @ViewChild(HeaderComponent) header;
+
   //private restResult: RestResult;
 
   communities: Community[]=[];
   resultError: string;
-  
+
   constructor(
     public communityService: CommunityService,
   ) {
@@ -70,7 +72,7 @@ export class CreateCommunityComponent implements OnInit {
       result=r;
       this.resultError=result.error;
       if ( this.resultError == null ){
-        this.communities.push(community);        
+        this.communities.push(community);
       }
     });
   }
