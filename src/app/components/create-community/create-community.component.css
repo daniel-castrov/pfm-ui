@@ -10,16 +10,6 @@
   font-size: 14px;
 }
 
-input {
-  margin: 5px 5px 4px 0;
-  padding: 2px 6px;
-  line-height: 1.8rem;
-  width: 355px;
-}
-
-select {
-  width: 355px;
-}
 
 .card-container ul {
   margin-top: 10px;
@@ -61,4 +51,65 @@ select {
   font-weight: 500;
   margin: 4px 0;
   padding: 0 10px;
+}
+
+.controls {
+  clear: both;
+}
+
+label, select {
+  color: #868e9b;
+}
+
+.form-control {
+  margin: 5px 5px 4px 0;
+  padding: 2px 6px;
+  line-height: 1.8rem;
+  width: 240px;
+}
+
+select {
+  width: 240px;
+}
+
+.firstname, .lastname {
+  display: inline;
+  width: 240px;
+  margin: 5px 5px 4px 0;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+input.middle {
+  display: inline;
+  width: 40px !important;
+  padding: 2px 6px;
+  margin: 5px 5px 4px 0;
+}
+
+.sponsor,
+.community {
+  display: inline;
+  width: 240px;
+  margin: 5px 5px 4px 0;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.name-error {
+  display: block;
+  position: absolute;
+  margin-top: -8px;
+  width: 230px !important;
+}
+
+.alert-danger {
+  color: #721c24;
+  width: 300px;
+}
+
+.alert {
+  margin-top: -8px;
+  padding: 0 5px;
+  margin-bottom: 2px;
 }
