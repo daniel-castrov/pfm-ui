@@ -24,8 +24,8 @@ export class HeaderComponent implements OnInit {
 
   //@Input() public title: string;
   //@Input() public isUserLoggedIn: boolean;
-   @Input() public isloggedin:boolean;
-   
+  isloggedin:boolean;
+
   id: number;
   pexUser:User;
 

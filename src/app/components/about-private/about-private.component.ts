@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
@@ -6,16 +6,18 @@ import { HeaderComponent } from '../../components/header/header.component';
   templateUrl: './about-private.component.html',
   styleUrls: ['./about-private.component.css']
 })
-export class AboutPrivateComponent implements OnInit {
+export class AboutPrivateComponent implements AfterViewInit {
+
+  @ViewChild(HeaderComponent) header: HeaderComponent;
 
   constructor() { }
 
   isloggedin: boolean;
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.isloggedin = true;
     // this.isloggedin = this.header.isloggedin;
-
+    // this.isloggedin = this.header.isloggedin;
   }
 
 }
