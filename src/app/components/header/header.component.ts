@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
@@ -22,11 +22,6 @@ import {
 
 export class HeaderComponent implements OnInit {
 
-  //@Input() public title: string;
-  //@Input() public isUserLoggedIn: boolean;
-  //isloggedin:boolean;
-  //@output() loggedin: EventEmitter<boolean> = new EventEmitter<boolean>();
-
   id: number;
   pexUser:User;
   isloggedin:boolean=false;
@@ -46,8 +41,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-
-    this.isloggedin = (this.pexUser == null ? true: true); 
+    this.isloggedin = true; 
   }
 
     getCurrentUser() {
