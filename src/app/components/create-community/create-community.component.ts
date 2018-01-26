@@ -12,11 +12,16 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 export class CreateCommunityComponent implements OnInit {
 
-    @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header;
 
   //private restResult: RestResult;
 
-  communities: Community[]=[];
+  status: any = {
+    isFirstOpen: true,
+    isFirstDisabled: false
+  };
+
+  communities: Community[] = [];
   resultError: string;
 
   constructor(
@@ -29,49 +34,49 @@ export class CreateCommunityComponent implements OnInit {
     this.findAll();
   }
 
-  findAll(): void{
+  findAll(): void {
 
     this.communities = [];
-    let result:RestResult;
+    let result: RestResult;
     this.communityService.findall()
-    .subscribe(c => {
-      result = c;
+      .subscribe(c => {
+        result = c;
 
-      this.resultError=result.error;
+        this.resultError = result.error;
 
-      let comm:Community;
-      for ( comm of result.result ){
-        this.communities.push(comm);
-      }
-    });
+        let comm: Community;
+        for (comm of result.result) {
+          this.communities.push(comm);
+        }
+      });
   }
 
-  delete(community: Community){
+  delete(community: Community) {
 
-    console.log(community.name + " - " +  community.id);
+    console.log(community.name + " - " + community.id);
 
-    let result:RestResult;
+    let result: RestResult;
     this.communityService.deleteById(community.id)
-    .subscribe(c => {
-      result = c;
-    });
+      .subscribe(c => {
+        result = c;
+      });
     this.findAll();
   }
 
   add(name) {
-    this.resultError=null;
-    let community:Community;
+    this.resultError = null;
+    let community: Community;
     community = new Object();
-    community.name=name;
+    community.name = name;
     //this.communities.push(community);
 
-    let result:RestResult;
-    let s=this.communityService.create(community);
+    let result: RestResult;
+    let s = this.communityService.create(community);
 
     s.subscribe(r => {
-      result=r;
-      this.resultError=result.error;
-      if ( this.resultError == null ){
+      result = r;
+      this.resultError = result.error;
+      if (this.resultError == null) {
         this.communities.push(community);
       }
     });

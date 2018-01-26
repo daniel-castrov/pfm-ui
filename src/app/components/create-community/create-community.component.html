@@ -2,26 +2,24 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-10 col-md-7">
-      <div class="community-data">
-        <div class="card-header">
-          List of Communities
-          <button (click)="findAll()" title="Reload List" class="btn btn-card-header">
-            <i class="fa fa-refresh icon-pad" aria-hidden="true"></i>
-            Reload
-          </button>
-        </div>
-        <div class="card-container">
+      <accordion>
+        <accordion-group #group [isOpen]="status.isFirstOpen" [isDisabled]="status.isFirstDisabled">
+          <div accordion-heading class="clearfix">
+            List of Communities
+            <button (click)="findAll()" title="Reload List" class="btn btn-card-header">
+              <i class="fa fa-refresh icon-pad" aria-hidden="true"></i>
+              Reload
+            </button>
+          </div>
           <ul>
             <li *ngFor="let comm of communities">
               {{ comm?.name }}
             </li>
           </ul>
-        </div>
-      </div>
-      <div>
-        {{ resultError }}
-      </div>
-      <accordion>
+          <div>
+            {{ resultError }}
+          </div>
+        </accordion-group>
         <accordion-group #group>
 			    <div accordion-heading class="clearfix">
 						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
@@ -109,7 +107,6 @@
       </accordion>
     </div>
     <div class="col-2 col-md-5">
-
     </div>
   </div>
 </div>
