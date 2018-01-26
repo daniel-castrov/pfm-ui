@@ -39,22 +39,20 @@
           <hr>
           <!-- (click) passes input value to add() and then clears the input -->
           <label>Assign User Approver</label>
-          <form>
-            <div class="form-group clearfix">
-              <select class="form-control">
-                  <option selected>Select User Approver</option>
-                  <option value="Jane Doe">Jane Doe</option>
-                  <option value="John Doe">John Doe</option>
-                  <option value="John Doe">Deanna Gross</option>
-                  <option value="John Doe">Enrico Serafini</option>
-                </select>
-              </div>
-              <button class="btn btn-default" value="Cancel">Cancel</button>
-              <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
-                <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
-                Add Community
-              </button>
-          </form>
+          <div class="form-group clearfix">
+            <select class="form-control">
+                <option selected>Select User Approver</option>
+                <option value="Jane Doe">Jane Doe</option>
+                <option value="John Doe">John Doe</option>
+                <option value="John Doe">Deanna Gross</option>
+                <option value="John Doe">Enrico Serafini</option>
+              </select>
+            </div>
+            <button class="btn btn-default" value="Cancel">Cancel</button>
+            <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+              <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+              Add Community
+            </button>
           </accordion-group>
           <accordion-group #group>
   			     <div accordion-heading class="clearfix">
@@ -100,7 +98,7 @@
                 <span class="form-group">
                   <input class="form-control sponsor" type="text" required="" placeholder="*Sponsor Email" value="" name="">
                 </span>
-              </div>  
+              </div>
               <button class="btn btn-default" value="Cancel">Cancel</button>
               <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
                 <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>

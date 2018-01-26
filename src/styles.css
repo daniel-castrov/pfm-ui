@@ -32,11 +32,18 @@ hr {
   padding: 0 15px;
 }
 
-
 accordion-group {
   margin: 20px 0;
   padding: 3px;
   cursor: pointer;
+}
+
+accordion-group .accordion-heading:hover {
+  color: #24527b;
+}
+
+accordion-group .acordion-icon:hover  {
+  color: #24527b;
 }
 
 .btn-default {
