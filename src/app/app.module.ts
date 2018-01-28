@@ -39,7 +39,6 @@ import { TagService } from './generated/api/tag.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { UserService } from './generated/api/user.service';
 
-
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},

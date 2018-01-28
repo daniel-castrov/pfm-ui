@@ -16,12 +16,14 @@ export class CreateCommunityComponent implements OnInit {
 
   //private restResult: RestResult;
 
+  status: any = {
+    isFirstOpen: true,
+    isFirstDisabled: false
+  };
+
   communities: Community[]=[];
   users: User[]=[];
-
-
   newapprover: string;
-
   resultError: string;
 
   constructor(
@@ -60,7 +62,7 @@ export class CreateCommunityComponent implements OnInit {
     .subscribe(c => {
       result = c;
 
-      this.resultError=result.error;
+        this.resultError = result.error;
 
       let user:User;
       for ( user of result.result ){
@@ -70,7 +72,7 @@ export class CreateCommunityComponent implements OnInit {
     });
   }
 
-  delete(community: Community){
+  delete(community: Community) {
 
     console.log(community.name + " - " + community.id);
 
