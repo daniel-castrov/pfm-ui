@@ -24,30 +24,27 @@
 			    <div accordion-heading class="clearfix">
 						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
 						<span class="accordion-heading">Add Community</span>
-					</div>
-          <label>Community Name:</label>
+          </div>
+          <label>Name:</label>
           <span class="form-group">
             <input class="form-control community" #communityName />
           </span>
-
-          <label>New Community Identifier:</label>
+          <label>Identifier:</label>
           <span class="form-group">
-            <input class="form-control community" />
+            <input class="form-control community" #communityIdentifier /> 
           </span>
           <hr>
-          <!-- (click) passes input value to add() and then clears the input -->
           <label>Assign User Approver</label>
           <div class="form-group clearfix">
-            <select class="form-control">
-                <option selected>Select User Approver</option>
-                <option value="Jane Doe">Jane Doe</option>
-                <option value="John Doe">John Doe</option>
-                <option value="John Doe">Deanna Gross</option>
-                <option value="John Doe">Enrico Serafini</option>
-              </select>
-            </div>
+            <select class="form-control" [(ngModel)]="newapprover" name="power">
+              <option *ngFor="let user of users" 
+                [value]="user.email">
+                {{user.firstName}} {{user.lastName}}
+              </option>
+            </select>
+          </div>
             <button class="btn btn-default" value="Cancel">Cancel</button>
-            <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+            <button class="btn btn-primary" (click)="add(selectedApprover, communityName.value, communityIdentifier.value)">
               <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
               Add Community
             </button>

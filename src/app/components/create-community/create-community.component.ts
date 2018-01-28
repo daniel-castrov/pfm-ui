@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommunityService, RestResult, Community } from '../../generated';
+import { CommunityService, RestResult, Community, UserService, User } from '../../generated';
 import { HeaderComponent } from '../../components/header/header.component';
 import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
@@ -16,25 +16,27 @@ export class CreateCommunityComponent implements OnInit {
 
   //private restResult: RestResult;
 
-  status: any = {
-    isFirstOpen: true,
-    isFirstDisabled: false
-  };
+  communities: Community[]=[];
+  users: User[]=[];
 
-  communities: Community[] = [];
+
+  newapprover: string;
+
   resultError: string;
 
   constructor(
     public communityService: CommunityService,
+    public userService: UserService,
   ) {
 
   }
 
   ngOnInit() {
-    this.findAll();
+    this.getCommunities();
+    this.getusers();
   }
 
-  findAll(): void {
+  getCommunities(): void{
 
     this.communities = [];
     let result: RestResult;
@@ -51,23 +53,50 @@ export class CreateCommunityComponent implements OnInit {
       });
   }
 
-  delete(community: Community) {
+  getusers(): void{
+    this.users = [];
+    let result:RestResult;
+    this.userService.findall()
+    .subscribe(c => {
+      result = c;
+
+      this.resultError=result.error;
+
+      let user:User;
+      for ( user of result.result ){
+        this.users.push(user);
+        console.log(user.email);
+      }
+    });
+  }
+
+  delete(community: Community){
 
     console.log(community.name + " - " + community.id);
 
     let result: RestResult;
     this.communityService.deleteById(community.id)
-      .subscribe(c => {
-        result = c;
-      });
-    this.findAll();
+    .subscribe(c => {
+      result = c;
+    });
+    this.getCommunities();
   }
 
-  add(name) {
-    this.resultError = null;
-    let community: Community;
+  add(name, identifier) {
+
+    if (null==this.newapprover){
+      alert("Must have an approver");
+    }
+    else {
+
+    this.resultError=null;
+    let community:Community;
     community = new Object();
-    community.name = name;
+    community.name=name;
+    community.identifier=identifier;
+    let approvers: string[]=[];
+    approvers.push(this.newapprover);
+    community.approvers=approvers;
     //this.communities.push(community);
 
     let result: RestResult;
@@ -81,5 +110,6 @@ export class CreateCommunityComponent implements OnInit {
       }
     });
   }
+}
 
 }
