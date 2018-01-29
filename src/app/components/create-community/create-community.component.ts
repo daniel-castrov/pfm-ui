@@ -14,8 +14,6 @@ export class CreateCommunityComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  //private restResult: RestResult;
-
   status: any = {
     isFirstOpen: true,
     isFirstDisabled: false
@@ -23,6 +21,7 @@ export class CreateCommunityComponent implements OnInit {
 
   communities: Community[]=[];
   users: User[]=[];
+  newCommunity: Community;
   newapprover: string;
   resultError: string;
 
@@ -35,40 +34,27 @@ export class CreateCommunityComponent implements OnInit {
 
   ngOnInit() {
     this.getCommunities();
-    this.getusers();
+    this.getUsers();
+    this.newCommunity = new Object();
   }
 
   getCommunities(): void{
-
-    this.communities = [];
     let result: RestResult;
     this.communityService.findall()
       .subscribe(c => {
         result = c;
-
         this.resultError = result.error;
-
-        let comm: Community;
-        for (comm of result.result) {
-          this.communities.push(comm);
-        }
+        this.communities = result.result;
       });
   }
 
-  getusers(): void{
-    this.users = [];
+  getUsers(): void{
     let result:RestResult;
     this.userService.findall()
     .subscribe(c => {
       result = c;
-
-        this.resultError = result.error;
-
-      let user:User;
-      for ( user of result.result ){
-        this.users.push(user);
-        console.log(user.email);
-      }
+      this.resultError = result.error;
+      this.users=result.result;
     });
   }
 
@@ -84,34 +70,38 @@ export class CreateCommunityComponent implements OnInit {
     this.getCommunities();
   }
 
-  add(name, identifier) {
+  addCommunity1() {
 
-    if (null==this.newapprover){
-      alert("Must have an approver");
+    this.newCommunity.approvers =[];
+    this.newCommunity.approvers.push(this.newapprover);
+    
+    if (this.isValid()){
+
+      let result: RestResult;
+      let s = this.communityService.create(this.newCommunity);
+
+      s.subscribe(r => {
+        result = r;
+        this.resultError = result.error;
+        if (this.resultError == null) {
+          this.communities.push(this.newCommunity);
+        }
+      });
     }
     else {
-
-    this.resultError=null;
-    let community:Community;
-    community = new Object();
-    community.name=name;
-    community.identifier=identifier;
-    let approvers: string[]=[];
-    approvers.push(this.newapprover);
-    community.approvers=approvers;
-    //this.communities.push(community);
-
-    let result: RestResult;
-    let s = this.communityService.create(community);
-
-    s.subscribe(r => {
-      result = r;
-      this.resultError = result.error;
-      if (this.resultError == null) {
-        this.communities.push(community);
-      }
-    });
+      console.log("Name of Id not unique");
+      this.newCommunity = new Object();
+    }
   }
-}
 
+  isValid(){
+    let com:Community;
+    for ( com of this.communities ){
+      if (  com.name === this.newCommunity.name || 
+            com.identifier === this.newCommunity.identifier ){
+        return false;
+      }
+    }
+    return true;
+  }
 }
