@@ -2,34 +2,112 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-10 col-md-7">
-      <div class="community-data">
-        <div class="card-header">
-          List of Communities
-          <button (click)="findAll()" title="Reload List" class="btn btn-card-header">
-            <i class="fa fa-refresh icon-pad" aria-hidden="true"></i>
-            Reload
-          </button>
-        </div>
-        <div class="card-container">
+      <accordion>
+        <accordion-group #group [isOpen]="status.isFirstOpen" [isDisabled]="status.isFirstDisabled">
+          <div accordion-heading class="clearfix">
+            List of Communities
+            <button (click)="getCommunities()" title="Reload List" class="btn btn-card-header">
+              <i class="fa fa-refresh icon-pad" aria-hidden="true"></i>
+              Reload
+            </button>
+          </div>
           <ul>
             <li *ngFor="let comm of communities">
               {{ comm?.name }}
             </li>
           </ul>
-        </div>
-      </div>
-      <div>
-        {{ resultError }}
-      </div>
-      <div class="card-container">
-        <label>Community Name:</label>
-        <input #communityName />
-        <!-- (click) passes input value to add() and then clears the input -->
-        <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
-          <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
-          Add Community
-        </button>
-      </div>
+          <div>
+            {{ resultError }}
+          </div>
+        </accordion-group>
+        <accordion-group #group>
+			    <div accordion-heading class="clearfix">
+						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
+						<span class="accordion-heading">Add Community</span>
+          </div>
+
+          <form novalidate #addForm="ngForm" (ngSubmit)="addCommunity1()">
+
+          <label>Name:</label>
+          <span class="form-group">
+            <input class="form-control community" name="communityName" [(ngModel)]="newCommunity.name" 
+              minlength="2" placeholder="Name" required/>
+          </span>
+          <label>Identifier:</label>
+          <span class="form-group">
+            <input class="form-control community" name="communityIdentifier" [(ngModel)]="newCommunity.identifier" 
+            minlength="2" placeholder="Identifier" required/> 
+          </span>
+          <hr>
+          <label>Assign User Approver</label>
+          <div class="form-group clearfix">
+            <select class="form-control" name="communityApprover" [(ngModel)]="newapprover" required>
+              <option *ngFor="let user of users" 
+                [value]="user.email">
+                {{user.firstName}} {{user.lastName}}
+              </option>
+            </select>
+          </div>
+            <button class="btn btn-default" value="Cancel" (click)="addForm.reset()">Cancel</button>
+            <button class="btn btn-primary" type="submit" [disabled]="!addForm.form.valid"> >
+              <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+              Add Community
+            </button>
+            </form>
+          </accordion-group>
+          <accordion-group #group>
+  			     <div accordion-heading class="clearfix">
+  						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
+  						<span class="accordion-heading">OR: Create New User as User Approver</span>
+  					</div>
+            <form>
+              <span class="form-group">
+                <input class="form-control firstname" type="text" required="" placeholder="*First Name" value="" name="name">
+              </span>
+              <span class="form-group">
+                <input class="form-control middle" type="text" required="" placeholder="MI" value="" name="">
+              </span>
+              <span class="form-group">
+                <input class="form-control lastname" type="text" required="" placeholder="*Last Name" value="" name="">
+              </span>
+              <div class="form-group clearfix">
+                <input class="form-control" type="text" required="" placeholder="Title/Rank" value="" name="">
+                <input class="form-control" type="text" required="" placeholder="Duty/Job Title" value="" name="">
+                <input class="form-control" type="text" required="" placeholder="*Email" value="" name="">
+                <input class="form-control" type="text" required="" placeholder="*Phone" value="" name="">
+                <input class="form-control" type="text" required="" placeholder="Street, City, State, Zip" value="" name="">
+                <input class="form-control" type="text" required="" placeholder="*Organization Name" value="" name="">
+                <input class="form-control" type="text" required="" placeholder="*Community" value="" name="">
+              </div>
+              <div class="form-group clearfix">
+                <select class="form-control form-field">
+                    <option selected>Select Branch</option>
+                    <option value="army">Army</option>
+                    <option value="airforce">Air Force</option>
+                    <option value="navy">Navy</option>
+                    <option value="marines">Marine Corps</option>
+                    <option value="national">National Guard</option>
+                    <option value="coast">Coast Guard</option>
+                  </select>
+
+                <span class="form-group">
+                  <input class="form-control sponsor" type="text" required="" placeholder="*Sponsor Name" value="" name="">
+                </span>
+                <span class="form-group">
+                  <input class="form-control sponsor"  type="text" required="" placeholder="*Sponsor Phone" value="" name="">
+                </span>
+                <span class="form-group">
+                  <input class="form-control sponsor" type="text" required="" placeholder="*Sponsor Email" value="" name="">
+                </span>
+              </div>
+              <button class="btn btn-default" value="Cancel">Cancel</button>
+              <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+                <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+                Add Community
+              </button>
+          </form>
+        </accordion-group>
+      </accordion>
     </div>
     <div class="col-2 col-md-5">
     </div>

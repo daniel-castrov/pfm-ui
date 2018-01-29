@@ -15,6 +15,7 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { CommunityDetailsComponent } from './components/community-details/community-details.component';
 import { CreateCommunityComponent } from './components/create-community/create-community.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -38,6 +39,7 @@ import { FundLineService } from './generated/api/fundLine.service';
 import { ProgramService } from './generated/api/program.service';
 import { TagService } from './generated/api/tag.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
+import { UserService } from './generated/api/user.service';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -45,6 +47,7 @@ const appRoutes: Routes = [
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
+  {path:'community-details', component:CommunityDetailsComponent},
   {path:'create-community', component:CreateCommunityComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
@@ -67,6 +70,7 @@ const appRoutes: Routes = [
     AppComponent,
     ApplyComponent,
     ContactComponent,
+    CommunityDetailsComponent,
     CreateCommunityComponent,
     HeaderComponent,
     HeaderNologinComponent,
@@ -97,6 +101,7 @@ const appRoutes: Routes = [
     ProgramService,
     TagService,
     MyDetailsService,
+    UserService,
     //{ provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
     { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },

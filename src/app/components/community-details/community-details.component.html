@@ -1,0 +1,32 @@
+<app-header title="JSCBIS Login"></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-5">
+
+      <!-- <p>
+        <button type="button" class="btn btn-primary btn-sm" (click)="status.isFirstDisabled = ! status.isFirstDisabled">
+          Enable / Disable first panel
+        </button>
+        </p> -->
+      <accordion>
+        <accordion-group heading="Programs">
+          <p>Info about all programs associated with the Community that are Community Specific</p>
+
+        </accordion-group>
+        <accordion-group heading="List Community Approvers">
+        </accordion-group>
+      </accordion>
+    </div>
+    <div class="col-5">
+      <accordion>
+        <accordion-group heading="Remove Approvers">
+        </accordion-group>
+        <accordion-group heading="Add Approvers">
+        </accordion-group>
+        <accordion-group heading="Remove Community">
+          <button class="btn btn-primary"><i class="fa fa-minus-circle" aria-hidden="true"></i> Remove</button>
+        </accordion-group>
+      </accordion>
+    </div>
+  </div>
+</div>

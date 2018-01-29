@@ -40,20 +40,17 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
   }
 
-  ngAfterViewInit() {
-    this.isloggedin = true; 
+  ngAfterViewInit() { 
   }
 
     getCurrentUser() {
-      //console.log("getCurrentUser");
-
       let resp = this.blankService.blank("response", true);
-
       resp.subscribe(
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
           this.pexUser = JSON.parse(atob(authHeader));
-          console.log(this.pexUser);
+          this.isloggedin = true;
+          console.log("Current User: " + this.pexUser.cn);
         }
       );
   }

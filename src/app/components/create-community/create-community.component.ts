@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommunityService, RestResult, Community } from '../../generated';
+import { CommunityService, RestResult, Community, UserService, User } from '../../generated';
 import { HeaderComponent } from '../../components/header/header.component';
 import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
@@ -15,67 +15,94 @@ export class CreateCommunityComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  //private restResult: RestResult;
+  status: any = {
+    isFirstOpen: true,
+    isFirstDisabled: false
+  };
 
   communities: Community[]=[];
+  users: User[]=[];
+  newCommunity: Community;
+  newapprover: string;
   resultError: string;
 
   constructor(
     public communityService: CommunityService,
+    public userService: UserService,
   ) {
 
   }
 
   ngOnInit() {
-    this.findAll();
+    this.getCommunities();
+    this.getUsers();
+    this.newCommunity = new Object();
   }
 
-  findAll(): void{
-
-    this.communities = [];
-    let result:RestResult;
+  getCommunities(): void{
+    let result: RestResult;
     this.communityService.findall()
+      .subscribe(c => {
+        result = c;
+        this.resultError = result.error;
+        this.communities = result.result;
+      });
+  }
+
+  getUsers(): void{
+    let result:RestResult;
+    this.userService.findall()
     .subscribe(c => {
       result = c;
-
-      this.resultError=result.error;
-
-      let comm:Community;
-      for ( comm of result.result ){
-        this.communities.push(comm);
-      }
+      this.resultError = result.error;
+      this.users=result.result;
     });
   }
 
-  delete(community: Community){
+  delete(community: Community) {
 
-    console.log(community.name + " - " +  community.id);
+    console.log(community.name + " - " + community.id);
 
-    let result:RestResult;
+    let result: RestResult;
     this.communityService.deleteById(community.id)
     .subscribe(c => {
       result = c;
     });
-    this.findAll();
+    this.getCommunities();
   }
 
-  add(name) {
-    this.resultError=null;
-    let community:Community;
-    community = new Object();
-    community.name=name;
-    //this.communities.push(community);
+  addCommunity1() {
 
-    let result:RestResult;
-    let s=this.communityService.create(community);
+    this.newCommunity.approvers =[];
+    this.newCommunity.approvers.push(this.newapprover);
+    
+    if (this.isValid()){
 
-    s.subscribe(r => {
-      result=r;
-      this.resultError=result.error;
-      if ( this.resultError == null ){
-        this.communities.push(community);
+      let result: RestResult;
+      let s = this.communityService.create(this.newCommunity);
+
+      s.subscribe(r => {
+        result = r;
+        this.resultError = result.error;
+        if (this.resultError == null) {
+          this.communities.push(this.newCommunity);
+        }
+      });
+    }
+    else {
+      console.log("Name of Id not unique");
+      this.newCommunity = new Object();
+    }
+  }
+
+  isValid(){
+    let com:Community;
+    for ( com of this.communities ){
+      if (  com.name === this.newCommunity.name || 
+            com.identifier === this.newCommunity.identifier ){
+        return false;
       }
-    });
+    }
+    return true;
   }
-
 }
