@@ -3,7 +3,8 @@ import { CommunityService, RestResult, Community, UserService, User } from '../.
 import { HeaderComponent } from '../../components/header/header.component';
 import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { AccordionModule } from 'primeng/accordion';
+
 
 @Component({
   selector: 'app-create-community',

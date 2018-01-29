@@ -27,6 +27,8 @@ import { NoAccessInterceptor } from './components/interceptors/noAccessIntercept
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
+import { RolesComponent } from './components/roles/roles.component';
+import { SuspendDeleteComponent } from './components/suspend-delete/suspend-delete.component';
 import { UserComponent } from './components/user/user.component';
 
 // GENERATED APIs AND MODELS
@@ -56,6 +58,8 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
+  {path:'roles', component:RolesComponent},
+  {path:'suspend-delete', component:SuspendDeleteComponent},
   {path:'user/:id', component:UserComponent}
 ];
 
@@ -77,6 +81,8 @@ const appRoutes: Routes = [
     NotFoundComponent,
     PlanningComponent,
     ProgramsComponent,
+    RolesComponent,
+    SuspendDeleteComponent,
     UserComponent
 
   ],

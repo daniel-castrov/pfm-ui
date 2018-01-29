@@ -1,0 +1,80 @@
+<app-header title="JSCBIS Login"></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="row main-content">
+      <div class="col-8">
+        <div class="card-header">
+          Roles
+        </div>
+        <div class="card-container">
+          <table class="table table-bordered table-list">
+            <tbody>
+              <tr>
+                <td align="left" width=180>
+                  <label><i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i> Add New Role</label>
+                </td>
+                <td><input class="form-control role" />
+                </td>
+              </tr>
+              <tr>
+              <td align="left">
+                <label><i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i> Add New Funtion</label>
+              </td>
+              <td><input class="form-control function" /></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td align="left">
+                <div class="controls">
+                  <button class="btn btn-default">Cancel</button>
+                  <button class="btn btn-primary">Submit</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <hr>
+      <!-- <div class="col-6">
+        <form id="multi">
+          <fieldset>
+            <div class="row">
+              <div class="col-md-5">
+                <select name="selectfrom" id="select-from" multiple="multiple" size="9" class="form-control">
+                  <option value="1">Option 1.1</option>
+                  <option value="2">Option 1.2</option>
+                  <option value="2">Option 1.3</option>
+                  <option value="2">Option 1.4</option>
+                  <option value="2">Option 1.5</option>
+                  </select>
+                <a href="javascript:void(0);" id="btn-up-source" class="btn btn-success btn-sm">Up</a>
+                <a href="javascript:void(0);" id="btn-down-source" class="btn btn-success btn-sm">Down</a>
+              </div>
+
+              <div class="col-md-2">
+                <a href="javascript:void(0);" id="btn-add" name="btn-add" class="btn btn-primary btn-block">
+                      Move
+                      <span class="" aria-hidden="true">
+                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                      </span>
+                  </a>
+                <a href="javascript:void(0);" id="btn-remove" name="btn-remove" class="btn btn-primary btn-block">
+                      <span aria-hidden="true">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                      </span>Move
+                  </a>
+              </div>
+              <div class="col-md-5">
+                <select name="selectto" id="select-to" multiple="multiple" size="9" class="form-control">
+                  </select>
+                <a href="javascript:void(0);" id="btn-up" class="btn btn-success btn-sm">Up</a>
+                <a href="javascript:void(0);" id="btn-down" class="btn btn-success btn-sm">Down</a>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div> -->
+    </div>
+  </div>
+</div>

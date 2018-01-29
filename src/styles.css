@@ -85,7 +85,8 @@ accordion-group .acordion-icon:hover  {
   color: #fff;
   background-color: #23527c !important;
   border-color: #23527c !important;
-  opacity: .9
+  opacity: .9;
+  border-radius: 0.25rem;
 }
 
 .btn-primary:hover {

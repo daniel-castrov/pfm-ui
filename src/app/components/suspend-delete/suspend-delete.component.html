@@ -1,0 +1,68 @@
+<app-header title="JSCBIS Login"></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-10">
+      <div class="card-header">
+        Suspend/Delete User
+      </div>
+      <div class="card-container">
+        <table class="table table-header-rotated">
+          <thead>
+            <tr>
+              <!-- First column header is not rotated -->
+              <th>UserID</th>
+              <!-- Following headers are rotated -->
+              <th class="rotate">
+                <div><span>Name</span></div>
+              </th>
+              <th class="rotate">
+                <div><span>Community</span></div>
+              </th>
+              <th class="rotate">
+                <div><span>Last Login</span></div>
+              </th>
+              <th class="rotate">
+                <div><span>Interval</span></div>
+              </th>
+              <th class="rotate">
+                <div><span>Suspend</span></div>
+              </th>
+              <th class="rotate">
+                <div><span>Delete</span></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="row-header">User</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><input checked="checked" name="column5[]" type="radio" value="row3-column5"></td>
+            <td><input checked="checked" name="column6[]" type="radio" value="row3-column6"></td>
+
+          </tr>
+          <tr>
+            <th class="row-header">User</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><input checked="checked" name="column5[]" type="radio" value="row3-column5"></td>
+            <td><input checked="checked" name="column6[]" type="radio" value="row3-column6"></td>
+          </tr>
+          <tr>
+            <th class="row-header">User</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><input checked="checked" name="column5[]" type="radio" value="row3-column5"></td>
+            <td><input checked="checked" name="column6[]" type="radio" value="row3-column6"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

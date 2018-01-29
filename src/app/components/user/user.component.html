@@ -23,7 +23,8 @@
         <div class="card-header">
           User Information:
           <button class="btn-card-header" title="Edit" (click)="editMode()">
-            <i class="fa fa-pencil icon-pad" aria-hidden="true"> Edit</i>
+            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
+            Edit
           </button>
         </div>
         <div class="card-container">
@@ -80,10 +81,10 @@
         <div class="card-header">
           User Information:
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
-            <i class="fa fa-ban icon-pad" aria-hidden="true"> Cancel</i>
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
           </button>
           <button class="btn-card-header" title="Save" (click)="saveCurrentUser()">
-            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> Save</i>
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
           </button>
         </div>
         <div class="card-container">

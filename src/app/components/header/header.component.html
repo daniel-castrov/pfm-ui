@@ -55,7 +55,6 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
@@ -94,16 +93,27 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <a class="dropdown-item" href="#" href="#" routerLink="/home">Approve User Access</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Request User Access Changes</a>
+          <a class="dropdown-item" href="#" routerLink="/home">Permission Changes</a>
           <a class="dropdown-item" href="#" routerLink="/home">Approve User Access Changes</a>
           <a class="dropdown-item" href="#" routerLink="/home">Create Role</a>
           <a class="dropdown-item" href="#" routerLink="/home">Delete Role</a>
           <a class="dropdown-item" href="#" routerLink="/home">Assign Role (+/-)</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Suspend/Delete User</a>
+          <a class="dropdown-item" href="#" routerLink="/suspend-delete">Suspend/Delete User</a>
           <a class="dropdown-item" href="#" routerLink="/home">Access NDA</a>
           <a class="dropdown-item" href="#" routerLink="/create-community">Create New Community</a>
         </div>
       </li>
     </ul>
+  </div>
+  <div class="col-3">
+    <span class="dropdown show actions-menu">
+      <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Actions
+        <i class="fa fa-bell" aria-hidden="true"></i>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
+        <a class="dropdown-item" href="#" routerLink="/roles">User Role Change Request</a>
+      </div>
+    </span>
   </div>
 </nav>

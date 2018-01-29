@@ -159,3 +159,12 @@ nav a:hover {
 a.dropdown-item {
     color: #24537b !important;
 }
+
+.actions-menu {
+  top: 41px;
+  left: 152px;
+}
+
+.actions-menu > a > i {
+  font-size: 16px;
+}
