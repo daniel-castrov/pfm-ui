@@ -1,52 +1,49 @@
 .table-header-rotated {
   border-collapse: collapse;
 }
+
+tr:nth-child(even) {
+  background: #f6f5f5;
+}
+
 .csstransforms .table-header-rotated td {
   width: 30px;
 }
+
 .no-csstransforms .table-header-rotated th {
   padding: 5px 10px;
-  border: 1px solid #ccc;
 }
+
 .table-header-rotated td {
-  text-align: left;
+  text-align: center;
   padding: 10px;
   border: 1px solid #ccc;
 }
+
 .csstransforms .table-header-rotated th.rotate {
   height: 140px;
   white-space: nowrap;
   border: 1px solid #ccc;
 }
-.csstransforms .table-header-rotated th.rotate > div {
+
+.csstransforms .table-header-rotated th.rotate>div {
   -webkit-transform: translate(25px, 51px) rotate(315deg);
-          transform: translate(25px, 51px) rotate(315deg);
+  transform: translate(25px, 51px) rotate(315deg);
   width: 30px;
 }
-.csstransforms .table-header-rotated th.rotate > div > span {
+
+.csstransforms .table-header-rotated th.rotate>div>span {
   border-bottom: 1px solid #ccc;
   padding: 5px 10px;
 }
+
 .table-header-rotated th.row-header {
   padding: 0 10px;
   border-bottom: 1px solid #ccc;
 }
 
-
 .card-container {
   height: 450px;
-}
-
-.card-container ul {
-  margin-top: 10px;
-  margin: 0;
-}
-
-.card-container ul li {
-  list-style: none;
-  line-height: 1.5rem;
-  padding: 4px 0 0 4px;
-  margin-left: -30px;
 }
 
 .btn-card-header {
@@ -70,13 +67,9 @@
   margin: 0 5px;
 }
 
-.btn-card-header:hover {
-    opacity: .7;
-}
-
 .card-header {
   float: left;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   height: 40px;
   width: 100%;
   color: #000;
@@ -99,23 +92,9 @@
   padding: 10px;
 }
 
-.card-container > ul > li > span i.fa {
-  color: #24527b;
-  cursor: pointer;
-  font-size: 25px;
-  margin-right: 5px;
-}
-
-.card-container > ul > li > span i.fa:hover {
-  color: #ccc;
-}
-
-.card-container label {
-  display: inline-block;
-  margin-bottom: .5rem;
-  color: #25527a;
-  font-size: 15px;
-  font-weight: 500;
-  margin: 4px 0;
-  padding: 0 10px;
+.table-scroll {
+  padding: 0;
+  height: 240px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
