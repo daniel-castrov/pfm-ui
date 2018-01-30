@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() { 
   }
 
     getCurrentUser() {
