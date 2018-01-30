@@ -23,7 +23,7 @@ import {
 export class HeaderComponent implements OnInit {
 
   id: number;
-  pexUser:any;
+  pexUser:User;
   isloggedin:boolean=false;
 
   constructor(
