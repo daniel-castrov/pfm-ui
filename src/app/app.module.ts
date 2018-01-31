@@ -39,6 +39,7 @@ import { FundLineService } from './generated/api/fundLine.service';
 import { ProgramService } from './generated/api/program.service';
 import { TagService } from './generated/api/tag.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
+import { UserApprovalComponent } from './components/user-approval/user-approval.component';
 import { UserService } from './generated/api/user.service';
 
 // ROUTES
@@ -60,7 +61,8 @@ const appRoutes: Routes = [
   {path:'programs', component:ProgramsComponent},
   {path:'roles', component:RolesComponent},
   {path:'suspend-delete', component:SuspendDeleteComponent},
-  {path:'user/:id', component:UserComponent}
+  {path:'user/:id', component:UserComponent},
+  {path:'user-approval', component:UserApprovalComponent}
 ];
 
 @NgModule({
@@ -83,9 +85,10 @@ const appRoutes: Routes = [
     ProgramsComponent,
     RolesComponent,
     SuspendDeleteComponent,
+    UserApprovalComponent,
     UserComponent
-
   ],
+
   imports: [
     AccordionModule.forRoot(),
     BrowserModule,

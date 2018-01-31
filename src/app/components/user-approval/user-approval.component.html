@@ -1,0 +1,62 @@
+<app-header></app-header>
+<div class="container-fluid" *ngIf="header.isloggedin">
+  <div class="row main-content">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg-10">
+      <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <h5>John Doe User Access Request (Date: 10-08-2017 at 10:32)</h5>
+        <hr>
+        <span class="form-group">
+          <input type="text" class="form-control firstname" placeholder="Name" disabled>
+        </span>
+        <span class="form-group">
+          <input type="text" class="form-control middle" placeholder="MI" name="middlename" disabled>
+        </span>
+        <span class="form-group">
+          <input type="text"class="form-control lastname" placeholder="Last Name" name="lastname" disabled>
+        </span>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput"  placeholder="Title/Rank" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="rank" placeholder="Duty/Job" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="email" placeholder="Email" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="phone" placeholder="Phone" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="address" placeholder="Street, City, State, Zipcode" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="organization"  placeholder="Community Name" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="branch" placeholder="Branch" disabled>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" name="community" placeholder="Community Access Request" disabled>
+        </div>
+        <div class="form-group">
+          <a href="../assets/pdf/NON_DISCLOSURE_FOR_CONTRACTORS.pdf" target="_blank">Signed NDA</a>
+        </div>
+        <span class="form-group sponsor">
+          <input type="text" class="form-control applyinput" name="sponsorname" placeholder="Sponsor Name" disabled>
+        </span>
+        <span class="form-group sponsor">
+          <input type="text" class="form-control applyinput sponsor" name="sponsorphone" placeholder="Sponsor Phone" disabled>
+        </span>
+        <span class="form-group sponsor">
+          <input type="text" class="form-control applyinput sponsor" name="sponsoremail" placeholder="Sponsor Email" disabled>
+        </span>
+        <div class="controls">
+          <button class="btn btn-danger">Deny</button>
+          <button class="btn btn-primary">Approve</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
