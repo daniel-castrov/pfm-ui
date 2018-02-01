@@ -3,6 +3,9 @@ import { Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserComponent } from '../user/user.component';
 import { User } from '../../generated/model/user';
+import { AuthUser } from '../../generated/model/authUser';
+
+
 import { RestResult } from '../../generated/model/restResult';
 import { GrantedAuthority } from '../../generated/model/grantedAuthority';
 import { Communication } from '../../generated/model/communication';
@@ -23,7 +26,7 @@ import {
 export class HeaderComponent implements OnInit {
 
   id: number;
-  pexUser:User;
+  authUser:AuthUser;
   isloggedin:boolean=false;
 
   constructor(
@@ -48,9 +51,9 @@ export class HeaderComponent implements OnInit {
       resp.subscribe(
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
-          this.pexUser = JSON.parse(atob(authHeader));
+          this.authUser = JSON.parse(atob(authHeader));
           this.isloggedin = true;
-          console.log("Current User: " + this.pexUser.cn);
+          console.log("Current User: " + this.authUser.username);
         }
       );
   }

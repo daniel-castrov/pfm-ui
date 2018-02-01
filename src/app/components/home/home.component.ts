@@ -28,7 +28,6 @@ export class HomeComponent implements OnInit {
   }
 
   id: number;
-  pexUser:User;
   jsonUser:string;
 
   constructor(
@@ -55,7 +54,7 @@ export class HomeComponent implements OnInit {
           var authHeader = r.headers.get('Authorization');
           //console.log("HELLO"+authHeader);
           this.jsonUser = atob(authHeader);
-          this.pexUser = JSON.parse(this.jsonUser);
+          //this.pexUser = JSON.parse(this.jsonUser);
 
         }
 
