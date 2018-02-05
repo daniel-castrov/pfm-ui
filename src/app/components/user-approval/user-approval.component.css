@@ -21,10 +21,6 @@
   clear: both;
 }
 
-label, select {
-  color: #868e9b;
-}
-
 .firstname, .lastname {
   display: inline;
   width: 300px;
@@ -47,24 +43,6 @@ label, select {
   display: inline;
   width: 60px;
   padding: 6px 4px;
-}
-
-.name-error {
-  display: block;
-  position: absolute;
-  margin-top: -8px;
-  width: 230px !important;
-}
-
-.alert-danger {
-  color: #721c24;
-  width: 300px;
-}
-
-.alert {
-  margin-top: -8px;
-  padding: 0 5px;
-  margin-bottom: 2px;
 }
 
 .form-group {
