@@ -3,8 +3,6 @@ import { CommunityService, RestResult, Community, UserService, User } from '../.
 import { HeaderComponent } from '../../components/header/header.component';
 import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
-import { AccordionModule } from 'primeng/accordion';
-
 
 @Component({
   selector: 'app-create-community',
@@ -75,7 +73,7 @@ export class CreateCommunityComponent implements OnInit {
 
     this.newCommunity.approvers =[];
     this.newCommunity.approvers.push(this.newapprover);
-    
+
     if (this.isValid()){
 
       let result: RestResult;
@@ -98,7 +96,7 @@ export class CreateCommunityComponent implements OnInit {
   isValid(){
     let com:Community;
     for ( com of this.communities ){
-      if (  com.name === this.newCommunity.name || 
+      if (  com.name === this.newCommunity.name ||
             com.identifier === this.newCommunity.identifier ){
         return false;
       }
