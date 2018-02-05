@@ -98,6 +98,29 @@ paths:
           description: "Forbidden"
         404:
           description: "Community does not exist."
+    get:
+      tags:
+      - "Community"
+      summary: "Gets a Community"
+      description: "Get a Community user identified via its id"
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a community"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occurred."
+        403:
+          description: "Forbidden"
+        404:
+          description: "Community does not exist."
   /mydetails:
     get:
       tags:
@@ -271,6 +294,15 @@ definitions:
         type: "string"
       result:
         type: "object"
+  AuthUser:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
   User:
     type: "object"
     properties:
