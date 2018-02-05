@@ -1,4 +1,5 @@
-<div class="header">
+<app-header-nologin *ngIf="!isloggedin"></app-header-nologin>
+<div class="header" *ngIf="isloggedin">
   <div class="container-fluid">
     <div class="row">
       <div class="col-6">
@@ -35,11 +36,11 @@
         </span>
         <span class="dropdown show">
           <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ pexUser?.firstName }} {{ pexUser?.lastName }}
+            {{ authUser?.firstName }} {{ authUser?.lastName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" routerLink="/user/{{ pexUser?.username }}">Profile</a>
+            <a class="dropdown-item" routerLink="/user/{{ authUser?.username }}">Profile</a>
             <a class="dropdown-item" href="#" routerLink="/home">Preferences</a>
             <!--<div class="dropdown-divider"></div>-->
             <!--<a class="dropdown-item" href="/">Logout</a>-->
@@ -51,7 +52,7 @@
 </div>
 
 <!-- private header for user login -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isloggedin">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -90,7 +91,7 @@
         <a class="nav-link" href="#" routerLink="/home">Search</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <a class="dropdown-item" href="#" href="#" routerLink="/home">Approve User Access</a>
           <a class="dropdown-item" href="#" routerLink="/home">Permission Changes</a>
@@ -113,6 +114,7 @@
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
         <a class="dropdown-item" href="#" routerLink="/roles">User Role Change Request</a>
+        <a class="dropdown-item" href="#" routerLink="/user-approval">User Approval Request</a>
       </div>
     </span>
   </div>

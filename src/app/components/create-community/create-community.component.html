@@ -7,9 +7,11 @@
           <div accordion-heading class="clearfix">
             List of Communitiess
           </div>
-          <ul>
+          <ul class="community-list">
             <li *ngFor="let comm of communities">
-              {{ comm?.name }}
+              <span class="community-name">{{ comm?.name }}</span>
+              <span class="btn-card-header"><a href="#" routerLink="/community-details"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Edit</a></span>
+              <span class="btn-card-header"><a  href="#" routerLink="/community-details"><i class="fa fa-eye icon-pad" aria-hidden="true"></i>View</a></span>
             </li>
           </ul>
           <div>
@@ -45,7 +47,7 @@
             </select>
           </div>
             <button class="btn btn-default" value="Cancel" (click)="addForm.reset()">Cancel</button>
-            <button class="btn btn-primary" type="submit" [disabled]="!addForm.form.valid"> 
+            <button class="btn btn-primary" type="submit" [disabled]="!addForm.form.valid">
               <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
               Add Community
             </button>
