@@ -22,6 +22,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { ManageUsersComponent } from './components/manage-users/manage-users.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
   {path:'header', component:HeaderComponent},
   {path:'header-nologin', component:HeaderNologinComponent},
   {path:'home', component:HomeComponent},
+  {path:'manage-users', component:ManageUsersComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
@@ -74,11 +76,12 @@ const appRoutes: Routes = [
     ContactComponent,
     CommunityDetailsComponent,
     CreateCommunityComponent,
+    FilterComponent,
     HeaderComponent,
     HeaderNologinComponent,
     HomeComponent,
     LoginComponent,
-    FilterComponent,
+    ManageUsersComponent,
     NoAccessComponent,
     NotFoundComponent,
     PlanningComponent,
@@ -105,8 +108,8 @@ const appRoutes: Routes = [
     TagService,
     MyDetailsService,
     UserService,
-    //{ provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
-    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+    { provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
+    //{ provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
   ],

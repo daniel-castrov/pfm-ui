@@ -1,0 +1,42 @@
+.user-name {
+  display: inline-block;
+  word-wrap: break-word;
+  width: 240px;
+  font-size: 14px;
+}
+
+.user-label {
+  display: inline-block;
+  word-wrap: break-word;
+  font-size: 14px;
+  margin-right: 20px;
+}
+
+.card-container {
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px #ccc solid;
+  border-radius: 5px;
+  color: #000;
+  padding: 30px;
+}
+
+.card-container ul {
+  margin-left: -60px;
+  margin-top: 20px;
+}
+
+.card-container li {
+  list-style: none;
+  line-height: 1.5rem;
+  margin-top: 19px;
+  padding: 10px 0;
+  list-style: none;
+  line-height: 1.5rem;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.card-container li:nth-child(even) {
+  background-color: #f7f7f7;
+}

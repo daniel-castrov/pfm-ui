@@ -1,0 +1,24 @@
+<app-header title="JSCBIS Login"></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-10 col-md-7">
+      <div class="card-header">
+          <i class="fa fa-users icon-pad"></i>List of Users
+      </div>
+      <div class="card-container">
+        <ul>
+          <li>
+            <span class="user-name">User Name Placeholder</span>
+            <span class="user-label"><i class="fa fa-meh-o icon-pad" aria-hidden="true"></i> Status</span>
+            <span class="btn-card-header" routerLink="/user/{{ authUser?.username }}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Edit</span>
+          </li>
+          <li>
+            <span class="user-name">User Name Placeholder</span>
+            <span class="user-label"><i class="fa fa-meh-o icon-pad" aria-hidden="true"></i> Status</span>
+            <span class="btn-card-header" routerLink="/user/{{ authUser?.username }}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Edit</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
