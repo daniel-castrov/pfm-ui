@@ -1,3 +1,21 @@
+.community-list li {
+  list-style: none;
+  line-height: 1.5rem;
+  padding: 5px;
+  margin-left: -50px;
+}
+
+.community-list li:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+.community-name {
+  display: inline-block;
+  word-wrap: break-word;
+  width: 300px;
+  margin-right: 100px;
+}
+
 .form-label {
   font-size: 16px;
   color: #23527c;
