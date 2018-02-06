@@ -12,6 +12,7 @@ tags:
 - name: "Tag"
 - name: "MyDetails"
 - name: "User"
+- name: "Role"
 paths:
   /blank:
     get:
@@ -249,6 +250,47 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /roles:
+     get:
+      tags:
+      - "Role"
+      summary: "List of Roles"
+      description: "Returns a list containing all Roles"
+      operationId: "findall"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Roles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /userRoles/{id}:
+     get:
+      tags:
+      - "Role"
+      summary: "List of Roles"
+      description: "Returns a list containing all Roles for a user"
+      operationId: "find"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A FundLine"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
   /fundLine/findall:
     get:
       tags:
@@ -386,6 +428,33 @@ definitions:
         type: "array"
         items:
           $ref: '#/definitions/GrantedAuthority'
+  Role:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      roleName:
+        type: "string"
+      roleDescription:
+        type: "string"
+  Permission:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      roleName:
+        type: "string"
+      permission:
+        type: "string"
+  UserRole:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      email:
+        type: "string"
+      roleName:
+        type: "string"
   GrantedAuthority:
     type: "object"
     properties:
