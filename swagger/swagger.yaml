@@ -163,13 +163,39 @@ paths:
           description: "The User does not exist."
         500:
           description: "An unexpected error occured."
-  /user/findall:
+  /users:
     get:
       tags:
       - "User"
       summary: "List of all users"
       description: "Returns a list containing all users"
-      operationId: "findall"
+      operationId: "getAllUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /user:
+    put:
+      tags:
+      - "User"
+      summary: "changes a user"
+      operationId: "updateUser"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "the User"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
       produces:
       - "application/json"
       responses:
@@ -297,11 +323,9 @@ definitions:
   AuthUser:
     type: "object"
     properties:
-      username:
+      email:
         type: "string"
-      firstName:
-        type: "string"
-      lastName:
+      fullName:
         type: "string"
   User:
     type: "object"
@@ -314,15 +338,7 @@ definitions:
         type: "string"
       cn:
         type: "string"
-      organization:
-        type: "string"
-      accountNonExpired:
-        type: "boolean"
-      accountNonLocked:
-        type: "boolean"
-      credentialsNonExpired:
-        type: "boolean"
-      enabled:
+      suspended:
         type: "boolean"
       communications:
         type: "array"
@@ -332,15 +348,6 @@ definitions:
         type: "object"
         additionalProperties:
             type: string
-      authorities:
-        type: "array"
-        items:
-          $ref: '#/definitions/GrantedAuthority'
-  GrantedAuthority:
-    type: "object"
-    properties:
-      authority:
-        type: "string"
   Communication:
     type: "object"
     properties:
@@ -448,11 +455,3 @@ definitions:
         type: "string"
       identifier:
         type: "string"
-      members:
-        type: "array"
-        items:
-          type: "string"
-      approvers:
-        type: "array"
-        items:
-          type: "string"
