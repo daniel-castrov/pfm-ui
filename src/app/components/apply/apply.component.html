@@ -72,7 +72,7 @@
           <input type="text" class="form-control applyinput" [(ngModel)]="apply.address" name="address" #applyAddress="ngModel" placeholder="Street, City, State, Zipcode">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" [(ngModel)]="apply.organization" name="organization" #applyOrganization="ngModel" minlength="10" placeholder="*Community Name" required>
+          <input type="text" class="form-control applyinput" [(ngModel)]="apply.organization" name="organization" #applyOrganization="ngModel" minlength="10" placeholder="*Organization Name" required>
           <div *ngIf="applyOrganization.errors?.required && applyOrganization.touched" class="alert alert-danger">Organization is required</div>
           <div *ngIf="applyOrganization.errors?.minlength && applyOrganization.touched" class="alert alert-danger">Organization should be at least 10 characters</div>
         </div>
