@@ -1,0 +1,46 @@
+<app-header title="JSCBIS Login"></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+      <div class="col-8">
+        <form id="multi">
+          <fieldset>
+            <div class="row">
+              <div class="col-md-5">
+                <h6>Current Roles</h6>
+                <select name="selectfrom" id="select-from" multiple="multiple" size="9" class="form-control">
+                  <option value="1">Role 1</option>
+                  <option value="2">Role 2</option>
+                  <option value="2">Role 3</option>
+                  <option value="2">Role 4</option>
+                  <option value="2">Role 5</option>
+                  </select>
+                <!-- <a href="javascript:void(0);" id="btn-up-source" class="btn btn-success btn-sm">Up</a>
+                <a href="javascript:void(0);" id="btn-down-source" class="btn btn-success btn-sm">Down</a> -->
+              </div>
+
+              <div class="col-md-2 move">
+                <a href="javascript:void(0);" id="btn-add" name="btn-add" class="btn btn-primary btn-block">
+                      Move
+                      <span class="" aria-hidden="true">
+                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                      </span>
+                  </a>
+                <a href="javascript:void(0);" id="btn-remove" name="btn-remove" class="btn btn-primary btn-block">
+                      <span aria-hidden="true">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                      </span>Move
+                  </a>
+              </div>
+              <div class="col-md-5">
+                <h6>Available Roles</h6>
+                <select name="selectto" id="select-to" multiple="multiple" size="9" class="form-control">
+                  </select>
+                <!-- <a href="javascript:void(0);" id="btn-up" class="btn btn-success btn-sm">Up</a>
+                <a href="javascript:void(0);" id="btn-down" class="btn btn-success btn-sm">Down</a> -->
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+  </div>
+</div>

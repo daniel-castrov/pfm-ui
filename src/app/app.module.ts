@@ -12,6 +12,7 @@ import { RouterModule, Routes } from '@angular/router';
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
+import { AccessChangeComponent } from './components/access-change/access-change.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
@@ -47,12 +48,12 @@ import { UserApprovalComponent } from './components/user-approval/user-approval.
 import { UserService } from './generated/api/user.service';
 import { RoleService } from './generated/api/role.service';
 
-
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
+  {path:'access-change', component:AccessChangeComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details', component:CommunityDetailsComponent},
   {path:'create-community', component:CreateCommunityComponent},
@@ -71,13 +72,14 @@ const appRoutes: Routes = [
   {path:'user/:id', component:UserComponent},
   {path:'user-approval', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
-  
+
 ];
 
 @NgModule({
   declarations: [
     AboutComponent,
     AboutPrivateComponent,
+    AccessChangeComponent,
     AppComponent,
     ApplyComponent,
     ContactComponent,
