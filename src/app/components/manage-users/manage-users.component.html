@@ -63,18 +63,16 @@
             <li>Landing Page: {{ targetUser?.preferences.landingPage }} </li>
           </ul>
         </div>
-        <!--
         <div class="card-header">
-          Roles:
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let auth of targetUser?.authorities">
-              {{ auth?.authority }}
-            </li>
-          </ul>
-        </div>
-      -->
+            Roles:
+          </div>
+          <div class="card-container">
+            <ul>
+              <li *ngFor="let role of userRoles">
+                {{ role.roleName }}
+              </li>
+            </ul>
+          </div>
       </div>
 
       <!-- EDITING MODE-->
@@ -180,6 +178,19 @@
           </button>
         </div>
       -->
+
+      <div class="card-header">
+          Roles:
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let role of userRoles">
+              {{ role.roleName }}
+            </li>
+          </ul>
+        </div>
+
+
       </div>
     </div>
   </div>
