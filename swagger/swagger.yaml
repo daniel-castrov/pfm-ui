@@ -317,6 +317,33 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /userRole:
+    post:
+      tags:
+      - "Role"
+      summary: "Assign a User to a Role"
+      description: "Assign a User to a Role"
+      operationId: "assignUserToRole"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Assign a User to a Role"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: "Community successfully created."
+        400:
+          description: "Community couldn't be created."
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden"
   /fundLine/findall:
     get:
       tags:
