@@ -163,7 +163,7 @@ paths:
           description: "The User does not exist."
         500:
           description: "An unexpected error occured."
-  /user/findall:
+  /users:
     get:
       tags:
       - "User"
@@ -175,6 +175,56 @@ paths:
       responses:
         200:
           description: "A list of users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /user:
+    post:
+      tags:
+      - "User"
+      summary: "Creates a User"
+      description: "Adds a User"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Create a User"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "Community successfully created."
+        400:
+          description: "Community couldn't be created."
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden"
+  /user/{id}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a user by Id"
+      description: "Returns a User with the given id"
+      operationId: "get"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A User"
           schema:
             $ref: "#/definitions/RestResult"
         500:
@@ -297,15 +347,15 @@ definitions:
   AuthUser:
     type: "object"
     properties:
-      username:
+      email:
         type: "string"
-      firstName:
-        type: "string"
-      lastName:
+      fullName:
         type: "string"
   User:
     type: "object"
     properties:
+      id:
+        type: "string"
       email:
         type: "string"
       firstName:

@@ -31,6 +31,9 @@ import { ProgramsComponent } from './components/programs/programs.component';
 import { RolesComponent } from './components/roles/roles.component';
 import { SuspendDeleteComponent } from './components/suspend-delete/suspend-delete.component';
 import { UserComponent } from './components/user/user.component';
+import { UserListComponent } from './components/user-list/user-list.component';
+
+
 
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
@@ -56,7 +59,7 @@ const appRoutes: Routes = [
   {path:'header', component:HeaderComponent},
   {path:'header-nologin', component:HeaderNologinComponent},
   {path:'home', component:HomeComponent},
-  {path:'manage-users', component:ManageUsersComponent},
+  {path:'manage-users/:id', component:ManageUsersComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
@@ -64,7 +67,9 @@ const appRoutes: Routes = [
   {path:'roles', component:RolesComponent},
   {path:'suspend-delete', component:SuspendDeleteComponent},
   {path:'user/:id', component:UserComponent},
-  {path:'user-approval', component:UserApprovalComponent}
+  {path:'user-approval', component:UserApprovalComponent},
+  {path:'user-list', component:UserListComponent},
+  
 ];
 
 @NgModule({
@@ -89,7 +94,8 @@ const appRoutes: Routes = [
     RolesComponent,
     SuspendDeleteComponent,
     UserApprovalComponent,
-    UserComponent
+    UserComponent,
+    UserListComponent
   ],
 
   imports: [
