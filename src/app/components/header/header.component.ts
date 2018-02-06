@@ -51,9 +51,11 @@ export class HeaderComponent implements OnInit {
       resp.subscribe(
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
+          //console.log("Current authHeader: " + authHeader);
           this.authUser = JSON.parse(atob(authHeader));
+          //console.log("Current json: " +atob(authHeader));
           this.isloggedin = true;
-          console.log("Current User: " + this.authUser.username);
+          //console.log("Current User: " + this.authUser.email);
         }
       );
   }

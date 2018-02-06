@@ -1,18 +1,185 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isloggedin">
-    <div class="col-10 col-md-7">
-      <div class="card-header">
-        <i class="fa fa-users icon-pad"></i>List of Users
+  <div class="row" *ngIf="header.isloggedin">
+    <div class="col-md-2">
+      <div class="profile-sidebar">
+        <div class="profile-userpic">
+          <img src="assets/img/user.png" alt="User">
+        </div>
+        <div class="profile-usertitle">
+          <div class="profile-usertitle-name">
+            {{ targetUser?.cn }}
+          </div>
+          <div class="profile-usertitle-job">
+          </div>
+        </div>
       </div>
-      <div class="card-container">
-        <ul>
-          <li>
-            <span class="user-name">{{ jsonUser }}</span>
-            <span class="user-label"><i class="fa fa-meh-o icon-pad" aria-hidden="true"></i> Status</span>
-            <span class="btn-card-header" routerLink="/user/{{ authUser?.username }}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Edit</span>
-          </li>
-        </ul>
+    </div>
+    <div class="col-md-9">
+
+      <!-- NOT EDITIING MODE-->
+      <div *ngIf="!isdEditMode">
+
+        <div class="card-header">
+          User Information:
+          <button class="btn-card-header" title="Edit" (click)="editMode()">
+            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
+            Edit
+          </button>
+        </div>
+        <div class="card-container">
+          <ul>
+            <li>First Name: {{ targetUser?.firstName }}</li>
+            <li>Last Name: {{ targetUser?.lastName }}</li>
+            <!--
+            <li>CN: {{ targetUser?.cn }}</li>
+            <li>Account non-expired: {{ targetUser?.accountNonExpired }}</li>
+            <li>Account non-locked: {{ targetUser?.accountNonLocked }}</li>
+            <li>Credentials non-exipred: {{ targetUser?.credentialsNonExpired }}</li>
+            <li>Account Enabled: {{ targetUser?.enabled }}</li>
+            -->
+            <li>Community: {{ targetUser?.organization }}</li>
+          </ul>
+        </div>
+        <div class="card-header">
+          Communications:
+        </div>
+        <div *ngIf="!isdEditMode" class="card-container">
+          <ul>
+            <li *ngFor="let comm of targetUser?.communications">
+              {{ comm.type }} {{ comm.subtype }} {{ comm.value }}
+              <!--{{ comm.confirmed }} {{ comm.preferred }}-->
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-header">
+          Preferences:
+        </div>
+        <div class="card-container">
+          <ul>
+            <li>Default Color: {{ targetUser?.preferences.defaultColor }} </li>
+            <li>Clock: {{ targetUser?.preferences.clock }} </li>
+            <li>Landing Page: {{ targetUser?.preferences.landingPage }} </li>
+          </ul>
+        </div>
+        <!--
+        <div class="card-header">
+          Roles:
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let auth of targetUser?.authorities">
+              {{ auth?.authority }}
+            </li>
+          </ul>
+        </div>
+      -->
+      </div>
+
+      <!-- EDITING MODE-->
+      <div *ngIf="isdEditMode">
+
+        <div class="card-header">
+          User Information:
+          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
+          </button>
+          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
+          </button>
+        </div>
+        <div class="card-container">
+          <ul>
+            <li>
+              First Name:
+              <input type="text" [(ngModel)]="targetUser.firstName">
+            </li>
+            <li>
+              Last Name:
+              <input type="text" [(ngModel)]="targetUser.lastName">
+            </li>
+            <!--
+                <li>CN: {{ targetUser?.cn }}</li>
+                <li>Account non-expired: {{ targetUser?.accountNonExpired }}</li>
+                <li>Account non-locked: {{ targetUser?.accountNonLocked }}</li>
+                <li>Credentials non-exipred: {{ targetUser?.credentialsNonExpired }}</li>
+                <li>Account Enabled: {{ targetUser?.enabled }}</li>
+                -->
+            <li>Community: {{ targetUser?.organization }}</li>
+          </ul>
+        </div>
+        <div class="card-header">
+          Communications:
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let comm of targetUser?.communications">
+              <select [(ngModel)]="comm.type" id="cusSelectbox">
+                <option value="Select">Select</option>
+                <option value="EMAIL">Email</option>
+                <option value="PHONE">Phone</option>
+              </select>
+              <select [(ngModel)]="comm.subtype">
+                <option value="PRIMARY">Primary</option>
+                <option value="SECONDARY">Secondary</option>
+                <option value="ALTERNATE">Alternate</option>
+              </select>
+              <input [(ngModel)]="comm.value" placeholder="value">
+              <!--
+              <select [(ngModel)]="comm.confirmed">
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+              <select [(ngModel)]="comm.preferred">
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            -->
+            <li>
+              <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
+                <i class="fa fa-plus-square" aria-hidden="true"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-header">
+          Preferences:
+        </div>
+        <div class="card-container">
+          <ul>
+            <li>Default Color:
+              <input type="text" [(ngModel)]="targetUser.preferences.defaultColor">
+            </li>
+            <li>Clock:
+              <input type="text" [(ngModel)]="targetUser.preferences.clock">
+            </li>
+            <li>Landing Page:
+              <input type="text" [(ngModel)]="targetUser.preferences.landingPage">
+            </li>
+          </ul>
+        </div>
+        <!--
+        <div class="card-header">
+          Roles:
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let auth of targetUser?.authorities">
+              {{ auth?.authority }}
+            </li>
+          </ul>
+        </div>
+        <div class="card-header">
+          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+            <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
+          </button>
+          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Save
+          </button>
+        </div>
+      -->
       </div>
     </div>
   </div>
