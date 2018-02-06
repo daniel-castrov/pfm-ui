@@ -66,13 +66,6 @@
         <div class="card-header">
           Roles:
         </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let auth of currentUser?.authorities">
-              {{ auth?.authority }}
-            </li>
-          </ul>
-        </div>
       </div>
 
       <!-- EDITING MODE-->
@@ -160,13 +153,6 @@
         </div>
         <div class="card-header">
           Roles:
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let auth of currentUser?.authorities">
-              {{ auth?.authority }}
-            </li>
-          </ul>
         </div>
         <div class="card-header">
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">

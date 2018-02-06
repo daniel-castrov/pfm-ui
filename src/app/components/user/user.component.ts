@@ -66,10 +66,6 @@ export class UserComponent implements OnInit {
       }
     }
 
-    // FIX ME
-    this.currentUser.authorities=[];
-    console.log(JSON.stringify(this.currentUser));
-
     let result:RestResult;
     this.userDetailsService.updateCurrentUser(this.currentUser)
     .subscribe(r => {

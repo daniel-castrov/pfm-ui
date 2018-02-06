@@ -581,3 +581,11 @@ definitions:
         type: "string"
       identifier:
         type: "string"
+      members:
+        type: "array"
+        items:
+          type: "string"
+      approvers:
+        type: "array"
+        items:
+          type: "string"

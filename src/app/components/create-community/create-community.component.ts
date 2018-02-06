@@ -49,7 +49,7 @@ export class CreateCommunityComponent implements OnInit {
 
   getUsers(): void{
     let result:RestResult;
-    this.userService.findall()
+    this.userService.getAllUsers()
     .subscribe(c => {
       result = c;
       this.resultError = result.error;

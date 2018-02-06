@@ -81,11 +81,6 @@ export class ManageUsersComponent implements OnInit {
         this.targetUser.communications.splice(i, 1);
       }
     }
-
-    // FIX ME
-    this.targetUser.authorities=[];
-    console.log(JSON.stringify(this.targetUser));
-
     let result:RestResult;
     //this.userService.create(this.targetUser)
     //.subscribe(r => {
