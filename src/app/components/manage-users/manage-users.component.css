@@ -167,13 +167,14 @@ select:hover {
   margin-left: -2px;
 }
 
-/* Profile Content */
-.profile-content {
-  padding: 20px;
-  background: #fff;
-  min-height: 460px;
+.form-input {
+  display: inline;
+  width: 300px;
+  margin-bottom: 10px;
 }
 
-.modal-title {
-  font-size: 15px;
+.status-checkbox {
+  margin-left: 30px;
+  width:20px;
+  display: inline;
 }

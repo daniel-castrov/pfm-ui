@@ -53,6 +53,7 @@
               <!--{{ comm.confirmed }} {{ comm.preferred }}-->
             </li>
           </ul>
+          <br>
         </div>
 
         <div class="card-header">
@@ -64,6 +65,7 @@
             <li>Clock: {{ targetUser?.preferences.clock }} </li>
             <li>Landing Page: {{ targetUser?.preferences.landingPage }} </li>
           </ul>
+          <br>
         </div>
         <div class="card-header">
             Roles:
@@ -74,6 +76,7 @@
                 {{ role.roleName }}
               </li>
             </ul>
+            <br>
           </div>
       </div>
 
@@ -88,14 +91,15 @@
           <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
           </button>
+          <br>
         </div>
         <div class="card-container">
           <ul>
-
             <li>
-              First Name:
-              <input type="text" [(ngModel)]="targetUser.firstName">
-              <input type="checkbox" name="isactive" [(ngModel)]="targetUser.suspended"/> Suspended
+              <span>First Name:</span>
+              <input class="form-control form-input" type="text" [(ngModel)]="targetUser.firstName">
+
+              <span><input type="checkbox" class="status-checkbox" name="isactive" [(ngModel)]="targetUser.suspended"/>Suspended</span>
             </li>
             <li>
               Last Name:
@@ -110,6 +114,7 @@
                 -->
             <li>Community: {{ targetUser?.organization }}</li>
           </ul>
+          <br>
         </div>
         <div class="card-header">
           Communications:
@@ -138,12 +143,13 @@
                 <option value="false">False</option>
               </select>
             -->
-            <li>
-              <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
-                <i class="fa fa-plus-square" aria-hidden="true"></i>
-              </button>
+
             </li>
           </ul>
+          <hr>
+          <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
+            <i class="fa fa-plus-square" aria-hidden="true"></i>
+          </button>
         </div>
 
         <div class="card-header">
@@ -161,6 +167,7 @@
               <input type="text" [(ngModel)]="targetUser.preferences.landingPage">
             </li>
           </ul>
+          <br>
         </div>
         <!--
         <div class="card-header">
@@ -194,12 +201,12 @@
               {{ role.roleName }}
             </li>
           </ul>
-      
+          <br>
         <div>
             <select name="addRoleSelector" [(ngModel)]="addedrole">
               <option *ngFor="let role of allRoles"
                 [value]="role.roleName">
-                {{role.roleName}} 
+                {{role.roleName}}
               </option>
             </select>
             <button class="btn-card-header" title="AddRole" (click)="addRole()">

@@ -23,7 +23,7 @@
       </div>
       <div class="col-6 col-md-4">
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
           </a>
@@ -36,7 +36,7 @@
           </div>
         </span>
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ authUser?.fullName }}
             <i class="fa fa-user" aria-hidden="true"></i>
@@ -95,17 +95,19 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
-          <a class="dropdown-item" href="#" href="#" routerLink="/home">Approve User Access</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Permission Changes</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Approve User Access Changes</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Create Role</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Delete Role</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Assign Role (+/-)</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Access NDA</a>
-          <a *ngIf="authUser.rolenames.includes('Admin')" 
+          <a *ngIf="authUser.rolenames.includes('Approver')"
+          class="dropdown-item" href="#" routerLink="/home">Approve User Access</a>
+          <a *ngIf="authUser.rolenames.includes('User')"
+            class="dropdown-item" href="#" routerLink="/home">Request Access</a>
+          <a *ngIf="authUser.rolenames.includes('Approver')"
+            class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
+          <a *ngIf="authUser.rolenames.includes('User')"
+            class="dropdown-item" href="#" routerLink="/home">My NDA</a>
+          <a *ngIf="authUser.rolenames.includes('Admin')"
              class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
-          <a class="dropdown-item" href="#" routerLink="/create-community">Create New Community</a>
-        </div>
+          <a *ngIf="authUser.rolenames.includes('Admin')"
+          class="dropdown-item" href="#" routerLink="/create-community">Manage Community</a>
+        </div> 
       </li>
     </ul>
   </div>
@@ -113,7 +115,7 @@
     <span class="dropdown show actions-menu">
       <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Actions
-        <i class="fa fa-bell" aria-hidden="true"></i> 
+        <i class="fa fa-bell" aria-hidden="true"></i>
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
         <a class="dropdown-item" href="#" routerLink="/roles">User Role Change Request</a>
@@ -121,4 +123,4 @@
       </div>
     </span>
   </div>
-</nav> 
+</nav>

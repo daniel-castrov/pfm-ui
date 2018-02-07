@@ -5,25 +5,27 @@
       <div class="card-header">
         <i class="fa fa-users icon-pad"></i>List of Users
       </div>
-      <div class="form-group clearfix">
+      <div class="card-container">
+        <div class="form-group clearfix">
 
-        <table cellpadding="5">
-          <thead>
-            <th>Name</th>
-            <th>Status</th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of users">
-              <td><a routerLink="/manage-users/{{ user?.id }}">
-                {{user.firstName}} {{user.lastName}}
-              </a>
-            </td>
-              <td><span *ngIf="user?.suspended">suspended</span>
-                <span *ngIf="!user?.suspended">active</span>
+          <table>
+            <thead>
+              <th>Name</th>
+              <th>Status</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td class="user-list"><a routerLink="/manage-users/{{ user?.id }}">
+                  {{user.firstName}} {{user.lastName}}
+                </a>
               </td>
-            </tr>
-          </tbody>
-        </table>
+                <td><span *ngIf="user?.suspended">suspended</span>
+                  <span *ngIf="!user?.suspended">active</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
