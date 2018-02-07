@@ -86,7 +86,7 @@ export class ManageUsersComponent implements OnInit {
       }
     }
     let result:RestResult;
-    this.userService.create(this.targetUser)
+    this.userService.updateUser(this.targetUser)
     .subscribe(r => {
       result=r;
     });
