@@ -63,9 +63,6 @@
             <li>Landing Page: {{ currentUser?.preferences.landingPage }} </li>
           </ul>
         </div>
-        <div class="card-header">
-          Roles:
-        </div>
       </div>
 
       <!-- EDITING MODE-->
@@ -150,9 +147,6 @@
               <input type="text" [(ngModel)]="currentUser.preferences.landingPage">
             </li>
           </ul>
-        </div>
-        <div class="card-header">
-          Roles:
         </div>
         <div class="card-header">
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">

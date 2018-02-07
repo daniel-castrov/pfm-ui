@@ -179,6 +179,8 @@
         </div>
       -->
 
+      <hr/>
+
       <div class="card-header">
           Roles:
         </div>
@@ -188,13 +190,22 @@
               {{ role.roleName }}
             </li>
           </ul>
+      
+        <div>
+            <select name="addRoleSelector" [(ngModel)]="addedrole">
+              <option *ngFor="let role of allRoles"
+                [value]="role.roleName">
+                {{role.roleName}} 
+              </option>
+            </select>
+            <button class="btn-card-header" title="AddRole" (click)="addRole()">
+                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Role
+            </button>
+            <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="resetAddRole()">
+                <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
+            </button>
+          </div>
         </div>
-
-       
-            <div *ngFor="let role of allRoles">
-             {{role.roleName}}
-            </div>
-       
       </div>
     </div>
   </div>
