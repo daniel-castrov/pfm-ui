@@ -23,7 +23,8 @@
       </div>
       <div class="col-6 col-md-4">
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -35,7 +36,8 @@
           </div>
         </span>
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ authUser?.fullName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
@@ -99,9 +101,9 @@
           <a class="dropdown-item" href="#" routerLink="/home">Create Role</a>
           <a class="dropdown-item" href="#" routerLink="/home">Delete Role</a>
           <a class="dropdown-item" href="#" routerLink="/home">Assign Role (+/-)</a>
-          <a class="dropdown-item" href="#" routerLink="/suspend-delete">Suspend/Delete User</a>
           <a class="dropdown-item" href="#" routerLink="/home">Access NDA</a>
-          <a class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
+          <a *ngIf="authUser.rolenames.includes('Admin')" 
+             class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
           <a class="dropdown-item" href="#" routerLink="/create-community">Create New Community</a>
         </div>
       </li>
@@ -111,7 +113,7 @@
     <span class="dropdown show actions-menu">
       <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Actions
-        <i class="fa fa-bell" aria-hidden="true"></i>
+        <i class="fa fa-bell" aria-hidden="true"></i> 
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
         <a class="dropdown-item" href="#" routerLink="/roles">User Role Change Request</a>
@@ -119,4 +121,4 @@
       </div>
     </span>
   </div>
-</nav>
+</nav> 

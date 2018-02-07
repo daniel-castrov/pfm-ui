@@ -29,7 +29,6 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { RolesComponent } from './components/roles/roles.component';
-import { SuspendDeleteComponent } from './components/suspend-delete/suspend-delete.component';
 import { UserComponent } from './components/user/user.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 
@@ -67,7 +66,6 @@ const appRoutes: Routes = [
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'roles', component:RolesComponent},
-  {path:'suspend-delete', component:SuspendDeleteComponent},
   {path:'user/:id', component:UserComponent},
   {path:'user-approval', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
@@ -94,7 +92,6 @@ const appRoutes: Routes = [
     PlanningComponent,
     ProgramsComponent,
     RolesComponent,
-    SuspendDeleteComponent,
     UserApprovalComponent,
     UserComponent,
     UserListComponent

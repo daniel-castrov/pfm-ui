@@ -446,6 +446,10 @@ definitions:
         type: "string"
       fullName:
         type: "string"
+      rolenames:
+        type: "array"
+        items:
+          type: "string"
   User:
     type: "object"
     properties:
