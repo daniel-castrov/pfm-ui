@@ -1,47 +1,54 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
-      <div class="col-8">
-
-        <form id="multi">
-          <fieldset>
-            <div class="row">
-              <div class="col-md-5">
-                <h6>Current Roles</h6>
-                <select name="selectfrom" id="select-from" multiple="multiple" size="9" class="form-control">
-                  <option value="1">Role 1</option>
-                  <option value="2">Role 2</option>
-                  <option value="2">Role 3</option>
-                  <option value="2">Role 4</option>
-                  <option value="2">Role 5</option>
-                  </select>
-                <!-- <a href="javascript:void(0);" id="btn-up-source" class="btn btn-success btn-sm">Up</a>
-                <a href="javascript:void(0);" id="btn-down-source" class="btn btn-success btn-sm">Down</a> -->
-              </div>
-
-              <div class="col-md-2 move">
-                <a href="javascript:void(0);" id="btn-add" name="btn-add" class="btn btn-primary btn-block">
-                      Move
-                      <span class="" aria-hidden="true">
-                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                      </span>
-                  </a>
-                <a href="javascript:void(0);" id="btn-remove" name="btn-remove" class="btn btn-primary btn-block">
-                      <span aria-hidden="true">
-                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                      </span>Move
-                  </a>
-              </div>
-              <div class="col-md-5">
-                <h6>Available Roles</h6>
-                <select name="selectto" id="select-to" multiple="multiple" size="9" class="form-control">
-                  </select>
-                <!-- <a href="javascript:void(0);" id="btn-up" class="btn btn-success btn-sm">Up</a>
-                <a href="javascript:void(0);" id="btn-down" class="btn btn-success btn-sm">Down</a> -->
-              </div>
-            </div>
-          </fieldset>
-        </form>
+    <div class="col-8">
+      <div class="row">
+        <div class="col-xs-5">
+          <h6>Current Roles</h6>
+          <select name="from[]" id="multiselect1" class="form-control window" size="8" multiple="multiple">
+            <option value="1">Item 1</option>
+            <option value="2">Item 5</option>
+            <option value="2">Item 2</option>
+            <option value="2">Item 4</option>
+            <option value="3">Item 3</option>
+          </select>
+        </div>
+        <div class="col-xs-2 arrows">
+          <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+          <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+          <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+          <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+        </div>
+        <div class="col-xs-5">
+          <h6>Available Roles</h6>
+          <select name="to[]" id="multiselect1_to" class="form-control window" size="8" multiple="multiple"></select>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="col-xs-5">
+          <h6>Current Programs</h6>
+          <select name="from[]" id="multiselect2" class="form-control window" size="8" multiple="multiple">
+            <option value="1">Item 1</option>
+            <option value="2">Item 5</option>
+            <option value="2">Item 2</option>
+            <option value="2">Item 4</option>
+            <option value="3">Item 3</option>
+          </select>
+        </div>
+
+        <div class="col-xs-2 arrows">
+          <button type="button" id="multiselect2_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+          <button type="button" id="multiselect2_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+          <button type="button" id="multiselect2_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+          <button type="button" id="multiselect2_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+        </div>
+
+        <div class="col-xs-5">
+          <h6>Available Programs</h6>
+          <select name="to[]" id="multiselect2_to" class="form-control window" size="8" multiple="multiple"></select>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
