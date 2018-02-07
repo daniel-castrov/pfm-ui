@@ -8,7 +8,9 @@
         </div>
         <div class="profile-usertitle">
           <div class="profile-usertitle-name">
-            {{ targetUser?.cn }} {{ targetUser?.suspended }}
+            {{ targetUser?.cn }}
+            <div *ngIf="targetUser?.suspended">suspended</div>
+            <div *ngIf="!targetUser?.suspended">active</div>
           </div>
           <div class="profile-usertitle-job">
           </div>
@@ -89,9 +91,11 @@
         </div>
         <div class="card-container">
           <ul>
+
             <li>
               First Name:
               <input type="text" [(ngModel)]="targetUser.firstName">
+              <input type="checkbox" name="isactive" [(ngModel)]="targetUser.suspended"/> Suspended
             </li>
             <li>
               Last Name:

@@ -7,16 +7,35 @@
       </div>
       <div class="form-group clearfix">
 
-        <ul>
-
-          <li *ngFor="let user of users">
-              <a class="dropdown-item" routerLink="/manage-users/{{ user?.id }}">
+        <table cellpadding="5">
+          <thead>
+            <th>Name</th>
+            <th>Status</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td><a routerLink="/manage-users/{{ user?.id }}">
                 {{user.firstName}} {{user.lastName}}
               </a>
+            </td>
+              <td><span *ngIf="user?.suspended">suspended</span>
+                <span *ngIf="!user?.suspended">active</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+<!--        <ul>
+          <li *ngFor="let user of users">
+              <a routerLink="/manage-users/{{ user?.id }}">
+                {{user.firstName}} {{user.lastName}}
+              </a>
+              <span *ngIf="user?.suspended">suspended</span>
+              <span *ngIf="!user?.suspended">active</span>
           </li>
 
         </ul>
-
+      -->
       </div>
     </div>
   </div>
