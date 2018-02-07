@@ -1,21 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
-import * as $ from 'jquery/dist/jquery.slim.min.js';
+import * as $ from 'jquery';
 
+declare const $: any;
 
 @Component({
   selector: 'app-access-change',
   templateUrl: './access-change.component.html',
   styleUrls: ['./access-change.component.css']
 })
+
 export class AccessChangeComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
 
-  status: any = {
-    isFirstOpen: true,
-    isFirstDisabled: false
-  };
+  @ViewChild(HeaderComponent) header;
 
     public ngOnInit() {
 
@@ -84,5 +82,6 @@ export class AccessChangeComponent implements OnInit {
           });
 
       });
+
     }
   }
