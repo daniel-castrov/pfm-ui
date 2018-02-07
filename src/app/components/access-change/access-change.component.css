@@ -1,0 +1,19 @@
+.move {
+  margin-top: 30px;
+}
+
+.window {
+  width: 400px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.main-content {
+  width: 100%;
+  margin: auto 0;
+  padding: 0 15px;
+}
+
+.arrows {
+  padding: 20px;
+}

@@ -73,7 +73,8 @@ export class ManageUsersComponent implements OnInit {
       this.resultError = result.error;
       this.targetUser=result.result;
       console.log(this.targetUser.suspended);
-       // Make a copy of the current user so we can revert changes
+
+      // Make a copy of the current user so we can revert changes
        this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
     });
   }
