@@ -8,7 +8,7 @@
         </div>
         <div class="profile-usertitle">
           <div class="profile-usertitle-name">
-            {{ targetUser?.cn }}
+              {{ targetUser?.firstName }} {{ targetUser?.lastName }}
             <div *ngIf="targetUser?.suspended">suspended</div>
             <div *ngIf="!targetUser?.suspended">active</div>
           </div>
@@ -32,7 +32,8 @@
           <ul>
             <li>First Name: {{ targetUser?.firstName }}</li>
             <li>Last Name: {{ targetUser?.lastName }}</li>
-            <li>Community: {{ targetUser?.organization }}</li>
+            <li>Email: {{targetUser?.communication.primaryEmail}}</li>
+            <li>Phone: {{targetUser?.communication.primaryPhone}}</li>
           </ul>
         </div>
       </div>
@@ -60,8 +61,14 @@
               Last Name:
               <input type="text" [(ngModel)]="targetUser.lastName">
             </li>
-
-            <li>Community: {{ targetUser?.organization }}</li>
+            <li>
+                Email:
+                <input [(ngModel)]="targetUser?.communication.primaryEmail" placeholder="value">
+              </li>
+              <li>
+                Phone:
+                <input [(ngModel)]="targetUser?.communication.primaryPhone" placeholder="value1">
+              </li>
           </ul>
           <br>
         </div>
@@ -112,58 +119,6 @@
         </div>
       </div>
 
-      <!-- Communications SECTION 2 - VIEW-->
-      <div *ngIf="!isdEditMode[2]">
-        <div class="card-header">
-          Communications:
-          <button class="btn-card-header" title="Edit" (click)="editMode(2)">
-            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
-            Edit
-          </button>
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let comm of targetUser?.communications">
-              {{ comm.type }} {{ comm.subtype }} {{ comm.value }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Communications SECTION 2 - EDIT-->
-      <div *ngIf="isdEditMode[2]">
-        <div class="card-header">
-          Communications:
-          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
-            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
-          </button>
-          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
-            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
-          </button>
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let comm of targetUser?.communications">
-              <select [(ngModel)]="comm.type" id="cusSelectbox">
-                <option value="Select">Select</option>
-                <option value="EMAIL">Email</option>
-                <option value="PHONE">Phone</option>
-              </select>
-              <select [(ngModel)]="comm.subtype">
-                <option value="PRIMARY">Primary</option>
-                <option value="SECONDARY">Secondary</option>
-                <option value="ALTERNATE">Alternate</option>
-              </select>
-              <input [(ngModel)]="comm.value" placeholder="value">
-            </li>
-          </ul>
-          <hr>
-          <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-
       <!-- Community SECTION 3 - VIEW-->
       <div *ngIf="!isdEditMode[3]">
         <div class="card-header">
@@ -175,8 +130,9 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>BLAH</li>
-            <li>BLAH</li>
+            <li *ngFor="let community of userCommunities">
+              {{ community.name }}
+            </li>
           </ul>
         </div>
       </div>
@@ -193,10 +149,22 @@
         </div>
         <div class="card-container">
 
-          <select name="addRoleSelector" [(ngModel)]="addedrole">
-            <option value="c1">comm1</option>
-            <option value="c2">comm2</option>
+          <ul>
+            <li *ngFor="let community of userCommunities">
+              {{ community.name }}
+            </li>
+          </ul>
+
+          <select name="addCommunitySelector" [(ngModel)]="addedcommunity">
+            <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
           </select>
+          <button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Community
+          </button>
+          <button class="btn-card-header" title="Cancel" (click)="resetAddCommunity()">
+            <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Clear
+          </button>
+
         </div>
       </div>
 
@@ -245,7 +213,7 @@
               <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Role
             </button>
             <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="resetAddRole()">
-              <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
+              <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Clear
             </button>
           </div>
         </div>

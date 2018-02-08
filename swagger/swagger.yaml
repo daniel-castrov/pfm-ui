@@ -438,10 +438,13 @@ definitions:
         type: "string"
       suspended:
         type: "boolean"
-      communications:
+      communication:
+        type: "object"
+        $ref: "#/definitions/Communication"
+      communities:
         type: "array"
         items:
-          $ref: '#/definitions/Communication'
+          type: "string"
       preferences:
         type: "object"
         additionalProperties:
@@ -481,23 +484,10 @@ definitions:
   Communication:
     type: "object"
     properties:
-      type:
+      primaryEmail:
         type: "string"
-        emun:
-          - PHONE
-          - EMAIL
-      subtype:
+      primaryPhone:
         type: "string"
-        emun:
-          - PRIMARY
-          - SECONDARY
-          - ALTERNATE
-      value:
-        type: "string"
-      confirmed:
-        type: "boolean"
-      preferred:
-        type: "boolean"
   Tag:
     type: "object"
     properties:

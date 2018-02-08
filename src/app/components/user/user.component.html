@@ -8,7 +8,7 @@
         </div>
         <div class="profile-usertitle">
           <div class="profile-usertitle-name">
-            {{ currentUser?.cn }}
+            {{ currentUser?.firstName }} {{ currentUser?.lastName }}
           </div>
           <div class="profile-usertitle-job">
           </div>
@@ -31,25 +31,8 @@
           <ul>
             <li>First Name: {{ currentUser?.firstName }}</li>
             <li>Last Name: {{ currentUser?.lastName }}</li>
-            <!--
-            <li>CN: {{ currentUser?.cn }}</li>
-            <li>Account non-expired: {{ currentUser?.accountNonExpired }}</li>
-            <li>Account non-locked: {{ currentUser?.accountNonLocked }}</li>
-            <li>Credentials non-exipred: {{ currentUser?.credentialsNonExpired }}</li>
-            <li>Account Enabled: {{ currentUser?.enabled }}</li>
-            -->
-            <li>Community: {{ currentUser?.organization }}</li>
-          </ul>
-        </div>
-        <div class="card-header">
-          Communications:
-        </div>
-        <div *ngIf="!isdEditMode" class="card-container">
-          <ul>
-            <li *ngFor="let comm of currentUser?.communications">
-              {{ comm.type }} {{ comm.subtype }} {{ comm.value }}
-              <!--{{ comm.confirmed }} {{ comm.preferred }}-->
-            </li>
+            <li>Email: {{currentUser?.communication.primaryEmail}}</li>
+            <li>Phone: {{currentUser?.communication.primaryPhone}}</li>
           </ul>
         </div>
 
@@ -67,7 +50,6 @@
 
       <!-- EDITING MODE-->
       <div *ngIf="isdEditMode">
-
         <div class="card-header">
           User Information:
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
@@ -87,51 +69,16 @@
               Last Name:
               <input type="text" [(ngModel)]="currentUser.lastName">
             </li>
-            <!--
-                <li>CN: {{ currentUser?.cn }}</li>
-                <li>Account non-expired: {{ currentUser?.accountNonExpired }}</li>
-                <li>Account non-locked: {{ currentUser?.accountNonLocked }}</li>
-                <li>Credentials non-exipred: {{ currentUser?.credentialsNonExpired }}</li>
-                <li>Account Enabled: {{ currentUser?.enabled }}</li>
-                -->
-            <li>Community: {{ currentUser?.organization }}</li>
-          </ul>
-        </div>
-        <div class="card-header">
-          Communications:
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let comm of currentUser?.communications">
-              <select [(ngModel)]="comm.type" id="cusSelectbox">
-                <option value="Select">Select</option>
-                <option value="EMAIL">Email</option>
-                <option value="PHONE">Phone</option>
-              </select>
-              <select [(ngModel)]="comm.subtype">
-                <option value="PRIMARY">Primary</option>
-                <option value="SECONDARY">Secondary</option>
-                <option value="ALTERNATE">Alternate</option>
-              </select>
-              <input [(ngModel)]="comm.value" placeholder="value">
-              <!--
-              <select [(ngModel)]="comm.confirmed">
-                <option value="true">True</option>
-                <option value="false">False</option>
-              </select>
-              <select [(ngModel)]="comm.preferred">
-                <option value="true">True</option>
-                <option value="false">False</option>
-              </select>
-            -->
             <li>
-              <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
-                <i class="fa fa-plus-square" aria-hidden="true"></i>
-              </button>
+              Email:
+              <input [(ngModel)]="currentUser?.communication.primaryEmail" placeholder="value">
+            </li>
+            <li>
+              Phone:
+              <input [(ngModel)]="currentUser?.communication.primaryPhone" placeholder="value1">
             </li>
           </ul>
         </div>
-
         <div class="card-header">
           Preferences:
         </div>

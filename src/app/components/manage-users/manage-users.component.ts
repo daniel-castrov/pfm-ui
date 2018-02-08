@@ -27,22 +27,30 @@ export class ManageUsersComponent implements OnInit {
   id: string;
 
   // The user we are interested in.
-  targetUser:User;
+  targetUser: User;
 
   // all the roles available ( all minus the ones we have )
-  allRoles:Role[]=[];
+  allRoles: Role[] = [];
 
   // The roles that this user has
-  userRoles:UserRole[]=[];
-  
+  userRoles: UserRole[] = [];
+
   // The name of the role we are assigning the targetUser to
-  addedrole:string;
+  addedrole: string;
+
+  // The name of the community we are assigning the targetUser to
+  addedcommunity: string;
+
+  // All the communities
+  communities: Community[] = [];
+
+  userCommunities: Community[] = [];
 
   // an original copy of the targted user so we can roll back.
-  reftargetUser:User;
+  reftargetUser: User;
 
   // Have we hit the edit button or are we just viewing?
-  isdEditMode:boolean[]=[];
+  isdEditMode: boolean[] = [];
 
   // Any error from a rest service
   resultError: string;
@@ -52,6 +60,7 @@ export class ManageUsersComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private roleService: RoleService,
+    private communityService: CommunityService,
 
   ) {
     this.route.params.subscribe((params: Params) => {
@@ -63,141 +72,152 @@ export class ManageUsersComponent implements OnInit {
     this.getTargetUser();
     this.getAllRoles();
     this.getTargetedUserRoles();
-    this.isdEditMode[0]=false;
+    this.getCommunities();
+    this.resetEditMode();
   }
 
-  getTargetUser(): void{
-    let result:RestResult;
+  getTargetUser(): void {
+    let result: RestResult;
     this.userService.get(this.id)
-    .subscribe(c => {
-      result = c;
-      this.resultError = result.error;
-      this.targetUser=result.result;
-      console.log(this.targetUser.suspended);
+      .subscribe(c => {
+        result = c;
+        this.resultError = result.error;
+        this.targetUser = result.result;
+        console.log("TargetUser: " + this.targetUser.cn);
 
-      // Make a copy of the current user so we can revert changes
-       this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
-    });
+        let comm: string;
+        for (comm of this.targetUser.communities) {
+          let result2: RestResult;
+          this.communityService.getById(comm)
+            .subscribe(c => {
+              result2 = c;
+              this.resultError = result2.error;
+              this.userCommunities.push(result2.result);
+            });
+        }
+
+        // Make a copy of the current user so we can revert changes
+        this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
+      });
   }
 
-  saveTargetUser():void{
-    // clean up empty communications
-    for(var i = this.targetUser.communications.length - 1; i >= 0; i--) {
-      if(this.targetUser.communications[i].value === "") {
-        this.targetUser.communications.splice(i, 1);
-      }
-    }
-    let result:RestResult;
+  saveTargetUser(): void {
+    let result: RestResult;
     this.userService.updateUser(this.targetUser)
-    .subscribe(r => {
-      result=r;
-    });
+      .subscribe(r => {
+        result = r;
+      });
     this.resetEditMode();
   }
 
   // set a section to edit mode
-  editMode(sectionnumber):void{
+  editMode(sectionnumber): void {
     this.resetEditMode();
-    this.isdEditMode[sectionnumber]=true;
+    this.isdEditMode[sectionnumber] = true;
     this.buildAvailableRoles();
   }
 
-  cancelEdit():void{
+  cancelEdit(): void {
     // revert changes
     this.targetUser = JSON.parse(JSON.stringify(this.reftargetUser));
     this.resetEditMode();
   }
 
-  resetEditMode():void{
-    // revert changes
-    this.targetUser = JSON.parse(JSON.stringify(this.reftargetUser));
-    for( var i=0; i<5; i++ ){
-      this.isdEditMode[i]=false;
+  resetEditMode(): void {
+    for (var i = 0; i < 5; i++) {
+      this.isdEditMode[i] = false;
     }
   }
 
-  createNewCommunication():void{
-    let newCom:Communication;
-    newCom = new Object;
-    newCom.type = "EMAIL";
-    newCom.confirmed = false;
-    newCom.preferred = false;
-    newCom.subtype = "SECONDARY";
-    newCom.value = "";
-    this.targetUser.communications.push(newCom);
-  }
+  getAllRoles(): void {
 
-
-  getAllRoles(): void{
-    
-    let result1:RestResult;
+    let result1: RestResult;
     this.roleService.findall()
-    .subscribe(c => {
-      result1 = c;
-      this.resultError = result1.error;
-      this.allRoles=result1.result;
-      let role:Role;
-    });
+      .subscribe(c => {
+        result1 = c;
+        this.resultError = result1.error;
+        this.allRoles = result1.result;
+        let role: Role;
+      });
   }
 
-  getTargetedUserRoles(): void{
+  getTargetedUserRoles(): void {
 
-    let result2:RestResult;
+    let result2: RestResult;
     this.roleService.find(this.id)
-    .subscribe(c => {
-      result2 = c;
-      this.resultError = result2.error;
-      this.userRoles=result2.result;
-//      let role:Role;
-//      console.log("My Roles");
-//      for ( role of this.userRoles ){
-//        console.log(role.roleName);
-//      }
-      
-    });
+      .subscribe(c => {
+        result2 = c;
+        this.resultError = result2.error;
+        this.userRoles = result2.result;
+      });
   }
 
-buildAvailableRoles():void{
-  console.log("MATCH");
-  let userRole:UserRole;
-  for ( userRole of this.userRoles ){
-    let role:Role;
-    for ( role of this.allRoles ){
-      if ( userRole.roleName === role.roleName ){
-        var index = this.allRoles.indexOf(role);
-        if ( index > -1 ){
-          this.allRoles.splice(index, 1);
+  buildAvailableRoles(): void {
+    console.log("MATCH");
+    let userRole: UserRole;
+    for (userRole of this.userRoles) {
+      let role: Role;
+      for (role of this.allRoles) {
+        if (userRole.roleName === role.roleName) {
+          var index = this.allRoles.indexOf(role);
+          if (index > -1) {
+            this.allRoles.splice(index, 1);
+          }
         }
       }
     }
   }
 
-}
+  addRole(): void {
+    console.log("addRole" + this.addedrole);
 
-  addRole(): void{
-    console.log("addRole"+this.addedrole);
-
-    let newUsreRole:UserRole;
+    let newUsreRole: UserRole;
     newUsreRole = new Object();
 
-    newUsreRole.email=this.targetUser.email;
-    newUsreRole.roleName=this.addedrole;
+    newUsreRole.email = this.targetUser.email;
+    newUsreRole.roleName = this.addedrole;
 
-    let reuslt3:RestResult; 
-    
+    let reuslt3: RestResult;
+
     this.roleService.assignUserToRole(newUsreRole)
+      .subscribe(c => {
+        reuslt3 = c;
+        this.resultError = reuslt3.error;
+        this.userRoles.push(newUsreRole);
+        this.resetAddRole();
+        this.buildAvailableRoles();
+      });
+  }
+
+  resetAddRole(): void {
+    this.addedrole = '';
+  }
+
+  getCommunities(): void {
+    let result: RestResult;
+    this.communityService.findall()
+      .subscribe(c => {
+        result = c;
+        this.resultError = result.error;
+        this.communities = result.result;
+      });
+  }
+
+  addCommunity(): void {
+    console.log("addCommunity" + this.addedcommunity);
+    this.targetUser.communities.push(this.addedcommunity);
+
+    let result2: RestResult;
+    this.communityService.getById(this.addedcommunity)
     .subscribe(c => {
-      reuslt3 = c;
-      this.resultError = reuslt3.error;
-      this.userRoles.push(newUsreRole);
-      this.resetAddRole();
-      this.buildAvailableRoles();
+      result2 = c;
+      this.resultError = result2.error;
+      this.userCommunities.push(result2.result);
     });
   }
-  
-  resetAddRole():void{
-    this.addedrole='';
-  }
 
+  resetAddCommunity(): void {
+    this.addedcommunity = '';
+  }
 
 }

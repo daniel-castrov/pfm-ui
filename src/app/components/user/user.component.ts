@@ -60,11 +60,11 @@ export class UserComponent implements OnInit {
   saveCurrentUser():void{
 
     // clean up empty communications
-    for(var i = this.currentUser.communications.length - 1; i >= 0; i--) {
-      if(this.currentUser.communications[i].value === "") {
-        this.currentUser.communications.splice(i, 1);
-      }
-    }
+    //for(var i = this.currentUser.communications.length - 1; i >= 0; i--) {
+    //  if(this.currentUser.communications[i].value === "") {
+    //    this.currentUser.communications.splice(i, 1);
+    //  }
+    //}
 
     let result:RestResult;
     this.userDetailsService.updateCurrentUser(this.currentUser)
@@ -85,15 +85,21 @@ export class UserComponent implements OnInit {
     this.currentUser = JSON.parse(JSON.stringify(this.refcurrentUser));
     this.isdEditMode=false;
   }
+
   createNewCommunication():void{
     let newCom:Communication;
+
+
     newCom = new Object;
-    newCom.type = "EMAIL";
-    newCom.confirmed = false;
-    newCom.preferred = false;
-    newCom.subtype = "SECONDARY";
-    newCom.value = "";
-    this.currentUser.communications.push(newCom);
+    newCom.primaryEmail
+    
+
+    //newCom.type = "EMAIL";
+    //newCom.confirmed = false;
+    //newCom.preferred = false;
+    //newCom.subtype = "SECONDARY";
+    //newCom.value = "";
+    //this.currentUser.communications.push(newCom);
   }
 
 }
