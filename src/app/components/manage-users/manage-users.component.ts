@@ -42,7 +42,7 @@ export class ManageUsersComponent implements OnInit {
   reftargetUser:User;
 
   // Have we hit the edit button or are we just viewing?
-  isdEditMode=false;
+  isdEditMode:boolean[]=[];
 
   // Any error from a rest service
   resultError: string;
@@ -63,6 +63,7 @@ export class ManageUsersComponent implements OnInit {
     this.getTargetUser();
     this.getAllRoles();
     this.getTargetedUserRoles();
+    this.isdEditMode[0]=false;
   }
 
   getTargetUser(): void{
@@ -91,19 +92,28 @@ export class ManageUsersComponent implements OnInit {
     .subscribe(r => {
       result=r;
     });
-    this.isdEditMode=false;
+    this.resetEditMode();
   }
 
-  // toggle edit mode
-  editMode():void{
-    this.isdEditMode=true;
+  // set a section to edit mode
+  editMode(sectionnumber):void{
+    this.resetEditMode();
+    this.isdEditMode[sectionnumber]=true;
     this.buildAvailableRoles();
   }
 
   cancelEdit():void{
     // revert changes
     this.targetUser = JSON.parse(JSON.stringify(this.reftargetUser));
-    this.isdEditMode=false;
+    this.resetEditMode();
+  }
+
+  resetEditMode():void{
+    // revert changes
+    this.targetUser = JSON.parse(JSON.stringify(this.reftargetUser));
+    for( var i=0; i<5; i++ ){
+      this.isdEditMode[i]=false;
+    }
   }
 
   createNewCommunication():void{

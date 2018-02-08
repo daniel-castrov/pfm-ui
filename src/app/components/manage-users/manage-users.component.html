@@ -19,12 +19,11 @@
     </div>
     <div class="col-md-9">
 
-      <!-- NOT EDITIING MODE-->
-      <div *ngIf="!isdEditMode">
-
+      <!-- INFO SECTION 0 - VIEW-->
+      <div *ngIf="!isdEditMode[0]">
         <div class="card-header">
           User Information:
-          <button class="btn-card-header" title="Edit" (click)="editMode()">
+          <button class="btn-card-header" title="Edit" (click)="editMode(0)">
             <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
             Edit
           </button>
@@ -33,56 +32,12 @@
           <ul>
             <li>First Name: {{ targetUser?.firstName }}</li>
             <li>Last Name: {{ targetUser?.lastName }}</li>
-            <!--
-            <li>CN: {{ targetUser?.cn }}</li>
-            <li>Account non-expired: {{ targetUser?.accountNonExpired }}</li>
-            <li>Account non-locked: {{ targetUser?.accountNonLocked }}</li>
-            <li>Credentials non-exipred: {{ targetUser?.credentialsNonExpired }}</li>
-            <li>Account Enabled: {{ targetUser?.enabled }}</li>
-            -->
             <li>Community: {{ targetUser?.organization }}</li>
           </ul>
         </div>
-        <div class="card-header">
-          Communications:
-        </div>
-        <div *ngIf="!isdEditMode" class="card-container">
-          <ul>
-            <li *ngFor="let comm of targetUser?.communications">
-              {{ comm.type }} {{ comm.subtype }} {{ comm.value }}
-              <!--{{ comm.confirmed }} {{ comm.preferred }}-->
-            </li>
-          </ul>
-          <br>
-        </div>
-
-        <div class="card-header">
-          Preferences:
-        </div>
-        <div class="card-container">
-          <ul>
-            <li>Default Color: {{ targetUser?.preferences.defaultColor }} </li>
-            <li>Clock: {{ targetUser?.preferences.clock }} </li>
-            <li>Landing Page: {{ targetUser?.preferences.landingPage }} </li>
-          </ul>
-          <br>
-        </div>
-        <div class="card-header">
-            Roles:
-          </div>
-          <div class="card-container">
-            <ul>
-              <li *ngFor="let role of userRoles">
-                {{ role.roleName }}
-              </li>
-            </ul>
-            <br>
-          </div>
       </div>
-
-      <!-- EDITING MODE-->
-      <div *ngIf="isdEditMode">
-
+      <!-- INFO SECTION 0 - EDIT-->
+      <div *ngIf="isdEditMode[0]">
         <div class="card-header">
           User Information:
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
@@ -98,62 +53,48 @@
             <li>
               <span>First Name:</span>
               <input class="form-control form-input" type="text" [(ngModel)]="targetUser.firstName">
-
-              <span><input type="checkbox" class="status-checkbox" name="isactive" [(ngModel)]="targetUser.suspended"/>Suspended</span>
+              <span>
+                <input type="checkbox" class="status-checkbox" name="isactive" [(ngModel)]="targetUser.suspended" />Suspended</span>
             </li>
             <li>
               Last Name:
               <input type="text" [(ngModel)]="targetUser.lastName">
             </li>
-            <!--
-                <li>CN: {{ targetUser?.cn }}</li>
-                <li>Account non-expired: {{ targetUser?.accountNonExpired }}</li>
-                <li>Account non-locked: {{ targetUser?.accountNonLocked }}</li>
-                <li>Credentials non-exipred: {{ targetUser?.credentialsNonExpired }}</li>
-                <li>Account Enabled: {{ targetUser?.enabled }}</li>
-                -->
+
             <li>Community: {{ targetUser?.organization }}</li>
           </ul>
           <br>
         </div>
+      </div>
+
+      <!-- PREF SECTION 1 - VIEW-->
+      <div *ngIf="!isdEditMode[1]">
         <div class="card-header">
-          Communications:
+          Preferences:
+          <button class="btn-card-header" title="Edit" (click)="editMode(1)">
+            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
+            Edit
+          </button>
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let comm of targetUser?.communications">
-              <select [(ngModel)]="comm.type" id="cusSelectbox">
-                <option value="Select">Select</option>
-                <option value="EMAIL">Email</option>
-                <option value="PHONE">Phone</option>
-              </select>
-              <select [(ngModel)]="comm.subtype">
-                <option value="PRIMARY">Primary</option>
-                <option value="SECONDARY">Secondary</option>
-                <option value="ALTERNATE">Alternate</option>
-              </select>
-              <input [(ngModel)]="comm.value" placeholder="value">
-              <!--
-              <select [(ngModel)]="comm.confirmed">
-                <option value="true">True</option>
-                <option value="false">False</option>
-              </select>
-              <select [(ngModel)]="comm.preferred">
-                <option value="true">True</option>
-                <option value="false">False</option>
-              </select>
-            -->
-
-            </li>
+            <li>Default Color: {{ targetUser?.preferences.defaultColor }} </li>
+            <li>Clock: {{ targetUser?.preferences.clock }} </li>
+            <li>Landing Page: {{ targetUser?.preferences.landingPage }} </li>
           </ul>
-          <hr>
-          <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
-          </button>
+          <br>
         </div>
-
+      </div>
+      <!-- PREF SECTION 1 - EDIT-->
+      <div *ngIf="isdEditMode[1]">
         <div class="card-header">
           Preferences:
+          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
+          </button>
+          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
+          </button>
         </div>
         <div class="card-container">
           <ul>
@@ -169,31 +110,123 @@
           </ul>
           <br>
         </div>
-        <!--
+      </div>
+
+      <!-- Communications SECTION 2 - VIEW-->
+      <div *ngIf="!isdEditMode[2]">
         <div class="card-header">
-          Roles:
+          Communications:
+          <button class="btn-card-header" title="Edit" (click)="editMode(2)">
+            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
+            Edit
+          </button>
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let auth of targetUser?.authorities">
-              {{ auth?.authority }}
+            <li *ngFor="let comm of targetUser?.communications">
+              {{ comm.type }} {{ comm.subtype }} {{ comm.value }}
             </li>
           </ul>
         </div>
+      </div>
+
+      <!-- Communications SECTION 2 - EDIT-->
+      <div *ngIf="isdEditMode[2]">
         <div class="card-header">
+          Communications:
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
-            <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
           </button>
           <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
-            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Save
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
           </button>
         </div>
-      -->
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let comm of targetUser?.communications">
+              <select [(ngModel)]="comm.type" id="cusSelectbox">
+                <option value="Select">Select</option>
+                <option value="EMAIL">Email</option>
+                <option value="PHONE">Phone</option>
+              </select>
+              <select [(ngModel)]="comm.subtype">
+                <option value="PRIMARY">Primary</option>
+                <option value="SECONDARY">Secondary</option>
+                <option value="ALTERNATE">Alternate</option>
+              </select>
+              <input [(ngModel)]="comm.value" placeholder="value">
+            </li>
+          </ul>
+          <hr>
+          <button class="btn btn-primary" title="Add Communication Type" (click)="createNewCommunication()">
+            <i class="fa fa-plus-square" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
 
-      <hr/>
+      <!-- Community SECTION 3 - VIEW-->
+      <div *ngIf="!isdEditMode[3]">
+        <div class="card-header">
+          Communities:
+          <button class="btn-card-header" title="Edit" (click)="editMode(3)">
+            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
+            Edit
+          </button>
+        </div>
+        <div class="card-container">
+          <ul>
+            <li>BLAH</li>
+            <li>BLAH</li>
+          </ul>
+        </div>
+      </div>
+      <!-- PREF Community 3 - EDIT-->
+      <div *ngIf="isdEditMode[3]">
+        <div class="card-header">
+          Communities:
+          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
+          </button>
+          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
+          </button>
+        </div>
+        <div class="card-container">
 
-      <div class="card-header">
+          <select name="addRoleSelector" [(ngModel)]="addedrole">
+            <option value="c1">comm1</option>
+            <option value="c2">comm2</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Role SECTION 4 - VIEW-->
+      <div *ngIf="!isdEditMode[4]">
+        <div class="card-header">
           Roles:
+          <button class="btn-card-header" title="Edit" (click)="editMode(4)">
+            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
+            Edit
+          </button>
+        </div>
+        <div class="card-container">
+          <ul>
+            <li *ngFor="let role of userRoles">
+              {{ role.roleName }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Role Community 4 - EDIT-->
+      <div *ngIf="isdEditMode[4]">
+        <div class="card-header">
+          Roles:
+          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
+          </button>
+          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
+          </button>
         </div>
         <div class="card-container">
           <ul>
@@ -202,18 +235,17 @@
             </li>
           </ul>
           <br>
-        <div>
+          <div>
             <select name="addRoleSelector" [(ngModel)]="addedrole">
-              <option *ngFor="let role of allRoles"
-                [value]="role.roleName">
+              <option *ngFor="let role of allRoles" [value]="role.roleName">
                 {{role.roleName}}
               </option>
             </select>
             <button class="btn-card-header" title="AddRole" (click)="addRole()">
-                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Role
+              <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Role
             </button>
             <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="resetAddRole()">
-                <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
+              <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
             </button>
           </div>
         </div>
