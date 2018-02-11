@@ -2,52 +2,26 @@
 <div class="row main-content" *ngIf="header.isloggedin">
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
-       Welcome back
+      Welcome back
     </div>
     <div class="card-container">
+      {{ header.authUser.fullName }}
+      <br/>
+      <button (click)="show = !show">{{show ? 'hide json' : 'show json'}}</button>
+      <div *ngIf="show">{{header.authUserJson}}</div>
       <!--
-      <ul>
-        <li>CN: {{ pexUser?.cn }}</li>
-        <li>Username: {{ pexUser?.username }}</li>
-        <li>password: {{ pexUser?.password }}</li>
-        <li>First Name: {{ pexUser?.firstName }}</li>
-        <li>Last Name: {{ pexUser?.lastName }}</li>
-        <li>Account non-expired: {{ pexUser?.accountNonExpired }}</li>
-        <li>Account non-locked: {{ pexUser?.accountNonLocked }}</li>
-        <li>Credentials non-exipred: {{ pexUser?.credentialsNonExpired }}</li>
-        <li>Account Enabled: {{ pexUser?.enabled }}</li>
-        <li>Community: {{ pexUser?.organization }}</li>
-        <li>Authorities:
-            <ul>
-              <li *ngFor="let auth of pexUser?.authorities">
-                {{ auth.authority }}
-              </li>
-            </ul>
-        </li>
-        <li>Communications:
-            <ul>
-              <li *ngFor="let comm of pexUser?.communications">
-                {{ comm.type }} {{ comm.subtype }} {{ comm.value }} {{ comm.confirmed }} {{ comm.preferred }}
-              </li>
-            </ul>
-        </li>
-        <li>Preferences:
-            <ul>
-                <li> defaultColor: {{ pexUser?.preferences.defaultColor }} </li>
-                <li> clock: {{ pexUser?.preferences.clock }} </li>
-                <li> landingPage: {{ pexUser?.preferences.landingPage }} </li>
-            </ul>
-        </li>
-    </ul>
-  -->
+        <button (click)="show = !show">{{show ? 'hide' : 'show'}}</button>
+        <div *ngIf="show; else elseBlock">{{header.authUserJson}}</div>
+        <ng-template #elseBlock>{{ header.authUser.fullName }}</ng-template>
+      -->
     </div>
   </div>
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
-       User (Json)
+      My ToDo
     </div>
     <div class="card-container">
-      {{ jsonUser }}
+
     </div>
   </div>
   <div class="col-2 col-md-2">
@@ -57,16 +31,19 @@
       Reports
     </div>
     <div class="card-container">
-      <div><button class="btn btn-danger" (mouseover)="fireEvent($event)">Mouseover Event</button></div>
+      <div>
+        <button class="btn btn-danger" (mouseover)="fireEvent($event)">Mouseover Event</button>
+      </div>
     </div>
   </div>
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
       Favorite Links
     </div>
-  <div class="card-container">
-    <span class="add-link" (click)="fireEvent($event)"> <i class="fa fa-plus" aria-hidden="true"></i> Add Link</span>
-  </div>
+    <div class="card-container">
+      <span class="add-link" (click)="fireEvent($event)">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add Link</span>
+    </div>
   </div>
   <div class="col-2 col-md-2">
   </div>

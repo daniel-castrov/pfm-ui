@@ -25,8 +25,8 @@ import {
 
 export class HeaderComponent implements OnInit {
 
-  id: number;
   authUser:AuthUser;
+  authUserJson:string;
   isloggedin:boolean=false;
 
   constructor(
@@ -34,9 +34,6 @@ export class HeaderComponent implements OnInit {
     private router:Router,
     private blankService:BlankService,
   ) {
-    this.route.params.subscribe((params:Params) => {
-      this.id = params.id;
-    });
   }
 
   ngOnInit() {
@@ -52,10 +49,11 @@ export class HeaderComponent implements OnInit {
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
           //console.log("Current authHeader: " + authHeader);
+          this.authUserJson=atob(authHeader);
+          //console.log("Current json: " +this.authUserJson);
           this.authUser = JSON.parse(atob(authHeader));
-          //console.log("Current json: " +atob(authHeader));
+          //console.log("Current User: " + this.authUser.fullName);
           this.isloggedin = true;
-          //console.log("Current User: " + this.authUser.email);
         }
       );
   }
