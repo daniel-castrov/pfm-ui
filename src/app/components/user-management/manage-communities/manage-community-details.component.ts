@@ -118,6 +118,10 @@ private getPrograms(): void {
       }
     });
 
+
+    this.approvers=[];
+    this.getCommunity();
+
   }
 
   private deleteCommunity():void {
