@@ -2,7 +2,7 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-5">
-        <h4>{{ comm?.name }}</h4>
+        <h4>{{ community?.name }}</h4>
 
       <!-- <p>
         <button type="button" class="btn btn-primary btn-sm" (click)="status.isFirstDisabled = ! status.isFirstDisabled">
@@ -12,20 +12,40 @@
       <accordion>
         <accordion-group heading="Programs">
           <p>Info about all programs associated with the Community that are Community Specific</p>
-
+          <ul class="community-list">
+            <li *ngFor="let program of programs">
+              {{ program }}
+            </li>
+          </ul>
         </accordion-group>
         <accordion-group heading="List Community Approvers">
+
+          <ul class="community-list">
+            <li *ngFor="let user of approvers">
+              {{ user?.firstName }} {{ user?.lastName }} 
+            </li>
+          </ul>
+
         </accordion-group>
       </accordion>
     </div>
     <div class="col-5">
       <accordion>
-        <accordion-group heading="Remove Approvers">
-        </accordion-group>
         <accordion-group heading="Add Approvers">
+
+            <div class="form-group clearfix">
+                <select class="form-control" name="communityApprover" [(ngModel)]="addedapprover" required>
+                  <option *ngFor="let user of users"
+                    [value]="user.id">
+                    {{user.firstName}} {{user.lastName}}
+                  </option>
+                </select>
+                <button class="btn btn-primary" (click)="addApprover()">Add Approver</button>
+              </div>
+
         </accordion-group>
         <accordion-group heading="Remove Community">
-          <button class="btn btn-primary"><i class="fa fa-minus-circle" aria-hidden="true"></i> Remove</button>
+          <button class="btn btn-primary" (click)="deleteCommunity()"><i class="fa fa-minus-circle" aria-hidden="true" ></i> Remove</button>
         </accordion-group>
       </accordion>
     </div>

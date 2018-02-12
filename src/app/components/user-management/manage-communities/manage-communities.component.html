@@ -10,8 +10,7 @@
           <ul class="community-list">
             <li *ngFor="let comm of communities">
               <span class="community-name">{{ comm?.name }}</span>
-              <span class="btn-card-header"><a href="#" routerLink="/community-details"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Edit</a></span>
-              <span class="btn-card-header"><a  href="#" routerLink="/community-details"><i class="fa fa-eye icon-pad" aria-hidden="true"></i>View</a></span>
+              <span class="btn-card-header"><a href="#" routerLink="/community-details/{{ comm?.id}}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Details</a></span>
             </li>
           </ul>
           <div>
@@ -41,7 +40,7 @@
           <div class="form-group clearfix">
             <select class="form-control" name="communityApprover" [(ngModel)]="newapprover" required>
               <option *ngFor="let user of users"
-                [value]="user.email">
+                [value]="user.id">
                 {{user.firstName}} {{user.lastName}}
               </option>
             </select>

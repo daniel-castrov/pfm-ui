@@ -54,7 +54,7 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'access-change', component:RequestAccessChangeComponent},
   {path:'apply', component:ApplyComponent},
-  {path:'community-details', component:MamageCommunityDetailsComponent},
+  {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},

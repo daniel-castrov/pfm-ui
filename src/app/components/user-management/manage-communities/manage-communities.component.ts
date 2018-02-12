@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -34,6 +35,7 @@ export class ManageCommunitiesComponent implements OnInit {
   resultError: string;
 
   constructor(
+    private router: Router,
     public communityService: CommunityService,
     public userService: UserService,
   ) {
@@ -79,9 +81,10 @@ export class ManageCommunitiesComponent implements OnInit {
   }
 
   addCommunity1() {
-
-    this.newCommunity.approvers =[];
-    this.newCommunity.approvers.push(this.newapprover);
+ 
+    this.newCommunity.approverIds =[];
+    this.newCommunity.approverIds.push(this.newapprover);
+    console.log(this.newapprover);
 
     if (this.isValid()){
 
@@ -94,6 +97,7 @@ export class ManageCommunitiesComponent implements OnInit {
         if (this.resultError == null) {
           this.communities.push(this.newCommunity);
         }
+        this.router.navigate(['/manage-communities']);
       });
     }
     else {

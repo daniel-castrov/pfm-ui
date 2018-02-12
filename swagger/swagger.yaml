@@ -77,6 +77,30 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden"
+    put:
+      tags:
+      - "Community"
+      summary: "Update a Community"
+      description: "Update a Community"
+      operationId: "updateCommunity"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Community"
+        required: true
+        schema:
+          $ref: "#/definitions/Community"
+      responses:
+        204:
+          description: "Successfully updated Community"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
   /community/{id}:
     delete:
       tags:
@@ -575,11 +599,7 @@ definitions:
         type: "string"
       identifier:
         type: "string"
-      members:
-        type: "array"
-        items:
-          type: "string"
-      approvers:
+      approverIds:
         type: "array"
         items:
           type: "string"
