@@ -99,13 +99,13 @@
             class="dropdown-item" href="#" routerLink="/access-change">Request Access</a>
           <a *ngIf="authUser.rolenames.includes('User')"
             class="dropdown-item" href="#" routerLink="/home">My NDA</a>
-          <a *ngIf="authUser.rolenames.includes('Approver')"
+          <a *ngIf="authUser.rolenames.includes('User_Approver')"
           class="dropdown-item" href="#" routerLink="/home">Approve User Access</a>
-          <a *ngIf="authUser.rolenames.includes('Approver')"
+          <a *ngIf="authUser.rolenames.includes('User_Approver')"
             class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
-          <a *ngIf="authUser.rolenames.includes('Admin')"
+          <a *ngIf="authUser.rolenames.includes('User_Admin')"
              class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
-          <a *ngIf="authUser.rolenames.includes('Admin')"
+          <a *ngIf="authUser.rolenames.includes('User_Admin')"
           class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
         </div>
       </li>

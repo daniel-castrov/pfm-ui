@@ -41,7 +41,6 @@ export class MamageCommunityDetailsComponent implements OnInit {
     private communityService: CommunityService,
 
   ) {
-
     this.route.params.subscribe((params: Params) => {
       this.id = params.id;
     });
@@ -67,6 +66,7 @@ private getPrograms(): void {
 }
 
   private getCommunity(): void {
+    this.approvers=[];
 
     let result: RestResult;
     let s = this.communityService.getById(this.id);
@@ -78,6 +78,7 @@ private getPrograms(): void {
         this.community = result.result;
       }
 
+      
       let appr: string;
       for (appr of this.community.approverIds) {
         let result: RestResult;
@@ -103,7 +104,7 @@ private getPrograms(): void {
 
   private addApprover():void {
 
-    console.log(this.addedapprover);
+    console.log("addApprover" + this.addedapprover);
 
     this.community.approverIds.push(this.addedapprover);
 
@@ -117,11 +118,7 @@ private getPrograms(): void {
         this.community = result.result;
       }
     });
-
-
-    this.approvers=[];
     this.getCommunity();
-
   }
 
   private deleteCommunity():void {
@@ -138,10 +135,5 @@ private getPrograms(): void {
       }
       this.router.navigate(['/manage-communities']);
     });
-
-
-
   }
-
-
 }
