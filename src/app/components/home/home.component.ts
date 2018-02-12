@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header.component';
 import { Response, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
+// Other Components
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-home',

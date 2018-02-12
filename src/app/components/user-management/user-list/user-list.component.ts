@@ -1,12 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UserComponent } from '../user/user.component';
-import { User } from '../../generated/model/user';
-import { RestResult } from '../../generated/model/restResult';
-import { Communication } from '../../generated/model/communication';
-import { GrantedAuthority } from '../../generated/model/grantedAuthority';
-import { CommunityService, Community, UserService } from '../../generated';
-import { HeaderComponent } from '../../components/header/header.component';
-import { BlankService } from '../../generated/api/blank.service';
 import { Response, ResponseContentType } from '@angular/http';
 import {
   HttpClient, HttpHeaders, HttpParams,
@@ -14,6 +6,15 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+
+// Other Components
+import { HeaderComponent } from '../../../components/header/header.component';
+
+// Generated
+import { User } from '../../../generated/model/user';
+import { RestResult } from '../../../generated/model/restResult';
+import { UserService } from '../../../generated/api/user.service';
+
 
 @Component({
   selector: 'app-user-list',
@@ -46,14 +47,6 @@ export class UserListComponent implements OnInit {
       result = c;
       this.resultError = result.error;
       this.users=result.result;
-
-
-      let user:User;
-      for ( user of this.users ){
-        console.log(user);
-      }
-      
-
     });
   }
 

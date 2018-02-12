@@ -1,18 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UserComponent } from '../user/user.component';
-import { User } from '../../generated/model/user';
-import { RestResult } from '../../generated/model/restResult';
-import { Communication } from '../../generated/model/communication';
-import { HeaderComponent } from '../../components/header/header.component';
-import { CommunityService, Community, UserService } from '../../generated';
-import { Role, RoleService, UserRole } from '../../generated';
-import { Response, ResponseContentType } from '@angular/http';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import {
   HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Response, ResponseContentType } from '@angular/http';
+
+// Other Components
+import { HeaderComponent } from '../../../components/header/header.component';
+
+// Generated
+import { User } from '../../../generated/model/user';
+import { RestResult } from '../../../generated/model/restResult';
+import { CommunityService } from '../../../generated/api/community.service';
+import { Community } from '../../../generated/model/community';
+import { UserService } from '../../../generated/api/user.service';
+import { Role } from '../../../generated/model/role';
+import { RoleService } from '../../../generated/api/role.service';
+import { UserRole } from '../../../generated/model/userRole';
 
 @Component({
   selector: 'app-manage-users',

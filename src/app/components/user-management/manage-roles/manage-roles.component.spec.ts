@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccessChangeComponent } from './access-change.component';
+import { ManageRolesComponent } from './manage-roles.component';
 
-describe('AccessChangeComponent', () => {
-  let component: AccessChangeComponent;
-  let fixture: ComponentFixture<AccessChangeComponent>;
+describe('ManageRolesComponent', () => {
+  let component: ManageRolesComponent;
+  let fixture: ComponentFixture<ManageRolesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccessChangeComponent ]
+      declarations: [ ManageRolesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AccessChangeComponent);
+    fixture = TestBed.createComponent(ManageRolesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,16 +1,13 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { UserComponent } from '../user/user.component';
-import { User } from '../../generated/model/user';
-import { AuthUser } from '../../generated/model/authUser';
-
-
-import { RestResult } from '../../generated/model/restResult';
-import { GrantedAuthority } from '../../generated/model/grantedAuthority';
-import { Communication } from '../../generated/model/communication';
-import { BlankService } from '../../generated/api/blank.service';
 import { Response, ResponseContentType } from '@angular/http';
+
+// Generated
+import { AuthUser } from '../../generated/model/authUser';
+import { RestResult } from '../../generated/model/restResult';
+import { BlankService } from '../../generated/api/blank.service';
+
 
 import {
   HttpClient, HttpHeaders, HttpParams,

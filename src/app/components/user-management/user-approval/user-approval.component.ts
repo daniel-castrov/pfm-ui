@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header.component';
+import { HeaderComponent } from '../../../components/header/header.component';
 
 @Component({
   selector: 'app-user-approval',

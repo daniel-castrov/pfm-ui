@@ -1,15 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommunityService, RestResult, Community, UserService, User } from '../../generated';
-import { HeaderComponent } from '../../components/header/header.component';
 import { Observable } from 'rxjs/Observable';
 import { NgForOf } from '@angular/common/src/directives';
 
+// Other Components
+import { HeaderComponent } from '../../../components/header/header.component';
+
+// Generated
+import { CommunityService } from '../../../generated';
+import { RestResult } from '../../../generated';
+import { Community } from '../../../generated';
+import { UserService } from '../../../generated';
+import { User } from '../../../generated';
+
+
 @Component({
-  selector: 'app-create-community',
-  templateUrl: './create-community.component.html',
-  styleUrls: ['./create-community.component.css']
+  selector: 'app-manage-communities',
+  templateUrl: './manage-communities.component.html',
+  styleUrls: ['./manage-communities.component.css']
 })
-export class CreateCommunityComponent implements OnInit {
+export class ManageCommunitiesComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 

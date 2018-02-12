@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommunityDetailsComponent } from './community-details.component';
+import { ManageSelfComponent } from './manage-self.component';
 
-describe('CommunityDetailsComponent', () => {
-  let component: CommunityDetailsComponent;
-  let fixture: ComponentFixture<CommunityDetailsComponent>;
+describe('ManageSelfComponent', () => {
+  let component: ManageSelfComponent;
+  let fixture: ComponentFixture<ManageSelfComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommunityDetailsComponent ]
+      declarations: [ ManageSelfComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CommunityDetailsComponent);
+    fixture = TestBed.createComponent(ManageSelfComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

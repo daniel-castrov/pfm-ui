@@ -1,12 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { NgFor } from '@angular/common/src/directives/ng_for_of';
+
+// Other Components
+import { HeaderComponent } from '../../components/header/header.component';
+
+// Generated
 import { ProgramService } from '../../generated/api/program.service';
 import { FundLineService } from '../../generated/api/fundLine.service';
 import { Program } from '../../generated/model/program'
-import { HeaderComponent } from '../../components/header/header.component';
 import { Increment } from '../../generated/model/increment'
 import { FundLine } from '../../generated/model/fundLine'
-import { NgFor } from '@angular/common/src/directives/ng_for_of';
 import { RestResult } from '../../generated/model/restResult';
 
 @Component({

@@ -6,18 +6,22 @@ import {
   HttpResponse, HttpEvent
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { HeaderComponent } from '../../components/header/header.component';
-import { Communication } from '../../generated/model/communication';
-import { User } from '../../generated/model/user';
-import { RestResult } from '../../generated/model/restResult';
-import { MyDetailsService } from '../../generated/api/myDetails.service';
+
+// Other Components
+import { HeaderComponent } from '../../../components/header/header.component';
+
+// Generated
+import { Communication } from '../../../generated/model/communication';
+import { User } from '../../../generated/model/user';
+import { RestResult } from '../../../generated/model/restResult';
+import { MyDetailsService } from '../../../generated/api/myDetails.service';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  selector: 'app-manage-self',
+  templateUrl: './manage-self.component.html',
+  styleUrls: ['./manage-self.component.css']
 })
-export class UserComponent implements OnInit {
+export class ManageSelfComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
@@ -59,13 +63,6 @@ export class UserComponent implements OnInit {
 
   saveCurrentUser():void{
 
-    // clean up empty communications
-    //for(var i = this.currentUser.communications.length - 1; i >= 0; i--) {
-    //  if(this.currentUser.communications[i].value === "") {
-    //    this.currentUser.communications.splice(i, 1);
-    //  }
-    //}
-
     let result:RestResult;
     this.userDetailsService.updateCurrentUser(this.currentUser)
     .subscribe(r => {
@@ -89,17 +86,9 @@ export class UserComponent implements OnInit {
   createNewCommunication():void{
     let newCom:Communication;
 
-
     newCom = new Object;
     newCom.primaryEmail
     
-
-    //newCom.type = "EMAIL";
-    //newCom.confirmed = false;
-    //newCom.preferred = false;
-    //newCom.subtype = "SECONDARY";
-    //newCom.value = "";
-    //this.currentUser.communications.push(newCom);
   }
 
 }

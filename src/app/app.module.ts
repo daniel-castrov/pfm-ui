@@ -12,26 +12,26 @@ import { RouterModule, Routes } from '@angular/router';
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
-import { AccessChangeComponent } from './components/access-change/access-change.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { CommunityDetailsComponent } from './components/community-details/community-details.component';
-import { CreateCommunityComponent } from './components/create-community/create-community.component';
+import { MamageCommunityDetailsComponent } from './components/user-management/manage-communities/manage-community-details.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { ManageUsersComponent } from './components/manage-users/manage-users.component';
+import { ManageCommunitiesComponent } from './components/user-management/manage-communities/manage-communities.component';
+import { ManageRolesComponent } from './components/user-management/manage-roles/manage-roles.component';
+import { ManageSelfComponent } from './components/user-management/manage-self/manage-self.component';
+import { ManageUsersComponent } from './components/user-management/manage-users/manage-users.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
-import { RolesComponent } from './components/roles/roles.component';
-import { UserComponent } from './components/user/user.component';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
+import { UserListComponent } from './components/user-management/user-list/user-list.component';
 
 
 
@@ -43,7 +43,7 @@ import { FundLineService } from './generated/api/fundLine.service';
 import { ProgramService } from './generated/api/program.service';
 import { TagService } from './generated/api/tag.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
-import { UserApprovalComponent } from './components/user-approval/user-approval.component';
+import { UserApprovalComponent } from './components/user-management/user-approval/user-approval.component';
 import { UserService } from './generated/api/user.service';
 import { RoleService } from './generated/api/role.service';
 
@@ -52,22 +52,22 @@ const appRoutes: Routes = [
   {path:'', component:LoginComponent},
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
-  {path:'access-change', component:AccessChangeComponent},
+  {path:'access-change', component:RequestAccessChangeComponent},
   {path:'apply', component:ApplyComponent},
-  {path:'community-details', component:CommunityDetailsComponent},
-  {path:'create-community', component:CreateCommunityComponent},
+  {path:'community-details', component:MamageCommunityDetailsComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
   {path:'header-nologin', component:HeaderNologinComponent},
   {path:'home', component:HomeComponent},
+  {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
-  {path:'roles', component:RolesComponent},
-  {path:'user/:id', component:UserComponent},
+  {path:'roles', component:ManageRolesComponent},
+  {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
 
@@ -77,25 +77,26 @@ const appRoutes: Routes = [
   declarations: [
     AboutComponent,
     AboutPrivateComponent,
-    AccessChangeComponent,
     AppComponent,
     ApplyComponent,
     ContactComponent,
-    CommunityDetailsComponent,
-    CreateCommunityComponent,
     FilterComponent,
     HeaderComponent,
     HeaderNologinComponent,
     HomeComponent,
     LoginComponent,
+    MamageCommunityDetailsComponent,
+    ManageCommunitiesComponent,
+    ManageRolesComponent,
+    ManageSelfComponent,
+    ManageSelfComponent,
     ManageUsersComponent,
     NoAccessComponent,
     NotFoundComponent,
     PlanningComponent,
     ProgramsComponent,
-    RolesComponent,
+    RequestAccessChangeComponent,
     UserApprovalComponent,
-    UserComponent,
     UserListComponent
   ],
 
