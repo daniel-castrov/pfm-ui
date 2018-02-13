@@ -35,9 +35,7 @@ body {
   font-size: 1.5rem;
 }
 
-
 @media (max-width: 960px) {
-
   .header {
     color: #fff;
     height: 96px;
@@ -56,8 +54,8 @@ body {
 }
 
 @media (max-width: 960px) {
-.sub-title {
-  font-size: 13px;
+  .sub-title {
+    font-size: 13px;
   }
 }
 
@@ -67,7 +65,7 @@ body {
   border: 0px white solid;
 }
 
-.external-links > a > img {
+.external-links>a>img {
   height: 20px;
   padding-right: 1px;
 }
@@ -80,11 +78,12 @@ body {
 }
 
 .super-user:hover {
-  color: #708CA7;;
+  color: #708CA7;
+  ;
   text-decoration: none;
 }
 
-.super-user > i {
+.super-user>i {
   padding: 0 5px;
   font-size: 20px;
 }
@@ -106,14 +105,14 @@ body {
 }
 
 li.nav-item {
- border-right: 1px solid rgba(92, 124, 152, 0.36);
+  border-right: 1px solid rgba(92, 124, 152, 0.36);
 }
 
-ul.navbar-nav > li.nav-item:first-child {
- border-right: 1px solid rgba(92, 124, 152, 0.36);
+ul.navbar-nav>li.nav-item:first-child {
+  border-right: 1px solid rgba(92, 124, 152, 0.36);
 }
 
-ul.navbar-nav > li.nav-item:last-child {
+ul.navbar-nav>li.nav-item:last-child {
   border-right: none;
 }
 
@@ -157,14 +156,44 @@ nav a:hover {
 }
 
 a.dropdown-item {
-    color: #24537b !important;
+  color: #24537b !important;
 }
 
 .actions-menu {
   top: 41px;
   left: 152px;
+  width: 200px;
 }
 
-.actions-menu > a > i {
-  font-size: 16px;
+.icon-wrapper {
+  position: relative;
+  float: left;
+  margin-right: 10px;
+}
+
+*.icon-blue {
+  color: #0088cc
+}
+
+*.icon-grey {
+  color: grey
+}
+
+.icon-wrapper>i.fa .fa-bell {
+  width: 20px;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.badge {
+  background: rgba(0, 0, 0, 0.5);
+  width: auto;
+  height: auto;
+  margin: 0;
+  border-radius: 50%;
+  position: absolute;
+  top: -13px;
+  right: -15px;
+  padding: 5px;
 }
