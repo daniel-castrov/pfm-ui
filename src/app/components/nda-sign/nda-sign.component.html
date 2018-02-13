@@ -1,0 +1,37 @@
+<app-header-nologin title="JSCBIS Login"></app-header-nologin>
+<div class="container-fluid">
+  <div class="row main-content">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg-6">
+      <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <h5>JSCBIS NON-DISCLOSURE CERTIFICATION</h5>
+        <p>I understand that the release of advanced procurement information, proprietary and source
+          selection information is governed by Public law 100-679, AR 340-17 Release of
+          Information and Records from Army files, AR 600-50 Standards of Conduct for
+          Department of Army Personnel, and provisions of the Federal Acquisition Regulations. I
+          will not knowingly disclose any acquisition, proprietary or source selection information
+          regarding any office or activity working for or with, and to include, the office I provide
+          support to and procurements directly or indirectly to any person other than a person
+          authorized by the head of the agency or the contracting officer to receive such
+          information</p>
+        <p>I further understand that access to the JSCBIS is to be used in the performance of my
+          duties in support of one or more of the following offices: the Deputy Assistant to the
+          Secretary of Defense for Chemical Biological Defense Policy, the Joint Program
+          Executive Office for Chemical Biological Defense, the Joint Science and Technology
+          Office Chemical Biological Defense, the Joint Requirements Office, the Joint Test and
+          Evaluation Office, and associated organizations. Information contained within this
+          system may be sensitive in nature and I agree to limit my access to that information
+          required in the performance of my assigned duties. </p>
+        <p>I understand that my obligations under this certification are of a continuing nature, and if
+          anything takes place which would cause a change to any statement, or create a violation
+          of any representation or rule of conduct herein, I will bring such matter to the attention of
+          the contracting office. </p>
+          <div class="controls">
+            <button class="btn btn-danger">Decline</button>
+            <button class="btn btn-primary">Accept</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

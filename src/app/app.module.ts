@@ -25,6 +25,7 @@ import { ManageCommunitiesComponent } from './components/user-management/manage-
 import { ManageRolesComponent } from './components/user-management/manage-roles/manage-roles.component';
 import { ManageSelfComponent } from './components/user-management/manage-self/manage-self.component';
 import { ManageUsersComponent } from './components/user-management/manage-users/manage-users.component';
+import { NdaSignComponent } from './components/nda-sign/nda-sign.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -32,8 +33,6 @@ import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
-
-
 
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
@@ -62,6 +61,7 @@ const appRoutes: Routes = [
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
+  {path:'nda-sign', component:NdaSignComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
@@ -91,6 +91,7 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageSelfComponent,
     ManageUsersComponent,
+    NdaSignComponent,
     NoAccessComponent,
     NotFoundComponent,
     PlanningComponent,

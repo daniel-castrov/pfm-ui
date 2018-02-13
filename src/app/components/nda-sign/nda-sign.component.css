@@ -1,0 +1,47 @@
+.apply-box {
+  background-color: #23527c !important;
+  padding: 10px;
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.apply-box a {
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.apply a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.controls {
+  clear: both;
+}
+
+label, select {
+  color: #868e9b;
+}
+
+.sponsor {
+  display: inline;
+  float: left;
+  padding: 6px 4px;
+}
+
+.applyinput {
+  width: 300px;
+  padding: 5px;
+}
+
+.alert {
+  margin-top: -8px;
+  padding: 0 5px;
+  margin-bottom: 2px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
