@@ -33,7 +33,7 @@
               required
           >
           <span *ngIf="applyMiddlename.errors?.required && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial is required</span>
-          <span *ngIf="applyMiddlename.errors?.minlength && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial should be at least 1 character</span>
+        <span *ngIf="applyMiddlename.errors?.minlength && applyMiddlename.touched" class="alert alert-danger name-error">Middle Initial should be at least 1 character</span>
         </span>
         <span class="form-group">
           <input
@@ -47,7 +47,7 @@
               required
           >
           <span *ngIf="applyLastname.errors?.required && applyLastname.touched" class="alert alert-danger name-error">Last Name is required</span>
-          <span *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger name-error">Last Name should be at least 2 characters</span>
+        <span *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger name-error">Last Name should be at least 2 characters</span>
         </span>
         <div class="form-group">
           <input type="text" class="form-control applyinput" [(ngModel)]="apply.rank" name="rank" #applyRank="ngModel" placeholder="Title/Rank">
@@ -56,7 +56,36 @@
           <input type="text" class="form-control applyinput" [(ngModel)]="apply.job" name="rank" #applyJob="ngModel" placeholder="Duty/Job">
         </div>
         <div class="form-group">
-          <a href="#" routerLink="/nda-sign" target="_blank">Sign NDA</a>
+          <a data-toggle="modal" href="#myModal">Sign NDA</a>
+          <div id="myModal" class="modal fade in">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                </div>
+                <div class="modal-body">
+                  <h4 class="modal-title">JSCBIS NON-DISCLOSURE CERTIFICATION</h4>
+                  <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+                    <p>I understand that the release of advanced procurement information, proprietary and source selection information is governed by Public law 100-679, AR 340-17 Release of Information and Records from Army files, AR 600-50 Standards of
+                      Conduct for Department of Army Personnel, and provisions of the Federal Acquisition Regulations. I will not knowingly disclose any acquisition, proprietary or source selection information regarding any office or activity working
+                      for or with, and to include, the office I provide support to and procurements directly or indirectly to any person other than a person authorized by the head of the agency or the contracting officer to receive such information
+                    </p>
+                    <p>I further understand that access to the JSCBIS is to be used in the performance of my duties in support of one or more of the following offices: the Deputy Assistant to the Secretary of Defense for Chemical Biological Defense Policy,
+                      the Joint Program Executive Office for Chemical Biological Defense, the Joint Science and Technology Office Chemical Biological Defense, the Joint Requirements Office, the Joint Test and Evaluation Office, and associated organizations.
+                      Information contained within this system may be sensitive in nature and I agree to limit my access to that information required in the performance of my assigned duties. </p>
+                    <p>I understand that my obligations under this certification are of a continuing nature, and if anything takes place which would cause a change to any statement, or create a violation of any representation or rule of conduct herein, I
+                      will bring such matter to the attention of the contracting office. </p>
+                    <div class="controls">
+                      <button class="btn btn-danger" data-dismiss="modal">Decline</button>
+                      <button class="btn btn-primary">Accept</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <input type="text" class="form-control applyinput" [(ngModel)]="apply.email" name="email" #applyEmail="ngModel" minlength="15" placeholder="*Email" required>
@@ -111,17 +140,17 @@
               required
           >
             <span *ngIf="applySponsorname.errors?.required && applySponsorname.touched" class="alert alert-danger">Sponsor Name is required</span>
-            <span *ngIf="applySponsorname.errors?.minlength && applySponsorname.touched" class="alert alert-danger">Sponsor Name should be at least 2 characters</span>
+        <span *ngIf="applySponsorname.errors?.minlength && applySponsorname.touched" class="alert alert-danger">Sponsor Name should be at least 2 characters</span>
         </span>
         <span class="form-group sponsor">
           <input type="text" class="form-control applyinput sponsor" [(ngModel)]="apply.sponsorphone" name="sponsorphone" #applySponsorphone="ngModel" minlength="10" placeholder="*Sponsor Phone" required>
           <span *ngIf="applySponsorphone.errors?.required && applySponsorphone.touched" class="alert alert-danger">Sponsor Phone is required</span>
-          <span *ngIf="applySponsorphone.errors?.minlength && applySponsorphone.touched" class="alert alert-danger">Sponsor should be at least 10 characters</span>
+        <span *ngIf="applySponsorphone.errors?.minlength && applySponsorphone.touched" class="alert alert-danger">Sponsor should be at least 10 characters</span>
         </span>
         <span class="form-group sponsor">
           <input type="text" class="form-control applyinput sponsor" [(ngModel)]="apply.sponsoremail" name="sponsoremail" #applySponsoremail="ngModel" minlength="4" placeholder="*Sponsor Email" required>
           <span *ngIf="applySponsoremail.errors?.required && applySponsoremail.touched" class="alert alert-danger">Sponsor Email is required</span>
-          <span *ngIf="applySponsoremail.errors?.minlength && applySponsoremail.touched" class="alert alert-danger">Sponsor Email should be at least 4 characters</span>
+        <span *ngIf="applySponsoremail.errors?.minlength && applySponsoremail.touched" class="alert alert-danger">Sponsor Email should be at least 4 characters</span>
         </span>
         <div class="controls">
           <button class="btn btn-default">Cancel</button>
