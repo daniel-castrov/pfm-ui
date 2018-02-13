@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap';
-import { BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-apply',
