@@ -1,0 +1,42 @@
+<app-header title="JSCBIS Login"></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-7">
+      <div class="row">
+        <h1 class="title" style="display:none">
+          {{title}}
+        </h1>
+        <button (click)="toggleTitle()"> clickhere</button>
+        <div class="card-header">
+        Community Request
+      </div>
+      <div class="card-container">
+        <div class="row items-container">
+          <div class="col-xs-5">
+            <h6>Current Communities</h6>
+            <select name="from[]" class="multiselect form-control window" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
+                <option value="1">Item 1</option>
+                <option value="2">Item 5</option>
+                <option value="2">Item 2</option>
+                <option value="2">Item 4</option>
+                <option value="3">Item 3</option>
+            </select>
+          </div>
+          <div class="col-xs-2 arrows">
+            <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+            <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+            <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+          </div>
+          <div class="col-xs-5">
+            <h6>Available Communities</h6>
+            <select name="to[]" id="multiselect_to_1" class="form-control window" size="8" multiple="multiple"></select>
+          </div>
+          <div class="controls">
+            <button class="btn btn-primary btn-sm">Submit</button>
+            <button class="btn btn-default btn-sm">Cancel</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
