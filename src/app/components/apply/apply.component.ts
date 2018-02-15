@@ -28,7 +28,7 @@ export class ApplyComponent implements OnInit {
    if(valid){
        console.log(value);
    } else {
-       console.log('Form is invalid');
+       // console.log('Form is invalid');
    }
   }
 
