@@ -1,25 +1,24 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
-    <div class="col-7">
+    <div class="col-12">
       <div class="row">
         <!-- <h1 class="title" style="display:none">
           {{title}}
         </h1>
         <button (click)="toggleTitle()"> clickhere</button> -->
         <div class="card-header">
-        Community Request
-      </div>
-      <div class="card-container">
+          Community Request
+        </div>
         <div class="row items-container">
           <div class="col-xs-5">
             <h6>Current Communities</h6>
-            <select name="from[]" id="multiselect" class="form-control window" size="8" 
-              multiple="multiple" 
-              data-right="#multiselect_to_1" 
-              data-right-all="#right_All_1" 
-              data-right-selected="#right_Selected_1" 
-              data-left-all="#left_All_1" 
+            <select name="from[]" id="multiselect" class="form-control window" size="8"
+              multiple="multiple"
+              data-right="#multiselect_to_1"
+              data-right-all="#right_All_1"
+              data-right-selected="#right_Selected_1"
+              data-left-all="#left_All_1"
               data-left-selected="#left_Selected_1">
               <option value="1">Item 1</option>
               <option value="2">Item 5</option>
@@ -43,6 +42,5 @@
             <button class="btn btn-default btn-sm">Cancel</button>
           </div>
       </div>
-    </div>
   </div>
 </div>
