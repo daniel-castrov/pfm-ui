@@ -18,7 +18,7 @@ export class RequestCommunityComponent implements OnInit {
 
 
         jQuery(document).ready(function($) {
-            $('.multiselect').multiselect();
+            $('#multiselect').multiselect();
         });
 
       }

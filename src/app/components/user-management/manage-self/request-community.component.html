@@ -14,7 +14,13 @@
         <div class="row items-container">
           <div class="col-xs-5">
             <h6>Current Communities</h6>
-            <select name="from[]" class="multiselect form-control window" size="8" multiple="multiple" data-right="#multiselect_to_1" data-right-all="#right_All_1" data-right-selected="#right_Selected_1" data-left-all="#left_All_1" data-left-selected="#left_Selected_1">
+            <select name="from[]" id="multiselect" class="form-control window" size="8" 
+              multiple="multiple" 
+              data-right="#multiselect_to_1" 
+              data-right-all="#right_All_1" 
+              data-right-selected="#right_Selected_1" 
+              data-left-all="#left_All_1" 
+              data-left-selected="#left_Selected_1">
               <option value="1">Item 1</option>
               <option value="2">Item 5</option>
               <option value="2">Item 2</option>
@@ -23,14 +29,14 @@
             </select>
           </div>
           <div class="col-xs-2 arrows">
-            <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-            <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-            <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-            <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+            <button type="button" id="multiselect_rightAll" class="btn btn-block"> &gt; &gt; </button>
+            <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+            <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
           </div>
           <div class="col-xs-5">
             <h6>Available Communities</h6>
-            <select name="to[]" id="multiselect_to_1" class="form-control window" size="8" multiple="multiple"></select>
+            <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple"></select>
           </div>
           <div class="controls">
             <button class="btn btn-primary btn-sm">Submit</button>
