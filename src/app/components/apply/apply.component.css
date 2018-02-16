@@ -1,5 +1,6 @@
 label, select {
   color: #868e9b;
+  width: 300px;
   margin: 0;
 }
 
@@ -7,6 +8,16 @@ label, select {
   width: 300px;
   padding: 6px 4px;
   clear: both;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.accept-box {
+  color: #000;
+  width: 600px;
+  margin: 10px 0 15px 0;
 }
 
 .inline-name {
@@ -39,6 +50,7 @@ label, select {
 
 .controls {
   clear: both;
+  margin-bottom: 20px;
 }
 
 .modal .modal-header {
