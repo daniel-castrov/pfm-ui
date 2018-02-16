@@ -50,7 +50,7 @@ export class ManageSelfComponent implements OnInit {
     this.getCurrentUser();
   }
 
-  getCurrentUser(){
+  getCurrentUser():void {
     var result:RestResult;
     this.userDetailsService.getCurrentUser()
     .subscribe((c) => {

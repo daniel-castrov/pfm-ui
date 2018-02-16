@@ -20,11 +20,9 @@
               data-right-selected="#right_Selected_1"
               data-left-all="#left_All_1"
               data-left-selected="#left_Selected_1">
-              <option value="1">Item 1</option>
-              <option value="2">Item 5</option>
-              <option value="2">Item 2</option>
-              <option value="2">Item 4</option>
-              <option value="3">Item 3</option>
+
+              <option *ngFor="let comm of reqcommunities" [value]="comm.id">{{comm.name}}</option>
+
             </select>
           </div>
           <div class="col-xs-2 arrows">
@@ -35,11 +33,13 @@
           </div>
           <div class="col-xs-5">
             <h6>Available Communities</h6>
-            <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple"></select>
+            <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple">
+                <option *ngFor="let comm of avacommunities" [value]="comm.id">{{comm.name}}</option>
+            </select>
           </div>
           <div class="controls">
-            <button class="btn btn-primary btn-sm">Submit</button>
-            <button class="btn btn-default btn-sm">Cancel</button>
+            <button class="btn btn-primary btn-sm" (click)="submit()">Submit</button>
+            <button class="btn btn-default btn-sm" (click)="cancel()">Cancel</button>
           </div>
       </div>
   </div>
