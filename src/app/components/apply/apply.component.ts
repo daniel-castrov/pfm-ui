@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 @Component({
   selector: 'app-apply',
@@ -33,6 +34,7 @@ export class ApplyComponent implements OnInit {
     { id: 7, name: 'None)' }
   ];
 
+
   communities = [
     { id: 1, name: 'JPEO-CBO' },
     { id: 2, name: 'JSTO-CBD' },
@@ -52,8 +54,8 @@ export class ApplyComponent implements OnInit {
    }
   }
 
-  submit(f){
-    f.value
+  submit(applyForm){
+    applyForm.value
   }
     constructor() { }
 

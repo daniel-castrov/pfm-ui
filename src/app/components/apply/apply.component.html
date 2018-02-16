@@ -4,47 +4,53 @@
     <div class="col-lg-2">
     </div>
     <div class="col-lg-10">
-      <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
         <h5>New User Application</h5>
         <p class="font-italic text-danger">* Indicates Required Field</p>
         <span class="form-group inline-name">
           <input
           type="text"
-          class="form-control applyinput"
           [(ngModel)]="apply.firstname"
+          [ngClass]="{'is-invalid':applyFirstname.errors && applyFirstname.touched}"
+          class="form-control applyinput"
           name="firstname"
           #applyFirstname="ngModel"
-          minlength="2"
           placeholder="*First Name"
-          required>
-          <span *ngIf="applyFirstname.errors?.required && applyFirstname.touched" class="alert alert-danger name-error">*First Name is required</span>
-          <span *ngIf="applyFirstname.errors?.minlength && applyFirstname.touched" class="alert alert-danger name-error">*First Name should be at least 2 characters</span>
+          minlength="2"
+          required
+          >
+          <span [hidden]="!applyFirstname.errors?.required" class="invalid-feedback">*First Name is required</span>
+          <span [hidden]="!applyFirstname.errors?.minlength" class="invalid-feedback">*First Name should be at least 2 characters</span>
         </span>
         <span class="form-group inline-name">
           <input
             type="text"
-            class="form-control middle"
             [(ngModel)]="apply.middle"
+            [ngClass]="{'is-invalid':applyMiddle.errors && applyMiddle.touched}"
+            class="form-control middle"
             name="middle"
             #applyMiddle="ngModel"
-            minlength="1"
             placeholder="*MI"
-            required>
-          <span *ngIf="applyMiddle.errors?.required && applyMiddle.touched" class="alert alert-danger name-error">*MI is required</span>
-          <span *ngIf="applyMiddle.errors?.minlength && applyMiddle.touched" class="alert alert-danger name-error">*MI should be at least 1 characters</span>
-        </span>
+            minlength="1"
+            required
+            >
+          <span [hidden]="!applyMiddle.errors?.required" class="invalid-feedback">*MI is required</span>
+          <span [hidden]="!applyMiddle.errors?.minlength" class="invalid-feedback">*MI should be at least 1 character</span>
+      </span>
         <span class="form-group inline-name">
           <input
             type="text"
-            class="form-control applyinput"
             [(ngModel)]="apply.lastname"
+            [ngClass]="{'is-invalid':applyLastname.errors && applyLastname.touched}"
+            class="form-control applyinput"
             name="lastname"
             #applyLastname="ngModel"
-            minlength="2"
             placeholder="*Last Name"
-            required>
-          <span *ngIf="applyLastname.errors?.required && applyLastname.touched" class="alert alert-danger name-error">*Last Name is required</span>
-          <span *ngIf="applyLastname.errors?.minlength && applyLastname.touched" class="alert alert-danger name-error">*Last Name should be at least 2 characters</span>
+            minlength="2"
+            required
+            >
+          <span [hidden]="!applyLastname.errors?.required" class="invalid-feedback">*Last Name is required</span>
+          <span [hidden]="!applyLastname.errors?.minlength" class="invalid-feedback">*Last Name should be at least 2 characters</span>
         </span>
         <div class="form-group">
           <input
@@ -53,7 +59,8 @@
             [(ngModel)]="apply.rank"
             name="rank"
             #applyRank="ngModel"
-            placeholder="Title/Rank">
+            placeholder="Title/Rank"
+            >
         </div>
         <div class="form-group">
           <input
@@ -62,7 +69,8 @@
             [(ngModel)]="apply.job"
             name="rank"
             #applyJob="ngModel"
-            placeholder="Duty/Job">
+            placeholder="Duty/Job"
+            >
         </div>
         <div class="form-group">
           <a data-toggle="modal" href="#myModal">Sign NDA</a>
@@ -107,28 +115,32 @@
         <div class="form-group">
           <input
           type="text"
-          class="form-control applyinput"
           [(ngModel)]="apply.email"
+          [ngClass]="{'is-invalid':applyEmail.errors && applyEmail.touched}"
+          class="form-control applyinput"
           name="email"
           #applyEmail="ngModel"
-          minlength="4"
           placeholder="*Email"
-          required>
-          <div *ngIf="applyEmail.errors.required && applyEmail.touched" class="alert alert-danger name-error">*Email is required</div>
-          <div *ngIf="applyEmail.errors.minlength && applyEmail.touched" class="alert alert-danger name-error">*Email should be at least 4 characters</div>
-        </div>
+          pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+          required
+          >
+          <span [hidden]="!applyEmail.errors?.required" class="invalid-feedback">*Email is required</span>
+          <span [hidden]="!applyEmail.errors?.pattern" class="invalid-feedback">*Email is not valid</span>
+      </div>
         <div class="form-group">
           <input
             type="text"
-            class="form-control applyinput"
             [(ngModel)]="apply.phone"
+            [ngClass]="{'is-invalid':applyPhone.errors && applyPhone.touched}"
+            class="form-control applyinput"
             name="phone"
             #applyPhone="ngModel"
-            minlength="10"
             placeholder="*Phone"
-            required>
-          <div *ngIf="applyPhone.errors?.required && applyPhone.touched" class="alert alert-danger name-error">*Phone is required</div>
-          <div *ngIf="applyPhone.errors?.minlength && applyPhone.touched" class="alert alert-danger name-error">*Phone should be at least 10 characters</div>
+            minlength="10"
+            required
+            >
+          <span [hidden]="!applyPhone.errors?.required" class="invalid-feedback">*Phone is required</span>
+          <span [hidden]="!applyPhone.errors?.minlength" class="invalid-feedback">*Phone should be at least 10 characters</span>
         </div>
         <div class="form-group">
           <input
@@ -137,20 +149,23 @@
             [(ngModel)]="apply.address"
             name="address"
             #applyAddress="ngModel"
-            placeholder="Street, City, State, Zipcode">
+            placeholder="Street, City, State, Zipcode"
+            >
         </div>
         <div class="form-group">
           <input
             type="text"
-            class="form-control applyinput"
             [(ngModel)]="apply.organization"
+            [ngClass]="{'is-invalid':applyOrganization.errors && applyOrganization.touched}"
+            class="form-control applyinput"
             name="organization"
             #applyOrganization="ngModel"
-            minlength="2"
             placeholder="*Organization Name"
-            required>
-          <div *ngIf="applyOrganization.errors?.required && applyOrganization.touched" class="alert alert-danger name-error">*Organization is required</div>
-          <div *ngIf="applyOrganization.errors?.minlength && applyOrganization.touched" class="alert alert-danger name-error">*Organization should be at least 2 characters</div>
+            minlength="2"
+            required
+            >
+          <span [hidden]="!applyOrganization.errors?.required" class="invalid-feedback">*Organization is required</span>
+          <span [hidden]="!applyOrganization.errors?.minlength" class="invalid-feedback">*Organization should be at least 2 characters</span>
         </div>
         <div class="form-group">
           <label for="branches">*Select Branch</label>
@@ -159,6 +174,9 @@
               <option value=""></option>
               <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.name }}</option>
             </select>
+            <div *ngIf="branches.invalid">
+              Branch required.
+            </div>
           </div>
         </div>
         <div class="form-group">
@@ -171,23 +189,52 @@
           </div>
         </div>
         <span class="form-group inline-name">
-          <input type="text" class="form-control applyinput sponsor" [(ngModel)]="apply.sponsorname" name="sponsorname" #applySponsorname="ngModel" minlength="2" placeholder="*Sponsor Name" required>
-          <span *ngIf="applySponsorname.errors?.required && applySponsorname.touched" class="alert alert-danger name-error">*Sponsor Name is required</span>
-          <span *ngIf="applySponsorname.errors?.minlength && applySponsorname.touched" class="alert alert-danger name-error">*Sponsor Name should be at least 2 characters</span>
+          <input
+            type="text"
+            [(ngModel)]="apply.sponsorname"
+            [ngClass]="{'is-invalid':applySponsorname.errors && applySponsorname.touched}"
+            class="form-control applyinput sponsor"
+            name="sponsorname"
+            #applySponsorname="ngModel"
+            placeholder="*Sponsor Name"
+            minlength="2"
+            required>
+          <span [hidden]="!applySponsorname.errors?.required" class="invalid-feedback">*Sponsor Name is required</span>
+          <span [hidden]="!applySponsorname.errors?.minlength" class="invalid-feedback">*Sponsor Name should be at least 2 characters</span>
         </span>
           <span class="form-group inline-name">
-            <input type="text" class="form-control applyinput sponsor" [(ngModel)]="apply.sponsorphone" name="sponsorphone" #applySponsorphone="ngModel" minlength="10" placeholder="*Sponsor Phone" required>
-            <span *ngIf="applySponsorphone.errors?.required && applySponsorphone.touched" class="alert alert alert-danger name-error">*Sponsor Phone is required</span>
-          <span *ngIf="applySponsorphone.errors?.minlength && applySponsorphone.touched" class="alert alert alert-danger name-error">*Sponsor should be at least 10 characters</span>
+            <input
+              type="text"
+              [(ngModel)]="apply.sponsorphone"
+              [ngClass]="{'is-invalid':applySponsorphone.errors && applySponsorphone.touched}"
+              class="form-control applyinput sponsor"
+              name="sponsorphone"
+              #applySponsorphone="ngModel"
+              placeholder="*Sponsor Phone"
+              minlength="10"
+              required
+              >
+            <span [hidden]="!applySponsorphone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
+            <span [hidden]="!applySponsorphone.errors?.minlength" class="invalid-feedback">*Sponsor should be at least 10 characters</span>
           </span>
           <span class="form-group inline-name">
-            <input type="text" class="form-control applyinput sponsor" [(ngModel)]="apply.sponsoremail" name="sponsoremail" #applySponsoremail="ngModel" minlength="4" placeholder="*Sponsor Email" required>
-            <span *ngIf="applySponsoremail.errors?.required && applySponsoremail.touched" class="alert alert-danger name-error">*Sponsor Email is required</span>
-            <span *ngIf="applySponsoremail.errors?.minlength && applySponsoremail.touched" class="alert alert-danger name-error">*Sponsor Email should be at least 4 characters</span>
+            <input
+              type="text"
+              [(ngModel)]="apply.sponsoremail"
+              [ngClass]="{'is-invalid':applySponsoremail.errors && applySponsoremail.touched}"
+              class="form-control applyinput sponsor"
+              name="sponsoremail"
+              #applySponsoremail="ngModel"
+              placeholder="*Sponsor Email"
+              pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+              required
+              >
+            <span [hidden]="!applySponsoremail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
+            <span [hidden]="!applySponsoremail.errors?.pattern" class="invalid-feedback">*Sponsor Email is not valid</span>
           </span>
         <div class="controls">
           <button class="btn btn-default">Cancel</button>
-          <button class="btn btn-primary" [disabled]="f.valid">Submit</button>
+          <button class="btn btn-primary" [disabled]="!applyForm.form.valid">Submit</button>
         </div>
       </form>
     </div>
