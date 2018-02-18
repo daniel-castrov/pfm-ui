@@ -74,16 +74,16 @@
         </div>
         <div class="form-group">
           <a data-toggle="modal" href="#myModal">Sign NDA</a>
-          <span><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>
+          <!-- <span *ngIf="!ch1.valid"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span> -->
+          <!-- <span *ngIf="ch1.valid"><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span> -->
           <div id="myModal" class="modal fade in">
             <div class="modal-dialog">
-              <div class="modal-content">
+              <div class="modal-content nda-content">
                 <div class="modal-header">
                   <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
                 </div>
                 <div class="modal-body">
                   <h4 class="modal-title">JSCBIS NON-DISCLOSURE CERTIFICATION</h4>
-                  <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
                     <p>I understand that the release of advanced procurement information, proprietary and source selection information is governed by Public law 100-679, AR 340-17 Release of Information and Records from Army files, AR 600-50 Standards of
                       Conduct for Department of Army Personnel, and provisions of the Federal Acquisition Regulations. I will not knowingly disclose any acquisition, proprietary or source selection information regarding any office or activity working
                       for or with, and to include, the office I provide support to and procurements directly or indirectly to any person other than a person authorized by the head of the agency or the contracting officer to receive such information
@@ -93,21 +93,13 @@
                       Information contained within this system may be sensitive in nature and I agree to limit my access to that information required in the performance of my assigned duties. </p>
                     <p>I understand that my obligations under this certification are of a continuing nature, and if anything takes place which would cause a change to any statement, or create a violation of any representation or rule of conduct herein, I
                       will bring such matter to the attention of the contracting office. </p>
-                    <div class="checkbox">
-                      <strong>Please agree to the terms of the Non-Disclosure Agreement.</strong>
-                      <label class="accept-box">
-                        <input type="checkbox" ngModel name="isNda" class="checkbox"> I have read and understand the terms of the NDA.
-                      </label>
-                      <!-- <p> {{ f.value | json}}</p> -->
-                    </div>
-                    <div class="controls">
-                      <button class="btn btn-danger" data-dismiss="modal">Decline</button>
-                      <button class="btn btn-primary" [disabled]="f.valid">Accept</button>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                </div>
+                    <input type="checkbox" [checked]="ch1" (change)="ch1= !ch1" class="checkbox" required>
+                    <strong>Please agree to the terms of the Non-Disclosure Agreement by click the checkbox.</strong>
+                    <span class="controls">
+                      <!-- <span *ngIf="!ch1.valid"><button class="btn btn-primary btn-sm" data-dismiss="modal">Back to Application form</button></span> -->
+                      <span><button class="btn btn-primary btn-sm" data-dismiss="modal">Back to Application form</button></span>
+                    </span>
+                  </div>
               </div>
             </div>
           </div>
@@ -121,11 +113,11 @@
           name="email"
           #applyEmail="ngModel"
           placeholder="*Email"
-          pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+          pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
           required
           >
           <span [hidden]="!applyEmail.errors?.required" class="invalid-feedback">*Email is required</span>
-          <span [hidden]="!applyEmail.errors?.pattern" class="invalid-feedback">*Email is not valid</span>
+          <span [hidden]="!applyEmail.errors?.pattern" class="invalid-feedback">*Email should be <small>joe@abc.com</small></span>
       </div>
         <div class="form-group">
           <input
@@ -136,11 +128,13 @@
             name="phone"
             #applyPhone="ngModel"
             placeholder="*Phone"
+            pattern="[0-9]*"
             minlength="10"
             required
             >
           <span [hidden]="!applyPhone.errors?.required" class="invalid-feedback">*Phone is required</span>
-          <span [hidden]="!applyPhone.errors?.minlength" class="invalid-feedback">*Phone should be at least 10 characters</span>
+          <span [hidden]="!applyPhone.errors?.minlength" class="invalid-feedback">*Phone should be should be 10 digits</span>
+          <span [hidden]="!applyPhone.errors?.pattern" class="invalid-feedback">*Phone should be only numbers</span>
         </div>
         <div class="form-group">
           <input
@@ -174,9 +168,6 @@
               <option value=""></option>
               <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.name }}</option>
             </select>
-            <div *ngIf="branches.invalid">
-              Branch required.
-            </div>
           </div>
         </div>
         <div class="form-group">
@@ -211,11 +202,13 @@
               name="sponsorphone"
               #applySponsorphone="ngModel"
               placeholder="*Sponsor Phone"
+              pattern="[0-9]*"
               minlength="10"
               required
               >
             <span [hidden]="!applySponsorphone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
-            <span [hidden]="!applySponsorphone.errors?.minlength" class="invalid-feedback">*Sponsor should be at least 10 characters</span>
+            <span [hidden]="!applySponsorphone.errors?.minlength" class="invalid-feedback">*Sponsor Phone should be should be 10 digits</span>
+            <span [hidden]="!applySponsorphone.errors?.pattern" class="invalid-feedback">*Sponsor Phone should be only numbers</span>
           </span>
           <span class="form-group inline-name">
             <input
@@ -226,15 +219,15 @@
               name="sponsoremail"
               #applySponsoremail="ngModel"
               placeholder="*Sponsor Email"
-              pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
               required
               >
             <span [hidden]="!applySponsoremail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
-            <span [hidden]="!applySponsoremail.errors?.pattern" class="invalid-feedback">*Sponsor Email is not valid</span>
+            <span [hidden]="!applySponsoremail.errors?.pattern" class="invalid-feedback">*Sponsor Email should be <small>joe@abc.com</small></span>
           </span>
         <div class="controls">
           <button class="btn btn-default">Cancel</button>
-          <button class="btn btn-primary" [disabled]="!applyForm.form.valid">Submit</button>
+          <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ch1">Submit</button>
         </div>
       </form>
     </div>
