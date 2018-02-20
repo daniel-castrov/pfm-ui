@@ -189,6 +189,29 @@ paths:
         500:
           description: "An unexpected error occurred."
   /communities/{commId}/approvers:
+    get:
+      tags:
+      - "Community"
+      summary: "Gets Approvers for a Community"
+      description: "Get the approvers for a community"
+      operationId: "getApprovers"
+      parameters:
+      - name: "commId"
+        in: "path"
+        description: "Community id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Community does not exist."
+        500:
+          description: "An unexpected error occurred."
     put:
       tags:
       - "Community"
@@ -597,13 +620,13 @@ paths:
     get:
       tags:
       - "Permission"
-      summary: "Find all the Permissions (Roles and all) by the PermissionId"
-      description: "Find all the Permissions (Roles and all) by the PermissionId"
+      summary: "Find all the Permissions (Roles and all) by the Permission string"
+      description: "Find all the Permissions (Roles and all) by the Permission string"
       operationId: "getPermissionsByPermissionId"
       parameters:
       - name: "permission"
         in: "path"
-        description: "permission id"
+        description: "permission string"
         required: true
         type: "string"
       produces:
@@ -617,7 +640,7 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /program/findall:
+  /programs:
     get:
       tags:
       - "Program"
@@ -635,7 +658,7 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"          
-  /fundLine/findall:
+  /programs/fundLines:
     get:
       tags:
       - "FundLine"
@@ -653,7 +676,7 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /fundLine/find/{id}:
+  /programs/fundLines/{id}:
     get:
       tags:
       - "FundLine"
@@ -676,7 +699,7 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /tag/find/{type}:
+  /tags/type/{type}:
     get:
       tags:
       - "Tag"
@@ -699,7 +722,7 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /tag/findname/{name}:
+  /tags/name/{name}:
     get:
       tags:
       - "Tag"
