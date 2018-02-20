@@ -238,6 +238,30 @@ paths:
           description: "Community does not exist."
         500:
           description: "An unexpected error occurred."
+  /communities/{commId}/users:
+    get:
+      tags:
+      - "Community"
+      summary: "Gets All Users for a Community"
+      description: "Get the users for a community"
+      operationId: "getUsers"
+      parameters:
+      - name: "commId"
+        in: "path"
+        description: "Community id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Community does not exist."
+        500:
+          description: "An unexpected error occurred."
 # STOP COMMUNITIES
 ##############################################################################
 # START MYDETAILS
@@ -471,6 +495,29 @@ paths:
           description: "The Role does not exist."
         500:
           description: "An unexpected error occured."
+  /roles/{roleId}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get a Role by Id"
+      description: "Returns a Role with the given id"
+      operationId: "getById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A Role"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
 # STOP ROLES
 ##############################################################################
 # START USERS
@@ -661,6 +708,30 @@ paths:
       responses:
         204:
           description: "UserRole successfully deleted."
+        403:
+          description: "Forbidden"
+        404:
+          description: "UserRole does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /userRoles/community/{commId}:
+     get:
+      tags:
+      - "UserRole"
+      summary: "Gets all UserRoles for a Community"
+      description: "Get all UserRoles for a Community id"
+      operationId: "getUserRoles"
+      parameters:
+      - name: "commId"
+        in: "path"
+        description: "Community Id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of UserRoles"
+          schema:
+            $ref: "#/definitions/RestResult"
         403:
           description: "Forbidden"
         404:
@@ -872,7 +943,7 @@ definitions:
     properties:
       id:
         type: "string"
-      email:
+      userId:
         type: "string"
       roleId:
         type: "string"

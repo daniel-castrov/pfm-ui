@@ -179,8 +179,8 @@
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let role of userRoles">
-              {{ role.roleId }}
+            <li *ngFor="let role of targetUserRoles">
+              {{ role.name }}
             </li>
           </ul>
         </div>
@@ -206,7 +206,7 @@
           <div>
             <select name="addRoleSelector" [(ngModel)]="addedrole">
               <option *ngFor="let role of allRoles" [value]="role.roleName">
-                {{role.roleName}}
+                {{role.name}}
               </option>
             </select>
             <button class="btn-card-header" title="AddRole" (click)="addRole()">

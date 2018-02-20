@@ -39,8 +39,11 @@ export class ManageUsersComponent implements OnInit {
   // all the roles available ( all minus the ones we have )
   allRoles: Role[] = [];
 
-  // The roles that this user has
-  userRoles: UserRole[] = [];
+  // The UserRoles that this user has
+  targetUserUserRoles: UserRole[] = [];
+
+  // The Roles this user has
+  targetUserRoles: UserRole[] = [];
 
   // The name of the role we are assigning the targetUser to
   addedrole: string;
@@ -157,21 +160,19 @@ export class ManageUsersComponent implements OnInit {
       .subscribe(c => {
         result = c;
         this.resultError = result.error;
-        this.userRoles = result.result;
+        this.targetUserUserRoles = result.result;
 
 
-        for (let ur of this.userRoles ){
+        for (let ur of this.targetUserUserRoles ){
           console.log(ur.roleId);
 
-
-          let turoles:Role[]=[];
-          this.roleServicel()
-      .subscribe(c => {
-        result1 = c;
-        this.resultError = result1.error;
-        this.allRoles = result1.result;
-        let role: Role;
-      });
+          let result1: RestResult;
+          this.roleService.getById(ur.roleId)  
+          .subscribe(c1 => {
+            result1 = c1;
+            this.resultError = result1.error;
+            this.targetUserRoles.push(result1.result);
+          });
 
         }
 
@@ -181,7 +182,7 @@ export class ManageUsersComponent implements OnInit {
   buildAvailableRoles(): void {
     console.log("MATCH");
     let userRole: UserRole;
-    for (userRole of this.userRoles) {
+    for (userRole of this.targetUserUserRoles) {
       let role: Role;
       for (role of this.allRoles) {
         if (userRole.roleId === role.id) {
@@ -197,19 +198,19 @@ export class ManageUsersComponent implements OnInit {
   addRole(): void {
     console.log("addRole" + this.addedrole);
 
-    let newUsreRole: UserRole;
-    newUsreRole = new Object();
+    let newUserRole: UserRole;
+    newUserRole = new Object();
 
-    newUsreRole.email = this.targetUser.email;
-    newUsreRole.roleId = this.addedrole;
+    newUserRole.userId = this.targetUser.id;
+    newUserRole.roleId = this.addedrole;
 
     let reuslt3: RestResult;
 
-    this.userRoleService.create(newUsreRole)
+    this.userRoleService.create(newUserRole)
       .subscribe(c => {
         reuslt3 = c;
         this.resultError = reuslt3.error;
-        this.userRoles.push(newUsreRole);
+        this.targetUserUserRoles.push(newUserRole);
         this.resetAddRole();
         this.buildAvailableRoles();
       });
