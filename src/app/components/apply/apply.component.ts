@@ -33,6 +33,19 @@ export class ApplyComponent implements OnInit {
     { id: 7, name: 'None)' }
   ];
 
+  // getBranches(): any[] {
+  //
+  //  let branches = [
+  //    { id: 1, name: 'Army (USA)' },
+  //    { id: 2, name: 'USAF (Air Force)' },
+  //    { id: 3, name: 'USN (Navy)' },
+  //    { id: 4, name: 'USMC (Marine Corps)' },
+  //    { id: 5, name: 'USCG (Coast Guard)' },
+  //    { id: 6, name: 'Other' },
+  //    { id: 7, name: 'None)' }
+  //  ];
+  //  return branches;
+  // }
 
   communities = [
     { id: 1, name: 'JPEO-CBO' },

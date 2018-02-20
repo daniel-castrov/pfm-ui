@@ -74,8 +74,8 @@
         </div>
         <div class="form-group">
           <a data-toggle="modal" href="#myModal">Sign NDA</a>
-          <!-- <span *ngIf="!ch1.valid"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span> -->
           <!-- <span *ngIf="ch1.valid"><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span> -->
+          <!-- <span *ngIf="!ch1.valid"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span>  -->
           <div id="myModal" class="modal fade in">
             <div class="modal-dialog">
               <div class="modal-content nda-content">
@@ -164,16 +164,18 @@
         <div class="form-group">
           <label for="branches">*Select Branch</label>
           <div>
-            <select ngModel name="branches" id="branches" required>
+            <select ngModel name="branch" required #branch="ngModel">
               <option value=""></option>
               <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.name }}</option>
             </select>
+            <span *ngIf="branch.required" class="invalid-feedback">Branch required</span>
+            <span *ngIf="branch.invalid" class="invalid-feedback">Branch required</span>
           </div>
         </div>
         <div class="form-group">
           <label for="communites">Select Community</label>
           <div>
-            <select ngModel name="communities" id="communities">
+            <select ngModel name="community" #community="ngModel">
               <option value=""></option>
               <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
             </select>
