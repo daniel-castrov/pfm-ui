@@ -74,7 +74,7 @@
             type="text"
             class="form-control applyinput"
             [(ngModel)]="apply.job"
-            name="rank"
+            name="job"
             #applyJob="ngModel"
             placeholder="Duty/Job"
             >
@@ -100,7 +100,7 @@
                       Information contained within this system may be sensitive in nature and I agree to limit my access to that information required in the performance of my assigned duties. </p>
                     <p>I understand that my obligations under this certification are of a continuing nature, and if anything takes place which would cause a change to any statement, or create a violation of any representation or rule of conduct herein, I
                       will bring such matter to the attention of the contracting office. </p>
-                    <input type="checkbox" [checked]="ch1" (change)="ch1= !ch1" class="checkbox" required>
+                    <input type="checkbox" [checked]="ch1" (change)="ch1= !ch1" name="ch1" class="checkbox" required>
                     <strong>Please agree to the terms of the Non-Disclosure Agreement by click the checkbox.</strong>
                     <span class="controls">
                       <!-- <span *ngIf="!ch1.valid"><button class="btn btn-primary btn-sm" data-dismiss="modal">Back to Application form</button></span> -->
