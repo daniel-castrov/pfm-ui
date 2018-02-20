@@ -19,6 +19,7 @@ import { UserService } from '../../../generated/api/user.service';
 import { Role } from '../../../generated/model/role';
 import { RoleService } from '../../../generated/api/role.service';
 import { UserRole } from '../../../generated/model/userRole';
+import { UserRoleService } from '../../../generated/api/userRole.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -67,6 +68,7 @@ export class ManageUsersComponent implements OnInit {
     private userService: UserService,
     private roleService: RoleService,
     private communityService: CommunityService,
+    private userRoleService: UserRoleService,
 
   ) {
     this.route.params.subscribe((params: Params) => {
@@ -84,7 +86,7 @@ export class ManageUsersComponent implements OnInit {
 
   getTargetUser(): void {
     let result: RestResult;
-    this.userService.get(this.id)
+    this.userService.getById(this.id)
       .subscribe(c => {
         result = c;
         this.resultError = result.error;
@@ -138,7 +140,7 @@ export class ManageUsersComponent implements OnInit {
   getAllRoles(): void {
 
     let result1: RestResult;
-    this.roleService.findall()
+    this.roleService.getAll()
       .subscribe(c => {
         result1 = c;
         this.resultError = result1.error;
@@ -149,12 +151,13 @@ export class ManageUsersComponent implements OnInit {
 
   getTargetedUserRoles(): void {
 
-    let result2: RestResult;
-    this.roleService.find(this.id)
+    let result: RestResult;
+
+    this.userRoleService.getById(this.id)
       .subscribe(c => {
-        result2 = c;
-        this.resultError = result2.error;
-        this.userRoles = result2.result;
+        result = c;
+        this.resultError = result.error;
+        this.userRoles = result.result;
       });
   }
 
@@ -164,7 +167,7 @@ export class ManageUsersComponent implements OnInit {
     for (userRole of this.userRoles) {
       let role: Role;
       for (role of this.allRoles) {
-        if (userRole.roleName === role.roleName) {
+        if (userRole.roleId === role.id) {
           var index = this.allRoles.indexOf(role);
           if (index > -1) {
             this.allRoles.splice(index, 1);
@@ -181,11 +184,11 @@ export class ManageUsersComponent implements OnInit {
     newUsreRole = new Object();
 
     newUsreRole.email = this.targetUser.email;
-    newUsreRole.roleName = this.addedrole;
+    newUsreRole.roleId = this.addedrole;
 
     let reuslt3: RestResult;
 
-    this.roleService.assignUserToRole(newUsreRole)
+    this.userRoleService.create(newUsreRole)
       .subscribe(c => {
         reuslt3 = c;
         this.resultError = reuslt3.error;
@@ -201,7 +204,7 @@ export class ManageUsersComponent implements OnInit {
 
   getCommunities(): void {
     let result: RestResult;
-    this.communityService.findall()
+    this.communityService.getAll()
       .subscribe(c => {
         result = c;
         this.resultError = result.error;

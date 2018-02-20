@@ -489,9 +489,9 @@ paths:
       description: "Get a UserRole user identified via its id"
       operationId: "getById"
       parameters:
-      - name: "id"
+      - name: "userId"
         in: "path"
-        description: "UserRole id"
+        description: "UserRole userId"
         required: true
         type: "string"
       responses:
@@ -509,12 +509,12 @@ paths:
       tags:
       - "UserRole"
       summary: "Deletes a UserRole"
-      description: "Delete a UserRole user identified via its id"
+      description: "Delete a UserRole user identified via its userId"
       operationId: "deleteById"
       parameters:
-      - name: "id"
+      - name: "userId"
         in: "path"
-        description: "UserRole id"
+        description: "UserRole userId"
         required: true
         type: "string"
       responses:
@@ -592,7 +592,7 @@ paths:
           description: "Permission does not exist."
         500:
           description: "An unexpected error occurred."
-  /permissions/role/{roleName}:
+  /permissions/role/{roleId}:
     get:
       tags:
       - "Permission"
