@@ -63,12 +63,15 @@ constructor() { this.id, this.name }
     { id: 8, name: 'DTRA' }
   ];
 
+submitted = false;
+
   onSubmit({value, valid}){
    if(valid){
        console.log(value);
    } else {
        // console.log('Form is invalid');
    }
+   this.submitted = true;
   }
 
   submit(applyForm){
