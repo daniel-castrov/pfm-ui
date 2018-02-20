@@ -4,7 +4,7 @@
     <div class="col-lg-2">
     </div>
     <div class="col-lg-10">
-      <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
+      <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)" (submit)="newApply(applyForm)">
         <h5>New User Application</h5>
         <p class="font-italic text-danger">* Indicates Required Field</p>
         <span class="form-group inline-name">
@@ -228,7 +228,7 @@
             <span [hidden]="!applySponsoremail.errors?.pattern" class="invalid-feedback">*Sponsor Email should be <small>joe@abc.com</small></span>
           </span>
         <div class="controls">
-          <button class="btn btn-default">Cancel</button>
+          <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>
           <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ch1">Submit</button>
         </div>
       </form>
