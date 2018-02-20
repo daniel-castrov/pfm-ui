@@ -158,6 +158,23 @@ export class ManageUsersComponent implements OnInit {
         result = c;
         this.resultError = result.error;
         this.userRoles = result.result;
+
+
+        for (let ur of this.userRoles ){
+          console.log(ur.roleId);
+
+
+          let turoles:Role[]=[];
+          this.roleServicel()
+      .subscribe(c => {
+        result1 = c;
+        this.resultError = result1.error;
+        this.allRoles = result1.result;
+        let role: Role;
+      });
+
+        }
+
       });
   }
 
