@@ -8,6 +8,9 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 })
 export class ApplyComponent implements OnInit {
 
+  id:any;
+  name:any;
+
   apply = {
     firstname:'',
     middlename:'',
@@ -22,6 +25,8 @@ export class ApplyComponent implements OnInit {
     sponsoremail:'',
     sponsorphone:''
   }
+
+constructor() { this.id, this.name }
 
   branches = [
     { id: 1, name: 'Army (USA)' },
@@ -50,7 +55,7 @@ export class ApplyComponent implements OnInit {
   communities = [
     { id: 1, name: 'JPEO-CBO' },
     { id: 2, name: 'JSTO-CBD' },
-    { id: 3, name: 'CBDP' },
+    { id: 3, name: 'JSTO-CBD' },
     { id: 4, name: 'TRAC-CWMD' },
     { id: 5, name: 'TRAC-CDP' },
     { id: 6, name: 'TRAC-CDP' },
@@ -69,7 +74,7 @@ export class ApplyComponent implements OnInit {
   submit(applyForm){
     applyForm.value
   }
-    constructor() { }
+
 
     ngOnInit() {
     }

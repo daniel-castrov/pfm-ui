@@ -166,7 +166,7 @@
           <div>
             <select ngModel name="branch" required #branch="ngModel">
               <option value=""></option>
-              <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.name }}</option>
+              <option *ngFor="let branch of branches" [value]="branch.name">{{ branch.name }}</option>
             </select>
             <span *ngIf="branch.required" class="invalid-feedback">Branch required</span>
             <span *ngIf="branch.invalid" class="invalid-feedback">Branch required</span>
@@ -177,7 +177,7 @@
           <div>
             <select ngModel name="community" #community="ngModel">
               <option value=""></option>
-              <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
+              <option *ngFor="let community of communities" [value]="community.name">{{ community.name }}</option>
             </select>
           </div>
         </div>
@@ -231,6 +231,9 @@
           <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>
           <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ch1">Submit</button>
         </div>
+        <pre>{{ applyForm.form.value | json }}</pre> <!-- Value of whole form -->
+
+        <pre>Valid form? {{ applyForm.form.valid | json }}</pre> <!-- Validity of whole form -->
       </form>
     </div>
   </div>
