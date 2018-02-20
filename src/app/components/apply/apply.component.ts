@@ -35,7 +35,7 @@ export class ApplyComponent implements OnInit {
     { id: 4, name: 'USMC (Marine Corps)' },
     { id: 5, name: 'USCG (Coast Guard)' },
     { id: 6, name: 'Other' },
-    { id: 7, name: 'None)' }
+    { id: 7, name: 'None' }
   ];
 
   // getBranches(): any[] {
