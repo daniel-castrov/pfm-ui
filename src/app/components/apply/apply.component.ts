@@ -18,7 +18,6 @@ export class ApplyComponent implements OnInit {
     phone:'',
     address:'',
     organization:'',
-    orgrequest:'',
     sponsorname:'',
     sponsoremail:'',
     sponsorphone:''
