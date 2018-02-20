@@ -8,25 +8,25 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 })
 export class ApplyComponent implements OnInit {
 
-  id:any;
-  name:any;
+  id: any;
+  name: any;
 
   apply = {
-    firstname:'',
-    middlename:'',
-    lastname:'',
-    rank:'',
-    job:'',
-    email:'',
-    phone:'',
-    address:'',
-    organization:'',
-    sponsorname:'',
-    sponsoremail:'',
-    sponsorphone:''
+    firstname: '',
+    middlename: '',
+    lastname: '',
+    rank: '',
+    job: '',
+    email: '',
+    phone: '',
+    address: '',
+    organization: '',
+    sponsorname: '',
+    sponsoremail: '',
+    sponsorphone: ''
   }
 
-constructor() { this.id, this.name }
+  constructor() { this.id, this.name }
 
   branches = [
     { id: 1, name: 'Army (USA)' },
@@ -63,23 +63,23 @@ constructor() { this.id, this.name }
     { id: 8, name: 'DTRA' }
   ];
 
-submitted = false;
+  submitted = false;
 
-  onSubmit({value, valid}){
-   if(valid){
-       console.log(value);
-   } else {
-       // console.log('Form is invalid');
-   }
-   this.submitted = true;
+  onSubmit({ value, valid }) {
+    if (valid) {
+      console.log(value);
+    } else {
+      // console.log('Form is invalid');
+    }
+    this.submitted = true;
   }
 
-  submit(applyForm){
+  submit(applyForm) {
     applyForm.value
   }
 
 
-    ngOnInit() {
-    }
-
+  ngOnInit() {
   }
+
+}
