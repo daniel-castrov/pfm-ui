@@ -670,34 +670,11 @@ paths:
         500:
           description: "An unexpected error occurred."
   /userRoles/{userId}:
-    get:
-      tags:
-      - "UserRole"
-      summary: "Gets a UserRole"
-      description: "Get a UserRole user identified via its id"
-      operationId: "getById"
-      parameters:
-      - name: "userId"
-        in: "path"
-        description: "UserRole userId"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "a UserRole"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "UserRole does not exist."
-        500:
-          description: "An unexpected error occurred."
     delete:
       tags:
       - "UserRole"
-      summary: "Deletes a UserRole"
-      description: "Delete a UserRole user identified via its userId"
+      summary: "Deletes all UserRole for a user"
+      description: "Delete all  UserRole user identified via its userId"
       operationId: "deleteById"
       parameters:
       - name: "userId"
@@ -722,6 +699,35 @@ paths:
       description: "Get all UserRoles for a Community id"
       operationId: "getUserRoles"
       parameters:
+      - name: "commId"
+        in: "path"
+        description: "Community Id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of UserRoles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "UserRole does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /userRoles/{userId}/community/{commId}:
+    get:
+      tags:
+      - "UserRole"
+      summary: "Gets all UserRoles user in a Community "
+      description: "Gets all UserRoles user in a Community"
+      operationId: "getUserRolesforCommunity"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User Id"
+        required: true
+        type: "string"
       - name: "commId"
         in: "path"
         description: "Community Id"

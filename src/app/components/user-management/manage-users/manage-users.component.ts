@@ -37,13 +37,13 @@ export class ManageUsersComponent implements OnInit {
   targetUser: User;
 
   // all the roles available ( all minus the ones we have )
-  allRoles: Role[] = [];
+  all_Roles: Role[] = [];
 
   // The UserRoles that this user has
-  targetUserUserRoles: UserRole[] = [];
+  targetUser_UserRoles: UserRole[] = [];
 
   // The Roles this user has
-  targetUserRoles: UserRole[] = [];
+  targetUser_Roles: UserRole[] = [];
 
   // The name of the role we are assigning the targetUser to
   addedrole: string;
@@ -52,9 +52,9 @@ export class ManageUsersComponent implements OnInit {
   addedcommunity: string;
 
   // All the communities
-  communities: Community[] = [];
+  all_Communities: Community[] = [];
 
-  userCommunities: Community[] = [];
+  targetUser_Communities: Community[] = [];
 
   // an original copy of the targted user so we can roll back.
   reftargetUser: User;
@@ -82,7 +82,6 @@ export class ManageUsersComponent implements OnInit {
   ngOnInit() {
     this.getTargetUser();
     this.getAllRoles();
-    this.getTargetedUserRoles();
     this.getCommunities();
     this.resetEditMode();
   }
@@ -103,10 +102,10 @@ export class ManageUsersComponent implements OnInit {
             .subscribe(c => {
               result2 = c;
               this.resultError = result2.error;
-              this.userCommunities.push(result2.result);
+              this.targetUser_Communities.push(result2.result);
+              this.getTargetedUserRoles(comm);
             });
         }
-
         // Make a copy of the current user so we can revert changes
         this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
       });
@@ -147,34 +146,33 @@ export class ManageUsersComponent implements OnInit {
       .subscribe(c => {
         result1 = c;
         this.resultError = result1.error;
-        this.allRoles = result1.result;
-        let role: Role;
+        this.all_Roles = result1.result;
       });
   }
 
-  getTargetedUserRoles(): void {
+  getTargetedUserRoles(commid): void {
 
     let result: RestResult;
 
-    this.userRoleService.getById(this.id)
+    this.userRoleService.getUserRolesforCommunity(this.id,commid)
       .subscribe(c => {
         result = c;
         this.resultError = result.error;
-        this.targetUserUserRoles = result.result;
+        this.targetUser_Roles = result.result;
 
 
-        for (let ur of this.targetUserUserRoles ){
-          console.log(ur.roleId);
+        // for (let ur of this.targetUser_UserRoles ){
+        //   console.log(ur.roleId);
 
-          let result1: RestResult;
-          this.roleService.getById(ur.roleId)  
-          .subscribe(c1 => {
-            result1 = c1;
-            this.resultError = result1.error;
-            this.targetUserRoles.push(result1.result);
-          });
+        //   let result1: RestResult;
+        //   this.roleService.getById(ur.roleId)  
+        //   .subscribe(c1 => {
+        //     result1 = c1;
+        //     this.resultError = result1.error;
+        //     this.targetUser_Roles.push(result1.result);
+        //   });
 
-        }
+        // }
 
       });
   }
@@ -182,13 +180,13 @@ export class ManageUsersComponent implements OnInit {
   buildAvailableRoles(): void {
     console.log("MATCH");
     let userRole: UserRole;
-    for (userRole of this.targetUserUserRoles) {
+    for (userRole of this.targetUser_UserRoles) {
       let role: Role;
-      for (role of this.allRoles) {
+      for (role of this.all_Roles) {
         if (userRole.roleId === role.id) {
-          var index = this.allRoles.indexOf(role);
+          var index = this.all_Roles.indexOf(role);
           if (index > -1) {
-            this.allRoles.splice(index, 1);
+            this.all_Roles.splice(index, 1);
           }
         }
       }
@@ -210,7 +208,7 @@ export class ManageUsersComponent implements OnInit {
       .subscribe(c => {
         reuslt3 = c;
         this.resultError = reuslt3.error;
-        this.targetUserUserRoles.push(newUserRole);
+        this.targetUser_UserRoles.push(newUserRole);
         this.resetAddRole();
         this.buildAvailableRoles();
       });
@@ -226,7 +224,7 @@ export class ManageUsersComponent implements OnInit {
       .subscribe(c => {
         result = c;
         this.resultError = result.error;
-        this.communities = result.result;
+        this.all_Communities = result.result;
       });
   }
 
@@ -239,7 +237,7 @@ export class ManageUsersComponent implements OnInit {
     .subscribe(c => {
       result2 = c;
       this.resultError = result2.error;
-      this.userCommunities.push(result2.result);
+      this.targetUser_Communities.push(result2.result);
     });
   }
 
