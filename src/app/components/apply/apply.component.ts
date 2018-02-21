@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 @Component({
   selector: 'app-apply',
@@ -7,34 +8,80 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ApplyComponent implements OnInit {
 
-    apply = {
-      firstname:'',
-      middlename:'',
-      lastname:'',
-      rank:'',
-      job:'',
-      email:'',
-      phone:'',
-      address:'',
-      organization:'',
-      orgrequest:'',
-      branch:'',
-      sponsorname:'',
-      sponsoremail:'',
-      sponsorphone:''
+  id: any;
+  name: any;
+  ch1: boolean = false;
+
+  apply = {
+    firstname: '',
+    middle: '',
+    lastname: '',
+    rank: '',
+    job: '',
+    email: '',
+    phone: '',
+    address: '',
+    organization: '',
+    sponsorname: '',
+    sponsoremail: '',
+    sponsorphone: ''
   }
 
-  onSubmit({value, valid}){
-   if(valid){
-       console.log(value);
-   } else {
-       console.log('Form is invalid');
-   }
-  }
+  constructor() { this.id, this.name }
 
-    constructor() { }
+  branches = [
+    { id: 1, name: 'Army (USA)' },
+    { id: 2, name: 'USAF (Air Force)' },
+    { id: 3, name: 'USN (Navy)' },
+    { id: 4, name: 'USMC (Marine Corps)' },
+    { id: 5, name: 'USCG (Coast Guard)' },
+    { id: 6, name: 'Other' },
+    { id: 7, name: 'None' }
+  ];
 
-    ngOnInit() {
+  // getBranches(): any[] {
+  //
+  //  let branches = [
+  //    { id: 1, name: 'Army (USA)' },
+  //    { id: 2, name: 'USAF (Air Force)' },
+  //    { id: 3, name: 'USN (Navy)' },
+  //    { id: 4, name: 'USMC (Marine Corps)' },
+  //    { id: 5, name: 'USCG (Coast Guard)' },
+  //    { id: 6, name: 'Other' },
+  //    { id: 7, name: 'None)' }
+  //  ];
+  //  return branches;
+  // }
+
+  communities = [
+    { id: 1, name: 'JPEO-CBO' },
+    { id: 2, name: 'JSTO-CBD' },
+    { id: 3, name: 'JSTO-CBD' },
+    { id: 4, name: 'TRAC-CWMD' },
+    { id: 5, name: 'TRAC-CDP' },
+    { id: 6, name: 'TRAC-CDP' },
+    { id: 7, name: 'NM)' },
+    { id: 8, name: 'DTRA' }
+  ];
+
+  submitted = false;
+
+  onSubmit({ value, valid }) {
+    if (valid) {
+      console.log(value);
+      this.submitted = true;
+      this.ch1 = true;
+    } else {
+      // console.log('Form is invalid');
     }
-
   }
+
+  submit(applyForm) {
+    applyForm.value
+  }
+
+
+  ngOnInit() {
+  }
+
+}
