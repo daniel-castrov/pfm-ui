@@ -42,7 +42,7 @@ export class UserListComponent implements OnInit {
 
   getUsers(): void{
     let result:RestResult;
-    this.userService.getAllUsers()
+    this.userService.getAll()
     .subscribe(c => {
       result = c;
       this.resultError = result.error;

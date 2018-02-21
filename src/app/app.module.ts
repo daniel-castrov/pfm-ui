@@ -44,6 +44,7 @@ import { TagService } from './generated/api/tag.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { UserApprovalComponent } from './components/user-management/user-approval/user-approval.component';
 import { UserService } from './generated/api/user.service';
+import { UserRoleService } from './generated/api/userRole.service';
 import { RoleService } from './generated/api/role.service';
 
 // ROUTES
@@ -117,6 +118,7 @@ const appRoutes: Routes = [
     TagService,
     MyDetailsService,
     RoleService,
+    UserRoleService,
     UserService,
     //{ provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
     { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },

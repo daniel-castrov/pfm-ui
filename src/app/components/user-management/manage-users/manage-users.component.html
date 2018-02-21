@@ -130,7 +130,7 @@
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let community of userCommunities">
+            <li *ngFor="let community of targetUser_Communities">
               {{ community.name }}
             </li>
           </ul>
@@ -150,13 +150,13 @@
         <div class="card-container">
 
           <ul>
-            <li *ngFor="let community of userCommunities">
-              {{ community.name }}
+            <li *ngFor="let tu_community of targetUser_Communities">
+              {{ tu_community.name }}
             </li>
           </ul>
 
           <select name="addCommunitySelector" [(ngModel)]="addedcommunity">
-            <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
+            <option *ngFor="let all_community of all_Communities" [value]="all_community.id">{{ all_community.name }}</option>
           </select>
           <button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Community
@@ -179,8 +179,8 @@
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let role of userRoles">
-              {{ role.roleName }}
+            <li *ngFor="let tu_role of targetUser_Roles">
+              {{ tu_role.name }}
             </li>
           </ul>
         </div>
@@ -198,15 +198,15 @@
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let role of userRoles">
-              {{ role.roleName }}
+            <li *ngFor="let tu_role of targetUser_Roles">
+              {{ tu_role.name }}
             </li>
           </ul>
           <br>
           <div>
             <select name="addRoleSelector" [(ngModel)]="addedrole">
-              <option *ngFor="let role of allRoles" [value]="role.roleName">
-                {{role.roleName}}
+              <option *ngFor="let all_role of all_Roles" [value]="all_role.name">
+                {{all_role.name}}
               </option>
             </select>
             <button class="btn-card-header" title="AddRole" (click)="addRole()">
