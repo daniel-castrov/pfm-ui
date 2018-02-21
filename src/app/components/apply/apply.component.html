@@ -103,7 +103,7 @@
                     <input type="checkbox" [checked]="ch1" (change)="ch1= !ch1" name="ch1" class="checkbox" required>
                     <strong>Please agree to the terms of the Non-Disclosure Agreement by click the checkbox.</strong>
                     <span class="controls">
-                      <!-- <span *ngIf="!ch1.valid"><button class="btn btn-primary btn-sm" data-dismiss="modal">Back to Application form</button></span> -->
+                      <!-- <span *ngIf="!ch1.errors.required"><button class="btn btn-primary btn-sm" data-dismiss="modal">Back to Application form</button></span> -->
                       <span><button class="btn btn-primary btn-sm" data-dismiss="modal">Back to Application form</button></span>
                     </span>
                   </div>

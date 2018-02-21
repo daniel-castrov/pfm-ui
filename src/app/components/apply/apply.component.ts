@@ -10,7 +10,7 @@ export class ApplyComponent implements OnInit {
 
   id: any;
   name: any;
-  ch1: boolean;
+  ch1: boolean = false;
 
   apply = {
     firstname: '',
