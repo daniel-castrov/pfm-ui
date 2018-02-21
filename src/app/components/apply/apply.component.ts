@@ -69,10 +69,11 @@ export class ApplyComponent implements OnInit {
   onSubmit({ value, valid }) {
     if (valid) {
       console.log(value);
+      this.submitted = true;
+      this.ch1 = true;
     } else {
       // console.log('Form is invalid');
     }
-    this.submitted = true;
   }
 
   submit(applyForm) {
