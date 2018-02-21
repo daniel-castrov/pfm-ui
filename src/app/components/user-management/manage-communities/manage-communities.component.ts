@@ -50,7 +50,7 @@ export class ManageCommunitiesComponent implements OnInit {
 
   getCommunities(): void{
     let result: RestResult;
-    this.communityService.findall()
+    this.communityService.getAll()
       .subscribe(c => {
         result = c;
         this.resultError = result.error;
@@ -60,7 +60,7 @@ export class ManageCommunitiesComponent implements OnInit {
 
   getUsers(): void{
     let result:RestResult;
-    this.userService.getAllUsers()
+    this.userService.getAll()
     .subscribe(c => {
       result = c;
       this.resultError = result.error;
@@ -82,8 +82,9 @@ export class ManageCommunitiesComponent implements OnInit {
 
   addCommunity1() {
  
-    this.newCommunity.approverIds =[];
-    this.newCommunity.approverIds.push(this.newapprover);
+    // TO DO Find all the current approvers for the community
+    //this.newCommunity.approverIds =[];
+    //this.newCommunity.approverIds.push(this.newapprover);
     console.log(this.newapprover);
 
     if (this.isValid()){

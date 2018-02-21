@@ -77,24 +77,22 @@ private getPrograms(): void {
       if (this.resultError == null) {
         this.community = result.result;
       }
+      let result2: RestResult;
+      let s2 = this.communityService.getApprovers(this.community.id);
+      s2.subscribe(r2 => {
+        result2 = r2;
+        this.resultError = result2.error;
+        if (this.resultError == null) {
+          this.approvers = result2.result;
+        }
 
-      
-      let appr: string;
-      for (appr of this.community.approverIds) {
-        let result: RestResult;
-        this.userService.get(appr)
-          .subscribe(c => {
-            result = c;
-            this.resultError = result.error;
-             this.approvers.push(result.result);
-          });
-      }
+      });
     });
   }
 
   getUsers(): void{
     let result:RestResult;
-    this.userService.getAllUsers()
+    this.userService.getAll()
     .subscribe(c => {
       result = c;
       this.resultError = result.error;
@@ -106,10 +104,10 @@ private getPrograms(): void {
 
     console.log("addApprover" + this.addedapprover);
 
-    this.community.approverIds.push(this.addedapprover);
+    //this.community.approverIds.push(this.addedapprover);
 
     let result: RestResult;
-    let s = this.communityService.updateCommunity(this.community);
+    let s = this.communityService.update(this.community);
 
     s.subscribe(r => {
       result = r;
@@ -118,6 +116,33 @@ private getPrograms(): void {
         this.community = result.result;
       }
     });
+
+
+    let user:User;
+    let result2:RestResult;
+    this.userService.getById(this.addedapprover)
+    .subscribe(r2 => {
+      result = r2;
+      this.resultError = result2.error;
+      user=result.result;
+
+      let result3: RestResult;
+      let s3 = this.communityService.assignApprover(user, this.community.id);
+  
+      s3.subscribe(r3 => {
+        result3 = r3;
+        this.resultError = result3.error;
+        if (this.resultError == null) {
+          result3.result;
+        }
+      });
+
+    });
+
+
+
+    
+
     this.getCommunity();
   }
 
