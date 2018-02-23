@@ -12,16 +12,17 @@ import { RouterModule, Routes } from '@angular/router';
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
+import { AccessCommunityComponent } from './components/user-management/user-approval/access-community.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { MamageCommunityDetailsComponent } from './components/user-management/manage-communities/manage-community-details.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ManageCommunitiesComponent } from './components/user-management/manage-communities/manage-communities.component';
+import { MamageCommunityDetailsComponent } from './components/user-management/manage-communities/manage-community-details.component';
 import { ManageRolesComponent } from './components/user-management/manage-roles/manage-roles.component';
 import { ManageSelfComponent } from './components/user-management/manage-self/manage-self.component';
 import { ManageUsersComponent } from './components/user-management/manage-users/manage-users.component';
@@ -52,6 +53,7 @@ const appRoutes: Routes = [
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'access-change', component:RequestAccessChangeComponent},
+  {path:'access-community', component:AccessCommunityComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'contact', component:ContactComponent},
@@ -78,6 +80,7 @@ const appRoutes: Routes = [
     AboutPrivateComponent,
     AppComponent,
     ApplyComponent,
+    AccessCommunityComponent,
     ContactComponent,
     FilterComponent,
     HeaderComponent,
