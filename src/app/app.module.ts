@@ -12,6 +12,7 @@ import { RouterModule, Routes } from '@angular/router';
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
+import { AccessChangeApprovalComponent } from './components/user-management/user-approval/access-change-approval.component';
 import { AccessCommunityComponent } from './components/user-management/user-approval/access-community.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
@@ -53,6 +54,7 @@ const appRoutes: Routes = [
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'access-change', component:RequestAccessChangeComponent},
+  {path:'access-change-approval', component:AccessChangeApprovalComponent},
   {path:'access-community', component:AccessCommunityComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
@@ -78,6 +80,7 @@ const appRoutes: Routes = [
   declarations: [
     AboutComponent,
     AboutPrivateComponent,
+    AccessChangeApprovalComponent,
     AppComponent,
     ApplyComponent,
     AccessCommunityComponent,
