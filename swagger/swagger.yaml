@@ -7,15 +7,12 @@ basePath: "/api"
 tags:
 - name: "Blank"
 - name: "Community"
+- name: "CreateUserRequest"
 - name: "MyDetails"
 - name: "Permission"
 - name: "Role"
 - name: "User"
 - name: "UserRole"
-# EXPERIMENTAL
-- name: "Program"
-- name: "FundLine"
-- name: "Tag"
 #
 ##############################################################################
 # PATHS
@@ -158,111 +155,92 @@ paths:
           description: "Community does not exist."
         500:
           description: "An unexpected error occurred."
-  /communities/{commId}/approvers:
-    get:
+# STOP COMMUNITIES
+##############################################################################
+# START CREATEUSERREQUEST
+  /createUserRequest:
+    post:
       tags:
-      - "Community"
-      summary: "Gets Approvers for a Community"
-      description: "Get the approvers for a community"
-      operationId: "getApprovers"
-      parameters:
-      - name: "commId"
-        in: "path"
-        description: "Community id"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "a List of Users"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Community does not exist."
-        500:
-          description: "An unexpected error occurred."
-    put:
-      tags:
-      - "Community"
-      summary: "Assign an approver to a community"
-      description: "Assign an approver to a Community"
-      operationId: "assignApprover"
+      - "CreateUserRequest"
+      summary: "Creates a CreateUserRequest"
+      description: "Adds a CreateUserRequest."
+      operationId: "create"
       consumes:
+      - "application/json"
+      produces:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "a user"
+        description: "a CreateUserRequest"
         required: true
         schema:
-          $ref: "#/definitions/User"
-      - name: "commId"
-        in: "path"
-        description: "the community ID"
-        required: true
-        type: "string"
+          $ref: "#/definitions/CreateUserRequest"
       responses:
-        204:
-          description: "Successfully assigned an approver to a Community"
+        201:
+          description: "CreateUserRequest successfully created."
+        400:
+          description: "CreateUserRequest couldn't be created."
         403:
           description: "Forbidden"
-        404:
-          description: "The Community or User does not exist."
         500:
           description: "An unexpected error occured."
-    delete:
-      tags:
-      - "Community"
-      summary: "remove an approver from a Community"
-      description: "remove an approver from a Community"
-      operationId: "removeApprover"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a User"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      - name: "commId"
-        in: "path"
-        description: "Community Id"
-        required: true
-        type: "string"
-      responses:
-        204:
-          description: "removed an approver from a Community."
-        403:
-          description: "Forbidden"
-        404:
-          description: "Community does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /communities/{commId}/users:
     get:
       tags:
-      - "Community"
-      summary: "Gets All Users for a Community"
-      description: "Get the users for a community"
-      operationId: "getUsers"
+      - "CreateUserRequest"
+      summary: "Gets a CreateUserRequest"
+      description: "Get a CreateUserRequest user identified via its id"
+      operationId: "getById"
       parameters:
-      - name: "commId"
+      - name: "id"
         in: "path"
-        description: "Community id"
+        description: "CreateUserRequest id"
         required: true
         type: "string"
       responses:
         200:
-          description: "a List of Users"
+          description: "a CreateUserRequest"
           schema:
             $ref: "#/definitions/RestResult"
         403:
           description: "Forbidden"
         404:
-          description: "Community does not exist."
+          description: "CreateUserRequest does not exist."
         500:
           description: "An unexpected error occurred."
-# STOP COMMUNITIES
+  /createUserRequest/{createUserRequestId}/status:
+    post:
+      tags:
+      - "CreateUserRequest"
+      summary: "Approve a CreateUserRequest"
+      description: "Approves a new CreateUserRequest"
+      operationId: "approve"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Status"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateUserRequest"
+      - name: "createUserRequestId"
+        in: "path"
+        description: "Role id"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "CreateUserRequest successfully updated."
+        400:
+          description: "CreateUserRequest couldn't be updated."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+# STOP CREATEUSERREQUEST
 ##############################################################################
 # START MYDETAILS
   /mydetails:
@@ -471,30 +449,6 @@ paths:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
-    put:
-      tags:
-      - "Role"
-      summary: "Update a Role"
-      description: "Update a Role"
-      operationId: "update"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a Role"
-        required: true
-        schema:
-          $ref: "#/definitions/Role"
-      responses:
-        204:
-          description: "Successfully updated Role"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The Role does not exist."
-        500:
-          description: "An unexpected error occured."
   /roles/{roleId}:
     get:
       tags:
@@ -518,6 +472,28 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+    delete:
+      tags:
+      - "Role"
+      summary: "Delete a Role by Id"
+      description: "Deletes a Role with the given id"
+      operationId: "deleteById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "deleted a Role."
+        403:
+          description: "Forbidden"
+        404:
+          description: "Role does not exist."
+        500:
+          description: "An unexpected error occurred."
 # STOP ROLES
 ##############################################################################
 # START USERS
@@ -587,30 +563,58 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /community/{communityId}/users:
+  /users/community/{commId}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a users by CommunityId"
+      description: "Returns a Users for a given Community"
+      operationId: "getByCommId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "commId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /users/{userId}community/{commId}/role/{roleName}:
     put:
       tags:
       - "User"
-      summary: "Assign a User to a Community"
-      operationId: "assignToCommunity"
+      summary: "changes a user"
+      operationId: "assignUserRole"
       consumes:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "the User"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      - name: "communityId"
+      - name: "userId"
         in: "path"
+        description: "User Id"
+        required: true
+        type: "string"
+      - name: "commId"
+        in: "path"
+        description: "Community Id"
+        required: true
+        type: "string"
+      - name: "roleName"
+        in: "path"
+        description: "Community Id"
         required: true
         type: "string"
       produces:
       - "application/json"
       responses:
         204:
-          description: "Successfully assigned user to Community"
+          description: "Successfully updated a User"
         403:
           description: "Forbidden"
         404:
@@ -647,28 +651,6 @@ paths:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
-    delete:
-      tags:
-      - "UserRole"
-      summary: "delete a UserRole"
-      description: "delete a UserRole"
-      operationId: "deleteAll"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a UserRole"
-        required: true
-        schema:
-          $ref: "#/definitions/UserRole"
-      responses:
-        204:
-          description: "deleted a UserRole."
-        403:
-          description: "Forbidden"
-        404:
-          description: "UserRole does not exist."
-        500:
-          description: "An unexpected error occurred."
   /userRoles/{userId}:
     delete:
       tags:
@@ -715,7 +697,7 @@ paths:
           description: "UserRole does not exist."
         500:
           description: "An unexpected error occurred."
-  /userRoles/{userId}/community/{commId}:
+  /userRoles/user/{userId}/community/{commId}:
     get:
       tags:
       - "UserRole"
@@ -745,114 +727,6 @@ paths:
         500:
           description: "An unexpected error occurred."
 # STOP USERROLES
-##############################################################################
-# START EXTERIMENTAL - The rest of these paths are here to play with
-  /programs/fundLines:
-    get:
-      tags:
-      - "FundLine"
-      summary: "List of FundLine"
-      description: "Returns a list containing all FundLine"
-      operationId: "findall"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of FundLine"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /programs/fundLines/{id}:
-    get:
-      tags:
-      - "FundLine"
-      summary: "Get FundLine by Id"
-      description: "Returns a FundLine with the given id"
-      operationId: "find"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "A FundLine"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /programs:
-    get:
-      tags:
-      - "Program"
-      summary: "List of Programs"
-      description: "Returns a list containing all Programs"
-      operationId: "findall"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /tags/type/{type}:
-    get:
-      tags:
-      - "Tag"
-      summary: "Get Tags by type"
-      description: "Returns a List of Tags with the given type"
-      operationId: "findTagsByType"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "type"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "A List of Tags"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /tags/name/{name}:
-    get:
-      tags:
-      - "Tag"
-      summary: "Get Tags by name"
-      description: "Returns a List of Tags with the given type"
-      operationId: "findTagsByName"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "name"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "A List of Tags"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-# STOP EXTERIMENTAL
 ##############################################################################
 # 
 # END PATHS
@@ -889,6 +763,55 @@ definitions:
         type: "string"
       identifier:
         type: "string"
+  CreateUserRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      cn:
+        type: "string"
+      firstName:
+        type: "string"
+      middleInitial:
+        type: "string"
+      lastName:
+        type: "string"
+      titleRank:
+        type: "string"
+      dutyJob:
+        type: "string"
+      contactEmail:
+        type: "string"
+      phone:
+        type: "string"
+      street:
+        type: "string"
+      city:
+        type: "string"
+      state:
+        type: "string"
+      zipCode:
+        type: "string"
+      organization:
+        type: "string"
+      community:
+        type: "string"
+      sponsorName:
+        type: "string"
+      sponsorEmail:
+        type: "string"
+      sponsorPhone:
+        type: "string"
+      nda:
+        type: "string"
+      dateApplied:
+        type: "string"
+      dateDecided:
+        type: "string"
+      service:
+        type: "string"
+      status:
+        type: "string"
   Permission:
     type: "object"
     properties:
@@ -921,23 +844,19 @@ definitions:
     properties:
       id:
         type: "string"
-      email:
+      cn:
         type: "string"
       firstName:
         type: "string"
-      lastName:
+      middleInitial:
         type: "string"
-      cn:
+      lastName:
         type: "string"
       suspended:
         type: "boolean"
       communication:
         type: "object"
         $ref: "#/definitions/Communication"
-      communities:
-        type: "array"
-        items:
-          type: "string"
       defaultCommunity:
         type: "string"
       preferences:
@@ -952,88 +871,6 @@ definitions:
       userId:
         type: "string"
       roleId:
-        type: "string"
-#
-##############################################################################
-# EPERIMENTAL DEFINITIONS FROM HERE DOWN Are just to play with 
-#
-  Fund:
-    type: "object"
-    properties:
-      year:
-        type: "integer"
-      amount:
-        type: "number"
-        format: "float"
-  FundLine:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      programId:
-        type: "string"
-      incrementNumber:
-        type: "integer"
-      description:
-        type: "string"
-      fiscalYear:
-        type: "integer"
-      tags:
-        type: "array"
-        items:
-          $ref: '#/definitions/Tag'
-      funds:
-        type: "array"
-        items:
-          $ref: '#/definitions/Fund'
-  Increment:
-    type: "object"
-    properties:
-      incrementNumber:
-        type: "integer"
-      description:
-        type: "string"
-      tags:
-        type: "array"
-        items:
-          $ref: '#/definitions/Tag'
-      fundingLineIds:
-        type: "array"
-        items:
-          type: "string"
-  Program:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      programId:
-        type: "string"
-      programName:
-        type: "string"
-      description:
-        type: "string"
-      tags:
-        type: "array"
-        items:
-          $ref: '#/definitions/Tag'
-      pocId:
-        type: "array"
-        items:
-          type: "string"
-      increments:
-        type: "array"
-        items:
-          $ref: '#/definitions/Increment'
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      type:
-        type: "string"
-      name:
-        type: "string"
-      abbr:
         type: "string"
 ##############################################################################
 # ENDFILE

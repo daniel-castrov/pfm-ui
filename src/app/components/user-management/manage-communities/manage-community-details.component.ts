@@ -78,15 +78,15 @@ private getPrograms(): void {
         this.community = result.result;
       }
       let result2: RestResult;
-      let s2 = this.communityService.getApprovers(this.community.id);
-      s2.subscribe(r2 => {
-        result2 = r2;
-        this.resultError = result2.error;
-        if (this.resultError == null) {
-          this.approvers = result2.result;
-        }
+      // let s2 = this.communityService.getApprovers(this.community.id);
+      // s2.subscribe(r2 => {
+      //   result2 = r2;
+      //   this.resultError = result2.error;
+      //   if (this.resultError == null) {
+      //     this.approvers = result2.result;
+      //   }
 
-      });
+      // });
     });
   }
 
@@ -127,15 +127,15 @@ private getPrograms(): void {
       user=result.result;
 
       let result3: RestResult;
-      let s3 = this.communityService.assignApprover(user, this.community.id);
+      // let s3 = this.communityService.assignApprover(user, this.community.id);
   
-      s3.subscribe(r3 => {
-        result3 = r3;
-        this.resultError = result3.error;
-        if (this.resultError == null) {
-          result3.result;
-        }
-      });
+      // s3.subscribe(r3 => {
+      //   result3 = r3;
+      //   this.resultError = result3.error;
+      //   if (this.resultError == null) {
+      //     result3.result;
+      //   }
+      // });
 
     });
 

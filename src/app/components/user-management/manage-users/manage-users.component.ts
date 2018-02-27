@@ -96,16 +96,16 @@ export class ManageUsersComponent implements OnInit {
         console.log("TargetUser: " + this.targetUser.cn);
 
         let comm: string;
-        for (comm of this.targetUser.communities) {
-          let result2: RestResult;
-          this.communityService.getById(comm)
-            .subscribe(c => {
-              result2 = c;
-              this.resultError = result2.error;
-              this.targetUser_Communities.push(result2.result);
-              this.getTargetedUserRoles(comm);
-            });
-        }
+        // for (comm of this.targetUser.communities) {
+        //   let result2: RestResult;
+        //   this.communityService.getById(comm)
+        //     .subscribe(c => {
+        //       result2 = c;
+        //       this.resultError = result2.error;
+        //       this.targetUser_Communities.push(result2.result);
+        //       this.getTargetedUserRoles(comm);
+        //     });
+        // }
         // Make a copy of the current user so we can revert changes
         this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
       });
@@ -229,16 +229,16 @@ export class ManageUsersComponent implements OnInit {
   }
 
   addCommunity(): void {
-    console.log("addCommunity" + this.addedcommunity);
-    this.targetUser.communities.push(this.addedcommunity);
+    // console.log("addCommunity" + this.addedcommunity);
+    // this.targetUser.communities.push(this.addedcommunity);
 
-    let result2: RestResult;
-    this.communityService.getById(this.addedcommunity)
-    .subscribe(c => {
-      result2 = c;
-      this.resultError = result2.error;
-      this.targetUser_Communities.push(result2.result);
-    });
+    // let result2: RestResult;
+    // this.communityService.getById(this.addedcommunity)
+    // .subscribe(c => {
+    //   result2 = c;
+    //   this.resultError = result2.error;
+    //   this.targetUser_Communities.push(result2.result);
+    // });
   }
 
   resetAddCommunity(): void {
