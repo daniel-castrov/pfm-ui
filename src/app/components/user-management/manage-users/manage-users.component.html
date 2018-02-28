@@ -8,7 +8,7 @@
         </div>
         <div class="profile-usertitle">
           <div class="profile-usertitle-name">
-              {{ targetUser?.firstName }} {{ targetUser?.lastName }}
+            {{ targetUser?.firstName }} {{ targetUser?.lastName }}
             <div *ngIf="targetUser?.suspended">suspended</div>
             <div *ngIf="!targetUser?.suspended">active</div>
           </div>
@@ -62,13 +62,13 @@
               <input type="text" [(ngModel)]="targetUser.lastName">
             </li>
             <li>
-                Email:
-                <input [(ngModel)]="targetUser?.communication.primaryEmail" placeholder="value">
-              </li>
-              <li>
-                Phone:
-                <input [(ngModel)]="targetUser?.communication.primaryPhone" placeholder="value1">
-              </li>
+              Email:
+              <input [(ngModel)]="targetUser?.communication.primaryEmail" placeholder="value">
+            </li>
+            <li>
+              Phone:
+              <input [(ngModel)]="targetUser?.communication.primaryPhone" placeholder="value1">
+            </li>
           </ul>
           <br>
         </div>
@@ -130,8 +130,18 @@
         </div>
         <div class="card-container">
           <ul>
-            <li *ngFor="let community of targetUser_Communities">
-              {{ community.name }}
+            <li *ngFor="let cwr of communityWithUserRoles">
+              {{ cwr.community.name }}
+              <ul>
+                <div class="card-header">
+                  <li>Roles</li>
+                </div>
+                <div class="card-container">
+                  <li *ngFor="let role of cwr.roles">
+                    {{role.name}}
+                  </li>
+                </div>
+              </ul>
             </li>
           </ul>
         </div>
@@ -148,13 +158,35 @@
           </button>
         </div>
         <div class="card-container">
-
           <ul>
-            <li *ngFor="let tu_community of targetUser_Communities">
-              {{ tu_community.name }}
+            <li *ngFor="let cwr of communityWithUserRoles">
+              {{ cwr.community.name }}
+              <ul>
+                <div class="card-header">
+                  <li>Roles
+                  </li>
+                </div>
+                <div class="card-container">
+                  <li *ngFor="let role of cwr.roles">
+                    {{role.name}}
+                  </li>
+                  <div>
+                    <select name="addRoleSelector" [(ngModel)]="addedrole">
+                      <option *ngFor="let all_role of all_Roles" [value]="all_role.name">
+                        {{all_role.name}}
+                      </option>
+                    </select>
+                    <button class="btn-card-header" title="AddRole" (click)="addRole()">
+                      <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Role
+                    </button>
+                    <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="resetAddRole()">
+                      <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Clear
+                    </button>
+                  </div>
+                </div>
+              </ul>
             </li>
           </ul>
-
           <select name="addCommunitySelector" [(ngModel)]="addedcommunity">
             <option *ngFor="let all_community of all_Communities" [value]="all_community.id">{{ all_community.name }}</option>
           </select>
@@ -164,58 +196,6 @@
           <button class="btn-card-header" title="Cancel" (click)="resetAddCommunity()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Clear
           </button>
-
-        </div>
-      </div>
-
-      <!-- Role SECTION 4 - VIEW-->
-      <div *ngIf="!isdEditMode[4]">
-        <div class="card-header">
-          Roles:
-          <button class="btn-card-header" title="Edit" (click)="editMode(4)">
-            <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
-            Edit
-          </button>
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let tu_role of targetUser_Roles">
-              {{ tu_role.name }}
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- Role Community 4 - EDIT-->
-      <div *ngIf="isdEditMode[4]">
-        <div class="card-header">
-          Roles:
-          <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
-            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
-          </button>
-          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
-            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
-          </button>
-        </div>
-        <div class="card-container">
-          <ul>
-            <li *ngFor="let tu_role of targetUser_Roles">
-              {{ tu_role.name }}
-            </li>
-          </ul>
-          <br>
-          <div>
-            <select name="addRoleSelector" [(ngModel)]="addedrole">
-              <option *ngFor="let all_role of all_Roles" [value]="all_role.name">
-                {{all_role.name}}
-              </option>
-            </select>
-            <button class="btn-card-header" title="AddRole" (click)="addRole()">
-              <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Role
-            </button>
-            <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="resetAddRole()">
-              <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Clear
-            </button>
-          </div>
         </div>
       </div>
     </div>
