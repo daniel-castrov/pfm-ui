@@ -15,6 +15,8 @@ import { Communication } from '../../../generated/model/communication';
 import { User } from '../../../generated/model/user';
 import { RestResult } from '../../../generated/model/restResult';
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
+import { CommunityService } from '../../../generated/api/community.service';
+import { Community } from '../../../generated/model/community';
 
 @Component({
   selector: 'app-manage-self',
@@ -28,6 +30,8 @@ export class ManageSelfComponent implements OnInit {
   currentusername: string;
   currentUser: User;
   refcurrentUser: User;
+  communities: Array<Community>= [];
+  defaultCommunity: Community = null;
 
   isdEditMode: boolean = false;
 
@@ -40,6 +44,7 @@ export class ManageSelfComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userDetailsService: MyDetailsService,
+    private communityService : CommunityService
   ) {
     this.route.params.subscribe((params: Params) => {
       this.currentusername = params.id;
@@ -48,6 +53,21 @@ export class ManageSelfComponent implements OnInit {
 
   ngOnInit() {
     this.getCurrentUser();
+    var my:ManageSelfComponent = this;
+    this.communityService.getAll().subscribe(
+      (data)=>{
+        console.log(data);
+        my.communities = data.result;
+        my.communities.forEach(function(x:Community){
+          if( x.id === my.currentUser.defaultCommunityId ){
+            my.defaultCommunity = x;
+          }
+        });
+      },
+      (error)=>{
+        console.error('error getting communities: ' + error);
+      }
+    );
   }
 
   getCurrentUser(){
@@ -62,11 +82,18 @@ export class ManageSelfComponent implements OnInit {
   }
 
   saveCurrentUser():void{
-
+    console.log( 'currnet user\s default community id: '+this.currentUser.defaultCommunityId );
     let result:RestResult;
+    var my:ManageSelfComponent = this;
     this.userDetailsService.updateCurrentUser(this.currentUser)
     .subscribe(r => {
       result=r;
+
+      my.communities.forEach(function(x:Community){
+        if( x.id === my.currentUser.defaultCommunityId ){
+          my.defaultCommunity = x;
+        }
+      });
     });
 
     this.isdEditMode=false;

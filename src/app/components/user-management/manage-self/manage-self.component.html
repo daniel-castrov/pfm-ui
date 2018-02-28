@@ -44,7 +44,7 @@
             <li>Default Color: {{ currentUser?.preferences.defaultColor }} </li>
             <li>Clock: {{ currentUser?.preferences.clock }} </li>
             <li>Landing Page: {{ currentUser?.preferences.landingPage }} </li>
-            <li>Default Community: {{ currentUser?.preferences.defaultCommunity }} </li>
+            <li>Default Community: {{ defaultCommunity?.name }} </li>
           </ul>
         </div>
       </div>
@@ -95,7 +95,11 @@
               <input type="text" [(ngModel)]="currentUser.preferences.landingPage">
             </li>
             <li>Default Community:
-              <input type="text" [(ngModel)]="currentUser.preferences.defaultCommunity">
+              <select [(ngModel)]="currentUser.defaultCommunityId">
+                <option [ngValue]="comm.id" *ngFor="let comm of communities">
+                    {{comm.name}}
+                </option>
+              </select>
             </li>
           </ul>
         </div>
