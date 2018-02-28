@@ -37,9 +37,6 @@ import { UserListComponent } from './components/user-management/user-list/user-l
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { CommunityService } from './generated/api/community.service';
-import { FundLineService } from './generated/api/fundLine.service';
-import { ProgramService } from './generated/api/program.service';
-import { TagService } from './generated/api/tag.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { UserApprovalComponent } from './components/user-management/user-approval/user-approval.component';
 import { UserService } from './generated/api/user.service';
@@ -110,9 +107,6 @@ const appRoutes: Routes = [
   providers: [
     BlankService,
     CommunityService,
-    FundLineService,
-    ProgramService,
-    TagService,
     MyDetailsService,
     RoleService,
     UserRoleService,
