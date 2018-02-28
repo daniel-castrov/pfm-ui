@@ -219,16 +219,16 @@ export class ManageUsersComponent implements OnInit {
   }
 
   addCommunity(): void {
-    // console.log("addCommunity" + this.addedcommunity);
-    // this.targetUser.communities.push(this.addedcommunity);
+    console.log("addCommunity" + this.addedcommunity);
 
-    // let result2: RestResult;
-    // this.communityService.getById(this.addedcommunity)
-    // .subscribe(c => {
-    //   result2 = c;
-    //   this.resultError = result2.error;
-    //   this.targetUser_Communities.push(result2.result);
-    // });
+
+    let result2: RestResult;
+    this.communityService.getById(this.addedcommunity)
+    .subscribe(c => {
+      result2 = c;
+      this.resultError = result2.error;
+
+    });
   }
 
   resetAddCommunity(): void {

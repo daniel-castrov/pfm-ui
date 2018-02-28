@@ -68,17 +68,7 @@ export class ManageCommunitiesComponent implements OnInit {
     });
   }
 
-  delete(community: Community) {
 
-    console.log(community.name + " - " + community.id);
-
-    let result: RestResult;
-    this.communityService.deleteById(community.id)
-    .subscribe(c => {
-      result = c;
-    });
-    this.getCommunities();
-  }
 
   addCommunity1() {
  

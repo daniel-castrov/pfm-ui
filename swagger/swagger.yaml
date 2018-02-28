@@ -134,27 +134,6 @@ paths:
           description: "Community does not exist."
         500:
           description: "An unexpected error occurred."
-    delete:
-      tags:
-      - "Community"
-      summary: "Deletes a Community"
-      description: "Delete a Community user identified via its id"
-      operationId: "deleteById"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "Community id"
-        required: true
-        type: "string"
-      responses:
-        204:
-          description: "Community successfully deleted."
-        403:
-          description: "Forbidden"
-        404:
-          description: "Community does not exist."
-        500:
-          description: "An unexpected error occurred."
 # STOP COMMUNITIES
 ##############################################################################
 # START CREATEUSERREQUEST

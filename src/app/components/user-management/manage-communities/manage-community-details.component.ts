@@ -138,27 +138,8 @@ private getPrograms(): void {
       // });
 
     });
-
-
-
     
-
     this.getCommunity();
   }
 
-  private deleteCommunity():void {
-
-    console.log("Delete Community");
-
-    let result: RestResult;
-    let s = this.communityService.deleteById(this.community.id);
-    s.subscribe(r => {
-      result = r;
-      this.resultError = result.error;
-      if (this.resultError == null) {
-        result.result;
-      }
-      this.router.navigate(['/manage-communities']);
-    });
-  }
 }
