@@ -82,13 +82,15 @@ export class ManageSelfComponent implements OnInit {
   }
 
   saveCurrentUser():void{
-    console.log( 'currnet user\s default community id: '+this.currentUser.defaultCommunityId );
     let result:RestResult;
     var my:ManageSelfComponent = this;
     this.userDetailsService.updateCurrentUser(this.currentUser)
     .subscribe(r => {
       result=r;
 
+      // we display the default community from the defaultCommunity
+      // member, but we use the user's defaultCommunityId as the model
+      // for our dropdown, so we need to sync the two
       my.communities.forEach(function(x:Community){
         if( x.id === my.currentUser.defaultCommunityId ){
           my.defaultCommunity = x;
