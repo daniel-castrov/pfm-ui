@@ -9,6 +9,7 @@ tags:
 - name: "Community"
 - name: "CreateUserRequest"
 - name: "MyDetails"
+- name: "Stranger"
 - name: "Permission"
 - name: "Role"
 - name: "User"
@@ -475,6 +476,27 @@ paths:
           description: "An unexpected error occurred."
 # STOP ROLES
 ##############################################################################
+# START STRANGER
+  /stranger:
+    get:
+      tags:
+      - "Stranger"
+      summary: "List of all users"
+      description: "Returns a list containing all Users"
+      operationId: "get"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A stranger object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP STRANGER
+##############################################################################
 # START USERS
   /users:
     get:
@@ -817,6 +839,15 @@ definitions:
       desc:
         type: "string"
       communityId:
+        type: "string"
+  Stranger:
+    type: "object"
+    properties:
+      cn:
+        type: "string"
+      contractor:
+        type: "boolean"
+      nda:
         type: "string"
   User:
     type: "object"

@@ -37,7 +37,9 @@ import { UserListComponent } from './components/user-management/user-list/user-l
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { CommunityService } from './generated/api/community.service';
+import { CreateUserRequestService } from './generated/api/createUserRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
+import { StrangerService } from './generated/api/stranger.service';
 import { UserApprovalComponent } from './components/user-management/user-approval/user-approval.component';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
@@ -107,8 +109,10 @@ const appRoutes: Routes = [
   providers: [
     BlankService,
     CommunityService,
+    CreateUserRequestService,
     MyDetailsService,
     RoleService,
+    StrangerService,
     UserRoleService,
     UserService,
     //{ provide: BASE_PATH, useValue: 'https://ec2-34-231-125-182.compute-1.amazonaws.com:8443/jscbis' },
