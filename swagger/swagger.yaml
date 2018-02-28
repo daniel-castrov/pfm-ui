@@ -849,6 +849,10 @@ definitions:
         type: "boolean"
       nda:
         type: "string"
+      communities:
+        type: "array"
+        items:
+          $ref: "#/definitions/Community"
   User:
     type: "object"
     properties:

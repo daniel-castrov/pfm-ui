@@ -23,7 +23,7 @@ export class ApplyComponent implements OnInit {
   resultError: string[]=[];
   stranger:Stranger;
   communities:Community[]=[];
-  createUserRequest:CreateUserRequest;
+  createUserRequest:CreateUserRequest=new Object();
 
 
 
@@ -43,30 +43,6 @@ export class ApplyComponent implements OnInit {
 
   ngOnInit() {
     this.getStranger();
-    this.getCommunities();
-
-    if ( this.stranger.contractor ){
-      console.log("Contractor");
-    } else {
-      console.log("No Contractor");
-    }
-
-    this.createUserRequest.cn= this.stranger.cn;
-    this.createUserRequest.nda='v1';
-    this.createUserRequest.firstName='';
-    this.createUserRequest.middleInitial= '';
-    this.createUserRequest.lastName= '';
-    this.createUserRequest.titleRank= '';
-    this.createUserRequest.dutyJob= '';
-    this.createUserRequest.contactEmail= '';
-    this.createUserRequest.phone= '';
-    this.createUserRequest.city= '';
-    this.createUserRequest.organization= '';
-    this.createUserRequest.sponsorName= '';
-    this.createUserRequest.sponsorEmail= '';
-    this.createUserRequest.sponsorPhone= '';
-
-
   }
 
   getStranger():void {
@@ -77,20 +53,36 @@ export class ApplyComponent implements OnInit {
       resultStranger = c;
       this.resultError.push(resultStranger.error);
       this.stranger= resultStranger.result;
-
       console.log( this.stranger.cn );
-
+      this.communities = this.stranger.communities;
+      this.setUser(this.stranger);
     });
   }
 
-  getCommunities(): void{
-    let result: RestResult;
-    this.communityService.getAll()
-      .subscribe(c => {
-        result = c;
-        this.resultError.push(result.error);
-        this.communities = result.result;
-      });
+  setUser(x){
+    this.createUserRequest.cn= x.cn;
+      this.createUserRequest.nda='v1';
+      this.createUserRequest.firstName='';
+      this.createUserRequest.middleInitial= '';
+      this.createUserRequest.lastName= '';
+      this.createUserRequest.titleRank= '';
+      this.createUserRequest.dutyJob= '';
+      this.createUserRequest.contactEmail= '';
+      this.createUserRequest.phone= '';
+      this.createUserRequest.city= '';
+      this.createUserRequest.organization= '';
+      this.createUserRequest.sponsorName= '';
+      this.createUserRequest.sponsorEmail= '';
+      this.createUserRequest.sponsorPhone= '';
+      console.log( this.stranger.cn );
+
+
+      if ( x.contractor ){
+        console.log("Contractor");
+      } else {
+        console.log("No Contractor");
+      }
+
   }
 
   getRequest(): void {
