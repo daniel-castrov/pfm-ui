@@ -50,7 +50,6 @@
   font-size: .8rem;
 }
 
-label,
 select {
   color: #868e9b;
 }
@@ -223,4 +222,15 @@ input.middle {
   margin-top: -8px;
   padding: 0 5px;
   margin-bottom: 2px;
+}
+
+.badge {
+  font-size: 14px;
+  background-color: #3a6489;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+label {
+  color: #3a6489;
 }
