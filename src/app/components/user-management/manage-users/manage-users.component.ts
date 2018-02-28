@@ -40,7 +40,7 @@ export class ManageUsersComponent implements OnInit {
   all_Roles: Role[] = [];
 
   // The UserRoles that this user has
-  targetUser_UserRoles: UserRole[] = [];
+  //targetUser_UserRoles: UserRole[] = [];
 
   // The Roles this user has
   targetUser_Roles: UserRole[] = [];
@@ -141,7 +141,7 @@ export class ManageUsersComponent implements OnInit {
   editMode(sectionnumber): void {
     this.resetEditMode();
     this.isdEditMode[sectionnumber] = true;
-    this.buildAvailableRoles();
+    //this.buildAvailableRoles();
   }
 
   cancelEdit(): void {
@@ -167,42 +167,42 @@ export class ManageUsersComponent implements OnInit {
       });
   }
 
-  buildAvailableRoles(): void {
-    console.log("MATCH");
-    let userRole: UserRole;
-    for (userRole of this.targetUser_UserRoles) {
-      let role: Role;
-      for (role of this.all_Roles) {
-        if (userRole.roleId === role.id) {
-          var index = this.all_Roles.indexOf(role);
-          if (index > -1) {
-            this.all_Roles.splice(index, 1);
-          }
-        }
-      }
-    }
-  }
+  // buildAvailableRoles(): void {
+  //   console.log("MATCH");
+  //   let userRole: UserRole;
+  //   for (userRole of this.targetUser_UserRoles) {
+  //     let role: Role;
+  //     for (role of this.all_Roles) {
+  //       if (userRole.roleId === role.id) {
+  //         var index = this.all_Roles.indexOf(role);
+  //         if (index > -1) {
+  //           this.all_Roles.splice(index, 1);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
-  addRole(): void {
-    console.log("addRole" + this.addedrole);
+  // addRole(): void {
+  //   console.log("addRole" + this.addedrole);
 
-    let newUserRole: UserRole;
-    newUserRole = new Object();
+  //   let newUserRole: UserRole;
+  //   newUserRole = new Object();
 
-    newUserRole.userId = this.targetUser.id;
-    newUserRole.roleId = this.addedrole;
+  //   newUserRole.userId = this.targetUser.id;
+  //   newUserRole.roleId = this.addedrole;
 
-    let reuslt3: RestResult;
+  //   let reuslt3: RestResult;
 
-    this.userRoleService.create(newUserRole)
-      .subscribe(c => {
-        reuslt3 = c;
-        this.resultError = reuslt3.error;
-        this.targetUser_UserRoles.push(newUserRole);
-        this.resetAddRole();
-        this.buildAvailableRoles();
-      });
-  }
+  //   this.userRoleService.create(newUserRole)
+  //     .subscribe(c => {
+  //       reuslt3 = c;
+  //       this.resultError = reuslt3.error;
+  //       this.targetUser_UserRoles.push(newUserRole);
+  //       this.resetAddRole();
+  //       this.buildAvailableRoles();
+  //     });
+  // }
 
   resetAddRole(): void {
     this.addedrole = '';
@@ -227,6 +227,10 @@ export class ManageUsersComponent implements OnInit {
     .subscribe(c => {
       result2 = c;
       this.resultError = result2.error;
+
+
+
+
 
     });
   }
