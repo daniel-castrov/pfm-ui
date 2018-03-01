@@ -17,27 +17,18 @@ import { StrangerService } from '../../generated/api/stranger.service';
 })
 export class ApplyComponent implements OnInit {
 
-  // id: any;
-  // name: any;
   ch1: boolean = false;
   resultError: string[]=[];
   stranger:Stranger;
   communities:Community[]=[];
   createUserRequest:CreateUserRequest=new Object();
 
-
-
   constructor(
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
     public strangerService:StrangerService
 
-  ) { 
-    
-    
-
-    // this.id, 
-    // this.name
+  ) {
   }
 
 
@@ -93,23 +84,6 @@ export class ApplyComponent implements OnInit {
 
   }
 
-
-  apply = {
-    firstname: '',
-    middle: '',
-    lastname: '',
-    rank: '',
-    job: '',
-    email: '',
-    phone: '',
-    address: '',
-    organization: '',
-    sponsorname: '',
-    sponsoremail: '',
-    sponsorphone: ''
-  }
-
-  
 
   branches = [
     { id: 1, name: 'Army (USA)' },

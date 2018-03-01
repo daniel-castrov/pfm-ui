@@ -17,55 +17,55 @@
         <span class="form-group inline-name">
           <input
           type="text"
-          [(ngModel)]="apply.firstname"
-          [ngClass]="{'is-invalid':applyFirstname.errors && applyFirstname.touched}"
+          [(ngModel)]="createUserRequest.firstName"
+          #createUserRequestFirstName="ngModel"
+          [ngClass]="{'is-invalid':createUserRequestFirstName.errors && createUserRequestFirstName.touched}"
           class="form-control applyinput"
-          name="firstname"
-          #applyFirstname="ngModel"
+          name="firstName"
           placeholder="*First Name"
           minlength="2"
           required
           >
-          <span [hidden]="!applyFirstname.errors?.required" class="invalid-feedback">*First Name is required</span>
-          <span [hidden]="!applyFirstname.errors?.minlength" class="invalid-feedback">*First Name should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestFirstName?.errors?.required" class="invalid-feedback">*First Name is required</span>
+          <span [hidden]="!createUserRequestFirstName?.errors?.minlength" class="invalid-feedback">*First Name should be at least 2 characters</span>
         </span>
         <span class="form-group inline-name">
           <input
             type="text"
-            [(ngModel)]="apply.middle"
-            [ngClass]="{'is-invalid':applyMiddle.errors && applyMiddle.touched}"
+            [(ngModel)]="createUserRequest.middleInitial"
+            #createUserRequestMiddleInitial="ngModel"
+            [ngClass]="{'is-invalid':createUserRequestMiddleInitial.errors && createUserRequestMiddleInitial.touched}"
             class="form-control middle"
-            name="middle"
-            #applyMiddle="ngModel"
+            name="middleInitial"
             placeholder="*MI"
             minlength="1"
             required
             >
-          <span [hidden]="!applyMiddle.errors?.required" class="invalid-feedback">*MI is required</span>
-          <span [hidden]="!applyMiddle.errors?.minlength" class="invalid-feedback">*MI should be at least 1 character</span>
+          <span [hidden]="!createUserRequestMiddleInitial.errors?.required" class="invalid-feedback">*MI is required</span>
+          <span [hidden]="!createUserRequestMiddleInitial.errors?.minlength" class="invalid-feedback">*MI should be at least 1 character</span>
       </span>
         <span class="form-group inline-name">
           <input
             type="text"
-            [(ngModel)]="apply.lastname"
-            [ngClass]="{'is-invalid':applyLastname.errors && applyLastname.touched}"
+            [(ngModel)]="createUserRequest.lastName"
+            #createUserRequestLastName="ngModel"
+            [ngClass]="{'is-invalid':createUserRequestLastName.errors && createUserRequestLastName.touched}"
             class="form-control applyinput"
-            name="lastname"
-            #applyLastname="ngModel"
+            name="lastName"
             placeholder="*Last Name"
             minlength="2"
             required
             >
-          <span [hidden]="!applyLastname.errors?.required" class="invalid-feedback">*Last Name is required</span>
-          <span [hidden]="!applyLastname.errors?.minlength" class="invalid-feedback">*Last Name should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestLastName.errors?.required" class="invalid-feedback">*Last Name is required</span>
+          <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name should be at least 2 characters</span>
         </span>
         <div class="form-group">
           <input
             type="text"
             class="form-control applyinput"
-            [(ngModel)]="apply.rank"
-            name="rank"
-            #applyRank="ngModel"
+            [(ngModel)]="createUserRequest.titleRank"
+            #createUserRequestTitleRank="ngModel"
+            name="titleRank"
             placeholder="Title/Rank"
             >
         </div>
@@ -73,9 +73,9 @@
           <input
             type="text"
             class="form-control applyinput"
-            [(ngModel)]="apply.job"
-            name="job"
-            #applyJob="ngModel"
+            [(ngModel)]="createUserRequest.dutyJob"
+            name="dutyJob"
+            #createUserRequestDutyJob="ngModel"
             placeholder="Duty/Job Title"
             >
         </div>
@@ -115,59 +115,59 @@
         <div class="form-group">
           <input
           type="text"
-          [(ngModel)]="apply.email"
-          [ngClass]="{'is-invalid':applyEmail.errors && applyEmail.touched}"
+          [(ngModel)]="createUserRequest.contactEmail"
+          #createUserRequestContactEmail="ngModel"
+          [ngClass]="{'is-invalid':createUserRequestContactEmail.errors && createUserRequestContactEmail.touched}"
           class="form-control applyinput"
           name="email"
-          #applyEmail="ngModel"
           placeholder="*Email"
           pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
           required
           >
-          <span [hidden]="!applyEmail.errors?.required" class="invalid-feedback">*Email is required</span>
-          <span [hidden]="!applyEmail.errors?.pattern" class="invalid-feedback">*Email should be <small>joe@abc.com</small></span>
+          <span [hidden]="!createUserRequestContactEmail.errors?.required" class="invalid-feedback">*Email is required</span>
+          <span [hidden]="!createUserRequestContactEmail.errors?.pattern" class="invalid-feedback">*Email should be <small>joe@abc.com</small></span>
       </div>
         <div class="form-group">
           <input
-            type="text"
-            [(ngModel)]="apply.phone"
-            [ngClass]="{'is-invalid':applyPhone.errors && applyPhone.touched}"
+            type="number"
+            [(ngModel)]="createUserRequest.phone"
+            #createUserRequestPhone="ngModel"
+            [ngClass]="{'is-invalid':createUserRequestPhone.errors && createUserRequestPhone.touched}"
             class="form-control applyinput"
             name="phone"
-            #applyPhone="ngModel"
             placeholder="*Phone"
             pattern="[0-9]*"
             minlength="10"
             required
             >
-          <span [hidden]="!applyPhone.errors?.required" class="invalid-feedback">*Phone is required</span>
-          <span [hidden]="!applyPhone.errors?.minlength" class="invalid-feedback">*Phone should be should be 10 digits</span>
-          <span [hidden]="!applyPhone.errors?.pattern" class="invalid-feedback">*Phone should be only numbers</span>
+          <span [hidden]="!createUserRequestPhone.errors?.required" class="invalid-feedback">*Phone is required</span>
+          <span [hidden]="!createUserRequestPhone.errors?.minlength" class="invalid-feedback">*Phone should be should be 10 digits</span>
+          <span [hidden]="!createUserRequestPhone.errors?.pattern" class="invalid-feedback">*Phone should be only numbers</span>
         </div>
         <div class="form-group">
           <input
             type="text"
             class="form-control applyinput"
-            [(ngModel)]="apply.address"
-            name="address"
-            #applyAddress="ngModel"
+            [(ngModel)]="createUserRequest.city"
+            #createUserRequestCity="ngModel"
+            name="city"
             placeholder="Street, City, State, Zipcode"
             >
         </div>
         <div class="form-group">
           <input
             type="text"
-            [(ngModel)]="apply.organization"
-            [ngClass]="{'is-invalid':applyOrganization.errors && applyOrganization.touched}"
+            [(ngModel)]="createUserRequest.organization"
+            #createUserRequestOrganization="ngModel"
+            [ngClass]="{'is-invalid':createUserRequestOrganization.errors && createUserRequestOrganization.touched}"
             class="form-control applyinput"
             name="organization"
-            #applyOrganization="ngModel"
             placeholder="*Organization Name"
             minlength="2"
             required
             >
-          <span [hidden]="!applyOrganization.errors?.required" class="invalid-feedback">*Organization is required</span>
-          <span [hidden]="!applyOrganization.errors?.minlength" class="invalid-feedback">*Organization should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestOrganization.errors?.required" class="invalid-feedback">*Organization is required</span>
+          <span [hidden]="!createUserRequestOrganization.errors?.minlength" class="invalid-feedback">*Organization should be at least 2 characters</span>
         </div>
         <div class="form-group">
           <label for="branches">*Select Branch</label>
@@ -192,48 +192,48 @@
         <span class="form-group inline-name">
           <input
             type="text"
-            [(ngModel)]="apply.sponsorname"
-            [ngClass]="{'is-invalid':applySponsorname.errors && applySponsorname.touched}"
+            [(ngModel)]="createUserRequest.sponsorName"
+            #createUserRequestSponsorName="ngModel"
+            [ngClass]="{'is-invalid':createUserRequestSponsorName.errors && createUserRequestSponsorName.touched}"
             class="form-control applyinput sponsor"
-            name="sponsorname"
-            #applySponsorname="ngModel"
+            name="sponsorName"
             placeholder="*Sponsor Name"
             minlength="2"
             required>
-          <span [hidden]="!applySponsorname.errors?.required" class="invalid-feedback">*Sponsor Name is required</span>
-          <span [hidden]="!applySponsorname.errors?.minlength" class="invalid-feedback">*Sponsor Name should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestSponsorName.errors?.required" class="invalid-feedback">*Sponsor Name is required</span>
+          <span [hidden]="!createUserRequestSponsorName.errors?.minlength" class="invalid-feedback">*Sponsor Name should be at least 2 characters</span>
         </span>
           <span class="form-group inline-name">
             <input
-              type="text"
-              [(ngModel)]="apply.sponsorphone"
-              [ngClass]="{'is-invalid':applySponsorphone.errors && applySponsorphone.touched}"
+              type="number"
+              [(ngModel)]="createUserRequest.sponsorPhone"
+              #createUserRequestSponsorPhone="ngModel"
+              [ngClass]="{'is-invalid':createUserRequestSponsorPhone.errors && createUserRequestSponsorPhone.touched}"
               class="form-control applyinput sponsor"
-              name="sponsorphone"
-              #applySponsorphone="ngModel"
+              name="sponsorPhone"
               placeholder="*Sponsor Phone"
               pattern="[0-9]*"
               minlength="10"
               required
               >
-            <span [hidden]="!applySponsorphone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
-            <span [hidden]="!applySponsorphone.errors?.minlength" class="invalid-feedback">*Sponsor Phone should be should be 10 digits</span>
-            <span [hidden]="!applySponsorphone.errors?.pattern" class="invalid-feedback">*Sponsor Phone should be only numbers</span>
+            <span [hidden]="!createUserRequestSponsorPhone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
+            <span [hidden]="!createUserRequestSponsorPhone.errors?.minlength" class="invalid-feedback">*Sponsor Phone should be should be 10 digits</span>
+            <span [hidden]="!createUserRequestSponsorPhone.errors?.pattern" class="invalid-feedback">*Sponsor Phone should be only numbers</span>
           </span>
           <span class="form-group inline-name">
             <input
               type="text"
-              [(ngModel)]="apply.sponsoremail"
-              [ngClass]="{'is-invalid':applySponsoremail.errors && applySponsoremail.touched}"
+              [(ngModel)]="createUserRequest.sponsorEmail"
+              #createUserRequestSponsorEmail="ngModel"
+              [ngClass]="{'is-invalid':createUserRequestSponsorEmail.errors && createUserRequestSponsorEmail.touched}"
               class="form-control applyinput sponsor"
-              name="sponsoremail"
-              #applySponsoremail="ngModel"
+              name="sponsorEmail"
               placeholder="*Sponsor Email"
               pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
               required
               >
-            <span [hidden]="!applySponsoremail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
-            <span [hidden]="!applySponsoremail.errors?.pattern" class="invalid-feedback">*Sponsor Email should be <small>joe@abc.com</small></span>
+            <span [hidden]="!createUserRequestSponsorEmail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
+            <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Sponsor Email should be <small>joe@abc.com</small></span>
           </span>
         <div class="controls">
           <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>
