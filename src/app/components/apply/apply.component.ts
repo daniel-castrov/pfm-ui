@@ -17,11 +17,15 @@ import { StrangerService } from '../../generated/api/stranger.service';
 })
 export class ApplyComponent implements OnInit {
 
+  id: any;
+  name: any;
   ch1: boolean = false;
   resultError: string[]=[];
   stranger:Stranger;
   communities:Community[]=[];
   createUserRequest:CreateUserRequest=new Object();
+
+
 
   constructor(
     public communityService: CommunityService,
@@ -29,9 +33,12 @@ export class ApplyComponent implements OnInit {
     public strangerService:StrangerService
 
   ) {
+
+
+
+    this.id,
+    this.name
   }
-
-
   ngOnInit() {
     this.getStranger();
   }
