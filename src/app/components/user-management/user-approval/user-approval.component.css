@@ -1,42 +1,26 @@
-.apply-box {
-  background-color: #23527c !important;
-  padding: 10px;
-  color: #fff;
-  font-size: 12px;
-  margin-bottom: 12px;
+label, select {
+  color:#24527b;
+  width: 300px;
+  margin: 0 0 10px 0;
 }
 
-.apply-box a {
-  color: #fff;
-  text-decoration: underline;
-  cursor: pointer;
+.nda {
+  margin: 0;
+  color:#24527b;
 }
 
-.apply a:hover {
-  color: #fff;
-  text-decoration: none;
+.nda-valid {
+  color: green;
 }
 
-.controls {
-  clear: both;
+.nda-not-valid {
+  color: red;
 }
 
 .firstname, .lastname {
   display: inline;
   width: 300px;
-  margin-bottom: 10px;
   padding: 6px 4px;
-}
-
-.sponsor {
-  display: inline;
-  float: left;
-  padding: 6px 4px;
-}
-
-.applyinput {
-  width: 300px;
-  padding: 5px;
 }
 
 .middle {
@@ -45,6 +29,21 @@
   padding: 6px 4px;
 }
 
-.form-group {
-  margin-bottom: 10px;
+.inline-name {
+  display: inline;
+  float: left;
+  margin-right: 4px;
+}
+
+.applyinput {
+  width: 300px;
+  padding: 5px;
+  padding: 6px 4px;
+  clear: both;
+  margin-bottom: 15px;
+}
+
+.controls {
+  clear: both;
+  margin-bottom: 20px;
 }
