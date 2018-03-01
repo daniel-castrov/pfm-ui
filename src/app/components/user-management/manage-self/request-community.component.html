@@ -1,17 +1,13 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isloggedin">
-    <div class="col-12">
+  <div class="main-content">
+    <div class="col-8">
       <div class="row">
-        <!-- <h1 class="title" style="display:none">
-          {{title}}
-        </h1>
-        <button (click)="toggleTitle()"> clickhere</button> -->
         <div class="card-header">
           Community Request
         </div>
-        <div class="row items-container">
-          <div class="col-xs-5">
+        <div class="row card-container">
+          <div class="col-md-5">
             <h6>Current Communities</h6>
             <select name="from[]" id="multiselect" class="form-control window" size="8"
               multiple="multiple"
@@ -31,7 +27,7 @@
             <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
             <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
           </div>
-          <div class="col-xs-5">
+          <div class="col-md-5">
             <h6>Available Communities</h6>
             <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple">
                 <option *ngFor="let comm of avacommunities" [value]="comm.id">{{comm.name}}</option>

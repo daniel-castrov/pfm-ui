@@ -1,7 +1,3 @@
-.items-container {
-  margin-top: 10px;
-}
-
 .move {
   margin-top: 30px;
 }
@@ -20,7 +16,7 @@
 
 .arrows {
   margin-top: 5px;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 .btn-block {
