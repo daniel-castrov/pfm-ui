@@ -41,8 +41,7 @@ export class HeaderComponent implements OnInit {
   }
 
     getCurrentUser() {
-      let resp = this.blankService.blank("response", true);
-      resp.subscribe(
+      this.blankService.blank("response", true).subscribe(
         (r: HttpResponse<RestResult>) => {
           var authHeader = r.headers.get('Authorization');
           //console.log("Current authHeader: " + authHeader);

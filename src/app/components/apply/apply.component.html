@@ -185,7 +185,7 @@
           <div>
             <select ngModel name="community" #community="ngModel">
               <option value=""></option>
-              <option *ngFor="let community of communities" [value]="community.name">{{ community.name }}</option>
+              <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
             </select>
           </div>
         </div>
