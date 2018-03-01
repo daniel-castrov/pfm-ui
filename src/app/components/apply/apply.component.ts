@@ -31,11 +31,7 @@ export class ApplyComponent implements OnInit {
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
     public strangerService:StrangerService
-
   ) { 
-    
-    
-
     // this.id, 
     // this.name
   }
@@ -43,6 +39,12 @@ export class ApplyComponent implements OnInit {
 
   ngOnInit() {
     this.getStranger();
+
+    var my:ApplyComponent=this;
+    this.communityService.getAll().subscribe((data)=>{
+      my.communities=data.result;
+    });
+
   }
 
   getStranger():void {
