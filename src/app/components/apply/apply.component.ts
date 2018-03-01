@@ -58,7 +58,7 @@ export class ApplyComponent implements OnInit {
   setUser(x){
     this.createUserRequest.cn= x.cn;
       this.createUserRequest.nda='v1';
-      this.createUserRequest.firstName='Mi';
+      this.createUserRequest.firstName="'MI'";
       this.createUserRequest.middleInitial= 'C';
       this.createUserRequest.lastName= 'Gi';
       this.createUserRequest.titleRank= 'df';
@@ -115,7 +115,7 @@ export class ApplyComponent implements OnInit {
 
   postNewRequest(){
 
-    this.createUserRequest.state="UNDECIDED";
+    this.createUserRequest.state="'UNDECIDED'";
 
     let resultReq:RestResult;
     let s=this.createUserRequestService.create(this.createUserRequest);
