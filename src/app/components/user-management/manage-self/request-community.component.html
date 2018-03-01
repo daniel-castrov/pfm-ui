@@ -1,12 +1,10 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
   <div class="main-content">
-    <div class="col-8">
-      <div class="row">
-        <div class="card-header">
-          Community Request
-        </div>
-        <div class="row card-container">
+    <div class="col-10 row">
+      <div class="card-header">Community Request</div>
+      <div class="card-container">
+        <div class="row">
           <div class="col-md-5">
             <h6>Current Communities</h6>
             <select name="from[]" id="multiselect" class="form-control window" size="8"
@@ -16,12 +14,10 @@
               data-right-selected="#right_Selected_1"
               data-left-all="#left_All_1"
               data-left-selected="#left_Selected_1">
-
               <option *ngFor="let comm of reqcommunities" [value]="comm.id">{{comm.name}}</option>
-
             </select>
           </div>
-          <div class="col-xs-2 arrows">
+          <div class="col-2 arrows">
             <button type="button" id="multiselect_rightAll" class="btn btn-block"> &gt; &gt; </button>
             <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
             <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
@@ -30,13 +26,16 @@
           <div class="col-md-5">
             <h6>Available Communities</h6>
             <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple">
-                <option *ngFor="let comm of avacommunities" [value]="comm.id">{{comm.name}}</option>
+              <option *ngFor="let comm of avacommunities" [value]="comm.id">{{comm.name}}</option>
             </select>
           </div>
-          <div class="controls">
-            <button class="btn btn-primary btn-sm" (click)="submit()">Submit</button>
-            <button class="btn btn-default btn-sm" (click)="cancel()">Cancel</button>
-          </div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-primary btn-sm" (click)="submit()">Submit</button>
+          <button class="btn btn-default btn-sm" (click)="cancel()">Cancel</button>
+        </div>
+
       </div>
+    </div>
   </div>
 </div>
