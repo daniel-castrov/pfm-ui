@@ -34,8 +34,6 @@ export class ApplyComponent implements OnInit {
 
   ) {
 
-
-
     this.id,
     this.name
   }
@@ -117,7 +115,5 @@ export class ApplyComponent implements OnInit {
   submit(applyForm) {
     applyForm.value
   }
-
-
 
 }
