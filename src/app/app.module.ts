@@ -65,6 +65,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
+  {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'request-community', component:RequestCommunityComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'user/:id', component:ManageSelfComponent},
