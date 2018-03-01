@@ -81,9 +81,8 @@
         </div>
         <div class="form-group">
           <a data-toggle="modal" href="#myModal">Sign NDA</a>
-          <!-- <span *ngIf="ch1.valid"><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span> -->
-          <!-- <span *ngIf="!ch1.valid"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span>  -->
-          <div id="myModal" class="modal fade in">
+          <span *ngIf="!ch1"><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span>
+          <span *ngIf="ch1"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span>          <div id="myModal" class="modal fade in">
             <div class="modal-dialog">
               <div class="modal-content nda-content">
                 <div class="modal-header">
@@ -237,10 +236,15 @@
           </span>
         <div class="controls">
           <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>
-          <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ch1">Submit</button>
+          <button class="btn btn-primary" 
+            [disabled]="!applyForm.form.valid || !ch1">
+            Submit
+          </button>
         </div>
         <pre>{{ applyForm.form.value | json }}</pre> <!-- Value of whole form -->
+        <pre>NDA? {{ ch1 | json }}</pre> <!-- Validity of whole form -->
         <pre>Valid form? {{ applyForm.form.valid | json }}</pre> <!-- Validity of whole form -->
+
       </form>
     </div>
   </div>

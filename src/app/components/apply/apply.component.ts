@@ -58,18 +58,18 @@ export class ApplyComponent implements OnInit {
   setUser(x){
     this.createUserRequest.cn= x.cn;
       this.createUserRequest.nda='v1';
-      this.createUserRequest.firstName='';
-      this.createUserRequest.middleInitial= '';
-      this.createUserRequest.lastName= '';
-      this.createUserRequest.titleRank= '';
-      this.createUserRequest.dutyJob= '';
-      this.createUserRequest.contactEmail= '';
-      this.createUserRequest.phone= '';
-      this.createUserRequest.city= '';
-      this.createUserRequest.organization= '';
-      this.createUserRequest.sponsorName= '';
-      this.createUserRequest.sponsorEmail= '';
-      this.createUserRequest.sponsorPhone= '';
+      this.createUserRequest.firstName='Mi';
+      this.createUserRequest.middleInitial= 'C';
+      this.createUserRequest.lastName= 'Gi';
+      this.createUserRequest.titleRank= 'df';
+      this.createUserRequest.dutyJob= 'df';
+      this.createUserRequest.contactEmail= 'joe@abc.com';
+      this.createUserRequest.phone= '1231231234';
+      this.createUserRequest.city= 'frfr';
+      this.createUserRequest.organization= 'frfr';
+      this.createUserRequest.sponsorName= 'frfr';
+      this.createUserRequest.sponsorEmail= 'joe@abc.com';
+      this.createUserRequest.sponsorPhone= '1231231234';
       console.log( this.stranger.cn );
 
 
@@ -107,13 +107,33 @@ export class ApplyComponent implements OnInit {
       console.log(value);
       this.submitted = true;
       this.ch1 = true;
+      this.postNewRequest();
     } else {
       // console.log('Form is invalid');
     }
   }
 
+  postNewRequest(){
+
+    this.createUserRequest.state="UNDECIDED";
+
+    let resultReq:RestResult;
+    let s=this.createUserRequestService.create(this.createUserRequest);
+    s.subscribe(c => {
+      resultReq = c;
+      this.resultError.push(resultReq.error);
+      this.stranger= resultReq.result;
+      console.log( this.stranger.cn );
+      this.communities = this.stranger.communities;
+      this.setUser(this.stranger);
+    });
+  }
+
+  
+
   submit(applyForm) {
     applyForm.value
+    console.log(this.createUserRequest);
   }
 
 }
