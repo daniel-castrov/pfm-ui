@@ -48,66 +48,66 @@ export class RequestCommunityComponent implements OnInit {
     });
 
 
-    this.buildCommunities();
-
-  }
-
-
-  buildCommunities():void{
-
-    var result: RestResult;
-    this.userDetailsService.getCurrentUser()
-      .subscribe((c) => {
-        result = c;
-        this.currentUser = result.result;
-
-        let result2: RestResult;
-        this.communityService.findall()
-          .subscribe(c => {
-            result2 = c;
-            this.resultError = result2.error;
-            this.allcommunities = result2.result;
-
-            for (let comm of this.allcommunities) {
-              if (this.currentUser.communities.indexOf(comm.id) > -1) {
-                this.reqcommunities.push(comm);
-              } else {
-                this.avacommunities.push(comm);
-              }
-            }
-          });
-      });
-  }
-
-  private submit():void{
-
-    let comms:string[]=[];
-
-    $("#multiselect option").each(function(){ comms.push($(this).val())});
-
-
-    for(let c of comms ){
-      console.log(c);
-    }
-
-    this.reqcommunities=[];
-    for (let comm of this.allcommunities) {
-      if (comms.indexOf(comm.id) > -1) {
-        this.reqcommunities.push(comm);
-      } 
-    }
-    for (let comm of this.reqcommunities) {
-      console.log(comm.name);
-    }
-    
-
-  }
-
-  private cancel():void{
-    this.allcommunities=[];
-  this.reqcommunities= [];
-  this.avacommunities= [];
-    this.buildCommunities();
+  //   this.buildCommunities();
+  //
+  // }
+  //
+  //
+  // buildCommunities():void{
+  //
+  //   var result: RestResult;
+  //   this.userDetailsService.getCurrentUser()
+  //     .subscribe((c) => {
+  //       result = c;
+  //       this.currentUser = result.result;
+  //
+  //       let result2: RestResult;
+  //       this.communityService.findall()
+  //         .subscribe(c => {
+  //           result2 = c;
+  //           this.resultError = result2.error;
+  //           this.allcommunities = result2.result;
+  //
+  //           for (let comm of this.allcommunities) {
+  //             // if (this.currentUser.communities.indexOf(comm.id) > -1) {
+  //             //   this.reqcommunities.push(comm);
+  //             // } else {
+  //               this.avacommunities.push(comm);
+  //             }
+  //           }
+  //         });
+  //     });
+  // }
+  //
+  // private submit():void{
+  //
+  //   let comms:string[]=[];
+  //
+  //   $("#multiselect option").each(function(){ comms.push($(this).val())});
+  //
+  //
+  //   for(let c of comms ){
+  //     console.log(c);
+  //   }
+  //
+  //   this.reqcommunities=[];
+  //   for (let comm of this.allcommunities) {
+  //     if (comms.indexOf(comm.id) > -1) {
+  //       this.reqcommunities.push(comm);
+  //     }
+  //   }
+  //   for (let comm of this.reqcommunities) {
+  //     console.log(comm.name);
+  //   }
+  //
+  //
+  // }
+  //
+  // private cancel():void{
+  //   this.allcommunities=[];
+  // this.reqcommunities= [];
+  // this.avacommunities= [];
+  //   this.buildCommunities();
   }
 
 }
