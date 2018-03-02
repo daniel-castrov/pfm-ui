@@ -40,7 +40,7 @@ export class ManageUsersComponent implements OnInit {
   all_Roles: Role[] = [];
 
   // The UserRoles that this user has
-  targetUser_UserRoles: UserRole[] = [];
+  //targetUser_UserRoles: UserRole[] = [];
 
   // The Roles this user has
   targetUser_Roles: UserRole[] = [];
@@ -53,8 +53,6 @@ export class ManageUsersComponent implements OnInit {
 
   // All the communities
   all_Communities: Community[] = [];
-
-  targetUser_Communities: Community[] = [];
 
   // an original copy of the targted user so we can roll back.
   reftargetUser: User;
@@ -87,28 +85,47 @@ export class ManageUsersComponent implements OnInit {
   }
 
   getTargetUser(): void {
-    let result: RestResult;
+
+    // 1. get the user
+    let resultUser: RestResult;
     this.userService.getById(this.id)
       .subscribe(c => {
-        result = c;
-        this.resultError = result.error;
-        this.targetUser = result.result;
+        resultUser = c;
+        this.resultError = resultUser.error;
+        this.targetUser = resultUser.result;
         console.log("TargetUser: " + this.targetUser.cn);
 
-        let comm: string;
-        for (comm of this.targetUser.communities) {
-          let result2: RestResult;
-          this.communityService.getById(comm)
-            .subscribe(c => {
-              result2 = c;
-              this.resultError = result2.error;
-              this.targetUser_Communities.push(result2.result);
-              this.getTargetedUserRoles(comm);
+        // 2. get the (all) communities 
+        let targetUserCommunities: Community[] = [];
+        let resultComm: RestResult;
+
+        let s = this.communityService.getAll();
+        s.subscribe(c => {
+          resultComm = c;
+          this.resultError = resultComm.error;
+          targetUserCommunities = resultComm.result;
+
+          // 3. Get the users Roles in each community
+          for (let comm of targetUserCommunities) {
+            let resultRoles: RestResult;
+            let s = this.userRoleService.getUserRolesforCommunity(this.targetUser.id, comm.id);
+            s.subscribe(c => {
+              resultRoles = c;
+              this.resultError = resultRoles.error;
+              // oush if at least one role
+              if ( resultRoles.result.length>0 ){ 
+                this.communityWithUserRoles.push(new CommWithRoles(comm, resultRoles.result));
+              }
             });
-        }
+          }
+          // end 3
+        });
+        // end 2
+
         // Make a copy of the current user so we can revert changes
         this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
       });
+      // end 1
   }
 
   saveTargetUser(): void {
@@ -124,7 +141,7 @@ export class ManageUsersComponent implements OnInit {
   editMode(sectionnumber): void {
     this.resetEditMode();
     this.isdEditMode[sectionnumber] = true;
-    this.buildAvailableRoles();
+    //this.buildAvailableRoles();
   }
 
   cancelEdit(): void {
@@ -150,69 +167,42 @@ export class ManageUsersComponent implements OnInit {
       });
   }
 
-  getTargetedUserRoles(commid): void {
+  // buildAvailableRoles(): void {
+  //   console.log("MATCH");
+  //   let userRole: UserRole;
+  //   for (userRole of this.targetUser_UserRoles) {
+  //     let role: Role;
+  //     for (role of this.all_Roles) {
+  //       if (userRole.roleId === role.id) {
+  //         var index = this.all_Roles.indexOf(role);
+  //         if (index > -1) {
+  //           this.all_Roles.splice(index, 1);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
-    let result: RestResult;
+  // addRole(): void {
+  //   console.log("addRole" + this.addedrole);
 
-    this.userRoleService.getUserRolesforCommunity(this.id,commid)
-      .subscribe(c => {
-        result = c;
-        this.resultError = result.error;
-        this.targetUser_Roles = result.result;
+  //   let newUserRole: UserRole;
+  //   newUserRole = new Object();
 
+  //   newUserRole.userId = this.targetUser.id;
+  //   newUserRole.roleId = this.addedrole;
 
-        // for (let ur of this.targetUser_UserRoles ){
-        //   console.log(ur.roleId);
+  //   let reuslt3: RestResult;
 
-        //   let result1: RestResult;
-        //   this.roleService.getById(ur.roleId)  
-        //   .subscribe(c1 => {
-        //     result1 = c1;
-        //     this.resultError = result1.error;
-        //     this.targetUser_Roles.push(result1.result);
-        //   });
-
-        // }
-
-      });
-  }
-
-  buildAvailableRoles(): void {
-    console.log("MATCH");
-    let userRole: UserRole;
-    for (userRole of this.targetUser_UserRoles) {
-      let role: Role;
-      for (role of this.all_Roles) {
-        if (userRole.roleId === role.id) {
-          var index = this.all_Roles.indexOf(role);
-          if (index > -1) {
-            this.all_Roles.splice(index, 1);
-          }
-        }
-      }
-    }
-  }
-
-  addRole(): void {
-    console.log("addRole" + this.addedrole);
-
-    let newUserRole: UserRole;
-    newUserRole = new Object();
-
-    newUserRole.userId = this.targetUser.id;
-    newUserRole.roleId = this.addedrole;
-
-    let reuslt3: RestResult;
-
-    this.userRoleService.create(newUserRole)
-      .subscribe(c => {
-        reuslt3 = c;
-        this.resultError = reuslt3.error;
-        this.targetUser_UserRoles.push(newUserRole);
-        this.resetAddRole();
-        this.buildAvailableRoles();
-      });
-  }
+  //   this.userRoleService.create(newUserRole)
+  //     .subscribe(c => {
+  //       reuslt3 = c;
+  //       this.resultError = reuslt3.error;
+  //       this.targetUser_UserRoles.push(newUserRole);
+  //       this.resetAddRole();
+  //       this.buildAvailableRoles();
+  //     });
+  // }
 
   resetAddRole(): void {
     this.addedrole = '';
@@ -230,14 +220,18 @@ export class ManageUsersComponent implements OnInit {
 
   addCommunity(): void {
     console.log("addCommunity" + this.addedcommunity);
-    this.targetUser.communities.push(this.addedcommunity);
+
 
     let result2: RestResult;
     this.communityService.getById(this.addedcommunity)
     .subscribe(c => {
       result2 = c;
       this.resultError = result2.error;
-      this.targetUser_Communities.push(result2.result);
+
+
+
+
+
     });
   }
 
@@ -245,4 +239,25 @@ export class ManageUsersComponent implements OnInit {
     this.addedcommunity = '';
   }
 
+
+  private communityWithUserRoles: CommWithRoles[] = [];
+
+
 }
+
+class CommWithRoles {
+
+  community: Community;
+  roles: Role[] = [];
+
+  constructor(c: Community, r: Role[]) {
+    this.community = c;
+    this.roles = r;
+  }
+
+
+}
+
+
+
+

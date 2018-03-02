@@ -7,20 +7,20 @@
       <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
         <h5>John Doe User Access Request (Date: 10-08-2017 at 10:32)</h5>
         <hr>
-        <span class="form-group">
+        <span class="form-group inline-name">
           <input type="text" class="form-control firstname" placeholder="Firt Name" disabled>
         </span>
-        <span class="form-group">
+        <span class="form-group inline-name">
           <input type="text" class="form-control middle" placeholder="MI" name="middlename" disabled>
         </span>
-        <span class="form-group">
+        <span class="form-group inline-name">
           <input type="text"class="form-control lastname" placeholder="Last Name" name="lastname" disabled>
         </span>
         <div class="form-group">
           <input type="text" class="form-control applyinput"  placeholder="Title/Rank" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="rank" placeholder="Duty/Job" disabled>
+          <input type="text" class="form-control applyinput" name="rank" placeholder="Duty/Job Title" disabled>
         </div>
         <div class="form-group">
           <input type="text" class="form-control applyinput" name="email" placeholder="Email" disabled>
@@ -42,16 +42,18 @@
           <input type="text" class="form-control applyinput" name="community" placeholder="Community Access Request" disabled>
         </div>
         <div class="form-group">
-          <a href="../assets/pdf/NON_DISCLOSURE_FOR_CONTRACTORS.pdf" target="_blank">Signed NDA</a>
+          <span class="nda">Signed NDA</span>
+          <span><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span>
+          <span><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span>
         </div>
-        <span class="form-group sponsor">
+        <span class="form-group inline-name">
           <input type="text" class="form-control applyinput" name="sponsorname" placeholder="Sponsor Name" disabled>
         </span>
-        <span class="form-group sponsor">
-          <input type="text" class="form-control applyinput sponsor" name="sponsorphone" placeholder="Sponsor Phone" disabled>
+        <span class="form-group inline-name">
+          <input type="text" class="form-control applyinput" name="sponsorphone" placeholder="Sponsor Phone" disabled>
         </span>
-        <span class="form-group sponsor">
-          <input type="text" class="form-control applyinput sponsor" name="sponsoremail" placeholder="Sponsor Email" disabled>
+        <span class="form-group inline-name">
+          <input type="text" class="form-control applyinput" name="sponsoremail" placeholder="Sponsor Email" disabled>
         </span>
         <div class="controls">
           <button class="btn btn-danger">Deny</button>
