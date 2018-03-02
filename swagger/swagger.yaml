@@ -165,6 +165,31 @@ paths:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
+  /createUserRequests/community/{commId}:
+    get:
+      tags:
+      - "CreateUserRequest"
+      summary: "Gets a CreateUserRequest"
+      description: "Get a CreateUserRequest user identified via its id"
+      operationId: "getByCommId"
+      parameters:
+      - name: "commId"
+        in: "path"
+        description: "CreateUserRequest id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a CreateUserRequest"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "CreateUserRequest does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /createUserRequests/{id}:
     get:
       tags:
       - "CreateUserRequest"
@@ -172,7 +197,7 @@ paths:
       description: "Get a CreateUserRequest user identified via its id"
       operationId: "getById"
       parameters:
-      - name: "id"
+      - name: "commId"
         in: "path"
         description: "CreateUserRequest id"
         required: true
@@ -795,7 +820,7 @@ definitions:
         type: "string"
       organization:
         type: "string"
-      community:
+      communityId:
         type: "string"
       sponsorName:
         type: "string"
