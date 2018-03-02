@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
@@ -109,6 +110,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
+    TabsModule.forRoot()
   ],
   providers: [
     BlankService,

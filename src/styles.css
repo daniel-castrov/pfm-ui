@@ -151,3 +151,7 @@ accordion-group .acordion-icon:hover  {
   color: #000;
   padding: 10px;
 }
+
+.btn-sm {
+  cursor: pointer;
+}

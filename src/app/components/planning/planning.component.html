@@ -1,9 +1,228 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isloggedin">
-    <div class="col-lg-12">
-      <h5>Planning</h5>
-    </div>
+  <div class="row main-content">
+      <div class="col-lg-11">
+        <h5>POM Hierarchy</h5>
+        <tabset>
+          <tab heading="Build" id="tab1">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card-header">POM Hierarchy</div>
+                <div class="programming-container">
+                  Model
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card-header">Selection</div>
+                <div class="programming-container">
+                  <form>
+                    <div class="form-group">
+                      <input
+                      type="text"
+                      class="form-control forminput"
+                      name="Name"
+                      placeholder="Name"
+                      >
+                    </div>
+                    <div class="form-group">
+                      <input
+                      type="text"
+                      class="form-control forminput"
+                      name="role"
+                      placeholder="Role"
+                      >
+                  </div>
+                  <div class="form-group">
+                    <input
+                    type="text"
+                    class="form-control forminput"
+                    name="organization"
+                    placeholder="Organization"
+                    >
+                  </div>
+                  <div class="form-group">
+                    <input
+                    type="text"
+                    class="form-control forminput"
+                    name="subToa"
+                    placeholder="Sub TOA"
+                    >
+                  </div>
+                  <table class="pom-table">
+                    <thead>
+                        <tr>
+                            <th>Programs Assigned</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td>$12,000</td>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">
+                        <div class="scrollit">
+                            <table>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                                <tr>
+                                    <td>January</td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>February</td>
+                                    <td>$80</td>
+                                </tr>
+                            </table>
+                        </div>
+                                </td>
+                        </tr>
+                    </tbody>
+                </table>
+                  <div class="controls">
+                    <button class="btn-sm btn-default" (click)="applyForm.form.reset()">Close</button>
+                    <button class="btn-sm btn-danger">Remove</button>
+                    <button class="btn-sm btn-primary">Add</button>
+                    <button class="btn-sm btn-success">Save</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="Verify" id="tab2">
 
+          </tab>
+        </tabset>
+      </div>
   </div>
 </div>

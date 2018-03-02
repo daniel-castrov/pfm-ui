@@ -12,9 +12,28 @@ export class PlanningComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
+  // tabs: any[] = [
+  //     {
+  //       title: 'Build',
+  //       content: 'Build',
+  //       customClass: 'tabMenu'
+  //     },
+  //     {
+  //       title: 'Verify',
+  //       content: 'Verify',
+  //       customClass: 'tabMenu'
+  //     }
+  //   ];
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  alertMe(): void {
+  setTimeout(function(): void {
+    alert("You've selected the alert tab!");
+  });
+}
 
 }
