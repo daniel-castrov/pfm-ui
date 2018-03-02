@@ -66,7 +66,7 @@ const appRoutes: Routes = [
   {path:'programs', component:ProgramsComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'user/:id', component:ManageSelfComponent},
-  {path:'user-approval', component:UserApprovalComponent},
+  {path:'user-approval/:id', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
 
 ];

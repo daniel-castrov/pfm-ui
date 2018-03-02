@@ -197,7 +197,7 @@ paths:
       description: "Get a CreateUserRequest user identified via its id"
       operationId: "getById"
       parameters:
-      - name: "commId"
+      - name: "id"
         in: "path"
         description: "CreateUserRequest id"
         required: true

@@ -5,55 +5,55 @@
     </div>
     <div class="col-lg-10">
       <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
-        <h5>John Doe User Access Request (Date: 10-08-2017 at 10:32)</h5>
+        <h5>{{createUserRequest.firstName}} {{createUserRequest?.middleInitial}} {{createUserRequest.lastName}} User Access Request ({{ createUserRequest.dateApplied }})</h5>
         <hr>
         <span class="form-group inline-name">
-          <input type="text" class="form-control firstname" placeholder="Firt Name" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.firstName" name="firstName" placeholder="Fisrt Name" disabled>
         </span>
         <span class="form-group inline-name">
-          <input type="text" class="form-control middle" placeholder="MI" name="middlename" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.middleInitial" placeholder="MI" name="middlename" disabled>
         </span>
         <span class="form-group inline-name">
-          <input type="text"class="form-control lastname" placeholder="Last Name" name="lastname" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.lastName" placeholder="Last Name" name="lastname" disabled>
         </span>
         <div class="form-group">
-          <input type="text" class="form-control applyinput"  placeholder="Title/Rank" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.titleRank"  placeholder="Title/Rank" name="title" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="rank" placeholder="Duty/Job Title" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.dutyJob" name="rank" placeholder="Duty/Job Title" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="email" placeholder="Email" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.contactEmail" name="email" placeholder="Email" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="phone" placeholder="Phone" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.phone" name="phone" placeholder="Phone" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="address" placeholder="Street, City, State, Zipcode" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.city" name="address" placeholder="Street, City, State, Zipcode" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="organization"  placeholder="Organization Name" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.organization" name="organization"  placeholder="Organization Name" disabled>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control applyinput" name="branch" placeholder="Branch" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.service" name="service" placeholder="Service" disabled>
         </div>
         <div class="form-group">
           <label>Community Access Request</label>
-          <input type="text" class="form-control applyinput" name="community" placeholder="Community Access Request" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.communityId" name="community" placeholder="Community Access Request" disabled>
         </div>
         <div class="form-group">
           <span class="nda">Signed NDA</span>
-          <span><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span>
-          <span><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span>
+          <span *ngIf="!createUserRequest.nda"><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span>
+          <span *ngIf="createUserRequest.nda"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span> 
         </div>
         <span class="form-group inline-name">
-          <input type="text" class="form-control applyinput" name="sponsorname" placeholder="Sponsor Name" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.sponsorName" name="sponsorname" placeholder="Sponsor Name" disabled>
         </span>
         <span class="form-group inline-name">
-          <input type="text" class="form-control applyinput" name="sponsorphone" placeholder="Sponsor Phone" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.sponsorPhone" name="sponsorphone" placeholder="Sponsor Phone" disabled>
         </span>
         <span class="form-group inline-name">
-          <input type="text" class="form-control applyinput" name="sponsoremail" placeholder="Sponsor Email" disabled>
+          <input type="text" class="form-control" [ngModel]="createUserRequest.sponsorEmail" name="sponsoremail" placeholder="Sponsor Email" disabled>
         </span>
         <div class="controls">
           <button class="btn btn-danger">Deny</button>

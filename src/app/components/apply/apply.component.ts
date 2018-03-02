@@ -25,8 +25,6 @@ export class ApplyComponent implements OnInit {
   communities:Community[]=[];
   createUserRequest:CreateUserRequest=new Object();
 
-
-
   constructor(
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
