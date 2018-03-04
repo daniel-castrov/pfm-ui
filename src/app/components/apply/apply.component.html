@@ -40,7 +40,7 @@
           <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.dutyJob" name="dutyJob" #createUserRequestDutyJob="ngModel"
             placeholder="Duty/Job Title">
         </div>
-        <div class="form-group">
+        <div class="form-group" *ngIf="stranger.contractor">
           <a data-toggle="modal" href="#myModal">Sign NDA</a>
           <span *ngIf="!ndaSatisfied">
             <i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i>

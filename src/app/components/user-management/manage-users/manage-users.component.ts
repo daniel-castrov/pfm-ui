@@ -108,7 +108,7 @@ export class ManageUsersComponent implements OnInit {
           // 3. Get the users Roles in each community
           for (let comm of targetUserCommunities) {
             let resultRoles: RestResult;
-            let s = this.userRoleService.getUserRolesforCommunity(this.targetUser.id, comm.id);
+            let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
             s.subscribe(c => {
               resultRoles = c;
               this.resultError = resultRoles.error;
@@ -184,17 +184,11 @@ export class ManageUsersComponent implements OnInit {
   addCommunity(): void {
     console.log("addCommunity" + this.addedcommunity);
 
-
     let result2: RestResult;
     this.communityService.getById(this.addedcommunity)
     .subscribe(c => {
       result2 = c;
       this.resultError = result2.error;
-
-
-
-
-
     });
   }
 
