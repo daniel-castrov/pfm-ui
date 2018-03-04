@@ -95,7 +95,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
-          <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/access-change">Request Access</a>
+          <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/request-community">Request Access</a>
           <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/home">My NDA</a>
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/home">Approve User Access</a>
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
