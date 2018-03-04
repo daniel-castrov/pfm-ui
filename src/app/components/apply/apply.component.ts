@@ -17,78 +17,75 @@ import { StrangerService } from '../../generated/api/stranger.service';
 })
 export class ApplyComponent implements OnInit {
 
-  id: any;
-  name: any;
-  ch1: boolean = false;
-  resultError: string[]=[];
-  stranger:Stranger;
-  communities:Community[]=[];
-  createUserRequest:CreateUserRequest=new Object();
+  resultError: string[] = [];
+  stranger: Stranger;
+  communities: Community[] = [];
+  ndaSatisfied: boolean;
+  ndaText:string;
+  createUserRequest: CreateUserRequest = new Object();
+  formsubmitted: boolean;
 
   constructor(
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
-    public strangerService:StrangerService
+    public strangerService: StrangerService
+  ) { }
 
-  ) {
-
-    this.id,
-    this.name
-  }
   ngOnInit() {
+    this.formsubmitted = false;
+    this.ndaSatisfied = true;
     this.getStranger();
   }
 
-  getStranger():void {
-    let resultStranger:RestResult;
+  getStranger(): void {
+    let resultStranger: RestResult;
 
     let s = this.strangerService.get();
     s.subscribe(c => {
       resultStranger = c;
       this.resultError.push(resultStranger.error);
-      this.stranger= resultStranger.result;
-      console.log( this.stranger.cn );
+      this.stranger = resultStranger.result;
+
+      // uncomment this
+      this.stranger.contractor = true;
+      if ( this.stranger.contractor ){
+        this.ndaSatisfied = false;
+      }
       this.communities = this.stranger.communities;
-      this.setUser(this.stranger);
+      this.ndaText = this.stranger.nda;
     });
   }
 
-  setUser(x){
-    this.createUserRequest.cn= x.cn;
-      this.createUserRequest.nda='v1';
-      this.createUserRequest.firstName="'MI'";
-      this.createUserRequest.middleInitial= 'C';
-      this.createUserRequest.lastName= 'Gi';
-      this.createUserRequest.titleRank= 'df';
-      this.createUserRequest.dutyJob= 'df';
-      this.createUserRequest.contactEmail= 'joe@abc.com';
-      this.createUserRequest.phone= '1231231234';
-      this.createUserRequest.city= 'frfr';
-      this.createUserRequest.organization= 'frfr';
-      this.createUserRequest.sponsorName= 'frfr';
-      this.createUserRequest.sponsorEmail= 'joe@abc.com';
-      this.createUserRequest.sponsorPhone= '1231231234';
-      console.log( this.stranger.cn );
-
-
-      if ( x.contractor ){
-        console.log("Contractor");
+  onSubmit({ value, valid }) {
+    if (valid) {
+      
+      this.createUserRequest = value;
+      this.createUserRequest.status = "UNDECIDED";
+      this.createUserRequest.cn = this.stranger.cn;
+      
+      if ( this.stranger.contractor ){
+        this.createUserRequest.nda = this.ndaText.substring(0,this.ndaText.indexOf("\n"));
       } else {
-        console.log("No Contractor");
+        this.createUserRequest.nda="NA"
       }
 
+      console.log(this.createUserRequest);
+
+      let resultReq: RestResult;
+      let s = this.createUserRequestService.create(this.createUserRequest);
+      s.subscribe(c => {
+        resultReq = c;
+      });
+
+      this.formsubmitted = true;
+
+    } else {
+      this.resultError.push("Unable to submit New User Request Form");
+      console.log("Unable to submit New User Request Form");
+    }
   }
 
-  getRequest(): void {
-
-    let resultReq:RestResult;
-
-    this.createUserRequestService.create
-
-  }
-
-
-  branches = [
+  services = [
     { id: 1, name: 'Army (USA)' },
     { id: 2, name: 'USAF (Air Force)' },
     { id: 3, name: 'USN (Navy)' },
@@ -97,41 +94,5 @@ export class ApplyComponent implements OnInit {
     { id: 6, name: 'Other' },
     { id: 7, name: 'None' }
   ];
-
-  submitted = false;
-
-  onSubmit({ value, valid }) {
-    if (valid) {
-      console.log(value);
-      this.submitted = true;
-      this.ch1 = true;
-      this.postNewRequest();
-    } else {
-      // console.log('Form is invalid');
-    }
-  }
-
-  postNewRequest(){
-
-    this.createUserRequest.state="'UNDECIDED'";
-
-    let resultReq:RestResult;
-    let s=this.createUserRequestService.create(this.createUserRequest);
-    s.subscribe(c => {
-      resultReq = c;
-      this.resultError.push(resultReq.error);
-      this.stranger= resultReq.result;
-      console.log( this.stranger.cn );
-      this.communities = this.stranger.communities;
-      this.setUser(this.stranger);
-    });
-  }
-
-  
-
-  submit(applyForm) {
-    applyForm.value
-    console.log(this.createUserRequest);
-  }
 
 }

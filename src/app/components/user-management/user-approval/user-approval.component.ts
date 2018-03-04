@@ -21,8 +21,10 @@ export class UserApprovalComponent implements OnInit {
   id: string;
   resultError: string[] = [];
   createUserRequest: CreateUserRequest;
+  error="";
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
@@ -52,10 +54,25 @@ export class UserApprovalComponent implements OnInit {
             this.resultError.push(result2.error);
             let com: Community = result2.result;
             this.createUserRequest.communityId = com.name;
-            console.log(this.createUserRequest);
-            //this.createUserRequest.nda='';
-
           });
       });
+  }
+
+  approve(){
+    this.submit("\"APPROVED\"")
+  }
+
+  deny(){
+    this.submit("\"DENIED\"")
+  }
+
+  submit(status){
+    let result: RestResult;
+    // this.createUserRequestService.approve(status, this.createUserRequest.id)
+    //   .subscribe(c => {
+    //     result = c;
+    //     this.resultError.push(result.error);        
+      //});
+        this.router.navigate(['./home']);
   }
 }

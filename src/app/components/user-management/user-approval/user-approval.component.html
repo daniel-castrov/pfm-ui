@@ -2,9 +2,9 @@
 <div class="container-fluid" *ngIf="header.isloggedin">
   <div class="row main-content">
     <div class="col-lg-2">
+        <span *ngIf="error">{{error}}</span>
     </div>
     <div class="col-lg-10">
-      <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
         <h5>{{createUserRequest.firstName}} {{createUserRequest?.middleInitial}} {{createUserRequest.lastName}} User Access Request ({{ createUserRequest.dateApplied }})</h5>
         <hr>
         <span class="form-group inline-name">
@@ -56,10 +56,9 @@
           <input type="text" class="form-control" [ngModel]="createUserRequest.sponsorEmail" name="sponsoremail" placeholder="Sponsor Email" disabled>
         </span>
         <div class="controls">
-          <button class="btn btn-danger">Deny</button>
-          <button class="btn btn-primary">Approve</button>
+          <button class="btn btn-danger" (click)="deny()">Deny</button>
+          <button class="btn btn-primary" (click)="approve()">Approve</button>
         </div>
-      </form>
     </div>
   </div>
 </div>
