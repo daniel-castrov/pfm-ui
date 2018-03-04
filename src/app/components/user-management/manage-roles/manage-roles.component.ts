@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import * as $ from 'jquery/dist/jquery.min.js';
+import * as $ from 'jquery';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
 
 // Generated
+
+declare const $: any;
+declare const jQuery: any;
 
 @Component({
   selector: 'app-manage-roles',
@@ -14,13 +17,15 @@ import { HeaderComponent } from '../../../components/header/header.component';
 
 export class ManageRolesComponent {
 
-  @ViewChild(HeaderComponent) header;
 
-  status: any = {
-    isFirstOpen: true,
-    isFirstDisabled: false
-  };
+    @ViewChild(HeaderComponent) header;
 
-  public ngOnInit() {}
+      public ngOnInit() {
 
-}
+        jQuery(document).ready(function($) {
+          $('#multiselect1').multiselect();
+          // $('#multiselect2').multiselect();
+        });
+
+      }
+    }
