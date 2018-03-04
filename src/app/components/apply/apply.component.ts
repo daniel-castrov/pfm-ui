@@ -46,8 +46,7 @@ export class ApplyComponent implements OnInit {
       this.resultError.push(resultStranger.error);
       this.stranger = resultStranger.result;
 
-      // uncomment this
-      this.stranger.contractor = true;
+
       if ( this.stranger.contractor ){
         this.ndaSatisfied = false;
       }

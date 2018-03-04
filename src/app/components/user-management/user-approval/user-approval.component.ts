@@ -68,11 +68,11 @@ export class UserApprovalComponent implements OnInit {
 
   submit(status){
     let result: RestResult;
-    // this.createUserRequestService.approve(status, this.createUserRequest.id)
-    //   .subscribe(c => {
-    //     result = c;
-    //     this.resultError.push(result.error);        
-      //});
+    this.createUserRequestService.approve(status, this.createUserRequest.id)
+      .subscribe(c => {
+        result = c;
+        this.resultError.push(result.error);        
+      });
         this.router.navigate(['./home']);
   }
 }
