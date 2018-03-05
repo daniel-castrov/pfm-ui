@@ -17,13 +17,17 @@ tab {
 
 tbody div {
   overflow-y:scroll;
-  height:100px;
+  height: 240px;
 }
 
 .pom-table {
   border: 1px #ccc solid;
-  padding: 15px;
+  padding: 3px;
   background-color: #f7f7f7;
+  overflow-y:scroll;
+  height: 350px;
+  width: 340px;
+  margin-bottom: 20px;
 }
 
 .pom-table > td {
@@ -32,12 +36,8 @@ tbody div {
   padding: 0 !important;
 }
 
-table {
-  overflow-y:scroll;
-  height: 200px;
-  width: 280px;
-  margin-bottom: 20px;
-}
+tr:nth-child(odd) {background: #f7f7f7}
+tr:nth-child(even) {background: #fff}
 
 tfoot {
   padding: 10px;
@@ -45,7 +45,7 @@ tfoot {
 }
 
 tfoot > tr {
-  padding: 10px;
+  padding: 0;
   color: #fff;
   background-color: #3c3737;
 }
@@ -56,11 +56,49 @@ tfoot > tr {
   background-color: #cccccc;
 }
 
-.pom-table tr > td {
-    padding: 0 10px;
-}
+.pom-table tr > td { padding: 0 5px; }
 
 .pom-table thead {
   padding: 5px 10px;
   border-radius: 4px;
+}
+
+.table {
+  width: 100%;
+}
+
+.table thead tr.filters th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #e9ecef;
+  background-color: #cecece;
+}
+
+.filterable {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.filterable .panel-heading .pull-right {
+  margin-top: -20px;
+}
+
+.filterable .filters input[disabled] {
+  background-color: transparent;
+  border: none;
+  cursor: auto;
+  box-shadow: none;
+  padding: 0;
+  height: auto;
+}
+
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+  color: #333;
+}
+
+.filterable .filters input[disabled]::-moz-placeholder {
+  color: #333;
+}
+
+.filterable .filters input[disabled]:-ms-input-placeholder {
+  color: #333;
 }
