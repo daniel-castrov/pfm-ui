@@ -73,6 +73,7 @@ export class UserApprovalComponent implements OnInit {
         result = c;
         this.resultError.push(result.error);       
       });
+      location.reload();
       this.router.navigate(['./user-list']); 
   }
 }
