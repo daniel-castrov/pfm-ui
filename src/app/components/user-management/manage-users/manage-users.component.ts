@@ -108,7 +108,7 @@ export class ManageUsersComponent implements OnInit {
           // 3. Get the users Roles in each community
           for (let comm of targetUserCommunities) {
             let resultRoles: RestResult;
-            let s = this.userRoleService.getUserRolesforCommunity(this.targetUser.id, comm.id);
+            let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
             s.subscribe(c => {
               resultRoles = c;
               this.resultError = resultRoles.error;
@@ -167,43 +167,6 @@ export class ManageUsersComponent implements OnInit {
       });
   }
 
-  // buildAvailableRoles(): void {
-  //   console.log("MATCH");
-  //   let userRole: UserRole;
-  //   for (userRole of this.targetUser_UserRoles) {
-  //     let role: Role;
-  //     for (role of this.all_Roles) {
-  //       if (userRole.roleId === role.id) {
-  //         var index = this.all_Roles.indexOf(role);
-  //         if (index > -1) {
-  //           this.all_Roles.splice(index, 1);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-  // addRole(): void {
-  //   console.log("addRole" + this.addedrole);
-
-  //   let newUserRole: UserRole;
-  //   newUserRole = new Object();
-
-  //   newUserRole.userId = this.targetUser.id;
-  //   newUserRole.roleId = this.addedrole;
-
-  //   let reuslt3: RestResult;
-
-  //   this.userRoleService.create(newUserRole)
-  //     .subscribe(c => {
-  //       reuslt3 = c;
-  //       this.resultError = reuslt3.error;
-  //       this.targetUser_UserRoles.push(newUserRole);
-  //       this.resetAddRole();
-  //       this.buildAvailableRoles();
-  //     });
-  // }
-
   resetAddRole(): void {
     this.addedrole = '';
   }
@@ -221,17 +184,11 @@ export class ManageUsersComponent implements OnInit {
   addCommunity(): void {
     console.log("addCommunity" + this.addedcommunity);
 
-
     let result2: RestResult;
     this.communityService.getById(this.addedcommunity)
     .subscribe(c => {
       result2 = c;
       this.resultError = result2.error;
-
-
-
-
-
     });
   }
 

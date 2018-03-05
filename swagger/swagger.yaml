@@ -79,8 +79,10 @@ paths:
         schema:
           $ref: "#/definitions/Community"
       responses:
-        201:
-          description: "Community successfully created."
+        200:
+          description: "The newly created community"
+          schema:
+            $ref: "#/definitions/RestResult"
         400:
           description: "Community couldn't be created."
         403:
@@ -135,6 +137,35 @@ paths:
           description: "Community does not exist."
         500:
           description: "An unexpected error occurred."
+  /communities/user/{userId}/role/{roleName}:
+    get:
+      tags:
+      - "Community"
+      summary: "Gets Communities that a user has a known Role Name"
+      description: "Gets Communities that a user has a known Role Name"
+      operationId: "getByUserIdAndRoleName"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User Id"
+        required: true
+        type: "string"
+      - name: "roleName"
+        in: "path"
+        description: "The known name of a Role"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "list of Communities"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "No User or Role exists."
+        500:
+          description: "An unexpected error occurred."
 # STOP COMMUNITIES
 ##############################################################################
 # START CREATEUSERREQUEST
@@ -165,6 +196,31 @@ paths:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
+  /createUserRequests/community/{commId}:
+    get:
+      tags:
+      - "CreateUserRequest"
+      summary: "Gets a CreateUserRequest"
+      description: "Get a CreateUserRequest user identified via its id"
+      operationId: "getByCommId"
+      parameters:
+      - name: "commId"
+        in: "path"
+        description: "CreateUserRequest id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a CreateUserRequest"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "CreateUserRequest does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /createUserRequests/{id}:
     get:
       tags:
       - "CreateUserRequest"
@@ -201,14 +257,14 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "body"
+        name: "status"
         description: "a Status"
         required: true
         schema:
-          $ref: "#/definitions/CreateUserRequest"
-      - name: "createUserRequestId"
-        in: "path"
-        description: "Role id"
+          $ref: "#/definitions/Status"
+      - in: "path"
+        name: "createUserRequestId"
+        description: "createUserRequestId"
         required: true
         type: "string"
       responses:
@@ -474,6 +530,83 @@ paths:
           description: "Role does not exist."
         500:
           description: "An unexpected error occurred."
+  /roles/community/{communityId}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get all Roles for a community"
+      description: "Returns all Roles for a community"
+      operationId: "getByCommunityId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Roles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /roles/community/{communityId}/name/{name}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get one Role by name and communityId"
+      description: "Returns one Role by name and communityId"
+      operationId: "getByNameAndCommunityId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "One Role"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /roles/user/{userId}/community/{communityId}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get all Roles a User has in a Community"
+      description: "Returns all Roles a User has in a Community"
+      operationId: "getByUserIdAndCommunityId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Roles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
 # STOP ROLES
 ##############################################################################
 # START STRANGER
@@ -587,41 +720,33 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /users/{userId}community/{commId}/role/{roleName}:
-    put:
+  /users/community/{communityId}/role/{roleName}:
+    get:
       tags:
       - "User"
-      summary: "changes a user"
-      operationId: "assignUserRole"
-      consumes:
+      summary: "Get Users by CommunityId and Rolename"
+      description: "Returns all Users by CommunityId and Rolename"
+      operationId: "getByCommunityIdAndRoleName"
+      produces:
       - "application/json"
       parameters:
-      - name: "userId"
+      - name: "communityId"
         in: "path"
-        description: "User Id"
-        required: true
-        type: "string"
-      - name: "commId"
-        in: "path"
-        description: "Community Id"
         required: true
         type: "string"
       - name: "roleName"
         in: "path"
-        description: "Community Id"
         required: true
         type: "string"
-      produces:
-      - "application/json"
       responses:
-        204:
-          description: "Successfully updated a User"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
+        200:
+          description: "List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
         500:
           description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
 # STOP USERS
 ##############################################################################
 # START USERROLES
@@ -652,17 +777,17 @@ paths:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
-  /userRoles/{userId}:
+  /userRoles/{userRoleId}:
     delete:
       tags:
       - "UserRole"
-      summary: "Deletes all UserRole for a user"
-      description: "Delete all  UserRole user identified via its userId"
+      summary: "Deletes a UserRole"
+      description: "Delete a UserRole"
       operationId: "deleteById"
       parameters:
-      - name: "userId"
+      - name: "userRoleId"
         in: "path"
-        description: "UserRole userId"
+        description: "UserRoleId"
         required: true
         type: "string"
       responses:
@@ -674,48 +799,19 @@ paths:
           description: "UserRole does not exist."
         500:
           description: "An unexpected error occurred."
-  /userRoles/community/{commId}:
-     get:
-      tags:
-      - "UserRole"
-      summary: "Gets all UserRoles for a Community"
-      description: "Get all UserRoles for a Community id"
-      operationId: "getUserRoles"
-      parameters:
-      - name: "commId"
-        in: "path"
-        description: "Community Id"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "List of UserRoles"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "UserRole does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /userRoles/user/{userId}/community/{commId}:
+  /userRoles/user/{userId}:
     get:
       tags:
       - "UserRole"
-      summary: "Gets all UserRoles user in a Community "
-      description: "Gets all UserRoles user in a Community"
-      operationId: "getUserRolesforCommunity"
+      summary: "Gets all UserRoles for a user"
+      description: "Gets all UserRoles for a user"
+      operationId: "getUserRolesbyUserId"
       parameters:
       - name: "userId"
         in: "path"
         description: "User Id"
         required: true
         type: "string"
-      - name: "commId"
-        in: "path"
-        description: "Community Id"
-        required: true
-        type: "string"
       responses:
         200:
           description: "List of UserRoles"
@@ -724,7 +820,7 @@ paths:
         403:
           description: "Forbidden"
         404:
-          description: "UserRole does not exist."
+          description: "User does not exist."
         500:
           description: "An unexpected error occurred."
 # STOP USERROLES
@@ -795,7 +891,7 @@ definitions:
         type: "string"
       organization:
         type: "string"
-      community:
+      communityId:
         type: "string"
       sponsorName:
         type: "string"
@@ -840,6 +936,8 @@ definitions:
         type: "string"
       communityId:
         type: "string"
+  Status:
+    type: "string"
   Stranger:
     type: "object"
     properties:

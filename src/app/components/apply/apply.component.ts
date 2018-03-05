@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { Router } from '@angular/router';
 
 // Generated
 import { Community } from '../../generated';
@@ -17,103 +18,79 @@ import { StrangerService } from '../../generated/api/stranger.service';
 })
 export class ApplyComponent implements OnInit {
 
-  // id: any;
-  // name: any;
-  ch1: boolean = false;
-  resultError: string[]=[];
-  stranger:Stranger;
-  communities:Community[]=[];
-  createUserRequest:CreateUserRequest=new Object();
-
-
+  resultError: string[] = [];
+  stranger: Stranger;
+  communities: Community[] = [];
+  ndaSatisfied: boolean;
+  ndaText:string;
+  createUserRequest: CreateUserRequest = new Object();
+  formsubmitted: boolean;
 
   constructor(
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
-    public strangerService:StrangerService
-  ) { 
-    // this.id, 
-    // this.name
-  }
-
+    public strangerService: StrangerService,
+    private router: Router,
+  ) { }
 
   ngOnInit() {
+    this.formsubmitted = false;
+    this.ndaSatisfied = true;
     this.getStranger();
-
-    var my:ApplyComponent=this;
-    this.communityService.getAll().subscribe((data)=>{
-      my.communities=data.result;
-    });
-
   }
 
-  getStranger():void {
-    let resultStranger:RestResult;
+  getStranger(): void {
+    let resultStranger: RestResult;
 
     let s = this.strangerService.get();
     s.subscribe(c => {
       resultStranger = c;
       this.resultError.push(resultStranger.error);
-      this.stranger= resultStranger.result;
-      console.log( this.stranger.cn );
+      this.stranger = resultStranger.result;
+
+
+      if ( this.stranger.contractor ){
+        this.ndaSatisfied = false;
+      }
       this.communities = this.stranger.communities;
-      this.setUser(this.stranger);
+      this.ndaText = this.stranger.nda;
     });
   }
 
-  setUser(x){
-    this.createUserRequest.cn= x.cn;
-      this.createUserRequest.nda='v1';
-      this.createUserRequest.firstName='';
-      this.createUserRequest.middleInitial= '';
-      this.createUserRequest.lastName= '';
-      this.createUserRequest.titleRank= '';
-      this.createUserRequest.dutyJob= '';
-      this.createUserRequest.contactEmail= '';
-      this.createUserRequest.phone= '';
-      this.createUserRequest.city= '';
-      this.createUserRequest.organization= '';
-      this.createUserRequest.sponsorName= '';
-      this.createUserRequest.sponsorEmail= '';
-      this.createUserRequest.sponsorPhone= '';
-      console.log( this.stranger.cn );
-
-
-      if ( x.contractor ){
-        console.log("Contractor");
+  onSubmit({ value, valid }) {
+    if (valid) {
+      
+      this.createUserRequest = value;
+      this.createUserRequest.status = "UNDECIDED";
+      this.createUserRequest.cn = this.stranger.cn;
+      
+      if ( this.stranger.contractor ){
+        this.createUserRequest.nda = this.ndaText.substring(0,this.ndaText.indexOf("\n"));
       } else {
-        console.log("No Contractor");
+        this.createUserRequest.nda="NA"
       }
 
+      console.log(this.createUserRequest);
+
+      let resultReq: RestResult;
+      let s = this.createUserRequestService.create(this.createUserRequest);
+      s.subscribe(c => {
+        resultReq = c;
+      });
+
+      this.formsubmitted = true;
+
+    } else {
+      this.resultError.push("Unable to submit New User Request Form");
+      console.log("Unable to submit New User Request Form");
+    }
   }
 
-  getRequest(): void {
-
-    let resultReq:RestResult;
-
-    this.createUserRequestService.create
-
+  done(){
+    this.router.navigate(['./about']);
   }
 
-
-  apply = {
-    firstname: '',
-    middle: '',
-    lastname: '',
-    rank: '',
-    job: '',
-    email: '',
-    phone: '',
-    address: '',
-    organization: '',
-    sponsorname: '',
-    sponsoremail: '',
-    sponsorphone: ''
-  }
-
-  
-
-  branches = [
+  services = [
     { id: 1, name: 'Army (USA)' },
     { id: 2, name: 'USAF (Air Force)' },
     { id: 3, name: 'USN (Navy)' },
@@ -122,23 +99,5 @@ export class ApplyComponent implements OnInit {
     { id: 6, name: 'Other' },
     { id: 7, name: 'None' }
   ];
-
-  submitted = false;
-
-  onSubmit({ value, valid }) {
-    if (valid) {
-      console.log(value);
-      this.submitted = true;
-      this.ch1 = true;
-    } else {
-      // console.log('Form is invalid');
-    }
-  }
-
-  submit(applyForm) {
-    applyForm.value
-  }
-
-
 
 }
