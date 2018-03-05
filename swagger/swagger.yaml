@@ -79,8 +79,10 @@ paths:
         schema:
           $ref: "#/definitions/Community"
       responses:
-        201:
-          description: "Community successfully created."
+        200:
+          description: "The newly created community"
+          schema:
+            $ref: "#/definitions/RestResult"
         400:
           description: "Community couldn't be created."
         403:
@@ -712,6 +714,33 @@ paths:
       responses:
         200:
           description: "A List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /users/community/{communityId}/role/{roleName}:
+    get:
+      tags:
+      - "User"
+      summary: "Get Users by CommunityId and Rolename"
+      description: "Returns all Users by CommunityId and Rolename"
+      operationId: "getByCommunityIdAndRoleName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "roleName"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Users"
           schema:
             $ref: "#/definitions/RestResult"
         500:

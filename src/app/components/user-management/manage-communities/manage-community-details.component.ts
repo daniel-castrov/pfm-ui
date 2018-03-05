@@ -11,6 +11,10 @@ import { RestResult } from '../../../generated/model/restResult';
 import { CommunityService } from '../../../generated/api/community.service';
 import { Community } from '../../../generated/model/community';
 import { UserService } from '../../../generated/api/user.service';
+import { Role } from '../../../generated/model/role'
+import { RoleService } from '../../../generated/api/role.service';
+import { UserRole } from '../../../generated/model/userRole'
+import { UserRoleService } from '../../../generated/api/userRole.service';
 
 @Component({
   selector: 'app-manage-community-details',
@@ -26,7 +30,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   approvers: User[]=[];
   addedapprover:string;
-  resultError: string;
+  resultError: string[]=[];
   community: Community;
   users:User[]=[];
 
@@ -39,6 +43,8 @@ export class MamageCommunityDetailsComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private communityService: CommunityService,
+    private roleService:RoleService,
+    private userRoleService:UserRoleService,
 
   ) {
     this.route.params.subscribe((params: Params) => {
@@ -69,16 +75,21 @@ private getPrograms(): void {
     this.approvers=[];
 
     let result: RestResult;
-    let s = this.communityService.getById(this.id);
-
-    s.subscribe(r => {
+    let s = this.communityService.getById(this.id)
+    .subscribe(r => {
       result = r;
-      this.resultError = result.error;
-      if (this.resultError == null) {
-        this.community = result.result;
-      }
-      let result2: RestResult;
-      // TODO Get the approvers
+      this.resultError.push(result.error);
+      this.community = result.result;
+
+      console.log(this.community );
+
+      let resultAppr: RestResult;
+      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver")
+        .subscribe(r => {
+          resultAppr = r;
+          this.resultError.push(resultAppr.error);
+          this.approvers = resultAppr.result;
+        });
     });
   }
 
@@ -87,7 +98,7 @@ private getPrograms(): void {
     this.userService.getAll()
     .subscribe(c => {
       result = c;
-      this.resultError = result.error;
+      this.resultError.push(result.error);
       this.users=result.result;
     });
   }
@@ -103,7 +114,7 @@ private getPrograms(): void {
 
     s.subscribe(r => {
       result = r;
-      this.resultError = result.error;
+      this.resultError.push(result.error);
       if (this.resultError == null) {
         this.community = result.result;
       }
@@ -115,7 +126,7 @@ private getPrograms(): void {
     this.userService.getById(this.addedapprover)
     .subscribe(r2 => {
       result = r2;
-      this.resultError = result2.error;
+      this.resultError.push(result2.error);
       user=result.result;
 
       let result3: RestResult;

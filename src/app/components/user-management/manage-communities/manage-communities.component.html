@@ -13,8 +13,10 @@
               <span class="btn-card-header"><a href="#" routerLink="/community-details/{{ comm?.id}}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Details</a></span>
             </li>
           </ul>
-          <div>
-            {{ resultError }}
+          <div *ngIf="resultError.length>0" >
+              <span *ngFor="let error of resultError">
+                  {{error}}
+              </span>
           </div>
         </accordion-group>
         <accordion-group #group>
@@ -23,7 +25,7 @@
 						<span class="accordion-heading">Add Community</span>
           </div>
 
-          <form novalidate #addForm="ngForm" (ngSubmit)="addCommunity1()">
+          <form novalidate #addForm="ngForm">
 
             <span class="form-group">
               <input class="form-control community" name="communityName" [(ngModel)]="newCommunity.name"
@@ -45,6 +47,7 @@
               </select>
             </div>
 
+            <!--
   			     <div class="col-12 badge badge-pill badge-default">
   						<span>OR: Create New User as User Approver</span>
   					</div>
@@ -87,8 +90,9 @@
                   <input class="form-control sponsor" type="text" required="" placeholder="*Sponsor Email" value="" name="">
                 </span>
               </div>
+            -->
               <button class="btn btn-default" value="Cancel">Cancel</button>
-              <button class="btn btn-primary" (click)="add(communityName.value); communityName.value=''">
+              <button class="btn btn-primary" (click)="addCommunity()">
                 <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
                 Add Community
               </button>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { Router } from '@angular/router';
 
 // Generated
 import { Community } from '../../generated';
@@ -28,7 +29,8 @@ export class ApplyComponent implements OnInit {
   constructor(
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
-    public strangerService: StrangerService
+    public strangerService: StrangerService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -82,6 +84,10 @@ export class ApplyComponent implements OnInit {
       this.resultError.push("Unable to submit New User Request Form");
       console.log("Unable to submit New User Request Form");
     }
+  }
+
+  done(){
+    this.router.navigate(['./about']);
   }
 
   services = [

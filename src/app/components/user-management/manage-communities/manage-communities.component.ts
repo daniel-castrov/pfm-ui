@@ -10,8 +10,13 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { CommunityService } from '../../../generated';
 import { RestResult } from '../../../generated';
 import { Community } from '../../../generated';
-import { UserService } from '../../../generated';
-import { User } from '../../../generated';
+import { Role } from '../../../generated/model/role'
+import { RoleService } from '../../../generated/api/role.service';
+import { UserRole } from '../../../generated/model/userRole'
+import { UserRoleService } from '../../../generated/api/userRole.service';
+
+import { UserService } from '../../../generated/api/user.service';
+import { User } from '../../../generated/model/user';
 
 
 @Component({
@@ -32,12 +37,14 @@ export class ManageCommunitiesComponent implements OnInit {
   users: User[]=[];
   newCommunity: Community;
   newapprover: string;
-  resultError: string;
+  resultError: string[]=[];
 
   constructor(
     private router: Router,
     public communityService: CommunityService,
     public userService: UserService,
+    private roleService: RoleService,
+    private userRoleService:UserRoleService,
   ) {
 
   }
@@ -53,7 +60,7 @@ export class ManageCommunitiesComponent implements OnInit {
     this.communityService.getAll()
       .subscribe(c => {
         result = c;
-        this.resultError = result.error;
+        this.resultError.push(result.error);
         this.communities = result.result;
       });
   }
@@ -63,37 +70,62 @@ export class ManageCommunitiesComponent implements OnInit {
     this.userService.getAll()
     .subscribe(c => {
       result = c;
-      this.resultError = result.error;
+      this.resultError.push(result.error);
       this.users=result.result;
     });
   }
 
 
 
-  addCommunity1() {
- 
-    // TO DO Find all the current approvers for the community
-    //this.newCommunity.approverIds =[];
-    //this.newCommunity.approverIds.push(this.newapprover);
-    console.log(this.newapprover);
+  addCommunity() {
 
-    if (this.isValid()){
+    let approverRole:Role;
 
-      let result: RestResult;
-      let s = this.communityService.create(this.newCommunity);
+    if ( !this.isValid() ){
+      let errorString="The new community name or identifier is not unique";
+      console.log(errorString);
+      this.resultError.push(errorString);
+    } else {
 
-      s.subscribe(r => {
-        result = r;
-        this.resultError = result.error;
-        if (this.resultError == null) {
-          this.communities.push(this.newCommunity);
-        }
+      console.log(this.newapprover);
+      console.log(this.newCommunity);
+
+      let resultCom: RestResult;
+      this.communityService.create(this.newCommunity)
+      .subscribe(r => {
+        resultCom = r;
+        this.resultError.push(resultCom.error);
+        this.newCommunity=resultCom.result;
+
+        console.log(this.newCommunity);
+
+        
+        let resultRole: RestResult;
+        this.roleService.getByNameAndCommunityId(this.newCommunity.id,"User_Approver")
+        .subscribe(r => {
+          resultRole = r;
+          this.resultError.push(resultRole.error);
+          approverRole = resultRole.result;
+          let userRole:UserRole=new Object();
+          userRole.roleId=approverRole.id;
+          userRole.userId=this.newapprover;
+          console.log(userRole);
+          
+          let resultUserRole: RestResult;
+          this.userRoleService.create(userRole)
+          .subscribe(r => {
+            resultRole = r;
+
+            if (this.resultError.length===0) {
+              this.communities.push(this.newCommunity);
+            }
+
+          });
+        });
+        
         this.router.navigate(['/manage-communities']);
       });
-    }
-    else {
-      console.log("Name of Id not unique");
-      this.newCommunity = new Object();
+      
     }
   }
 

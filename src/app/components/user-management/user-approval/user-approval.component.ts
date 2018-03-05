@@ -59,11 +59,11 @@ export class UserApprovalComponent implements OnInit {
   }
 
   approve(){
-    this.submit("\"APPROVED\"")
+    this.submit("\"APPROVED\"");
   }
 
   deny(){
-    this.submit("\"DENIED\"")
+    this.submit("\"DENIED\"");
   }
 
   submit(status){
@@ -71,8 +71,8 @@ export class UserApprovalComponent implements OnInit {
     this.createUserRequestService.approve(status, this.createUserRequest.id)
       .subscribe(c => {
         result = c;
-        this.resultError.push(result.error);        
+        this.resultError.push(result.error);       
       });
-        this.router.navigate(['./home']);
+      this.router.navigate(['./user-list']); 
   }
 }

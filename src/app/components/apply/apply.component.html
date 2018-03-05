@@ -10,6 +10,7 @@
           <div class="alert-success-group">
             <div class="alert-success alert-dismissable">
               <strong>Your Appication to join JSCBIS has been submitted. Please check your email for the status of your request.</strong>
+              <button class="btn btn-default" (click)="done()">OK</button>
             </div>
           </div>
         </span>
@@ -141,7 +142,7 @@
             <small>joe@abc.com</small>
           </span>
         </span>
-        <div class="controls">
+        <div class="controls" [hidden]="formsubmitted">
           <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>
           <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ndaSatisfied">
             Submit
