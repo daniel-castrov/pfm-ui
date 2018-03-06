@@ -34,9 +34,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
   community: Community;
   users:User[]=[];
 
-
   programs: string[]=[];
-
 
   constructor(
     private route: ActivatedRoute,
@@ -60,15 +58,11 @@ export class MamageCommunityDetailsComponent implements OnInit {
   }
 
 private getPrograms(): void {
-
-
   this.programs.push("DATFASTTRAC");
   this.programs.push("ENOOP");
   this.programs.push("LSPTTRUST");
   this.programs.push("POS SYSTEMS");
   this.programs.push("VTRST");
-  
-
 }
 
   private getCommunity(): void {
@@ -105,35 +99,24 @@ private getPrograms(): void {
 
   private addApprover():void {
 
-    console.log("addApprover" + this.addedapprover);
-
-    //TODO: push(the new approver);
-
-    let result: RestResult;
-    let s = this.communityService.update(this.community);
-
-    s.subscribe(r => {
-      result = r;
-      this.resultError.push(result.error);
-      if (this.resultError == null) {
-        this.community = result.result;
-      }
+    let approverRole:Role;
+    let resultRole: RestResult;
+    this.roleService.getByNameAndCommunityId(this.id,"User_Approver")
+    .subscribe(r => {
+      resultRole = r;
+      this.resultError.push(resultRole.error);
+      approverRole = resultRole.result;
+      let userRole:UserRole=new Object();
+      userRole.roleId=approverRole.id;
+      userRole.userId=this.addedapprover;
+      
+      let resultUserRole: RestResult;
+      this.userRoleService.create(userRole)
+      .subscribe(r => {
+        resultRole = r;
+        this.getCommunity();
+      });
     });
-
-
-    let user:User;
-    let result2:RestResult;
-    this.userService.getById(this.addedapprover)
-    .subscribe(r2 => {
-      result = r2;
-      this.resultError.push(result2.error);
-      user=result.result;
-
-      let result3: RestResult;
-      // TODO: Assign the approver
-    });
-    
-    this.getCommunity();
   }
 
 }

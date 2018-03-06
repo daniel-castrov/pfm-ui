@@ -122,7 +122,7 @@ export class ManageCommunitiesComponent implements OnInit {
 
           });
         });
-        
+        location.reload();
         this.router.navigate(['/manage-communities']);
       });
       
