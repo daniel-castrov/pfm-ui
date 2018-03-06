@@ -36,23 +36,17 @@ export class ManageUsersComponent implements OnInit {
   // The user we are interested in.
   targetUser: User;
 
-  // all the roles available ( all minus the ones we have )
-  all_Roles: Role[] = [];
-
-  // The UserRoles that this user has
-  //targetUser_UserRoles: UserRole[] = [];
-
-  // The Roles this user has
-  targetUser_Roles: UserRole[] = [];
+  // this user's roles and all roles in a community
+  private communityWithUserRoles: CommWithRoles[] = [];
 
   // The name of the role we are assigning the targetUser to
-  addedrole: string;
+  addedroleId: string;
 
   // The name of the community we are assigning the targetUser to
   addedcommunity: string;
 
-  // All the communities
-  all_Communities: Community[] = [];
+  // All the communities the user does not belong to
+  avail_Communities: Community[] = [];
 
   // an original copy of the targted user so we can roll back.
   reftargetUser: User;
@@ -61,7 +55,7 @@ export class ManageUsersComponent implements OnInit {
   isdEditMode: boolean[] = [];
 
   // Any error from a rest service
-  resultError: string;
+  resultError: string[]=[];
 
   constructor(
     private route: ActivatedRoute,
@@ -79,49 +73,64 @@ export class ManageUsersComponent implements OnInit {
 
   ngOnInit() {
     this.getTargetUser();
-    this.getAllRoles();
-    this.getCommunities();
     this.resetEditMode();
   }
 
-  getTargetUser(): void {
 
+  getTargetUser(): void {
+    this.communityWithUserRoles=[];
     // 1. get the user
     let resultUser: RestResult;
     this.userService.getById(this.id)
       .subscribe(c => {
         resultUser = c;
-        this.resultError = resultUser.error;
+        this.resultError.push(resultUser.error);
         this.targetUser = resultUser.result;
         console.log("TargetUser: " + this.targetUser.cn);
 
         // 2. get the (all) communities 
-        let targetUserCommunities: Community[] = [];
+        let allCommunities: Community[] = [];
         let resultComm: RestResult;
 
         let s = this.communityService.getAll();
         s.subscribe(c => {
           resultComm = c;
-          this.resultError = resultComm.error;
-          targetUserCommunities = resultComm.result;
+          this.resultError.push(resultComm.error);
+          allCommunities = resultComm.result;
 
           // 3. Get the users Roles in each community
-          for (let comm of targetUserCommunities) {
-            let resultRoles: RestResult;
+          for (let comm of allCommunities) {
+            let resultUserRoles: RestResult;
             let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
             s.subscribe(c => {
-              resultRoles = c;
-              this.resultError = resultRoles.error;
-              // oush if at least one role
-              if ( resultRoles.result.length>0 ){ 
-                this.communityWithUserRoles.push(new CommWithRoles(comm, resultRoles.result));
-              }
+              resultUserRoles = c;
+              this.resultError.push(resultUserRoles.error);
+
+              // 4. Get all the roles for the community
+              let resultAllRoles: RestResult;
+              this.roleService.getByCommunityId(comm.id)
+              .subscribe(c => {
+                resultAllRoles = c;
+                this.resultError.push(resultAllRoles.error);
+
+                // push if at least one role
+                if ( resultUserRoles.result.length>0 ){ 
+                  this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoles.result, resultAllRoles.result));
+
+                  for (var i =0; i < allCommunities.length; i++){
+                    if ( allCommunities[i].id === comm.id ){
+                      allCommunities.splice(i,1);
+                    }
+                  }
+                }
+                this.avail_Communities=allCommunities;
+              });
+              // end 4
             });
           }
           // end 3
         });
         // end 2
-
         // Make a copy of the current user so we can revert changes
         this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
       });
@@ -156,39 +165,49 @@ export class ManageUsersComponent implements OnInit {
     }
   }
 
-  getAllRoles(): void {
-
-    let result1: RestResult;
-    this.roleService.getAll()
-      .subscribe(c => {
-        result1 = c;
-        this.resultError = result1.error;
-        this.all_Roles = result1.result;
+  addRole(): void {
+ 
+     let userRole:UserRole=new Object();
+      userRole.roleId=this.addedroleId;
+      userRole.userId=this.id;
+      console.log(userRole);
+      
+      let resultUserRole: RestResult;
+      this.userRoleService.create(userRole)
+      .subscribe(r => {
+        resultUserRole = r;
+        this.getTargetUser();
       });
   }
 
   resetAddRole(): void {
-    this.addedrole = '';
-  }
-
-  getCommunities(): void {
-    let result: RestResult;
-    this.communityService.getAll()
-      .subscribe(c => {
-        result = c;
-        this.resultError = result.error;
-        this.all_Communities = result.result;
-      });
+    this.addedroleId = '';
   }
 
   addCommunity(): void {
     console.log("addCommunity" + this.addedcommunity);
 
-    let result2: RestResult;
-    this.communityService.getById(this.addedcommunity)
-    .subscribe(c => {
-      result2 = c;
-      this.resultError = result2.error;
+    let resultRole: RestResult;
+    this.roleService.getByNameAndCommunityId(this.addedcommunity,"User")
+    .subscribe(r => {
+      resultRole = r;
+      this.resultError.push(resultRole.error);
+
+      let approverRole:Role;
+      approverRole = resultRole.result;
+      let userRole:UserRole=new Object();
+      userRole.roleId=approverRole.id;
+      userRole.userId=this.id;
+      console.log(userRole);
+      
+      let resultUserRole: RestResult;
+      this.userRoleService.create(userRole)
+      .subscribe(r => {
+        resultUserRole = r;
+
+        this.getTargetUser();
+
+      });
     });
   }
 
@@ -196,20 +215,26 @@ export class ManageUsersComponent implements OnInit {
     this.addedcommunity = '';
   }
 
-
-  private communityWithUserRoles: CommWithRoles[] = [];
-
-
 }
 
 class CommWithRoles {
 
   community: Community;
-  roles: Role[] = [];
+  userRoles: Role[] = [];
+  allRoles: Role[] = []; 
 
-  constructor(c: Community, r: Role[]) {
+  constructor(c: Community, ur: Role[], ar: Role[]) {
     this.community = c;
-    this.roles = r;
+    this.userRoles = ur;
+
+    for (var i =0; i < ar.length; i++){
+      for (let r of ur){
+        if ( ar[i].name === r.name ){
+          ar.splice(i,1);
+        }
+      }
+    }
+    this.allRoles=ar;
   }
 
 

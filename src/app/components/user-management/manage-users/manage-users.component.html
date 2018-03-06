@@ -137,7 +137,7 @@
                   <li>Roles</li>
                 </div>
                 <div class="card-container">
-                  <li *ngFor="let role of cwr.roles">
+                  <li *ngFor="let role of cwr.userRoles">
                     {{role.name}}
                   </li>
                 </div>
@@ -167,13 +167,13 @@
                   </li>
                 </div>
                 <div class="card-container">
-                  <li *ngFor="let role of cwr.roles">
+                  <li *ngFor="let role of cwr.userRoles">
                     {{role.name}}
                   </li>
                   <div>
-                    <select name="addRoleSelector" [(ngModel)]="addedrole">
-                      <option *ngFor="let all_role of all_Roles" [value]="all_role.name">
-                        {{all_role.name}}
+                    <select name="addRoleSelector" [(ngModel)]="addedroleId">
+                      <option *ngFor="let arole of cwr.allRoles" [value]="arole.id">
+                        {{arole.name}}
                       </option>
                     </select>
                     <button class="btn-card-header" title="AddRole" (click)="addRole()">
@@ -188,7 +188,7 @@
             </li>
           </ul>
           <select name="addCommunitySelector" [(ngModel)]="addedcommunity">
-            <option *ngFor="let all_community of all_Communities" [value]="all_community.id">{{ all_community.name }}</option>
+            <option *ngFor="let all_community of avail_Communities" [value]="all_community.id">{{ all_community.name }}</option>
           </select>
           <button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Community
