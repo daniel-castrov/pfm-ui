@@ -17,12 +17,6 @@ export class PlanningComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  tabs: any[] = [
-      {
-        customClass: 'customClass'
-      }
-    ];
-
   constructor() { }
 
   ngOnInit() {

@@ -1,0 +1,107 @@
+.program-container {
+  padding: 15px;
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px #ccc solid;
+  color: #000;
+  border-radius: 5px;
+  min-height: 100px;
+}
+
+.inline-name {
+  display: inline;
+  float: left;
+  margin-right: 10px;
+}
+
+.forminput {
+  width: 300px;
+  padding: 6px 4px;
+  clear: both;
+}
+
+tbody div {
+  overflow-y:scroll;
+  height: 240px;
+}
+
+.pom-table {
+  border: 1px #ccc solid;
+  padding: 3px;
+  background-color: #f7f7f7;
+  overflow-y:scroll;
+  height: 350px;
+  width: 340px;
+  margin-bottom: 20px;
+}
+
+.pom-table > td {
+  font-size: 15px;
+  font-weight: 400;
+  padding: 0 !important;
+}
+
+tr:nth-child(odd) {background: #f7f7f7}
+tr:nth-child(even) {background: #fff}
+
+tfoot {
+  padding: 10px;
+  color: #fff;
+}
+
+tfoot > tr {
+  padding: 0;
+  color: #fff;
+  background-color: #3c3737;
+}
+
+.pom-table thead tr th {
+  padding: 4px 10px;
+  font-weight: 500;
+  background-color: #cccccc;
+}
+
+.pom-table tr > td { padding: 0 5px; }
+
+.pom-table thead {
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.table {
+  width: 100%;
+}
+
+.table thead tr.filters th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #e9ecef;
+  background-color: #cecece;
+}
+
+.btn-gray{
+  background-color: #f5f5f5;
+  border-color:#aaa;
+  color:#000;
+}
+
+.btn-file{
+  position:relative
+}
+
+.btn-file input[type=file]{
+  position:absolute;
+  top:0;
+  right:0;
+  min-width:100%;
+  min-height:100%;
+  font-size:999px;
+  text-align:right;
+  opacity:0;
+  cursor:inherit;
+  display:block
+}
+
+input[readonly]{
+  background-color:#fff!important;
+  cursor:text!important;
+}

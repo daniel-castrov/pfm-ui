@@ -159,5 +159,14 @@ accordion-group .acordion-icon:hover  {
 .nav-tabs .nav-link,
 .nav-tabs .nav-item.show .nav-link {
   color: white;
-  background-color: #23527c;
+  background-color: #7c838a;
+}
+
+tab {
+  padding: 15px;
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px #ccc solid;
+  border-top: none;
+  color: #000;
 }

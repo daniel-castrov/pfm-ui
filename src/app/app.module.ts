@@ -33,6 +33,7 @@ import { NoAccessInterceptor } from './components/interceptors/noAccessIntercept
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
+import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestCommunityComponent } from './components/user-management/manage-self/request-community.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
@@ -70,6 +71,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
+  {path:'program-view', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'request-community', component:RequestCommunityComponent},
   {path:'roles', component:ManageRolesComponent},
@@ -103,6 +105,7 @@ const appRoutes: Routes = [
     NotFoundComponent,
     PlanningComponent,
     ProgramsComponent,
+    ProgramViewComponent,
     RequestAccessChangeComponent,
     RequestCommunityComponent,
     UserApprovalComponent,
