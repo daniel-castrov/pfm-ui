@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import * as $ from 'jquery';
 
 // Other Components
@@ -47,67 +48,41 @@ export class RequestCommunityComponent implements OnInit {
       $('#multiselect').multiselect();
     });
 
+    var my: RequestCommunityComponent = this;
+    Observable.forkJoin([
+      my.communityService.getAll(),
+      my.userDetailsService.getCurrentUser()
+    ]).subscribe(data => {
+      console.log(data);
+      my.allcommunities = data[0].result;
+      my.currentUser = data[1].result;
 
-  //   this.buildCommunities();
-  //
-  // }
-  //
-  //
-  // buildCommunities():void{
-  //
-  //   var result: RestResult;
-  //   this.userDetailsService.getCurrentUser()
-  //     .subscribe((c) => {
-  //       result = c;
-  //       this.currentUser = result.result;
-  //
-  //       let result2: RestResult;
-  //       this.communityService.findall()
-  //         .subscribe(c => {
-  //           result2 = c;
-  //           this.resultError = result2.error;
-  //           this.allcommunities = result2.result;
-  //
-  //           for (let comm of this.allcommunities) {
-  //             // if (this.currentUser.communities.indexOf(comm.id) > -1) {
-  //             //   this.reqcommunities.push(comm);
-  //             // } else {
-  //               this.avacommunities.push(comm);
-  //             }
-  //           }
-  //         });
-  //     });
-  // }
-  //
-  // private submit():void{
-  //
-  //   let comms:string[]=[];
-  //
-  //   $("#multiselect option").each(function(){ comms.push($(this).val())});
-  //
-  //
-  //   for(let c of comms ){
-  //     console.log(c);
-  //   }
-  //
-  //   this.reqcommunities=[];
-  //   for (let comm of this.allcommunities) {
-  //     if (comms.indexOf(comm.id) > -1) {
-  //       this.reqcommunities.push(comm);
-  //     }
-  //   }
-  //   for (let comm of this.reqcommunities) {
-  //     console.log(comm.name);
-  //   }
-  //
-  //
-  // }
-  //
-  // private cancel():void{
-  //   this.allcommunities=[];
-  // this.reqcommunities= [];
-  // this.avacommunities= [];
-  //   this.buildCommunities();
+      // got all communities, and our user,
+      // so see what communities our user is part of
+      my.communityService.getByUserIdAndRoleName(my.currentUser.id, 'User').subscribe(roles => {
+        var usercommids: Set<string> = new Set<string>();
+        roles.result.forEach(function (x: Community) {
+          usercommids.add(x.id);
+        });
+        my.reqcommunities = roles.result;
+        my.avacommunities = my.allcommunities.filter(function (c: Community) {
+          return (!usercommids.has(c.id));
+        });
+      });
+    });
   }
 
+  private reqall() {
+    console.log('reqall');
+  }
+  private nreqall() {
+    console.log('nreqall');
+  }
+  private reqone() {
+    console.log('reqone');
+  }
+  private nreqone() {
+    console.log('nreqone');
+  }
 }
+  
