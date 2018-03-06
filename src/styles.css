@@ -160,10 +160,12 @@ accordion-group .acordion-icon:hover  {
 .nav-tabs .nav-item.show .nav-link {
   color: white;
   background-color: #7c838a;
+  border: 1px solid #ccc !important;
+  border-bottom: none;
 }
 
 tab {
-  padding: 15px;
+  padding: 30px 15px;
   width: 100%;
   margin-bottom: 10px;
   border: 1px #ccc solid;

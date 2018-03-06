@@ -16,14 +16,12 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-9">
-              <div class="program-container">
-                <div class="form-group inline-name">
-                  <input type="text" class="form-control forminput" name="progId" placeholder="ProgID">
-                </div>
-                <div class="form-group inline-name">
-                  <input type="text" class="form-control forminput" name="progName" placeholder="ProgName">
-                </div>
+          <div class="col-md-9">
+              <div class="form-group inline-name">
+                <input type="text" class="form-control forminput" name="progId" placeholder="ProgID">
+              </div>
+              <div class="form-group inline-name">
+                <input type="text" class="form-control forminput" name="progName" placeholder="ProgName">
               </div>
             </div>
           </div>
@@ -39,10 +37,11 @@
               </div>
               <div class="form-group inline-name">
                 <span class="input-group input-group-sm">
-                    <input type="text" class="form-control forminput" placeholder="URL Hyperlink" readonly>
+                    <!-- <input type="text" class="form-control forminput" placeholder="URL Hyperlink" readonly> -->
                     <span class="input-group-btn">
-                      <span class="btn btn-gray btn-file">
-                        Browse <input type="file" name="file" accept="image/*">
+                      <span class="btn btn-gray">
+                        <input type="text" class="forminput" placeholder="URL Hyperlink">
+                        <a href="http://www.google.com" target="_blank">Browse</a>
                       </span>
                 </span>
                 </span>
@@ -55,10 +54,25 @@
                 Capability
               </div>
               <div class="card-container">
-                <p>Content</p>
-                <p>Content</p>
-                <p>Content</p>
-                <p>Content</p>
+                <div class="control-group">
+                  <label class="control-label">Card Number</label>
+                  <div class="controls">
+                    <div class="row-fluid">
+                      <div class="span3">
+                        <input type="text" class="input-block-level" autocomplete="off" maxlength="4" pattern="\d{4}" title="First four digits" required>
+                      </div>
+                      <div class="span3">
+                        <input type="text" class="input-block-level" autocomplete="off" maxlength="4" pattern="\d{4}" title="Second four digits" required>
+                      </div>
+                      <div class="span3">
+                        <input type="text" class="input-block-level" autocomplete="off" maxlength="4" pattern="\d{4}" title="Third four digits" required>
+                      </div>
+                      <div class="span3">
+                        <input type="text" class="input-block-level" autocomplete="off" maxlength="4" pattern="\d{4}" title="Fourth four digits" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
