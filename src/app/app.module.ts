@@ -71,7 +71,6 @@ const appRoutes: Routes = [
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
-  {path:'program', component:ProgramComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'program-view', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
