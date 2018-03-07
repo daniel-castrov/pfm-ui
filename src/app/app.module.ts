@@ -19,6 +19,7 @@ import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FilterComponent } from './components/filter/filter.component';
+import { FundsComponent } from './components/programs/program-view/funds.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
@@ -92,6 +93,7 @@ const appRoutes: Routes = [
     AccessCommunityComponent,
     ContactComponent,
     FilterComponent,
+    FundsComponent,
     HeaderComponent,
     HeaderNologinComponent,
     HomeComponent,
