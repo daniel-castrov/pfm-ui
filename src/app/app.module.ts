@@ -32,6 +32,7 @@ import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
+import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
@@ -70,6 +71,7 @@ const appRoutes: Routes = [
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
+  {path:'program', component:ProgramComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'program-view', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
@@ -104,6 +106,7 @@ const appRoutes: Routes = [
     NoAccessComponent,
     NotFoundComponent,
     PlanningComponent,
+    ProgramComponent,
     ProgramsComponent,
     ProgramViewComponent,
     RequestAccessChangeComponent,
