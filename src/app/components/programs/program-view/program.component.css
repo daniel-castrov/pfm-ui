@@ -30,7 +30,7 @@ select {
 }
 
 .inline-name {
-  display: inline;
+  display: inline-block;
   float: left;
   margin-right: 20px;
 }
