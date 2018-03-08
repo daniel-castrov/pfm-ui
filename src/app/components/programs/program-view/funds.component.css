@@ -1,0 +1,31 @@
+table.GeneratedTable {
+  width: 100%;
+  background-color: #ffffff;
+  border-collapse: collapse;
+  border-width: 1px;
+  border-color: #423500;
+  border-style: solid;
+  color: #000000;
+}
+
+table.GeneratedTable td, table.GeneratedTable th {
+  border-width: 1px;
+  border-color: #423500;
+  border-style: solid;
+  padding: 6px;
+}
+
+table.GeneratedTable thead {
+  background-color: #24527b;
+  color: #ffffff;
+}
+
+.row-lt-blue {
+  background-color: #c6d9f1;
+  color: #000000;
+}
+
+.row-lt-green {
+  background-color: #ebf2de;
+  color: #000;
+}
