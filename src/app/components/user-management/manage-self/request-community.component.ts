@@ -1,3 +1,4 @@
+import { FilterComponent } from './../../filter/filter.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as $ from 'jquery';
@@ -12,6 +13,7 @@ import { Community } from '../../../generated';
 import { UserService } from '../../../generated';
 import { User } from '../../../generated';
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
+import { Jsonp } from '@angular/http';
 
 declare const $: any;
 declare const jQuery: any;
@@ -25,64 +27,61 @@ export class RequestCommunityComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  allcommunities: Community[] = [];
-  reqcommunities: Community[] = [];
-  avacommunities: Community[] = [];
+  allCommunities: Community[] = [];
+  availableCommunities: Community[] = [];
+  currentCommunities: Community[] = [];
+  requestedCommunities: Community[] = [];
+  currentCommunityIds: Set<string> = new Set<string>();
   currentUser: User;
+  test: any
 
   constructor(
-
     public communityService: CommunityService,
     public userService: UserService,
-    private userDetailsService: MyDetailsService,
-  ) {
-
+    private userDetailsService: MyDetailsService) {
   }
-
-  newCommunity: Community;
-  resultError: string;
 
   public ngOnInit() {
 
-    jQuery(document).ready(function ($) {
-      $('#multiselect').multiselect();
-    });
+    jQuery(document).ready(($) => $('#multiselect').multiselect());
 
-    var my: RequestCommunityComponent = this;
     Observable.forkJoin([
-      my.communityService.getAll(),
-      my.userDetailsService.getCurrentUser()
+      this.communityService.getAll(),
+      this.userDetailsService.getCurrentUser()
     ]).subscribe(data => {
-      console.log(data);
-      my.allcommunities = data[0].result;
-      my.currentUser = data[1].result;
+      this.allCommunities = data[0].result;
+      this.currentUser = data[1].result;
 
-      // got all communities, and our user,
-      // so see what communities our user is part of
-      my.communityService.getByUserIdAndRoleName(my.currentUser.id, 'User').subscribe(roles => {
-        var usercommids: Set<string> = new Set<string>();
-        roles.result.forEach(function (x: Community) {
-          usercommids.add(x.id);
-        });
-        my.reqcommunities = roles.result;
-        my.avacommunities = my.allcommunities.filter(function (c: Community) {
-          return (!usercommids.has(c.id));
-        });
+      this.communityService.getByUserIdAndRoleName(this.currentUser.id, 'User').subscribe(roles => {
+        this.currentCommunities = roles.result;
+        this.requestedCommunities = roles.result;
+        this.currentCommunities.forEach((community: Community) => this.currentCommunityIds.add(community.id));
+        this.availableCommunities = this.allCommunities.filter( (community: Community) => !this.currentCommunityIds.has(community.id));
       });
     });
   }
 
-  private reqall() {
-    console.log('reqall');
+  public submit() {
+    const selectedCommunityIds: Set<string> = $('#multiselect option').map(function() { return $(this).attr('value')});
+
+    const communityIdsToBeRemoved = Array.from(this.currentCommunityIds.values()).filter( (communityId: string) => !selectedCommunityIds.has(communityId));
+    this.removeCommunities(communityIdsToBeRemoved);
+
+    const communityIdsToBeAdded = Array.from(selectedCommunityIds.values()).filter( (communityId: string) => !this.currentCommunityIds.has(communityId));
+    this.createAddCommunitiesRequest(communityIdsToBeAdded);
   }
-  private nreqall() {
-    console.log('nreqall');
+
+  public cancel() {
+    this.requestedCommunities = JSON.parse(JSON.stringify(this.currentCommunities));
   }
-  private reqone() {
-    console.log('reqone');
+
+  public removeCommunities(comminutyIds : string[]) {
+    co
   }
-  private nreqone() {
-    console.log('nreqone');
+
+  public createAddCommunitiesRequest(comminutyIds : string[]) {
+
   }
+
 }
   
