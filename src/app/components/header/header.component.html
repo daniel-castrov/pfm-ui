@@ -101,6 +101,7 @@
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
+          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/request-community">Manage My Communities</a>
         </div>
       </li>
     </ul>
