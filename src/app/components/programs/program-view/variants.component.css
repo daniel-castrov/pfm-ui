@@ -39,6 +39,10 @@ table.GeneratedTable thead {
   border-right: 1px solid #fff !important;
 }
 
+.cell-left-border-white {
+  border-left: 1px solid #fff !important;
+}
+
 .row-white {
   background-color: #ffffff;
 }
@@ -46,6 +50,7 @@ table.GeneratedTable thead {
 .row-border-top {
   border-top: 4px solid #7b8389;
 }
+
 
 .light-cell {
   background-color: #ddd;
