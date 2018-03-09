@@ -1,7 +1,7 @@
 label {
   color: #868e9b;
   margin: 0;
-  margin-right: 10px;
+  margin-right: 6px;
 }
 
 select {
@@ -18,8 +18,13 @@ select {
 @media (min-width: 1200px) {
 
   .img-placeholder > i.fa {
-    font-size: 260px;
+    font-size: 200px;
   }
+}
+
+.program-values {
+  margin-right: 20px;
+  padding: 2px;
 }
 
 .program-container {
