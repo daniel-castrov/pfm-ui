@@ -39,6 +39,7 @@ import { ProgramViewComponent } from './components/programs/program-view/program
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestCommunityComponent } from './components/user-management/manage-self/request-community.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
+import { VariantsComponent } from './components/programs/program-view/variants.component';
 
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
@@ -113,7 +114,8 @@ const appRoutes: Routes = [
     RequestAccessChangeComponent,
     RequestCommunityComponent,
     UserApprovalComponent,
-    UserListComponent
+    UserListComponent,
+    VariantsComponent
   ],
 
   imports: [
