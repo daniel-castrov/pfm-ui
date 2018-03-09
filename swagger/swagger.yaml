@@ -169,7 +169,7 @@ paths:
 # STOP COMMUNITIES
 ##############################################################################
 # START CREATEUSERREQUEST
-  /createUserRequest:
+  /createUserRequests:
     post:
       tags:
       - "CreateUserRequest"
@@ -186,7 +186,7 @@ paths:
         description: "a CreateUserRequest"
         required: true
         schema:
-          $ref: "#/definitions/CreateUserRequest"
+          $ref: "#/definitions/CreateUserRequests"
       responses:
         201:
           description: "CreateUserRequest successfully created."
@@ -244,7 +244,7 @@ paths:
           description: "CreateUserRequest does not exist."
         500:
           description: "An unexpected error occurred."
-  /createUserRequest/{createUserRequestId}/status:
+  /createUserRequests/{createUserRequestId}/status:
     post:
       tags:
       - "CreateUserRequest"
