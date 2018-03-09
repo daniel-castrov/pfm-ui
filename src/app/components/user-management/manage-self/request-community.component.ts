@@ -1,3 +1,6 @@
+import { AddUserToCommunityRequest } from './../../../generated/model/addUserToCommunityRequest';
+import { AddUserToCommunityRequestService } from './../../../generated/api/addUserToCommunityRequest.service';
+import { UserRoleService } from './../../../generated/api/userRole.service';
 import { FilterComponent } from './../../filter/filter.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -38,6 +41,8 @@ export class RequestCommunityComponent implements OnInit {
   constructor(
     public communityService: CommunityService,
     public userService: UserService,
+    public userRoleService: UserRoleService,
+    public addUserToCommunityRequestsService: AddUserToCommunityRequestService,
     private userDetailsService: MyDetailsService) {
   }
 
@@ -76,11 +81,16 @@ export class RequestCommunityComponent implements OnInit {
   }
 
   public removeCommunities(comminutyIds : string[]) {
-    co
+    comminutyIds.forEach(communityId => this.userRoleService.deleteById(communityId));
   }
 
-  public createAddCommunitiesRequest(comminutyIds : string[]) {
-
+  public createAddCommunitiesRequest(communityIds : string[]) {
+    communityIds.forEach(communityId => {
+      const request: AddUserToCommunityRequest = {};
+      request.userId == this.currentUser.id;
+      request.communityId;
+      this.addUserToCommunityRequestsService.create(request)
+    });
   }
 
 }

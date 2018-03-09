@@ -186,7 +186,7 @@ paths:
         description: "a CreateUserRequest"
         required: true
         schema:
-          $ref: "#/definitions/CreateUserRequests"
+          $ref: "#/definitions/CreateUserRequest"
       responses:
         201:
           description: "CreateUserRequest successfully created."
@@ -277,6 +277,116 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP CREATEUSERREQUEST
+##############################################################################
+# START ADDUSERTOCOMMUNITYREQUEST
+  /addUserToCommunityRequests:
+    post:
+      tags:
+      - "AddUserToCommunityRequest"
+      summary: "Creates a AddUserToCommunityRequests"
+      description: "Adds a AddUserToCommunityRequests."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a AddUserToCommunityRequests"
+        required: true
+        schema:
+          $ref: "#/definitions/AddUserToCommunityRequest"
+      responses:
+        201:
+          description: "addUserToCommunityRequests successfully created."
+        400:
+          description: "AddUserToCommunityRequests couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+  /addUserToCommunityRequests/community/{commId}:
+    get:
+      tags:
+      - "AddUserToCommunityRequest"
+      summary: "Gets a AddUserToCommunityRequests"
+      description: "Get a AddUserToCommunityRequests user identified via its id"
+      operationId: "getByCommId"
+      parameters:
+      - name: "commId"
+        in: "path"
+        description: "AddUserToCommunityRequests id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a AddUserToCommunityRequests"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "AddUserToCommunityRequests does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /addUserToCommunityRequests/{id}:
+    get:
+      tags:
+      - "AddUserToCommunityRequest"
+      summary: "Gets a AddUserToCommunityRequests"
+      description: "Get a AddUserToCommunityRequests user identified via its id"
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "AddUserToCommunityRequests id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a AddUserToCommunityRequests"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "AddUserToCommunityRequests does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /addUserToCommunityRequests/{requestId}/status:
+    post:
+      tags:
+      - "AddUserToCommunityRequest"
+      summary: "Approve a AddUserToCommunityRequests"
+      description: "Approves a new AddUserToCommunityRequests"
+      operationId: "approve"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "status"
+        description: "a Status"
+        required: true
+        schema:
+          $ref: "#/definitions/Status"
+      - in: "path"
+        name: "requestId"
+        description: "requestId"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "AddUserToCommunityRequests successfully updated."
+        400:
+          description: "AddUserToCommunityRequests couldn't be updated."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+# STOP ADDUSERTOCOMMUNITYREQUEST
 ##############################################################################
 # START MYDETAILS
   /mydetails:
@@ -906,6 +1016,21 @@ definitions:
       dateDecided:
         type: "string"
       service:
+        type: "string"
+      status:
+        type: "string"
+  AddUserToCommunityRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      userId:
+        type: "string"
+      communityId:
+        type: "string"
+      dateApplied:
+        type: "string"
+      dateDecided:
         type: "string"
       status:
         type: "string"
