@@ -1,3 +1,4 @@
+import { UserRole } from './../../../generated/model/userRole';
 import { AddUserToCommunityRequest } from './../../../generated/model/addUserToCommunityRequest';
 import { AddUserToCommunityRequestService } from './../../../generated/api/addUserToCommunityRequest.service';
 import { UserRoleService } from './../../../generated/api/userRole.service';
@@ -17,6 +18,8 @@ import { UserService } from '../../../generated';
 import { User } from '../../../generated';
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
 import { Jsonp } from '@angular/http';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
 
 declare const $: any;
 declare const jQuery: any;
@@ -39,10 +42,11 @@ export class RequestCommunityComponent implements OnInit {
   test: any
 
   constructor(
-    public communityService: CommunityService,
-    public userService: UserService,
-    public userRoleService: UserRoleService,
-    public addUserToCommunityRequestsService: AddUserToCommunityRequestService,
+    private router: Router,
+    private communityService: CommunityService,
+    private userService: UserService,
+    private userRoleService: UserRoleService,
+    private addUserToCommunityRequestsService: AddUserToCommunityRequestService,
     private userDetailsService: MyDetailsService) {
   }
 
@@ -67,29 +71,42 @@ export class RequestCommunityComponent implements OnInit {
   }
 
   public submit() {
-    const selectedCommunityIds: Set<string> = $('#multiselect option').map(function() { return $(this).attr('value')});
+    const selectedCommunityIds: Set<string> = new Set<string>($('#multiselect option').map(function() { return $(this).attr('value')}).toArray());
 
-    const communityIdsToBeRemoved = Array.from(this.currentCommunityIds.values()).filter( (communityId: string) => !selectedCommunityIds.has(communityId));
+    const communityIdsToBeRemoved: string[] = this.subtract(this.currentCommunityIds, selectedCommunityIds);
     this.removeCommunities(communityIdsToBeRemoved);
 
-    const communityIdsToBeAdded = Array.from(selectedCommunityIds.values()).filter( (communityId: string) => !this.currentCommunityIds.has(communityId));
+    const communityIdsToBeAdded: string[] = this.subtract(selectedCommunityIds, this.currentCommunityIds);
     this.createAddCommunitiesRequest(communityIdsToBeAdded);
+
+    this.router.navigate(['./home']);    
   }
 
   public cancel() {
     this.requestedCommunities = JSON.parse(JSON.stringify(this.currentCommunities));
   }
 
-  public removeCommunities(comminutyIds : string[]) {
-    comminutyIds.forEach(communityId => this.userRoleService.deleteById(communityId));
+  private subtract(first: Set<string>, second: Set<string>) : string[] {
+    return Array.from(first).filter( (element: string) => {
+      return !second.has(element);
+    });
   }
 
-  public createAddCommunitiesRequest(communityIds : string[]) {
+  private removeCommunities(communityIds : string[]) {
+    communityIds.forEach(communityId => {
+      this.userRoleService.getUserRolesbyUserAndCommunityAndRoleName(this.currentUser.id, communityId, "User").subscribe( result => {
+          this.userRoleService.deleteById(result.result.id).subscribe();
+      });
+    });
+  }
+
+  private createAddCommunitiesRequest(communityIds : string[]) {
     communityIds.forEach(communityId => {
       const request: AddUserToCommunityRequest = {};
-      request.userId == this.currentUser.id;
-      request.communityId;
-      this.addUserToCommunityRequestsService.create(request)
+      request.userId = this.currentUser.id;
+      request.communityId = communityId;
+      console.log(request);
+      this.addUserToCommunityRequestsService.create(request).subscribe()
     });
   }
 
