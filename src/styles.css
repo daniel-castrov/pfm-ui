@@ -126,7 +126,7 @@ accordion-group .acordion-icon:hover  {
   line-height: 2.4rem;
 }
 
-.btn-card-header {
+.btn-card-header  {
   font-weight: 400;
   height: 30px;
   text-align: center;
@@ -143,8 +143,19 @@ accordion-group .acordion-icon:hover  {
   margin: 0 5px 4px 0;
 }
 
-.btn-card-header:hover {
+.btn-card-header:hover{
     opacity: .7;
+}
+
+.btn-card-header > a {
+  color: #000;
+  line-height: 30px;
+}
+
+.btn-card-header:hover > a {
+  opacity: .7;
+  color: #000;
+  text-decoration: none;
 }
 
 .card-container {
