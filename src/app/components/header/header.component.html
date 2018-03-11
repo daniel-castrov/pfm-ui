@@ -124,10 +124,10 @@
           </li>
         </ul>
         <hr/>
-        User Role Requests
+        Community Access Requests
         <ul>
-          <li *ngFor="let roleRequest of nothing">
-            <a class="dropdown-item" href="#" routerLink="/role-approval/{{ roleRequest.id }}">{{roleRequest.firstName}} {{roleRequest.lastName}}</a>
+          <li *ngFor="let commRequest of addUserToCommunityRequests">
+            <a class="dropdown-item" href="#" routerLink="/access-community/{{ commRequest.id }}">{{commRequest.id}} {{commRequest.userId}}</a>
           </li>
         </ul>
         <hr/>

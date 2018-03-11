@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit {
   user: User;
   resultError: string[] = [];
   createUserRequests: CreateUserRequest[] = [];
-  addUserToCommunityRequest:AddUserToCommunityRequest[]=[];
+  addUserToCommunityRequests:AddUserToCommunityRequest[]=[];
   numberOfNotifications=null;
 
   constructor(
@@ -94,8 +94,9 @@ export class HeaderComponent implements OnInit {
           .subscribe ( (c) => {
             resultCR=c;
             this.resultError.push(resultCR.error);
-            this.addUserToCommunityRequest = resultCR.result;
-            this.numberOfNotifications += this.addUserToCommunityRequest.length;
+            this.addUserToCommunityRequests = resultCR.result;
+
+            this.numberOfNotifications += this.addUserToCommunityRequests.length;
   
             // How many notifications are there? If none then null;
             if (this.numberOfNotifications <1) {

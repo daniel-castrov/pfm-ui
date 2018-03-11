@@ -56,7 +56,7 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'access-change', component:RequestAccessChangeComponent},
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
-  {path:'access-community', component:AccessCommunityComponent},
+  {path:'access-community/:id', component:AccessCommunityComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'contact', component:ContactComponent},
