@@ -933,6 +933,36 @@ paths:
           description: "User does not exist."
         500:
           description: "An unexpected error occurred."
+  /userRoles/user/{userId}/community/{communityId}/role/{roleName}:
+    get:
+      tags:
+      - "UserRole"
+      operationId: "getUserRolesbyUserAndCommunityAndRoleName"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "roleName"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of UserRoles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "User does not exist."
+        500:
+          description: "An unexpected error occurred."
+
 # STOP USERROLES
 ##############################################################################
 # 
