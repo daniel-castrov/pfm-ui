@@ -37,11 +37,11 @@ import { RequestCommunityComponent } from './components/user-management/manage-s
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 
 // GENERATED APIs AND MODELS
+import { AddUserToCommunityRequestService } from './generated/api/addUserToCommunityRequest.service';
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
-import { AddUserToCommunityRequestService } from './generated/api/addUserToCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserApprovalComponent } from './components/user-management/user-approval/user-approval.component';
@@ -118,10 +118,10 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
   ],
   providers: [
+    AddUserToCommunityRequestService,
     BlankService,
     CommunityService,
     CreateUserRequestService,
-    AddUserToCommunityRequestService,
     MyDetailsService,
     RoleService,
     StrangerService,
