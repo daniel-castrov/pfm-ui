@@ -11,6 +11,10 @@ import { User } from '../../generated/model/user';
 import { MyDetailsService } from '../../generated/api/myDetails.service';
 import { CreateUserRequest } from '../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../generated/api/createUserRequest.service';
+import { AddUserToCommunityRequestService } from '../../generated/api/addUserToCommunityRequest.service';
+import { AddUserToCommunityRequest } from '../../generated/model/addUserToCommunityRequest';
+
+
 
 import {
   HttpClient, HttpHeaders, HttpParams,
@@ -31,6 +35,7 @@ export class HeaderComponent implements OnInit {
   user: User;
   resultError: string[] = [];
   createUserRequests: CreateUserRequest[] = [];
+  addUserToCommunityRequest:AddUserToCommunityRequest[]=[];
   numberOfNotifications=null;
 
   constructor(
@@ -39,7 +44,7 @@ export class HeaderComponent implements OnInit {
     private blankService: BlankService,
     private myDetailsService: MyDetailsService,
     private createUserRequestService: CreateUserRequestService,
-
+    private addUserToCommunityRequestService:AddUserToCommunityRequestService,
   ) {
   }
 
@@ -69,24 +74,36 @@ export class HeaderComponent implements OnInit {
 
   getApproverNotifications() {
 
-    var result: RestResult;
+    var resultUser: RestResult;
     this.myDetailsService.getCurrentUser()
       .subscribe((c) => {
-        result = c;
-        this.user = result.result;
+        resultUser = c;
+        this.user = resultUser.result;
         console.log(this.user.firstName);
-        let result2: RestResult;
+
+        let resultNUR: RestResult;
         let s = this.createUserRequestService.getByCommId(this.user.defaultCommunityId);
         s.subscribe(c => {
-          result2 = c;
-          this.resultError.push(result2.error);
-          this.createUserRequests = result2.result;
-          // How many notifications are there? If none then null;
-          if (this.createUserRequests.length > 0) {
-            this.numberOfNotifications = this.createUserRequests.length;
-          }
+          resultNUR = c;
+          this.resultError.push(resultNUR.error);
+          this.createUserRequests = resultNUR.result;
+          this.numberOfNotifications = this.createUserRequests.length;
+
+          let resultCR: RestResult;
+          this.addUserToCommunityRequestService.getByCommId(this.user.defaultCommunityId)
+          .subscribe ( (c) => {
+            resultCR=c;
+            this.resultError.push(resultCR.error);
+            this.addUserToCommunityRequest = resultCR.result;
+            this.numberOfNotifications += this.addUserToCommunityRequest.length;
+  
+            // How many notifications are there? If none then null;
+            if (this.numberOfNotifications <1) {
+              this.numberOfNotifications=null;
+            }
+          });
+
         });
       });
   }
-
 }
