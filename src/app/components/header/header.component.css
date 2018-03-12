@@ -65,7 +65,7 @@ body {
   border: 0px white solid;
 }
 
-.external-links>a>img {
+.external-links > a >img {
   height: 20px;
   padding-right: 1px;
 }
@@ -82,7 +82,7 @@ body {
   text-decoration: none;
 }
 
-.super-user>i {
+.super-user > i {
   padding: 0 5px;
   font-size: 20px;
 }

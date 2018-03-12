@@ -8,7 +8,7 @@ a,
 a:active,
 a:visited {
 color:  #23527c;
-text-decoration: underline;
+text-decoration: none;
 }
 
 a:hover {
