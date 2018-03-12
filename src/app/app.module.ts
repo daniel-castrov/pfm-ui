@@ -12,8 +12,8 @@ import { RouterModule, Routes } from '@angular/router';
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
-import { AccessChangeApprovalComponent } from './components/user-management/user-approval/access-change-approval.component';
-import { AccessCommunityComponent } from './components/user-management/user-approval/access-community.component';
+import { AccessChangeApprovalComponent } from './components/user-management/approval-role/access-change-approval.component';
+import { AccessCommunityComponent } from './components/user-management/approval-community/access-community.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ContactComponent } from './components/contact/contact.component';
@@ -34,16 +34,17 @@ import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestCommunityComponent } from './components/user-management/manage-self/request-community.component';
+import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 
 // GENERATED APIs AND MODELS
+import { AddUserToCommunityRequestService } from './generated/api/addUserToCommunityRequest.service';
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { StrangerService } from './generated/api/stranger.service';
-import { UserApprovalComponent } from './components/user-management/user-approval/user-approval.component';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { RoleService } from './generated/api/role.service';
@@ -55,7 +56,7 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'access-change', component:RequestAccessChangeComponent},
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
-  {path:'access-community', component:AccessCommunityComponent},
+  {path:'access-community/:id', component:AccessCommunityComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'contact', component:ContactComponent},
@@ -117,6 +118,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
   ],
   providers: [
+    AddUserToCommunityRequestService,
     BlankService,
     CommunityService,
     CreateUserRequestService,
