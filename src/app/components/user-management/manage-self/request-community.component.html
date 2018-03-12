@@ -1,6 +1,6 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
-  <div class="main-content" *ngIf="header.isloggedin">
+  <div class="main-content">
     <div class="col-10 row">
       <div class="card-header">Community Request</div>
       <div class="card-container">
@@ -14,11 +14,11 @@
               data-right-selected="#right_Selected_1"
               data-left-all="#left_All_1"
               data-left-selected="#left_Selected_1">
-              <option *ngFor="let comm of reqcommunities" [value]="comm.id">{{comm.name}}</option>
+              <option *ngFor="let community of requestedCommunities" [value]="community.id">{{community.name}}</option>
             </select>
           </div>
           <div class="col-2 arrows">
-            <button type="button" id="multiselect_rightAll" class="btn btn-block"> &gt; &gt; </button>
+            <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
             <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
             <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
             <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
@@ -26,7 +26,7 @@
           <div class="col-md-5">
             <h6>Available Communities</h6>
             <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple">
-              <option *ngFor="let comm of avacommunities" [value]="comm.id">{{comm.name}}</option>
+              <option *ngFor="let community of availableCommunities" [value]="community.id">{{community.name}}</option>
             </select>
           </div>
         </div>

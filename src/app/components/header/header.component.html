@@ -95,12 +95,19 @@
         <a class="nav-link" href="#" routerLink="/home">Search</a>
       </li>
       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown06">
+          <a class="dropdown-item" href="#" routerLink="/program-view">View Program</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/access-change">Request Access</a>
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
+          <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/request-community">Manage My Communities</a>
         </div>
       </li>
     </ul>
@@ -123,10 +130,10 @@
           </li>
         </ul>
         <hr/>
-        User Role Requests
+        Community Access Requests
         <ul>
-          <li *ngFor="let roleRequest of nothing">
-            <a class="dropdown-item" href="#" routerLink="/role-approval/{{ roleRequest.id }}">{{roleRequest.firstName}} {{roleRequest.lastName}}</a>
+          <li *ngFor="let commRequest of commRequestWithUsers">
+            <a class="dropdown-item" href="#" routerLink="/access-community/{{ commRequest.requestId }}">{{commRequest?.user.firstName}} {{commRequest?.user.lastName}}</a>
           </li>
         </ul>
         <hr/>

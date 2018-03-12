@@ -40,6 +40,7 @@ export class UserApprovalComponent implements OnInit {
 
   getCreateUserRquest() {
 
+    // get the request
     let result: RestResult;
     this.createUserRequestService.getById(this.id)
       .subscribe(c => {
@@ -47,6 +48,7 @@ export class UserApprovalComponent implements OnInit {
         this.resultError.push(result.error);
         this.createUserRequest = result.result;
 
+        // get the community that this request if for
         let result2: RestResult;
         this.communityService.getById(this.createUserRequest.communityId)
           .subscribe(c => {
