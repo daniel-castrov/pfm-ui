@@ -94,9 +94,9 @@ export class RequestCommunityComponent implements OnInit {
 
   private removeCommunities(communityIds : string[]) {
     communityIds.forEach(communityId => {
-//      this.userRoleService.getUserRolesbyUserAndCommunityAndRoleName(this.currentUser.id, communityId, "User").subscribe( result => {
-//         this.userRoleService.deleteById(result.result.id).subscribe();
-//     });
+      this.userRoleService.getUserRolesbyUserAndCommunityAndRoleName(this.currentUser.id, communityId, "User").subscribe( result => {
+         this.userRoleService.deleteById(result.result.id).subscribe();
+     });
     });
   }
 

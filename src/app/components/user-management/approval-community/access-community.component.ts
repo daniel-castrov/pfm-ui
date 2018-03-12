@@ -22,8 +22,11 @@ export class AccessCommunityComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  addUserToCommunityRequest:AddUserToCommunityRequest;
   requestId:string;
+  addUserToCommunityRequest:AddUserToCommunityRequest;
+  requstingUser:User;
+  requestedCommunity:Community;
+  currentCommunities:Community[]=[];
   resultError: string[] = [];
 
   constructor(
@@ -47,6 +50,12 @@ export class AccessCommunityComponent implements OnInit {
 
   getRequest(): void {
 
+// 1 get the requets
+// 2 get the user that the request if for
+// 3 get all the communities that the user is in
+// 4 get the community the request is for.
+
+    // get the request 
     let result: RestResult;
     this.addUserToCommunityRequestService.getById(this.requestId)
     .subscribe( (c) => {
@@ -64,28 +73,49 @@ export class AccessCommunityComponent implements OnInit {
           let com: Community = result2.result;
           this.addUserToCommunityRequest.communityId = com.name;
 
+          // get the user
           let result3: RestResult;    
           this.userService.getById(this.addUserToCommunityRequest.userId)
           .subscribe( (c) => {
             result3 = c;
             this.resultError.push(result3.error);
-            let user:User;
-            user=result3.result;
+            this.requstingUser=result3.result;
+
+
+            // get this users communities.
+            let result4: RestResult;    
+            this.communityService.getByUserIdAndRoleName(this.addUserToCommunityRequest.userId, "User")
+            .subscribe ( (c) => {
+              result4 = c;
+              this.resultError.push(result4.error);
+
+              this.currentCommunities = result4.result;
+
+            });
+
           });
         });
     });
   }
 
-  do(){
-
-    this.addUserToCommunityRequest.communityId;
-    this.addUserToCommunityRequest.dateApplied
-    this.addUserToCommunityRequest.dateDecided
-    this.addUserToCommunityRequest.status
-    this.addUserToCommunityRequest.userId
-    this.addUserToCommunityRequest.id
-
-
+ approve(){
+    this.submit("\"APPROVED\"");
   }
 
+  deny(){
+    this.submit("\"DENIED\"");
+  }
+
+  submit(status){
+
+    let result: RestResult;
+    this.addUserToCommunityRequestService.approve(status, this.addUserToCommunityRequest.id )
+    .subscribe ( (c) => {
+      result = c;
+      this.resultError.push(result.error);   
+      this.router.navigate(['./home']); 
+      location.reload();
+    });
+
+  }
 }
