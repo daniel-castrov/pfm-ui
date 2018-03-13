@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
   resultError: string[] = [];
   createUserRequests: CreateUserRequest[] = [];
   //addUserToCommunityRequests:AddUserToCommunityRequest[]=[];
-  commRequestWithUsers:CommRequestWithUser[]=[];
+  requestLinks:RequestLink[]=[];
   numberOfNotifications=null;
 
   constructor(
@@ -72,6 +72,11 @@ export class HeaderComponent implements OnInit {
 
     // 1 get the current user
     var resultUser: RestResult;
+
+    this.requestLinks.push(
+      new RequestLink( "John Smith " , '1234324324234', "/access-community/234234234" ) 
+    );
+
     this.myDetailsService.getCurrentUser()
       .subscribe((c) => {
         resultUser = c;
@@ -84,10 +89,12 @@ export class HeaderComponent implements OnInit {
         s.subscribe(c => {
           resultNUR = c;
           this.resultError.push(resultNUR.error);
-          this.createUserRequests = resultNUR.result;
-
-          // How many notifications are there?
-          this.numberOfNotifications = this.createUserRequests.length;
+          let createUserRequests:CreateUserRequest[] = resultNUR.result;
+          for ( let request of createUserRequests  ){
+            this.requestLinks.push(
+              new RequestLink( request.firstName + " " + request.lastName , request.dateApplied, "/access-community/"+request.id ) 
+            );
+          }
 
           // 3 get the current user's community-requests (for the default community) 
           let resultCR: RestResult;
@@ -96,12 +103,6 @@ export class HeaderComponent implements OnInit {
             resultCR=c;
             this.resultError.push(resultCR.error);
             let addUserToCommunityRequests = resultCR.result;
-           
-            this.numberOfNotifications += addUserToCommunityRequests.length;  
-            // How many notifications are there? If none then null;
-            if (this.numberOfNotifications <1) {
-              this.numberOfNotifications=null;
-            }
 
             // 4 get usernames for each community-requests
             for ( let request of addUserToCommunityRequests  ){
@@ -110,8 +111,16 @@ export class HeaderComponent implements OnInit {
               .subscribe ((c) => {
                 resultUser=c;
                 this.resultError.push(resultUser.error);
-                this.commRequestWithUsers.push(new CommRequestWithUser( resultUser.result , request.id ) );
-              })
+                let user:User = resultUser.result;
+                this.requestLinks.push(new RequestLink( user.firstName + " " + user.lastName , request.dateApplied, "/access-community/"+request.id ) );
+             
+                // How many notifications are there? If none then null;
+                this.numberOfNotifications = this.requestLinks.length;  
+                if (this.numberOfNotifications <1) {
+                  this.numberOfNotifications=null;
+                }
+             
+              });
             }
           });
         });
@@ -119,12 +128,14 @@ export class HeaderComponent implements OnInit {
   }
 }
 
-class CommRequestWithUser {
-  user: User;
-  requestId:string; 
-  constructor(u: User, r: string) {
-    this.user = u;
-    this.requestId = r;
+class RequestLink {
+  name:string;
+  date:string;
+  link:string; 
+  constructor(u: string, d:string, l: string) {
+    this.name = u;
+    this.date = d;
+    this.link = l;
   }
 }
 

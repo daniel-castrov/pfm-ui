@@ -123,19 +123,11 @@
         </div>
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
-        New User Requests
-        <ul>
-          <li *ngFor="let createUserRequest of createUserRequests">
-            <a class="dropdown-item" href="#" routerLink="/user-approval/{{ createUserRequest.id }}">{{createUserRequest.firstName}} {{createUserRequest.lastName}}</a>
-          </li>
-        </ul>
-        <hr/>
-        Community Access Requests
-        <ul>
-          <li *ngFor="let commRequest of commRequestWithUsers">
-            <a class="dropdown-item" href="#" routerLink="/access-community/{{ commRequest.requestId }}">{{commRequest?.user.firstName}} {{commRequest?.user.lastName}}</a>
-          </li>
-        </ul>
+          <div *ngFor="let requestLink of requestLinks">
+            <a class="dropdown-item" href="#" routerLink="{{requestLink.link}}" ngbTooltip="{{requestLink?.name}}">
+              {{requestLink?.date | date:'MM/dd/yyyy @ h:mma'}}
+            </a>
+          </div>
         <hr/>
       </div>
     </span>
