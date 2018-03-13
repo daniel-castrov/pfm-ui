@@ -1,6 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Input } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
 import {
   HttpClient, HttpHeaders, HttpParams,
@@ -30,16 +28,11 @@ export class HeaderComponent implements OnInit {
   authUser: AuthUser;
   authUserJson: string;
   isloggedin: boolean = false;
-  user: User;
   resultError: string[] = [];
-  createUserRequests: CreateUserRequest[] = [];
-  //addUserToCommunityRequests:AddUserToCommunityRequest[]=[];
   requestLinks:RequestLink[]=[];
   numberOfNotifications=null;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private blankService: BlankService,
     private myDetailsService: MyDetailsService,
     private createUserRequestService: CreateUserRequestService,
@@ -50,9 +43,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.getAutUser();
-  }
-
-  ngAfterViewInit() {
   }
 
   getAutUser() {
@@ -73,32 +63,29 @@ export class HeaderComponent implements OnInit {
     // 1 get the current user
     var resultUser: RestResult;
 
-    this.requestLinks.push(
-      new RequestLink( "John Smith " , '1234324324234', "/access-community/234234234" ) 
-    );
-
     this.myDetailsService.getCurrentUser()
       .subscribe((c) => {
         resultUser = c;
-        this.user = resultUser.result;
-        console.log(this.user.firstName);
+
+        let user = resultUser.result;
+        console.log(user.firstName);
 
         // 2 get the current user's new-user-requests (for the default community) 
         let resultNUR: RestResult;
-        let s = this.createUserRequestService.getByCommId(this.user.defaultCommunityId);
+        let s = this.createUserRequestService.getByCommId(user.defaultCommunityId);
         s.subscribe(c => {
           resultNUR = c;
           this.resultError.push(resultNUR.error);
           let createUserRequests:CreateUserRequest[] = resultNUR.result;
           for ( let request of createUserRequests  ){
             this.requestLinks.push(
-              new RequestLink( request.firstName + " " + request.lastName , request.dateApplied, "/access-community/"+request.id ) 
+              new RequestLink( request.firstName + " " + request.lastName , request.dateApplied, "/user-approval/"+request.id ) 
             );
           }
 
           // 3 get the current user's community-requests (for the default community) 
           let resultCR: RestResult;
-          this.addUserToCommunityRequestService.getByCommId(this.user.defaultCommunityId)
+          this.addUserToCommunityRequestService.getByCommId(user.defaultCommunityId)
           .subscribe ( (c) => {
             resultCR=c;
             this.resultError.push(resultCR.error);
@@ -112,14 +99,15 @@ export class HeaderComponent implements OnInit {
                 resultUser=c;
                 this.resultError.push(resultUser.error);
                 let user:User = resultUser.result;
-                this.requestLinks.push(new RequestLink( user.firstName + " " + user.lastName , request.dateApplied, "/access-community/"+request.id ) );
+                this.requestLinks.push(
+                  new RequestLink( user.firstName + " " + user.lastName , request.dateApplied, "/access-community/"+request.id ) 
+                );
              
                 // How many notifications are there? If none then null;
                 this.numberOfNotifications = this.requestLinks.length;  
                 if (this.numberOfNotifications <1) {
                   this.numberOfNotifications=null;
                 }
-             
               });
             }
           });
