@@ -1,7 +1,7 @@
 
 .card-header {
   float: left;
-  margin-bottom: 15px;
+  margin-bottom: 0 !important; 
   height: 40px;
   width: 100%;
   color: #000;
