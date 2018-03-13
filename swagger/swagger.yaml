@@ -14,6 +14,7 @@ tags:
 - name: "Role"
 - name: "User"
 - name: "UserRole"
+- name: "Programs"
 #
 ##############################################################################
 # PATHS
@@ -965,6 +966,26 @@ paths:
 
 # STOP USERROLES
 ##############################################################################
+# START PROGRAMS
+  /programs/{programId}:
+    get:
+      tags:
+      - "Programs"
+      summary: "Get one program"
+      description: "Returns a given program"
+      operationId: "get"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A program object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP PROGRAMS
 # 
 # END PATHS
 #
@@ -1139,5 +1160,101 @@ definitions:
         type: "string"
       roleId:
         type: "string"
+  IntMap:
+    type: "object"
+    additionalProperties:
+      type: "integer"
+  StringMap:
+    type: "object"
+    additionalProperties:
+      type: "string"
+  FundingLine:
+    type: "object"
+    properties:
+      tags:
+        $ref: '#/definitions/StringMap'
+      id:
+        type: "string"
+      appropriation:
+        type: "string"
+      blin:
+        type: "string"
+      opAgency:
+        type: "string"
+      item:
+        type: "string"
+      funds:
+        $ref: '#/definitions/IntMap'
+  Milestone:
+    type: "object"
+    properties:
+      start:
+        type: "integer"
+      end:
+        type: "integer"
+      phase:
+        type: "string"
+      name:
+        type: "string"
+      acronym:
+        type: "string"
+      status:
+        type: "string"
+  Variant:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      branch:
+        type: "string"
+      contractor:
+        type: "string"
+      quantity:
+        type: "integer"
+      unitCost:
+        type: "integer"
+  Program:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      tags:
+        $ref: '#/definitions/StringMap'
+      description:
+        type: "string"
+      parentId:
+        type: "string"
+      infolink:
+        type: "string"
+      imgLink:
+        type: "string"
+      shortName:
+        type: "string"
+      longName:
+        type: "string"
+      type:
+        type: "string"
+      execution:
+        type: "string"
+      milestones:
+        type: "array"
+        items:
+          $ref: "#/definitions/Milestone"
+      funding:
+        type: "array"
+        items:
+          $ref: "#/definitions/FundingLine"
+      fy:
+        type: "integer"
+      variants:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
+      emphases:
+        type: "array"
+        items:
+          $ref: "string"
 ##############################################################################
 # ENDFILE
