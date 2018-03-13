@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProgramsService, Program } from '../../../generated';
 
 @Component({
   selector: 'program',
@@ -6,10 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./program.component.css']
 })
 export class ProgramComponent implements OnInit {
+  private allprograms: Program[] = [];
 
-  constructor() { }
+  constructor( private programs:ProgramsService ) { }
 
   ngOnInit() {
+    this.programs.getall().subscribe(
+      (data) => { 
+        this.allprograms = data.result;
+      }
+    );
   }
 
 }

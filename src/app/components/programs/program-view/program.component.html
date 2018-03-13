@@ -7,10 +7,8 @@
         <div class="col-md-12">
           <div class="form-group inline-name">
             <label>Select Program:</label>
-            <select>
-             <option>Program 1</option>
-             <option>Program 2</option>
-             <option>Program 3</option>
+            <select >
+              <option *ngFor="let p of allprograms" [value]="p.id">{{p.shortName}}</option>
             </select>
           </div>
           <div class="form-group inline-name">

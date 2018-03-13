@@ -53,6 +53,7 @@ import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { RoleService } from './generated/api/role.service';
+import { ProgramsService } from './generated/api/programs.service';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -137,9 +138,10 @@ const appRoutes: Routes = [
     RoleService,
     StrangerService,
     UserRoleService,
+    ProgramsService,
     UserService,
-    { provide: BASE_PATH, useValue: 'https://ec2-54-174-141-253.compute-1.amazonaws.com:8445/jscbis' },
-    //{ provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+    //{ provide: BASE_PATH, useValue: 'https://ec2-54-174-141-253.compute-1.amazonaws.com:8445/jscbis' },
+    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
   ],
