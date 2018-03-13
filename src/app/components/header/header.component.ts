@@ -54,11 +54,19 @@ export class HeaderComponent implements OnInit {
         this.isloggedin = true;
         if (this.authUser.rolenames.includes('User_Approver')) {
           this.getApproverNotifications();
+          this.requestLinks.sort(this.compareRequsetLink);
         }
       });
   }
 
   getApproverNotifications() {
+    
+    this.requestLinks.push(new RequestLink( "Sam Smith" , '45243707542', "/user-approval/"+"2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink( "Patti Jones" , '25204707542', "/user-approval/"+"2222222222", "New User Request" ));
+    this.requestLinks.push(new RequestLink( "Michael McCallaster" , '45243707542', "/user-approval/"+"2222222222", "New User Request" ));
+    this.requestLinks.push(new RequestLink( "Amy Awkward" , '15209707542', "/user-approval/"+"2222222222", "Community Request" ));
+    this.requestLinks.push(new RequestLink( "Violet Vulcan" , '85202107542', "/user-approval/"+"2222222222", "Community Request" ));
+    this.numberOfNotifications = this.requestLinks.length;  
 
     // 1 get the current user
     var resultUser: RestResult;
@@ -79,7 +87,7 @@ export class HeaderComponent implements OnInit {
           let createUserRequests:CreateUserRequest[] = resultNUR.result;
           for ( let request of createUserRequests  ){
             this.requestLinks.push(
-              new RequestLink( request.firstName + " " + request.lastName , request.dateApplied, "/user-approval/"+request.id ) 
+              new RequestLink( request.firstName + " " + request.lastName , request.dateApplied, "/user-approval/"+request.id, "New User Request" ) 
             );
           }
 
@@ -100,7 +108,7 @@ export class HeaderComponent implements OnInit {
                 this.resultError.push(resultUser.error);
                 let user:User = resultUser.result;
                 this.requestLinks.push(
-                  new RequestLink( user.firstName + " " + user.lastName , request.dateApplied, "/access-community/"+request.id ) 
+                  new RequestLink( user.firstName + " " + user.lastName , request.dateApplied, "/access-community/"+request.id, "Community Request" ) 
                 );
              
                 // How many notifications are there? If none then null;
@@ -114,16 +122,28 @@ export class HeaderComponent implements OnInit {
         });
       });
   }
+
+ compareRequsetLink(a,b) {
+    if (a.date < b.date)
+      return -1;
+    if (a.date > b.date)
+      return 1;
+    return 0;
+  }
+
+
 }
 
 class RequestLink {
   name:string;
   date:string;
-  link:string; 
-  constructor(u: string, d:string, l: string) {
+  link:string;
+  type:string;
+  constructor(u: string, d:string, l: string, t:string) {
     this.name = u;
     this.date = d;
     this.link = l;
+    this.type = t;
   }
 }
 

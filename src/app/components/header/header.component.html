@@ -124,7 +124,8 @@
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
           <div *ngFor="let requestLink of requestLinks">
-            <a class="dropdown-item" href="#" routerLink="{{requestLink.link}}" ngbTooltip="{{requestLink?.name}}">
+            <ng-template #tipContent>{{requestLink?.type}}<br/>{{requestLink?.name}}</ng-template>
+            <a class="dropdown-item" href="#" routerLink="{{requestLink.link}}" [ngbTooltip]="tipContent">
               {{requestLink?.date | date:'MM/dd/yyyy @ h:mma'}}
             </a>
           </div>
