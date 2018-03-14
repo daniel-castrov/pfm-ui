@@ -4,6 +4,7 @@ import {
   HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent
 } from '@angular/common/http';
+import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 
 // Generated
 import { AuthUser } from '../../generated/model/authUser';
@@ -20,7 +21,8 @@ import { AddUserToCommunityRequestService } from '../../generated/api/addUserToC
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  providers: [NgbTooltipConfig] 
 })
 
 export class HeaderComponent implements OnInit {
@@ -37,8 +39,10 @@ export class HeaderComponent implements OnInit {
     private myDetailsService: MyDetailsService,
     private createUserRequestService: CreateUserRequestService,
     private addUserToCommunityRequestService:AddUserToCommunityRequestService,
-    private userService:UserService
+    private userService:UserService,
+    private config: NgbTooltipConfig
   ) {
+    config.placement = 'left';
   }
 
   ngOnInit() {
@@ -61,12 +65,12 @@ export class HeaderComponent implements OnInit {
 
   getApproverNotifications() {
     
-    this.requestLinks.push(new RequestLink( "Sam Smith" , '45243707542', "/user-approval/"+"2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink( "Patti Jones" , '25204707542', "/user-approval/"+"2222222222", "New User Request" ));
-    this.requestLinks.push(new RequestLink( "Michael McCallaster" , '45243707542', "/user-approval/"+"2222222222", "New User Request" ));
-    this.requestLinks.push(new RequestLink( "Amy Awkward" , '15209707542', "/user-approval/"+"2222222222", "Community Request" ));
-    this.requestLinks.push(new RequestLink( "Violet Vulcan" , '85202107542', "/user-approval/"+"2222222222", "Community Request" ));
-    this.numberOfNotifications = this.requestLinks.length;  
+    // this.requestLinks.push(new RequestLink( "Sam Smith" , '45243707542', "/user-approval/"+"2222222222", "New User Request"));
+    // this.requestLinks.push(new RequestLink( "Patti Jones" , '25204707542', "/user-approval/"+"2222222222", "New User Request" ));
+    // this.requestLinks.push(new RequestLink( "Michael McCallaster" , '45243707542', "/user-approval/"+"2222222222", "New User Request" ));
+    // this.requestLinks.push(new RequestLink( "Amy Awkward" , '15209707542', "/access-community/"+"2222222222", "Community Request" ));
+    // this.requestLinks.push(new RequestLink( "Violet Vulcan" , '85202107542', "/access-community/"+"2222222222", "Community Request" ));
+    // this.numberOfNotifications = this.requestLinks.length;  
 
     // 1 get the current user
     var resultUser: RestResult;
