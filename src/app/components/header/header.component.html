@@ -32,10 +32,10 @@
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#" routerLink="/home">Documentation</a>
+            <!-- <a class="dropdown-item" href="#" routerLink="/home">Documentation</a>
             <a class="dropdown-item" href="#" routerLink="/home">Library</a>
-            <a class="dropdown-item" href="#" routerLink="/home">Support Request</a>
-            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" routerLink="/home">Support Request</a> -->
+            <!-- <div class="dropdown-divider"></div> -->
             <a class="dropdown-item" routerLink="/about-private">About Us</a>
           </div>
         </span>
@@ -63,8 +63,8 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown01">
+        <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
+        <!-- <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
           <a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
           <a class="dropdown-item" href="#" routerLink="/home">Approve Fund Request</a>
@@ -73,26 +73,23 @@
           <a class="dropdown-item" href="#" routerLink="/home">Summary of Request</a>
           <a class="dropdown-item" href="#" routerLink="/home">Create UFR</a>
           <a class="dropdown-item" href="#" routerLink="/home">Generate POM Submission</a>
-        </div>
+        </div> -->
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/home">Budget</a>
+        <a style="color:#6994b9;" class="nav-link" href="#" routerLink="/home">Budget</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/home">Execution</a>
+        <a style="color:#6994b9;" class="nav-link" href="#" routerLink="/home">Execution</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown02">
+        <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+        <!-- <div class="dropdown-menu" aria-labelledby="dropdown02">
           <a class="dropdown-item" href="#" routerLink="/home">Planning</a>
           <a class="dropdown-item" href="#" routerLink="/home">Execution</a>
           <a class="dropdown-item" href="#" routerLink="/home">Budget</a>
           <a class="dropdown-item" href="#" routerLink="/home">Programs</a>
           <a class="dropdown-item" href="#" routerLink="/home">System</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" routerLink="/home">Search</a>
+        </div> -->
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
@@ -123,20 +120,12 @@
         </div>
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
-        New User Requests
-        <ul>
-          <li *ngFor="let createUserRequest of createUserRequests">
-            <a class="dropdown-item" href="#" routerLink="/user-approval/{{ createUserRequest.id }}">{{createUserRequest.firstName}} {{createUserRequest.lastName}}</a>
-          </li>
-        </ul>
-        <hr/>
-        Community Access Requests
-        <ul>
-          <li *ngFor="let commRequest of commRequestWithUsers">
-            <a class="dropdown-item" href="#" routerLink="/access-community/{{ commRequest.requestId }}">{{commRequest?.user.firstName}} {{commRequest?.user.lastName}}</a>
-          </li>
-        </ul>
-        <hr/>
+          <div *ngFor="let requestLink of requestLinks">
+            <ng-template #tipContent><strong>{{requestLink?.type}}</strong><br/>{{requestLink?.name}}</ng-template>
+            <a class="dropdown-item" href="#" routerLink="{{requestLink.link}}" [ngbTooltip]="tipContent">
+              {{requestLink?.date | date:'MM/dd/yyyy @ h:mma'}}
+            </a>
+          </div>
       </div>
     </span>
   </div>

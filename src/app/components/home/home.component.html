@@ -1,14 +1,14 @@
-<app-header title="JSCBIS Login"></app-header>
+<app-header></app-header>
 <div class="row main-content" *ngIf="header.isloggedin">
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
-      Welcome back
+      Welcome back <strong> {{ header.authUser.fullName }}</strong>
     </div>
     <div class="card-container">
-      {{ header.authUser.fullName }}
+
       <br/>
-      <button (click)="show = !show">{{show ? 'hide json' : 'show json'}}</button>
-      <div *ngIf="show">{{header.authUserJson}}</div>
+      <!-- <button (click)="show = !show">{{show ? 'hide json' : 'show json'}}</button>
+      <div *ngIf="show">{{header.authUserJson}}</div> -->
       <!--
         <button (click)="show = !show">{{show ? 'hide' : 'show'}}</button>
         <div *ngIf="show; else elseBlock">{{header.authUserJson}}</div>
@@ -21,7 +21,6 @@
       My ToDo
     </div>
     <div class="card-container">
-
     </div>
   </div>
   <div class="col-2 col-md-2">
@@ -31,9 +30,6 @@
       Reports
     </div>
     <div class="card-container">
-      <div>
-        <button class="btn btn-danger" (mouseover)="fireEvent($event)">Mouseover Event</button>
-      </div>
     </div>
   </div>
   <div class="col-lg-5 col-sm-10">

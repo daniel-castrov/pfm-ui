@@ -1,4 +1,4 @@
-<app-header title="JSCBIS Login"></app-header>
+<app-header></app-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-10">
@@ -20,7 +20,7 @@
 
           <ul>
             <li *ngFor="let comm of currentCommunities">
-              {{ comm.name }}              
+              {{ comm.name }}
             </li>
           </ul>
         </div>
