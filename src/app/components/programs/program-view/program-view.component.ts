@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ProgramsService, Program } from '../../../generated';
 import * as $ from 'jquery';
 
 // Other Components
@@ -15,11 +16,21 @@ declare const jQuery: any;
 export class ProgramViewComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
+  private allprograms: Program[] = [];
+  private current: Program = null;
 
 
-  constructor() { }
+  constructor(private programs: ProgramsService) {
+  }
 
   ngOnInit() {
+    this.programs.getall().subscribe(
+      (data) => {
+        this.allprograms = data.result;
+        this.current = this.allprograms[0];
+        console.log(this.current);
+      }
+    );
   }
 
 }

@@ -1,35 +1,19 @@
+<ng-template #novalue>
+  <span class="program-values"><i>None</i></span>
+</ng-template>
 <form>
   <div class="row">
     <!--Left column begins-->
     <div class="col-8">
       <div class="row">
-        <!--Contents of left column-->
-        <div class="col-md-12">
-          <div class="form-group inline-name">
-            <label>Select Program:</label>
-            <select >
-              <option *ngFor="let p of allprograms" [value]="p.id">{{p.shortName}}</option>
-            </select>
-          </div>
-          <div class="form-group inline-name">
-            <label>Select Subprogram:</label>
-            <select>
-             <option>Increment A</option>
-             <option>Increment B</option>
-             <option>Increment C</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-md-12">
           <div class="form-group inline-name">
             <label>ProgID:</label>
-            <span class="program-values">Value</span>
+            <span class="program-values">{{current?.shortName}}</span>
           </div>
           <div class="form-group inline-name">
             <label>ProgName:</label>
-            <span class="program-values">Value</span>
+            <span class="program-values">{{current?.longName}}</span>
           </div>
         </div>
       </div>
@@ -37,7 +21,7 @@
         <div class="col-md-12">
           <div class="form-group inline-name">
             <label>Prog Parent:</label>
-            <span class="program-values">Value</span>
+            <span class="program-values" *ngIf="current.parentId; else novalue">{{current.parentId}}</span>
           </div>
         </div>
       </div>
@@ -48,19 +32,19 @@
               <div class="card-title">Capability</div>
               <span class="form-group inline-name">
                 <label>*Primary:</label>
-                <span class="program-values">Value</span>
+                <span class="program-values">{{current?.tags['Primary_Capability']}}</span>
                </span>
                <span class="form-group inline-name">
                   <label>*Core:</label>
-                  <span class="program-values">Value</span>
+                  <span class="program-values">{{current?.tags['Core_Capability']}}</span>
                 </span>
                 <span class="form-group inline-name">
                   <label>*Secondary:</label>
-                  <span class="program-values">Value</span>
+                  <span class="program-values">{{current?.tags['Secondary_Capability']}}</span>
                 </span>
                 <span class="form-group inline-name">
                   <label>Tertiary:</label>
-                  <span class="program-values">Value</span>
+                  <span class="program-values" *ngIf="current.tags['Tertiary_Capability']; else novalue">{{current?.tags['Tertiary_Capability']}}</span>
                 </span>
               </div>
             </div>
@@ -73,19 +57,19 @@
               <div class="card-title">Area</div>
               <span class="form-group inline-name">
                 <label>*Functional:</label>
-                <span class="program-values">Value</span>
+                <span class="program-values">{{current?.tags['Functional_Area']}}</span>
               </span>
               <span class="form-group inline-name">
                 <label>*Medical Cat.:</label>
-                <span class="program-values">Value</span>
+                <span class="program-values" *ngIf="current.tags['Medical_Category']; else novalue">{{current?.tags['Medical_Category']}}</span>
               </span>
               <span class="form-group inline-name">
                 <label>*NBC Cat.:</label>
-                <span class="program-values">Value</span>
+                <span class="program-values" *ngIf="current.tags['NBC_Category']; else novalue">{{current?.tags['NBC_Category']}}</span>
               </span>
               <span class="form-group inline-name">
-                <label>*Aqu. Type:</label>
-                <span class="program-values">Value</span>
+                <label>*Acq. Type:</label>
+                <span class="program-values" *ngIf="current.tags['Acquisition_Type']; else novalue">{{current?.tags['Acquisition_Type']}}</span>
               </span>
             </div>
           </div>
@@ -93,18 +77,20 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <span class="form-group inline-name">
-            <label>Emphasis:</label>
-            <span class="program-values">Value</span>
-          </span>
-          <span class="form-group inline-name">
-            <label>BSV Nat. Strat.:</label>
-            <span class="program-values">Value</span>
-          </span>
-          <span class="form-group inline-name">
-            <label>DASD POM:</label>
-            <span class="program-values">Value</span>
-          </span>
+          <div class="card-body">
+            <span class="form-group inline-name">
+              <label>Emphasis:</label>
+              <span class="program-values" *ngIf="current.emphases; else novalue">{{current?.emphases[0]}}</span>
+            </span>
+            <span class="form-group inline-name">
+              <label>BSV Nat. Strat.:</label>
+              <span class="program-values" *ngIf="false; else novalue"></span>
+            </span>
+            <span class="form-group inline-name">
+              <label>DASD POM:</label>
+              <span class="program-values" *ngIf="false; else novalue"></span>
+            </span>
+          </div>
         </div>
       </div>
       <!-- <div class="row">
@@ -118,7 +104,8 @@
       <!--Contents of right column.-->
       <div class="card border-light mb-3 text-center">
         <div class="img-placeholder">
-          <i class="fa fa-picture-o" aria-hidden="true"></i>
+          <img *ngIf="current.imgLink" src="current.imgLink"/>
+          <i *ngIf="!current.imgLink" class="fa fa-picture-o" aria-hidden="true"></i>
         </div>
       </div>
     </div>

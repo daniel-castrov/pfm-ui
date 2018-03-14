@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12">
     <div class="card-header font-weight-bold">
-      <span class="text-dark card-header-text-pad">Prog 1</span> <span class="text-muted">Increment A</span>
+      <span class="text-dark card-header-text-pad">{{current.longName}}</span> <span class="text-muted">Increment A</span>
     </div>
     <table class="GeneratedTable">
       <thead>
@@ -9,31 +9,23 @@
           <th class="row-width">Appropriation</th>
           <th class="row-width">Budget</th>
           <th>Cycle</th>
-          <th>FY19</th>
-          <th>FY20</th>
-          <th>FY22</th>
-          <th>FY23</th>
-          <th>FY24</th>
+          <th>FY{{startyear}}</th>
+          <th>FY{{startyear+1}}</th>
+          <th>FY{{startyear+2}}</th>
+          <th>FY{{startyear+3}}</th>
+          <th>FY{{startyear+4}}</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="row-lt-gray text-center" rowspan="3">RDT&amp;E</td>
-          <td class="row-lt-gray text-center" rowspan="3">BA4</td>
-          <td>PBR18</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-blue">
-          <td>POM19</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
+        <tr *ngFor="let fl of appropriations; index as i">
+          <td class="row-lt-gray text-center" rowspan="spans[fl.appropriation+'-'+fl.blin]">{{fl.appropriation}}</td>
+          <td class="row-lt-gray text-center" rowspan="spans[fl.appropriation+'-'+fl.blin]">{{fl.blin}}</td>
+          <td>{{fl.fy}}</td>
+          <td class="text-right">{{fl.funds[startyear]}}</td>
+          <td class="text-right">{{fl.funds[startyear+1]}}</td>
+          <td class="text-right">{{fl.funds[startyear+2]}}</td>
+          <td class="text-right">{{fl.funds[startyear+3]}}</td>
+          <td class="text-right">{{fl.funds[startyear+4]}}</td>
         </tr>
         <tr class="row-lt-green">
           <td></td>

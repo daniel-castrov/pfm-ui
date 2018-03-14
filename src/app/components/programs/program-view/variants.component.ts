@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Program } from '../../../generated';
 
 @Component({
   selector: 'variants',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./variants.component.css']
 })
 export class VariantsComponent implements OnInit {
+  @Input() current: Program;
 
   constructor() { }
 

@@ -1,16 +1,24 @@
 <app-header title="JSCBIS Login"></app-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
+
+    <div class="form-group inline-name">
+      <label>Select Program:</label>
+      <select [(ngModel)]="current" name="current">
+        <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
+      </select>
+    </div>
+
     <div class="col-md-10">
       <tabset>
         <tab heading="Program" id="tab1">
-          <program></program>
+          <program [current]="current"></program>
         </tab>
         <tab heading="Funds" id="tab2">
-          <funds></funds>
+          <funds [current]="current"></funds>
         </tab>
         <tab heading="Variants" id="tab3">
-          <variants></variants>
+          <variants [current]="current"></variants>
         </tab>
         <!-- <tab heading="Execution" id="tab4">
           <div class="row col-md-12">
