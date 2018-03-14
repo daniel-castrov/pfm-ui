@@ -1,6 +1,6 @@
 import { UserRole } from './../../../generated/model/userRole';
-import { AddUserToCommunityRequest } from './../../../generated/model/addUserToCommunityRequest';
-import { AddUserToCommunityRequestService } from './../../../generated/api/addUserToCommunityRequest.service';
+import { JoinCommunityRequest } from './../../../generated/model/joinCommunityRequest';
+import { JoinCommunityRequestService } from './../../../generated/api/joinCommunityRequest.service';
 import { UserRoleService } from './../../../generated/api/userRole.service';
 import { FilterComponent } from './../../filter/filter.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -46,7 +46,7 @@ export class RequestCommunityComponent implements OnInit {
     private communityService: CommunityService,
     private userService: UserService,
     private userRoleService: UserRoleService,
-    private addUserToCommunityRequestsService: AddUserToCommunityRequestService,
+    private joinCommunityRequestsService: JoinCommunityRequestService,
     private userDetailsService: MyDetailsService) {
   }
 
@@ -102,11 +102,11 @@ export class RequestCommunityComponent implements OnInit {
 
   private createAddCommunitiesRequest(communityIds : string[]) {
     communityIds.forEach(communityId => {
-      const request: AddUserToCommunityRequest = {};
+      const request: JoinCommunityRequest = {};
       request.userId = this.currentUser.id;
       request.communityId = communityId;
       console.log(request);
-      this.addUserToCommunityRequestsService.create(request).subscribe()
+      this.joinCommunityRequestsService.create(request).subscribe()
     });
   }
 

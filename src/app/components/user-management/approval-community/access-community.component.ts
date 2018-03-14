@@ -4,10 +4,10 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
 
-import { AddUserToCommunityRequestService } from '../../../generated/api/addUserToCommunityRequest.service';
-import { AddUserToCommunityRequest } from '../../../generated/model/addUserToCommunityRequest';
 import { Community } from '../../../generated/model/community';
 import { CommunityService } from '../../../generated/api/community.service';
+import { JoinCommunityRequestService } from '../../../generated/api/joinCommunityRequest.service';
+import { JoinCommunityRequest } from '../../../generated/model/joinCommunityRequest';
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
@@ -23,14 +23,14 @@ export class AccessCommunityComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   requestId:string;
-  addUserToCommunityRequest:AddUserToCommunityRequest;
+  joinCommunityRequest:JoinCommunityRequest;
   requstingUser:User;
   requestedCommunity:Community;
   currentCommunities:Community[]=[];
   resultError: string[] = [];
 
   constructor(
-    private addUserToCommunityRequestService:AddUserToCommunityRequestService,
+    private joinCommunityRequestService:JoinCommunityRequestService,
     private router: Router,
     private route: ActivatedRoute,
     public communityService: CommunityService,
@@ -57,25 +57,25 @@ export class AccessCommunityComponent implements OnInit {
 
     // get the request 
     let result: RestResult;
-    this.addUserToCommunityRequestService.getById(this.requestId)
+    this.joinCommunityRequestService.getById(this.requestId)
     .subscribe( (c) => {
       result = c;
       this.resultError.push(result.error);
-      this.addUserToCommunityRequest=result.result;
+      this.joinCommunityRequest=result.result;
 
 
       // get the community that this request if for
       let result2: RestResult;
-      this.communityService.getById(this.addUserToCommunityRequest.communityId)
+      this.communityService.getById(this.joinCommunityRequest.communityId)
         .subscribe(c => {
           result2 = c;
           this.resultError.push(result2.error);
           let com: Community = result2.result;
-          this.addUserToCommunityRequest.communityId = com.name;
+          this.joinCommunityRequest.communityId = com.name;
 
           // get the user
           let result3: RestResult;    
-          this.userService.getById(this.addUserToCommunityRequest.userId)
+          this.userService.getById(this.joinCommunityRequest.userId)
           .subscribe( (c) => {
             result3 = c;
             this.resultError.push(result3.error);
@@ -84,7 +84,7 @@ export class AccessCommunityComponent implements OnInit {
 
             // get this users communities.
             let result4: RestResult;    
-            this.communityService.getByUserIdAndRoleName(this.addUserToCommunityRequest.userId, "User")
+            this.communityService.getByUserIdAndRoleName(this.joinCommunityRequest.userId, "User")
             .subscribe ( (c) => {
               result4 = c;
               this.resultError.push(result4.error);
@@ -109,7 +109,7 @@ export class AccessCommunityComponent implements OnInit {
   submit(status){
 
     let result: RestResult;
-    this.addUserToCommunityRequestService.approve(status, this.addUserToCommunityRequest.id )
+    this.joinCommunityRequestService.approve(status, this.joinCommunityRequest.id )
     .subscribe ( (c) => {
       result = c;
       this.resultError.push(result.error);   

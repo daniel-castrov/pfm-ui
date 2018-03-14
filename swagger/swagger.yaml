@@ -294,11 +294,6 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/JoinCommunityRequest"
-      responses:
-        201:
-        400:
-        403:
-        500:
   /joinCommunityRequests/community/{commId}:
     get:
       tags:
@@ -309,13 +304,6 @@ paths:
         in: "path"
         required: true
         type: "string"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-        404:
-        500:
   /joinCommunityRequests/{id}:
     get:
       tags:
@@ -326,13 +314,6 @@ paths:
         in: "path"
         required: true
         type: "string"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-        404:
-        500:
   /joinCommunityRequests/{requestId}/status:
     post:
       tags:
@@ -352,11 +333,6 @@ paths:
         name: "requestId"
         required: true
         type: "string"
-      responses:
-        201:
-        400:
-        403:
-        500:
 # STOP JOINCOMMUNITYREQUEST
 ##############################################################################
 # START LEAVECOMMUNITYREQUEST
@@ -375,11 +351,6 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/LeaveCommunityRequest"
-      responses:
-        201:
-        400:
-        403:
-        500:
   /leaveCommunityRequests/community/{commId}:
     get:
       tags:
@@ -390,13 +361,6 @@ paths:
         in: "path"
         required: true
         type: "string"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-        404:
-        500:
   /leaveCommunityRequests/{id}:
     get:
       tags:
@@ -407,13 +371,6 @@ paths:
         in: "path"
         required: true
         type: "string"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-        404:
-        500:
   /leaveCommunityRequests/{requestId}/status:
     post:
       tags:
@@ -433,11 +390,6 @@ paths:
         name: "requestId"
         required: true
         type: "string"
-      responses:
-        201:
-        400:
-        403:
-        500:
 # STOP LEAVECOMMUNITYREQUEST
 ##############################################################################
 # START MYDETAILS

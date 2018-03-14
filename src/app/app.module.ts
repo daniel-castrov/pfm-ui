@@ -43,11 +43,11 @@ import { UserListComponent } from './components/user-management/user-list/user-l
 import { VariantsComponent } from './components/programs/program-view/variants.component';
 
 // GENERATED APIs AND MODELS
-import { AddUserToCommunityRequestService } from './generated/api/addUserToCommunityRequest.service';
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
+import { JoinCommunityRequestService } from './generated/api/joinCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
@@ -129,17 +129,17 @@ const appRoutes: Routes = [
     TabsModule.forRoot()
   ],
   providers: [
-    AddUserToCommunityRequestService,
     BlankService,
     CommunityService,
     CreateUserRequestService,
+    JoinCommunityRequestService,
     MyDetailsService,
     RoleService,
     StrangerService,
     UserRoleService,
     UserService,
-    { provide: BASE_PATH, useValue: 'https://ec2-54-174-141-253.compute-1.amazonaws.com:8445/jscbis' },
-    //{ provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+//    { provide: BASE_PATH, useValue: 'https://ec2-54-174-141-253.compute-1.amazonaws.com:8445/jscbis' },
+    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
   ],

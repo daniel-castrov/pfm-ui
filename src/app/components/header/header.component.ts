@@ -16,8 +16,8 @@ import { UserService } from '../../generated/api/user.service';
 import { MyDetailsService } from '../../generated/api/myDetails.service';
 import { CreateUserRequest } from '../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../generated/api/createUserRequest.service';
-import { AddUserToCommunityRequest } from '../../generated/model/addUserToCommunityRequest';
-import { AddUserToCommunityRequestService } from '../../generated/api/addUserToCommunityRequest.service';
+import { JoinCommunityRequest } from '../../generated/model/joinCommunityRequest';
+import { JoinCommunityRequestService } from '../../generated/api/joinCommunityRequest.service';
 
 @Component({
   selector: 'app-header',
@@ -33,7 +33,6 @@ export class HeaderComponent implements OnInit {
   user: User;
   resultError: string[] = [];
   createUserRequests: CreateUserRequest[] = [];
-  //addUserToCommunityRequests:AddUserToCommunityRequest[]=[];
   commRequestWithUsers:CommRequestWithUser[]=[];
   numberOfNotifications=null;
 
@@ -43,7 +42,7 @@ export class HeaderComponent implements OnInit {
     private blankService: BlankService,
     private myDetailsService: MyDetailsService,
     private createUserRequestService: CreateUserRequestService,
-    private addUserToCommunityRequestService:AddUserToCommunityRequestService,
+    private joinCommunityRequestService:JoinCommunityRequestService,
     private userService:UserService
   ) {
   }
@@ -91,20 +90,20 @@ export class HeaderComponent implements OnInit {
 
           // 3 get the current user's community-requests (for the default community) 
           let resultCR: RestResult;
-          this.addUserToCommunityRequestService.getByCommId(this.user.defaultCommunityId)
+          this.joinCommunityRequestService.getByCommId(this.user.defaultCommunityId)
           .subscribe ( (c) => {
             resultCR=c;
             this.resultError.push(resultCR.error);
-            let addUserToCommunityRequests = resultCR.result;
+            let joinCommunityRequests = resultCR.result;
            
-            this.numberOfNotifications += addUserToCommunityRequests.length;  
+            this.numberOfNotifications += joinCommunityRequests.length;  
             // How many notifications are there? If none then null;
             if (this.numberOfNotifications <1) {
               this.numberOfNotifications=null;
             }
 
             // 4 get usernames for each community-requests
-            for ( let request of addUserToCommunityRequests  ){
+            for ( let request of joinCommunityRequests  ){
               let resultUser: RestResult;
               this.userService.getById(request.userId)
               .subscribe ((c) => {
