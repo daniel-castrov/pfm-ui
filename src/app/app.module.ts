@@ -9,7 +9,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment'
 
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
