@@ -4,9 +4,6 @@
 
 <div class="row">
   <div class="col-12">
-    <div class="card-header font-weight-bold">
-      <span class="text-dark card-header-text-pad">{{current.longName}}</span> <span class="text-muted">Increment A</span>
-    </div>
     <table class="GeneratedTable">
       <thead>
         <tr>
@@ -21,153 +18,46 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let fl of appropriations">
-          <td class="row-lt-gray text-center" rowspan="fl.cyclefunds.size">xx {{fl.appropriation}}</td>
-          <td class="row-lt-gray text-center" rowspan="fl.cyclefunds.size">yy {{fl.blin}}</td>
-          <ng-container *ngFor="let cf of fl.cyclefunds.keys()">
-            <td>{{cf}}</td>
+        <ng-container *ngFor="let fl of appropriations; first as isFirstApp">
+          <ng-container *ngFor="let blin of fl.blins; first as isFirstBlin">
+            <ng-container *ngFor="let f of blin.cfunds; first as isFirstFund">
+              <tr>
+                <!--ng-container *ngIf="isFirstBlin">
+                  <td class="row-lt-gray text-center" [attr.rowspan]="fl.rowspan">xx {{fl.appropriation}}</td>
+                </ng-container-->
+                <ng-container *ngIf="isFirstFund">
+                  <td class="row-lt-gray text-center" [attr.rowspan]="blin.rowspan">{{fl.appropriation}}</td>
+                  <td class="row-lt-gray text-center" [attr.rowspan]="blin.rowspan">{{blin.blin}}</td>
+                </ng-container>
+
+                <td class="text-right">{{f.cycle}}</td>
+                <td class="text-right" *ngIf="f.funds.has(startyear); else nomoney">{{f.funds.get(startyear)}}</td>
+                <td class="text-right" *ngIf="f.funds.has(startyear+1); else nomoney">{{f.funds.get(startyear+1)}}</td>
+                <td class="text-right" *ngIf="f.funds.has(startyear+2); else nomoney">{{f.funds.get(startyear+2)}}</td>
+                <td class="text-right" *ngIf="f.funds.has(startyear+3); else nomoney">{{f.funds.get(startyear+3)}}</td>
+                <td class="text-right" *ngIf="f.funds.has(startyear+4); else nomoney">{{f.funds.get(startyear+4)}}</td>
+              </tr>
+            </ng-container>
           </ng-container>
-<!--          <td class="text-right" *ngIf="fl.funds[startyear]; else nomoney">{{fl.funds[startyear]}}</td>
-          <td class="text-right" *ngIf="fl.funds[startyear+1]; else nomoney">{{fl.funds[startyear+1]}}</td>
-          <td class="text-right" *ngIf="fl.funds[startyear+2]; else nomoney">{{fl.funds[startyear+2]}}</td>
-          <td class="text-right" *ngIf="fl.funds[startyear+3]; else nomoney">{{fl.funds[startyear+3]}}</td>
-          <td class="text-right" *ngIf="fl.funds[startyear+4]; else nomoney">{{fl.funds[startyear+4]}}</td>
--->
-        </tr>
-        <tr class="row-lt-green">
-          <td></td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr>
-          <td class="row-lt-gray text-center" rowspan="3">RDT&amp;E</td>
-          <td class="row-lt-gray text-center" rowspan="3">BA5</td>
-          <td>PBR18</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-blue">
-          <td>POM19</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-green">
-          <td></td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
+          <tr class="row-lt-gray font-weight-bold row-border-bottom">
+            <td class="text-center" colspan="2" rowspan="1">Subtotal {{fl.appropriation}}</td>
+            <td>PBR18<i>??</i></td>
+            <td class="text-right" *ngIf="fl.subtotals.has(startyear); else nomoney">{{fl.subtotals.get(startyear)}}</td>
+            <td class="text-right" *ngIf="fl.subtotals.has(startyear+1); else nomoney">{{fl.subtotals.get(startyear+1)}}</td>
+            <td class="text-right" *ngIf="fl.subtotals.has(startyear+2); else nomoney">{{fl.subtotals.get(startyear+2)}}</td>
+            <td class="text-right" *ngIf="fl.subtotals.has(startyear+3); else nomoney">{{fl.subtotals.get(startyear+3)}}</td>
+            <td class="text-right" *ngIf="fl.subtotals.has(startyear+4); else nomoney">{{fl.subtotals.get(startyear+4)}}</td>
+          </tr>
+        </ng-container>
+
         <tr class="row-lt-gray font-weight-bold">
-          <td class="text-center" colspan="2" rowspan="3">Subtotal RDT&amp;E</td>
-          <td>PBR18</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td>POM19</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td></td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray row-border-top font-weight-bold">
-          <td class="row-lt-gray text-center" rowspan="3">PROC</td>
-          <td class="row-lt-gray text-center" rowspan="3">PHM0001</td>
-          <td class="row-white font-weight-normal">PBR18</td>
-          <td class="text-right row-white font-weight-normal">-</td>
-          <td class="text-right row-white font-weight-normal">786</td>
-          <td class="text-right row-white font-weight-normal">32,172</td>
-          <td class="text-right row-white font-weight-normal">41,179</td>
-          <td class="text-right row-white font-weight-normal">41,179</td>
-        </tr>
-        <tr class="row-lt-blue">
-          <td>POM19</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-green">
-          <td class="text-danger"></td>
-          <td class="text-right">-</td>
-          <td class="text-right text-danger">(786)</td>
-          <td class="text-right text-danger">()</td>
-          <td class="text-right text-danger">()</td>
-          <td class="text-right text-danger">()</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td class="text-center" colspan="2" rowspan="3">Subtotal PROC</td>
-          <td>PBR18</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td>POM19</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray row-border-bottom font-weight-bold">
-          <td></td>
-          <td class="text-right">-</td>
-          <td class="text-right text-danger">-</td>
-          <td class="text-right text-danger">-</td>
-          <td class="text-right text-danger">-</td>
-          <td class="text-right text-danger">-</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td class="text-center light-cell" colspan="2" rowspan="3">Total Funds Request</td>
+          <td class="text-center light-cell" colspan="2" rowspan="1">Total Funds Request</td>
           <td>Baseline</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td>POM19</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-        </tr>
-        <tr class="row-lt-gray font-weight-bold">
-          <td>Delta</td>
-          <td class="text-right">-</td>
-          <td class="text-right">-</td>
-          <td class="text-right text-danger">-</td>
-          <td class="text-right text-danger">-</td>
-          <td class="text-right text-danger">-</td>
+          <td class="text-right" *ngIf="totals.has(startyear); else nomoney">{{totals.get(startyear)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+1); else nomoney">{{totals.get(startyear+1)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+2); else nomoney">{{totals.get(startyear+2)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+3); else nomoney">{{totals.get(startyear+3)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+4); else nomoney">{{totals.get(startyear+4)}}</td>
         </tr>
       </tbody>
     </table>

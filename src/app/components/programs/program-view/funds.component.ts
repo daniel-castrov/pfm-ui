@@ -9,7 +9,8 @@ import { Program, FundingLine, IntMap } from '../../../generated';
 export class FundsComponent implements OnInit {
   private _current: Program;
   private appropriations: AppropriationBlock[] = [];
-  private startyear:number = 2013;
+  private startyear: number = 2013;
+  private totals: Map<number, number> = new Map<number, number>();
 
   constructor() { }
 
@@ -21,33 +22,64 @@ export class FundsComponent implements OnInit {
     var my: FundsComponent = this;
     this._current = curr;
 
-    // sort funding lines based on: appropriation, blin, cycle (don't know what cycle is)
+    // sort funding lines based on: appropriation, blin, cycle
     curr.funding.sort(function (a: FundingLine, b: FundingLine) { 
       var diff = a.appropriation.localeCompare(b.appropriation);
       if ( 0 === diff ) {
         diff = a.blin.localeCompare(b.blin);
+        if (0 == diff) {
+          diff = a.fy - b.fy;
+        }
       }
       return diff;
     });
 
     // figure out our rowspans for each blin
     var blockmap: Map<string, AppropriationBlock> = new Map<string, AppropriationBlock>();
+    var blinmap: Map<string, BlinBlock> = new Map<string, BlinBlock>();
     curr.funding.forEach(function (x: FundingLine) {
-      var key = x.appropriation + '-' + x.blin;
-      if (!blockmap.has(key)) {
-        blockmap.set(key, {
+      var blinmapkey = x.appropriation + '-' + x.blin;
+
+      var appblock:AppropriationBlock = null;
+      if (!blockmap.has(x.appropriation)) {
+        appblock = {
           appropriation: x.appropriation,
-          blinfunds: new Map<string, CycleFund>(),
+          blins: [],
           subtotals: new Map<number, number>(),
-          rowspan: 1
-        });
+          rowspan: 0
+        };
+        blockmap.set(x.appropriation, appblock);
+      }
+
+      appblock = blockmap.get(x.appropriation);
+      var blinblock: BlinBlock = null;
+      if (!blinmap.has(blinmapkey)) {
+        blinblock = {
+          blin: x.blin,
+          cfunds: [],
+          rowspan: 0
+        };
+        blinmap.set(blinmapkey, blinblock);
+        appblock.blins.push(blinblock);
       }
 
       var map: Map<number, number> = new Map<number, number>();
       for (var k in x.funds) {
-        map.set(Number(k), x.funds[k]);
+        var fkey: number = Number(k);
+        map.set(fkey, x.funds[k]);
+        if (!appblock.subtotals.has(fkey)){
+          appblock.subtotals.set(fkey, 0);
+        }
+        var oldsub = appblock.subtotals.get(fkey);
+        appblock.subtotals.set(fkey, oldsub + x.funds[k]);
       }
-      blockmap.get(key).cyclefunds.set(x.fy, map);
+      var blinblock: BlinBlock = blinmap.get(blinmapkey);
+      appblock.rowspan += 1;
+      blinblock.rowspan += 1;
+      blinblock.cfunds.push({
+        cycle: x.fy,
+        funds: map
+      });
     });
 
     this.appropriations = [];
@@ -55,10 +87,17 @@ export class FundsComponent implements OnInit {
     for (var x = 0; x < blockmap.size; x++ ){
       this.appropriations.push(it.next().value);
     }
-    console.log(this.appropriations);
-
+    
+    // finally, figure out the total for this request
+    // by adding up all the subtotals
+    this.totals.clear();
     this.appropriations.forEach(function (x) { 
-      console.log(x.appropriation + ' - ' + x.blin + ' - ' + x.cyclefunds.size);
+      x.subtotals.forEach(function (val, key) { 
+        if (!my.totals.has(key)) {
+          my.totals.set(key, 0);
+        }
+        my.totals.set(key, my.totals.get(key) + val);
+      });
     });
 
   }
@@ -72,9 +111,15 @@ interface CycleFund {
   funds: Map<number, number>
 }
 
+interface BlinBlock {
+  blin: string,
+  cfunds: CycleFund[],
+  rowspan: 0
+}
+
 interface AppropriationBlock {
   appropriation: string,
-  blinfunds: Map<string, CycleFund>,
+  blins: BlinBlock[],
   subtotals: Map<number, number>,
-  rowspan:number
+  rowspan: number
 }
