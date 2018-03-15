@@ -9,6 +9,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { environment } from '../environments/environment'
 
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
@@ -138,8 +139,7 @@ const appRoutes: Routes = [
     StrangerService,
     UserRoleService,
     UserService,
-    //{ provide: BASE_PATH, useValue: 'https://ec2-54-174-141-253.compute-1.amazonaws.com:8445/jscbis' },
-    { provide: BASE_PATH, useValue: 'https://localhost:8445/jscbis' },
+    { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
   ],
