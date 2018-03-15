@@ -33,6 +33,8 @@ export class RequestCommunityComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
+  isFirstOpen = true;
+
   allCommunities: Community[] = [];
   availableCommunities: Community[] = [];
   currentCommunities: Community[] = [];
@@ -52,7 +54,10 @@ export class RequestCommunityComponent implements OnInit {
 
   public ngOnInit() {
 
-    jQuery(document).ready(($) => $('#multiselect').multiselect());
+    // jQuery(document).ready(($) => $('#multiselect').multiselect());
+
+    // Alert box message
+    jQuery(".alert").alert('close');
 
     Observable.forkJoin([
       this.communityService.getAll(),
@@ -79,7 +84,7 @@ export class RequestCommunityComponent implements OnInit {
     const communityIdsToBeAdded: string[] = this.subtract(selectedCommunityIds, this.currentCommunityIds);
     this.createAddCommunitiesRequest(communityIdsToBeAdded);
 
-    this.router.navigate(['./home']);    
+    this.router.navigate(['./home']);
   }
 
   public cancel() {
@@ -111,4 +116,3 @@ export class RequestCommunityComponent implements OnInit {
   }
 
 }
-  

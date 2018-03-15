@@ -1,41 +1,106 @@
 <app-header></app-header>
 <div class="container-fluid">
-  <div class="main-content">
-    <div class="col-10 row">
-      <div class="card-header">Community Request</div>
-      <div class="card-container">
-        <div class="row">
-          <div class="col-md-5">
-            <h6>Current Communities</h6>
-            <select name="from[]" id="multiselect" class="form-control window" size="8"
-              multiple="multiple"
-              data-right="#multiselect_to_1"
-              data-right-all="#right_All_1"
-              data-right-selected="#right_Selected_1"
-              data-left-all="#left_All_1"
-              data-left-selected="#left_Selected_1">
-              <option *ngFor="let community of requestedCommunities" [value]="community.id">{{community.name}}</option>
-            </select>
+  <div class="row main-content">
+    <div class="col-10">
+      <p class="h5">Manage My Communities</p>
+      <accordion>
+        <accordion-group [isOpen]="isFirstOpen">
+          <div accordion-heading>
+              <i class="fa fa-th-list icon-pad" aria-hidden="true"></i>
+            <span class="accordion-heading">My Current Communities</span>
           </div>
-          <div class="col-2 arrows">
-            <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-            <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-            <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-            <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+          <span class="badge badge-secondary float-right pull-right">* Indicates Default Community</span>
+          <ul class="community-list">
+            <li>
+              <span class="default-community">* Community 1</span>
+            </li>
+            <li>
+              Community 2
+            </li>
+            <li>
+              Community 3
+            </li>
+            <li>
+              Community 4
+            </li>
+          </ul>
+          <form novalidate class="form-inline">
+            <span class="form-group">
+              <label class="mb-2 mr-sm-2">Change Default Community</label>
+              <select class="form-control-sm mb-2 mr-sm-2">
+               <option>Community 2</option>
+               <option>Community 3</option>
+               <option>Community 4</option>
+              </select>
+            </span>
+            <span>
+              <button class="btn btn-primary btn-sm mb-2">Change</button>
+            </span>
+          </form>
+        </accordion-group>
+      </accordion>
+      <accordion>
+        <accordion-group>
+          <div accordion-heading>
+              <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
+            <span class="accordion-heading">Join Community</span>
           </div>
-          <div class="col-md-5">
-            <h6>Available Communities</h6>
-            <select name="to[]" id="multiselect_to" class="form-control window" size="8" multiple="multiple">
-              <option *ngFor="let community of availableCommunities" [value]="community.id">{{community.name}}</option>
-            </select>
+          <p>Request to join a Community  <small>(Only 1 Community per request)</small></p>
+          <form novalidate class="form-inline">
+            <span class="form-group">
+              <label class="mb-2 mr-sm-2">Select Community</label>
+              <select class="form-control-sm mb-2 mr-sm-2">
+               <option>Community 5</option>
+               <option>Community 6</option>
+               <option>Community 7</option>
+              </select>
+            </span>
+            <span>
+              <button class="btn btn-primary btn-sm mb-2">Send Request</button>
+            </span>
+            <span [hidden]="!formsubmitted">
+              <div class="alert-success-group">
+                <div class="alert-success alert-dismissable">
+                  <strong>You will receive an email once your request is processed.</strong>
+                  <button class="btn btn-default" (click)="done()">X</button>
+                </div>
+              </div>
+            </span>
+          </form>
+        </accordion-group>
+      </accordion>
+      <accordion>
+        <accordion-group>
+          <div accordion-heading>
+            <i class="fa fa-sign-out icon-pad" aria-hidden="true"></i>
+            <span class="accordion-heading">Leave Community</span>
           </div>
-        </div>
-        <div class="controls">
-          <button class="btn btn-default btn-sm" (click)="cancel()">Cancel</button>
-          <button class="btn btn-primary btn-sm" (click)="submit()">Submit</button>
-        </div>
-
-      </div>
+          <p>Request to be removed from a Community  <small>(Only 1 Community per request)</small></p>
+          <form novalidate class="form-inline">
+            <span class="form-group">
+              <label class="mb-2 mr-sm-2">Select Community</label>
+              <select class="form-control-sm mb-2 mr-sm-2">
+               <option>Community 2</option>
+               <option>Community 3</option>
+               <option>Community 4</option>
+              </select>
+            </span>
+            <span>
+              <button class="btn btn-primary btn-sm mb-2">Send Request</button>
+            </span>
+          </form>
+          <span>
+            <div class="alert-success-group">
+              <div class="alert-success alert-dismissable">
+                You will receive an email once your request is processed.
+                <button type="button" class="close fade" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </span>
+        </accordion-group>
+      </accordion>
     </div>
   </div>
 </div>
