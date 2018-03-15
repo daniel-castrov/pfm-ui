@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -14,11 +15,11 @@ import { UserService } from '../../../generated/api/user.service';
 
 
 @Component({
-  selector: 'app-access-community',
-  templateUrl: './access-community.component.html',
-  styleUrls: ['./access-community.component.css']
+  selector: 'app-community-join',
+  templateUrl: './community-join.component.html',
+  styleUrls: ['./community-join.component.css']
 })
-export class AccessCommunityComponent implements OnInit {
+export class CommunityJoinComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
@@ -50,11 +51,6 @@ export class AccessCommunityComponent implements OnInit {
 
   getRequest(): void {
 
-// 1 get the requets
-// 2 get the user that the request if for
-// 3 get all the communities that the user is in
-// 4 get the community the request is for.
-
     // get the request 
     let result: RestResult;
     this.joinCommunityRequestService.getById(this.requestId)
@@ -63,38 +59,24 @@ export class AccessCommunityComponent implements OnInit {
       this.resultError.push(result.error);
       this.joinCommunityRequest=result.result;
 
+      // get the community and user that the request if for,
+      // and all the communities the user is a member of 
+      Observable.forkJoin([
+        this.communityService.getById(this.joinCommunityRequest.communityId),
+        this.userService.getById(this.joinCommunityRequest.userId),
+        this.communityService.getByUserIdAndRoleName(this.joinCommunityRequest.userId, "User")
+      ]).subscribe(data => {
 
-      // get the community that this request if for
-      let result2: RestResult;
-      this.communityService.getById(this.joinCommunityRequest.communityId)
-        .subscribe(c => {
-          result2 = c;
-          this.resultError.push(result2.error);
-          let com: Community = result2.result;
-          this.joinCommunityRequest.communityId = com.name;
+        this.resultError.push(data[0].error);
+        this.resultError.push(data[1].error);
+        this.resultError.push(data[2].error);
 
-          // get the user
-          let result3: RestResult;    
-          this.userService.getById(this.joinCommunityRequest.userId)
-          .subscribe( (c) => {
-            result3 = c;
-            this.resultError.push(result3.error);
-            this.requstingUser=result3.result;
+        let com: Community = data[0].result;
+        this.joinCommunityRequest.communityId = com.name;
+        this.requstingUser = data[1].result;
+        this.currentCommunities =  data[2].result;
 
-
-            // get this users communities.
-            let result4: RestResult;    
-            this.communityService.getByUserIdAndRoleName(this.joinCommunityRequest.userId, "User")
-            .subscribe ( (c) => {
-              result4 = c;
-              this.resultError.push(result4.error);
-
-              this.currentCommunities = result4.result;
-
-            });
-
-          });
-        });
+      });
     });
   }
 

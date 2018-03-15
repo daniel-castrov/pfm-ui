@@ -14,9 +14,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/access-change-approval.component';
-import { AccessCommunityComponent } from './components/user-management/approval-community/access-community.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
+import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
@@ -48,6 +49,7 @@ import { BlankService } from './generated/api/blank.service';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
 import { JoinCommunityRequestService } from './generated/api/joinCommunityRequest.service';
+import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
@@ -61,9 +63,10 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'access-change', component:RequestAccessChangeComponent},
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
-  {path:'access-community/:id', component:AccessCommunityComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
+  {path:'community-join/:id', component:CommunityJoinComponent},
+  {path:'community-leave/:id', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
@@ -92,7 +95,8 @@ const appRoutes: Routes = [
     AccessChangeApprovalComponent,
     AppComponent,
     ApplyComponent,
-    AccessCommunityComponent,
+    CommunityJoinComponent,
+    CommunityLeaveComponent,
     ContactComponent,
     FilterComponent,
     FundsComponent,
@@ -133,6 +137,7 @@ const appRoutes: Routes = [
     CommunityService,
     CreateUserRequestService,
     JoinCommunityRequestService,
+    LeaveCommunityRequestService,
     MyDetailsService,
     RoleService,
     StrangerService,
