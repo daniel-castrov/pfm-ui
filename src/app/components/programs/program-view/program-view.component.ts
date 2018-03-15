@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ProgramsService, Program } from '../../../generated';
 import * as $ from 'jquery';
 
@@ -18,6 +18,7 @@ export class ProgramViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private allprograms: Program[] = [];
   private current: Program = null;
+  startyear: number = 2013;
 
 
   constructor(private programs: ProgramsService) {

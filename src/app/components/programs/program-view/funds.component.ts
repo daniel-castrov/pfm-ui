@@ -9,7 +9,7 @@ import { Program, FundingLine, IntMap } from '../../../generated';
 export class FundsComponent implements OnInit {
   private _current: Program;
   private appropriations: AppropriationBlock[] = [];
-  private startyear: number = 2013;
+  @Input() startyear: number;
   private totals: Map<number, number> = new Map<number, number>();
 
   constructor() { }
@@ -19,6 +19,9 @@ export class FundsComponent implements OnInit {
 
   @Input()
   set current(curr: Program) {
+    if (!curr) {
+      return;
+    }
     var my: FundsComponent = this;
     this._current = curr;
 

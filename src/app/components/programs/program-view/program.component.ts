@@ -8,6 +8,7 @@ import { Program } from '../../../generated';
 })
 export class ProgramComponent implements OnInit {
   @Input() current: Program;
+  @Input() startyear: number;
 
   constructor() {
   }

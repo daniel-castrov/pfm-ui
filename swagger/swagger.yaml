@@ -1212,6 +1212,10 @@ definitions:
         type: "integer"
       funds:
         $ref: '#/definitions/IntMap'
+      variants:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
   Milestone:
     type: "object"
     properties:
@@ -1241,7 +1245,7 @@ definitions:
       quantity:
         type: "integer"
       unitCost:
-        type: "integer"
+        type: "number"
   Program:
     type: "object"
     properties:
