@@ -3,8 +3,8 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Generated
-import { Community } from '../../../generated';
-import { CommunityService } from '../../../generated';
+import { Community } from '../../../generated/model/community';
+import { CommunityService } from '../../../generated/api/community.service';
 import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';

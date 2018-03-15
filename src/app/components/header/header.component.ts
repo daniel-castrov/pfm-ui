@@ -99,7 +99,7 @@ export class HeaderComponent implements OnInit {
             let joinCommunityRequests = r.result;
             for (let request1 of joinCommunityRequests) {
 
-              // 3 get the usernames for the joins
+              // 2a get the usernames for the joins
               this.userService.getById(request1.userId)
                 .subscribe((c) => {
                   resultUser = c;
@@ -114,13 +114,13 @@ export class HeaderComponent implements OnInit {
                 });
             }
 
-            // 4 get the leave-community-requests for this approver
+            // 3 get the leave-community-requests for this approver
             this.leaveCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
               .subscribe(r => {
+               
+                // 3a  get the usernames for the leaves
                 let leaveCommunityRequests = r.result;
                 for (let request2 of leaveCommunityRequests) {
-
-                  // 5  get the usernames for the leaves
                   this.userService.getById(request2.userId)
                     .subscribe((c) => {
                       resultUser = c;
@@ -135,10 +135,11 @@ export class HeaderComponent implements OnInit {
                     });
                 }
 
-                // 6 get the new-user-requests for this approver
+                // 3b get the new-user-requests for this approver
                 this.createUserRequestService.getByCommId(currentUser.defaultCommunityId)
                   .subscribe(r => {
 
+                    // 3c get the usernames for the joins
                     let createUserRequests: CreateUserRequest[] = r.result;
                     for (let request0 of createUserRequests) {
                       this.requestLinks.push(
@@ -148,7 +149,8 @@ export class HeaderComponent implements OnInit {
                           "/user-approval/" + request0.id, 
                           "New User Request"));
                     }
-                    // 7. How many notifications are there? If none then null;
+
+                    // LAST Sort and how many notifications are there? If none then null;
                     this.getSampleNotifications();
                     this.requestLinks.sort(this.compareRequsetLink);
                     this.numberOfNotifications = this.requestLinks.length;  
