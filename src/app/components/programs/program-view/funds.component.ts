@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Program, FundingLine } from '../../../generated';
+import { Program, FundingLine, IntMap } from '../../../generated';
 
 @Component({
   selector: 'funds',
@@ -8,9 +8,8 @@ import { Program, FundingLine } from '../../../generated';
 })
 export class FundsComponent implements OnInit {
   private _current: Program;
-  private appropriations: FundingLine[] = [];
-  private spans: Map<string, number> = new Map<string, number>();
-  private startyear:number = 2010;
+  private appropriations: AppropriationBlock[] = [];
+  private startyear:number = 2013;
 
   constructor() { }
 
@@ -21,10 +20,9 @@ export class FundsComponent implements OnInit {
   set current(curr: Program) {
     var my: FundsComponent = this;
     this._current = curr;
-    this.appropriations = curr.funding;
 
     // sort funding lines based on: appropriation, blin, cycle (don't know what cycle is)
-    this.appropriations.sort(function (a: FundingLine, b: FundingLine) { 
+    curr.funding.sort(function (a: FundingLine, b: FundingLine) { 
       var diff = a.appropriation.localeCompare(b.appropriation);
       if ( 0 === diff ) {
         diff = a.blin.localeCompare(b.blin);
@@ -33,16 +31,50 @@ export class FundsComponent implements OnInit {
     });
 
     // figure out our rowspans for each blin
-    this.spans.clear();
-    this.appropriations.forEach(function (x: FundingLine) {
+    var blockmap: Map<string, AppropriationBlock> = new Map<string, AppropriationBlock>();
+    curr.funding.forEach(function (x: FundingLine) {
       var key = x.appropriation + '-' + x.blin;
-      if (!my.spans.has(key)) {
-        my.spans.set(key, 0);
+      if (!blockmap.has(key)) {
+        blockmap.set(key, {
+          appropriation: x.appropriation,
+          blinfunds: new Map<string, CycleFund>(),
+          subtotals: new Map<number, number>(),
+          rowspan: 1
+        });
       }
-      my.spans.set(key, my.spans.get(key));
+
+      var map: Map<number, number> = new Map<number, number>();
+      for (var k in x.funds) {
+        map.set(Number(k), x.funds[k]);
+      }
+      blockmap.get(key).cyclefunds.set(x.fy, map);
     });
+
+    this.appropriations = [];
+    var it = blockmap.values();
+    for (var x = 0; x < blockmap.size; x++ ){
+      this.appropriations.push(it.next().value);
+    }
+    console.log(this.appropriations);
+
+    this.appropriations.forEach(function (x) { 
+      console.log(x.appropriation + ' - ' + x.blin + ' - ' + x.cyclefunds.size);
+    });
+
   }
   get current() {
     return this._current;
   }
+}
+
+interface CycleFund {
+  cycle: number,
+  funds: Map<number, number>
+}
+
+interface AppropriationBlock {
+  appropriation: string,
+  blinfunds: Map<string, CycleFund>,
+  subtotals: Map<number, number>,
+  rowspan:number
 }

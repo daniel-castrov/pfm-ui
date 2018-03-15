@@ -1208,6 +1208,8 @@ definitions:
         type: "string"
       item:
         type: "string"
+      fy:
+        type: "integer"
       funds:
         $ref: '#/definitions/IntMap'
   Milestone:

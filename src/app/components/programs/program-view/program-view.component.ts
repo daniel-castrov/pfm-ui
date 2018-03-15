@@ -28,7 +28,6 @@ export class ProgramViewComponent implements OnInit {
       (data) => {
         this.allprograms = data.result;
         this.current = this.allprograms[0];
-        console.log(this.current);
       }
     );
   }

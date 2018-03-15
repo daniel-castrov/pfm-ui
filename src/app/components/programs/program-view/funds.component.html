@@ -1,3 +1,7 @@
+<ng-template #nomoney>
+  <td class="text-right">-</td>
+</ng-template>
+
 <div class="row">
   <div class="col-12">
     <div class="card-header font-weight-bold">
@@ -17,15 +21,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let fl of appropriations; index as i">
-          <td class="row-lt-gray text-center" rowspan="spans[fl.appropriation+'-'+fl.blin]">{{fl.appropriation}}</td>
-          <td class="row-lt-gray text-center" rowspan="spans[fl.appropriation+'-'+fl.blin]">{{fl.blin}}</td>
-          <td>{{fl.fy}}</td>
-          <td class="text-right">{{fl.funds[startyear]}}</td>
-          <td class="text-right">{{fl.funds[startyear+1]}}</td>
-          <td class="text-right">{{fl.funds[startyear+2]}}</td>
-          <td class="text-right">{{fl.funds[startyear+3]}}</td>
-          <td class="text-right">{{fl.funds[startyear+4]}}</td>
+        <tr *ngFor="let fl of appropriations">
+          <td class="row-lt-gray text-center" rowspan="fl.cyclefunds.size">xx {{fl.appropriation}}</td>
+          <td class="row-lt-gray text-center" rowspan="fl.cyclefunds.size">yy {{fl.blin}}</td>
+          <ng-container *ngFor="let cf of fl.cyclefunds.keys()">
+            <td>{{cf}}</td>
+          </ng-container>
+<!--          <td class="text-right" *ngIf="fl.funds[startyear]; else nomoney">{{fl.funds[startyear]}}</td>
+          <td class="text-right" *ngIf="fl.funds[startyear+1]; else nomoney">{{fl.funds[startyear+1]}}</td>
+          <td class="text-right" *ngIf="fl.funds[startyear+2]; else nomoney">{{fl.funds[startyear+2]}}</td>
+          <td class="text-right" *ngIf="fl.funds[startyear+3]; else nomoney">{{fl.funds[startyear+3]}}</td>
+          <td class="text-right" *ngIf="fl.funds[startyear+4]; else nomoney">{{fl.funds[startyear+4]}}</td>
+-->
         </tr>
         <tr class="row-lt-green">
           <td></td>
