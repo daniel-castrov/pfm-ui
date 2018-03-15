@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { Program, FundingLine, Variant } from '../../../generated';
 
 @Component({
@@ -54,9 +55,6 @@ export class VariantsComponent implements OnInit {
         });
       });
     });
-    console.log(my.totals);
-    console.log(my.total);
-    console.log(my.variants);
   }
 
   get current(): Program {

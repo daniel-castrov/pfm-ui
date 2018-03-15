@@ -37,7 +37,7 @@
                   <td class="row-white" [attr.rowspan]="1">{{variant.branch}}</td>
                   <td class="row-white" [attr.rowspan]="1">{{variant.description}}</td>
                   <td class="row-white" [attr.rowspan]="1">{{variant.contractor}}</td>
-                  <td class="row-white" [attr.rowspan]="1">{{variant.unitcost}}</td>
+                  <td class="row-white" [attr.rowspan]="1">{{variant.unitcost|currency}}</td>
                   <td class="row-white">PB{{variant.cycle}}</td>
                   <td class="text-right" *ngIf="variant.funds.has(startyear); else nomoney">{{variant.funds.get(startyear)}}</td>
                   <td class="text-right" *ngIf="variant.funds.has(startyear+1); else nomoney">{{variant.funds.get(startyear+1)}}</td>
