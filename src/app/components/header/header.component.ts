@@ -65,7 +65,7 @@ export class HeaderComponent implements OnInit {
         my.authUser = JSON.parse(atob(authHeader));
         my.isloggedin = true;
         if (my.authUser.rolenames.includes('User_Approver')) {
-          this.requestLinks = [];
+          //this.requestLinks = [];
           my.getApproverNotifications();
         }
       });
@@ -130,18 +130,21 @@ export class HeaderComponent implements OnInit {
                         new RequestLink(
                           user.firstName + " " + user.lastName,
                           request2.dateApplied, 
-                          "/community-join/" + request2.id, 
+                          "/community-leave/" + request2.id, 
                           "Community Request"));
                     });
                 }
 
+                
                 // 3b get the new-user-requests for this approver
                 this.createUserRequestService.getByCommId(currentUser.defaultCommunityId)
                   .subscribe(r => {
-
+                    console.log("Hello");
                     // 3c get the usernames for the joins
                     let createUserRequests: CreateUserRequest[] = r.result;
+                    console.log(r.result);
                     for (let request0 of createUserRequests) {
+                      
                       this.requestLinks.push(
                         new RequestLink(
                           request0.firstName + " " + request0.lastName, 

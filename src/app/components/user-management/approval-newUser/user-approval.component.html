@@ -1,11 +1,11 @@
 <app-header></app-header>
 <div class="container-fluid" *ngIf="header.isloggedin">
   <div class="row main-content">
-    <div class="col-lg-2">
-      <span *ngIf="error">{{error}}</span>
-    </div>
-    <div class="col-lg-8">
-      <h5>{{createUserRequest.firstName}} {{createUserRequest?.middleInitial}} {{createUserRequest.lastName}} User Access Request ({{ createUserRequest.dateApplied }})</h5>
+    <div class="error" *ngFor="let error of resultError">{{error}}</div>
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8" *ngIf="createUserRequest">
+      <h5>{{createUserRequest.firstName}} {{createUserRequest?.middleInitial}} {{createUserRequest.lastName}} User Access Request
+        ({{ createUserRequest.dateApplied }})</h5>
       <hr>
       <span class="form-group inline-name">
         <label>First Name</label>
@@ -53,8 +53,12 @@
       </div>
       <div class="form-group">
         <span class="nda">Signed NDA</span>
-        <span *ngIf="!createUserRequest.nda"><i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i></span>
-        <span *ngIf="createUserRequest.nda"><i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i></span>
+        <span *ngIf="!createUserRequest.nda">
+          <i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i>
+        </span>
+        <span *ngIf="createUserRequest.nda">
+          <i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i>
+        </span>
       </div>
       <span class="form-group inline-name">
         <label>Sponsor Name</label>

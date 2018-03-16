@@ -62,6 +62,12 @@ export class ManageCommunitiesComponent implements OnInit {
         result = c;
         this.resultError.push(result.error);
         this.communities = result.result;
+
+        if ( null==this.communities || this.communities.length==0 ){
+          this.resultError.push("No Communities were found");
+          return;
+        }
+
       });
   }
 

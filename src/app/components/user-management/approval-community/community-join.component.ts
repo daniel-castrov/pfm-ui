@@ -28,7 +28,7 @@ export class CommunityJoinComponent implements OnInit {
   requstingUser:User;
   requestedCommunity:Community;
   currentCommunities:Community[]=[];
-  resultError: string[] = [];
+  resultError;
 
   constructor(
     private joinCommunityRequestService:JoinCommunityRequestService,
@@ -45,6 +45,7 @@ export class CommunityJoinComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.resultError=this.header.resultError;
     this.getRequest();
   }
 
@@ -58,6 +59,11 @@ export class CommunityJoinComponent implements OnInit {
       result = c;
       this.resultError.push(result.error);
       this.joinCommunityRequest=result.result;
+
+      if ( null==this.joinCommunityRequest ){
+        this.resultError.push("The requested Join-Community-Request does not exist");
+        return;
+      }
 
       // get the community and user that the request if for,
       // and all the communities the user is a member of 

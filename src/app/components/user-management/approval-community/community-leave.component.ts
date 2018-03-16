@@ -28,7 +28,7 @@ export class CommunityLeaveComponent implements OnInit {
   requstingUser:User;
   requestedCommunity:Community;
   currentCommunities:Community[]=[];
-  resultError: string[] = [];
+  resultError;
 
   constructor(
     private leaveCommunityRequestService:LeaveCommunityRequestService,
@@ -45,6 +45,7 @@ export class CommunityLeaveComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.resultError=this.header.resultError;
     this.getRequest();
   }
 
@@ -58,6 +59,10 @@ export class CommunityLeaveComponent implements OnInit {
       result = c;
       this.resultError.push(result.error);
       this.leaveCommunityRequest=result.result;
+      if ( null==this.leaveCommunityRequest ){
+        this.resultError.push("The requested Leave-Community-Request does not exist");
+        return;
+      }
 
       // get the community and user that the request if for,
       // and all the communities the user is a member of 

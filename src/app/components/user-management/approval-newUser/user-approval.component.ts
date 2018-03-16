@@ -19,7 +19,7 @@ export class UserApprovalComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   id: string;
-  resultError: string[] = [];
+  resultError;
   createUserRequest: CreateUserRequest;
   error="";
 
@@ -35,6 +35,7 @@ export class UserApprovalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.resultError=this.header.resultError;
     this.getCreateUserRquest();
   }
 
@@ -47,6 +48,10 @@ export class UserApprovalComponent implements OnInit {
         result = c;
         this.resultError.push(result.error);
         this.createUserRequest = result.result;
+        if ( null==this.createUserRequest ){
+          this.resultError.push("The requested New-User-Application does not exist");
+          return;
+        }
 
         // get the community that this request if for
         let result2: RestResult;

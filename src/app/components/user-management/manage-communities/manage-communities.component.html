@@ -1,9 +1,10 @@
 <app-header></app-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="error" *ngFor="let error of resultError">{{error}}</div>
     <div class="col-10 col-md-7">
       <accordion>
-        <accordion-group #group [isOpen]="status.isFirstOpen" [isDisabled]="status.isFirstDisabled">
+        <accordion-group #group [isOpen]="status.isFirstOpen" [isDisabled]="status.isFirstDisabled" *ngIf="communities">
           <div accordion-heading class="clearfix">
             List of Communitiess
           </div>
@@ -13,11 +14,6 @@
               <span class="btn-card-header"><a href="#" routerLink="/community-details/{{ comm?.id}}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Details</a></span>
             </li>
           </ul>
-          <div *ngIf="resultError.length>0" >
-              <span *ngFor="let error of resultError">
-                  {{error}}
-              </span>
-          </div>
         </accordion-group>
         <accordion-group #group>
 			    <div accordion-heading class="clearfix">
