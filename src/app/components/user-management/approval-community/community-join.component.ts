@@ -102,7 +102,6 @@ export class CommunityJoinComponent implements OnInit {
       result = c;
       this.resultError.push(result.error);   
       this.router.navigate(['./home']); 
-      location.reload();
     });
 
   }

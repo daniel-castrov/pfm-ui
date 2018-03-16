@@ -79,8 +79,7 @@ export class UserApprovalComponent implements OnInit {
       .subscribe(c => {
         result = c;
         this.resultError.push(result.error);       
+        this.router.navigate(['./user-list']); 
       });
-      location.reload();
-      this.router.navigate(['./user-list']); 
   }
 }

@@ -33,18 +33,18 @@ export class ManageCommunitiesComponent implements OnInit {
     isFirstDisabled: false
   };
 
-  communities: Community[]=[];
-  users: User[]=[];
+  communities: Community[] = [];
+  users: User[] = [];
   newCommunity: Community;
   newapprover: string;
-  resultError: string[]=[];
+  resultError: string[] = [];
 
   constructor(
     private router: Router,
     public communityService: CommunityService,
     public userService: UserService,
     private roleService: RoleService,
-    private userRoleService:UserRoleService,
+    private userRoleService: UserRoleService,
   ) {
 
   }
@@ -55,7 +55,7 @@ export class ManageCommunitiesComponent implements OnInit {
     this.newCommunity = new Object();
   }
 
-  getCommunities(): void{
+  getCommunities(): void {
     let result: RestResult;
     this.communityService.getAll()
       .subscribe(c => {
@@ -63,7 +63,7 @@ export class ManageCommunitiesComponent implements OnInit {
         this.resultError.push(result.error);
         this.communities = result.result;
 
-        if ( null==this.communities || this.communities.length==0 ){
+        if (null == this.communities || this.communities.length == 0) {
           this.resultError.push("No Communities were found");
           return;
         }
@@ -71,24 +71,22 @@ export class ManageCommunitiesComponent implements OnInit {
       });
   }
 
-  getUsers(): void{
-    let result:RestResult;
+  getUsers(): void {
+    let result: RestResult;
     this.userService.getAll()
-    .subscribe(c => {
-      result = c;
-      this.resultError.push(result.error);
-      this.users=result.result;
-    });
+      .subscribe(c => {
+        result = c;
+        this.resultError.push(result.error);
+        this.users = result.result;
+      });
   }
 
 
 
-  addCommunity() {
+  addCommunity():void {
 
-    let approverRole:Role;
-
-    if ( !this.isValid() ){
-      let errorString="The new community name or identifier is not unique";
+    if (!this.isValid()) {
+      let errorString = "The new community name or identifier is not unique";
       console.log(errorString);
       this.resultError.push(errorString);
     } else {
@@ -98,48 +96,54 @@ export class ManageCommunitiesComponent implements OnInit {
 
       let resultCom: RestResult;
       this.communityService.create(this.newCommunity)
-      .subscribe(r => {
-        resultCom = r;
-        this.resultError.push(resultCom.error);
-        this.newCommunity=resultCom.result;
-
-        console.log(this.newCommunity);
-
-        
-        let resultRole: RestResult;
-        this.roleService.getByNameAndCommunityId(this.newCommunity.id,"User_Approver")
         .subscribe(r => {
-          resultRole = r;
-          this.resultError.push(resultRole.error);
-          approverRole = resultRole.result;
-          let userRole:UserRole=new Object();
-          userRole.roleId=approverRole.id;
-          userRole.userId=this.newapprover;
-          console.log(userRole);
-          
-          let resultUserRole: RestResult;
-          this.userRoleService.create(userRole)
-          .subscribe(r => {
-            resultRole = r;
+          resultCom = r;
+          this.resultError.push(resultCom.error);
+          this.newCommunity = resultCom.result;
 
-            if (this.resultError.length===0) {
+          console.log(this.newCommunity);
+
+          // Get the Roles
+          Observable.forkJoin([
+            this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User"),
+            this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User_Approver")
+
+          ]).subscribe(data => {
+
+            // create the userUserRole
+            let userRole: Role;
+            userRole = data[0].result;
+            let userUserRole: UserRole = new Object();
+            userUserRole.roleId = userRole.id;
+            userUserRole.userId = this.newapprover;
+            console.log(userUserRole);
+
+            // create the approverUserRole
+            let approverRole: Role;
+            approverRole = data[1].result;
+            let appUserRole: UserRole = new Object();
+            appUserRole.roleId = approverRole.id;
+            appUserRole.userId = this.newapprover;
+            console.log(appUserRole);
+
+            // Save both new userRoles
+            Observable.forkJoin([
+              this.userRoleService.create(userUserRole),
+              this.userRoleService.create(appUserRole)
+            ]).subscribe(data2 => {
               this.communities.push(this.newCommunity);
-            }
-
+              this.router.navigate(['/manage-communities']);
+            });
           });
         });
-        location.reload();
-        this.router.navigate(['/manage-communities']);
-      });
-      
     }
   }
 
-  isValid(){
-    let com:Community;
-    for ( com of this.communities ){
-      if (  com.name === this.newCommunity.name ||
-            com.identifier === this.newCommunity.identifier ){
+  isValid() {
+    let com: Community;
+    for (com of this.communities) {
+      if (com.name === this.newCommunity.name ||
+        com.identifier === this.newCommunity.identifier) {
         return false;
       }
     }

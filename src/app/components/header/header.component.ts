@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
     this.getAutUser();
   }
 
-  getAutUser():void {
+  getAutUser(): void {
 
     var my: HeaderComponent = this;
 
@@ -71,7 +71,7 @@ export class HeaderComponent implements OnInit {
       });
   }
 
-  getSampleNotifications():void {
+  getSampleNotifications(): void {
     this.requestLinks.push(new RequestLink("Sam Smith", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
     this.requestLinks.push(new RequestLink("Patti Jones", '25204707542', "/user-approval/" + "2222222222", "New User Request"));
     this.requestLinks.push(new RequestLink("Michael McCallaster", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
@@ -81,7 +81,7 @@ export class HeaderComponent implements OnInit {
   }
 
   // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
-  getApproverNotifications():void {
+  getApproverNotifications(): void {
 
     // 1 get the current user
     var resultUser: RestResult;
@@ -110,14 +110,14 @@ export class HeaderComponent implements OnInit {
                       user.firstName + " " + user.lastName,
                       request1.dateApplied,
                       "/community-join/" + request1.id,
-                      "Community Request"));
+                      "Join Community Request"));
+                      this.fixNotifications();
                 });
             }
 
             // 3 get the leave-community-requests for this approver
             this.leaveCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
               .subscribe(r => {
-               
                 // 3a  get the usernames for the leaves
                 let leaveCommunityRequests = r.result;
                 for (let request2 of leaveCommunityRequests) {
@@ -126,44 +126,48 @@ export class HeaderComponent implements OnInit {
                       resultUser = c;
                       this.resultError.push(resultUser.error);
                       let user: User = resultUser.result;
+                      console.log(user.firstName);
                       this.requestLinks.push(
                         new RequestLink(
                           user.firstName + " " + user.lastName,
-                          request2.dateApplied, 
-                          "/community-leave/" + request2.id, 
-                          "Community Request"));
+                          request2.dateApplied,
+                          "/community-leave/" + request2.id,
+                          "Leave Community Request"));
+                          this.fixNotifications();
                     });
                 }
 
-                
+
                 // 3b get the new-user-requests for this approver
                 this.createUserRequestService.getByCommId(currentUser.defaultCommunityId)
                   .subscribe(r => {
-                    console.log("Hello");
                     // 3c get the usernames for the joins
                     let createUserRequests: CreateUserRequest[] = r.result;
-                    console.log(r.result);
                     for (let request0 of createUserRequests) {
-                      
+
                       this.requestLinks.push(
                         new RequestLink(
-                          request0.firstName + " " + request0.lastName, 
-                          request0.dateApplied, 
-                          "/user-approval/" + request0.id, 
+                          request0.firstName + " " + request0.lastName,
+                          request0.dateApplied,
+                          "/user-approval/" + request0.id,
                           "New User Request"));
                     }
 
                     // LAST Sort and how many notifications are there? If none then null;
-                    this.getSampleNotifications();
-                    this.requestLinks.sort(this.compareRequsetLink);
-                    this.numberOfNotifications = this.requestLinks.length;  
-                    if (this.numberOfNotifications <1) {
-                      this.numberOfNotifications=null;
-                    }
+                    //this.getSampleNotifications();
+                    this.fixNotifications();
                   });
               });
           });
       });
+  }
+
+  fixNotifications() {
+    this.requestLinks.sort(this.compareRequsetLink);
+    this.numberOfNotifications = this.requestLinks.length;
+    if (this.numberOfNotifications < 1) {
+      this.numberOfNotifications = null;
+    }
   }
 
   compareRequsetLink(a, b) {
