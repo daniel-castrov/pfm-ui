@@ -40,14 +40,11 @@ body {
     color: #fff;
     height: 96px;
   }
-  .sub-title {
-    font-size: 1px;
-  }
 }
 
 .sub-title {
   float: left;
-  margin-left: 70px;
+  margin-left: 85px;
   font-size: 15px;
   color: #708CA7;
   font-style: italic;
@@ -55,7 +52,7 @@ body {
 
 @media (max-width: 960px) {
   .sub-title {
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 
