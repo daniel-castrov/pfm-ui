@@ -1,6 +1,6 @@
 import { UserRole } from './../../../generated/model/userRole';
-import { AddUserToCommunityRequest } from './../../../generated/model/addUserToCommunityRequest';
-import { AddUserToCommunityRequestService } from './../../../generated/api/addUserToCommunityRequest.service';
+import { JoinCommunityRequest } from './../../../generated/model/joinCommunityRequest';
+import { JoinCommunityRequestService } from './../../../generated/api/joinCommunityRequest.service';
 import { UserRoleService } from './../../../generated/api/userRole.service';
 import { FilterComponent } from './../../filter/filter.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -33,6 +33,8 @@ export class RequestCommunityComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
+  isFirstOpen = true;
+
   allCommunities: Community[] = [];
   availableCommunities: Community[] = [];
   currentCommunities: Community[] = [];
@@ -46,13 +48,16 @@ export class RequestCommunityComponent implements OnInit {
     private communityService: CommunityService,
     private userService: UserService,
     private userRoleService: UserRoleService,
-    private addUserToCommunityRequestsService: AddUserToCommunityRequestService,
+    private joinCommunityRequestsService: JoinCommunityRequestService,
     private userDetailsService: MyDetailsService) {
   }
 
   public ngOnInit() {
 
-    jQuery(document).ready(($) => $('#multiselect').multiselect());
+    // jQuery(document).ready(($) => $('#multiselect').multiselect());
+
+    // Alert box message
+    jQuery(".alert").alert('close');
 
     Observable.forkJoin([
       this.communityService.getAll(),
@@ -79,7 +84,7 @@ export class RequestCommunityComponent implements OnInit {
     const communityIdsToBeAdded: string[] = this.subtract(selectedCommunityIds, this.currentCommunityIds);
     this.createAddCommunitiesRequest(communityIdsToBeAdded);
 
-    this.router.navigate(['./home']);    
+    this.router.navigate(['./home']);
   }
 
   public cancel() {
@@ -102,13 +107,12 @@ export class RequestCommunityComponent implements OnInit {
 
   private createAddCommunitiesRequest(communityIds : string[]) {
     communityIds.forEach(communityId => {
-      const request: AddUserToCommunityRequest = {};
+      const request: JoinCommunityRequest = {};
       request.userId = this.currentUser.id;
       request.communityId = communityId;
       console.log(request);
-      this.addUserToCommunityRequestsService.create(request).subscribe()
+      this.joinCommunityRequestsService.create(request).subscribe()
     });
   }
 
 }
-  

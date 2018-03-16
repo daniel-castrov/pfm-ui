@@ -1,7 +1,8 @@
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { Component, OnInit, ViewChild } from '@angular/core';
-
+import { Observable } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
 
@@ -69,21 +70,20 @@ private getPrograms(): void {
     this.approvers=[];
 
     let result: RestResult;
-    let s = this.communityService.getById(this.id)
-    .subscribe(r => {
-      result = r;
-      this.resultError.push(result.error);
-      this.community = result.result;
 
+    Observable.forkJoin([
+      this.communityService.getById(this.id),
+      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver")
+    ]).subscribe(data => {
+
+      this.resultError.push(data[0].error);
+      this.resultError.push(data[1].error);
+
+      this.community = data[0].result;
       console.log(this.community );
 
-      let resultAppr: RestResult;
-      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver")
-        .subscribe(r => {
-          resultAppr = r;
-          this.resultError.push(resultAppr.error);
-          this.approvers = resultAppr.result;
-        });
+      this.approvers = data[1].result;
+
     });
   }
 

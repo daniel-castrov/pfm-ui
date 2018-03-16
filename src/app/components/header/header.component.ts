@@ -1,28 +1,32 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Input } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
 import {
   HttpClient, HttpHeaders, HttpParams,
   HttpResponse, HttpEvent
 } from '@angular/common/http';
+import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/toPromise';
 
 // Generated
 import { AuthUser } from '../../generated/model/authUser';
 import { RestResult } from '../../generated/model/restResult';
 import { BlankService } from '../../generated/api/blank.service';
 import { User } from '../../generated/model/user';
-import { UserService } from '../../generated/api/user.service'; 
+import { UserService } from '../../generated/api/user.service';
 import { MyDetailsService } from '../../generated/api/myDetails.service';
 import { CreateUserRequest } from '../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../generated/api/createUserRequest.service';
-import { AddUserToCommunityRequest } from '../../generated/model/addUserToCommunityRequest';
-import { AddUserToCommunityRequestService } from '../../generated/api/addUserToCommunityRequest.service';
+import { JoinCommunityRequest } from '../../generated/model/joinCommunityRequest';
+import { JoinCommunityRequestService } from '../../generated/api/joinCommunityRequest.service';
+import { LeaveCommunityRequest } from '../../generated/model/leaveCommunityRequest';
+import { LeaveCommunityRequestService } from '../../generated/api/leaveCommunityRequest.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  providers: [NgbTooltipConfig]
 })
 
 export class HeaderComponent implements OnInit {
@@ -30,102 +34,157 @@ export class HeaderComponent implements OnInit {
   authUser: AuthUser;
   authUserJson: string;
   isloggedin: boolean = false;
-  user: User;
   resultError: string[] = [];
-  createUserRequests: CreateUserRequest[] = [];
-  //addUserToCommunityRequests:AddUserToCommunityRequest[]=[];
-  commRequestWithUsers:CommRequestWithUser[]=[];
-  numberOfNotifications=null;
+  requestLinks: RequestLink[] = [];
+  numberOfNotifications = null;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private blankService: BlankService,
     private myDetailsService: MyDetailsService,
     private createUserRequestService: CreateUserRequestService,
-    private addUserToCommunityRequestService:AddUserToCommunityRequestService,
-    private userService:UserService
+    private joinCommunityRequestService: JoinCommunityRequestService,
+    private leaveCommunityRequestService: LeaveCommunityRequestService,
+    private userService: UserService,
+    private config: NgbTooltipConfig
   ) {
+    config.placement = 'left';
   }
 
   ngOnInit() {
     this.getAutUser();
   }
 
-  ngAfterViewInit() {
-  }
+  getAutUser():void {
 
-  getAutUser() {
+    var my: HeaderComponent = this;
+
     this.blankService.blank("response", true).subscribe(
       (r: HttpResponse<RestResult>) => {
         var authHeader = r.headers.get('Authorization');
-        this.authUserJson = atob(authHeader);
-        this.authUser = JSON.parse(atob(authHeader));
-        this.isloggedin = true;
-        if (this.authUser.rolenames.includes('User_Approver')) {
-          this.getApproverNotifications();
+        my.authUserJson = atob(authHeader);
+        my.authUser = JSON.parse(atob(authHeader));
+        my.isloggedin = true;
+        if (my.authUser.rolenames.includes('User_Approver')) {
+          this.requestLinks = [];
+          my.getApproverNotifications();
         }
       });
   }
 
-  getApproverNotifications() {
+  getSampleNotifications():void {
+    this.requestLinks.push(new RequestLink("Sam Smith", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink("Patti Jones", '25204707542', "/user-approval/" + "2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink("Michael McCallaster", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink("Amy Awkward", '15209707542', "/community-join/" + "2222222222", "Community Request"));
+    this.requestLinks.push(new RequestLink("Violet Vulcan", '85202107542', "/community-leave/" + "2222222222", "Leave Community Request"));
+    this.numberOfNotifications = this.requestLinks.length;
+  }
+
+  // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
+  getApproverNotifications():void {
 
     // 1 get the current user
     var resultUser: RestResult;
+
     this.myDetailsService.getCurrentUser()
       .subscribe((c) => {
         resultUser = c;
-        this.user = resultUser.result;
-        console.log(this.user.firstName);
 
-        // 2 get the current user's new-user-requests (for the default community) 
-        let resultNUR: RestResult;
-        let s = this.createUserRequestService.getByCommId(this.user.defaultCommunityId);
-        s.subscribe(c => {
-          resultNUR = c;
-          this.resultError.push(resultNUR.error);
-          this.createUserRequests = resultNUR.result;
+        let currentUser = resultUser.result;
+        console.log(currentUser.firstName);
 
-          // How many notifications are there?
-          this.numberOfNotifications = this.createUserRequests.length;
+        // 2 get the join-community-requests for this approver
+        this.joinCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
+          .subscribe(r => {
+            let joinCommunityRequests = r.result;
+            for (let request1 of joinCommunityRequests) {
 
-          // 3 get the current user's community-requests (for the default community) 
-          let resultCR: RestResult;
-          this.addUserToCommunityRequestService.getByCommId(this.user.defaultCommunityId)
-          .subscribe ( (c) => {
-            resultCR=c;
-            this.resultError.push(resultCR.error);
-            let addUserToCommunityRequests = resultCR.result;
-           
-            this.numberOfNotifications += addUserToCommunityRequests.length;  
-            // How many notifications are there? If none then null;
-            if (this.numberOfNotifications <1) {
-              this.numberOfNotifications=null;
+              // 3 get the usernames for the joins
+              this.userService.getById(request1.userId)
+                .subscribe((c) => {
+                  resultUser = c;
+                  this.resultError.push(resultUser.error);
+                  let user: User = resultUser.result;
+                  this.requestLinks.push(
+                    new RequestLink(
+                      user.firstName + " " + user.lastName,
+                      request1.dateApplied,
+                      "/community-join/" + request1.id,
+                      "Community Request"));
+                });
             }
 
-            // 4 get usernames for each community-requests
-            for ( let request of addUserToCommunityRequests  ){
-              let resultUser: RestResult;
-              this.userService.getById(request.userId)
-              .subscribe ((c) => {
-                resultUser=c;
-                this.resultError.push(resultUser.error);
-                this.commRequestWithUsers.push(new CommRequestWithUser( resultUser.result , request.id ) );
-              })
-            }
+            // 4 get the leave-community-requests for this approver
+            this.leaveCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
+              .subscribe(r => {
+                let leaveCommunityRequests = r.result;
+                for (let request2 of leaveCommunityRequests) {
+
+                  // 5  get the usernames for the leaves
+                  this.userService.getById(request2.userId)
+                    .subscribe((c) => {
+                      resultUser = c;
+                      this.resultError.push(resultUser.error);
+                      let user: User = resultUser.result;
+                      this.requestLinks.push(
+                        new RequestLink(
+                          user.firstName + " " + user.lastName,
+                          request2.dateApplied, 
+                          "/community-join/" + request2.id, 
+                          "Community Request"));
+                    });
+                }
+
+                // 6 get the new-user-requests for this approver
+                this.createUserRequestService.getByCommId(currentUser.defaultCommunityId)
+                  .subscribe(r => {
+
+                    let createUserRequests: CreateUserRequest[] = r.result;
+                    for (let request0 of createUserRequests) {
+                      this.requestLinks.push(
+                        new RequestLink(
+                          request0.firstName + " " + request0.lastName, 
+                          request0.dateApplied, 
+                          "/user-approval/" + request0.id, 
+                          "New User Request"));
+                    }
+                    // 7. How many notifications are there? If none then null;
+                    this.getSampleNotifications();
+                    this.requestLinks.sort(this.compareRequsetLink);
+                    this.numberOfNotifications = this.requestLinks.length;  
+                    if (this.numberOfNotifications <1) {
+                      this.numberOfNotifications=null;
+                    }
+                  });
+              });
           });
-        });
       });
   }
-}
 
-class CommRequestWithUser {
-  user: User;
-  requestId:string; 
-  constructor(u: User, r: string) {
-    this.user = u;
-    this.requestId = r;
+  compareRequsetLink(a, b) {
+    if (a.date < b.date)
+      return -1;
+    if (a.date > b.date)
+      return 1;
+    return 0;
   }
+
+
 }
 
+class RequestLink {
+  userId: string;
+  name: string;
+  date: string;
+  link: string;
+  type: string;
 
+  constructor(id: string, d: string, l: string, t: string) {
+    this.userId = id;
+    this.date = d;
+    this.link = l;
+    this.type = t;
+    this.name = id;
+  }
+
+}

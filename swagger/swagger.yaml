@@ -279,13 +279,11 @@ paths:
           description: "An unexpected error occured."
 # STOP CREATEUSERREQUEST
 ##############################################################################
-# START ADDUSERTOCOMMUNITYREQUEST
-  /addUserToCommunityRequests:
+# START JOINCOMMUNITYREQUEST
+  /joinCommunityRequests:
     post:
       tags:
-      - "AddUserToCommunityRequest"
-      summary: "Creates a AddUserToCommunityRequests"
-      description: "Adds a AddUserToCommunityRequests."
+      - "JoinCommunityRequest"
       operationId: "create"
       consumes:
       - "application/json"
@@ -294,73 +292,33 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "a AddUserToCommunityRequests"
         required: true
         schema:
-          $ref: "#/definitions/AddUserToCommunityRequest"
-      responses:
-        201:
-          description: "addUserToCommunityRequests successfully created."
-        400:
-          description: "AddUserToCommunityRequests couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-  /addUserToCommunityRequests/community/{commId}:
+          $ref: "#/definitions/JoinCommunityRequest"
+  /joinCommunityRequests/community/{commId}:
     get:
       tags:
-      - "AddUserToCommunityRequest"
-      summary: "Gets a AddUserToCommunityRequests"
-      description: "Get a AddUserToCommunityRequests user identified via its id"
+      - "JoinCommunityRequest"
       operationId: "getByCommId"
       parameters:
       - name: "commId"
         in: "path"
-        description: "AddUserToCommunityRequests id"
         required: true
         type: "string"
-      responses:
-        200:
-          description: "a AddUserToCommunityRequests"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "AddUserToCommunityRequests does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /addUserToCommunityRequests/{id}:
+  /joinCommunityRequests/{id}:
     get:
       tags:
-      - "AddUserToCommunityRequest"
-      summary: "Gets a AddUserToCommunityRequests"
-      description: "Get a AddUserToCommunityRequests user identified via its id"
+      - "JoinCommunityRequest"
       operationId: "getById"
       parameters:
       - name: "id"
         in: "path"
-        description: "AddUserToCommunityRequests id"
         required: true
         type: "string"
-      responses:
-        200:
-          description: "a AddUserToCommunityRequests"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "AddUserToCommunityRequests does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /addUserToCommunityRequests/{requestId}/status:
+  /joinCommunityRequests/{requestId}/status:
     post:
       tags:
-      - "AddUserToCommunityRequest"
-      summary: "Approve a AddUserToCommunityRequests"
-      description: "Approves a new AddUserToCommunityRequests"
+      - "JoinCommunityRequest"
       operationId: "approve"
       consumes:
       - "application/json"
@@ -369,25 +327,71 @@ paths:
       parameters:
       - in: "body"
         name: "status"
-        description: "a Status"
         required: true
         schema:
           $ref: "#/definitions/Status"
       - in: "path"
         name: "requestId"
-        description: "requestId"
         required: true
         type: "string"
-      responses:
-        201:
-          description: "AddUserToCommunityRequests successfully updated."
-        400:
-          description: "AddUserToCommunityRequests couldn't be updated."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-# STOP ADDUSERTOCOMMUNITYREQUEST
+# STOP JOINCOMMUNITYREQUEST
+##############################################################################
+# START LEAVECOMMUNITYREQUEST
+  /leaveCommunityRequests:
+    post:
+      tags:
+      - "LeaveCommunityRequest"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LeaveCommunityRequest"
+  /leaveCommunityRequests/community/{commId}:
+    get:
+      tags:
+      - "LeaveCommunityRequest"
+      operationId: "getByCommId"
+      parameters:
+      - name: "commId"
+        in: "path"
+        required: true
+        type: "string"
+  /leaveCommunityRequests/{id}:
+    get:
+      tags:
+      - "LeaveCommunityRequest"
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+  /leaveCommunityRequests/{requestId}/status:
+    post:
+      tags:
+      - "LeaveCommunityRequest"
+      operationId: "approve"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "status"
+        required: true
+        schema:
+          $ref: "#/definitions/Status"
+      - in: "path"
+        name: "requestId"
+        required: true
+        type: "string"
+# STOP LEAVECOMMUNITYREQUEST
 ##############################################################################
 # START MYDETAILS
   /mydetails:
@@ -1095,7 +1099,22 @@ definitions:
         type: "string"
       status:
         type: "string"
-  AddUserToCommunityRequest:
+  JoinCommunityRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      userId:
+        type: "string"
+      communityId:
+        type: "string"
+      dateApplied:
+        type: "string"
+      dateDecided:
+        type: "string"
+      status:
+        type: "string"
+  LeaveCommunityRequest:
     type: "object"
     properties:
       id:
