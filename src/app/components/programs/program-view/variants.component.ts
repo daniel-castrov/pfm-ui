@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Program, FundingLine, Variant } from '../../../generated';
+import { VariantLineComponent } from './variant-line/variant-line.component';
+import { VariantLine } from './variant-line';
 
 @Component({
   selector: 'variants',
@@ -10,7 +12,8 @@ import { Program, FundingLine, Variant } from '../../../generated';
 export class VariantsComponent implements OnInit {
   @Input() startyear: number;
   private _current: Program;
-  private variants: VariantLine[] = [];
+  private varmap: Map<string, VariantLine[]> = new Map<string, VariantLine[]>();
+  private varkeys: string[] = [];
   private totals: Map<number, number> = new Map<number, number>();
   private total: number = 0;
   constructor() { }
@@ -25,52 +28,47 @@ export class VariantsComponent implements OnInit {
 
     var my: VariantsComponent = this;
     my.totals.clear();
+    my.varmap.clear();
     curr.funding.forEach(function (fl: FundingLine) { 
-      fl.variants.forEach(function (y: Variant) {
-        var sum = 0;
-        var map: Map<number, number> = new Map<number, number>();
-        for (var k in fl.funds) {
-          var fkey: number = Number(k);
-          var linesum:number = y.unitCost * y.quantity;
-          map.set(fkey, linesum);
-          sum += linesum;
-
-          my.total += linesum;
-          if (!my.totals.has(fkey)) {
-            my.totals.set(fkey, 0);
-          }
-          my.totals.set(fkey, my.totals.get(fkey) + linesum);
+      fl.variants.forEach(function (variant: Variant) {
+        if (!my.varmap.has(variant.shortName)) {
+          my.varmap.set(variant.shortName, []);
         }
 
-        my.variants.push({
+        var sum = 0;
+        var map: Map<number, number> = new Map<number, number>();
+        for (var k in variant.quantity) {
+          var year: number = Number(k);
+          var amt = variant.quantity[k];
+          map.set(year, amt);
+          sum += amt;
+
+          my.total += amt;
+          if (!my.totals.has(year)) {
+            my.totals.set(year, 0);
+          }
+          my.totals.set(year, my.totals.get(year) + amt);
+        }
+
+        var vl: VariantLine = {
           cycle: fl.fy,
-          name: y.name,
-          description: y.description,
-          branch: y.branch,
-          contractor: y.contractor,
-          quantity: y.quantity,
-          unitcost: y.unitCost,
-          funds: map,
-          total:sum
-        });
+          name: variant.longName,
+          id: variant.shortName,
+          description: variant.description,
+          branch: variant.branch,
+          contractor: variant.contractor,
+          unitcost: variant.unitCost,
+          quantities: map,
+          total: sum
+        };
+        my.varmap.get( variant.shortName ).push(vl);
       });
     });
+
+    my.varkeys = Array.from(my.varmap.keys());
   }
 
   get current(): Program {
     return this._current;
   }
 }
-
-interface VariantLine {
-  cycle: number,
-  name: string,
-  description: string,
-  branch: string,
-  contractor: string,
-  quantity: number,
-  unitcost: number,
-  funds: Map<number, number>,
-  total: number
-}
-

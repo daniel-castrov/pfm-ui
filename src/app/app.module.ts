@@ -54,6 +54,7 @@ import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { RoleService } from './generated/api/role.service';
 import { ProgramsService } from './generated/api/programs.service';
+import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -117,7 +118,8 @@ const appRoutes: Routes = [
     RequestCommunityComponent,
     UserApprovalComponent,
     UserListComponent,
-    VariantsComponent
+    VariantsComponent,
+    VariantLineComponent
   ],
 
   imports: [

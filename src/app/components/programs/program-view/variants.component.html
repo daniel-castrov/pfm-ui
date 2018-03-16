@@ -7,60 +7,11 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <div class="row">
-          <div class="col-5">
-            <div class="card-title text-center font-weight-bold">Variant Name</div>
-          </div>
-          <div class="col-6">
-            <div class="card-title text-center font-weight-bold">Variant ID</div>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-12">
-            <table class="GeneratedTable">
-              <thead>
-                <tr>
-                  <th class="row-width">Service</th>
-                  <th class="row-width">Description</th>
-                  <th class="row-width">Contractor</th>
-                  <th colspan="2">Unit Costs</th>
-                  <th>FY{{startyear}}</th>
-                  <th>FY{{startyear+1}}</th>
-                  <th>FY{{startyear+2}}</th>
-                  <th>FY{{startyear+3}}</th>
-                  <th>FY{{startyear+4}}</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let variant of variants">
-                  <td class="row-white" [attr.rowspan]="1">{{variant.branch}}</td>
-                  <td class="row-white" [attr.rowspan]="1">{{variant.description}}</td>
-                  <td class="row-white" [attr.rowspan]="1">{{variant.contractor}}</td>
-                  <td class="row-white" [attr.rowspan]="1">{{variant.unitcost|currency}}</td>
-                  <td class="row-white">PB{{variant.cycle}}</td>
-                  <td class="text-right" *ngIf="variant.funds.has(startyear); else nomoney">{{variant.funds.get(startyear)}}</td>
-                  <td class="text-right" *ngIf="variant.funds.has(startyear+1); else nomoney">{{variant.funds.get(startyear+1)}}</td>
-                  <td class="text-right" *ngIf="variant.funds.has(startyear+2); else nomoney">{{variant.funds.get(startyear+2)}}</td>
-                  <td class="text-right" *ngIf="variant.funds.has(startyear+3); else nomoney">{{variant.funds.get(startyear+3)}}</td>
-                  <td class="text-right" *ngIf="variant.funds.has(startyear+4); else nomoney">{{variant.funds.get(startyear+4)}}</td>
-                  <td class="text-right">{{variant.total}}</td>
-                </tr>
-                <tr class="row-border-top">
-                  <td colspan="4" class="cell-left-border-white cell-bottom-border-white"></td>
-                  <td class="text-right row-white font-weight-bold">Totals:</td>
-                  <td class="text-right" *ngIf="totals.has(startyear); else nomoney">{{totals.get(startyear)}}</td>
-                  <td class="text-right" *ngIf="totals.has(startyear+1); else nomoney">{{totals.get(startyear+1)}}</td>
-                  <td class="text-right" *ngIf="totals.has(startyear+2); else nomoney">{{totals.get(startyear+2)}}</td>
-                  <td class="text-right" *ngIf="totals.has(startyear+3); else nomoney">{{totals.get(startyear+3)}}</td>
-                  <td class="text-right" *ngIf="totals.has(startyear+4); else nomoney">{{totals.get(startyear+4)}}</td>
-                  <td class="text-right">{{total}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <hr>
+        <ng-container *ngFor="let varname of varkeys">
+          <variant-line [startyear] ="startyear" [variants]="varmap.get( varname )"></variant-line>
+        </ng-container>
+
+        <hr/>
         <div class="row mb-3">
           <div class="col-12">
             <table class="GeneratedTable">

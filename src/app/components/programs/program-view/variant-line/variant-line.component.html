@@ -1,0 +1,58 @@
+<ng-template #nomoney>
+  <td class="text-right">-</td>
+</ng-template>
+
+<div class="row">
+  <div class="col-5">
+    <div class="card-title text-center font-weight-bold">{{name}}</div>
+  </div>
+  <div class="col-6">
+    <div class="card-title text-center font-weight-bold">{{id}}</div>
+  </div>
+</div>
+<div class="row mb-3">
+  <div class="col-12">
+    <table class="GeneratedTable">
+      <thead>
+        <tr>
+          <th class="row-width">Service</th>
+          <th class="row-width">Description</th>
+          <th class="row-width">Contractor</th>
+          <th colspan="2">Unit Costs</th>
+          <th>FY{{startyear}}</th>
+          <th>FY{{startyear+1}}</th>
+          <th>FY{{startyear+2}}</th>
+          <th>FY{{startyear+3}}</th>
+          <th>FY{{startyear+4}}</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let variant of variants">
+          <td class="row-white" [attr.rowspan]="1">{{variant.branch}}</td>
+          <td class="row-white" [attr.rowspan]="1">{{variant.description}}</td>
+          <td class="row-white" [attr.rowspan]="1">{{variant.contractor}}</td>
+          <td class="row-white" [attr.rowspan]="1">{{variant.unitcost|currency}}</td>
+          <td class="row-white">PB{{variant.cycle}}</td>
+          <td class="text-right" *ngIf="variant.quantities.has(startyear); else nomoney">{{variant.quantities.get(startyear)}}</td>
+          <td class="text-right" *ngIf="variant.quantities.has(startyear+1); else nomoney">{{variant.quantities.get(startyear+1)}}</td>
+          <td class="text-right" *ngIf="variant.quantities.has(startyear+2); else nomoney">{{variant.quantities.get(startyear+2)}}</td>
+          <td class="text-right" *ngIf="variant.quantities.has(startyear+3); else nomoney">{{variant.quantities.get(startyear+3)}}</td>
+          <td class="text-right" *ngIf="variant.quantities.has(startyear+4); else nomoney">{{variant.quantities.get(startyear+4)}}</td>
+          <td class="text-right">{{variant.total}}</td>
+        </tr>
+        <tr class="row-border-top">
+          <td colspan="4" class="cell-left-border-white cell-bottom-border-white"></td>
+          <td class="text-right row-white font-weight-bold">Totals:</td>
+          <td class="text-right" *ngIf="totals.has(startyear); else nomoney">{{totals.get(startyear)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+1); else nomoney">{{totals.get(startyear+1)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+2); else nomoney">{{totals.get(startyear+2)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+3); else nomoney">{{totals.get(startyear+3)}}</td>
+          <td class="text-right" *ngIf="totals.has(startyear+4); else nomoney">{{totals.get(startyear+4)}}</td>
+          <td class="text-right">{{total}}</td>
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+

@@ -1234,7 +1234,9 @@ definitions:
   Variant:
     type: "object"
     properties:
-      name:
+      shortName:
+        type: "string"
+      longName:
         type: "string"
       description:
         type: "string"
@@ -1243,7 +1245,7 @@ definitions:
       contractor:
         type: "string"
       quantity:
-        type: "integer"
+        $ref: '#/definitions/IntMap'
       unitCost:
         type: "number"
   Program:
