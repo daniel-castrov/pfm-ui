@@ -8,6 +8,8 @@ import { CommunityService } from '../../../generated/api/community.service';
 import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';
+import { RequestLinkService } from '../../header/requestLink.service';
+import { RequestLink } from '../../header/requestLink';
 
 @Component({
   selector: 'app-user-approval',
@@ -18,7 +20,7 @@ export class UserApprovalComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  id: string;
+  requestId: string;
   resultError;
   createUserRequest: CreateUserRequest;
   error="";
@@ -28,9 +30,10 @@ export class UserApprovalComponent implements OnInit {
     private route: ActivatedRoute,
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
+    public requestLinkService: RequestLinkService,
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
+      this.requestId = params.requestId;
     });
   }
 
@@ -43,7 +46,7 @@ export class UserApprovalComponent implements OnInit {
 
     // get the request
     let result: RestResult;
-    this.createUserRequestService.getById(this.id)
+    this.createUserRequestService.getById(this.requestId)
       .subscribe(c => {
         result = c;
         this.resultError.push(result.error);
@@ -66,6 +69,18 @@ export class UserApprovalComponent implements OnInit {
   }
 
   approve(){
+    let my: UserApprovalComponent = this;
+    let reqLinks:RequestLink[];
+    reqLinks = my.header.requestLinks.filter(
+      function (el) { return el.requestId !== my.requestId }
+    );
+
+    // for ( let req of reqLinks ){
+    //   console.log(req.requestId+ ":"+req.name);
+    // }
+
+    this.requestLinkService.requestLinks.next(reqLinks);
+
     this.submit("\"APPROVED\"");
   }
 

@@ -21,6 +21,8 @@ import { JoinCommunityRequest } from '../../generated/model/joinCommunityRequest
 import { JoinCommunityRequestService } from '../../generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequest } from '../../generated/model/leaveCommunityRequest';
 import { LeaveCommunityRequestService } from '../../generated/api/leaveCommunityRequest.service';
+import { RequestLinkService } from './requestLink.service';
+import { RequestLink } from './requestLink';
 
 @Component({
   selector: 'app-header',
@@ -36,7 +38,6 @@ export class HeaderComponent implements OnInit {
   isloggedin: boolean = false;
   resultError: string[] = [];
   requestLinks: RequestLink[] = [];
-  numberOfNotifications = null;
 
   constructor(
     private blankService: BlankService,
@@ -45,9 +46,15 @@ export class HeaderComponent implements OnInit {
     private joinCommunityRequestService: JoinCommunityRequestService,
     private leaveCommunityRequestService: LeaveCommunityRequestService,
     private userService: UserService,
-    private config: NgbTooltipConfig
+    private config: NgbTooltipConfig,
+    private requestLinkService:RequestLinkService,
+
   ) {
     config.placement = 'left';
+    this.requestLinkService.requestLinks.subscribe( (val) => {
+      this.requestLinks=val;
+      this.fixNotifications;
+    });
   }
 
   ngOnInit() {
@@ -72,12 +79,11 @@ export class HeaderComponent implements OnInit {
   }
 
   getSampleNotifications(): void {
-    this.requestLinks.push(new RequestLink("Sam Smith", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink("Patti Jones", '25204707542', "/user-approval/" + "2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink("Michael McCallaster", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink("Amy Awkward", '15209707542', "/community-join/" + "2222222222", "Community Request"));
-    this.requestLinks.push(new RequestLink("Violet Vulcan", '85202107542', "/community-leave/" + "2222222222", "Leave Community Request"));
-    this.numberOfNotifications = this.requestLinks.length;
+    this.requestLinks.push(new RequestLink("1", "Sam Smith", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink("2", "Patti Jones", '25204707542', "/user-approval/" + "2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink("3", "Michael McCallaster", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
+    this.requestLinks.push(new RequestLink("4", "Amy Awkward", '15209707542', "/community-join/" + "2222222222", "Community Request"));
+    this.requestLinks.push(new RequestLink("5", "Violet Vulcan", '85202107542', "/community-leave/" + "2222222222", "Leave Community Request"));
   }
 
   // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
@@ -107,6 +113,7 @@ export class HeaderComponent implements OnInit {
                   let user: User = resultUser.result;
                   this.requestLinks.push(
                     new RequestLink(
+                      request1.id,
                       user.firstName + " " + user.lastName,
                       request1.dateApplied,
                       "/community-join/" + request1.id,
@@ -129,6 +136,7 @@ export class HeaderComponent implements OnInit {
                       console.log(user.firstName);
                       this.requestLinks.push(
                         new RequestLink(
+                          request2.id,
                           user.firstName + " " + user.lastName,
                           request2.dateApplied,
                           "/community-leave/" + request2.id,
@@ -147,6 +155,7 @@ export class HeaderComponent implements OnInit {
 
                       this.requestLinks.push(
                         new RequestLink(
+                          request0.id,
                           request0.firstName + " " + request0.lastName,
                           request0.dateApplied,
                           "/user-approval/" + request0.id,
@@ -154,7 +163,7 @@ export class HeaderComponent implements OnInit {
                     }
 
                     // LAST Sort and how many notifications are there? If none then null;
-                    //this.getSampleNotifications();
+                    this.getSampleNotifications();
                     this.fixNotifications();
                   });
               });
@@ -163,11 +172,8 @@ export class HeaderComponent implements OnInit {
   }
 
   fixNotifications() {
+    console.log("hello");
     this.requestLinks.sort(this.compareRequsetLink);
-    this.numberOfNotifications = this.requestLinks.length;
-    if (this.numberOfNotifications < 1) {
-      this.numberOfNotifications = null;
-    }
   }
 
   compareRequsetLink(a, b) {
@@ -181,19 +187,3 @@ export class HeaderComponent implements OnInit {
 
 }
 
-class RequestLink {
-  userId: string;
-  name: string;
-  date: string;
-  link: string;
-  type: string;
-
-  constructor(id: string, d: string, l: string, t: string) {
-    this.userId = id;
-    this.date = d;
-    this.link = l;
-    this.type = t;
-    this.name = id;
-  }
-
-}
