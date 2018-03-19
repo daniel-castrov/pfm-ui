@@ -12,11 +12,14 @@ export class AboutPrivateComponent {
 
   @ViewChild(HeaderComponent) header;
 
+  resultError;
+
   constructor() {
     // This is a static page
   }
 
   ngOnInit() {
+    this.resultError=this.header.resultError;
   }
 
 }

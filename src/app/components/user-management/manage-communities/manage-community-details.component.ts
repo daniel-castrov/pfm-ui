@@ -31,7 +31,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   approvers: User[]=[];
   addedapprover:string;
-  resultError: string[]=[];
+  resultError;
   community: Community;
   users:User[]=[];
 
@@ -53,6 +53,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.resultError=this.header.resultError;
     this.getCommunity();
     this.getPrograms();
     this.getUsers();
@@ -80,6 +81,10 @@ private getPrograms(): void {
       this.resultError.push(data[1].error);
 
       this.community = data[0].result;
+      if ( null==this.community ){
+        this.resultError.push("The requested Community does not exist");
+        return;
+      }
       console.log(this.community );
 
       this.approvers = data[1].result;
