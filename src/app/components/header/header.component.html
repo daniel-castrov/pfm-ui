@@ -109,14 +109,15 @@
       </li>
     </ul>
   </div>
+
   <div class="col-3">
-    <span class="dropdown show actions-menu">
+    <span class="dropdown show actions-menu" *ngIf="authUser.rolenames.includes('User_Approver') || authUser.rolenames.includes('User_Admin')">
       <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
         <div class="icon-wrapper">
           Actions
           <i class="fa fa-bell" aria-hidden="true"></i>
-          <span class="badge">{{numberOfNotifications}}</span>
+          <span class="badge" *ngIf="requestLinks.length > 0">{{requestLinks.length}}</span>
         </div>
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
@@ -129,4 +130,5 @@
       </div>
     </span>
   </div>
+
 </nav>
