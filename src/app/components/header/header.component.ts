@@ -72,18 +72,17 @@ export class HeaderComponent implements OnInit {
         my.authUser = JSON.parse(atob(authHeader));
         my.isloggedin = true;
         if (my.authUser.rolenames.includes('User_Approver')) {
-          //this.requestLinks = [];
           my.getApproverNotifications();
         }
       });
   }
 
   getSampleNotifications(): void {
-    this.requestLinks.push(new RequestLink("1", "Sam Smith", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink("2", "Patti Jones", '25204707542', "/user-approval/" + "2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink("3", "Michael McCallaster", '45243707542', "/user-approval/" + "2222222222", "New User Request"));
-    this.requestLinks.push(new RequestLink("4", "Amy Awkward", '15209707542', "/community-join/" + "2222222222", "Community Request"));
-    this.requestLinks.push(new RequestLink("5", "Violet Vulcan", '85202107542', "/community-leave/" + "2222222222", "Leave Community Request"));
+    this.requestLinks.push(new RequestLink("1", "Sam Smith", '45243707542', "/user-approval/" + "1", "New User Request"));
+    this.requestLinks.push(new RequestLink("2", "Patti Jones", '25204707542', "/user-approval/" + "2", "New User Request"));
+    this.requestLinks.push(new RequestLink("3", "Michael McCallaster", '45243707542', "/user-approval/" + "3", "New User Request"));
+    this.requestLinks.push(new RequestLink("4", "Amy Awkward", '15209707542', "/community-join/" + "4", "Community Request"));
+    this.requestLinks.push(new RequestLink("5", "Violet Vulcan", '85202107542', "/community-leave/" + "5", "Leave Community Request"));
   }
 
   // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
@@ -95,9 +94,7 @@ export class HeaderComponent implements OnInit {
     this.myDetailsService.getCurrentUser()
       .subscribe((c) => {
         resultUser = c;
-
         let currentUser = resultUser.result;
-        console.log(currentUser.firstName);
 
         // 2 get the join-community-requests for this approver
         this.joinCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
@@ -133,7 +130,6 @@ export class HeaderComponent implements OnInit {
                       resultUser = c;
                       this.resultError.push(resultUser.error);
                       let user: User = resultUser.result;
-                      console.log(user.firstName);
                       this.requestLinks.push(
                         new RequestLink(
                           request2.id,
@@ -163,7 +159,7 @@ export class HeaderComponent implements OnInit {
                     }
 
                     // LAST Sort and how many notifications are there? If none then null;
-                    this.getSampleNotifications();
+                    //this.getSampleNotifications();
                     this.fixNotifications();
                   });
               });
@@ -172,7 +168,6 @@ export class HeaderComponent implements OnInit {
   }
 
   fixNotifications() {
-    console.log("hello");
     this.requestLinks.sort(this.compareRequsetLink);
   }
 
