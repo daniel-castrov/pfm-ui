@@ -1,0 +1,16 @@
+
+  <span class="badge badge-secondary float-right pull-right">* Indicates Default Community</span>
+  <ul class="community-list">
+    <li *ngFor="let community of _memberOfCommunities">
+      <span [ngClass]=" community.id==_user.defaultCommunityId ? 'default-community' : ''">{{community.name}}</span>
+    </li>
+  </ul>
+  <span class="form-group">
+    <label class="mb-2 mr-sm-2">Change Default Community</label>
+    <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
+      <option *ngFor="let community of communitiesToSelectFrom" [ngValue]="community.id">{{community.name}}</option>
+    </select>
+  </span>
+  <span>
+    <button class="btn btn-primary btn-sm mb-2" (click)='change()'>Change</button>
+  </span>

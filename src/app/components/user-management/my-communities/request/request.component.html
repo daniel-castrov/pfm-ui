@@ -1,0 +1,17 @@
+<span class="form-group">
+  <label class="mb-2 mr-sm-2">Select Community</label>
+  <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
+    <option *ngFor="let community of communities" [ngValue]="community.id">{{community.name}}</option>
+  </select>
+</span>
+<span>
+  <button class="btn btn-primary btn-sm mb-2" (click)="createRequest()">Send Request</button>
+</span>
+<span [hidden]="!formsubmitted">
+  <div class="alert-success-group">
+    <div class="alert-success alert-dismissable">
+      <strong>You will receive an email once your request is processed.</strong>
+      <button class="btn btn-default" (click)="done()">X</button>
+    </div>
+  </div>
+</span>
