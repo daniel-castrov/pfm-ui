@@ -21,10 +21,13 @@ export class HomeComponent implements OnInit {
     console.log(e.type);
   }
 
+  resultError;
+
   constructor(
   ) {
   }
 
   ngOnInit() { 
+    this.resultError=this.header.resultError;
   }
 }

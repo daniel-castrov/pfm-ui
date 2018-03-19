@@ -55,6 +55,7 @@ import { MyDetailsService } from './generated/api/myDetails.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
+import { RequestLinkService } from './components/header/requestLink.service';
 import { RoleService } from './generated/api/role.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
@@ -68,8 +69,8 @@ const appRoutes: Routes = [
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
   {path:'apply', component:ApplyComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
-  {path:'community-join/:id', component:CommunityJoinComponent},
-  {path:'community-leave/:id', component:CommunityLeaveComponent},
+  {path:'community-join/:requestId', component:CommunityJoinComponent},
+  {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
@@ -86,7 +87,7 @@ const appRoutes: Routes = [
   {path:'request-community', component:RequestCommunityComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'user/:id', component:ManageSelfComponent},
-  {path:'user-approval/:id', component:UserApprovalComponent},
+  {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
 
 ];
@@ -148,6 +149,7 @@ const appRoutes: Routes = [
     UserRoleService,
     ProgramsService,
     UserService,
+    RequestLinkService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

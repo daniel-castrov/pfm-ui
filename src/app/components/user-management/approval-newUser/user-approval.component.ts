@@ -3,11 +3,13 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Generated
-import { Community } from '../../../generated';
-import { CommunityService } from '../../../generated';
+import { Community } from '../../../generated/model/community';
+import { CommunityService } from '../../../generated/api/community.service';
 import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';
+import { RequestLinkService } from '../../header/requestLink.service';
+import { RequestLink } from '../../header/requestLink';
 
 @Component({
   selector: 'app-user-approval',
@@ -18,8 +20,8 @@ export class UserApprovalComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  id: string;
-  resultError: string[] = [];
+  requestId: string;
+  resultError;
   createUserRequest: CreateUserRequest;
   error="";
 
@@ -28,13 +30,15 @@ export class UserApprovalComponent implements OnInit {
     private route: ActivatedRoute,
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
+    public requestLinkService: RequestLinkService,
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
+      this.requestId = params.requestId;
     });
   }
 
   ngOnInit() {
+    this.resultError=this.header.resultError;
     this.getCreateUserRquest();
   }
 
@@ -42,11 +46,15 @@ export class UserApprovalComponent implements OnInit {
 
     // get the request
     let result: RestResult;
-    this.createUserRequestService.getById(this.id)
+    this.createUserRequestService.getById(this.requestId)
       .subscribe(c => {
         result = c;
         this.resultError.push(result.error);
         this.createUserRequest = result.result;
+        if ( null==this.createUserRequest ){
+          this.resultError.push("The requested New-User-Application does not exist");
+          return;
+        }
 
         // get the community that this request if for
         let result2: RestResult;
@@ -61,6 +69,18 @@ export class UserApprovalComponent implements OnInit {
   }
 
   approve(){
+    let my: UserApprovalComponent = this;
+    let reqLinks:RequestLink[];
+    reqLinks = my.header.requestLinks.filter(
+      function (el) { return el.requestId !== my.requestId }
+    );
+
+    // for ( let req of reqLinks ){
+    //   console.log(req.requestId+ ":"+req.name);
+    // }
+
+    this.requestLinkService.requestLinks.next(reqLinks);
+
     this.submit("\"APPROVED\"");
   }
 
@@ -74,8 +94,7 @@ export class UserApprovalComponent implements OnInit {
       .subscribe(c => {
         result = c;
         this.resultError.push(result.error);       
+        this.router.navigate(['./user-list']); 
       });
-      location.reload();
-      this.router.navigate(['./user-list']); 
   }
 }

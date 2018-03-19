@@ -1,5 +1,6 @@
 <app-header></app-header>
 <div class="row main-content" *ngIf="header.isloggedin">
+  <div class="error" *ngFor="let error of resultError">{{error}}</div>
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
       Welcome back <strong> {{ header.authUser.fullName }}</strong>
@@ -7,8 +8,10 @@
     <div class="card-container">
 
       <br/>
-      <!-- <button (click)="show = !show">{{show ? 'hide json' : 'show json'}}</button>
-      <div *ngIf="show">{{header.authUserJson}}</div> -->
+       
+      <button (click)="show = !show">{{show ? 'hide json' : 'show json'}}</button>
+      <div *ngIf="show">{{header.authUserJson}}</div>
+      
       <!--
         <button (click)="show = !show">{{show ? 'hide' : 'show'}}</button>
         <div *ngIf="show; else elseBlock">{{header.authUserJson}}</div>
