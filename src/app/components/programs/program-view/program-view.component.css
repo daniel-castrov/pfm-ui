@@ -1,3 +1,9 @@
+label {
+  color: #868e9b;
+  margin: 0;
+  margin-right: 6px;
+}
+
 tbody div {
   overflow-y:scroll;
   height: 240px;
