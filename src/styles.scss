@@ -1,3 +1,6 @@
+@import 'variables';
+@import '../node_modules/font-awesome/scss/font-awesome';
+
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #fff;
@@ -123,6 +126,13 @@ accordion-group .acordion-icon:hover  {
 }
 
 .btn-primary {
+  &:hover {
+    &:disabled {
+      opacity: 0.65;
+      cursor: auto;
+    }
+    opacity: 1;
+  }
   color: #fff;
   background-color: #23527c !important;
   border-color: #23527c !important;
@@ -130,9 +140,6 @@ accordion-group .acordion-icon:hover  {
   border-radius: 0.25rem;
 }
 
-.btn-primary:hover {
-  opacity: 1;
-}
 
 .btn-card-header  {
   font-weight: 400;
@@ -203,6 +210,10 @@ accordion-group .acordion-icon:hover  {
   background-color: #7c838a;
   border: 1px solid #ccc !important;
   border-bottom: none;
+}
+
+select {
+  cursor: pointer;
 }
 
 tab {

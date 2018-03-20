@@ -304,6 +304,16 @@ paths:
         in: "path"
         required: true
         type: "string"
+  /joinCommunityRequests/user/{userId}:
+    get:
+      tags:
+      - "JoinCommunityRequest"
+      operationId: "getByUser"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
   /joinCommunityRequests/{id}:
     get:
       tags:
@@ -358,6 +368,16 @@ paths:
       operationId: "getByCommId"
       parameters:
       - name: "commId"
+        in: "path"
+        required: true
+        type: "string"
+  /leaveCommunityRequests/user/{userId}:
+    get:
+      tags:
+      - "LeaveCommunityRequest"
+      operationId: "getByUser"
+      parameters:
+      - name: "userId"
         in: "path"
         required: true
         type: "string"

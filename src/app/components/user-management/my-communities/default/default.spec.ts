@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyCommunitiesComponent } from './../default/default.component';
+import { MyCommunitiesComponent } from './../my-communities.component';
 
 describe('MyCommunitiesComponent', () => {
   let component: MyCommunitiesComponent;

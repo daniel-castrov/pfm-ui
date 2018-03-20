@@ -1,7 +1,6 @@
 import { JoinCommunityRequestService } from './../../../generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequestService } from './../../../generated/api/leaveCommunityRequest.service';
-import { UserRoleService } from './../../../generated/api/userRole.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 // Generated
@@ -20,13 +19,11 @@ export class MyCommunitiesComponent implements OnInit {
   allCommunities: Community[] = [];
   availableCommunities: Community[] = [];
   memberOfCommunities: Community[] = [];
-  requestedCommunities: Community[] = [];
   currentCommunityIds: Set<string> = new Set<string>();
   user: User;
 
   constructor(
     private communityService: CommunityService,
-    private userRoleService: UserRoleService,
     private joinCommunityRequestsService: JoinCommunityRequestService,
     private leaveCommunityRequestsService: LeaveCommunityRequestService,
     private myDetailsService: MyDetailsService) {
@@ -42,7 +39,6 @@ export class MyCommunitiesComponent implements OnInit {
 
       this.communityService.getByUserIdAndRoleName(this.user.id, 'User').subscribe(roles => {
         this.memberOfCommunities = roles.result;
-        this.requestedCommunities = roles.result;
         this.memberOfCommunities.forEach((community: Community) => this.currentCommunityIds.add(community.id));
         this.availableCommunities = this.allCommunities.filter( (community: Community) => !this.currentCommunityIds.has(community.id));
       });
