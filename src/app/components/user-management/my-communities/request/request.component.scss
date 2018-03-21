@@ -1,8 +1,3 @@
-label, select {
-  color: #868e9b;
-  margin: 0;
-}
-
 .wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -22,6 +17,10 @@ button {
 
 .requests {
   grid-column: 3;
+  option {
+    color: #868e9b;
+    cursor: default
+  }
 }
 
 .message {
@@ -33,8 +32,17 @@ button {
   text-align: center;
 }
 
-.default-community {
-  &::after {
-    content: " (Default Community)";
+option {
+  &.default-community {
+    color: #868e9b;
+    cursor: default;
+    &::after {
+      content: " (Default Community)";
+    }
   }
+  color: black
+}
+
+select {
+  overflow: auto
 }
