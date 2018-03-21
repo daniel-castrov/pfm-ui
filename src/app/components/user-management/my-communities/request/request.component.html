@@ -2,9 +2,9 @@
   <div class="communities">
     <div class="label">Community</div>
     <select size="3" class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
-      <option [ngClass]=" community.id==user.defaultCommunityId ? 'default-community' : ''"
+      <option [class.default-community]="community.id==user.defaultCommunityId"
               *ngFor="let community of availableCommunities"
-              [ngValue]="community.id"
+              [value]="community.id"
               [disabled]="user.defaultCommunityId==community.id">
         {{community.name}}
       </option>
