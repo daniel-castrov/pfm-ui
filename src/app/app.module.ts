@@ -20,6 +20,7 @@ import { ApplyComponent } from './components/apply/apply.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { DefaultComponent } from './components/user-management/my-communities/default/default.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -31,6 +32,7 @@ import { MamageCommunityDetailsComponent } from './components/user-management/ma
 import { ManageRolesComponent } from './components/user-management/manage-roles/manage-roles.component';
 import { ManageSelfComponent } from './components/user-management/manage-self/manage-self.component';
 import { ManageUsersComponent } from './components/user-management/manage-users/manage-users.component';
+import { MyCommunitiesComponent } from './components/user-management/my-communities/my-communities.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -39,7 +41,7 @@ import { ProgramComponent } from './components/programs/program-view/program.com
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
-import { RequestCommunityComponent } from './components/user-management/manage-self/request-community.component';
+import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
@@ -84,7 +86,7 @@ const appRoutes: Routes = [
   {path:'programs', component:ProgramsComponent},
   {path:'program-view', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
-  {path:'request-community', component:RequestCommunityComponent},
+  {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
@@ -102,6 +104,7 @@ const appRoutes: Routes = [
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
+    DefaultComponent,
     FilterComponent,
     FundsComponent,
     HeaderComponent,
@@ -121,7 +124,8 @@ const appRoutes: Routes = [
     ProgramsComponent,
     ProgramViewComponent,
     RequestAccessChangeComponent,
-    RequestCommunityComponent,
+    RequestComponent,
+    MyCommunitiesComponent,
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
