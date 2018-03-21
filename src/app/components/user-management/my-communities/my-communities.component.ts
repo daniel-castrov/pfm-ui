@@ -17,7 +17,8 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 export class MyCommunitiesComponent implements OnInit {
 
   allCommunities: Community[] = [];
-  availableCommunities: Community[] = [];
+  communitiesToJoin: Community[] = [];
+  communitiesToLeave: Community[] = [];
   memberOfCommunities: Community[] = [];
   currentCommunityIds: Set<string> = new Set<string>();
   user: User;
@@ -38,9 +39,10 @@ export class MyCommunitiesComponent implements OnInit {
       this.user = data[1].result;
 
       this.communityService.getByUserIdAndRoleName(this.user.id, 'User').subscribe(roles => {
-        this.memberOfCommunities = roles.result;
-        this.memberOfCommunities.forEach((community: Community) => this.currentCommunityIds.add(community.id));
-        this.availableCommunities = this.allCommunities.filter( (community: Community) => !this.currentCommunityIds.has(community.id));
+        this.communitiesToLeave = roles.result;
+        this.communitiesToLeave.forEach((community: Community) => this.currentCommunityIds.add(community.id));
+        this.memberOfCommunities = this.communitiesToLeave;
+        this.communitiesToJoin = this.allCommunities.filter( (community: Community) => !this.currentCommunityIds.has(community.id));
       });
     });
   }

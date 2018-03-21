@@ -1,0 +1,40 @@
+label, select {
+  color: #868e9b;
+  margin: 0;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  justify-items: center;
+  align-items: center;
+}
+
+.comunities {
+  grid-column: 1;
+}
+
+button {
+  grid-column: 2;
+}
+
+.requests {
+  grid-column: 3;
+}
+
+.message {
+  grid-column: 1/4;
+}
+
+.label {
+  padding-right: 40px;
+  text-align: center;
+}
+
+.default-community {
+  &::after {
+    content: " (Default Community)";
+  }
+}

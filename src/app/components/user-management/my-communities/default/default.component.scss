@@ -4,8 +4,8 @@ label, select {
 }
 
 .default-community {
-  &::before {
-    content: "*";
+  &::after {
+    content: " (Default Community)";
   }
   background: #df960e;
   border-radius: 5pt;

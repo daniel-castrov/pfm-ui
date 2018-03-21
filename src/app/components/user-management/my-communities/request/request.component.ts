@@ -7,15 +7,17 @@ import { Community, RestResult, User } from '../../../../generated';
 @Component({
   selector: 'request',
   templateUrl: './request.component.html',
-  styleUrls: ['./request.component.css']
+  styleUrls: ['./request.component.scss']
 })
 export class RequestComponent implements OnChanges {
 
-  @Input() communities: Community[];
+  @Input() allCommunities: Community[];
   @Input() user: User;
   @Input() service: any;
-  requestedCommunityIds: Set<string> = new Set<string>();
+  availableCommunities: Community[];
+  requestedCommunities: Community[];
   selectedCommunityId: string;
+  messageIsHidden: boolean = true;
 
   ngOnChanges() {
     if(this.user) {
@@ -27,19 +29,27 @@ export class RequestComponent implements OnChanges {
     const request: any = {};
     request.userId = this.user.id;
     request.communityId = this.selectedCommunityId;
-    this.service.create(request).subscribe(() => this.updateRequestedCommuntyIds());
+    this.service.create(request).subscribe(() => {
+      this.messageIsHidden = false;
+      setInterval(() => this.messageIsHidden = true, 5000);
+      this.updateRequestedCommuntyIds();
+    });
     delete this.selectedCommunityId;
   }
 
   private updateRequestedCommuntyIds() {
-    this.requestedCommunityIds.clear();
-    this.service.getByUser(this.user.id).subscribe( (response: RestResult) =>
-      response.result.forEach(request => this.requestedCommunityIds.add(request.communityId))
-    );
-  }
+    this.service.getByUser(this.user.id).subscribe( (response: RestResult) => {
+      this.availableCommunities = [...this.allCommunities];
+      this.requestedCommunities = [];
+      response.result.forEach(request => {
+        // remove the community of the current request from this.availableCommunities
+        this.availableCommunities = this.availableCommunities.filter((community) => community.id != request.communityId);
 
-  private disabled(communityId: string): boolean {
-    return this.requestedCommunityIds.has(communityId) || this.user.defaultCommunityId==communityId;
+        // add the the community of the current request to this.requestedCommunities
+        const requestedCommunities: Community[] = this.allCommunities.filter((community) => community.id == request.communityId);
+        this.requestedCommunities.push(...requestedCommunities);
+      });
+    });
   }
 
 }

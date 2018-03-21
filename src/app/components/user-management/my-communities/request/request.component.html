@@ -1,17 +1,29 @@
-<span class="form-group">
-  <label class="mb-2 mr-sm-2">Select Community</label>
-  <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
-    <option *ngFor="let community of communities" [ngValue]="community.id" [disabled]="disabled(community.id)">{{community.name}}</option>
-  </select>
-</span>
-<span>
-  <button class="btn btn-primary btn-sm" (click)="createRequest()" [disabled]="!selectedCommunityId">Send Request</button>
-</span>
-<span [hidden]="!formsubmitted">
-  <div class="alert-success-group">
-    <div class="alert-success alert-dismissable">
-      <strong>You will receive an email once your request is processed.</strong>
-      <button class="btn btn-default" (click)="done()">X</button>
+<div class="wrapper">
+  <div class="communities">
+    <div class="label">Community</div>
+    <select size="3" class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
+      <option [ngClass]=" community.id==user.defaultCommunityId ? 'default-community' : ''"
+              *ngFor="let community of availableCommunities"
+              [ngValue]="community.id"
+              [disabled]="user.defaultCommunityId==community.id">
+        {{community.name}}
+      </option>
+    </select>
+  </div>
+  <div>
+    <button class="btn btn-primary btn-sm" (click)="createRequest()" [disabled]="!selectedCommunityId">Create Request</button>
+  </div>
+  <div class="requests">
+    <div class="label">Requests</div>
+    <select size="3" class="form-control-sm mb-2 mr-sm-2">
+      <option *ngFor="let community of requestedCommunities" [disabled]="true">{{community.name}}</option>
+    </select>
+  </div>
+  <div class="message" [hidden]="messageIsHidden">
+    <div class="alert-success-group">
+      <div class="alert-success alert-dismissable">
+        <strong>You will receive an email once your request is processed.</strong>
+      </div>
     </div>
   </div>
-</span>
+</div>

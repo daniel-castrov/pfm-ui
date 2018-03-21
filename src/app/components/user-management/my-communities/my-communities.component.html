@@ -7,7 +7,7 @@
         <accordion-group [isOpen]="true">
           <div accordion-heading>
               <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
-            <span class="accordion-heading">My Current Communities</span>
+            <span class="accordion-heading">My Communities</span>
           </div>
           <default [memberOfCommunities]="memberOfCommunities" [user]="user"></default>
         </accordion-group>
@@ -18,7 +18,7 @@
               <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
             <span class="accordion-heading">Join Community</span>
           </div>
-          <request [communities]="availableCommunities" [service]="joinCommunityRequestsService" [user]="user"></request>
+          <request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user"></request>
         </accordion-group>
       </accordion>
       <accordion>
@@ -27,7 +27,7 @@
             <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
             <span class="accordion-heading">Leave Community</span>
           </div>
-          <request [communities]="memberOfCommunities" [service]="leaveCommunityRequestsService" [user]="user"></request>
+          <request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user"></request>
         </accordion-group>
       </accordion>
     </div>
