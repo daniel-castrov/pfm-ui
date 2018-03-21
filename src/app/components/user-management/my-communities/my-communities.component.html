@@ -4,27 +4,30 @@
     <div class="col-10">
       <p class="h5">Manage My Communities</p>
       <accordion>
-        <accordion-group [isOpen]="true">
+        <accordion-group #group [isOpen]="true">
           <div accordion-heading>
-              <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
+            <i *ngIf="group.isOpen" class="fa fa-caret-down"></i>
+            <i *ngIf="!group.isOpen" class="fa fa-caret-right"></i>
             <span class="accordion-heading">My Communities</span>
           </div>
           <default [memberOfCommunities]="memberOfCommunities" [user]="user"></default>
         </accordion-group>
       </accordion>
       <accordion>
-        <accordion-group>
+        <accordion-group #group2>
           <div accordion-heading>
-              <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
+            <i *ngIf="group2.isOpen" class="fa fa-caret-down"></i>
+            <i *ngIf="!group2.isOpen" class="fa fa-caret-right"></i>
             <span class="accordion-heading">Join Community</span>
           </div>
           <request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user"></request>
         </accordion-group>
       </accordion>
       <accordion>
-        <accordion-group>
+        <accordion-group #group3>
           <div accordion-heading>
-            <i class="fa fa-plus-square-o icon-pad" aria-hidden="true"></i>
+            <i *ngIf="group3.isOpen" class="fa fa-caret-down"></i>
+            <i *ngIf="!group3.isOpen" class="fa fa-caret-right"></i>
             <span class="accordion-heading">Leave Community</span>
           </div>
           <request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user"></request>
