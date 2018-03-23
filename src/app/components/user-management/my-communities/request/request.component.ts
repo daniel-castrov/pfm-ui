@@ -41,7 +41,7 @@ export class RequestComponent implements OnChanges {
     this.service.getByUser(this.user.id).subscribe( (response: RestResult) => {
       this.availableCommunities = [...this.allCommunities];
       this.requestedCommunities = [];
-      response.result.forEach(request => {
+      response.result.forEach( (request:{id:string, communityId:string}) => {
         // remove the community of the current request from this.availableCommunities
         this.availableCommunities = this.availableCommunities.filter((community) => community.id != request.communityId);
 
