@@ -2,10 +2,12 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
-    <div class="col-10 col-md-7">
+    <div class="col-md-10">
       <accordion>
         <accordion-group #group [isOpen]="status.isFirstOpen" [isDisabled]="status.isFirstDisabled" *ngIf="communities">
           <div accordion-heading class="clearfix">
+            <i *ngIf="group2.isOpen" class="fa fa-caret-down"></i>
+            <i *ngIf="!group2.isOpen" class="fa fa-caret-right"></i>
             List of Communitiess
           </div>
           <ul class="community-list">
@@ -15,10 +17,11 @@
             </li>
           </ul>
         </accordion-group>
-        <accordion-group #group>
+        <accordion-group #group2>
 			    <div accordion-heading class="clearfix">
-						<span class="acordion-icon"><i class="fa fa-plus-circle"></i></span>
-						<span class="accordion-heading">Add Community</span>
+            <i *ngIf="group2.isOpen" class="fa fa-caret-down"></i>
+            <i *ngIf="!group2.isOpen" class="fa fa-caret-right"></i>
+						<span class="accordion-heading">Create a Community</span>
           </div>
 
           <form novalidate #addForm="ngForm">
@@ -87,8 +90,8 @@
                 </span>
               </div>
             -->
-              <button class="btn btn-default" value="Cancel">Cancel</button>
-              <button class="btn btn-primary" (click)="addCommunity()">
+              <button class="btn btn-default btn-sm" value="Cancel">Cancel</button>
+              <button class="btn btn-primary btn-sm" (click)="addCommunity()">
                 <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
                 Add Community
               </button>
@@ -96,7 +99,7 @@
         </accordion-group>
       </accordion>
     </div>
-    <div class="col-2 col-md-5">
+    <div class="col-md-2">
     </div>
   </div>
 </div>

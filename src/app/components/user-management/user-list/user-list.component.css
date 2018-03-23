@@ -1,7 +1,7 @@
 
 .card-header {
   float: left;
-  margin-bottom: 0 !important; 
+  margin-bottom: 0 !important;
   height: 40px;
   width: 100%;
   color: #000;
@@ -47,24 +47,19 @@
   padding: 4px 0;
 }
 
-.card-container {
-  width: 100%;
-  margin-bottom: 10px;
-  border: 1px #ccc solid;
-  border-radius: 5px;
-  color: #000;
-  padding: 10px;
-}
-
-.card-container > ul > li > span i.fa {
+.card > ul > li > span i.fa {
   color: #24527b;
   cursor: pointer;
   font-size: 25px;
   margin-right: 5px;
 }
 
-.card-container > ul > li > span i.fa:hover {
+.card > ul > li > span i.fa:hover {
   color: #ccc;
+}
+
+.table-list-users {
+  width: 100%;
 }
 
 th {

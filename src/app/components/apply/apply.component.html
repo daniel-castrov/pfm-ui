@@ -102,7 +102,7 @@
         <div class="form-group">
           <label for="branches">*Select Branch</label>
           <div>
-            <select ngModel name="service" required #service="ngModel">
+            <select class="form-control-sm mb-2 mr-sm-2" ngModel name="service" required #service="ngModel">
               <option value=""></option>
               <option *ngFor="let service of services" [value]="service.name">{{ service.name }}</option>
             </select>
@@ -113,7 +113,7 @@
         <div class="form-group">
           <label for="communites">Community Access Request</label>
           <div>
-            <select ngModel name="communityId" #communityId="ngModel">
+            <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" #communityId="ngModel">
               <option value=""></option>
               <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
             </select>

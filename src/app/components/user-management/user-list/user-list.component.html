@@ -1,14 +1,14 @@
 <app-header></app-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
-    <div class="col-10 col-md-7">
+    <div class="col-md-10">
       <div class="card-header">
         <i class="fa fa-users icon-pad"></i>List of Users
       </div>
-      <div class="card-container">
-        <div class="form-group clearfix">
-
-          <table>
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group clearfix">
+          <table class="table-list-users">
             <thead>
               <th>Name</th>
               <th>Status</th>
@@ -25,6 +25,7 @@
               </tr>
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     </div>
