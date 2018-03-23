@@ -4,20 +4,20 @@
     <div class="col-md-12">
       <p class="h5">View Program</p>
       <div class="row">
-        <div class="col-md-2">
-          <div class="card-container">
+        <div class="col-md-10">
+          <div class="card-container mb-3">
             <div class="card-body">
-              <div class="form-group">
-                  <label class="mb-2 mr-sm-2">Select Program:</label>
-                <div>
-                  <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
+            <div class="form-group">
+              <label>Select Program:</label>
+              <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
                   <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
                 </select>
-                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-10">
           <tabset>
             <tab heading="Program" id="tab1">

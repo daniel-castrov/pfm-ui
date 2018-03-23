@@ -1,107 +1,92 @@
-<div class="programs-filter">
-  <span class="content-label">
-    <h1>Filters</h1>
-  </span>
-  <div> Appropriations:</div>
-  <div class="controls-filters">
-   <label class="checkbox-inline" for="checkboxes-0">PROC</label>
-   <input type="checkbox" name="checkboxes" id="checkboxes-0" value="1">
-   <label class="checkbox-inline" for="checkboxes-1">RDT&amp;E</label>
-   <input type="checkbox" name="checkboxes" id="checkboxes-1" value="2">
-   <label class="checkbox-inline" for="checkboxes-1">*CBDP</label>
-   <input type="checkbox" name="checkboxes" id="checkboxes-1" value="3">
+<div class="card">
+  <div class="card-header"><i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filters</div>
+    <div class="card-body">
+      <div class="card-title">Select Program:</div>
+<div class="form-group">
+  <div>
+    <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
+          <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
+        </select>
   </div>
-  <div class="dropdown">
-    <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">BL/BLIN</a>
-    <div class="dropdown-menu" aria-labelledby="dropdown01">
-      <a class="dropdown-item" href="#">BA-1</a>
-      <a class="dropdown-item" href="#">BA-2</a>
-      <a class="dropdown-item" href="#">BA-3</a>
-      <a class="dropdown-item" href="#">BA-4</a>
-      <a class="dropdown-item" href="#">BA-5</a>
-      <a class="dropdown-item" href="#">BA-6</a>
-      <a class="dropdown-item" href="#">BA-7</a>
-      <a class="dropdown-item" href="#">PHM001</a>
-      <a class="dropdown-item" href="#">SA0001</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Functional Areas</a>
-    <div class="dropdown-menu" aria-labelledby="dropdown01">
-      <a class="dropdown-item" href="#">CA</a>
-      <a class="dropdown-item" href="#">CB</a>
-      <a class="dropdown-item" href="#">CM</a>
-      <a class="dropdown-item" href="#">CO</a>
-      <a class="dropdown-item" href="#">DE</a>
-      <a class="dropdown-item" href="#">DT</a>
-      <a class="dropdown-item" href="#">DW</a>
-      <a class="dropdown-item" href="#">IP</a>
-      <a class="dropdown-item" href="#">IS</a>
-      <a class="dropdown-item" href="#">LS</a>
-      <a class="dropdown-item" href="#">LF</a>
-      <a class="dropdown-item" href="#">MB</a>
-      <a class="dropdown-item" href="#">MP</a>
-      <a class="dropdown-item" href="#">MS</a>
-      <a class="dropdown-item" href="#">NT</a>
-      <a class="dropdown-item" href="#">04</a>
-      <a class="dropdown-item" href="#">PS</a>
-      <a class="dropdown-item" href="#">SB</a>
-      <a class="dropdown-item" href="#">TE</a>
-      <a class="dropdown-item" href="#">TM</a>
-      <a class="dropdown-item" href="#">TT</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manager</a>
-    <div class="dropdown-menu" aria-labelledby="dropdown01">
-      <a class="dropdown-item" href="#">CBA</a>
-      <a class="dropdown-item" href="#">CBI</a>
-      <a class="dropdown-item" href="#">CBM</a>
-      <a class="dropdown-item" href="#">CBS</a>
-      <a class="dropdown-item" href="#">CBT</a>
-      <a class="dropdown-item" href="#">JPMCA</a>
-      <a class="dropdown-item" href="#">JPMG</a>
-      <a class="dropdown-item" href="#">JPMIS</a>
-      <a class="dropdown-item" href="#">JPMMCS</a>
-      <a class="dropdown-item" href="#">JPMP</a>
-      <a class="dropdown-item" href="#">OTH</a>
-      <a class="dropdown-item" href="#">SOFRCD</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aquisition Type</a>
-    <div class="dropdown-menu" aria-labelledby="dropdown01">
-      <a class="dropdown-item" href="#">Systems Acquisition</a>
-      <a class="dropdown-item" href="#">RDT&amp;E Management Support</a>
-      <a class="dropdown-item" href="#">Procurement</a>
-      <a class="dropdown-item" href="#">Science &amp; Technology</a>
-    </div>
-  </div>
-  <hr>
-  <span class="content-label">
-    <h1>Format</h1>
-  </span>
-  <div class="controls-filters">
-    <div class="radio-item">
-      <input type="radio" id="ritema" name="ritem" value="ropt1">
-      <label for="ritema">%</label>
-    </div>
-    <div class="radio-item">
-      <input type="radio" id="ritemb" name="ritem" value="ropt2">
-      <label for="ritemb">$</label>
-    </div>
-  </div>
-  <div>OSD Goals</div>
-   <div class="osd">
-     <div class="osd-red"></div>
-     <span class="osd-data">5%</span>
+</div>
+      <div class="dropdown">
+        <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Functional Areas</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">CA</a>
+          <a class="dropdown-item" href="#">CB</a>
+          <a class="dropdown-item" href="#">CM</a>
+          <a class="dropdown-item" href="#">CO</a>
+          <a class="dropdown-item" href="#">DE</a>
+          <a class="dropdown-item" href="#">DT</a>
+          <a class="dropdown-item" href="#">DW</a>
+          <a class="dropdown-item" href="#">IP</a>
+          <a class="dropdown-item" href="#">IS</a>
+          <a class="dropdown-item" href="#">LS</a>
+          <a class="dropdown-item" href="#">LF</a>
+          <a class="dropdown-item" href="#">MB</a>
+          <a class="dropdown-item" href="#">MP</a>
+          <a class="dropdown-item" href="#">MS</a>
+          <a class="dropdown-item" href="#">NT</a>
+          <a class="dropdown-item" href="#">04</a>
+          <a class="dropdown-item" href="#">PS</a>
+          <a class="dropdown-item" href="#">SB</a>
+          <a class="dropdown-item" href="#">TE</a>
+          <a class="dropdown-item" href="#">TM</a>
+          <a class="dropdown-item" href="#">TT</a>
+        </div>
+      </div>
+      <!-- <div class="dropdown">
+        <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manager</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">CBA</a>
+          <a class="dropdown-item" href="#">CBI</a>
+          <a class="dropdown-item" href="#">CBM</a>
+          <a class="dropdown-item" href="#">CBS</a>
+          <a class="dropdown-item" href="#">CBT</a>
+          <a class="dropdown-item" href="#">JPMCA</a>
+          <a class="dropdown-item" href="#">JPMG</a>
+          <a class="dropdown-item" href="#">JPMIS</a>
+          <a class="dropdown-item" href="#">JPMMCS</a>
+          <a class="dropdown-item" href="#">JPMP</a>
+          <a class="dropdown-item" href="#">OTH</a>
+          <a class="dropdown-item" href="#">SOFRCD</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aquisition Type</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Systems Acquisition</a>
+          <a class="dropdown-item" href="#">RDT&amp;E Management Support</a>
+          <a class="dropdown-item" href="#">Procurement</a>
+          <a class="dropdown-item" href="#">Science &amp; Technology</a>
+        </div>
+      </div> -->
+      <hr>
+      <span class="content-label">
+        <div class="card-title">Format</div>
+      </span>
+      <div class="controls-filters">
+        <div class="radio-item">
+          <input type="radio" id="ritema" name="ritem" value="ropt1">
+          <label for="ritema">%</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="ritemb" name="ritem" value="ropt2">
+          <label for="ritemb">$</label>
+        </div>
+      </div>
+      <div>OSD Goals</div>
+       <div class="osd">
+         <div class="osd-red"></div>
+         <span class="osd-data">5%</span>
+       </div>
+       <div class="osd">
+         <div class="osd-yellow"></div>
+         <span class="osd-data">10%</span>
+       </div>
+       <span>Highlighting:</span>
+       <button type="button" class="btn btn-sm btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+         <div class="handle"></div>
+       </button>
    </div>
-   <div class="osd">
-     <div class="osd-yellow"></div>
-     <span class="osd-data">10%</span>
-   </div>
-   <span>Highlighting:</span>
-   <button type="button" class="btn btn-sm btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
-     <div class="handle"></div>
-   </button>
 </div>
