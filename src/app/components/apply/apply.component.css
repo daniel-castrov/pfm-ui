@@ -57,7 +57,7 @@ label, select {
 }
 
 .nda-not-valid {
-  color: red;
+  color: #676775;
 }
 
 .alert-dismissible .close {

@@ -5,15 +5,15 @@
     </div>
     <div class="col-lg-10">
       <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
-        <h5>New User Application</h5>
-        <span [hidden]="!formsubmitted">
+        <span [hidden]="!formsubmitted" class="clearfix">
           <div class="alert-success-group">
             <div class="alert-success alert-dismissable">
               <strong>Your Appication to join JSCBIS has been submitted. Please check your email for the status of your request.</strong>
-              <button class="btn btn-default" (click)="done()">OK</button>
+              <button class="btn btn-success" (click)="done()">OK</button>
             </div>
           </div>
         </span>
+        <h5>New User Application</h5>
         <p class="font-italic text-danger">* Indicates Required Field</p>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.firstName" #createUserRequestFirstName="ngModel" [ngClass]="{'is-invalid':createUserRequestFirstName.errors && createUserRequestFirstName.touched}"
@@ -44,7 +44,7 @@
         <div class="form-group" *ngIf="stranger.contractor">
           <a data-toggle="modal" href="#myModal">Sign NDA</a>
           <span *ngIf="!ndaSatisfied">
-            <i class="fa fa-check-circle-o nda-not-valid" aria-hidden="true"></i>
+            <i class="fa fa-exclamation-triangle nda-not-valid" aria-hidden="true"></i>
           </span>
           <span *ngIf="ndaSatisfied">
             <i class="fa fa-check-circle-o nda-valid" aria-hidden="true"></i>
@@ -148,6 +148,7 @@
             Submit
           </button>
         </div>
+
         <!-- Value of whole form -->
         <!--
         <pre>{{ applyForm.form.value | json }}</pre>
