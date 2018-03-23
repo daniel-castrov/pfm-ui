@@ -33,7 +33,7 @@ hr {
     margin-left: 4px;
 }
 
-/* container */
+/* bootstrap containers */
 
 .container-fluid {
   padding-right: 0;
@@ -211,6 +211,11 @@ label {
   border-radius: 5px;
   color: #000;
   padding: 0 0 20px 0;
+}
+
+.card {
+  border: 1px #ccc solid;
+  padding: 0;
 }
 
 /* tabs */
