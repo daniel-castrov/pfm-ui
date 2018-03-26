@@ -61,6 +61,7 @@ import { RequestLinkService } from './components/header/requestLink.service';
 import { RoleService } from './generated/api/role.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
+import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -91,6 +92,7 @@ const appRoutes: Routes = [
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
+  { path: 'exporter', component: ProgramExportComponent },
 
 ];
 
@@ -129,7 +131,8 @@ const appRoutes: Routes = [
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
-    VariantLineComponent
+    VariantLineComponent,
+    ProgramExportComponent
   ],
 
   imports: [

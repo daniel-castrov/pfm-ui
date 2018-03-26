@@ -1,0 +1,8 @@
+<app-header></app-header>
+<p>
+  <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="startyear" name="startyear">
+    <option [ngValue]="2017">2017</option>
+    <option [ngValue]="2018">2018</option>
+  </select>
+  <button (click)="onExportClick()">Export POM Template</button>
+</p>

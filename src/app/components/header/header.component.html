@@ -1,4 +1,5 @@
 <app-header-nologin *ngIf="!isloggedin"></app-header-nologin>
+
 <div class="header" *ngIf="isloggedin">
   <div class="container-fluid">
     <div class="row main-content">
@@ -105,6 +106,7 @@
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
           <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/my-community">Manage My Communities</a>
+          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/exporter">Export POM Template</a>
         </div>
       </li>
     </ul>
