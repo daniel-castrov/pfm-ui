@@ -2,21 +2,18 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-md-12">
-      <p class="h5">View Program</p>
-      <div class="row">
-        <div class="col-md-10">
-          <div class="card mb-3">
-            <div class="card-body">
-            <div class="form-group">
-              <label>Select Program:</label>
-              <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
-                  <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
-                </select>
-              </div>
-            </div>
+      <div class=row>
+        <div class="col-md-10 mb-2">
+          <span class="h5 mr-sm-4">View Program</span>
+          <span class="form-group">
+            <label class="font-weight-bold">Select Program:</label>
+            <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
+                <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
+              </select>
+            </span>
+            <hr>
           </div>
         </div>
-      </div>
       <div class="row">
         <div class="col-md-10">
           <tabset>
