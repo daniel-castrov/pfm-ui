@@ -1,8 +1,21 @@
 <app-header></app-header>
-<p>
-  <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="startyear" name="startyear">
-    <option [ngValue]="2017">2017</option>
-    <option [ngValue]="2018">2018</option>
-  </select>
-  <button (click)="onExportClick()">Export POM Template</button>
-</p>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-md-12">
+      <p class="h5">POM Templates</p>
+      <div class="row">
+        <div class="col-md-10">
+          <tabset>
+            <tab heading="Export" id="tab1">
+              <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="startyear" name="startyear">
+                <option [ngValue]="2017">2017</option>
+                <option [ngValue]="2018">2018</option>
+              </select>
+              <button class="btn btn-primary btn-sm" (click)="onExportClick()">Export POM Template</button>
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
