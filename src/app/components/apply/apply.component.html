@@ -5,14 +5,7 @@
     </div>
     <div class="col-lg-10">
       <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
-        <span [hidden]="!formsubmitted" class="clearfix">
-          <div class="alert-success-group">
-            <div class="alert-success alert-dismissable">
-              <strong>Your Appication to join JSCBIS has been submitted. Please check your email for the status of your request.</strong>
-              <button class="btn btn-success" (click)="done()">OK</button>
-            </div>
-          </div>
-        </span>
+
         <h5>New User Application</h5>
         <p class="font-italic text-danger">* Indicates Required Field</p>
         <span class="form-group inline-name">
@@ -33,16 +26,9 @@
           <span [hidden]="!createUserRequestLastName.errors?.required" class="invalid-feedback">*Last Name is required</span>
           <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name should be at least 2 characters</span>
         </span>
-        <div class="form-group">
-          <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.titleRank" #createUserRequestTitleRank="ngModel"
-            name="titleRank" placeholder="Title/Rank">
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.dutyJob" name="dutyJob" #createUserRequestDutyJob="ngModel"
-            placeholder="Duty/Job Title">
-        </div>
-        <div class="form-group" *ngIf="stranger.contractor">
-          <a data-toggle="modal" href="#myModal">Sign NDA</a>
+        <div class="form-group nda" *ngIf="stranger.contractor">
+          <a *ngIf="!ndaSatisfied" data-toggle="modal" href="#myModal">*Sign NDA</a>
+          <a *ngIf="ndaSatisfied" data-toggle="modal"  href="#myModal">Sign NDA</a>
           <span *ngIf="!ndaSatisfied">
             <i class="fa fa-exclamation-triangle nda-not-valid" aria-hidden="true"></i>
           </span>
@@ -72,6 +58,14 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.titleRank" #createUserRequestTitleRank="ngModel"
+            name="titleRank" placeholder="Title/Rank">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.dutyJob" name="dutyJob" #createUserRequestDutyJob="ngModel"
+            placeholder="Duty/Job Title">
         </div>
         <div class="form-group">
           <input type="text" [(ngModel)]="createUserRequest.contactEmail" #createUserRequestContactEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestContactEmail.errors && createUserRequestContactEmail.touched}"
@@ -141,6 +135,14 @@
           <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Sponsor Email should be
             <small>joe@abc.com</small>
           </span>
+        </span>
+        <span [hidden]="!formsubmitted" class="clearfix">
+          <div class="alert-success-group">
+            <div class="alert-success alert-dismissable">
+              <strong>Your Appication to join JSCBIS has been submitted. Please check your email for the status of your request.</strong>
+              <button class="btn btn-success" (click)="done()">OK</button>
+            </div>
+          </div>
         </span>
         <div class="controls" [hidden]="formsubmitted">
           <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>

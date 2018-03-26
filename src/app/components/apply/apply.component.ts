@@ -14,7 +14,7 @@ import { StrangerService } from '../../generated/api/stranger.service';
 @Component({
   selector: 'app-apply',
   templateUrl: './apply.component.html',
-  styleUrls: ['./apply.component.css']
+  styleUrls: ['./apply.component.scss']
 })
 export class ApplyComponent implements OnInit {
 
@@ -59,11 +59,11 @@ export class ApplyComponent implements OnInit {
 
   onSubmit({ value, valid }) {
     if (valid) {
-      
+
       this.createUserRequest = value;
       this.createUserRequest.status = "UNDECIDED";
       this.createUserRequest.cn = this.stranger.cn;
-      
+
       if ( this.stranger.contractor ){
         this.createUserRequest.nda = this.ndaText.substring(0,this.ndaText.indexOf("\n"));
       } else {
