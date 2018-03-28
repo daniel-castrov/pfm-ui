@@ -41,6 +41,7 @@ import { ProgramComponent } from './components/programs/program-view/program.com
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
+import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
@@ -127,6 +128,7 @@ const appRoutes: Routes = [
     ProgramComponent,
     ProgramExportComponent,
     ProgramRequestComponent,
+    ProgramTabComponent,
     ProgramViewComponent,
     ProgramsComponent,
     RequestAccessChangeComponent,
