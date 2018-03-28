@@ -3,41 +3,71 @@
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-md-12">
       <div class=row>
-        <div class="col-md-10 mb-2">
-          <span class="h5 mr-sm-4">Programmatic Request:</span>
-            <span class="form-group">
+        <div class="col-md-6">
+          <span class="h5 mr-sm-4">Programmatic Request</span>
+        </div>
+        <div class="col-md-4 mb-1">
+          <p>Leave Blank when issuing a New Top Level Program request:</p>
+          <span class="form-group">
               <label class="font-weight-bold">Program ID</label>
               <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
                 <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
               </select>
             </span>
-          <hr>
+          <span class="form-group pull-right">
+            <input type="text" class="form-control forminput" name="programName" placeholder="Program Name">
+          </span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-10">
-          <tabset>
-            <tab heading="Program" id="tab1">
-              <program-tab></program-tab>
-            </tab>
-            <tab heading="Funds" id="tab2">
-              <funds-tab></funds-tab>
-            </tab>
-            <tab heading="Proc. Qty" id="tab3">
-              <proc-qty-tab></proc-qty-tab>
-            </tab>
-            <tab heading="Schedule" id="tab4">
-              <schedule-tab></schedule-tab>
-            </tab>
-            <tab heading="Justification" id="tab5">
-              <justification-tab></justification-tab>
-            </tab>
-            <tab heading="Summary" id="tab6">
-              <summary-tab></summary-tab>
-            </tab>
-          </tabset>
+      <div class=row>
+        <div class="col-md-6"></div>
+        <div class="col-md-4">
+          <div class="pull-right">
+            <span>
+                <button class="btn btn-success btn-sm">
+                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>
+                Save
+              </button>
+            </span>
+            <span>
+              <button class="btn btn-default btn-sm mr-sm-2">
+                <i class="fa fa-times icon-pad" aria-hidden="true"></i>
+              Close</button>
+            </span>
+            <span>
+              <button class="btn-primary btn-sm">
+                <i class="fa fa-paper-plane icon-pad" aria-hidden="true"></i>
+                Submit
+              </button>
+            </span>
+          </div>
         </div>
       </div>
     </div>
+    <hr>
+    <div class="row main-content">
+      <div class="col-md-10">
+        <tabset>
+          <tab heading="Program" id="tab1">
+            <program-tab></program-tab>
+          </tab>
+          <tab heading="Funds" id="tab2">
+            <funds-tab></funds-tab>
+          </tab>
+          <tab heading="Proc. Qty" id="tab3">
+            <proc-qty-tab></proc-qty-tab>
+          </tab>
+          <tab heading="Schedule" id="tab4">
+            <schedule-tab></schedule-tab>
+          </tab>
+          <tab heading="Justification" id="tab5">
+            <justification-tab></justification-tab>
+          </tab>
+          <tab heading="Summary" id="tab6">
+            <summary-tab></summary-tab>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+    </div>
   </div>
-</div>

@@ -1,44 +1,49 @@
 <form>
   <div class="row">
     <!--Left column begins-->
-    <div class="col-8">
+    <div class="col-9">
       <div class="row">
-        <!--Contents of left column-->
-        <div class="col-md-12">
+        <div class="col-md-9">
           <div class="form-group inline-name">
-            <input type="text" class="form-control forminput" name="program" placeholder="Program">
+            <input type="text" class="form-control forminput" name="progId" placeholder="*ProgID">
           </div>
           <div class="form-group inline-name">
-            <input type="text" class="form-control forminput" name="subProgram" placeholder="Subprogram">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group inline-name">
-            <input type="text" class="form-control forminput" name="progId" placeholder="ProgID">
+            <input type="text" class="form-control forminput" name="progName" placeholder="*Prog Name">
           </div>
           <div class="form-group inline-name">
-            <input type="text" class="form-control forminput" name="progName" placeholder="ProgName">
+            <div class="input-group">
+              <input type="text" class="form-control forminput" placeholder="Select Picture">
+              <span class="input-group-btn">
+                <button class="btn btn-secondary btn-sm" type="button">Browse</button>
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
           <div class="form-group inline-name">
-            <label>Prog Parent</label>
-            <select>
+            <label>Parent Program</label>
+            <select class="form-control-sm mb-2 mr-sm-2">
                 <option>items</option>
                 <option>items</option>
                 <option>items</option>
               </select>
           </div>
-          <div class="form-group inline-name">
-            <div class="input-group">
-              <input type="text" class="form-control forminput" placeholder="hyperlink URL">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary btn-sm" type="button">Browse</button>
-              </span>
+        </div>
+        <div class="col-md-3">
+          <div class="radio-buttons">
+            <div class="radio-item">
+              <input type="radio" id="ritema" name="ritem" value="ropt1">
+              <label for="ritema">No Subprogram</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="ritemb" name="ritem" value="ropt2">
+              <label for="ritemb">Increment</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="ritemc" name="ritem" value="ropt3">
+              <label for="ritemc">FoS</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="ritemd" name="ritem" value="ropt4">
+              <label for="ritemd">Variant RDTE</label>
             </div>
           </div>
         </div>
@@ -46,40 +51,41 @@
       <div class="row">
         <div class="col-md-12">
           <div class="card mb-3">
-            <div class="card-body">
-              <div class="card-title">Capability</div>
-              <span class="form-group inline-name">
-                <label>*Primary</label>
-                <select>
-                   <option>items</option>
-                   <option>items</option>
-                   <option>items</option>
-                 </select>
-               </span>
-               <span class="form-group inline-name">
-                  <label>*Core</label>
-                  <select>
-                   <option>items</option>
-                   <option>items</option>
-                   <option>items</option>
-                  </select>
-                </span>
+              <div class="card-body">
+                <div class="title">Capability</div>
+                  <hr>
                 <span class="form-group inline-name">
-                  <label>*Secondary</label>
-                  <select>
-                    <option>items</option>
-                    <option>items</option>
-                    <option>items</option>
-                  </select>
-                </span>
-                <span class="form-group inline-name">
-                  <label>Tertiary</label>
-                  <select>
-                    <option>items</option>
-                    <option>items</option>
-                    <option>items</option>
-                  </select>
-                </span>
+                  <label>*Primary</label>
+                  <select class="form-control-sm mb-2 mr-sm-2">
+                     <option>items</option>
+                     <option>items</option>
+                     <option>items</option>
+                   </select>
+                 </span>
+                 <span class="form-group inline-name">
+                    <label>*Core</label>
+                    <select class="form-control-sm mb-2 mr-sm-2">
+                       <option>items</option>
+                       <option>items</option>
+                       <option>items</option>
+                    </select>
+                  </span>
+                  <span class="form-group inline-name">
+                    <label>*Secondary</label>
+                    <select class="form-control-sm mb-2 mr-sm-2">
+                      <option>items</option>
+                      <option>items</option>
+                      <option>items</option>
+                    </select>
+                  </span>
+                  <span class="form-group inline-name">
+                    <label>Tertiary</label>
+                    <select class="form-control-sm mb-2 mr-sm-2">
+                      <option>items</option>
+                      <option>items</option>
+                      <option>items</option>
+                    </select>
+                  </span>
               </div>
             </div>
           </div>
@@ -89,9 +95,10 @@
           <div class="card mb-3">
             <div class="card-body">
               <div class="card-title">Area</div>
+              <hr>
               <span class="form-group inline-name">
                 <label>*Functional</label>
-                <select>
+                <select class="form-control-sm mb-2 mr-sm-2">
                    <option>items</option>
                    <option>items</option>
                    <option>items</option>
@@ -99,7 +106,7 @@
               </span>
               <span class="form-group inline-name">
                 <label>*Medical Cat.</label>
-                <select>
+                <select class="form-control-sm mb-2 mr-sm-2">
                  <option>items</option>
                  <option>items</option>
                  <option>items</option>
@@ -107,7 +114,7 @@
               </span>
               <span class="form-group inline-name">
                 <label>*NBC Cat.</label>
-                <select>
+                <select class="form-control-sm mb-2 mr-sm-2">
                   <option>items</option>
                   <option>items</option>
                   <option>items</option>
@@ -115,7 +122,7 @@
               </span>
               <span class="form-group inline-name">
                 <label>*Aqu. Type</label>
-                <select>
+                <select class="form-control-sm mb-2 mr-sm-2">
                   <option>items</option>
                   <option>items</option>
                   <option>items</option>
@@ -129,7 +136,7 @@
         <div class="col-md-12">
           <span class="form-group inline-name">
             <label>Emphasis</label>
-            <select>
+            <select class="form-control-sm mb-2 mr-sm-2">
               <option>items</option>
               <option>items</option>
               <option>items</option>
@@ -137,7 +144,7 @@
           </span>
           <span class="form-group inline-name">
             <label>BSV Nat. Strat.</label>
-            <select>
+            <select class="form-control-sm mb-2 mr-sm-2">
               <option>items</option>
               <option>items</option>
               <option>items</option>
@@ -145,7 +152,7 @@
           </span>
           <span class="form-group inline-name">
             <label>DASD POM</label>
-            <select>
+            <select class="form-control-sm mb-2 mr-sm-2">
               <option>items</option>
               <option>items</option>
               <option>items</option>
@@ -153,31 +160,9 @@
           </span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card border-light mb-3">
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="FactSheet">
-                  <span class="input-group-btn">
-                    <button class="btn btn-secondary btn-sm" type="button">Browse</button>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <button type="button" class="btn btn-primary btn-sm pull-left" disabled>Add Subprogram</button>
-          </div>
-        </div>
-        </div>
-      </div>
     </div>
     <!--Left column ends. Right column begins.-->
-    <div class="col-md-4">
+    <div class="col-md-3">
       <!--Contents of right column.-->
       <div class="card border-light mb-3 pull-right">
         <div class="img-placeholder">
