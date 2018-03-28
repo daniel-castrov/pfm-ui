@@ -39,6 +39,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
+import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
+import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
@@ -55,13 +57,12 @@ import { JoinCommunityRequestService } from './generated/api/joinCommunityReques
 import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { StrangerService } from './generated/api/stranger.service';
-import { UserService } from './generated/api/user.service';
-import { UserRoleService } from './generated/api/userRole.service';
+import { ProgramsService } from './generated/api/programs.service';
 import { RequestLinkService } from './components/header/requestLink.service';
 import { RoleService } from './generated/api/role.service';
-import { ProgramsService } from './generated/api/programs.service';
+import { UserService } from './generated/api/user.service';
+import { UserRoleService } from './generated/api/userRole.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
-import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -85,6 +86,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
+  {path:'program-request', component:ProgramRequestComponent},
   {path:'program-view', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
@@ -92,7 +94,7 @@ const appRoutes: Routes = [
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
-  { path: 'exporter', component: ProgramExportComponent },
+  {path:'exporter', component: ProgramExportComponent}
 
 ];
 
@@ -123,16 +125,17 @@ const appRoutes: Routes = [
     NotFoundComponent,
     PlanningComponent,
     ProgramComponent,
-    ProgramsComponent,
+    ProgramExportComponent,
+    ProgramRequestComponent,
     ProgramViewComponent,
+    ProgramsComponent,
     RequestAccessChangeComponent,
     RequestComponent,
     MyCommunitiesComponent,
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
-    VariantLineComponent,
-    ProgramExportComponent
+    VariantLineComponent
   ],
 
   imports: [

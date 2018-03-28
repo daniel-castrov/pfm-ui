@@ -1,0 +1,43 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-md-12">
+      <div class=row>
+        <div class="col-md-10 mb-2">
+          <span class="h5 mr-sm-4">Programmatic Request:</span>
+            <span class="form-group">
+              <label class="font-weight-bold">Program ID</label>
+              <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
+                <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
+              </select>
+            </span>
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <tabset>
+            <tab heading="Program" id="tab1">
+
+            </tab>
+            <tab heading="Funds" id="tab2">
+
+            </tab>
+            <tab heading="Proc. Qty" id="tab3">
+
+            </tab>
+            <tab heading="Schedule" id="tab4">
+
+            </tab>
+            <tab heading="Justification" id="tab5">
+
+            </tab>
+            <tab heading="Summary" id="tab6">
+
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
