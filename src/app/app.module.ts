@@ -23,9 +23,11 @@ import { ContactComponent } from './components/contact/contact.component';
 import { DefaultComponent } from './components/user-management/my-communities/default/default.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
+import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
+import { JustificationTabComponent } from './components/programming/program-request/justification-tab/justification-tab.component';
 import { LoginComponent } from './components/login/login.component';
 import { ManageCommunitiesComponent } from './components/user-management/manage-communities/manage-communities.component';
 import { MamageCommunityDetailsComponent } from './components/user-management/manage-communities/manage-community-details.component';
@@ -37,6 +39,7 @@ import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
+import { ProcQtyTabComponent } from './components/programming/program-request/proc-qty-tab/proc-qty-tab.component';
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
@@ -45,6 +48,8 @@ import { ProgramTabComponent } from './components/programming/program-request/pr
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
+import { ScheduleTabComponent } from './components/programming/program-request/schedule-tab/schedule-tab.component';
+import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
@@ -112,9 +117,11 @@ const appRoutes: Routes = [
     DefaultComponent,
     FilterComponent,
     FundsComponent,
+    FundsTabComponent,
     HeaderComponent,
     HeaderNologinComponent,
     HomeComponent,
+    JustificationTabComponent,
     LoginComponent,
     MamageCommunityDetailsComponent,
     ManageCommunitiesComponent,
@@ -122,9 +129,11 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageSelfComponent,
     ManageUsersComponent,
+    MyCommunitiesComponent,
     NoAccessComponent,
     NotFoundComponent,
     PlanningComponent,
+    ProcQtyTabComponent,
     ProgramComponent,
     ProgramExportComponent,
     ProgramRequestComponent,
@@ -133,7 +142,8 @@ const appRoutes: Routes = [
     ProgramsComponent,
     RequestAccessChangeComponent,
     RequestComponent,
-    MyCommunitiesComponent,
+    ScheduleTabComponent,
+    SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
