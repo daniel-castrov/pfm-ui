@@ -1209,7 +1209,7 @@ definitions:
       communication:
         type: "object"
         $ref: "#/definitions/Communication"
-      defaultCommunityId:
+      currentCommunityId:
         type: "string"
       preferences:
         type: "object"
