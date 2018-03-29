@@ -34,8 +34,6 @@ button {
 
 option {
   &.current-community {
-    color: #868e9b;
-    cursor: default;
     &::after {
       content: " (Current Community)";
     }

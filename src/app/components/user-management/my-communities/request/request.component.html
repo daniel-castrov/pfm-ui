@@ -2,10 +2,9 @@
   <div class="communities">
     <div class="label">Community</div>
     <select size="3" class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
-      <option [class.current-community]="community.id==user.currentCommunityId"
-              *ngFor="let community of availableCommunities"
-              [value]="community.id"
-              [disabled]="user.currentCommunityId==community.id">
+      <option *ngFor="let community of availableCommunities"
+              [class.current-community]="community.id==user.currentCommunityId"
+              [value]="community.id">
         {{community.name}}
       </option>
     </select>
@@ -16,7 +15,11 @@
   <div class="requests">
     <div class="label">Requests</div>
     <select size="3" class="form-control-sm mb-2 mr-sm-2">
-      <option *ngFor="let community of requestedCommunities" [disabled]="true">{{community.name}}</option>
+      <option *ngFor="let community of requestedCommunities"
+              [class.current-community]="community.id==user.currentCommunityId"
+              [disabled]="true">
+        {{community.name}}
+      </option>
     </select>
   </div>
   <div class="message" [hidden]="messageIsHidden">
