@@ -64,7 +64,9 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
-        <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
         <!-- <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
           <a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
@@ -73,8 +75,8 @@
           <a class="dropdown-item" href="#" routerLink="/home">Create/Update Program Justificaton</a>
           <a class="dropdown-item" href="#" routerLink="/home">Summary of Request</a>
           <a class="dropdown-item" href="#" routerLink="/home">Create UFR</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Generate POM Submission</a>
-        </div> -->
+          <a class="dropdown-item" href="#" routerLink="/home">Generate POM Submission</a-->
+        </div>
       </li>
       <li class="nav-item">
         <a style="color:#6994b9;" class="nav-link" href="#" routerLink="/home">Budget</a>
@@ -106,7 +108,6 @@
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
           <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
           <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/my-community">Manage My Communities</a>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/exporter">Export POM Template</a>
         </div>
       </li>
     </ul>
