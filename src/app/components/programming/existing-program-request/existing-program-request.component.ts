@@ -5,9 +5,9 @@ import { HeaderComponent } from '../../../components/header/header.component';
 
 
 @Component({
-  selector: 'program-request',
-  templateUrl: './program-request.component.html',
-  styleUrls: ['./program-request.component.scss']
+  selector: 'existing-program-request',
+  templateUrl: './existing-program-request.component.html',
+  styleUrls: ['./existing-program-request.component.scss']
 })
 export class ProgramRequestComponent implements OnInit {
 

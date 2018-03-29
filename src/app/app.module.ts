@@ -23,11 +23,11 @@ import { ContactComponent } from './components/contact/contact.component';
 import { DefaultComponent } from './components/user-management/my-communities/default/default.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
-import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
+import { FundsTabComponent } from './components/programming/existing-program-request/funds-tab/funds-tab.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
 import { HomeComponent } from './components/home/home.component';
-import { JustificationTabComponent } from './components/programming/program-request/justification-tab/justification-tab.component';
+import { JustificationTabComponent } from './components/programming/existing-program-request/justification-tab/justification-tab.component';
 import { LoginComponent } from './components/login/login.component';
 import { ManageCommunitiesComponent } from './components/user-management/manage-communities/manage-communities.component';
 import { MamageCommunityDetailsComponent } from './components/user-management/manage-communities/manage-community-details.component';
@@ -39,17 +39,18 @@ import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PlanningComponent } from './components/planning/planning.component';
-import { ProcQtyTabComponent } from './components/programming/program-request/proc-qty-tab/proc-qty-tab.component';
+import { ProcQtyTabComponent } from './components/programming/existing-program-request/proc-qty-tab/proc-qty-tab.component';
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
-import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
-import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
+import { ProgramRequestComponent } from './components/programming/existing-program-request/existing-program-request.component';
+import { ProgramTabComponent } from './components/programming/existing-program-request/program-tab/program-tab.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
-import { ScheduleTabComponent } from './components/programming/program-request/schedule-tab/schedule-tab.component';
-import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
+import { ScheduleTabComponent } from './components/programming/existing-program-request/schedule-tab/schedule-tab.component';
+import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
+import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
@@ -69,7 +70,6 @@ import { RoleService } from './generated/api/role.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
-
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -82,6 +82,7 @@ const appRoutes: Routes = [
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
+  {path:'existing-program-request', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
   {path:'header-nologin', component:HeaderNologinComponent},
@@ -92,11 +93,11 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
-  {path:'program-request', component:ProgramRequestComponent},
   {path:'program-view', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
+  {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
@@ -143,6 +144,7 @@ const appRoutes: Routes = [
     RequestAccessChangeComponent,
     RequestComponent,
     ScheduleTabComponent,
+    SelectProgramRequestComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,

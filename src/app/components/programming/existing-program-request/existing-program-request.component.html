@@ -2,26 +2,11 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-md-12">
-      <div class=row>
-        <div class="col-md-6">
-          <span class="h5 mr-sm-4">Programmatic Request</span>
+      <div class="row">
+        <div class="col-md-7 mb-4">
+          <span class="h5">Programmatic Request - For Existing or Requested Program</span>
         </div>
-        <div class="col-md-4 mb-1">
-          <p>Leave Blank when issuing a New Top Level Program request:</p>
-          <span class="form-group">
-              <label class="font-weight-bold">Program ID</label>
-              <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
-                <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
-              </select>
-            </span>
-          <span class="form-group pull-right">
-            <input type="text" class="form-control forminput" name="programName" placeholder="Program Name">
-          </span>
-        </div>
-      </div>
-      <div class=row>
-        <div class="col-md-6"></div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="pull-right">
             <span>
                 <button class="btn btn-success btn-sm">
@@ -43,8 +28,19 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <span class="form-group">
+            <label class="h6 primary-label mr-sm-4">Program ID </label>
+          </span>
+          <span class="form-group">
+            <label class="h6 primary-label mr-sm-4">Program Name </label>
+          </span>
+        </div>
+        <div class="col-md-4">
+        </div>
+      </div>
     </div>
-    <hr>
     <div class="row main-content">
       <div class="col-md-10">
         <tabset>
@@ -69,5 +65,5 @@
         </tabset>
       </div>
     </div>
-    </div>
   </div>
+</div>
