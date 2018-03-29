@@ -222,6 +222,58 @@ label {
   padding: 0;
 }
 
+// styles for radio buttons
+
+.radio-buttons {
+  color: #000;
+  padding: 2px 0 0 0;
+  margin-bottom: 5px;
+  width: 100%
+}
+
+.radio-item {
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 0;
+
+  input[type='radio'] {
+    display: none;
+  }
+
+  input[type=radio]:checked + label:after {
+    border-radius: 11px;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    top: 9px;
+    left: 4px;
+    content: " ";
+    display: block;
+    background: #23527c;
+    cursor: pointer;
+  }
+
+  label {
+    color: #23527c;
+    font-weight: normal;
+    &:before {
+      content: " ";
+      display: inline-block;
+      position: relative;
+      top: 5px;
+      margin: 0 10px 0 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 11px;
+      border: 2px solid #23527c;
+      background-color: transparent;
+      cursor: pointer;
+    }
+  }
+}
+
+
 /* tabs */
 
 .nav-tabs .nav-link,
