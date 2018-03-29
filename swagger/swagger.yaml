@@ -1034,6 +1034,25 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /exports:
+    get:
+      operationId: "getExportYears"
+      tags:
+      - "Programs"
+      summary: "Get all export years"
+      description: "Returns all years we an export"
+      operationId: "exports"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of export years"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
 # STOP PROGRAMS
 # 
 # END PATHS

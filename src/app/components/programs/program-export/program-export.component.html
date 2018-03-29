@@ -9,8 +9,7 @@
             <tab heading="Export" id="tab1">
               <p class="h6 mb-3">Export POM Wizard Template</p>
               <select class="form-control-sm mb-2 mr-sm-2 mb-3" [(ngModel)]="startyear" name="startyear">
-                <option [ngValue]="2017">2017</option>
-                <option [ngValue]="2018">2018</option>
+                <option [ngValue]="y" *ngFor="let y of years">{{y}}</option>
               </select>
               <button class="btn btn-primary btn-sm" (click)="onExportClick()">Export POM Template</button>
               <div class="h6">Processing Status</div>
