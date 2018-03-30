@@ -97,7 +97,7 @@ export class HeaderComponent implements OnInit {
         let currentUser = resultUser.result;
 
         // 2 get the join-community-requests for this approver
-        this.joinCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
+        this.joinCommunityRequestService.getByCommId(currentUser.currentCommunityId)
           .subscribe(r => {
             let joinCommunityRequests = r.result;
             for (let request1 of joinCommunityRequests) {
@@ -120,7 +120,7 @@ export class HeaderComponent implements OnInit {
             }
 
             // 3 get the leave-community-requests for this approver
-            this.leaveCommunityRequestService.getByCommId(currentUser.defaultCommunityId)
+            this.leaveCommunityRequestService.getByCommId(currentUser.currentCommunityId)
               .subscribe(r => {
                 // 3a  get the usernames for the leaves
                 let leaveCommunityRequests = r.result;
@@ -143,7 +143,7 @@ export class HeaderComponent implements OnInit {
 
 
                 // 3b get the new-user-requests for this approver
-                this.createUserRequestService.getByCommId(currentUser.defaultCommunityId)
+                this.createUserRequestService.getByCommId(currentUser.currentCommunityId)
                   .subscribe(r => {
                     // 3c get the usernames for the joins
                     let createUserRequests: CreateUserRequest[] = r.result;
