@@ -1,0 +1,55 @@
+label {
+  color: #868e9b;
+  margin: 0;
+  margin-right: 6px;
+  width: 100%;
+}
+
+select {
+  margin-right: 20px;
+}
+
+@media (min-width: 768px) {
+  .img-placeholder > i.fa {
+    font-size: 160px;
+    color: #ccc;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .img-placeholder > i.fa {
+    font-size: 200px;
+  }
+}
+
+.program-values {
+  margin-right: 20px;
+  padding: 2px;
+}
+
+.program-container {
+  width: 100%;
+  margin-bottom: 10px;
+  color: #000;
+  padding: 10px;
+}
+
+.inline-name {
+  display: inline-block;
+  float: left;
+  margin-right: 20px;
+}
+
+.forminput {
+  width: 300px;
+  padding: 6px 4px;
+  clear: both;
+  display: inline;
+}
+
+.forminput-sm {
+  width: 130px;
+  padding: 6px 4px;
+  clear: both;
+}
