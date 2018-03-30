@@ -20,7 +20,7 @@ import { ApplyComponent } from './components/apply/apply.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { DefaultComponent } from './components/user-management/my-communities/default/default.component';
+import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
 import { FundsTabComponent } from './components/programming/existing-program-request/funds-tab/funds-tab.component';
@@ -118,7 +118,7 @@ const appRoutes: Routes = [
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
-    DefaultComponent,
+    CurrentComponent,
     FilterComponent,
     FundsComponent,
     FundsTabComponent,

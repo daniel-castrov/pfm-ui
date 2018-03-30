@@ -1,11 +1,11 @@
 
 <ul class="community-list">
   <li *ngFor="let community of memberOfCommunities">
-    <span [class.default-community]="community.id==user.defaultCommunityId">{{community.name}}</span>
+    <span [class.current-community]="community.id==user.currentCommunityId">{{community.name}}</span>
   </li>
 </ul>
 <span class="form-group">
-  <label class="mb-2 mr-sm-2">Change Default Community</label>
+  <label class="mb-2 mr-sm-2">Change Current Community</label>
   <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
     <option *ngFor="let community of communitiesToSelectFrom" [value]="community.id">{{community.name}}</option>
   </select>
