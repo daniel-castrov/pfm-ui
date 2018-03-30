@@ -1060,12 +1060,11 @@ paths:
 # 
   /snapshots:
     get:
-      operationId: "getSnapshots"
+      operationId: "getAll"
       tags:
       - "Snapshots"
-      summary: "Get Snapshot names and creation dates"
-      description: "Returns snapshots"
-      operationId: "snapshots"
+      summary: "Gets a mapping for snapshot names and creation dates"
+      description: "Returns snapshots map"
       produces:
       - "application/json"
       responses:
@@ -1079,7 +1078,7 @@ paths:
           description: "An unexpected error occured."
   /snapshots/{name}/programs:
     get:
-      operationId: "getSnapshot"
+      operationId: "getPrograms"
       parameters:
       - name: "name"
         in: "path"
@@ -1087,14 +1086,13 @@ paths:
         type: "string"
       tags:
       - "Snapshots"
-      summary: "Get programs associated with this snapshot"
+      summary: "Gets programs associated with this snapshot"
       description: "Returns a collection of snapshots"
-      operationId: "get"
       produces:
       - "application/json"
       responses:
         200:
-          description: "A program object"
+          description: "A list of program objects"
           schema:
             $ref: "#/definitions/RestResult"
         403:
