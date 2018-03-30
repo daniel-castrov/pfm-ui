@@ -1073,6 +1073,8 @@ definitions:
         type: "array"
         items:
           type: "string"
+      currentCommunity:
+        type: "object"
   Communication:
     type: "object"
     properties:
