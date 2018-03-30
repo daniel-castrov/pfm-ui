@@ -15,6 +15,7 @@ tags:
 - name: "User"
 - name: "UserRole"
 - name: "Programs"
+- name: "Snapshots"
 #
 ##############################################################################
 # PATHS
@@ -1054,7 +1055,52 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP PROGRAMS
+##############################################################################
+# START SNAPSHOTS
 # 
+  /snapshots:
+    get:
+      operationId: "getAll"
+      tags:
+      - "Snapshots"
+      summary: "Gets a mapping for snapshot names and creation dates"
+      description: "Returns snapshots map"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A mapping of snapshot labels, create dates"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /snapshots/{name}/programs:
+    get:
+      operationId: "getPrograms"
+      parameters:
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Snapshots"
+      summary: "Gets programs associated with this snapshot"
+      description: "Returns a collection of snapshots"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of program objects"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP SNAPSHOTS
+#
 # END PATHS
 #
 #################################################################
