@@ -10,7 +10,7 @@
             <i *ngIf="!group.isOpen" class="fa fa-caret-right"></i>
             <span class="accordion-heading">My Communities</span>
           </div>
-          <default [memberOfCommunities]="memberOfCommunities" [user]="user"></default>
+          <current [memberOfCommunities]="memberOfCommunities" [user]="user"></current>
         </accordion-group>
       </accordion>
       <accordion>

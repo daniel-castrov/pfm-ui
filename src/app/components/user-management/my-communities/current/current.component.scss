@@ -2,9 +2,9 @@ label, select {
   margin: 0;
 }
 
-.default-community {
+.current-community {
   &::after {
-    content: " (Default Community)";
+    content: " (Current Community)";
   }
   background: #df960e;
   border-radius: 5px;

@@ -33,11 +33,9 @@ button {
 }
 
 option {
-  &.default-community {
-    color: #868e9b;
-    cursor: default;
+  &.current-community {
     &::after {
-      content: " (Default Community)";
+      content: " (Current Community)";
     }
   }
   color: black

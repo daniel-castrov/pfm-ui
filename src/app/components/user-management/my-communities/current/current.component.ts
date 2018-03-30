@@ -6,11 +6,11 @@ import { User } from '../../../../generated';
 import { MyDetailsService } from '../../../../generated/api/myDetails.service';
 
 @Component({
-  selector: 'default',
-  templateUrl: './default.component.html',
-  styleUrls: ['./default.component.scss']
+  selector: 'current',
+  templateUrl: './current.component.html',
+  styleUrls: ['./current.component.scss']
 })
-export class DefaultComponent {
+export class CurrentComponent {
 
   @Input() private memberOfCommunities: Community[];
   @Input() private user: User;
@@ -25,15 +25,15 @@ export class DefaultComponent {
   }
 
   private change() {
-    const user: User = {...this.user, defaultCommunityId : this.selectedCommunityId};
+    const user: User = {...this.user, currentCommunityId : this.selectedCommunityId};
     this.myDetailsService.updateCurrentUser(user).subscribe(() => {
-      this.user.defaultCommunityId = this.selectedCommunityId;
+      this.user.currentCommunityId = this.selectedCommunityId;
       this.updateCommunitiesToSelectFrom();
       delete this.selectedCommunityId;
     });
   }
 
   private updateCommunitiesToSelectFrom(): void {
-    this.communitiesToSelectFrom = this.memberOfCommunities.filter(community => community.id != this.user.defaultCommunityId);
+    this.communitiesToSelectFrom = this.memberOfCommunities.filter(community => community.id != this.user.currentCommunityId);
   }
 }
