@@ -1,7 +1,8 @@
 <div class="wrapper">
   <div class="communities">
     <div class="label">Community</div>
-    <select size="3" class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
+    <select size="3" class="form-control-sm mb-2 mr-sm-2 manage-community-list" [(ngModel)]="selectedCommunityId">
+      <option class="community-list-message">No communities are available</option>
       <option *ngFor="let community of availableCommunities"
               [class.current-community]="community.id==user.currentCommunityId"
               [value]="community.id">
@@ -14,7 +15,8 @@
   </div>
   <div class="requests">
     <div class="label">Requests</div>
-    <select size="3" class="form-control-sm mb-2 mr-sm-2">
+    <select size="3" class="form-control-sm mb-2 mr-sm-2 manage-community-list">
+      <option class="community-list-message">There are no requests</option>
       <option *ngFor="let community of requestedCommunities"
               [class.current-community]="community.id==user.currentCommunityId"
               [disabled]="true">
