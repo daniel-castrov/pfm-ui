@@ -143,7 +143,7 @@ export class ManageCommunitiesComponent implements OnInit {
     let com: Community;
     for (com of this.communities) {
       if (com.name === this.newCommunity.name ||
-        com.identifier === this.newCommunity.identifier) {
+        com.abbreviation === this.newCommunity.abbreviation) {
         return false;
       }
     }

@@ -1137,7 +1137,7 @@ definitions:
         type: "string"
       name:
         type: "string"
-      identifier:
+      abbreviation:
         type: "string"
   CreateUserRequest:
     type: "object"
