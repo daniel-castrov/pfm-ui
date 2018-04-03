@@ -1,4 +1,5 @@
 <app-header></app-header>
+
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-md-12">
@@ -15,80 +16,40 @@
               <div class="row">
                 <div class="col-md-2">
                   <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Appropriation
-                  </label>
+                    <input class="form-check-input" type="checkbox"  id="defaultCheck1" [(ngModel)]="useappropriations">
+                    <label class="form-check-label" for="defaultCheck1">Appropriation</label>
                   </div>
                   <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                    <label class="form-check-label" for="defaultCheck2">
-                    OpAgency
-                  </label>
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies">
+                    <label class="form-check-label" for="defaultCheck2">OpAgency</label>
                   </div>
                   <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
-                    <label class="form-check-label" for="defaultCheck3">
-                    ??
-                  </label>
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins">
+                    <label class="form-check-label" for="defaultCheck3">BA/BLIN</label>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <div class="form-group inline-name">
-                    <label class="mb-1">RDTE:</label>
-                    <select class="form-control-sm mb-2 mr-sm-1">
-                      <option>items</option>
-                      <option>items</option>
-                      <option>items</option>
+                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.appropriation" name="appropriation"
+                            [disabled]="!useappropriations">
+                      <option *ngFor="let a of appropriations" [ngValue]="a" [selected]="">{{a}}</option>
                     </select>
                   </div>
                   <div class="form-group inline-name">
-                    <label class="mb-1">5Y:</label>
-                    <select class="form-control-sm mb-2 mr-sm-1">
-                      <option>items</option>
-                      <option>items</option>
-                      <option>items</option>
+                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.agency" name="agency"
+                            [disabled]="!useagencies">
+                      <option *ngFor="let a of agencies" [ngValue]="a">{{a}}</option>
                     </select>
                   </div>
                   <div class="form-group inline-name">
-                    <label class="mb-1">???:</label>
-                    <select class="form-control-sm mb-2 mr-sm-1">
-                      <option>items</option>
-                      <option>items</option>
-                      <option>items</option>
+                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.blin" name="blin" [disabled]="!useblins">
+                      <option *ngFor="let a of blins" [ngValue]="a">{{a}}</option>
                     </select>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    BA/BLIN
-                  </label>
-                  </div>
-                  <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                    <label class="form-check-label" for="defaultCheck2">
-                    OpAgency
-                  </label>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    BA
-                  </label>
-                  </div>
-                  <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                    <label class="form-check-label" for="defaultCheck2">
-                    ??
-                    </label>
                   </div>
                 </div>
               </div>
               <div class="row">
+                <button (click)="search()">Search</button>
                 <div class="col-md-12">
                   <div class="h6">Select Program of Interest</div>
                   <table class="program-filter-table">
@@ -96,47 +57,23 @@
                       <tr>
                         <th class="row-width">Program</th>
                         <th class="row-width">Subprogram</th>
-                        <th class="row-width">Varaint</th>
-                        <th>Org</th>
-                        <th>OpAgency</th>
+                        <th class="row-width">Variant</th>
+                        <th class="row-width">TYPE</th>
+                        <th>FA</th>
+                        <th>CC</th>
                         <th>Manager</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                      <tr class="row-blue">
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
+                      <tr *ngFor="let p of finds; let isOdd=odd" [class.row-blue]="isOdd" [class.row-light]="!isOdd">
+                        <td><a [routerLink]="['/program-view', p.id]">{{p.shortName}}</a></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{p.type}}</td>
+                        <td>{{p.tags['Functional_Area']}}</td>
+                        <td>{{p.tags['Core_Capability']}}</td>
+                        <td>{{p.tags['Manager']}}</td>
                       </tr>
-                      <tr class="row-light">
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                      </tr>
-                      <tr class="row-blue">
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                      </tr>
-                      <tr class="row-light">
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                        <td class="">-</td>
-                      </tr>
-
                     </tbody>
                   </table>
                 </div>

@@ -1087,6 +1087,42 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /search/agencies:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getSearchAgencies"
+      summary: "Gets all opAgencies in use"
+      description: "Returns a collection of OpAgencies"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of strings"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search/appropriations:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getSearchAppropriations"
+      summary: "Gets all Appropriations in use"
+      description: "Returns a collection of Appropriations"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of strings"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
   /search/tags/{type}:
     get:
       tags:

@@ -1,22 +1,11 @@
 <app-header></app-header>
-
-<!--div *ngFor="let t of appropriations">appropriations: {{t.abbr}}</div>
-<div *ngFor="let t of opagencies">agencies: {{t.abbr}}</div>
-<div *ngFor="let t of blins">blins: {{t}}</div-->
-
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-md-12">
       <div class=row>
         <div class="col-md-10 mb-2">
-          <span class="h5 mr-sm-4">View Program:</span>
-            <span class="form-group">
-              <label class="font-weight-bold">Select Program:</label>
-              <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="current" name="current">
-                <option [ngValue]="p" *ngFor="let p of allprograms">{{p.shortName}}</option>
-              </select>
-            </span>
-          <hr>
+          <div class="h5 mr-sm-4">View {{current.type}}</div>
+          <div class="h3 mr-sm-4"> {{current.longName}} ({{current.shortName}})</div>
         </div>
       </div>
       <div class="row">

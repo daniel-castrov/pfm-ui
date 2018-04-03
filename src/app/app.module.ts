@@ -97,7 +97,7 @@ const appRoutes: Routes = [
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
   {path:'program-search', component:ProgramSearchComponent},
-  {path:'program-view', component:ProgramViewComponent},
+  {path:'program-view/:id', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
