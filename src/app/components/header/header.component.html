@@ -67,7 +67,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="#" routerLink="/select-program-request">Programmatic Request</a>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
+          <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
           <!--<a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
           <a class="dropdown-item" href="#" routerLink="/home">Approve Fund Request</a>
@@ -109,8 +109,8 @@
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/access-change">Request Access</a>
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
+          <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
+          <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
           <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/my-community">Manage My Communities</a>
         </div>
       </li>
@@ -118,7 +118,7 @@
   </div>
 
   <div class="col-3">
-    <span class="dropdown show actions-menu" *ngIf="authUser.rolenames.includes('User_Approver') || authUser.rolenames.includes('User_Admin')">
+    <span class="dropdown show actions-menu" *ngIf="authUser.rolenames.includes('User_Approver') || authUser.admin">
       <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
         <div class="icon-wrapper">

@@ -1231,10 +1231,14 @@ definitions:
         type: "string"
       fullName:
         type: "string"
+      admin:
+        type: "boolean"
       rolenames:
         type: "array"
         items:
           type: "string"
+      currentCommunity:
+        type: "object"
   Communication:
     type: "object"
     properties:
@@ -1249,7 +1253,7 @@ definitions:
         type: "string"
       name:
         type: "string"
-      identifier:
+      abbreviation:
         type: "string"
   CreateUserRequest:
     type: "object"
