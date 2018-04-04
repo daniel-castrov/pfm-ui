@@ -19,13 +19,11 @@ export class ProgramExportComponent implements OnInit {
 
   constructor(private programs: ProgramsService) {
     var my: ProgramExportComponent = this;
-    programs.exports().subscribe((data: RestResult) => {
+    programs.getExportYears().subscribe((data: RestResult) => {
       my.years = data.result.sort();
       my.startyear = my.years[my.years.length - 1];
-    },
-      (err) => { console.log(err); }
-    );
-   }
+    });
+  }
 
   ngOnInit() {
 

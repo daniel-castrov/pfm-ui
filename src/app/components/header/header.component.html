@@ -46,10 +46,10 @@
             {{ authUser?.fullName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div *ngIf="authUser.rolenames.includes('User')" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
-            <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
-            <a class="dropdown-item" routerLink="/home">My Roles</a>
+            <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
+            <a class="dropdown-item" href="#" routerLink="/not-implemented">My Roles</a>
           </div>
         </span>
       </div>
@@ -69,9 +69,9 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="#" routerLink="/select-program-request">Programmatic Request</a>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
-          <!--<a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
+          <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
+          <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
+          <!--<a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
           <a class="dropdown-item" href="#" routerLink="/home">Approve Fund Request</a>
           <a class="dropdown-item" href="#" routerLink="/home">Create/Update Program Schedule</a>
           <a class="dropdown-item" href="#" routerLink="/home">Create/Update Program Justificaton</a>
@@ -99,27 +99,31 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
         <div class="dropdown-menu" aria-labelledby="dropdown06">
-          <a class="dropdown-item" href="#" routerLink="/program-view">View Program</a>
+          <div class="dropdown-header">Programs</div>
+          <a class="dropdown-item" href="#" routerLink="/program-search">Find Program</a>
+          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Edit Program</a>
+          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Create Program</a>
+          <div class="dropdown-header" style="color:grey !important;">UFRs</div>
         </div>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <div class="dropdown-header">Requests</div>
-          <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/access-change">New User Requests</a>
-          <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/home">Community Change Requests</a>
-          <a *ngIf="authUser.rolenames.includes('User')" class="dropdown-item" href="#" routerLink="/home">Role Change Requests</a>
+          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">New User Requests</a>
+          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">Community Change Requests</a>
+          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">Role Change Requests</a>
           <div class="dropdown-header">Administrative</div>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
-          <a *ngIf="authUser.rolenames.includes('User_Admin')" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
-          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/home">Manage Roles</a>
+          <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
+          <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
+          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">Manage Roles</a>
         </div>
       </li>
     </ul>
   </div>
 
   <div class="col-3">
-    <span class="dropdown show actions-menu" *ngIf="authUser.rolenames.includes('User_Approver') || authUser.rolenames.includes('User_Admin')">
+    <span class="dropdown show actions-menu" *ngIf="authUser.rolenames.includes('User_Approver') || authUser.admin">
       <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
         <div class="icon-wrapper">

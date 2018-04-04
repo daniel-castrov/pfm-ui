@@ -994,17 +994,16 @@ paths:
 # START PROGRAMS
   /programs/{programId}:
     get:
+      tags:
+      - "Programs"
       operationId: "getProgramById"
       parameters:
       - name: "programId"
         in: "path"
         required: true
         type: "string"
-      tags:
-      - "Programs"
       summary: "Get one program"
       description: "Returns a given program"
-      operationId: "get"
       produces:
       - "application/json"
       responses:
@@ -1018,12 +1017,11 @@ paths:
           description: "An unexpected error occured."
   /programs:
     get:
-      operationId: "getAllPrograms"
       tags:
       - "Programs"
+      operationId: "getAll"
       summary: "Get all programs"
       description: "Returns all programs"
-      operationId: "getall"
       produces:
       - "application/json"
       responses:
@@ -1037,17 +1035,136 @@ paths:
           description: "An unexpected error occured."
   /exports:
     get:
-      operationId: "getExportYears"
       tags:
       - "Programs"
+      operationId: "getExportYears"
       summary: "Get all export years"
       description: "Returns all years we an export"
-      operationId: "exports"
       produces:
       - "application/json"
       responses:
         200:
           description: "A list of export years"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search/tags:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getSearchTags"
+      summary: "Gets all type names"
+      description: "Returns a collection of type names"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of strings"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search/blins:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getSearchBlins"
+      summary: "Gets all blins in use"
+      description: "Returns a collection of blins"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of strings"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search/agencies:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getSearchAgencies"
+      summary: "Gets all opAgencies in use"
+      description: "Returns a collection of OpAgencies"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of strings"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search/appropriations:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getSearchAppropriations"
+      summary: "Gets all Appropriations in use"
+      description: "Returns a collection of Appropriations"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of strings"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search/tags/{type}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getTagsByType"
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets all the tags for a given type"
+      description: "Returns tags for a type"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "All the tags for this type"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search:
+    post:
+      tags:
+      - "Programs"
+      operationId: "search"
+      summary: "Search programs based on criteria"
+      description: "Returns a collection of programs that meet the criteria"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a ProgramFilter"
+        required: true
+        schema:
+          $ref: "#/definitions/ProgramFilter"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
           schema:
             $ref: "#/definitions/RestResult"
         403:
@@ -1100,7 +1217,6 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP SNAPSHOTS
-#
 # END PATHS
 #
 #################################################################
@@ -1115,10 +1231,14 @@ definitions:
         type: "string"
       fullName:
         type: "string"
+      admin:
+        type: "boolean"
       rolenames:
         type: "array"
         items:
           type: "string"
+      currentCommunity:
+        type: "object"
   Communication:
     type: "object"
     properties:
@@ -1133,7 +1253,7 @@ definitions:
         type: "string"
       name:
         type: "string"
-      identifier:
+      abbreviation:
         type: "string"
   CreateUserRequest:
     type: "object"
@@ -1289,6 +1409,15 @@ definitions:
         type: "string"
       roleId:
         type: "string"
+  Tag:
+      type: "object"
+      properties:
+      id:
+        type: "string"
+      abbr:
+        type: "string"
+      name:
+        type: "string"
   IntMap:
     type: "object"
     additionalProperties:
@@ -1393,5 +1522,16 @@ definitions:
         type: "array"
         items:
           $ref: "string"
+  ProgramFilter:
+    type: "object"
+    properties:
+      tagCriteria:
+        $ref: '#/definitions/StringMap'
+      blin:
+        type: 'string'
+      agency:
+        type: 'string'
+      appropriation:
+        type: 'string'
 ##############################################################################
 # ENDFILE

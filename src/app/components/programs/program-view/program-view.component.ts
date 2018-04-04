@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ProgramsService, Program } from '../../../generated';
+import { ProgramsService, Program, ProgramFilter } from '../../../generated';
 import * as $ from 'jquery';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
+import { Router, ActivatedRoute, ParamMap, Params, UrlSegment } from '@angular/router';
 
 declare const $: any;
 declare const jQuery: any;
@@ -16,21 +17,20 @@ declare const jQuery: any;
 export class ProgramViewComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
-  private allprograms: Program[] = [];
   private current: Program = null;
-  startyear: number = 2013;
+  private startyear: number = 2013;
 
-
-  constructor(private programs: ProgramsService) {
+  constructor(private programs: ProgramsService, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.programs.getall().subscribe(
-      (data) => {
-        this.allprograms = data.result;
-        this.current = this.allprograms[0];
-      }
-    );
+    var my: ProgramViewComponent = this;
+    this.route.url.subscribe((segments: UrlSegment[]) => { 
+      var pid = segments[segments.length - 1].path;
+      my.programs.getProgramById(pid).subscribe(
+        (data) => {
+          my.current = data.result;
+        });
+    });
   }
-
 }

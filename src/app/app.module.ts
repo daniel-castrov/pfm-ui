@@ -38,12 +38,14 @@ import { MyCommunitiesComponent } from './components/user-management/my-communit
 import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProcQtyTabComponent } from './components/programming/existing-program-request/proc-qty-tab/proc-qty-tab.component';
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
 import { ProgramRequestComponent } from './components/programming/existing-program-request/existing-program-request.component';
+import { ProgramSearchComponent } from './components/programs/program-search/program-search.component';
 import { ProgramTabComponent } from './components/programming/existing-program-request/program-tab/program-tab.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
@@ -93,9 +95,11 @@ const appRoutes: Routes = [
   {path:'manage-users/:id', component:ManageUsersComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
+  {path:'not-implemented', component:NotImplementedComponent},
   {path:'planning', component:PlanningComponent},
   {path:'programs', component:ProgramsComponent},
-  {path:'program-view', component:ProgramViewComponent},
+  {path:'program-search', component:ProgramSearchComponent},
+  {path:'program-view/:id', component:ProgramViewComponent},
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
@@ -136,11 +140,13 @@ const appRoutes: Routes = [
     MyCommunitiesComponent,
     NoAccessComponent,
     NotFoundComponent,
+    NotImplementedComponent,
     PlanningComponent,
     ProcQtyTabComponent,
     ProgramComponent,
     ProgramExportComponent,
     ProgramRequestComponent,
+    ProgramSearchComponent,
     ProgramTabComponent,
     ProgramViewComponent,
     ProgramsComponent,
