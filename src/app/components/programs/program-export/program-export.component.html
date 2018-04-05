@@ -11,7 +11,7 @@
               <select class="form-control-sm mb-2 mr-sm-2 mb-3" [(ngModel)]="startyear" name="startyear">
                 <option [ngValue]="y" *ngFor="let y of years">{{y}}</option>
               </select>
-              <button class="btn btn-primary btn-sm" (click)="onExportClick()">Export POM Template</button>
+              <button class="btn btn-primary btn" (click)="onExportClick()">Export POM Template</button>
               <div class="h6">Processing Status</div>
               <div class="card">
                 <div class="card-body"></div>

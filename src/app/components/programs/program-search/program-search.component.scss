@@ -2,8 +2,12 @@
   margin: 0 0 0 15px;
 }
 
+.form-check-input {
+  margin-left: -10px;
+}
+
 .form-check-label {
-  padding-left: 3px;
+  padding-left: 10px;
 }
 
 table.program-filter-table {
@@ -90,4 +94,11 @@ table.program-filter-table thead {
 
 .font-lt-gray {
   color: #848282;
+}
+
+.program-view-link {
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
 }
