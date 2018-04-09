@@ -1,66 +1,9 @@
-.programming-container {
-  width: 100%;
-  margin: 40px -3px;
-  padding: 20px;
-}
-
-tab {
-  padding: 15px
-}
-
 .forminput {
   width: 300px;
   padding: 6px 4px;
   clear: both;
 }
 
-tbody div {
-  overflow-y:scroll;
-  height: 240px;
-}
-
-.pom-table {
-  border: 1px #ccc solid;
-  padding: 3px;
-  background-color: #f7f7f7;
-  overflow-y:scroll;
-  height: 350px;
-  width: 340px;
-  margin-bottom: 20px;
-}
-
-.pom-table > td {
-  font-size: 15px;
-  font-weight: 400;
-  padding: 0 !important;
-}
-
-tr:nth-child(odd) {background: #f7f7f7}
-tr:nth-child(even) {background: #fff}
-
-tfoot {
-  padding: 10px;
-  color: #fff;
-}
-
-tfoot > tr {
-  padding: 0;
-  color: #fff;
-  background-color: #3c3737;
-}
-
-.pom-table thead tr th {
-  padding: 4px 10px;
-  font-weight: 500;
-  background-color: #cccccc;
-}
-
-.pom-table tr > td { padding: 0 5px; }
-
-.pom-table thead {
-  padding: 5px 10px;
-  border-radius: 4px;
-}
 
 .table {
   width: 100%;
