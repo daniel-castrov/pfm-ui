@@ -76,7 +76,7 @@
           <div class="card-body">
             <span class="form-group inline-name">
               <label>Emphasis:</label>
-              <ng-container *ngIf="current?.emphases; else novalue">
+              <ng-container *ngIf="current?.emphases && current?.emphases.length>0; else novalue">
                 <span class="program-values" *ngFor="let e of current.emphases">{{e}}</span>
               </ng-container>
             </span>
