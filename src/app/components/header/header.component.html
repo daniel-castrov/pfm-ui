@@ -110,9 +110,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <div class="dropdown-header">Requests</div>
-          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">New User Requests</a>
-          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">Community Change Requests</a>
-          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">Role Change Requests</a>
+          <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/approve-requests">Approve Requests</a>
           <div class="dropdown-header">Administrative</div>
           <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
           <a *ngIf="authUser.admin" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>

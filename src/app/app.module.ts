@@ -17,6 +17,7 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/access-change-approval.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
@@ -82,6 +83,7 @@ const appRoutes: Routes = [
   {path:'access-change', component:RequestAccessChangeComponent},
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
   {path:'apply', component:ApplyComponent},
+  {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
@@ -119,6 +121,7 @@ const appRoutes: Routes = [
     AccessChangeApprovalComponent,
     AppComponent,
     ApplyComponent,
+    ApproveRequestsComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
