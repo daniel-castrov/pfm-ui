@@ -1,12 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
-import 'rxjs/add/operator/toPromise';
 
 // Generated
 import { AuthUser } from '../../generated/model/authUser';
@@ -53,36 +48,20 @@ export class HeaderComponent implements OnInit {
     config.placement = 'left';
     this.requestLinkService.requestLinks.subscribe( (val) => {
       this.requestLinks=val;
-      this.fixNotifications;
     });
   }
 
-  ngOnInit() {
-    this.getAutUser();
-  }
-
-  getAutUser(): void {
-
-    var my: HeaderComponent = this;
-
+  ngOnInit(): void {
     this.blankService.blank("response", true).subscribe(
       (r: HttpResponse<RestResult>) => {
         var authHeader = r.headers.get('Authorization');
-        my.authUserJson = atob(authHeader);
-        my.authUser = JSON.parse(atob(authHeader));
-        my.isloggedin = true;
-        if (my.authUser.rolenames.includes('User_Approver')) {
-          my.getApproverNotifications();
+        this.authUserJson = atob(authHeader);
+        this.authUser = JSON.parse(atob(authHeader));
+        this.isloggedin = true;
+        if (this.authUser.rolenames.includes('User_Approver')) {
+          this.getApproverNotifications();
         }
       });
-  }
-
-  getSampleNotifications(): void {
-    this.requestLinks.push(new RequestLink("1", "Sam Smith", '45243707542', "/user-approval/" + "1", "New User Request"));
-    this.requestLinks.push(new RequestLink("2", "Patti Jones", '25204707542', "/user-approval/" + "2", "New User Request"));
-    this.requestLinks.push(new RequestLink("3", "Michael McCallaster", '45243707542', "/user-approval/" + "3", "New User Request"));
-    this.requestLinks.push(new RequestLink("4", "Amy Awkward", '15209707542', "/community-join/" + "4", "Community Request"));
-    this.requestLinks.push(new RequestLink("5", "Violet Vulcan", '85202107542', "/community-leave/" + "5", "Leave Community Request"));
   }
 
   // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
@@ -115,7 +94,7 @@ export class HeaderComponent implements OnInit {
                       request1.dateApplied,
                       "/community-join/" + request1.id,
                       "Join Community Request"));
-                      this.fixNotifications();
+                      this.sortNotifications();
                 });
             }
 
@@ -137,7 +116,7 @@ export class HeaderComponent implements OnInit {
                           request2.dateApplied,
                           "/community-leave/" + request2.id,
                           "Leave Community Request"));
-                          this.fixNotifications();
+                          this.sortNotifications();
                     });
                 }
 
@@ -158,16 +137,14 @@ export class HeaderComponent implements OnInit {
                           "New User Request"));
                     }
 
-                    // LAST Sort and how many notifications are there? If none then null;
-                    //this.getSampleNotifications();
-                    this.fixNotifications();
+                    this.sortNotifications();
                   });
               });
           });
       });
   }
 
-  fixNotifications() {
+  sortNotifications() {
     this.requestLinks.sort(this.compareRequsetLink);
   }
 
@@ -178,6 +155,5 @@ export class HeaderComponent implements OnInit {
       return 1;
     return 0;
   }
-
 
 }
