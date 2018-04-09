@@ -31,19 +31,19 @@
             <legend>Capability</legend>
             <span class="form-group inline-name">
             <label>*Primary:</label>
-            <span class="program-values" *ngIf="current?.tags['Primary_Capability']; else novalue">{{current?.tags['Primary_Capability']}}</span>
+            <span class="program-values" *ngIf="current?.tags['Primary_Capability']; else novalue">{{tagnames.get( 'Primary_Capability' ).get( current?.tags['Primary_Capability'] )}}</span>
            </span>
            <span class="form-group inline-name">
               <label>*Core:</label>
-              <span class="program-values" *ngIf="current?.tags['Core_Capability']; else novalue">{{current?.tags['Core_Capability']}}</span>
+              <span class="program-values" *ngIf="current?.tags['Core_Capability']; else novalue">{{tagnames.get( 'Core_Capability' ).get( current?.tags['Core_Capability'] )}}</span>
             </span>
             <span class="form-group inline-name">
               <label>*Secondary:</label>
-              <span class="program-values" *ngIf="current?.tags['Secondary_Capability']; else novalue">{{current?.tags['Secondary_Capability']}}</span>
+              <span class="program-values" *ngIf="current?.tags['Secondary_Capability']; else novalue">{{tagnames.get( 'Secondary_Capability' ).get( current?.tags['Secondary_Capability'] )}}</span>
             </span>
             <span class="form-group inline-name">
               <label>Tertiary:</label>
-              <span class="program-values" *ngIf="current?.tags['Tertiary_Capability']; else novalue">{{current?.tags['Tertiary_Capability']}}</span>
+              <span class="program-values" *ngIf="current?.tags['Tertiary_Capability']; else novalue">{{tagnames.get( 'Tertiary_Capability' ).get( current?.tags['Tertiary_Capability'])}}</span>
             </span>
           </fieldset>
         </div>
@@ -54,19 +54,19 @@
             <legend>Area</legend>
             <span class="form-group inline-name">
               <label>*Functional:</label>
-              <span class="program-values" *ngIf="current?.tags['Functional_Area']; else novalue">{{current?.tags['Functional_Area']}}</span>
+              <span class="program-values" *ngIf="current?.tags['Functional_Area']; else novalue">{{tagnames.get( 'Functional_Area' ).get( current?.tags['Functional_Area'])}}</span>
             </span>
             <span class="form-group inline-name">
               <label>*Medical Cat.:</label>
-              <span class="program-values" *ngIf="current?.tags['Medical_Category']; else novalue">{{current?.tags['Medical_Category']}}</span>
+              <span class="program-values" *ngIf="current?.tags['Medical_Category']; else novalue">{{tagnames.get( 'Medical_Category' ).get( current?.tags['Medical_Category'] )}}</span>
             </span>
             <span class="form-group inline-name">
               <label>*NBC Cat.:</label>
-              <span class="program-values" *ngIf="current?.tags['NBC_Category']; else novalue">{{current?.tags['NBC_Category']}}</span>
+              <span class="program-values" *ngIf="current?.tags['NBC_Category']; else novalue">{{tagnames.get( 'NBC_Category' ).get( current?.tags['NBC_Category'] )}}</span>
             </span>
             <span class="form-group inline-name">
               <label>*Acq. Type:</label>
-              <span class="program-values" *ngIf="current?.tags['Acquisition_Type']; else novalue">{{current?.tags['Acquisition_Type']}}</span>
+              <span class="program-values" *ngIf="current?.tags['Acquisition_Type']; else novalue">{{tagnames.get( 'Acquisition_Type' ).get( current?.tags['Acquisition_Type'] )}}</span>
             </span>
           </fieldset>
         </div>
@@ -80,7 +80,7 @@
             </span>
             <span class="form-group inline-name">
               <label>BSV Nat. Strat.:</label>
-              <span class="program-values" *ngIf="false; else novalue"></span>
+              <span class="program-values" *ngIf="current?.tags['BSV_Strategy']; else novalue">{{tagnames.get( 'BSV_Strategy' ).get( current?.tags['BSV_Strategy'] )}}</span>
             </span>
             <span class="form-group inline-name">
               <label>DASD POM:</label>
