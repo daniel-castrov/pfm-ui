@@ -54,6 +54,8 @@ export class ProgramSearchComponent implements OnInit {
           my.filter.appropriation = my.appropriations[0];
         }
       });
+    
+    this.search();
   }
 
   private search() {
