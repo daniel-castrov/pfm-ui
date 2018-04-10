@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 
 // Generated
+import { HeaderComponent } from '../../../../components/header/header.component';
 import { Community } from '../../../../generated';
 import { User } from '../../../../generated';
 import { MyDetailsService } from '../../../../generated/api/myDetails.service';
@@ -12,6 +13,7 @@ import { MyDetailsService } from '../../../../generated/api/myDetails.service';
 })
 export class CurrentComponent {
 
+  @Input() header: HeaderComponent;
   @Input() private memberOfCommunities: Community[];
   @Input() private user: User;
   private selectedCommunityId: string;
@@ -29,6 +31,7 @@ export class CurrentComponent {
     this.myDetailsService.updateCurrentUser(user).subscribe(() => {
       this.user.currentCommunityId = this.selectedCommunityId;
       this.updateCommunitiesToSelectFrom();
+      this.header.ngOnInit();
       delete this.selectedCommunityId;
     });
   }
