@@ -59,11 +59,11 @@
                 <mat-cell *matCellDef="let p" [routerLink]="['/program-view', p.id]">{{p.shortName}}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="subprogram">
-                <mat-header-cell *matHeaderCellDef>Subprogram</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Subprogram</mat-header-cell>
                 <mat-cell *matCellDef="let p"></mat-cell>
               </ng-container>
               <ng-container matColumnDef="Variant">
-                <mat-header-cell *matHeaderCellDef>Variant</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Variant</mat-header-cell>
                 <mat-cell *matCellDef="let p"></mat-cell>
               </ng-container>
               <ng-container matColumnDef="type">
@@ -71,15 +71,15 @@
                 <mat-cell *matCellDef="let p"> {{p.type}} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="FA">
-                <mat-header-cell *matHeaderCellDef>FA</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>FA</mat-header-cell>
                 <mat-cell *matCellDef="let p"> {{p.tags['Functional_Area']}} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="CC">
-                <mat-header-cell *matHeaderCellDef>CC</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>CC</mat-header-cell>
                 <mat-cell *matCellDef="let p"> {{p.tags['Core_Capability']}} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="Manager">
-                <mat-header-cell *matHeaderCellDef>Manager</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
                 <mat-cell *matCellDef="let p"> {{p.tags['Manager']}} </mat-cell>
               </ng-container>
 

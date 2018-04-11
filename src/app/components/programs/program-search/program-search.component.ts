@@ -32,6 +32,19 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     var my: ProgramSearchComponent = this;
 
+    this.datasource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'FA':
+          return data.tags['Functional_Area'];
+        case 'CC':
+          return data.tags['Core_Capability'];
+        case 'Manager':
+          return data.tags['Manager'];  
+        default:
+          return data[sortHeaderId];
+      }
+    }
+
     this.programs.getSearchBlins().subscribe(
       (data) => { 
         my.blins = data.result;
@@ -62,8 +75,10 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // FIXME: these don't seem to work here
     this.datasource.paginator = this.paginator;
     this.datasource.sort = this.sorter;
+    console.log(this.datasource);
     this.search();
   }
 
@@ -85,9 +100,10 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
     this.programs.search(criteria).subscribe(
       (data) => { 
         my.datasource.data = data.result;
+        // FIXME: these lines should be in ngAfterViewInit, but they don't seem to work there
         my.datasource.sort = this.sorter;
         my.datasource.paginator = this.paginator;
-        console.log(my.datasource);
+        //console.log(my.datasource);
       });
   }
 }
