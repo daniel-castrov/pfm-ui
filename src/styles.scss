@@ -363,3 +363,14 @@ tab {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
 }
+
+// table pagination
+
+.mat-paginator-page-size {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.mat-paginator-range-label {
+  font-size: 14px;
+}

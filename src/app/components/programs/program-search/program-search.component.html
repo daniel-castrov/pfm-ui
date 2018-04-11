@@ -56,11 +56,11 @@
             <mat-table [dataSource]="datasource" matSort>
               <ng-container matColumnDef="shortName">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Program</mat-header-cell>
-                <mat-cell *matCellDef="let p" [routerLink]="['/program-view', p.id]">{{p.shortName}}</mat-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p" [routerLink]="['/program-view', p.id]">{{p.shortName}}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="subprogram">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Subprogram</mat-header-cell>
-                <mat-cell *matCellDef="let p"></mat-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
               </ng-container>
               <ng-container matColumnDef="Variant">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Variant</mat-header-cell>
@@ -82,7 +82,6 @@
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
                 <mat-cell *matCellDef="let p"> {{p.tags['Manager']}} </mat-cell>
               </ng-container>
-
               <mat-header-row *matHeaderRowDef="['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-header-row>
               <mat-row *matRowDef="let myRowData; columns: ['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-row>
             </mat-table>
