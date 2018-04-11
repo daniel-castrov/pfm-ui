@@ -5,6 +5,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
+         MatSortModule, MatTableModule } from "@angular/material";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -166,6 +168,11 @@ const appRoutes: Routes = [
     AccordionModule.forRoot(),
     BrowserModule,
     FormsModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
