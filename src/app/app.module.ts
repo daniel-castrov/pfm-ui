@@ -7,6 +7,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
          MatSortModule, MatTableModule } from "@angular/material";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -161,7 +162,7 @@ const appRoutes: Routes = [
     UserListComponent,
     VariantsComponent,
     VariantLineComponent,
-    SelectRequestDropdownComponent
+    SelectRequestDropdownComponent    
   ],
 
   imports: [
@@ -176,7 +177,8 @@ const appRoutes: Routes = [
     HttpClientModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [
     BlankService,

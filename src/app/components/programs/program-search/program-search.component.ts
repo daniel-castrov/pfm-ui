@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatTableDataSource,MatPaginator, MatSort } from '@angular/material';
+
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -10,8 +12,10 @@ import { ProgramsService, ProgramFilter, Program } from '../../../generated';
   templateUrl: './program-search.component.html',
   styleUrls: ['./program-search.component.scss']
 })
-export class ProgramSearchComponent implements OnInit {
+export class ProgramSearchComponent implements OnInit, AfterViewInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sorter: MatSort;
 
   private useappropriations: boolean = false;
   private useblins: boolean = false;
@@ -20,7 +24,7 @@ export class ProgramSearchComponent implements OnInit {
   private blins: string[] = [];
   private agencies: string[] = [];
   private filter: ProgramFilter = {};
-  private finds: Program[] = [];
+  private datasource: MatTableDataSource<Program> = new MatTableDataSource<Program>();
 
   constructor(private programs: ProgramsService, private router: Router ) { 
   }
@@ -55,6 +59,11 @@ export class ProgramSearchComponent implements OnInit {
         }
       });
     
+  }
+
+  ngAfterViewInit() {
+    this.datasource.paginator = this.paginator;
+    this.datasource.sort = this.sorter;
     this.search();
   }
 
@@ -75,7 +84,10 @@ export class ProgramSearchComponent implements OnInit {
     var my: ProgramSearchComponent = this;
     this.programs.search(criteria).subscribe(
       (data) => { 
-        my.finds = data.result;
+        my.datasource.data = data.result;
+        my.datasource.sort = this.sorter;
+        my.datasource.paginator = this.paginator;
+        console.log(my.datasource);
       });
   }
 }
