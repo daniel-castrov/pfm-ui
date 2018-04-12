@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ProgramsService, Program, ProgramFilter } from '../../../generated';
+import { ViewEncapsulation } from '@angular/core';
 import * as $ from 'jquery';
 
 // Other Components
@@ -12,7 +13,8 @@ declare const jQuery: any;
 @Component({
   selector: 'program-view',
   templateUrl: './program-view.component.html',
-  styleUrls: ['./program-view.component.css']
+  styleUrls: ['./program-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ProgramViewComponent implements OnInit {
 
@@ -25,7 +27,7 @@ export class ProgramViewComponent implements OnInit {
 
   ngOnInit() {
     var my: ProgramViewComponent = this;
-    this.route.url.subscribe((segments: UrlSegment[]) => { 
+    this.route.url.subscribe((segments: UrlSegment[]) => {
       var pid = segments[segments.length - 1].path;
       my.programs.getProgramById(pid).subscribe(
         (data) => {
