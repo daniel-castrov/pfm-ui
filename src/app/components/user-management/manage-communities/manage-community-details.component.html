@@ -3,49 +3,44 @@
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
     <div class="col-5" *ngIf="community">
-        <h4>{{ community?.name }}</h4>
+      <h4>{{ community?.name }}</h4>
 
       <!-- <p>
         <button type="button" class="btn btn-primary btn" (click)="status.isFirstDisabled = ! status.isFirstDisabled">
           Enable / Disable first panel
         </button>
         </p> -->
-      <accordion>
-        <accordion-group heading="Organizations">
-          <p>Organizations within this Community</p>
-          <ul class="community-list">
-            <li *ngFor="let organization of organizations">
-              {{ organization.abbreviation }}
-            </li>
-          </ul>
-        </accordion-group>
-        <accordion-group heading="List Community Approvers">
-
-          <ul class="community-list">
-            <li *ngFor="let user of approvers">
-              {{ user?.firstName }} {{ user?.lastName }}
-            </li>
-          </ul>
-
-        </accordion-group>
-      </accordion>
+      <fieldset>
+        <legend>Organizations</legend>
+        <p>Organizations within this Community</p>
+        <ul class="community-list">
+          <li *ngFor="let organization of organizations">
+            {{ organization.abbreviation }}
+          </li>
+        </ul>
+      </fieldset>
+      <fieldset>
+        <legend>List of Communities</legend>
+        <ul class="community-list">
+          <li *ngFor="let user of approvers">
+            {{ user?.firstName }} {{ user?.lastName }}
+          </li>
+        </ul>
+      </fieldset>
     </div>
     <div class="col-5">
-      <accordion>
-        <accordion-group heading="Add Approvers">
-
-            <div class="form-group clearfix">
-                <select class="form-control" name="communityApprover" [(ngModel)]="addedapprover" required>
-                  <option *ngFor="let user of users"
-                    [value]="user.id">
-                    {{user.firstName}} {{user.lastName}}
-                  </option>
-                </select>
-                <button class="btn btn-primary" (click)="addApprover()">Add Approver</button>
-              </div>
-
-        </accordion-group>
-      </accordion>
+      <fieldset>
+        <legend>Add Approvers</legend>
+        <div class="form-group clearfix">
+          <select class="form-control-sm dropdown-width mr-sm-2" name="communityApprover" [(ngModel)]="addedapprover" required>
+            <option *ngFor="let user of users"
+              [value]="user.id">
+              {{user.firstName}} {{user.lastName}}
+            </option>
+          </select>
+          <button class="btn btn-primary" (click)="addApprover()">Add Approver</button>
+        </div>
+      </fieldset>
     </div>
   </div>
 </div>

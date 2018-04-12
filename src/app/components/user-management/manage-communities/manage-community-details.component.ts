@@ -22,7 +22,7 @@ import { OrganizationService } from '../../../generated/api/organization.service
 @Component({
   selector: 'app-manage-community-details',
   templateUrl: './manage-community-details.component.html',
-  styleUrls: ['./manage-community-details.component.css']
+  styleUrls: ['./manage-community-details.component.scss']
 })
 export class MamageCommunityDetailsComponent implements OnInit {
 
@@ -70,13 +70,13 @@ export class MamageCommunityDetailsComponent implements OnInit {
     Observable.forkJoin([
       this.communityService.getById(this.id),
       this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver"),
-      this.organizationService.getByCommunityId(this.id)      
+      this.organizationService.getByCommunityId(this.id)
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
       this.resultError.push(data[1].error);
       this.resultError.push(data[2].error);
-      
+
       this.community = data[0].result;
       if ( null==this.community ){
         this.resultError.push("The requested Community does not exist");
@@ -113,7 +113,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
       let userRole:UserRole=new Object();
       userRole.roleId=approverRole.id;
       userRole.userId=this.addedapprover;
-      
+
       let resultUserRole: RestResult;
       this.userRoleService.create(userRole)
       .subscribe(r => {
