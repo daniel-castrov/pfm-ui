@@ -11,11 +11,11 @@
         </button>
         </p> -->
       <accordion>
-        <accordion-group heading="Programs">
-          <p>Info about all programs associated with the Community that are Community Specific</p>
+        <accordion-group heading="Organizations">
+          <p>Organizations within this Community</p>
           <ul class="community-list">
-            <li *ngFor="let program of programs">
-              {{ program }}
+            <li *ngFor="let organization of organizations">
+              {{ organization.abbreviation }}
             </li>
           </ul>
         </accordion-group>
