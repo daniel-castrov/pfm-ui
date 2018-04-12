@@ -13,6 +13,9 @@
     background-color: #f1f1f1;
     border: 1px solid #ced4da;
   }
+  > .nav-tabs .nav-item {
+    border-bottom: 1px solid #ced4da !important;
+  }
   > .nav-tabs .nav-link.active,
     .nav-tabs .nav-item.show .nav-link {
       color: #fff;
