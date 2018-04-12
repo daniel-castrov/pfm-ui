@@ -13,7 +13,7 @@ import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
 import { RequestLinkService } from '../../header/requestLink.service';
-import { RequestLink } from '../../header/requestLink';
+import { Request } from '../../header/request';
 
 @Component({
   selector: 'app-community-leave',
@@ -47,7 +47,7 @@ export class CommunityLeaveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resultError = this.header.resultError;
+    this.resultError = this.header.resultError || [];
     this.getRequest();
   }
 
@@ -89,14 +89,10 @@ export class CommunityLeaveComponent implements OnInit {
 
   approve() {
     let my: CommunityLeaveComponent = this;
-    let reqLinks: RequestLink[];
+    let reqLinks: Request[];
     reqLinks = my.header.requestLinks.filter(
       function (el) { return el.requestId !== my.requestId }
     );
-
-    // for ( let req of reqLinks ){
-    //   console.log(req.requestId+ ":"+req.name);
-    // }
 
     this.requestLinkService.requestLinks.next(reqLinks);
     this.submit("\"APPROVED\"");

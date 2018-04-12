@@ -13,7 +13,7 @@ import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
 import { RequestLinkService } from '../../header/requestLink.service';
-import { RequestLink } from '../../header/requestLink';
+import { Request } from '../../header/request';
 
 @Component({
   selector: 'app-community-join',
@@ -92,14 +92,11 @@ export class CommunityJoinComponent implements OnInit {
 
   approve() {
     let my: CommunityJoinComponent = this;
-    let reqLinks:RequestLink[];
+    let reqLinks:Request[];
     reqLinks = my.header.requestLinks.filter(
       function (el) { return el.requestId !== my.requestId }
     );
 
-    // for ( let req of reqLinks ){
-    //   console.log(req.requestId+ ":"+req.name);
-    // }
 
     this.requestLinkService.requestLinks.next(reqLinks);
 

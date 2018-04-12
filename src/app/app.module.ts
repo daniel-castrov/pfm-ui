@@ -68,10 +68,11 @@ import { CreateUserRequestService } from './generated/api/createUserRequest.serv
 import { JoinCommunityRequestService } from './generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
-import { StrangerService } from './generated/api/stranger.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { RequestLinkService } from './components/header/requestLink.service';
+import { RequestsService } from './components/header/requests.service';
 import { RoleService } from './generated/api/role.service';
+import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
@@ -188,6 +189,7 @@ const appRoutes: Routes = [
     ProgramsService,
     UserService,
     RequestLinkService,
+    RequestsService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

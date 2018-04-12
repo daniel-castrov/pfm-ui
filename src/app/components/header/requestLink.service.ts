@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { RequestLink } from './requestLink';
+import { Request } from './request';
 
 @Injectable()
 export class RequestLinkService {
-    public requestLinks: Subject<RequestLink[]> = new Subject<RequestLink[]>();
+    public requestLinks: Subject<Request[]> = new Subject<Request[]>();
 }

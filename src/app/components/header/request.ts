@@ -1,4 +1,4 @@
-export class RequestLink {
+export class Request {
     requestId: string;
     name: string;
     date: string;

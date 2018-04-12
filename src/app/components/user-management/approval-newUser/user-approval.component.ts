@@ -9,7 +9,7 @@ import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';
 import { RequestLinkService } from '../../header/requestLink.service';
-import { RequestLink } from '../../header/requestLink';
+import { Request } from '../../header/request';
 
 @Component({
   selector: 'app-user-approval',
@@ -70,14 +70,10 @@ export class UserApprovalComponent implements OnInit {
 
   approve(){
     let my: UserApprovalComponent = this;
-    let reqLinks:RequestLink[];
+    let reqLinks:Request[];
     reqLinks = my.header.requestLinks.filter(
       function (el) { return el.requestId !== my.requestId }
     );
-
-    // for ( let req of reqLinks ){
-    //   console.log(req.requestId+ ":"+req.name);
-    // }
 
     this.requestLinkService.requestLinks.next(reqLinks);
 

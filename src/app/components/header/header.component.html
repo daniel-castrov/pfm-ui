@@ -126,14 +126,14 @@
         <div class="icon-wrapper">
           Actions
           <i class="fa fa-bell" aria-hidden="true"></i>
-          <span class="badge" *ngIf="requestLinks.length > 0">{{requestLinks.length}}</span>
+          <span class="badge" *ngIf="requests.length > 0">{{requests.length}}</span>
         </div>
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
-          <div *ngFor="let requestLink of requestLinks">
-            <ng-template #tipContent><strong>{{requestLink?.type}}</strong><br/>{{requestLink?.name}}</ng-template>
-            <a class="dropdown-item" href="#" routerLink="{{requestLink.link}}" [ngbTooltip]="tipContent">
-              {{requestLink?.date | date:'MM/dd/yyyy @ h:mma'}}
+          <div *ngFor="let request of requests">
+            <ng-template #tipContent><strong>{{request?.type}}</strong><br/>{{request?.name}}</ng-template>
+            <a class="dropdown-item" href="#" routerLink="{{request.link}}" [ngbTooltip]="tipContent">
+              {{request?.date | date:'MM/dd/yyyy @ h:mma'}}
             </a>
           </div>
       </div>
