@@ -102,6 +102,7 @@ input[readonly]{
       background-color: #616161;
       border-radius: 0rem;
       border: none !important;
+      font-weight: 500;
   }
   > .nav-tabs .nav-link,
     .nav-tabs .nav-item.show .nav-link {
@@ -109,5 +110,6 @@ input[readonly]{
       background-color: #f1f1f1;
       border-radius: 0rem;
       border: none !important;
+      font-weight: 500;
   }
 }
