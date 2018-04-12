@@ -53,7 +53,7 @@
               </div>
             </fieldset>
             <div class="h6">Select Program of Interest</div>
-            <mat-table [dataSource]="datasource" matSort matSortActive="Program">
+            <mat-table [dataSource]="datasource" matSort matSortActive="shortName" matSortDirection="asc">
               <ng-container matColumnDef="shortName">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Program</mat-header-cell>
                 <mat-cell class="program-view-link" *matCellDef="let p">{{p.shortName}}</mat-cell>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatTableDataSource,MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource,MatPaginator, MatSort, MatSortable } from '@angular/material';
 
 
 // Other Components
@@ -31,6 +31,20 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     var my: ProgramSearchComponent = this;
+
+    // we can't sort on tags directly, so we need something more complicated
+    my.datasource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'FA':
+          return data.tags['Functional_Area'];
+        case 'CC':
+          return data.tags['Core_Capability'];
+        case 'Manager':
+          return data.tags['Manager'];
+        default:
+          return data[sortHeaderId];
+      }
+    }
 
     this.programs.getSearchBlins().subscribe(
       (data) => { 
@@ -86,26 +100,12 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
     var my: ProgramSearchComponent = this;
     this.programs.search(criteria).subscribe(
       (data) => {
-        // FIXME: I think mostly all this stuff belongs in ngAfterViewInit (and 
-        // the datasource created / configured in the ctor), but I can't get
+        my.datasource.data = data.result;
+        // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
         // it to work there. The sorter and paginator aren't set there (?)
         // so this is a not-too-ugly workaround.
-        my.datasource = new MatTableDataSource(data.result);
-        my.datasource.sort = this.sorter;
-        my.datasource.paginator = this.paginator;
-        // we can't sort on tags directly, so we need something more complicated
-        my.datasource.sortingDataAccessor = (data, sortHeaderId) => {
-          switch (sortHeaderId) {
-            case 'FA':
-              return data.tags['Functional_Area'];
-            case 'CC':
-              return data.tags['Core_Capability'];
-            case 'Manager':
-              return data.tags['Manager'];
-            default:
-              return data[sortHeaderId];
-          }
-        }
+        my.datasource.sort = my.sorter;
+        my.datasource.paginator = my.paginator;
       });
   }
 
