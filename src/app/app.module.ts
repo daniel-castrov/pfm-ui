@@ -66,6 +66,7 @@ import { CreateUserRequestService } from './generated/api/createUserRequest.serv
 import { JoinCommunityRequestService } from './generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
+import { OrganizationService } from './generated/api/organization.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { RequestLinkService } from './components/header/requestLink.service';
@@ -178,6 +179,7 @@ const appRoutes: Routes = [
     JoinCommunityRequestService,
     LeaveCommunityRequestService,
     MyDetailsService,
+    OrganizationService,
     RoleService,
     StrangerService,
     UserRoleService,
