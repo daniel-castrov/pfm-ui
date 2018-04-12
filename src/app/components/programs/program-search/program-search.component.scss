@@ -10,18 +10,16 @@
   padding-left: 10px;
 }
 
-
-.mat-sort-header-button {
-  color: #fff;
-  font-size: 14px;
-  font-weight: bold;
-}
-
 .mat-table {
   display: table;
   width: 100%;
   border-collapse: collapse;
   color: #fff;
+    >  .mat-sort-header-button {
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+  }
     > .mat-header-row, > .mat-row {
       display: table-row;
       min-height: 20px;
