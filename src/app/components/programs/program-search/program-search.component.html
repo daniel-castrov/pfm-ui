@@ -53,37 +53,38 @@
               </div>
             </fieldset>
 
-            <mat-table class="mat-table" [dataSource]="datasource" matSort>
+            <mat-table [dataSource]="datasource" matSort>
               <ng-container matColumnDef="shortName">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>Program</mat-header-cell>
-                <mat-cell class="program-view-link mat-cell" *matCellDef="let p" [routerLink]="['/program-view', p.id]">{{p.shortName}}</mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Program</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p">{{p.shortName}}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="subprogram">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>Subprogram</mat-header-cell>
-                <mat-cell class="program-view-link mat-cell"  *matCellDef="let p"></mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Subprogram</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
               </ng-container>
               <ng-container matColumnDef="Variant">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>Variant</mat-header-cell>
-                <mat-cell class="mat-cell" *matCellDef="let p"></mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Variant</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
               </ng-container>
               <ng-container matColumnDef="type">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-                <mat-cell class="mat-cell"  *matCellDef="let p"> {{p.type}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.type}} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="FA">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>FA</mat-header-cell>
-                <mat-cell class="mat-cell" *matCellDef="let p"> {{p.tags['Functional_Area']}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>FA</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Functional_Area']}} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="CC">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>CC</mat-header-cell>
-                <mat-cell class="mat-cell" *matCellDef="let p"> {{p.tags['Core_Capability']}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>CC</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Core_Capability']}} </mat-cell>
               </ng-container>
               <ng-container matColumnDef="Manager">
-                <mat-header-cell class="mat-header-cell" *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
-                <mat-cell class="mat-cell" *matCellDef="let p"> {{p.tags['Manager']}} </mat-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Manager']}} </mat-cell>
               </ng-container>
-              <mat-header-row class="mat-header-row" *matHeaderRowDef="['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-header-row>
-              <mat-row class="mat-row" *matRowDef="let myRowData; columns: ['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-row>
+              <mat-header-row *matHeaderRowDef="['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: ['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"
+               (click)="navigate( row )"></mat-row>
             </mat-table>
             <mat-paginator [pageSize]="10"></mat-paginator>
         </div>

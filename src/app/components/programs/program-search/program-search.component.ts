@@ -32,19 +32,6 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     var my: ProgramSearchComponent = this;
 
-    this.datasource.sortingDataAccessor = (data, sortHeaderId) => {
-      switch (sortHeaderId) {
-        case 'FA':
-          return data.tags['Functional_Area'];
-        case 'CC':
-          return data.tags['Core_Capability'];
-        case 'Manager':
-          return data.tags['Manager'];  
-        default:
-          return data[sortHeaderId];
-      }
-    }
-
     this.programs.getSearchBlins().subscribe(
       (data) => { 
         my.blins = data.result;
@@ -76,9 +63,9 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // FIXME: these don't seem to work here
-    this.datasource.paginator = this.paginator;
-    this.datasource.sort = this.sorter;
-    console.log(this.datasource);
+    //this.datasource.paginator = this.paginator;
+    //this.datasource.sort = this.sorter;
+    //console.log(this.datasource);
     this.search();
   }
 
@@ -98,12 +85,31 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
 
     var my: ProgramSearchComponent = this;
     this.programs.search(criteria).subscribe(
-      (data) => { 
-        my.datasource.data = data.result;
-        // FIXME: these lines should be in ngAfterViewInit, but they don't seem to work there
+      (data) => {
+        // FIXME: I think mostly all this stuff belongs in ngAfterViewInit (and 
+        // the datasource created / configured in the ctor), but I can't get
+        // it to work there. The sorter and paginator aren't set there (?)
+        // so this is a not-too-ugly workaround.
+        my.datasource = new MatTableDataSource(data.result);
         my.datasource.sort = this.sorter;
         my.datasource.paginator = this.paginator;
-        //console.log(my.datasource);
+        // we can't sort on tags directly, so we need something more complicated
+        my.datasource.sortingDataAccessor = (data, sortHeaderId) => {
+          switch (sortHeaderId) {
+            case 'FA':
+              return data.tags['Functional_Area'];
+            case 'CC':
+              return data.tags['Core_Capability'];
+            case 'Manager':
+              return data.tags['Manager'];
+            default:
+              return data[sortHeaderId];
+          }
+        }
       });
+  }
+
+  navigate(row) {
+    this.router.navigate(['/program-view', row.id]);
   }
 }
