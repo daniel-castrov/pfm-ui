@@ -10,16 +10,6 @@
   padding-left: 10px;
 }
 
-mat-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: #fff;
-}
-
-.mat-header-cell  {
-  font-size: 15px;
-  color: #fff;
-}
 
 .mat-sort-header-button {
   color: #fff;
@@ -27,14 +17,38 @@ mat-table {
   font-weight: bold;
 }
 
-mat-header-row {
-  min-height: 40px;
-  background-color: #24527b;
-  color: #ffffff;
+.mat-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+    > .mat-header-row, > .mat-row {
+      display: table-row;
+      min-height: 20px;
+    > .mat-header-cell {
+      display: table-cell;
+      height: 38px;
+      padding: 0 10px;
+      color: #ffffff;
+      vertical-align: middle;
+    }
+    > .mat-header-cell, > .mat-cell {
+      display: table-cell;
+      height: 38px;
+      border: 1px solid #7b8389;
+      font-size: 14px;
+      padding: 0 10px;
+      vertical-align: middle;
+    }
+    > .mat-header-cell {
+      font-size: 16px;
+    }
+  }
 }
 
-mat-row {
-  border: 1px solid #7b8389;
+mat-header-row {
+  background-color: #24527b;
+  color: #ffffff;
 }
 
 mat-row:nth-child(even) {
@@ -44,14 +58,6 @@ mat-row:nth-child(even) {
 mat-row:nth-child(odd){
     background: #eae9e9;
   }
-
-.mat-sort-header-button {
-  color: #fff;
-}
-
-.ng-container {
-  border: 1px solid #7b8389;
-}
 
 .program-view-link {
   text-decoration: underline;
