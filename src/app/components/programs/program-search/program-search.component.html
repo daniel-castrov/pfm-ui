@@ -15,75 +15,78 @@
               <div class="row fieldset-padding">
                 <div class="col-md-2">
                   <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox"  id="defaultCheck1" [(ngModel)]="useappropriations">
+                    <input class="form-check-input" type="checkbox"  id="defaultCheck1" [(ngModel)]="useappropriations"
+                     (change)="search()">
                     <label class="form-check-label" for="defaultCheck1">Appropriation</label>
                   </div>
                   <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies"
+                       (change)="search()">
                     <label class="form-check-label" for="defaultCheck2">OpAgency</label>
                   </div>
                   <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins"
+                        (change)="search()">
                     <label class="form-check-label" for="defaultCheck3">BA/BLIN</label>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <div class="form-group inline-name">
                     <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.appropriation" name="appropriation"
-                            [disabled]="!useappropriations">
+                            [disabled]="!useappropriations" (change)="search()">
                       <option *ngFor="let a of appropriations" [ngValue]="a" [selected]="">{{a}}</option>
                     </select>
                   </div>
                   <div class="form-group inline-name">
                     <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.agency" name="agency"
-                            [disabled]="!useagencies">
+                            [disabled]="!useagencies" (change)="search()">
                       <option *ngFor="let a of agencies" [ngValue]="a">{{a}}</option>
                     </select>
                   </div>
                   <div class="form-group inline-name">
-                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.blin" name="blin" [disabled]="!useblins">
+                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.blin" name="blin"
+                            [disabled]="!useblins" (change)="search()">
                       <option *ngFor="let a of blins" [ngValue]="a">{{a}}</option>
                     </select>
                   </div>
                 </div>
               </div>
-              <div class="row mb-3">
-                <div class="col-md-3">
-                  <button class="btn btn-primary btn" (click)="search()">Filter</button>
-                </div>
-              </div>
-              </fieldset>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="h6">Select Program of Interest</div>
-                  <table class="program-filter-table">
-                    <thead>
-                      <tr>
-                        <th class="row-width">Program</th>
-                        <th class="row-width">Subprogram</th>
-                        <th class="row-width">Variant</th>
-                        <th class="row-width">TYPE</th>
-                        <th>FA</th>
-                        <th>CC</th>
-                        <th>Manager</th>
-                        <th>LC</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let p of finds; let isOdd=odd" [class.row-blue]="isOdd" [class.row-light]="!isOdd">
-                        <td><a class="program-view-link" [routerLink]="['/program-view', p.id]">{{p.shortName}}</a></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{p.type}}</td>
-                        <td>{{p.tags['Functional_Area']}}</td>
-                        <td>{{p.tags['Core_Capability']}}</td>
-                        <td>{{p.tags['Manager']}}</td>
-                        <td>{{p.tags['Lead_Component']}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            </fieldset>
+            <div class="h6">Select Program of Interest</div>
+            <mat-table [dataSource]="datasource" matSort matSortActive="shortName" matSortDirection="asc">
+              <ng-container matColumnDef="shortName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Program</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p">{{p.shortName}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="subprogram">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Subprogram</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Variant">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Variant</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.type}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="FA">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>FA</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Functional_Area']}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="CC">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>CC</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Core_Capability']}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Manager">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
+                <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Manager']}} </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: ['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"
+               (click)="navigate( row )"></mat-row>
+            </mat-table>
+            <mat-paginator [pageSize]="10"></mat-paginator>
         </div>
       </div>
     </div>

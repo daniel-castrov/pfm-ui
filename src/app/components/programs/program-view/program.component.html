@@ -1,6 +1,20 @@
 <ng-template #novalue>
-  <span class="program-values"><i>None</i></span>
+  <span class="program-values">
+    <i>None</i>
+  </span>
 </ng-template>
+
+<ng-template #value let-area="area">
+  <span class="program-values" *ngIf="current?.tags[area] && tagnames.has( area ); else novalue">
+    <ng-container *ngIf="tagnames.get( area ).has( current.tags[area] )">
+       {{tagnames.get( area ).get( current.tags[area] )}}
+    </ng-container>
+    <ng-container *ngIf="!tagnames.get( area ).has( current.tags[area] )">
+      {{current.tags[area]}} (Unknown value)
+    </ng-container>
+  </span>
+</ng-template>
+
 <form>
   <div class="row">
     <!--Left column begins-->
@@ -30,20 +44,20 @@
           <fieldset>
             <legend>Capability</legend>
             <span class="form-group inline-name">
-            <label>*Primary:</label>
-            <span class="program-values" *ngIf="current?.tags['Primary_Capability']; else novalue">{{current?.tags['Primary_Capability']}}</span>
+              <label>*Primary:</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Primary_Capability'}"></ng-container>
            </span>
            <span class="form-group inline-name">
               <label>*Core:</label>
-              <span class="program-values" *ngIf="current?.tags['Core_Capability']; else novalue">{{current?.tags['Core_Capability']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Core_Capability'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>*Secondary:</label>
-              <span class="program-values" *ngIf="current?.tags['Secondary_Capability']; else novalue">{{current?.tags['Secondary_Capability']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Secondary_Capability'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>Tertiary:</label>
-              <span class="program-values" *ngIf="current?.tags['Tertiary_Capability']; else novalue">{{current?.tags['Tertiary_Capability']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary_Capability'}"></ng-container>
             </span>
           </fieldset>
         </div>
@@ -54,19 +68,19 @@
             <legend>Area</legend>
             <span class="form-group inline-name">
               <label>*Functional:</label>
-              <span class="program-values" *ngIf="current?.tags['Functional_Area']; else novalue">{{current?.tags['Functional_Area']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Functional_Area'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>*Medical Cat.:</label>
-              <span class="program-values" *ngIf="current?.tags['Medical_Category']; else novalue">{{current?.tags['Medical_Category']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Medical_Category'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>*NBC Cat.:</label>
-              <span class="program-values" *ngIf="current?.tags['NBC_Category']; else novalue">{{current?.tags['NBC_Category']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'NBC_Category'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>*Acq. Type:</label>
-              <span class="program-values" *ngIf="current?.tags['Acquisition_Type']; else novalue">{{current?.tags['Acquisition_Type']}}</span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Acquisition_Type'}"></ng-container>
             </span>
           </fieldset>
         </div>
@@ -76,11 +90,13 @@
           <div class="card-body">
             <span class="form-group inline-name">
               <label>Emphasis:</label>
-              <span class="program-values" *ngIf="current?.emphases; else novalue">{{current?.emphases[0]}}</span>
+              <ng-container *ngIf="current?.emphases && current?.emphases.length>0; else novalue">
+                <span class="program-values" *ngFor="let e of current.emphases">{{e}}</span>
+              </ng-container>
             </span>
             <span class="form-group inline-name">
               <label>BSV Nat. Strat.:</label>
-              <span class="program-values" *ngIf="false; else novalue"></span>
+              <ng-container *ngTemplateOutlet="value;context:{area:'BSV_Strategy'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>DASD POM:</label>

@@ -1,5 +1,6 @@
 @import 'variables';
 @import '../node_modules/font-awesome/scss/font-awesome';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -309,7 +310,6 @@ label {
   }
 }
 
-
 /* tabs */
 
 .nav-tabs .nav-link,
@@ -361,4 +361,15 @@ tab {
   font-weight: 500;
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
+}
+
+// table pagination
+
+.mat-paginator-page-size {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.mat-paginator-range-label {
+  font-size: 14px;
 }

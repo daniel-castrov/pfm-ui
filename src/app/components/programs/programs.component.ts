@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { NgFor } from '@angular/common/src/directives/ng_for_of';
 
 // Other Components
 import { HeaderComponent } from '../../components/header/header.component';

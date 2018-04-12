@@ -1536,8 +1536,8 @@ definitions:
       roleId:
         type: "string"
   Tag:
-      type: "object"
-      properties:
+    type: "object"
+    properties:
       id:
         type: "string"
       abbr:
