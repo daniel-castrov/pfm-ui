@@ -20,6 +20,7 @@ export class CurrentComponent {
   private communitiesToSelectFrom: Community[];
 
   constructor(private myDetailsService: MyDetailsService) {
+
   }
 
   ngOnChanges() {
