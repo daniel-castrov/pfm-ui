@@ -70,12 +70,13 @@ import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequ
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { RequestLinkService } from './components/header/requestLink.service';
-import { RequestsService } from './components/header/requests.service';
+import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
+import { Injectables } from './services/injectables';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -180,6 +181,7 @@ const appRoutes: Routes = [
     BlankService,
     CommunityService,
     CreateUserRequestService,
+    Injectables,
     JoinCommunityRequestService,
     LeaveCommunityRequestService,
     MyDetailsService,

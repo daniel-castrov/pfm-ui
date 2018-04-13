@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Request } from './request';
+import { Request } from '../../services/request';
 
 @Injectable()
 export class RequestLinkService {

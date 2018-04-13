@@ -10,52 +10,37 @@
     </div>
     <div class="row main-content">
       <div class="col-md-12">
-          <table class="table">
-            <thead>
-              <tr class="filters">
-                <th>Date</th>
-                <th>Time Stamp</th>
-                <th>Type</th>
-                <th>Approve/Deny</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>12/2/17</td>
-                <td>13:09</td>
-                <td><a href="">User access</a></td>
-                <td>
-                  <div class="controls">
-                    <button class="btn btn-primary" (click)="approve()">Approve</button>
-                    <button class="btn btn-danger" (click)="deny()">Deny</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>12/31/2017</td>
-                <td>9:00</td>
-                <td><a href="">Community Change</a></td>
-                <td>
-                  <div class="controls">
-                    <button class="btn btn-primary" (click)="approve()">Approve</button>
-                    <button class="btn btn-danger" (click)="deny()">Deny</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>12/31/2017</td>
-                <td>11:59</td>
-                <td><a href="">etc</a></td>
-                <td>
-                  <div class="controls">
-                    <button class="btn btn-primary" (click)="approve()">Approve</button>
-                    <button class="btn btn-danger" (click)="deny()">Deny</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <table class="table">
+          <thead>
+            <tr class="filters">
+              <th>Date</th>
+              <th>Time Stamp</th>
+              <th>Type</th>
+              <th>Approve/Deny</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of header.requests">
+              <td>{{request.date | date:'MM/dd/yyyy'}}</td>
+              <td>{{request.date | date:'h:mma'}}</td>
+              <td><a href="{{request.link}}">{{request.approveRequestsPageType}}</a></td>
+              <td>
+                <div class="controls">
+                  <button class="btn btn-primary" (click)="approve(request)">Approve</button>
+                  <button class="btn btn-danger" (click)="deny(request)">Deny</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
+<div class="message" [hidden]="messageIsHidden">
+  <div class="alert-success-group">
+    <div class="alert-success alert-dismissable">
+      <strong>The status of your request has been updated.</strong>
+    </div>
+  </div>
+</div>

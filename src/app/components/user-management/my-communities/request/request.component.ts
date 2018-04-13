@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
 // Generated
 import { Community, RestResult, User } from '../../../../generated';
+import { HeaderComponent } from '../../../header/header.component';
 
 @Component({
   selector: 'request',
@@ -14,6 +15,7 @@ export class RequestComponent implements OnChanges {
   @Input() allCommunities: Community[];
   @Input() user: User;
   @Input() service: any;
+  @Input() header: HeaderComponent;
   availableCommunities: Community[];
   requestedCommunities: Community[];
   selectedCommunityId: string;
@@ -33,6 +35,7 @@ export class RequestComponent implements OnChanges {
       this.messageIsHidden = false;
       setInterval(() => this.messageIsHidden = true, 5000);
       this.updateRequestedCommuntyIds();
+      this.header.ngOnInit();
     });
     delete this.selectedCommunityId;
   }

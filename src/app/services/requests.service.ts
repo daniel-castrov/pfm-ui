@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import { Request } from './request';
 
 // Generated
-import { User } from '../../generated/model/user';
-import { UserService } from '../../generated/api/user.service';
-import { MyDetailsService } from '../../generated/api/myDetails.service';
-import { CreateUserRequest } from '../../generated/model/createUserRequest';
-import { CreateUserRequestService } from '../../generated/api/createUserRequest.service';
-import { JoinCommunityRequest } from '../../generated/model/joinCommunityRequest';
-import { JoinCommunityRequestService } from '../../generated/api/joinCommunityRequest.service';
-import { LeaveCommunityRequest } from '../../generated/model/leaveCommunityRequest';
-import { LeaveCommunityRequestService } from '../../generated/api/leaveCommunityRequest.service';
+import { User } from '../generated/model/user';
+import { UserService } from '../generated/api/user.service';
+import { MyDetailsService } from '../generated/api/myDetails.service';
+import { CreateUserRequest } from '../generated/model/createUserRequest';
+import { CreateUserRequestService } from '../generated/api/createUserRequest.service';
+import { JoinCommunityRequest } from '../generated/model/joinCommunityRequest';
+import { JoinCommunityRequestService } from '../generated/api/joinCommunityRequest.service';
+import { LeaveCommunityRequest } from '../generated/model/leaveCommunityRequest';
+import { LeaveCommunityRequestService } from '../generated/api/leaveCommunityRequest.service';
+import { UiLeaveCommunityRequest } from './uiLeaveCommunityRequest';
+import { UiJoinCommunityRequest } from './uiJoinCommunityRequest';
+import { UiCreateUserRequest } from './uiCreateUserRequest';
 
 
 @Injectable()
@@ -26,7 +29,7 @@ export class RequestsService {
   
   // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
   getRequests(): Request[] {
-    const requestLinks: Request[] = [];
+    const result: Request[] = [];
 
     this.myDetailsService.getCurrentUser().subscribe((resultUser) => {
         let currentUser: User = resultUser.result;
@@ -38,14 +41,12 @@ export class RequestsService {
               // 2a get the usernames for the joins
               this.userService.getById(request.userId).subscribe((response) => {
                   let user: User = response.result;
-                  requestLinks.push(
-                    new Request(
+                  result.push(
+                    new UiJoinCommunityRequest(
                       request.id,
                       user.firstName + " " + user.lastName,
-                      request.dateApplied,
-                      "/community-join/" + request.id,
-                      "Join Community Request"));
-                      this.sortNotifications(requestLinks);
+                      request.dateApplied));
+                      this.sortNotifications(result);
                 });
             }
 
@@ -55,14 +56,12 @@ export class RequestsService {
                 for (let request of response.result as LeaveCommunityRequest[]) {
                   this.userService.getById(request.userId).subscribe((response) => {
                       let user: User = response.result;
-                      requestLinks.push(
-                        new Request(
+                      result.push(
+                        new UiLeaveCommunityRequest(
                           request.id,
                           user.firstName + " " + user.lastName,
-                          request.dateApplied,
-                          "/community-leave/" + request.id,
-                          "Leave Community Request"));
-                          this.sortNotifications(requestLinks);
+                          request.dateApplied));
+                          this.sortNotifications(result);
                     });
                 }
 
@@ -70,20 +69,18 @@ export class RequestsService {
                 this.createUserRequestService.getByCommId(currentUser.currentCommunityId).subscribe(response => {
                     // 3c get the usernames for the joins
                     for (let request of response.result as CreateUserRequest[]) {
-                      requestLinks.push(
-                        new Request(
+                      result.push(
+                        new UiCreateUserRequest(
                           request.id,
                           request.firstName + " " + request.lastName,
-                          request.dateApplied,
-                          "/user-approval/" + request.id,
-                          "New User Request"));
+                          request.dateApplied));
                     }
-                    this.sortNotifications(requestLinks);
+                    this.sortNotifications(result);
                   });
               });
           });
       });
-      return requestLinks;
+      return result;
   }
 
   sortNotifications(requestLinks: Request[]) {

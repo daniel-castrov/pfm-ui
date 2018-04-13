@@ -17,7 +17,7 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 })
 export class MyCommunitiesComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header: HeaderComponent;
 
   allCommunities: Community[] = [];
   communitiesToJoin: Community[] = [];

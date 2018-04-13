@@ -1,4 +1,4 @@
-import { RequestsService } from './requests.service';
+import { RequestsService } from './../../services/requests.service';
 import { Component, OnInit } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
 import { HttpResponse } from '@angular/common/http';
@@ -18,7 +18,7 @@ import { JoinCommunityRequestService } from '../../generated/api/joinCommunityRe
 import { LeaveCommunityRequest } from '../../generated/model/leaveCommunityRequest';
 import { LeaveCommunityRequestService } from '../../generated/api/leaveCommunityRequest.service';
 import { RequestLinkService } from './requestLink.service';
-import { Request } from './request';
+import { Request } from '../../services/request';
 
 @Component({
   selector: 'app-header',
