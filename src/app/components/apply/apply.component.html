@@ -5,9 +5,7 @@
     </div>
     <div class="col-lg-10">
       <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
-
-        <h5>New User Application</h5>
-        <p class="font-italic text-danger">* Indicates Required Field</p>
+        <div class="h5 mb-2">New User Application</div>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.firstName" #createUserRequestFirstName="ngModel" [ngClass]="{'is-invalid':createUserRequestFirstName.errors && createUserRequestFirstName.touched}"
             class="form-control applyinput" name="firstName" placeholder="*First Name" minlength="2" required>
@@ -15,10 +13,8 @@
           <span [hidden]="!createUserRequestFirstName?.errors?.minlength" class="invalid-feedback">*First Name should be at least 2 characters</span>
         </span>
         <span class="form-group inline-name">
-          <input type="text" [(ngModel)]="createUserRequest.middleInitial" #createUserRequestMiddleInitial="ngModel" [ngClass]="{'is-invalid':createUserRequestMiddleInitial.errors && createUserRequestMiddleInitial.touched}"
-            class="form-control middle" name="middleInitial" placeholder="*MI" minlength="1" required>
-          <span [hidden]="!createUserRequestMiddleInitial.errors?.required" class="invalid-feedback">*MI is required</span>
-          <span [hidden]="!createUserRequestMiddleInitial.errors?.minlength" class="invalid-feedback">*MI should be at least 1 character</span>
+          <input type="text" [(ngModel)]="createUserRequest.middleInitial" #createUserRequestMiddleInitial="ngModel"
+            class="form-control middle" name="middleInitial" placeholder="MI" minlength="1">
         </span>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.lastName" #createUserRequestLastName="ngModel" [ngClass]="{'is-invalid':createUserRequestLastName.errors && createUserRequestLastName.touched}"
@@ -45,12 +41,12 @@
                 </div>
                 <div class="modal-body">
                   <h4 class="modal-title">JSCBIS NON-DISCLOSURE CERTIFICATION</h4>
-                  <pre>{{ndaText}}</pre>
+                  <pre class="nda-message">{{ndaText}}</pre>
                   <input type="checkbox" [checked]="ndaSatisfied" (change)="ndaSatisfied= !ndaSatisfied" name="ndaSatisfied" class="checkbox" required>
-                  <strong>Please agree to the terms of the Non-Disclosure Agreement by click the checkbox.</strong>
-                  <span class="controls">
+                  <strong>I agree to the terms and conditions of this Non-Disclosure Agreement</strong>
+                  <span class="controls mb-2">
                     <span>
-                      <button class="btn btn-primary btn" data-dismiss="modal">Back to Application form</button>
+                      <button class="btn btn-primary btn" data-dismiss="modal">Agree</button>
                     </span>
                     <span [hidden]="ndaSatisfied.required" class="invalid-feedback">*Check NDA</span>
                   </span>
