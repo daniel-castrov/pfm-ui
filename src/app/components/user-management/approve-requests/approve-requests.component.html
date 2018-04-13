@@ -16,6 +16,7 @@
               <th>Date</th>
               <th>Time Stamp</th>
               <th>Type</th>
+              <th>Originator</th>
               <th>Approve/Deny</th>
             </tr>
           </thead>
@@ -24,6 +25,7 @@
               <td>{{request.date | date:'MM/dd/yyyy'}}</td>
               <td>{{request.date | date:'h:mma'}}</td>
               <td><a href="{{request.link}}">{{request.approveRequestsPageType}}</a></td>
+              <td>{{request.name}}</td>
               <td>
                 <div class="controls">
                   <button class="btn btn-primary" (click)="approve(request)">Approve</button>
