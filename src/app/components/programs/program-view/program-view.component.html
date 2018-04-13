@@ -3,14 +3,14 @@
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="col-md-12">
       <div class=row>
-        <div class="col-md-10 mb-2">
+        <div class="col-md-10">
           <div class="h5 mr-sm-4">View {{current?.type}}</div>
           <label class="badge badge-light mr-sm-4"><h5>{{current?.longName}} ({{current?.shortName}})</h5></label>
         </div>
       </div>
       <div class="row">
         <div class="col-md-10">
-          <tabset>
+          <tabset class="program-tab-style">
             <tab heading="Program" id="tab1">
               <program [current]="current" [startyear]="startyear"></program>
             </tab>

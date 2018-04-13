@@ -11,16 +11,18 @@ import { User } from '../../../generated/model/user';
 import { RestResult } from '../../../generated/model/restResult';
 import { CommunityService } from '../../../generated/api/community.service';
 import { Community } from '../../../generated/model/community';
+import { Organization } from '../../../generated/model/organization';
 import { UserService } from '../../../generated/api/user.service';
 import { Role } from '../../../generated/model/role'
 import { RoleService } from '../../../generated/api/role.service';
 import { UserRole } from '../../../generated/model/userRole'
 import { UserRoleService } from '../../../generated/api/userRole.service';
+import { OrganizationService } from '../../../generated/api/organization.service';
 
 @Component({
   selector: 'app-manage-community-details',
   templateUrl: './manage-community-details.component.html',
-  styleUrls: ['./manage-community-details.component.css']
+  styleUrls: ['./manage-community-details.component.scss']
 })
 export class MamageCommunityDetailsComponent implements OnInit {
 
@@ -34,6 +36,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
   resultError;
   community: Community;
   users:User[]=[];
+  organizations:Organization[]=[];
 
   programs: string[]=[];
 
@@ -44,6 +47,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
     private communityService: CommunityService,
     private roleService:RoleService,
     private userRoleService:UserRoleService,
+    private organizationService:OrganizationService
 
   ) {
     this.route.params.subscribe((params: Params) => {
@@ -55,17 +59,8 @@ export class MamageCommunityDetailsComponent implements OnInit {
   ngOnInit() {
     this.resultError=this.header.resultError;
     this.getCommunity();
-    this.getPrograms();
     this.getUsers();
   }
-
-private getPrograms(): void {
-  this.programs.push("DATFASTTRAC");
-  this.programs.push("ENOOP");
-  this.programs.push("LSPTTRUST");
-  this.programs.push("POS SYSTEMS");
-  this.programs.push("VTRST");
-}
 
   private getCommunity(): void {
     this.approvers=[];
@@ -74,11 +69,13 @@ private getPrograms(): void {
 
     Observable.forkJoin([
       this.communityService.getById(this.id),
-      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver")
+      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver"),
+      this.organizationService.getByCommunityId(this.id)
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
       this.resultError.push(data[1].error);
+      this.resultError.push(data[2].error);
 
       this.community = data[0].result;
       if ( null==this.community ){
@@ -88,6 +85,8 @@ private getPrograms(): void {
       console.log(this.community );
 
       this.approvers = data[1].result;
+
+      this.organizations = data[2].result;
 
     });
   }
@@ -114,7 +113,7 @@ private getPrograms(): void {
       let userRole:UserRole=new Object();
       userRole.roleId=approverRole.id;
       userRole.userId=this.addedapprover;
-      
+
       let resultUserRole: RestResult;
       this.userRoleService.create(userRole)
       .subscribe(r => {

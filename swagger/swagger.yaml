@@ -10,12 +10,14 @@ tags:
 - name: "CreateUserRequest"
 - name: "MyDetails"
 - name: "Stranger"
+- name: "Organization"
 - name: "Permission"
+- name: "Programs"
 - name: "Role"
+- name: "Snapshots"
 - name: "User"
 - name: "UserRole"
-- name: "Programs"
-- name: "Snapshots"
+- name: "TOA"
 #
 ##############################################################################
 # PATHS
@@ -418,6 +420,126 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP MYDETAILS
+##############################################################################
+# START ORGANIZATIONS
+#
+#/organizations/name/{name}
+
+  /organizations:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get all"
+      description: "Get all the Organization in a community"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Organizations"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/{orgId}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get an organization by its id"
+      description: "Get an organization by its id"
+      operationId: "get"
+      parameters:
+      - name: "orgId"
+        in: "path"
+        description: "am id "
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An Organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/abbreviation/{abbr}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get an organization by its abbreviation"
+      description: "Get an organization by its abbreviation"
+      operationId: "getByAbbreviation"
+      parameters:
+      - name: "abbr"
+        in: "path"
+        description: "an abbreviation"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An Organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/name/{name}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get an organization by its name"
+      description: "Get an organization by its name"
+      operationId: "getByName"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "a name "
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An Organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/community/{communityId}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get organizations by community"
+      description: "Get an organization by its name"
+      operationId: "getByCommunityId"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        description: "a name "
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Organizations"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP ORGANIZATIONS
 ##############################################################################
 # START PERMISSIONS
   /permissions:
@@ -1215,6 +1337,10 @@ definitions:
         type: "string"
       abbreviation:
         type: "string"
+      toas:
+        type: "array"
+        items:
+          $ref: "#/definitions/TOA"
   CreateUserRequest:
     type: "object"
     properties:
@@ -1424,6 +1550,28 @@ definitions:
         type: "string"
       status:
         type: "string"
+  Organization:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"
+      name:
+        type: "string"
+      abbreviation:
+        type: "string"
+      toas:
+        type: "array"
+        items:
+          $ref: "#/definitions/TOA"
+  TOA:
+    type: "object"
+    properties:
+      year:
+        type: "integer"
+      amount:
+        type: "number"
   Variant:
     type: "object"
     properties:

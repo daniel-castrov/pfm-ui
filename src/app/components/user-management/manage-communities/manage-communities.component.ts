@@ -22,7 +22,7 @@ import { User } from '../../../generated/model/user';
 @Component({
   selector: 'app-manage-communities',
   templateUrl: './manage-communities.component.html',
-  styleUrls: ['./manage-communities.component.css']
+  styleUrls: ['./manage-communities.component.scss']
 })
 export class ManageCommunitiesComponent implements OnInit {
 

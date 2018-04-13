@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatTableDataSource,MatPaginator, MatSort, MatSortable } from '@angular/material';
+
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -10,8 +12,10 @@ import { ProgramsService, ProgramFilter, Program } from '../../../generated';
   templateUrl: './program-search.component.html',
   styleUrls: ['./program-search.component.scss']
 })
-export class ProgramSearchComponent implements OnInit {
+export class ProgramSearchComponent implements OnInit, AfterViewInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sorter: MatSort;
 
   private useappropriations: boolean = false;
   private useblins: boolean = false;
@@ -20,13 +24,27 @@ export class ProgramSearchComponent implements OnInit {
   private blins: string[] = [];
   private agencies: string[] = [];
   private filter: ProgramFilter = {};
-  private finds: Program[] = [];
+  private datasource: MatTableDataSource<Program> = new MatTableDataSource<Program>();
 
   constructor(private programs: ProgramsService, private router: Router ) { 
   }
 
   ngOnInit() {
     var my: ProgramSearchComponent = this;
+
+    // we can't sort on tags directly, so we need something more complicated
+    my.datasource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'FA':
+          return data.tags['Functional_Area'];
+        case 'CC':
+          return data.tags['Core_Capability'];
+        case 'Manager':
+          return data.tags['Manager'];
+        default:
+          return data[sortHeaderId];
+      }
+    }
 
     this.programs.getSearchBlins().subscribe(
       (data) => { 
@@ -55,6 +73,13 @@ export class ProgramSearchComponent implements OnInit {
         }
       });
     
+  }
+
+  ngAfterViewInit() {
+    // FIXME: these don't seem to work here
+    //this.datasource.paginator = this.paginator;
+    //this.datasource.sort = this.sorter;
+    //console.log(this.datasource);
     this.search();
   }
 
@@ -74,8 +99,17 @@ export class ProgramSearchComponent implements OnInit {
 
     var my: ProgramSearchComponent = this;
     this.programs.search(criteria).subscribe(
-      (data) => { 
-        my.finds = data.result;
+      (data) => {
+        my.datasource.data = data.result;
+        // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
+        // it to work there. The sorter and paginator aren't set there (?)
+        // so this is a not-too-ugly workaround.
+        my.datasource.sort = my.sorter;
+        my.datasource.paginator = my.paginator;
       });
+  }
+
+  navigate(row) {
+    this.router.navigate(['/program-view', row.id]);
   }
 }

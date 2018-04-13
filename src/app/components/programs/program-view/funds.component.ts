@@ -26,7 +26,7 @@ export class FundsComponent implements OnInit {
     this._current = curr;
 
     // sort funding lines based on: appropriation, blin, cycle
-    curr.funding.sort(function (a: FundingLine, b: FundingLine) { 
+    curr.funding.sort(function (a: FundingLine, b: FundingLine) {
       var diff = a.appropriation.localeCompare(b.appropriation);
       if ( 0 === diff ) {
         diff = a.blin.localeCompare(b.blin);
@@ -90,12 +90,12 @@ export class FundsComponent implements OnInit {
     for (var x = 0; x < blockmap.size; x++ ){
       this.appropriations.push(it.next().value);
     }
-    
+
     // finally, figure out the total for this request
     // by adding up all the subtotals
     this.totals.clear();
-    this.appropriations.forEach(function (x) { 
-      x.subtotals.forEach(function (val, key) { 
+    this.appropriations.forEach(function (x) {
+      x.subtotals.forEach(function (val, key) {
         if (!my.totals.has(key)) {
           my.totals.set(key, 0);
         }
