@@ -10,7 +10,7 @@
           <input type="text" [(ngModel)]="createUserRequest.firstName" #createUserRequestFirstName="ngModel" [ngClass]="{'is-invalid':createUserRequestFirstName.errors && createUserRequestFirstName.touched}"
             class="form-control applyinput" name="firstName" placeholder="*First Name" minlength="2" required>
           <span [hidden]="!createUserRequestFirstName?.errors?.required" class="invalid-feedback">*First Name is required</span>
-          <span [hidden]="!createUserRequestFirstName?.errors?.minlength" class="invalid-feedback">*First Name should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestFirstName?.errors?.minlength" class="invalid-feedback">*First Name must be at least 2 characters</span>
         </span>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.middleInitial" #createUserRequestMiddleInitial="ngModel"
@@ -20,7 +20,7 @@
           <input type="text" [(ngModel)]="createUserRequest.lastName" #createUserRequestLastName="ngModel" [ngClass]="{'is-invalid':createUserRequestLastName.errors && createUserRequestLastName.touched}"
             class="form-control applyinput" name="lastName" placeholder="*Last Name" minlength="2" required>
           <span [hidden]="!createUserRequestLastName.errors?.required" class="invalid-feedback">*Last Name is required</span>
-          <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name mustbe at least 2 characters</span>
         </span>
         <div class="form-group nda" *ngIf="stranger.contractor">
           <a *ngIf="!ndaSatisfied" data-toggle="modal" href="#myModal">*Sign NDA</a>
@@ -46,7 +46,7 @@
                   <strong>I agree to the terms and conditions of this Non-Disclosure Agreement</strong>
                   <span class="controls mb-2">
                     <span>
-                      <button class="btn btn-primary btn" data-dismiss="modal">Agree</button>
+                      <button class="btn btn-primary btn" data-dismiss="modal">I Agree</button>
                     </span>
                     <span [hidden]="ndaSatisfied.required" class="invalid-feedback">*Check NDA</span>
                   </span>
@@ -64,32 +64,43 @@
             placeholder="Duty/Job Title">
         </div>
         <div class="form-group">
-          <input type="text" [(ngModel)]="createUserRequest.contactEmail" #createUserRequestContactEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestContactEmail.errors && createUserRequestContactEmail.touched}"
+          <input type="email" [(ngModel)]="createUserRequest.contactEmail" #createUserRequestContactEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestContactEmail.errors && createUserRequestContactEmail.touched}"
             class="form-control applyinput" name="contactEmail" placeholder="*Email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
             required>
+          <span class="form-formatting">Must be a valid email: joe@abc.com</span>
           <span [hidden]="!createUserRequestContactEmail.errors?.required" class="invalid-feedback">*Email is required</span>
-          <span [hidden]="!createUserRequestContactEmail.errors?.pattern" class="invalid-feedback">*Email should be
-            <small>joe@abc.com</small>
+          <span [hidden]="!createUserRequestContactEmail.errors?.pattern" class="invalid-feedback">*Email must be joe@abc.com
           </span>
         </div>
         <div class="form-group">
-          <input type="number" [(ngModel)]="createUserRequest.phone" #createUserRequestPhone="ngModel" [ngClass]="{'is-invalid':createUserRequestPhone.errors && createUserRequestPhone.touched}"
-            class="form-control applyinput" name="phone" placeholder="*Phone" pattern="[0-9]*" minlength="10" required>
+          <input type="text" [(ngModel)]="createUserRequest.phone" #createUserRequestPhone="ngModel" [ngClass]="{'is-invalid':createUserRequestPhone.errors && createUserRequestPhone.touched}"
+            class="form-control applyinput" name="phone" placeholder="*Phone" pattern="\d{3}[\-]\d{3}[\-]\d{4}" required>
+          <span class="form-formatting">US based in the format of: 123-456-7890</span>
           <span [hidden]="!createUserRequestPhone.errors?.required" class="invalid-feedback">*Phone is required</span>
-          <span [hidden]="!createUserRequestPhone.errors?.minlength" class="invalid-feedback">*Phone should be should be 10 digits</span>
-          <span [hidden]="!createUserRequestPhone.errors?.pattern" class="invalid-feedback">*Phone should be only numbers</span>
+          <span [hidden]="!createUserRequestPhone.errors?.pattern" class="invalid-feedback">*Phone must be US based in the format of: 123-456-7890</span>
         </div>
         <div class="form-group">
           <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.city" #createUserRequestCity="ngModel"
             name="city" placeholder="Street, City, State, Zipcode">
         </div>
+        <div class="form-group dropdown-select">
+          <label for="communites">*Community Access Request</label>
+          <div>
+            <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" required #communityId="ngModel">
+              <option value=""></option>
+              <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
+            </select>
+            <div [hidden]="communityId.valid || communityId.pristine" class="alert alert-danger">*Community required</div>
+          </div>
+        </div>
         <div class="form-group">
+          <label for="organization">*Select Organization</label>
           <input type="text" [(ngModel)]="createUserRequest.organization" #createUserRequestOrganization="ngModel" [ngClass]="{'is-invalid':createUserRequestOrganization.errors && createUserRequestOrganization.touched}"
             class="form-control applyinput" name="organization" placeholder="*Organization Name" minlength="2" required>
           <span [hidden]="!createUserRequestOrganization.errors?.required" class="invalid-feedback">*Organization is required</span>
-          <span [hidden]="!createUserRequestOrganization.errors?.minlength" class="invalid-feedback">*Organization should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestOrganization.errors?.minlength" class="invalid-feedback">*Organization must be at least 2 characters</span>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="branches">*Select Branch</label>
           <div>
             <select class="form-control-sm mb-2 mr-sm-2" ngModel name="service" required #service="ngModel">
@@ -99,38 +110,27 @@
             <span *ngIf="service.required" class="invalid-feedback">Service required</span>
             <span *ngIf="service.invalid" class="invalid-feedback">Service required</span>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="communites">Community Access Request</label>
-          <div>
-            <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" #communityId="ngModel">
-              <option value=""></option>
-              <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
-            </select>
-          </div>
-        </div>
+        </div> -->
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.sponsorName" #createUserRequestSponsorName="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorName.errors && createUserRequestSponsorName.touched}"
-            class="form-control applyinput sponsor" name="sponsorName" placeholder="*Sponsor Name" minlength="2" required>
+            class="form-control applyinput sponsor" name="sponsorName" minlength="2" placeholder="*Sponsor Name" required>
           <span [hidden]="!createUserRequestSponsorName.errors?.required" class="invalid-feedback">*Sponsor Name is required</span>
-          <span [hidden]="!createUserRequestSponsorName.errors?.minlength" class="invalid-feedback">*Sponsor Name should be at least 2 characters</span>
+          <span [hidden]="!createUserRequestSponsorName.errors?.minlength" class="invalid-feedback">*Sponsor Name must be at least 2 characters</span>
         </span>
         <span class="form-group inline-name">
-          <input type="number" [(ngModel)]="createUserRequest.sponsorPhone" #createUserRequestSponsorPhone="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorPhone.errors && createUserRequestSponsorPhone.touched}"
-            class="form-control applyinput sponsor" name="sponsorPhone" placeholder="*Sponsor Phone" pattern="[0-9]*" minlength="10"
-            required>
+          <input type="text" [(ngModel)]="createUserRequest.sponsorPhone" #createUserRequestSponsorPhone="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorPhone.errors && createUserRequestSponsorPhone.touched}"
+            class="form-control applyinput sponsor" name="sponsorPhone" placeholder="*Sponsor Phone" pattern="\d{3}[\-]\d{3}[\-]\d{4}" required>
+          <span class="form-formatting">US based in the format of: 123-456-7890</span>
           <span [hidden]="!createUserRequestSponsorPhone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
-          <span [hidden]="!createUserRequestSponsorPhone.errors?.minlength" class="invalid-feedback">*Sponsor Phone should be should be 10 digits</span>
-          <span [hidden]="!createUserRequestSponsorPhone.errors?.pattern" class="invalid-feedback">*Sponsor Phone should be only numbers</span>
+          <span [hidden]="!createUserRequestSponsorPhone.errors?.pattern" class="invalid-feedback">*Must be US based in the format of: 123-456-7890</span>
         </span>
         <span class="form-group inline-name">
-          <input type="text" [(ngModel)]="createUserRequest.sponsorEmail" #createUserRequestSponsorEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorEmail.errors && createUserRequestSponsorEmail.touched}"
+          <input type="email" [(ngModel)]="createUserRequest.sponsorEmail" #createUserRequestSponsorEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorEmail.errors && createUserRequestSponsorEmail.touched}"
             class="form-control applyinput sponsor" name="sponsorEmail" placeholder="*Sponsor Email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
             required>
+          <span class="form-formatting">Must be a valid email: joe@abc.com</span>
           <span [hidden]="!createUserRequestSponsorEmail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
-          <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Sponsor Email should be
-            <small>joe@abc.com</small>
-          </span>
+          <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Must be a valid email: joe@abc.com</span>
         </span>
         <span [hidden]="!formsubmitted" class="clearfix">
           <div class="alert-success-group">
