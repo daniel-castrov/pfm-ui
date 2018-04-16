@@ -9,7 +9,7 @@ import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';
 import { RequestLinkService } from '../../header/requestLink.service';
-import { RequestLink } from '../../header/requestLink';
+import { Request } from '../../../services/request';
 
 @Component({
   selector: 'app-user-approval',
@@ -18,7 +18,7 @@ import { RequestLink } from '../../header/requestLink';
 })
 export class UserApprovalComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header: HeaderComponent;
 
   requestId: string;
   resultError;
@@ -30,7 +30,7 @@ export class UserApprovalComponent implements OnInit {
     private route: ActivatedRoute,
     public communityService: CommunityService,
     public createUserRequestService: CreateUserRequestService,
-    public requestLinkService: RequestLinkService,
+    public requestLinkService: RequestLinkService
   ) {
     this.route.params.subscribe((params: Params) => {
       this.requestId = params.requestId;
@@ -38,7 +38,7 @@ export class UserApprovalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resultError=this.header.resultError;
+    this.resultError=[];
     this.getCreateUserRquest();
   }
 
@@ -70,14 +70,10 @@ export class UserApprovalComponent implements OnInit {
 
   approve(){
     let my: UserApprovalComponent = this;
-    let reqLinks:RequestLink[];
-    reqLinks = my.header.requestLinks.filter(
+    let reqLinks:Request[];
+    reqLinks = my.header.requests.filter(
       function (el) { return el.requestId !== my.requestId }
     );
-
-    // for ( let req of reqLinks ){
-    //   console.log(req.requestId+ ":"+req.name);
-    // }
 
     this.requestLinkService.requestLinks.next(reqLinks);
 
@@ -90,7 +86,7 @@ export class UserApprovalComponent implements OnInit {
 
   submit(status){
     let result: RestResult;
-    this.createUserRequestService.approve(status, this.createUserRequest.id)
+    this.createUserRequestService.status(status, this.createUserRequest.id)
       .subscribe(c => {
         result = c;
         this.resultError.push(result.error);       

@@ -18,7 +18,7 @@ export class PlanningComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
 
-  
+
   constructor() { }
 
   ngOnInit() {

@@ -1,0 +1,48 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-10 mb-4">
+          <span class="h5">Approve Requests</span>
+        </div>
+      </div>
+    </div>
+    <div class="row main-content">
+      <div class="col-md-12">
+        <table class="table">
+          <thead>
+            <tr class="filters">
+              <th>Date</th>
+              <th>Time Stamp</th>
+              <th>Type</th>
+              <th>Originator</th>
+              <th>Approve/Deny</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of header.requests">
+              <td>{{request.date | date:'MM/dd/yyyy'}}</td>
+              <td>{{request.date | date:'h:mma'}}</td>
+              <td><a href="{{request.link}}">{{request.approveRequestsPageType}}</a></td>
+              <td>{{request.name}}</td>
+              <td>
+                <div class="controls">
+                  <button class="btn btn-primary" (click)="approve(request)">Approve</button>
+                  <button class="btn btn-danger" (click)="deny(request)">Deny</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="message" [hidden]="messageIsHidden">
+  <div class="alert-success-group">
+    <div class="alert-success alert-dismissable">
+      <strong>The status of the request has been updated.</strong>
+    </div>
+  </div>
+</div>

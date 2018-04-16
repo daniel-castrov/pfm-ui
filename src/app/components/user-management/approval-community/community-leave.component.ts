@@ -13,7 +13,7 @@ import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
 import { RequestLinkService } from '../../header/requestLink.service';
-import { RequestLink } from '../../header/requestLink';
+import { Request } from '../../../services/request';
 
 @Component({
   selector: 'app-community-leave',
@@ -22,7 +22,7 @@ import { RequestLink } from '../../header/requestLink';
 })
 export class CommunityLeaveComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header: HeaderComponent;
 
   requestId: string;
   leaveCommunityRequest: LeaveCommunityRequest;
@@ -47,7 +47,7 @@ export class CommunityLeaveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resultError = this.header.resultError;
+    this.resultError = [];
     this.getRequest();
   }
 
@@ -89,14 +89,10 @@ export class CommunityLeaveComponent implements OnInit {
 
   approve() {
     let my: CommunityLeaveComponent = this;
-    let reqLinks: RequestLink[];
-    reqLinks = my.header.requestLinks.filter(
+    let reqLinks: Request[];
+    reqLinks = my.header.requests.filter(
       function (el) { return el.requestId !== my.requestId }
     );
-
-    // for ( let req of reqLinks ){
-    //   console.log(req.requestId+ ":"+req.name);
-    // }
 
     this.requestLinkService.requestLinks.next(reqLinks);
     this.submit("\"APPROVED\"");
@@ -109,7 +105,7 @@ export class CommunityLeaveComponent implements OnInit {
   submit(status) {
 
     let result: RestResult;
-    this.leaveCommunityRequestService.approve(status, this.leaveCommunityRequest.id)
+    this.leaveCommunityRequestService.status(status, this.leaveCommunityRequest.id)
       .subscribe((c) => {
         result = c;
         this.resultError.push(result.error);

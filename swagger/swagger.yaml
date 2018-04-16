@@ -191,15 +191,6 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/CreateUserRequest"
-      responses:
-        201:
-          description: "CreateUserRequest successfully created."
-        400:
-          description: "CreateUserRequest couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
   /createUserRequests/community/{commId}:
     get:
       tags:
@@ -213,17 +204,6 @@ paths:
         description: "CreateUserRequest id"
         required: true
         type: "string"
-      responses:
-        200:
-          description: "a CreateUserRequest"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "CreateUserRequest does not exist."
-        500:
-          description: "An unexpected error occurred."
   /createUserRequests/{id}:
     get:
       tags:
@@ -237,24 +217,13 @@ paths:
         description: "CreateUserRequest id"
         required: true
         type: "string"
-      responses:
-        200:
-          description: "a CreateUserRequest"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "CreateUserRequest does not exist."
-        500:
-          description: "An unexpected error occurred."
   /createUserRequests/{createUserRequestId}/status:
     post:
       tags:
       - "CreateUserRequest"
       summary: "Approve a CreateUserRequest"
       description: "Approves a new CreateUserRequest"
-      operationId: "approve"
+      operationId: "status"
       consumes:
       - "application/json"
       produces:
@@ -271,15 +240,6 @@ paths:
         description: "createUserRequestId"
         required: true
         type: "string"
-      responses:
-        201:
-          description: "CreateUserRequest successfully updated."
-        400:
-          description: "CreateUserRequest couldn't be updated."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
 # STOP CREATEUSERREQUEST
 ##############################################################################
 # START JOINCOMMUNITYREQUEST
@@ -332,7 +292,7 @@ paths:
     post:
       tags:
       - "JoinCommunityRequest"
-      operationId: "approve"
+      operationId: "status"
       consumes:
       - "application/json"
       produces:
@@ -399,7 +359,7 @@ paths:
     post:
       tags:
       - "LeaveCommunityRequest"
-      operationId: "approve"
+      operationId: "status"
       consumes:
       - "application/json"
       produces:
