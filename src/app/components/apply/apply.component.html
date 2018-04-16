@@ -20,7 +20,7 @@
           <input type="text" [(ngModel)]="createUserRequest.lastName" #createUserRequestLastName="ngModel" [ngClass]="{'is-invalid':createUserRequestLastName.errors && createUserRequestLastName.touched}"
             class="form-control applyinput" name="lastName" placeholder="*Last Name" minlength="2" required>
           <span [hidden]="!createUserRequestLastName.errors?.required" class="invalid-feedback">*Last Name is required</span>
-          <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name mustbe at least 2 characters</span>
+          <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name must be at least 2 characters</span>
         </span>
         <div class="form-group nda" *ngIf="stranger.contractor">
           <a *ngIf="!ndaSatisfied" data-toggle="modal" href="#myModal">*Sign NDA</a>
