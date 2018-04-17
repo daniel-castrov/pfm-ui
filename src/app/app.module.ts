@@ -26,6 +26,7 @@ import { CommunityLeaveComponent } from './components/user-management/approval-c
 import { ContactComponent } from './components/contact/contact.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
 import { FundsTabComponent } from './components/programming/existing-program-request/funds-tab/funds-tab.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -132,6 +133,7 @@ const appRoutes: Routes = [
     CommunityLeaveComponent,
     ContactComponent,
     CurrentComponent,
+    FeedbackComponent,
     FilterComponent,
     FundsComponent,
     FundsTabComponent,
