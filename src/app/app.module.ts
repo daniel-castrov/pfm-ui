@@ -20,6 +20,7 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/access-change-approval.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
@@ -70,13 +71,15 @@ import { JoinCommunityRequestService } from './generated/api/joinCommunityReques
 import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { OrganizationService } from './generated/api/organization.service';
-import { StrangerService } from './generated/api/stranger.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { RequestLinkService } from './components/header/requestLink.service';
+import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
+import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
+import { Injectables } from './services/injectables';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -86,6 +89,7 @@ const appRoutes: Routes = [
   {path:'access-change', component:RequestAccessChangeComponent},
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
   {path:'apply', component:ApplyComponent},
+  {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
@@ -123,6 +127,7 @@ const appRoutes: Routes = [
     AccessChangeApprovalComponent,
     AppComponent,
     ApplyComponent,
+    ApproveRequestsComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
@@ -185,6 +190,7 @@ const appRoutes: Routes = [
     BlankService,
     CommunityService,
     CreateUserRequestService,
+    Injectables,
     JoinCommunityRequestService,
     LeaveCommunityRequestService,
     MyDetailsService,
@@ -195,6 +201,7 @@ const appRoutes: Routes = [
     ProgramsService,
     UserService,
     RequestLinkService,
+    RequestsService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

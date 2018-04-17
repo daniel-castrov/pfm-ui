@@ -13,7 +13,7 @@ import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
 import { RequestLinkService } from '../../header/requestLink.service';
-import { RequestLink } from '../../header/requestLink';
+import { Request } from '../../../services/request';
 
 @Component({
   selector: 'app-community-join',
@@ -23,7 +23,7 @@ import { RequestLink } from '../../header/requestLink';
 })
 export class CommunityJoinComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header: HeaderComponent;
 
 
   requestId: string;
@@ -49,7 +49,7 @@ export class CommunityJoinComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resultError = this.header.resultError;
+    this.resultError = [];
     this.getRequest();
   }
 
@@ -92,14 +92,11 @@ export class CommunityJoinComponent implements OnInit {
 
   approve() {
     let my: CommunityJoinComponent = this;
-    let reqLinks:RequestLink[];
-    reqLinks = my.header.requestLinks.filter(
+    let reqLinks:Request[];
+    reqLinks = my.header.requests.filter(
       function (el) { return el.requestId !== my.requestId }
     );
 
-    // for ( let req of reqLinks ){
-    //   console.log(req.requestId+ ":"+req.name);
-    // }
 
     this.requestLinkService.requestLinks.next(reqLinks);
 
@@ -113,13 +110,13 @@ export class CommunityJoinComponent implements OnInit {
   submit(status) {
     let my: CommunityJoinComponent = this;
     let result: RestResult;
-    my.joinCommunityRequestService.approve(status, my.joinCommunityRequest.id)
+    my.joinCommunityRequestService.status(status, my.joinCommunityRequest.id)
       .subscribe((c) => {
         result = c;
         my.resultError.push(result.error);
 
         // How do I get this back to the header?
-        my.header.requestLinks = my.header.requestLinks.filter(
+        my.header.requests = my.header.requests.filter(
           function (el) { return el.requestId !== my.requestId }
         );
 
