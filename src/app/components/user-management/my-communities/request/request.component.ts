@@ -6,7 +6,7 @@ import { Community, RestResult, User } from '../../../../generated';
 import { HeaderComponent } from '../../../header/header.component';
 
 @Component({
-  selector: 'request',
+  selector: 'j-request',
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss']
 })
