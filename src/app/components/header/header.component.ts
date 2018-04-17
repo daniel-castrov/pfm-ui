@@ -31,9 +31,9 @@ import { Request } from '../../services/request';
 export class HeaderComponent implements OnInit {
 
   isloggedin: boolean = false;
-message: string="";
   authUser: AuthUser;
   requests: Request[] = [];
+  message: string;
 
   constructor(
     private blankService: BlankService,
@@ -48,11 +48,10 @@ message: string="";
     private router:Router
 
   ) {
-    config.placement = 'left';
-    this.requestLinkService.requestLinks.subscribe( (val) => {
+      config.placement = 'left';
+      this.requestLinkService.requestLinks.subscribe( (val) => {
       this.requests=val;
     });
-    this.message = "";
   }
 
   ngOnInit(): void {
@@ -63,11 +62,10 @@ message: string="";
         this.isloggedin = true;
 
         if ( this.authUser.rolenames.length==0 ){
-          console.log(this.authUser.rolenames);
-          this.message = `You do not have access to the requested community, your 'Current Community'.
-          You might not be a member of that Community (or any Community).<br/>
-          Please check your Current Community and or request to join a Community.<br/>
-          Please contact an Adminstrator if you need further assistance.`
+          this.message = `You must be a member of a JSCBIS Community to proceed.<br/><br/>
+          You are seeing this message because you are not a member of a Community. 
+          Create a request to Join a Community from the list below.<br/><br/> 
+          Please contact an Administrator if you need further assistance.`
 
           this.router.navigate(['my-community'])
 
