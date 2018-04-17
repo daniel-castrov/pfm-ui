@@ -1,0 +1,13 @@
+<app-header></app-header>
+<div *ngIf="header.isloggedin && community">
+  <div>
+    <h5>Create POM Scenario for FY {{fy}} based on PB {{by}} </h5>
+  </div>  
+  <div>Set Overall TOA for {{community.abbreviation}} Community <input [(ngModel)]="toa"></div>   
+
+  <div *ngFor="let o of orgs">
+    <div>
+      <span>{{o.abbreviation}}</span><input [(ngModel)]="orgtoas[o.id]">
+    </div>
+  </div>
+</div>
