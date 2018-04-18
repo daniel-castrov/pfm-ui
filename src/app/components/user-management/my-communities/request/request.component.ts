@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 // Generated
 import { Community, RestResult, User } from '../../../../generated';
 import { HeaderComponent } from '../../../header/header.component';
+import { FeedbackComponent } from '../../../feedback/feedback.component';
 
 @Component({
-  selector: 'request',
+  selector: 'j-request',
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss']
 })
@@ -19,7 +20,7 @@ export class RequestComponent implements OnChanges {
   availableCommunities: Community[];
   requestedCommunities: Community[];
   selectedCommunityId: string;
-  messageIsHidden: boolean = true;
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   ngOnChanges() {
     if(this.user) {
@@ -32,8 +33,7 @@ export class RequestComponent implements OnChanges {
     request.userId = this.user.id;
     request.communityId = this.selectedCommunityId;
     this.service.create(request).subscribe(() => {
-      this.messageIsHidden = false;
-      setInterval(() => this.messageIsHidden = true, 5000);
+      this.feedback.flash("You will receive an email once your request is processed.");
       this.updateRequestedCommuntyIds();
       this.header.ngOnInit();
     });
