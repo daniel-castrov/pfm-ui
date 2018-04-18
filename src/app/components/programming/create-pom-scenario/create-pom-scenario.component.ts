@@ -79,6 +79,7 @@ export class CreatePomScenarioComponent implements OnInit {
   submit() {
     var my: CreatePomScenarioComponent = this;
     my.community.toas.push({ year: my.fy, amount: my.toa });
-    
+   
+    console.log({ year: my.fy, amount: my.toa});
   }
 }
