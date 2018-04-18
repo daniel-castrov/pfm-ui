@@ -1,7 +1,3 @@
-
-
-{{ message }}
-
 <ul class="community-list">
   <li *ngFor="let community of memberOfCommunities">
     <span [class.current-community]="community.id==user.currentCommunityId">{{community.name}}</span>
