@@ -7,7 +7,7 @@ import { User } from '../../../../generated';
 import { MyDetailsService } from '../../../../generated/api/myDetails.service';
 
 @Component({
-  selector: 'current',
+  selector: 'j-current',
   templateUrl: './current.component.html',
   styleUrls: ['./current.component.scss']
 })

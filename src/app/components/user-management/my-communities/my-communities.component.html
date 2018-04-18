@@ -8,15 +8,15 @@
       <p class="h5">Manage My Communities</p>
       <fieldset>
         <legend>My Communities</legend>
-        <current [memberOfCommunities]="memberOfCommunities" [user]="user" [header]="header"></current>
+        <j-current [memberOfCommunities]="memberOfCommunities" [user]="user" [header]="header"></j-current>
       </fieldset>
       <fieldset>
         <legend>Join Community</legend>
-        <request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user" [header]="header"></request>
+        <j-request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user" [header]="header"></j-request>
       </fieldset>
       <fieldset>
         <legend>Leave Community</legend>
-        <request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user" [header]="header"></request>
+        <j-request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user" [header]="header"></j-request>
       </fieldset>
     </div>
   </div>
