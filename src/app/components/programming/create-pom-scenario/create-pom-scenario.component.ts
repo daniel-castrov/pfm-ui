@@ -6,8 +6,10 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 import { Community } from '../../../generated/model/community';
 import { Organization } from '../../../generated/model/organization';
 import { TOA } from '../../../generated/model/TOA';
+import { ToaTransfer } from '../../../generated/model/toaTransfer';
 import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
+import { IntMap } from '../../../generated/model/intMap';
 
 @Component({
   selector: 'app-create-pom-scenario',
@@ -78,8 +80,18 @@ export class CreatePomScenarioComponent implements OnInit {
 
   submit() {
     var my: CreatePomScenarioComponent = this;
-    my.community.toas.push({ year: my.fy, amount: my.toa });
-   
-    console.log({ year: my.fy, amount: my.toa});
+    var map: IntMap = {}
+    var transfer: ToaTransfer = {
+      year: my.fy,
+      toa: my.toa,
+      orgToas: {}
+    }
+
+    my.orgtoas.forEach(function (val: number, orgid: string) {
+      transfer.orgToas[orgid] = val;
+    });
+
+    console.log(transfer);
+    my.communityService.setToas(my.community.id, transfer);
   }
 }
