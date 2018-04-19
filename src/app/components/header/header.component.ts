@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit {
   authUser: AuthUser;
   requests: Request[] = [];
   message: string;
+  authUserJson:string;
 
   constructor(
     private blankService: BlankService,
@@ -46,7 +47,6 @@ export class HeaderComponent implements OnInit {
     private requestLinkService:RequestLinkService,
     private requestsService: RequestsService,
     private router:Router
-
   ) {
       config.placement = 'left';
       this.requestLinkService.requestLinks.subscribe( (val) => {
@@ -60,8 +60,7 @@ export class HeaderComponent implements OnInit {
         var authHeader = r.headers.get('Authorization');
         this.authUser = JSON.parse(atob(authHeader));
         this.isloggedin = true;
-
-        console.log( "The Current Community is " + this.authUser.currentCommunity )
+        this.message = JSON.stringify(this.authUser);
 
         if (null==this.authUser.currentCommunity){
           this.message = this.authUser.fullName + 
