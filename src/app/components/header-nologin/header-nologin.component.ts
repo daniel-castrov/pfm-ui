@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header-nologin.component.css']
 })
 export class HeaderNologinComponent implements OnInit {
-
+  
   constructor() { }
 
   ngOnInit() {

@@ -61,14 +61,15 @@ export class HeaderComponent implements OnInit {
         this.authUser = JSON.parse(atob(authHeader));
         this.isloggedin = true;
 
-        if ( this.authUser.rolenames.length==0 ){
-          this.message = `You must be a member of a JSCBIS Community to proceed.<br/><br/>
-          You are seeing this message because you are not a member of a Community. 
-          Create a request to Join a Community from the list below.<br/><br/> 
+        console.log( "The Current Community is " + this.authUser.currentCommunity )
+
+        if ( null==this.authUser.currentCommunity || this.authUser.rolenames.length==0 ){
+          this.message = this.authUser.fullName + 
+          `: You are seeing this message because you are not a member of a Community.<br/>
+          You must be a member of a JSCBIS Community to proceed.<br/>
+          Create a request to Join a Community from the list below.<br/> 
           Please contact an Administrator if you need further assistance.`
-
           this.router.navigate(['my-community'])
-
         }
 
         if (this.authUser.rolenames.includes('User_Approver')) {
