@@ -91,8 +91,11 @@ export class CreatePomScenarioComponent implements OnInit {
       orgToas: map
     };
 
-    console.log(transfer);
     console.log('calling setToas!');
-    this.communityService.setToas(my.community.id, transfer);
+    console.log(transfer);
+    this.communityService.setToas(my.community.id, transfer).subscribe(
+      (data) => { console.log('data: '); console.log(data); },
+      (err) => { console.log('err: '); console.log(err); }
+    );
   }
 }
