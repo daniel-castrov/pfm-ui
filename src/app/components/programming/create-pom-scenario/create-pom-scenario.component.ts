@@ -5,7 +5,7 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
 import { Community } from '../../../generated/model/community';
 import { Organization } from '../../../generated/model/organization';
-import { TOA } from '../../../generated/model/TOA';
+import { TOA } from '../../../generated/model/tOA';
 import { ToaTransfer } from '../../../generated/model/toaTransfer';
 import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
@@ -24,7 +24,7 @@ export class CreatePomScenarioComponent implements OnInit {
   private orgs: Organization[];
   private years: number[];
   private toa: number;
-  private orgtoas: Map<string, number> = new Map<string, number>();
+  private orgtoas: {} = {};
 
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
@@ -63,7 +63,7 @@ export class CreatePomScenarioComponent implements OnInit {
     });
 
     //console.log(my.orgs);
-    my.orgtoas = new Map<string, number>();
+    my.orgtoas = {};
     my.orgs.forEach(function (org) {
       //console.log(org.name + ' ->' + org.abbreviation);
       org.toas.forEach(function (toa) {
@@ -80,18 +80,19 @@ export class CreatePomScenarioComponent implements OnInit {
 
   submit() {
     var my: CreatePomScenarioComponent = this;
-    var map: IntMap = {}
+    var map: IntMap = {};
+    Object.getOwnPropertyNames(my.orgtoas).forEach(function (orgid){
+      map[orgid] = my.orgtoas[orgid];
+    });
+
     var transfer: ToaTransfer = {
       year: my.fy,
       toa: my.toa,
-      orgToas: {}
-    }
-
-    my.orgtoas.forEach(function (val: number, orgid: string) {
-      transfer.orgToas[orgid] = val;
-    });
+      orgToas: map
+    };
 
     console.log(transfer);
-    my.communityService.setToas(my.community.id, transfer);
+    console.log('calling setToas!');
+    this.communityService.setToas(my.community.id, transfer);
   }
 }

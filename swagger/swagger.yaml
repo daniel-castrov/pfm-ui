@@ -152,30 +152,18 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-
       parameters:
-      - name: "id"
-        in: "path"
-        description: "Community id"
+      - in: "path"
+        name: "id"
+        description: "The community id"
         required: true
         type: "string"
-      - name: "body"
-        in: "body"
-        description: "a ToaTransfer"
+      - in: "body"
+        name: "body"
+        description: "a ToaTransfer object"
         required: true
         schema:
           $ref: "#/definitions/ToaTransfer"
-      responses:
-        200:
-          description: "true"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Community does not exist."
-        500:
-          description: "An unexpected error occurred."
   /communities/user/{userId}/role/{roleName}:
     get:
       tags:
