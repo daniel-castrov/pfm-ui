@@ -60,7 +60,6 @@ export class HeaderComponent implements OnInit {
         var authHeader = r.headers.get('Authorization');
         this.authUser = JSON.parse(atob(authHeader));
         this.isloggedin = true;
-        this.message = JSON.stringify(this.authUser);
 
         if (null==this.authUser.currentCommunity){
           this.message = this.authUser.fullName + 
