@@ -28,7 +28,7 @@ export class CreatePomScenarioComponent implements OnInit {
 
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
-  private orgsvc : OrganizationService ) {
+    private orgsvc: OrganizationService) {
   }
 
   ngOnInit() {
@@ -37,16 +37,17 @@ export class CreatePomScenarioComponent implements OnInit {
 
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId)]).subscribe(data => {
-          my.community = data[0].result;
+          var community = data[0].result;
           my.orgs = data[1].result;
 
           var tempyears: number[] = [];
-          my.community.toas.forEach(function (toa) {
+          community.toas.forEach(function (toa) {
             tempyears.push(toa.year);
           });
           tempyears.sort();
+          my.community = community;
+          my.setYear(tempyears[tempyears.length - 1]);
           my.years = tempyears;
-          my.setYear(my.years[my.years.length - 1]);
         });
       });
   }
@@ -94,8 +95,8 @@ export class CreatePomScenarioComponent implements OnInit {
     console.log('calling setToas!');
     console.log(transfer);
     this.communityService.setToas(my.community.id, transfer).subscribe(
-      (data) => { console.log('data: '); console.log(data); },
-      (err) => { console.log('err: '); console.log(err); }
-    );
+      (data) => {
+        my.ngOnInit();
+      });
   }
 }
