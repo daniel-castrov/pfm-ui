@@ -19,7 +19,7 @@ import { IntMap } from '../../../generated/model/intMap';
 export class CreatePomScenarioComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private fy: number = new Date().getFullYear() + 1;
-  private by: number = new Date().getFullYear();
+  private modelyear: number = new Date().getFullYear();
   private community: Community;
   private orgs: Organization[];
   private years: number[];
@@ -55,10 +55,10 @@ export class CreatePomScenarioComponent implements OnInit {
   setYear(year) {
     var my: CreatePomScenarioComponent = this;
     console.log('setting year to ' + year);
-    my.by = Number.parseInt(year);
+    my.modelyear = Number.parseInt(year);
 
     my.community.toas.forEach(function (toa) {
-      if (toa.year == my.by ) {
+      if (toa.year == my.modelyear ) {
         my.toa = toa.amount;
       }
     });
@@ -69,7 +69,7 @@ export class CreatePomScenarioComponent implements OnInit {
       //console.log(org.name + ' ->' + org.abbreviation);
       org.toas.forEach(function (toa) {
         //console.log('  ' + toa.year + ' (' + typeof (toa.year) + ')  -> ' + my.by + ' (' + typeof (my.by) + ')');
-        if (toa.year === my.by ) {
+        if (toa.year === my.modelyear ) {
           my.orgtoas[org.id] = toa.amount;
           //console.log('\tsetting orgtoa for ' + org.abbreviation + ' to ' + toa.amount);
         }

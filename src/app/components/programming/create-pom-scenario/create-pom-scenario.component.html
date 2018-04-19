@@ -1,10 +1,10 @@
 <app-header></app-header>
-<div *ngIf="header.isloggedin && years">
-  <ng-container *ngIf="by!=fy">
+<div *ngIf="header.isloggedin && community">
+  <ng-container *ngIf="modelyear!=fy">
     <div>
       <h5>Create POM Scenario for FY {{fy}} based on PB
-        <select ([ngModel])="by" (change)="setYear($event.target.value)">
-          <option *ngFor="let y of years" [value]="y" [selected]="y===by">{{y}}</option>
+        <select ([ngModel])="modelyear" (change)="setYear($event.target.value)">
+          <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
         </select>
       </h5>
     </div>
@@ -21,7 +21,7 @@
     <button (click)="submit()">Create Scenario</button>
   </ng-container>
 
-  <ng-container *ngIf="by===fy">
+  <ng-container *ngIf="modelyear===fy">
     <div>
       <h5>POM Scenario for FY {{fy}}</h5>
     </div>
