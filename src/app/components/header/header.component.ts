@@ -63,7 +63,7 @@ export class HeaderComponent implements OnInit {
 
         console.log( "The Current Community is " + this.authUser.currentCommunity )
 
-        if ( null==this.authUser.currentCommunity || this.authUser.rolenames.length==0 ){
+        if (null==this.authUser.currentCommunity){
           this.message = this.authUser.fullName + 
           `: You are seeing this message because you are not a member of a Community.<br/>
           You must be a member of a JSCBIS Community to proceed.<br/>
