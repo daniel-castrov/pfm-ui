@@ -27,14 +27,11 @@ import { Request } from '../../services/request';
   styleUrls: ['./header.component.scss'],
   providers: [NgbTooltipConfig]
 })
-
 export class HeaderComponent implements OnInit {
 
   isloggedin: boolean = false;
   authUser: AuthUser;
   requests: Request[] = [];
-  message: string;
-  authUserJson:string;
 
   constructor(
     private blankService: BlankService,
@@ -60,12 +57,7 @@ export class HeaderComponent implements OnInit {
       this.authUser = JSON.parse(atob(authHeader));
       this.isloggedin = true;
       
-      if (null==this.authUser.currentCommunity){
-        this.message = this.authUser.fullName + 
-        `: You are seeing this message because you are not a member of a Community.<br/>
-        You must be a member of a JSCBIS Community to proceed.<br/>
-        Create a request to Join a Community from the list below.<br/> 
-        Please contact an Administrator if you need further assistance.`
+      if (null==this.authUser.currentCommunity) {
         this.router.navigate(['my-community'])
       }
       

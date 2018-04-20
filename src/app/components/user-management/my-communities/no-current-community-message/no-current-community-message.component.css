@@ -1,0 +1,12 @@
+label, select {
+  margin: 0;
+}
+
+.current-community {
+  &::after {
+    content: " (Current Community)";
+  }
+  background: #df960e;
+  border-radius: 5px;
+  padding: 2px 4px 2px 4px;
+}
