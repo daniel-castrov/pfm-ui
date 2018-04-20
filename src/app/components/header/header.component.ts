@@ -55,25 +55,26 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.blankService.blank("response", true).subscribe(
-      (r: HttpResponse<RestResult>) => {
-        var authHeader = r.headers.get('Authorization');
-        this.authUser = JSON.parse(atob(authHeader));
-        this.isloggedin = true;
-
-        if (null==this.authUser.currentCommunity){
-          this.message = this.authUser.fullName + 
-          `: You are seeing this message because you are not a member of a Community.<br/>
-          You must be a member of a JSCBIS Community to proceed.<br/>
-          Create a request to Join a Community from the list below.<br/> 
-          Please contact an Administrator if you need further assistance.`
-          this.router.navigate(['my-community'])
-        }
-
-        if (this.authUser.rolenames.includes('User_Approver')) {
-          this.requests = this.requestsService.getRequests();
-        }
-      });
+    this.blankService.blank("response", true).subscribe((r: HttpResponse<RestResult>) => {
+      var authHeader = r.headers.get('Authorization');
+      this.authUser = JSON.parse(atob(authHeader));
+      this.isloggedin = true;
+      
+      if (null==this.authUser.currentCommunity){
+        this.message = this.authUser.fullName + 
+        `: You are seeing this message because you are not a member of a Community.<br/>
+        You must be a member of a JSCBIS Community to proceed.<br/>
+        Create a request to Join a Community from the list below.<br/> 
+        Please contact an Administrator if you need further assistance.`
+        this.router.navigate(['my-community'])
+      }
+      
+      if (this.authUser.rolenames.includes('User_Approver')) {
+        this.requests = this.requestsService.getRequests();
+      } else {
+        this.requests = [];
+      }
+    });
   }
 
 }
