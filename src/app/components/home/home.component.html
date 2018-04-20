@@ -6,17 +6,6 @@
       Welcome back <strong> {{ header.authUser.fullName }}</strong>
     </div>
     <div class="card-container">
-
-      <br/>
-       
-      <button (click)="show = !show">{{show ? 'hide json' : 'show json'}}</button>
-      <div *ngIf="show">{{header.authUserJson}}</div>
-      
-      <!--
-        <button (click)="show = !show">{{show ? 'hide' : 'show'}}</button>
-        <div *ngIf="show; else elseBlock">{{header.authUserJson}}</div>
-        <ng-template #elseBlock>{{ header.authUser.fullName }}</ng-template>
-      -->
     </div>
   </div>
   <div class="col-lg-5 col-sm-10">

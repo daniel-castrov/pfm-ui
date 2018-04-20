@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Response, ResponseContentType } from '@angular/http';
 import { HttpResponse } from '@angular/common/http';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule, Routes, Router } from '@angular/router';
 
 // Generated
 import { AuthUser } from '../../generated/model/authUser';
@@ -32,6 +33,8 @@ export class HeaderComponent implements OnInit {
   isloggedin: boolean = false;
   authUser: AuthUser;
   requests: Request[] = [];
+  message: string;
+  authUserJson:string;
 
   constructor(
     private blankService: BlankService,
@@ -42,10 +45,11 @@ export class HeaderComponent implements OnInit {
     private userService: UserService,
     private config: NgbTooltipConfig,
     private requestLinkService:RequestLinkService,
-    private requestsService: RequestsService
+    private requestsService: RequestsService,
+    private router:Router
   ) {
-    config.placement = 'left';
-    this.requestLinkService.requestLinks.subscribe( (val) => {
+      config.placement = 'left';
+      this.requestLinkService.requestLinks.subscribe( (val) => {
       this.requests=val;
     });
   }
@@ -56,6 +60,16 @@ export class HeaderComponent implements OnInit {
         var authHeader = r.headers.get('Authorization');
         this.authUser = JSON.parse(atob(authHeader));
         this.isloggedin = true;
+
+        if (null==this.authUser.currentCommunity){
+          this.message = this.authUser.fullName + 
+          `: You are seeing this message because you are not a member of a Community.<br/>
+          You must be a member of a JSCBIS Community to proceed.<br/>
+          Create a request to Join a Community from the list below.<br/> 
+          Please contact an Administrator if you need further assistance.`
+          this.router.navigate(['my-community'])
+        }
+
         if (this.authUser.rolenames.includes('User_Approver')) {
           this.requests = this.requestsService.getRequests();
         }

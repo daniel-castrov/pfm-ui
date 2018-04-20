@@ -28,12 +28,12 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  // This is the id of the user we are interested in ... the targetUser
+  // This is the id of the community we are interested in 
   id: string;
 
   approvers: User[]=[];
   addedapprover:string;
-  resultError;
+  resultError:string[]=[];
   community: Community;
   users:User[]=[];
   organizations:Organization[]=[];
@@ -57,7 +57,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resultError=this.header.resultError;
+    this.resultError;
     this.getCommunity();
     this.getUsers();
   }

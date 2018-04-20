@@ -2,7 +2,7 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isloggedin">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
-    <div class="col-5" *ngIf="community">
+    <div class="col-5">
       <h4>{{ community?.name }}</h4>
 
       <!-- <p>
@@ -20,7 +20,7 @@
         </ul>
       </fieldset>
       <fieldset>
-        <legend>List of Communities</legend>
+        <legend>List of Approvers</legend>
         <ul class="community-list">
           <li *ngFor="let user of approvers">
             {{ user?.firstName }} {{ user?.lastName }}

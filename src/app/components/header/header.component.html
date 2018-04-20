@@ -1,6 +1,6 @@
-<app-header-nologin *ngIf="!isloggedin"></app-header-nologin>
+<app-header-nologin *ngIf="!isloggedin || !authUser.currentCommunity"></app-header-nologin>
 
-<div class="header" *ngIf="isloggedin">
+<div class="header" *ngIf="isloggedin && authUser.currentCommunity">
   <div class="container-fluid">
     <div class="row main-content">
       <div class="col-6">
@@ -10,14 +10,14 @@
           </a>
         </span>
         <div class="header-title">
-          JSCBIS :: <span class="current-community">{{authUser.currentCommunity.abbreviation}}</span>
+          JSCBIS :: <span class="current-community">{{authUser.currentCommunity?.abbreviation}}</span>
         </div>
       </div>
       <div class="col-6 col-md-3">
       </div>
       <div class="col-6 col-md-8">
       </div>
-    </div>
+    </div> 
     <div class="row header-items">
       <div class="col-6 col-md-6">
         <div class="sub-title">
@@ -58,7 +58,7 @@
 </div>
 
 <!-- private header for user login -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isloggedin">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isloggedin && authUser.currentCommunity">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
     aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
