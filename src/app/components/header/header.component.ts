@@ -51,22 +51,21 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.blankService.blank("response", true).subscribe((r: HttpResponse<RestResult>) => {
-      var authHeader = r.headers.get('Authorization');
-      this.authUser = JSON.parse(atob(authHeader));
-      this.isloggedin = true;
-      
-      if (null==this.authUser.currentCommunity) {
-        this.router.navigate(['my-community'])
-      }
-      
-      if (this.authUser.rolenames.includes('User_Approver')) {
-        this.requests = this.requestsService.getRequests();
-      } else {
-        this.requests = [];
-      }
-    });
+  async ngOnInit(): Promise<void> {
+    const httpResponse: HttpResponse<RestResult> = await this.blankService.blank("response", true).toPromise();
+    const authHeader = httpResponse.headers.get('Authorization');
+    this.authUser = JSON.parse(atob(authHeader));
+    this.isloggedin = true;
+    
+    if (!this.authUser.currentCommunity) {
+      this.router.navigate(['my-community'])
+    }
+    
+    if (this.authUser.rolenames.includes('User_Approver')) {
+      this.requests = this.requestsService.getRequests();
+    } else {
+      this.requests = [];
+    }
   }
 
 }
