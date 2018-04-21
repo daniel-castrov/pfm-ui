@@ -141,6 +141,29 @@ paths:
           description: "Community does not exist."
         500:
           description: "An unexpected error occurred."
+  /communities/{id}/toa:
+    post:
+      tags:
+      - "Community"
+      summary: "Set TOAs for a Community"
+      description: "Sets TOA values for a Community and its organizations"
+      operationId: "setToas"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a ToaTransfer object"
+        required: true
+        schema:
+          $ref: "#/definitions/ToaTransfer"
   /communities/user/{userId}/role/{roleName}:
     get:
       tags:
@@ -1641,5 +1664,14 @@ definitions:
         type: 'string'
       appropriation:
         type: 'string'
+  ToaTransfer:
+    type: "object"
+    properties:
+      orgToas:
+        $ref: '#/definitions/IntMap'
+      year:
+        type: 'integer'
+      toa:
+        type: 'number'
 ##############################################################################
 # ENDFILE

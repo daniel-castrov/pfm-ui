@@ -21,6 +21,7 @@ import { AccessChangeApprovalComponent } from './components/user-management/appr
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
+import { CreatePomScenarioComponent } from './components/programming/create-pom-scenario/create-pom-scenario.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
@@ -120,8 +121,8 @@ const appRoutes: Routes = [
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
-  {path:'exporter', component: ProgramExportComponent}
-
+  { path: 'exporter', component: ProgramExportComponent },
+  { path: 'create-new-pom', component: CreatePomScenarioComponent }
 ];
 
 @NgModule({
@@ -135,6 +136,7 @@ const appRoutes: Routes = [
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
+    CreatePomScenarioComponent,
     CurrentComponent,
     ElevationComponent,
     FeedbackComponent,
