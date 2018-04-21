@@ -20,6 +20,7 @@ import { LeaveCommunityRequest } from '../../generated/model/leaveCommunityReque
 import { LeaveCommunityRequestService } from '../../generated/api/leaveCommunityRequest.service';
 import { RequestLinkService } from './requestLink.service';
 import { Request } from '../../services/request';
+import { ElevationService } from '../../services/elevation.component';
 
 @Component({
   selector: 'app-header',
@@ -29,9 +30,10 @@ import { Request } from '../../services/request';
 })
 export class HeaderComponent implements OnInit {
 
+  // Since there is no such thing as logging in the name below is probably bad; Hopefully someone who is familiar with it would rename it appropriately.
   isloggedin: boolean = false;
   authUser: AuthUser;
-  requests: Request[] = [];
+  requests: Request[];
 
   constructor(
     private blankService: BlankService,
@@ -43,7 +45,8 @@ export class HeaderComponent implements OnInit {
     private config: NgbTooltipConfig,
     private requestLinkService:RequestLinkService,
     private requestsService: RequestsService,
-    private router:Router
+    private router:Router,
+    private elevationService: ElevationService
   ) {
       config.placement = 'left';
       this.requestLinkService.requestLinks.subscribe( (val) => {

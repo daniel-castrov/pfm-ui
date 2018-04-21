@@ -11,6 +11,12 @@ body {
 }
 
 .header {
+  &.elevated {
+    background: -webkit-linear-gradient(#f4d742, #f45c42);
+    background: -o-linear-gradient(#f4d742, #f45c42);
+    background: -moz-linear-gradient(#f4d742, #f45c42);
+    background: linear-gradient(#f4d742, #f45c42);
+  }
   background: -webkit-linear-gradient(#325F96, #083361);
   background: -o-linear-gradient(#325F96, #083361);
   background: -moz-linear-gradient(#325F96, #083361);

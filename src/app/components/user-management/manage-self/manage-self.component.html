@@ -46,6 +46,7 @@
             <li>Landing Page: {{ currentUser?.preferences.landingPage }} </li>
           </ul>
         </div>
+        <j-elevation [header]="header"></j-elevation>
       </div>
 
       <!-- EDITING MODE-->
@@ -95,6 +96,7 @@
             </li>
           </ul>
         </div>
+        <j-elevation [header]="header"></j-elevation>
         <div class="card-header">
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel

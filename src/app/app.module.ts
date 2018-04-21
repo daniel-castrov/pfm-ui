@@ -24,6 +24,7 @@ import { ApproveRequestsComponent } from './components/user-management/approve-r
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
@@ -81,6 +82,8 @@ import { UserService } from './generated/api/user.service';
 import { UserRoleService } from './generated/api/userRole.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
 import { Injectables } from './services/injectables';
+import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
+import { ElevationService } from './services/elevation.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -133,6 +136,7 @@ const appRoutes: Routes = [
     CommunityLeaveComponent,
     ContactComponent,
     CurrentComponent,
+    ElevationComponent,
     FeedbackComponent,
     FilterComponent,
     FundsComponent,
@@ -149,6 +153,7 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageUsersComponent,
     MyCommunitiesComponent,
+    NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
     NotImplementedComponent,
@@ -192,6 +197,7 @@ const appRoutes: Routes = [
     BlankService,
     CommunityService,
     CreateUserRequestService,
+    ElevationService,
     Injectables,
     JoinCommunityRequestService,
     LeaveCommunityRequestService,
