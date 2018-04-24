@@ -1,36 +1,51 @@
 <app-header></app-header>
-<div *ngIf="header.isloggedin && community">
-  <ng-container *ngIf="modelyear!=fy">
-    <div>
-      <h5>Create POM Scenario for FY {{fy}} based on PB
-        <select ([ngModel])="modelyear" (change)="setYear($event.target.value)">
-          <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
-        </select>
-      </h5>
-    </div>
-    <div>Set Overall TOA for {{community.abbreviation}} Community
-      <input [(ngModel)]="toa">
-    </div>
-  
-    <div *ngFor="let o of orgs">
-      <div>
-        <span>{{o.abbreviation}}</span>
-        <input [(ngModel)]="orgtoas[o.id]">
-      </div>
-    </div>
-    <button (click)="submit()">Create Scenario</button>
-  </ng-container>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isloggedin && community">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <ng-container *ngIf="modelyear!=fy">
+            <div>
+              <span class="h5 mr-sm-2 mb-4">Create POM Scenario for FY {{fy}} based on PB</span>
+              <select class="h5 form-control-sm" ([ngModel])="modelyear" (change)="setYear($event.target.value)">
+                <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
+              </select>
+            </div>
+            <span class="h6 mr-sm-2">Set Overall TOA for {{community.abbreviation}} Community
+                <input [(ngModel)]="toa">
+              </span>
+            <div *ngFor="let o of orgs">
+              <div>
+                <label class="pom-label mb-1">{{o.abbreviation}}</label>
+                <input [(ngModel)]="orgtoas[o.id]">
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="modelyear===fy">
+            <div dclass="h5">POM Scenario for FY {{fy}}</div>
 
-  <ng-container *ngIf="modelyear===fy">
-    <div>
-      <h5>POM Scenario for FY {{fy}}</h5>
-    </div>
-    <div>Overall TOA for {{community.abbreviation}} Community {{toa}}</div>
-  
-    <div *ngFor="let o of orgs">
-      <div>
-        <span>{{o.abbreviation}}</span> {{orgtoas[o.id]}}
+            <div>Overall TOA for {{community.abbreviation}} Community {{toa}}</div>
+
+            <div *ngFor="let o of orgs">
+              <div>
+                <label class="pom-label mb-1">{{o.abbreviation}}</label> {{orgtoas[o.id]}}
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8 mb-3">
+          <button class="btn btn-primary" (click)="submit()">Create Scenario</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <div class="h6">Progress Report:</div>
+          <fieldset class="mb-3">
+          </fieldset>
+        </div>
       </div>
     </div>
-  </ng-container>
+  </div>
 </div>
