@@ -1,26 +1,15 @@
 import { RequestsService } from './../../services/requests.service';
 import { Component, OnInit } from '@angular/core';
-import { Response, ResponseContentType } from '@angular/http';
 import { HttpResponse } from '@angular/common/http';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule, Routes, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 // Generated
 import { AuthUser } from '../../generated/model/authUser';
 import { RestResult } from '../../generated/model/restResult';
 import { BlankService } from '../../generated/api/blank.service';
-import { User } from '../../generated/model/user';
-import { UserService } from '../../generated/api/user.service';
-import { MyDetailsService } from '../../generated/api/myDetails.service';
-import { CreateUserRequest } from '../../generated/model/createUserRequest';
-import { CreateUserRequestService } from '../../generated/api/createUserRequest.service';
-import { JoinCommunityRequest } from '../../generated/model/joinCommunityRequest';
-import { JoinCommunityRequestService } from '../../generated/api/joinCommunityRequest.service';
-import { LeaveCommunityRequest } from '../../generated/model/leaveCommunityRequest';
-import { LeaveCommunityRequestService } from '../../generated/api/leaveCommunityRequest.service';
 import { RequestLinkService } from './requestLink.service';
 import { Request } from '../../services/request';
-import { ElevationService } from '../../services/elevation.component';
 
 @Component({
   selector: 'app-header',
@@ -37,16 +26,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private blankService: BlankService,
-    private myDetailsService: MyDetailsService,
-    private createUserRequestService: CreateUserRequestService,
-    private joinCommunityRequestService: JoinCommunityRequestService,
-    private leaveCommunityRequestService: LeaveCommunityRequestService,
-    private userService: UserService,
     private config: NgbTooltipConfig,
     private requestLinkService:RequestLinkService,
     private requestsService: RequestsService,
-    private router:Router,
-    private elevationService: ElevationService
+    private router:Router
   ) {
       config.placement = 'left';
       this.requestLinkService.requestLinks.subscribe( (val) => {
