@@ -14,7 +14,7 @@ import { Request } from '../../../services/request';
 @Component({
   selector: 'app-user-approval',
   templateUrl: './user-approval.component.html',
-  styleUrls: ['./user-approval.component.css']
+  styleUrls: ['./user-approval.component.scss']
 })
 export class UserApprovalComponent implements OnInit {
 
@@ -89,8 +89,8 @@ export class UserApprovalComponent implements OnInit {
     this.createUserRequestService.status(status, this.createUserRequest.id)
       .subscribe(c => {
         result = c;
-        this.resultError.push(result.error);       
-        this.router.navigate(['./user-list']); 
+        this.resultError.push(result.error);
+        this.router.navigate(['./user-list']);
       });
   }
 }
