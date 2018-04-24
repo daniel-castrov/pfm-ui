@@ -1,5 +1,5 @@
 <div *ngIf="header.authUser.admin" class="card-header">
-  Privilege Elevation:
+  Operate as Admin:
 </div>
 <div *ngIf="header.authUser.admin" class="card-container">
   <button class="btn btn-primary" (click)="elevationService.flip()">{{elevationService.elevatedString}}</button>
