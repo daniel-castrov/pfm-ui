@@ -12,12 +12,12 @@
               </select>
             </div>
             <span class="h6 mr-sm-2">Set Overall TOA for {{community.abbreviation}} Community
-                <input [(ngModel)]="toa">
+                <input class="form-control forminput"  [(ngModel)]="toa">
               </span>
             <div *ngFor="let o of orgs">
               <div>
                 <label class="pom-label mb-1">{{o.abbreviation}}</label>
-                <input [(ngModel)]="orgtoas[o.id]">
+                <input class="form-control forminput" [(ngModel)]="orgtoas[o.id]">
               </div>
             </div>
           </ng-container>
@@ -32,6 +32,10 @@
               </div>
             </div>
           </ng-container>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
         </div>
       </div>
       <div class="row">

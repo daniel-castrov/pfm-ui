@@ -10,6 +10,10 @@ import { ToaTransfer } from '../../../generated/model/toaTransfer';
 import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
 import { IntMap } from '../../../generated/model/intMap';
+import * as $ from 'jquery';
+
+declare const $: any;
+declare const jQuery: any;
 
 @Component({
   selector: 'app-create-pom-scenario',
@@ -32,6 +36,7 @@ export class CreatePomScenarioComponent implements OnInit {
   }
 
   ngOnInit() {
+
     var my: CreatePomScenarioComponent = this;
     this.userDetailsService.getCurrentUser().subscribe((person) => {
 
@@ -50,6 +55,7 @@ export class CreatePomScenarioComponent implements OnInit {
           my.years = tempyears;
         });
       });
+
   }
 
   setYear(year) {
@@ -99,4 +105,5 @@ export class CreatePomScenarioComponent implements OnInit {
         my.ngOnInit();
       });
   }
+
 }
