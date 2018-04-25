@@ -9,7 +9,10 @@ import { TOA } from '../../../generated/model/tOA';
 import { ToaTransfer } from '../../../generated/model/toaTransfer';
 import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
+import { POMService } from '../../../generated/api/pOM.service';
 import { IntMap } from '../../../generated/model/intMap';
+import { Pom } from '../../../generated/model/pom';
+
 import * as $ from 'jquery';
 
 declare const $: any;
@@ -27,12 +30,12 @@ export class CreatePomScenarioComponent implements OnInit {
   private community: Community;
   private orgs: Organization[];
   private years: number[];
-  private toa: number;
+  private toas: TOA[];
   private orgtoas: {} = {};
-
+  private poms: Pom[];
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
-    private orgsvc: OrganizationService) {
+    private orgsvc: OrganizationService, private pomsvc:POMService) {
   }
 
   ngOnInit() {
@@ -95,22 +98,24 @@ export class CreatePomScenarioComponent implements OnInit {
 
     var my: CreatePomScenarioComponent = this;
     this.userDetailsService.getCurrentUser().subscribe((person) => {
-
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
-        my.orgsvc.getByCommunityId(person.result.currentCommunityId)]).subscribe(data => {
-          var community = data[0].result;
-          my.orgs = data[1].result;
+        my.orgsvc.getByCommunityId(person.result.currentCommunityId),
+        my.pomsvc.getById( person.result.currentCommunityId )
+      ]).subscribe(data => {
+        var community = data[0].result;
+        my.orgs = data[1].result;
+        my.poms = data[2].result;
 
-          var tempyears: number[] = [];
-          community.toas.forEach(function (toa) {
-            tempyears.push(toa.year);
-          });
-          tempyears.sort();
-          my.community = community;
-          my.setYear(tempyears[tempyears.length - 1]);
-          my.years = tempyears;
+        var tempyears: number[] = [];
+        my.poms.forEach(function (pom) {
+          tempyears.push(pom.fy);
         });
+        tempyears.sort();
+        my.community = community;
+        my.setYear(tempyears[tempyears.length - 1]);
+        my.years = tempyears;
       });
+    });
 
   }
 
@@ -119,29 +124,39 @@ export class CreatePomScenarioComponent implements OnInit {
     console.log('setting year to ' + year);
     my.modelyear = Number.parseInt(year);
 
-    my.community.toas.forEach(function (toa) {
-      if (toa.year == my.modelyear ) {
-        my.toa = toa.amount;
+    var modelpom:Pom;
+    my.poms.forEach(function (pom) {
+      if (pom.fy == my.modelyear ) {
+        my.toas = pom.toas;
+        modelpom = pom;
       }
     });
 
+    console.log(modelpom);
     //console.log(my.orgs);
     my.orgtoas = {};
-    my.orgs.forEach(function (org) {
-      //console.log(org.name + ' ->' + org.abbreviation);
-      org.toas.forEach(function (toa) {
-        //console.log('  ' + toa.year + ' (' + typeof (toa.year) + ')  -> ' + my.by + ' (' + typeof (my.by) + ')');
-        if (toa.year === my.modelyear ) {
-          my.orgtoas[org.id] = toa.amount;
-          //console.log('\tsetting orgtoa for ' + org.abbreviation + ' to ' + toa.amount);
-        }
+    /*
+    if (modelpom) {
+      modelpom.orgToas.forEach(function (org) {
+        //console.log(org.name + ' ->' + org.abbreviation);
+        my.orgtoas.forEach(function (toa) {
+          //console.log('  ' + toa.year + ' (' + typeof (toa.year) + ')  -> ' + my.by + ' (' + typeof (my.by) + ')');
+          if (toa.year === my.modelyear) {
+            my.orgtoas[org.id] = toa.amount;
+            //console.log('\tsetting orgtoa for ' + org.abbreviation + ' to ' + toa.amount);
+          }
+        });
       });
-    });
+      
+    } */
     //console.log(my.orgtoas);
   }
 
 
   submit() {
+    return;
+  /*
+    
     var my: CreatePomScenarioComponent = this;
     var map: IntMap = {};
     Object.getOwnPropertyNames(my.orgtoas).forEach(function (orgid){
@@ -160,6 +175,7 @@ export class CreatePomScenarioComponent implements OnInit {
       (data) => {
         my.ngOnInit();
       });
+      */
   }
 
 }
