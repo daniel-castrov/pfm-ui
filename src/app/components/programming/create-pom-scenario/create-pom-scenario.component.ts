@@ -25,13 +25,13 @@ declare const jQuery: any;
 })
 export class CreatePomScenarioComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
-  private fy: number = new Date().getFullYear() + 1;
+  private fy: number = new Date().getFullYear() + 2;
   private modelyear: number = new Date().getFullYear();
   private community: Community;
   private orgs: Organization[];
   private years: number[];
-  private toas: TOA[];
-  private orgtoas: {} = {};
+  private toas: Map<number, number> = new Map<number, number>();
+  private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
   private poms: Pom[];
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
@@ -124,32 +124,34 @@ export class CreatePomScenarioComponent implements OnInit {
     console.log('setting year to ' + year);
     my.modelyear = Number.parseInt(year);
 
-    var modelpom:Pom;
+    var modelpom: Pom;
+    my.toas.clear();
+    my.orgtoas.clear();
     my.poms.forEach(function (pom) {
       if (pom.fy == my.modelyear ) {
-        my.toas = pom.toas;
         modelpom = pom;
+        pom.toas.forEach(function (toa:TOA) {
+          my.toas.set(toa.year, toa.amount);
+        });
+
+        for (var i = 0; i < 10; i++){
+          if (!my.toas.has(pom.fy + i)) {
+            my.toas.set(pom.fy + i, 0);
+          }
+        }
+
+        Object.getOwnPropertyNames(pom.orgToas).forEach(function (orgid) { 
+          var map: Map<number, number> = new Map<number, number>();
+          pom.orgToas[orgid].forEach(function (toa: TOA) { 
+            map.set(toa.year, toa.amount);            
+          });
+          my.orgtoas.set(orgid, map);
+        });
       }
     });
 
     console.log(modelpom);
-    //console.log(my.orgs);
-    my.orgtoas = {};
-    /*
-    if (modelpom) {
-      modelpom.orgToas.forEach(function (org) {
-        //console.log(org.name + ' ->' + org.abbreviation);
-        my.orgtoas.forEach(function (toa) {
-          //console.log('  ' + toa.year + ' (' + typeof (toa.year) + ')  -> ' + my.by + ' (' + typeof (my.by) + ')');
-          if (toa.year === my.modelyear) {
-            my.orgtoas[org.id] = toa.amount;
-            //console.log('\tsetting orgtoa for ' + org.abbreviation + ' to ' + toa.amount);
-          }
-        });
-      });
-      
-    } */
-    //console.log(my.orgtoas);
+    console.log(my.toas);
   }
 
 

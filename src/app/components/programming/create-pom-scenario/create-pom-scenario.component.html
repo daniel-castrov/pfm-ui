@@ -17,18 +17,29 @@
             <div id="toa1" class="table-editable  table-bordered table-striped">
               <table class="table">
                 <tr>
-                  <th>FY20</th>
-                  <th>FY21</th>
-                  <th>FY22</th>
-                  <th>FY23</th>
-                  <th>FY24</th>
+                  <th>Community/Organization</th>
+                  <th>{{fy}}</th>
+                  <th>{{fy+1}}</th>
+                  <th>{{fy+2}}</th>
+                  <th>{{fy+3}}</th>
+                  <th>{{fy+4}}</th>
                 </tr>
                 <tr>
-                  <td contenteditable="true">Untitled</td>
-                  <td contenteditable="true">Untitled</td>
-                  <td contenteditable="true">Untitled</td>
-                  <td contenteditable="true">Untitled</td>
-                  <td contenteditable="true">Untitled</td>
+                  <td>{{community.abbreviation}} Overall</td>
+                  <td contenteditable="true">{{toas.get(fy)}}</td>
+                  <td contenteditable="true">{{toas.get(fy+1)}}</td>
+                  <td contenteditable="true">{{toas.get(fy+2)}}</td>
+                  <td contenteditable="true">{{toas.get(fy+3)}}</td>
+                  <td contenteditable="true">{{toas.get(fy+4)}}</td>
+                </tr>
+
+                <tr *ngFor="let o of orgs">
+                  <td class="pom-label mb-1">{{o.abbreviation}}</td>
+                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy)}}</td>
+                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+1)}}</td>
+                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+2)}}</td>
+                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+3)}}</td>
+                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+4)}}</td>
                 </tr>
               </table>
             </div>
