@@ -1,6 +1,6 @@
-<app-header-nologin *ngIf="!isloggedin || !authUser.currentCommunity"></app-header-nologin>
+<app-header-nologin *ngIf="!isAuthenticated || !authUser.currentCommunity"></app-header-nologin>
 
-<div class="header" [class.elevated]="elevationService.elevatedBoolean" *ngIf="isloggedin && authUser.currentCommunity">
+<div class="header" [class.elevated]="elevationService.elevatedBoolean" *ngIf="isAuthenticated && authUser.currentCommunity">
   <div class="container-fluid">
     <div class="row main-content">
       <div class="col-6">
@@ -58,7 +58,7 @@
 </div>
 
 <!-- private header for user login -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isloggedin && authUser.currentCommunity">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isAuthenticated && authUser.currentCommunity">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
     aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div *ngIf="header.isloggedin && community">
+<div *ngIf="header.isAuthenticated && community">
   <ng-container *ngIf="modelyear!=fy">
     <div>
       <h5>Create POM Scenario for FY {{fy}} based on PB

@@ -19,8 +19,7 @@ import { Request } from '../../services/request';
 })
 export class HeaderComponent implements OnInit {
 
-  // Since there is no such thing as logging in the name below is probably bad; Hopefully someone who is familiar with it would rename it appropriately.
-  isloggedin: boolean = false;
+  isAuthenticated: boolean = false;
   authUser: AuthUser;
   requests: Request[];
 
@@ -41,7 +40,7 @@ export class HeaderComponent implements OnInit {
     const httpResponse: HttpResponse<RestResult> = await this.blankService.blank("response", true).toPromise();
     const authHeader = httpResponse.headers.get('Authorization');
     this.authUser = JSON.parse(atob(authHeader));
-    this.isloggedin = true;
+    this.isAuthenticated = true;
     
     if (!this.authUser.currentCommunity) {
       this.router.navigate(['my-community'])

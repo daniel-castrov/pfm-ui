@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div class="row main-content" *ngIf="header.isloggedin">
+<div class="row main-content" *ngIf="header.isAuthenticated">
   <div class="error" *ngFor="let error of resultError">{{error}}</div>
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">

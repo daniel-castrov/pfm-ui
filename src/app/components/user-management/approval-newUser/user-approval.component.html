@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div class="container-fluid" *ngIf="header.isloggedin">
+<div class="container-fluid" *ngIf="header.isAuthenticated">
   <div class="row main-content">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
     <div class="col-lg-2"></div>
