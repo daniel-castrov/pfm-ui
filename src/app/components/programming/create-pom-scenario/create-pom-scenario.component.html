@@ -4,7 +4,6 @@
     <div class="col-md-12">
       <div class="row">
         <div class="col-md-6 mb-3">
-          <ng-container *ngIf="modelyear!=fy">
             <div>
               <span class="h5 mr-sm-2 mb-4">Create POM Scenario for FY {{fy}} based on PB</span>
               <select class="h5 form-control-sm" ([ngModel])="modelyear" (change)="setYear($event.target.value)">
@@ -26,80 +25,28 @@
                 </tr>
                 <tr>
                   <td>{{community.abbreviation}} Overall</td>
-                  <td contenteditable="true">{{toas.get(fy)}}</td>
-                  <td contenteditable="true">{{toas.get(fy+1)}}</td>
-                  <td contenteditable="true">{{toas.get(fy+2)}}</td>
-                  <td contenteditable="true">{{toas.get(fy+3)}}</td>
-                  <td contenteditable="true">{{toas.get(fy+4)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, community.id, fy)">{{toas.get(fy)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, community.id, fy+1)">{{toas.get(fy+1)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, community.id, fy+2)">{{toas.get(fy+2)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, community.id, fy+3)">{{toas.get(fy+3)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, community.id, fy+4)">{{toas.get(fy+4)}}</td>
                 </tr>
 
                 <tr *ngFor="let o of orgs">
                   <td class="pom-label mb-1">{{o.abbreviation}}</td>
-                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy)}}</td>
-                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+1)}}</td>
-                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+2)}}</td>
-                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+3)}}</td>
-                  <td contenteditable="true">{{orgtoas.get(o.id).get(fy+4)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, o.id, fy)">{{orgtoas.get(o.id).get(fy)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, o.id, fy+1)">{{orgtoas.get(o.id).get(fy+1)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, o.id, fy+2)">{{orgtoas.get(o.id).get(fy+2)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, o.id, fy+3)">{{orgtoas.get(o.id).get(fy+3)}}</td>
+                  <td contenteditable="allowedits()" (blur)="editfield($event, o.id, fy+4)">{{orgtoas.get(o.id).get(fy+4)}}</td>
                 </tr>
               </table>
             </div>
-
-            <div *ngFor="let o of orgs">
-              <div>
-                <label class="pom-label mb-1">{{o.abbreviation}}</label>
-                <input class="form-control forminput" [(ngModel)]="orgtoas[o.id]">
-              </div>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="modelyear===fy">
-            <div dclass="h5">POM Scenario for FY {{fy}}</div>
-
-            <div>Overall TOA for {{community.abbreviation}} Community {{toa}}</div>
-
-            <div *ngFor="let o of orgs">
-              <div>
-                <label class="pom-label mb-1">{{o.abbreviation}}</label> {{orgtoas[o.id]}}
-              </div>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-8">
-          <div id="toa2" class="table-editable  table-bordered table-striped">
-            <table class="table">
-              <tr>
-                <th>Organization</th>
-                <th>FY20</th>
-                <th>FY21</th>
-                <th>FY22</th>
-                <th>FY23</th>
-                <th>FY24</th>
-              </tr>
-              <tr>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-              </tr>
-              <!-- This is our clonable table line -->
-              <tr class="hide">
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-                <td contenteditable="true">Untitled</td>
-              </tr>
-            </table>
-          </div>
         </div>
       </div>
       <div class="row">
         <div class="col-8 mb-3">
-          <button class="btn btn-primary" (click)="submit()">Create Scenario</button>
+          <button class="btn btn-primary" [attr.disabled]="!allowedits()" (click)="submit()">Create Scenario</button>
         </div>
       </div>
       <div class="row">

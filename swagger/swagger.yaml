@@ -180,7 +180,7 @@ paths:
       - "POM"
       summary: "Creates a new POM scenario"
       description: "Sets TOA values for a Community and its organizations"
-      operationId: "create"
+      operationId: "createPom"
       consumes:
       - "application/json"
       produces:
@@ -198,11 +198,10 @@ paths:
         type: "integer"
       - in: "body"
         name: "body"
-        description: "a ToaTransfer object"
+        description: "a POM object"
         required: true
         schema:
           $ref: "#/definitions/Pom"
-  /pom/{communityId}/{year}:
     get:
       tags:
       - "POM"
