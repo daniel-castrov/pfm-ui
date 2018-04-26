@@ -12,7 +12,7 @@ import { LeaveCommunityRequest } from '../../../generated/model/leaveCommunityRe
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
-import { RequestLinkService } from '../../header/requestLink.service';
+import { RequestLinkService } from '../../header/header-user/requestLink.service';
 import { Request } from '../../../services/request';
 
 @Component({
@@ -90,7 +90,7 @@ export class CommunityLeaveComponent implements OnInit {
   approve() {
     let my: CommunityLeaveComponent = this;
     let reqLinks: Request[];
-    reqLinks = my.header.requests.filter(
+    reqLinks = my.header.headerUserComponent.requests.filter(
       function (el) { return el.requestId !== my.requestId }
     );
 

@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isloggedin">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
     <div class="col-5">
       <h4>{{ community?.name }}</h4>

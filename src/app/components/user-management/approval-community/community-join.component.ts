@@ -12,7 +12,7 @@ import { JoinCommunityRequest } from '../../../generated/model/joinCommunityRequ
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
-import { RequestLinkService } from '../../header/requestLink.service';
+import { RequestLinkService } from '../../header/header-user/requestLink.service';
 import { Request } from '../../../services/request';
 
 @Component({
@@ -93,7 +93,7 @@ export class CommunityJoinComponent implements OnInit {
   approve() {
     let my: CommunityJoinComponent = this;
     let reqLinks:Request[];
-    reqLinks = my.header.requests.filter(
+    reqLinks = my.header.headerUserComponent.requests.filter(
       function (el) { return el.requestId !== my.requestId }
     );
 
@@ -116,7 +116,7 @@ export class CommunityJoinComponent implements OnInit {
         my.resultError.push(result.error);
 
         // How do I get this back to the header?
-        my.header.requests = my.header.requests.filter(
+        my.header.headerUserComponent.requests = my.header.headerUserComponent.requests.filter(
           function (el) { return el.requestId !== my.requestId }
         );
 

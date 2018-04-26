@@ -75,7 +75,7 @@ import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequ
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { OrganizationService } from './generated/api/organization.service';
 import { ProgramsService } from './generated/api/programs.service';
-import { RequestLinkService } from './components/header/requestLink.service';
+import { RequestLinkService } from './components/header/header-user/requestLink.service';
 import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
 import { StrangerService } from './generated/api/stranger.service';
@@ -85,6 +85,7 @@ import { VariantLineComponent } from './components/programs/program-view/variant
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
+import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -133,6 +134,7 @@ const appRoutes: Routes = [
     AppComponent,
     ApplyComponent,
     ApproveRequestsComponent,
+    HeaderUserComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,

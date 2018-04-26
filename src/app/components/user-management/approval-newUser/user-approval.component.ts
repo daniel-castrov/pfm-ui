@@ -8,7 +8,7 @@ import { CommunityService } from '../../../generated/api/community.service';
 import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';
-import { RequestLinkService } from '../../header/requestLink.service';
+import { RequestLinkService } from '../../header/header-user/requestLink.service';
 import { Request } from '../../../services/request';
 
 @Component({
@@ -71,7 +71,7 @@ export class UserApprovalComponent implements OnInit {
   approve(){
     let my: UserApprovalComponent = this;
     let reqLinks:Request[];
-    reqLinks = my.header.requests.filter(
+    reqLinks = my.header.headerUserComponent.requests.filter(
       function (el) { return el.requestId !== my.requestId }
     );
 
