@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderNologinComponent } from './header-nologin.component';
+import { HeaderStrangerComponent } from './header-stranger.component';
 
 describe('HeaderNologinComponent', () => {
-  let component: HeaderNologinComponent;
-  let fixture: ComponentFixture<HeaderNologinComponent>;
+  let component: HeaderStrangerComponent;
+  let fixture: ComponentFixture<HeaderStrangerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderNologinComponent ]
+      declarations: [ HeaderStrangerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HeaderNologinComponent);
+    fixture = TestBed.createComponent(HeaderStrangerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

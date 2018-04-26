@@ -1,3 +1,3 @@
-<app-header-nologin *ngIf="!isAuthenticated || !authUser.currentCommunity"></app-header-nologin>
+<header-stranger *ngIf="!isAuthenticated || !authUser.currentCommunity"></header-stranger>
 
 <header-user [isAuthenticated]="isAuthenticated" [authUser]="authUser" *ngIf="isAuthenticated && authUser.currentCommunity"></header-user>

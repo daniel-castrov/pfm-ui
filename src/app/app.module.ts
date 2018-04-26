@@ -32,7 +32,8 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
 import { FundsTabComponent } from './components/programming/existing-program-request/funds-tab/funds-tab.component';
 import { HeaderComponent } from './components/header/header.component';
-import { HeaderNologinComponent } from './components/header-nologin/header-nologin.component';
+import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
+import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 import { HomeComponent } from './components/home/home.component';
 import { JustificationTabComponent } from './components/programming/existing-program-request/justification-tab/justification-tab.component';
 import { LoginComponent } from './components/login/login.component';
@@ -85,7 +86,6 @@ import { VariantLineComponent } from './components/programs/program-view/variant
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
-import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -103,7 +103,6 @@ const appRoutes: Routes = [
   {path:'existing-program-request', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
-  {path:'header-nologin', component:HeaderNologinComponent},
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
@@ -146,7 +145,8 @@ const appRoutes: Routes = [
     FundsComponent,
     FundsTabComponent,
     HeaderComponent,
-    HeaderNologinComponent,
+    HeaderStrangerComponent,
+    HeaderUserComponent,
     HomeComponent,
     JustificationTabComponent,
     LoginComponent,
