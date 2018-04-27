@@ -100,12 +100,16 @@ export class CreatePomScenarioComponent implements OnInit {
 
   allowedits(): boolean {
     var my: CreatePomScenarioComponent = this;
+    console.log(this.years);
+    var ok: boolean = true;
     this.years.forEach(function (yr) {
       if (yr === my.fy) {
-        return false;
+        //console.log(yr + '===' + my.fy + ', so can\'t edit');
+        ok = false;
       }
     });
-    return true;
+
+    return ok;
   }
 
   fetch(){
