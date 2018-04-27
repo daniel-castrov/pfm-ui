@@ -3,7 +3,7 @@
   <div class="row main-content">
     <div class="col-lg-2">
     </div>
-    <div class="col-lg-10">
+    <div class="col-lg-10 applyform">
       <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
         <div class="h5 mb-2">New User Application</div>
         <span class="form-group inline-name">
@@ -141,7 +141,6 @@
           </div>
         </span>
         <div class="controls" [hidden]="formsubmitted">
-          <button class="btn btn-default" (click)="applyForm.form.reset()">Cancel</button>
           <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ndaSatisfied">
             Submit
           </button>

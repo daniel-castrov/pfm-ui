@@ -87,6 +87,7 @@ import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
+import { POMService } from './generated';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -216,6 +217,7 @@ const appRoutes: Routes = [
     UserService,
     RequestLinkService,
     RequestsService,
+    POMService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

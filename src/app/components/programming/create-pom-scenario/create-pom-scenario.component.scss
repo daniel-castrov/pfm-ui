@@ -1,0 +1,49 @@
+fieldset {
+  padding: 20px;
+}
+
+.table-editable {
+  position: relative;
+
+  th {
+    padding: 8px;
+  }
+
+  tr > td {
+   padding: 8px;
+  }
+
+  .fa {
+    font-size: 20px;
+  }
+}
+
+.table-remove {
+  color: #700;
+  cursor: pointer;
+
+  &:hover {
+    color: #f00;
+  }
+}
+
+.table-up, .table-down {
+  color: #007;
+  cursor: pointer;
+
+  &:hover {
+    color: #00f;
+  }
+}
+
+.table-add {
+  color: #070;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 0;
+
+  &:hover {
+    color: #0b0;
+  }
+}

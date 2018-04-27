@@ -18,6 +18,7 @@ tags:
 - name: "User"
 - name: "UserRole"
 - name: "TOA"
+- name: "POM"
 #
 ##############################################################################
 # PATHS
@@ -141,29 +142,6 @@ paths:
           description: "Community does not exist."
         500:
           description: "An unexpected error occurred."
-  /communities/{id}/toa:
-    post:
-      tags:
-      - "Community"
-      summary: "Set TOAs for a Community"
-      description: "Sets TOA values for a Community and its organizations"
-      operationId: "setToas"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "id"
-        description: "The community id"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "a ToaTransfer object"
-        required: true
-        schema:
-          $ref: "#/definitions/ToaTransfer"
   /communities/user/{userId}/role/{roleName}:
     get:
       tags:
@@ -194,6 +172,75 @@ paths:
         500:
           description: "An unexpected error occurred."
 # STOP COMMUNITIES
+##############################################################################
+# START POM
+  /pom/{communityId}/{year}:
+    post:
+      tags:
+      - "POM"
+      summary: "Creates a new POM scenario"
+      description: "Sets TOA values for a Community and its organizations"
+      operationId: "createPom"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "a POM object"
+        required: true
+        schema:
+          $ref: "#/definitions/Pom"
+    get:
+      tags:
+      - "POM"
+      summary: "Fetches an existing POM scenario"
+      description: "Gets the POM information for this year"
+      operationId: "getByIdAndYear"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+  /pom/{communityId}:
+    get:
+      tags:
+      - "POM"
+      summary: "Fetches all existing POMs for this community"
+      description: "Gets the POM information"
+      operationId: "getById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+# STOP POM
 ##############################################################################
 # START CREATEUSERREQUEST
   /createUserRequests:
@@ -1360,10 +1407,6 @@ definitions:
         type: "string"
       abbreviation:
         type: "string"
-      toas:
-        type: "array"
-        items:
-          $ref: "#/definitions/TOA"
   CreateUserRequest:
     type: "object"
     properties:
@@ -1584,10 +1627,6 @@ definitions:
         type: "string"
       abbreviation:
         type: "string"
-      toas:
-        type: "array"
-        items:
-          $ref: "#/definitions/TOA"
   TOA:
     type: "object"
     properties:
@@ -1664,14 +1703,26 @@ definitions:
         type: 'string'
       appropriation:
         type: 'string'
-  ToaTransfer:
+  Pom:
     type: "object"
     properties:
-      orgToas:
-        $ref: '#/definitions/IntMap'
-      year:
+      id:
+        type: 'string'
+      communityId:
+        type: 'string'
+      fy:
         type: 'integer'
-      toa:
-        type: 'number'
+      toas:
+        type: "array"
+        items:
+          $ref: "#/definitions/TOA"
+      orgToas:
+        type: "object"
+        additionalProperties:
+          type: 'array'
+          items:
+            $ref: "#/definitions/TOA"
+      phase:
+        type: 'string'
 ##############################################################################
 # ENDFILE

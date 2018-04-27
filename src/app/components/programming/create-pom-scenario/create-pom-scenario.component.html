@@ -1,36 +1,63 @@
 <j-header></j-header>
-<div *ngIf="header.isAuthenticated && community">
-  <ng-container *ngIf="modelyear!=fy">
-    <div>
-      <h5>Create POM Scenario for FY {{fy}} based on PB
-        <select ([ngModel])="modelyear" (change)="setYear($event.target.value)">
-          <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
-        </select>
-      </h5>
-    </div>
-    <div>Set Overall TOA for {{community.abbreviation}} Community
-      <input [(ngModel)]="toa">
-    </div>
-  
-    <div *ngFor="let o of orgs">
-      <div>
-        <span>{{o.abbreviation}}</span>
-        <input [(ngModel)]="orgtoas[o.id]">
-      </div>
-    </div>
-    <button (click)="submit()">Create Scenario</button>
-  </ng-container>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated && community">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-lg-6 col-md-12 mb-2">
+          <div class="h5 mb-2">
+          <ng-container *ngIf="allowedits()">
+            <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY {{fy}} based on PB</span>
+            <select class="h5 form-control-sm" ([ngModel])="modelyear" (change)="setYear($event.target.value)">
+              <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
+            </select>
+          </ng-container>
+          <ng-container *ngIf="!allowedits()">
+            <span class="h5 mr-sm-2 mb-2">POM Scenario for FY {{fy}}</span>
+          </ng-container>
+          </div>
+          <div id="toa1" class="table-editable table-bordered table-striped">
+            <table class="table">
+              <tr>
+                <th>Community/Organization</th>
+                <th>{{fy}}</th>
+                <th>{{fy+1}}</th>
+                <th>{{fy+2}}</th>
+                <th>{{fy+3}}</th>
+                <th>{{fy+4}}</th>
+              </tr>
+              <tr>
+                <th>{{community.abbreviation}} Overall</th>
+                <th [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy)">{{toas.get(fy)}}</th>
+                <th [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+1)">{{toas.get(fy+1)}}</th>
+                <th [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)">{{toas.get(fy+2)}}</th>
+                <th [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+3)">{{toas.get(fy+3)}}</th>
+                <th [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+4)">{{toas.get(fy+4)}}</th>
+              </tr>
 
-  <ng-container *ngIf="modelyear===fy">
-    <div>
-      <h5>POM Scenario for FY {{fy}}</h5>
-    </div>
-    <div>Overall TOA for {{community.abbreviation}} Community {{toa}}</div>
-  
-    <div *ngFor="let o of orgs">
-      <div>
-        <span>{{o.abbreviation}}</span> {{orgtoas[o.id]}}
+              <tr *ngFor="let o of orgs">
+                <td>{{o.abbreviation}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy)">{{orgtoas.get(o.id).get(fy)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+1)">{{orgtoas.get(o.id).get(fy+1)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)">{{orgtoas.get(o.id).get(fy+2)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+3)">{{orgtoas.get(o.id).get(fy+3)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)">{{orgtoas.get(o.id).get(fy+4)}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="allowedits()">
+        <div class="col-lg-8 col-md-12 mb-3">
+          <button class="btn btn-primary" (click)="submit()">Create Scenario</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 col-md-12">
+          <div class="h6">Progress Report:</div>
+          <fieldset class="mb-3">
+          </fieldset>
+        </div>
       </div>
     </div>
-  </ng-container>
+  </div>
 </div>
