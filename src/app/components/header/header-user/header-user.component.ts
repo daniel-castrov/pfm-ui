@@ -1,6 +1,5 @@
 import { RequestsService } from './../../../services/requests.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
 
 // Generated
 import { AuthUser } from '../../../generated/model/authUser';
@@ -22,17 +21,12 @@ export class HeaderUserComponent implements OnInit {
   constructor(
     private requestLinkService:RequestLinkService,
     private requestsService: RequestsService,
-    private elevationService: ElevationService,
-    private router: Router
+    private elevationService: ElevationService
   ) {
     this.requestLinkService.requestLinks.subscribe( val => this.requests=val);
   }
 
   ngOnInit() {
-    if (!this.authUser.currentCommunity) {
-      this.router.navigate(['my-community'])
-    }
-
     if (this.authUser.rolenames.includes('User_Approver')) {
       this.requests = this.requestsService.getRequests();
     } else {

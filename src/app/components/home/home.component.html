@@ -1,5 +1,5 @@
-<app-header></app-header>
-<div class="row main-content" *ngIf="header.isAuthenticated">
+<j-header></j-header>
+<div class="row main-content" *ngIf="header.authUser">
   <div class="error" *ngFor="let error of resultError">{{error}}</div>
   <div class="col-lg-5 col-sm-10">
     <div class="card-header">
@@ -29,7 +29,7 @@
       Favorite Links
     </div>
     <div class="card-container">
-      <span class="add-link" (click)="fireEvent($event)">
+      <span class="add-link">
         <i class="fa fa-plus" aria-hidden="true"></i> Add Link</span>
     </div>
   </div>
