@@ -3,16 +3,16 @@
   <div class="row main-content" *ngIf="header.isloggedin && community">
     <div class="col-md-12">
       <div class="row">
-        <div class="col-md-6 mb-3">
-          <div>
+        <div class="col-lg-6 col-md-12 mb-2">
+          <div class="h5 mb-2">
           <ng-container *ngIf="allowedits()">
-            <span class="h5 mr-sm-2 mb-4">Create POM Scenario for FY {{fy}} based on PB</span>
+            <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY {{fy}} based on PB</span>
             <select class="h5 form-control-sm" ([ngModel])="modelyear" (change)="setYear($event.target.value)">
               <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
             </select>
           </ng-container>
           <ng-container *ngIf="!allowedits()">
-            <span class="h5 mr-sm-2 mb-4">POM Scenario for FY {{fy}}</span>
+            <span class="h5 mr-sm-2 mb-2">POM Scenario for FY {{fy}}</span>
           </ng-container>
           </div>
           <div id="toa1" class="table-editable table-bordered table-striped">
@@ -35,7 +35,7 @@
               </tr>
 
               <tr *ngFor="let o of orgs">
-                <td class="pom-label mb-1">{{o.abbreviation}}</td>
+                <td>{{o.abbreviation}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy)">{{orgtoas.get(o.id).get(fy)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+1)">{{orgtoas.get(o.id).get(fy+1)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)">{{orgtoas.get(o.id).get(fy+2)}}</td>
@@ -47,12 +47,12 @@
         </div>
       </div>
       <div class="row" *ngIf="allowedits()">
-        <div class="col-8 mb-3">
+        <div class="col-lg-8 col-md-12 mb-3">
           <button class="btn btn-primary" (click)="submit()">Create Scenario</button>
         </div>
       </div>
       <div class="row">
-        <div class="col-8">
+        <div class="col-lg-8 col-md-12">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
           </fieldset>
