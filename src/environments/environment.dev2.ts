@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://ec2-54-174-141-253.compute-1.amazonaws.com:8445/jscbis'
+  apiUrl: 'https://dev2.ironparrot.com/jscbis'
 };
