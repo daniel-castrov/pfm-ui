@@ -13,6 +13,11 @@ fieldset {
   .toa-table-title {
     background-color: #ffffff;
   }
+
+  .data-hover:hover {
+    cursor: pointer;
+    background-color: #cccccc;
+  }
 }
 
 .table-editable {
