@@ -12,44 +12,60 @@
         <div class="col-md-10">
           <fieldset>
             <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filter By</legend>
-              <div class="row fieldset-padding">
-                <div class="col-md-2">
-                  <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox"  id="defaultCheck1" [(ngModel)]="useappropriations"
+            <div class="row fieldset-padding">
+              <table class="program-search-table">
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox"  id="defaultCheck1" [(ngModel)]="useappropriations"
                      (change)="search()">
-                    <label class="form-check-label" for="defaultCheck1">Appropriation</label>
-                  </div>
-                  <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies"
+                     <label class="form-check-label primary-label" for="defaultCheck1">Appropriation</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.appropriation" name="appropriation"
+                              [disabled]="!useappropriations" (change)="search()">
+                        <option *ngFor="let a of appropriations" [ngValue]="a" [selected]="">{{a}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies"
                        (change)="search()">
-                    <label class="form-check-label" for="defaultCheck2">OpAgency</label>
-                  </div>
-                  <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins"
-                        (change)="search()">
-                    <label class="form-check-label" for="defaultCheck3">BA/BLIN</label>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="form-group inline-name">
-                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.appropriation" name="appropriation"
-                            [disabled]="!useappropriations" (change)="search()">
-                      <option *ngFor="let a of appropriations" [ngValue]="a" [selected]="">{{a}}</option>
-                    </select>
-                  </div>
-                  <div class="form-group inline-name">
-                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.agency" name="agency"
+                       <label class="form-check-label primary-label " for="defaultCheck2">OpAgency</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.agency" name="agency"
                             [disabled]="!useagencies" (change)="search()">
-                      <option *ngFor="let a of agencies" [ngValue]="a">{{a}}</option>
-                    </select>
-                  </div>
-                  <div class="form-group inline-name">
-                    <select class="form-control-sm mb-2 mr-sm-1" [(ngModel)]="filter.blin" name="blin"
+                        <option *ngFor="let a of agencies" [ngValue]="a">{{a}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins"
+                        (change)="search()">
+                        <label class="form-check-label primary-label " for="defaultCheck3">BA/BLIN</label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.blin" name="blin"
                             [disabled]="!useblins" (change)="search()">
-                      <option *ngFor="let a of blins" [ngValue]="a">{{a}}</option>
-                    </select>
-                  </div>
-                </div>
+                          <option *ngFor="let a of blins" [ngValue]="a">{{a}}</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </div>
             </fieldset>
             <div class="h6">Select Program of Interest</div>
