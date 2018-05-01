@@ -60,7 +60,6 @@ import { RequestAccessChangeComponent } from './components/user-management/manag
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { ScheduleTabComponent } from './components/programming/existing-program-request/schedule-tab/schedule-tab.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
-import { SelectRequestDropdownComponent } from './components/programming/select-program-request/select-request-dropdown/select-request-dropdown.component';
 import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
@@ -119,7 +118,6 @@ const appRoutes: Routes = [
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
-  {path:'select-request', component:SelectRequestDropdownComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
@@ -181,8 +179,7 @@ const appRoutes: Routes = [
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
-    VariantLineComponent,
-    SelectRequestDropdownComponent    
+    VariantLineComponent
   ],
 
   imports: [
