@@ -1,7 +1,7 @@
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
-    <div class="col-md-12">
+    <div class="col-12">
       <div class="row">
         <div class="col-md-7 mb-4">
           <span class="h5">Programmatic Request for POM 19</span>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="row mb-2">
-        <div class="col-md-10">
+        <div class="col-md-10 col-sm-12">
           <table class="summary-table row-light pull-right mb-3">
             <thead>
               <tr>
@@ -29,7 +29,7 @@
             </thead>
             <tbody>
               <tr class="font-lt-gray font-weight-bold">
-                <td class="text-right">PB18</td>
+                <td class="text-right">Baseline</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
@@ -37,7 +37,7 @@
                 <td class="text-right">-</td>
               </tr>
               <tr class="font-weight-bold">
-                <td class="text-right">TOA</td>
+                <td class="text-right">Allocated TOA</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
@@ -63,11 +63,9 @@
             </tbody>
           </table>
 
-          <table class="GeneratedTable">
-
+          <table class="pr-table">
             <thead>
               <tr class="white-top-table-header font-italic">
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -84,9 +82,6 @@
                 <td></td>
               </tr>
               <tr>
-                <th>
-                  <span><i class="fa fa-trash" aria-hidden="true"></i></span>
-                </th>
                 <th class="row-width">Program</th>
                 <th class="row-width">Subprogram</th>
                 <th class="row-width">Varaint</th>
@@ -105,7 +100,6 @@
             </thead>
             <tbody>
               <tr>
-                <td class="row-lt-gray text-center" rowspan="2"><input type="checkbox"></td>
                 <td class="row-lt-gray text-center" rowspan="2">NGCD</td>
                 <td class="row-lt-gray text-center" rowspan="2">Increment 1</td>
                 <td class="row-lt-gray text-center" rowspan="2"></td>
@@ -121,7 +115,7 @@
                 <td class="text-right"></td>
                 <td class="text-right"></td>
               </tr>
-              <tr class="row-lighte">
+              <tr class="row-blue">
                 <td class="">POM</td>
                 <td class="text-right">0</td>
                 <td class="text-right">0</td>
@@ -135,7 +129,6 @@
               </tr>
 
               <tr class="row-border-top">
-                <td class="row-lt-gray text-center" rowspan="2"><input type="checkbox"></td>
                 <td class="row-lt-gray text-center" rowspan="2">NGCD</td>
                 <td class="row-lt-gray text-center" rowspan="2">Increment 2</td>
                 <td class="row-lt-gray text-center" rowspan="2"></td>
@@ -152,7 +145,7 @@
                 <td class="text-right"></td>
 
               </tr>
-              <tr class="row-light">
+              <tr class="row-blue">
                 <td class="">POM</td>
                 <td class="text-right">0</td>
                 <td class="text-right">0</td>
@@ -163,11 +156,9 @@
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
-
               </tr>
 
               <tr class="row-border-top">
-                <td class="row-lt-gray text-center" rowspan="2"><input type="checkbox"></td>
                 <td class="row-lt-gray text-center" rowspan="2">JESS</td>
                 <td class="row-lt-gray text-center" rowspan="2"></td>
                 <td class="row-lt-gray text-center" rowspan="2">Varient XX</td>
@@ -184,7 +175,7 @@
                 <td class="text-right"></td>
 
               </tr>
-              <tr class="row-light">
+              <tr class="row-blue">
                 <td class="">POM</td>
                 <td class="text-right">0</td>
                 <td class="text-right">0</td>
@@ -198,7 +189,6 @@
 
               </tr>
               <tr class="row-border-top">
-                <td class="row-lt-gray text-center" rowspan="2"><input type="checkbox"></td>
                 <td class="row-lt-gray text-center" rowspan="2">Prog1</td>
                 <td class="row-lt-gray text-center" rowspan="2"></td>
                 <td class="row-lt-gray text-center" rowspan="2"></td>
@@ -215,7 +205,7 @@
                 <td class="text-right"></td>
 
               </tr>
-              <tr class="row-light">
+              <tr class="row-blue">
                 <td class="">POM</td>
                 <td class="text-right">0</td>
                 <td class="text-right">0</td>
@@ -226,14 +216,13 @@
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
-
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10 col-sm-12">
           <fieldset>
             <legend>Add New Programmatic Request for:</legend>
               <form>

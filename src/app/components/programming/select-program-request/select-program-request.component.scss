@@ -2,7 +2,7 @@ fieldset {
   padding: 20px;
 }
 
-.GeneratedTable {
+.pr-table {
   width: 100%;
   background-color: #ffffff;
   border-collapse: collapse;
@@ -10,18 +10,18 @@ fieldset {
   color: #000000;
 }
 
-.GeneratedTable td, .GeneratedTable th {
+.pr-table td, .pr-table th {
   border: 1px solid #7b8389;
   padding: 6px;
   padding: 2px 10px;
 }
 
-.GeneratedTable th {
+.pr-table th {
   font-weight: 500;
   text-align: center;
 }
 
-.GeneratedTable thead {
+.pr-table thead {
   background-color: #24527b;
   color: #ffffff;
 }
@@ -63,7 +63,6 @@ fieldset {
   color: #000;
 }
 
-
 .row-border-bottom {
   border-bottom: 4px solid #7b8389;
 }
@@ -94,7 +93,7 @@ fieldset {
 }
 
 .row-width {
-  width: 140px;
+  width: 160px;
 }
 
 .row-blue {
