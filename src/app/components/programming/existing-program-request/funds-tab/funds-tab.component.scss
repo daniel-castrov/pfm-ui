@@ -39,6 +39,11 @@ table.GeneratedTable thead {
   background-color: #ddd;
 }
 
+.row-light {
+  background-color: #eae9e9;
+  color: #000000;
+}
+
 .row-width {
   width: 190px;
 }
@@ -48,6 +53,12 @@ table.GeneratedTable thead {
   color: #000000;
 }
 
+.cell-lt-blue {
+  background-color: #c6d9f1;
+  color: #000000;
+}
+
+
 .row-lt-gray {
   background-color: #ccc;
   color: #000000;
@@ -56,4 +67,17 @@ table.GeneratedTable thead {
 .row-lt-green {
   background-color: #ebf2de;
   color: #000;
+}
+
+.white-top-table-header  {
+  background-color: #fff !important;
+  border: 1px solid #fff !important;
+  color: #000;
+}
+
+.white-top-table-header > td {
+  background-color: #fff !important;
+  border: 1px solid #fff !important;
+  color: #000;
+  text-align: center;
 }
