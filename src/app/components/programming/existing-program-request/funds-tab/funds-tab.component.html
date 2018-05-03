@@ -192,59 +192,80 @@
 </div>
 
 <div class="row">
-  <div class="col-md-9 col-sm-10 mb-3">
+  <div class="col-lg-10 col-md-10 mb-3">
     <fieldset>
       <legend>Add Funding Line #1</legend>
-      <span class="form-group inline-name">
-        <label class="mb-1 mr-sm-2">RDT&amp;E</label>
-        <select class="form-control-sm mb-2 mr-sm-4">
-           <option>items</option>
-           <option>items</option>
-           <option>items</option>
-         </select>
-      </span>
-      <span class="form-group inline-name">
-        <label class="mb-1 mr-sm-2">BA7</label>
-        <select class="form-control-sm mb-2 mr-sm-4">
-           <option>items</option>
-           <option>items</option>
-           <option>items</option>
-        </select>
-      </span>
-      <span class="form-group">
-        <label class="badge badge-light mr-sm-4"><h6>Item</h6></label>
-      </span>
-      <span class="form-group">
-        <label class="badge badge-light mr-sm-4"><h6>OpAgency</h6></label>
-      </span>
-      <span class="form-group">
-        <label class="badge badge-light mr-sm-4"><h6>Prog Element</h6></label>
-      </span>
-      <div id="pr-funding-line" class="table-editable">
-        <table class="pr-funds-table">
-          <thead>
-            <tr>
-              <th>FY19</th>
-              <th>FY20</th>
-              <th>FY21</th>
-              <th>FY22</th>
-              <th>FY23</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="row-lt-blue">
-              <td contenteditable="true" class="text-right data-hover">-</td>
-              <td contenteditable="true" class="text-right data-hover">-</td>
-              <td contenteditable="true" class="text-right data-hover">3,153</td>
-              <td contenteditable="true" class="text-right data-hover">8,077</td>
-              <td contenteditable="true" class="text-right data-hover">10,898</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="row mb-3">
+        <div class="col-2">
+          <span class="form-group">
+            <div class="mb-2 primary-label">Appropriation</div>
+              <select class="form-control-sm dropdown-width">
+               <option>RDT&amp;E</option>
+             </select>
+           </span>
+          </div>
+          <div class="col-2">
+            <span class="form-group">
+              <div class="mb-2 primary-label">BA/BLIN</div>
+                <select class="form-control-sm dropdown-width">
+                 <option>BA7</option>
+              </select>
+            </span>
+          </div>
+          <div class="col-2">
+            <span class="form-group">
+              <div class="mb-2 primary-label">Item</div>
+                <select class="form-control-sm dropdown-width">
+                 <option>Item</option>
+               </select>
+            </span>
+          </div>
+          <div class="col-2">
+            <span class="form-group">
+              <div class="mb-2 primary-label">OpAgency</div>
+                <select class="form-control-sm dropdown-width">
+                 <option>OpAgency</option>
+               </select>
+            </span>
+          </div>
+          <div class="col-2">
+            <span class="form-group">
+              <div class="mb-2 primary-label">Program Element</div>
+              <select class="form-control-sm dropdown-width">
+                 <option>Program Element</option>
+               </select>
+            </span>
+        </div>
       </div>
+      <div class="row">
+      <div class="col-12">
+        <div id="pr-funding-line" class="table-editable">
+          <table class="pr-funds-table">
+            <thead>
+              <tr>
+                <th>FY19</th>
+                <th>FY20</th>
+                <th>FY21</th>
+                <th>FY22</th>
+                <th>FY23</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-lt-blue">
+                <td contenteditable="true" class="text-right data-hover">-</td>
+                <td contenteditable="true" class="text-right data-hover">-</td>
+                <td contenteditable="true" class="text-right data-hover">3,153</td>
+                <td contenteditable="true" class="text-right data-hover">8,077</td>
+                <td contenteditable="true" class="text-right data-hover">10,898</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     </fieldset>
   </div>
-  <div class="col-md-3 col-sm-1">
+  <div class="col-md-2 col-sm-1">
     <button class="btn btn-primary">
         <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
         Add Funding Line

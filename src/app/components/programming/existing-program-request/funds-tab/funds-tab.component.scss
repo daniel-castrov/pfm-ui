@@ -1,3 +1,5 @@
+fieldset { padding: 20px;}
+
 .pr-funds-table {
   width: 100%;
   background-color: #ffffff;
@@ -121,5 +123,8 @@
   &:hover {
     color: #0b0;
   }
+}
 
+.dropdown-width {
+  width: 100%;
 }
