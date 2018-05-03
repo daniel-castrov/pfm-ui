@@ -14,7 +14,7 @@
           </span>
         </div>
       </div>
-      <div class="row mb-2">
+      <div class="row mb-3">
         <div class="col-md-10 col-sm-12">
           <table class="summary-table row-light pull-right mb-3">
             <thead>
@@ -28,7 +28,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="font-lt-gray font-weight-bold">
+              <tr class="font-dark-grey font-weight-bold">
                 <td class="text-right">Baseline</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
@@ -63,7 +63,7 @@
             </tbody>
           </table>
 
-          <table class="pr-table">
+          <table class="pr-table main-view-table">
             <thead>
               <tr class="white-top-table-header font-italic">
                 <td></td>
@@ -217,8 +217,100 @@
                 <td class="text-right"></td>
                 <td class="text-right"></td>
               </tr>
+              <tr class="row-border-top">
+                <td class="row-lt-gray text-center" rowspan="2">
+                  <span>
+                    <input class="form-check-input" type="checkbox">
+                  </span>
+                  <span>Prog1</span>
+                </td>
+                <td class="row-lt-gray text-center" rowspan="2">XYZ</td>
+                <td class="row-lt-gray text-center" rowspan="2"></td>
+                <td class="row-lt-gray text-center" rowspan="2"><a href="">Saved 1/24/2018</a></td>
+                <td class="">PBR</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+              </tr>
+              <tr class="row-blue">
+                <td class="">POM</td>
+                <td class="text-right">0</td>
+                <td class="text-right">0</td>
+                <td class="text-right">11</td>
+                <td class="text-right">13</td>
+                <td class="text-right">19</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+              </tr>
+              <tr class="row-border-top">
+                <td class="row-lt-gray text-center" rowspan="2">
+                  <span>
+                    <input class="form-check-input" type="checkbox">
+                  </span>
+                  <span>Prog2</span>
+                </td>
+                <td class="row-lt-gray text-center" rowspan="2"></td>
+                <td class="row-lt-gray text-center" rowspan="2"></td>
+                <td class="row-lt-gray text-center" rowspan="2"><a href="">Saved 1/24/2018</a></td>
+                <td class="">PBR</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+              </tr>
+              <tr class="row-blue">
+                <td class="">POM</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right">81</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+              </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <button class="btn btn-danger" data-toggle="modal"  href="#myModal">
+            <i class="fa fa-trash icon-pad" aria-hidden="true"></i>
+            Delete PR
+          </button>
+          <div id="myModal" class="modal fade in">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <a class="btn" data-dismiss="modal">
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to delete <span class="delete-program">Prog1 Subprogram XYZ</span>?</p>
+                  <span class="mb-2">
+                    <button type="button" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
