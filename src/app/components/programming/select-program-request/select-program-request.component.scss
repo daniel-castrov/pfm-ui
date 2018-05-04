@@ -35,6 +35,17 @@ fieldset {
   color: $white;
 }
 
+.delete-pr {
+  > i  {
+    opacity: .9;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  > i:hover {
+    opacity: 1;
+  }
+}
+
 .summary-table {
   width: 710px;
   border-collapse: collapse;
