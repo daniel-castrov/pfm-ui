@@ -36,7 +36,7 @@ fieldset {
 }
 
 .summary-table {
-  width: 60%;
+  width: 710px;
   border-collapse: collapse;
   border: $grey-border;
   color: $black;
@@ -57,6 +57,10 @@ fieldset {
 .summary-table thead {
   color: $black;
   font-weight: bold;
+}
+
+.large-column {
+  width: 140px;
 }
 
 .white-top-table-header  {
