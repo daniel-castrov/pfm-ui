@@ -12,8 +12,6 @@ import { JoinCommunityRequest } from '../../../generated/model/joinCommunityRequ
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
-import { RequestLinkService } from '../../header/header-user/requestLink.service';
-import { Request } from '../../../services/request';
 
 @Component({
   selector: 'app-community-join',
@@ -24,7 +22,6 @@ import { Request } from '../../../services/request';
 export class CommunityJoinComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
-
 
   requestId: string;
   joinCommunityRequest: JoinCommunityRequest;
@@ -38,8 +35,7 @@ export class CommunityJoinComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public communityService: CommunityService,
-    public userService: UserService,
-    public requestLinkService: RequestLinkService,
+    public userService: UserService
   ) {
 
     this.route.params.subscribe((params: Params) => {
@@ -91,15 +87,6 @@ export class CommunityJoinComponent implements OnInit {
   }
 
   approve() {
-    let my: CommunityJoinComponent = this;
-    let reqLinks:Request[];
-    reqLinks = my.header.headerUserComponent.requests.filter(
-      function (el) { return el.requestId !== my.requestId }
-    );
-
-
-    this.requestLinkService.requestLinks.next(reqLinks);
-
     this.submit("\"APPROVED\"");
   }
 
@@ -108,21 +95,9 @@ export class CommunityJoinComponent implements OnInit {
   }
 
   submit(status) {
-    let my: CommunityJoinComponent = this;
-    let result: RestResult;
-    my.joinCommunityRequestService.status(status, my.joinCommunityRequest.id)
+    this.joinCommunityRequestService.status(status, this.joinCommunityRequest.id)
       .subscribe((c) => {
-        result = c;
-        my.resultError.push(result.error);
-
-        // How do I get this back to the header?
-        my.header.headerUserComponent.requests = my.header.headerUserComponent.requests.filter(
-          function (el) { return el.requestId !== my.requestId }
-        );
-
-        my.router.navigate(['./home']);
-
+        this.router.navigate(['./home']);
       });
-
   }
 }

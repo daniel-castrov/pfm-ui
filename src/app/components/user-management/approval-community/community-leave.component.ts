@@ -12,8 +12,6 @@ import { LeaveCommunityRequest } from '../../../generated/model/leaveCommunityRe
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
-import { RequestLinkService } from '../../header/header-user/requestLink.service';
-import { Request } from '../../../services/request';
 
 @Component({
   selector: 'app-community-leave',
@@ -36,8 +34,7 @@ export class CommunityLeaveComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public communityService: CommunityService,
-    public userService: UserService,
-    public requestLinkService: RequestLinkService,
+    public userService: UserService
   ) {
 
     this.route.params.subscribe((params: Params) => {
@@ -88,13 +85,6 @@ export class CommunityLeaveComponent implements OnInit {
   }
 
   approve() {
-    let my: CommunityLeaveComponent = this;
-    let reqLinks: Request[];
-    reqLinks = my.header.headerUserComponent.requests.filter(
-      function (el) { return el.requestId !== my.requestId }
-    );
-
-    this.requestLinkService.requestLinks.next(reqLinks);
     this.submit("\"APPROVED\"");
   }
 
@@ -103,12 +93,8 @@ export class CommunityLeaveComponent implements OnInit {
   }
 
   submit(status) {
-
-    let result: RestResult;
     this.leaveCommunityRequestService.status(status, this.leaveCommunityRequest.id)
       .subscribe((c) => {
-        result = c;
-        this.resultError.push(result.error);
         this.router.navigate(['./home']);
       });
   }

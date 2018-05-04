@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { AuthUser } from '../../generated/model/authUser';
 import { RestResult } from '../../generated/model/restResult';
 import { BlankService } from '../../generated/api/blank.service';
-import { HeaderUserComponent } from './header-user/header-user.component';
 
 @Component({
   selector: 'j-header',
@@ -17,7 +16,6 @@ import { HeaderUserComponent } from './header-user/header-user.component';
 })
 export class HeaderComponent implements OnInit {
 
-  @ViewChild(HeaderUserComponent) headerUserComponent;
   isAuthenticated: boolean = false;
   authUser: AuthUser;
 
