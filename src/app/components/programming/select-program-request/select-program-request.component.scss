@@ -36,7 +36,7 @@ fieldset {
 }
 
 .summary-table {
-  width: 80%;
+  width: 60%;
   border-collapse: collapse;
   border: $grey-border;
   color: $black;
@@ -54,11 +54,10 @@ fieldset {
   text-align: center;
 }
 
-.summary-table  thead {
+.summary-table thead {
   color: $black;
   font-weight: bold;
 }
-
 
 .white-top-table-header  {
   background-color: $white !important;
@@ -70,6 +69,11 @@ fieldset {
   background-color: $white !important;
   border: 1px solid $white !important;
   color: $black;
+}
+
+.white-cell {
+  background-color: $white !important;
+  border: 1px solid $white !important;
 }
 
 .row-border-bottom {
@@ -97,7 +101,12 @@ fieldset {
 }
 
 .row-width {
-  width: 160px;
+  width: 90px;
+}
+
+.cell-lt-blue {
+  background-color: $light-blue;
+  color: $black;
 }
 
 .row-blue {
@@ -107,6 +116,11 @@ fieldset {
 
 .row-lt-gray {
   background-color: #ccc;
+  color: $black;
+}
+
+.row-light {
+  background-color: $light-grey;
   color: $black;
 }
 
