@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let request of header.requests">
+          <tr *ngFor="let request of requests">
             <td>{{request.date | date:'MM/dd/yyyy'}}</td>
             <td>{{request.date | date:'h:mma'}}</td>
             <td><a href="{{request.link}}">{{request.approveRequestsPageType}}</a></td>

@@ -1,3 +1,4 @@
+import { HeaderUserComponent } from './header-user/header-user.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +17,7 @@ import { BlankService } from '../../generated/api/blank.service';
 })
 export class HeaderComponent implements OnInit {
 
+  @ViewChild(HeaderUserComponent) headerUserComponent: HeaderUserComponent;
   isAuthenticated: boolean = false;
   authUser: AuthUser;
 
@@ -27,22 +29,32 @@ export class HeaderComponent implements OnInit {
       config.placement = 'left';
   }
 
-  ngOnInit() {
-    this.blankService.blank("response", true).subscribe( (httpResponse: HttpResponse<RestResult>) => {
-      const authHeader = httpResponse.headers.get('Authorization');
-      this.isAuthenticated = true;
-      if(authHeader) {
-        this.authUser = JSON.parse(atob(authHeader));
-        if (!this.authUser.currentCommunity) {
-          this.router.navigate(['my-community'])
+  ngOnInit(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.blankService.blank("response", true).subscribe( (httpResponse: HttpResponse<RestResult>) => {
+        const authHeader = httpResponse.headers.get('Authorization');
+        this.isAuthenticated = true;
+        if(authHeader) {
+          this.authUser = JSON.parse(atob(authHeader));
+          if (!this.authUser.currentCommunity) {
+            this.router.navigate(['my-community'])
+          }
+        } else {
+          this.router.navigate(['apply'])
         }
-      } else {
-        this.router.navigate(['apply'])
-      }
-    },
-    ()=>{
-      this.router.navigate(['/'])
+        resolve();
+      },
+      ()=>{
+        this.router.navigate(['/'])
+        reject();
+      });
     });
+  }
+
+  async refreshActions() {
+    await this.ngOnInit();
+    this.headerUserComponent.authUser = {...this.authUser}
+    this.headerUserComponent.ngOnInit();
   }
 
 }

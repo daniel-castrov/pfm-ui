@@ -35,7 +35,7 @@ export class RequestComponent implements OnChanges {
     this.service.create(request).subscribe(() => {
       this.feedback.flash("You will receive an email once your request is processed.");
       this.updateRequestedCommuntyIds();
-      this.header.ngOnInit();
+      this.header.refreshActions();
     });
     delete this.selectedCommunityId;
   }
