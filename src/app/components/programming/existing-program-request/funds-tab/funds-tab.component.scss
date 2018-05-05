@@ -1,19 +1,28 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+
 fieldset { padding: 20px;}
 
 .pr-funds-table {
   width: 100%;
-  background-color: #ffffff;
+  background-color: $white;
   border-collapse: collapse;
-  border: 1px solid #7b8389;
-  color: #000000;
+  border: 1px solid $grey-border;
+  color: $black;
 
   thead {
-    background-color: #24527b;
-    color: #ffffff;
+    background-color: $primary-color;
+    color: $white;
   }
 
   th {
-    border: 1px solid #7b8389;
+    border: $grey-border;
     padding: 6px;
     padding: 2px 10px;
     font-weight: 500;
@@ -21,65 +30,50 @@ fieldset { padding: 20px;}
   }
 
   td {
-    border: 1px solid #7b8389;
+    border: $grey-border;
     padding: 6px;
     padding: 2px 10px;
   }
 
-  .row-width {
+  .header-column-width {
     width: 160px;
   }
 
-  .data-hover:hover {
-    cursor: pointer;
-    background-color: #eae9e9;;
-  }
-
-  .row-border-bottom {
-    border-bottom: 4px solid #7b8389;
-  }
-
-  .row-white {
-    background-color: #ffffff;
+  .cell-white {
+    background-color: $white;
   }
 
   .row-border-top {
-    border-top: 4px solid #7b8389;
+    border-top: $grey-border;
   }
 
-  .light-cell {
-    background-color: #ddd;
+  .mediu-grey-cell {
+    background-color: $medium-grey;
   }
 
   .row-light {
-    background-color: #eae9e9;
-    color: #000000;
+    background-color: $light-grey;
+    color: $black;
   }
 
-  .row-lt-blue {
+  .editable-field {
     background-color: #c6d9f1;
-    color: #000000;
-  }
-
-  .cell-lt-blue {
-    background-color: #c6d9f1;
-    color: #000000;
+    color: $black;
+    text-align: right;
+    &:hover {
+      cursor: pointer;
+      background-color: $light-grey;
+    }
   }
 
   .row-lt-gray {
     background-color: #ccc;
-    color: #000000;
-  }
-
-  .white-top-table-header  {
-    background-color: #fff !important;
-    border: 1px solid #fff !important;
-    color: #000;
+    color: $black;
   }
 
   .white-top-table-header > td {
-    background-color: #fff !important;
-    border: 1px solid #fff !important;
+    background-color: $white !important;
+    border: 1px solid $white !important;
     color: #000;
     text-align: center;
   }

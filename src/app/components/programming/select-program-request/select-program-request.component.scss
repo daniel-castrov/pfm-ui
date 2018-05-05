@@ -115,7 +115,7 @@ fieldset {
   border-top: 4px solid #7b8389;
 }
 
-.row-width {
+.header-column-width {
   width: 90px;
 }
 
@@ -124,18 +124,8 @@ fieldset {
   color: $black;
 }
 
-.row-blue {
-  background-color: $light-blue;
-  color: $black;
-}
-
 .row-lt-gray {
   background-color: #ccc;
-  color: $black;
-}
-
-.row-light {
-  background-color: $light-grey;
   color: $black;
 }
 
@@ -190,8 +180,8 @@ a.font-danger:hover {
   }
 }
 
-.main-view-table {
-  width: 100%;
-  height: 400px;
-  overflow-y: scroll;
-}
+// .main-view-table {
+//   width: 100%;
+//   height: 400px;
+//   overflow-y: scroll;
+// }
