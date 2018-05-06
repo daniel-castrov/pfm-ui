@@ -12,6 +12,7 @@ import { LeaveCommunityRequest } from '../../../generated/model/leaveCommunityRe
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
+import { FeedbackComponent } from '../../feedback/feedback.component';
 
 @Component({
   selector: 'app-community-leave',
@@ -21,6 +22,7 @@ import { UserService } from '../../../generated/api/user.service';
 export class CommunityLeaveComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   requestId: string;
   leaveCommunityRequest: LeaveCommunityRequest;
@@ -92,10 +94,15 @@ export class CommunityLeaveComponent implements OnInit {
     this.submit("\"DENIED\"");
   }
 
-  submit(status) {
-    this.leaveCommunityRequestService.status(status, this.leaveCommunityRequest.id)
-      .subscribe((c) => {
-        this.router.navigate(['./home']);
-      });
+  async submit(status) {
+    try {
+      await this.leaveCommunityRequestService.status(status, this.leaveCommunityRequest.id).toPromise();
+      this.router.navigate(['./home']);
+    } catch(e) {
+      this.feedback.failure(e.message);
+    }
   }
+
+
+
 }

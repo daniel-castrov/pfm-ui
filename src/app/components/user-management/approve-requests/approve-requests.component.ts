@@ -27,17 +27,22 @@ export class ApproveRequestsComponent implements OnInit {
   }
 
   async approve(request: Request) {
-    await request.approve();
-    this.feedback.flash("The request has been approved.");
-    this.ngOnInit();
-    this.header.refreshActions();
+    this.submit(()=>request.approve(), "approved");
   }
 
   async deny(request: Request) {
-    await request.deny();
-    this.feedback.flash("The request has been denied.");
-    this.ngOnInit();
-    this.header.refreshActions();
+    this.submit(()=>request.deny(), "denied");
+  }
+
+  async submit(action: any, message: string) {
+    try {
+      await action();
+      this.feedback.success("The request has been " + message);
+      this.ngOnInit();
+      this.header.refreshActions();
+    } catch(e) {
+      this.feedback.failure(e.message);
+    }
   }
 
 }

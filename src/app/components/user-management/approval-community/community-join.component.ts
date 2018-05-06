@@ -12,6 +12,7 @@ import { JoinCommunityRequest } from '../../../generated/model/joinCommunityRequ
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
+import { FeedbackComponent } from '../../feedback/feedback.component';
 
 @Component({
   selector: 'app-community-join',
@@ -22,6 +23,7 @@ import { UserService } from '../../../generated/api/user.service';
 export class CommunityJoinComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   requestId: string;
   joinCommunityRequest: JoinCommunityRequest;
@@ -94,10 +96,13 @@ export class CommunityJoinComponent implements OnInit {
     this.submit("\"DENIED\"");
   }
 
-  submit(status) {
-    this.joinCommunityRequestService.status(status, this.joinCommunityRequest.id)
-      .subscribe((c) => {
-        this.router.navigate(['./home']);
-      });
+  async submit(status) {
+    try {
+      await this.joinCommunityRequestService.status(status, this.joinCommunityRequest.id).toPromise();
+      this.router.navigate(['./home']);
+    } catch(e) {
+      this.feedback.failure(e.message);
+    }
   }
+
 }

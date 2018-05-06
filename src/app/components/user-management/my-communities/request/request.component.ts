@@ -28,15 +28,18 @@ export class RequestComponent implements OnChanges {
     }
   }
 
-  private createRequest() {
+  private async createRequest() {
     const request: any = {};
     request.userId = this.user.id;
     request.communityId = this.selectedCommunityId;
-    this.service.create(request).subscribe(() => {
-      this.feedback.flash("You will receive an email once your request is processed.");
+    try {
+      await this.service.create(request).toPromise();
+      this.feedback.success("You will receive an email once your request is processed.");
       this.updateRequestedCommuntyIds();
       this.header.refreshActions();
-    });
+    } catch(e) {
+      this.feedback.failure(e.message);
+    }
     delete this.selectedCommunityId;
   }
 
