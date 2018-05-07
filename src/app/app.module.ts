@@ -58,7 +58,6 @@ import { ProgramTabComponent } from './components/programming/existing-program-r
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
-import { ScheduleTabComponent } from './components/programming/existing-program-request/schedule-tab/schedule-tab.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
@@ -173,7 +172,6 @@ const appRoutes: Routes = [
     ProgramsComponent,
     RequestAccessChangeComponent,
     RequestComponent,
-    ScheduleTabComponent,
     SelectProgramRequestComponent,
     SummaryTabComponent,
     UserApprovalComponent,
