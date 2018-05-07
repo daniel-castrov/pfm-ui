@@ -8,8 +8,6 @@ import { CommunityService } from '../../../generated/api/community.service';
 import { CreateUserRequest } from '../../../generated/model/createUserRequest';
 import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
 import { RestResult } from '../../../generated/model/restResult';
-import { RequestLinkService } from '../../header/header-user/requestLink.service';
-import { Request } from '../../../services/request';
 
 @Component({
   selector: 'app-user-approval',
@@ -29,8 +27,7 @@ export class UserApprovalComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public communityService: CommunityService,
-    public createUserRequestService: CreateUserRequestService,
-    public requestLinkService: RequestLinkService
+    public createUserRequestService: CreateUserRequestService
   ) {
     this.route.params.subscribe((params: Params) => {
       this.requestId = params.requestId;
@@ -69,14 +66,6 @@ export class UserApprovalComponent implements OnInit {
   }
 
   approve(){
-    let my: UserApprovalComponent = this;
-    let reqLinks:Request[];
-    reqLinks = my.header.headerUserComponent.requests.filter(
-      function (el) { return el.requestId !== my.requestId }
-    );
-
-    this.requestLinkService.requestLinks.next(reqLinks);
-
     this.submit("\"APPROVED\"");
   }
 
@@ -88,8 +77,6 @@ export class UserApprovalComponent implements OnInit {
     let result: RestResult;
     this.createUserRequestService.status(status, this.createUserRequest.id)
       .subscribe(c => {
-        result = c;
-        this.resultError.push(result.error);
         this.router.navigate(['./user-list']);
       });
   }

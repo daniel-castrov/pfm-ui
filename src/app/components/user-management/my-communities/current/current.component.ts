@@ -32,7 +32,7 @@ export class CurrentComponent {
     this.myDetailsService.updateCurrentUser(user).subscribe(() => {
       this.user.currentCommunityId = this.selectedCommunityId;
       this.updateCommunitiesToSelectFrom();
-      this.header.ngOnInit();
+      this.header.refreshActions();
       delete this.selectedCommunityId;
     });
   }

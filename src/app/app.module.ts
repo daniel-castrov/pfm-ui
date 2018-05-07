@@ -74,7 +74,6 @@ import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequ
 import { MyDetailsService } from './generated/api/myDetails.service';
 import { OrganizationService } from './generated/api/organization.service';
 import { ProgramsService } from './generated/api/programs.service';
-import { RequestLinkService } from './components/header/header-user/requestLink.service';
 import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
 import { StrangerService } from './generated/api/stranger.service';
@@ -210,7 +209,6 @@ const appRoutes: Routes = [
     UserRoleService,
     ProgramsService,
     UserService,
-    RequestLinkService,
     RequestsService,
     POMService,
     { provide: BASE_PATH, useValue: environment.apiUrl },

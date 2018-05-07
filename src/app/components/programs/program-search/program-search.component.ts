@@ -36,9 +36,9 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
     my.datasource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
         case 'FA':
-          return data.tags['Functional_Area'];
+          return data.tags['Functional Area'];
         case 'CC':
-          return data.tags['Core_Capability'];
+          return data.tags['Core Capability Area'];
         case 'Manager':
           return data.tags['Manager'];
         default:
