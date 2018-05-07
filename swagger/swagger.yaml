@@ -1712,7 +1712,7 @@ definitions:
         type: 'string'
       fy:
         type: 'integer'
-      toas:
+      communityToas:
         type: "array"
         items:
           $ref: "#/definitions/TOA"
@@ -1722,6 +1722,12 @@ definitions:
           type: 'array'
           items:
             $ref: "#/definitions/TOA"
+      status:
+        type: 'string'
+      startdate: 
+        type: 'integer'
+      enddate:
+        type: 'integer'
       phase:
         type: 'string'
 ##############################################################################

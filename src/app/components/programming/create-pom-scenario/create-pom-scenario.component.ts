@@ -147,7 +147,7 @@ export class CreatePomScenarioComponent implements OnInit {
     my.poms.forEach(function (pom) {
       if (pom.fy === year ) {
         var modelpom = pom;
-        pom.toas.forEach(function (toa: TOA) {
+        pom.communityToas.forEach(function (toa: TOA) {
           if (toa.year >= my.fy) {
             my.toas.set(toa.year, toa.amount);
           }
@@ -211,7 +211,7 @@ export class CreatePomScenarioComponent implements OnInit {
     });
 
     var transfer: Pom = {
-      toas: toas,
+      communityToas: toas,
       orgToas: otoas,
       fy: this.fy
     };
