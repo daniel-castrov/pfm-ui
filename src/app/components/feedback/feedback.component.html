@@ -1,3 +1,3 @@
 <div [hidden]="hidden">
-  <strong class="alert-success-group alert-success alert-dismissable">{{message}}</strong>
+  <strong [ngClass]=" successStyle ? 'alert-success-group alert-success alert-dismissable' : 'failure' ">{{message}}</strong>
 </div>

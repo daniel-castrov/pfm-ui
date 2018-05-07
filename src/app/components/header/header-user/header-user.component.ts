@@ -3,7 +3,6 @@ import { Component, OnInit, Input } from '@angular/core';
 
 // Generated
 import { AuthUser } from '../../../generated/model/authUser';
-import { RequestLinkService } from './requestLink.service';
 import { Request } from '../../../services/request';
 import { ElevationService } from '../../../services/elevation.component';
 
@@ -19,12 +18,9 @@ export class HeaderUserComponent implements OnInit {
   requests: Request[];
 
   constructor(
-    private requestLinkService:RequestLinkService,
     private requestsService: RequestsService,
     private elevationService: ElevationService
-  ) {
-    this.requestLinkService.requestLinks.subscribe( val => this.requests=val);
-  }
+  ) {}
 
   ngOnInit() {
     if (this.authUser.rolenames.includes('User_Approver')) {
