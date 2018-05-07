@@ -35,14 +35,18 @@ fieldset {
   color: $white;
 }
 
-.delete-pr {
-  > i  {
-    opacity: .9;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  > i:hover {
-    opacity: 1;
+.remove-pr {
+ i {
+     &.fa {
+      color: $black;
+      opacity: .5;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    &.fa:hover {
+      color: red;
+      opacity: .9;
+    }
   }
 }
 
@@ -174,7 +178,7 @@ a.font-danger:hover {
     }
   }
 
-  .delete-program {
+  .remove-program {
     font-weight: 800;
     color: $primary-color;
   }
