@@ -91,6 +91,18 @@ fieldset { padding: 20px;}
    padding: 8px;
   }
 
+
+  .exceed-sum {
+
+    color: #dc3545;
+
+    &:before {
+      content: " ( ";
+    }
+    &:after {
+      content: " ) ";
+    }
+  }
 }
 
 .table-remove {
