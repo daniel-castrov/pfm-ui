@@ -32,6 +32,7 @@ export class CreatePomScenarioComponent implements OnInit {
   private toas: Map<number, number> = new Map<number, number>();
   private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
   private poms: Pom[];
+  private sums: Map<string, number> = new Map<string, number>();
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc:POMService) {
@@ -100,7 +101,6 @@ export class CreatePomScenarioComponent implements OnInit {
 
   allowedits(): boolean {
     var my: CreatePomScenarioComponent = this;
-    console.log(this.years);
     var ok: boolean = true;
     this.years.forEach(function (yr) {
       if (yr === my.fy) {
@@ -142,14 +142,17 @@ export class CreatePomScenarioComponent implements OnInit {
     console.log('setting year to ' + year);
     my.modelyear = year;
 
+    my.sums.clear();
     my.toas.clear();
     my.orgtoas.clear();
     my.poms.forEach(function (pom) {
       if (pom.fy === year ) {
         var modelpom = pom;
+        my.sums.set(pom.communityId, 0);
         pom.communityToas.forEach(function (toa: TOA) {
           if (toa.year >= my.fy) {
             my.toas.set(toa.year, toa.amount);
+            my.sums.set(pom.communityId, my.sums.get(pom.communityId) + toa.amount);
           }
         });
 
@@ -162,9 +165,11 @@ export class CreatePomScenarioComponent implements OnInit {
 
         Object.getOwnPropertyNames(pom.orgToas).forEach(function (orgid) { 
           var map: Map<number, number> = new Map<number, number>();
+          my.sums.set(orgid, 0);
           pom.orgToas[orgid].forEach(function (toa: TOA) { 
             if (toa.year >= my.fy) {
               map.set(toa.year, toa.amount);
+              my.sums.set(orgid, my.sums.get(orgid) + toa.amount);
             }
           });
           
@@ -182,14 +187,27 @@ export class CreatePomScenarioComponent implements OnInit {
 
     //console.log(my.toas);
     //console.log(my.orgtoas);
+    console.log(my.sums);
   }
 
   editfield(event, id, fy) {
     if (id === this.community.id) {
       this.toas.set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
+
+      // update our running totals
+      var amt = 0;
+      this.toas.forEach(function (val) { 
+        amt += val;
+      });
+      this.sums.set(id, amt);
     }
     else {
       this.orgtoas.get(id).set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
+      var amt = 0;
+      this.orgtoas.get(id).forEach(function (val) {
+        amt += val;
+      });
+      this.sums.set(id, amt);
     }
   }
 
