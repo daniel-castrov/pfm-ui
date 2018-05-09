@@ -32,7 +32,8 @@ export class CreatePomScenarioComponent implements OnInit {
   private toas: Map<number, number> = new Map<number, number>();
   private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
   private poms: Pom[];
-  private sums: Map<string, number> = new Map<string, number>();
+  private orgsums: Map<string, number> = new Map<string, number>();
+  private yearsums: Map<number, number> = new Map<number, number>();
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc:POMService) {
@@ -142,17 +143,15 @@ export class CreatePomScenarioComponent implements OnInit {
     console.log('setting year to ' + year);
     my.modelyear = year;
 
-    my.sums.clear();
     my.toas.clear();
     my.orgtoas.clear();
     my.poms.forEach(function (pom) {
       if (pom.fy === year ) {
         var modelpom = pom;
-        my.sums.set(pom.communityId, 0);
+        my.orgsums.set(pom.communityId, 0);
         pom.communityToas.forEach(function (toa: TOA) {
           if (toa.year >= my.fy) {
             my.toas.set(toa.year, toa.amount);
-            my.sums.set(pom.communityId, my.sums.get(pom.communityId) + toa.amount);
           }
         });
 
@@ -165,11 +164,9 @@ export class CreatePomScenarioComponent implements OnInit {
 
         Object.getOwnPropertyNames(pom.orgToas).forEach(function (orgid) { 
           var map: Map<number, number> = new Map<number, number>();
-          my.sums.set(orgid, 0);
           pom.orgToas[orgid].forEach(function (toa: TOA) { 
             if (toa.year >= my.fy) {
               map.set(toa.year, toa.amount);
-              my.sums.set(orgid, my.sums.get(orgid) + toa.amount);
             }
           });
           
@@ -185,31 +182,53 @@ export class CreatePomScenarioComponent implements OnInit {
       }
     });
 
+    this.resetTotals();
     //console.log(my.toas);
     //console.log(my.orgtoas);
-    console.log(my.sums);
+    console.log(my.orgsums);
+    console.log(my.yearsums);
   }
 
   editfield(event, id, fy) {
     if (id === this.community.id) {
       this.toas.set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
-
-      // update our running totals
-      var amt = 0;
-      this.toas.forEach(function (val) { 
-        amt += val;
-      });
-      this.sums.set(id, amt);
     }
     else {
       this.orgtoas.get(id).set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
-      var amt = 0;
-      this.orgtoas.get(id).forEach(function (val) {
-        amt += val;
-      });
-      this.sums.set(id, amt);
     }
+
+    this.resetTotals();
   }
+
+  resetTotals() {
+    var my: CreatePomScenarioComponent = this;
+
+    // update our running totals
+    my.orgsums.clear();
+    my.yearsums.clear();
+
+    var amt = 0;
+    my.toas.forEach(function (val, year) {
+      amt += val;
+      my.yearsums.set(year, val);
+
+      if (!my.orgsums.has(my.community.id) ){
+        my.orgsums.set(my.community.id, 0);
+      }
+      my.orgsums.set(my.community.id, my.orgsums.get(my.community.id) + val);
+    });
+
+    amt = 0;
+    my.orgtoas.forEach(function (toas, orgid) {
+        my.orgsums.set(orgid, 0);
+      toas.forEach(function (amt, year) { 
+        my.yearsums.set(year, my.yearsums.get(year) - amt);
+        my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
+      });
+    });
+    
+  }
+
 
   submit() {
     var my: CreatePomScenarioComponent = this;
