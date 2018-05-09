@@ -31,6 +31,20 @@ fieldset {
    padding: 8px;
   }
 
+  > .alert {
+   &.alert-danger {
+     color: #dc3545;
+     padding: 10px;
+     background-color: #fff;
+     border: 1px solid #dc3545;
+     border-radius: 6px;
+   }
+
+   .exceed-sum {
+      color: #dc3545;
+      content: '()';
+   }
+
   .fa {
     font-size: 20px;
   }
@@ -64,4 +78,5 @@ fieldset {
   &:hover {
     color: #0b0;
   }
+ }
 }
