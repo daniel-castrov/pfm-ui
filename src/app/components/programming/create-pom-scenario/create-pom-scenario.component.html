@@ -39,7 +39,7 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)" class="data-hover">{{toas.get(fy+2)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+3)" class="data-hover">{{toas.get(fy+3)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+4)" class="data-hover">{{toas.get(fy+4)}}</td>
-                <td class="data-hover">{{sums.get(community.id)}}</td>
+                <td><span class="exceed-sum">{{sums.get(community.id)}}</span></td>
               </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA</td>
@@ -57,12 +57,12 @@
 
               <tr *ngFor="let o of orgs" class="table-bordered">
                 <td>{{o.abbreviation}}</td>
-                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy)" class="data-hover">{{orgtoas.get(o.id).get(fy)}}</td>
-                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+1)" class="data-hover">{{orgtoas.get(o.id).get(fy+1)}}</td>
-                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)" class="data-hover">{{orgtoas.get(o.id).get(fy+2)}}</td>
-                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+3)" class="data-hover">{{orgtoas.get(o.id).get(fy+3)}}</td>
-                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)" class="data-hover">{{orgtoas.get(o.id).get(fy+4)}}</td>
-                <td class="data-hover">{{sums.get(o.id)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy)" class="editable-field">{{orgtoas.get(o.id).get(fy)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+1)" class="editable-field">{{orgtoas.get(o.id).get(fy+1)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)" class="editable-field">{{orgtoas.get(o.id).get(fy+2)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+3)" class="editable-field">{{orgtoas.get(o.id).get(fy+3)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)" class="editable-field">{{orgtoas.get(o.id).get(fy+4)}}</td>
+                <td>{{sums.get(o.id)}}</td>
               </tr>
             </table>
           </div>

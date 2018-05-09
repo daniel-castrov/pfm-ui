@@ -14,14 +14,17 @@ fieldset {
     background-color: #ffffff;
   }
 
-  .data-hover:hover {
-    cursor: pointer;
-    background-color: #cccccc;
+  .editable-field {
+    &:hover {
+      cursor: pointer;
+      background-color: #cccccc;
   }
 }
 
 .table-editable {
   position: relative;
+
+
 
   th {
     padding: 8px;
@@ -29,21 +32,8 @@ fieldset {
 
   tr > td {
    padding: 8px;
+    }
   }
-
-  > .alert {
-   &.alert-danger {
-     color: #dc3545;
-     padding: 10px;
-     background-color: #fff;
-     border: 1px solid #dc3545;
-     border-radius: 6px;
-   }
-
-   .exceed-sum {
-      color: #dc3545;
-      content: '()';
-   }
 
   .fa {
     font-size: 20px;
@@ -78,5 +68,34 @@ fieldset {
   &:hover {
     color: #0b0;
   }
- }
+}
+
+.exceed-sum {
+
+  color: #dc3545;
+
+  &:before {
+    content: " ( ";
+  }
+  &:after {
+    content: " ) ";
+  }
+}
+
+
+.table-editable  {
+
+  .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+
+  .alert {
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+  }
 }
