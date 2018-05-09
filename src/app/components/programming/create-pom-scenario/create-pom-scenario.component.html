@@ -36,7 +36,7 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)" class="data-hover">{{toas.get(fy+2)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+3)" class="data-hover">{{toas.get(fy+3)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+4)" class="data-hover">{{toas.get(fy+4)}}</td>
-                <td class="data-hover">{{sums.get(community.id)}}</td>
+                <td class="data-hover">{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA</td>
@@ -59,7 +59,15 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)" class="data-hover">{{orgtoas.get(o.id).get(fy+2)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+3)" class="data-hover">{{orgtoas.get(o.id).get(fy+3)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)" class="data-hover">{{orgtoas.get(o.id).get(fy+4)}}</td>
-                <td class="data-hover">{{sums.get(o.id)}}</td>
+                <td class="data-hover">{{orgsums.get(o.id)}}</td>
+              </tr>
+              <tr class="table-bordered">
+                <td></td>
+                <td class="data-hover">{{yearsums.get(fy)}}</td>
+                <td class="data-hover">{{yearsums.get(fy+1)}}</td>
+                <td class="data-hover">{{yearsums.get(fy+2)}}</td>
+                <td class="data-hover">{{yearsums.get(fy+3)}}</td>
+                <td class="data-hover">{{yearsums.get(fy+4)}}</td>
               </tr>
             </table>
           </div>
