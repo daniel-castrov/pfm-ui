@@ -39,7 +39,7 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)" class="editable-field">{{toas.get(fy+2)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+3)" class="editable-field">{{toas.get(fy+3)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+4)" class="editable-field">{{toas.get(fy+4)}}</td>
-                <td><span class="exceed-sum">{{orgsums.get(community.id)}}</span></td>
+                <td>{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA</td>
@@ -66,11 +66,11 @@
               </tr>
               <tr class="table-bordered">
                 <td></td>
-                <td class="editable-field">{{yearsums.get(fy)}}</td>
-                <td class="editable-field">{{yearsums.get(fy+1)}}</td>
-                <td class="editable-field">{{yearsums.get(fy+2)}}</td>
-                <td class="editable-field">{{yearsums.get(fy+3)}}</td>
-                <td class="editable-field">{{yearsums.get(fy+4)}}</td>
+                <td class="editable-field exceed-sum">{{yearsums.get(fy)}}</td>
+                <td class="editable-field exceed-sum">{{yearsums.get(fy+1)}}</td>
+                <td class="editable-field exceed-sum">{{yearsums.get(fy+2)}}</td>
+                <td class="editable-field exceed-sum">{{yearsums.get(fy+3)}}</td>
+                <td class="editable-field exceed-sum">{{yearsums.get(fy+4)}}</td>
                 <td></td>
               </tr>
             </table>
