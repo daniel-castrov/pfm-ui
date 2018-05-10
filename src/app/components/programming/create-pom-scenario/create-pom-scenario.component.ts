@@ -33,7 +33,7 @@ export class CreatePomScenarioComponent implements OnInit {
   private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
   private poms: Pom[];
   private orgsums: Map<string, number> = new Map<string, number>();
-  private yearsums: Map<number, number> = new Map<number, number>();
+  private yeardiffs: Map<number, number> = new Map<number, number>();
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc:POMService) {
@@ -186,7 +186,7 @@ export class CreatePomScenarioComponent implements OnInit {
     //console.log(my.toas);
     //console.log(my.orgtoas);
     console.log(my.orgsums);
-    console.log(my.yearsums);
+    console.log(my.yeardiffs);
   }
 
   editfield(event, id, fy) {
@@ -205,12 +205,12 @@ export class CreatePomScenarioComponent implements OnInit {
 
     // update our running totals
     my.orgsums.clear();
-    my.yearsums.clear();
+    my.yeardiffs.clear();
 
     var amt = 0;
     my.toas.forEach(function (val, year) {
       amt += val;
-      my.yearsums.set(year, val);
+      my.yeardiffs.set(year, val);
 
       if (!my.orgsums.has(my.community.id) ){
         my.orgsums.set(my.community.id, 0);
@@ -222,7 +222,7 @@ export class CreatePomScenarioComponent implements OnInit {
     my.orgtoas.forEach(function (toas, orgid) {
         my.orgsums.set(orgid, 0);
       toas.forEach(function (amt, year) { 
-        my.yearsums.set(year, my.yearsums.get(year) - amt);
+        my.yeardiffs.set(year, my.yeardiffs.get(year) - amt);
         my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
       });
     });

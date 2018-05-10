@@ -1,3 +1,4 @@
+<ng-template #emptycell><td></td></ng-template>
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated && community">
@@ -64,13 +65,14 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)" class="editable-field">{{orgtoas.get(o.id).get(fy+4)}}</td>
                 <td>{{orgsums.get(o.id)}}</td>
               </tr>
-              <tr class="table-bordered">
+
+              <tr>
                 <td></td>
-                <td class="exceed-sum">{{yearsums.get(fy)}}</td>
-                <td class="exceed-sum">{{yearsums.get(fy+1)}}</td>
-                <td class="exceed-sum">{{yearsums.get(fy+2)}}</td>
-                <td class="exceed-sum">{{yearsums.get(fy+3)}}</td>
-                <td class="exceed-sum">{{yearsums.get(fy+4)}}</td>
+                <td *ngIf="yeardiffs.get(fy) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy)}}</td>
+                <td *ngIf="yeardiffs.get(fy+1) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+1)}}</td>
+                <td *ngIf="yeardiffs.get(fy+2) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+2)}}</td>
+                <td *ngIf="yeardiffs.get(fy+3) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+3)}}</td>
+                <td *ngIf="yeardiffs.get(fy+4) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+4)}}</td>
                 <td></td>
               </tr>
             </table>
