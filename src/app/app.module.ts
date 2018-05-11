@@ -87,6 +87,7 @@ import { NoCurrentCommunityMessageComponent } from './components/user-management
 import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated';
+import { PBService } from './generated';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -216,6 +217,7 @@ const appRoutes: Routes = [
     UserService,
     RequestsService,
     POMService,
+    PBService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
