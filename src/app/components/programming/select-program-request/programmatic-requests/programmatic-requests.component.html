@@ -1,0 +1,253 @@
+<div class="row mb-3 col-md-10 col-sm-12 autoscroll" >
+  <table class="pr-table">
+    <thead>
+      <tr class="white-top-table-header font-italic">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="text-center">PY-1</td>
+        <td class="text-center">PY</td>
+        <td class="text-center">CY</td>
+        <td class="text-center">BY</td>
+        <td class="text-center">BY+1</td>
+        <td class="text-center">BY+2</td>
+        <td class="text-center">BY+3</td>
+        <td class="text-center">BY+4</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="header-column-width">Program</th>
+        <th class="header-column-width">Subprogram</th>
+        <th class="header-column-width">Variant</th>
+        <th class="header-column-width">Status</th>
+        <th class="header-column-width">Cycle</th>
+        <th class="header-column-width">FY{{by-2000 - 3}}</th>
+        <th class="header-column-width">FY{{by-2000 - 2}}</th>
+        <th class="header-column-width">FY{{by-2000 - 1}}</th>
+        <th class="header-column-width">FY{{by-2000}}</th>
+        <th class="header-column-width">FY{{by-2000 + 1}}</th>
+        <th class="header-column-width">FY{{by-2000 + 2}}</th>
+        <th class="header-column-width">FY{{by-2000 + 3}}</th>
+        <th class="header-column-width">FY{{by-2000 + 4}}</th>
+        <th class="header-column-width">>>FY{{by-2000 + 4}}</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let pr of programmaticRequests">
+      <tr>
+        <td class="row-lt-gray text-center" rowspan="2">{{pr.shortName}}</td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.state}}</a></td>
+        <td class="">PB</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right">0</td>
+        <td class="text-right">0</td>
+        <td class="text-right">369</td>
+        <td class="cell-lt-grey text-right">2280</td>
+        <td class="cell-lt-grey text-right">3520</td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <td class="row-lt-gray text-center" rowspan="2">NGCD</td>
+        <td class="row-lt-gray text-center" rowspan="2">Increment 1</td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">Outstanding</a></td>
+        <td class="">PB</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right">0</td>
+        <td class="text-right">0</td>
+        <td class="text-right">369</td>
+        <td class="cell-lt-grey text-right">2280</td>
+        <td class="cell-lt-grey text-right">3520</td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+      </tr>
+      <tr class="row-border-top">
+        <td class="row-lt-gray text-center" rowspan="2">NGCD</td>
+        <td class="row-lt-gray text-center" rowspan="2">Increment 2</td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">Outstanding</a></td>
+        <td class="">PB</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right">0</td>
+        <td class="text-right">0</td>
+        <td class="text-right">656</td>
+        <td class="cell-lt-grey text-right text-right">1137</td>
+        <td class="cell-lt-grey text-right text-right">1121</td>
+        <td class="cell-lt-grey text-right text-right"></td>
+        <td class="cell-lt-grey text-right text-right"></td>
+        <td class="cell-lt-grey text-right text-right"></td>
+        <td class="cell-lt-grey text-right text-right"></td>
+      </tr>
+
+      <tr class="row-border-top">
+        <td class="row-lt-gray text-center" rowspan="2">JESS</td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2">Variant XX</td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">Outstanding</a></td>
+        <td class="">PB</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right">0</td>
+        <td class="text-right">0</td>
+        <td class="text-right">3634</td>
+        <td class="cell-lt-grey text-right">570</td>
+        <td class="cell-lt-grey text-right">562</td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+
+      </tr>
+      <tr class="row-border-top">
+        <td class="row-lt-gray text-center" rowspan="2">Prog1</td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">Outstanding</a></td>
+        <td class="">PBR</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right">0</td>
+        <td class="text-right">0</td>
+        <td class="text-right">181</td>
+        <td class="cell-lt-grey text-right">130</td>
+        <td class="cell-lt-grey text-right">129</td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+      </tr>
+      <tr class="row-border-top">
+        <td class="row-lt-gray text-center" rowspan="2">
+          <span class="icon-pad">Prog1 </span>
+          <span class="remove-pr" data-toggle="modal"  href="#myModal" title="Remove PR">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </span>
+        </td>
+        <td class="row-lt-gray text-center" rowspan="2">XYZ</td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="">Saved 1/24/2018</a></td>
+        <td class="">PBR</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right">0</td>
+        <td class="text-right">0</td>
+        <td class="text-right">11</td>
+        <td class="cell-lt-grey text-right">13</td>
+        <td class="cell-lt-grey text-right">19</td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+      </tr>
+      <tr class="row-border-top">
+        <td class="row-lt-gray text-center" rowspan="2">
+          <span class="icon-pad">Prog2</span>
+          <span class="remove-pr" data-toggle="modal"  href="#myModal" tooltip="Remove PR">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </span>
+        </td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="">Saved 1/24/2018</a></td>
+        <td class="">PBR</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+      </tr>
+      <tr>
+        <td class="">POM</td>
+        <td class="text-right"></td>
+        <td class="text-right"></td>
+        <td class="text-right">81</td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+        <td class="cell-lt-grey text-right"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

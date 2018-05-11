@@ -1,3 +1,5 @@
+import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
+import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
 // app.modules
 // ANGULAR IMPORTS
 import { AccordionModule } from 'ngx-bootstrap/accordion';
@@ -84,7 +86,9 @@ import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
-import { POMService } from './generated';
+import { POMService } from './generated/api/pOM.service';
+import { PRService } from './generated/api/pR.service';
+import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -156,11 +160,13 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageUsersComponent,
     MyCommunitiesComponent,
+    NewProgrammaticRequestComponent,
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
     NotImplementedComponent,
     PlanningComponent,
+    PomComponent,
     ProcQtyTabComponent,
     ProgramComponent,
     ProgramExportComponent,
@@ -169,6 +175,7 @@ const appRoutes: Routes = [
     ProgramTabComponent,
     ProgramViewComponent,
     ProgramsComponent,
+    ProgrammaticRequestsComponent,
     RequestAccessChangeComponent,
     RequestComponent,
     SelectProgramRequestComponent,
@@ -211,6 +218,7 @@ const appRoutes: Routes = [
     UserService,
     RequestsService,
     POMService,
+    PRService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
