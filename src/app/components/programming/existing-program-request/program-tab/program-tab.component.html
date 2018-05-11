@@ -1,11 +1,10 @@
-<form>
+<form id="program-request">
   <div class="row">
-    <!--Left column begins-->
     <div class="col-9">
       <div class="row">
         <div class="col-md-9">
-          <div class="form-group inline-name">
-            <label class="mb-1">Assigned Organization</label>
+          <div class="form-group inline-name mr-5">
+            <label class="mb-1">Parent program for Sub-programs</label>
             <select class="form-control-sm dropdown-width mb-2">
                 <option>items</option>
                 <option>items</option>
@@ -13,7 +12,7 @@
               </select>
           </div>
           <div class="form-group inline-name">
-            <label class="mb-1">Parent Program ID</label>
+            <label class="mb-1">Type of Subprogram</label>
             <select class="form-control-sm dropdown-width mb-2">
                 <option>items</option>
                 <option>items</option>
@@ -34,86 +33,74 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card mb-3">
-              <div class="card-body">
-                <div class="title">Capability</div>
-                  <hr>
-                <span class="form-group inline-name">
-                  <label class="mb-1">*Primary</label>
-                  <select class="form-control-sm dropdown-width mb-2">
-                     <option>items</option>
-                     <option>items</option>
-                     <option>items</option>
-                   </select>
-                 </span>
-                 <span class="form-group inline-name">
-                    <label class="mb-1">*Core</label>
-                    <select class="form-control-sm dropdown-width mb-2">
-                       <option>items</option>
-                       <option>items</option>
-                       <option>items</option>
-                    </select>
-                  </span>
-                  <span class="form-group inline-name">
-                    <label class="mb-1">*Secondary</label>
-                    <select class="form-control-sm dropdown-width mb-2">>
-                      <option>items</option>
-                      <option>items</option>
-                      <option>items</option>
-                    </select>
-                  </span>
-                  <span class="form-group inline-name">
-                    <label class="mb-1">Tertiary</label>
-                    <select class="form-control-sm dropdown-width mb-2">
-                      <option>items</option>
-                      <option>items</option>
-                      <option>items</option>
-                    </select>
-                  </span>
-              </div>
-            </div>
-          </div>
+          <fieldset>
+            <legend>Capability</legend>
+            <span class="form-group inline-name">
+              <label class="mb-1">*Primary</label>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+             </span>
+             <span class="form-group inline-name">
+                <label class="mb-1">*Core</label>
+                <select class="form-control-sm dropdown-width mb-2">
+                   <option>items</option>
+                   <option>items</option>
+                   <option>items</option>
+                </select>
+              </span>
+              <span class="form-group inline-name">
+                <label class="mb-1">Secondary</label>
+                <select class="form-control-sm dropdown-width mb-2">>
+                  <option>items</option>
+                  <option>items</option>
+                  <option>items</option>
+                </select>
+              </span>
+              <span class="form-group inline-name">
+                <label class="mb-1">Tertiary</label>
+                <select class="form-control-sm dropdown-width mb-2">
+                  <option>items</option>
+                  <option>items</option>
+                  <option>items</option>
+                </select>
+              </span>
+          </fieldset>
+        </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
-          <div class="card mb-3">
-            <div class="card-body">
-              <div class="card-title">Area</div>
-              <hr>
-              <span class="form-group inline-name">
-                <label class="mb-1">*Functional</label>
-                <select class="form-control-sm dropdown-width mb-2">
-                   <option>items</option>
-                   <option>items</option>
-                   <option>items</option>
-                 </select>
-              </span>
-              <span class="form-group inline-name">
-                <label class="mb-1">*Medical Cat.</label>
-                <select class="form-control-sm dropdown-width mb-2">
+        <div class="col-md-7">
+          <fieldset>
+            <legend>Area</legend>
+            <span class="form-group inline-name mr-4">
+              <label class="mb-1">*Functional</label>
+              <select class="form-control-sm dropdown-width mb-2">
                  <option>items</option>
                  <option>items</option>
                  <option>items</option>
-                </select>
-              </span>
-              <span class="form-group inline-name">
-                <label class="mb-1">*NBC Cat.</label>
-                <select class="form-control-sm dropdown-width mb-2">
-                  <option>items</option>
-                  <option>items</option>
-                  <option>items</option>
-                </select>
-              </span>
-              <span class="form-group inline-name">
-                <label class="mb-1">*Aqu. Type</label>
-                <select class="form-control-sm dropdown-width mb-2">
-                  <option>items</option>
-                  <option>items</option>
-                  <option>items</option>
-                </select>
-              </span>
-            </div>
-          </div>
+               </select>
+            </span>
+            <span class="form-group inline-name">
+              <label class="mb-1">*Medical Cat.</label>
+              <select class="form-control-sm dropdown-width mb-2">
+               <option>items</option>
+               <option>items</option>
+               <option>items</option>
+              </select>
+            </span>
+          </fieldset>
+        </div>
+        <div class="col-md-5">
+          <span class="form-group inline-name">
+            <label class="mt-5">Aqu. Type</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
         </div>
       </div>
       <div class="row">
@@ -144,16 +131,381 @@
           </span>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="form-group inline-name">
+            <label class="mb-1">*Lead Component</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">*Manager</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
     </div>
-    <!--Left column ends. Right column begins.-->
     <div class="col-md-3">
-      <!--Contents of right column.-->
       <div class="card border-light mb-3 pull-right">
         <div class="img-placeholder">
           <i class="fa fa-picture-o" aria-hidden="true"></i>
         </div>
       </div>
     </div>
-  <!--Right column ends-->
   </div>
 </form>
+<!-- <form id="create-new-subprogram">
+  <div class="row">
+    <div class="col-9">
+      <div class="row">
+        <div class="col-8 mb-2">
+          <span class="badge badge-light mr-sm-4">
+            <h6>Program ID</h6>
+          </span>
+          <span class="badge badge-light mr-sm-4">
+            <h6>Program Name Selected</h6>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="form-group inline-name mr-5">
+            <label class="mb-1">Parent program for Sub-programs</label>
+            <select class="form-control-sm dropdown-width mb-2">
+                <option>items</option>
+                <option>items</option>
+                <option>items</option>
+              </select>
+          </div>
+          <div class="form-group inline-name">
+            <label class="mb-1">Type of Subprogram</label>
+            <select class="form-control-sm dropdown-width mb-2">
+                <option>items</option>
+                <option>items</option>
+                <option>items</option>
+              </select>
+          </div>
+          <div class="form-group inline-name">
+            <div class="input-group">
+              <input type="text" class="form-control forminput" placeholder="Select Picture">
+              <span class="input-group-btn">
+                <button class="btn btn-secondary btn-sm" type="button">Browse</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <fieldset>
+            <legend>Capability</legend>
+            <span class="form-group inline-name">
+              <label class="mb-1">*Primary</label>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+             </span>
+             <span class="form-group inline-name">
+                <label class="mb-1">*Core</label>
+                <select class="form-control-sm dropdown-width mb-2">
+                   <option>items</option>
+                   <option>items</option>
+                   <option>items</option>
+                </select>
+              </span>
+              <span class="form-group inline-name">
+                <label class="mb-1">Secondary</label>
+                <select class="form-control-sm dropdown-width mb-2">>
+                  <option>items</option>
+                  <option>items</option>
+                  <option>items</option>
+                </select>
+              </span>
+              <span class="form-group inline-name">
+                <label class="mb-1">Tertiary</label>
+                <select class="form-control-sm dropdown-width mb-2">
+                  <option>items</option>
+                  <option>items</option>
+                  <option>items</option>
+                </select>
+              </span>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-7">
+          <fieldset>
+            <legend>Area</legend>
+            <span class="form-group inline-name mr-4">
+              <label class="mb-1">*Functional</label>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+            </span>
+            <span class="form-group inline-name">
+              <label class="mb-1">*Medical Cat.</label>
+              <select class="form-control-sm dropdown-width mb-2">
+               <option>items</option>
+               <option>items</option>
+               <option>items</option>
+              </select>
+            </span>
+          </fieldset>
+        </div>
+        <div class="col-md-5">
+          <span class="form-group inline-name">
+            <label class="mt-5">Aqu. Type</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="form-group inline-name">
+            <label class="mb-1">Emphasis</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">BSV Nat. Strat.</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">DASD POM</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="form-group inline-name">
+            <label class="mb-1">*Lead Component</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">*Manager</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-light mb-3 pull-right">
+        <div class="img-placeholder">
+          <i class="fa fa-picture-o" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</form> -->
+<!-- <form id="create-new-toplevel">
+  <div class="row">
+    <div class="col-9">
+      <div class="row">
+        <div class="col-8 mb-2">
+          <div class="form-group inline-name">
+            <label>*Enter Program ID</label>
+            <input type="text" class="form-control forminput mr-5">
+          </div>
+          <div class="form-group inline-name">
+            <label>*Enter Name</label>
+            <input type="text" class="form-control forminput">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="form-group inline-name mr-5">
+            <label class="mb-1">Parent program for Sub-programs</label>
+            <select class="form-control-sm dropdown-width mb-2">
+                <option>items</option>
+                <option>items</option>
+                <option>items</option>
+              </select>
+          </div>
+          <div class="form-group inline-name">
+            <label class="mb-1">Type of Subprogram</label>
+            <select class="form-control-sm dropdown-width mb-2">
+                <option>items</option>
+                <option>items</option>
+                <option>items</option>
+              </select>
+          </div>
+          <div class="form-group inline-name">
+            <div class="input-group">
+              <input type="text" class="form-control forminput" placeholder="Select Picture">
+              <span class="input-group-btn">
+                <button class="btn btn-secondary btn-sm" type="button">Browse</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <fieldset>
+            <legend>Capability</legend>
+            <span class="form-group inline-name">
+              <label class="mb-1">*Primary</label>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+             </span>
+             <span class="form-group inline-name">
+                <label class="mb-1">*Core</label>
+                <select class="form-control-sm dropdown-width mb-2">
+                   <option>items</option>
+                   <option>items</option>
+                   <option>items</option>
+                </select>
+              </span>
+              <span class="form-group inline-name">
+                <label class="mb-1">Secondary</label>
+                <select class="form-control-sm dropdown-width mb-2">>
+                  <option>items</option>
+                  <option>items</option>
+                  <option>items</option>
+                </select>
+              </span>
+              <span class="form-group inline-name">
+                <label class="mb-1">Tertiary</label>
+                <select class="form-control-sm dropdown-width mb-2">
+                  <option>items</option>
+                  <option>items</option>
+                  <option>items</option>
+                </select>
+              </span>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-7">
+          <fieldset>
+            <legend>Area</legend>
+            <span class="form-group inline-name mr-4">
+              <label class="mb-1">*Functional</label>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+            </span>
+            <span class="form-group inline-name">
+              <label class="mb-1">*Medical Cat.</label>
+              <select class="form-control-sm dropdown-width mb-2">
+               <option>items</option>
+               <option>items</option>
+               <option>items</option>
+              </select>
+            </span>
+          </fieldset>
+        </div>
+        <div class="col-md-5">
+          <span class="form-group inline-name">
+            <label class="mt-5">Aqu. Type</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="form-group inline-name">
+            <label class="mb-1">Emphasis</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">BSV Nat. Strat.</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">DASD POM</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="form-group inline-name">
+            <label class="mb-1">*Lead Component</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+          <span class="form-group inline-name">
+            <label class="mb-1">*Manager</label>
+            <select class="form-control-sm dropdown-width mb-2">
+              <option>items</option>
+              <option>items</option>
+              <option>items</option>
+            </select>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-light mb-3 pull-right">
+        <div class="img-placeholder">
+          <i class="fa fa-picture-o" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</form> -->

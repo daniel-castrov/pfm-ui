@@ -3,36 +3,45 @@
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="col-12">
       <div class="row">
-        <div class="col-lg-7 col-md-7 col-sm-3 mb-4">
-          <span class="h5">Programmatic Request for Program:</span>
+        <div class="col-6" id="program-request">
+          <div class="h5 mb-4">Programmatic Request for Program:</div>
+            <span class="form-group">
+              <label class="badge badge-light mr-sm-4"><h6>Program ID</h6></label>
+            </span>
+            <span class="form-group">
+              <label class="badge badge-light mr-sm-4"><h6>Program Name Selected</h6></label>
+            </span>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-7">
-          <div class="pull-right">
+        <!-- <div class="col-6" id="create-new-subprogram">
+          <div class="h5 mb-4">Programmatic Request - Creating New Sub-Program for Program:</div>
+        </div> -->
+       <!-- <div class="col-6" id="create-new-toplevel">
+          <div class="h5 mb-4">Programmatic Request - Create new Top Level Program:</div>
+        </div> -->
+        <div class="col-lg-4 col-md-4 col-sm-6">
+          <div class="pull-right mb-2" aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">
+                  <span>
+                    <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                  </span>
+                  <span>
+                    <a href="#" routerLink="/select-program-request">back to Programmatic Request</a>
+                  </span>
+                </li>
+              </ol>
+          </div>
+          <div class="pull-right program-controls">
             <span>
-                <button class="btn btn-success btn">
-                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>
-                Save
-              </button>
+              <button class="btn btn-primary">Validate</button>
             </span>
             <span>
-              <button class="btn-primary btn">
-                <i class="fa fa-paper-plane icon-pad" aria-hidden="true"></i>
-                Submit
-              </button>
+              <button class="btn btn-secondary">Save</button>
+            </span>
+            <span>
+              <button class="btn btn-success">Submit</button>
             </span>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 mb-2">
-          <span class="form-group">
-            <label class="badge badge-light mr-sm-4"><h6>Program ID</h6></label>
-          </span>
-          <span class="form-group">
-            <label class="badge badge-light mr-sm-4"><h6>Program Name Selected</h6></label>
-          </span>
-        </div>
-        <div class="col-md-4">
         </div>
       </div>
     </div>

@@ -4,19 +4,27 @@
     <ng-container *ngFor="let varname of varkeys">
       <variant-line [startyear]="startyear" [variants]="varmap.get( varname )"></variant-line>
     </ng-container>
-    <div class="row mb-2">
-      <div class="col-md-10"></div>
-      <div class="col-md-2">
-        <button class="btn btn-primary btn pull-right">
+    <div class="row">
+      <div class="col-12 mb-2">
+        <span class="mr-4">
+          <button class="btn btn-primary">
             <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            Add Varient Table
+          Add Variant Table
           </button>
+        </span>
+        <span class="mr-4">for</span>
+        <span class="form-group inline-name mr-5">
+          <select class="form-control-sm dropdown-width mb-2">
+            <option>PHM0001</option>
+            <option>items</option>
+            <option>items</option>
+          </select>
+        </span>
       </div>
     </div>
-    <hr/>
     <div class="row mb-2">
       <div class="col-md-12">
-        <table class="GeneratedTable">
+        <table class="variants-table">
           <thead>
             <tr>
               <th class="row-width">Service</th>
