@@ -197,6 +197,11 @@ paths:
         description: "the year"
         required: true
         type: "integer"
+      - in: "query"
+        name: "model"
+        description: "the PB to use as a model"
+        required: false
+        type: "string"
       - in: "body"
         name: "body"
         description: "a POM object"

@@ -7,8 +7,8 @@
           <div class="h5 mb-2">
           <ng-container *ngIf="allowedits()">
             <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY{{fy-2000}} based on PB</span>
-            <select class="h6 form-control-sm" ([ngModel])="modelyear" (change)="setYear($event.target.value)">
-              <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
+            <select class="h6 form-control-sm" ([ngModel])="modelid" (change)="setModelId($event.target.value)">
+              <option *ngFor="let p of pbs" [value]="p.id" [selected]="p===model">{{p.fy}}</option>
             </select>
           </ng-container>
           <ng-container *ngIf="!allowedits()">

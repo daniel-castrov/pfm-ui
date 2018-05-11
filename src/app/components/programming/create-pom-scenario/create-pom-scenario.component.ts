@@ -28,14 +28,14 @@ export class CreatePomScenarioComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private fy: number = new Date().getFullYear() + 2;
   private resetFy: boolean = true;
-  private modelyear: number = new Date().getFullYear();
   private community: Community;
   private orgs: Organization[];
-  private years: number[];
   private toas: Map<number, number> = new Map<number, number>();
   private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
   private poms: Pom[];
   private pbs: PB[];
+  private model: PB;
+  private modelid: string;
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
@@ -108,12 +108,20 @@ export class CreatePomScenarioComponent implements OnInit {
   allowedits(): boolean {
     var my: CreatePomScenarioComponent = this;
     var ok: boolean = true;
-    this.years.forEach(function (yr) {
-      if (yr === my.fy) {
-        //console.log(yr + '===' + my.fy + ', so can\'t edit');
+
+    this.poms.forEach(function (pom) { 
+      if (pom.fy === my.fy) {
         ok = false;
       }
     });
+
+
+    //this.years.forEach(function (yr) {
+    //  if (yr === my.fy) {
+    //    //console.log(yr + '===' + my.fy + ', so can\'t edit');
+    //    ok = false;
+    //  }
+    //});
 
     return ok;
   }
@@ -129,34 +137,55 @@ export class CreatePomScenarioComponent implements OnInit {
         var community = data[0].result;
         my.orgs = data[1].result;
         my.poms = data[2].result;
-        my.pbs = data[2].result;
+        my.pbs = data[3].result;
+        console.log(my.pbs);
         console.log(my.poms);
 
-        var tempyears: number[] = [];
-        my.poms.forEach(function (pom) {
-          tempyears.push(pom.fy);
+        my.pbs.sort(function (a: PB, b: PB) {
+          return (a.fy - b.fy);
         });
-        tempyears.sort();
+        my.model = my.pbs[my.pbs.length - 1];
         my.community = community;
         if (my.resetFy) {
-          my.fy = tempyears[tempyears.length - 1] + 2;
+          my.fy = my.model.fy + 2;
           this.resetFy = false;
         }
 
-        my.setYear(tempyears[tempyears.length - 1]);
-        my.years = tempyears;
+        my.setYear(my.fy);        
       });
     });
 
   }
 
+  setModelId(pbid) {
+    console.log(pbid);
+    var my: CreatePomScenarioComponent = this;
+    my.pbs.forEach(function (pb) { 
+      if (pb.id === pbid) {
+        my.model = pb;
+      }
+    });
+    this.setYear( my.model.fy)
+  }
+
   setYear(year) {
     var my: CreatePomScenarioComponent = this;
-    console.log('setting year to ' + year);
-    my.modelyear = year;
+    console.log('setting model year to ' + year);
 
     my.toas.clear();
     my.orgtoas.clear();
+
+    for (var i = 0; i < 7; i++){
+      my.toas.set(year + i, 0);
+    }
+    my.orgs.forEach(function (org) { 
+      var ts: Map<number, number> = new Map<number, number>();
+      for (var i = 0; i < 7; i++) {
+        ts.set(year + i, 0);
+      }
+      my.orgtoas.set(org.id, ts);
+    });
+
     my.poms.forEach(function (pom) {
       if (pom.fy === year ) {
         var modelpom = pom;
@@ -168,7 +197,7 @@ export class CreatePomScenarioComponent implements OnInit {
         });
 
         // fill in any missing years
-        for (var i = my.fy; i < my.fy + 5; i++) {
+        for (var i = my.fy; i < my.fy + 7; i++) {
           if (!my.toas.has(i)) {
             my.toas.set(i, 0);
           }
@@ -183,7 +212,7 @@ export class CreatePomScenarioComponent implements OnInit {
           });
           
           // fill in any missing years
-          for (var i = my.fy; i < my.fy + 5; i++) {
+          for (var i = my.fy; i < my.fy + 7; i++) {
             if (!map.has(i)) {
               map.set(i, 0);
             }
@@ -267,7 +296,7 @@ export class CreatePomScenarioComponent implements OnInit {
 
     //console.log('calling setToas!');
     //console.log(transfer);
-    this.pomsvc.createPom(this.community.id, this.fy, transfer).subscribe(
+    this.pomsvc.createPom(this.community.id, this.fy, transfer, my.model.id).subscribe(
       (data) => {
         my.fetch();
       });
