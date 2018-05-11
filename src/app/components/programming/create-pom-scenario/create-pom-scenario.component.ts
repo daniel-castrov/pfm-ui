@@ -36,6 +36,7 @@ export class CreatePomScenarioComponent implements OnInit {
   private pbs: PB[];
   private model: PB;
   private modelid: string;
+  private tooMuchToa: boolean = false;
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
@@ -110,18 +111,11 @@ export class CreatePomScenarioComponent implements OnInit {
     var ok: boolean = true;
 
     this.poms.forEach(function (pom) { 
+      // if we have a pom from this FY, we can't edit it again
       if (pom.fy === my.fy) {
         ok = false;
       }
     });
-
-
-    //this.years.forEach(function (yr) {
-    //  if (yr === my.fy) {
-    //    //console.log(yr + '===' + my.fy + ', so can\'t edit');
-    //    ok = false;
-    //  }
-    //});
 
     return ok;
   }
@@ -243,10 +237,11 @@ export class CreatePomScenarioComponent implements OnInit {
 
   resetTotals() {
     var my: CreatePomScenarioComponent = this;
-
+    
     // update our running totals
     my.orgsums.clear();
     my.yeardiffs.clear();
+    my.tooMuchToa = false;
 
     var amt = 0;
     my.toas.forEach(function (val, year) {
@@ -261,10 +256,14 @@ export class CreatePomScenarioComponent implements OnInit {
 
     amt = 0;
     my.orgtoas.forEach(function (toas, orgid) {
-        my.orgsums.set(orgid, 0);
+      my.orgsums.set(orgid, 0);
       toas.forEach(function (amt, year) { 
         my.yeardiffs.set(year, my.yeardiffs.get(year) - amt);
         my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
+
+        if (my.yeardiffs.get(year)< 0 ) {
+          my.tooMuchToa = true;
+        }
       });
     });
     

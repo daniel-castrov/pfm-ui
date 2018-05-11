@@ -17,9 +17,6 @@
           </ng-container>
           </div>
           <div id="toa1" class="table-editable">
-            <div class="alert alert-danger" role="alert">
-              <strong>Difference from TOA?</strong>
-            </div>
             <table class="table">
               <tr class="toa-table-title">
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Overall TOA for {{community.abbreviation}} Community</td>
@@ -81,7 +78,8 @@
       </div>
       <div class="row" *ngIf="allowedits()">
         <div class="col-lg-8 col-md-12 mb-3">
-          <button class="btn btn-primary" (click)="submit()">Create Scenario</button>
+          <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create Scenario</button>
+          <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
         </div>
       </div>
       <div class="row">
