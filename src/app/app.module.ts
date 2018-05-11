@@ -88,6 +88,7 @@ import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
+import { PBService } from './generated';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
 
 // ROUTES
@@ -219,6 +220,7 @@ const appRoutes: Routes = [
     RequestsService,
     POMService,
     PRService,
+    PBService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

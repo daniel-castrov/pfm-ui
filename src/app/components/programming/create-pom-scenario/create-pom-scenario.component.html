@@ -6,13 +6,13 @@
         <div class="col-lg-6 col-md-12 mb-2">
           <div class="h5 mb-2">
           <ng-container *ngIf="allowedits()">
-            <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY {{fy}} based on PB</span>
-            <select class="h6 form-control-sm" ([ngModel])="modelyear" (change)="setYear($event.target.value)">
-              <option *ngFor="let y of years" [value]="y" [selected]="y===modelyear">{{y}}</option>
+            <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY{{fy-2000}} based on PB</span>
+            <select class="h6 form-control-sm" ([ngModel])="modelid" (change)="setModelId($event.target.value)">
+              <option *ngFor="let p of pbs" [value]="p.id" [selected]="p===model">{{p.fy}}</option>
             </select>
           </ng-container>
           <ng-container *ngIf="!allowedits()">
-            <span class="h5 mr-sm-2 mb-2">POM Scenario for FY {{fy}}</span>
+            <span class="h5 mr-sm-2 mb-2">POM Scenario for FY{{fy-2000}}</span>
           </ng-container>
           </div>
           <div id="toa1" class="table-editable">
@@ -22,11 +22,12 @@
               </tr>
               <tr class="table-bordered">
                 <th>Community</th>
-                <th>{{fy}}</th>
-                <th>{{fy+1}}</th>
-                <th>{{fy+2}}</th>
-                <th>{{fy+3}}</th>
-                <th>{{fy+4}}</th>
+                <th>FY{{fy-2000}}</th>
+                <th>FY{{fy+1-2000}}</th>
+                <th>FY{{fy+2-2000}}</th>
+                <th>FY{{fy+3-2000}}</th>
+                <th>FY{{fy+4-2000}}</th>
+                <th>FY{{fy-2000}}-{{fy+4-2000}}</th>
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}} Overall</td>
@@ -35,6 +36,7 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)" class="data-hover">{{toas.get(fy+2)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+3)" class="data-hover">{{toas.get(fy+3)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+4)" class="data-hover">{{toas.get(fy+4)}}</td>
+                <td class="data-hover">{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA</td>
@@ -42,11 +44,12 @@
 
               <tr class="table-bordered">
                 <th>Organization</th>
-                <th>{{fy}}</th>
-                <th>{{fy+1}}</th>
-                <th>{{fy+2}}</th>
-                <th>{{fy+3}}</th>
-                <th>{{fy+4}}</th>
+                <th>FY{{fy-2000}}</th>
+                <th>FY{{fy+1-2000}}</th>
+                <th>FY{{fy+2-2000}}</th>
+                <th>FY{{fy+3-2000}}</th>
+                <th>FY{{fy+4-2000}}</th>
+                <th>FY{{fy-2000}}-{{fy+4-2000}}</th>
               </tr>
 
               <tr *ngFor="let o of orgs" class="table-bordered">
@@ -56,6 +59,15 @@
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)" class="data-hover">{{orgtoas.get(o.id).get(fy+2)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+3)" class="data-hover">{{orgtoas.get(o.id).get(fy+3)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)" class="data-hover">{{orgtoas.get(o.id).get(fy+4)}}</td>
+                <td class="data-hover">{{orgsums.get(o.id)}}</td>
+              </tr>
+              <tr class="table-bordered">
+                <td></td>
+                <td class="data-hover">{{yeardiffs.get(fy)}}</td>
+                <td class="data-hover">{{yeardiffs.get(fy+1)}}</td>
+                <td class="data-hover">{{yeardiffs.get(fy+2)}}</td>
+                <td class="data-hover">{{yeardiffs.get(fy+3)}}</td>
+                <td class="data-hover">{{yeardiffs.get(fy+4)}}</td>
               </tr>
             </table>
           </div>
