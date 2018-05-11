@@ -19,6 +19,7 @@ tags:
 - name: "UserRole"
 - name: "TOA"
 - name: "POM"
+- name: "PB"
 #
 ##############################################################################
 # PATHS
@@ -241,6 +242,26 @@ paths:
         required: true
         type: "string"
 # STOP POM
+##############################################################################
+# START PB
+  /pb/{communityId}:
+    get:
+      tags:
+      - "PB"
+      summary: "Fetches all existing PBs for this community"
+      description: "Gets the PB information"
+      operationId: "getById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+# END PB
 ##############################################################################
 # START CREATEUSERREQUEST
   /createUserRequests:
@@ -1728,7 +1749,18 @@ definitions:
         type: 'integer'
       enddate:
         type: 'integer'
-      phase:
+  PB:
+    type: "object"
+    properties:
+      id:
         type: 'string'
+      communityId:
+        type: 'string'
+      fy:
+        type: 'integer'
+      startdate: 
+        type: 'integer'
+      enddate:
+        type: 'integer'
 ##############################################################################
 # ENDFILE

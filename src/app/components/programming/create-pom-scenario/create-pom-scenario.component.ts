@@ -8,9 +8,11 @@ import { Organization } from '../../../generated/model/organization';
 import { TOA } from '../../../generated/model/tOA';
 import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
+import { PBService } from '../../../generated/api/pB.service';
 import { POMService } from '../../../generated/api/pOM.service';
 import { IntMap } from '../../../generated/model/intMap';
 import { Pom } from '../../../generated/model/pom';
+import { PB } from '../../../generated/model/pB';
 
 import * as $ from 'jquery';
 
@@ -25,6 +27,7 @@ declare const jQuery: any;
 export class CreatePomScenarioComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private fy: number = new Date().getFullYear() + 2;
+  private resetFy: boolean = true;
   private modelyear: number = new Date().getFullYear();
   private community: Community;
   private orgs: Organization[];
@@ -32,11 +35,12 @@ export class CreatePomScenarioComponent implements OnInit {
   private toas: Map<number, number> = new Map<number, number>();
   private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
   private poms: Pom[];
+  private pbs: PB[];
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
   constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
-    private orgsvc: OrganizationService, private pomsvc:POMService) {
+    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService ) {
   }
 
   ngOnInit() {
@@ -97,6 +101,7 @@ export class CreatePomScenarioComponent implements OnInit {
       $EXPORT.text(JSON.stringify(data));
     });
 
+    this.resetFy = true;
     this.fetch();
   }
 
@@ -118,12 +123,14 @@ export class CreatePomScenarioComponent implements OnInit {
     this.userDetailsService.getCurrentUser().subscribe((person) => {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
-        my.pomsvc.getById( person.result.currentCommunityId )
+        my.pomsvc.getById(person.result.currentCommunityId),
+        my.pbsvc.getById(person.result.currentCommunityId)
       ]).subscribe(data => {
         var community = data[0].result;
         my.orgs = data[1].result;
         my.poms = data[2].result;
-        console.log(community);
+        my.pbs = data[2].result;
+        console.log(my.poms);
 
         var tempyears: number[] = [];
         my.poms.forEach(function (pom) {
@@ -131,6 +138,11 @@ export class CreatePomScenarioComponent implements OnInit {
         });
         tempyears.sort();
         my.community = community;
+        if (my.resetFy) {
+          my.fy = tempyears[tempyears.length - 1] + 2;
+          this.resetFy = false;
+        }
+
         my.setYear(tempyears[tempyears.length - 1]);
         my.years = tempyears;
       });
