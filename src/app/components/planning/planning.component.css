@@ -35,9 +35,6 @@ tbody div {
   padding: 0 !important;
 }
 
-tr:nth-child(odd) {background: #f7f7f7}
-tr:nth-child(even) {background: #fff}
-
 tfoot {
   padding: 10px;
   color: #fff;

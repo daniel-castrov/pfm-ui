@@ -246,7 +246,38 @@ paths:
         description: "The community id"
         required: true
         type: "string"
+  /pom/community/{communityId}/year/{year}:
+    get:
+      tags:
+      - "POM"
+      operationId: "getByCommunityAndYear"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        required: true
+        type: "number"
 # STOP POM
+##############################################################################
+# START PR
+  /pr/pom/{pomId}:
+    get:
+      tags:
+      - "PR"
+      operationId: "getByPom"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+# STOP PR
 ##############################################################################
 # START PB
   /pb/{communityId}:
@@ -1755,12 +1786,30 @@ definitions:
       enddate:
         type: 'integer'
   PB:
+        type: 'string'
+  ProgrammaticRequest:
+    type: "object"
+    properties:
+      id:
+        type: 'string'
+      status:
+        type: 'string'
+      funding:
+        type: "array"
+        items:
+          $ref: "#/definitions/FundingLine"
+  FundingLine:
+    type: "object"
+    properties:
+      id:
+        type: 'string'
+  PB:
     type: "object"
     properties:
       id:
         type: 'string'
       communityId:
-        type: 'string'
+        type: 'string'      
       fy:
         type: 'integer'
       startdate: 

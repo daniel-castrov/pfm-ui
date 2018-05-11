@@ -1,13 +1,21 @@
+fieldset {
+  padding: 10px 20px;
+}
+
 .inline-name {
   display: inline-block;
   float: left;
 }
 
 label {
-  color: #868e9b;
+  color: #8a8787;
   margin: 0;
   width: 233px;
   display: block;
+}
+
+.badge {
+  padding: 6px 10px 2px 10px;
 }
 
 .forminput {

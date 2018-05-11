@@ -1,3 +1,5 @@
+import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
+import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
 // app.modules
 // ANGULAR IMPORTS
 import { AccordionModule } from 'ngx-bootstrap/accordion';
@@ -58,9 +60,7 @@ import { ProgramTabComponent } from './components/programming/existing-program-r
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
-import { ScheduleTabComponent } from './components/programming/existing-program-request/schedule-tab/schedule-tab.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
-import { SelectRequestDropdownComponent } from './components/programming/select-program-request/select-request-dropdown/select-request-dropdown.component';
 import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
@@ -86,8 +86,10 @@ import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
-import { POMService } from './generated';
+import { POMService } from './generated/api/pOM.service';
+import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated';
+import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -119,7 +121,6 @@ const appRoutes: Routes = [
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
-  {path:'select-request', component:SelectRequestDropdownComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
@@ -160,11 +161,13 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageUsersComponent,
     MyCommunitiesComponent,
+    NewProgrammaticRequestComponent,
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
     NotImplementedComponent,
     PlanningComponent,
+    PomComponent,
     ProcQtyTabComponent,
     ProgramComponent,
     ProgramExportComponent,
@@ -173,16 +176,15 @@ const appRoutes: Routes = [
     ProgramTabComponent,
     ProgramViewComponent,
     ProgramsComponent,
+    ProgrammaticRequestsComponent,
     RequestAccessChangeComponent,
     RequestComponent,
-    ScheduleTabComponent,
     SelectProgramRequestComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
-    VariantLineComponent,
-    SelectRequestDropdownComponent    
+    VariantLineComponent
   ],
 
   imports: [
@@ -217,6 +219,7 @@ const appRoutes: Routes = [
     UserService,
     RequestsService,
     POMService,
+    PRService,
     PBService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },

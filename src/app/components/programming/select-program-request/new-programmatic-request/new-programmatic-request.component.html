@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-10 col-sm-12">
+    <fieldset>
+      <legend>Add New Programmatic Request for:</legend>
+        <form>
+          <div class="row">
+            <div class="col-md-5">
+              <div class="radio-buttons mb-3">
+                <div class="radio-item">
+                  <input type="radio" id="ritema" name="ritem" value="ropt1">
+                  <label for="ritema">An Existing Program of Record</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="ritemb" name="ritem" value="ropt2">
+                  <label for="ritemb">A New Subprogram</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="ritemc" name="ritem" value="ropt3">
+                  <label for="ritemc">A New Program</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-7">
+              <div class="mb-2 mr-sm-2">
+                <label class="primary-label mb-2">
+                  Select a Program except for when adding a New Program
+                </label>
+              </div>
+              <span class="mr-sm-4">
+                <select class="form-control-sm">
+                  <option>Program ID</option>
+                </select>
+              </span>
+              <span class="mr-sm-4">
+                <input type="text" class="form-control program-name" name="progamName" placeholder="Program Name">
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button class="btn btn-primary btn pull-right" href="#" routerLink="/existing-program-request">
+                <span class="icon-pad">Next</span>
+                <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </fieldset>
+  </div>
+</div>
