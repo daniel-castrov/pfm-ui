@@ -265,16 +265,16 @@ paths:
 # STOP POM
 ##############################################################################
 # START PR
-  /pr/pom/{pomId}:
+  /pr/phase/{phaseId}:
     get:
       tags:
       - "PR"
-      operationId: "getByPom"
+      operationId: "getByPhase"
       produces:
       - "application/json"
       parameters:
       - in: "path"
-        name: "pomId"
+        name: "phaseId"
         required: true
         type: "string"
 # STOP PR
@@ -1790,12 +1790,14 @@ definitions:
     properties:
       id:
         type: 'string'
-      status:
+      state:
         type: 'string'
       funding:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"
+      shortname:
+        type: 'string'
   FundingLine:
     type: "object"
     properties:
