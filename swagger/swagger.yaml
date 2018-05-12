@@ -1785,8 +1785,6 @@ definitions:
         type: 'integer'
       enddate:
         type: 'integer'
-  PB:
-        type: 'string'
   ProgrammaticRequest:
     type: "object"
     properties:
@@ -1803,6 +1801,20 @@ definitions:
     properties:
       id:
         type: 'string'
+      appropriation:
+        type: 'string'
+      blin:
+        type: 'string'
+      opAgency:
+        type: 'string'
+      item:
+        type: 'string'
+      funds:
+        type: 'object'
+      fy:
+        type: 'number'
+      variants:
+        type: 'object'
   PB:
     type: "object"
     properties:
