@@ -31,7 +31,7 @@ export class SelectProgramRequestComponent implements OnInit {
   async ngOnInit() {
     const user: User = (await this.myDetailsService.getCurrentUser().toPromise()).result;
     this.pom = (await this.pomService.getByCommunityAndYear(user.currentCommunityId, this.by).toPromise()).result;
-    this.programmaticRequests = (await this.prService.getByPom(this.pom.id).toPromise()).result;
+    this.programmaticRequests = (await this.prService.getByPhase(this.pom.id).toPromise()).result;
   }
 
 }

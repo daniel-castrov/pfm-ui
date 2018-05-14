@@ -265,16 +265,16 @@ paths:
 # STOP POM
 ##############################################################################
 # START PR
-  /pr/pom/{pomId}:
+  /pr/phase/{phaseId}:
     get:
       tags:
       - "PR"
-      operationId: "getByPom"
+      operationId: "getByPhase"
       produces:
       - "application/json"
       parameters:
       - in: "path"
-        name: "pomId"
+        name: "phaseId"
         required: true
         type: "string"
 # STOP PR
@@ -1785,24 +1785,38 @@ definitions:
         type: 'integer'
       enddate:
         type: 'integer'
-  PB:
-        type: 'string'
   ProgrammaticRequest:
     type: "object"
     properties:
       id:
         type: 'string'
-      status:
+      state:
         type: 'string'
       funding:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"
+      shortname:
+        type: 'string'
   FundingLine:
     type: "object"
     properties:
       id:
         type: 'string'
+      appropriation:
+        type: 'string'
+      blin:
+        type: 'string'
+      opAgency:
+        type: 'string'
+      item:
+        type: 'string'
+      funds:
+        type: 'object'
+      fy:
+        type: 'number'
+      variants:
+        type: 'object'
   PB:
     type: "object"
     properties:
