@@ -1430,6 +1430,32 @@ paths:
         description: "the year"
         required: true
         type: "integer"
+  /search:
+    post:
+      tags:
+      - "UFRs"
+      operationId: "search"
+      summary: "Search UFRs based on criteria"
+      description: "Returns a collection of UFRs that meet the criteria"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a UFRFilter"
+        required: true
+        schema:
+          $ref: "#/definitions/UFRFilter"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+
 # STOP UFRs
 ##############################################################################
 # START SNAPSHOTS

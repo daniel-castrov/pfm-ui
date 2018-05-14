@@ -143,10 +143,9 @@
                   </td>
                   <td>
                     <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.cycle" name="status" [disabled]="!usecycle"
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.cycle" name="cycle" [disabled]="!usecycle"
                         (change)="search()">
-                        <option>POM 17</option>
-                        <option>PB 18</option>
+                        <option *ngFor="let c of cycles" [value]="c">{{c}}</option>
                       </select>
                     </div>
                   </td>
