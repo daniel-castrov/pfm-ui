@@ -90,6 +90,7 @@ import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
+import { UfrSearchComponent } from './components/programs/ufr-search/ufr-search.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -125,7 +126,8 @@ const appRoutes: Routes = [
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
-  { path: 'create-new-pom', component: CreatePomScenarioComponent }
+  { path: 'create-new-pom', component: CreatePomScenarioComponent },
+  { path: 'ufr-search', component: UfrSearchComponent }
 ];
 
 @NgModule({
@@ -184,7 +186,8 @@ const appRoutes: Routes = [
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
-    VariantLineComponent
+    VariantLineComponent,
+    UfrSearchComponent
   ],
 
   imports: [

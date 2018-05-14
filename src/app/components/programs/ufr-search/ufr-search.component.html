@@ -1,0 +1,105 @@
+<j-header></j-header>
+
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-md-12">
+      <div class=row>
+        <div class="col-md-10 mb-2">
+          <span class="h5 mr-sm-4">Select UFR to View:</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <fieldset>
+            <legend>
+              <i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filter By</legend>
+            <div class="row fieldset-padding">
+              <table class="program-search-table">
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" id="defaultCheck1" [(ngModel)]="useappropriations" (change)="search()">
+                      <label class="form-check-label primary-label" for="defaultCheck1">Appropriation</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.appropriation" name="appropriation" [disabled]="!useappropriations"
+                        (change)="search()">
+                        <option *ngFor="let a of appropriations" [ngValue]="a" [selected]="">{{a}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck2">OpAgency</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.agency" name="agency" [disabled]="!useagencies" (change)="search()">
+                        <option *ngFor="let a of agencies" [ngValue]="a">{{a}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck3">BA/BLIN</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.blin" name="blin" [disabled]="!useblins" (change)="search()">
+                        <option *ngFor="let a of blins" [ngValue]="a">{{a}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </fieldset>
+          <div class="h6">Select UFR of Interest</div>
+          <mat-table [dataSource]="datasource" matSort matSortActive="shortName" matSortDirection="asc">
+            <ng-container matColumnDef="shortName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Program</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p">{{p.shortName}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="subprogram">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Subprogram</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Variant">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Variant</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p"></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p"> {{p.type}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="FA">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FA</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Functional Area']}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="CC">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>CC</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Core Capability Area']}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Manager">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Manager</mat-header-cell>
+              <mat-cell class="program-view-link" *matCellDef="let p"> {{p.tags['Manager']}} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['shortName', 'subprogram', 'Variant', 'type', 'FA', 'CC', 'Manager']" (click)="navigate( row )"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSize]="10"></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
