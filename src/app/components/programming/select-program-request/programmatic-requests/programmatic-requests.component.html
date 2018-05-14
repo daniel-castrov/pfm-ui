@@ -36,7 +36,7 @@
     </thead>
     <tbody *ngFor="let pr of uiProgrammaticRequests">
       <tr>
-        <td class="row-lt-gray text-center" rowspan="2">{{pr.shortname}}</td>
+        <td class="row-lt-gray text-center" rowspan="2">{{pr.shortName}}</td>
         <td class="row-lt-gray text-center" rowspan="2"></td>
         <td class="row-lt-gray text-center" rowspan="2"></td>
         <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.state}}</a></td>
@@ -53,14 +53,14 @@
       </tr>
       <tr>
         <td class="">POM</td>
-        <td class="text-right">0</td>
-        <td class="text-right">0</td>
-        <td class="text-right">369</td>
-        <td class="cell-lt-grey text-right">2280</td>
-        <td class="cell-lt-grey text-right">3520</td>
-        <td class="cell-lt-grey text-right"></td>
-        <td class="cell-lt-grey text-right"></td>
-        <td class="cell-lt-grey text-right"></td>
+        <td class="text-right">{{pr.getToa(by-3)}}</td>
+        <td class="text-right">{{pr.getToa(by-2)}}</td>
+        <td class="text-right">{{pr.getToa(by-1)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.getToa(by)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.getToa(by+1)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.getToa(by+2)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.getToa(by+3)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.getToa(by+4)}}</td>
         <td class="cell-lt-grey text-right"></td>
       </tr>
     </tbody>

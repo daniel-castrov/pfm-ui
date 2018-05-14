@@ -1792,11 +1792,11 @@ definitions:
         type: 'string'
       state:
         type: 'string'
-      funding:
+      fundingLines:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"
-      shortname:
+      shortName:
         type: 'string'
   FundingLine:
     type: "object"
