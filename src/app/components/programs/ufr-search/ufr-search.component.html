@@ -5,7 +5,7 @@
     <div class="col-md-12">
       <div class=row>
         <div class="col-md-10 mb-2">
-          <span class="h5 mr-sm-4">Select UFR to View:</span>
+          <span class="h5 mr-sm-4">Unfunded Requests:</span>
         </div>
       </div>
       <div class="row">
@@ -18,15 +18,15 @@
                 <tr>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" id="defaultCheck1" [(ngModel)]="useappropriations" (change)="search()">
-                      <label class="form-check-label primary-label" for="defaultCheck1">Appropriation</label>
+                      <input class="form-check-input" type="checkbox" id="defaultCheck1" [(ngModel)]="useorg" (change)="search()">
+                      <label class="form-check-label primary-label" for="defaultCheck1">Organization</label>
                     </div>
                   </td>
                   <td>
                     <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.appropriation" name="appropriation" [disabled]="!useappropriations"
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.orgId" name="org" [disabled]="!useorg"
                         (change)="search()">
-                        <option *ngFor="let a of appropriations" [ngValue]="a" [selected]="">{{a}}</option>
+                        <option *ngFor="let o of orgs" [ngValue]="o.id" [selected]="">{{o.name}}</option>
                       </select>
                     </div>
                   </td>
@@ -34,14 +34,14 @@
                 <tr>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useagencies" (change)="search()">
-                      <label class="form-check-label primary-label " for="defaultCheck2">OpAgency</label>
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="usefa" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck2">Func. Area</label>
                     </div>
                   </td>
                   <td>
                     <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.agency" name="agency" [disabled]="!useagencies" (change)="search()">
-                        <option *ngFor="let a of agencies" [ngValue]="a">{{a}}</option>
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.fa" name="area" [disabled]="!usefa" (change)="search()">
+                        <option *ngFor="let a of fas" [ngValue]="a">{{a}}</option>
                       </select>
                     </div>
                   </td>
@@ -49,18 +49,111 @@
                 <tr>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useblins" (change)="search()">
-                      <label class="form-check-label primary-label " for="defaultCheck3">BA/BLIN</label>
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="usedates" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck3">Date Issued</label>
                     </div>
                   </td>
                   <td>
                     <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.blin" name="blin" [disabled]="!useblins" (change)="search()">
-                        <option *ngFor="let a of blins" [ngValue]="a">{{a}}</option>
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.from" name="from" [disabled]="!usedates" (change)="search()">
+                        <option>from</option>
+                      </select>
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.to" name="to" [disabled]="!usedates" (change)="search()">
+                        <option>to</option>
                       </select>
                     </div>
                   </td>
                 </tr>
+
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useyoe" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck2">YoE</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="filter.yoe" (change)="search()"
+                      [disabled]="!useyoe">
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck4" [(ngModel)]="useactive" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck4">Active</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck4" [(ngModel)]="filter.active" (change)="search()"
+                        [disabled]="!useactive">
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck5" [(ngModel)]="usestatus" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck5">Status</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.status" name="status" [disabled]="!usestatus" (change)="search()">
+                        <option>DRAFT</option>
+                        <option>SUBMITTED</option>
+                        <option>VALID</option>
+                        <option>INVALID</option>
+                        <option>WITHDRAWN</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck6" [(ngModel)]="usedisp" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck6">Disposition</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.disposition" name="status" [disabled]="!usedisp" (change)="search()">
+                        <option>Approved</option>
+                        <option>Partially Approved</option>
+                        <option>Disapproved</option>
+                        <option>Deferred</option>
+                        <option>Year of Execution</option>
+                        <option>OGI</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck7" [(ngModel)]="usecycle" (change)="search()">
+                      <label class="form-check-label primary-label " for="defaultCheck7">Cycle</label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.cycle" name="status" [disabled]="!usecycle"
+                        (change)="search()">
+                        <option>POM 17</option>
+                        <option>PB 18</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+
+
+
               </table>
             </div>
           </fieldset>

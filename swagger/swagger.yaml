@@ -20,6 +20,8 @@ tags:
 - name: "TOA"
 - name: "POM"
 - name: "PB"
+- name: "UFRs"
+
 #
 ##############################################################################
 # PATHS
@@ -1382,6 +1384,54 @@ paths:
           description: "An unexpected error occured."
 # STOP PROGRAMS
 ##############################################################################
+# START UFRs
+  /ufrs/{ufrId}:
+    get:
+      tags:
+      - "UFRs"
+      operationId: "getUfrById"
+      parameters:
+      - name: "ufrId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get one UFR"
+      description: "Returns the requested UFR"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A program object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /ufrs/{communityId}/{year}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets a list of UFRs for this community and year"
+      description: "Gets UFRs as specified"
+      operationId: "getAll"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+# STOP UFRs
+##############################################################################
 # START SNAPSHOTS
 # 
   /snapshots:
@@ -1426,8 +1476,8 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP SNAPSHOTS
+#################################################################
 # END PATHS
-#
 #################################################################
 #
 # START DEFINITONS
@@ -1760,6 +1810,82 @@ definitions:
         type: 'string'
       appropriation:
         type: 'string'
+  UFRFilter:
+    type: "object"
+    properties:
+      orgId:
+        type: "string"
+      fa:
+        type: "string"
+      from:
+        type: "integer"
+      to:
+        type: "integer"
+      yoe: 
+        type: "boolean"
+      active:
+        type: "boolean"
+      status:
+        type: "string"
+      disposition:
+        type: "string"
+      cycle:
+        type: "string"
+
+
+  UFR:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      tags:
+        $ref: '#/definitions/StringMap'
+      description:
+        type: "string"
+      parentId:
+        type: "string"
+      originatingProgramId:
+        type: "string"
+      infolink:
+        type: "string"
+      imgLink:
+        type: "string"
+      shortName:
+        type: "string"
+      longName:
+        type: "string"
+      type:
+        type: "string"
+      yoe:
+        type: "boolean"
+      status:
+        type: "string"
+      disposition:
+        type: "string"
+      lastmod:
+        type: "integer"
+      notes:
+        type: "string"
+      justification:
+        type: "string"
+      number:
+        type: "integer"
+      created:
+        type: "integer"      
+      funding:
+        type: "array"
+        items:
+          $ref: "#/definitions/FundingLine"
+      fy:
+        type: "integer"
+      variants:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
+      emphases:
+        type: "array"
+        items:
+          $ref: "string"
   Pom:
     type: "object"
     properties:

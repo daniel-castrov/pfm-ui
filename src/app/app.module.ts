@@ -88,7 +88,8 @@ import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
-import { PBService } from './generated';
+import { PBService } from './generated/api/pB.service';
+import { UFRsService } from './generated/api/uFRs.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
 import { UfrSearchComponent } from './components/programs/ufr-search/ufr-search.component';
 
@@ -224,6 +225,7 @@ const appRoutes: Routes = [
     POMService,
     PRService,
     PBService,
+    UFRsService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

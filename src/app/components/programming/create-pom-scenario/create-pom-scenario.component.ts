@@ -121,7 +121,7 @@ export class CreatePomScenarioComponent implements OnInit {
   }
 
   fetch(){
-    var my: CreatePomScenarioComponent = this;
+    var my: CreatePomScenarioComponent = this;0
     this.userDetailsService.getCurrentUser().subscribe((person) => {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
