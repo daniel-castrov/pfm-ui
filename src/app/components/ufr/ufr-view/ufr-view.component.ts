@@ -10,7 +10,8 @@ import { Router, ActivatedRoute, ParamMap, Params, UrlSegment } from '@angular/r
 @Component({
   selector: 'app-ufr-view',
   templateUrl: './ufr-view.component.html',
-  styleUrls: ['./ufr-view.component.scss']
+  styleUrls: ['./ufr-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
