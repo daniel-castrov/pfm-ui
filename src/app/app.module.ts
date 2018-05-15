@@ -97,6 +97,7 @@ import { UfrMetadataComponent } from './components/ufr/metadata/ufr-metadata.com
 import { UfrFundsComponent } from './components/ufr/ufr-funds/ufr-funds.component';
 import { UfrVariantsComponent } from './components/ufr/ufr-variants/ufr-variants.component';
 import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
+import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -200,7 +201,8 @@ const appRoutes: Routes = [
     UfrMetadataComponent,
     UfrFundsComponent,
     UfrVariantsComponent,
-    UfrTabComponent
+    UfrTabComponent,
+    UfrJustificationComponent
   ],
 
   imports: [
