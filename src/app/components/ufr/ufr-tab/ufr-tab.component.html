@@ -1,3 +1,64 @@
-<p>
-  ufr-tab works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-3">
+        <span class="form-group inline-name">
+           <label>Label</label>
+           <input type="text" class="form-control forminput mr-5">
+         </span>
+      </div>
+      <div class="col-3">
+        <span class="form-group inline-name">
+          <label class="mb-1">POM</label>
+          <select class="form-control-sm dropdown-width mb-2">
+            <option>POM19</option>
+          </select>
+        </span>
+      </div>
+      <div class="col-3">
+        <span class="form-check inline-name">
+          <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useyoe" (change)="search()">
+          <label class="form-check-label primary-label" for="defaultCheck2">YoE UFR</label>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <span class="form-group inline-name">
+          <label class="mb-1">Label</label>
+          <select class="form-control-sm dropdown-width mb-2">
+            <option>CCAs</option>
+          </select>
+        </span>
+      </div>
+      <div class="col-3">
+        <span class="form-group inline-name">
+           <label>Status</label>
+           <input type="text" placeholder="Draft" class="form-control forminput mr-5">
+         </span>
+      </div>
+      <div class="col-3">
+        <span class="form-group inline-name">
+           <label>Cost to Complete</label>
+           <input type="text" placeholder="$" class="form-control forminput mr-5">
+         </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <span class="form-group inline-name">
+          <label>Disposition</label>
+          <input type="text" placeholder="" class="form-control forminput mr-5">
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="title mb-2">Notes:</div>
+        <div class="form-group">
+          <textarea cols="50" rows="4" wrap="physical" class="form-control" id="impact"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
