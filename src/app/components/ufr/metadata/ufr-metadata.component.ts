@@ -4,18 +4,18 @@ import { Program, ProgramsService, Tag } from '../../../generated';
 import { UFR } from '../../../generated/model/uFR'
 
 @Component({
-  selector: 'ufr-progmetas',
-  templateUrl: './ufr.component.html',
-  styleUrls: ['./ufr.component.scss']
+  selector: 'ufr-metadata',
+  templateUrl: './ufr-metadata.component.html',
+  styleUrls: ['./ufr-metadata.component.scss']
 })
-export class UfrComponent implements OnInit {
+export class UfrMetadataComponent implements OnInit {
   @Input() current: UFR;
   private tagnames: Map<string, Map<string,string>> = new Map<string, Map<string,string>>();
 
   constructor(private progsvc: ProgramsService) { }
 
   ngOnInit() {
-    var my: UfrComponent = this;
+    var my: UfrMetadataComponent = this;
     this.progsvc.getSearchTags().subscribe(tagtypes => { 
       tagtypes.result.forEach(function (tagtype: string) {
         

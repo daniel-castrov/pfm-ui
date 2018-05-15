@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UfrComponent } from './ufr.component';
+import { UfrMetadataComponent } from './ufr-metadata.component';
 
 describe('UfrComponent', () => {
-  let component: UfrComponent;
-  let fixture: ComponentFixture<UfrComponent>;
+  let component: UfrMetadataComponent;
+  let fixture: ComponentFixture<UfrMetadataComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UfrComponent ]
+      declarations: [UfrMetadataComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UfrComponent);
+    fixture = TestBed.createComponent(UfrMetadataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
