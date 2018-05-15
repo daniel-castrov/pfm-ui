@@ -17,9 +17,9 @@
           </ng-container>
           </div>
           <div id="toa1" class="table-editable">
-            <table class="table table-striped">
+            <table class="table">
               <tr class="toa-table-title">
-                <td class="font-weight-bold toa-table-title" colspan="6">Set Overall TOA for {{community.abbreviation}} Community</td>
+                <td class="font-weight-bold toa-table-title" colspan="6">Set TOA for {{community.abbreviation}} Community</td>
               </tr>
               <tr class="table-bordered">
                 <th>Community</th>
@@ -31,7 +31,7 @@
                 <th>FY{{fy-2000}}-{{fy+4-2000}}</th>
               </tr>
               <tr class="table-bordered">
-                <td>{{community.abbreviation}} Overall</td>
+                <td>{{community.abbreviation}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy)" class="editable-field">{{toas.get(fy)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+1)" class="editable-field">{{toas.get(fy+1)}}</td>
                 <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)" class="editable-field">{{toas.get(fy+2)}}</td>
@@ -78,7 +78,7 @@
       </div>
       <div class="row" *ngIf="allowedits()">
         <div class="col-lg-8 col-md-12 mb-3">
-          <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create Scenario</button>
+          <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
           <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
         </div>
       </div>

@@ -1,15 +1,24 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+
 fieldset {
   padding: 20px;
 }
 
 .table {
   th {
-    background-color: #25527a;
-    color: #ffffff;
+    background-color: $primary-color;
+    color: $white;
   }
 
   .toa-table-title {
-    background-color: #ffffff;
+    background-color: $white;
   }
 
   .editable-field {
@@ -21,8 +30,6 @@ fieldset {
 
 .table-editable {
   position: relative;
-
-
 
   th {
     padding: 8px;
@@ -68,8 +75,8 @@ fieldset {
   }
 
   .row-light {
-    background-color: #eae9e9;
-    color: #000000;
+    background-color: $light-grey;
+    color: $black;
   }
 
 }
@@ -86,10 +93,19 @@ fieldset {
   }
 }
 
-
 .table-editable  {
   .row-white {
-    background-color: #ffffff;
+    background-color: $white;
+  }
+
+  .editable-field {
+    background-color: $light-blue;
+    color: $black;
+    text-align: right;
+    &:hover {
+      cursor: pointer;
+      background-color: $light-grey;
+    }
   }
 }
 
