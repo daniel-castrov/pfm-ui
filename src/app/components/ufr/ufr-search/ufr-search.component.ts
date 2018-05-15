@@ -42,7 +42,7 @@ export class UfrSearchComponent implements OnInit {
 
   constructor(private usvc: UFRsService, private userDetailsService: MyDetailsService,
     private communityService: CommunityService, private orgsvc: OrganizationService,
-    private pomsvc: POMService, private pbsvc:PBService ) {    
+    private pomsvc: POMService, private pbsvc: PBService, private router: Router) {
   }
 
   ngOnInit() {
@@ -57,13 +57,14 @@ export class UfrSearchComponent implements OnInit {
       ]).subscribe(data => {
         my.community = data[0].result;
         my.orgs = data[1].result;
-        my.fas = data[4].result;
+        my.fas = (data[4].result ? data[4].result : ['FA 1', 'FA2 ', 'Functional Area C']);
         
         my.filter.orgId = my.orgs[0].id;
         my.filter.from = new Date().getTime();
         my.filter.to = new Date().getTime();
         my.filter.disposition = 'Approved';
         my.filter.status = 'DRAFT';
+        
         my.fas.sort();
         my.filter.fa = my.fas[0];
 
@@ -132,15 +133,43 @@ export class UfrSearchComponent implements OnInit {
       searchfilter.yoe = my.filter.yoe;
     }
 
-    this.usvc.search( searchfilter ).subscribe(
+
+    this.usvc.search( my.community.id, searchfilter ).subscribe(
       (data) => {
-        my.datasource.data = data.result;
+        //my.datasource.data = data.result;
+        my.datasource.data = my.makeMockUfrs();
         // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
         // it to work there. The sorter and paginator aren't set there (?)
         // so this is a not-too-ugly workaround.
         my.datasource.sort = my.sorter;
         my.datasource.paginator = my.paginator;
       });
+  }
+
+  makeMockUfrs() {
+    var my: UfrSearchComponent = this;
+
+    var ulist: UFR[] = [];
+    for (var i = 0; i < 5; i++){
+      ulist.push({
+        id: (i + 1).toString(),
+        number: 100 + i,
+        name: 'UFR named ' + i,
+        yoe: (Math.random() >= 0.5),
+        status: (Math.random()>=0.5 ? "Partially Approved" : 'Approved'),
+        disposition: (Math.random() >= 0.5 ? "DRAFT" : 'OUTSTANDING'),
+        lastmod: new Date().getTime(),
+        created: new Date().getTime()-60000
+      });
+    }
+
+    console.log(ulist);
+    return ulist;
+  }
+
+
+  navigate(row) {
+    this.router.navigate(['/ufr-view', row.id]);
   }
 }
 

@@ -91,7 +91,9 @@ import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
-import { UfrSearchComponent } from './components/programs/ufr-search/ufr-search.component';
+import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
+import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
+import { UfrComponent } from './components/ufr/ufr/ufr.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -128,7 +130,9 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
   { path: 'create-new-pom', component: CreatePomScenarioComponent },
-  { path: 'ufr-search', component: UfrSearchComponent }
+  { path: 'ufr-search', component: UfrSearchComponent },
+  { path: 'ufr-view/:id', component: UfrViewComponent },
+
 ];
 
 @NgModule({
@@ -188,7 +192,9 @@ const appRoutes: Routes = [
     UserListComponent,
     VariantsComponent,
     VariantLineComponent,
-    UfrSearchComponent
+    UfrSearchComponent,
+    UfrViewComponent,
+    UfrComponent
   ],
 
   imports: [

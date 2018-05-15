@@ -1884,8 +1884,6 @@ definitions:
         type: "string"
       cycle:
         type: "string"
-
-
   UFR:
     type: "object"
     properties:
