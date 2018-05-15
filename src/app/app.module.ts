@@ -94,6 +94,8 @@ import { ProgrammaticRequestsComponent } from './components/programming/select-p
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
 import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
 import { UfrMetadataComponent } from './components/ufr/metadata/ufr-metadata.component';
+import { UfrFundsComponent } from './components/ufr/ufr-funds/ufr-funds.component';
+import { UfrVariantsComponent } from './components/ufr/ufr-variants/ufr-variants.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -194,7 +196,9 @@ const appRoutes: Routes = [
     VariantLineComponent,
     UfrSearchComponent,
     UfrViewComponent,
-    UfrMetadataComponent
+    UfrMetadataComponent,
+    UfrFundsComponent,
+    UfrVariantsComponent
   ],
 
   imports: [
