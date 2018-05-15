@@ -1408,7 +1408,7 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /ufrs/{communityId}/{year}:
+  /ufrs/community/{communityId}/year/{year}:
     get:
       tags:
       - "UFRs"
@@ -1430,7 +1430,7 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-  /search:
+  /search-ufrs/community/{communityId}:
     post:
       tags:
       - "UFRs"
@@ -1438,6 +1438,11 @@ paths:
       summary: "Search UFRs based on criteria"
       description: "Returns a collection of UFRs that meet the criteria"
       parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
       - in: "body"
         name: "body"
         description: "a UFRFilter"
@@ -1451,6 +1456,28 @@ paths:
           description: "A collection of Programs"
           schema:
             $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search-ufrs/community/{communityId}/fa:
+    get:
+      tags:
+      - "UFRs"
+      operationId: "getFAs"
+      summary: "Gets a list of Functional Areas for UFRs in this community"
+      description: "Returns a collection of FAs (strings)"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of FAs (strings)"
         403:
           description: "Forbidden/not authorized"
         500:
@@ -1912,6 +1939,8 @@ definitions:
         type: "array"
         items:
           $ref: "string"
+      name:
+        type: "string"
   Pom:
     type: "object"
     properties:

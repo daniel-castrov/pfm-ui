@@ -52,16 +52,20 @@ export class UfrSearchComponent implements OnInit {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
         my.pomsvc.getById(person.result.currentCommunityId),
-        my.pbsvc.getById( person.result.currentCommunityId)
+        my.pbsvc.getById(person.result.currentCommunityId),
+        my.usvc.getFAs(person.result.currentCommunityId)
       ]).subscribe(data => {
         my.community = data[0].result;
         my.orgs = data[1].result;
-
+        my.fas = data[4].result;
+        
         my.filter.orgId = my.orgs[0].id;
         my.filter.from = new Date().getTime();
         my.filter.to = new Date().getTime();
         my.filter.disposition = 'Approved';
-        my.filter.status = 'DRAFT';    
+        my.filter.status = 'DRAFT';
+        my.fas.sort();
+        my.filter.fa = my.fas[0];
 
         var phases: Cycle[] = [];
         data[2].result.forEach(function (x: Pom) {
