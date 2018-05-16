@@ -17,113 +17,43 @@
 
 <form>
   <div class="row">
-    <div class="col-8">
+    <div class="col-9">
       <div class="row">
         <div class="col-md-12">
-          <div class="form-group inline-name">
-            <label>ProgID:</label>
-            <span class="program-values">{{current?.shortName}}</span>
-          </div>
-          <div class="form-group inline-name">
-            <label>ProgName:</label>
-            <span class="program-values">{{current?.longName}}</span>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group inline-name">
+                <label>ProgID:</label>
+                <span class="program-values">{{current?.shortName}}</span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group inline-name">
+                <label>ProgName:</label>
+                <span class="program-values">{{current?.longName}}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-3">
           <div class="form-group inline-name">
-            <label>Prog Parent:</label>
+            <label>Parent Program for Subprogram:</label>
             <span class="program-values" *ngIf="current?.parentId; else novalue">{{current.parentId}}</span>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <fieldset>
-            <legend>Capability</legend>
-            <span class="form-group inline-name">
-              <label>*Primary:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Primary Capability'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>*Core:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Core Capability Area'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>*Secondary:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Secondary Capability'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>Tertiary:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary Capability'}"></ng-container>
-            </span>
-          </fieldset>
+        <div class="col-3">
+          <span class="form-group inline-name">
+          <label class="mb-1">Type of Subprogram</label>
+           <select class="form-control-sm dropdown-width mb-2">
+             <option>items</option>
+             <option>items</option>
+             <option>items</option>
+           </select>
+          </span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <fieldset>
-            <legend>Area</legend>
-            <span class="form-group inline-name">
-              <label>*Functional:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Functional Area'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>*Medical Cat.:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Medical Category'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>*NBC Cat.:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'NBC Category'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>*Acq. Type:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Acquisition Type'}"></ng-container>
-            </span>
-          </fieldset>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card-body">
-            <span class="form-group inline-name">
-              <label>Emphasis:</label>
-              <ng-container *ngIf="current?.emphases && current?.emphases.length>0; else novalue">
-                <span class="program-values" *ngFor="let e of current.emphases">{{e}}</span>
-              </ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>BSV Nat. Strat.:</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'BSV National Strategy'}"></ng-container>
-            </span>
-            <span class="form-group inline-name">
-              <label>DASD POM:</label>
-              <span class="program-values" *ngIf="false; else novalue"></span>
-            </span>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="row">
-        <div class="col-12">
-          <button type="button" class="btn btn-primary btn pull-left" disabled>Add Subprogram</button>
-        </div>
-      </div> -->
-    </div>
-    <div class="col-md-4">
-      <div class="card border-light mb-3 text-center">
-        <div class="img-placeholder">
-          <img *ngIf="current?.imgLink" src="current.imgLink" />
-          <i *ngIf="!current?.imgLink" class="fa fa-picture-o" aria-hidden="true"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
-
-<form id="program-request">
-  <div class="row">
-    <div class="col-9">
       <div class="row">
         <div class="col-md-5">
           <div class="input-group mb-3">
@@ -133,54 +63,57 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-        </div>
       </div>
       <div class="row">
         <div class="col-md-12">
           <fieldset>
             <legend>Capability</legend>
             <span class="form-group inline-name">
-              <label class="mb-1">*Primary</label>
+              <label class="mb-1">Primary Cap.</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Primary Capability'}"></ng-container>
               <select class="form-control-sm dropdown-width mb-2">
                  <option>items</option>
                  <option>items</option>
                  <option>items</option>
                </select>
              </span>
-             <span class="form-group inline-name">
-                <label class="mb-1">*Core</label>
-                <select class="form-control-sm dropdown-width mb-2">
-                   <option>items</option>
-                   <option>items</option>
-                   <option>items</option>
-                </select>
-              </span>
-              <span class="form-group inline-name">
-                <label class="mb-1">Secondary</label>
-                <select class="form-control-sm dropdown-width mb-2">>
-                  <option>items</option>
-                  <option>items</option>
-                  <option>items</option>
-                </select>
-              </span>
-              <span class="form-group inline-name">
-                <label class="mb-1">Tertiary</label>
-                <select class="form-control-sm dropdown-width mb-2">
-                  <option>items</option>
-                  <option>items</option>
-                  <option>items</option>
-                </select>
-              </span>
+            <span class="form-group inline-name">
+              <label>Core:</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Core Capability Area'}"></ng-container>
+              <select class="form-control-sm dropdown-width mb-2">
+               <option>items</option>
+               <option>items</option>
+               <option>items</option>
+              </select>
+            </span>
+            <span class="form-group inline-name">
+              <label>Secondary:</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Secondary Capability'}"></ng-container>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+            </span>
+            <span class="form-group inline-name">
+              <label>Tertiary:</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary Capability'}"></ng-container>
+              <select class="form-control-sm dropdown-width mb-2">
+                 <option>items</option>
+                 <option>items</option>
+                 <option>items</option>
+               </select>
+            </span>
           </fieldset>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-10">
           <fieldset>
-            <legend>Area</legend>
-            <span class="form-group inline-name mr-4">
-              <label class="mb-1">*Functional</label>
+          <legend>Area</legend>
+            <span class="form-group inline-name">
+              <label class="mb-1">Functional</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Functional Area'}"></ng-container>
               <select class="form-control-sm dropdown-width mb-2">
                  <option>items</option>
                  <option>items</option>
@@ -189,6 +122,16 @@
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Medical Cat.</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'Medical Category'}"></ng-container>
+              <select class="form-control-sm dropdown-width mb-2">
+               <option>items</option>
+               <option>items</option>
+               <option>items</option>
+              </select>
+            </span>
+            <span class="form-group inline-name">
+              <label class="mb-1">NBC Cat.</label>
+              <ng-container *ngTemplateOutlet="value;context:{area:'NBC Category'}"></ng-container>
               <select class="form-control-sm dropdown-width mb-2">
                <option>items</option>
                <option>items</option>
@@ -197,9 +140,10 @@
             </span>
           </fieldset>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-2">
           <span class="form-group inline-name">
             <label class="mt-5">Aqu. Type</label>
+            <ng-container *ngTemplateOutlet="value;context:{area:'Acquisition Type'}"></ng-container>
             <select class="form-control-sm dropdown-width mb-2">
               <option>items</option>
               <option>items</option>
@@ -211,7 +155,25 @@
       <div class="row">
         <div class="col-md-12">
           <span class="form-group inline-name">
-            <label class="mb-1">Emphasis</label>
+            <label>Emphasis:</label>
+            <ng-container *ngIf="current?.emphases && current?.emphases.length>0; else novalue">
+              <span class="program-values" *ngFor="let e of current.emphases">{{e}}</span>
+            </ng-container>
+          </span>
+          <span class="form-group inline-name">
+            <label>BSV Nat. Strat.:</label>
+            <ng-container *ngTemplateOutlet="value;context:{area:'BSV National Strategy'}"></ng-container>
+          </span>
+          <span class="form-group inline-name">
+            <label>DASD POM:</label>
+            <span class="program-values" *ngIf="false; else novalue"></span>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="form-group inline-name">
+            <label class="mb-1">Lead Component</label>
             <select class="form-control-sm dropdown-width mb-2">
               <option>items</option>
               <option>items</option>
@@ -219,7 +181,7 @@
             </select>
           </span>
           <span class="form-group inline-name">
-            <label class="mb-1">BSV Nat. Strat.</label>
+            <label class="mb-1">Manager</label>
             <select class="form-control-sm dropdown-width mb-2">
               <option>items</option>
               <option>items</option>
@@ -227,7 +189,7 @@
             </select>
           </span>
           <span class="form-group inline-name">
-            <label class="mb-1">DASD POM</label>
+            <label class="mb-1">Branch</label>
             <select class="form-control-sm dropdown-width mb-2">
               <option>items</option>
               <option>items</option>
@@ -236,24 +198,17 @@
           </span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <span class="form-group inline-name">
-            <label class="mb-1">*Lead Component</label>
-            <select class="form-control-sm dropdown-width mb-2">
-              <option>items</option>
-              <option>items</option>
-              <option>items</option>
-            </select>
-          </span>
-          <span class="form-group inline-name">
-            <label class="mb-1">*Manager</label>
-            <select class="form-control-sm dropdown-width mb-2">
-              <option>items</option>
-              <option>items</option>
-              <option>items</option>
-            </select>
-          </span>
+  <!--<div class="row">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary btn pull-left" disabled>Add Subprogram</button>
+        </div>
+      </div> -->
+    </div>
+    <div class="col-3">
+      <div class="card border-light mb-3 text-center">
+        <div class="img-placeholder">
+          <img *ngIf="current?.imgLink" src="current.imgLink" />
+          <i *ngIf="!current?.imgLink" class="fa fa-picture-o" aria-hidden="true"></i>
         </div>
       </div>
     </div>
