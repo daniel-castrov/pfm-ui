@@ -53,11 +53,7 @@
                   <td>
                     <div class="form-group">
                       <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.status" name="status" [disabled]="!usestatus" (change)="search()">
-                        <option>DRAFT</option>
-                        <option>SUBMITTED</option>
-                        <option>VALID</option>
-                        <option>INVALID</option>
-                        <option>WITHDRAWN</option>
+                        <option *ngFor="let d of statuses">{{d}}</option>
                       </select>
                     </div>
                   </td>
@@ -99,12 +95,7 @@
                   <td>
                     <div class="form-group">
                       <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.disposition" name="disposition" [disabled]="!usedisp" (change)="search()">
-                        <option>Approved</option>
-                        <option>Partially Approved</option>
-                        <option>Disapproved</option>
-                        <option>Deferred</option>
-                        <option>Year of Execution</option>
-                        <option>OGI</option>
+                        <option *ngFor="let d of dispositions">{{d}}</option>
                       </select>
                     </div>
                   </td>

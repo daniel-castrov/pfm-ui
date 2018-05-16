@@ -1848,14 +1848,6 @@ definitions:
         type: "string"
       type:
         type: "string"
-      cca:
-        type: "string"
-      impactY:
-        type: "string"
-      impactN:
-        type: "string"
-      costToComplete:
-        type: "number"
       execution:
         type: "string"
       milestones:
@@ -1948,7 +1940,15 @@ definitions:
       number:
         type: "integer"
       created:
-        type: "integer"      
+        type: "integer"
+      cca:
+        type: "string"
+      impactY:
+        type: "string"
+      impactN:
+        type: "string"
+      costToComplete:
+        type: "number"
       funding:
         type: "array"
         items:

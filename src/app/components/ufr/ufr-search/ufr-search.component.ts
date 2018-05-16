@@ -13,6 +13,8 @@ import { UFRFilter } from '../../../generated/model/uFRFilter';
 import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB } from '../../../generated';
 
 import { Cycle } from '../cycle';
+import { Disposition } from '../disposition.enum';
+import { Status } from '../status.enum';
 
 @Component({
   selector: 'app-ufr-search',
@@ -38,12 +40,19 @@ export class UfrSearchComponent implements OnInit {
   private fas: string[] = [];
   private cycles: string[] = [];
   private community: Community;
+  private dispositions: string[]=[];
+  private statuses: string[] = [];
 
   private datasource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
 
   constructor(private usvc: UFRsService, private userDetailsService: MyDetailsService,
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private router: Router) {
+    
+    this.dispositions = Object.keys(Disposition)
+      .filter(k => typeof Disposition[k] === "number") as string[];
+    this.statuses = Object.keys(Status)
+      .filter(k => typeof Status[k] === "number") as string[];
   }
 
   ngOnInit() {
@@ -63,8 +72,8 @@ export class UfrSearchComponent implements OnInit {
         my.filter.orgId = my.orgs[0].id;
         my.filter.from = new Date().getTime();
         my.filter.to = new Date().getTime();
-        my.filter.disposition = 'Approved';
-        my.filter.status = 'DRAFT';
+        my.filter.status = Status[0];
+        my.filter.disposition = Disposition[0];
         
         my.fas.sort();
         my.filter.fa = my.fas[0];
@@ -160,8 +169,8 @@ export class UfrSearchComponent implements OnInit {
         number: 100 + i,
         name: 'UFR named ' + i,
         yoe: (Math.random() >= 0.5),
-        status: (Math.random()>=0.5 ? "Partially Approved" : 'Approved'),
-        disposition: (Math.random() >= 0.5 ? "DRAFT" : 'OUTSTANDING'),
+        status: Status[Math.floor(Math.random() * (Object.keys(Status).length / 2))],
+        disposition: Disposition[Math.floor(Math.random() * (Object.keys(Disposition).length / 2))],
         lastmod: new Date().getTime(),
         created: new Date().getTime()-60000
       });
