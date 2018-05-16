@@ -32,7 +32,7 @@ export class UfrViewComponent implements OnInit {
         id: pid,
         phaseId: '5afc6ef882d7c8902e97c73d', // WARNING: this is super-fragile!
         costToComplete: 100,
-        impactY: 'none',
+        milestoneImpact: 'none',
         impactN: 'I don\'t know',
         cca: 'My core!',
         justification: 'Just because ;)',

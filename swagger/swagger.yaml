@@ -1943,7 +1943,7 @@ definitions:
         type: "integer"
       cca:
         type: "string"
-      impactY:
+      milestoneImpact:
         type: "string"
       impactN:
         type: "string"
