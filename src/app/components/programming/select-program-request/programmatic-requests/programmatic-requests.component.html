@@ -36,31 +36,31 @@
     </thead>
     <tbody *ngFor="let pr of (rows | values)">
       <tr>
-        <td class="row-lt-gray text-center" rowspan="2">{{pr.pom.shortName}}</td>
+        <td class="row-lt-gray text-center" rowspan="2">{{pr.pom?.shortName}}</td>
         <td class="row-lt-gray text-center" rowspan="2"></td>
         <td class="row-lt-gray text-center" rowspan="2"></td>
-        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.pom.state}}</a></td>
+        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.pom?.state}}</a></td>
         <td class="">PB</td>
-        <td class="text-right">{{pr.pb.getToa(by-3)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by-2)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by-1)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by+1)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by+2)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by+3)}}</td>
-        <td class="text-right">{{pr.pb.getToa(by+4)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by-2)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by-1)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by+1)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by+2)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by+3)}}</td>
+        <td class="text-right">{{pr.pb?.getToa(by+4)}}</td>
         <td class="text-right"></td>
       </tr>
       <tr>
         <td class="">POM</td>
-        <td class="text-right">{{pr.pom.getToa(by-3)}}</td>
-        <td class="text-right">{{pr.pom.getToa(by-2)}}</td>
-        <td class="text-right">{{pr.pom.getToa(by-1)}}</td>
-        <td class="cell-lt-grey text-right">{{pr.pom.getToa(by)}}</td>
-        <td class="cell-lt-grey text-right">{{pr.pom.getToa(by+1)}}</td>
-        <td class="cell-lt-grey text-right">{{pr.pom.getToa(by+2)}}</td>
-        <td class="cell-lt-grey text-right">{{pr.pom.getToa(by+3)}}</td>
-        <td class="cell-lt-grey text-right">{{pr.pom.getToa(by+4)}}</td>
+        <td class="text-right">{{pr.pom?.getToa(by-3)}}</td>
+        <td class="text-right">{{pr.pom?.getToa(by-2)}}</td>
+        <td class="text-right">{{pr.pom?.getToa(by-1)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+1)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+2)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+3)}}</td>
+        <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+4)}}</td>
         <td class="cell-lt-grey text-right"></td>
       </tr>
     </tbody>
