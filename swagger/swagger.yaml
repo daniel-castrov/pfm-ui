@@ -16,7 +16,7 @@ tags:
 - name: "Role"
 - name: "Snapshots"
 - name: "User"
-- name: "UserRole"
+- name: "UserRoleResource"
 - name: "TOA"
 - name: "POM"
 - name: "PB"
@@ -1098,9 +1098,9 @@ paths:
   /userRoles:
     post:
       tags:
-      - "UserRole"
-      summary: "Creates a UserRole"
-      description: "Creates a UserRole"
+      - "UserRoleResource"
+      summary: "Creates a UserRoleResource"
+      description: "Creates a UserRoleResource"
       operationId: "create"
       consumes:
       - "application/json"
@@ -1109,47 +1109,47 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "a UserRole"
+        description: "a UserRoleResource"
         required: true
         schema:
-          $ref: "#/definitions/UserRole"
+          $ref: "#/definitions/UserRoleResource"
       responses:
         201:
-          description: "UserRole successfully created."
+          description: "UserRoleResource successfully created."
         400:
-          description: "UserRole couldn't be created."
+          description: "UserRoleResource couldn't be created."
         403:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
-  /userRoles/{userRoleId}:
+  /userRoles/{userRoleResourceId}:
     delete:
       tags:
-      - "UserRole"
-      summary: "Deletes a UserRole"
-      description: "Delete a UserRole"
+      - "UserRoleResource"
+      summary: "Deletes a UserRoleResource"
+      description: "Delete a UserRoleResource"
       operationId: "deleteById"
       parameters:
-      - name: "userRoleId"
+      - name: "userRoleResourceId"
         in: "path"
-        description: "UserRoleId"
+        description: "userRoleResourceId"
         required: true
         type: "string"
       responses:
         204:
-          description: "UserRole successfully deleted."
+          description: "UserRoleResource successfully deleted."
         403:
           description: "Forbidden"
         404:
-          description: "UserRole does not exist."
+          description: "UserRoleResource does not exist."
         500:
           description: "An unexpected error occurred."
   /userRoles/user/{userId}:
     get:
       tags:
-      - "UserRole"
-      summary: "Gets all UserRoles for a user"
-      description: "Gets all UserRoles for a user"
+      - "UserRoleResource"
+      summary: "Gets all UserRoleResorces for a user"
+      description: "Gets all UserRoleResorces for a user"
       operationId: "getUserRolesbyUserId"
       parameters:
       - name: "userId"
@@ -1159,7 +1159,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "List of UserRoles"
+          description: "List of UserRoleResorces"
           schema:
             $ref: "#/definitions/RestResult"
         403:
@@ -1171,7 +1171,7 @@ paths:
   /userRoles/user/{userId}/community/{communityId}/role/{roleName}:
     get:
       tags:
-      - "UserRole"
+      - "UserRoleResource"
       operationId: "getUserRolesbyUserAndCommunityAndRoleName"
       parameters:
       - name: "userId"
@@ -1188,7 +1188,7 @@ paths:
         type: "string"
       responses:
         200:
-          description: "List of UserRoles"
+          description: "List of UserRoleResources"
           schema:
             $ref: "#/definitions/RestResult"
         403:
@@ -1609,7 +1609,7 @@ definitions:
         type: "object"
         additionalProperties:
             type: string
-  UserRole:
+  UserRoleResource:
     type: "object"
     properties:
       id:
@@ -1618,6 +1618,10 @@ definitions:
         type: "string"
       roleId:
         type: "string"
+      resourceIds:
+        type: "array"
+        items:
+          type: "string"
   Tag:
     type: "object"
     properties:

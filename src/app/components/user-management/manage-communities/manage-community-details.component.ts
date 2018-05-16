@@ -15,8 +15,8 @@ import { Organization } from '../../../generated/model/organization';
 import { UserService } from '../../../generated/api/user.service';
 import { Role } from '../../../generated/model/role'
 import { RoleService } from '../../../generated/api/role.service';
-import { UserRole } from '../../../generated/model/userRole'
-import { UserRoleService } from '../../../generated/api/userRole.service';
+import { UserRoleResource } from '../../../generated/model/userRoleResource'
+import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
 
 @Component({
@@ -46,7 +46,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
     private userService: UserService,
     private communityService: CommunityService,
     private roleService:RoleService,
-    private userRoleService:UserRoleService,
+    private userRoleResourceService:UserRoleResourceService,
     private organizationService:OrganizationService
 
   ) {
@@ -110,12 +110,12 @@ export class MamageCommunityDetailsComponent implements OnInit {
       resultRole = r;
       this.resultError.push(resultRole.error);
       approverRole = resultRole.result;
-      let userRole:UserRole=new Object();
-      userRole.roleId=approverRole.id;
-      userRole.userId=this.addedapprover;
+      let userRoleResource:UserRoleResource=new Object();
+      userRoleResource.roleId=approverRole.id;
+      userRoleResource.userId=this.addedapprover;
 
       let resultUserRole: RestResult;
-      this.userRoleService.create(userRole)
+      this.userRoleResourceService.create(userRoleResource)
       .subscribe(r => {
         resultRole = r;
         this.getCommunity();

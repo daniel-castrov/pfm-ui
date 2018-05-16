@@ -18,8 +18,8 @@ import { Community } from '../../../generated/model/community';
 import { UserService } from '../../../generated/api/user.service';
 import { Role } from '../../../generated/model/role';
 import { RoleService } from '../../../generated/api/role.service';
-import { UserRole } from '../../../generated/model/userRole';
-import { UserRoleService } from '../../../generated/api/userRole.service';
+import { UserRoleResource } from '../../../generated/model/userRoleResource';
+import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -63,7 +63,7 @@ export class ManageUsersComponent implements OnInit {
     private userService: UserService,
     private roleService: RoleService,
     private communityService: CommunityService,
-    private userRoleService: UserRoleService,
+    private userRoleResourceService: UserRoleResourceService,
 
   ) {
     this.route.params.subscribe((params: Params) => {
@@ -100,11 +100,11 @@ export class ManageUsersComponent implements OnInit {
 
           // 3. Get the users Roles in each community
           for (let comm of allCommunities) {
-            let resultUserRoles: RestResult;
+            let resultUserRoleResources: RestResult;
             let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
             s.subscribe(c => {
-              resultUserRoles = c;
-              this.resultError.push(resultUserRoles.error);
+              resultUserRoleResources = c;
+              this.resultError.push(resultUserRoleResources.error);
 
               // 4. Get all the roles for the community
               let resultAllRoles: RestResult;
@@ -114,8 +114,8 @@ export class ManageUsersComponent implements OnInit {
                 this.resultError.push(resultAllRoles.error);
 
                 // push if at least one role
-                if ( resultUserRoles.result.length>0 ){ 
-                  this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoles.result, resultAllRoles.result));
+                if ( resultUserRoleResources.result.length>0 ){ 
+                  this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result, resultAllRoles.result));
 
                   for (var i =0; i < allCommunities.length; i++){
                     if ( allCommunities[i].id === comm.id ){
@@ -167,15 +167,15 @@ export class ManageUsersComponent implements OnInit {
 
   addRole(): void {
  
-     let userRole:UserRole=new Object();
-      userRole.roleId=this.addedroleId;
-      userRole.userId=this.id;
-      console.log(userRole);
+     let userRoleResource:UserRoleResource=new Object();
+      userRoleResource.roleId=this.addedroleId;
+      userRoleResource.userId=this.id;
+      console.log(userRoleResource);
       
-      let resultUserRole: RestResult;
-      this.userRoleService.create(userRole)
+      let resultUserRoleResource: RestResult;
+      this.userRoleResourceService.create(userRoleResource)
       .subscribe(r => {
-        resultUserRole = r;
+        resultUserRoleResource = r;
         this.getTargetUser();
       });
   }
@@ -195,15 +195,15 @@ export class ManageUsersComponent implements OnInit {
 
       let approverRole:Role;
       approverRole = resultRole.result;
-      let userRole:UserRole=new Object();
-      userRole.roleId=approverRole.id;
-      userRole.userId=this.id;
-      console.log(userRole);
+      let userRoleResource:UserRoleResource=new Object();
+      userRoleResource.roleId=approverRole.id;
+      userRoleResource.userId=this.id;
+      console.log(userRoleResource);
       
-      let resultUserRole: RestResult;
-      this.userRoleService.create(userRole)
+      let resultUserRoleResource: RestResult;
+      this.userRoleResourceService.create(userRoleResource)
       .subscribe(r => {
-        resultUserRole = r;
+        resultUserRoleResource = r;
 
         this.getTargetUser();
 
