@@ -297,6 +297,22 @@ paths:
         description: "The community id"
         required: true
         type: "string"
+  /pb/community/{communityId}/year/{year}:
+    get:
+      tags:
+      - "PB"
+      operationId: "getByCommunityAndYear"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        required: true
+        type: "number"
 # END PB
 ##############################################################################
 # START CREATEUSERREQUEST

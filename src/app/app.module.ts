@@ -90,6 +90,7 @@ import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
+import { ValuesPipe } from './pipes/values/values.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -184,7 +185,8 @@ const appRoutes: Routes = [
     UserApprovalComponent,
     UserListComponent,
     VariantsComponent,
-    VariantLineComponent
+    VariantLineComponent,
+    ValuesPipe
   ],
 
   imports: [
