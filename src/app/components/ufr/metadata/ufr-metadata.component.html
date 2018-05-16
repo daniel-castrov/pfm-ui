@@ -23,13 +23,13 @@
           <div class="row">
             <div class="col-3">
               <div class="form-group inline-name">
-                <label>ProgID:</label>
+                <label>ProgID</label>
                 <span class="program-values">{{current?.shortName}}</span>
               </div>
             </div>
             <div class="col-3">
               <div class="form-group inline-name">
-                <label>ProgName:</label>
+                <label>ProgName</label>
                 <span class="program-values">{{current?.longName}}</span>
               </div>
             </div>
@@ -39,7 +39,7 @@
       <div class="row">
         <div class="col-3">
           <div class="form-group inline-name">
-            <label>Parent Program for Subprogram:</label>
+            <label>Parent Program for Subprogram</label>
             <span class="program-values" *ngIf="current?.parentId; else novalue">{{current.parentId}}</span>
           </div>
         </div>
@@ -78,7 +78,7 @@
                </select>
              </span>
             <span class="form-group inline-name">
-              <label>Core:</label>
+              <label>Core</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Core Capability Area'}"></ng-container>
               <select class="form-control-sm dropdown-width mb-2">
                <option>items</option>
@@ -87,7 +87,7 @@
               </select>
             </span>
             <span class="form-group inline-name">
-              <label>Secondary:</label>
+              <label>Secondary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Secondary Capability'}"></ng-container>
               <select class="form-control-sm dropdown-width mb-2">
                  <option>items</option>
@@ -96,7 +96,7 @@
                </select>
             </span>
             <span class="form-group inline-name">
-              <label>Tertiary:</label>
+              <label>Tertiary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary Capability'}"></ng-container>
               <select class="form-control-sm dropdown-width mb-2">
                  <option>items</option>
@@ -155,17 +155,17 @@
       <div class="row">
         <div class="col-md-12">
           <span class="form-group inline-name">
-            <label>Emphasis:</label>
+            <label>Emphasis</label>
             <ng-container *ngIf="current?.emphases && current?.emphases.length>0; else novalue">
               <span class="program-values" *ngFor="let e of current.emphases">{{e}}</span>
             </ng-container>
           </span>
           <span class="form-group inline-name">
-            <label>BSV Nat. Strat.:</label>
+            <label>BSV Nat. Strat.</label>
             <ng-container *ngTemplateOutlet="value;context:{area:'BSV National Strategy'}"></ng-container>
           </span>
           <span class="form-group inline-name">
-            <label>DASD POM:</label>
+            <label>DASD POM</label>
             <span class="program-values" *ngIf="false; else novalue"></span>
           </span>
         </div>
