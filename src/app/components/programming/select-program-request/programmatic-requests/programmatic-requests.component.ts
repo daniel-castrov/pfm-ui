@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Program } from '../../../../generated/model/program';
 import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
-import { UiProgrammaticRequest } from './UiProgrammaticRequest';
+import { Row } from './Row';
 
 @Component({
   selector: 'programmatic-requests',
@@ -10,16 +10,30 @@ import { UiProgrammaticRequest } from './UiProgrammaticRequest';
 })
 export class ProgrammaticRequestsComponent implements OnChanges {
 
-  @Input() private programmaticRequests: ProgrammaticRequest[];
+  @Input() private pomProgrammaticRequests: ProgrammaticRequest[];
+  @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
   @Input() private by: number;
-  private uiProgrammaticRequests: UiProgrammaticRequest[];
+  private rows = {};
 
   constructor() {}
 
   ngOnChanges() {
-    if(this.programmaticRequests) {
-      this.uiProgrammaticRequests = this.programmaticRequests.map( (pr) => new UiProgrammaticRequest(pr));
-    }
+    if(this.pomProgrammaticRequests) {
+      this.pomProgrammaticRequests.forEach( pr => {
+        this.rows[pr.shortName]=new Row();
+        this.rows[pr.shortName].addPomPr(pr);
+      });
+    };
+    if(this.pbProgrammaticRequests) {
+      this.pbProgrammaticRequests.forEach( pr => {
+        if(this.rows[pr.shortName]) {
+          this.rows[pr.shortName].addPbPr(pr);
+        } else {
+          this.rows[pr.shortName]=new Row();
+          this.rows[pr.shortName].addPbPr(pr);
+        }
+      });
+    };
   }
 
 }

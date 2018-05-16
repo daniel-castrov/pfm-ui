@@ -299,6 +299,22 @@ paths:
         description: "The community id"
         required: true
         type: "string"
+  /pb/community/{communityId}/year/{year}:
+    get:
+      tags:
+      - "PB"
+      operationId: "getByCommunityAndYear"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        required: true
+        type: "number"
 # END PB
 ##############################################################################
 # START CREATEUSERREQUEST
@@ -1832,6 +1848,14 @@ definitions:
         type: "string"
       type:
         type: "string"
+      cca:
+        type: "string"
+      impactY:
+        type: "string"
+      impactN:
+        type: "string"
+      costToComplete:
+        type: "number"
       execution:
         type: "string"
       milestones:
@@ -1973,11 +1997,11 @@ definitions:
         type: 'string'
       state:
         type: 'string'
-      funding:
+      fundingLines:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"
-      shortname:
+      shortName:
         type: 'string'
   FundingLine:
     type: "object"

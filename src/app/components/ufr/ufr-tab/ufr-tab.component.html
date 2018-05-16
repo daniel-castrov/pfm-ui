@@ -10,8 +10,8 @@
       <div class="col-3">
         <span class="form-group inline-name">
           <label class="mb-1">POM</label>
-          <select class="form-control-sm dropdown-width mb-2">
-            <option>POM19</option>
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.phaseId">
+            <option *ngFor="let p of cycles"[value]="p.pomid">{{p.display}}</option>
           </select>
         </span>
       </div>

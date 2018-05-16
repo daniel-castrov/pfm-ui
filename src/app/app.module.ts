@@ -98,6 +98,7 @@ import { UfrFundsComponent } from './components/ufr/ufr-funds/ufr-funds.componen
 import { UfrVariantsComponent } from './components/ufr/ufr-variants/ufr-variants.component';
 import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
 import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
+import { ValuesPipe } from './pipes/values/values.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -202,7 +203,8 @@ const appRoutes: Routes = [
     UfrFundsComponent,
     UfrVariantsComponent,
     UfrTabComponent,
-    UfrJustificationComponent
+    UfrJustificationComponent,
+    ValuesPipe
   ],
 
   imports: [

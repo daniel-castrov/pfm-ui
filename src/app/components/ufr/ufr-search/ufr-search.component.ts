@@ -12,6 +12,7 @@ import { CommunityService } from '../../../generated/api/community.service';
 import { UFRFilter } from '../../../generated/model/uFRFilter';
 import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB } from '../../../generated';
 
+import { Cycle } from '../cycle';
 
 @Component({
   selector: 'app-ufr-search',
@@ -72,13 +73,13 @@ export class UfrSearchComponent implements OnInit {
         data[2].result.forEach(function (x: Pom) {
           phases.push({
             fy: x.fy,
-            phase: 0
+            phase: 'POM'
           });
         });
         data[3].result.forEach(function (x: PB) {
           phases.push({
             fy: x.fy,
-            phase: 2
+            phase: 'PB'
           });
         });
 
@@ -86,7 +87,10 @@ export class UfrSearchComponent implements OnInit {
 
         phases.sort(function (a:any, b:any) {
           if (a.fy === b.fy) {
-            return a.phase - b.phase;
+            if (a.phase === b.phase) {
+              return 0;
+            }
+            return (a.phase < b.phase ? -1 : 1);
           }
           else {
             return a.fy - b.fy;
@@ -94,7 +98,7 @@ export class UfrSearchComponent implements OnInit {
         });
 
         phases.forEach(function (x:any) { 
-          my.cycles.push((0 == x.phase ? 'POM' : 'PB') + ' ' + (x.fy - 2000));
+          my.cycles.push( x.phase + ' ' + (x.fy - 2000));
         });
         my.filter.cycle = my.cycles[0];
         console.log(my.cycles);
@@ -171,9 +175,4 @@ export class UfrSearchComponent implements OnInit {
   navigate(row) {
     this.router.navigate(['/ufr-view', row.id]);
   }
-}
-
-interface Cycle {
-  fy: number,
-  phase: number // 0 for POM, 1 for BES, 2 for PB
 }

@@ -27,6 +27,7 @@ export class UfrViewComponent implements OnInit {
 
       my.current = {
         id: pid,
+        phaseId: '5afc6ef882d7c8902e97c73d', // WARNING: this is super-fragile!
         justification: 'Just because ;)',
         notes: 'some scribbled jibberish',
         number: 100 + Number.parseInt(pid),

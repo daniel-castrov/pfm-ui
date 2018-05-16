@@ -10,6 +10,8 @@ import { RestResult } from '../../../generated/model/restResult';
 import { Program } from '../../../generated/model/program';
 import { PRService } from '../../../generated/api/pR.service';
 import { ProgrammaticRequest } from '../../../generated/model/programmaticRequest';
+import { PB } from '../../../generated/model/pB';
+import { PBService } from '../../../generated/api/pB.service';
 
 @Component({
   selector: 'app-select-program-request',
@@ -21,17 +23,30 @@ export class SelectProgramRequestComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private by: number = new Date().getFullYear() + 2;
   private pom: Pom;
-  private programmaticRequests: ProgrammaticRequest[];
+  private pomProgrammaticRequests: ProgrammaticRequest[];
+  private pb: PB;
+  private pbProgrammaticRequests: ProgrammaticRequest[];
 
   constructor(private myDetailsService: MyDetailsService,
               private pomService: POMService,
+              private pbService: PBService,
               private prService: PRService
   ) {}
 
   async ngOnInit() {
     const user: User = (await this.myDetailsService.getCurrentUser().toPromise()).result;
+    this.initPomPrs(user);
+    this.initPbPrs(user);
+  }
+
+  async initPomPrs(user: User) {
     this.pom = (await this.pomService.getByCommunityAndYear(user.currentCommunityId, this.by).toPromise()).result;
-    this.programmaticRequests = (await this.prService.getByPhase(this.pom.id).toPromise()).result;
+    this.pomProgrammaticRequests = (await this.prService.getByPhase(this.pom.id).toPromise()).result;
+  }
+
+  async initPbPrs(user: User) {
+    this.pb = (await this.pbService.getByCommunityAndYear(user.currentCommunityId, this.by-2).toPromise()).result;
+    this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
   }
 
 }
