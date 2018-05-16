@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { UFR } from '../../../generated';
 
 @Component({
   selector: 'ufr-tab',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ufr-tab.component.scss']
 })
 export class UfrTabComponent implements OnInit {
-
+  @Input() current: UFR;
+  
   constructor() { }
 
   ngOnInit() {

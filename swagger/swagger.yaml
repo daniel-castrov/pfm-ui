@@ -1895,6 +1895,8 @@ definitions:
         type: "string"
       parentId:
         type: "string"
+      phaseId:
+        type: "string"
       originatingProgramId:
         type: "string"
       infolink:

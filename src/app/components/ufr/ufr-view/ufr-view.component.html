@@ -33,10 +33,10 @@
     <div class="row main-content">
       <div class="col-lg-10 col-md-12">
         <tabset class="ufr-tab-style" role="tablist">
-          <tab heading="UFR" id="tab1" role="tablist">
-            <ufr-tab role="tabpanel"></ufr-tab>
+          <tab heading="UFR" id="tab1">
+            <ufr-tab [current]="current" role="tabpanel"></ufr-tab>
           </tab>
-          <tab heading="Program" id="tab2" role="tablist">
+          <tab heading="Program" id="tab2">
             <ufr-metadata [current]="current" role="tabpanel"></ufr-metadata>
           </tab>
           <tab heading="Funds" id="tab3">
@@ -46,7 +46,7 @@
              <ufr-variants [current]="current" role="tabpanel"></ufr-variants>
           </tab>
           <tab heading="Justification" id="tab5">
-            <ufr-justification role="tabpanel"></ufr-justification>
+            <ufr-justification [current]="current" role="tabpanel"></ufr-justification>
           </tab>
         </tabset>
       </div>

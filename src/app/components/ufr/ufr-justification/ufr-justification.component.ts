@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { UFR } from '../../../generated';
 
 @Component({
   selector: 'ufr-justification',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ufr-justification.component.scss']
 })
 export class UfrJustificationComponent implements OnInit {
-
+  @Input() current: UFR;
+  
   constructor() { }
 
   ngOnInit() {
