@@ -67,9 +67,19 @@ export class UfrViewComponent implements OnInit {
             description: 'vdesc',
             branch: 'USN',
             contractor: 'Lockheed',
-            quantity: { 2018: 5, 2019: 10, 2020: 11 },
+            quantity: { 2018: 5, 2019: 10, 2020: 11, 2021: 12, 2022: 13, 2023: 14 },
             unitCost: 19
-          }]
+          },
+          {
+            shortName: 'AF1',
+            longName: 'long-stuff',
+            description: 'a description',
+            branch: 'USAF',
+            contractor: 'Boeing',
+            quantity: { 2018: 123, 2019: 123, 2020: 5511, 2021: 23512, 2022: 18873, 2023: 18784 },
+            unitCost: 380
+          }
+          ]
         },
         {
           id: 'FL#2',
