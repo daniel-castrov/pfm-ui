@@ -80,7 +80,7 @@ import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
-import { UserRoleService } from './generated/api/userRole.service';
+import { UserRoleResourceService } from './generated/api/userRoleResource.service';
 import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
@@ -216,7 +216,7 @@ const appRoutes: Routes = [
     OrganizationService,
     RoleService,
     StrangerService,
-    UserRoleService,
+    UserRoleResourceService,
     ProgramsService,
     UserService,
     RequestsService,

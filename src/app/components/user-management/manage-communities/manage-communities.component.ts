@@ -12,8 +12,8 @@ import { RestResult } from '../../../generated';
 import { Community } from '../../../generated';
 import { Role } from '../../../generated/model/role'
 import { RoleService } from '../../../generated/api/role.service';
-import { UserRole } from '../../../generated/model/userRole'
-import { UserRoleService } from '../../../generated/api/userRole.service';
+import { UserRoleResource } from '../../../generated/model/userRoleResource'
+import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
 
 import { UserService } from '../../../generated/api/user.service';
 import { User } from '../../../generated/model/user';
@@ -44,7 +44,7 @@ export class ManageCommunitiesComponent implements OnInit {
     public communityService: CommunityService,
     public userService: UserService,
     private roleService: RoleService,
-    private userRoleService: UserRoleService,
+    private userRoleResourceService: UserRoleResourceService,
   ) {
 
   }
@@ -81,8 +81,6 @@ export class ManageCommunitiesComponent implements OnInit {
       });
   }
 
-
-
   addCommunity():void {
 
     if (!this.isValid()) {
@@ -103,36 +101,21 @@ export class ManageCommunitiesComponent implements OnInit {
 
           console.log(this.newCommunity);
 
-          // Get the Roles
-          Observable.forkJoin([
-            this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User"),
-            this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User_Approver")
+          // Get the User_Approver Role
+          this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User_Approver")
+          .subscribe(data => {
 
-          ]).subscribe(data => {
-
-            // create the userUserRole
-            let userRole: Role;
-            userRole = data[0].result;
-            let userUserRole: UserRole = new Object();
-            userUserRole.roleId = userRole.id;
-            userUserRole.userId = this.newapprover;
-            console.log(userUserRole);
-
-            // create the approverUserRole
+            // create and save the approverUserRole
             let approverRole: Role;
-            approverRole = data[1].result;
-            let appUserRole: UserRole = new Object();
-            appUserRole.roleId = approverRole.id;
-            appUserRole.userId = this.newapprover;
-            console.log(appUserRole);
-
-            // Save both new userRoles
-            Observable.forkJoin([
-              this.userRoleService.create(userUserRole),
-              this.userRoleService.create(appUserRole)
-            ]).subscribe(data2 => {
-              this.communities.push(this.newCommunity);
-              this.router.navigate(['/manage-communities']);
+            approverRole = data.result;
+            let appUserRoleResource: UserRoleResource = new Object();
+            appUserRoleResource.roleId = approverRole.id;
+            appUserRoleResource.userId = this.newapprover;
+            console.log(appUserRoleResource);
+            this.userRoleResourceService.create(appUserRoleResource)
+              .subscribe(data2 => {
+                this.communities.push(this.newCommunity);
+                this.router.navigate(['/manage-communities']);
             });
           });
         });
