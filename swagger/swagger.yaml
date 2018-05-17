@@ -231,13 +231,13 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-  /pom/{communityId}:
+  /pom/community/{communityId}:
     get:
       tags:
       - "POM"
       summary: "Fetches all existing POMs for this community"
       description: "Gets the POM information"
-      operationId: "getById"
+      operationId: "getByCommunityId"
       consumes:
       - "application/json"
       produces:
@@ -246,6 +246,23 @@ paths:
       - in: "path"
         name: "communityId"
         description: "The community id"
+        required: true
+        type: "string"
+  /pom/{pomId}:
+    get:
+      tags:
+      - "POM"
+      summary: "Fetches existing POM"
+      description: "Gets the POM information"
+      operationId: "getById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        description: "The pom id"
         required: true
         type: "string"
   /pom/community/{communityId}/year/{year}:

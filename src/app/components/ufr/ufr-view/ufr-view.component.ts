@@ -59,8 +59,17 @@ export class UfrViewComponent implements OnInit {
           blin: 'BA4',
           opAgency: 'CBDP',
           item: 'Item 666!',
-          funds: { 2016: 100, 2017: 1000, 2018: 10000, 2019: 100000 },
-          fy: 2018
+          funds: { 2016: 100, 2017: 1000, 2018: 10000, 2019: 100000, 2020:999999, 2021:99999, 2022:9999, 2023:999 },
+          fy: 2018,
+          variants: [{
+            shortName: 'shorty',
+            longName: 'longy',
+            description: 'vdesc',
+            branch: 'USN',
+            contractor: 'Lockheed',
+            quantity: { 2018: 5, 2019: 10, 2020: 11 },
+            unitCost: 19
+          }]
         }]
       }
 

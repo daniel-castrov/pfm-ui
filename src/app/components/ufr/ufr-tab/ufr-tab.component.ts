@@ -32,7 +32,7 @@ export class UfrTabComponent implements OnInit {
     this.userDetailsService.getCurrentUser().subscribe((person) => {
       forkJoin([
         //my.communityService.getById(person.result.currentCommunityId),
-        my.pomsvc.getById(person.result.currentCommunityId)
+        my.pomsvc.getByCommunityId(person.result.currentCommunityId)
         ]).subscribe(data => {
           data[0].result.forEach(function (pom: Pom) { 
             my.cycles.push({
@@ -41,7 +41,7 @@ export class UfrTabComponent implements OnInit {
             });
           });
 
-          console.log(my.cycles);
+          // console.log(my.cycles);
         });
     });
   }
