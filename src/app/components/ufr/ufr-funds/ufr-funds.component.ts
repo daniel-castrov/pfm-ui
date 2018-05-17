@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Program, FundingLine, IntMap, UFR, POMService, Pom } from '../../../generated';
+import { forkJoin } from "rxjs/observable/forkJoin";
+
+import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest } from '../../../generated';
 
 @Component({
   selector: 'ufr-funds',
@@ -13,20 +15,35 @@ export class UfrFundsComponent implements OnInit {
   private uvals: Map<number, number> = new Map<number, number>();
   private cvals: Map<number, number> = new Map<number, number>();
   private diffs: {} = {};
-    
-  constructor( private pomsvc:POMService) { }
+  
+  
+  constructor(private pomsvc: POMService, private pbService: PBService,
+    private prService: PRService) { }
 
   ngOnInit() {
     // FIXME: we need to fetch the given programmatic request from the pom
     // we can find it based on originalProgramId of the UFR
 
     var my: UfrFundsComponent = this;
+    
+
     this.pomsvc.getById(this.current.phaseId).subscribe(data => { 
       my.pom = data.result;
       my.fy = my.pom.fy;
       //console.log(my.fy);
       //console.log(my.pom);
       my.sumfunds();
+
+    
+      my.pbService.getByCommunityAndYear(my.pom.communityId, my.fy - 2).subscribe(pb => {
+        my.prService.getByPhase(pb.result.id).subscribe(prs => { 
+          prs.result.forEach(function (pr) { 
+
+          });
+        });
+      });
+
+
     });
 
     //console.log(this.current);
@@ -65,8 +82,6 @@ export class UfrFundsComponent implements OnInit {
       my.diffs[year] = 0;;
     });
 
-    //my.cvals.set(2023, 2000);
-
     my.current.funding.forEach(function (fund) { 
       Object.keys(fund.funds).forEach(function (yearstr) { 
         var year = Number.parseInt(yearstr);
@@ -82,3 +97,10 @@ export class UfrFundsComponent implements OnInit {
     //console.log(my.diffs);
   }
 }
+
+interface PbUfrRow{
+  appropriation: string,
+  blin: string,
+  pb: ProgrammaticRequest,
+  ufr:UFR
+};
