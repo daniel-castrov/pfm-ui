@@ -1,5 +1,5 @@
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
-import { FundingLine } from '../../../../generated/model/fundingLine';
+import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
+import { FundingLine } from '../../../generated/model/fundingLine';
 
 export class UiProgrammaticRequest {
   constructor(public programmaticRequest: ProgrammaticRequest) {}
