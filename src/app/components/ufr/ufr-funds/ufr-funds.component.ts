@@ -9,6 +9,10 @@ import { Program, FundingLine, IntMap, UFR, POMService, Pom } from '../../../gen
 export class UfrFundsComponent implements OnInit {
   @Input() current: UFR;
   private pom: Pom;
+  private fy: number = new Date().getFullYear() + 2;
+  private uvals: Map<number, number> = new Map<number, number>();
+  private cvals: Map<number, number> = new Map<number, number>();
+  private diffs: {} = {};
     
   constructor( private pomsvc:POMService) { }
 
@@ -19,9 +23,62 @@ export class UfrFundsComponent implements OnInit {
     var my: UfrFundsComponent = this;
     this.pomsvc.getById(this.current.phaseId).subscribe(data => { 
       my.pom = data.result;
+      my.fy = my.pom.fy;
+      //console.log(my.fy);
+      //console.log(my.pom);
+      my.sumfunds();
     });
 
-    console.log(this.current);
+    //console.log(this.current);
   }
 
+  onedit( newval, appr, blin, year ) {
+    var my: UfrFundsComponent = this;
+
+    var thisyear = Number.parseInt(year);
+    my.current.funding.forEach(function (fund) {
+      if (fund.appropriation === appr && fund.blin === blin) {
+        fund.funds[thisyear] = Number.parseFloat( newval );
+      }
+    });
+
+    this.sumfunds();
+  }
+
+  sumfunds(){
+    var my: UfrFundsComponent = this;
+    // console.log('into sumfunds!');
+    
+    // FIXME: need to start by summing up the PR data
+    // then add/subtract the values from this UFR
+    this.cvals.clear();
+    this.uvals.clear();
+    this.diffs = {};
+    var years: number[] = [];
+    for (var year = my.pom.fy - 4; year < my.pom.fy + 5; year++) {
+      years.push(year);
+    }
+
+    years.forEach(function (year) { 
+      my.uvals.set(year, 0);
+      my.cvals.set(year, 0);
+      my.diffs[year] = 0;;
+    });
+
+    //my.cvals.set(2023, 2000);
+
+    my.current.funding.forEach(function (fund) { 
+      Object.keys(fund.funds).forEach(function (yearstr) { 
+        var year = Number.parseInt(yearstr);
+        my.uvals.set(year, my.uvals.get(year) + fund.funds[year]);        
+      });
+    });
+
+    years.forEach(function (year) {
+      my.diffs[year] = (my.uvals.get(year) - my.cvals.get(year));
+    });
+
+    //console.log(my.uvals);
+    //console.log(my.diffs);
+  }
 }

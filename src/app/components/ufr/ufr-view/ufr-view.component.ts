@@ -51,7 +51,7 @@ export class UfrViewComponent implements OnInit {
           'Medical Category': 'M',
           'NBC Category': 'O',
           'BSV National Strategy': 'Other',
-          'Acquisition Type': 'Stomachs'          
+          'Acquisition Type': 'Stomachs'
         },
         funding: [{
           id: 'FL#1',
@@ -59,7 +59,7 @@ export class UfrViewComponent implements OnInit {
           blin: 'BA4',
           opAgency: 'CBDP',
           item: 'Item 666!',
-          funds: { 2016: 100, 2017: 1000, 2018: 10000, 2019: 100000, 2020:999999, 2021:99999, 2022:9999, 2023:999 },
+          funds: { 2016: 100, 2017: 1000, 2018: 10000, 2019: 100000, 2020: 999999, 2021: 99999, 2022: 9999, 2023: 999 },
           fy: 2018,
           variants: [{
             shortName: 'shorty',
@@ -70,13 +70,23 @@ export class UfrViewComponent implements OnInit {
             quantity: { 2018: 5, 2019: 10, 2020: 11 },
             unitCost: 19
           }]
-        }]
-      }
+        },
+        {
+          id: 'FL#2',
+          appropriation: 'RDTE',
+          blin: 'BA7',
+          opAgency: 'CBDP',
+          item: 'Item 667!',
+          funds: { 2016: 200, 2017: 2000, 2018: 20000, 2019: 200000, 2020: 19999, 2021: 1999, 2022: 199, 2023: 19 },
+          fy: 2018
+        }
+        ]
+      };
 
       // my.usvc.getUfrById(pid).subscribe(
       //   (data) => {
       //     my.current = data.result;
       //  });
     });
-  }
+  }    
 }
