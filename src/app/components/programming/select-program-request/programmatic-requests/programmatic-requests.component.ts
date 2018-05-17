@@ -15,8 +15,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   @Input() private by: number;
   private rows = {};
 
-  constructor() {}
-
   ngOnChanges() {
     if(this.pomProgrammaticRequests) {
       this.pomProgrammaticRequests.forEach( pr => {

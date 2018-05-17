@@ -1,6 +1,6 @@
 import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
 import { FundingLine } from '../../../../generated/model/fundingLine';
-import { UiProgrammaticRequest } from './UiProgrammaticRequest';
+import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 
 export class Row {
 

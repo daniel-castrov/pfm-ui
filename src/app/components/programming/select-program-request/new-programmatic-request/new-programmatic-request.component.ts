@@ -10,8 +10,4 @@ import { Pom } from '../../../../generated/model/pom';
 })
 export class NewProgrammaticRequestComponent {
 
-  private pom: Pom;
-
-  constructor() {}
-
 }
