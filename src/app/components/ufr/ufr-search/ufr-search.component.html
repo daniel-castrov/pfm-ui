@@ -38,7 +38,7 @@
                     </td>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="filter.yoe" (change)="search()"
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="filter.yoE" (change)="search()"
                       [disabled]="!useyoe">
                       <label class="form-check-label primary-label"></label>
                     </div>
@@ -68,7 +68,7 @@
                   <td>
                     <div class="form-group">
                       <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.fa" name="area" [disabled]="!usefa" (change)="search()">
-                        <option *ngFor="let a of fas" [ngValue]="a">{{a}}</option>
+                        <option *ngFor="let a of fas" [ngValue]="a.abbr" title="{{a.name}}">{{a.abbr}}</option>
                       </select>
                     </div>
                   </td>

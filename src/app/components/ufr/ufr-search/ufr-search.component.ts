@@ -10,7 +10,7 @@ import { UFR } from '../../../generated/model/uFR'
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
 import { CommunityService } from '../../../generated/api/community.service';
 import { UFRFilter } from '../../../generated/model/uFRFilter';
-import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB } from '../../../generated';
+import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB, ProgramsService, Tag } from '../../../generated';
 
 import { Cycle } from '../cycle';
 import { Disposition } from '../disposition.enum';
@@ -37,7 +37,7 @@ export class UfrSearchComponent implements OnInit {
   private usecycle: boolean = false;
   private filter: UFRFilter = {};
   private orgs: Organization[] = [];
-  private fas: string[] = [];
+  private fas: Tag[] = [];
   private cycles: string[] = [];
   private community: Community;
   private dispositions: string[]=[];
@@ -47,7 +47,8 @@ export class UfrSearchComponent implements OnInit {
 
   constructor(private usvc: UFRsService, private userDetailsService: MyDetailsService,
     private communityService: CommunityService, private orgsvc: OrganizationService,
-    private pomsvc: POMService, private pbsvc: PBService, private router: Router) {
+    private pomsvc: POMService, private pbsvc: PBService, private progsvc: ProgramsService,
+    private router: Router) {
     
     this.dispositions = Object.keys(Disposition)
       .filter(k => typeof Disposition[k] === "number") as string[];
@@ -63,11 +64,11 @@ export class UfrSearchComponent implements OnInit {
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
         my.pomsvc.getByCommunityId(person.result.currentCommunityId),
         my.pbsvc.getById(person.result.currentCommunityId),
-        my.usvc.getFAs(person.result.currentCommunityId)
+        my.progsvc.getTagsByType("Functional Area")
       ]).subscribe(data => {
         my.community = data[0].result;
         my.orgs = data[1].result;
-        my.fas = (data[4].result ? data[4].result : ['FA 1', 'FA2 ', 'Functional Area C']);
+        my.fas = (data[4].result ? data[4].result : []);
         
         my.filter.orgId = my.orgs[0].id;
         my.filter.from = new Date().getTime();
@@ -75,8 +76,13 @@ export class UfrSearchComponent implements OnInit {
         my.filter.status = Status[0];
         my.filter.disposition = Disposition[0];
         
-        my.fas.sort();
-        my.filter.fa = my.fas[0];
+        my.fas.sort(function (a, b) { 
+          if (a.abbr === b.abbr) {
+            return 0;
+          }
+          return (a.abbr < b.abbr ? -1 : 1);
+        });
+        my.filter.fa = my.fas[0].abbr;
 
         var phases: Cycle[] = [];
         data[2].result.forEach(function (x: Pom) {
@@ -91,8 +97,6 @@ export class UfrSearchComponent implements OnInit {
             phase: 'PB'
           });
         });
-
-        console.log(phases);
 
         phases.sort(function (a:any, b:any) {
           if (a.fy === b.fy) {
@@ -110,7 +114,6 @@ export class UfrSearchComponent implements OnInit {
           my.cycles.push( x.phase + ' ' + (x.fy - 2000));
         });
         my.filter.cycle = my.cycles[0];
-        console.log(my.cycles);
         my.search();
       });
     });
@@ -118,7 +121,6 @@ export class UfrSearchComponent implements OnInit {
 
   search() {
     var my: UfrSearchComponent = this;
-    
     var searchfilter: UFRFilter = {};
     if (my.useactive) {
       searchfilter.active = my.filter.active;
@@ -146,11 +148,13 @@ export class UfrSearchComponent implements OnInit {
       searchfilter.yoe = my.filter.yoe;
     }
 
-
+    console.log(my.community.id);
+    console.log(searchfilter);
     this.usvc.search( my.community.id, searchfilter ).subscribe(
       (data) => {
-        //my.datasource.data = data.result;
-        my.datasource.data = my.makeMockUfrs();
+        my.datasource.data = data.result;
+        console.log(data.result);
+        //my.datasource.data = my.makeMockUfrs();
         // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
         // it to work there. The sorter and paginator aren't set there (?)
         // so this is a not-too-ugly workaround.
@@ -168,7 +172,7 @@ export class UfrSearchComponent implements OnInit {
         id: (i + 1).toString(),
         number: 100 + i,
         name: 'UFR named ' + i,
-        yoe: (Math.random() >= 0.5),
+        yoE: (Math.random() >= 0.5),
         status: Status[Math.floor(Math.random() * (Object.keys(Status).length / 2))],
         disposition: Disposition[Math.floor(Math.random() * (Object.keys(Disposition).length / 2))],
         lastmod: new Date().getTime(),

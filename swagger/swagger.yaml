@@ -1463,7 +1463,7 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-  /search-ufrs/community/{communityId}:
+  /ufr/community/{communityId}/search:
     post:
       tags:
       - "UFRs"
@@ -1493,29 +1493,6 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /search-ufrs/community/{communityId}/fa:
-    get:
-      tags:
-      - "UFRs"
-      operationId: "getFAs"
-      summary: "Gets a list of Functional Areas for UFRs in this community"
-      description: "Returns a collection of FAs (strings)"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A collection of FAs (strings)"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-
 # STOP UFRs
 ##############################################################################
 # START SNAPSHOTS
@@ -1946,7 +1923,9 @@ definitions:
         type: "string"
       type:
         type: "string"
-      yoe:
+      yoE:
+        type: "boolean"
+      active:
         type: "boolean"
       status:
         type: "string"
@@ -1962,7 +1941,7 @@ definitions:
         type: "integer"
       created:
         type: "integer"
-      cca:
+      coreCapability:
         type: "string"
       milestoneImpact:
         type: "string"
@@ -1985,6 +1964,8 @@ definitions:
         items:
           $ref: "string"
       name:
+        type: "string"
+      organization:
         type: "string"
   Pom:
     type: "object"
