@@ -152,7 +152,7 @@
           <mat-table [dataSource]="datasource" matSort matSortActive="number" matSortDirection="asc">
             <ng-container matColumnDef="number">
               <mat-header-cell *matHeaderCellDef mat-sort-header>UFR#</mat-header-cell>
-              <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.number}}</mat-cell>
+              <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.requestNumber}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
               <mat-header-cell *matHeaderCellDef mat-sort-header>UFR Name</mat-header-cell>
@@ -168,7 +168,7 @@
             </ng-container>
             <ng-container matColumnDef="yoe">
               <mat-header-cell *matHeaderCellDef mat-sort-header>YoE?</mat-header-cell>
-              <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.yoe}}</mat-cell>
+              <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.yoE}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="status">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>

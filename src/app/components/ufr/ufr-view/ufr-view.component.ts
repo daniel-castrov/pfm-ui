@@ -26,77 +26,13 @@ export class UfrViewComponent implements OnInit {
   ngOnInit() {
     var my: UfrViewComponent = this;
     this.route.url.subscribe((segments: UrlSegment[]) => {
-      var pid = segments[segments.length - 1].path;
+      var ufrid = segments[segments.length - 1].path;
+      console.log('ufrid: ' + ufrid);
 
-      my.current = {
-        id: pid,
-        phaseId: '5afc6ef882d7c8902e97c73d', // WARNING: this is super-fragile!
-        costToComplete: 100,
-        milestoneImpact: 'none',
-        impactN: 'I don\'t know',
-        coreCapability: 'My core!',
-        justification: 'Just because ;)',
-        notes: 'some scribbled jibberish',
-        number: 100 + Number.parseInt(pid),
-        name: 'UFR named ' + pid,
-        yoE: (Math.random() >= 0.5),
-
-        status: Status[Math.floor(Math.random() * (Object.keys(Status).length / 2))],
-        disposition: Disposition[Math.floor(Math.random() * (Object.keys(Disposition).length / 2))],
-        tags: {
-          'Core Capability Area': 'sausages',
-          'Primary Capability': 'rolls',
-          'Secondary Capability': 'hoagies',
-          'Functional Area': 'hotdogs',
-          'Medical Category': 'M',
-          'NBC Category': 'O',
-          'BSV National Strategy': 'Other',
-          'Acquisition Type': 'Stomachs'
-        },
-        funding: [{
-          id: 'FL#1',
-          appropriation: 'RDTE',
-          blin: 'BA4',
-          opAgency: 'CBDP',
-          item: 'Item 666!',
-          funds: { 2016: 100, 2017: 1000, 2018: 10000, 2019: 100000, 2020: 999999, 2021: 99999, 2022: 9999, 2023: 999 },
-          fy: 2018,
-          variants: [{
-            shortName: 'shorty',
-            longName: 'longy',
-            description: 'vdesc',
-            branch: 'USN',
-            contractor: 'Lockheed',
-            quantity: { 2018: 5, 2019: 10, 2020: 11, 2021: 12, 2022: 13, 2023: 14 },
-            unitCost: 19
-          },
-          {
-            shortName: 'AF1',
-            longName: 'long-stuff',
-            description: 'a description',
-            branch: 'USAF',
-            contractor: 'Boeing',
-            quantity: { 2018: 123, 2019: 123, 2020: 5511, 2021: 23512, 2022: 18873, 2023: 18784 },
-            unitCost: 380
-          }
-          ]
-        },
-        {
-          id: 'FL#2',
-          appropriation: 'RDTE',
-          blin: 'BA7',
-          opAgency: 'CBDP',
-          item: 'Item 667!',
-          funds: { 2016: 200, 2017: 2000, 2018: 20000, 2019: 200000, 2020: 19999, 2021: 1999, 2022: 199, 2023: 19 },
-          fy: 2018
-        }
-        ]
-      };
-
-      // my.usvc.getUfrById(pid).subscribe(
-      //   (data) => {
-      //     my.current = data.result;
-      //  });
+      my.usvc.getUfrById(ufrid).subscribe(data => { 
+        my.current = data.result;
+        console.log(my.current);
+      });
     });
   }    
 }

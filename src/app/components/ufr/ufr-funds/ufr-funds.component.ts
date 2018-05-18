@@ -26,8 +26,10 @@ export class UfrFundsComponent implements OnInit {
 
     var my: UfrFundsComponent = this;
     
+    console.log('ufrfunds');
+    console.log(my.current);
 
-    this.pomsvc.getById(this.current.phaseId).subscribe(data => { 
+    this.pomsvc.getById(this.current.pomId).subscribe(data => { 
       my.pom = data.result;
       my.fy = my.pom.fy;
       //console.log(my.fy);

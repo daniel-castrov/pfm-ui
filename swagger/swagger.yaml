@@ -1418,7 +1418,7 @@ paths:
 # STOP PROGRAMS
 ##############################################################################
 # START UFRs
-  /ufrs/{ufrId}:
+  /ufr/{ufrId}:
     get:
       tags:
       - "UFRs"
@@ -1441,7 +1441,7 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /ufrs/community/{communityId}/year/{year}:
+  /ufr/community/{communityId}/year/{year}:
     get:
       tags:
       - "UFRs"
@@ -1909,7 +1909,7 @@ definitions:
         type: "string"
       parentId:
         type: "string"
-      phaseId:
+      pomId:
         type: "string"
       originatingProgramId:
         type: "string"
@@ -1917,6 +1917,8 @@ definitions:
         type: "string"
       imgLink:
         type: "string"
+      costLeft:
+        type: "number"
       shortName:
         type: "string"
       longName:
@@ -1937,7 +1939,7 @@ definitions:
         type: "string"
       justification:
         type: "string"
-      number:
+      requestNumber:
         type: "integer"
       created:
         type: "integer"

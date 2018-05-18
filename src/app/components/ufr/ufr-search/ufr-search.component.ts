@@ -163,29 +163,10 @@ export class UfrSearchComponent implements OnInit {
       });
   }
 
-  makeMockUfrs() {
-    var my: UfrSearchComponent = this;
-
-    var ulist: UFR[] = [];
-    for (var i = 0; i < 5; i++){
-      ulist.push({
-        id: (i + 1).toString(),
-        number: 100 + i,
-        name: 'UFR named ' + i,
-        yoE: (Math.random() >= 0.5),
-        status: Status[Math.floor(Math.random() * (Object.keys(Status).length / 2))],
-        disposition: Disposition[Math.floor(Math.random() * (Object.keys(Disposition).length / 2))],
-        lastmod: new Date().getTime(),
-        created: new Date().getTime()-60000
-      });
-    }
-
-    console.log(ulist);
-    return ulist;
-  }
-
-
   navigate(row) {
+    console.log('navigating!');
+    console.log(row);
+
     this.router.navigate(['/ufr-view', row.id]);
   }
 }

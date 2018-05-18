@@ -18,7 +18,7 @@ export class UfrVariantsComponent implements OnInit {
 
   ngOnInit() {
     var my: UfrVariantsComponent = this;
-    this.pomsvc.getById(this.current.phaseId).subscribe(data => {
+    this.pomsvc.getById(this.current.pomId).subscribe(data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
       my.sumtotals();
