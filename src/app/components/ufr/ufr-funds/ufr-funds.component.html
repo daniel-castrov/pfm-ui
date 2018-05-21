@@ -5,7 +5,7 @@
   <td class="text-right" contenteditable="true" class="editable-field" (blur)="onedit()">-</td>
 </ng-template>
 
-<div class="row">
+<div class="row" *ngIf="current">
   <div class="col-12 mb-3">
     <div id="pr-funds" class="table-editable">
       <table class="pr-funds-table">

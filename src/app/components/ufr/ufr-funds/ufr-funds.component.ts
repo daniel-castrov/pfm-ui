@@ -28,8 +28,8 @@ export class UfrFundsComponent implements OnInit {
     // we can find it based on originalProgramId of the UFR
     var my: UfrFundsComponent = this;
     
-    console.log('ufrfunds');
-    console.log(my.current);
+    //console.log('ufrfunds');
+    //console.log(my.current);
 
     this.pomsvc.getById(my.current.pomId).subscribe(data => { 
       my.pom = data.result;
@@ -52,7 +52,6 @@ export class UfrFundsComponent implements OnInit {
           };
 
           Object.keys(fund.funds).forEach(function (yearstr) {
-            console.log(yearstr);
             var year: number = Number.parseInt(yearstr);
             if (!my.cvals.has(year)) {
               my.cvals.set(year, 0);
@@ -121,7 +120,7 @@ export class UfrFundsComponent implements OnInit {
 
     //console.log(my.uvals);
     //console.log(my.diffs);
-    console.log(my.modelfunds);
+    //console.log(my.modelfunds);
   }
 }
 

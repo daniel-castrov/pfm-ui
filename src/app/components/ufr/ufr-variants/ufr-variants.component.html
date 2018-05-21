@@ -16,16 +16,16 @@
         <span class="mr-4">for</span>
         <span class="form-group inline-name mr-5">
           <select class="form-control-sm dropdown-width mb-2">
-            <ng-container *ngFor="let fund of current.funding">
-              <option *ngIf="!fund.variants" [value]="fund.blin">{{fund.blin}}</option>
+            <ng-container *ngFor="let fund of current.fundingLines">
+              <option *ngIf="fund.appropriation==='PROC' && fund.variants.length<1" [value]="fund.blin">{{fund.blin}}</option>
             </ng-container>
           </select>
         </span>
       </div>
     </div>
 
-    <ng-container *ngFor="let fund of current.funding">
-      <ng-container *ngIf="fund.variants">
+    <ng-container *ngFor="let fund of current.fundingLines">
+      <ng-container *ngIf="fund.variants.length>0">
       <div class="row mb-2">
         <div class="col-md-12">
           <div id="proc-qty" class="table-editable">
