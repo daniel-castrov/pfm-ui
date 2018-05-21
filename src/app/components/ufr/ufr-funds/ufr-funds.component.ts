@@ -15,7 +15,10 @@ export class UfrFundsComponent implements OnInit {
   private uvals: Map<number, number> = new Map<number, number>();
   private cvals: Map<number, number> = new Map<number, number>();
   private diffs: {} = {};
-  
+  private model: ProgrammaticRequest;
+
+  // key is appropriation-blin
+  private modelfunds: Map<string, modelval> = new Map<string, modelval>();
   
   constructor(private pomsvc: POMService, private pbService: PBService,
     private prService: PRService) { }
@@ -23,29 +26,47 @@ export class UfrFundsComponent implements OnInit {
   ngOnInit() {
     // FIXME: we need to fetch the given programmatic request from the pom
     // we can find it based on originalProgramId of the UFR
-
     var my: UfrFundsComponent = this;
     
     console.log('ufrfunds');
     console.log(my.current);
 
-    this.pomsvc.getById(this.current.pomId).subscribe(data => { 
+    this.pomsvc.getById(my.current.pomId).subscribe(data => { 
       my.pom = data.result;
       my.fy = my.pom.fy;
       //console.log(my.fy);
       //console.log(my.pom);
-      my.sumfunds();
 
-    
-      my.pbService.getByCommunityAndYear(my.pom.communityId, my.fy - 2).subscribe(pb => {
-        my.prService.getByPhase(pb.result.id).subscribe(prs => { 
-          prs.result.forEach(function (pr) { 
+      my.cvals.clear();      
+      my.prService.getByPhaseAndShortName( my.pom.id, my.current.shortName ).subscribe( model=>{
+        // get the current values for this program
+        my.model = model.result;
+        console.log(my.model);
 
+        my.model.fundingLines.forEach(function (fund) {
+          var key = fund.appropriation + fund.blin;
+          var val: modelval = {
+            appropriation: fund.appropriation,
+            blin: fund.blin,
+            funds: fund.funds
+          };
+
+          Object.keys(fund.funds).forEach(function (yearstr) {
+            console.log(yearstr);
+            var year: number = Number.parseInt(yearstr);
+            if (!my.cvals.has(year)) {
+              my.cvals.set(year, 0);
+            }
+
+            my.cvals.set(year, my.cvals.get(year) + fund.funds[year]);
           });
-        });
+
+          my.modelfunds.set(key, val);
+          
+          // would like to call this only once, after all the endpoint calls
+          my.sumfunds();
+        });        
       });
-
-
     });
 
     //console.log(this.current);
@@ -53,11 +74,17 @@ export class UfrFundsComponent implements OnInit {
 
   onedit( newval, appr, blin, year ) {
     var my: UfrFundsComponent = this;
+    console.log('editing ' + appr + '/' + blin + ' in ' + year + ' with val: ' + newval); 
 
     var thisyear = Number.parseInt(year);
-    my.current.funding.forEach(function (fund) {
+    my.current.fundingLines.forEach(function (fund) {
       if (fund.appropriation === appr && fund.blin === blin) {
-        fund.funds[thisyear] = Number.parseFloat( newval );
+        console.log('found the fund, setting the value for ' + thisyear+' to '+Number.parseFloat(newval));
+        console.log(fund.funds);
+        console.log(fund.funds[thisyear]);
+        fund.funds[thisyear] = Number.parseFloat(newval);
+        console.log(fund.funds);
+        console.log(fund.funds[thisyear]);
       }
     });
 
@@ -66,11 +93,9 @@ export class UfrFundsComponent implements OnInit {
 
   sumfunds(){
     var my: UfrFundsComponent = this;
-    // console.log('into sumfunds!');
+    console.log('into sumfunds!');
     
-    // FIXME: need to start by summing up the PR data
-    // then add/subtract the values from this UFR
-    this.cvals.clear();
+    // remember: cvals get set only once
     this.uvals.clear();
     this.diffs = {};
     var years: number[] = [];
@@ -80,11 +105,10 @@ export class UfrFundsComponent implements OnInit {
 
     years.forEach(function (year) { 
       my.uvals.set(year, 0);
-      my.cvals.set(year, 0);
-      my.diffs[year] = 0;;
+      my.diffs[year] = 0;
     });
 
-    my.current.funding.forEach(function (fund) { 
+    my.current.fundingLines.forEach(function (fund) { 
       Object.keys(fund.funds).forEach(function (yearstr) { 
         var year = Number.parseInt(yearstr);
         my.uvals.set(year, my.uvals.get(year) + fund.funds[year]);        
@@ -97,6 +121,7 @@ export class UfrFundsComponent implements OnInit {
 
     //console.log(my.uvals);
     //console.log(my.diffs);
+    console.log(my.modelfunds);
   }
 }
 
@@ -106,3 +131,9 @@ interface PbUfrRow{
   pb: ProgrammaticRequest,
   ufr:UFR
 };
+
+interface modelval {
+  appropriation: string,
+  blin: string,
+  funds: Map<number, number>;
+}

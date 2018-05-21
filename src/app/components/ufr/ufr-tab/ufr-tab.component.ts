@@ -36,7 +36,7 @@ export class UfrTabComponent implements OnInit {
         ]).subscribe(data => {
           data[0].result.forEach(function (pom: Pom) { 
             my.cycles.push({
-              display: 'POM ' + pom.fy,
+              display: 'POM ' + ( pom.fy-2000 ),
               pomid: pom.id
             });
           });

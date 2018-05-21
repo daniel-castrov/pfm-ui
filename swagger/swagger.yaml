@@ -296,6 +296,22 @@ paths:
         name: "phaseId"
         required: true
         type: "string"
+  /pr/phase/{phaseId}/program/{shortname}:
+    get:
+      tags:
+      - "PR"
+      operationId: "getByPhaseAndShortName"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "shortname"
+        required: true
+        type: "string"
 # STOP PR
 ##############################################################################
 # START PB
@@ -1933,7 +1949,7 @@ definitions:
         type: "string"
       disposition:
         type: "string"
-      lastmod:
+      lastModifiedTime:
         type: "integer"
       notes:
         type: "string"
@@ -1941,7 +1957,7 @@ definitions:
         type: "string"
       requestNumber:
         type: "integer"
-      created:
+      creationTime:
         type: "integer"
       coreCapability:
         type: "string"
@@ -1951,7 +1967,7 @@ definitions:
         type: "string"
       costToComplete:
         type: "number"
-      funding:
+      fundingLines:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"

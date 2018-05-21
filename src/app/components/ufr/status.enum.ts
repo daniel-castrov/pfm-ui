@@ -1,4 +1,5 @@
 export enum Status {
+    ARCHIVED,
     DRAFT,
     SUBMITTED,
     VALID,

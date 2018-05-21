@@ -1,10 +1,10 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isAuthenticated">
+  <div class="row main-content" *ngIf="header.isAuthenticated && current">
     <div class="col-12">
       <div class="row">
         <div class="col-6" id="program-request">
-          <div class="h5 mb-4">Unfunded Request {{ current.id }}</div>
+          <div class="h5 mb-4">Unfunded Request {{ current.requestNumber }}</div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
           <div class="pull-right mb-2" aria-label="breadcrumb">
