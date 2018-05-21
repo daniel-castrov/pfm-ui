@@ -32,13 +32,13 @@
                   </td>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useyoe" (change)="search()">
+                      <input class="form-check-input" type="checkbox" id="defaultCheck2" [(ngModel)]="useyoe" (change)="search()">
                       <label class="form-check-label primary-label" for="defaultCheck2">YoE</label>
                     </div>
                     </td>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="filter.yoE" (change)="search()"
+                      <input class="form-check-input" type="checkbox" id="defaultCheck3" [(ngModel)]="filter.yoe" (change)="search()"
                       [disabled]="!useyoe">
                       <label class="form-check-label primary-label"></label>
                     </div>
@@ -46,7 +46,7 @@
                   <td></td>
                   <td>
                     <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck5" [(ngModel)]="usestatus" (change)="search()">
+                      <input class="form-check-input" type="checkbox" id="defaultCheck5" [(ngModel)]="usestatus" (change)="search()">
                       <label class="form-check-label primary-label" for="defaultCheck5">Status</label>
                     </div>
                   </td>
@@ -175,15 +175,19 @@
               <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.status}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="disp">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Cycle</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Disp</mat-header-cell>
               <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.disposition}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="cycle">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Funding Request</mat-header-cell>
-              <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Cycle</mat-header-cell>
+              <mat-cell class="ufr-view-link" *matCellDef="let p">{{cyclelkp.get(p.pomId)}}</mat-cell>
             </ng-container>
-            <mat-header-row *matHeaderRowDef="['number', 'name', 'progid', 'parent', 'yoe', 'status', 'disp', 'cycle']"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: ['number', 'name', 'progid', 'parent', 'yoe', 'status', 'disp', 'cycle']" (click)="navigate( row )"></mat-row>
+            <ng-container matColumnDef="funding">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Funding Request</mat-header-cell>
+              <mat-cell class="ufr-view-link" *matCellDef="let p">&lt;no data?&gt;</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="['number', 'name', 'progid', 'parent', 'yoe', 'status', 'disp', 'cycle', 'funding']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['number', 'name', 'progid', 'parent', 'yoe', 'status', 'disp', 'cycle','funding']" (click)="navigate( row )"></mat-row>
           </mat-table>
           <mat-paginator [pageSize]="10"></mat-paginator>
         </div>

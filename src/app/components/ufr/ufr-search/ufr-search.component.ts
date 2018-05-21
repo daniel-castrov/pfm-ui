@@ -42,6 +42,7 @@ export class UfrSearchComponent implements OnInit {
   private community: Community;
   private dispositions: string[]=[];
   private statuses: string[] = [];
+  private cyclelkp: Map<string, string> = new Map<string, string>();
 
   private datasource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
 
@@ -84,12 +85,16 @@ export class UfrSearchComponent implements OnInit {
         });
         my.filter.fa = my.fas[0].abbr;
 
+        my.filter.yoe = true;
+        my.filter.active = true;
+
         var phases: Cycle[] = [];
         data[2].result.forEach(function (x: Pom) {
           phases.push({
             fy: x.fy,
             phase: 'POM'
           });
+          my.cyclelkp.set(x.id, 'POM ' + x.fy);
         });
         data[3].result.forEach(function (x: PB) {
           phases.push({
@@ -126,7 +131,7 @@ export class UfrSearchComponent implements OnInit {
       searchfilter.active = my.filter.active;
     }
     if (my.usecycle) {
-      searchfilter.cycle = my.filter.cycle;
+      searchfilter.cycle = my.filter.cycle.replace(/([0-9]+)/, "20$1");
     }
     if (my.usedates) {
       searchfilter.from = my.filter.from;
@@ -145,15 +150,16 @@ export class UfrSearchComponent implements OnInit {
       searchfilter.status = my.filter.status;
     }
     if (my.useyoe) {
+      console.log(my.filter);
       searchfilter.yoe = my.filter.yoe;
     }
 
-    console.log(my.community.id);
+    //console.log(my.community.id);
     console.log(searchfilter);
     this.usvc.search( my.community.id, searchfilter ).subscribe(
       (data) => {
         my.datasource.data = data.result;
-        console.log(data.result);
+        //console.log(data.result);
         //my.datasource.data = my.makeMockUfrs();
         // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
         // it to work there. The sorter and paginator aren't set there (?)

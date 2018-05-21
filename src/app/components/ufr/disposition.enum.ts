@@ -3,6 +3,6 @@ export enum Disposition {
     PARTIALLY_APPROVED,
     DISAPPROVED,
     DEFERRED,
-    DEFERRED_YOE,
-    ISSUE_PAPER
+    //DEFERRED_YOE,
+    OGI//ISSUE_PAPER
 }
