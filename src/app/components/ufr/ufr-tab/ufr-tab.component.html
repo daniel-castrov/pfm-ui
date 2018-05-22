@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-3">
+        <span class="form-group inline-name">
+           <label>Label</label>
+           <input type="text" [(value)]="current.name" class="form-control forminput mr-5">
+         </span>
+      </div>
+      <div class="col-3">
+        <span class="form-group inline-name">
+          <label class="mb-1">POM</label>
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.pomId">
+            <option *ngFor="let p of cycles"[value]="p.pomid">{{p.display}}</option>
+          </select>
+        </span>
+      </div>
+      <div class="col-3">
+        <span class="form-check inline-name">
+          <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="current.yoE" (change)="search()">
+          <label class="form-check-label primary-label" for="defaultCheck2">YoE UFR</label>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <span class="form-group inline-name">
+          <label class="mb-1">Core Capability</label>
+          <select class="form-control-sm dropdown-width mb-2">
+            <option>CCAs</option>
+          </select>
+        </span>
+      </div>
+      <div class="col-3">
+        <span class="form-group inline-name">
+          <label class="mb-1">Status</label>
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.status">
+            <option *ngFor="let p of statuses" [value]="p">{{p}}</option>
+          </select>
+        </span>
+      </div>
+      <div class="col-3">
+        <span class="form-group inline-name">
+           <label>Cost to Complete</label>
+           <input type="text" placeholder="$" [(value)]="current.costLeft" class="form-control forminput mr-5">
+         </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <span class="form-group inline-name">
+          <label>Disposition</label>
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.disposition">
+            <option *ngFor="let p of dispositions" [value]="p">{{p}}</option>
+          </select>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="title mb-2">Notes:</div>
+        <div class="form-group">
+          <textarea cols="50" rows="4" wrap="physical" [(value)]="current.notes" class="form-control" id="impact"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

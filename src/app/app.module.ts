@@ -88,9 +88,18 @@ import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
-import { PBService } from './generated';
+import { PBService } from './generated/api/pB.service';
+import { UFRsService } from './generated/api/uFRs.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
+import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
+import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
+import { UfrMetadataComponent } from './components/ufr/metadata/ufr-metadata.component';
+import { UfrFundsComponent } from './components/ufr/ufr-funds/ufr-funds.component';
+import { UfrVariantsComponent } from './components/ufr/ufr-variants/ufr-variants.component';
+import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
+import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
+import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -126,7 +135,10 @@ const appRoutes: Routes = [
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
-  { path: 'create-new-pom', component: CreatePomScenarioComponent }
+  { path: 'create-new-pom', component: CreatePomScenarioComponent },
+  { path: 'ufr-search', component: UfrSearchComponent },
+  { path: 'ufr-view/:id', component: UfrViewComponent },
+
 ];
 
 @NgModule({
@@ -186,7 +198,15 @@ const appRoutes: Routes = [
     UserListComponent,
     VariantsComponent,
     VariantLineComponent,
-    ValuesPipe
+    UfrSearchComponent,
+    UfrViewComponent,
+    UfrMetadataComponent,
+    UfrFundsComponent,
+    UfrVariantsComponent,
+    UfrTabComponent,
+    UfrJustificationComponent,
+    ValuesPipe,
+    DashForZeroPipe
   ],
 
   imports: [
@@ -223,6 +243,7 @@ const appRoutes: Routes = [
     POMService,
     PRService,
     PBService,
+    UFRsService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

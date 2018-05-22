@@ -20,6 +20,8 @@ tags:
 - name: "TOA"
 - name: "POM"
 - name: "PB"
+- name: "UFRs"
+
 #
 ##############################################################################
 # PATHS
@@ -229,13 +231,13 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-  /pom/{communityId}:
+  /pom/community/{communityId}:
     get:
       tags:
       - "POM"
       summary: "Fetches all existing POMs for this community"
       description: "Gets the POM information"
-      operationId: "getById"
+      operationId: "getByCommunityId"
       consumes:
       - "application/json"
       produces:
@@ -244,6 +246,23 @@ paths:
       - in: "path"
         name: "communityId"
         description: "The community id"
+        required: true
+        type: "string"
+  /pom/{pomId}:
+    get:
+      tags:
+      - "POM"
+      summary: "Fetches existing POM"
+      description: "Gets the POM information"
+      operationId: "getById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        description: "The pom id"
         required: true
         type: "string"
   /pom/community/{communityId}/year/{year}:
@@ -285,6 +304,22 @@ paths:
       parameters:
       - in: "path"
         name: "id"
+        required: true
+        type: "string"        
+  /pr/phase/{phaseId}/program/{shortname}:
+    get:
+      tags:
+      - "PR"
+      operationId: "getByPhaseAndShortName"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "shortname"
         required: true
         type: "string"
 # STOP PR
@@ -1408,6 +1443,84 @@ paths:
           description: "An unexpected error occured."
 # STOP PROGRAMS
 ##############################################################################
+# START UFRs
+  /ufr/{ufrId}:
+    get:
+      tags:
+      - "UFRs"
+      operationId: "getUfrById"
+      parameters:
+      - name: "ufrId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get one UFR"
+      description: "Returns the requested UFR"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A program object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /ufr/community/{communityId}/year/{year}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets a list of UFRs for this community and year"
+      description: "Gets UFRs as specified"
+      operationId: "getAll"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+  /ufr/community/{communityId}/search:
+    post:
+      tags:
+      - "UFRs"
+      operationId: "search"
+      summary: "Search UFRs based on criteria"
+      description: "Returns a collection of UFRs that meet the criteria"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a UFRFilter"
+        required: true
+        schema:
+          $ref: "#/definitions/UFRFilter"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP UFRs
+##############################################################################
 # START SNAPSHOTS
 # 
   /snapshots:
@@ -1452,8 +1565,8 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP SNAPSHOTS
+#################################################################
 # END PATHS
-#
 #################################################################
 #
 # START DEFINITONS
@@ -1790,6 +1903,98 @@ definitions:
         type: 'string'
       appropriation:
         type: 'string'
+  UFRFilter:
+    type: "object"
+    properties:
+      orgId:
+        type: "string"
+      fa:
+        type: "string"
+      from:
+        type: "integer"
+      to:
+        type: "integer"
+      yoe: 
+        type: "boolean"
+      active:
+        type: "boolean"
+      status:
+        type: "string"
+      disposition:
+        type: "string"
+      cycle:
+        type: "string"
+  UFR:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      tags:
+        $ref: '#/definitions/StringMap'
+      description:
+        type: "string"
+      parentId:
+        type: "string"
+      pomId:
+        type: "string"
+      originatingProgramId:
+        type: "string"
+      infolink:
+        type: "string"
+      imgLink:
+        type: "string"
+      costLeft:
+        type: "number"
+      shortName:
+        type: "string"
+      longName:
+        type: "string"
+      type:
+        type: "string"
+      yoE:
+        type: "boolean"
+      active:
+        type: "boolean"
+      status:
+        type: "string"
+      disposition:
+        type: "string"
+      lastModifiedTime:
+        type: "integer"
+      notes:
+        type: "string"
+      justification:
+        type: "string"
+      requestNumber:
+        type: "integer"
+      creationTime:
+        type: "integer"
+      coreCapability:
+        type: "string"
+      milestoneImpact:
+        type: "string"
+      impactN:
+        type: "string"
+      costToComplete:
+        type: "number"
+      fundingLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/FundingLine"
+      fy:
+        type: "integer"
+      variants:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
+      emphases:
+        type: "array"
+        items:
+          $ref: "string"
+      name:
+        type: "string"
+      organization:
+        type: "string"
   Pom:
     type: "object"
     properties:

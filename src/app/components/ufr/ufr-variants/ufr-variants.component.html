@@ -1,0 +1,110 @@
+<ng-template #noqty>
+<td contenteditable="true" class="editable-field"></td>
+</ng-template>
+
+<div class="row">
+  <!--Left column begins-->
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-12 mb-2">
+        <span class="mr-4">
+          <button class="btn btn-primary">
+            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+            Add Variant Table
+          </button>
+        </span>
+        <span class="mr-4">for</span>
+        <span class="form-group inline-name mr-5">
+          <select class="form-control-sm dropdown-width mb-2">
+            <ng-container *ngFor="let fund of current.fundingLines">
+              <option *ngIf="fund.appropriation==='PROC' && fund.variants.length<1" [value]="fund.blin">{{fund.blin}}</option>
+            </ng-container>
+          </select>
+        </span>
+      </div>
+    </div>
+
+    <ng-container *ngFor="let fund of current.fundingLines">
+      <ng-container *ngIf="fund.variants.length>0">
+      <div class="row mb-2">
+        <div class="col-md-12">
+          <div id="proc-qty" class="table-editable">
+            {{fund.blin}}
+            <table class="proc-qty">
+              <thead>
+                <tr>
+                  <th class="row-width">Service</th>
+                  <th class="row-width">Description</th>
+                  <th class="row-width">Contractor</th>
+                  <th colspan="2">Unit Costs</th>
+                  <th>FY{{fy-2000}}</th>
+                  <th>FY{{fy+1-2000}}</th>
+                  <th>FY{{fy+2-2000}}</th>
+                  <th>FY{{fy+3-2000}}</th>
+                  <th>FY{{fy+4-2000}}</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>                
+                <ng-container *ngFor="let variant of fund.variants">
+                <tr>
+                  <td class="row-white" rowspan="3">{{variant.branch}}</td>
+                  <td class="row-white" rowspan="3">{{variant.description}}</td>
+                  <td class="row-white" rowspan="3">{{variant.contractor}}</td>
+                  <td class="row-white text-right cell-right-border-white" rowspan="3">${{variant.unitCost}}</td>
+                  <td class="row-white cell-bottom-border-white">PBR{{fy-2002}}</td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                </tr>
+                <tr>
+                  <td class="row-white cell-bottom-border-white">POM{{fy-2000}}</td>
+                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy] else noqty">{{variant.quantity[fy]}}</td>
+                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+1] else noqty">{{variant.quantity[fy+1]}}</td>
+                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+2] else noqty">{{variant.quantity[fy+2]}}</td>
+                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+3] else noqty">{{variant.quantity[fy+3]}}</td>
+                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+4] else noqty">{{variant.quantity[fy+4]}}</td>
+                  <td>{{sum(variant, fy, fy+4)}}</td>
+                </tr>
+                <tr class="row-lt-green">
+                  <td class="row-white cell-left-bottom-border-white">Difference</td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"></td>
+                </tr>                  
+                </ng-container>
+                <tr class="row-border-top">
+                  <td colspan="4" class="cell-left-border-white cell-bottom-border-white">
+                  </td>
+                  <td class="text-right row-white font-weight-bold">Totals:</td>
+                  <td class="text-right row-white">0</td>
+                  <td class="text-right row-white">0</td>
+                  <td class="text-right row-white">2900</td>
+                  <td class="text-right row-white">4117</td>
+                  <td class="text-right row-white">5382</td>
+                  <td class="text-right row-white">12399</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </ng-container>
+     </ng-container>
+
+      <div class="row mb-2">
+        <div class="col-md-12">
+          <button class="btn btn-light btn pull-left">
+            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+            Add Service Line
+          </button>
+        </div>
+      </div>
+  </div>
+</div>
