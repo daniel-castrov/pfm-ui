@@ -11,7 +11,7 @@
         <span class="form-group inline-name">
           <label class="mb-1">POM</label>
           <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.pomId">
-            <option *ngFor="let p of cycles"[value]="p.pomid">{{p.display}}</option>
+            <option *ngFor="let p of cycles" [value]="p.pomid">{{p.display}}</option>
           </select>
         </span>
       </div>
