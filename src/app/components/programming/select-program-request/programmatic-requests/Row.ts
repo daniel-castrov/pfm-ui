@@ -7,7 +7,7 @@ export class Row {
   pom: UiProgrammaticRequest;
   pb: UiProgrammaticRequest;
 
-  addPomPr(pr: ProgrammaticRequest) {
+  constructor(pr: ProgrammaticRequest) {
     this.pom = new UiProgrammaticRequest(pr);
   }
 

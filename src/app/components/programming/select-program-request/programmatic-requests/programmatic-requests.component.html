@@ -36,7 +36,11 @@
     </thead>
     <tbody *ngFor="let pr of (rows | values)">
       <tr>
-        <td class="row-lt-gray text-center" rowspan="2">{{pr.pom?.shortName}}</td>
+        <td class="row-lt-gray text-center" rowspan="2">{{pr.pom?.shortName}}
+          <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
+            <i class="fa fa-trash"></i>
+          </span>
+        </td>
         <td class="row-lt-gray text-center" rowspan="2"></td>
         <td class="row-lt-gray text-center" rowspan="2"></td>
         <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.pom?.state}}</a></td>
@@ -250,4 +254,28 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+
+<div class="row mb-3" >
+  <div class="col-12">
+    <div id="modal" class="modal fade in" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <a class="btn" data-dismiss="modal">
+              <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to remove <span class="remove-program">{{nameToDelete}}</span>?</p>
+            <span class="mb-2">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="delete()">Yes</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

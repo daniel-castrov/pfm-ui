@@ -277,6 +277,16 @@ paths:
         name: "phaseId"
         required: true
         type: "string"
+  /pr/{id}:
+    delete:
+      tags:
+      - "PR"
+      operationId: "remove"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
 # STOP PR
 ##############################################################################
 # START PB
@@ -1818,6 +1828,8 @@ definitions:
           $ref: "#/definitions/FundingLine"
       shortName:
         type: 'string'
+      bulkOrigin:
+        type: 'boolean'
   FundingLine:
     type: "object"
     properties:

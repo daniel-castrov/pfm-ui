@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Program } from '../../../../generated/model/program';
 import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Row } from './Row';
+import { PRService } from '../../../../generated/api/pR.service';
 
 @Component({
   selector: 'programmatic-requests',
@@ -14,24 +15,35 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
   @Input() private by: number;
   private rows = {};
+  @Output() deleted: EventEmitter<any> = new EventEmitter();
+
+  // used only during PR deletion
+  private idToDelete: string;
+  private nameToDelete: string;
+
+  constructor( private prService: PRService ) {}
 
   ngOnChanges() {
-    if(this.pomProgrammaticRequests) {
+    if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
+      this.rows = {};
       this.pomProgrammaticRequests.forEach( pr => {
-        this.rows[pr.shortName]=new Row();
-        this.rows[pr.shortName].addPomPr(pr);
+        this.rows[pr.shortName]=new Row(pr);
       });
-    };
-    if(this.pbProgrammaticRequests) {
       this.pbProgrammaticRequests.forEach( pr => {
         if(this.rows[pr.shortName]) {
           this.rows[pr.shortName].addPbPr(pr);
-        } else {
-          this.rows[pr.shortName]=new Row();
-          this.rows[pr.shortName].addPbPr(pr);
-        }
+        };
       });
     };
   }
 
+  saveDeletionValues(id: string, shortName: string) {
+    this.idToDelete = id;
+    this.nameToDelete = shortName;
+  }
+
+  delete() {
+    this.prService.remove(this.idToDelete).toPromise();
+    this.deleted.emit();
+  }
 }
