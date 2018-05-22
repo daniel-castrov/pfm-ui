@@ -177,7 +177,7 @@ paths:
 # STOP COMMUNITIES
 ##############################################################################
 # START POM
-  /pom/{communityId}/{year}:
+  /pom/community/{communityId}/year/{year}:
     post:
       tags:
       - "POM"
@@ -325,7 +325,7 @@ paths:
 # STOP PR
 ##############################################################################
 # START PB
-  /pb/{communityId}:
+  /pb/community/{communityId}:
     get:
       tags:
       - "PB"
@@ -358,6 +358,23 @@ paths:
         name: "year"
         required: true
         type: "number"
+  /pb/community/{communityId}/latest:
+    get:
+      tags:
+      - "PB"
+      summary: "Gets the current PB, whatever that means"
+      description: "Gets the PB information"
+      operationId: "getLatest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
 # END PB
 ##############################################################################
 # START CREATEUSERREQUEST
