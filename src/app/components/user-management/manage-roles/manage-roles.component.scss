@@ -1,0 +1,50 @@
+$primary-color: #25527a;
+$white: #ffffff;
+
+fieldset {
+  padding: 20px;
+}
+
+
+.role-controls {
+   color: $primary-color;
+   font-weight: 500;
+
+  > label {
+    color: $primary-color;
+    margin: 0 0 5px 0;
+    width: 233px;
+    display: block;
+  }
+}
+
+.dropdown-width {
+  width: 200px;
+}
+
+.controls {
+  clear: both;
+}
+
+.window {
+
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  min-height: 200px;
+  overflow-y: auto;
+
+  li {
+    list-style: none;
+    margin-left: -40px;
+    &:hover,
+    &:focus {
+      background-color: #3a6489;
+      color: $white;
+      }
+  }
+}
+
+.arrows {
+  padding: 20px;
+}

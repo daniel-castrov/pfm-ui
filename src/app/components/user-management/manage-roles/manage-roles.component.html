@@ -1,64 +1,78 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content col-md-8" *ngIf="header.isAuthenticated">
-    <div class="card-header">
-      Create/Modify/Delete Role
-    </div>
-    <div class="card-container">
-      <div class="row">
-        <div class="col-md-5">
-          <h6>Current Roles</h6>
-          <div class="form-control window">
-            <ul>
-              <li>Item 1</li>
-              <li>Item 5</li>
-              <li>Item 2</li>
-              <li>Item 4</li>
-              <li>Item 3</li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-5">
-          <div class="control-box">
-          <div class="form-group">
-            <button class="btn btn-primary"><i class="fa fa-minus-circle icon-pad" aria-hidden="true"></i>Remove Selected Role</button>
-          </div>
-            <label><i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>Add New Role</label>
-            <div class="input-group">
-              <input type="text" class="form-control">
-              <span class="input-group-btn">
-               <button class="btn btn-primary" type="button"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-             </span>
-           </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-5">
-          <h6>Current Functions</h6>
-            <select name="from[]" id="multiselect1" class="form-control window" size="8" multiple="multiple">
-              <option value="1">Item 1</option>
-              <option value="2">Item 5</option>
-              <option value="2">Item 2</option>
-              <option value="2">Item 4</option>
-              <option value="3">Item 3</option>
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-md-10">
+      <div class="row mb-4">
+        <div class="col-md-12">
+          <span class="h5 mr-3">Manage Roles for</span>
+          <span class="form-group">
+            <select class="form-control-sm dropdown-width">
+              <option>Community</option>
             </select>
-        </div>
-        <div class="col-xs-2 arrows">
-          <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-          <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-          <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-          <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
-        </div>
-        <div class="col-md-5">
-          <h6>Available Functions</h6>
-          <select name="to[]" id="multiselect1_to" class="form-control window" size="8" multiple="multiple"></select>
+          </span>
         </div>
       </div>
-      <div class="controls">
-        <button class="btn btn-default">Cancel</button>
-        <button class="btn btn-primary">Submit</button>
+      <div class="row mb-4">
+        <div class="col-lg-2 col-md-6 mb-2 role-controls">
+          <label>Select Role</label>
+          <span class="form-group">
+            <select class="form-control-sm dropdown-width">
+              <option>Role 1</option>
+            </select>
+          </span>
+        </div>
+        <div class="col-lg-2 col-md-6 role-controls">
+          <label>Select User</label>
+          <span class="form-group">
+            <select class="form-control-sm dropdown-width">
+              <option>User 1</option>
+            </select>
+          </span>
+        </div>
+        <div class="col-lg-2 col-md-6">
+          <div class="controls mt-4">
+            <button class="btn btn-primary">Next</button>
+          </div>
+        </div>
       </div>
+      <fieldset>
+        <legend>Modify a User's Role</legend>
+        <p class="role-controls">Assign one or more Resources for this role:</p>
+        <div class="row">
+          <div class="col-md-5">
+            <h6>Assign Programs</h6>
+              <select name="from[]" id="multiselect1" class="form-control window" size="8" multiple="multiple">
+                <option value="1">Item 1</option>
+                <option value="2">Item 5</option>
+                <option value="2">Item 2</option>
+                <option value="2">Item 4</option>
+                <option value="3">Item 3</option>
+              </select>
+            </div>
+            <div class="col-xs-2 arrows">
+              <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+              <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+              <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+              <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+            </div>
+            <div class="col-md-5">
+              <h6>Available Programs</h6>
+              <select name="to[]" id="multiselect1_to" class="form-control window" size="8" multiple="multiple"></select>
+            </div>
+          </div>
+          <span [hidden]="!formsubmitted" class="clearfix">
+            <div class="alert-success-group message">
+              <div class="alert-success alert-dismissable">
+                <strong>Bill Andrew's Resources have been modified</strong>
+                <!-- <strong>Bill Andrew's no longer has the role of Program Owner - CBDP</strong>
+                <strong>Bill Andrew has been assigned Program Owner - CBDP</strong> -->
+              </div>
+            </div>
+          </span>
+          <div class="controls pull-right">
+            <button class="btn btn-primary">Modify</button>
+          </div>
+      </fieldset>
     </div>
   </div>
 </div>

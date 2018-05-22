@@ -12,11 +12,10 @@ declare const jQuery: any;
 @Component({
   selector: 'app-manage-roles',
   templateUrl: './manage-roles.component.html',
-  styleUrls: ['./manage-roles.component.css']
+  styleUrls: ['./manage-roles.component.scss']
 })
 
 export class ManageRolesComponent {
-
 
     @ViewChild(HeaderComponent) header;
 
