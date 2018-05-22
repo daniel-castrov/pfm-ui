@@ -17,7 +17,12 @@ export class NewUfrComponent implements OnInit {
   ngOnInit() {
     var my: NewUfrComponent = this;
     this.psvc.getAll().subscribe(data => { 
-      my.programs = data.result;
+      my.programs = data.result.sort(function (a, b) {
+        if (a.shortName === b.shortName) {
+          return 0;
+        }
+        return (a.shortName < b.shortName ? -1 : 1);
+      });
       my.selected = my.programs[0];
     });
 
@@ -25,6 +30,8 @@ export class NewUfrComponent implements OnInit {
   }
 
   showPrograms(yes, title) {
+    console.log(this.selected);
+
     this.needProgramSelector = yes;
     this.programSelectorTitle = title;
   }
