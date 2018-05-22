@@ -99,6 +99,7 @@ import { UfrVariantsComponent } from './components/ufr/ufr-variants/ufr-variants
 import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
 import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
+import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -204,7 +205,8 @@ const appRoutes: Routes = [
     UfrVariantsComponent,
     UfrTabComponent,
     UfrJustificationComponent,
-    ValuesPipe
+    ValuesPipe,
+    DashForZeroPipe
   ],
 
   imports: [

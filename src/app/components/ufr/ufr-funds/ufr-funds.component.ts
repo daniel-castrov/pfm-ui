@@ -24,24 +24,22 @@ export class UfrFundsComponent implements OnInit {
     private prService: PRService) { }
 
   ngOnInit() {
-    // FIXME: we need to fetch the given programmatic request from the pom
-    // we can find it based on originalProgramId of the UFR
     var my: UfrFundsComponent = this;
     
-    //console.log('ufrfunds');
-    //console.log(my.current);
-
     this.pomsvc.getById(my.current.pomId).subscribe(data => { 
       my.pom = data.result;
       my.fy = my.pom.fy;
-      //console.log(my.fy);
-      //console.log(my.pom);
 
-      my.cvals.clear();      
+      console.log('into ufr-funds init!');
+      console.log(my.current.fundingLines);
+
+      my.cvals.clear();
+
+      // get the original funding lines from the POM
       my.prService.getByPhaseAndShortName( my.pom.id, my.current.shortName ).subscribe( model=>{
         // get the current values for this program
         my.model = model.result;
-        console.log(my.model);
+        //console.log(my.model);
 
         my.model.fundingLines.forEach(function (fund) {
           var key = fund.appropriation + fund.blin;
