@@ -6,7 +6,7 @@
   <div class="row main-content" *ngIf="header.isAuthenticated && community && fy">
     <div class="col-md-12">
       <div class="row">
-        <div class="col-lg-6 col-md-12 mb-2">
+        <div class="col-lg-6 col-md-12">
           <div class="h5 mb-2">
             <ng-container *ngIf="editsOk">
               <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY{{fy-2000}}</span>
@@ -18,7 +18,7 @@
           <div id="toa1" class="table-editable">
             <table class="table">
               <tr class="toa-table-title">
-                <td class="font-weight-bold toa-table-title" colspan="6">Set TOA for {{community.abbreviation}} Community</td>
+                <td class="font-weight-bold toa-table-title" colspan="6">Set TOA for {{community.abbreviation}} Community ($K)</td>
               </tr>
               <tr class="table-bordered">
                 <th>Community</th>
@@ -39,7 +39,7 @@
                 <td>{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
-                <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA</td>
+                <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA ($K)</td>
               </tr>
 
               <tr class="table-bordered">
@@ -71,20 +71,25 @@
                 <td *ngIf="yeardiffs.get(fy+4) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+4)}}</td>
                 <td></td>
               </tr>
+              <tr>
+                <td colspan="5"></td>
+                <td colspan="2" class="text-right">
+                  <div *ngIf="allowedits()">
+                    <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
+                  </div>
+                </td>
+              </tr>
             </table>
           </div>
-        </div>
-      </div>
-      <div class="row" *ngIf="editsOk">
-        <div class="col-lg-8 col-md-12 mb-3">
-          <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
-          <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-8 col-md-12">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
+            <div *ngIf="editsOk">
+              <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
+            </div>
           </fieldset>
         </div>
       </div>
