@@ -181,7 +181,7 @@ paths:
     post:
       tags:
       - "POM"
-      summary: "Creates a new POM scenario"
+      summary: "Creates a new POM session"
       description: "Sets TOA values for a Community and its organizations"
       operationId: "createPom"
       consumes:
@@ -213,9 +213,9 @@ paths:
     get:
       tags:
       - "POM"
-      summary: "Fetches an existing POM scenario"
+      summary: "Fetches an existing POM sesion"
       description: "Gets the POM information for this year"
-      operationId: "getByIdAndYear"
+      operationId: "getByCommunityIdAndYear"
       consumes:
       - "application/json"
       produces:
@@ -265,22 +265,6 @@ paths:
         description: "The pom id"
         required: true
         type: "string"
-  /pom/community/{communityId}/year/{year}:
-    get:
-      tags:
-      - "POM"
-      operationId: "getByCommunityAndYear"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "year"
-        required: true
-        type: "number"
 # STOP POM
 ##############################################################################
 # START PR
