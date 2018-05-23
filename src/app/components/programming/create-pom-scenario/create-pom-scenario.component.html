@@ -1,15 +1,18 @@
 <ng-template #emptycell><td></td></ng-template>
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isAuthenticated && community && fy">
+  <div class="row main-content" *ngIf="header.isAuthenticated && community">
     <div class="col-md-12">
       <div class="row">
         <div class="col-lg-6 col-md-12 mb-2">
           <div class="h5 mb-2">
-          <ng-container *ngIf="editsOk">
-            <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY{{fy-2000}}</span>
+          <ng-container *ngIf="allowedits()">
+            <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY{{fy-2000}} based on PB</span>
+            <select class="h6 form-control-sm" ([ngModel])="modelid" (change)="setModelId($event.target.value)">
+              <option *ngFor="let p of pbs" [value]="p.id" [selected]="p===model">{{p.fy}}</option>
+            </select>
           </ng-container>
-          <ng-container *ngIf="!editsOk">
+          <ng-container *ngIf="!allowedits()">
             <span class="h5 mr-sm-2 mb-2">POM Scenario for FY{{fy-2000}}</span>
           </ng-container>
           </div>
@@ -29,11 +32,11 @@
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy)" class="editable-field">{{toas.get(fy)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+1)" class="editable-field">{{toas.get(fy+1)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+2)" class="editable-field">{{toas.get(fy+2)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+3)" class="editable-field">{{toas.get(fy+3)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+4)" class="editable-field">{{toas.get(fy+4)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy)" class="editable-field">{{toas.get(fy)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+1)" class="editable-field">{{toas.get(fy+1)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+2)" class="editable-field">{{toas.get(fy+2)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+3)" class="editable-field">{{toas.get(fy+3)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, community.id, fy+4)" class="editable-field">{{toas.get(fy+4)}}</td>
                 <td>{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
@@ -52,11 +55,11 @@
 
               <tr *ngFor="let o of orgs" class="table-bordered">
                 <td>{{o.abbreviation}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy)" class="editable-field">{{orgtoas.get(o.id).get(fy)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+1)" class="editable-field">{{orgtoas.get(o.id).get(fy+1)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+2)" class="editable-field">{{orgtoas.get(o.id).get(fy+2)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+3)" class="editable-field">{{orgtoas.get(o.id).get(fy+3)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+4)" class="editable-field">{{orgtoas.get(o.id).get(fy+4)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy)" class="editable-field">{{orgtoas.get(o.id).get(fy)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+1)" class="editable-field">{{orgtoas.get(o.id).get(fy+1)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+2)" class="editable-field">{{orgtoas.get(o.id).get(fy+2)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+3)" class="editable-field">{{orgtoas.get(o.id).get(fy+3)}}</td>
+                <td [attr.contenteditable]="allowedits()" (blur)="editfield($event, o.id, fy+4)" class="editable-field">{{orgtoas.get(o.id).get(fy+4)}}</td>
                 <td>{{orgsums.get(o.id)}}</td>
               </tr>
 
@@ -73,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="editsOk">
+      <div class="row" *ngIf="allowedits()">
         <div class="col-lg-8 col-md-12 mb-3">
           <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
           <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
