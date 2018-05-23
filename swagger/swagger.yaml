@@ -358,6 +358,24 @@ paths:
         name: "year"
         required: true
         type: "number"
+  /pb/community/{communityId}/latest:
+    get:
+      tags:
+      - "PB"
+      summary: "Fetches the 'current' PB for this community"
+      description: "Gets the PB information"
+      operationId: "getLatest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+
 # END PB
 ##############################################################################
 # START CREATEUSERREQUEST
