@@ -252,6 +252,23 @@ paths:
     get:
       tags:
       - "POM"
+      summary: 'Gets a "sample" POM based on the values in the current PB'
+      description: "get sample pom values (toas)"
+      operationId: "getToaSamples"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+  /pom/community/{communityId}/sample:
+    get:
+      tags:
+      - "POM"
       summary: "Is there an open pom for this community?"
       description: "Open pom for the com?"
       operationId: "isOpen"
