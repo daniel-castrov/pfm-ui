@@ -11,8 +11,6 @@ export class OnlyDigitsDirective {
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    console.log( 'here I am in only-digits!')
-
     // Allow Backspace, tab, end, and home keys
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
