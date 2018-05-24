@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { UFRsService, POMService, ProgramsService, Program } from '../../../generated';
+import { Component, OnInit, } from '@angular/core';
+import { Router } from '@angular/router';
+import { UFRsService, POMService, ProgramsService, Program, UFR } from '../../../generated';
 
 @Component({
   selector: 'app-new-ufr',
@@ -11,13 +12,15 @@ export class NewUfrComponent implements OnInit {
   private programSelectorTitle: string = '';
   private programs: ProgramWrapper[] = [];
   private selected: Program;
+  private mode: string;
 
-  constructor(private usvc: UFRsService, private pomsvc:POMService, private psvc:ProgramsService ) { }
+  constructor(private usvc: UFRsService, private pomsvc: POMService, private psvc: ProgramsService,
+  private router:Router ) { }
 
   ngOnInit() {
     var my: NewUfrComponent = this;
     this.psvc.getAll().subscribe(data => { 
-      console.log(data.result);
+      //console.log(data.result);
 
       var idproglkp: Map<string, Program> = new Map<string, Program>();
       data.result.forEach((p:Program) => { 
@@ -43,16 +46,30 @@ export class NewUfrComponent implements OnInit {
         return (a.fullname < b.fullname ? -1 : 1);
       });
 
-      console.log(my.programs);
+      //console.log(my.programs);
       my.selected = my.programs[0].program;
     });
   }
 
-  showPrograms(yes, title) {
-    console.log(this.selected);
+  setMode(mode) {
+    if ('FL' === mode) { // funding lines only
+      this.needProgramSelector = true;
+      this.programSelectorTitle = 'Select Program ID';
+    }
+    else if ('SP' === mode) { // subprogram
+      this.needProgramSelector = true;
+      this.programSelectorTitle = 'Select Parent Program ID';
+    }
+    else if ('P' === mode) { // new program
+      this.needProgramSelector = false;
+    }
+    this.mode = mode;
+  }
 
-    this.needProgramSelector = yes;
-    this.programSelectorTitle = title;
+  create() {
+    console.log('create ' + this.mode + ' UFR');
+    var ufr: UFR = {};
+    this.usvc.create(ufr);
   }
 }
 

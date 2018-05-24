@@ -155,7 +155,7 @@ export class UfrSearchComponent implements OnInit {
     }
 
     //console.log(my.community.id);
-    console.log(searchfilter);
+    //console.log(searchfilter);
     this.usvc.search( my.community.id, searchfilter ).subscribe(
       (data) => {
         my.datasource.data = data.result;
@@ -170,9 +170,6 @@ export class UfrSearchComponent implements OnInit {
   }
 
   navigate(row) {
-    console.log('navigating!');
-    console.log(row);
-
     this.router.navigate(['/ufr-view', row.id]);
   }
 }
