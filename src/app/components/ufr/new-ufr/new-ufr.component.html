@@ -24,7 +24,7 @@
       <span class="mr-sm-4">
         <div class="form-group">
           <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selected" name="programid">
-            <option *ngFor="let p of programs" [ngValue]="p" [title]="p.longName">{{p.shortName}}</option>
+            <option *ngFor="let p of programs" [ngValue]="p.program" [title]="p.program.longName">{{p.fullname}}</option>
           </select>
         </div>
       </span>

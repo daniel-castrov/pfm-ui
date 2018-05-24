@@ -9,7 +9,7 @@ import { UFRsService, POMService, ProgramsService, Program } from '../../../gene
 export class NewUfrComponent implements OnInit {
   private needProgramSelector:boolean = false;
   private programSelectorTitle: string = '';
-  private programs: Program[] = [];
+  private programs: ProgramWrapper[] = [];
   private selected: Program;
 
   constructor(private usvc: UFRsService, private pomsvc:POMService, private psvc:ProgramsService ) { }
@@ -18,16 +18,34 @@ export class NewUfrComponent implements OnInit {
     var my: NewUfrComponent = this;
     this.psvc.getAll().subscribe(data => { 
       console.log(data.result);
-      my.programs = data.result.sort(function (a, b) {
-        if (a.shortName === b.shortName) {
+
+      var idproglkp: Map<string, Program> = new Map<string, Program>();
+      data.result.forEach((p:Program) => { 
+        idproglkp.set(p.id, p);
+      });
+
+      function progFullName(p: Program): string{
+        var pname = '';
+        if (null != p.parentId){
+          pname = progFullName(idproglkp.get(p.parentId)) + '::';
+        }
+        return pname + p.shortName;
+      }
+
+      data.result.forEach((p: Program) => {
+        my.programs.push({ program: p, fullname: progFullName(p) });
+      });
+      
+      my.programs.sort(function (a, b) {
+        if (a.fullname === b.fullname) {
           return 0;
         }
-        return (a.shortName < b.shortName ? -1 : 1);
+        return (a.fullname < b.fullname ? -1 : 1);
       });
-      my.selected = my.programs[0];
+
+      console.log(my.programs);
+      my.selected = my.programs[0].program;
     });
-
-
   }
 
   showPrograms(yes, title) {
@@ -36,4 +54,9 @@ export class NewUfrComponent implements OnInit {
     this.needProgramSelector = yes;
     this.programSelectorTitle = title;
   }
+}
+
+interface ProgramWrapper {
+  program: Program,
+  fullname: string
 }
