@@ -9,19 +9,37 @@ $dark-grey: #848282;
 
 fieldset {
   padding: 20px;
+  min-height: 70px;
 }
 
 .table {
+
+  max-width: 800px;
+  min-width: 800px;
+
   th {
     background-color: $primary-color;
     color: $white;
+  }
+
+  td {
+    border-top: none;
+    max-width: 100px;
+    min-width: 100px;
+    max-height: 20px;
+    padding: 6px;
   }
 
   .toa-table-title {
     background-color: $white;
   }
 
+ .fixed-row-width {
+    width: 120px;
+  }
+
   .editable-field {
+
     &:hover {
       cursor: pointer;
       background-color: #cccccc;
@@ -36,7 +54,8 @@ fieldset {
   }
 
   tr > td {
-   padding: 8px;
+   padding: 4px;
+   border: none;
     }
   }
 
