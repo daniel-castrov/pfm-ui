@@ -34,15 +34,15 @@
         <th class="header-column-width">>>FY{{by-2000 + 4}}</th>
       </tr>
     </thead>
-    <tbody *ngFor="let pr of (rows | values)">
+    <tbody *ngFor="let pr of (mapNameToRow | values)">
       <tr>
-        <td class="row-lt-gray text-center" rowspan="2">{{pr.pom?.shortName}}
+        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isSubprogram ? mapIdToRow[pr.pom.parentId]?.pom.shortName : pr.pom?.shortName}}
           <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
             <i class="fa fa-trash"></i>
           </span>
         </td>
-        <td class="row-lt-gray text-center" rowspan="2"></td>
-        <td class="row-lt-gray text-center" rowspan="2"></td>
+        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
+        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</td>
         <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.pom?.state}}</a></td>
         <td class="">PB</td>
         <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>

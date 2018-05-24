@@ -2035,6 +2035,10 @@ definitions:
         type: 'string'
       bulkOrigin:
         type: 'boolean'
+      parentId:
+        type: 'string'
+      type:
+        type: 'object'
   FundingLine:
     type: "object"
     properties:
