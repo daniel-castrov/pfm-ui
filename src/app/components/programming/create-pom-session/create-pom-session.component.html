@@ -9,10 +9,10 @@
         <div class="col-lg-6 col-md-12">
           <div class="h5 mb-2">
             <ng-container *ngIf="editsOk">
-              <span class="h5 mr-sm-2 mb-2">Create POM Scenario for FY{{fy-2000}}</span>
+              <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy|fy}}</span>
             </ng-container>
             <ng-container *ngIf="!editsOk">
-              <span class="h5 mr-sm-2 mb-2">POM Scenario for FY{{fy-2000}}</span>
+              <span class="h5 mr-sm-2 mb-2">POM Session for {{fy|fy}}</span>
             </ng-container>
           </div>
           <div id="toa1" class="table-editable">
@@ -22,12 +22,12 @@
               </tr>
               <tr class="table-bordered">
                 <th>Community</th>
-                <th>FY{{fy-2000}}</th>
-                <th>FY{{fy+1-2000}}</th>
-                <th>FY{{fy+2-2000}}</th>
-                <th>FY{{fy+3-2000}}</th>
-                <th>FY{{fy+4-2000}}</th>
-                <th>FY{{fy-2000}}-{{fy+4-2000}}</th>
+                <th>{{fy|fy}}</th>
+                <th>{{fy+1|fy}}</th>
+                <th>{{fy+2|fy}}</th>
+                <th>{{fy+3|fy}}</th>
+                <th>{{fy+4|fy}}</th>
+                <th>{{fy|fy}}-{{fy+4|fy}}</th>
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}}</td>
@@ -44,12 +44,12 @@
 
               <tr class="table-bordered">
                 <th>Organization</th>
-                <th>FY{{fy-2000}}</th>
-                <th>FY{{fy+1-2000}}</th>
-                <th>FY{{fy+2-2000}}</th>
-                <th>FY{{fy+3-2000}}</th>
-                <th>FY{{fy+4-2000}}</th>
-                <th>FY{{fy-2000}}-{{fy+4-2000}}</th>
+                <th>{{fy|fy}}</th>
+                <th>{{fy+1|fy}}</th>
+                <th>{{fy+2|fy}}</th>
+                <th>{{fy+3|fy}}</th>
+                <th>{{fy+4|fy}}</th>
+                <th>{{fy|fy}}-{{fy+4|fy}}</th>
               </tr>
 
               <tr *ngFor="let o of orgs" class="table-bordered">

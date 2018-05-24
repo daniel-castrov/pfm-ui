@@ -20,11 +20,11 @@ declare const $: any;
 declare const jQuery: any;
 
 @Component({
-  selector: 'app-create-pom-scenario',
-  templateUrl: './create-pom-scenario.component.html',
-  styleUrls: ['./create-pom-scenario.component.scss']
+  selector: 'app-create-pom-session',
+  templateUrl: './create-pom-session.component.html',
+  styleUrls: ['./create-pom-session.component.scss']
 })
-export class CreatePomScenarioComponent implements OnInit {
+export class CreatePomSessionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private fy: number;
   private community: Community;
@@ -103,7 +103,7 @@ export class CreatePomScenarioComponent implements OnInit {
   }
 
   fetch() {
-    var my: CreatePomScenarioComponent = this;
+    var my: CreatePomSessionComponent = this;
     this.detailsvc.getCurrentUser().subscribe((person) => {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
@@ -130,7 +130,7 @@ export class CreatePomScenarioComponent implements OnInit {
   }
 
   setInitialValuesAndEditable(poms: Pom[], samplepom: Pom) {
-    var my: CreatePomScenarioComponent = this;
+    var my: CreatePomSessionComponent = this;
 
     // set everything to 0, just to be safe
     for (var i = 0; i < 5; i++) {
@@ -193,7 +193,7 @@ export class CreatePomScenarioComponent implements OnInit {
   }
 
   resetTotals() {
-    var my: CreatePomScenarioComponent = this;
+    var my: CreatePomSessionComponent = this;
 
     // update our running totals
     my.orgsums.clear();
@@ -231,7 +231,7 @@ export class CreatePomScenarioComponent implements OnInit {
 
 
   submit() {
-    var my: CreatePomScenarioComponent = this;
+    var my: CreatePomSessionComponent = this;
     var toas: TOA[] = [];
     my.toas.forEach(function (amt, yr) {
       var t: TOA = {

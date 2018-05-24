@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreatePomScenarioComponent } from './create-pom-scenario.component';
+import { CreatePomSessionComponent } from './create-pom-session.component';
 
-describe('CreatePomScenarioComponent', () => {
-  let component: CreatePomScenarioComponent;
-  let fixture: ComponentFixture<CreatePomScenarioComponent>;
+describe('CreatePomSessionComponent', () => {
+  let component: CreatePomSessionComponent;
+  let fixture: ComponentFixture<CreatePomSessionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreatePomScenarioComponent ]
+      declarations: [CreatePomSessionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreatePomScenarioComponent);
+    fixture = TestBed.createComponent(CreatePomSessionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

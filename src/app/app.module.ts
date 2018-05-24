@@ -23,7 +23,7 @@ import { AccessChangeApprovalComponent } from './components/user-management/appr
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
-import { CreatePomScenarioComponent } from './components/programming/create-pom-scenario/create-pom-scenario.component';
+import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
@@ -101,6 +101,7 @@ import { UfrJustificationComponent } from './components/ufr/ufr-justification/uf
 import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
+import { FyPipe } from './pipes/fy.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -136,7 +137,7 @@ const appRoutes: Routes = [
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
-  { path: 'create-new-pom', component: CreatePomScenarioComponent },
+  { path: 'create-new-pom', component: CreatePomSessionComponent },
   { path: 'ufr-search', component: UfrSearchComponent },
   { path: 'ufr-view/:id', component: UfrViewComponent },
 
@@ -154,7 +155,7 @@ const appRoutes: Routes = [
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
-    CreatePomScenarioComponent,
+    CreatePomSessionComponent,
     CurrentComponent,
     ElevationComponent,
     FeedbackComponent,
@@ -208,7 +209,8 @@ const appRoutes: Routes = [
     UfrJustificationComponent,
     ValuesPipe,
     DashForZeroPipe,
-    OnlyDigitsDirective
+    OnlyDigitsDirective,
+    FyPipe
   ],
 
   imports: [
