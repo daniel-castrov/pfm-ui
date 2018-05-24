@@ -1,0 +1,51 @@
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6" id="update-pom-session">
+          <div class="h5 mb-4">POM 2019 Session Update</div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6">
+          <div class="pull-right pom-controls">
+            <span>
+              <button class="btn btn-primary">Update</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <span class="form-group inline-name">
+            <label class="mb-1">Worksheets</label>
+            <select class="form-control-sm dropdown-width mb-2">
+               <option value=""></option>
+               <option value="">Worksheet v1</option>
+             </select>
+           </span>
+         </div>
+         <div class="col-7">
+           <span class="form-group">
+             <label class="mb-1">Area to enter more specific notes</label>
+             <textarea cols="30" rows="4" wrap="physical" class="form-control"></textarea>
+           </span>
+        </div>
+      </div>
+    </div>
+    <div class="row main-content">
+      <div class="col-lg-10 col-md-12">
+        <tabset class="program-tab-style" role="tablist">
+          <tab heading="Bulk" id="tab1" role="tablist">
+            <bulk-tab role="tabpanel"></bulk-tab>
+          </tab>
+          <tab heading="Transfer" id="tab2">
+            <transfer-tab role="tabpanel"></transfer-tab>
+          </tab>
+          <tab heading="Calculate" id="tab3">
+            <calculate-tab role="tabpanel"></calculate-tab>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>
