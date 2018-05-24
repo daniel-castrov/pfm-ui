@@ -100,6 +100,7 @@ import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
 import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
+import { OnlyDigitsDirective } from './directives/only-digits.directive';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -206,7 +207,8 @@ const appRoutes: Routes = [
     UfrTabComponent,
     UfrJustificationComponent,
     ValuesPipe,
-    DashForZeroPipe
+    DashForZeroPipe,
+    OnlyDigitsDirective
   ],
 
   imports: [

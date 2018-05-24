@@ -178,10 +178,10 @@ export class CreatePomScenarioComponent implements OnInit {
 
   editfield(event, id, fy) {
     if (id === this.community.id) {
-      this.toas.set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
+      this.toas.set(Number.parseInt(fy), Number.parseInt(event.target.innerText));
     }
     else {
-      this.orgtoas.get(id).set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
+      this.orgtoas.get(id).set(Number.parseInt(fy), Number.parseInt(event.target.innerText));
     }
 
     this.resetTotals();

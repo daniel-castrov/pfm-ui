@@ -31,11 +31,11 @@
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy)" class="editable-field">{{toas.get(fy)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+1)" class="editable-field">{{toas.get(fy+1)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+2)" class="editable-field">{{toas.get(fy+2)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+3)" class="editable-field">{{toas.get(fy+3)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+4)" class="editable-field">{{toas.get(fy+4)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy)" class="editable-field" digits>{{toas.get(fy)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+1)" class="editable-field" digits>{{toas.get(fy+1)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+2)" class="editable-field" digits>{{toas.get(fy+2)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+3)" class="editable-field" digits>{{toas.get(fy+3)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+4)" class="editable-field" digits>{{toas.get(fy+4)}}</td>
                 <td>{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
@@ -54,21 +54,21 @@
 
               <tr *ngFor="let o of orgs" class="table-bordered">
                 <td>{{o.abbreviation}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy)" class="editable-field">{{orgtoas.get(o.id).get(fy)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+1)" class="editable-field">{{orgtoas.get(o.id).get(fy+1)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+2)" class="editable-field">{{orgtoas.get(o.id).get(fy+2)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+3)" class="editable-field">{{orgtoas.get(o.id).get(fy+3)}}</td>
-                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+4)" class="editable-field">{{orgtoas.get(o.id).get(fy+4)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+1)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+1)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+2)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+2)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+3)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+3)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+4)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+4)}}</td>
                 <td>{{orgsums.get(o.id)}}</td>
               </tr>
 
               <tr>
                 <td></td>
-                <td *ngIf="yeardiffs.get(fy) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy)}}</td>
-                <td *ngIf="yeardiffs.get(fy+1) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+1)}}</td>
-                <td *ngIf="yeardiffs.get(fy+2) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+2)}}</td>
-                <td *ngIf="yeardiffs.get(fy+3) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+3)}}</td>
-                <td *ngIf="yeardiffs.get(fy+4) < 0; else emptycell" class="exceed-sum">{{yeardiffs.get(fy+4)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+3) < 0}">{{yeardiffs.get(fy+3)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+4) < 0}">{{yeardiffs.get(fy+4)}}</td>
                 <td></td>
               </tr>
               <tr>
