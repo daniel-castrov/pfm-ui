@@ -28,10 +28,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
       this.mapNameToRow = this.createMapNameToRow();
     };
-    if(this.pomProgrammaticRequests) {
-      this.mapIdToRow = this.createMapIdToRow();
-    };
-
   }
 
   private createMapNameToRow() {
@@ -43,14 +39,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       if (result[pr.shortName]) {
         result[pr.shortName].addPbPr(pr);
       };
-    });
-    return result;
-  }
-
-  private createMapIdToRow() {
-    const result = {};
-    this.pomProgrammaticRequests.forEach(pr => {
-      result[pr.id] = new Row(pr);
     });
     return result;
   }
