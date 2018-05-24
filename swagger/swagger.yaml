@@ -248,7 +248,7 @@ paths:
         description: "The community id"
         required: true
         type: "string"
-  /pom/community/{communityId}/isopen:
+  /pom/community/{communityId}/sample:
     get:
       tags:
       - "POM"
@@ -265,7 +265,7 @@ paths:
         description: "The community id"
         required: true
         type: "string"
-  /pom/community/{communityId}/sample:
+  /pom/community/{communityId}/isopen:
     get:
       tags:
       - "POM"

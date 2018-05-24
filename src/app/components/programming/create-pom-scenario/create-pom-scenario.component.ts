@@ -106,14 +106,16 @@ export class CreatePomScenarioComponent implements OnInit {
     var my: CreatePomScenarioComponent = this;
     this.detailsvc.getCurrentUser().subscribe((person) => {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
-      my.orgsvc.getByCommunityId(person.result.currentCommunityId),
-      my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-      my.pbsvc.getLatest(person.result.currentCommunityId)
+        my.orgsvc.getByCommunityId(person.result.currentCommunityId),
+        my.pomsvc.getByCommunityId(person.result.currentCommunityId),
+        my.pbsvc.getLatest(person.result.currentCommunityId),
+        my.pomsvc.getToaSamples(person.result.currentCommunityId )
       ]).subscribe(data => {
         var community = data[0].result;
         my.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
         my.pb = data[3].result;
+        var samplepom: Pom = data[4].result;
 
         my.community = community;
         my.fy = my.pb.fy + 2;
@@ -121,39 +123,56 @@ export class CreatePomScenarioComponent implements OnInit {
         my.toas.clear();
         my.orgtoas.clear();
 
-        for (var i = 0; i < 5; i++) {
-          my.toas.set(my.fy + i, 0);
-        }
-        my.orgs.forEach(function (org) {
-          var ts: Map<number, number> = new Map<number, number>();
-          for (var i = 0; i < 5; i++) {
-            ts.set(my.fy + i, 0);
-          }
-          my.orgtoas.set(org.id, ts);
-        });
-
-        my.editsOk = true;
-        poms.forEach(function (x) {
-          if (x.fy === my.fy) {
-            my.editsOk = false;
-
-            // we have a POM for this FY, so fill in the values
-            x.communityToas.forEach((toa) => {
-              my.toas.set(toa.year, toa.amount);
-            });
-
-            Object.keys(x.orgToas).forEach(key => {
-              var toamap: Map<number, number> = new Map<number, number>();
-              x.orgToas[key].forEach(toa => {
-                toamap.set(toa.year, toa.amount);
-              });
-              my.orgtoas.set(key, toamap);
-            });
-          }
-        });
-
+        my.setInitialValuesAndEditable(poms, samplepom);
         my.resetTotals();
       });
+    });
+  }
+
+  setInitialValuesAndEditable(poms: Pom[], samplepom: Pom) {
+    var my: CreatePomScenarioComponent = this;
+
+    // set everything to 0, just to be safe
+    for (var i = 0; i < 5; i++) {
+      my.toas.set(my.fy + i, 0);
+    }
+    samplepom.communityToas.forEach( (toa: TOA) => { 
+      my.toas.set(toa.year, toa.amount);
+    });
+
+    // set org toas to 0 as well, then update after
+    my.orgs.forEach(function (org) {
+      var tszeros: Map<number, number> = new Map<number, number>();
+      for (var i = 0; i < 5; i++) {
+        tszeros.set(my.fy + i, 0);
+      }
+      my.orgtoas.set(org.id, tszeros);
+    });
+
+    Object.keys(samplepom.orgToas).forEach(orgid => {
+      samplepom.orgToas[orgid].forEach(toa => {
+        my.orgtoas.get(orgid).set(toa.year, toa.amount);
+      });
+    });
+
+    my.editsOk = true;
+    poms.forEach(function (x) {
+      if (x.fy === my.fy) {
+        my.editsOk = false;
+
+        // we have a POM for this FY, so fill in the values
+        x.communityToas.forEach((toa) => {
+          my.toas.set(toa.year, toa.amount);
+        });
+
+        Object.keys(x.orgToas).forEach(key => {
+          var toamap: Map<number, number> = new Map<number, number>();
+          x.orgToas[key].forEach(toa => {
+            toamap.set(toa.year, toa.amount);
+          });
+          my.orgtoas.set(key, toamap);
+        });
+      }
     });
   }
 
