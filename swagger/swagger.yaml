@@ -1233,7 +1233,7 @@ paths:
     get:
       tags:
       - "UserRoleResource"
-      operationId: "getUserRolesbyUserAndCommunityAndRoleName"
+      operationId: "getUserRoleByUserAndCommunityAndRoleName"
       parameters:
       - name: "userId"
         in: "path"
