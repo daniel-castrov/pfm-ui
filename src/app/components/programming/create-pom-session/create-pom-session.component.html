@@ -1,0 +1,98 @@
+<ng-template #emptycell>
+  <td></td>
+</ng-template>
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated && community && fy">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-lg-6 col-md-12">
+          <div class="h5 mb-2">
+            <ng-container *ngIf="editsOk">
+              <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy|fy}}</span>
+            </ng-container>
+            <ng-container *ngIf="!editsOk">
+              <span class="h5 mr-sm-2 mb-2">POM Session for {{fy|fy}}</span>
+            </ng-container>
+          </div>
+          <div id="toa1" class="table-editable">
+            <table class="table">
+              <tr class="toa-table-title">
+                <td class="font-weight-bold toa-table-title" colspan="6">Set TOA for {{community.abbreviation}} Community ($K)</td>
+              </tr>
+              <tr class="table-bordered">
+                <th>Community</th>
+                <th>{{fy|fy}}</th>
+                <th>{{fy+1|fy}}</th>
+                <th>{{fy+2|fy}}</th>
+                <th>{{fy+3|fy}}</th>
+                <th>{{fy+4|fy}}</th>
+                <th>{{fy|fy}}-{{fy+4|fy}}</th>
+              </tr>
+              <tr class="table-bordered">
+                <td>{{community.abbreviation}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy)" class="editable-field" digits>{{toas.get(fy)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+1)" class="editable-field" digits>{{toas.get(fy+1)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+2)" class="editable-field" digits>{{toas.get(fy+2)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+3)" class="editable-field" digits>{{toas.get(fy+3)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+4)" class="editable-field" digits>{{toas.get(fy+4)}}</td>
+                <td>{{orgsums.get(community.id)}}</td>
+              </tr>
+              <tr>
+                <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA ($K)</td>
+              </tr>
+
+              <tr class="table-bordered">
+                <th>Organization</th>
+                <th>{{fy|fy}}</th>
+                <th>{{fy+1|fy}}</th>
+                <th>{{fy+2|fy}}</th>
+                <th>{{fy+3|fy}}</th>
+                <th>{{fy+4|fy}}</th>
+                <th>{{fy|fy}}-{{fy+4|fy}}</th>
+              </tr>
+
+              <tr *ngFor="let o of orgs" class="table-bordered">
+                <td>{{o.abbreviation}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+1)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+1)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+2)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+2)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+3)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+3)}}</td>
+                <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+4)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+4)}}</td>
+                <td>{{orgsums.get(o.id)}}</td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+3) < 0}">{{yeardiffs.get(fy+3)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+4) < 0}">{{yeardiffs.get(fy+4)}}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td colspan="5"></td>
+                <td colspan="2" class="text-right">
+                  <div *ngIf="editsOk">
+                    <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 col-md-12">
+          <div class="h6">Progress Report:</div>
+          <fieldset class="mb-3">
+            <div *ngIf="editsOk">
+              <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
