@@ -20,28 +20,25 @@ declare const $: any;
 declare const jQuery: any;
 
 @Component({
-  selector: 'app-create-pom-scenario',
-  templateUrl: './create-pom-scenario.component.html',
-  styleUrls: ['./create-pom-scenario.component.scss']
+  selector: 'app-create-pom-session',
+  templateUrl: './create-pom-session.component.html',
+  styleUrls: ['./create-pom-session.component.scss']
 })
-export class CreatePomScenarioComponent implements OnInit {
+export class CreatePomSessionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
-  private fy: number = new Date().getFullYear() + 2;
-  private resetFy: boolean = true;
+  private fy: number;
   private community: Community;
   private orgs: Organization[];
   private toas: Map<number, number> = new Map<number, number>();
-  private orgtoas: Map<string, Map<number,number>> = new Map<string,Map<number,number>>();
-  private poms: Pom[];
-  private pbs: PB[];
-  private model: PB;
-  private modelid: string;
+  private orgtoas: Map<string, Map<number, number>> = new Map<string, Map<number, number>>();
+  private pb: PB;
+  private editsOk: boolean = true;
   private tooMuchToa: boolean = false;
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
-  constructor(private userDetailsService: MyDetailsService, private communityService: CommunityService,
-    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService ) {
+  constructor(private detailsvc: MyDetailsService, private communityService: CommunityService,
+    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService) {
   }
 
   ngOnInit() {
@@ -102,142 +99,102 @@ export class CreatePomScenarioComponent implements OnInit {
       $EXPORT.text(JSON.stringify(data));
     });
 
-    this.resetFy = true;
     this.fetch();
   }
 
-  allowedits(): boolean {
-    var my: CreatePomScenarioComponent = this;
-    var ok: boolean = true;
-
-    this.poms.forEach(function (pom) { 
-      // if we have a pom from this FY, we can't edit it again
-      if (pom.fy === my.fy) {
-        ok = false;
-      }
-    });
-
-    return ok;
-  }
-
-  fetch(){
-    var my: CreatePomScenarioComponent = this;0
-    this.userDetailsService.getCurrentUser().subscribe((person) => {
+  fetch() {
+    var my: CreatePomSessionComponent = this;
+    this.detailsvc.getCurrentUser().subscribe((person) => {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
         my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-        my.pbsvc.getById(person.result.currentCommunityId)
+        my.pbsvc.getLatest(person.result.currentCommunityId),
+        my.pomsvc.getToaSamples(person.result.currentCommunityId )
       ]).subscribe(data => {
         var community = data[0].result;
         my.orgs = data[1].result;
-        my.poms = data[2].result;
-        my.pbs = data[3].result;
-        console.log(my.pbs);
-        console.log(my.poms);
+        var poms: Pom[] = data[2].result;
+        my.pb = data[3].result;
+        var samplepom: Pom = data[4].result;
 
-        my.pbs.sort(function (a: PB, b: PB) {
-          return (a.fy - b.fy);
-        });
-        my.model = my.pbs[my.pbs.length - 1];
         my.community = community;
-        if (my.resetFy) {
-          my.fy = my.model.fy + 2;
-          this.resetFy = false;
-        }
+        my.fy = my.pb.fy + 2;
 
-        my.setYear(my.fy);        
+        my.toas.clear();
+        my.orgtoas.clear();
+
+        my.setInitialValuesAndEditable(poms, samplepom);
+        my.resetTotals();
+      });
+    });
+  }
+
+  setInitialValuesAndEditable(poms: Pom[], samplepom: Pom) {
+    var my: CreatePomSessionComponent = this;
+
+    // set everything to 0, just to be safe
+    for (var i = 0; i < 5; i++) {
+      my.toas.set(my.fy + i, 0);
+    }
+    samplepom.communityToas.forEach( (toa: TOA) => { 
+      my.toas.set(toa.year, toa.amount);
+    });
+
+    // set org toas to 0 as well, then update after
+    my.orgs.forEach(function (org) {
+      var tszeros: Map<number, number> = new Map<number, number>();
+      for (var i = 0; i < 5; i++) {
+        tszeros.set(my.fy + i, 0);
+      }
+      my.orgtoas.set(org.id, tszeros);
+    });
+
+    Object.keys(samplepom.orgToas).forEach(orgid => {
+      samplepom.orgToas[orgid].forEach(toa => {
+        my.orgtoas.get(orgid).set(toa.year, toa.amount);
       });
     });
 
-  }
+    my.editsOk = true;
+    poms.forEach(function (x) {
+      if (x.fy === my.fy) {
+        my.editsOk = false;
 
-  setModelId(pbid) {
-    console.log(pbid);
-    var my: CreatePomScenarioComponent = this;
-    my.pbs.forEach(function (pb) { 
-      if (pb.id === pbid) {
-        my.model = pb;
-      }
-    });
-    this.setYear( my.model.fy)
-  }
-
-  setYear(year) {
-    var my: CreatePomScenarioComponent = this;
-    console.log('setting model year to ' + year);
-
-    my.toas.clear();
-    my.orgtoas.clear();
-
-    for (var i = 0; i < 7; i++){
-      my.toas.set(year + i, 0);
-    }
-    my.orgs.forEach(function (org) { 
-      var ts: Map<number, number> = new Map<number, number>();
-      for (var i = 0; i < 7; i++) {
-        ts.set(year + i, 0);
-      }
-      my.orgtoas.set(org.id, ts);
-    });
-
-    my.poms.forEach(function (pom) {
-      if (pom.fy === year ) {
-        var modelpom = pom;
-        my.orgsums.set(pom.communityId, 0);
-        pom.communityToas.forEach(function (toa: TOA) {
-          if (toa.year >= my.fy) {
-            my.toas.set(toa.year, toa.amount);
-          }
+        // we have a POM for this FY, so fill in the values
+        x.communityToas.forEach((toa) => {
+          my.toas.set(toa.year, toa.amount);
         });
 
-        // fill in any missing years
-        for (var i = my.fy; i < my.fy + 7; i++) {
-          if (!my.toas.has(i)) {
-            my.toas.set(i, 0);
-          }
-        }
-
-        Object.getOwnPropertyNames(pom.orgToas).forEach(function (orgid) { 
-          var map: Map<number, number> = new Map<number, number>();
-          pom.orgToas[orgid].forEach(function (toa: TOA) { 
-            if (toa.year >= my.fy) {
-              map.set(toa.year, toa.amount);
-            }
+        Object.keys(x.orgToas).forEach(key => {
+          var toamap: Map<number, number> = new Map<number, number>();
+          x.orgToas[key].forEach(toa => {
+            toamap.set(toa.year, toa.amount);
           });
-          
-          // fill in any missing years
-          for (var i = my.fy; i < my.fy + 7; i++) {
-            if (!map.has(i)) {
-              map.set(i, 0);
-            }
-          }
-
-          my.orgtoas.set(orgid, map);
+          my.orgtoas.set(key, toamap);
         });
       }
     });
-
-    this.resetTotals();
-    //console.log(my.toas);
-    //console.log(my.orgtoas);
-    console.log(my.orgsums);
-    console.log(my.yeardiffs);
   }
 
   editfield(event, id, fy) {
+    var val: number = Number.parseInt(event.target.innerText);
+    if (val > 99999999) {
+      val = 99999999;
+    }
+
     if (id === this.community.id) {
-      this.toas.set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
+      this.toas.set(Number.parseInt(fy), val);
     }
     else {
-      this.orgtoas.get(id).set(Number.parseInt(fy), Number.parseFloat(event.target.innerText));
+      this.orgtoas.get(id).set(Number.parseInt(fy), val);
     }
 
     this.resetTotals();
   }
 
   resetTotals() {
-    var my: CreatePomScenarioComponent = this;
-    
+    var my: CreatePomSessionComponent = this;
+
     // update our running totals
     my.orgsums.clear();
     my.yeardiffs.clear();
@@ -248,34 +205,40 @@ export class CreatePomScenarioComponent implements OnInit {
       amt += val;
       my.yeardiffs.set(year, val);
 
-      if (!my.orgsums.has(my.community.id) ){
+      if (!my.orgsums.has(my.community.id)) {
         my.orgsums.set(my.community.id, 0);
       }
       my.orgsums.set(my.community.id, my.orgsums.get(my.community.id) + val);
     });
 
+    //console.log(my.orgtoas);
+    //console.log(my.toas);
+
     amt = 0;
     my.orgtoas.forEach(function (toas, orgid) {
       my.orgsums.set(orgid, 0);
-      toas.forEach(function (amt, year) { 
+      toas.forEach(function (amt, year) {
         my.yeardiffs.set(year, my.yeardiffs.get(year) - amt);
         my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
 
-        if (my.yeardiffs.get(year)< 0 ) {
+        if (my.yeardiffs.get(year) < 0) {
           my.tooMuchToa = true;
         }
       });
     });
-    
+
   }
 
 
   submit() {
-    var my: CreatePomScenarioComponent = this;
-
+    var my: CreatePomSessionComponent = this;
     var toas: TOA[] = [];
     my.toas.forEach(function (amt, yr) {
-      toas.push({ year: yr, amount: amt });
+      var t: TOA = {
+        year: yr,
+        amount: amt
+      };
+      toas.push(t);
     });
 
     var otoas: { [key: string]: TOA[]; } = {};
@@ -295,10 +258,11 @@ export class CreatePomScenarioComponent implements OnInit {
 
     //console.log('calling setToas!');
     //console.log(transfer);
-    this.pomsvc.createPom(this.community.id, this.fy, transfer, my.model.id).subscribe(
+    this.pomsvc.createPom(this.community.id, this.fy, transfer, my.pb.id).subscribe(
       (data) => {
-        my.fetch();
+        if (data.result) {
+          my.editsOk = false;
+        }
       });
   }
-
 }

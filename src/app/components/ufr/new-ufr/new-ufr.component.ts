@@ -17,6 +17,7 @@ export class NewUfrComponent implements OnInit {
   ngOnInit() {
     var my: NewUfrComponent = this;
     this.psvc.getAll().subscribe(data => { 
+      console.log(data.result);
       my.programs = data.result.sort(function (a, b) {
         if (a.shortName === b.shortName) {
           return 0;
