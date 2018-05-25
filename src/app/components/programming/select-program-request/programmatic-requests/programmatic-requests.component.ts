@@ -14,7 +14,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   @Input() private pomProgrammaticRequests: ProgrammaticRequest[];
   @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
   @Input() private by: number;
-  private rows = {};
+  private mapNameToRow = {};
+  private mapIdToRow = {};
   @Output() deleted: EventEmitter<any> = new EventEmitter();
 
   // used only during PR deletion
@@ -25,16 +26,21 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   ngOnChanges() {
     if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
-      this.rows = {};
-      this.pomProgrammaticRequests.forEach( pr => {
-        this.rows[pr.shortName]=new Row(pr);
-      });
-      this.pbProgrammaticRequests.forEach( pr => {
-        if(this.rows[pr.shortName]) {
-          this.rows[pr.shortName].addPbPr(pr);
-        };
-      });
+      this.mapNameToRow = this.createMapNameToRow();
     };
+  }
+
+  private createMapNameToRow() {
+    const result = {};
+    this.pomProgrammaticRequests.forEach(pr => {
+      result[pr.shortName] = new Row(pr);
+    });
+    this.pbProgrammaticRequests.forEach(pr => {
+      if (result[pr.shortName]) {
+        result[pr.shortName].addPbPr(pr);
+      };
+    });
+    return result;
   }
 
   saveDeletionValues(id: string, shortName: string) {
