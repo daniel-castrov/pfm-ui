@@ -41,7 +41,7 @@ export class UfrViewComponent implements OnInit {
     var my: UfrViewComponent = this;
     if (my.current) {
       console.log(my.current);
-     // my.usvc.update(my.current).subscribe();      
+      my.usvc.update(my.current).subscribe();      
     }
   }
 
