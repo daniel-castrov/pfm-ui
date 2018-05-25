@@ -60,20 +60,16 @@
         <p class="role-controls">
           <span *ngIf="newUserRole===false">Modify</span>
           <span *ngIf="newUserRole">New</span>
-          <b>{{ selectedRole.name }}</b>
-          role for
-          <b>{{ selectedUser.firstName }} {{ selectedUser.middleInitial }} {{selectedUser.lastName }}</b>
+          <b>{{ selectedRole.name }}</b> role for <b>{{ selectedUserName }}</b>
         </p>
 
         <!-- Delete existing -->
         <div *ngIf="newUserRole===false">
           <fieldset>
-            <legend>{{ selectedUser.firstName }} {{ selectedUser.middleInitial }} {{ selectedUser.lastName }} already been assigned
-              this role.
-            </legend>
-            <p class="role-controls">Un-assign this role</p>
+            <legend>Un-assign a role</legend>
+            <p class="role-controls">{{ selectedUserName }} has already been assigned this role.</p>
             <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="commit()">
+              <button class="btn btn-primary" (click)="commitUnassign()">
                 <span>Un-assign</span>
               </button>
             </div>
@@ -87,28 +83,14 @@
         <ng-template #Modifyable>
           <fieldset>
             <legend>Assign access to one or more Programs for this Role:</legend>
-
             <div style="max-width:800px;">
               <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
             </dual-list>
-            </div>
-
-            <!--
-            <span [hidden]="!formsubmitted" class="clearfix">
-              <div class="alert-success-group message">
-                <div class="alert-success alert-dismissable">
-                  <strong>Bill Andrew's Resources have been modified</strong>
-                  <strong>Bill Andrew's no longer has the role of Program Owner - CBDP</strong>
-                  <strong>Bill Andrew has been assigned Program Owner - CBDP</strong>
-                </div>
-              </div>
-            </span>
-            -->
-
+            </div>            
             <br/>
             <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="commit()">
+              <button class="btn btn-primary" (click)="commitModify()">
                 <span *ngIf="newUserRole===true">Assign</span>
                 <span *ngIf="newUserRole===false">Modify</span>
               </button>
@@ -119,21 +101,26 @@
 
         <!-- Some UserRoleResources CANNOT be modified -->
         <ng-template #NotModifyable>
-          <fieldset>
-            <legend>You cannot modify access for the {{ selectedRole.name }} role.</legend>
-            <div *ngIf="newUserRole===true">
-              <p class="role-controls">Assign this role.</p>
+          <fieldset *ngIf="newUserRole===true">
+            <legend>Assign a new Role.</legend>
+              <p class="role-controls">Assign the {{ selectedRole.name }} role to {{ selectedUserName }}</p>
               <div class="controls pull-right">
-                <button class="btn btn-primary" (click)="commit()">
+                <button class="btn btn-primary" (click)="commitAssign()">
                   <span>Assign</span>
                 </button>
               </div>
-            </div>
           </fieldset>
         </ng-template>
 
-
       </div>
+
+      <span [hidden]="!submitted" class="clearfix">
+          <div class="alert-success-group message">
+            <div class="alert-success alert-dismissable">
+              <strong>{{submittedMessage}}</strong>
+            </div>
+          </div>
+        </span>
 
     </div>
   </div>

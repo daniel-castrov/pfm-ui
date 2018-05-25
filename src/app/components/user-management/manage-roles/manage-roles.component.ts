@@ -45,9 +45,12 @@ export class ManageRolesComponent {
   selectedCommunity: Community;  
   selectedRole: Role;
   selectedUser: User;
+  selectedUserName:string;
   selectedURR: UserRoleResource;
 
   commRoleUserOK: boolean=false;
+  submitted:boolean=false;
+  submittedMessage="no message";
   isModifyable: boolean;
   newUserRole:boolean;
 
@@ -110,9 +113,7 @@ export class ManageRolesComponent {
         
         this.roles = data[0].result;
         this.users = data[1].result;
-        //this.availablePrograms = data[2].result;
-        this.availablePrograms=this.makePorgs();
-
+        this.availablePrograms = data[2].result;
     });
   }
   
@@ -120,9 +121,11 @@ export class ManageRolesComponent {
 
     this.commRoleUserOK=true;
 
-    console.log(this.selectedCommunity.name);
-    console.log(this.selectedRole.name);
-    console.log(this.selectedUser.firstName);
+    console.log("Community: " + this.selectedCommunity.name);
+    console.log("Role: " + this.selectedRole.name);
+    console.log("User: " + this.selectedUser.firstName);
+
+    this.selectedUserName = this.selectedUser.firstName +  " " + this.selectedUser.middleInitial +  " " + this.selectedUser.lastName;
 
     this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(this.selectedUser.id, this.selectedCommunity.id,  this.selectedRole.name)
     .subscribe( (response: RestResult) => {
@@ -132,41 +135,93 @@ export class ManageRolesComponent {
 
       this.isModifyable = true;
       this.newUserRole = true;
+
+      let initialResourceIds = ["x"];
+      if ( this.unmodifiableRoles.includes(this.selectedRole.name)){
+        this.isModifyable=false;
+        initialResourceIds=["*"];
+      }
       if ( urr ){
         this.newUserRole=false;
-      } 
-      if ( this.unmodifiableRoles.indexOf(this.selectedRole.name) > -1  ){
-        this.isModifyable=false;        
+        this.selectedURR = urr;
+      } else {
+        this.selectedURR = new Object();
+        this.selectedURR.userId=this.selectedUser.id;
+        this.selectedURR.roleId=this.selectedRole.id;
+        this.selectedURR.resourceIds = initialResourceIds;
       }
 
-    });
 
+      if ( this.selectedURR.resourceIds.includes("*") ){
+
+        //Deep copy array
+        //this.assignedPrograms=[];
+        this.availablePrograms.forEach( function (value) { 
+          //this.assignedPrograms.push(value);
+          console.log(value.shortName);
+          
+        } );
+
+        //this.assignedPrograms=jQuery.extend(true, {}, this.availablePrograms);
+        //this.availablePrograms= [];
+      }
+ 
+
+    });
+  }
+
+  commitModify(): void {
+    
+    if (this.newUserRole){
+      this.commitAssign();
+    } else {
+      this.commit();
+      this.submitted = true;
+      this.submittedMessage = this.getCommitMessage(0);
+    }
+  }
+
+  commitAssign():void{
+    this.commit();
+    this.submitted = true;
+    this.submittedMessage = this.getCommitMessage(2);
+
+  }
+
+  commitUnassign():void{
+    this.commit();
+    this.submitted = true;
+    this.submittedMessage = this.getCommitMessage(1);
   }
 
   commit(): void {
+    console.log( this.selectedURR );
+    this.selectedURR.resourceIds.forEach( function (value) { console.log(value) } );
+
+    this.assignedPrograms.forEach( function (value) {
+      console.log(value.shortName);
+    });
+
+    this.clear();
   }
+
+  getCommitMessage( messageNumber ):string{
+    
+    let role_community_name = this.selectedRole.name + " - " + this.selectedCommunity.abbreviation;
+
+    let message:string[]=[
+      this.selectedUserName+"'s Resources have been modified",
+      this.selectedUserName+" no longer has the role of "+role_community_name,
+      this.selectedUserName + " has been assigned the role of " + role_community_name
+    ];
+
+    return message[messageNumber];
+  }
+
 
   clear(): void {
     this.commRoleUserOK=false;
-  }
-
-
-
-  makePorgs(): Program[] {
-
-    let r:Program[] = [ 
-      {id:"1",shortName:"One"},
-      {id:"2",shortName:"Two"},
-      {id:"3",shortName:"Three"},
-      {id:"4",shortName:"Four"},
-      {id:"5",shortName:"Five"},
-      {id:"6",shortName:"Six"},
-      {id:"7",shortName:"Seven"},
-      {id:"8",shortName:"Eight"},
-    ] 
-
-      return r;
-
+    this.submitted = false;
   }
 
 }
