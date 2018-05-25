@@ -19,6 +19,12 @@ $dark-grey: #848282;
   width: 300px;
 }
 
+@media (max-width: 960px) {
+  .worksheet-width {
+    width: 200px;
+  }
+}
+
 label {
   color: $primary-color;
   margin: 0;
