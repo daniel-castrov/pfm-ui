@@ -1,3 +1,61 @@
-<p>
-  calculate-tab works!
-</p>
+<table class="calculate-pom-table">
+  <tr>
+    <td colspan="2">
+      <div class="m-3">
+        <label class="filter-label primary-label">Bulk of charge</label>
+      </div>
+    </td>
+    <td>
+      <div class="m-3">
+        <label class="filter-label primary-label">Down select by</label>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="radio-buttons mb-3">
+        <div class="radio-item">
+          <input type="radio" id="ritema" name="ritem" value="ropt1">
+          <label for="ritema">% change</label>
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="form-group">
+        <div>
+          <input type="text" class="form-control percent-input">
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="form-group">
+        <select class="form-control-sm dropdown-width">
+          <option value=""></option>
+          <option>CAA</option>
+          <option>BA</option>
+        </select>
+      </div>
+    </td>
+    <td>
+      <div class="form-group">
+        <div>
+          <input type="text" class="form-control percent-input">
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="radio-buttons mb-3">
+        <div class="radio-item">
+          <input type="radio" id="ritema2" name="ritem" value="ropt2">
+          <label for="ritema">fixed $</label>
+        </div>
+      </div>
+      <td colspan="3">
+        <button class="btn btn-primary btn pull-right" href="#" routerLink="">
+          <span class="icon-pad">Apply to Visible Cells</span>
+        </button>
+      </td>
+  </tr>
+</table>
