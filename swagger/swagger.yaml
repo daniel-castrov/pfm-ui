@@ -1525,6 +1525,31 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /ufr:
+    put:
+      tags:
+      - "UFRs"
+      summary: "Create a UFR"
+      description: "Create a UFR"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      responses:
+        204:
+          description: "Successfully created UFR"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
   /ufr/community/{communityId}/year/{year}:
     get:
       tags:

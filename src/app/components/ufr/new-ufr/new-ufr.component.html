@@ -1,0 +1,41 @@
+<form>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="radio-buttons mb-3">
+        <div class="radio-item">
+          <input type="radio" id="ritema" name="ritem" value="ropt1" (click)="setMode('FL')">
+          <label for="ritema">Add Funds or Funding Line(s) to a Program of Record</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="ritemb" name="ritem" value="ropt2" (click)="setMode('SP')">
+          <label for="ritemb">Request New Subprogram</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="ritemc" name="ritem" value="ropt3" (click)="setMode('P')">
+          <label for="ritemc">Request New Program</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7" *ngIf="needProgramSelector">
+      <span class="mr-sm-2">
+        <label class="primary-label">{{programSelectorTitle}}</label>
+      </span>
+      <span class="mr-sm-4">
+        <div class="form-group">
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selected" name="programid">
+            <option *ngFor="let p of programs" [ngValue]="p.program" [title]="p.program.longName">{{p.fullname}}</option>
+          </select>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button [disabled]="!mode" class="btn btn-primary btn pull-right" href="#" (click)="create()">
+        <span class="icon-pad">Create</span>
+        <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</form>
