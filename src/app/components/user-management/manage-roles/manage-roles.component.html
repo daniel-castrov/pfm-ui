@@ -56,11 +56,29 @@
 
       <div *ngIf="commRoleUserOK">
 
+        <!-- Main message -->
         <p class="role-controls">
-            <span *ngIf="newUserRole===false">Modify</span>
-            <span *ngIf="newUserRole">New</span>
+          <span *ngIf="newUserRole===false">Modify</span>
+          <span *ngIf="newUserRole">New</span>
           <b>{{ selectedRole.name }}</b>
-          role for <b>{{ selectedUser.firstName }} {{ selectedUser.middleInitial }} {{selectedUser.lastName }}</b></p> 
+          role for
+          <b>{{ selectedUser.firstName }} {{ selectedUser.middleInitial }} {{selectedUser.lastName }}</b>
+        </p>
+
+        <!-- Delete existing -->
+        <div *ngIf="newUserRole===false">
+          <fieldset>
+            <legend>{{ selectedUser.firstName }} {{ selectedUser.middleInitial }} {{ selectedUser.lastName }} already been assigned
+              this role.
+            </legend>
+            <p class="role-controls">Un-assign this role</p>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="commit()">
+                <span>Un-assign</span>
+              </button>
+            </div>
+          </fieldset>
+        </div>
 
         <ng-container *ngIf="isModifyable; then Modifyable; else NotModifyable">
         </ng-container>
@@ -69,36 +87,14 @@
         <ng-template #Modifyable>
           <fieldset>
             <legend>Assign access to one or more Programs for this Role:</legend>
-            <div class="row">
-              <div class="col-md-5">
-                <h6>Assign Programs</h6>
-                <select name="from[]" id="multiselect1" class="form-control window" size="8" multiple="multiple">
-                  <option value="1">Item 1</option>
-                  <option value="2">Item 5</option>
-                  <option value="2">Item 2</option>
-                  <option value="2">Item 4</option>
-                  <option value="3">Item 3</option>
-                </select>
-              </div>
-              <div class="col-xs-2 arrows">
-                <button type="button" id="multiselect1_rightAll" class="btn btn-block">
-                  <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </button>
-                <button type="button" id="multiselect1_rightSelected" class="btn btn-block">
-                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                </button>
-                <button type="button" id="multiselect1_leftSelected" class="btn btn-block">
-                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                </button>
-                <button type="button" id="multiselect1_leftAll" class="btn btn-block">
-                  <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="col-md-5">
-                <h6>Available Programs</h6>
-                <select name="to[]" id="multiselect1_to" class="form-control window" size="8" multiple="multiple"></select>
-              </div>
+
+            <div style="max-width:800px;">
+              <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
+                [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
+            </dual-list>
             </div>
+
+            <!--
             <span [hidden]="!formsubmitted" class="clearfix">
               <div class="alert-success-group message">
                 <div class="alert-success alert-dismissable">
@@ -108,12 +104,16 @@
                 </div>
               </div>
             </span>
+            -->
+
+            <br/>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="commit()">
                 <span *ngIf="newUserRole===true">Assign</span>
                 <span *ngIf="newUserRole===false">Modify</span>
               </button>
             </div>
+
           </fieldset>
         </ng-template>
 
@@ -130,20 +130,7 @@
               </div>
             </div>
           </fieldset>
-          </ng-template>
-          
-          <div *ngIf="newUserRole===false">
-            <fieldset>
-              <legend>{{ selectedUser.firstName }} {{ selectedUser.middleInitial }} {{ selectedUser.lastName }} already been assigned this
-                  role.</legend>
-              <p class="role-controls">Un-assign this role</p>
-              <div class="controls pull-right">
-                <button class="btn btn-primary" (click)="commit()">
-                  <span>Un-assign</span>
-                </button>
-              </div>
-            </fieldset>
-          </div>
+        </ng-template>
 
 
       </div>

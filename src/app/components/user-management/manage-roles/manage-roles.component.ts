@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as $ from 'jquery';
+import { AngularDualListBoxModule } from 'angular-dual-listbox';
+import { DualListComponent } from 'angular-dual-listbox';
+
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -16,6 +19,9 @@ import { UserRoleResource } from '../../../generated/model/userRoleResource'
 import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
+import { Program } from '../../../generated/model/program';
+import { ProgramsService } from '../../../generated/api/programs.service';
+
 
 declare const $: any;
 declare const jQuery: any;
@@ -45,24 +51,33 @@ export class ManageRolesComponent {
   isModifyable: boolean;
   newUserRole:boolean;
 
-  buttonText:string;
-
   unmodifiableRoles = ["User_Approver","POM_Manager"];
+
+  // For the dual select 
+  availablePrograms:Program[] = [];
+  assignedPrograms:Program[] = [];
+  key:string = "id";
+	display:string = "shortName";
+	keepSorted = true;
+	filter = false;
+  format:any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
+  disabled = false;
+  userAdd = '';
+	sourceLeft = false;
+  tab = 1;
 
   constructor(
     private router: Router,
     private communityService: CommunityService,
     private roleService: RoleService,
     private userService: UserService,
-    private userRoleResourceService: UserRoleResourceService
+    private userRoleResourceService: UserRoleResourceService, 
+    private programsService: ProgramsService
   ) {
+
   }
 
   public ngOnInit() {
-    jQuery(document).ready(function ($) {
-      $('#multiselect1').multiselect();
-      // $('#multiselect2').multiselect();
-    });
     this.getCommunities();
   }
  
@@ -86,13 +101,17 @@ export class ManageRolesComponent {
       Observable.forkJoin([
         this.roleService.getByCommunityId(this.selectedCommunity.id),
         this.userService.getByCommId (this.selectedCommunity.id),
+        this.programsService.getProgramsByCommunity(this.selectedCommunity.id)
       ]).subscribe(data => {
 
         this.resultError.push(data[0].error);
         this.resultError.push(data[1].error);
-
+        this.resultError.push(data[2].error);
+        
         this.roles = data[0].result;
         this.users = data[1].result;
+        //this.availablePrograms = data[2].result;
+        this.availablePrograms=this.makePorgs();
 
     });
   }
@@ -129,6 +148,25 @@ export class ManageRolesComponent {
 
   clear(): void {
     this.commRoleUserOK=false;
+  }
+
+
+
+  makePorgs(): Program[] {
+
+    let r:Program[] = [ 
+      {id:"1",shortName:"One"},
+      {id:"2",shortName:"Two"},
+      {id:"3",shortName:"Three"},
+      {id:"4",shortName:"Four"},
+      {id:"5",shortName:"Five"},
+      {id:"6",shortName:"Six"},
+      {id:"7",shortName:"Seven"},
+      {id:"8",shortName:"Eight"},
+    ] 
+
+      return r;
+
   }
 
 }
