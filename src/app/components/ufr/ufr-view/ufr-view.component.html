@@ -21,10 +21,10 @@
           </div>
           <div class="pull-right ufr-controls">
             <span>
-              <button class="btn btn-secondary">Save</button>
+              <button class="btn btn-secondary" (click)="save()">Save</button>
             </span>
             <span>
-              <button class="btn btn-success">Submit</button>
+              <button class="btn btn-success" (click)="submit()">Submit</button>
             </span>
           </div>
         </div>
@@ -34,19 +34,19 @@
       <div class="col-lg-10 col-md-12">
         <tabset class="ufr-tab-style" role="tablist">
           <tab heading="UFR" id="tab1">
-            <ufr-tab [current]="current" role="tabpanel"></ufr-tab>
+            <ufr-tab [(current)]="current" role="tabpanel"></ufr-tab>
           </tab>
           <tab heading="Program" id="tab2">
-            <ufr-metadata [current]="current" role="tabpanel"></ufr-metadata>
+            <ufr-metadata [(current)]="current" role="tabpanel"></ufr-metadata>
           </tab>
           <tab heading="Funds" id="tab3">
-            <ufr-funds [current]="current" role="tabpanel"></ufr-funds>
+            <ufr-funds [(current)]="current" role="tabpanel"></ufr-funds>
           </tab>
           <tab heading="Proc. Qty" id="tab4">
-             <ufr-variants [current]="current" role="tabpanel"></ufr-variants>
+             <ufr-variants [(current)]="current" role="tabpanel"></ufr-variants>
           </tab>
           <tab heading="Justification" id="tab5">
-            <ufr-justification [current]="current" role="tabpanel"></ufr-justification>
+            <ufr-justification [(current)]="current" role="tabpanel"></ufr-justification>
           </tab>
         </tabset>
       </div>
