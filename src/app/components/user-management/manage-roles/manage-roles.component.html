@@ -4,9 +4,14 @@
     <div class="col-md-10">
       <div class="row mb-4">
         <div class="col-md-12">
-          <span class="h5 mr-3">Manage Roles for</span>
+          <span class="h5 mr-3">Manage Roles</span>
+        </div>
+      </div>
+      <div class="row mb-4">
 
-          <!-- Get the selectedCommunity -->
+        <!-- Get the selectedCommunity -->
+        <div class="col-lg-2 col-md-6 mb-2 role-controls">
+          <label>Select Community</label>
           <span class="form-group">
             <select name="communitySelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
               <option value=""></option>
@@ -16,8 +21,6 @@
             </select>
           </span>
         </div>
-      </div>
-      <div class="row mb-4">
 
         <!-- Get the selectedRole -->
         <div class="col-lg-2 col-md-6 mb-2 role-controls">
@@ -36,7 +39,8 @@
         <div class="col-lg-2 col-md-6 role-controls">
           <label>Select User</label>
           <span class="form-group">
-            <select name="userSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedUser" (change)="clear()">
+            <select name="userSelector" class="form-control-sm dropdown-width"
+             [(ngModel)]="selectedUser" (change)="clear()">
               <option value=""></option>
               <option *ngFor="let u of users" [ngValue]="u">
                 {{ u.firstName }} {{ u.middleInitial }} {{ u.lastName }}
@@ -48,51 +52,70 @@
         <!-- Get the selectedUserRoleResource -->
         <div class="col-lg-2 col-md-6">
           <div class="controls mt-4">
-            <button class="btn btn-primary" (click)="getURR()">Next</button>
+            <button class="btn btn-primary" [disabled]="!okNext()" (click)="getURR()">Next</button>
           </div>
         </div>
 
       </div>
 
-      <div *ngIf="commRoleUserOK">
+      <div *ngIf="isURRVisible">
 
-        <!-- Main message -->
-        <p class="role-controls">
-          <span *ngIf="newUserRole===false">Modify</span>
-          <span *ngIf="newUserRole">New</span>
-          <b>{{ selectedRole.name }}</b> role for <b>{{ selectedUserName }}</b>
+        <!-- Message -->
+        <p class="role-controls" *ngIf="isNewUserRole"> 
+          Assign a new role of
+          <b>{{selectedRole.name}}</b> to
+          <b>{{selectedUserName}}</b>.
         </p>
+        <p class="role-controls" *ngIf="isNewUserRole===false">
+          The
+          <b>{{selectedRole.name}}</b> role has already been assiged to
+          <b>{{selectedUserName}}</b>.
+        </p>
+        <p class="role-controls" *ngIf="isModifyable===false">
+          Resource access for the
+          <b>{{selectedRole.name}}</b> role is predeifined and cannot be modified.
+        </p>
+        <!--p class="role-controls" *ngIf="isModifyable">
+          Resource access for the <b>{{selectedRole.name}}</b> role can be modified.
+        </p-->
 
         <!-- Delete existing -->
-        <div *ngIf="newUserRole===false">
+        <div *ngIf="isNewUserRole===false">
           <fieldset>
-            <legend>Un-assign a role</legend>
-            <p class="role-controls">{{ selectedUserName }} has already been assigned this role.</p>
+            <legend>Unassign a User/Role</legend>
+            <p class="role-controls">
+              Take the
+              <b>{{selectedRole.name}}</b> role away from
+              <b>{{selectedUserName}}</b>.
+            </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="commitUnassign()">
-                <span>Un-assign</span>
+                <span>Unassign</span>
               </button>
             </div>
           </fieldset>
         </div>
 
-        <ng-container *ngIf="isModifyable; then Modifyable; else NotModifyable">
+        <ng-container *ngIf="isURRModifyable; then Modifyable; else NotModifyable">
         </ng-container>
 
         <!-- Some UserRoleResources can be modified -->
         <ng-template #Modifyable>
           <fieldset>
-            <legend>Assign access to one or more Programs for this Role:</legend>
+            <legend>
+              <span *ngIf="isNewUserRole===true">Assign</span>
+              <span *ngIf="isNewUserRole===false">Modify</span>
+              access to one or more Programs for this User/Role</legend>
             <div style="max-width:800px;">
               <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
-            </dual-list>
-            </div>            
+              </dual-list>
+            </div>
             <br/>
             <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="commitModify()">
-                <span *ngIf="newUserRole===true">Assign</span>
-                <span *ngIf="newUserRole===false">Modify</span>
+              <button class="btn btn-primary" (click)="commit()">
+                <span *ngIf="isNewUserRole===true">Assign</span>
+                <span *ngIf="isNewUserRole===false">Modify</span>
               </button>
             </div>
 
@@ -101,26 +124,29 @@
 
         <!-- Some UserRoleResources CANNOT be modified -->
         <ng-template #NotModifyable>
-          <fieldset *ngIf="newUserRole===true">
-            <legend>Assign a new Role.</legend>
-              <p class="role-controls">Assign the {{ selectedRole.name }} role to {{ selectedUserName }}</p>
-              <div class="controls pull-right">
-                <button class="btn btn-primary" (click)="commitAssign()">
-                  <span>Assign</span>
-                </button>
-              </div>
+          <fieldset *ngIf="isNewUserRole===true">
+            <legend>Assign a User/Role.</legend>
+            <p class="role-controls">Assign the
+              <b>{{selectedRole.name}}</b> role to
+              <b>{{selectedUserName}}</b>
+            </p>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="commit()">
+                <span>Assign</span>
+              </button>
+            </div>
           </fieldset>
         </ng-template>
 
       </div>
 
       <span [hidden]="!submitted" class="clearfix">
-          <div class="alert-success-group message">
-            <div class="alert-success alert-dismissable">
-              <strong>{{submittedMessage}}</strong>
-            </div>
+        <div class="alert-success-group message">
+          <div class="alert-success alert-dismissable">
+            <strong>{{submittedMessage}}</strong>
           </div>
-        </span>
+        </div>
+      </span>
 
     </div>
   </div>

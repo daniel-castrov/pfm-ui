@@ -5,7 +5,6 @@ import * as $ from 'jquery';
 import { AngularDualListBoxModule } from 'angular-dual-listbox';
 import { DualListComponent } from 'angular-dual-listbox';
 
-
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
 
@@ -21,7 +20,6 @@ import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
 import { Program } from '../../../generated/model/program';
 import { ProgramsService } from '../../../generated/api/programs.service';
-
 
 declare const $: any;
 declare const jQuery: any;
@@ -42,31 +40,34 @@ export class ManageRolesComponent {
   roles: Role[] = [];
   users: User[] = [];
 
-  selectedCommunity: Community;  
+  selectedCommunity: Community;
   selectedRole: Role;
   selectedUser: User;
-  selectedUserName:string;
   selectedURR: UserRoleResource;
 
-  commRoleUserOK: boolean=false;
-  submitted:boolean=false;
-  submittedMessage="no message";
-  isModifyable: boolean;
-  newUserRole:boolean;
+  submitted: boolean = false;
+  isURRModifyable: boolean;
+  isNewUserRole: boolean;
+  isURRVisible: boolean = false;
 
-  unmodifiableRoles = ["User_Approver","POM_Manager"];
+  unmodifiableRoles = ["User_Approver", "POM_Manager"];
 
-  // For the dual select 
-  availablePrograms:Program[] = [];
-  assignedPrograms:Program[] = [];
-  key:string = "id";
-	display:string = "shortName";
-	keepSorted = true;
-	filter = false;
-  format:any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
+  selectedUserName: string;
+  submittedMessage = "no message";
+
+
+  // For the angular-dual-listbox
+  availablePrograms: Array<Program> = [];
+  allcount=0;
+  assignedPrograms: Array<any> = [];
+  key: string = "id";
+  display: string = "shortName";
+  keepSorted = true;
+  filter = false;
+  format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
   disabled = false;
   userAdd = '';
-	sourceLeft = false;
+  sourceLeft = true;
   tab = 1;
 
   constructor(
@@ -74,154 +75,184 @@ export class ManageRolesComponent {
     private communityService: CommunityService,
     private roleService: RoleService,
     private userService: UserService,
-    private userRoleResourceService: UserRoleResourceService, 
+    private userRoleResourceService: UserRoleResourceService,
     private programsService: ProgramsService
-  ) {
-
-  }
+  ) { }
 
   public ngOnInit() {
-    this.getCommunities();
+    var my: ManageRolesComponent = this;
+    my.getCommunities();
   }
- 
+
   getCommunities(): void {
+
+    var my: ManageRolesComponent = this;
+
     let result: RestResult;
-    this.communityService.getAll()
+    my.communityService.getAll()
       .subscribe(c => {
         result = c;
-        this.resultError.push(result.error);
-        this.communities = result.result;
+        my.resultError.push(result.error);
+        my.communities = result.result;
 
-        if (null == this.communities || this.communities.length == 0) {
-          this.resultError.push("No Communities were found");
+        if (null == my.communities || my.communities.length == 0) {
+          my.resultError.push("No Communities were found");
           return;
         }
       });
   }
 
   getRolesAndUsers(): void {
-      console.log("get Roles and Users for Community " + this.selectedCommunity.id);
-      Observable.forkJoin([
-        this.roleService.getByCommunityId(this.selectedCommunity.id),
-        this.userService.getByCommId (this.selectedCommunity.id),
-        this.programsService.getProgramsByCommunity(this.selectedCommunity.id)
-      ]).subscribe(data => {
 
-        this.resultError.push(data[0].error);
-        this.resultError.push(data[1].error);
-        this.resultError.push(data[2].error);
-        
-        this.roles = data[0].result;
-        this.users = data[1].result;
-        this.availablePrograms = data[2].result;
+    var my: ManageRolesComponent = this;
+
+    my.clear();
+    my.selectedRole = null;
+    my.selectedUser = null;
+
+    Observable.forkJoin([
+      my.roleService.getByCommunityId(my.selectedCommunity.id),
+      my.userService.getByCommId(my.selectedCommunity.id)
+    ]).subscribe(data => {
+      my.resultError.push(data[0].error);
+      my.roles = data[0].result;
+      my.resultError.push(data[1].error);
+      my.users = data[1].result;
     });
   }
-  
+
   getURR(): void {
 
-    this.commRoleUserOK=true;
+    var my: ManageRolesComponent = this;
 
-    console.log("Community: " + this.selectedCommunity.name);
-    console.log("Role: " + this.selectedRole.name);
-    console.log("User: " + this.selectedUser.firstName);
+    my.clear();
+    my.selectedUserName = my.selectedUser.firstName + " " + my.selectedUser.middleInitial + " " + my.selectedUser.lastName;
 
-    this.selectedUserName = this.selectedUser.firstName +  " " + this.selectedUser.middleInitial +  " " + this.selectedUser.lastName;
+    Observable.forkJoin([
+      my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
+      my.programsService.getProgramsByCommunity(my.selectedCommunity.id)
+    ]).subscribe(data => {
 
-    this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(this.selectedUser.id, this.selectedCommunity.id,  this.selectedRole.name)
-    .subscribe( (response: RestResult) => {
+      my.resultError.push(data[0].error);
+      let urr: UserRoleResource = data[0].result;
 
-      this.resultError.push(response.error);
-      let urr:UserRoleResource = response.result;
+      my.resultError.push(data[1].error);
+      my.availablePrograms = data[1].result;
+      my.allcount=my.availablePrograms.length;
 
-      this.isModifyable = true;
-      this.newUserRole = true;
+      my.isURRVisible = true;
+      my.isURRModifyable = true;
+      my.isNewUserRole = true;
 
-      let initialResourceIds = ["x"];
-      if ( this.unmodifiableRoles.includes(this.selectedRole.name)){
-        this.isModifyable=false;
-        initialResourceIds=["*"];
+      if (my.unmodifiableRoles.includes(my.selectedRole.name)) {
+        my.isURRModifyable = false;
       }
-      if ( urr ){
-        this.newUserRole=false;
-        this.selectedURR = urr;
+      if (urr) {
+        my.isNewUserRole = false;
+        my.selectedURR = urr;
       } else {
-        this.selectedURR = new Object();
-        this.selectedURR.userId=this.selectedUser.id;
-        this.selectedURR.roleId=this.selectedRole.id;
-        this.selectedURR.resourceIds = initialResourceIds;
+        my.selectedURR = new Object();
+        my.selectedURR.userId = my.selectedUser.id;
+        my.selectedURR.roleId = my.selectedRole.id;
+        my.selectedURR.resourceIds = [];
       }
 
-
-      if ( this.selectedURR.resourceIds.includes("*") ){
-
-        //Deep copy array
-        //this.assignedPrograms=[];
-        this.availablePrograms.forEach( function (value) { 
-          //this.assignedPrograms.push(value);
-          console.log(value.shortName);
-          
-        } );
-
-        //this.assignedPrograms=jQuery.extend(true, {}, this.availablePrograms);
-        //this.availablePrograms= [];
+      if (my.selectedURR.resourceIds.includes("x") || my.selectedURR.resourceIds.length==0) {
+        // none are granted
+        my.assignedPrograms = []; 
+      } else if (my.selectedURR.resourceIds.includes("*")) {
+        // all are granted - deep copy array
+        my.availablePrograms.forEach(function (program) {
+          my.assignedPrograms.push(program);
+        });
+      } else {
+        // some are granted
+        let newAvail:Program[]=[];
+        my.selectedURR.resourceIds.forEach(function ( progId ) {
+          my.availablePrograms.forEach(function (prog) {
+            if ( prog.id == progId ){
+              my.assignedPrograms.push(prog);
+            } else {
+              newAvail.push(prog);
+            }
+          });
+        });
+        my.availablePrograms=newAvail;
       }
- 
 
     });
   }
 
-  commitModify(): void {
-    
-    if (this.newUserRole){
-      this.commitAssign();
-    } else {
-      this.commit();
-      this.submitted = true;
-      this.submittedMessage = this.getCommitMessage(0);
-    }
-  }
-
-  commitAssign():void{
-    this.commit();
-    this.submitted = true;
-    this.submittedMessage = this.getCommitMessage(2);
-
-  }
-
-  commitUnassign():void{
-    this.commit();
-    this.submitted = true;
-    this.submittedMessage = this.getCommitMessage(1);
+  commitUnassign(): void {
+    var my: ManageRolesComponent = this;
+    my.userRoleResourceService.deleteById(my.selectedURR.id).subscribe(() => {
+      my.clear(); 
+      my.showCommitMessage(0);
+    });
   }
 
   commit(): void {
-    console.log( this.selectedURR );
-    this.selectedURR.resourceIds.forEach( function (value) { console.log(value) } );
+    var my: ManageRolesComponent = this;
 
-    this.assignedPrograms.forEach( function (value) {
-      console.log(value.shortName);
-    });
+    if (!my.assignedPrograms || my.assignedPrograms == null || my.assignedPrograms.length==0) {
+      // none are selected
+      my.selectedURR.resourceIds=["x"];
+    } else if (my.assignedPrograms.length==my.allcount) {
+      // all are selected
+      my.selectedURR.resourceIds=["*"];
+    } else {
+      // some are selected
+      my.selectedURR.resourceIds=[];
+      my.assignedPrograms.forEach(function (value) {
+        my.selectedURR.resourceIds.push( value.id );
+      });
+    }
 
-    this.clear();
+    if (my.isNewUserRole){
+      my.userRoleResourceService.create(my.selectedURR).subscribe(() => {
+        my.clear(); 
+        my.showCommitMessage(1);
+      });
+    } else {
+      my.userRoleResourceService.update(my.selectedURR).subscribe(() => {
+        my.clear(); 
+        my.showCommitMessage(2);
+      });
+    }
   }
 
-  getCommitMessage( messageNumber ):string{
-    
-    let role_community_name = this.selectedRole.name + " - " + this.selectedCommunity.abbreviation;
+  showCommitMessage(messageNumber) {
+    var my: ManageRolesComponent = this;
 
-    let message:string[]=[
-      this.selectedUserName+"'s Resources have been modified",
-      this.selectedUserName+" no longer has the role of "+role_community_name,
-      this.selectedUserName + " has been assigned the role of " + role_community_name
+    let community_role_name = my.selectedCommunity.abbreviation + " : " + my.selectedRole.name;
+
+    let message: string[] = [
+      my.selectedUserName + " no longer has the role of " + community_role_name,
+      my.selectedUserName + " has been assigned the role of " + community_role_name,
+      my.selectedUserName + "'s resource access for "+community_role_name+" has been modified"
     ];
-
-    return message[messageNumber];
+    my.submitted = true;
+    my.submittedMessage = message[messageNumber];
   }
 
 
   clear(): void {
-    this.commRoleUserOK=false;
-    this.submitted = false;
+    var my: ManageRolesComponent = this;
+    my.submitted = false;
+    my.isURRVisible = false;
+    my.availablePrograms = [];
+    my.assignedPrograms = [];
+  }
+
+  okNext(): boolean {
+    var my: ManageRolesComponent = this;
+    if ((!my.selectedRole || my.selectedRole == null || my.selectedRole === "")) {
+      return false;
+    }
+    if ((!my.selectedUser || my.selectedUser == null || my.selectedUser === "")) {
+      return false;
+    }
+    return true;
   }
 
 }
