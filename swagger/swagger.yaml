@@ -1597,6 +1597,7 @@ paths:
         type: 'string'
       - in: "path"
         name: "shortname"
+        type: "string"
         description: 'the "model" program'
         required: true
       consumes:
@@ -2200,7 +2201,7 @@ definitions:
       item:
         type: 'string'
       funds:
-        type: 'object'
+        $ref: '#/definitions/IntMap'
       fy:
         type: 'number'
       variants:

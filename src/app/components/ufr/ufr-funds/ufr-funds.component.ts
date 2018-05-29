@@ -53,8 +53,8 @@ export class UfrFundsComponent implements OnInit {
 
         Object.keys(fund.funds).forEach(function (yearstr) {
           var year: number = Number.parseInt(yearstr);
-          cfunds.set(year, Number.parseInt(fund.funds[yearstr]));
-          tfunds.set(year, Number.parseInt(fund.funds[yearstr]));
+          cfunds.set(year, fund.funds[yearstr]);
+          tfunds.set(year, fund.funds[yearstr]);
           mfunds.set(year, 0);
         });
 
@@ -93,7 +93,7 @@ export class UfrFundsComponent implements OnInit {
 
             Object.keys(fund.funds).forEach(function (yearstr) {
               var year: number = Number.parseInt(yearstr);
-              var amt: number = Number.parseInt(fund.funds[yearstr]);
+              var amt: number = fund.funds[yearstr];
               thisrow.modelfunds.set(year, amt);
               if (!thisrow.ufrfunds.has(year)) {
                 thisrow.ufrfunds.set(year, 0);
