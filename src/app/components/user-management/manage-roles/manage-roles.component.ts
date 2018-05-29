@@ -39,6 +39,10 @@ export class ManageRolesComponent {
   communities: Community[] = [];
   roles: Role[] = [];
   users: User[] = [];
+  
+  paramCommunityId: string="";
+  paramRoleId: string="";
+  paramUserId: string="";
 
   selectedCommunity: Community;
   selectedRole: Role;
@@ -71,16 +75,29 @@ export class ManageRolesComponent {
   tab = 1;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private communityService: CommunityService,
     private roleService: RoleService,
     private userService: UserService,
     private userRoleResourceService: UserRoleResourceService,
     private programsService: ProgramsService
-  ) { }
+  ) { 
+
+    this.route.params.subscribe((params: Params) => {
+      console.log(  params.commid +" "+ params.roleid +" "+ params.userid);
+
+      this.paramCommunityId= params.commid;
+      this.paramRoleId=params.roleid;
+      this.paramUserId=params.userid;
+
+    });
+
+  }
 
   public ngOnInit() {
     var my: ManageRolesComponent = this;
+    
     my.getCommunities();
   }
 
@@ -95,6 +112,14 @@ export class ManageRolesComponent {
         my.resultError.push(result.error);
         my.communities = result.result;
 
+        // See if the community is already in the params. 
+        my.communities.forEach(function (x){ 
+          if(x.id===my.paramCommunityId){ 
+            my.selectedCommunity=x;
+            my.getRolesAndUsers(); 
+          }  
+        });
+
         if (null == my.communities || my.communities.length == 0) {
           my.resultError.push("No Communities were found");
           return;
@@ -105,6 +130,9 @@ export class ManageRolesComponent {
   getRolesAndUsers(): void {
 
     var my: ManageRolesComponent = this;
+
+    console.log(this.selectedCommunity.id);
+    console.log(this.paramCommunityId);
 
     my.clear();
     my.selectedRole = null;
@@ -118,6 +146,22 @@ export class ManageRolesComponent {
       my.roles = data[0].result;
       my.resultError.push(data[1].error);
       my.users = data[1].result;
+
+      // See if the role and and user are already in the params. 
+      my.roles.forEach(function (x){ 
+        if(x.id===my.paramRoleId){ 
+          my.selectedRole=x;
+        }  
+      });
+      my.users.forEach(function (x){ 
+        if(x.id===my.paramUserId){ 
+          my.selectedUser=x;
+        }  
+      });
+      if( my.selectedCommunity && my.selectedRole && my.selectedUser ) {
+        my.getURR();
+      }
+
     });
   }
 

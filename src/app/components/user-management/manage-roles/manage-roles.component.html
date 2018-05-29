@@ -15,7 +15,7 @@
           <span class="form-group">
             <select name="communitySelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
               <option value=""></option>
-              <option *ngFor="let comm of communities" [ngValue]="comm">
+              <option *ngFor="let comm of communities" [ngValue]="comm" [(selected)]="comm.id === paramCommunityId">
                 {{ comm.name }}
               </option>
             </select>
@@ -71,11 +71,11 @@
           <b>{{selectedRole.name}}</b> role has already been assiged to
           <b>{{selectedUserName}}</b>.
         </p>
-        <p class="role-controls" *ngIf="isModifyable===false">
+        <p class="role-controls" *ngIf="isURRModifyable===false">
           Resource access for the
           <b>{{selectedRole.name}}</b> role is predeifined and cannot be modified.
         </p>
-        <!--p class="role-controls" *ngIf="isModifyable">
+        <!--p class="role-controls" *ngIf="isURRModifyable">
           Resource access for the <b>{{selectedRole.name}}</b> role can be modified.
         </p-->
 

@@ -139,6 +139,7 @@ const appRoutes: Routes = [
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
+  {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},

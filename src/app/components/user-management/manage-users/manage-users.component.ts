@@ -215,10 +215,8 @@ export class ManageUsersComponent implements OnInit {
     this.addedcommunity = '';
   }
  
-  editRoles( commid, userid ){
-
-    console.log( commid +" "+ userid );
-
+  editRoles( commid, roleid, userid ){
+    this.router.navigate(['/roles', commid, roleid, userid]);
   }
 
 }
