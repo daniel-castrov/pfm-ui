@@ -282,6 +282,23 @@ paths:
         description: "The community id"
         required: true
         type: "string"
+  /pom/community/{communityId}/open:
+    get:
+      tags:
+      - "POM"
+      summary: "Gets the currently-open POM"
+      description: "Open pom for the com"
+      operationId: "getOpen"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
   /pom/{pomId}:
     get:
       tags:
@@ -1568,8 +1585,6 @@ paths:
       summary: "Create a UFR"
       description: "Create a UFR"
       operationId: "create"
-      consumes:
-      - "application/json"
       parameters:
       - in: "body"
         name: "ufr"
@@ -1577,6 +1592,67 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        204:
+          description: "Successfully created UFR"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
+    post:
+      tags:
+      - "UFRs"
+      summary: "Updates a UFR"
+      description: "Updates a UFR"
+      operationId: "update"
+      parameters:
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        204:
+          description: "Successfully created UFR"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
+  /ufr/pom/{pomId}/program/{shortname}:
+    put:
+      tags:
+      - "UFRs"
+      summary: "Create a UFR from an existing PR"
+      description: "Create a UFR"
+      operationId: "addFundingLine"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        description: 'the pom'
+        required: true
+        type: 'string'
+      - in: "path"
+        name: "shortname"
+        type: "string"
+        description: 'the "model" program'
+        required: true
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
       responses:
         204:
           description: "Successfully created UFR"
@@ -1993,6 +2069,8 @@ definitions:
         type: "string"
       execution:
         type: "string"
+      organization:
+        type: "string"
       milestones:
         type: "array"
         items:
@@ -2078,7 +2156,7 @@ definitions:
         type: "string"
       disposition:
         type: "string"
-      lastModifiedTime:
+      lastMod:
         type: "integer"
       notes:
         type: "string"
@@ -2172,7 +2250,7 @@ definitions:
       item:
         type: 'string'
       funds:
-        type: 'object'
+        $ref: '#/definitions/IntMap'
       fy:
         type: 'number'
       variants:

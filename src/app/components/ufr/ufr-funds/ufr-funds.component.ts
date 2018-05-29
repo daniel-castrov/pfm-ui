@@ -1,7 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { forkJoin } from "rxjs/observable/forkJoin";
+import { Component, OnInit, Input, ApplicationRef } from '@angular/core'
+import { forkJoin } from "rxjs/observable/forkJoin"
 
-import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest } from '../../../generated';
+import {
+  Program, FundingLine, IntMap, UFR, POMService,
+  Pom, PRService, PBService, ProgrammaticRequest, Tag,
+  ProgramsService
+} from '../../../generated'
 
 @Component({
   selector: 'ufr-funds',
@@ -16,121 +20,220 @@ export class UfrFundsComponent implements OnInit {
   private cvals: Map<number, number> = new Map<number, number>();
   private diffs: {} = {};
   private model: ProgrammaticRequest;
-
-  // key is appropriation-blin
-  private modelfunds: Map<string, modelval> = new Map<string, modelval>();
+  // key is appropriation+blin
+  private rows: Map<string, tabledata> = new Map<string, tabledata>();
   
-  constructor(private pomsvc: POMService, private pbService: PBService,
-    private prService: PRService) { }
+  // for the add FL section
+  private appropriations: string[] = [];
+  private blins: string[] = [];
+  private agencies: string[] = [];
+  private flfunds = {};
+  private appr: string;
+  private blin: string;
+  private agency: string;
 
+  constructor(private pomsvc: POMService, private pbService: PBService,
+    private prService: PRService, private progsvc: ProgramsService) { }
+  
   ngOnInit() {
     var my: UfrFundsComponent = this;
     
-    this.pomsvc.getById(my.current.pomId).subscribe(data => { 
+    this.pomsvc.getById(my.current.pomId).subscribe(data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
 
       console.log('into ufr-funds init!');
-      console.log(my.current.fundingLines);
+      
+      // get the data from the UFR into our tabledata structure
+      my.current.fundingLines.forEach(fund => { 
+        var key = fund.appropriation + fund.blin;
+        var cfunds: Map<number, number> = new Map<number, number>();
+        var tfunds: Map<number, number> = new Map<number, number>();
+        var mfunds: Map<number, number> = new Map<number, number>();
 
-      my.cvals.clear();
+        Object.keys(fund.funds).forEach(function (yearstr) {
+          var year: number = Number.parseInt(yearstr);
+          cfunds.set(year, fund.funds[yearstr]);
+          tfunds.set(year, fund.funds[yearstr]);
+          mfunds.set(year, 0);
+        });
 
-      // get the original funding lines from the POM
-      my.prService.getByPhaseAndShortName( my.pom.id, my.current.shortName ).subscribe( model=>{
-        // get the current values for this program
-        my.model = model.result;
-        //console.log(my.model);
-
-        my.model.fundingLines.forEach(function (fund) {
-          var key = fund.appropriation + fund.blin;
-          var val: modelval = {
-            appropriation: fund.appropriation,
-            blin: fund.blin,
-            funds: fund.funds
-          };
-
-          Object.keys(fund.funds).forEach(function (yearstr) {
-            var year: number = Number.parseInt(yearstr);
-            if (!my.cvals.has(year)) {
-              my.cvals.set(year, 0);
-            }
-
-            my.cvals.set(year, my.cvals.get(year) + fund.funds[year]);
-          });
-
-          my.modelfunds.set(key, val);
-          
-          // would like to call this only once, after all the endpoint calls
-          my.sumfunds();
-        });        
+        my.rows.set(key, {
+          blin: fund.blin,
+          appropriation: fund.appropriation,
+          ufrfunds: cfunds,
+          totalfunds: tfunds,
+          modelfunds: mfunds
+        });
       });
-    });
 
-    //console.log(this.current);
+      // ...now merge/add the original funding lines from the POM
+      // (new programs/subprograms won't necessarily have a shortname yet)
+      if (my.current.shortName) {
+        my.prService.getByPhaseAndShortName(my.pom.id, my.current.shortName).subscribe(model => {
+          // get the current values for this program
+          my.model = model.result;
+          //console.log(my.model);
+
+          my.model.fundingLines.forEach(fund => {
+            var key = fund.appropriation + fund.blin;
+
+            var newdata = false;
+            if (!my.rows.has(key)) {
+              my.rows.set(key, {
+                appropriation: fund.appropriation,
+                blin: fund.blin,
+                modelfunds: new Map<number, number>(),
+                ufrfunds: new Map<number, number>(),
+                totalfunds: new Map<number, number>()
+              });
+              newdata = true;
+            }
+            var thisrow: tabledata = my.rows.get(key);
+
+            Object.keys(fund.funds).forEach(function (yearstr) {
+              var year: number = Number.parseInt(yearstr);
+              var amt: number = fund.funds[yearstr];
+              thisrow.modelfunds.set(year, amt);
+              if (!thisrow.ufrfunds.has(year)) {
+                thisrow.ufrfunds.set(year, 0);
+              }
+              thisrow.totalfunds.set(year, thisrow.ufrfunds.get(year) + amt);
+            });
+          });
+        });
+      }  
+
+      forkJoin([
+        my.progsvc.getSearchAgencies(),
+        my.progsvc.getSearchAppropriations(),
+        my.progsvc.getSearchBlins()
+      ]).subscribe(data2 => {
+        my.agencies = data2[0].result.sort();
+        my.agency = my.agencies[0];
+        my.appropriations = data2[1].result.sort();
+        my.appr = my.appropriations[0];
+        my.blins = data2[2].result.sort();
+        my.blin = my.blins[0];
+      }); 
+    });
   }
 
-  onedit( newval, appr, blin, year ) {
+  newfledit(newval, year) {
+    this.flfunds[year] = Number.parseInt( newval );
+  }
+
+  addfl() {
+    var my: UfrFundsComponent = this;
+    var key: string = this.appr + this.blin;
+    if (this.rows.has(key)) {
+      var tabledata = this.rows.get(this.appr + this.blin);
+      var ufunds = tabledata.ufrfunds;
+      Object.keys(this.flfunds).forEach(yearstr => {
+        var year: number = Number.parseInt(yearstr);
+        var oldval: number = (ufunds.has(year) ? ufunds.get(year) : 0);
+        ufunds.set(year, oldval + my.flfunds[year]);
+      });
+    }
+    else {
+      var tfunds: Map<number, number> = new Map<number, number>();
+      var ufunds: Map<number, number> = new Map<number, number>();
+      Object.keys(this.flfunds).forEach(yearstr => {
+        var year: number = Number.parseInt(yearstr);
+        tfunds.set(year, my.flfunds[year]);
+        ufunds.set(year, my.flfunds[year]);
+      });
+
+      this.rows.set(key, {
+        appropriation: my.appr,
+        blin: my.blin,
+        ufrfunds: ufunds,
+        totalfunds: tfunds,
+        modelfunds: new Map<number, number>()
+      });
+
+      // now set this same data in the current data (for saves)
+      var fl: FundingLine = {
+        appropriation: my.appr,
+        blin: my.blin,
+        fy: my.pom.fy,
+        opAgency: my.agency,
+        funds: my.flfunds,
+        variants: []
+      };
+      this.current.fundingLines.push(fl);
+    }
+  }
+
+
+  onedit(newval, appr, blin, year) {
     var my: UfrFundsComponent = this;
     console.log('editing ' + appr + '/' + blin + ' in ' + year + ' with val: ' + newval); 
 
     var thisyear = Number.parseInt(year);
-    my.current.fundingLines.forEach(function (fund) {
-      if (fund.appropriation === appr && fund.blin === blin) {
-        console.log('found the fund, setting the value for ' + thisyear+' to '+Number.parseFloat(newval));
-        console.log(fund.funds);
-        console.log(fund.funds[thisyear]);
-        fund.funds[thisyear] = Number.parseFloat(newval);
-        console.log(fund.funds);
-        console.log(fund.funds[thisyear]);
+    var thisvalue = Number.parseInt(newval);
+    if (''===newval || Number.isNaN(thisvalue)) {
+      thisvalue = 0;
+    }
+
+    var thisrow = this.rows.get(appr + blin);
+
+    if (!thisrow.totalfunds.has(year)) {
+      thisrow.totalfunds.set(year, 0);
+    }
+
+    var oldvalue = (thisrow.ufrfunds.has(year) ? thisrow.ufrfunds.get(year) : 0);
+    thisrow.totalfunds.set(year, thisrow.totalfunds.get(year) - oldvalue);
+    this.rows.get(appr + blin).ufrfunds.set(year, thisvalue);
+    thisrow.totalfunds.set(year, thisrow.totalfunds.get(year) + thisvalue);
+
+    // finally, we need to update our actual funding lines...
+    // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR
+    var found = false;
+    this.current.fundingLines.forEach(fl => { 
+      if (appr === fl.appropriation && blin === fl.blin) {
+        fl.funds[year] = thisvalue;
+        found = true;
+      }
+    });
+    if (!found) {
+      console.debug('no matching FL found...adding new one');
+      var funds = {};
+      funds[year] = thisvalue;
+
+      this.current.fundingLines.push({
+        appropriation: appr,
+        blin: blin,
+        fy: my.pom.fy,
+        funds: funds,
+        variants: []
+      });
+    }
+  }
+
+  totals(year: number, mode: string) {
+    var sum: number = 0;
+    this.rows.forEach(data => {
+      if ('POM' === mode) {
+        sum += (data.modelfunds.has(year) ? data.modelfunds.get(year) : 0);
+      }
+      else if ('UFR' === mode) {
+        sum += (data.ufrfunds.has(year) ? data.ufrfunds.get(year) : 0 );
+      }
+      else if ('TOTAL' === mode) {
+        sum += (data.totalfunds.get(year) ? data.totalfunds.get(year) : 0);
       }
     });
 
-    this.sumfunds();
+    return sum;
   }
 
-  sumfunds(){
-    var my: UfrFundsComponent = this;
-    console.log('into sumfunds!');
-    
-    // remember: cvals get set only once
-    this.uvals.clear();
-    this.diffs = {};
-    var years: number[] = [];
-    for (var year = my.pom.fy - 4; year < my.pom.fy + 5; year++) {
-      years.push(year);
-    }
-
-    years.forEach(function (year) { 
-      my.uvals.set(year, 0);
-      my.diffs[year] = 0;
-    });
-
-    my.current.fundingLines.forEach(function (fund) { 
-      Object.keys(fund.funds).forEach(function (yearstr) { 
-        var year = Number.parseInt(yearstr);
-        my.uvals.set(year, my.uvals.get(year) + fund.funds[year]);        
-      });
-    });
-
-    years.forEach(function (year) {
-      my.diffs[year] = (my.uvals.get(year) - my.cvals.get(year));
-    });
-
-    //console.log(my.uvals);
-    //console.log(my.diffs);
-    //console.log(my.modelfunds);
-  }
 }
 
-interface PbUfrRow{
+interface tabledata {
   appropriation: string,
   blin: string,
-  pb: ProgrammaticRequest,
-  ufr:UFR
-};
-
-interface modelval {
-  appropriation: string,
-  blin: string,
-  funds: Map<number, number>;
+  modelfunds?: Map<number, number>,
+  ufrfunds?: Map<number, number>,
+  totalfunds?: Map<number, number>
 }
