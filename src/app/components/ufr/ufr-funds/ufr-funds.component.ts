@@ -61,7 +61,7 @@ export class UfrFundsComponent implements OnInit {
       my.prService.getByPhaseAndShortName( my.pom.id, my.current.shortName ).subscribe( model=>{
         // get the current values for this program
         my.model = model.result;
-        console.log(my.model);
+        //console.log(my.model);
 
         my.model.fundingLines.forEach(fund=> {
           var key = fund.appropriation + fund.blin;
@@ -96,7 +96,6 @@ export class UfrFundsComponent implements OnInit {
   onedit(newval, appr, blin, year) {
     var my: UfrFundsComponent = this;
     console.log('editing ' + appr + '/' + blin + ' in ' + year + ' with val: ' + newval); 
-
 
     var thisyear = Number.parseInt(year);
     var thisvalue = Number.parseInt(newval);
@@ -137,6 +136,23 @@ export class UfrFundsComponent implements OnInit {
         variants: []
       });
     }
+  }
+
+  totals(year: number, mode: string) {
+    var sum: number = 0;
+    this.rows.forEach(data => {
+      if ('POM' === mode) {
+        sum += (data.modelfunds.has(year) ? data.modelfunds.get(year) : 0);
+      }
+      else if ('UFR' === mode) {
+        sum += (data.ufrfunds.has(year) ? data.ufrfunds.get(year) : 0 );
+      }
+      else if ('TOTAL' === mode) {
+        sum += (data.totalfunds.get(year) ? data.totalfunds.get(year) : 0);
+      }
+    });
+
+    return sum;
   }
 
 }
