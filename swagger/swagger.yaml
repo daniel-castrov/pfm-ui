@@ -316,6 +316,16 @@ paths:
         description: "The pom id"
         required: true
         type: "string"
+  /pom/{pomId}/submit:
+    post:
+      tags:
+      - "POM"
+      operationId: "submit"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
 # STOP POM
 ##############################################################################
 # START PR
