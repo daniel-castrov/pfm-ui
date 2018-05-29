@@ -53,11 +53,11 @@
               <td class="text-right">{{row.ufrfunds.get(fy-3) | dashForZero}}</td>
               <td class="text-right">{{row.ufrfunds.get(fy-2) | dashForZero}}</td>
               <td class="text-right">{{row.ufrfunds.get(fy-1) | dashForZero}}</td>
-              <td contenteditable="true" class="editable-field" (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy)">{{row.ufrfunds.get(fy)}}</td>
-              <td contenteditable="true" class="editable-field" (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+1)">{{row.ufrfunds.get(fy+1)}}</td>
-              <td contenteditable="true" class="editable-field" (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+2)">{{row.ufrfunds.get(fy+2)}}</td>
-              <td contenteditable="true" class="editable-field" (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+3)">{{row.ufrfunds.get(fy+3)}}</td>
-              <td contenteditable="true" class="editable-field" (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+4)">{{row.ufrfunds.get(fy+4)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy)">{{row.ufrfunds.get(fy)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+1)">{{row.ufrfunds.get(fy+1)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+2)">{{row.ufrfunds.get(fy+2)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+3)">{{row.ufrfunds.get(fy+3)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+4)">{{row.ufrfunds.get(fy+4)}}</td>
               <td>??</td>
             </tr>
             <tr class="row-light">
@@ -163,11 +163,11 @@
               </thead>
               <tbody>
                 <tr>
-                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy)">{{flfunds[fy]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+1)">{{flfunds[fy+1]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+2)">{{flfunds[fy+2]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+3)">{{flfunds[fy+3]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+4)">{{flfunds[fy+4]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy)">{{flfunds[fy]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+1)">{{flfunds[fy+1]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+2)">{{flfunds[fy+2]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+3)">{{flfunds[fy+3]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+4)">{{flfunds[fy+4]|dashForZero}}</td>
                 </tr>
               </tbody>
             </table>
