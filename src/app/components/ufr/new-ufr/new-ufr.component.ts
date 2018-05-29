@@ -78,19 +78,25 @@ export class NewUfrComponent implements OnInit {
   create() {
     var my: NewUfrComponent = this;
     console.log('create ' + this.mode + ' UFR');
-    var ufr: UFR = {
-      pomId: this.pom.id,
-      organization: this.selected.organization
-    };
 
-    if ('FL' === this.mode || 'SP' === this.mode ) {
+    if ('FL' === this.mode ) {
       this.usvc.addFundingLine(this.pom.id, this.selected.shortName).subscribe(data => {
         var ufrid = data.result;
         my.router.navigate(['/ufr-view', ufrid]);
       });
     }
     else {
-      ufr.name = 'New Program POM ' + my.pom.fy;
+      var title = ('SP' === this.mode ? ' sub ' + this.selected.shortName : '');
+      var ufr: UFR = {
+        pomId: this.pom.id,
+        organization: this.selected.organization,
+        name: 'UFR new' + title + ' POM ' + my.pom.fy
+      };
+
+      if ('SP' === this.mode) {
+        ufr.parentId = this.selected.id;
+      }
+
       this.usvc.create(ufr).subscribe(data => {
         var ufrid = data.result;
         my.router.navigate(['/ufr-view', ufrid]);

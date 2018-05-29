@@ -3,7 +3,8 @@ import { forkJoin } from "rxjs/observable/forkJoin"
 
 import {
   Program, FundingLine, IntMap, UFR, POMService,
-  Pom, PRService, PBService, ProgrammaticRequest
+  Pom, PRService, PBService, ProgrammaticRequest, Tag,
+  ProgramsService
 } from '../../../generated'
 
 @Component({
@@ -21,14 +22,23 @@ export class UfrFundsComponent implements OnInit {
   private model: ProgrammaticRequest;
   // key is appropriation+blin
   private rows: Map<string, tabledata> = new Map<string, tabledata>();
+  
+  // for the add FL section
+  private appropriations: string[] = [];
+  private blins: string[] = [];
+  private agencies: string[] = [];
+  private flfunds = {};
+  private appr: string;
+  private blin: string;
+  private agency: string;
 
   constructor(private pomsvc: POMService, private pbService: PBService,
-    private prService: PRService) { }
-
+    private prService: PRService, private progsvc: ProgramsService) { }
+  
   ngOnInit() {
     var my: UfrFundsComponent = this;
     
-    this.pomsvc.getById(my.current.pomId).subscribe(data => { 
+    this.pomsvc.getById(my.current.pomId).subscribe(data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
 
@@ -58,40 +68,103 @@ export class UfrFundsComponent implements OnInit {
       });
 
       // ...now merge/add the original funding lines from the POM
-      my.prService.getByPhaseAndShortName( my.pom.id, my.current.shortName ).subscribe( model=>{
-        // get the current values for this program
-        my.model = model.result;
-        //console.log(my.model);
+      // (new programs/subprograms won't necessarily have a shortname yet)
+      if (my.current.shortName) {
+        my.prService.getByPhaseAndShortName(my.pom.id, my.current.shortName).subscribe(model => {
+          // get the current values for this program
+          my.model = model.result;
+          //console.log(my.model);
 
-        my.model.fundingLines.forEach(fund=> {
-          var key = fund.appropriation + fund.blin;
+          my.model.fundingLines.forEach(fund => {
+            var key = fund.appropriation + fund.blin;
 
-          var newdata = false;
-          if (!my.rows.has(key)) {
-            my.rows.set(key, {
-              appropriation: fund.appropriation,
-              blin: fund.blin,
-              modelfunds: new Map<number, number>(),
-              ufrfunds: new Map<number, number>(),
-              totalfunds: new Map<number, number>()
-            });
-            newdata = true;
-          }
-          var thisrow: tabledata = my.rows.get(key);
-
-          Object.keys(fund.funds).forEach(function (yearstr) {
-            var year: number = Number.parseInt(yearstr);
-            var amt: number = Number.parseInt(fund.funds[yearstr]);
-            thisrow.modelfunds.set(year, amt);
-            if (!thisrow.ufrfunds.has(year)) {
-              thisrow.ufrfunds.set(year, 0);
+            var newdata = false;
+            if (!my.rows.has(key)) {
+              my.rows.set(key, {
+                appropriation: fund.appropriation,
+                blin: fund.blin,
+                modelfunds: new Map<number, number>(),
+                ufrfunds: new Map<number, number>(),
+                totalfunds: new Map<number, number>()
+              });
+              newdata = true;
             }
-            thisrow.totalfunds.set(year, thisrow.ufrfunds.get(year) + amt);
+            var thisrow: tabledata = my.rows.get(key);
+
+            Object.keys(fund.funds).forEach(function (yearstr) {
+              var year: number = Number.parseInt(yearstr);
+              var amt: number = Number.parseInt(fund.funds[yearstr]);
+              thisrow.modelfunds.set(year, amt);
+              if (!thisrow.ufrfunds.has(year)) {
+                thisrow.ufrfunds.set(year, 0);
+              }
+              thisrow.totalfunds.set(year, thisrow.ufrfunds.get(year) + amt);
+            });
           });
         });
-      });
+      }  
+
+      forkJoin([
+        my.progsvc.getSearchAgencies(),
+        my.progsvc.getSearchAppropriations(),
+        my.progsvc.getSearchBlins()
+      ]).subscribe(data2 => {
+        my.agencies = data2[0].result.sort();
+        my.agency = my.agencies[0];
+        my.appropriations = data2[1].result.sort();
+        my.appr = my.appropriations[0];
+        my.blins = data2[2].result.sort();
+        my.blin = my.blins[0];
+      }); 
     });
   }
+
+  newfledit(newval, year) {
+    this.flfunds[year] = Number.parseInt( newval );
+  }
+
+  addfl() {
+    var my: UfrFundsComponent = this;
+    var key: string = this.appr + this.blin;
+    if (this.rows.has(key)) {
+      var tabledata = this.rows.get(this.appr + this.blin);
+      var ufunds = tabledata.ufrfunds;
+      Object.keys(this.flfunds).forEach(yearstr => {
+        var year: number = Number.parseInt(yearstr);
+        var oldval: number = (ufunds.has(year) ? ufunds.get(year) : 0);
+        ufunds.set(year, oldval + my.flfunds[year]);
+      });
+    }
+    else {
+      var tfunds: Map<number, number> = new Map<number, number>();
+      var ufunds: Map<number, number> = new Map<number, number>();
+      Object.keys(this.flfunds).forEach(yearstr => {
+        var year: number = Number.parseInt(yearstr);
+        tfunds.set(year, my.flfunds[year]);
+        ufunds.set(year, my.flfunds[year]);
+      });
+
+      this.rows.set(key, {
+        appropriation: my.appr,
+        blin: my.blin,
+        ufrfunds: ufunds,
+        totalfunds: tfunds,
+        modelfunds: new Map<number, number>()
+      });
+
+      // now set this same data in the current data (for saves)
+      var fl: FundingLine = {
+        appropriation: my.appr,
+        blin: my.blin,
+        fy: my.pom.fy,
+        opAgency: my.agency,
+        funds: my.flfunds,
+        variants: []
+      };
+      this.current.fundingLines.push(fl);
+    }
+  }
+
 
   onedit(newval, appr, blin, year) {
     var my: UfrFundsComponent = this;

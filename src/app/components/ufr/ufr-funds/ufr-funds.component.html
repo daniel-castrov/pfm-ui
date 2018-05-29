@@ -110,16 +110,16 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">Appropriation</div>
-            <select class="form-control-sm dropdown-width">
-              <option>RDT&amp;E</option>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="appr">
+              <option *ngFor="let a of appropriations" [ngValue]="a">{{a}}</option>
             </select>
           </span>
         </div>
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">BA/BLIN</div>
-            <select class="form-control-sm dropdown-width">
-              <option>BA7</option>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
+              <option *ngFor="let b of blins">{{b}}</option>
             </select>
           </span>
         </div>
@@ -134,9 +134,9 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">OpAgency</div>
-            <span class="form-group">
-              <div class="mb-2 primary-label">OpAgency Name</div>
-            </span>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="agency">
+              <option *ngFor="let c of agencies">{{c}}</option>
+            </select>
           </span>
         </div>
         <div class="col-2">
@@ -154,20 +154,20 @@
             <table class="pr-funds-table">
               <thead>
                 <tr>
-                  <th>FY19</th>
-                  <th>FY20</th>
-                  <th>FY21</th>
-                  <th>FY22</th>
-                  <th>FY23</th>
+                  <th>{{fy|fy}}</th>
+                  <th>{{fy+1|fy}}</th>
+                  <th>{{fy+2|fy}}</th>
+                  <th>{{fy+3|fy}}</th>
+                  <th>{{fy+4|fy}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td contenteditable="true" class="editable-field">-</td>
-                  <td contenteditable="true" class="editable-field">-</td>
-                  <td contenteditable="true" class="editable-field">-</td>
-                  <td contenteditable="true" class="editable-field">8,077</td>
-                  <td contenteditable="true" class="editable-field">10,898</td>
+                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy)">{{flfunds[fy]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+1)">{{flfunds[fy+1]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+2)">{{flfunds[fy+2]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+3)">{{flfunds[fy+3]|dashForZero}}</td>
+                  <td contenteditable="true" class="editable-field" (blur)="newfledit($event.target.textContent,fy+4)">{{flfunds[fy+4]|dashForZero}}</td>
                 </tr>
               </tbody>
             </table>
@@ -177,7 +177,7 @@
     </fieldset>
   </div>
   <div class="col-2">
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="addfl()">
       <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
       Add Funding Line
     </button>
