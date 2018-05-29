@@ -214,10 +214,6 @@ export class ManageUsersComponent implements OnInit {
   resetAddCommunity(): void {
     this.addedcommunity = '';
   }
- 
-  editRoles( commid, roleid, userid ){
-    this.router.navigate(['/roles', commid, roleid, userid]);
-  }
 
 }
 
@@ -240,8 +236,6 @@ class CommWithRoles {
     }
     this.allRoles=ar;
   }
-
-
 
 
 }
