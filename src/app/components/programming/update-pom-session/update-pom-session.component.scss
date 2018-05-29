@@ -207,8 +207,6 @@ label {
   }
 }
 
-
-
 .alert-danger {
   color: #721c24;
   background-color: #f8d7da;
@@ -234,4 +232,24 @@ a.font-danger:hover {
 .autoscroll {
   max-height: 400px;
   overflow-y: auto
+}
+
+.exceed-sum {
+
+  color: #dc3545;
+
+  &:before {
+    content: " ( ";
+  }
+  &:after {
+    content: " ) ";
+  }
+}
+
+.timestamp {
+  font-size:12px;
+  display: block;
+  color: $primary-color;
+  font-size: 12px;
+
 }
