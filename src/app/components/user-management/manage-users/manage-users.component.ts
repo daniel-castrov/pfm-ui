@@ -214,6 +214,12 @@ export class ManageUsersComponent implements OnInit {
   resetAddCommunity(): void {
     this.addedcommunity = '';
   }
+ 
+  editRoles( commid, userid ){
+
+    console.log( commid +" "+ userid );
+
+  }
 
 }
 
@@ -236,6 +242,8 @@ class CommWithRoles {
     }
     this.allRoles=ar;
   }
+
+
 
 
 }

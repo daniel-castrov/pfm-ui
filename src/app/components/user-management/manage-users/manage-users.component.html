@@ -132,6 +132,7 @@
           <ul>
             <li *ngFor="let cwr of communityWithUserRoles">
               {{ cwr.community.name }}
+              <!--
               <ul>
                 <div class="card-header">
                   <li>Roles</li>
@@ -142,6 +143,7 @@
                   </li>
                 </div>
               </ul>
+              -->
             </li>
           </ul>
         </div>
@@ -151,16 +153,26 @@
         <div class="card-header">
           Communities:
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
-            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
+            <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Close
           </button>
+          <!--
           <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
           </button>
+          -->
         </div>
         <div class="card-container">
-          <ul>
-            <li *ngFor="let cwr of communityWithUserRoles">
-              {{ cwr.community.name }}
+          <table>
+            <tr *ngFor="let cwr of communityWithUserRoles">
+              <td>{{ cwr.community.name }}</td>
+              <td><button class="btn-card-header" title="Leave">
+                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Leave Community
+              </button></td>
+              <td><button class="btn-card-header" title="EditRoles" (click)="editRoles(cwr.community.id, targetUser.id  )">
+                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Edit Community Roles
+              </button></td>
+            </tr>
+              <!--
               <ul>
                 <div class="card-header">
                   <li>Roles
@@ -185,17 +197,22 @@
                   </div>
                 </div>
               </ul>
-            </li>
-          </ul>
-          <select name="addCommunitySelector" [(ngModel)]="addedcommunity">
+              -->
+  <tr>
+          <td><select name="addCommunitySelector" [(ngModel)]="addedcommunity">
+            <option value=""></option>
             <option *ngFor="let all_community of avail_Communities" [value]="all_community.id">{{ all_community.name }}</option>
-          </select>
-          <button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
-            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Add Community
-          </button>
-          <button class="btn-card-header" title="Cancel" (click)="resetAddCommunity()">
+          </select></td>
+          <td><button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
+            <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Join Community
+          </button></td>
+          <td><!--<button class="btn-card-header" title="Cancel" (click)="resetAddCommunity()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Clear
-          </button>
+          </button>--></td>
+        </tr>
+
+        </table>
+
         </div>
       </div>
     </div>
