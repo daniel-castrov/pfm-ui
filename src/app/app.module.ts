@@ -103,6 +103,7 @@ import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { FyPipe } from './pipes/fy.pipe';
+import { MapAsListPipe } from './pipes/map-as-list.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -212,7 +213,8 @@ const appRoutes: Routes = [
     DashForZeroPipe,
     NewUfrComponent,
     OnlyDigitsDirective,
-    FyPipe
+    FyPipe,
+    MapAsListPipe
   ],
 
   imports: [
