@@ -107,11 +107,7 @@ import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
-<<<<<<< HEAD
-import { FyPipe } from './pipes/fy.pipe';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
-=======
->>>>>>> develop
 
 // ROUTES
 const appRoutes: Routes = [
@@ -225,14 +221,10 @@ const appRoutes: Routes = [
     UpdatePomSessionComponent,
     ValuesPipe,
     DashForZeroPipe,
-<<<<<<< HEAD
     NewUfrComponent,
     OnlyDigitsDirective,
     FyPipe,
     MapAsListPipe
-=======
-    OnlyDigitsDirective
->>>>>>> develop
   ],
 
   imports: [
