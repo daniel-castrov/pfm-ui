@@ -45,6 +45,7 @@ import { ManageRolesComponent } from './components/user-management/manage-roles/
 import { ManageSelfComponent } from './components/user-management/manage-self/manage-self.component';
 import { ManageUsersComponent } from './components/user-management/manage-users/manage-users.component';
 import { MyCommunitiesComponent } from './components/user-management/my-communities/my-communities.component';
+import { MyRolesComponent } from './components/user-management/my-roles/my-roles.component';
 import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -58,7 +59,6 @@ import { ProgramRequestComponent } from './components/programming/existing-progr
 import { ProgramSearchComponent } from './components/programs/program-search/program-search.component';
 import { ProgramTabComponent } from './components/programming/existing-program-request/program-tab/program-tab.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
-import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
@@ -114,7 +114,6 @@ const appRoutes: Routes = [
   {path:'', component:LoginComponent},
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
-  {path:'access-change', component:RequestAccessChangeComponent},
   {path:'access-change-approval', component:AccessChangeApprovalComponent},
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
@@ -128,6 +127,7 @@ const appRoutes: Routes = [
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
+  {path:'my-roles', component:MyRolesComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
@@ -135,7 +135,6 @@ const appRoutes: Routes = [
   {path:'programs', component:ProgramsComponent},
   {path:'program-search', component:ProgramSearchComponent},
   {path:'program-view/:id', component:ProgramViewComponent},
-  {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
@@ -186,6 +185,7 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageUsersComponent,
     MyCommunitiesComponent,
+    MyRolesComponent,
     NewProgrammaticRequestComponent,
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
@@ -202,7 +202,6 @@ const appRoutes: Routes = [
     ProgramViewComponent,
     ProgramsComponent,
     ProgrammaticRequestsComponent,
-    RequestAccessChangeComponent,
     RequestComponent,
     SelectProgramRequestComponent,
     SummaryTabComponent,

@@ -1,0 +1,70 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+
+fieldset {
+  padding: 20px;
+}
+
+label {
+  color: $primary-color;
+  margin: 0;
+  display: inline=block;
+}
+
+.my-roles-list {
+  width: 100%;
+
+  th {
+    font-weight: 600;
+    background: $white;
+  }
+
+  tr {
+    padding: 10px;
+  }
+
+  tr:nth-child(odd)  {
+    background-color: #f5f5f5;
+  }
+
+  td {
+    padding: 5px;
+  }
+}
+
+.my-roles-list {
+  a {
+    color: #24527b;
+    text-decoration: underline;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+.dropdown-width {
+  width: 200px;
+}
+
+.my-role-label {
+  padding-right: 40px;
+  text-align: center;
+}
+
+.my-role-message {
+  color: #5b5e61;
+  font-style: italic;
+  padding: 4px;
+  background-color: #f5f5f5;
+}
+
+.pending-role {
+  width: 98%;
+  height: 100px;
+}
