@@ -118,7 +118,6 @@
                 <span *ngIf="isNewUserRole===false">Modify</span>
               </button>
             </div>
-
           </fieldset>
         </ng-template>
 
@@ -139,15 +138,9 @@
         </ng-template>
 
       </div>
-
-      <span [hidden]="!submitted" class="clearfix">
-        <div class="alert-success-group message">
-          <div class="alert-success alert-dismissable">
-            <strong>{{submittedMessage}}</strong>
-          </div>
-        </div>
-      </span>
-
+      <div class="message">
+        <j-feedback></j-feedback>
+      </div>
     </div>
   </div>
 </div>

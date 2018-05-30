@@ -10,43 +10,35 @@
             <tr>
               <th>
                 Roles
-              </th>
+              </th> 
               <th>
                 Programs
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                Program Owner
-              </td>
-              <td>
-                Program 1, Program 2, Program 4
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Funds Manager
-              </td>
-              <td>
-                Program 4, Program 6, Program 9
-              </td>
+            <tr *ngFor="let roleWres of currentRolesWithResources">
+              <td> {{ roleWres.role.name }} </td>
+              <td> {{ roleWres.resources.join(', ') }} </td>
             </tr>
           </tbody>
         </table>
       </fieldset>
+      <div class="message">
+        <j-feedback></j-feedback>
+      </div>
       <fieldset>
         <legend>Request a Role Change</legend>
         <div class="row">
           <div class="col-lg-12 col-sm-12 mb-3">
             <label class="mb-1 mr-2">Roles</label>
-            <select class="form-control-sm dropdown-width">
-               <option value=""></option>
-               <option value="">Program Owner</option>
-               <option value="">Program Manager</option>
-               <option value="">Program Reviewer</option>
-             </select>
+
+            <select name="roleSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedRole" (change)="getURR()">
+              <option value=""></option>
+              <option *ngFor="let r of allRoles" [ngValue]="r">
+                {{ r.name }}
+              </option>
+            </select>
           </div>
         </div>
         <div class="row">
@@ -54,7 +46,7 @@
             <!-- add widget for resources here -->
           </div>
           <div class="col-lg-2 col-sm-12">
-            <button class="btn btn-primary mt-3">Create Request</button>
+            <button class="btn btn-primary mt-3" (click)="createRequest()">Create Request</button>
           </div>
           <div class="col-lg-4 col-sm-12">
             <div class="my-role-label">Pending Requests</div>
@@ -70,15 +62,15 @@
         <div class="row">
           <div class="col-lg-3 col-sm-12">
             <label class="mb-1 mr-2 mb-3">Roles</label>
-            <select class="form-control-sm dropdown-width">
-               <option value=""></option>
-               <option value="">Program Owner</option>
-               <option value="">Program Manager</option>
-               <option value="">Program Reviewer</option>
-             </select>
+            <select name="dropRoleSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedDropRole" (change)="nothing()">
+              <option value=""></option>
+              <option *ngFor="let r of dropableRoles" [ngValue]="r">
+                {{ r.name }}
+              </option>
+            </select>
           </div>
           <div class="col-lg-3 col-sm-4">
-            <button class="btn btn-primary mt-1 mb-2">Create Request</button>
+            <button class="btn btn-primary mt-1 mb-2" (click)="dropRole()">Create Request</button>
           </div>
           <div class="col-lg-4 col-sm-12">
             <div class="my-role-label">Pending Requests</div>
@@ -86,17 +78,6 @@
               <option class="my-role-message">There are no requests</option>
               <option value="">none</option>
             </select>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-lg-8 col-sm-12">
-            <span [hidden]="formsubmitted" class="clearfix">
-              <div class="alert-success-group">
-                <div class="alert-success alert-dismissable">
-                  <strong>Your request has been submitted. Your will recieve an email once your request is processed.</strong>
-                </div>
-              </div>
-            </span>
           </div>
         </div>
       </fieldset>
