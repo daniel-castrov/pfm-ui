@@ -67,6 +67,7 @@ import { UpdatePomSessionComponent } from './components/programming/update-pom-s
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
+import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
@@ -149,6 +150,7 @@ const appRoutes: Routes = [
   { path: 'create-new-pom', component: CreatePomSessionComponent },
   { path: 'ufr-search', component: UfrSearchComponent },
   { path: 'ufr-view/:id', component: UfrViewComponent },
+  { path: 'worksheet-management', component: WorksheetManagementComponent }
 
 ];
 
@@ -222,6 +224,7 @@ const appRoutes: Routes = [
     UfrJustificationComponent,
     UpdatePomSessionComponent,
     ValuesPipe,
+    WorksheetManagementComponent,
     DashForZeroPipe,
     NewUfrComponent,
     OnlyDigitsDirective,
