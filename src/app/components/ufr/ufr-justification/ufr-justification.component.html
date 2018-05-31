@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="title mb-2">Rationale:</div>
       <div class="form-group">
-        <textarea cols="50" rows="4" wrap="physical" [(value)]="current.justification" class="form-control"></textarea>
+        <textarea cols="50" rows="4" wrap="physical" [(ngModel)]="current.justification" class="form-control" id="rationale" name="rationale"></textarea>
       </div>
     </div>
   </div>
@@ -11,7 +11,7 @@
     <div class="col-md-12">
       <div class="title mb-2">Milestone Impact:</div>
       <div class="form-group">
-        <textarea cols="50" rows="4" wrap="physical" [(value)]="current.milestoneImpact" class="form-control" id="impact-1"></textarea>
+        <textarea cols="50" rows="4" wrap="physical" [(ngModel)]="current.milestoneImpact" class="form-control" id="impact-1" name="impact-1"></textarea>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
     <div class="col-md-12">
       <div class="title mb-2">Impact if not funded:</div>
       <div class="form-group">
-        <textarea cols="50" rows="4" wrap="physical" [(value)]="current.impactN" class="form-control" id="impact-2"></textarea>
+        <textarea cols="50" rows="4" wrap="physical" [(ngModel)]="current.impactN" class="form-control" id="impact-2" name="impact-2"></textarea>
       </div>
     </div>
   </div>

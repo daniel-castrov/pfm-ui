@@ -28,6 +28,9 @@ export class UfrMetadataComponent implements OnInit {
 
         my.tagnames.set(tagtype, map);
       });
+
+      console.log(my.tagnames);
+      console.log(my.current);
     });
   }
 

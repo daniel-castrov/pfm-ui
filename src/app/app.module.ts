@@ -3,6 +3,7 @@ import { PomComponent } from './components/programming/select-program-request/po
 // app.modules
 // ANGULAR IMPORTS
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { AngularDualListBoxModule } from 'angular-dual-listbox';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -62,6 +63,7 @@ import { RequestAccessChangeComponent } from './components/user-management/manag
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
+import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
@@ -69,8 +71,11 @@ import { VariantsComponent } from './components/programs/program-view/variants.c
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
+import { BulkTabComponent } from './components/programming/update-pom-session/bulk-tab/bulk-tab.component';
+import { CalculateTabComponent } from './components/programming/update-pom-session/calculate-tab/calculate-tab.component';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
+import { FyPipe } from './pipes/fy.pipe';
 import { JoinCommunityRequestService } from './generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
 import { MyDetailsService } from './generated/api/myDetails.service';
@@ -91,6 +96,7 @@ import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
+import { TransferTabComponent } from './components/programming/update-pom-session/transfer-tab/transfer-tab.component';
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
 import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
 import { UfrMetadataComponent } from './components/ufr/metadata/ufr-metadata.component';
@@ -100,8 +106,9 @@ import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
 import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
+import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
-import { FyPipe } from './pipes/fy.pipe';
+import { MapAsListPipe } from './pipes/map-as-list.pipe';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -132,8 +139,10 @@ const appRoutes: Routes = [
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
+  {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
+  {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
@@ -151,7 +160,9 @@ const appRoutes: Routes = [
     AppComponent,
     ApplyComponent,
     ApproveRequestsComponent,
+    BulkTabComponent,
     HeaderUserComponent,
+    CalculateTabComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
@@ -162,6 +173,7 @@ const appRoutes: Routes = [
     FilterComponent,
     FundsComponent,
     FundsTabComponent,
+    FyPipe,
     HeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
@@ -200,6 +212,7 @@ const appRoutes: Routes = [
     UserListComponent,
     VariantsComponent,
     VariantLineComponent,
+    TransferTabComponent,
     UfrSearchComponent,
     UfrViewComponent,
     UfrMetadataComponent,
@@ -207,14 +220,18 @@ const appRoutes: Routes = [
     UfrVariantsComponent,
     UfrTabComponent,
     UfrJustificationComponent,
+    UpdatePomSessionComponent,
     ValuesPipe,
     DashForZeroPipe,
+    NewUfrComponent,
     OnlyDigitsDirective,
-    FyPipe
+    FyPipe,
+    MapAsListPipe
   ],
 
   imports: [
     AccordionModule.forRoot(),
+    AngularDualListBoxModule,
     BrowserModule,
     FormsModule,
     MatInputModule,

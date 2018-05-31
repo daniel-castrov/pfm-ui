@@ -32,7 +32,20 @@ export class UfrViewComponent implements OnInit {
       my.usvc.getUfrById(ufrid).subscribe(data => { 
         //console.log('ufr-view setting current');
         my.current = data.result;
+        //console.log(my.current);
       });
     });
-  }    
+  }
+
+  save() {
+    var my: UfrViewComponent = this;
+    if (my.current) {
+      console.log(my.current);
+      my.usvc.update(my.current).subscribe();
+    }
+  }
+
+  submit() {
+    console.log('submittal is not yet implemented');
+  }
 }

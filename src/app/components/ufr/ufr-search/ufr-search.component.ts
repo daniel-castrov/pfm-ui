@@ -10,7 +10,7 @@ import { UFR } from '../../../generated/model/uFR'
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
 import { CommunityService } from '../../../generated/api/community.service';
 import { UFRFilter } from '../../../generated/model/uFRFilter';
-import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB, ProgramsService, Tag } from '../../../generated';
+import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB, ProgramsService, Tag, Program } from '../../../generated';
 
 import { Cycle } from '../cycle';
 import { Disposition } from '../disposition.enum';
@@ -65,7 +65,8 @@ export class UfrSearchComponent implements OnInit {
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
         my.pomsvc.getByCommunityId(person.result.currentCommunityId),
         my.pbsvc.getById(person.result.currentCommunityId),
-        my.progsvc.getTagsByType("Functional Area")
+        my.progsvc.getTagsByType("Functional Area"),
+        my.progsvc.getAll()
       ]).subscribe(data => {
         my.community = data[0].result;
         my.orgs = data[1].result;
@@ -155,7 +156,7 @@ export class UfrSearchComponent implements OnInit {
     }
 
     //console.log(my.community.id);
-    console.log(searchfilter);
+    //console.log(searchfilter);
     this.usvc.search( my.community.id, searchfilter ).subscribe(
       (data) => {
         my.datasource.data = data.result;
@@ -170,9 +171,6 @@ export class UfrSearchComponent implements OnInit {
   }
 
   navigate(row) {
-    console.log('navigating!');
-    console.log(row);
-
     this.router.navigate(['/ufr-view', row.id]);
   }
 }
