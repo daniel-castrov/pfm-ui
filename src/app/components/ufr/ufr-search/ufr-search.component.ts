@@ -30,8 +30,6 @@ export class UfrSearchComponent implements OnInit {
   private useorg: boolean = false;
   private usefa: boolean = false;
   private usedates: boolean = false;
-  private useyoe: boolean = false;
-  private useactive: boolean = false;
   private usestatus: boolean = false;
   private usedisp: boolean = false;
   private usecycle: boolean = false;
@@ -128,9 +126,6 @@ export class UfrSearchComponent implements OnInit {
   search() {
     var my: UfrSearchComponent = this;
     var searchfilter: UFRFilter = {};
-    if (my.useactive) {
-      searchfilter.active = my.filter.active;
-    }
     if (my.usecycle) {
       searchfilter.cycle = my.filter.cycle.replace(/([0-9]+)/, "20$1");
     }
@@ -149,10 +144,6 @@ export class UfrSearchComponent implements OnInit {
     }
     if (my.usestatus) {
       searchfilter.status = my.filter.status;
-    }
-    if (my.useyoe) {
-      console.log(my.filter);
-      searchfilter.yoe = my.filter.yoe;
     }
 
     //console.log(my.community.id);

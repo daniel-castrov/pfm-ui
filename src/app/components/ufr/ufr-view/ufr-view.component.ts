@@ -19,6 +19,7 @@ import { Disposition } from '../disposition.enum';
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private current: UFR;
+  private qtyok: boolean=false;
 
   constructor(private usvc: UFRsService, private router: Router, private route: ActivatedRoute) {
   }
@@ -30,9 +31,8 @@ export class UfrViewComponent implements OnInit {
       console.log('ufrid: ' + ufrid);
 
       my.usvc.getUfrById(ufrid).subscribe(data => { 
-        //console.log('ufr-view setting current');
         my.current = data.result;
-        //console.log(my.current);
+        my.setQtyOk();
       });
     });
   }
@@ -41,8 +41,23 @@ export class UfrViewComponent implements OnInit {
     var my: UfrViewComponent = this;
     if (my.current) {
       console.log(my.current);
+      my.setQtyOk();
       my.usvc.update(my.current).subscribe();
     }
+  }
+
+  setQtyOk() {
+    var my: UfrViewComponent = this;
+    var ok: boolean = false;
+    my.current.fundingLines.forEach(fl => {
+      console.log(fl);
+      if ('PROC' === fl.appropriation) {
+        ok = true;
+      }
+    });
+
+    my.qtyok = ok;
+    console.log(my.qtyok);
   }
 
   submit() {
