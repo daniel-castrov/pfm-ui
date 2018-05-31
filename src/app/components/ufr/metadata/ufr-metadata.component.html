@@ -6,9 +6,14 @@
 
 <ng-template #value let-area="area">
   <select [(ngModel)]="current.tags[area]" name="{{area}}">
+    <ng-container *ngIf="current.tags[area]">
+      <!-- we have an area set, but check that we have a recognized value -->
+    <option *ngIf="!tagnames.has(area) || (tagnames.has(area) && !tagnames.get(area).has(current.tags[area]))"
+        [ngValue]="current.tags[area] ">{{current.tags[area]}} (Unknown value)</option>
+    </ng-container>
+
     <option *ngFor="let t of tagnames.get(area) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
   </select>
-
 
   <!--span class="program-values" *ngIf="current?.tags[area] && tagnames.has( area ); else novalue">
     <ng-container *ngIf="tagnames.get( area ).has( current.tags[area] )">
