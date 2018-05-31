@@ -42,7 +42,7 @@ export class UfrFundsComponent implements OnInit {
       my.pom = data.result;
       my.fy = my.pom.fy;
 
-      console.log('into ufr-funds init!');
+      console.log('into ufr-funds init!' + my.fy );
       
       // get the data from the UFR into our tabledata structure
       my.current.fundingLines.forEach(fund => { 

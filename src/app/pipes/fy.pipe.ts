@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FyPipe implements PipeTransform {
 
-  transform(value: number, args?: any): any {
+  transform(value: number, args?: string): any {
     if (args) {
       return args + (value - 2000);
     }
