@@ -123,7 +123,7 @@ const appRoutes: Routes = [
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
-  {path:'existing-program-request', component:ProgramRequestComponent},
+  {path:'existing-program-request/:prId', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
   {path:'home', component:HomeComponent},

@@ -342,6 +342,31 @@ paths:
         required: true
         type: "string"
   /pr/{id}:
+    get:
+      tags:
+      - "PR"
+      operationId: "getById"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"        
+    put:
+      tags:
+      - "PR"
+      operationId: "save"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "pr"
+        required: true
+        schema:
+          $ref: "#/definitions/ProgrammaticRequest"
     delete:
       tags:
       - "PR"
@@ -350,7 +375,22 @@ paths:
       - in: "path"
         name: "id"
         required: true
-        type: "string"        
+        type: "string"    
+  /pr:
+    post:
+      tags:
+      - "PR"
+      operationId: "create"
+      parameters:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProgrammaticRequest"      
   /pr/phase/{phaseId}/program/{shortname}:
     get:
       tags:
@@ -2235,7 +2275,9 @@ definitions:
       parentId:
         type: 'string'
       type:
-        type: 'object'
+        type: 'string'
+      phaseId:
+        type: 'string'
   FundingLine:
     type: "object"
     properties:
