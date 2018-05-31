@@ -64,7 +64,6 @@ export class ManageRolesComponent {
 
   // For the angular-dual-listbox
   availablePrograms: Array<Program> = [];
-  allcount=0;
   assignedPrograms: Array<any> = [];
   key: string = "id";
   display: string = "shortName";
@@ -72,9 +71,10 @@ export class ManageRolesComponent {
   filter = false;
   format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
   disabled = false;
-  userAdd = '';
-  sourceLeft = true;
-  tab = 1;
+  //userAdd = '';
+  //sourceLeft = true;
+  //tab = 1;
+  allcount=0;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,8 +87,7 @@ export class ManageRolesComponent {
   ) { 
 
     this.route.params.subscribe((params: Params) => {
-      console.log(  params.commid +" "+ params.roleid +" "+ params.userid);
-
+      //console.log(  params.commid +" "+ params.roleid +" "+ params.userid);
       this.paramCommunityId= params.commid;
       this.paramRoleId=params.roleid;
       this.paramUserId=params.userid;
@@ -134,9 +133,6 @@ export class ManageRolesComponent {
 
     var my: ManageRolesComponent = this;
 
-    console.log(this.selectedCommunity.id);
-    console.log(this.paramCommunityId);
-
     my.clear();
     my.selectedRole = null;
     my.selectedUser = null;
@@ -176,7 +172,7 @@ export class ManageRolesComponent {
 
     my.clear();
     my.selectedUserName = my.selectedUser.firstName + " " + my.selectedUser.middleInitial + " " + my.selectedUser.lastName;
-
+    
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
       my.programsService.getProgramsByCommunity(my.selectedCommunity.id)
