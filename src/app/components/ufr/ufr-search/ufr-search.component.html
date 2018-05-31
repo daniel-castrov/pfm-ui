@@ -22,7 +22,7 @@
                       <label class="form-check-label primary-label" for="defaultCheck1">Organization</label>
                     </div>
                   </td>
-                  <td>
+                  <td colspan="2">
                     <div class="form-group">
                       <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.orgId" name="org" [disabled]="!useorg"
                         (change)="search()">
@@ -30,20 +30,6 @@
                       </select>
                     </div>
                   </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" id="defaultCheck2" [(ngModel)]="useyoe" (change)="search()">
-                      <label class="form-check-label primary-label" for="defaultCheck2">YoE</label>
-                    </div>
-                    </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" id="defaultCheck3" [(ngModel)]="filter.yoe" (change)="search()"
-                      [disabled]="!useyoe">
-                      <label class="form-check-label primary-label"></label>
-                    </div>
-                  </td>
-                  <td></td>
                   <td>
                     <div class="form-check mb-4">
                       <input class="form-check-input" type="checkbox" id="defaultCheck5" [(ngModel)]="usestatus" (change)="search()">
@@ -65,27 +51,13 @@
                       <label class="form-check-label primary-label " for="defaultCheck2">Func. Area</label>
                     </div>
                   </td>
-                  <td>
+                  <td colspan="2">
                     <div class="form-group">
                       <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="filter.fa" name="area" [disabled]="!usefa" (change)="search()">
                         <option *ngFor="let a of fas" [ngValue]="a.abbr" title="{{a.name}}">{{a.abbr}}</option>
                       </select>
                     </div>
                   </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck4" [(ngModel)]="useactive" (change)="search()">
-                      <label class="form-check-label primary-label " for="defaultCheck4">Active</label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck4" [(ngModel)]="filter.active" (change)="search()"
-                        [disabled]="!useactive">
-                      <label class="form-check-label primary-label"></label>
-                    </div>
-                  </td>
-                  <td></td>
                   <td>
                     <div class="form-check mb-4">
                       <input class="form-check-input" type="checkbox" value="" id="defaultCheck6" [(ngModel)]="usedisp" (change)="search()">
@@ -107,7 +79,7 @@
                       <label class="form-check-label primary-label" for="defaultCheck3">Date Issued</label>
                     </div>
                   </td>
-                  <td colspan="3">
+                  <td colspan="2">
                     <span class="form-group inline-name">
                       <div class="mr-sm-2">
                         <label class="primary-label">From</label>
@@ -129,7 +101,6 @@
                       </div>
                     </span>
                   </td>
-                  <td></td>
                   <td>
                     <div class="form-check mb-4">
                       <input class="form-check-input" type="checkbox" value="" id="defaultCheck7" [(ngModel)]="usecycle" (change)="search()">

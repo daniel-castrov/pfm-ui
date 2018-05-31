@@ -9,10 +9,10 @@
         <div class="col-lg-6 col-md-12">
           <div class="h5 mb-2">
             <ng-container *ngIf="editsOk">
-              <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy|fy}}</span>
+              <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy| FY}}</span>
             </ng-container>
             <ng-container *ngIf="!editsOk">
-              <span class="h5 mr-sm-2 mb-2">POM Session for {{fy|fy}}</span>
+              <span class="h5 mr-sm-2 mb-2">POM Session for {{fy| FY}}</span>
             </ng-container>
           </div>
           <div id="toa1" class="table-editable">
@@ -22,12 +22,12 @@
               </tr>
               <tr class="table-bordered">
                 <th>Community</th>
-                <th>{{fy|fy}}</th>
-                <th>{{fy+1|fy}}</th>
-                <th>{{fy+2|fy}}</th>
-                <th>{{fy+3|fy}}</th>
-                <th>{{fy+4|fy}}</th>
-                <th>{{fy|fy}}-{{fy+4|fy}}</th>
+                <th>{{fy| FY}}</th>
+                <th>{{fy+1| FY}}</th>
+                <th>{{fy+2| FY}}</th>
+                <th>{{fy+3| FY}}</th>
+                <th>{{fy+4| FY}}</th>
+                <th>{{fy| FY}}-{{fy+4| FY}}</th>
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}}</td>
@@ -44,12 +44,12 @@
 
               <tr class="table-bordered">
                 <th>Organization</th>
-                <th>{{fy|fy}}</th>
-                <th>{{fy+1|fy}}</th>
-                <th>{{fy+2|fy}}</th>
-                <th>{{fy+3|fy}}</th>
-                <th>{{fy+4|fy}}</th>
-                <th>{{fy|fy}}-{{fy+4|fy}}</th>
+                <th>{{fy| FY}}</th>
+                <th>{{fy+1| FY}}</th>
+                <th>{{fy+2| FY}}</th>
+                <th>{{fy+3| FY}}</th>
+                <th>{{fy+4| FY}}</th>
+                <th>{{fy| FY}}-{{fy+4| FY}}</th>
               </tr>
 
               <tr *ngFor="let o of orgs" class="table-bordered">

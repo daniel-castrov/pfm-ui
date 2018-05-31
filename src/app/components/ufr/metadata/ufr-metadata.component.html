@@ -5,17 +5,22 @@
 </ng-template>
 
 <ng-template #value let-area="area">
-  <span class="program-values" *ngIf="current?.tags[area] && tagnames.has( area ); else novalue">
+  <select [(ngModel)]="current.tags[area]" name="{{area}}">
+    <option *ngFor="let t of tagnames.get(area) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
+  </select>
+
+
+  <!--span class="program-values" *ngIf="current?.tags[area] && tagnames.has( area ); else novalue">
     <ng-container *ngIf="tagnames.get( area ).has( current.tags[area] )">
       {{tagnames.get( area ).get( current.tags[area] )}}
     </ng-container>
     <ng-container *ngIf="!tagnames.get( area ).has( current.tags[area] )">
       {{current.tags[area]}} (Unknown value)
     </ng-container>
-  </span>
+  </span-->
 </ng-template>
 
-<form>
+<form *ngIf="current && tagnames">
   <div class="row">
     <div class="col-9">
       <div class="row">
@@ -24,13 +29,13 @@
             <div class="col-3">
               <div class="form-group inline-name">
                 <label>ProgID</label>
-                <span class="program-values">{{current?.shortName}}</span>
+                <input [(ngModel)]="current.shortName" class="program-values" name="program-id">
               </div>
             </div>
             <div class="col-3">
               <div class="form-group inline-name">
                 <label>ProgName</label>
-                <span class="program-values">{{current?.longName}}</span>
+                <input [(ngModel)]="current.longName" class="program-values" name="program-name">
               </div>
             </div>
           </div>
@@ -166,7 +171,7 @@
           </span>
           <span class="form-group inline-name">
             <label>DASD POM</label>
-            <span class="program-values" *ngIf="false; else novalue"></span>
+            <ng-container *ngTemplateOutlet="value;context:{area:'DASD CBD'}"></ng-container>
           </span>
         </div>
       </div>
@@ -174,6 +179,7 @@
         <div class="col-md-12">
           <span class="form-group inline-name">
             <label class="mb-1">Lead Component</label>
+            <ng-container *ngTemplateOutlet="value;context:{area:'Lead Component'}"></ng-container>
             <!--select class="form-control-sm dropdown-width mb-2">
               <option>items</option>
               <option>items</option>
@@ -182,20 +188,23 @@
           </span>
           <span class="form-group inline-name">
             <label class="mb-1">Manager</label>
+            <ng-container *ngTemplateOutlet="value;context:{area:'Manager'}"></ng-container>
             <!--select class="form-control-sm dropdown-width mb-2">
               <option>items</option>
               <option>items</option>
               <option>items</option>
             </select-->
           </span>
-          <span class="form-group inline-name">
+          <!--span class="form-group inline-name">
             <label class="mb-1">Branch</label>
-            <!--select class="form-control-sm dropdown-width mb-2">
-              <option>items</option>
-              <option>items</option>
-              <option>items</option>
-            </select-->
-          </span>
+            <select [(ngModel)]="current.branch" name="branch">
+              <option [ngValue]="USA">Army</option>
+              <option [ngValue]="USN">Navy</option>
+              <option [ngValue]="USAF">Air Force</option>
+              <option [ngValue]="USM">Marines</option>
+              <option [ngValue]="USCG">Coast Guard</option>
+            </select>
+          </span-->
         </div>
       </div>
   <!--<div class="row">

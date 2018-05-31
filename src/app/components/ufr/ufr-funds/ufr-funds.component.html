@@ -37,7 +37,7 @@
             <tr>
               <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
               <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
-              <td>POM{{pom.fy-2000}}</td>
+              <td>pom.fy-2000|FY:'POM'</td>
               <td class="text-right">{{row.modelfunds.get(fy-3) | dashForZero}}</td>
               <td class="text-right">{{row.modelfunds.get(fy-2) | dashForZero}}</td>
               <td class="text-right">{{row.modelfunds.get(fy-1) | dashForZero}}</td>
@@ -76,7 +76,7 @@
 
           <tr class="row-lt-gray font-weight-bold">
             <td class="text-center medium-grey-cell" colspan="2" rowspan="3">Total Funds Request</td>
-            <td>POM{{pom.fy-2000}}</td>
+            <td>{{pom.fy-2000|FY:'POM'}}</td>
             <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
               {{totals( fy+year, 'POM' ) | dashForZero}}
             </td>
@@ -154,11 +154,11 @@
             <table class="pr-funds-table">
               <thead>
                 <tr>
-                  <th>{{fy|fy}}</th>
-                  <th>{{fy+1|fy}}</th>
-                  <th>{{fy+2|fy}}</th>
-                  <th>{{fy+3|fy}}</th>
-                  <th>{{fy+4|fy}}</th>
+                  <th>{{fy| FY}}</th>
+                  <th>{{fy+1| FY}}</th>
+                  <th>{{fy+2| FY}}</th>
+                  <th>{{fy+3| FY}}</th>
+                  <th>{{fy+4| FY}}</th>
                 </tr>
               </thead>
               <tbody>
