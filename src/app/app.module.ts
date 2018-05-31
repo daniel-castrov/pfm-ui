@@ -3,6 +3,7 @@ import { PomComponent } from './components/programming/select-program-request/po
 // app.modules
 // ANGULAR IMPORTS
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { AngularDualListBoxModule } from 'angular-dual-listbox';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -138,6 +139,7 @@ const appRoutes: Routes = [
   {path:'request-access-change', component:RequestAccessChangeComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
+  {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
@@ -229,6 +231,7 @@ const appRoutes: Routes = [
 
   imports: [
     AccordionModule.forRoot(),
+    AngularDualListBoxModule,
     BrowserModule,
     FormsModule,
     MatInputModule,

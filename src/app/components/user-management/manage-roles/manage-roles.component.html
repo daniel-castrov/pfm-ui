@@ -1,64 +1,153 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content col-md-8" *ngIf="header.isAuthenticated">
-    <div class="card-header">
-      Create/Modify/Delete Role
-    </div>
-    <div class="card-container">
-      <div class="row">
-        <div class="col-md-5">
-          <h6>Current Roles</h6>
-          <div class="form-control window">
-            <ul>
-              <li>Item 1</li>
-              <li>Item 5</li>
-              <li>Item 2</li>
-              <li>Item 4</li>
-              <li>Item 3</li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-5">
-          <div class="control-box">
-          <div class="form-group">
-            <button class="btn btn-primary"><i class="fa fa-minus-circle icon-pad" aria-hidden="true"></i>Remove Selected Role</button>
-          </div>
-            <label><i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>Add New Role</label>
-            <div class="input-group">
-              <input type="text" class="form-control">
-              <span class="input-group-btn">
-               <button class="btn btn-primary" type="button"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-             </span>
-           </div>
-          </div>
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-md-10">
+      <div class="row mb-4">
+        <div class="col-md-12">
+          <span class="h5 mr-3">Manage Roles</span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-5">
-          <h6>Current Functions</h6>
-            <select name="from[]" id="multiselect1" class="form-control window" size="8" multiple="multiple">
-              <option value="1">Item 1</option>
-              <option value="2">Item 5</option>
-              <option value="2">Item 2</option>
-              <option value="2">Item 4</option>
-              <option value="3">Item 3</option>
+      <div class="row mb-4">
+
+        <!-- Get the selectedCommunity -->
+        <div class="col-lg-2 col-md-6 mb-2 role-controls">
+          <label>Select Community</label>
+          <span class="form-group">
+            <select name="communitySelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
+              <option value=""></option>
+              <option *ngFor="let comm of communities" [ngValue]="comm" [(selected)]="comm.id === paramCommunityId">
+                {{ comm.name }}
+              </option>
             </select>
+          </span>
         </div>
-        <div class="col-xs-2 arrows">
-          <button type="button" id="multiselect1_rightAll" class="btn btn-block"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-          <button type="button" id="multiselect1_rightSelected" class="btn btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-          <button type="button" id="multiselect1_leftSelected" class="btn btn-block"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-          <button type="button" id="multiselect1_leftAll" class="btn btn-block"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+
+        <!-- Get the selectedRole -->
+        <div class="col-lg-2 col-md-6 mb-2 role-controls">
+          <label>Select Role</label>
+          <span class="form-group">
+            <select name="roleSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedRole" (change)="clear()">
+              <option value=""></option>
+              <option *ngFor="let r of roles" [ngValue]="r">
+                {{ r.name }}
+              </option>
+            </select>
+          </span>
         </div>
-        <div class="col-md-5">
-          <h6>Available Functions</h6>
-          <select name="to[]" id="multiselect1_to" class="form-control window" size="8" multiple="multiple"></select>
+
+        <!-- Get the selectedUser -->
+        <div class="col-lg-2 col-md-6 role-controls">
+          <label>Select User</label>
+          <span class="form-group">
+            <select name="userSelector" class="form-control-sm dropdown-width"
+             [(ngModel)]="selectedUser" (change)="clear()">
+              <option value=""></option>
+              <option *ngFor="let u of users" [ngValue]="u">
+                {{ u.firstName }} {{ u.middleInitial }} {{ u.lastName }}
+              </option>
+            </select>
+          </span>
         </div>
+
+        <!-- Get the selectedUserRoleResource -->
+        <div class="col-lg-2 col-md-6">
+          <div class="controls mt-4">
+            <button class="btn btn-primary" [disabled]="!okNext()" (click)="getURR()">Next</button>
+          </div>
+        </div>
+
       </div>
-      <div class="controls">
-        <button class="btn btn-default">Cancel</button>
-        <button class="btn btn-primary">Submit</button>
+
+      <div *ngIf="isURRVisible">
+
+        <!-- Message -->
+        <p class="role-controls" *ngIf="isNewUserRole"> 
+          Assign a new role of
+          <b>{{selectedRole.name}}</b> to
+          <b>{{selectedUserName}}</b>.
+        </p>
+        <p class="role-controls" *ngIf="isNewUserRole===false">
+          The
+          <b>{{selectedRole.name}}</b> role has already been assiged to
+          <b>{{selectedUserName}}</b>.
+        </p>
+        <p class="role-controls" *ngIf="isURRModifyable===false">
+          Resource access for the
+          <b>{{selectedRole.name}}</b> role is predeifined and cannot be modified.
+        </p>
+        <!--p class="role-controls" *ngIf="isURRModifyable">
+          Resource access for the <b>{{selectedRole.name}}</b> role can be modified.
+        </p-->
+
+        <!-- Delete existing -->
+        <div *ngIf="isNewUserRole===false">
+          <fieldset>
+            <legend>Unassign a User/Role</legend>
+            <p class="role-controls">
+              Take the
+              <b>{{selectedRole.name}}</b> role away from
+              <b>{{selectedUserName}}</b>.
+            </p>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="commitUnassign()">
+                <span>Unassign</span>
+              </button>
+            </div>
+          </fieldset>
+        </div>
+
+        <ng-container *ngIf="isURRModifyable; then Modifyable; else NotModifyable">
+        </ng-container>
+
+        <!-- Some UserRoleResources can be modified -->
+        <ng-template #Modifyable>
+          <fieldset>
+            <legend>
+              <span *ngIf="isNewUserRole===true">Assign</span>
+              <span *ngIf="isNewUserRole===false">Modify</span>
+              access to one or more Programs for this User/Role</legend>
+            <div style="max-width:800px;">
+              <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
+                [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
+              </dual-list>
+            </div>
+            <br/>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="commit()">
+                <span *ngIf="isNewUserRole===true">Assign</span>
+                <span *ngIf="isNewUserRole===false">Modify</span>
+              </button>
+            </div>
+
+          </fieldset>
+        </ng-template>
+
+        <!-- Some UserRoleResources CANNOT be modified -->
+        <ng-template #NotModifyable>
+          <fieldset *ngIf="isNewUserRole===true">
+            <legend>Assign a User/Role.</legend>
+            <p class="role-controls">Assign the
+              <b>{{selectedRole.name}}</b> role to
+              <b>{{selectedUserName}}</b>
+            </p>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="commit()">
+                <span>Assign</span>
+              </button>
+            </div>
+          </fieldset>
+        </ng-template>
+
       </div>
+
+      <span [hidden]="!submitted" class="clearfix">
+        <div class="alert-success-group message">
+          <div class="alert-success alert-dismissable">
+            <strong>{{submittedMessage}}</strong>
+          </div>
+        </div>
+      </span>
+
     </div>
   </div>
 </div>

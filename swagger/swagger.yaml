@@ -1245,6 +1245,32 @@ paths:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
+    put:
+      tags:
+      - "UserRoleResource"
+      summary: "Updates a UserRoleResource"
+      description: "Updates a UserRoleResource"
+      operationId: "update"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a UserRoleResource"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRoleResource"
+      responses:
+        201:
+          description: "UserRoleResource successfully updated."
+        400:
+          description: "UserRoleResource couldn't be updated."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
   /userRoles/{userRoleResourceId}:
     delete:
       tags:
@@ -1295,7 +1321,7 @@ paths:
     get:
       tags:
       - "UserRoleResource"
-      operationId: "getUserRolesbyUserAndCommunityAndRoleName"
+      operationId: "getUserRoleByUserAndCommunityAndRoleName"
       parameters:
       - name: "userId"
         in: "path"
@@ -1354,6 +1380,29 @@ paths:
       operationId: "getAll"
       summary: "Get all programs"
       description: "Returns all programs"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/community/{communityId}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getProgramsByCommunity"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get all programs for a community"
+      description: "Returns a collection of programs"
       produces:
       - "application/json"
       responses:
