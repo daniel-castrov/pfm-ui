@@ -37,12 +37,12 @@ export class UfrFundsComponent implements OnInit {
   
   ngOnInit() {
     var my: UfrFundsComponent = this;
-    
+
     this.pomsvc.getById(my.current.pomId).subscribe(data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
 
-      console.log('into ufr-funds init!');
+      console.log('into ufr-funds init!' + my.fy );
       
       // get the data from the UFR into our tabledata structure
       my.current.fundingLines.forEach(fund => { 
@@ -168,24 +168,20 @@ export class UfrFundsComponent implements OnInit {
 
   onedit(newval, appr, blin, year) {
     var my: UfrFundsComponent = this;
-    console.log('editing ' + appr + '/' + blin + ' in ' + year + ' with val: ' + newval); 
-
-    var thisyear = Number.parseInt(year);
-    var thisvalue = Number.parseInt(newval);
+    var thisyear:number = Number.parseInt(year);
+    
+    var thisvalue = Number.parseInt(newval.replace(/[^0-9]/g, ''));
     if (''===newval || Number.isNaN(thisvalue)) {
       thisvalue = 0;
     }
 
     var thisrow = this.rows.get(appr + blin);
 
-    if (!thisrow.totalfunds.has(year)) {
-      thisrow.totalfunds.set(year, 0);
-    }
-
-    var oldvalue = (thisrow.ufrfunds.has(year) ? thisrow.ufrfunds.get(year) : 0);
-    thisrow.totalfunds.set(year, thisrow.totalfunds.get(year) - oldvalue);
-    this.rows.get(appr + blin).ufrfunds.set(year, thisvalue);
-    thisrow.totalfunds.set(year, thisrow.totalfunds.get(year) + thisvalue);
+    var oldvalue: number = (thisrow.ufrfunds.has(year) ? thisrow.ufrfunds.get(year) : 0);
+    var oldtotal: number = (thisrow.totalfunds.has(year) ? thisrow.totalfunds.get(year) : 0);
+    var newamt = oldtotal - oldvalue + thisvalue;
+    thisrow.ufrfunds.set(year, thisvalue);
+    thisrow.totalfunds.set(year, newamt);
 
     // finally, we need to update our actual funding lines...
     // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR

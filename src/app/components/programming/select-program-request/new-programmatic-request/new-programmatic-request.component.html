@@ -7,15 +7,15 @@
             <div class="col-md-5">
               <div class="radio-buttons mb-3">
                 <div class="radio-item">
-                  <input type="radio" id="ritema" name="ritem" value="ropt1">
+                  <input type="radio" id="ritema" name="ritem" [(ngModel)]="radio" value="ExistingProgram">
                   <label for="ritema">An Existing Program of Record</label>
                 </div>
                 <div class="radio-item">
-                  <input type="radio" id="ritemb" name="ritem" value="ropt2">
+                  <input type="radio" id="ritemb" name="ritem" [(ngModel)]="radio" value="NewSubprogram">
                   <label for="ritemb">A New Subprogram</label>
                 </div>
                 <div class="radio-item">
-                  <input type="radio" id="ritemc" name="ritem" value="ropt3">
+                  <input type="radio" id="ritemc" name="ritem" [(ngModel)]="radio" value="NewProgram">
                   <label for="ritemc">A New Program</label>
                 </div>
               </div>
@@ -39,7 +39,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <button class="btn btn-primary btn pull-right" href="#" routerLink="/existing-program-request">
+              <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='ExistingProgram'">
                 <span class="icon-pad">Next</span>
                 <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
               </button>

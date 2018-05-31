@@ -52,4 +52,5 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.prService.remove(this.idToDelete).toPromise();
     this.deleted.emit();
   }
+  
 }
