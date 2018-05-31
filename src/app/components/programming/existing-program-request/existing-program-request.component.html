@@ -7,6 +7,7 @@
           <div class="h5 mb-4">Programmatic Request for Program:</div>
             <span class="form-group">
               <label class="badge badge-light mr-sm-4"><h6>Program ID</h6></label>
+              <input type="text" [(ngModel)]="pr.shortName" placeholder="short name" aria-label="short name">
             </span>
             <span class="form-group">
               <label class="badge badge-light mr-sm-4"><h6>Program Name Selected</h6></label>
@@ -42,7 +43,7 @@
               <button class="btn btn-primary">Validate</button>
             </span>
             <span>
-              <button class="btn btn-secondary">Save</button>
+              <button class="btn btn-secondary" (click)="save()">Save</button>
             </span>
             <span>
               <button class="btn btn-success">Submit</button>
