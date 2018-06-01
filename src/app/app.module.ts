@@ -70,6 +70,7 @@ import { VariantsComponent } from './components/programs/program-view/variants.c
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
+import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service'; 
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { BulkTabComponent } from './components/programming/update-pom-session/bulk-tab/bulk-tab.component';
@@ -248,6 +249,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule
   ],
   providers: [
+    AssignRoleRequestService,
     BlankService,
     CommunityService,
     CreateUserRequestService,

@@ -7,8 +7,8 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 // Generated
-import { Community, Program, User, Role, UserRoleResource } from '../../../generated';
-import { MyDetailsService, RoleService, UserRoleResourceService, ProgramsService } from '../../../generated';
+import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest } from '../../../generated';
+import { MyDetailsService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService } from '../../../generated';
 
 
 @Component({
@@ -29,6 +29,8 @@ export class MyRolesComponent implements OnInit {
   pogramsMap:any[]=[];
   selectedURR:UserRoleResource;
 
+  assignRequests:AssignRoleRequest[]=[];
+
   submitted: boolean = false;
   isURRModifyable: boolean;
   isNewUserRole: boolean;
@@ -38,7 +40,7 @@ export class MyRolesComponent implements OnInit {
 
   // For the angular-dual-listbox
   availablePrograms: Array<Program> = [];
-  assignedPrograms: Array<any> = [];
+  assignedPrograms: Array<Program> = [];
   key: string = "id";
   display: string = "shortName";
   keepSorted = true;
@@ -57,7 +59,8 @@ export class MyRolesComponent implements OnInit {
     private myDetailsService:MyDetailsService,  
     private roleService: RoleService,
     private userRoleResourceService: UserRoleResourceService,
-    private programsService: ProgramsService
+    private programsService: ProgramsService,
+    private assignRoleRequestService: AssignRoleRequestService
   ) { }
 
 
@@ -76,7 +79,8 @@ export class MyRolesComponent implements OnInit {
       Observable.forkJoin([
         my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId),
         my.roleService.getByUserIdAndCommunityId(my.currentUser.id, my.currentUser.currentCommunityId),
-        my.roleService.getByCommunityId(my.currentUser.currentCommunityId)
+        my.roleService.getByCommunityId(my.currentUser.currentCommunityId),
+        my.assignRoleRequestService.getByUser(my.currentUser.id)
       ]).subscribe(r => {
 
         // Get all the programs and put thenm in a map
@@ -110,6 +114,11 @@ export class MyRolesComponent implements OnInit {
         my.resultError.push(r[2].error);
         my.allRoles=r[2].result;
 
+        // get any existing requests
+        my.resultError.push(r[3].error);
+        my.assignRequests=r[3].result;
+        my.adjustAllRoles();
+
       });
     });
   }
@@ -117,6 +126,9 @@ export class MyRolesComponent implements OnInit {
   private getURR():void {
 
     var my: MyRolesComponent = this;
+
+
+    if (null==my.selectedRole.name) return;
 
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedRole.name),
@@ -176,11 +188,28 @@ export class MyRolesComponent implements OnInit {
     console.log("nothing");
   }
 
-  private createRequest(): void{
+  private async createRequest() {
     console.log("createRequest");
     var my: MyRolesComponent = this;
-    let message:string = "Your request has been submitted. Your will recieve an email once your request is processed.";
-    my.feedback.success(message);
+
+    
+    let assignedProgs:string[] = [];
+    my.assignedPrograms.forEach((x)=>{ assignedProgs.push(x.id) } );
+
+    let request:AssignRoleRequest=new Object();
+    request.userId = this.currentUser.id;
+    request.communityId = this.currentUser.currentCommunityId;
+    request.roleName = this.selectedRole.name;
+    request.resourceIds=assignedProgs;
+
+    try {
+      await this.assignRoleRequestService.create(request).toPromise();
+      this.feedback.success("Your request has been submitted. Your will recieve an email once your request is processed.");
+      this.updateRequestedRoles(request);
+      this.header.refreshActions();
+    } catch(e) {
+      this.feedback.failure(e.message);
+    }
   }
 
   private dropRole():void{
@@ -189,6 +218,28 @@ export class MyRolesComponent implements OnInit {
     let message:string = "Your request has been submitted. Your will recieve an email once your request is processed.";
     my.feedback.success(message); 
   }
+
+  private  updateRequestedRoles(request:AssignRoleRequest){
+    var my: MyRolesComponent = this;
+    my.assignRequests.push(request);
+    my.adjustAllRoles();  
+    my.selectedRole=null;  
+  }
+
+  private adjustAllRoles(){
+    var my: MyRolesComponent = this;
+    let pr:string[]=[];
+    my.assignRequests.forEach( x => pr.push(x.roleName) );
+
+    let allr:Role[]=[];
+    my.allRoles.forEach( r => {
+      if ( !pr.includes( r.name ) ){
+        allr.push(r);
+      }
+    });
+    my.allRoles = allr;
+  }
+
 
 }
 

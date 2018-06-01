@@ -34,7 +34,7 @@
             </select>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="selectedRole">
           <div class="col-lg-8 col-sm-12">
             <ng-container *ngIf="isURRModifyable; then Modifyable; else NotModifyable"></ng-container>
             <ng-template #Modifyable>
@@ -45,8 +45,8 @@
               </div>
             </ng-template>
             <ng-template #NotModifyable>
-              <div *ngIf="selectedRole">
-                Resource access for the <b>{{selectedRole.name}}</b> role can be modified. <br/>
+              <div>
+                Resource access for the <b>{{selectedRole.name}}</b> role cannot be modified. <br/>
                 To request this role simply click "Create Request".
               </div>
             </ng-template>
@@ -57,12 +57,16 @@
             </div>
             <div class="my-role-label">Pending Requests</div>
             <select size="3" class="form-control-sm pending-role">
-              <option class="my-role-message">There are no requests</option>
-              <option value="">none</option>
+              <option class="community-list-message" *ngIf="!assignRequests?.length">There are no requests</option>
+              <option *ngFor="let req of assignRequests"
+                      [disabled]="true">
+                {{req.roleName}}
+              </option>
             </select>
           </div>
         </div>
       </fieldset>
+<!--
       <fieldset>
         <legend>Request to Remove a Role</legend>
         <div class="row">
@@ -75,7 +79,6 @@
               </option>
             </select>
           </div>
-         
           <div class="col-lg-4 col-sm-12">
             <div class="col-lg-3 col-sm-4">
               <button class="btn btn-primary mt-3" (click)="dropRole()">Create Request</button>
@@ -88,6 +91,7 @@
           </div>
         </div>
       </fieldset>
+-->
     </div>
   </div>
 </div>
