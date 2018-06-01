@@ -2220,10 +2220,6 @@ definitions:
           $ref: "#/definitions/FundingLine"
       fy:
         type: "integer"
-      variants:
-        type: "array"
-        items:
-          $ref: "#/definitions/Variant"
       emphases:
         type: "array"
         items:
@@ -2296,7 +2292,9 @@ definitions:
       fy:
         type: 'number'
       variants:
-        type: 'object'
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
   PB:
     type: "object"
     properties:
