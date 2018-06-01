@@ -7,14 +7,7 @@
         <legend>My Roles</legend>
         <table class="my-roles-list">
           <thead>
-            <tr>
-              <th>
-                Roles
-              </th> 
-              <th>
-                Programs
-              </th>
-            </tr>
+            <tr><th>Roles</th><th>Programs</th></tr>
           </thead>
           <tbody>
             <tr *ngFor="let roleWres of currentRolesWithResources">
@@ -32,8 +25,8 @@
         <div class="row">
           <div class="col-lg-12 col-sm-12 mb-3">
             <label class="mb-1 mr-2">Roles</label>
-
-            <select name="roleSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedRole" (change)="getURR()">
+            <select name="roleSelector" class="form-control-sm dropdown-width"
+             [(ngModel)]="selectedRole" (change)="getURR()">
               <option value=""></option>
               <option *ngFor="let r of allRoles" [ngValue]="r">
                 {{ r.name }}
@@ -42,13 +35,26 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-6 col-sm-12">
-            <!-- add widget for resources here -->
-          </div>
-          <div class="col-lg-2 col-sm-12">
-            <button class="btn btn-primary mt-3" (click)="createRequest()">Create Request</button>
+          <div class="col-lg-8 col-sm-12">
+            <ng-container *ngIf="isURRModifyable; then Modifyable; else NotModifyable"></ng-container>
+            <ng-template #Modifyable>
+              <div>
+                <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
+                  [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
+                </dual-list>
+              </div>
+            </ng-template>
+            <ng-template #NotModifyable>
+              <div *ngIf="selectedRole">
+                Resource access for the <b>{{selectedRole.name}}</b> role can be modified. <br/>
+                To request this role simply click "Create Request".
+              </div>
+            </ng-template>
           </div>
           <div class="col-lg-4 col-sm-12">
+              <div class="col-lg-3 col-sm-4">
+              <button class="btn btn-primary mt-3" (click)="createRequest()">Create Request</button>
+            </div>
             <div class="my-role-label">Pending Requests</div>
             <select size="3" class="form-control-sm pending-role">
               <option class="my-role-message">There are no requests</option>
@@ -60,7 +66,7 @@
       <fieldset>
         <legend>Request to Remove a Role</legend>
         <div class="row">
-          <div class="col-lg-3 col-sm-12">
+          <div class="col-lg-8 col-sm-12">
             <label class="mb-1 mr-2 mb-3">Roles</label>
             <select name="dropRoleSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedDropRole" (change)="nothing()">
               <option value=""></option>
@@ -69,10 +75,11 @@
               </option>
             </select>
           </div>
-          <div class="col-lg-3 col-sm-4">
-            <button class="btn btn-primary mt-1 mb-2" (click)="dropRole()">Create Request</button>
-          </div>
+         
           <div class="col-lg-4 col-sm-12">
+            <div class="col-lg-3 col-sm-4">
+              <button class="btn btn-primary mt-3" (click)="dropRole()">Create Request</button>
+            </div>
             <div class="my-role-label">Pending Requests</div>
             <select size="3" class="form-control-sm pending-role">
               <option class="my-role-message">There are no requests</option>

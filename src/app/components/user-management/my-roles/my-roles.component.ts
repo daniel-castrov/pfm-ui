@@ -1,20 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AngularDualListBoxModule, DualListComponent} from 'angular-dual-listbox';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 // Generated
-import { Community } from '../../../generated';
-import { User } from '../../../generated';
-import { MyDetailsService } from '../../../generated/api/myDetails.service';
-import { Role } from '../../../generated/model/role';
-import { RoleService } from '../../../generated/api/role.service';
-import { UserRoleResource } from '../../../generated/model/userRoleResource'
-import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
-import { Program } from '../../../generated/model/program';
-import { ProgramsService } from '../../../generated/api/programs.service';
+import { Community, Program, User, Role, UserRoleResource } from '../../../generated';
+import { MyDetailsService, RoleService, UserRoleResourceService, ProgramsService } from '../../../generated';
 
 
 @Component({
@@ -33,9 +27,31 @@ export class MyRolesComponent implements OnInit {
   allRoles:Role[] = [];
   selectedRole:Role;
   pogramsMap:any[]=[];
+  selectedURR:UserRoleResource;
+
+  submitted: boolean = false;
+  isURRModifyable: boolean;
+  isNewUserRole: boolean;
+  isURRVisible: boolean = false;
+
+  unmodifiableRoles = ["User_Approver", "POM_Manager"];
+
+  // For the angular-dual-listbox
+  availablePrograms: Array<Program> = [];
+  assignedPrograms: Array<any> = [];
+  key: string = "id";
+  display: string = "shortName";
+  keepSorted = true;
+  filter = false;
+  format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
+  disabled = false;
+  //userAdd = '';
+  //sourceLeft = true;
+  //tab = 1;
+  allcount=0;
+
 
   currentRolesWithResources:RoleNameWithResources[] = [];
-
 
   constructor(
     private myDetailsService:MyDetailsService,  
@@ -99,7 +115,61 @@ export class MyRolesComponent implements OnInit {
   }
 
   private getURR():void {
-    console.log("getURR");
+
+    var my: MyRolesComponent = this;
+
+    Observable.forkJoin([
+      my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedRole.name),
+      my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId)
+    ]).subscribe(data => {
+
+      my.resultError.push(data[0].error);
+      let urr: UserRoleResource = data[0].result;
+
+      my.resultError.push(data[1].error);
+      my.availablePrograms = data[1].result;
+      my.allcount=my.availablePrograms.length;
+
+      my.isURRModifyable = true;
+      my.isNewUserRole = true;
+
+      if (my.unmodifiableRoles.includes(my.selectedRole.name)) {
+        my.isURRModifyable = false;
+      }
+      if (urr) {
+        my.isNewUserRole = false;
+        my.selectedURR = urr;
+      } else {
+        my.selectedURR = new Object();
+        my.selectedURR.userId = my.currentUser.id;
+        my.selectedURR.roleId = my.selectedRole.id;
+        my.selectedURR.resourceIds = [];
+      }
+
+      if (my.selectedURR.resourceIds.includes("x") || my.selectedURR.resourceIds.length==0) {
+        // none are granted
+        my.assignedPrograms = []; 
+      } else if (my.selectedURR.resourceIds.includes("*")) {
+        // all are granted - deep copy array
+        my.availablePrograms.forEach(function (program) {
+          my.assignedPrograms.push(program);
+        });
+      } else {
+        // some are granted
+        let newAvail:Program[]=[];
+        my.selectedURR.resourceIds.forEach(function ( progId ) {
+          my.availablePrograms.forEach(function (prog) {
+            if ( prog.id == progId ){
+              my.assignedPrograms.push(prog);
+            } else {
+              newAvail.push(prog);
+            }
+          });
+        });
+        my.availablePrograms=newAvail;
+      }
+
+    });
   }
 
   private nothing():void{
