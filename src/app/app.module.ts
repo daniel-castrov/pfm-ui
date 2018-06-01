@@ -33,12 +33,12 @@ import { CurrentComponent } from './components/user-management/my-communities/cu
 import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
-import { FundsTabComponent } from './components/programming/existing-program-request/funds-tab/funds-tab.component';
+import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 import { HomeComponent } from './components/home/home.component';
-import { JustificationTabComponent } from './components/programming/existing-program-request/justification-tab/justification-tab.component';
+import { JustificationTabComponent } from './components/programming/program-request/justification-tab/justification-tab.component';
 import { LoginComponent } from './components/login/login.component';
 import { ManageCommunitiesComponent } from './components/user-management/manage-communities/manage-communities.component';
 import { MamageCommunityDetailsComponent } from './components/user-management/manage-communities/manage-community-details.component';
@@ -51,22 +51,23 @@ import { NoAccessInterceptor } from './components/interceptors/noAccessIntercept
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { PlanningComponent } from './components/planning/planning.component';
-import { ProcQtyTabComponent } from './components/programming/existing-program-request/proc-qty-tab/proc-qty-tab.component';
+import { ProcQtyTabComponent } from './components/programming/program-request/proc-qty-tab/proc-qty-tab.component';
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
-import { ProgramRequestComponent } from './components/programming/existing-program-request/existing-program-request.component';
+import { ProgramRequestComponent } from './components/programming/program-request/main/main.component';
 import { ProgramSearchComponent } from './components/programs/program-search/program-search.component';
-import { ProgramTabComponent } from './components/programming/existing-program-request/program-tab/program-tab.component';
+import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestAccessChangeComponent } from './components/user-management/manage-self/request-access-change.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
-import { SummaryTabComponent } from './components/programming/existing-program-request/summary-tab/summary-tab.component';
+import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
+import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
 import { BASE_PATH } from './generated/variables';
@@ -109,6 +110,7 @@ import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
+import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode/page-mode.service';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -123,7 +125,7 @@ const appRoutes: Routes = [
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
-  {path:'existing-program-request/:prId', component:ProgramRequestComponent},
+  {path:'program-request', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
   {path:'home', component:HomeComponent},
@@ -149,6 +151,7 @@ const appRoutes: Routes = [
   { path: 'create-new-pom', component: CreatePomSessionComponent },
   { path: 'ufr-search', component: UfrSearchComponent },
   { path: 'ufr-view/:id', component: UfrViewComponent },
+  { path: 'worksheet-management', component: WorksheetManagementComponent }
 
 ];
 
@@ -222,6 +225,7 @@ const appRoutes: Routes = [
     UfrJustificationComponent,
     UpdatePomSessionComponent,
     ValuesPipe,
+    WorksheetManagementComponent,
     DashForZeroPipe,
     NewUfrComponent,
     OnlyDigitsDirective,
@@ -255,6 +259,7 @@ const appRoutes: Routes = [
     LeaveCommunityRequestService,
     MyDetailsService,
     OrganizationService,
+    ProgramRequestPageModeService,
     RoleService,
     StrangerService,
     UserRoleResourceService,

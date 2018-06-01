@@ -1,0 +1,97 @@
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-10">
+      <div class="row">
+        <div class="col-6" id="update-pom-session">
+          <div class="h5 mb-4">Worksheet Managment POM 2019</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-9">
+          <mat-table [dataSource]="datasource" matSort matSortActive="worksheetname" matSortDirection="asc">
+            <ng-container matColumnDef="checkbox">
+              <mat-header-cell class="checkbox" *matHeaderCellDef mat-sort-header> </mat-header-cell>
+              <mat-cell></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="worksheetname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Worksheet Name</mat-header-cell>
+              <mat-cell></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="version">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Version</mat-header-cell>
+              <mat-cell></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="created">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
+              <mat-cell></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="lastupdated">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</mat-header-cell>
+              <mat-cell></mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="['checkbox', 'worksheetname', 'version', 'created', 'lastupdated']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['checkbox', 'worksheetname', 'version', 'created', 'lastupdated']"
+             (click)="navigate( row )"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSize]="10"></mat-paginator>
+         </div>
+        <div class="col-3">
+          <div class="pull-right">
+            <ul class="worksheet-controls">
+              <li><button class="btn btn-danger">Delete</button></li>
+              <li><button class="btn btn-secondary">Duplicate</button></li>
+              <li><button class="btn btn-success">Export</button></li>
+              <li><button class="btn btn-primary">Import</button></li>
+              <li><button class="btn btn-secondary">Rename</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <fieldset>
+            <legend>Progress Report</legend>
+            <p>Baseline 2 has been created...</p>
+          </fieldset>
+          <fieldset>
+            <legend>Enter Name of Export File</legend>
+            <div class="form-group forminput-width">
+              <input type="text" class="form-control inputfile">
+            </div>
+            <button class="btn btn-primary pull-right">
+              <span class="icon-pad">Next</span>
+              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+            </button>
+          </fieldset>
+          <fieldset>
+            <legend>Select Location for Import File and name</legend>
+            <div class="input-group forminput-width mb-3">
+              <input type="text" class="form-control" placeholder="Enter File Location" aria-label="Enter File Location" aria-describedby="basic-addon1">
+              <div class="input-group-append">
+                <span class="input-group-text">Browse</span>
+              </div>
+            </div>
+            <div class="form-group forminput-width">
+              <input type="text" placeholder="Enter Name" class="form-control inputfile">
+            </div>
+            <button class="btn btn-primary pull-right">
+              <span class="icon-pad">Next</span>
+              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+            </button>
+          </fieldset>
+          <fieldset>
+            <legend>Specify Desired Name</legend>
+            <div class="form-group forminput-width">
+              <input type="text" placeholder="Enter Name" class="form-control inputfile">
+            </div>
+            <button class="btn btn-primary pull-right">
+              <span class="icon-pad">Next</span>
+              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+            </button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
