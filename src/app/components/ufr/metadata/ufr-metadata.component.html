@@ -5,7 +5,7 @@
 </ng-template>
 
 <ng-template #value let-area="area">
-  <select [(ngModel)]="current.tags[area]" name="{{area}}">
+  <select [(ngModel)]="current.tags[area]" < name="{{area}}">
     <ng-container *ngIf="current.tags[area]">
       <!-- we have an area set, but check that we have a recognized value -->
     <option *ngIf="!tagnames.has(area) || (tagnames.has(area) && !tagnames.get(area).has(current.tags[area]))"
@@ -32,15 +32,15 @@
         <div class="col-md-12">
           <div class="row">
             <div class="col-3">
-              <div class="form-group inline-name">
+              <div class="form-group inline-name mr-2">
                 <label>ProgID</label>
-                <input [(ngModel)]="current.shortName" class="program-values" name="program-id">
+                <input [(ngModel)]="current.shortName" class="program-values forminput" name="program-id">
               </div>
             </div>
             <div class="col-3">
               <div class="form-group inline-name">
                 <label>ProgName</label>
-                <input [(ngModel)]="current.longName" class="program-values" name="program-name">
+                <input [(ngModel)]="current.longName" class="program-values forminput" name="program-name">
               </div>
             </div>
           </div>
