@@ -13,7 +13,8 @@
         <div class="col-lg-2 col-md-6 mb-2 role-controls">
           <label>Select Community</label>
           <span class="form-group">
-            <select name="communitySelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
+            <select name="communitySelector" class="form-control-sm dropdown-width" 
+              [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
               <option value=""></option>
               <option *ngFor="let comm of communities" [ngValue]="comm" [(selected)]="comm.id === paramCommunityId">
                 {{ comm.name }}
@@ -26,7 +27,8 @@
         <div class="col-lg-2 col-md-6 mb-2 role-controls">
           <label>Select Role</label>
           <span class="form-group">
-            <select name="roleSelector" class="form-control-sm dropdown-width" required [(ngModel)]="selectedRole" (change)="clear()">
+            <select name="roleSelector" class="form-control-sm dropdown-width" 
+              [(ngModel)]="selectedRole" (change)="clear()">
               <option value=""></option>
               <option *ngFor="let r of roles" [ngValue]="r">
                 {{ r.name }}
@@ -40,7 +42,7 @@
           <label>Select User</label>
           <span class="form-group">
             <select name="userSelector" class="form-control-sm dropdown-width"
-             [(ngModel)]="selectedUser" (change)="clear()">
+              [(ngModel)]="selectedUser" (change)="clear()">
               <option value=""></option>
               <option *ngFor="let u of users" [ngValue]="u">
                 {{ u.firstName }} {{ u.middleInitial }} {{ u.lastName }}
@@ -118,7 +120,6 @@
                 <span *ngIf="isNewUserRole===false">Modify</span>
               </button>
             </div>
-
           </fieldset>
         </ng-template>
 
@@ -139,15 +140,9 @@
         </ng-template>
 
       </div>
-
-      <span [hidden]="!submitted" class="clearfix">
-        <div class="alert-success-group message">
-          <div class="alert-success alert-dismissable">
-            <strong>{{submittedMessage}}</strong>
-          </div>
-        </div>
-      </span>
-
+      <div class="message">
+        <j-feedback></j-feedback>
+      </div>
     </div>
   </div>
 </div>
