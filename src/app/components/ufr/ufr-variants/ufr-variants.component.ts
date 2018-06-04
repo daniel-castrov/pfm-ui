@@ -7,7 +7,7 @@ import { Program, FundingLine, IntMap, UFR, POMService, Pom, Variant, ProgramsSe
   styleUrls: ['./ufr-variants.component.scss']
 })
 export class UfrVariantsComponent implements OnInit {
-  @Input() current: UFR;
+  @Input() current: UFR | ProgrammaticRequest;
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private model: ProgrammaticRequest;
@@ -23,7 +23,7 @@ export class UfrVariantsComponent implements OnInit {
     var my: UfrVariantsComponent = this;
     
     my.blinsleft.clear();
-    this.pomsvc.getById(this.current.pomId).subscribe(data => {
+    this.pomsvc.getById(this.current.phaseId).subscribe(data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
 

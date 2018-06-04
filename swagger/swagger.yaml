@@ -2263,7 +2263,7 @@ definitions:
         type: "string"
       parentId:
         type: "string"
-      pomId:
+      phaseId:
         type: "string"
       originatingProgramId:
         type: "string"

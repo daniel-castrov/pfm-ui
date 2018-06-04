@@ -13,7 +13,7 @@ import {
   styleUrls: ['./ufr-funds.component.scss']
 })
 export class UfrFundsComponent implements OnInit {
-  @Input() current: UFR;
+  @Input() current: UFR | ProgrammaticRequest;
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private uvals: Map<number, number> = new Map<number, number>();
@@ -39,7 +39,7 @@ export class UfrFundsComponent implements OnInit {
   ngOnInit() {
     var my: UfrFundsComponent = this;
 
-    this.pomsvc.getById(my.current.pomId).subscribe(data => {
+    this.pomsvc.getById(my.current.phaseId).subscribe(data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
 
