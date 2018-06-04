@@ -34,10 +34,10 @@ export class UfrMetadataComponent implements OnInit {
         });
 
         my.tagnames = tagmap;
-        console.log(my.tagnames);
+        //console.log(my.tagnames);
       });
 
-      console.log(my.current);
+      //console.log(my.current);
     });
   }
 

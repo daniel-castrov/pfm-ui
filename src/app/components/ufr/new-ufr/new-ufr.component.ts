@@ -88,7 +88,7 @@ export class NewUfrComponent implements OnInit {
     else {
       var title = ('SP' === this.mode ? ' sub ' + this.selected.shortName : '');
       var ufr: UFR = {
-        pomId: this.pom.id,
+        phaseId: this.pom.id,
         organization: this.selected.organization,
         name: 'UFR new' + title + ' POM ' + my.pom.fy
       };
