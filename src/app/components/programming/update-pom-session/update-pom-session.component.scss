@@ -127,7 +127,7 @@ label {
   color: $dark-grey;
 }
 
-.table {
+.update-pom-table {
   width: 99%;
 
   thead tr {
@@ -139,6 +139,7 @@ label {
     min-width: 123px; // min fixed width
     background-color: $primary-color;
     color: $white;
+    padding: 10px;
     border: 1px solid $white;
   }
 
