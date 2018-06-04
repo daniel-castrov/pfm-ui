@@ -1,9 +1,9 @@
-<div class="row mb-3 col-md-10 col-sm-12">
+<div class="row mb-3 col-md-10 col-sm-12 autoscroll" >
   <table class="pr-table">
     <thead>
       <tr class="white-top-table-header font-italic">
         <td></td>
-        <td class="large-column"></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -18,20 +18,20 @@
         <td></td>
       </tr>
       <tr>
-        <th>Program</th>
-        <th class="large-column">Subprogram</th>
-        <th>Variant</th>
-        <th>Status</th>
-        <th>Cycle</th>
-        <th>{{by-3 | FY}}</th>
-        <th>{{by-2 | FY}}</th>
-        <th>{{by-1 | FY}}</th>
-        <th>{{by   | FY}}</th>
-        <th>{{by+1 | FY}}</th>
-        <th>{{by+2 | FY}}</th>
-        <th>{{by+3 | FY}}</th>
-        <th>{{by+4 | FY}}</th>
-        <th>>>{{by+4 | FY}}</th>
+        <th class="header-column-width">Program</th>
+        <th class="header-column-width">Subprogram</th>
+        <th class="header-column-width">Variant</th>
+        <th class="header-column-width">Status</th>
+        <th class="header-column-width">Cycle</th>
+        <th class="header-column-width">{{by-3 | FY}}</th>
+        <th class="header-column-width">{{by-2 | FY}}</th>
+        <th class="header-column-width">{{by-1 | FY}}</th>
+        <th class="header-column-width">{{by   | FY}}</th>
+        <th class="header-column-width">{{by+1 | FY}}</th>
+        <th class="header-column-width">{{by+2 | FY}}</th>
+        <th class="header-column-width">{{by+3 | FY}}</th>
+        <th class="header-column-width">{{by+4 | FY}}</th>
+        <th class="header-column-width">>>{{by+4 | FY}}</th>
       </tr>
     </thead>
     <tbody *ngFor="let pr of (mapNameToRow | values)">
@@ -41,7 +41,7 @@
             <i class="fa fa-trash"></i>
           </span>
         </td>
-        <td class="row-lt-gray text-center large-column" rowspan="2">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
+        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
         <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</td>
         <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.pom?.state}}</a></td>
         <td class="">PB</td>
@@ -57,7 +57,7 @@
       </tr>
       <tr>
         <td class="">POM</td>
-        <td class="text-right large-column">{{pr.pom?.getToa(by-3)}}</td>
+        <td class="text-right">{{pr.pom?.getToa(by-3)}}</td>
         <td class="text-right">{{pr.pom?.getToa(by-2)}}</td>
         <td class="text-right">{{pr.pom?.getToa(by-1)}}</td>
         <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by)}}</td>
