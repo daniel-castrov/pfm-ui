@@ -7,6 +7,7 @@ import { DualListComponent } from 'angular-dual-listbox';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
+import { FeedbackComponent } from '../../feedback/feedback.component';
 
 // Generated
 import { RestResult } from '../../../generated/model/restResult';
@@ -33,6 +34,7 @@ declare const jQuery: any;
 export class ManageRolesComponent {
 
   @ViewChild(HeaderComponent) header;
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   resultError: string[] = [];
 
@@ -62,7 +64,6 @@ export class ManageRolesComponent {
 
   // For the angular-dual-listbox
   availablePrograms: Array<Program> = [];
-  allcount=0;
   assignedPrograms: Array<any> = [];
   key: string = "id";
   display: string = "shortName";
@@ -70,9 +71,10 @@ export class ManageRolesComponent {
   filter = false;
   format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
   disabled = false;
-  userAdd = '';
-  sourceLeft = true;
-  tab = 1;
+  //userAdd = '';
+  //sourceLeft = true;
+  //tab = 1;
+  allcount=0;
 
   constructor(
     private route: ActivatedRoute,
@@ -85,8 +87,7 @@ export class ManageRolesComponent {
   ) { 
 
     this.route.params.subscribe((params: Params) => {
-      console.log(  params.commid +" "+ params.roleid +" "+ params.userid);
-
+      //console.log(  params.commid +" "+ params.roleid +" "+ params.userid);
       this.paramCommunityId= params.commid;
       this.paramRoleId=params.roleid;
       this.paramUserId=params.userid;
@@ -116,7 +117,8 @@ export class ManageRolesComponent {
         my.communities.forEach(function (x){ 
           if(x.id===my.paramCommunityId){ 
             my.selectedCommunity=x;
-            my.getRolesAndUsers(); 
+            my.getRolesAndUsers();
+            return; 
           }  
         });
 
@@ -130,9 +132,6 @@ export class ManageRolesComponent {
   getRolesAndUsers(): void {
 
     var my: ManageRolesComponent = this;
-
-    console.log(this.selectedCommunity.id);
-    console.log(this.paramCommunityId);
 
     my.clear();
     my.selectedRole = null;
@@ -151,11 +150,13 @@ export class ManageRolesComponent {
       my.roles.forEach(function (x){ 
         if(x.id===my.paramRoleId){ 
           my.selectedRole=x;
+          return;
         }  
       });
       my.users.forEach(function (x){ 
         if(x.id===my.paramUserId){ 
           my.selectedUser=x;
+          return;
         }  
       });
       if( my.selectedCommunity && my.selectedRole && my.selectedUser ) {
@@ -171,7 +172,7 @@ export class ManageRolesComponent {
 
     my.clear();
     my.selectedUserName = my.selectedUser.firstName + " " + my.selectedUser.middleInitial + " " + my.selectedUser.lastName;
-
+    
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
       my.programsService.getProgramsByCommunity(my.selectedCommunity.id)
@@ -231,7 +232,7 @@ export class ManageRolesComponent {
     var my: ManageRolesComponent = this;
     my.userRoleResourceService.deleteById(my.selectedURR.id).subscribe(() => {
       my.clear(); 
-      my.showCommitMessage(0);
+      my.feedback.success(my.getMessage(0));
     });
   }
 
@@ -255,17 +256,17 @@ export class ManageRolesComponent {
     if (my.isNewUserRole){
       my.userRoleResourceService.create(my.selectedURR).subscribe(() => {
         my.clear(); 
-        my.showCommitMessage(1);
+        my.feedback.success(my.getMessage(1));
       });
     } else {
       my.userRoleResourceService.update(my.selectedURR).subscribe(() => {
         my.clear(); 
-        my.showCommitMessage(2);
+        my.feedback.success(my.getMessage(2));
       });
     }
   }
 
-  showCommitMessage(messageNumber) {
+  getMessage(messageNumber): string {
     var my: ManageRolesComponent = this;
 
     let community_role_name = my.selectedCommunity.abbreviation + " : " + my.selectedRole.name;
@@ -276,7 +277,7 @@ export class ManageRolesComponent {
       my.selectedUserName + "'s resource access for "+community_role_name+" has been modified"
     ];
     my.submitted = true;
-    my.submittedMessage = message[messageNumber];
+    return  message[messageNumber];
   }
 
 

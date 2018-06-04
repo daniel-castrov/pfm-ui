@@ -76,7 +76,6 @@ export class ManageUsersComponent implements OnInit {
     this.resetEditMode();
   }
 
-
   getTargetUser(): void {
     this.communityWithUserRoles=[];
     // 1. get the user
@@ -88,7 +87,7 @@ export class ManageUsersComponent implements OnInit {
         this.targetUser = resultUser.result;
         console.log("TargetUser: " + this.targetUser.cn);
 
-        // 2. get the (all) communities 
+        // 2. get all communities 
         let allCommunities: Community[] = [];
         let resultComm: RestResult;
 
@@ -98,7 +97,7 @@ export class ManageUsersComponent implements OnInit {
           this.resultError.push(resultComm.error);
           allCommunities = resultComm.result;
 
-          // 3. Get the users Roles in each community
+          // 3. Get this user's roles in each community
           for (let comm of allCommunities) {
             let resultUserRoleResources: RestResult;
             let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
@@ -106,26 +105,16 @@ export class ManageUsersComponent implements OnInit {
               resultUserRoleResources = c;
               this.resultError.push(resultUserRoleResources.error);
 
-              // 4. Get all the roles for the community
-              let resultAllRoles: RestResult;
-              this.roleService.getByCommunityId(comm.id)
-              .subscribe(c => {
-                resultAllRoles = c;
-                this.resultError.push(resultAllRoles.error);
-
-                // push if at least one role
-                if ( resultUserRoleResources.result.length>0 ){ 
-                  this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result, resultAllRoles.result));
-
-                  for (var i =0; i < allCommunities.length; i++){
-                    if ( allCommunities[i].id === comm.id ){
-                      allCommunities.splice(i,1);
-                    }
+              // push the community if at least one role and take it out of avail 
+              if ( resultUserRoleResources.result.length>0 ){ 
+                this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result));
+                for (var i =0; i < allCommunities.length; i++){
+                  if ( allCommunities[i].id === comm.id ){
+                    allCommunities.splice(i,1);
                   }
                 }
-                this.avail_Communities=allCommunities;
-              });
-              // end 4
+              }
+              this.avail_Communities=allCommunities;
             });
           }
           // end 3
@@ -150,7 +139,6 @@ export class ManageUsersComponent implements OnInit {
   editMode(sectionnumber): void {
     this.resetEditMode();
     this.isdEditMode[sectionnumber] = true;
-    //this.buildAvailableRoles();
   }
 
   cancelEdit(): void {
@@ -160,59 +148,32 @@ export class ManageUsersComponent implements OnInit {
   }
 
   resetEditMode(): void {
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 3; i++) {
       this.isdEditMode[i] = false;
     }
   }
 
-  addRole(): void {
- 
-     let userRoleResource:UserRoleResource=new Object();
-      userRoleResource.roleId=this.addedroleId;
-      userRoleResource.userId=this.id;
-      console.log(userRoleResource);
-      
-      let resultUserRoleResource: RestResult;
-      this.userRoleResourceService.create(userRoleResource)
-      .subscribe(r => {
-        resultUserRoleResource = r;
-        this.getTargetUser();
-      });
-  }
-
-  resetAddRole(): void {
-    this.addedroleId = '';
-  }
-
   addCommunity(): void {
-    console.log("addCommunity" + this.addedcommunity);
-
+    
     let resultRole: RestResult;
     this.roleService.getByNameAndCommunityId(this.addedcommunity,"User")
     .subscribe(r => {
       resultRole = r;
       this.resultError.push(resultRole.error);
 
-      let approverRole:Role;
-      approverRole = resultRole.result;
-      let userRoleResource:UserRoleResource=new Object();
-      userRoleResource.roleId=approverRole.id;
-      userRoleResource.userId=this.id;
-      console.log(userRoleResource);
+      let userRole:Role;
+      userRole = resultRole.result;
+      let userRoleRes:UserRoleResource=new Object();
+      userRoleRes.roleId=userRole.id;
+      userRoleRes.userId=this.id;
       
       let resultUserRoleResource: RestResult;
-      this.userRoleResourceService.create(userRoleResource)
+      this.userRoleResourceService.create(userRoleRes)
       .subscribe(r => {
         resultUserRoleResource = r;
-
         this.getTargetUser();
-
       });
     });
-  }
-
-  resetAddCommunity(): void {
-    this.addedcommunity = '';
   }
  
   editRoles( commid, roleid, userid ){
@@ -225,25 +186,11 @@ class CommWithRoles {
 
   community: Community;
   userRoles: Role[] = [];
-  allRoles: Role[] = []; 
 
-  constructor(c: Community, ur: Role[], ar: Role[]) {
+  constructor(c: Community, ur: Role[]) {
     this.community = c;
     this.userRoles = ur;
-
-    for (var i =0; i < ar.length; i++){
-      for (let r of ur){
-        if ( ar[i].name === r.name ){
-          ar.splice(i,1);
-        }
-      }
-    }
-    this.allRoles=ar;
   }
-
-
-
-
 }
 
 

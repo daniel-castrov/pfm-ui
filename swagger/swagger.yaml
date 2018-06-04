@@ -1,26 +1,29 @@
 swagger: "2.0"
 info:
   version: 0.0.1
-  title: JSBIS Services
-  description: API services for JSCBIS
+  title: "JSBIS Services"
+  description: "API services for JSCBIS"
 basePath: "/api"
 tags:
+- name: "AssignRoleRequest"
 - name: "Blank"
 - name: "Community"
 - name: "CreateUserRequest"
+- name: "JoinCommunityRequest"
+- name: "LeaveCommunityRequest"
 - name: "MyDetails"
-- name: "Stranger"
 - name: "Organization"
+- name: "PB"
 - name: "Permission"
+- name: "POM"
+- name: "PR"
 - name: "Programs"
 - name: "Role"
 - name: "Snapshots"
+- name: "Stranger"
+- name: "UFRs"
 - name: "User"
 - name: "UserRoleResource"
-- name: "TOA"
-- name: "POM"
-- name: "PB"
-- name: "UFRs"
 
 #
 ##############################################################################
@@ -252,7 +255,7 @@ paths:
     get:
       tags:
       - "POM"
-      summary: 'Gets a "sample" POM based on the values in the current PB'
+      summary: "Gets a 'sample' POM based on the values in the current PB"
       description: "get sample pom values (toas)"
       operationId: "getToaSamples"
       consumes:
@@ -665,6 +668,73 @@ paths:
         required: true
         type: "string"
 # STOP LEAVECOMMUNITYREQUEST
+##############################################################################
+# START ASSIGNROLEREQUEST
+  /assignRoleRequests:
+    post:
+      tags:
+      - "AssignRoleRequest"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AssignRoleRequest"
+  /assignRoleRequests/community/{commId}:
+    get:
+      tags:
+      - "AssignRoleRequest"
+      operationId: "getByCommId"
+      parameters:
+      - name: "commId"
+        in: "path"
+        required: true
+        type: "string"
+  /assignRoleRequests/user/{userId}:
+    get:
+      tags:
+      - "AssignRoleRequest"
+      operationId: "getByUser"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+  /assignRoleRequests/{id}:
+    get:
+      tags:
+      - "AssignRoleRequest"
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+  /assignRoleRequests/{requestId}/status:
+    post:
+      tags:
+      - "AssignRoleRequest"
+      operationId: "status"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "status"
+        required: true
+        schema:
+          $ref: "#/definitions/Status"
+      - in: "path"
+        name: "requestId"
+        required: true
+        type: "string"
+# STOP ASSIGNROLEREQUEST
 ##############################################################################
 # START MYDETAILS
   /mydetails:
@@ -1681,13 +1751,13 @@ paths:
       parameters:
       - in: "path"
         name: "pomId"
-        description: 'the pom'
+        description: "the pom"
         required: true
-        type: 'string'
+        type: "string"
       - in: "path"
         name: "shortname"
         type: "string"
-        description: 'the "model" program'
+        description: "the 'model' program"
         required: true
       consumes:
       - "application/json"
@@ -1917,6 +1987,27 @@ definitions:
         type: "string"
       status:
         type: "string"
+  AssignRoleRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      userId:
+        type: "string"
+      communityId:
+        type: "string"
+      dateApplied:
+        type: "string"
+      dateDecided:
+        type: "string"
+      status:
+        type: "string"
+      roleName:
+        type: "string"
+      resourceIds:
+        type: "array"
+        items:
+          type: "string"
   Permission:
     type: "object"
     properties:
@@ -1982,7 +2073,7 @@ definitions:
       preferences:
         type: "object"
         additionalProperties:
-            type: string
+            type: "string"
   UserRoleResource:
     type: "object"
     properties:
@@ -2017,7 +2108,7 @@ definitions:
     type: "object"
     properties:
       tags:
-        $ref: '#/definitions/StringMap'
+        $ref: "#/definitions/StringMap"
       id:
         type: "string"
       appropriation:
@@ -2031,7 +2122,7 @@ definitions:
       fy:
         type: "integer"
       funds:
-        $ref: '#/definitions/IntMap'
+        $ref: "#/definitions/IntMap"
       variants:
         type: "array"
         items:
@@ -2083,7 +2174,7 @@ definitions:
       contractor:
         type: "string"
       quantity:
-        $ref: '#/definitions/IntMap'
+        $ref: "#/definitions/IntMap"
       unitCost:
         type: "number"
   Program:
@@ -2092,7 +2183,7 @@ definitions:
       id:
         type: "string"
       tags:
-        $ref: '#/definitions/StringMap'
+        $ref: "#/definitions/StringMap"
       description:
         type: "string"
       parentId:
@@ -2128,18 +2219,18 @@ definitions:
       emphases:
         type: "array"
         items:
-          $ref: "string"
+          type: "string"
   ProgramFilter:
     type: "object"
     properties:
       tagCriteria:
-        $ref: '#/definitions/StringMap'
+        $ref: "#/definitions/StringMap"
       blin:
-        type: 'string'
+        type: "string"
       agency:
-        type: 'string'
+        type: "string"
       appropriation:
-        type: 'string'
+        type: "string"
   UFRFilter:
     type: "object"
     properties:
@@ -2167,7 +2258,7 @@ definitions:
       id:
         type: "string"
       tags:
-        $ref: '#/definitions/StringMap'
+        $ref: "#/definitions/StringMap"
       description:
         type: "string"
       parentId:
@@ -2223,7 +2314,7 @@ definitions:
       emphases:
         type: "array"
         items:
-          $ref: "string"
+          type: "string"
       name:
         type: "string"
       organization:
@@ -2232,11 +2323,11 @@ definitions:
     type: "object"
     properties:
       id:
-        type: 'string'
+        type: "string"
       communityId:
-        type: 'string'
+        type: "string"
       fy:
-        type: 'integer'
+        type: "integer"
       communityToas:
         type: "array"
         items:
@@ -2244,69 +2335,73 @@ definitions:
       orgToas:
         type: "object"
         additionalProperties:
-          type: 'array'
+          type: "array"
           items:
             $ref: "#/definitions/TOA"
       status:
-        type: 'string'
+        type: "string"
       startdate: 
-        type: 'integer'
+        type: "integer"
       enddate:
-        type: 'integer'
+        type: "integer"
   ProgrammaticRequest:
     type: "object"
     properties:
       id:
-        type: 'string'
+        type: "string"
       state:
-        type: 'string'
+        type: "string"
       fundingLines:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"
       shortName:
-        type: 'string'
+        type: "string"
       bulkOrigin:
-        type: 'boolean'
+        type: "boolean"
       parentId:
-        type: 'string'
+        type: "string"
       type:
-        type: 'string'
+        type: "string"
       phaseId:
-        type: 'string'
+        type: "string"
   FundingLine:
     type: "object"
     properties:
       id:
-        type: 'string'
+        type: "string"
       appropriation:
-        type: 'string'
+        type: "string"
       blin:
-        type: 'string'
+        type: "string"
       opAgency:
-        type: 'string'
+        type: "string"
       item:
-        type: 'string'
+        type: "string"
       funds:
-        $ref: '#/definitions/IntMap'
+        $ref: "#/definitions/IntMap"
       fy:
-        type: 'number'
+        type: "number"
       variants:
+<<<<<<< HEAD
         type: "array"
         items:
           $ref: "#/definitions/Variant"
+=======
+        type: "object"
+>>>>>>> develop
   PB:
     type: "object"
     properties:
       id:
-        type: 'string'
+        type: "string"
       communityId:
-        type: 'string'      
+        type: "string"      
       fy:
-        type: 'integer'
+        type: "integer"
       startdate: 
-        type: 'integer'
+        type: "integer"
       enddate:
-        type: 'integer'
+        type: "integer"
 ##############################################################################
 # ENDFILE
