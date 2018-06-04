@@ -2383,13 +2383,9 @@ definitions:
       fy:
         type: "number"
       variants:
-<<<<<<< HEAD
         type: "array"
         items:
           $ref: "#/definitions/Variant"
-=======
-        type: "object"
->>>>>>> develop
   PB:
     type: "object"
     properties:

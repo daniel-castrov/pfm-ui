@@ -31,6 +31,7 @@ export class UfrFundsComponent implements OnInit {
   private appr: string;
   private blin: string;
   private agency: string;
+  private item: string;
 
   constructor(private pomsvc: POMService, private pbService: PBService,
     private prService: PRService, private progsvc: ProgramsService) { }
@@ -114,7 +115,7 @@ export class UfrFundsComponent implements OnInit {
         my.appropriations = data2[1].result.sort();
         my.appr = my.appropriations[0];
         my.blins = data2[2].result.sort();
-        my.blin = my.blins[0];
+        my.blin = my.getBlins()[0];
       }); 
     });
   }
@@ -202,10 +203,28 @@ export class UfrFundsComponent implements OnInit {
         blin: blin,
         fy: my.pom.fy,
         funds: funds,
+        item: my.item,
         variants: []
       });
     }
   }
+
+  getBlins(): string[]{
+    var ret: string[] = [];
+    if ('PROC' === this.appr) {
+      this.blins.filter(s => (s.match(/00/))).forEach(str => { ret.push(str) });
+    }
+    else if ('RDTE' === this.appr) {
+      this.blins.filter(s => (s.match(/BA[1-4]/))).forEach(str => { ret.push(str) });
+    }
+    else if ('O&M' === this.appr) {
+      this.blins.filter(s => (s.match(/BA[5-7]/))).forEach(str => { ret.push(str) });
+    }
+      
+    return ret;
+  }
+
+
 
   totals(year: number, mode: string) {
     var sum: number = 0;

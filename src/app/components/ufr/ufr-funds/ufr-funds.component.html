@@ -119,7 +119,7 @@
           <span class="form-group">
             <div class="mb-2 primary-label">BA/BLIN</div>
             <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
-              <option *ngFor="let b of blins">{{b}}</option>
+              <option *ngFor="let b of getBlins();first as first" [selected]="first">{{b}}</option>
             </select>
           </span>
         </div>
@@ -127,7 +127,7 @@
           <span class="form-group">
             <div class="mb-2 primary-label">Item</div>
             <span class="form-group">
-              <div class="mb-2 primary-label">Item Name</div>
+              <input class="mb-2 primary-label" [(ngModel)]="item">
             </span>
           </span>
         </div>
@@ -148,38 +148,12 @@
           </span>
         </div>
       </div>
-      <div class="row mb-4">
-        <div class="col-10">
-          <div id="pr-funding-line" class="table-editable">
-            <table class="pr-funds-table">
-              <thead>
-                <tr>
-                  <th>{{fy| FY}}</th>
-                  <th>{{fy+1| FY}}</th>
-                  <th>{{fy+2| FY}}</th>
-                  <th>{{fy+3| FY}}</th>
-                  <th>{{fy+4| FY}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy)">{{flfunds[fy]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+1)">{{flfunds[fy+1]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+2)">{{flfunds[fy+2]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+3)">{{flfunds[fy+3]|dashForZero}}</td>
-                  <td contenteditable="true" class="editable-field" digits (blur)="newfledit($event.target.textContent,fy+4)">{{flfunds[fy+4]|dashForZero}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="col-2">
+        <button class="btn btn-primary" (click)="addfl()" [disabled]="!(item && appr && blin)">
+          <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+          Add Funding Line
+        </button>
       </div>
     </fieldset>
-  </div>
-  <div class="col-2">
-    <button class="btn btn-primary" (click)="addfl()">
-      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-      Add Funding Line
-    </button>
   </div>
 </div>
