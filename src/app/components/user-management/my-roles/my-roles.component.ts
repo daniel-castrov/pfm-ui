@@ -7,8 +7,8 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 // Generated
-import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest } from '../../../generated';
-import { MyDetailsService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService } from '../../../generated';
+import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest, DropRoleRequest } from '../../../generated';
+import { MyDetailsService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
 
 
 @Component({
@@ -23,20 +23,26 @@ export class MyRolesComponent implements OnInit {
 
   resultError: string[] = [];
   currentUser:User;
-  dropableRoles:Role[] = [];
+
   allRoles:Role[] = [];
-  selectedRole:Role;
+  currentRoles:Role[] = [];
+  assignRequests:AssignRoleRequest[]=[];
+  assignableRoles:Role[] = [];
+  dropRequests:DropRoleRequest[]=[];
+  dropableRoles:Role[] = [];
+
+  currentRolesWithResources:RoleNameWithResources[] = [];
+  allcount=0;
+  unmodifiableRoles = ["User_Approver", "POM_Manager"];
   pogramsMap:any[]=[];
+  
+  selectedAddRole:Role;
+  selectedDropRole:Role;
   selectedURR:UserRoleResource;
 
-  assignRequests:AssignRoleRequest[]=[];
-
-  submitted: boolean = false;
   isURRModifyable: boolean;
   isNewUserRole: boolean;
   isURRVisible: boolean = false;
-
-  unmodifiableRoles = ["User_Approver", "POM_Manager"];
 
   // For the angular-dual-listbox
   availablePrograms: Array<Program> = [];
@@ -47,25 +53,96 @@ export class MyRolesComponent implements OnInit {
   filter = false;
   format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
   disabled = false;
-  //userAdd = '';
-  //sourceLeft = true;
-  //tab = 1;
-  allcount=0;
-
-
-  currentRolesWithResources:RoleNameWithResources[] = [];
 
   constructor(
     private myDetailsService:MyDetailsService,  
     private roleService: RoleService,
     private userRoleResourceService: UserRoleResourceService,
     private programsService: ProgramsService,
-    private assignRoleRequestService: AssignRoleRequestService
+    private assignRoleRequestService: AssignRoleRequestService,
+    private dropRoleRequestService:DropRoleRequestService
   ) { }
-
 
   ngOnInit() {
     this.getUserAndRoles();
+  }
+
+  private onChangeAddRoleSelector():void {
+    var my: MyRolesComponent = this;
+    my.selectedDropRole = null;
+    my.isURRModifyable = false;
+    if ( my.selectedAddRole ) my.getURR();
+  }
+
+  private onChangeDropRoleSelector():void{
+    var my: MyRolesComponent = this;
+    my.selectedAddRole = null;
+    my.isURRModifyable = false;
+  }
+
+  private async createAssignRequest() {
+    var my: MyRolesComponent = this;
+
+    // Get all the progIds from the selected 'assignedPrograms'
+    let assignedProgs:string[];
+
+    console.log (my.assignedPrograms.length+" : "+my.allcount);
+
+    if (!my.assignedPrograms || my.assignedPrograms == null || my.assignedPrograms.length==0) {
+      // none are selected
+      assignedProgs=["x"];
+    } else if (my.assignedPrograms.length==my.allcount) {
+      // all are selected
+      assignedProgs=["*"];
+    } else {
+      // some are selected
+      assignedProgs=[];
+      my.assignedPrograms.forEach(function (value) {
+        assignedProgs.push( value.id );
+      });
+    }
+
+    // build the new request
+    let request:AssignRoleRequest=new Object();
+    request.userId = my.currentUser.id;
+    request.communityId = my.currentUser.currentCommunityId;
+    request.roleName = my.selectedAddRole.name;
+    request.isNew=my.isNewUserRole;
+    request.resourceIds=assignedProgs;
+
+    // Submit it
+    try {
+      await my.assignRoleRequestService.create(request).toPromise();
+      my.feedback.success("Your request has been submitted. Your will recieve an email once your request is processed.");
+      my.updateAssignRequests(request);
+      my.header.refreshActions();
+      my.selectedAddRole = null;
+      my.isURRModifyable = false;
+    } catch(e) {
+      my.feedback.failure(e.message);
+    }
+  }
+
+  private async createDropRequest(){
+    var my: MyRolesComponent = this;
+
+    // build the new request
+    let request:DropRoleRequest= new Object();
+    request.userId = my.currentUser.id;
+    request.communityId = my.currentUser.currentCommunityId;
+    request.roleName = my.selectedDropRole.name;
+
+    // Submit it
+    try {
+      await my.dropRoleRequestService.create(request).toPromise();
+      my.feedback.success("Your request has been submitted. Your will recieve an email once your request is processed.");
+      my.updateDropRequests(request);
+      my.header.refreshActions();
+      my.selectedDropRole = null;
+      my.isURRModifyable = false;
+    } catch(e) {
+      my.feedback.failure(e.message);
+    }
   }
 
   private getUserAndRoles():void {
@@ -80,18 +157,20 @@ export class MyRolesComponent implements OnInit {
         my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId),
         my.roleService.getByUserIdAndCommunityId(my.currentUser.id, my.currentUser.currentCommunityId),
         my.roleService.getByCommunityId(my.currentUser.currentCommunityId),
-        my.assignRoleRequestService.getByUser(my.currentUser.id)
+        my.assignRoleRequestService.getByUser(my.currentUser.id),
+        my.dropRoleRequestService.getByUser(my.currentUser.id)
       ]).subscribe(r => {
 
-        // Get all the programs and put thenm in a map
+        // Get all the programs and put them in a map
         my.resultError.push(r[0].error);
-        let programs:Program[]=r[0].result;
-        programs.forEach ( p => my.pogramsMap[p.id] = p );
+        my.availablePrograms = r[0].result;
+        my.allcount=my.availablePrograms.length;
+        my.availablePrograms.forEach ( p => my.pogramsMap[p.id] = p );
 
         // Get the current user's roles and match them with the program names
         my.resultError.push(r[1].error);
-        let currentRoles:Role[] =r[1].result;
-        currentRoles.forEach( role => {
+        my.currentRoles =r[1].result;
+        my.currentRoles.forEach( role => {
           my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
             my.currentUser.id, my.currentUser.currentCommunityId,role.name
           ).subscribe( ( ur ) => { 
@@ -108,44 +187,39 @@ export class MyRolesComponent implements OnInit {
             my.currentRolesWithResources.push( new RoleNameWithResources ( role, progNames ) );
           });
         });
-        my.dropableRoles=currentRoles;
 
         // Get all the roles
         my.resultError.push(r[2].error);
         my.allRoles=r[2].result;
 
-        // get any existing requests
+        // get any existing add requests
         my.resultError.push(r[3].error);
         my.assignRequests=r[3].result;
-        my.adjustAllRoles();
+
+        // get any existing drop requests
+        my.resultError.push(r[4].error);
+        my.dropRequests=r[4].result;
+
+        my.buildSelectables();
 
       });
     });
   }
 
   private getURR():void {
-
     var my: MyRolesComponent = this;
 
-
-    if (null==my.selectedRole.name) return;
-
     Observable.forkJoin([
-      my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedRole.name),
-      my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId)
+      my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedAddRole.name)
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);
       let urr: UserRoleResource = data[0].result;
 
-      my.resultError.push(data[1].error);
-      my.availablePrograms = data[1].result;
-      my.allcount=my.availablePrograms.length;
-
       my.isURRModifyable = true;
       my.isNewUserRole = true;
 
-      if (my.unmodifiableRoles.includes(my.selectedRole.name)) {
+      if (my.unmodifiableRoles.includes(my.selectedAddRole.name)) {
         my.isURRModifyable = false;
       }
       if (urr) {
@@ -154,7 +228,7 @@ export class MyRolesComponent implements OnInit {
       } else {
         my.selectedURR = new Object();
         my.selectedURR.userId = my.currentUser.id;
-        my.selectedURR.roleId = my.selectedRole.id;
+        my.selectedURR.roleId = my.selectedAddRole.id;
         my.selectedURR.resourceIds = [];
       }
 
@@ -180,69 +254,58 @@ export class MyRolesComponent implements OnInit {
         });
         my.availablePrograms=newAvail;
       }
-
     });
   }
 
-  private nothing():void{
-    console.log("nothing");
-  }
-
-  private async createRequest() {
-    console.log("createRequest");
-    var my: MyRolesComponent = this;
-
-    
-    let assignedProgs:string[] = [];
-    my.assignedPrograms.forEach((x)=>{ assignedProgs.push(x.id) } );
-
-    let request:AssignRoleRequest=new Object();
-    request.userId = this.currentUser.id;
-    request.communityId = this.currentUser.currentCommunityId;
-    request.roleName = this.selectedRole.name;
-    request.resourceIds=assignedProgs;
-
-    try {
-      await this.assignRoleRequestService.create(request).toPromise();
-      this.feedback.success("Your request has been submitted. Your will recieve an email once your request is processed.");
-      this.updateRequestedRoles(request);
-      this.header.refreshActions();
-    } catch(e) {
-      this.feedback.failure(e.message);
-    }
-  }
-
-  private dropRole():void{
-    console.log("dropRole"); 
-    var my: MyRolesComponent = this;
-    let message:string = "Your request has been submitted. Your will recieve an email once your request is processed.";
-    my.feedback.success(message); 
-  }
-
-  private  updateRequestedRoles(request:AssignRoleRequest){
+  private  updateAssignRequests(request:AssignRoleRequest){
     var my: MyRolesComponent = this;
     my.assignRequests.push(request);
-    my.adjustAllRoles();  
-    my.selectedRole=null;  
+    my.buildSelectables();  
+    my.selectedAddRole=null;  
   }
 
-  private adjustAllRoles(){
+  private updateDropRequests(request:DropRoleRequest){
     var my: MyRolesComponent = this;
+    my.dropRequests.push(request);
+    my.buildSelectables();  
+    my.selectedDropRole=null;  
+  }
+  
+  private buildSelectables(){
+    var my: MyRolesComponent = this;
+
+    // calculate the dropable menu
+    my.dropableRoles=[ ...my.currentRoles ];
     let pr:string[]=[];
     my.assignRequests.forEach( x => pr.push(x.roleName) );
+    my.dropRequests.forEach( x => pr.push(x.roleName) );
 
-    let allr:Role[]=[];
-    my.allRoles.forEach( r => {
-      if ( !pr.includes( r.name ) ){
-        allr.push(r);
+    let  dRoles:Role[]=[];
+    my.dropableRoles.forEach( r => {
+      if ( !pr.includes(r.name) ){ 
+        dRoles.push(r); 
+      } 
+    });
+    my.dropableRoles = dRoles;
+
+    // calculate the assignable menu
+    my.assignableRoles=[ ...my.allRoles ];
+    my.currentRoles.forEach( x => {
+      if( my.unmodifiableRoles.includes(x.name) ){
+        pr.push(x.name);
       }
     });
-    my.allRoles = allr;
+    let aRoles:Role[]=[];
+    my.assignableRoles.forEach( r => {
+      if ( !pr.includes( r.name ) ){
+        aRoles.push(r);
+      }
+    });
+    my.assignableRoles = aRoles;
   }
-
-
 }
 
+// a class for viewing the current roles with the associated resources (program names)
 class RoleNameWithResources {
   role: Role;
   resources: string[];
