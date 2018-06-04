@@ -35,8 +35,8 @@
         <tbody>
           <ng-container *ngFor="let row of rows | mapAsList : 'values'">
             <tr>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
+              <td class="row-lt-gray text-center header-column-width" rowspan="3">{{row.appropriation}}</td>
+              <td class="row-lt-gray text-center header-column-width" rowspan="3">{{row.blin}}</td>
               <td>{{fy|FY:'POM'}}</td>
               <td class="text-right">{{row.modelfunds.get(fy-3) | dashForZero}}</td>
               <td class="text-right">{{row.modelfunds.get(fy-2) | dashForZero}}</td>

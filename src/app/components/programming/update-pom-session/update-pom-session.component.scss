@@ -143,12 +143,11 @@ label {
     border: 1px solid $white;
   }
 
-  tbody{
+  tbody {
     display:block;
-    height:200px;
-    overflow:auto; //set tbody to auto
+    height: 200px;
+    overflow: auto; //set tbody to auto
   }
-
 
   td {
     max-width: 123px; // max fixed width
@@ -160,15 +159,6 @@ label {
 
   .table-editable {
     position: relative;
-
-    th {
-      padding: 8px;
-    }
-
-    tr > td {
-     padding: 4px;
-     border: none;
-      }
   }
 
   .large-column {
