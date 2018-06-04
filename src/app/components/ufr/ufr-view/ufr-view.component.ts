@@ -50,14 +50,14 @@ export class UfrViewComponent implements OnInit {
     var my: UfrViewComponent = this;
     var ok: boolean = false;
     my.current.fundingLines.forEach(fl => {
-      console.log(fl);
+      //console.log(fl);
       if ('PROC' === fl.appropriation) {
         ok = true;
       }
     });
 
     my.qtyok = ok;
-    console.log(my.qtyok);
+    //console.log(my.qtyok);
   }
 
   submit() {
