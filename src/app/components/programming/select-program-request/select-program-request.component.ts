@@ -49,8 +49,8 @@ export class SelectProgramRequestComponent implements OnInit {
     this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
   }
 
-  submit() {
-    this.pomService.submit(this.pom.id).toPromise();
+  async submit() {
+    await this.pomService.submit(this.pom.id).toPromise();
     this.ngOnInit();
   }
 }
