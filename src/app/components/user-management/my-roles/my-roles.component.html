@@ -11,8 +11,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let roleWres of currentRolesWithResources">
-              <td> {{ roleWres.role.name }} </td>
-              <td> {{ roleWres.resources.join(', ') }} </td>
+              <td class="column-1"> {{ roleWres.role.name }} </td>
+              <td class="column-2"> {{ roleWres.resources.join(', ') }} </td>
             </tr>
           </tbody>
         </table>
