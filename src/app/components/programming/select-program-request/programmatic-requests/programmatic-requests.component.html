@@ -36,14 +36,14 @@
     </thead>
     <tbody *ngFor="let pr of (mapNameToRow | values)">
       <tr>
-        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isSubprogram ? pr.pom.parentId : pr.pom?.shortName}}
+        <td class="row-lt-gray text-center clickable" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isSubprogram ? pr.pom.parentId : pr.pom?.shortName}}
           <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
             <i class="fa fa-trash"></i>
           </span>
         </td>
-        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
-        <td class="row-lt-gray text-center" rowspan="2">{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</td>
-        <td class="row-lt-gray text-center" rowspan="2"><a href="" class="text-danger">{{pr.pom?.state}}</a></td>
+        <td class="row-lt-gray text-center clickable" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
+        <td class="row-lt-gray text-center clickable" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</td>
+        <td class="row-lt-gray text-center clickable" rowspan="2" (click)="editPR(pr.pom.id)"><span class="text-danger">{{pr.pom?.state}}</span></td>
         <td class="">PB</td>
         <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>
         <td class="text-right">{{pr.pb?.getToa(by-2)}}</td>

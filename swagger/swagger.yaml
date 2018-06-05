@@ -2357,6 +2357,8 @@ definitions:
           $ref: "#/definitions/FundingLine"
       shortName:
         type: "string"
+      longName:
+        type: "string"
       bulkOrigin:
         type: "boolean"
       parentId:

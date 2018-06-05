@@ -7,6 +7,7 @@ export class UiProgrammaticRequest {
   get id():string {return this.programmaticRequest.id}
   get state():string {return this.programmaticRequest.state}
   get shortName():string {return this.programmaticRequest.shortName}
+  get longName():string {return this.programmaticRequest.longName}
   get fundingLines():FundingLine[] {return this.programmaticRequest.fundingLines}
   get parentId():string {return this.programmaticRequest.parentId}
   get bulkOrigin():boolean {return this.programmaticRequest.bulkOrigin}
