@@ -40,10 +40,9 @@ export class RequestsService {
   ) {}
 
   getRequests(): Request[] {
-    var my: RequestsService = this;
-    my.pendingRequests=[];
-    my.buildRequests();
-    return my.pendingRequests;
+    this.pendingRequests=[];
+    this.buildRequests();
+    return this.pendingRequests;
   }
 
   private async buildRequests() {
@@ -59,66 +58,61 @@ export class RequestsService {
   }
 
   private async buildJoinCommunityRequests(communityId:string) {
-    var my: RequestsService = this;
-    let jcr: JoinCommunityRequest[]  = (await my.joinCommunityRequestService.getByCommId(communityId).toPromise()).result;
-    jcr.forEach( async x => {
-      let user: User = (await my.userService.getById(x.userId).toPromise()).result;
-      my.pendingRequests.push(
+    let joinCommReqs: JoinCommunityRequest[]  = (await this.joinCommunityRequestService.getByCommId(communityId).toPromise()).result;
+    joinCommReqs.forEach( async request => {
+      let user: User = (await this.userService.getById(request.userId).toPromise()).result;
+      this.pendingRequests.push(
       new UiJoinCommunityRequest(
-        x.id,
+        request.id,
         user.firstName + " " + user.lastName,
-        x.dateApplied));
+        request.dateApplied));
     });
   }
 
   private async buildLeaveCommunityRequests(communityId:string) {
-    var my: RequestsService = this;
-    let lcr: LeaveCommunityRequest[]  = (await my.leaveCommunityRequestService.getByCommId(communityId).toPromise()).result;
-    lcr.forEach( async y => {
-      let user: User = (await my.userService.getById( y.userId ).toPromise()).result;
-      my.pendingRequests.push(
+    let leaveCommReqs: LeaveCommunityRequest[]  = (await this.leaveCommunityRequestService.getByCommId(communityId).toPromise()).result;
+    leaveCommReqs.forEach( async request => {
+      let user: User = (await this.userService.getById( request.userId ).toPromise()).result;
+      this.pendingRequests.push(
       new UiLeaveCommunityRequest(
-        y.id,
+        request.id,
         user.firstName + " " + user.lastName,
-        y.dateApplied));
+        request.dateApplied));
     });
   }
 
   private async buildCreateUserRequests(communityId:string) {
-    var my: RequestsService = this;
-    let nur: CreateUserRequest[]  = (await my.createUserRequestService.getByCommId(communityId).toPromise()).result;
-    nur.forEach( y => {
-      my.pendingRequests.push(
+    let createUserReqs: CreateUserRequest[]  = (await this.createUserRequestService.getByCommId(communityId).toPromise()).result;
+    createUserReqs.forEach( request => {
+      this.pendingRequests.push(
         new UiCreateUserRequest(
-          y.id,
-          y.firstName + " " + y.lastName,
-          y.dateApplied));
+          request.id,
+          request.firstName + " " + request.lastName,
+          request.dateApplied));
     });
   }
 
   private async buildAssignRoleRequests(communityId:string) {
-    var my: RequestsService = this;
-    let arr: AssignRoleRequest[]  = (await my.assignRoleRequestService.getByCommId(communityId).toPromise()).result;
-    arr.forEach( async y => {
-      let user: User = (await my.userService.getById( y.userId ).toPromise()).result;
-      my.pendingRequests.push(
+    let assignRoleReqs: AssignRoleRequest[]  = (await this.assignRoleRequestService.getByCommId(communityId).toPromise()).result;
+    assignRoleReqs.forEach( async request => {
+      let user: User = (await this.userService.getById( request.userId ).toPromise()).result;
+      this.pendingRequests.push(
       new UiAssignRoleRequest(
-        y.id,
+        request.id,
         user.firstName + " " + user.lastName,
-        y.dateApplied));
+        request.dateApplied));
     });
   }
 
   private async buildDropRoleRequests(communityId:string) {
-    var my: RequestsService = this;
-    let arr: DropRoleRequest[]  = (await my.dropRoleRequestService.getByCommId(communityId).toPromise()).result;
-    arr.forEach( async y => {
-      let user: User = (await my.userService.getById( y.userId ).toPromise()).result;
-      my.pendingRequests.push(
+    let dropRoleReqs: DropRoleRequest[]  = (await this.dropRoleRequestService.getByCommId(communityId).toPromise()).result;
+    dropRoleReqs.forEach( async request => {
+      let user: User = (await this.userService.getById( request.userId ).toPromise()).result;
+      this.pendingRequests.push(
       new UiDropRoleRequest(
-        y.id,
+        request.id,
         user.firstName + " " + user.lastName,
-        y.dateApplied));
+        request.dateApplied));
     });
   }
 
