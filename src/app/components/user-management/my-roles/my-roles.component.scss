@@ -40,6 +40,12 @@ label {
   td {
     padding: 5px;
   }
+  .column-1 {
+    width: 30%
+  }
+  .column-2 {
+    width: 70%
+  }
 }
 
 .my-roles-list {
@@ -50,6 +56,21 @@ label {
   a:hover {
     text-decoration: none;
   }
+}
+
+.my-roles-table {
+  width: 100%;
+ td {
+    padding: 2px 10px;
+  }
+
+  .column-1 {
+    width: 70%
+  }
+  .column-2 {
+    width: 30%
+  }
+
 }
 
 .dropdown-width {
@@ -66,6 +87,10 @@ label {
   font-style: italic;
   padding: 4px;
   background-color: #f5f5f5;
+}
+
+.large-column {
+  width: 280px;
 }
 
 .pending-role {
