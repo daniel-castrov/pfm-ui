@@ -77,6 +77,7 @@ import { BulkTabComponent } from './components/programming/update-pom-session/bu
 import { CalculateTabComponent } from './components/programming/update-pom-session/calculate-tab/calculate-tab.component';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
+import { DropRoleRequestService } from './generated/api/dropRoleRequest.service';
 import { FyPipe } from './pipes/fy.pipe';
 import { JoinCommunityRequestService } from './generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequestService } from './generated/api/leaveCommunityRequest.service';
@@ -254,6 +255,7 @@ const appRoutes: Routes = [
     BlankService,
     CommunityService,
     CreateUserRequestService,
+    DropRoleRequestService,
     ElevationService,
     Injectables,
     JoinCommunityRequestService,

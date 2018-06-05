@@ -206,10 +206,8 @@ export class ManageRolesComponent {
         // none are granted
         my.assignedPrograms = []; 
       } else if (my.selectedURR.resourceIds.includes("*")) {
-        // all are granted - deep copy array
-        my.availablePrograms.forEach(function (program) {
-          my.assignedPrograms.push(program);
-        });
+        // all are granted - shallow copy array
+        my.assignedPrograms = [ ...my.availablePrograms ];
       } else {
         // some are granted
         let newAvail:Program[]=[];

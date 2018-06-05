@@ -1,10 +1,10 @@
-import { RequestsService } from './../../../services/requests.service';
 import { Component, OnInit, Input } from '@angular/core';
+import { RequestsService } from './../../../services/requests.service';
+import { Request } from '../../../services/request';
+import { ElevationService } from '../../../services/elevation.component';
 
 // Generated
 import { AuthUser } from '../../../generated/model/authUser';
-import { Request } from '../../../services/request';
-import { ElevationService } from '../../../services/elevation.component';
 
 @Component({
   selector: 'header-user',

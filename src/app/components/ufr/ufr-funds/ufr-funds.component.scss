@@ -11,10 +11,10 @@ fieldset { padding: 20px;}
 
 .pr-funds-table {
   width: 100%;
-  background-color: $white;
-  border-collapse: collapse;
-  border: 1px solid $grey-border;
-  color: $black;
+
+  thead tr {
+    display: block;
+  }
 
   thead {
     background-color: $primary-color;
@@ -23,23 +23,28 @@ fieldset { padding: 20px;}
 
   th {
     border: $grey-border;
+    max-width: 100px;
+    min-width: 100px;
     padding: 6px;
     padding: 2px 10px;
     font-weight: 500;
     text-align: center;
   }
 
+  tbody{
+    display:block;
+    height: 450px;
+    overflow:auto;//set tbody to auto
+  }
+
   td {
     border: $grey-border;
+    width:100%; //fixed width
     max-width: 100px;
     min-width: 100px;
     max-height: 20px;
     padding: 6px;
     padding: 2px 10px;
-  }
-
-  .header-column-width {
-    width: 160px;
   }
 
   .cell-white {
@@ -81,14 +86,31 @@ fieldset { padding: 20px;}
     text-align: center;
   }
 
+  // custom scroll background
+  /* width */
+  ::-webkit-scrollbar {
+      width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+      background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+  }
+
 }
 
 .table-editable {
   position: relative;
-
-  th {
-    padding: 8px;
-  }
 
   tr > td {
    padding: 8px;
@@ -107,6 +129,16 @@ fieldset { padding: 20px;}
   }
 }
 
+.header-column-width {
+  width:100%;//fixed width
+  max-width: 160px;
+  min-width: 160px;
+}
+
 .dropdown-width {
+  width: 100%;
+}
+
+.forminput {
   width: 100%;
 }

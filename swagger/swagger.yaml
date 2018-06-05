@@ -9,6 +9,7 @@ tags:
 - name: "Blank"
 - name: "Community"
 - name: "CreateUserRequest"
+- name: "DropRoleRequest"
 - name: "JoinCommunityRequest"
 - name: "LeaveCommunityRequest"
 - name: "MyDetails"
@@ -719,6 +720,73 @@ paths:
     post:
       tags:
       - "AssignRoleRequest"
+      operationId: "status"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "status"
+        required: true
+        schema:
+          $ref: "#/definitions/Status"
+      - in: "path"
+        name: "requestId"
+        required: true
+        type: "string"
+# STOP ASSIGNROLEREQUEST
+##############################################################################
+# START DROPROLEREQUEST
+  /dropRoleRequests:
+    post:
+      tags:
+      - "DropRoleRequest"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DropRoleRequest"
+  /dropRoleRequests/community/{commId}:
+    get:
+      tags:
+      - "DropRoleRequest"
+      operationId: "getByCommId"
+      parameters:
+      - name: "commId"
+        in: "path"
+        required: true
+        type: "string"
+  /dropRoleRequests/user/{userId}:
+    get:
+      tags:
+      - "DropRoleRequest"
+      operationId: "getByUser"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+  /dropRoleRequests/{id}:
+    get:
+      tags:
+      - "DropRoleRequest"
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+  /dropRoleRequests/{requestId}/status:
+    post:
+      tags:
+      - "DropRoleRequest"
       operationId: "status"
       consumes:
       - "application/json"
@@ -2002,12 +2070,31 @@ definitions:
         type: "string"
       status:
         type: "string"
+      isNew:
+        type: "boolean"
       roleName:
         type: "string"
       resourceIds:
         type: "array"
         items:
           type: "string"
+  DropRoleRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      userId:
+        type: "string"
+      communityId:
+        type: "string"
+      dateApplied:
+        type: "string"
+      dateDecided:
+        type: "string"
+      status:
+        type: "string"
+      roleName:
+        type: "string"
   Permission:
     type: "object"
     properties:
