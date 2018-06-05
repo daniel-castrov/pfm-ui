@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Request } from './request';
+import { UiLeaveCommunityRequest } from './uiLeaveCommunityRequest';
+import { UiJoinCommunityRequest } from './uiJoinCommunityRequest';
+import { UiCreateUserRequest } from './uiCreateUserRequest';
+import { UiAssignRoleRequest } from './uiAssignRoleRequest';
+import { UiDropRoleRequest } from './uiDropRoleRequest';
 
 // Generated
 import { User } from '../generated/model/user';
@@ -11,86 +17,119 @@ import { JoinCommunityRequest } from '../generated/model/joinCommunityRequest';
 import { JoinCommunityRequestService } from '../generated/api/joinCommunityRequest.service';
 import { LeaveCommunityRequest } from '../generated/model/leaveCommunityRequest';
 import { LeaveCommunityRequestService } from '../generated/api/leaveCommunityRequest.service';
-import { UiLeaveCommunityRequest } from './uiLeaveCommunityRequest';
-import { UiJoinCommunityRequest } from './uiJoinCommunityRequest';
-import { UiCreateUserRequest } from './uiCreateUserRequest';
+import { AssignRoleRequest } from '../generated/model/assignRoleRequest';
+import { AssignRoleRequestService } from '../generated/api/assignRoleRequest.service';
+import { DropRoleRequest } from '../generated/model/dropRoleRequest';
+import { DropRoleRequestService } from '../generated/api/dropRoleRequest.service';
 
 
 @Injectable()
 export class RequestsService {
+
+  // All Pending Requests for the current user's current community.
+  pendingRequests: Request[];
 
   constructor(
     private myDetailsService: MyDetailsService,
     private createUserRequestService: CreateUserRequestService,
     private joinCommunityRequestService: JoinCommunityRequestService,
     private leaveCommunityRequestService: LeaveCommunityRequestService,
-    private userService: UserService
+    private userService: UserService,
+    private assignRoleRequestService: AssignRoleRequestService,
+    private dropRoleRequestService: DropRoleRequestService
   ) {}
-  
-  // TO DO Refactor this method.  I tried to use promises and forkJoins but failed.
+
   getRequests(): Request[] {
-    const result: Request[] = [];
-
-    this.myDetailsService.getCurrentUser().subscribe((resultUser) => {
-        let currentUser: User = resultUser.result;
-
-        // 2 get the join-community-requests for this approver
-        this.joinCommunityRequestService.getByCommId(currentUser.currentCommunityId).subscribe(response => {
-            for (let request of response.result as JoinCommunityRequest[]) {
-
-              // 2a get the usernames for the joins
-              this.userService.getById(request.userId).subscribe((response) => {
-                  let user: User = response.result;
-                  result.push(
-                    new UiJoinCommunityRequest(
-                      request.id,
-                      user.firstName + " " + user.lastName,
-                      request.dateApplied));
-                      this.sortNotifications(result);
-                });
-            }
-
-            // 3 get the leave-community-requests for this approver
-            this.leaveCommunityRequestService.getByCommId(currentUser.currentCommunityId).subscribe(response => {
-                // 3a  get the usernames for the leaves
-                for (let request of response.result as LeaveCommunityRequest[]) {
-                  this.userService.getById(request.userId).subscribe((response) => {
-                      let user: User = response.result;
-                      result.push(
-                        new UiLeaveCommunityRequest(
-                          request.id,
-                          user.firstName + " " + user.lastName,
-                          request.dateApplied));
-                          this.sortNotifications(result);
-                    });
-                }
-
-                // 3b get the new-user-requests for this approver
-                this.createUserRequestService.getByCommId(currentUser.currentCommunityId).subscribe(response => {
-                    // 3c get the usernames for the joins
-                    for (let request of response.result as CreateUserRequest[]) {
-                      result.push(
-                        new UiCreateUserRequest(
-                          request.id,
-                          request.firstName + " " + request.lastName,
-                          request.dateApplied));
-                    }
-                    this.sortNotifications(result);
-                  });
-              });
-          });
-      });
-      return result;
+    var my: RequestsService = this;
+    my.pendingRequests=[];
+    my.buildRequests();
+    return my.pendingRequests;
   }
 
-  sortNotifications(requestLinks: Request[]) {
+  private async buildRequests() {
+    
+    let currentUser:User = (await this.myDetailsService.getCurrentUser().toPromise()).result;
+    let communityId:string  = currentUser.currentCommunityId;
+    this.buildJoinCommunityRequests(communityId);
+    this.buildLeaveCommunityRequests(communityId);
+    this.buildCreateUserRequests(communityId);
+    this.buildAssignRoleRequests(communityId);
+    this.buildDropRoleRequests(communityId);
+    this.sortNotifications(communityId, this.pendingRequests);
+  }
+
+  private async buildJoinCommunityRequests(communityId:string) {
+    var my: RequestsService = this;
+    let jcr: JoinCommunityRequest[]  = (await my.joinCommunityRequestService.getByCommId(communityId).toPromise()).result;
+    jcr.forEach( async x => {
+      let user: User = (await my.userService.getById(x.userId).toPromise()).result;
+      my.pendingRequests.push(
+      new UiJoinCommunityRequest(
+        x.id,
+        user.firstName + " " + user.lastName,
+        x.dateApplied));
+    });
+  }
+
+  private async buildLeaveCommunityRequests(communityId:string) {
+    var my: RequestsService = this;
+    let lcr: LeaveCommunityRequest[]  = (await my.leaveCommunityRequestService.getByCommId(communityId).toPromise()).result;
+    lcr.forEach( async y => {
+      let user: User = (await my.userService.getById( y.userId ).toPromise()).result;
+      my.pendingRequests.push(
+      new UiLeaveCommunityRequest(
+        y.id,
+        user.firstName + " " + user.lastName,
+        y.dateApplied));
+    });
+  }
+
+  private async buildCreateUserRequests(communityId:string) {
+    var my: RequestsService = this;
+    let nur: CreateUserRequest[]  = (await my.createUserRequestService.getByCommId(communityId).toPromise()).result;
+    nur.forEach( y => {
+      my.pendingRequests.push(
+        new UiCreateUserRequest(
+          y.id,
+          y.firstName + " " + y.lastName,
+          y.dateApplied));
+    });
+  }
+
+  private async buildAssignRoleRequests(communityId:string) {
+    var my: RequestsService = this;
+    let arr: AssignRoleRequest[]  = (await my.assignRoleRequestService.getByCommId(communityId).toPromise()).result;
+    arr.forEach( async y => {
+      let user: User = (await my.userService.getById( y.userId ).toPromise()).result;
+      my.pendingRequests.push(
+      new UiAssignRoleRequest(
+        y.id,
+        user.firstName + " " + user.lastName,
+        y.dateApplied));
+    });
+  }
+
+  private async buildDropRoleRequests(communityId:string) {
+    var my: RequestsService = this;
+    let arr: DropRoleRequest[]  = (await my.dropRoleRequestService.getByCommId(communityId).toPromise()).result;
+    arr.forEach( async y => {
+      let user: User = (await my.userService.getById( y.userId ).toPromise()).result;
+      my.pendingRequests.push(
+      new UiDropRoleRequest(
+        y.id,
+        user.firstName + " " + user.lastName,
+        y.dateApplied));
+    });
+  }
+
+  private sortNotifications(communityId:string, requestLinks: Request[]) {
     requestLinks.sort(this.compareRequsetLink);
   }
 
-  compareRequsetLink(a, b) {
-    if (a.date < b.date)
+  private compareRequsetLink(a, b) {
+    if (a.dateApplied < b.dateApplied)
       return -1;
-    if (a.date > b.date)
+    if (a.dateApplied > b.dateApplied)
       return 1;
     return 0;
   }

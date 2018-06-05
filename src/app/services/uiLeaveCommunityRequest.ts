@@ -11,7 +11,7 @@ export class UiLeaveCommunityRequest extends Request {
   }
 
   get type(): string {
-    return "Join Community Request";
+    return "Leave Community Request";
   }
 
   get approveRequestsPageType(): string {
