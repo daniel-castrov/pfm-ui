@@ -23,7 +23,8 @@
         </div>
         <div class="col-6" id="create-new-toplevel" *ngIf="!programRequestPageMode.id && programRequestPageMode.newProgram">
           <div class="h5 mb-4">Programmatic Request - Create new Top Level Program:</div>
-          <input type="text" [(ngModel)]="pr.shortName" placeholder="short name" aria-label="short name">
+          <input type="text" [(ngModel)]="pr.shortName" placeholder="Program ID" aria-label="short name">
+          <input type="text" [(ngModel)]="pr.longName" placeholder="Program Name" aria-label="short name">
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
           <div class="pull-right mb-2" aria-label="breadcrumb">
