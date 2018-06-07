@@ -1809,7 +1809,7 @@ paths:
           description: "The User does not exist."
         500:
           description: "An unexpected error occured."
-  /ufr/pom/{pomId}/program/{shortname}:
+  /ufr/pom/{pomId}/program/{mrdbId}:
     put:
       tags:
       - "UFRs"
@@ -1823,9 +1823,9 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "shortname"
+        name: "mrdbId"
         type: "string"
-        description: "the 'model' program"
+        description: "the program id from the MRDB"
         required: true
       consumes:
       - "application/json"

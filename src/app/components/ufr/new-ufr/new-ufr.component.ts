@@ -80,7 +80,7 @@ export class NewUfrComponent implements OnInit {
     console.log('create ' + this.mode + ' UFR');
 
     if ('FL' === this.mode ) {
-      this.usvc.addFundingLine(this.pom.id, this.selected.shortName).subscribe(data => {
+      this.usvc.addFundingLine(this.pom.id, this.selected.id).subscribe(data => {
         var ufrid = data.result;
         my.router.navigate(['/ufr-view', ufrid]);
       });
@@ -95,6 +95,10 @@ export class NewUfrComponent implements OnInit {
 
       if ('SP' === this.mode) {
         ufr.parentId = this.selected.id;
+        ufr.type = 'INCREMENT';
+      }
+      else {
+        ufr.type = 'PROGRAM';
       }
 
       this.usvc.create(ufr).subscribe(data => {

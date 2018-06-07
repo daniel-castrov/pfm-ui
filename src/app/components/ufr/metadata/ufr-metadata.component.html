@@ -33,13 +33,13 @@
           <div class="row">
             <div class="col-3">
               <div class="form-group inline-name mr-2">
-                <label>ProgID</label>
+                <label>Program ID</label>
                 <input [(ngModel)]="current.shortName" class="program-values forminput" name="program-id">
               </div>
             </div>
             <div class="col-3">
               <div class="form-group inline-name">
-                <label>ProgName</label>
+                <label>Program Name</label>
                 <input [(ngModel)]="current.longName" class="program-values forminput" name="program-name">
               </div>
             </div>
@@ -50,12 +50,18 @@
         <div class="col-3">
           <div class="form-group inline-name">
             <label>Parent Program for Subprogram</label>
-            <span class="program-values" *ngIf="current?.parentId; else novalue">{{current.parentId}}</span>
+            <span class="program-values" *ngIf="parentname; else novalue">{{parentname}}</span>
           </div>
         </div>
         <div class="col-3">
           <span class="form-group inline-name">
             <label class="mb-1">Type of Subprogram</label>
+            <select [(ngModel)]="current.type" name="typeselect">
+              <option [ngValue]="'PROGRAM'">Program</option>
+              <option [ngValue]="'INCREMENT'">Increment</option>
+              <option [ngValue]="'FOS'">Family of Systems</option>
+              <option [ngValue]="'VARIANT'">Variant</option>
+            </select>
           </span>
         </div>
       </div>
