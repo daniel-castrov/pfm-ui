@@ -27,15 +27,15 @@
                 </label>
               </div>
               <span class="mr-sm-4">
-                <select class="form-control-sm">
-                  <option>Program ID</option>
+                <select class="form-control-sm" [(ngModel)]="selectedProgram" name="unused">
+                  <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
                 </select>
               </span>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
-              <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='ExistingProgram'">
+              <button type="button" class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='ExistingProgram'">
                 <span class="icon-pad">Next</span>
                 <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
               </button>

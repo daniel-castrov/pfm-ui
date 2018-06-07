@@ -2448,6 +2448,8 @@ definitions:
         type: "string"
       bulkOrigin:
         type: "boolean"
+      originatingProgramId:
+        type: "string"
       parentId:
         type: "string"
       type:

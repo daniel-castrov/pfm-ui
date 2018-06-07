@@ -1,3 +1,4 @@
+import { ProgramsWithFullNameService } from './services/fetch-programs.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
 // app.modules
@@ -263,6 +264,7 @@ const appRoutes: Routes = [
     MyDetailsService,
     OrganizationService,
     ProgramRequestPageModeService,
+    ProgramsWithFullNameService,
     RoleService,
     StrangerService,
     UserRoleResourceService,
