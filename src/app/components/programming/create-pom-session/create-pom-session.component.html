@@ -73,11 +73,11 @@
 
               <tr class="sum-difference">
                 <td></td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">${{yeardiffs.get(fy)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">${{yeardiffs.get(fy+1)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">${{yeardiffs.get(fy+2)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+3) < 0}">${{yeardiffs.get(fy+3)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+4) < 0}">${{yeardiffs.get(fy+4)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+3) < 0}">{{yeardiffs.get(fy+3)}}</td>
+                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+4) < 0}">{{yeardiffs.get(fy+4)}}</td>
                 <td></td>
               </tr>
               <tr>

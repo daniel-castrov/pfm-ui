@@ -45,14 +45,20 @@ fieldset {
     &:hover {
       cursor: pointer;
       background-color: #cccccc;
+    }
+    &:before {
+      content: "$";
+    }
   }
-
-}
 
 .sum-difference {
   td {
   border: $light-grey-border;
   text-align: right;
+
+  &:before {
+    content: "$";
+    }
   }
 }
 
