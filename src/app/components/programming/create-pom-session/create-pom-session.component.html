@@ -31,12 +31,12 @@
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}} Baseline</td>
-                <td class="text-right" digits>${{toas.get(fy)}}</td>
-                <td class="text-right" digits>${{toas.get(fy+1)}}</td>
-                <td class="text-right" digits>${{toas.get(fy+2)}}</td>
-                <td class="text-right" digits>${{toas.get(fy+3)}}</td>
-                <td class="text-right" digits>${{toas.get(fy+4)}}</td>
-                <td class="text-right">${{orgsums.get(community.id)}}</td>
+                <td class="not-editable" digits>{{toas.get(fy)}}</td>
+                <td class="not-editable" digits>{{toas.get(fy+1)}}</td>
+                <td class="not-editable" digits>{{toas.get(fy+2)}}</td>
+                <td class="not-editable" digits>{{toas.get(fy+3)}}</td>
+                <td class="not-editable" digits>{{toas.get(fy+4)}}</td>
+                <td class="not-editable">{{orgsums.get(community.id)}}</td>
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}} TOA</td>
@@ -45,7 +45,7 @@
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+2)" class="editable-field" digits>{{toas.get(fy+2)}}</td>
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+3)" class="editable-field" digits>{{toas.get(fy+3)}}</td>
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+4)" class="editable-field" digits>{{toas.get(fy+4)}}</td>
-                <td class="text-right">${{orgsums.get(community.id)}}</td>
+                <td class="not-editable">{{orgsums.get(community.id)}}</td>
               </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA ($K)</td>
@@ -68,16 +68,16 @@
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+2)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+2)}}</td>
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+3)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+3)}}</td>
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, o.id, fy+4)" class="editable-field" digits>{{orgtoas.get(o.id).get(fy+4)}}</td>
-                <td class="text-right">${{orgsums.get(o.id)}}</td>
+                <td class="not-editable">{{orgsums.get(o.id)}}</td>
               </tr>
 
               <tr class="sum-difference">
                 <td></td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+3) < 0}">{{yeardiffs.get(fy+3)}}</td>
-                <td [ngClass]="{'exceed-sum':yeardiffs.get(fy+4) < 0}">{{yeardiffs.get(fy+4)}}</td>
+                <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)}}</td>
+                <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)}}</td>
+                <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)}}</td>
+                <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+3) < 0}">{{yeardiffs.get(fy+3)}}</td>
+                <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+4) < 0}">{{yeardiffs.get(fy+4)}}</td>
                 <td></td>
               </tr>
               <tr>

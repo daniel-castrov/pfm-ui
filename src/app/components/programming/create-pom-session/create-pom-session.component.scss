@@ -51,14 +51,18 @@ fieldset {
     }
   }
 
-.sum-difference {
-  td {
-  border: $light-grey-border;
+.not-editable {
   text-align: right;
 
   &:before {
     content: "$";
-    }
+  }
+}
+
+.sum-difference {
+  td {
+  border: $light-grey-border;
+  text-align: right;
   }
 }
 
