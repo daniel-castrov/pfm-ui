@@ -38,7 +38,7 @@ export class NewUfrComponent implements OnInit {
         function progFullName(p: Program): string {
           var pname = '';
           if (null != p.parentId) {
-            pname = progFullName(idproglkp.get(p.parentId)) + '::';
+            pname = progFullName(idproglkp.get(p.parentId)) + '/';
           }
           return pname + p.shortName;
         }
