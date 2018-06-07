@@ -6,7 +6,7 @@
     </div>
     <div class="col-md-3">
       <span>
-        <button class="btn-primary btn pull-right" (click)=submit()>Submit All</button>
+        <button class="btn-primary btn pull-right" (click)=submit() [disabled]="thereAreOutstandingPRs">Submit All</button>
       </span>
     </div>
   </div>

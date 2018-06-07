@@ -20,20 +20,16 @@
                 </div>
               </div>
             </div>
-
-            <div class="col-md-7">
+            <div class="col-md-7" *ngIf="radio=='ProgramOfRecord' || radio=='NewSubprogram'">
               <div class="mb-2 mr-sm-2">
                 <label class="primary-label mb-2">
-                  Select a Program except for when adding a New Program
+                  Select a Program
                 </label>
               </div>
               <span class="mr-sm-4">
                 <select class="form-control-sm">
                   <option>Program ID</option>
                 </select>
-              </span>
-              <span class="mr-sm-4">
-                <input type="text" class="form-control program-name" name="progamName" placeholder="Program Name">
               </span>
             </div>
           </div>

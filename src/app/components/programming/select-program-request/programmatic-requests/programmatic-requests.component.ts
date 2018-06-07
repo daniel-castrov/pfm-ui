@@ -1,8 +1,10 @@
+import { Router } from '@angular/router';
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Program } from '../../../../generated/model/program';
 import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Row } from './Row';
 import { PRService } from '../../../../generated/api/pR.service';
+import { ProgramRequestPageModeService } from '../../program-request/page-mode/page-mode.service';
 
 @Component({
   selector: 'programmatic-requests',
@@ -22,7 +24,9 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   private idToDelete: string;
   private nameToDelete: string;
 
-  constructor( private prService: PRService ) {}
+  constructor( private prService: PRService,
+               private router: Router,
+               private programRequestPageMode: ProgramRequestPageModeService ) {}
 
   ngOnChanges() {
     if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
@@ -53,4 +57,9 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.deleted.emit();
   }
   
+  editPR(prId: string) {
+    this.programRequestPageMode.id = prId;
+    this.router.navigate(['/program-request']);    
+  }
+
 }

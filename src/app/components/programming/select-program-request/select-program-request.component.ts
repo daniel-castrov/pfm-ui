@@ -26,6 +26,7 @@ export class SelectProgramRequestComponent implements OnInit {
   private pomProgrammaticRequests: ProgrammaticRequest[];
   private pb: PB;
   private pbProgrammaticRequests: ProgrammaticRequest[];
+  private thereAreOutstandingPRs: boolean;
 
   constructor(private myDetailsService: MyDetailsService,
               private pomService: POMService,
@@ -35,22 +36,28 @@ export class SelectProgramRequestComponent implements OnInit {
 
   async ngOnInit() {
     const user: User = (await this.myDetailsService.getCurrentUser().toPromise()).result;
-    this.initPomPrs(user);
-    this.initPbPrs(user);
+    await Promise.all([this.initPomPrs(user),this.initPbPrs(user)]);
+    this.thereAreOutstandingPRs = this.pomProgrammaticRequests.filter(pr => pr.state === 'OUTSTANDING').length > 0;
   }
 
-  async initPomPrs(user: User) {
-    this.pom = (await this.pomService.getByCommunityIdAndYear(user.currentCommunityId, this.by).toPromise()).result;
-    this.pomProgrammaticRequests = (await this.prService.getByPhase(this.pom.id).toPromise()).result;
+  initPomPrs(user: User): Promise<any> {
+    return new Promise( async (resolve, reject) => {
+      this.pom = (await this.pomService.getByCommunityIdAndYear(user.currentCommunityId, this.by).toPromise()).result;
+      this.pomProgrammaticRequests = (await this.prService.getByPhase(this.pom.id).toPromise()).result;
+      resolve();
+    });
   }
 
-  async initPbPrs(user: User) {
-    this.pb = (await this.pbService.getByCommunityAndYear(user.currentCommunityId, this.by-2).toPromise()).result;
-    this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
+  initPbPrs(user: User): Promise<any> {
+    return new Promise( async (resolve, reject) => {
+      this.pb = (await this.pbService.getByCommunityAndYear(user.currentCommunityId, this.by-2).toPromise()).result;
+      this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
+      resolve();
+    });
   }
 
-  submit() {
-    this.pomService.submit(this.pom.id).toPromise();
+  async submit() {
+    await this.pomService.submit(this.pom.id).toPromise();
     this.ngOnInit();
   }
 }
