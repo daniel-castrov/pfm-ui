@@ -212,7 +212,6 @@ export class ManageRolesComponent {
           my.availablePrograms=newAvail;
         }
       } else {
-        console.log("NEW");
         my.selectedURR = new Object();
         my.selectedURR.userId = my.selectedUser.id;
         my.selectedURR.roleId = my.selectedRole.id;
@@ -234,11 +233,9 @@ export class ManageRolesComponent {
 
     if (!my.assignedPrograms || my.assignedPrograms == null || my.assignedPrograms.length==0) {
       // none are selected
-      console.log("None");
       my.selectedURR.resourceIds=[];
     } else if (my.assignedPrograms.length==my.allcount) {
       // all are selected
-      console.log("All");
       my.selectedURR.resourceIds=["*"];
     } else {
       // some are selected
