@@ -68,7 +68,7 @@
       <div class="row">
         <div class="col-md-5">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Broswe Picture" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Browse Picture" aria-describedby="basic-addon1">
             <div class="input-group-append">
               <span class="input-group-text">Browse</span>
             </div>
@@ -91,10 +91,11 @@
               <label>Secondary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Secondary Capability'}"></ng-container>
             </span>
-            <span class="form-group inline-name">
+            <!-- RPB: As far as I can tell, Tertiary Capability is a historical tag, not current -->
+            <!--span class="form-group inline-name">
               <label>Tertiary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary Capability'}"></ng-container>
-            </span>
+            </span-->
           </fieldset>
         </div>
       </div>

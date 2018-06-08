@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 
 import { UFRsService, POMService, ProgramsService, Program, UFR, MyDetailsService, Community, Pom } from '../../../generated';
+import { ProgramTreeUtils } from '../../../utils/program-tree-utils'
 
 @Component({
   selector: 'app-new-ufr',
@@ -30,21 +31,8 @@ export class NewUfrComponent implements OnInit {
       ]).subscribe(data => {
         my.pom = data[0].result;
 
-        var idproglkp: Map<string, Program> = new Map<string, Program>();
-        data[1].result.forEach((p: Program) => {
-          idproglkp.set(p.id, p);
-        });
-
-        function progFullName(p: Program): string {
-          var pname = '';
-          if (null != p.parentId) {
-            pname = progFullName(idproglkp.get(p.parentId)) + '/';
-          }
-          return pname + p.shortName;
-        }
-
-        data[1].result.forEach((p: Program) => {
-          my.programs.push({ program: p, fullname: progFullName(p) });
+        ProgramTreeUtils.fullnames(data[1].result).forEach((fullname, program) => { 
+          my.programs.push({ program: program, fullname: fullname });
         });
 
         my.programs.sort(function (a, b) {

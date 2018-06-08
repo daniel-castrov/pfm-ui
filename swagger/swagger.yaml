@@ -1551,6 +1551,57 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /programs/{programId}/fullname:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getFullName"
+      parameters:
+      - name: "programId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "sep"
+        description: "how to separate names"
+        required: false
+        type: "string"
+      summary: "Get program"
+      description: "Returns a given program's full name"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A string"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/{programId}/ancestors:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getAncestors"
+      parameters:
+      - name: "programId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get program's ancestors"
+      description: "Returns a given program's ancestors"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Programs, from top to bottom in the tree"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
   /programs:
     get:
       tags:

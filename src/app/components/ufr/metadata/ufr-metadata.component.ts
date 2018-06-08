@@ -41,8 +41,9 @@ export class UfrMetadataComponent implements OnInit {
       //console.log(my.current);
     });
 
-    this.progsvc.getProgramById(this.current.parentId).subscribe(data => {
-      my.parentname = data.result.shortName;
+    console.log('calling for fullname of ' + this.current.parentId);
+    this.progsvc.getFullName(this.current.parentId).subscribe(data => {
+      my.parentname = data.result;
     });
 
 
