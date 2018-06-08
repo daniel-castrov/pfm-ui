@@ -15,7 +15,7 @@ export class HeaderUserComponent implements OnInit {
 
   @Input() isAuthenticated: boolean;
   @Input() authUser: AuthUser;
-  requests: Request[];
+  requests:Request[];
 
   constructor(
     private requestsService: RequestsService,
@@ -24,7 +24,8 @@ export class HeaderUserComponent implements OnInit {
 
   ngOnInit() {
     if (this.authUser.rolenames.includes('User_Approver')) {
-      this.requests = this.requestsService.getRequests();
+      this.requestsService.getRequests().subscribe(
+         (allRequests) => this.requests = allRequests );
     } else {
       this.requests = [];
     }

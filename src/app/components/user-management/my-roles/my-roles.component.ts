@@ -181,6 +181,7 @@ export class MyRolesComponent implements OnInit {
               try {
                 progNames.push(my.pogramsMap[r].shortName );
               } catch (any){
+                if ( r==="x" ) r="none";
                 progNames.push(r);
               }
             });

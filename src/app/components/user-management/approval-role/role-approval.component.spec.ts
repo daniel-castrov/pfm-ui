@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccessChangeApprovalComponent } from './access-change-approval.component';
+import { AccessChangeApprovalComponent } from './role-approval.component';
 
 describe('AccessChangeApprovalComponent', () => {
   let component: AccessChangeApprovalComponent;

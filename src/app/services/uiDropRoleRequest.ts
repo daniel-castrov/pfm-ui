@@ -3,12 +3,11 @@ import { Injectables } from './injectables';
 
 export class UiDropRoleRequest extends Request {
   constructor(requestId: string, name: string, date: string) {
-    super(requestId, name, date, Injectables.createUserRequestService);
+    super(requestId, name, date, Injectables.dropRoleRequestService);
   }
 
   get link(): string {
-    //return "/role-drop-approval/" + this.requestId;
-    return "/not-implemented";
+    return "/role-approve/drop/" + this.requestId;
   }
 
   get type(): string {
