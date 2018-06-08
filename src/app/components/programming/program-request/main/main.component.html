@@ -6,13 +6,13 @@
         <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfRecord">
           <div class="h5 mb-4">Programmatic Request for Program:</div>
             <span class="form-group">
-              <label class="badge badge-light mr-sm-4"><h6>Program ID</h6></label>
+              <label class="badge badge-light mr-sm-4"><h6>{{pr.shortName}}</h6></label>
             </span>
             <span class="form-group">
-              <label class="badge badge-light mr-sm-4"><h6>Program Name Selected</h6></label>
+              <label class="badge badge-light mr-sm-4"><h6>{{pr.longName}}</h6></label>
             </span>
         </div>
-        <div class="col-6" id="create-new-subprogram" *ngIf="programRequestPageMode.newSubprogram">
+        <div class="col-6" id="create-new-subprogram" *ngIf="!programRequestPageMode.id && programRequestPageMode.newSubprogram">
           <div class="h5 mb-4">Programmatic Request - Creating New Sub-Program for Program:</div>
           <span class="form-group">
             <label class="badge badge-light mr-sm-4"><h6>Program ID</h6></label>
@@ -21,9 +21,10 @@
             <label class="badge badge-light mr-sm-4"><h6>Program Name Selected</h6></label>
           </span>
         </div>
-        <div class="col-6" id="create-new-toplevel" *ngIf="programRequestPageMode.newProgram">
+        <div class="col-6" id="create-new-toplevel" *ngIf="!programRequestPageMode.id && programRequestPageMode.newProgram">
           <div class="h5 mb-4">Programmatic Request - Create new Top Level Program:</div>
-          <input type="text" [(ngModel)]="pr.shortName" placeholder="short name" aria-label="short name">
+          <input type="text" [(ngModel)]="pr.shortName" placeholder="Program ID" aria-label="short name">
+          <input type="text" [(ngModel)]="pr.longName" placeholder="Program Name" aria-label="short name">
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
           <div class="pull-right mb-2" aria-label="breadcrumb">
