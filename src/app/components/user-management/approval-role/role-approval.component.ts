@@ -76,17 +76,12 @@ export class AccessChangeApprovalComponent implements OnInit {
   private async getUserAndRoles() {
 
     this.request = (await this.requestService.getById(this.requestId).toPromise()).result;
-    if (this.isDrop){ 
-      this.requsetDisplay = this.createRoleWithResource(this.request.roleName, [...[]]);
-    } else {
-      this.requsetDisplay = this.createRoleWithResource(this.request.roleName, this.request.resourceIds);
-    }
     this.requestingUser = (await this.userService.getById(this.request.userId).toPromise()).result;
-
+    
     Observable.forkJoin([
       this.programsService.getProgramsByCommunity(this.requestingUser.currentCommunityId),
       this.roleService.getByUserIdAndCommunityId(this.requestingUser.id, this.requestingUser.currentCommunityId)
-    ]).toPromise().then( r => {
+    ]).toPromise().then( async r => {
 
       // Get all the programs and put them in a map
       this.resultError.push(r[0].error);
@@ -104,6 +99,11 @@ export class AccessChangeApprovalComponent implements OnInit {
           this.currentRoles.push(this.createRoleWithResource(role.name, urr.resourceIds));
         });
       });
+      if (this.isDrop){ 
+        this.requsetDisplay = this.createRoleWithResource(this.request.roleName, [...[]]);
+      } else {
+        this.requsetDisplay = this.createRoleWithResource(this.request.roleName, this.request.resourceIds);
+      }
     });
   }
 
@@ -144,6 +144,7 @@ class RoleNameWithResources {
   resources: string[];
   constructor(nm: string, re: string[]) {
     this.name = nm;
+    if ( re.length===0 ) re=["none"];
     this.resources = re;
   }
 }
