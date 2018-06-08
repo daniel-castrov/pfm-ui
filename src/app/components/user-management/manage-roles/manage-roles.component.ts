@@ -87,18 +87,14 @@ export class ManageRolesComponent {
   ) { 
 
     this.route.params.subscribe((params: Params) => {
-      //console.log(  params.commid +" "+ params.roleid +" "+ params.userid);
       this.paramCommunityId= params.commid;
       this.paramRoleId=params.roleid;
       this.paramUserId=params.userid;
-
     });
-
   }
 
   public ngOnInit() {
-    var my: ManageRolesComponent = this;
-    
+    var my: ManageRolesComponent = this; 
     my.getCommunities();
   }
 
@@ -195,40 +191,38 @@ export class ManageRolesComponent {
       if (urr) {
         my.isNewUserRole = false;
         my.selectedURR = urr;
+        if (my.selectedURR.resourceIds.includes("x") || my.selectedURR.resourceIds.length==0) {
+          // none are granted
+          my.assignedPrograms = []; 
+        } else if (my.selectedURR.resourceIds.includes("*")) {
+          // all are granted - shallow copy array
+          my.assignedPrograms = [ ...my.availablePrograms ];
+        } else {
+          // some are granted
+          let newAvail:Program[]=[];
+          my.selectedURR.resourceIds.forEach(function ( progId ) {
+            my.availablePrograms.forEach(function (prog) {
+              if ( prog.id == progId ){
+                my.assignedPrograms.push(prog);
+              } else {
+                newAvail.push(prog);
+              }
+            });
+          });
+          my.availablePrograms=newAvail;
+        }
       } else {
         my.selectedURR = new Object();
         my.selectedURR.userId = my.selectedUser.id;
         my.selectedURR.roleId = my.selectedRole.id;
         my.selectedURR.resourceIds = [];
       }
-
-      if (my.selectedURR.resourceIds.includes("x") || my.selectedURR.resourceIds.length==0) {
-        // none are granted
-        my.assignedPrograms = []; 
-      } else if (my.selectedURR.resourceIds.includes("*")) {
-        // all are granted - shallow copy array
-        my.assignedPrograms = [ ...my.availablePrograms ];
-      } else {
-        // some are granted
-        let newAvail:Program[]=[];
-        my.selectedURR.resourceIds.forEach(function ( progId ) {
-          my.availablePrograms.forEach(function (prog) {
-            if ( prog.id == progId ){
-              my.assignedPrograms.push(prog);
-            } else {
-              newAvail.push(prog);
-            }
-          });
-        });
-        my.availablePrograms=newAvail;
-      }
-
     });
   }
 
   commitUnassign(): void {
     var my: ManageRolesComponent = this;
-    my.userRoleResourceService.deleteById(my.selectedURR.id).subscribe(() => {
+    my.userRoleResourceService.deleteById(my.selectedURR.id).subscribe(() => { 
       my.clear(); 
       my.feedback.success(my.getMessage(0));
     });
@@ -239,16 +233,14 @@ export class ManageRolesComponent {
 
     if (!my.assignedPrograms || my.assignedPrograms == null || my.assignedPrograms.length==0) {
       // none are selected
-      my.selectedURR.resourceIds=["x"];
+      my.selectedURR.resourceIds=[];
     } else if (my.assignedPrograms.length==my.allcount) {
       // all are selected
       my.selectedURR.resourceIds=["*"];
     } else {
       // some are selected
       my.selectedURR.resourceIds=[];
-      my.assignedPrograms.forEach(function (value) {
-        my.selectedURR.resourceIds.push( value.id );
-      });
+      my.assignedPrograms.forEach( (value) => my.selectedURR.resourceIds.push(value.id));
     }
 
     if (my.isNewUserRole){
