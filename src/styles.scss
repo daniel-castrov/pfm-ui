@@ -65,9 +65,9 @@ hr {
 }
 
 .h5 {
-    font-size: 1.25rem;
+    font-size: 24px;
     padding-bottom: 10px;
-    margin-left: 4px;
+    margin: 0;
 }
 
 .primary-label {
@@ -75,11 +75,6 @@ hr {
 }
 
 /* bootstrap containers */
-
-.container-fluid {
-  padding-right: 0;
-  padding-left: 0;
-}
 
 .card-header-text-pad {
   padding-right: 15px;
@@ -373,4 +368,41 @@ tab {
 
 .mat-paginator-range-label {
   font-size: 14px;
+}
+
+.container-fluid {
+  padding-left: 0;
+}
+
+// New tab design
+
+
+.program-tab-style {
+  padding: 10px;
+  font-size: 14px;
+  padding: 0.3rem 1rem;
+  > .nav-tabs {
+    background-color: #f1f1f1;
+    border: 1px solid #ced4da;
+  }
+  > .nav-tabs .nav-item {
+    border-bottom: 1px solid #ced4da !important;
+  }
+  > .nav-tabs .nav-link.active,
+    .nav-tabs .nav-item.show .nav-link {
+      color: #fff;
+      background-color: #616161;
+      border-radius: 0rem;
+      border: none !important;
+      font-weight: 500;
+      border: 1px solid #ddd;
+  }
+  > .nav-tabs .nav-link,
+    .nav-tabs .nav-item.show .nav-link {
+      color: #616161;
+      background-color: #f1f1f1;
+      border-radius: 0rem;
+      border: none !important;
+      font-weight: 500;
+  }
 }

@@ -12,7 +12,7 @@ export class ProgramRequestPageModeService {
   private _initialized: boolean;
   private _id: string; // null if a PR is being created, an id if an existing PR is being edited
   private type: Type; // applicable only when this._is is not defined
-  public phaseId: string;
+  public phaseId: string; // applicable only when this._is is not defined
 
   // begin initilizers
   set id(id:string) {
@@ -21,18 +21,21 @@ export class ProgramRequestPageModeService {
   }
 
   setProgramOfRecord(phaseId: string) {
+    this.id = null;
     this.type = Type.ProgramFormRecord;
     this.phaseId = phaseId;
     this._initialized = true;
   }
 
   setNewSubprogram(phaseId: string) {
+    this.id = null;
     this.type = Type.NewSubprogram;
     this.phaseId = phaseId;
     this._initialized = true;
   }
   
   setNewProgram(phaseId: string) {
+    this.id = null;
     this.type = Type.NewProgram;
     this.phaseId = phaseId;
     this._initialized = true;
