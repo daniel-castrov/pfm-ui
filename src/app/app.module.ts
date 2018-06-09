@@ -20,7 +20,7 @@ import { environment } from '../environments/environment'
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
-import { AccessChangeApprovalComponent } from './components/user-management/approval-role/access-change-approval.component';
+import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
@@ -119,7 +119,6 @@ const appRoutes: Routes = [
   {path:'', component:LoginComponent},
   {path:'about', component:AboutComponent},
   {path:'about-private', component:AboutPrivateComponent},
-  {path:'access-change-approval', component:AccessChangeApprovalComponent},
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
@@ -143,6 +142,7 @@ const appRoutes: Routes = [
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
+  {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},

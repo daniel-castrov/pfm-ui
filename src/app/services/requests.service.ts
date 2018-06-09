@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Request } from './request';
 import { UiLeaveCommunityRequest } from './uiLeaveCommunityRequest';
 import { UiJoinCommunityRequest } from './uiJoinCommunityRequest';
@@ -21,13 +21,11 @@ import { AssignRoleRequest } from '../generated/model/assignRoleRequest';
 import { AssignRoleRequestService } from '../generated/api/assignRoleRequest.service';
 import { DropRoleRequest } from '../generated/model/dropRoleRequest';
 import { DropRoleRequestService } from '../generated/api/dropRoleRequest.service';
+import { Response } from '@angular/http';
 
 
 @Injectable()
 export class RequestsService {
-
-  // All Pending Requests for the current user's current community.
-  pendingRequests: Request[];
 
   constructor(
     private myDetailsService: MyDetailsService,
@@ -37,95 +35,115 @@ export class RequestsService {
     private userService: UserService,
     private assignRoleRequestService: AssignRoleRequestService,
     private dropRoleRequestService: DropRoleRequestService
-  ) {}
+  ) { }
 
-  getRequests(): Request[] {
-    this.pendingRequests=[];
-    this.buildRequests();
-    return this.pendingRequests;
+  getRequests(): Observable<Request[]> {
+
+    let observable = new Subject<Request[]>();
+    let allRequests: Request[] = [];
+
+    this.myDetailsService.getCurrentUser().subscribe(
+      (response) => {
+
+        let communityId: string = response.result.currentCommunityId;
+
+        Promise.all([
+          this.getAssignRoleReqs(allRequests, communityId),
+          this.getDropRoleReqs(allRequests, communityId),
+          this.getJoinCommReqs(allRequests, communityId),
+          this.getLeaveCommReqs(allRequests, communityId),
+          this.getCreateUserReqs(allRequests, communityId)
+        ]).then(
+          (requestArrays: any) => {
+            requestArrays.forEach(
+              (reqArray: Request[]) => {
+                allRequests.concat(reqArray);
+              });
+          });
+          observable.next(allRequests);
+      });
+    return observable;
   }
 
-  private async buildRequests() {
-    
-    let currentUser:User = (await this.myDetailsService.getCurrentUser().toPromise()).result;
-    let communityId:string  = currentUser.currentCommunityId;
-    this.buildJoinCommunityRequests(communityId);
-    this.buildLeaveCommunityRequests(communityId);
-    this.buildCreateUserRequests(communityId);
-    this.buildAssignRoleRequests(communityId);
-    this.buildDropRoleRequests(communityId);
-    this.sortNotifications(communityId, this.pendingRequests);
-  }
+  // TRY WITH ASYNC and shared parameter
 
-  private async buildJoinCommunityRequests(communityId:string) {
-    let joinCommReqs: JoinCommunityRequest[]  = (await this.joinCommunityRequestService.getByCommId(communityId).toPromise()).result;
-    joinCommReqs.forEach( async request => {
-      let user: User = (await this.userService.getById(request.userId).toPromise()).result;
-      this.pendingRequests.push(
-      new UiJoinCommunityRequest(
-        request.id,
-        user.firstName + " " + user.lastName,
-        request.dateApplied));
+  private async getAssignRoleReqs(allRequests: Request[], communityId: string) {
+    let assignRoleReqs: AssignRoleRequest[] = (await this.assignRoleRequestService.getByCommId(communityId).toPromise()).result;
+    let promise = new Promise((resolve, reject) => {
+      assignRoleReqs.forEach(async request => {
+        let user: User = (await this.userService.getById(request.userId).toPromise()).result;
+        allRequests.push(
+          new UiAssignRoleRequest(
+            request.id,
+            user.firstName + " " + user.lastName,
+            request.dateApplied));
+      });
+      resolve();
     });
+    return promise;
   }
 
-  private async buildLeaveCommunityRequests(communityId:string) {
-    let leaveCommReqs: LeaveCommunityRequest[]  = (await this.leaveCommunityRequestService.getByCommId(communityId).toPromise()).result;
-    leaveCommReqs.forEach( async request => {
-      let user: User = (await this.userService.getById( request.userId ).toPromise()).result;
-      this.pendingRequests.push(
-      new UiLeaveCommunityRequest(
-        request.id,
-        user.firstName + " " + user.lastName,
-        request.dateApplied));
+  private async getDropRoleReqs(allRequests: Request[], communityId: string) {
+    let dropRoleReqs: DropRoleRequest[] = (await this.dropRoleRequestService.getByCommId(communityId).toPromise()).result;
+    let promise = new Promise((resolve, reject) => {
+      dropRoleReqs.forEach(async request => {
+        let user: User = (await this.userService.getById(request.userId).toPromise()).result;
+        allRequests.push(
+          new UiDropRoleRequest(
+            request.id,
+            user.firstName + " " + user.lastName,
+            request.dateApplied));
+      });
+      resolve();
     });
+    return promise;
   }
 
-  private async buildCreateUserRequests(communityId:string) {
-    let createUserReqs: CreateUserRequest[]  = (await this.createUserRequestService.getByCommId(communityId).toPromise()).result;
-    createUserReqs.forEach( request => {
-      this.pendingRequests.push(
-        new UiCreateUserRequest(
+  private async getJoinCommReqs(allRequests: Request[], communityId: string) {
+    let joinCommReqs: JoinCommunityRequest[] = (await this.joinCommunityRequestService.getByCommId(communityId).toPromise()).result;
+    let promise = new Promise((resolve, reject) => {
+      joinCommReqs.forEach(async request => {
+        let user: User = (await this.userService.getById(request.userId).toPromise()).result;
+        allRequests.push(new UiJoinCommunityRequest(
           request.id,
-          request.firstName + " " + request.lastName,
-          request.dateApplied));
+          user.firstName + " " + user.lastName,
+          request.dateApplied)
+        );
+      });
+      resolve();
     });
+    return promise;
   }
 
-  private async buildAssignRoleRequests(communityId:string) {
-    let assignRoleReqs: AssignRoleRequest[]  = (await this.assignRoleRequestService.getByCommId(communityId).toPromise()).result;
-    assignRoleReqs.forEach( async request => {
-      let user: User = (await this.userService.getById( request.userId ).toPromise()).result;
-      this.pendingRequests.push(
-      new UiAssignRoleRequest(
-        request.id,
-        user.firstName + " " + user.lastName,
-        request.dateApplied));
+  private async getLeaveCommReqs(allRequests: Request[], communityId: string) {
+    let leaveCommReqs: LeaveCommunityRequest[] = (await this.leaveCommunityRequestService.getByCommId(communityId).toPromise()).result;
+    let promise = new Promise<Request[]>((resolve, reject) => {
+      leaveCommReqs.forEach(async request => {
+        let user: User = (await this.userService.getById(request.userId).toPromise()).result;
+        allRequests.push(new UiLeaveCommunityRequest(
+          request.id,
+          user.firstName + " " + user.lastName,
+          request.dateApplied)
+        );
+      });
+      resolve();
     });
+    return promise;
   }
 
-  private async buildDropRoleRequests(communityId:string) {
-    let dropRoleReqs: DropRoleRequest[]  = (await this.dropRoleRequestService.getByCommId(communityId).toPromise()).result;
-    dropRoleReqs.forEach( async request => {
-      let user: User = (await this.userService.getById( request.userId ).toPromise()).result;
-      this.pendingRequests.push(
-      new UiDropRoleRequest(
-        request.id,
-        user.firstName + " " + user.lastName,
-        request.dateApplied));
+  private async getCreateUserReqs(allRequests: Request[], communityId: string) {
+    let createUserReqs: CreateUserRequest[] = (await this.createUserRequestService.getByCommId(communityId).toPromise()).result;
+    let promise = new Promise((resolve, reject) => {
+      createUserReqs.forEach(request => {
+        allRequests.push(
+          new UiCreateUserRequest(
+            request.id,
+            request.firstName + " " + request.lastName,
+            request.dateApplied));
+      });
+      resolve();
     });
-  }
-
-  private sortNotifications(communityId:string, requestLinks: Request[]) {
-    requestLinks.sort(this.compareRequsetLink);
-  }
-
-  private compareRequsetLink(a, b) {
-    if (a.dateApplied < b.dateApplied)
-      return -1;
-    if (a.dateApplied > b.dateApplied)
-      return 1;
-    return 0;
+    return promise;
   }
 
 }
