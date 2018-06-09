@@ -10,7 +10,12 @@ import { UFR } from '../../../generated/model/uFR'
 import { MyDetailsService } from '../../../generated/api/myDetails.service';
 import { CommunityService } from '../../../generated/api/community.service';
 import { UFRFilter } from '../../../generated/model/uFRFilter';
-import { OrganizationService, Organization, Community, POMService, PBService, Pom, PB, ProgramsService, Tag, Program } from '../../../generated';
+import {
+  OrganizationService, Organization, Community, POMService, PBService,
+  Pom, PB, ProgramsService, Tag, Program
+} from '../../../generated';
+
+import { ProgramTreeUtils } from '../../../utils/program-tree-utils'
 
 import { Cycle } from '../cycle';
 import { Disposition } from '../disposition.enum';
@@ -43,6 +48,7 @@ export class UfrSearchComponent implements OnInit {
   private cyclelkp: Map<string, string> = new Map<string, string>();
 
   private datasource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
+  private programlkp: Map<string, string> = new Map<string, string>();// mrid, fullname
 
   constructor(private usvc: UFRsService, private userDetailsService: MyDetailsService,
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -70,6 +76,10 @@ export class UfrSearchComponent implements OnInit {
         my.orgs = data[1].result;
         my.fas = (data[4].result ? data[4].result : []);
         
+        ProgramTreeUtils.fullnames(data[5].result).forEach((fullname, program) => {
+          my.programlkp.set(program.id, fullname);
+        });
+
         my.filter.orgId = my.orgs[0].id;
         my.filter.from = new Date().getTime();
         my.filter.to = new Date().getTime();
@@ -163,5 +173,13 @@ export class UfrSearchComponent implements OnInit {
 
   navigate(row) {
     this.router.navigate(['/ufr-view', row.id]);
+  }
+
+  getProgId(p: UFR) {
+    return this.programlkp.get( p.originalMrId );
+  }
+
+  getParentProgId(p: UFR) {
+    return (p.parentMrId ? this.programlkp.get(p.parentMrId) : '');
   }
 }
