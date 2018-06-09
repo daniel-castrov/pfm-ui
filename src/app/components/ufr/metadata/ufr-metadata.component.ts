@@ -41,10 +41,12 @@ export class UfrMetadataComponent implements OnInit {
       //console.log(my.current);
     });
 
-    console.log('calling for fullname of ' + this.current.parentId);
-    this.progsvc.getFullName(this.current.parentId).subscribe(data => {
-      my.parentname = data.result;
-    });
+    if (this.current.parentMrId) {
+      console.log('calling for fullname of ' + this.current.parentMrId);
+      this.progsvc.getFullName(this.current.parentMrId).subscribe(data => {
+        my.parentname = data.result;
+      });
+    }
 
 
   }

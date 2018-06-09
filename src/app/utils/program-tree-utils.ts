@@ -11,8 +11,8 @@ export class ProgramTreeUtils {
 
         function progFullName(p: Program): string {
             var pname = '';
-            if (null != p.parentId) {
-                pname = progFullName(idproglkp.get(p.parentId)) + '/';
+            if (null != p.parentMrId) {
+                pname = progFullName(idproglkp.get(p.parentMrId)) + '/';
             }
             return pname + p.shortName;
         }

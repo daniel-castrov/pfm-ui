@@ -82,7 +82,7 @@ export class NewUfrComponent implements OnInit {
       };
 
       if ('SP' === this.mode) {
-        ufr.parentId = this.selected.id;
+        ufr.parentMrId = this.selected.id;
         ufr.type = 'INCREMENT';
       }
       else {

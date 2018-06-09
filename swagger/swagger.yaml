@@ -1528,13 +1528,13 @@ paths:
 # STOP USERROLES
 ##############################################################################
 # START PROGRAMS
-  /programs/{programId}:
+  /programs/{mrId}:
     get:
       tags:
       - "Programs"
       operationId: "getProgramById"
       parameters:
-      - name: "programId"
+      - name: "mrId"
         in: "path"
         required: true
         type: "string"
@@ -1551,13 +1551,13 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /programs/{programId}/fullname:
+  /programs/{mrId}/fullname:
     get:
       tags:
       - "Programs"
       operationId: "getFullName"
       parameters:
-      - name: "programId"
+      - name: "mrId"
         in: "path"
         required: true
         type: "string"
@@ -1579,13 +1579,13 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /programs/{programId}/ancestors:
+  /programs/{mrId}/ancestors:
     get:
       tags:
       - "Programs"
       operationId: "getAncestors"
       parameters:
-      - name: "programId"
+      - name: "mrId"
         in: "path"
         required: true
         type: "string"
@@ -2324,7 +2324,7 @@ definitions:
         $ref: "#/definitions/StringMap"
       description:
         type: "string"
-      parentId:
+      parentMrId:
         type: "string"
       infolink:
         type: "string"
@@ -2399,11 +2399,11 @@ definitions:
         $ref: "#/definitions/StringMap"
       description:
         type: "string"
-      parentId:
+      parentMrId:
         type: "string"
       phaseId:
         type: "string"
-      originatingProgramId:
+      originalMrId:
         type: "string"
       infolink:
         type: "string"
@@ -2499,7 +2499,7 @@ definitions:
         type: "string"
       bulkOrigin:
         type: "boolean"
-      parentId:
+      parentMrId:
         type: "string"
       type:
         type: "string"
