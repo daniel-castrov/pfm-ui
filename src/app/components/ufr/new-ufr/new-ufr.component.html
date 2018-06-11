@@ -1,4 +1,4 @@
-<form>
+<form *ngIf="editable">
   <div class="row">
     <div class="col-md-5">
       <div class="radio-buttons mb-3">
@@ -39,3 +39,7 @@
     </div>
   </div>
 </form>
+
+<div *ngIf="!editable">
+  UFRs can be created/edited when there is an open POM session
+</div>

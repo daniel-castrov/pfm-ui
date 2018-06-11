@@ -8,6 +8,8 @@ import { Program, FundingLine, IntMap, UFR, POMService, Pom, Variant, ProgramsSe
 })
 export class UfrVariantsComponent implements OnInit {
   @Input() current: UFR | ProgrammaticRequest;
+  @Input() editable: boolean = false;
+
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private model: ProgrammaticRequest;

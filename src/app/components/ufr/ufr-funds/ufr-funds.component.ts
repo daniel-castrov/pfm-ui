@@ -14,6 +14,7 @@ import {
 })
 export class UfrFundsComponent implements OnInit {
   @Input() current: UFR | ProgrammaticRequest;
+  @Input() editable: boolean = false;
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private uvals: Map<number, number> = new Map<number, number>();
@@ -46,6 +47,7 @@ export class UfrFundsComponent implements OnInit {
       console.log('into ufr-funds init!' + my.fy );
       
       // get the data from the UFR into our tabledata structure
+      console.log('am I ere?');
       my.current.fundingLines.forEach(fund => { 
         var key = fund.appropriation + fund.blin;
         var cfunds: Map<number, number> = new Map<number, number>();
@@ -75,7 +77,7 @@ export class UfrFundsComponent implements OnInit {
           // get the current values for this program
           my.model = model.result;
           //console.log(my.model);
-
+          console.log('model check?');
           my.model.fundingLines.forEach(fund => {
             var key = fund.appropriation + fund.blin;
 

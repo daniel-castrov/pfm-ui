@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ProgramsService, Program, ProgramFilter, UFR, UFRsService } from '../../../generated';
+import { ProgramsService, Program, ProgramFilter, UFR, UFRsService, POMService, MyDetailsService } from '../../../generated';
 import { ViewEncapsulation } from '@angular/core';
 import * as $ from 'jquery';
 
@@ -19,9 +19,11 @@ import { Disposition } from '../disposition.enum';
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private current: UFR;
-  private qtyok: boolean=false;
+  private qtyok: boolean = false;
+  private canedit: boolean = false;
 
-  constructor(private usvc: UFRsService, private router: Router, private route: ActivatedRoute) {
+  constructor(private usvc: UFRsService, private pomsvc: POMService,
+    private usersvc:MyDetailsService, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -33,6 +35,12 @@ export class UfrViewComponent implements OnInit {
       my.usvc.getUfrById(ufrid).subscribe(data => { 
         my.current = data.result;
         my.setQtyOk();
+      });
+
+      my.usersvc.getCurrentUser().subscribe(data => {
+        my.pomsvc.isOpen(data.result.currentCommunityId).subscribe(d2 => { 
+          my.canedit = d2.result;
+        });
       });
     });
   }
