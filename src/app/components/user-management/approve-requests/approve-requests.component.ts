@@ -23,7 +23,10 @@ export class ApproveRequestsComponent implements OnInit {
   ){} 
 
   ngOnInit() {
-    this.requests = this.requestsService.getRequests();
+    this.requestsService.getRequests().subscribe(
+      (allRequests) => {
+        this.requests = allRequests;
+      });
   }
 
   async approve(request: Request) {

@@ -9,14 +9,14 @@ export class UiProgrammaticRequest {
   get shortName():string {return this.programmaticRequest.shortName}
   get longName():string {return this.programmaticRequest.longName}
   get fundingLines():FundingLine[] {return this.programmaticRequest.fundingLines}
-  get parentId():string {return this.programmaticRequest.parentId}
+  get parentId():string {return this.programmaticRequest.parentMrId}
   get bulkOrigin():boolean {return this.programmaticRequest.bulkOrigin}
   getToa(year:number): any {
       const sum = this.programmaticRequest.fundingLines.map( fundingLine=>fundingLine.funds[year] ).reduce((a,b)=>a+b, 0);
       return isNaN(sum) ? '' : sum;
   }
   get isSubprogram(): boolean {
-    return this.programmaticRequest.parentId !== null;
+    return this.programmaticRequest.parentMrId !== null;
   }
   get isNonVariantSubprogram(): boolean {
     return this.isSubprogram && this.programmaticRequest.type !== 'VARIANT';
