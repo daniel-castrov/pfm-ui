@@ -31,12 +31,12 @@
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}} Baseline</td>
-                <td class="not-editable" digits>{{toas.get(fy)}}</td>
-                <td class="not-editable" digits>{{toas.get(fy+1)}}</td>
-                <td class="not-editable" digits>{{toas.get(fy+2)}}</td>
-                <td class="not-editable" digits>{{toas.get(fy+3)}}</td>
-                <td class="not-editable" digits>{{toas.get(fy+4)}}</td>
-                <td class="not-editable">{{orgsums.get(community.id)}}</td>
+                <td class="not-editable" digits>{{baseline.get(fy)}}</td>
+                <td class="not-editable" digits>{{baseline.get(fy+1)}}</td>
+                <td class="not-editable" digits>{{baseline.get(fy+2)}}</td>
+                <td class="not-editable" digits>{{baseline.get(fy+3)}}</td>
+                <td class="not-editable" digits>{{baseline.get(fy+4)}}</td>
+                <td class="not-editable">{{baseline.get(fy)+baseline.get(fy+1)+baseline.get(fy+2)+baseline.get(fy+3)+baseline.get(fy+4)}}</td>
               </tr>
               <tr class="table-bordered">
                 <td>{{community.abbreviation}} TOA</td>
