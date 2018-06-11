@@ -47,7 +47,6 @@ export class UfrFundsComponent implements OnInit {
       console.log('into ufr-funds init!' + my.fy );
       
       // get the data from the UFR into our tabledata structure
-      console.log('am I ere?');
       my.current.fundingLines.forEach(fund => { 
         var key = fund.appropriation + fund.blin;
         var cfunds: Map<number, number> = new Map<number, number>();
