@@ -11,7 +11,8 @@ import { UFR } from '../../../generated/model/uFR'
 })
 export class UfrMetadataComponent implements OnInit {
   @Input() current: UFR;
-  private tagnames: Map<string, Map<string,string>>;
+  private tagnames: Map<string, Map<string, string>>;
+  private parentname: string;
 
   constructor(private progsvc: ProgramsService) { }
 
@@ -39,6 +40,15 @@ export class UfrMetadataComponent implements OnInit {
 
       //console.log(my.current);
     });
+
+    if (this.current.parentMrId) {
+      console.log('calling for fullname of ' + this.current.parentMrId);
+      this.progsvc.getFullName(this.current.parentMrId).subscribe(data => {
+        my.parentname = data.result;
+      });
+    }
+
+
   }
 
 }

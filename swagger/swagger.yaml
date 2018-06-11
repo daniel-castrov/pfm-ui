@@ -1528,13 +1528,13 @@ paths:
 # STOP USERROLES
 ##############################################################################
 # START PROGRAMS
-  /programs/{programId}:
+  /programs/{mrId}:
     get:
       tags:
       - "Programs"
       operationId: "getProgramById"
       parameters:
-      - name: "programId"
+      - name: "mrId"
         in: "path"
         required: true
         type: "string"
@@ -1545,6 +1545,57 @@ paths:
       responses:
         200:
           description: "A program object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/{mrId}/fullname:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getFullName"
+      parameters:
+      - name: "mrId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "sep"
+        description: "how to separate names"
+        required: false
+        type: "string"
+      summary: "Get program"
+      description: "Returns a given program's full name"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A string"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/{mrId}/ancestors:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getAncestors"
+      parameters:
+      - name: "mrId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get program's ancestors"
+      description: "Returns a given program's ancestors"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Programs, from top to bottom in the tree"
           schema:
             $ref: "#/definitions/RestResult"
         403:
@@ -1809,7 +1860,7 @@ paths:
           description: "The User does not exist."
         500:
           description: "An unexpected error occured."
-  /ufr/pom/{pomId}/program/{shortname}:
+  /ufr/pom/{pomId}/program/{mrdbId}:
     put:
       tags:
       - "UFRs"
@@ -1823,9 +1874,9 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "shortname"
+        name: "mrdbId"
         type: "string"
-        description: "the 'model' program"
+        description: "the program id from the MRDB"
         required: true
       consumes:
       - "application/json"
@@ -2273,7 +2324,7 @@ definitions:
         $ref: "#/definitions/StringMap"
       description:
         type: "string"
-      parentId:
+      parentMrId:
         type: "string"
       infolink:
         type: "string"
@@ -2348,11 +2399,11 @@ definitions:
         $ref: "#/definitions/StringMap"
       description:
         type: "string"
-      parentId:
+      parentMrId:
         type: "string"
       phaseId:
         type: "string"
-      originatingProgramId:
+      originalMrId:
         type: "string"
       infolink:
         type: "string"
@@ -2448,7 +2499,7 @@ definitions:
         type: "string"
       bulkOrigin:
         type: "boolean"
-      parentId:
+      parentMrId:
         type: "string"
       type:
         type: "string"

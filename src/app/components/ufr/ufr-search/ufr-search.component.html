@@ -131,11 +131,11 @@
             </ng-container>
             <ng-container matColumnDef="progid">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Prog ID</mat-header-cell>
-              <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
+              <mat-cell class="ufr-view-link" *matCellDef="let p">{{getProgId( p )}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="parent">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Parent</mat-header-cell>
-              <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
+              <mat-cell class="ufr-view-link" *matCellDef="let p">{{getParentProgId( p )}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="yoe">
               <mat-header-cell *matHeaderCellDef mat-sort-header>YoE?</mat-header-cell>

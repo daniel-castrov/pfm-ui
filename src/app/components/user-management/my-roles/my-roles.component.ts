@@ -86,12 +86,11 @@ export class MyRolesComponent implements OnInit {
     // Get all the progIds from the selected 'assignedPrograms'
     let assignedProgs:string[];
 
-    console.log (my.assignedPrograms.length+" : "+my.allcount);
-
-    if (!my.assignedPrograms || my.assignedPrograms == null || my.assignedPrograms.length==0) {
-      // none are selected
-      assignedProgs=["x"];
-    } else if (my.assignedPrograms.length==my.allcount) {
+    if (my.unmodifiableRoles.includes(my.selectedAddRole.name) ){
+      assignedProgs=["*"];
+    } else if (!my.assignedPrograms || my.assignedPrograms == null || my.assignedPrograms.length==0) {
+      assignedProgs=[];
+    } else if (  my.assignedPrograms.length==my.allcount) {
       // all are selected
       assignedProgs=["*"];
     } else {
@@ -181,6 +180,7 @@ export class MyRolesComponent implements OnInit {
               try {
                 progNames.push(my.pogramsMap[r].shortName );
               } catch (any){
+                if ( r==="x" ) r="none";
                 progNames.push(r);
               }
             });
@@ -225,34 +225,33 @@ export class MyRolesComponent implements OnInit {
       if (urr) {
         my.isNewUserRole = false;
         my.selectedURR = urr;
+        if (my.selectedURR.resourceIds.includes("x") || my.selectedURR.resourceIds.length==0) {
+          // none are granted
+          my.assignedPrograms = []; 
+        } else if (my.selectedURR.resourceIds.includes("*")) {
+          // all are granted - deep copy array
+          my.availablePrograms.forEach(function (program) {
+            my.assignedPrograms.push(program);
+          });
+        } else {
+          // some are granted
+          let newAvail:Program[]=[];
+          my.selectedURR.resourceIds.forEach(function ( progId ) {
+            my.availablePrograms.forEach(function (prog) {
+              if ( prog.id == progId ){
+                my.assignedPrograms.push(prog);
+              } else {
+                newAvail.push(prog);
+              }
+            });
+          });
+          my.availablePrograms=newAvail;
+        }
       } else {
         my.selectedURR = new Object();
         my.selectedURR.userId = my.currentUser.id;
         my.selectedURR.roleId = my.selectedAddRole.id;
         my.selectedURR.resourceIds = [];
-      }
-
-      if (my.selectedURR.resourceIds.includes("x") || my.selectedURR.resourceIds.length==0) {
-        // none are granted
-        my.assignedPrograms = []; 
-      } else if (my.selectedURR.resourceIds.includes("*")) {
-        // all are granted - deep copy array
-        my.availablePrograms.forEach(function (program) {
-          my.assignedPrograms.push(program);
-        });
-      } else {
-        // some are granted
-        let newAvail:Program[]=[];
-        my.selectedURR.resourceIds.forEach(function ( progId ) {
-          my.availablePrograms.forEach(function (prog) {
-            if ( prog.id == progId ){
-              my.assignedPrograms.push(prog);
-            } else {
-              newAvail.push(prog);
-            }
-          });
-        });
-        my.availablePrograms=newAvail;
       }
     });
   }

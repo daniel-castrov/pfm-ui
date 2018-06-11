@@ -41,16 +41,17 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   initPomPrs(user: User): Promise<any> {
-    return new Promise( async (resolve, reject) => {
-      this.pom = (await this.pomService.getByCommunityIdAndYear(user.currentCommunityId, this.by).toPromise()).result;
+    return new Promise(async (resolve, reject) => {
+      this.pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result;
       this.pomProgrammaticRequests = (await this.prService.getByPhase(this.pom.id).toPromise()).result;
+      this.by = this.pom.fy;
       resolve();
     });
   }
 
   initPbPrs(user: User): Promise<any> {
     return new Promise( async (resolve, reject) => {
-      this.pb = (await this.pbService.getByCommunityAndYear(user.currentCommunityId, this.by-2).toPromise()).result;
+      this.pb = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
       this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
       resolve();
     });
