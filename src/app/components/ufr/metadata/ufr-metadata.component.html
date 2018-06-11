@@ -33,13 +33,13 @@
           <div class="row">
             <div class="col-3">
               <div class="form-group inline-name mr-2">
-                <label>ProgID</label>
+                <label>Program ID</label>
                 <input [(ngModel)]="current.shortName" class="program-values forminput" name="program-id">
               </div>
             </div>
             <div class="col-3">
               <div class="form-group inline-name">
-                <label>ProgName</label>
+                <label>Program Name</label>
                 <input [(ngModel)]="current.longName" class="program-values forminput" name="program-name">
               </div>
             </div>
@@ -50,19 +50,25 @@
         <div class="col-3">
           <div class="form-group inline-name">
             <label>Parent Program for Subprogram</label>
-            <span class="program-values" *ngIf="current?.parentId; else novalue">{{current.parentId}}</span>
+            <span class="program-values" *ngIf="parentname; else novalue">{{parentname}}</span>
           </div>
         </div>
         <div class="col-3">
           <span class="form-group inline-name">
             <label class="mb-1">Type of Subprogram</label>
+            <select [(ngModel)]="current.type" name="typeselect">
+              <option [ngValue]="'PROGRAM'">Program</option>
+              <option [ngValue]="'INCREMENT'">Increment</option>
+              <option [ngValue]="'FOS'">Family of Systems</option>
+              <option [ngValue]="'VARIANT'">Variant</option>
+            </select>
           </span>
         </div>
       </div>
       <div class="row">
         <div class="col-md-5">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Broswe Picture" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Browse Picture" aria-describedby="basic-addon1">
             <div class="input-group-append">
               <span class="input-group-text">Browse</span>
             </div>
@@ -85,10 +91,11 @@
               <label>Secondary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Secondary Capability'}"></ng-container>
             </span>
-            <span class="form-group inline-name">
+            <!-- RPB: As far as I can tell, Tertiary Capability is a historical tag, not current -->
+            <!--span class="form-group inline-name">
               <label>Tertiary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary Capability'}"></ng-container>
-            </span>
+            </span-->
           </fieldset>
         </div>
       </div>

@@ -13,16 +13,16 @@ export class ProgramsWithFullNameService {
 
   async programs():Promise<ProgramWithFullName[]> {
 
-    const data: Program[] = (await this.programsService.getAll().toPromise()).result;
+    const inputPrograms: Program[] = (await this.programsService.getAll().toPromise()).result;
 
     const mapIdToProgram: Map<string, Program> = new Map<string, Program>();
     const result: ProgramWithFullName[] = [];
 
-    data.forEach((program: Program) => {
+    inputPrograms.forEach((program: Program) => {
       mapIdToProgram.set(program.id, program);
     });
 
-    data.forEach((program: Program) => {
+    inputPrograms.forEach((program: Program) => {
       result.push({ ...program, fullname: this.fullName(program, mapIdToProgram) });
     });
 
@@ -38,8 +38,8 @@ export class ProgramsWithFullNameService {
 
   private fullName(program: Program, mapIdToProgram: Map<string, Program>): string {
     var programName = '';
-    if (null != program.parentId) {
-      programName = this.fullName(mapIdToProgram.get(program.parentId), mapIdToProgram) + '/';
+    if (null != program.parentMrId) {
+      programName = this.fullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
     }
     return programName + program.shortName;
   }

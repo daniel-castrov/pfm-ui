@@ -37,8 +37,8 @@ export class ProgramRequestComponent implements OnInit {
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
     } else {
       this.pr.phaseId = this.programRequestPageMode.phaseId;
-      this.pr.originatingProgramId = this.programRequestPageMode.originatingProgramId;
-      this.pr.parentId = this.programRequestPageMode.parentId;
+      this.pr.originanalMrId = this.programRequestPageMode.originatingProgramId;
+      this.pr.parentMrId = this.programRequestPageMode.parentId;
       this.pr.bulkOrigin = false;
       this.pr.state = 'OUTSTANDING';
       if(this.programRequestPageMode.newProgram) this.pr.type = 'PROGRAM';
