@@ -7,7 +7,7 @@ import { Program, FundingLine, IntMap, UFR, POMService, Pom, Variant, ProgramsSe
   styleUrls: ['./ufr-variants.component.scss']
 })
 export class UfrVariantsComponent implements OnInit {
-  @Input() current: UFR | ProgrammaticRequest;
+  @Input() current: UFR;
   @Input() editable: boolean = false;
 
   private pom: Pom;
@@ -38,8 +38,8 @@ export class UfrVariantsComponent implements OnInit {
         }
       });
 
-      if (my.current.shortName) {
-        my.prsvc.getByPhaseAndShortName(my.pom.id, my.current.shortName).subscribe(model => {
+      if (my.current.originalMrId) {
+        my.prsvc.getByPhaseAndMrId(my.pom.id, my.current.originalMrId).subscribe(model => {
           // get the current values for this program
           my.model = model.result;
           //console.log(my.model);

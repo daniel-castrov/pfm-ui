@@ -83,7 +83,7 @@ export class UfrSearchComponent implements OnInit {
         });
 
         my.pomIsOpen = data[6].result;
-        console.log( 'pomisopen: '+my.pomIsOpen)
+        // console.log( 'pomisopen: '+my.pomIsOpen)
 
         my.filter.orgId = my.orgs[0].id;
         my.filter.from = new Date().getTime();
