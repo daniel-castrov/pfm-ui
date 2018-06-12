@@ -13,7 +13,7 @@ import {
   styleUrls: ['./ufr-funds.component.scss']
 })
 export class UfrFundsComponent implements OnInit {
-  @Input() current: UFR | ProgrammaticRequest;
+  @Input() current: UFR ;
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private uvals: Map<number, number> = new Map<number, number>();

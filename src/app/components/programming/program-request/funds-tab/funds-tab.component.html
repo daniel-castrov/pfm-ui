@@ -21,170 +21,81 @@
             <th class="header-column-width">Appropriation</th>
             <th class="header-column-width">Budget</th>
             <th>Cycle</th>
-            <th>FY16</th>
-            <th>FY17</th>
-            <th>FY18</th>
-            <th>FY19</th>
-            <th>FY20</th>
-            <th>FY21</th>
-            <th>FY22</th>
-            <th>FY23</th>
-            <th>>>FY23</th>
+            <th>{{fy-3}}</th>
+            <th>{{fy-2}}</th>
+            <th>{{fy-1}}</th>
+            <th>{{fy}}</th>
+            <th>{{fy+1}}</th>
+            <th>{{fy+2}}</th>
+            <th>{{fy+3}}</th>
+            <th>{{fy+4}}</th>
+            <th>&gt;&gt;FY&lt;??&gt;</th>
           </tr>
         </thead>
         <tbody>
+          <ng-container *ngFor="let row of rows | mapAsList : 'values'">
           <tr>
-            <td class="row-lt-gray text-center" rowspan="3">RDT&amp;E</td>
-            <td class="row-lt-gray text-center" rowspan="3">BA4</td>
-            <td>PB18</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
+            <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
+            <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
+            <td>PB{{fy-2000-2}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy-1) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy+1) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy+2) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy+3) | dashForZero}}</td>
+            <td class="text-right">{{row.modelfunds.get(fy+4) | dashForZero}}</td>
             <td class="text-right">-</td>
           </tr>
           <tr>
-            <td>POM19</td>
+            <td>POM{{fy-2000}}</td>
+            <td class="text-right">{{row.ufrfunds.get(fy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.ufrfunds.get(fy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.ufrfunds.get(fy-1) | dashForZero}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy)">{{row.ufrfunds.get(fy)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+1)">{{row.ufrfunds.get(fy+1)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+2)">{{row.ufrfunds.get(fy+2)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+3)">{{row.ufrfunds.get(fy+3)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+4)">{{row.ufrfunds.get(fy+4)}}</td>
+            <td contenteditable="true" class="editable-field">-</td>
+          </tr>
+          <tr class="row-light">
+            <td>Total</td>
+            <td class="text-right">{{row.totalfunds.get(fy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy-1) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy+1) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy+2) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy+3) | dashForZero}}</td>
+            <td class="text-right">{{row.totalfunds.get(fy+4) | dashForZero}}</td>
             <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
+          </tr>
+          </ng-container>
 
-          </tr>
-          <tr class="row-light">
-            <td></td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr>
-            <td class="row-lt-gray text-center" rowspan="3">RDT&amp;E</td>
-            <td class="row-lt-gray text-center" rowspan="3">BA5</td>
-            <td>PB18</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr>
-            <td>POM19</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-          </tr>
-          <tr class="row-light">
-            <td></td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr class="row-lt-gray row-border-top font-weight-bold">
-            <td class="row-lt-gray text-center" rowspan="3">PROC</td>
-            <td class="row-lt-gray text-center" rowspan="3">PHM0001</td>
-            <td class="cell-white font-weight-normal">PB18</td>
-            <td class="text-right cell-white font-weight-normal">-</td>
-            <td class="text-right cell-white font-weight-normal"></td>
-            <td class="text-right cell-white font-weight-normal"></td>
-            <td class="text-right cell-white font-weight-normal">41,179</td>
-            <td class="text-right cell-white font-weight-normal">41,179</td>
-            <td class="text-right cell-white font-weight-normal">-</td>
-            <td class="text-right cell-white font-weight-normal">-</td>
-            <td class="text-right cell-white font-weight-normal">-</td>
-            <td class="text-right cell-white font-weight-normal">-</td>
-          </tr>
-          <tr>
-            <td>POM19</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-            <td contenteditable="true" class="editable-field">-</td>
-          </tr>
-          <tr class="row-light">
-            <td class="text-danger"></td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right"></td>
-            <td class="text-right"><span class="exceed-sum">29,019</span></td>
-            <td class="text-right"></td>
-            <td class="text-right"><span class="exceed-sum">33,102</span></td>
-            <td class="text-right"><span class="exceed-sum"></span></td>
-            <td class="text-right"><span class="exceed-sum"></span></td>
-            <td class="text-right"><span class="exceed-sum"></span></td>
-          </tr>
           <tr class="row-lt-gray font-weight-bold">
-            <td class="text-center medium-grey-cell" colspan="2" rowspan="3">Total Funds Request</td>
-            <td>POM18 Baseline</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr class="row-lt-gray font-weight-bold">
-            <td>POM19</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr class="row-lt-gray font-weight-bold">
-            <td>Delta</td>
-            <td class="text-right">-</td>
-            <td class="text-right">-</td>
-            <td class="text-right text-danger">-</td>
-            <td class="text-right text-danger">-</td>
-            <td class="text-right text-danger">-</td>
-            <td class="text-right text-danger">-</td>
-            <td class="text-right text-danger">-</td>
-            <td class="text-right text-danger">-</td>
-            <td class="text-right text-danger">-</td>
-          </tr>
+              <td class="text-center medium-grey-cell" colspan="2" rowspan="3">Total Funds Request</td>
+              <td>{{fy|FY:'POM'}}</td>
+              <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
+                {{totals( fy+year, 'POM' ) | dashForZero}}
+              </td>
+              <td class="text-right">-</td>
+            </tr>
+            <tr class="row-lt-gray font-weight-bold">
+              <td>UFR</td>
+              <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
+                {{totals( fy+year, 'UFR' ) | dashForZero}}
+              </td>
+              <td class="text-right">-</td>
+            </tr>
+            <tr class="row-lt-gray font-weight-bold">
+              <td>Total</td>
+              <ng-container *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
+                <td [ngClass]="{'text-right':true, 'text-danger': totals(fy+year)<0 }">{{totals( fy+year, 'TOTAL') | dashForZero}}</td>
+              </ng-container>
+              <td class="text-right text-danger">-</td>
+            </tr>
         </tbody>
       </table>
     </div>
@@ -194,21 +105,21 @@
 <div class="row">
   <div class="col-10 mb-3">
     <fieldset>
-      <legend>Add Funding Line #1</legend>
+      <legend>Add Funding Line</legend>
       <div class="row mb-3">
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">Appropriation</div>
-              <select class="form-control-sm dropdown-width">
-               <option>RDT&amp;E</option>
-             </select>
-           </span>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="appr">
+              <option *ngFor="let a of appropriations" [ngValue]="a">{{a}}</option>
+            </select>
+          </span>
         </div>
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">BA/BLIN</div>
-              <select class="form-control-sm dropdown-width">
-               <option>BA7</option>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
+              <option *ngFor="let b of getBlins();first as first" [selected]="first">{{b}}</option>
             </select>
           </span>
         </div>
@@ -216,43 +127,33 @@
           <span class="form-group">
             <div class="mb-2 primary-label">Item</div>
             <span class="form-group">
-              <div class="mb-2 primary-label">Item Name</div>
+              <input class="mb-2 form-control forminput" [(ngModel)]="item">
             </span>
           </span>
         </div>
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">OpAgency</div>
-            <span class="form-group">
-              <div class="mb-2 primary-label">OpAgency Name</div>
-            </span>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="agency">
+              <option *ngFor="let c of agencies">{{c}}</option>
+            </select>
           </span>
         </div>
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">Program Element</div>
             <span class="form-group">
-              <div class="mb-2 primary-label">Program Element Name</div>
+              <input class="mb-2 form-control forminput">
             </span>
           </span>
         </div>
-        <div class="col-2">
-          <span class="form-group">
-            <div class="mb-2 primary-label">Aqu. Type</div>
-            <select class="form-control-sm dropdown-width mb-2">
-              <option>items</option>
-              <option>items</option>
-              <option>items</option>
-            </select>
-          </span>
-        </div>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-primary" (click)="addfl()" [disabled]="!(item && appr && blin)">
+          <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+          Add Funding Line
+        </button>
       </div>
     </fieldset>
-  </div>
-  <div class="col-2">
-    <button class="btn btn-primary">
-      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-      Add Funding Line
-    </button>
   </div>
 </div>
