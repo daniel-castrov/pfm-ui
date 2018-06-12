@@ -15,24 +15,86 @@ fieldset {
   width: 100%;
   background-color: $white;
   border-collapse: collapse;
-  border: $grey-border;
+  // border: $grey-border;
   color: $black;
+
+  td {
+    border: $grey-border;
+    padding: 2px 10px;
+    max-height: 20px;
+    width: 77px;
+    min-width: 77px;
+    content: '';
+  }
+
+  th {
+    font-weight: 500;
+    border: $grey-border;
+    padding: 2px 10px;
+    max-height: 20px;
+    text-align: center;
+    width: 77px;
+    min-width: 77px;
+    content: '';
+  }
+
+  thead > tr > td  {
+    padding: 2px 10px;
+    width: 77px;
+    min-width: 77px;
+  }
+
+  thead {
+    background-color: #24527b;
+    color: $white;
+  }
+
+  thead tr td {
+    padding: 2px 10px;
+    width: 77px;
+    min-width: 77px;
+    content: '';
+  }
+
+  thead tr {
+    display:block;
+  }
+
+  .large-column {
+    padding: 2px 10px;
+    width: 132px !important;
+    min-width: 132px !important;
+  }
+
+  .table-body {
+    width: 100%;
+    display:block;
+    height: 600px;
+    overflow: auto; //set tbody to auto
+  }
 }
 
-.pr-table td, .pr-table th {
-  border: $grey-border;
-  padding: 6px;
-  padding: 2px 10px;
-}
+.pr-table {
+  // custom scroll background
+  /* width */
+  ::-webkit-scrollbar {
+      width: 5px;
+  }
 
-.pr-table th {
-  font-weight: 500;
-  text-align: center;
-}
+  /* Track */
+  ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
 
-.pr-table thead {
-  background-color: #24527b;
-  color: $white;
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+      background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+  }
 }
 
 .remove-pr {
@@ -117,10 +179,6 @@ fieldset {
 
 .row-border-top {
   border-top: 4px solid #7b8389;
-}
-
-.header-column-width {
-  width: 90px;
 }
 
 .cell-lt-grey {
