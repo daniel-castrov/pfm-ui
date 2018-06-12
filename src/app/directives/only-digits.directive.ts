@@ -5,13 +5,16 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 })
 export class OnlyDigitsDirective {
   private regex: RegExp = new RegExp(/^-?[0-9]+$/g);
-  private specialKeys: string[] = ['Backspace', 'Tab', 'End', 'Home', '-'];
+  private specialKeys: string[] = ['Backspace', 'Delete', 'ArrowRight', 'ArrowLeft',
+    'Tab', 'End', 'Home'];
 
   constructor(private el: ElementRef) { }
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     // Allow Backspace, tab, end, and home keys
+    //console.log('digits event');
+    //console.log(event);
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
     }

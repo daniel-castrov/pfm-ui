@@ -13,7 +13,8 @@ import {
   styleUrls: ['./ufr-funds.component.scss']
 })
 export class UfrFundsComponent implements OnInit {
-  @Input() current: UFR ;
+  @Input() current: UFR;
+  @Input() editable: boolean = false;
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private uvals: Map<number, number> = new Map<number, number>();
@@ -70,12 +71,12 @@ export class UfrFundsComponent implements OnInit {
 
       // ...now merge/add the original funding lines from the POM
       // (new programs/subprograms won't necessarily have a shortname yet)
-      if (my.current.shortName) {
-        my.prService.getByPhaseAndShortName(my.pom.id, my.current.shortName).subscribe(model => {
+      if (my.current.originalMrId) {
+        my.prService.getByPhaseAndMrId(my.pom.id, my.current.originalMrId).subscribe(model => {
           // get the current values for this program
           my.model = model.result;
           //console.log(my.model);
-
+          //console.log('model check?');
           my.model.fundingLines.forEach(fund => {
             var key = fund.appropriation + fund.blin;
 

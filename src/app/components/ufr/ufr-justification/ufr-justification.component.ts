@@ -8,6 +8,7 @@ import { UFR } from '../../../generated';
 })
 export class UfrJustificationComponent implements OnInit {
   @Input() current: UFR;
+  @Input() editable: boolean = false;
   
   constructor() { }
 

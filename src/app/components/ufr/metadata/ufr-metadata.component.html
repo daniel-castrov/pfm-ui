@@ -58,9 +58,9 @@
             <label class="mb-1">Type of Subprogram</label>
             <select [(ngModel)]="current.type" name="typeselect">
               <option [ngValue]="'PROGRAM'">Program</option>
-              <option [ngValue]="'INCREMENT'">Increment</option>
-              <option [ngValue]="'FOS'">Family of Systems</option>
-              <option [ngValue]="'VARIANT'">Variant</option>
+              <option *ngIf="parentname" [ngValue]="'INCREMENT'">Increment</option>
+              <option *ngIf="parentname" [ngValue]="'FOS'">Family of Systems</option>
+              <option *ngIf="parentname" [ngValue]="'VARIANT'">Variant</option>
             </select>
           </span>
         </div>

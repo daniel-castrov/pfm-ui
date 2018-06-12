@@ -13,6 +13,7 @@ import { Disposition } from '../disposition.enum';
 })
 export class UfrTabComponent implements OnInit {
   @Input() current: UFR;
+  @Input() editable: boolean = false;
 
   private cycles: {}[] = [];
   private statuses: string[] = [];

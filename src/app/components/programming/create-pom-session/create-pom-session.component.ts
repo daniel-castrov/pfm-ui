@@ -15,6 +15,7 @@ import { Pom } from '../../../generated/model/pom';
 import { PB } from '../../../generated/model/pB';
 
 import * as $ from 'jquery';
+import { Router } from '@angular/router';
 
 declare const $: any;
 declare const jQuery: any;
@@ -29,6 +30,7 @@ export class CreatePomSessionComponent implements OnInit {
   private fy: number;
   private community: Community;
   private orgs: Organization[];
+  private baseline: Map<number, number> = new Map<number, number>();
   private toas: Map<number, number> = new Map<number, number>();
   private orgtoas: Map<string, Map<number, number>> = new Map<string, Map<number, number>>();
   private pb: PB;
@@ -38,7 +40,8 @@ export class CreatePomSessionComponent implements OnInit {
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
   constructor(private detailsvc: MyDetailsService, private communityService: CommunityService,
-    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService) {
+    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -109,7 +112,7 @@ export class CreatePomSessionComponent implements OnInit {
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
         my.pomsvc.getByCommunityId(person.result.currentCommunityId),
         my.pbsvc.getLatest(person.result.currentCommunityId),
-        my.pomsvc.getToaSamples(person.result.currentCommunityId )
+        my.pomsvc.getToaSamples(person.result.currentCommunityId)
       ]).subscribe(data => {
         var community = data[0].result;
         my.orgs = data[1].result;
@@ -122,6 +125,7 @@ export class CreatePomSessionComponent implements OnInit {
 
         my.toas.clear();
         my.orgtoas.clear();
+        my.baseline.clear();
 
         my.setInitialValuesAndEditable(poms, samplepom);
         my.resetTotals();
@@ -135,9 +139,11 @@ export class CreatePomSessionComponent implements OnInit {
     // set everything to 0, just to be safe
     for (var i = 0; i < 5; i++) {
       my.toas.set(my.fy + i, 0);
+      my.baseline.set(my.fy + i, 0);
     }
     samplepom.communityToas.forEach( (toa: TOA) => { 
       my.toas.set(toa.year, toa.amount);
+      my.baseline.set(toa.year, toa.amount);
     });
 
     // set org toas to 0 as well, then update after
@@ -202,13 +208,15 @@ export class CreatePomSessionComponent implements OnInit {
 
     var amt = 0;
     my.toas.forEach(function (val, year) {
-      amt += val;
-      my.yeardiffs.set(year, val);
+      if (year >= my.fy) {
+        amt += val;
+        my.yeardiffs.set(year, val);
 
-      if (!my.orgsums.has(my.community.id)) {
-        my.orgsums.set(my.community.id, 0);
-      }
-      my.orgsums.set(my.community.id, my.orgsums.get(my.community.id) + val);
+        if (!my.orgsums.has(my.community.id)) {
+          my.orgsums.set(my.community.id, 0);
+        }
+        my.orgsums.set(my.community.id, my.orgsums.get(my.community.id) + val);
+      }  
     });
 
     //console.log(my.orgtoas);
@@ -218,12 +226,14 @@ export class CreatePomSessionComponent implements OnInit {
     my.orgtoas.forEach(function (toas, orgid) {
       my.orgsums.set(orgid, 0);
       toas.forEach(function (amt, year) {
-        my.yeardiffs.set(year, my.yeardiffs.get(year) - amt);
-        my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
+        if (year >= my.fy) {
+          my.yeardiffs.set(year, my.yeardiffs.get(year) - amt);
+          my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
 
-        if (my.yeardiffs.get(year) < 0) {
-          my.tooMuchToa = true;
-        }
+          if (my.yeardiffs.get(year) < 0) {
+            my.tooMuchToa = true;
+          }
+        }  
       });
     });
 
@@ -262,6 +272,7 @@ export class CreatePomSessionComponent implements OnInit {
       (data) => {
         if (data.result) {
           my.editsOk = false;
+          my.router.navigate(['/home']);
         }
       });
   }

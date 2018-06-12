@@ -1,4 +1,4 @@
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 
@@ -11,6 +11,8 @@ import { ProgramTreeUtils } from '../../../utils/program-tree-utils'
   styleUrls: ['./new-ufr.component.scss']
 })
 export class NewUfrComponent implements OnInit {
+  @Input() editable: boolean = false;
+
   private needProgramSelector:boolean = false;
   private programSelectorTitle: string = '';
   private programs: ProgramWrapper[] = [];
