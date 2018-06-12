@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { RequestsService } from './../../../services/requests.service';
 import { Request } from '../../../services/request';
 import { ElevationService } from '../../../services/elevation.component';
+import { POMService } from '../../../generated/api/pOM.service';
 
 // Generated
 import { AuthUser } from '../../../generated/model/authUser';
@@ -15,11 +16,13 @@ export class HeaderUserComponent implements OnInit {
 
   @Input() isAuthenticated: boolean;
   @Input() authUser: AuthUser;
-  requests:Request[];
+  requests: Request[];
+  pomIsOpen: boolean = false;
 
   constructor(
     private requestsService: RequestsService,
-    private elevationService: ElevationService
+    private elevationService: ElevationService,
+    private pomService: POMService
   ) {}
 
   ngOnInit() {
@@ -29,6 +32,11 @@ export class HeaderUserComponent implements OnInit {
     } else {
       this.requests = [];
     }
+
+    this.pomService.isOpen(this.authUser.currentCommunity).subscribe(data => { 
+      this.pomIsOpen = data.result;
+    });
+
   }
 
 }

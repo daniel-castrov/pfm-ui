@@ -69,7 +69,7 @@
           <a class="dropdown-item" href="#" routerLink="/select-program-request">Programmatic Request</a>
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
-          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+          <a class="dropdown-item" href="#" routerLink="/create-new-pom" [disabled]="pomIsOpen">Create POM Session</a>
           <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
           <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
           <!--<a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
@@ -106,7 +106,7 @@
           <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Edit Program</a>
           <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Create Program</a>
           <div class="dropdown-header" style="color:grey !important;">UFRs</div>
-          <a class="dropdown-item" href="#" routerLink="/ufr-search">Requests</a>
+          <a class="dropdown-item" href="#" routerLink="/ufr-search" [disabled]="!pomIsOpen">Requests</a>
         </div>
       </li>
       <li class="nav-item dropdown">
