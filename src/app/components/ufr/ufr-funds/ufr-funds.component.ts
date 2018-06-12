@@ -71,7 +71,7 @@ export class UfrFundsComponent implements OnInit {
 
       // ...now merge/add the original funding lines from the POM
       // (new programs/subprograms won't necessarily have a shortname yet)
-      if (my.current.shortName) {
+      if (my.current.originalMrId) {
         my.prService.getByPhaseAndMrId(my.pom.id, my.current.originalMrId).subscribe(model => {
           // get the current values for this program
           my.model = model.result;
