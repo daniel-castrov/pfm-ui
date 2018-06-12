@@ -33,7 +33,7 @@ export class HeaderUserComponent implements OnInit {
       this.requests = [];
     }
 
-    this.pomService.isOpen(this.authUser.currentCommunity).subscribe(data => { 
+    this.pomService.isOpen(this.authUser.currentCommunity.id).subscribe(data => { 
       this.pomIsOpen = data.result;
     });
 

@@ -66,11 +66,21 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
+          <a *ngIf="pomIsOpen" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
+          <span *ngIf="!pomIsOpen" class="dropdown-item" disabled>Program Request</span>
+
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
-          <a *ngIf="!pomIsOpen" class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b;" href="#" routerLink="/create-new-pom" disable>Create POM Session</a>
+        <ng-container *ngIf="pomIsOpen">
+          <span class="dropdown-item" disabled>Create POM Session</span>
           <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
+        </ng-container>
+
+        <ng-container *ngIf="!pomIsOpen">
+          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+          <span class="dropdown-item" disabled>Update POM Session</span>
+        </ng-container>
+
           <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
           <!--<a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
           <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
@@ -107,7 +117,7 @@
           <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Create Program</a>
           <div class="dropdown-header" style="color:grey !important;">UFRs</div>
           <a *ngIf="pomIsOpen" class="dropdown-item" href="#" routerLink="/ufr-search">Requests</a>
-          <a *ngIf="!pomIsOpen" disable class="dropdown-item" href="#" routerLink="/ufr-search">Requests</a>
+          <span *ngIf="!pomIsOpen" disable class="dropdown-item">Requests</span>
         </div>
       </li>
       <li class="nav-item dropdown">

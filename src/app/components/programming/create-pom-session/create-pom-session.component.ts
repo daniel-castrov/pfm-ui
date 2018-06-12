@@ -15,6 +15,7 @@ import { Pom } from '../../../generated/model/pom';
 import { PB } from '../../../generated/model/pB';
 
 import * as $ from 'jquery';
+import { Router } from '@angular/router';
 
 declare const $: any;
 declare const jQuery: any;
@@ -39,7 +40,8 @@ export class CreatePomSessionComponent implements OnInit {
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
   constructor(private detailsvc: MyDetailsService, private communityService: CommunityService,
-    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService) {
+    private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -270,6 +272,7 @@ export class CreatePomSessionComponent implements OnInit {
       (data) => {
         if (data.result) {
           my.editsOk = false;
+          my.router.navigate(['/home']);
         }
       });
   }
