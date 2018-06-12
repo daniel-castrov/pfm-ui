@@ -394,12 +394,12 @@ paths:
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/ProgrammaticRequest"      
-  /pr/phase/{phaseId}/program/{shortname}:
+          $ref: "#/definitions/ProgrammaticRequest"
+  /pr/phase/{phaseId}/program/{mrId}:
     get:
       tags:
       - "PR"
-      operationId: "getByPhaseAndShortName"
+      operationId: "getByPhaseAndMrId"
       produces:
       - "application/json"
       parameters:
@@ -408,7 +408,7 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "shortname"
+        name: "mrId"
         required: true
         type: "string"
 # STOP PR

@@ -11,6 +11,7 @@ import { UFR } from '../../../generated/model/uFR'
 })
 export class UfrMetadataComponent implements OnInit {
   @Input() current: UFR;
+  @Input() editable: boolean = false;
   private tagnames: Map<string, Map<string, string>>;
   private parentname: string;
 
