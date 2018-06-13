@@ -25,13 +25,9 @@ export class ProgramRequestComponent implements OnInit {
     }
   }
 
-  submit() {
-    this.pr.state = 'SUBMITTED';
-    this.save();
-  }
-
-  async save() {
+  async save(state: string) {
     if(this.pr.id) {
+      this.pr.state = state;
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
     } else {
       this.pr.phaseId = this.programRequestPageMode.phaseId;

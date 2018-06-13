@@ -40,10 +40,10 @@
               <button class="btn btn-primary">Validate</button>
             </span>
             <span>
-              <button class="btn btn-secondary" (click)="save()">Save</button>
+              <button class="btn btn-secondary" (click)="save('SAVED')">Save</button>
             </span>
             <span>
-              <button class="btn btn-success" (click)="submit()" [disabled]="pr.state=='SUBMITTED'">Submit</button>
+              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="pr.state=='SUBMITTED'">Submit</button>
             </span>
           </div>
         </div>
