@@ -11,38 +11,46 @@ export class ProgramRequestPageModeService {
 
   private _initialized: boolean;
   private _id: string; // null if a PR is being created, an id if an existing PR is being edited
-  private type: Type; // applicable only when this._is is not defined
-  public phaseId: string; // applicable only when this._is is not defined
+  private type: Type;            // applicable only when this._id is not defined
+  public originatingProgramId;   // applicable only when this._id is not defined
+  public parentId;               // applicable only when this._id is not defined
+  public phaseId: string;        // applicable only when this._id is not defined
 
   // begin initilizers
   set id(id:string) {
+    this.init();
     this._id = id;
-    this._initialized = true;
   }
 
   setProgramOfRecord(phaseId: string) {
-    this.id = null;
+    this.init();
     this.type = Type.ProgramFormRecord;
     this.phaseId = phaseId;
-    this._initialized = true;
   }
 
   setNewSubprogram(phaseId: string) {
-    this.id = null;
+    this.init();
     this.type = Type.NewSubprogram;
     this.phaseId = phaseId;
-    this._initialized = true;
   }
   
   setNewProgram(phaseId: string) {
-    this.id = null;
+    this.init();
     this.type = Type.NewProgram;
     this.phaseId = phaseId;
-    this._initialized = true;
   }
   // end initilizers
 
-  // begin queries
+  private init() {
+    this._initialized = true;
+    this._id = null;
+    this.type = null;
+    this.originatingProgramId = null;
+    this.parentId = null;
+    this.phaseId = null;
+  }
+
+  // begin properties
   get id() {
     return this._id;
   }
@@ -62,5 +70,5 @@ export class ProgramRequestPageModeService {
   get initialized() {
     return this._initialized;
   }
-  // end queries
+  // end properties
 }

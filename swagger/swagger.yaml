@@ -2499,6 +2499,8 @@ definitions:
         type: "string"
       bulkOrigin:
         type: "boolean"
+      originalMrId:
+        type: "string"
       parentMrId:
         type: "string"
       type:

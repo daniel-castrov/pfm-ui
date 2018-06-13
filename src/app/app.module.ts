@@ -1,3 +1,5 @@
+import { GlobalsService } from './services/globals.service';
+import { ProgramsWithFullNameService } from './services/fetch-programs.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
 // app.modules
@@ -257,12 +259,14 @@ const appRoutes: Routes = [
     CreateUserRequestService,
     DropRoleRequestService,
     ElevationService,
+    GlobalsService,
     Injectables,
     JoinCommunityRequestService,
     LeaveCommunityRequestService,
     MyDetailsService,
     OrganizationService,
     ProgramRequestPageModeService,
+    ProgramsWithFullNameService,
     RoleService,
     StrangerService,
     UserRoleResourceService,
