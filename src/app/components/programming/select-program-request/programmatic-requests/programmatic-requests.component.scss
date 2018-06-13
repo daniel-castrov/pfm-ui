@@ -112,6 +112,147 @@ fieldset {
   }
 }
 
+.summary-table {
+  width: 710px;
+  border-collapse: collapse;
+  border: $grey-border;
+  color: $black;
+}
+
+.summary-table td,
+.summary-table th {
+  border: $grey-border;
+  padding: 6px;
+  padding: 2px 10px;
+}
+
+.summary-table  th {
+  font-weight: 500;
+  text-align: center;
+}
+
+.summary-table thead {
+  color: $black;
+  font-weight: bold;
+}
+
+.large-column {
+  width: 140px;
+}
+
+.white-top-table-header  {
+  background-color: $white !important;
+  border: 1px solid $white !important;
+  color: $black;
+}
+
+.white-top-table-header > td {
+  background-color: $white !important;
+  border: 1px solid $white !important;
+  color: $black;
+}
+
+.white-cell {
+  background-color: $white !important;
+  border: 1px solid $white !important;
+}
+
+.row-border-bottom {
+  border-bottom: 4px solid #7b8389;
+}
+
+.cell-bottom-border-white {
+  border-bottom: 1px solid $white !important;
+}
+
+.cell-right-border-white {
+  border-right: 1px solid $white !important;
+}
+
+.cell-left-border-white {
+  border-left: 1px solid $white !important;
+}
+
+.row-white {
+  background-color: $white;
+}
+
+.row-border-top {
+  border-top: 4px solid #7b8389;
+}
+
+.cell-lt-grey {
+  background-color: $light-grey;
+  color: $black;
+}
+
+.row-lt-gray {
+  background-color: #ccc;
+  color: $black;
+}
+
+.row-light {
+  background-color: $light-grey;
+  color: $black;
+}
+
+.row-lt-green {
+  background-color: $light-green;
+  color: $black;
+}
+
+.font-dark-grey {
+  color: $dark-grey;
+}
+
+.program-name {
+  display: inline;
+  width: 460px;
+  margin-right: 4px;
+}
+
+a.font-danger:hover {
+  text-decoration: underline;
+}
+
+.modal {
+
+ .modal-header {
+    border-bottom: none;
+    position: relative;
+
+   .btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin-top: 0;
+      height: 30px;
+      border-top-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      > i {
+        font-size: 26px;
+      }
+    }
+  }
+
+  .remove-program {
+    font-weight: 800;
+    color: $primary-color;
+  }
+}
+
+// .main-view-table {
+//   width: 100%;
+//   height: 400px;
+//   overflow-y: scroll;
+// }
+
+.autoscroll {
+  max-height: 400px;
+  overflow-y: auto
+}
+
 .clickable {
   cursor: pointer
 }
