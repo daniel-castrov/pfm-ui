@@ -3,7 +3,6 @@ import { PRService } from './../../../../generated/api/pR.service';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 // Other Components
-import { HeaderComponent } from '../../../../components/header/header.component';
 import { ProgramRequestPageModeService } from '../page-mode/page-mode.service';
 
 
@@ -14,7 +13,6 @@ import { ProgramRequestPageModeService } from '../page-mode/page-mode.service';
 })
 export class ProgramRequestComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
   private pr: ProgrammaticRequest = {};
 
   constructor(
@@ -37,7 +35,7 @@ export class ProgramRequestComponent implements OnInit {
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
     } else {
       this.pr.phaseId = this.programRequestPageMode.phaseId;
-      this.pr.originanalMrId = this.programRequestPageMode.originatingProgramId;
+      this.pr.originalMrId = this.programRequestPageMode.originatingProgramId;
       this.pr.parentMrId = this.programRequestPageMode.parentId;
       this.pr.bulkOrigin = false;
       this.pr.state = 'OUTSTANDING';

@@ -1,10 +1,11 @@
+import { User } from './../../../../generated/model/user';
+import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
 import { ProgramViewComponent } from './../../../programs/program-view/program-view.component';
 import { Component, Input, ApplicationRef, OnChanges, ViewChild } from '@angular/core'
 import { forkJoin } from "rxjs/observable/forkJoin"
 import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest, Tag, ProgramsService } from '../../../../generated'
 import { Row } from './Row';
-import { HeaderComponent } from '../../../header/header.component';
 
 @Component({
   selector: 'funds-tab',
@@ -12,9 +13,8 @@ import { HeaderComponent } from '../../../header/header.component';
   styleUrls: ['./funds-tab.component.scss']
 })
 export class FundsTabComponent implements OnChanges {
-  @ViewChild(HeaderComponent) header: HeaderComponent;
   @Input() pr: ProgrammaticRequest;
-  private fy: number = new Date().getFullYear() + 2;
+  private fy: number;
   // key is appropriation+blin
   private rows: Map<string, Row> = new Map<string, Row>();
   
@@ -28,47 +28,38 @@ export class FundsTabComponent implements OnChanges {
   private agency: string;
   private item: string;
 
-  constructor(private pbService: PBService,
+  constructor(private pomService: POMService, 
+              private pbService: PBService,
               private prService: PRService,
-              private programsService: ProgramsService) {}
-  
+              private programsService: ProgramsService,
+              private globalsService: GlobalsService) {}
+
   ngOnChanges() {
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
-
+    
+    this.setFiscalYear();
     this.loadDropdownOptions();
     this.setPOMtoRows();
     this.setPBtoRows();
   }
 
-  private async setPBtoRows() {
+  private async setFiscalYear() {
+    const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
+    this.fy = pom.fy;
+  }
 
-    const pb: PB = (await this.pbService.getByCommunityAndYear(this.header.authUser.currentCommunity, this.fy-2).toPromise()).result;
-
-    const pr: ProgrammaticRequest = (await this.prService.getByPhase(pb.id).toPromise()).result;
-
-    pr.fundingLines.forEach(fund => {
-      var key = fund.appropriation + fund.blin;
-      var newdata = false;
-      if (!this.rows.has(key)) {
-        this.rows.set(key, {
-          appropriation: fund.appropriation,
-          blin: fund.blin,
-          pbFunds: new Map<number, number>(),
-          prFunds: new Map<number, number>(),
-          totalFunds: new Map<number, number>()
-        });
-        newdata = true;
-      }
-      var thisrow: Row = this.rows.get(key);
-      Object.keys(fund.funds).forEach(function (yearstr) {
-        var year: number = Number.parseInt(yearstr);
-        var amt: number = fund.funds[yearstr];
-        thisrow.pbFunds.set(year, amt);
-        if (!thisrow.prFunds.has(year)) {
-          thisrow.prFunds.set(year, 0);
-        }
-        thisrow.totalFunds.set(year, thisrow.prFunds.get(year) + amt);
-      });
+  private loadDropdownOptions() {
+    forkJoin([
+      this.programsService.getSearchAgencies(),
+      this.programsService.getSearchAppropriations(),
+      this.programsService.getSearchBlins()
+    ]).subscribe(data2 => {
+      this.agencies = data2[0].result.sort();
+      this.agency = this.agencies[0];
+      this.appropriations = data2[1].result.sort();
+      this.appr = this.appropriations[0];
+      this.blins = data2[2].result.sort();
+      this.blin = this.getBlins()[0];
     });
   }
 
@@ -94,18 +85,34 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  private loadDropdownOptions() {
-    forkJoin([
-      this.programsService.getSearchAgencies(),
-      this.programsService.getSearchAppropriations(),
-      this.programsService.getSearchBlins()
-    ]).subscribe(data2 => {
-      this.agencies = data2[0].result.sort();
-      this.agency = this.agencies[0];
-      this.appropriations = data2[1].result.sort();
-      this.appr = this.appropriations[0];
-      this.blins = data2[2].result.sort();
-      this.blin = this.getBlins()[0];
+  private async setPBtoRows() {
+    const user: User = await this.globalsService.user().toPromise();
+    const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
+    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
+
+    pbPr.fundingLines.forEach(fund => {
+      var key = fund.appropriation + fund.blin;
+      var newdata = false;
+      if (!this.rows.has(key)) {
+        this.rows.set(key, {
+          appropriation: fund.appropriation,
+          blin: fund.blin,
+          pbFunds: new Map<number, number>(),
+          prFunds: new Map<number, number>(),
+          totalFunds: new Map<number, number>()
+        });
+        newdata = true;
+      }
+      var thisrow: Row = this.rows.get(key);
+      Object.keys(fund.funds).forEach(function (yearstr) {
+        var year: number = Number.parseInt(yearstr);
+        var amt: number = fund.funds[yearstr];
+        thisrow.pbFunds.set(year, amt);
+        if (!thisrow.prFunds.has(year)) {
+          thisrow.prFunds.set(year, 0);
+        }
+        thisrow.totalFunds.set(year, thisrow.prFunds.get(year) + amt);
+      });
     });
   }
 

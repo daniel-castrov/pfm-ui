@@ -2499,7 +2499,7 @@ definitions:
         type: "string"
       bulkOrigin:
         type: "boolean"
-      originanalMrId:
+      originalMrId:
         type: "string"
       parentMrId:
         type: "string"
