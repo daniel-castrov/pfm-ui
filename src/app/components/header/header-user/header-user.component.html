@@ -72,7 +72,7 @@
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
         <ng-container *ngIf="pomIsOpen">
-          <span class="dropdown-item" disabled>Create POM Session</span>
+          <a class="dropdown-item" disabled>Create POM Session</a>
           <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
         </ng-container>
 
