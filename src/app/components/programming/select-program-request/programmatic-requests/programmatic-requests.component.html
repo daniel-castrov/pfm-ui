@@ -1,77 +1,78 @@
-<div class="row mb-3 col-md-10 col-sm-12" >
-  <table class="pr-table">
-    <thead>
-      <tr class="white-top-table-header font-italic">
-        <td class="large-column"> </td>
-        <td class="large-column"> </td>
-        <td class="large-column"> </td>
-        <td class="large-column"> </td>
-        <td> </td>
-        <td> </td>
-        <td class="text-center">PY-1</td>
-        <td class="text-center">PY</td>
-        <td class="text-center">CY</td>
-        <td class="text-center">BY</td>
-        <td class="text-center">BY+1</td>
-        <td class="text-center">BY+2</td>
-        <td class="text-center">BY+3</td>
-        <td class="text-center">BY+4</td>
-        <td></td>
-      </tr>
-      <tr>
-        <th class="large-column">Program</th>
-        <th class="large-column">Subprogram</th>
-        <th class="large-column">Variant</th>
-        <th class="large-column">Status</th>
-        <th>Cycle</th>
-        <th>{{by-3 | FY}}</th>
-        <th>{{by-2 | FY}}</th>
-        <th>{{by-1 | FY}}</th>
-        <th>{{by   | FY}}</th>
-        <th>{{by+1 | FY}}</th>
-        <th>{{by+2 | FY}}</th>
-        <th>{{by+3 | FY}}</th>
-        <th>{{by+4 | FY}}</th>
-        <th> >>{{by+4 | FY}}</th>
-      </tr>
-    </thead>
-    <div class="table-body">
-      <tbody *ngFor="let pr of (mapNameToRow | values)">
-        <tr>
-          <td class="row-lt-gray text-center large-column" rowspan="2"><span class="clickable" (click)="editPR(pr.pom.id)">{{ pr.pom.isSubprogram ? pr.pom.parentMrId : pr.pom?.shortName}}</span>
-            <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
-              <i class="fa fa-trash"></i>
-            </span>
-          </td>
-          <td class="row-lt-gray text-center clickable large-column" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
-          <td class="row-lt-gray text-center clickable large-column" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</td>
-          <td class="row-lt-gray text-center clickable large-column" rowspan="2" (click)="editPR(pr.pom.id)"><span class="text-danger">{{pr.pom?.state}}</span></td>
-          <td>PB</td>
-          <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by-2)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by-1)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by+1)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by+2)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by+3)}}</td>
-          <td class="text-right">{{pr.pb?.getToa(by+4)}}</td>
-          <td class="text-right"></td>
+<div class="row">
+  <div class="mb-3 col-md-10 col-sm-12">
+    <table class="pr-table pull-right">
+      <thead>
+        <tr class="white-top-table-header font-italic">
+          <td class="large-column"> </td>
+          <td class="large-column"> </td>
+          <td class="large-column"> </td>
+          <td class="large-column"> </td>
+          <td> </td>
+          <td> </td>
+          <td class="text-center">PY-1</td>
+          <td class="text-center">PY</td>
+          <td class="text-center">CY</td>
+          <td class="text-center">BY</td>
+          <td class="text-center">BY+1</td>
+          <td class="text-center">BY+2</td>
+          <td class="text-center">BY+3</td>
+          <td class="text-center">BY+4</td>
         </tr>
         <tr>
-          <td>POM</td>
-          <td class="text-right">{{pr.pom?.getToa(by-3)}}</td>
-          <td class="text-right">{{pr.pom?.getToa(by-2)}}</td>
-          <td class="text-right">{{pr.pom?.getToa(by-1)}}</td>
-          <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by)}}</td>
-          <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+1)}}</td>
-          <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+2)}}</td>
-          <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+3)}}</td>
-          <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+4)}}</td>
-          <td class="cell-lt-grey text-right"></td>
+          <th class="large-column">Program</th>
+          <th class="large-column">Subprogram</th>
+          <th class="large-column">Variant</th>
+          <th class="large-column">Status</th>
+          <th>Cycle</th>
+          <th>{{by-3 | FY}}</th>
+          <th>{{by-2 | FY}}</th>
+          <th>{{by-1 | FY}}</th>
+          <th>{{by   | FY}}</th>
+          <th>{{by+1 | FY}}</th>
+          <th>{{by+2 | FY}}</th>
+          <th>{{by+3 | FY}}</th>
+          <th>{{by+4 | FY}}</th>
+          <th> >>{{by+4 | FY}}</th>
         </tr>
-      </tbody>
-    </div>
-  </table>
+      </thead>
+      <div class="table-body">
+        <tbody *ngFor="let pr of (mapNameToRow | values)">
+          <tr>
+            <td class="row-lt-gray text-center large-column" rowspan="2"><span class="clickable" (click)="editPR(pr.pom.id)">{{ pr.pom.isSubprogram ? pr.pom.parentMrId : pr.pom?.shortName}}</span>
+              <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
+                <i class="fa fa-trash"></i>
+              </span>
+            </td>
+            <td class="row-lt-gray text-center clickable large-column" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}</td>
+            <td class="row-lt-gray text-center clickable large-column" rowspan="2" (click)="editPR(pr.pom.id)">{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</td>
+            <td class="row-lt-gray text-center clickable large-column" rowspan="2" (click)="editPR(pr.pom.id)"><span class="text-danger">{{pr.pom?.state}}</span></td>
+            <td>PB</td>
+            <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by-2)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by-1)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by+1)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by+2)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by+3)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(by+4)}}</td>
+            <td class="text-right"></td>
+          </tr>
+          <tr>
+            <td>POM</td>
+            <td class="text-right">{{pr.pom?.getToa(by-3)}}</td>
+            <td class="text-right">{{pr.pom?.getToa(by-2)}}</td>
+            <td class="text-right">{{pr.pom?.getToa(by-1)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+1)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+2)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+3)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+4)}}</td>
+            <td class="cell-lt-grey text-right"></td>
+          </tr>
+        </tbody>
+      </div>
+    </table>
+  </div>
 </div>
 
 <div class="row mb-3" >
