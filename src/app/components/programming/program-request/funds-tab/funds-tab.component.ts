@@ -14,7 +14,8 @@ import { Row } from './Row';
 })
 export class FundsTabComponent implements OnChanges {
   @Input() pr: ProgrammaticRequest;
-  private fy: number;
+  private pomFy: number;
+  private pbFy: number;
   // key is appropriation+blin
   private rows: Map<string, Row> = new Map<string, Row>();
   
@@ -37,15 +38,15 @@ export class FundsTabComponent implements OnChanges {
   ngOnChanges() {
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     
-    this.setFiscalYear();
+    this.setPomFiscalYear();
     this.loadDropdownOptions();
     this.setPOMtoRows();
     this.setPBtoRows();
   }
 
-  private async setFiscalYear() {
+  private async setPomFiscalYear() {
     const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
-    this.fy = pom.fy;
+    this.pomFy = pom.fy;
   }
 
   private loadDropdownOptions() {
@@ -88,6 +89,7 @@ export class FundsTabComponent implements OnChanges {
   private async setPBtoRows() {
     const user: User = await this.globalsService.user().toPromise();
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
+    this.pbFy = pb.fy;
     const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
 
     pbPr.fundingLines.forEach(fund => {
@@ -153,7 +155,7 @@ export class FundsTabComponent implements OnChanges {
       var fl: FundingLine = {
         appropriation: my.appr,
         blin: my.blin,
-        fy: this.fy,
+        fy: this.pomFy,
         opAgency: my.agency,
         funds: my.flfunds,
         variants: []
@@ -197,7 +199,7 @@ export class FundsTabComponent implements OnChanges {
       this.pr.fundingLines.push({
         appropriation: appr,
         blin: blin,
-        fy: this.fy,
+        fy: this.pomFy,
         funds: funds,
         item: my.item,
         variants: []

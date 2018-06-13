@@ -21,15 +21,15 @@
             <th class="header-column-width">Appropriation</th>
             <th class="header-column-width">Budget</th>
             <th>Cycle</th>
-            <th>{{fy-3}}</th>
-            <th>{{fy-2}}</th>
-            <th>{{fy-1}}</th>
-            <th>{{fy}}</th>
-            <th>{{fy+1}}</th>
-            <th>{{fy+2}}</th>
-            <th>{{fy+3}}</th>
-            <th>{{fy+4}}</th>
-            <th>{{fy+5}}</th>
+            <th>{{pomFy-3}}</th>
+            <th>{{pomFy-2}}</th>
+            <th>{{pomFy-1}}</th>
+            <th>{{pomFy}}</th>
+            <th>{{pomFy+1}}</th>
+            <th>{{pomFy+2}}</th>
+            <th>{{pomFy+3}}</th>
+            <th>{{pomFy+4}}</th>
+            <th>{{pomFy+5}}</th>
           </tr>
         </thead>
         <tbody>
@@ -37,40 +37,40 @@
           <tr>
             <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
             <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
-            <td>PB{{fy-2000-2}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy-3) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy-2) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy-1) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy+1) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy+2) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy+3) | dashForZero}}</td>
-            <td class="text-right">{{row.pbFunds.get(fy+4) | dashForZero}}</td>
+            <td>PB{{pbFy-2000}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy-1) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy+1) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy+2) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy+3) | dashForZero}}</td>
+            <td class="text-right">{{row.pbFunds.get(pomFy+4) | dashForZero}}</td>
             <td class="text-right">-</td>
           </tr>
           <tr>
-            <td>POM{{fy-2000}}</td>
-            <td class="text-right">{{row.prFunds.get(fy-3) | dashForZero}}</td>
-            <td class="text-right">{{row.prFunds.get(fy-2) | dashForZero}}</td>
-            <td class="text-right">{{row.prFunds.get(fy-1) | dashForZero}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy)">{{row.prFunds.get(fy)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+1)">{{row.prFunds.get(fy+1)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+2)">{{row.prFunds.get(fy+2)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+3)">{{row.prFunds.get(fy+3)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+4)">{{row.prFunds.get(fy+4)}}</td>
+            <td>POM{{pomFy-2000}}</td>
+            <td class="text-right">{{row.prFunds.get(pomFy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.prFunds.get(pomFy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.prFunds.get(pomFy-1) | dashForZero}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy)">{{row.prFunds.get(pomFy)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+1)">{{row.prFunds.get(pomFy+1)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+2)">{{row.prFunds.get(pomFy+2)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+3)">{{row.prFunds.get(pomFy+3)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+4)">{{row.prFunds.get(pomFy+4)}}</td>
             <td contenteditable="true" class="editable-field">-</td>
           </tr>
           <tr class="row-light">
             <td>Total</td>
-            <td class="text-right">{{row.totalFunds.get(fy-3) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy-2) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy-1) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy+1) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy+2) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy+3) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy+4) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(fy+5) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy-1) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy+1) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy+2) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy+3) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy+4) | dashForZero}}</td>
+            <td class="text-right">{{row.totalFunds.get(pomFy+5) | dashForZero}}</td>
           </tr>
           </ng-container>
 
@@ -78,21 +78,21 @@
               <td class="text-center medium-grey-cell" colspan="2" rowspan="3">Total Funds Request</td>
               <td>PB</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-                {{totals( fy+year, 'POM' ) | dashForZero}}
+                {{totals( pomFy+year, 'POM' ) | dashForZero}}
               </td>
               <td class="text-right">-</td>
             </tr>
             <tr class="row-lt-gray font-weight-bold">
               <td>POM</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-                {{totals( fy+year, 'UFR' ) | dashForZero}}
+                {{totals( pomFy+year, 'UFR' ) | dashForZero}}
               </td>
               <td class="text-right">-</td>
             </tr>
             <tr class="row-lt-gray font-weight-bold">
               <td>Total</td>
               <ng-container *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-                <td [ngClass]="{'text-right':true, 'text-danger': totals(fy+year)<0 }">{{totals( fy+year, 'TOTAL') | dashForZero}}</td>
+                <td [ngClass]="{'text-right':true, 'text-danger': totals(pomFy+year)<0 }">{{totals( pomFy+year, 'TOTAL') | dashForZero}}</td>
               </ng-container>
               <td class="text-right text-danger">-</td>
             </tr>
