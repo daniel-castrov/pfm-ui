@@ -12,7 +12,7 @@ fieldset {
 }
 
 .pr-table {
-  width: 97%;
+  width: 100%;
   background-color: $white;
   border-collapse: collapse;
   // border: $grey-border;
@@ -22,8 +22,8 @@ fieldset {
     border: $grey-border;
     padding: 2px 10px;
     max-height: 20px;
-    width: 78px;
-    min-width: 78px;
+    width: 82px;
+    min-width: 82px;
     content: '';
   }
 
@@ -33,15 +33,15 @@ fieldset {
     padding: 2px 10px;
     max-height: 20px;
     text-align: center;
-    width: 78px;
-    min-width: 78px;
+    width: 82px;
+    min-width: 82px;
     content: '';
   }
 
   thead > tr > td  {
     padding: 2px 10px;
-    width: 78px;
-    min-width: 78px;
+    width: 82px;
+    min-width: 82px;
   }
 
   thead {
@@ -51,8 +51,8 @@ fieldset {
 
   thead tr td {
     padding: 2px 10px;
-    width: 78px;
-    min-width: 78px;
+    width: 82px;
+    min-width: 82px;
     content: '';
   }
 
