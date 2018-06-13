@@ -32,15 +32,15 @@ export class NewProgrammaticRequestComponent implements OnInit {
 
   async next() {
     switch(this.radio) {
-      case 'ProgramOfRecord':
+      case 'An Existing Program of Record':
         this.programRequestPageMode.setProgramOfRecord(this.pom.id);
         this.programRequestPageMode.originatingProgramId = this.selectedProgram.id;
         break;
-      case 'NewSubprogram':
+      case 'A New Subprogram':
         this.programRequestPageMode.setNewSubprogram(this.pom.id);
         this.programRequestPageMode.parentId = this.selectedProgram.id;
         break;
-      case 'NewProgram':
+      case 'A New Program':
         this.programRequestPageMode.setNewProgram(this.pom.id);
     }
     this.router.navigate(['/program-request']);

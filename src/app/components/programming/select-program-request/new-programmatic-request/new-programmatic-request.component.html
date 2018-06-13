@@ -5,43 +5,29 @@
         <div class="col-md-3">
           <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Select an option
+              {{radio ? radio : 'Select an option'}}
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" value="ProgramOfRecord" [(ngModel)]="radio">An Existing Program of Record</a>
-              <a class="dropdown-item" value="NewSubprogram" [(ngModel)]="radio">A New Subprogram</a>
-              <a class="dropdown-item" value="NewProgram" [(ngModel)]="radio">A New Program</a>
+              <a class="dropdown-item" (click)="radio='An Existing Program of Record'">An Existing Program of Record</a>
+              <a class="dropdown-item" (click)="radio='A New Subprogram'">A New Subprogram</a>
+              <a class="dropdown-item" (click)="radio='A New Program'">A New Program</a>
             </div>
           </div>
-          <!-- <div class="radio-buttons mb-3">
-            <div class="radio-item">
-              <input type="radio" id="ritema" name="ritem" [(ngModel)]="radio" value="ProgramOfRecord">
-              <label for="ritema">An Existing Program of Record</label>
-            </div>
-            <div class="radio-item">
-              <input type="radio" id="ritemb" name="ritem" [(ngModel)]="radio" value="NewSubprogram">
-              <label for="ritemb">A New Subprogram</label>
-            </div>
-            <div class="radio-item">
-              <input type="radio" id="ritemc" name="ritem" [(ngModel)]="radio" value="NewProgram">
-              <label for="ritemc">A New Program</label>
-            </div>
-          </div> -->
         </div>
-        <div class="col-md-6" *ngIf="radio=='ProgramOfRecord' || radio=='NewSubprogram'">
+        <div class="col-md-6" *ngIf="radio=='An Existing Program of Record' || radio=='A New Subprogram'">
           <div class="mb-2 mr-sm-2">
             <label class="primary-label mb-2">
               Select a Program
             </label>
           </div>
           <div class="mr-sm-4">
-            <select class="form-control-sm">
-              <option>Program ID</option>
+            <select [(ngModel)]="selectedProgram" class="form-control-sm" name="dummy">
+              <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
             </select>
           </div>
         </div>
         <div class="col-md-6">
-          <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='ExistingProgram'">
+          <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='Select an option'">
             <span class="icon-pad">Next</span>
             <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
           </button>
