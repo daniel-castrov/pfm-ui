@@ -12,14 +12,14 @@ fieldset {
 }
 
 .summary-table {
-  max-width: 710px;
+  max-width: 780px;
   border-collapse: collapse;
   border: $grey-border;
   color: $black;
 
   td, th {
-    width: 82px;
-    min-width: 82px;
+    width: 100px;
+    max-width: 100px;
     border: $grey-border;
     padding: 2px 10px;
   }
@@ -35,7 +35,7 @@ fieldset {
  }
 
  .large-column {
-   width: 140px !important;
+   width: 150px !important;
  }
 }
 

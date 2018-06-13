@@ -2,7 +2,7 @@
   <legend>Add New Program Request for:</legend>
     <form>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-10">
           <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {{radio ? radio : 'Select an option'}}
@@ -14,23 +14,25 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6" *ngIf="radio=='An Existing Program of Record' || radio=='A New Subprogram'">
-          <div class="mb-2 mr-sm-2">
-            <label class="primary-label mb-2">
-              Select a Program
-            </label>
-          </div>
-          <div class="mr-sm-4">
-            <select [(ngModel)]="selectedProgram" class="form-control-sm" name="dummy">
-              <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-1">
           <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='Select an option'">
             <span class="icon-pad">Next</span>
             <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
           </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6" *ngIf="radio=='An Existing Program of Record' || radio=='A New Subprogram'">
+          <div class="mt-2">
+            <label class="primary-label mb-2">
+              Select a Program
+            </label>
+          </div>
+          <div>
+            <select [(ngModel)]="selectedProgram" class="form-control-sm" name="dummy">
+              <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
+            </select>
+          </div>
         </div>
       </div>
     </form>
