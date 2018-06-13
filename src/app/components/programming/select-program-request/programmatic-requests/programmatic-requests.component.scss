@@ -112,10 +112,6 @@ fieldset {
   }
 }
 
-.large-column {
-  width: 140px;
-}
-
 .white-top-table-header  {
   background-color: $white !important;
   border: 1px solid $white !important;
@@ -216,17 +212,6 @@ a.font-danger:hover {
     font-weight: 800;
     color: $primary-color;
   }
-}
-
-// .main-view-table {
-//   width: 100%;
-//   height: 400px;
-//   overflow-y: scroll;
-// }
-
-.autoscroll {
-  max-height: 400px;
-  overflow-y: auto
 }
 
 .clickable {
