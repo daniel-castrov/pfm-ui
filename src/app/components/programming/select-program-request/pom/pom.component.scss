@@ -11,12 +11,6 @@ fieldset {
   padding: 20px;
 }
 
-.large-column {
-  padding: 2px 10px;
-  width: 134px !important;
-  min-width: 134px !important;
-}
-
 .summary-table {
   width: 710px;
   border-collapse: collapse;
@@ -26,8 +20,9 @@ fieldset {
 
 .summary-table td,
 .summary-table th {
+  width: 82px;
+  min-width: 82px;
   border: $grey-border;
-  padding: 6px;
   padding: 2px 10px;
 }
 
@@ -42,24 +37,7 @@ fieldset {
 }
 
 .large-column {
-  width: 140px;
-}
-
-.white-top-table-header  {
-  background-color: $white !important;
-  border: 1px solid $white !important;
-  color: $black;
-}
-
-.white-top-table-header > td {
-  background-color: $white !important;
-  border: 1px solid $white !important;
-  color: $black;
-}
-
-.white-cell {
-  background-color: $white !important;
-  border: 1px solid $white !important;
+  width: 140px !important;
 }
 
 .row-border-bottom {
@@ -86,10 +64,6 @@ fieldset {
   border-top: 4px solid #7b8389;
 }
 
-.header-column-width {
-  width: 90px;
-}
-
 .cell-lt-grey {
   background-color: $light-grey;
   color: $black;
@@ -105,21 +79,7 @@ fieldset {
   color: $black;
 }
 
-.row-lt-green {
-  background-color: $light-green;
-  color: $black;
-}
 
 .font-dark-grey {
   color: $dark-grey;
-}
-
-.program-name {
-  display: inline;
-  width: 460px;
-  margin-right: 4px;
-}
-
-a.font-danger:hover {
-  text-decoration: underline;
 }
