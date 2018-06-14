@@ -6,6 +6,7 @@ import { POMService } from '../../../generated/api/pOM.service';
 
 // Generated
 import { AuthUser } from '../../../generated/model/authUser';
+import { Pom } from '../../../generated/model/pom';
 
 @Component({
   selector: 'header-user',
@@ -17,7 +18,9 @@ export class HeaderUserComponent implements OnInit {
   @Input() isAuthenticated: boolean;
   @Input() authUser: AuthUser;
   requests: Request[];
-  pomIsOpen: boolean = false;
+  pomStatusIsOpen: boolean = false;
+  pomStatusIsCreated: boolean = false;
+  pomId: string = '';
 
   constructor(
     private requestsService: RequestsService,
@@ -33,10 +36,27 @@ export class HeaderUserComponent implements OnInit {
       this.requests = [];
     }
 
-    this.pomService.isOpen(this.authUser.currentCommunity.id).subscribe(data => { 
-      this.pomIsOpen = data.result;
+    this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
+      data.result.forEach((p: Pom) => {
+        console.log(p);
+        if ('CREATED' === p.status) {
+          this.pomStatusIsCreated = true;
+          this.pomId = p.id;
+        }
+        else if ('OPEN' === p.status) {
+          this.pomStatusIsOpen = true;
+          this.pomId = p.id;
+        }
+      });
     });
-
   }
 
+  openPom( event ) {
+    if (this.pomStatusIsCreated) {
+      this.pomService.open(this.pomId).subscribe(data => {
+        this.pomStatusIsCreated = false;
+        this.pomStatusIsOpen = true;
+      });
+    }
+  }
 }
