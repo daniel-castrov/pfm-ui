@@ -67,7 +67,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a *ngIf="pomIsOpen" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
-          <span *ngIf="!pomIsOpen" class="dropdown-item" disabled>Program Request</span>
+          <a *ngIf="!pomIsOpen" class="dropdown-item" disabled>Program Request</a>
 
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
@@ -78,7 +78,7 @@
 
         <ng-container *ngIf="!pomIsOpen">
           <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-          <span class="dropdown-item" disabled>Update POM Session</span>
+          <a class="dropdown-item" disabled>Update POM Session</a>
         </ng-container>
 
           <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
