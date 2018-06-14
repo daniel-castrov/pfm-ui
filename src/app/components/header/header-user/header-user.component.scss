@@ -154,7 +154,8 @@ nav a:hover {
 }
 
 nav a:not([href]):not([tabindex]) {
-    color: inherit;
+    color: #708CA7 !important;
+    
     text-decoration: none;
     cursor: disable;
     cursor: not-allowed;
