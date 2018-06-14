@@ -153,6 +153,13 @@ nav a:hover {
   text-decoration: none;
 }
 
+nav a:not([href]):not([tabindex]) {
+    color: inherit;
+    text-decoration: none;
+    cursor: disable;
+    cursor: not-allowed;
+  }
+
 a.dropdown-item {
   color: #24537b !important;
 }

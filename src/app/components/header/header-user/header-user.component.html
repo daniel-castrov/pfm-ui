@@ -67,27 +67,27 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a *ngIf="pomStatusIsOpen" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
-          <span *ngIf="!pomStatusIsOpen" class="dropdown-item" disabled>Program Request</span>
+          <a *ngIf="!pomStatusIsOpen" class="dropdown-item" disabled>Program Request</a>
 
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
 
         <ng-container *ngIf="pomStatusIsOpen">
-          <span class="dropdown-item" disabled>Create POM Session</span>
-          <span class="dropdown-item" disabled>Open POM Session</span>
+          <a class="dropdown-item" disabled>Create POM Session</a>
+          <a class="dropdown-item" disabled>Open POM Session</a>
           <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
         </ng-container>
 
         <ng-container *ngIf="pomStatusIsCreated">
-          <span class="dropdown-item" disabled>Create POM Session</span>
+          <a class="dropdown-item" disabled>Create POM Session</a>
           <a class="dropdown-item" href="#" routerLink="/home" (click)="openPom()">Open POM Session</a>
-          <span class="dropdown-item" disabled>Update POM Session</span>
+          <a class="dropdown-item" disabled>Update POM Session</a>
         </ng-container>
 
         <ng-container *ngIf="!( pomStatusIsCreated || pomStatusIsOpen )">
           <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-          <span class="dropdown-item" disabled>Open POM Session</span>
-          <span class="dropdown-item" disabled>Update POM Session</span>
+          <a class="dropdown-item" disabled>Open POM Session</a>
+          <a class="dropdown-item" disabled>Update POM Session</a>
         </ng-container>
 
           <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>

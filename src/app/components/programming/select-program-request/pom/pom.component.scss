@@ -11,88 +11,32 @@ fieldset {
   padding: 20px;
 }
 
-.pr-table {
-  width: 100%;
-  background-color: $white;
-  border-collapse: collapse;
-  border: $grey-border;
-  color: $black;
-}
-
-.pr-table td, .pr-table th {
-  border: $grey-border;
-  padding: 6px;
-  padding: 2px 10px;
-}
-
-.pr-table th {
-  font-weight: 500;
-  text-align: center;
-}
-
-.pr-table thead {
-  background-color: #24527b;
-  color: $white;
-}
-
-.remove-pr {
- i {
-     &.fa {
-      color: $black;
-      opacity: .5;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    &.fa:hover {
-      color: red;
-      opacity: .9;
-    }
-  }
-}
-
 .summary-table {
   width: 710px;
   border-collapse: collapse;
   border: $grey-border;
   color: $black;
-}
 
-.summary-table td,
-.summary-table th {
-  border: $grey-border;
-  padding: 6px;
-  padding: 2px 10px;
-}
+  td, th {
+    width: 82px;
+    min-width: 82px;
+    border: $grey-border;
+    padding: 2px 10px;
+  }
+  
+  th {
+    font-weight: 500;
+    text-align: center;
+  }
 
-.summary-table  th {
-  font-weight: 500;
-  text-align: center;
-}
-
-.summary-table thead {
-  color: $black;
-  font-weight: bold;
+  thead {
+   color: $black;
+   font-weight: bold;
+ }
 }
 
 .large-column {
-  width: 140px;
-}
-
-.white-top-table-header  {
-  background-color: $white !important;
-  border: 1px solid $white !important;
-  color: $black;
-}
-
-.white-top-table-header > td {
-  background-color: $white !important;
-  border: 1px solid $white !important;
-  color: $black;
-}
-
-.white-cell {
-  background-color: $white !important;
-  border: 1px solid $white !important;
+  width: 140px !important;
 }
 
 .row-border-bottom {
@@ -119,10 +63,6 @@ fieldset {
   border-top: 4px solid #7b8389;
 }
 
-.header-column-width {
-  width: 90px;
-}
-
 .cell-lt-grey {
   background-color: $light-grey;
   color: $black;
@@ -138,54 +78,7 @@ fieldset {
   color: $black;
 }
 
-.row-lt-green {
-  background-color: $light-green;
-  color: $black;
-}
 
 .font-dark-grey {
   color: $dark-grey;
 }
-
-.program-name {
-  display: inline;
-  width: 460px;
-  margin-right: 4px;
-}
-
-a.font-danger:hover {
-  text-decoration: underline;
-}
-
-.modal {
-
- .modal-header {
-    border-bottom: none;
-    position: relative;
-
-   .btn {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin-top: 0;
-      height: 30px;
-      border-top-left-radius: 0;
-      border-bottom-right-radius: 0;
-
-      > i {
-        font-size: 26px;
-      }
-    }
-  }
-
-  .remove-program {
-    font-weight: 800;
-    color: $primary-color;
-  }
-}
-
-// .main-view-table {
-//   width: 100%;
-//   height: 400px;
-//   overflow-y: scroll;
-// }
