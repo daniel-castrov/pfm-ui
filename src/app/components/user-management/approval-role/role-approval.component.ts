@@ -130,7 +130,7 @@ export class AccessChangeApprovalComponent implements OnInit {
 
   async submit(status) {
     try {
-      await this.assignRoleRequestService.status(status, this.request.id).toPromise();
+      await this.requestService.status(status, this.request.id).toPromise();
       this.router.navigate(['./home']);
     } catch (e) {
       this.feedback.failure(e.message);
