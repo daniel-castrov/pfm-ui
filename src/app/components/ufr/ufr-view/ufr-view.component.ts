@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ProgramsService, Program, ProgramFilter, UFR, UFRsService, POMService, MyDetailsService } from '../../../generated';
+import { ProgramsService, Program, ProgramFilter, UFR, UFRsService, POMService, MyDetailsService, Pom } from '../../../generated';
 import { ViewEncapsulation } from '@angular/core';
 import * as $ from 'jquery';
 
@@ -38,8 +38,13 @@ export class UfrViewComponent implements OnInit {
       });
 
       my.usersvc.getCurrentUser().subscribe(data => {
-        my.pomsvc.isOpen(data.result.currentCommunityId).subscribe(d2 => { 
-          my.canedit = d2.result;
+        my.canedit = false;
+        my.pomsvc.getByCommunityId(data.result.currentCommunityId).subscribe(d2 => {
+          d2.result.forEach( (pommy:Pom) => { 
+            if ('CREATED' === pommy.status || 'OPEN' === pommy.status) {
+              my.canedit = true;
+            }
+          });
         });
       });
     });

@@ -15,9 +15,8 @@ export class ProgramRequestComponent implements OnInit {
 
   private pr: ProgrammaticRequest = {};
 
-  constructor(
-    private prService: PRService,
-    private programRequestPageMode: ProgramRequestPageModeService ) {
+  constructor( private prService: PRService,
+               private programRequestPageMode: ProgramRequestPageModeService ) {
       this.pr.fundingLines = [];
     }
 

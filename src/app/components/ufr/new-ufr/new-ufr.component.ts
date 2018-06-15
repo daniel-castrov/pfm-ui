@@ -28,10 +28,18 @@ export class NewUfrComponent implements OnInit {
 
     my.deetsvc.getCurrentUser().subscribe((person) => {
       forkJoin([
-        my.pomsvc.getOpen(person.result.currentCommunityId),
+        my.pomsvc.getByCommunityId(person.result.currentCommunityId),
         my.psvc.getAll()
       ]).subscribe(data => {
-        my.pom = data[0].result;
+        // get the open/created pom
+        for (var i = 0; i < data[0].result.length; i++){
+          var p: Pom = data[0].result[i];
+          console.log(p);
+          if ('CREATED' === p.status || 'OPEN' === p.status) {
+            my.pom = p;
+            break;
+          }
+        }
 
         ProgramTreeUtils.fullnames(data[1].result).forEach((fullname, program) => { 
           my.programs.push({ program: program, fullname: fullname });
@@ -77,6 +85,7 @@ export class NewUfrComponent implements OnInit {
     }
     else {
       var title = ('SP' === this.mode ? ' sub ' + this.selected.shortName : '');
+      
       var ufr: UFR = {
         phaseId: this.pom.id,
         organization: this.selected.organization,

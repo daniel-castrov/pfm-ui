@@ -7,13 +7,18 @@ $light-grey: #eae9e9;
 $dark-grey: #848282;
 $light-green: #ebf2de;
 
-fieldset {
-  padding: 20px;
+.custom-pr {
+  padding: 10px;
+  margin-top: -16px;
+  min-height: 183px;
+  max-height: 183px;
+  height: 183px;
 }
 
-label {
-  padding: 2px;
+.dropdown-label {
+  padding: 0 7px;
 }
+
 
 .dropdown-item {
   cursor: pointer;
