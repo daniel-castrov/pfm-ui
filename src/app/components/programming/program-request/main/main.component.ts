@@ -17,7 +17,9 @@ export class ProgramRequestComponent implements OnInit {
 
   constructor(
     private prService: PRService,
-    private programRequestPageMode: ProgramRequestPageModeService ) {}
+    private programRequestPageMode: ProgramRequestPageModeService ) {
+      this.pr.fundingLines = [];
+    }
 
   async ngOnInit() {
     if(this.programRequestPageMode.id) {
@@ -36,7 +38,7 @@ export class ProgramRequestComponent implements OnInit {
       this.pr.bulkOrigin = false;
       this.pr.state = 'OUTSTANDING';
       if(this.programRequestPageMode.newProgram) this.pr.type = 'PROGRAM';
-      if(this.programRequestPageMode.newSubprogram) this.pr.type = 'SUBPROGRAM';
+      if(this.programRequestPageMode.newSubprogram) this.pr.type = 'INCREMENT';
       this.pr = (await this.prService.create(this.pr).toPromise()).result;
     }
   }
