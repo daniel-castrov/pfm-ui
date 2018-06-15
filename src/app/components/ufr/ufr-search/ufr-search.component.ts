@@ -191,4 +191,18 @@ export class UfrSearchComponent implements OnInit {
   getParentProgId(p: UFR) {
     return (p.parentMrId ? this.programlkp.get(p.parentMrId) : '');
   }
+
+  getFullProgId(p: UFR) {
+    var parentname = this.getParentProgId(p);
+    if ('' != parentname) {
+      parentname += '/';
+    }
+
+    // this UFR might be a new program, and if so, just use the shortname
+    if (p.originalMrId) {
+      return parentname + this.getProgId(p);
+    }
+
+    return parentname + (!p.shortName || null === p.shortName ? '??' : p.shortName);
+  }
 }
