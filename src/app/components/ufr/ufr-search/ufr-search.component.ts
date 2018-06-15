@@ -49,7 +49,7 @@ export class UfrSearchComponent implements OnInit {
 
   private datasource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
   private programlkp: Map<string, string> = new Map<string, string>();// mrid, fullname
-  private pomIsOpen: boolean = false;
+  private editable: boolean = false;
 
   constructor(private usvc: UFRsService, private userDetailsService: MyDetailsService,
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -71,8 +71,7 @@ export class UfrSearchComponent implements OnInit {
         my.pomsvc.getByCommunityId(person.result.currentCommunityId),
         my.pbsvc.getById(person.result.currentCommunityId),
         my.progsvc.getTagsByType("Functional Area"),
-        my.progsvc.getAll(),
-        my.pomsvc.isOpen(person.result.currentCommunityId)
+        my.progsvc.getAll()
       ]).subscribe(data => {
         my.community = data[0].result;
         my.orgs = data[1].result;
@@ -82,7 +81,6 @@ export class UfrSearchComponent implements OnInit {
           my.programlkp.set(program.id, fullname);
         });
 
-        my.pomIsOpen = data[6].result;
         // console.log( 'pomisopen: '+my.pomIsOpen)
 
         my.filter.orgId = my.orgs[0].id;
@@ -102,6 +100,7 @@ export class UfrSearchComponent implements OnInit {
         my.filter.yoe = true;
         my.filter.active = true;
 
+        my.editable = false;
         var phases: Cycle[] = [];
         data[2].result.forEach(function (x: Pom) {
           phases.push({
@@ -109,6 +108,11 @@ export class UfrSearchComponent implements OnInit {
             phase: 'POM'
           });
           my.cyclelkp.set(x.id, 'POM ' + x.fy);
+
+
+          if ('CREATED' === x.status || 'OPEN' === x.status) {
+            my.editable = true;
+          }
         });
         data[3].result.forEach(function (x: PB) {
           phases.push({

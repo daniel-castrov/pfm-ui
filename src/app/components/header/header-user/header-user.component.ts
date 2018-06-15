@@ -37,6 +37,9 @@ export class HeaderUserComponent implements OnInit {
     }
 
     this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
+      this.pomStatusIsCreated = false;
+      this.pomStatusIsOpen = false;
+
       data.result.forEach((p: Pom) => {
         console.log(p);
         if ('CREATED' === p.status) {
