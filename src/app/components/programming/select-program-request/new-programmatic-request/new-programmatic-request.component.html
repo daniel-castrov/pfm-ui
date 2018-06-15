@@ -1,39 +1,37 @@
-<fieldset>
+<fieldset class="custom-pr">
   <legend>Add New Program Request for:</legend>
-    <form>
-      <div class="row">
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{radio ? radio : 'Select an option'}}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" (click)="radio='An Existing Program of Record'">An Existing Program of Record</a>
-              <a class="dropdown-item" (click)="radio='A New Subprogram'">A New Subprogram</a>
-              <a class="dropdown-item" (click)="radio='A New Program'">A New Program</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-1">
-          <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='Select an option'">
-            <span class="icon-pad">Next</span>
-            <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{radio ? radio : 'Select an option'}}
           </button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6" *ngIf="radio=='An Existing Program of Record' || radio=='A New Subprogram'">
-          <div class="mt-2">
-            <label class="primary-label mb-2">
-              Select a Program
-            </label>
-          </div>
-          <div>
-            <select [(ngModel)]="selectedProgram" class="form-control-sm" name="dummy">
-              <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
-            </select>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" (click)="radio='An Existing Program of Record'">An Existing Program of Record</a>
+            <a class="dropdown-item" (click)="radio='A New Subprogram'">A New Subprogram</a>
+            <a class="dropdown-item" (click)="radio='A New Program'">A New Program</a>
           </div>
         </div>
       </div>
-    </form>
+      <div class="col-md-1">
+        <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='Select an option'">
+          <span class="icon-pad">Next</span>
+          <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6" *ngIf="radio=='An Existing Program of Record' || radio=='A New Subprogram'">
+        <div class="dropdown-label mt-4">
+          <label class="primary-label mb-2">
+            Select a Program
+          </label>
+        </div>
+        <div class="dropdown-label">
+          <select [(ngModel)]="selectedProgram" class="form-control-sm" name="dummy">
+            <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </fieldset>

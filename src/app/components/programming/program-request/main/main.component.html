@@ -4,7 +4,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfRecord">
-          <div class="h5 mb-4">Programmatic Request for Program:</div>
+          <div class="h5 mb-4">Program Request for Program:</div>
             <span class="form-group">
               <label class="badge badge-light mr-sm-4"><h6>{{pr.shortName}}</h6></label>
             </span>
@@ -13,12 +13,12 @@
             </span>
         </div>
         <div class="col-6" id="create-new-subprogram" *ngIf="!programRequestPageMode.id && programRequestPageMode.newSubprogram">
-          <div class="h5 mb-4">Programmatic Request - Creating New Sub-Program for Program:</div>
+          <div class="h5 mb-4">Program Request - Creating New Sub-Program for Program:</div>
           <input type="text" class="form-control forminput mr-2" [(ngModel)]="pr.shortName" placeholder="Subprogram ID" aria-label="short name">
           <input type="text" class="form-control forminput" [(ngModel)]="pr.longName" placeholder="Subprogram Name" aria-label="short name">
         </div>
         <div class="col-6" id="create-new-toplevel" *ngIf="!programRequestPageMode.id && programRequestPageMode.newProgram">
-          <div class="h5 mb-4">Programmatic Request - Create new Top Level Program:</div>
+          <div class="h5 mb-4">Program Request - Create new Top Level Program:</div>
           <input type="text" class="form-control forminput mr-2" [(ngModel)]="pr.shortName" placeholder="Program ID" aria-label="short name">
           <input type="text" class="form-control forminput" [(ngModel)]="pr.longName" placeholder="Program Name" aria-label="short name">
         </div>
