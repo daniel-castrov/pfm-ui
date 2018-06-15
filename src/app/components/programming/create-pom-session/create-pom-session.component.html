@@ -47,6 +47,10 @@
                 <td [attr.contenteditable]="editsOk" (blur)="editfield($event, community.id, fy+4)" class="editable-field" digits>{{toas.get(fy+4)}}</td>
                 <td class="not-editable">{{orgsums.get(community.id)}}</td>
               </tr>
+              <tr class="empty-row">
+                <td>
+                </td>
+              </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="6">Set Organization's sub-TOA</td>
               </tr>
@@ -72,7 +76,7 @@
               </tr>
 
               <tr class="sum-difference">
-                <td></td>
+                <td><span class="difference-label">Available Difference</span></td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)}}</td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)}}</td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)}}</td>
@@ -97,7 +101,7 @@
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
             <div *ngIf="editsOk">
-              <span *ngIf="tooMuchToa" class="alert alert-danger" role="alert">Organizational TOA(s) exceeds Community TOA</span>
+              <span *ngIf="tooMuchToa" class="toa-alert" role="alert">Organizational TOA(s) exceeds Community TOA</span>
             </div>
           </fieldset>
         </div>
