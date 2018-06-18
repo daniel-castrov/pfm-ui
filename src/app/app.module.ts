@@ -30,6 +30,7 @@ import { CreatePomSessionComponent } from './components/programming/create-pom-s
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { CreateExecutionPhaseComponent } from './components/programming/create-execution-phase/create-execution-phase.component';
 import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
@@ -72,7 +73,7 @@ import { VariantsComponent } from './components/programs/program-view/variants.c
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
-import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service'; 
+import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service';
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { BulkTabComponent } from './components/programming/update-pom-session/bulk-tab/bulk-tab.component';
@@ -115,7 +116,6 @@ import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode/page-mode.service';
-
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -127,6 +127,7 @@ const appRoutes: Routes = [
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
+  {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
@@ -172,6 +173,7 @@ const appRoutes: Routes = [
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
+    CreateExecutionPhaseComponent,
     CreatePomSessionComponent,
     CurrentComponent,
     ElevationComponent,
