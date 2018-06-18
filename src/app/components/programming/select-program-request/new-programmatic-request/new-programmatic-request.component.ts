@@ -14,7 +14,7 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode/p
 })
 export class NewProgrammaticRequestComponent implements OnInit {
 
-  radio: string;
+  addNewPrFor: string;
   @Input() pom: Pom;
   programs: ProgramWithFullName[];
   selectedProgram: ProgramWithFullName;
@@ -31,7 +31,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
   }
 
   async next() {
-    switch(this.radio) {
+    switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
         this.programRequestPageMode.setProgramOfRecord(this.pom.id);
         this.programRequestPageMode.originatingProgramId = this.selectedProgram.id;

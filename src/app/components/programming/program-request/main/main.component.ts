@@ -15,9 +15,10 @@ export class ProgramRequestComponent implements OnInit {
 
   private pr: ProgrammaticRequest = {};
 
-  constructor(
-    private prService: PRService,
-    private programRequestPageMode: ProgramRequestPageModeService ) {}
+  constructor( private prService: PRService,
+               private programRequestPageMode: ProgramRequestPageModeService ) {
+      this.pr.fundingLines = [];
+    }
 
   async ngOnInit() {
     if(this.programRequestPageMode.id) {
@@ -25,13 +26,9 @@ export class ProgramRequestComponent implements OnInit {
     }
   }
 
-  submit() {
-    this.pr.state = 'SUBMITTED';
-    this.save();
-  }
-
-  async save() {
+  async save(state: string) {
     if(this.pr.id) {
+      this.pr.state = state;
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
     } else {
       this.pr.phaseId = this.programRequestPageMode.phaseId;
@@ -40,7 +37,7 @@ export class ProgramRequestComponent implements OnInit {
       this.pr.bulkOrigin = false;
       this.pr.state = 'OUTSTANDING';
       if(this.programRequestPageMode.newProgram) this.pr.type = 'PROGRAM';
-      if(this.programRequestPageMode.newSubprogram) this.pr.type = 'SUBPROGRAM';
+      if(this.programRequestPageMode.newSubprogram) this.pr.type = 'INCREMENT';
       this.pr = (await this.prService.create(this.pr).toPromise()).result;
     }
   }

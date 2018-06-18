@@ -23,7 +23,6 @@ export class FundsTabComponent implements OnChanges {
   private appropriations: string[] = [];
   private blins: string[] = [];
   private agencies: string[] = [];
-  private flfunds = {};
   private appr: string;
   private blin: string;
   private agency: string;
@@ -36,10 +35,11 @@ export class FundsTabComponent implements OnChanges {
               private globalsService: GlobalsService) {}
 
   ngOnChanges() {
+    this.loadDropdownOptions();
+    
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     
     this.setPomFiscalYear();
-    this.loadDropdownOptions();
     this.setPOMtoRows();
     this.setPBtoRows();
   }
@@ -90,6 +90,10 @@ export class FundsTabComponent implements OnChanges {
     const user: User = await this.globalsService.user().toPromise();
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
     this.pbFy = pb.fy;
+
+    // there is no PB if there is no this.pr.originalMrId
+    if(!this.pr.originalMrId) return;
+
     const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
 
     pbPr.fundingLines.forEach(fund => {
@@ -118,29 +122,26 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  newfledit(newval, year) {
-    this.flfunds[year] = Number.parseInt( newval );
-  }
-
   addfl() {
     var my: FundsTabComponent = this;
     var key: string = this.appr + this.blin;
+    const flfunds = {}
     if (this.rows.has(key)) {
       var tabledata = this.rows.get(this.appr + this.blin);
       var ufunds = tabledata.prFunds;
-      Object.keys(this.flfunds).forEach(yearstr => {
+      Object.keys(flfunds).forEach(yearstr => {
         var year: number = Number.parseInt(yearstr);
         var oldval: number = (ufunds.has(year) ? ufunds.get(year) : 0);
-        ufunds.set(year, oldval + my.flfunds[year]);
+        ufunds.set(year, oldval + flfunds[year]);
       });
     }
     else {
       var tfunds: Map<number, number> = new Map<number, number>();
       var ufunds: Map<number, number> = new Map<number, number>();
-      Object.keys(this.flfunds).forEach(yearstr => {
+      Object.keys(flfunds).forEach(yearstr => {
         var year: number = Number.parseInt(yearstr);
-        tfunds.set(year, my.flfunds[year]);
-        ufunds.set(year, my.flfunds[year]);
+        tfunds.set(year, flfunds[year]);
+        ufunds.set(year, flfunds[year]);
       });
 
       this.rows.set(key, {
@@ -157,7 +158,7 @@ export class FundsTabComponent implements OnChanges {
         blin: my.blin,
         fy: this.pomFy,
         opAgency: my.agency,
-        funds: my.flfunds,
+        funds: flfunds,
         variants: []
       };
       this.pr.fundingLines.push(fl);

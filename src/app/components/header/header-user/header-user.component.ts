@@ -41,7 +41,6 @@ export class HeaderUserComponent implements OnInit {
       this.pomStatusIsOpen = false;
 
       data.result.forEach((p: Pom) => {
-        //console.log(p);
         if ('CREATED' === p.status) {
           this.pomStatusIsCreated = true;
           this.pomId = p.id;
