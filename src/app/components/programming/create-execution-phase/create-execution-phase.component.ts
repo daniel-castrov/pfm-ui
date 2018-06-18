@@ -14,7 +14,15 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   constructor() { }
 
+
   ngOnInit() {
+    var fn = function(e) {
+			if (!/zmore/.test(e.target.className)) { $('#dmore').hide(); }
+		}
+		document.addEventListener('click', fn);
+		document.addEventListener('touchstart', fn);
+
+
   }
 
 }
