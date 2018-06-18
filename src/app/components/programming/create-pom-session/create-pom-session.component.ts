@@ -183,7 +183,7 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   editfield(event, id, fy) {
-    var val: number = Number.parseInt(event.target.innerText);
+    var val: number = Number.parseInt(event.target.innerText.replace(/,/g,''));
     if (val > 99999999) {
       val = 99999999;
     }
