@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import * as $ from 'jquery';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
+
+declare const $: any;
+declare const jQuery: any;
 
 @Component({
   selector: 'app-create-execution-phase',
