@@ -38,6 +38,8 @@ export class CreatePomSessionComponent implements OnInit {
   private tooMuchToa: boolean = false;
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
+  
+  private useEpp = false;
 
   constructor(private detailsvc: MyDetailsService, private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
@@ -239,6 +241,26 @@ export class CreatePomSessionComponent implements OnInit {
 
   }
 
+  loadFY4fromEpp(){
+
+    if ( this.useEpp==true ) {
+      // start dummy code 
+      // Replace with calls to get actual EPP data
+      var n = this.orgs.length;
+      var t=125;
+      this.orgs.forEach( org => {
+      this.orgtoas.get(org.id).set(this.fy+4,t);
+      this.toas.set(this.fy+4, n*t);
+      }); // end dummy code
+    } else {
+      // replace any values in fy+4 with 0
+      this.orgs.forEach( org => {
+      this.orgtoas.get(org.id).set(this.fy+4,0);
+      this.toas.set(this.fy+4, 0);
+      });
+    }
+    this.resetTotals();
+  }
 
   submit() {
     var my: CreatePomSessionComponent = this;

@@ -24,6 +24,13 @@ fieldset {
     color: $white;
   }
 
+  .thh {
+    background-color: $primary-color;
+    color: $white;
+    text-align: left;
+    font-size: 75%;
+  }
+
   td {
     border-top: none;
     max-width: 100px;
