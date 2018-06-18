@@ -4,24 +4,24 @@
       <div class="col-md-10">
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{radio ? radio : 'Select an option'}}
+              {{addNewPrFor ? addNewPrFor : 'Select an option'}}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" (click)="radio='An Existing Program of Record'">An Existing Program of Record</a>
-            <a class="dropdown-item" (click)="radio='A New Subprogram'">A New Subprogram</a>
-            <a class="dropdown-item" (click)="radio='A New Program'">A New Program</a>
+              <a class="dropdown-item" (click)="addNewPrFor='An Existing Program of Record'">An Existing Program of Record</a>
+              <a class="dropdown-item" (click)="addNewPrFor='A New Subprogram'">A New Subprogram</a>
+              <a class="dropdown-item" (click)="addNewPrFor='A New Program'">A New Program</a>
           </div>
         </div>
       </div>
       <div class="col-md-1">
-        <button class="btn btn-primary btn pull-right" (click)="next()" [disabled]="!radio || radio=='Select an option'">
+          <button class="btn btn-primary btn pull-right" type="button" (click)="next()" [disabled]="!addNewPrFor || addNewPrFor=='Select an option'">
           <span class="icon-pad">Next</span>
           <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
         </button>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6" *ngIf="radio=='An Existing Program of Record' || radio=='A New Subprogram'">
+        <div class="col-md-6" *ngIf="addNewPrFor=='An Existing Program of Record' || addNewPrFor=='A New Subprogram'">
         <div class="dropdown-label mt-4">
           <label class="primary-label mb-2">
             Select a Program
