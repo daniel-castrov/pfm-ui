@@ -33,7 +33,6 @@ fieldset { padding: 20px;}
   color: $black;
 
   thead {
-    background-color: $primary-color;
     color: $white;
   }
 
@@ -44,6 +43,7 @@ fieldset { padding: 20px;}
     width: 110px;
     min-width: 110px;
     text-align: center;
+    background-color: $primary-color;
   }
 
   td {
