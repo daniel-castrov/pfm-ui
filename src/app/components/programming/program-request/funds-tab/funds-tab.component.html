@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12 mb-3">
-    <div id="pr-funds" class="table-editable">
+    <div class="table-editable">
       <table class="pr-funds-table">
         <thead>
           <tr class="white-top-table-header font-italic">
@@ -18,8 +18,8 @@
             <td>CTC</td>
           </tr>
           <tr>
-            <th class="header-column-width">Appropriation</th>
-            <th class="header-column-width">Budget</th>
+            <th>Appropriation</th>
+            <th>Budget</th>
             <th>Cycle</th>
             <th>{{pomFy-3}}</th>
             <th>{{pomFy-2}}</th>
@@ -75,7 +75,8 @@
           </ng-container>
 
           <tr class="row-lt-gray font-weight-bold">
-              <td class="text-center medium-grey-cell" colspan="2" rowspan="3">Total Funds Request</td>
+              <td class="text-center medium-grey-cell" rowspan="3">Total Funds Request</td>
+              <td class="text-center medium-grey-cell" rowspan="3"></td>
               <td>PB{{pbFy-2000}}</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
                 {{totals( pomFy+year, 'POM' ) | dashForZero}}
