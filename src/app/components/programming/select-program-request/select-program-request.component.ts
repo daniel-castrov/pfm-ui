@@ -43,12 +43,12 @@ export class SelectProgramRequestComponent implements OnInit {
   initPomPrs(user: User): Promise<any> {
     return new Promise(async (resolve, reject) => {
       // can't use getOpen here, because we need to handle open *or* created pom
-      this.pomService.getByCommunityId(user.currentCommunityId).subscribe(data => { 
-        for (var i = 0; i < data.result.length; i++){
-          var p: Pom = data.result[i];
-          if ('CREATED' === p.status || 'OPEN' === p.status) {
-            this.pom = p;
-            this.pom.fy = p.fy;
+      this.pomService.getByCommunityId(user.currentCommunityId).subscribe(poms => { 
+        for (var i = 0; i < poms.result.length; i++){
+          var pom: Pom = poms.result[i];
+          if ('CREATED' === pom.status || 'OPEN' === pom.status) {
+            this.pom = pom;
+            this.pom.fy = pom.fy;
             this.prService.getByPhase(this.pom.id).subscribe(prrslt => { 
               this.pomProgrammaticRequests = prrslt.result;
               resolve();

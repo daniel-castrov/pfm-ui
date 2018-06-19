@@ -19,6 +19,10 @@
         <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom" [by]="by"></j-pom>
       </div>
     </div>
-    <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="by" (deleted)="ngOnInit()"></programmatic-requests>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="by" (deleted)="ngOnInit()"></programmatic-requests>
+      </div>
+    </div>
   </div>
 </div>
