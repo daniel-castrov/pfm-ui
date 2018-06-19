@@ -76,14 +76,14 @@
 
           <tr class="row-lt-gray font-weight-bold">
               <td class="text-center medium-grey-cell" colspan="2" rowspan="3">Total Funds Request</td>
-              <td>PB</td>
+              <td>PB{{pbFy-2000}}</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
                 {{totals( pomFy+year, 'POM' ) | dashForZero}}
               </td>
               <td class="text-right">-</td>
             </tr>
             <tr class="row-lt-gray font-weight-bold">
-              <td>POM</td>
+              <td>POM{{pomFy-2000}}</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
                 {{totals( pomFy+year, 'UFR' ) | dashForZero}}
               </td>
