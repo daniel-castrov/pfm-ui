@@ -6,10 +6,10 @@
         <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfRecord">
           <div class="h5 mb-4">Program Request for Program:</div>
             <span class="form-group">
-              <label class="badge badge-light mr-sm-4"><h6>{{pr.shortName}}</h6></label>
+              <label class="main-titles mr-sm-4">{{pr.shortName}}</label>
             </span>
             <span class="form-group">
-              <label class="badge badge-light mr-sm-4"><h6>{{pr.longName}}</h6></label>
+              <label class="main-titles mr-sm-4">{{pr.longName}}</label>
             </span>
         </div>
         <div class="col-6" id="create-new-subprogram" *ngIf="!programRequestPageMode.id && programRequestPageMode.newSubprogram">
