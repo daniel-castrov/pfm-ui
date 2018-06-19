@@ -104,7 +104,7 @@
 </div>
 
 <div class="row">
-  <div class="col-10 mb-3">
+  <div class="col-12">
     <fieldset>
       <legend>Add Funding Line</legend>
       <div class="row mb-3">
@@ -148,12 +148,15 @@
             </span>
           </span>
         </div>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-primary" (click)="addfl()" [disabled]="!(item && appr && blin)">
-          <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-          Add Funding Line
-        </button>
+        <div class="col-2">
+          <span class="form-group">
+            <div class="mt-1 primary-label"></div>
+              <button class="btn btn-primary mt-3" (click)="addfl()" [disabled]="!(item && appr && blin)">
+              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+              Add Funding Line
+            </button>
+          </span>
+        </div>
       </div>
     </fieldset>
   </div>
