@@ -121,7 +121,7 @@ export class CreatePomSessionComponent implements OnInit {
         var samplepom: Pom = data[4].result;
 
         my.community = community;
-        my.fy = my.pb.fy + 2;
+        my.fy = my.pb.fy + 1;
 
         my.toas.clear();
         my.orgtoas.clear();
