@@ -22,6 +22,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private modelpb: PB;
+  private message: string;
 
   constructor(private pbsvc: PBService, private usvc: MyDetailsService,
   private esvc:ExecutionService, private router:Router ) { }
@@ -36,7 +37,6 @@ export class CreateExecutionPhaseComponent implements OnInit {
     this.usvc.getCurrentUser().subscribe(p => { 
       this.pbsvc.getByCommunityId(p.result.currentCommunityId).subscribe(data => { 
         data.result.forEach((pb: PB) => {
-          console.log(pb);
           this.yearpblkp.set(pb.fy, pb);
           this.modelpb = pb;
         });
@@ -45,9 +45,15 @@ export class CreateExecutionPhaseComponent implements OnInit {
   }
 
   submit() {
+    var my: CreateExecutionPhaseComponent = this;
     var exe: Execution = {};
     this.esvc.createExecution(this.modelpb.communityId, this.modelpb.fy, exe).subscribe(data => { 
-      this.router.navigate(['/home']);
+      if (data.result) {
+        my.router.navigate(['/home']);
+      }
+      else {
+        my.message = data.error;
+      }
     });
   }
 }
