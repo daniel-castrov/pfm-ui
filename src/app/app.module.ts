@@ -101,6 +101,7 @@ import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
+import { ExecutionService } from './generated/api/execution.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
 import { TransferTabComponent } from './components/programming/update-pom-session/transfer-tab/transfer-tab.component';
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
@@ -279,6 +280,7 @@ const appRoutes: Routes = [
     PRService,
     PBService,
     UFRsService,
+    ExecutionService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

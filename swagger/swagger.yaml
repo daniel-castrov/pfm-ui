@@ -25,6 +25,7 @@ tags:
 - name: "UFRs"
 - name: "User"
 - name: "UserRoleResource"
+- name: "Execution"
 
 #
 ##############################################################################
@@ -437,7 +438,7 @@ paths:
       - "PB"
       summary: "Fetches all existing PBs for this community"
       description: "Gets the PB information"
-      operationId: "getById"
+      operationId: "getByCommunityId"
       consumes:
       - "application/json"
       produces:
@@ -2006,6 +2007,93 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP SNAPSHOTS
+##############################################################################
+# START EXECUTION
+# 
+  /execution/community/{communityId}:
+    get:
+      operationId: "getByCommunity"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "status"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution phases for this community"
+      description: "Returns open community execution phases"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of executions"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /execution/{id}:
+    get:
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets the given Execution"
+      description: "Returns an execution"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An execution"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /execution/community/{communityId}/year/{year}:
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates a new Execution phase"
+      description: "creates a new execution phase"
+      operationId: "createExecution"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+      - in: "query"
+        name: "model"
+        description: "the PB to use as a model"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Execution object"
+        required: true
+        schema:
+          $ref: "#/definitions/Execution"
+# STOP EXECUTION
 #################################################################
 # END PATHS
 #################################################################
@@ -2558,5 +2646,41 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
+  ExecutionLine:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      appropriation:
+        type: "string"
+      blin:
+        type: "string"
+      opAgency:
+        type: "string"
+      item:
+        type: "string"
+      funds:
+        $ref: "#/definitions/IntMap"
+      fy:
+        type: "number"
+      variants:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
+  Execution:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"      
+      fy:
+        type: "integer"
+      status:
+        type: "string"
+      executionLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/ExecutionLine"
 ##############################################################################
 # ENDFILE

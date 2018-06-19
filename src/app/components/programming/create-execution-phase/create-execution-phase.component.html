@@ -5,11 +5,8 @@
       <div class="col-md-7 col-sm-12 mb-4">
         <span class="h5 mr-2">Create Execution Phase for FY</span>
         <span>
-          <select class="form-control-sm dropdown-year-width mb-2">
-             <option>2018</option>
-             <option>2019</option>
-             <option>2020</option>
-             <option>2021</option>
+          <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="modelpb">
+            <option *ngFor="let pb of yearpblkp|mapAsList" [value]="pb.value">{{pb.key}}</option>
            </select>
          </span>
       </div>
