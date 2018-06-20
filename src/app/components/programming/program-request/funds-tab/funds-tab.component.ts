@@ -1,3 +1,4 @@
+import { FeedbackComponent } from './../../../feedback/feedback.component';
 import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
@@ -6,6 +7,7 @@ import { Component, Input, ApplicationRef, OnChanges, ViewChild } from '@angular
 import { forkJoin } from "rxjs/observable/forkJoin"
 import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest, Tag, ProgramsService } from '../../../../generated'
 import { Row } from './Row';
+import { Key } from './Key';
 
 @Component({
   selector: 'funds-tab',
@@ -13,6 +15,7 @@ import { Row } from './Row';
   styleUrls: ['./funds-tab.component.scss']
 })
 export class FundsTabComponent implements OnChanges {
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() pr: ProgrammaticRequest;
   private pomFy: number;
   private pbFy: number;
@@ -23,9 +26,9 @@ export class FundsTabComponent implements OnChanges {
   private appropriations: string[] = [];
   private blins: string[] = [];
   private agencies: string[] = [];
-  private appr: string;
+  private appropriation: string;
   private blin: string;
-  private agency: string;
+  private opAgency: string;
   private item: string;
 
   constructor(private pomService: POMService, 
@@ -39,6 +42,10 @@ export class FundsTabComponent implements OnChanges {
     
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     
+    this.initTable();
+  }
+
+  private initTable() {
     this.setPomFiscalYear();
     this.setPOMtoRows();
     this.setPBtoRows();
@@ -54,19 +61,20 @@ export class FundsTabComponent implements OnChanges {
       this.programsService.getSearchAgencies(),
       this.programsService.getSearchAppropriations(),
       this.programsService.getSearchBlins()
-    ]).subscribe(data2 => {
-      this.agencies = data2[0].result.sort();
-      this.agency = this.agencies[0];
-      this.appropriations = data2[1].result.sort();
-      this.appr = this.appropriations[0];
-      this.blins = data2[2].result.sort();
+    ]).subscribe(data => {
+      this.agencies = data[0].result.sort();
+      this.opAgency = this.agencies[0];
+      this.appropriations = data[1].result.sort();
+      this.appropriation = this.appropriations[0];
+      this.blins = data[2].result.sort();
       this.blin = this.getBlins()[0];
     });
   }
 
   private setPOMtoRows() {
+    this.rows.clear();
     this.pr.fundingLines.forEach(fund => {
-      var key = fund.appropriation + fund.blin;
+      var key = Key.create(fund.appropriation, fund.blin, fund.item, fund.opAgency);
       var prFunds: Map<number, number> = new Map<number, number>();
       var totalFunds: Map<number, number> = new Map<number, number>();
       var pbFunds: Map<number, number> = new Map<number, number>();
@@ -77,8 +85,10 @@ export class FundsTabComponent implements OnChanges {
         pbFunds.set(year, 0);
       });
       this.rows.set(key, {
-        blin: fund.blin,
         appropriation: fund.appropriation,
+        blin: fund.blin,
+        item: fund.item,
+        opAgency: fund.opAgency,
         prFunds: prFunds,
         totalFunds: totalFunds,
         pbFunds: pbFunds
@@ -97,15 +107,17 @@ export class FundsTabComponent implements OnChanges {
     const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
 
     pbPr.fundingLines.forEach(fund => {
-      var key = fund.appropriation + fund.blin;
+      var key = Key.create(fund.appropriation, fund.blin, fund.item, fund.opAgency);
       var newdata = false;
       if (!this.rows.has(key)) {
         this.rows.set(key, {
           appropriation: fund.appropriation,
           blin: fund.blin,
-          pbFunds: new Map<number, number>(),
-          prFunds: new Map<number, number>(),
-          totalFunds: new Map<number, number>()
+          item: fund.item,
+          opAgency: fund.opAgency,
+          pbFunds: new Map(),
+          prFunds: new Map(),
+          totalFunds: new Map()
         });
         newdata = true;
       }
@@ -122,52 +134,28 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  addfl() {
-    var my: FundsTabComponent = this;
-    var key: string = this.appr + this.blin;
-    const flfunds = {}
+  addFundingLine() {
+    var key: string = Key.create(this.appropriation, this.blin, this.item, this.opAgency);
     if (this.rows.has(key)) {
-      var tabledata = this.rows.get(this.appr + this.blin);
-      var ufunds = tabledata.prFunds;
-      Object.keys(flfunds).forEach(yearstr => {
-        var year: number = Number.parseInt(yearstr);
-        var oldval: number = (ufunds.has(year) ? ufunds.get(year) : 0);
-        ufunds.set(year, oldval + flfunds[year]);
-      });
-    }
-    else {
-      var tfunds: Map<number, number> = new Map<number, number>();
-      var ufunds: Map<number, number> = new Map<number, number>();
-      Object.keys(flfunds).forEach(yearstr => {
-        var year: number = Number.parseInt(yearstr);
-        tfunds.set(year, flfunds[year]);
-        ufunds.set(year, flfunds[year]);
-      });
-
-      this.rows.set(key, {
-        appropriation: my.appr,
-        blin: my.blin,
-        prFunds: ufunds,
-        totalFunds: tfunds,
-        pbFunds: new Map<number, number>()
-      });
-
+      this.feedback.failure('Funding Line already exists');
+    } else {
       // now set this same data in the current data (for saves)
-      var fl: FundingLine = {
-        appropriation: my.appr,
-        blin: my.blin,
+      var fundingLine: FundingLine = {
         fy: this.pomFy,
-        opAgency: my.agency,
-        funds: flfunds,
+        appropriation: this.appropriation,
+        blin: this.blin,
+        item: this.item,
+        opAgency: this.opAgency,
+        funds: {},
         variants: []
       };
-      this.pr.fundingLines.push(fl);
+      this.pr.fundingLines.push(fundingLine);
+      this.initTable();
     }
   }
 
 
   onedit(newval, appr, blin, year) {
-    var my: FundsTabComponent = this;
     var thisyear:number = Number.parseInt(year);
     
     var thisvalue = Number.parseInt(newval.replace(/[^0-9]/g, ''));
@@ -202,7 +190,7 @@ export class FundsTabComponent implements OnChanges {
         blin: blin,
         fy: this.pomFy,
         funds: funds,
-        item: my.item,
+        item: this.item,
         variants: []
       });
     }
@@ -210,13 +198,13 @@ export class FundsTabComponent implements OnChanges {
 
   getBlins(): string[]{
     var ret: string[] = [];
-    if ('PROC' === this.appr) {
+    if ('PROC' === this.appropriation) {
       this.blins.filter(s => (s.match(/00/))).forEach(str => { ret.push(str) });
     }
-    else if ('RDTE' === this.appr) {
+    else if ('RDTE' === this.appropriation) {
       this.blins.filter(s => (s.match(/BA[1-4]/))).forEach(str => { ret.push(str) });
     }
-    else if ('O&M' === this.appr) {
+    else if ('O&M' === this.appropriation) {
       this.blins.filter(s => (s.match(/BA[5-7]/))).forEach(str => { ret.push(str) });
     }
       

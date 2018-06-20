@@ -38,7 +38,7 @@ export class RequestComponent implements OnChanges {
       this.updateRequestedCommuntyIds();
       this.header.refreshActions();
     } catch(e) {
-      this.feedback.failure(e.message);
+      this.feedback.exception(e.message);
     }
     delete this.selectedCommunityId;
   }
