@@ -133,7 +133,7 @@ export class AccessChangeApprovalComponent implements OnInit {
       await this.requestService.status(status, this.request.id).toPromise();
       this.router.navigate(['./home']);
     } catch (e) {
-      this.feedback.failure(e.message);
+      this.feedback.exception(e.message);
     }
   }
 }

@@ -99,7 +99,7 @@ export class CommunityLeaveComponent implements OnInit {
       await this.leaveCommunityRequestService.status(status, this.leaveCommunityRequest.id).toPromise();
       this.router.navigate(['./home']);
     } catch(e) {
-      this.feedback.failure(e.message);
+      this.feedback.exception(e.message);
     }
   }
 
