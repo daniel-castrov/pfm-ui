@@ -109,13 +109,13 @@
 </div>
 
 <div class="row">
-  <div class="col-10 mb-3">
+  <div class="col-12 mb-3">
     <fieldset>
       <legend>Add Funding Line</legend>
       <div class="row mb-3">
         <div class="col-2">
           <span class="form-group">
-            <div class="mb-2 primary-label">Appropriation</div>
+            <div class="mb-1 primary-label">Appropriation</div>
             <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
               <option *ngFor="let a of appropriations" [ngValue]="a">{{a}}</option>
             </select>
@@ -123,7 +123,7 @@
         </div>
         <div class="col-2">
           <span class="form-group">
-            <div class="mb-2 primary-label">BA/BLIN</div>
+            <div class="mb-1 primary-label">BA/BLIN</div>
             <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
               <option *ngFor="let b of getBlins();first as first" [selected]="first">{{b}}</option>
             </select>
@@ -131,7 +131,7 @@
         </div>
         <div class="col-2">
           <span class="form-group">
-            <div class="mb-2 primary-label">Item</div>
+            <div class="mb-1 primary-label">Item</div>
             <span class="form-group">
               <input class="mb-2 form-control forminput" [(ngModel)]="item">
             </span>
@@ -139,7 +139,7 @@
         </div>
         <div class="col-2">
           <span class="form-group">
-            <div class="mb-2 primary-label">OpAgency</div>
+            <div class="mb-1 primary-label">OpAgency</div>
             <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency">
               <option *ngFor="let c of agencies">{{c}}</option>
             </select>
@@ -147,19 +147,22 @@
         </div>
         <div class="col-2">
           <span class="form-group">
-            <div class="mb-2 primary-label">Program Element</div>
+            <div class="mb-1 primary-label">Program Element</div>
             <span class="form-group">
               <input class="mb-2 form-control forminput">
             </span>
           </span>
         </div>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-primary" (click)="addFundingLine()" [disabled]="!(item)">
-          <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-          Add Funding Line
-        </button>
-      </div>
+        <div class="col-2">
+          <span class="form-group">
+              <div class="primary-label"> </div>
+              <button class="btn btn-primary mt-4" (click)="addFundingLine()" [disabled]="!(item)">
+                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+               Add Funding Line
+             </button>
+           </span>
+         </div>
+       </div>
     </fieldset>
     <j-feedback></j-feedback>
   </div>
