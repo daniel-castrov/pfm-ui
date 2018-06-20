@@ -115,6 +115,7 @@ import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode/page-mode.service';
+import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -154,7 +155,8 @@ const appRoutes: Routes = [
   { path: 'create-new-pom', component: CreatePomSessionComponent },
   { path: 'ufr-search', component: UfrSearchComponent },
   { path: 'ufr-view/:id', component: UfrViewComponent },
-  { path: 'worksheet-management', component: WorksheetManagementComponent }
+  { path: 'worksheet-management', component: WorksheetManagementComponent},
+  { path: 'set-epp', component: SetEppComponent}
 
 ];
 
@@ -233,7 +235,8 @@ const appRoutes: Routes = [
     NewUfrComponent,
     OnlyDigitsDirective,
     FyPipe,
-    MapAsListPipe
+    MapAsListPipe,
+    SetEppComponent
   ],
 
   imports: [
