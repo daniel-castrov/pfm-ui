@@ -91,6 +91,10 @@
         </ng-container>
 
           <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
+          <ng-container *ngIf="authUser.rolenames.includes('POM_Manager')">
+            <hr/>
+            <a class="dropdown-item" href="#">Set EPP</a>
+          </ng-container>
           <!--<a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
           <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
           <a class="dropdown-item" href="#" routerLink="/home">Approve Fund Request</a>
