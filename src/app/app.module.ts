@@ -7,7 +7,7 @@ import { PomComponent } from './components/programming/select-program-request/po
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AngularDualListBoxModule } from 'angular-dual-listbox';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
@@ -253,7 +253,9 @@ const appRoutes: Routes = [
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     TabsModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     AssignRoleRequestService,

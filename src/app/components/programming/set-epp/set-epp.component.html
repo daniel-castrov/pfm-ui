@@ -9,7 +9,7 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <button class="btn btn-primary btn float-right">Import EPP</button>
+          <button class="btn btn-primary btn float-right" data-toggle="modal" href="#epp-modal">Import EPP</button>
         </div>
       </div>
       <div class="row">
@@ -20,3 +20,42 @@
     </div>
   </div>
 </div>
+<!--Import file dialog-->
+<div class="row mb-3" >
+    <div class="col-12">
+      <div id="epp-modal" class="modal fade in" (onHidden)="onHidden($event)">
+        <div class="modal-dialog">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="modal-content">
+              <div class="modal-header">
+                <a class="btn" data-dismiss="modal">
+                  <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </a>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-12">
+                    <label>Specify location of EPP spreadsheet:</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 form-group">
+                    <input type="file" class="custom-file-input" id="epp-input-file" (change)="onFileChange($event)" required #fileInput>
+                    <label class="custom-file-label" for="epp-input-file">{{fileName}}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary float-right" data-dismiss="modal" [disabled]="form.invalid || loading">
+                        Import <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

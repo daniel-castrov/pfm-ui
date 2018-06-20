@@ -80,12 +80,42 @@ mat-row:nth-child(odd){
   background: #fff;
 }
 
-.input-file {
-  width: 80%;
-  padding: 6px 4px;
-  clear: both;
-}
+.modal {
 
-.forminput-width {
-  width: 80%;
-}
+  .modal-body {
+    padding: 2rem;
+    
+    .row [class^=col-] {
+      padding-left: 0px;
+      padding-right: 0px;
+
+      .btn {
+        margin: 0 0 0 10px;
+      }
+    }
+  }
+
+  .modal-header {
+     border-bottom: none;
+     position: relative;
+ 
+    .btn {
+       position: absolute;
+       top: 0;
+       right: 0;
+       margin-top: 0;
+       height: 30px;
+       border-top-left-radius: 0;
+       border-bottom-right-radius: 0;
+ 
+       > i {
+         font-size: 26px;
+       }
+     }
+   }
+ 
+   .nda-message {
+     height: 480px;
+     overflow-y: scroll;
+   }
+ }
