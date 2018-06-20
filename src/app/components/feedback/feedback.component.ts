@@ -16,7 +16,13 @@ export class FeedbackComponent {
     this.flash(message);
   }
 
-  public failure(exceptionMessage: string) {
+  public failure(message: string) {
+    this.successStyle = false;
+    this.flash(message);
+  }
+
+  // feed this method an exception message and it will output a (hopefully meaningful) message oriented toward a non-technical user
+  public exception(exceptionMessage: string) {
     this.successStyle = false;
     let displayMessage: string;
     if(exceptionMessage.includes(" 409 ")) {

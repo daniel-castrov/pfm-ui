@@ -101,7 +101,7 @@ export class CommunityJoinComponent implements OnInit {
       await this.joinCommunityRequestService.status(status, this.joinCommunityRequest.id).toPromise();
       this.router.navigate(['./home']);
     } catch(e) {
-      this.feedback.failure(e.message);
+      this.feedback.exception(e.message);
     }
   }
 

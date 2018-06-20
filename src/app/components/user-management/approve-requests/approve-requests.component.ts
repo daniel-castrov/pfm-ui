@@ -44,7 +44,7 @@ export class ApproveRequestsComponent implements OnInit {
       this.ngOnInit();
       this.header.refreshActions();
     } catch(e) {
-      this.feedback.failure(e.message);
+      this.feedback.exception(e.message);
     }
   }
 
