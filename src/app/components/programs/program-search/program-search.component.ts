@@ -46,7 +46,7 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.programs.getSearchBlins().subscribe(
+    this.programs.getBlins().subscribe(
       (data) => { 
         my.blins = data.result;
         my.blins.sort();
@@ -55,7 +55,7 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
         }
       });
     
-    this.programs.getSearchAgencies().subscribe(
+    this.programs.getAgencies().subscribe(
       (data) => {
         my.agencies = data.result;
         my.agencies.sort();
@@ -64,7 +64,7 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
         }
       });
     
-    this.programs.getSearchAppropriations().subscribe(
+    this.programs.getAppropriations().subscribe(
       (data) => {
         my.appropriations = data.result;
         my.appropriations.sort();

@@ -39,9 +39,7 @@ export class FundsTabComponent implements OnChanges {
 
   ngOnChanges() {
     this.loadDropdownOptions();
-    
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
-    
     this.initTable();
   }
 
@@ -58,9 +56,9 @@ export class FundsTabComponent implements OnChanges {
 
   private loadDropdownOptions() {
     forkJoin([
-      this.programsService.getSearchAgencies(),
-      this.programsService.getSearchAppropriations(),
-      this.programsService.getSearchBlins()
+      this.programsService.getAgencies(),
+      this.programsService.getAppropriations(),
+      this.programsService.getBlins()
     ]).subscribe(data => {
       this.agencies = data[0].result.sort();
       this.opAgency = this.agencies[0];
@@ -108,7 +106,6 @@ export class FundsTabComponent implements OnChanges {
 
     pbPr.fundingLines.forEach(fund => {
       var key = Key.create(fund.appropriation, fund.blin, fund.item, fund.opAgency);
-      var newdata = false;
       if (!this.rows.has(key)) {
         this.rows.set(key, {
           appropriation: fund.appropriation,
@@ -119,17 +116,16 @@ export class FundsTabComponent implements OnChanges {
           prFunds: new Map(),
           totalFunds: new Map()
         });
-        newdata = true;
       }
-      var thisrow: Row = this.rows.get(key);
+      var row: Row = this.rows.get(key);
       Object.keys(fund.funds).forEach(function (yearstr) {
         var year: number = Number.parseInt(yearstr);
         var amt: number = fund.funds[yearstr];
-        thisrow.pbFunds.set(year, amt);
-        if (!thisrow.prFunds.has(year)) {
-          thisrow.prFunds.set(year, 0);
+        row.pbFunds.set(year, amt);
+        if (!row.prFunds.has(year)) {
+          row.prFunds.set(year, 0);
         }
-        thisrow.totalFunds.set(year, thisrow.prFunds.get(year) + amt);
+        row.totalFunds.set(year, row.prFunds.get(year) + amt);
       });
     });
   }

@@ -1678,11 +1678,11 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /search/tags:
+  /metadata/tags:
     get:
       tags:
       - "Programs"
-      operationId: "getSearchTags"
+      operationId: "getTags"
       summary: "Gets all type names"
       description: "Returns a collection of type names"
       produces:
@@ -1696,11 +1696,11 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /search/blins:
+  /metadata/blins:
     get:
       tags:
       - "Programs"
-      operationId: "getSearchBlins"
+      operationId: "getBlins"
       summary: "Gets all blins in use"
       description: "Returns a collection of blins"
       produces:
@@ -1714,11 +1714,11 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /search/agencies:
+  /metadata/agencies:
     get:
       tags:
       - "Programs"
-      operationId: "getSearchAgencies"
+      operationId: "getAgencies"
       summary: "Gets all opAgencies in use"
       description: "Returns a collection of OpAgencies"
       produces:
@@ -1732,11 +1732,11 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /search/appropriations:
+  /metadata/appropriations:
     get:
       tags:
       - "Programs"
-      operationId: "getSearchAppropriations"
+      operationId: "getAppropriations"
       summary: "Gets all Appropriations in use"
       description: "Returns a collection of Appropriations"
       produces:
@@ -1750,7 +1750,7 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /search/tags/{type}:
+  /metadata/tags/{type}:
     get:
       tags:
       - "Programs"

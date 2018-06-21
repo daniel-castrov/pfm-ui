@@ -107,9 +107,9 @@ export class UfrFundsComponent implements OnInit {
       }  
 
       forkJoin([
-        my.progsvc.getSearchAgencies(),
-        my.progsvc.getSearchAppropriations(),
-        my.progsvc.getSearchBlins()
+        my.progsvc.getAgencies(),
+        my.progsvc.getAppropriations(),
+        my.progsvc.getBlins()
       ]).subscribe(data2 => {
         my.agencies = data2[0].result.sort();
         my.agency = my.agencies[0];

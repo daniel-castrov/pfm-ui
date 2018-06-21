@@ -19,7 +19,7 @@ export class UfrMetadataComponent implements OnInit {
 
   ngOnInit() {
     var my: UfrMetadataComponent = this;
-    this.progsvc.getSearchTags().subscribe(tagtypes => { 
+    this.progsvc.getTags().subscribe(tagtypes => { 
       var calls: any[] = [];
       tagtypes.result.forEach(tagtype => { 
         calls.push(my.progsvc.getTagsByType(tagtype));
