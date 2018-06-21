@@ -23,6 +23,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private modelpb: PB;
   private message: string;
+  private fileToUpload: File = null;
 
   constructor(private pbsvc: PBService, private usvc: MyDetailsService,
   private esvc:ExecutionService, private router:Router ) { }
@@ -44,10 +45,18 @@ export class CreateExecutionPhaseComponent implements OnInit {
     });
   }
 
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+    console.log('here I am');
+    console.log(this.fileToUpload);
+  }
+
+
   submit() {
     var my: CreateExecutionPhaseComponent = this;
-    var exe: Execution = {};
-    this.esvc.createExecution(this.modelpb.communityId, this.modelpb.fy, exe).subscribe(data => { 
+    
+    this.esvc.createExecution(this.modelpb.communityId, this.modelpb.fy, this.fileToUpload,
+      this.modelpb.id ).subscribe(data => { 
       if (data.result) {
         my.router.navigate(['/home']);
       }
