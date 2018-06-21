@@ -118,7 +118,7 @@ export class MyRolesComponent implements OnInit {
       my.selectedAddRole = null;
       my.isURRModifyable = false;
     } catch(e) {
-      my.feedback.failure(e.message);
+      my.feedback.exception(e.message);
     }
   }
 
@@ -140,7 +140,7 @@ export class MyRolesComponent implements OnInit {
       my.selectedDropRole = null;
       my.isURRModifyable = false;
     } catch(e) {
-      my.feedback.failure(e.message);
+      my.feedback.exception(e.message);
     }
   }
 
