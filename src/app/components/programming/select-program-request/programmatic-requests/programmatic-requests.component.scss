@@ -214,5 +214,10 @@ a.font-danger:hover {
 }
 
 .clickable {
-  cursor: pointer
+  cursor: pointer;
+  text-decoration: underline;
+  color: $primary-color;
+  &:hover {
+    text-decoration: none;
+  }
 }
