@@ -59,10 +59,16 @@ fieldset {
     display:block;
   }
 
+  .largest-column {
+    padding: 2px 10px;
+    width: 242px !important;
+    min-width: 150px !important;
+  }
+
   .large-column {
     padding: 2px 10px;
-    width: 134px !important;
-    min-width: 134px !important;
+    width: 150px !important;
+    min-width: 215px !important;
   }
 
   .table-body {
