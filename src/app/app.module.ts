@@ -116,6 +116,7 @@ import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
+import { EppService } from './generated';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -282,6 +283,7 @@ const appRoutes: Routes = [
     PRService,
     PBService,
     UFRsService,
+    EppService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 

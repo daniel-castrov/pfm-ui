@@ -9,19 +9,6 @@ $dark-grey: #848282;
 
 fieldset { padding: 20px;}
 
-.worksheet-controls {
-  li {
-    list-style: none;
-    margin-left: 0;
-    padding: 4px 0;
-    width: 180px;
-  }
-
-  button {
-    width: 100%;
-  }
-}
-
 .mat-table {
 
   display: table;
@@ -113,9 +100,10 @@ mat-row:nth-child(odd){
        }
      }
    }
- 
-   .nda-message {
-     height: 480px;
-     overflow-y: scroll;
-   }
  }
+
+.alert-danger {
+  color: #dc3545;
+  background-color: none;
+  border: none;
+}
