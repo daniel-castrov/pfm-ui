@@ -2028,15 +2028,6 @@ paths:
       description: "Returns open community execution phases"
       produces:
       - "application/json"
-      responses:
-        200:
-          description: "A list of executions"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
   /execution/{id}:
     get:
       operationId: "getById"
@@ -2051,15 +2042,6 @@ paths:
       description: "Returns an execution"
       produces:
       - "application/json"
-      responses:
-        200:
-          description: "An execution"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
   /execution/community/{communityId}/year/{year}:
     post:
       tags:

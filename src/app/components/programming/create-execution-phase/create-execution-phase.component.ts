@@ -19,7 +19,6 @@ declare const jQuery: any;
   styleUrls: ['./create-execution-phase.component.scss']
 })
 export class CreateExecutionPhaseComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private modelpb: PB;
   private message: string;
