@@ -26,6 +26,7 @@ tags:
 - name: "User"
 - name: "UserRoleResource"
 - name: "Epp"
+- name: "Execution"
 
 #
 ##############################################################################
@@ -438,7 +439,7 @@ paths:
       - "PB"
       summary: "Fetches all existing PBs for this community"
       description: "Gets the PB information"
-      operationId: "getById"
+      operationId: "getByCommunityId"
       consumes:
       - "application/json"
       produces:
@@ -2037,6 +2038,80 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP SNAPSHOTS
+##############################################################################
+# START EXECUTION
+# 
+  /execution/community/{communityId}:
+    get:
+      operationId: "getByCommunity"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "status"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution phases for this community"
+      description: "Returns open community execution phases"
+      produces:
+      - "application/json"
+  /execution/{id}:
+    get:
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets the given Execution"
+      description: "Returns an execution"
+      produces:
+      - "application/json"
+  /execution/community/{communityId}/year/{year}:
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates a new Execution phase"
+      description: "creates a new execution phase"
+      operationId: "createExecution"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+      - in: "query"
+        name: "model"
+        description: "the PB to use as a model"
+        required: false
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+# STOP EXECUTION
 #################################################################
 # END PATHS
 #################################################################
@@ -2589,5 +2664,62 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
+  ExecutionLine:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      appropriation:
+        type: "string"
+      blin:
+        type: "string"
+      opAgency:
+        type: "string"
+      item:
+        type: "string"
+      mrId:
+        type: "string"
+      toa:
+        type: "integer"
+      withheld:
+        type: "integer"
+      commitments:
+        type: "integer"
+      obligations:
+        type: "integer"
+      accruals:
+        type: "integer"
+      outlays:
+        type: "integer"
+      spendPlans:
+        type: "array"
+        items:
+          $ref: "#/definitions/SpendPlan"
+  Execution:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"      
+      fy:
+        type: "integer"
+      status:
+        type: "string"
+      executionLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/ExecutionLine"
+  SpendPlan:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+      fy:
+        type: "integer"
+      monthlies:
+        type: "array"
+        items:
+          type: "number"
 ##############################################################################
 # ENDFILE

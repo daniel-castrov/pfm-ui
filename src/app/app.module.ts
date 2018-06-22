@@ -30,6 +30,7 @@ import { CreatePomSessionComponent } from './components/programming/create-pom-s
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { CreateExecutionPhaseComponent } from './components/programming/create-execution-phase/create-execution-phase.component';
 import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
@@ -72,7 +73,7 @@ import { VariantsComponent } from './components/programs/program-view/variants.c
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
-import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service'; 
+import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service';
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
 import { BulkTabComponent } from './components/programming/update-pom-session/bulk-tab/bulk-tab.component';
@@ -100,6 +101,7 @@ import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
+import { ExecutionService } from './generated/api/execution.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
 import { TransferTabComponent } from './components/programming/update-pom-session/transfer-tab/transfer-tab.component';
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
@@ -129,6 +131,7 @@ const appRoutes: Routes = [
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
+  {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
   {path:'header', component:HeaderComponent},
@@ -175,6 +178,7 @@ const appRoutes: Routes = [
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
+    CreateExecutionPhaseComponent,
     CreatePomSessionComponent,
     CurrentComponent,
     ElevationComponent,
@@ -284,6 +288,7 @@ const appRoutes: Routes = [
     PBService,
     UFRsService,
     EppService,
+    ExecutionService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
 
