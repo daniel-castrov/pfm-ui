@@ -1809,16 +1809,27 @@ paths:
       operationId: "importFile"
       summary: "Imports EPP spreadsheet"
       description: "This option allows POM managers to upload a EPP spreadsheet into the system"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
       parameters:
       - in: "query"
         name: "name"
         description: "the name of the EPP spreadsheet file"
         required: true
         type: "string"
-      - in: "query"
+      - in: "formData"
         name: "file"
         description: "The EPP spreadsheet file"
         required: true
+        type: file
       produces:
       - "application/json"
       responses:
