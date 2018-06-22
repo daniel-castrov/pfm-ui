@@ -81,7 +81,7 @@
               </tr>
 
               <tr class="sum-difference">
-                <td class="text-left"><span class="difference-label">Avl. Difference</span></td>
+                <td class="text-left"><span class="difference-label">POM Delta</span></td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)|number:'1.0'}}</td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)|number:'1.0'}}</td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+2) < 0}">{{yeardiffs.get(fy+2)|number:'1.0'}}</td>
