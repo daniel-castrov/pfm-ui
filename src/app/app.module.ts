@@ -7,7 +7,7 @@ import { PomComponent } from './components/programming/select-program-request/po
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AngularDualListBoxModule } from 'angular-dual-listbox';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
@@ -118,6 +118,7 @@ import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
+import { EppService } from './generated';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -257,7 +258,9 @@ const appRoutes: Routes = [
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     TabsModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     AssignRoleRequestService,
@@ -284,6 +287,7 @@ const appRoutes: Routes = [
     PRService,
     PBService,
     UFRsService,
+    EppService,
     ExecutionService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },

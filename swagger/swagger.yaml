@@ -25,6 +25,7 @@ tags:
 - name: "UFRs"
 - name: "User"
 - name: "UserRoleResource"
+- name: "Epp"
 - name: "Execution"
 
 #
@@ -1799,6 +1800,47 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+
+
+  /epp/importFile:
+    post:
+      tags:
+      - "Epp"
+      operationId: "importFile"
+      summary: "Imports EPP spreadsheet"
+      description: "This option allows POM managers to upload a EPP spreadsheet into the system"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "query"
+        name: "name"
+        description: "the name of the EPP spreadsheet file"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "The EPP spreadsheet file"
+        required: true
+        type: file
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured." 
 # STOP PROGRAMS
 ##############################################################################
 # START UFRs
