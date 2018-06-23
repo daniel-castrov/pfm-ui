@@ -1678,79 +1678,16 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /metadata/tags:
+  /tagtypes:
     get:
       tags:
       - "Programs"
-      operationId: "getTags"
+      operationId: "getTagtypes"
       summary: "Gets all type names"
       description: "Returns a collection of type names"
       produces:
       - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/blins:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getBlins"
-      summary: "Gets all blins in use"
-      description: "Returns a collection of blins"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/agencies:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getAgencies"
-      summary: "Gets all opAgencies in use"
-      description: "Returns a collection of OpAgencies"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/appropriations:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getAppropriations"
-      summary: "Gets all Appropriations in use"
-      description: "Returns a collection of Appropriations"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/tags/{type}:
+  /tags/type/{type}:
     get:
       tags:
       - "Programs"
@@ -1764,15 +1701,6 @@ paths:
       description: "Returns tags for a type"
       produces:
       - "application/json"
-      responses:
-        200:
-          description: "All the tags for this type"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
   /search:
     post:
       tags:
