@@ -125,7 +125,7 @@
           <span class="form-group">
             <div class="mb-1 primary-label">BA/BLIN</div>
             <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
-              <option *ngFor="let blin of blins;first as first" [selected]="first">{{blin}}</option>
+              <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
             </select>
           </span>
         </div>

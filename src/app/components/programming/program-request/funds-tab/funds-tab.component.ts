@@ -194,19 +194,11 @@ export class FundsTabComponent implements OnChanges, OnInit {
     }
   }
 
-  getBlins(): string[]{
-    var ret: string[] = [];
-    if ('PROC' === this.appropriation) {
-      this.blins.filter(blin => (blin.match(/00/))).forEach(str => { ret.push(str) });
-    }
-    else if ('RDTE' === this.appropriation) {
-      this.blins.filter(blin => (blin.match(/BA[1-4]/))).forEach(str => { ret.push(str) });
-    }
-    else if ('O&M' === this.appropriation) {
-      this.blins.filter(blin => (blin.match(/BA[5-7]/))).forEach(str => { ret.push(str) });
-    }
-      
-    return ret;
+  getBlins(): string[] {
+    if ('PROC' === this.appropriation) return this.blins.filter(blin => (blin.match(/00/)));
+    else if ('RDTE' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[1-4]/)));
+    else if ('O&M' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[5-7]/)));
+    else return this.blins;
   }
 
 
