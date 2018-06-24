@@ -25,6 +25,8 @@ tags:
 - name: "UFRs"
 - name: "User"
 - name: "UserRoleResource"
+- name: "Epp"
+- name: "Execution"
 
 #
 ##############################################################################
@@ -437,7 +439,7 @@ paths:
       - "PB"
       summary: "Fetches all existing PBs for this community"
       description: "Gets the PB information"
-      operationId: "getById"
+      operationId: "getByCommunityId"
       consumes:
       - "application/json"
       produces:
@@ -1678,79 +1680,16 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /metadata/tags:
+  /tagtypes:
     get:
       tags:
       - "Programs"
-      operationId: "getTags"
+      operationId: "getTagtypes"
       summary: "Gets all type names"
       description: "Returns a collection of type names"
       produces:
       - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/blins:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getBlins"
-      summary: "Gets all blins in use"
-      description: "Returns a collection of blins"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/agencies:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getAgencies"
-      summary: "Gets all opAgencies in use"
-      description: "Returns a collection of OpAgencies"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/appropriations:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getAppropriations"
-      summary: "Gets all Appropriations in use"
-      description: "Returns a collection of Appropriations"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of strings"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /metadata/tags/{type}:
+  /tags/type/{type}:
     get:
       tags:
       - "Programs"
@@ -1764,15 +1703,6 @@ paths:
       description: "Returns tags for a type"
       produces:
       - "application/json"
-      responses:
-        200:
-          description: "All the tags for this type"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
   /search:
     post:
       tags:
@@ -1798,6 +1728,47 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+
+
+  /epp/importFile:
+    post:
+      tags:
+      - "Epp"
+      operationId: "importFile"
+      summary: "Imports EPP spreadsheet"
+      description: "This option allows POM managers to upload a EPP spreadsheet into the system"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "query"
+        name: "name"
+        description: "the name of the EPP spreadsheet file"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "The EPP spreadsheet file"
+        required: true
+        type: file
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured." 
 # STOP PROGRAMS
 ##############################################################################
 # START UFRs
@@ -2006,6 +1977,80 @@ paths:
         500:
           description: "An unexpected error occured."
 # STOP SNAPSHOTS
+##############################################################################
+# START EXECUTION
+# 
+  /execution/community/{communityId}:
+    get:
+      operationId: "getByCommunity"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "status"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution phases for this community"
+      description: "Returns open community execution phases"
+      produces:
+      - "application/json"
+  /execution/{id}:
+    get:
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets the given Execution"
+      description: "Returns an execution"
+      produces:
+      - "application/json"
+  /execution/community/{communityId}/year/{year}:
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates a new Execution phase"
+      description: "creates a new execution phase"
+      operationId: "createExecution"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+      - in: "query"
+        name: "model"
+        description: "the PB to use as a model"
+        required: false
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+# STOP EXECUTION
 #################################################################
 # END PATHS
 #################################################################
@@ -2558,5 +2603,62 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
+  ExecutionLine:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      appropriation:
+        type: "string"
+      blin:
+        type: "string"
+      opAgency:
+        type: "string"
+      item:
+        type: "string"
+      mrId:
+        type: "string"
+      toa:
+        type: "integer"
+      withheld:
+        type: "integer"
+      commitments:
+        type: "integer"
+      obligations:
+        type: "integer"
+      accruals:
+        type: "integer"
+      outlays:
+        type: "integer"
+      spendPlans:
+        type: "array"
+        items:
+          $ref: "#/definitions/SpendPlan"
+  Execution:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"      
+      fy:
+        type: "integer"
+      status:
+        type: "string"
+      executionLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/ExecutionLine"
+  SpendPlan:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+      fy:
+        type: "integer"
+      monthlies:
+        type: "array"
+        items:
+          type: "number"
 ##############################################################################
 # ENDFILE

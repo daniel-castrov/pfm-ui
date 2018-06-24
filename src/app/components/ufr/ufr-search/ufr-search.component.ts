@@ -69,7 +69,7 @@ export class UfrSearchComponent implements OnInit {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
         my.orgsvc.getByCommunityId(person.result.currentCommunityId),
         my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-        my.pbsvc.getById(person.result.currentCommunityId),
+        my.pbsvc.getByCommunityId(person.result.currentCommunityId),
         my.progsvc.getTagsByType("Functional Area"),
         my.progsvc.getAll()
       ]).subscribe(data => {

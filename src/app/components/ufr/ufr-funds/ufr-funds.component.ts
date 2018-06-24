@@ -1,3 +1,4 @@
+import { GlobalsService } from './../../../services/globals.service';
 import { Component, OnInit, Input, ApplicationRef } from '@angular/core'
 import { forkJoin } from "rxjs/observable/forkJoin"
 
@@ -34,13 +35,15 @@ export class UfrFundsComponent implements OnInit {
   private agency: string;
   private item: string;
 
-  constructor(private pomsvc: POMService, private pbService: PBService,
-    private prService: PRService, private progsvc: ProgramsService) { }
+  constructor(private pomsvc: POMService, 
+              private pbService: PBService,
+              private prService: PRService,
+              private globalsService: GlobalsService) { }
   
   ngOnInit() {
     var my: UfrFundsComponent = this;
 
-    this.pomsvc.getById(my.current.phaseId).subscribe(data => {
+    this.pomsvc.getById(my.current.phaseId).subscribe(async data => {
       my.pom = data.result;
       my.fy = my.pom.fy;
 
@@ -106,18 +109,18 @@ export class UfrFundsComponent implements OnInit {
         });
       }  
 
-      forkJoin([
-        my.progsvc.getAgencies(),
-        my.progsvc.getAppropriations(),
-        my.progsvc.getBlins()
-      ]).subscribe(data2 => {
-        my.agencies = data2[0].result.sort();
-        my.agency = my.agencies[0];
-        my.appropriations = data2[1].result.sort();
-        my.appr = my.appropriations[0];
-        my.blins = data2[2].result.sort();
-        my.blin = my.getBlins()[0];
-      }); 
+      {
+        this.agencies = await this.globalsService.tagAbbreviationsForOpAgency();
+        this.agency = this.agencies[0];
+      }
+      {
+        this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
+        this.appr = this.appropriations[0];
+      }
+      {
+        this.blins = await this.globalsService.tagAbbreviationsForBlin();
+        this.blin = this.getBlins()[0];
+      }
     });
   }
 

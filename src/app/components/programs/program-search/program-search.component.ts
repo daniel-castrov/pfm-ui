@@ -1,3 +1,4 @@
+import { GlobalsService } from './../../../services/globals.service';
 import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableDataSource,MatPaginator, MatSort, MatSortable } from '@angular/material';
@@ -26,10 +27,12 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
   private filter: ProgramFilter = {};
   private datasource: MatTableDataSource<Program> = new MatTableDataSource<Program>();
 
-  constructor(private programs: ProgramsService, private router: Router ) { 
+  constructor(private programs: ProgramsService, 
+              private router: Router,
+              private globalsService: GlobalsService ) { 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     var my: ProgramSearchComponent = this;
 
     // we can't sort on tags directly, so we need something more complicated
@@ -45,34 +48,27 @@ export class ProgramSearchComponent implements OnInit, AfterViewInit {
           return data[sortHeaderId];
       }
     }
-
-    this.programs.getBlins().subscribe(
-      (data) => { 
-        my.blins = data.result;
-        my.blins.sort();
-        if (my.blins.length > 0) {
-          my.filter.blin = my.blins[0];
-        }
-      });
-    
-    this.programs.getAgencies().subscribe(
-      (data) => {
-        my.agencies = data.result;
-        my.agencies.sort();
-        if (my.agencies.length > 0) {
-          my.filter.agency = my.agencies[0];
-        }
-      });
-    
-    this.programs.getAppropriations().subscribe(
-      (data) => {
-        my.appropriations = data.result;
-        my.appropriations.sort();
-        if (my.appropriations.length > 0) {
-          my.filter.appropriation = my.appropriations[0];
-        }
-      });
-    
+    {
+      my.blins = await this.globalsService.tagAbbreviationsForBlin()
+      my.blins.sort();
+      if (my.blins.length > 0) {
+        my.filter.blin = my.blins[0];
+      }
+    }
+    {
+      my.agencies = await this.globalsService.tagAbbreviationsForOpAgency();
+      my.agencies.sort();
+      if (my.agencies.length > 0) {
+        my.filter.agency = my.agencies[0];
+      }
+    }
+    {
+      my.appropriations = await this.globalsService.tagAbbreviationsForOpAgency();
+      my.appropriations.sort();
+      if (my.appropriations.length > 0) {
+        my.filter.appropriation = my.appropriations[0];
+      }
+    }
   }
 
   ngAfterViewInit() {

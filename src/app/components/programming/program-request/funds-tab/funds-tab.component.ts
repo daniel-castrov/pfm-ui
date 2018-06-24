@@ -3,7 +3,7 @@ import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
 import { ProgramViewComponent } from './../../../programs/program-view/program-view.component';
-import { Component, Input, ApplicationRef, OnChanges, ViewChild } from '@angular/core'
+import { Component, Input, ApplicationRef, OnChanges, ViewChild, OnInit } from '@angular/core'
 import { forkJoin } from "rxjs/observable/forkJoin"
 import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest, Tag, ProgramsService } from '../../../../generated'
 import { Row } from './Row';
@@ -14,7 +14,7 @@ import { Key } from './Key';
   templateUrl: './funds-tab.component.html',
   styleUrls: ['./funds-tab.component.scss']
 })
-export class FundsTabComponent implements OnChanges {
+export class FundsTabComponent implements OnChanges, OnInit {
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() pr: ProgrammaticRequest;
   private pomFy: number;
@@ -24,21 +24,23 @@ export class FundsTabComponent implements OnChanges {
   
   // for the add FL section
   private appropriations: string[] = [];
-  private blins: string[] = [];
-  private agencies: string[] = [];
   private appropriation: string;
+  private blins: string[] = [];
   private blin: string;
-  private opAgency: string;
   private item: string;
+  private opAgencies: string[] = [];
+  private opAgency: string;
 
   constructor(private pomService: POMService, 
               private pbService: PBService,
               private prService: PRService,
-              private programsService: ProgramsService,
               private globalsService: GlobalsService) {}
 
-  ngOnChanges() {
+  ngOnInit() {
     this.loadDropdownOptions();
+  }
+
+  ngOnChanges() {
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     this.initTable();
   }
@@ -54,19 +56,19 @@ export class FundsTabComponent implements OnChanges {
     this.pomFy = pom.fy;
   }
 
-  private loadDropdownOptions() {
-    forkJoin([
-      this.programsService.getAgencies(),
-      this.programsService.getAppropriations(),
-      this.programsService.getBlins()
-    ]).subscribe(data => {
-      this.agencies = data[0].result.sort();
-      this.opAgency = this.agencies[0];
-      this.appropriations = data[1].result.sort();
+  private async loadDropdownOptions() {
+    {
+      this.opAgencies = await this.globalsService.tagAbbreviationsForOpAgency();
+      this.opAgency = this.opAgencies[0];
+    }
+    {
+      this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
       this.appropriation = this.appropriations[0];
-      this.blins = data[2].result.sort();
+    }
+    {
+      this.blins = await this.globalsService.tagAbbreviationsForBlin();
       this.blin = this.getBlins()[0];
-    });
+    }
   }
 
   private setPOMtoRows() {
@@ -192,19 +194,11 @@ export class FundsTabComponent implements OnChanges {
     }
   }
 
-  getBlins(): string[]{
-    var ret: string[] = [];
-    if ('PROC' === this.appropriation) {
-      this.blins.filter(s => (s.match(/00/))).forEach(str => { ret.push(str) });
-    }
-    else if ('RDTE' === this.appropriation) {
-      this.blins.filter(s => (s.match(/BA[1-4]/))).forEach(str => { ret.push(str) });
-    }
-    else if ('O&M' === this.appropriation) {
-      this.blins.filter(s => (s.match(/BA[5-7]/))).forEach(str => { ret.push(str) });
-    }
-      
-    return ret;
+  getBlins(): string[] {
+    if ('PROC' === this.appropriation) return this.blins.filter(blin => (blin.match(/00/)));
+    else if ('RDTE' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[1-4]/)));
+    else if ('O&M' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[5-7]/)));
+    else return this.blins;
   }
 
 

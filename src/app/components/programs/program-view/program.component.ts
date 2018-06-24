@@ -17,7 +17,7 @@ export class ProgramComponent implements OnInit {
 
   ngOnInit() {
     var my: ProgramComponent = this;
-    this.progsvc.getTags().subscribe(tagtypes => { 
+    this.progsvc.getTagtypes().subscribe(tagtypes => { 
       tagtypes.result.forEach(function (tagtype: string) {
         
         var map: Map<string, string> = new Map<string, string>();
