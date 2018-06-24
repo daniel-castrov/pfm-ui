@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { ProgrammaticRequest} from '../../../../generated'
+import { FeedbackComponent } from './../../../feedback/feedback.component';
 
 import * as $ from 'jquery';
 
@@ -12,10 +14,15 @@ declare const jQuery: any;
 })
 export class ProcQtyTabComponent implements OnInit {
 
+
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
+  @Input() pr: ProgrammaticRequest;
+
   constructor() { }
 
   ngOnInit() {
 
+    /*
     //jQuery for editing table
     var $TABLE = $('#proc-qty');
     var $BTN = $('#export-btn');
@@ -71,7 +78,7 @@ export class ProcQtyTabComponent implements OnInit {
       // Output the result
       $EXPORT.text(JSON.stringify(data));
     });
-
+  */
   }
 
 }

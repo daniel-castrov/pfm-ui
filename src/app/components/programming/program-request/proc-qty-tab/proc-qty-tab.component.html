@@ -9,7 +9,7 @@
         <span class="mr-4">
           <button class="btn btn-primary">
             <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-          Add Variant
+            Add Variant
           </button>
         </span>
         <span class="mr-4">for</span>
@@ -191,6 +191,51 @@
             </tbody>
           </table>
         </div>
+
+        <!-- CRAP -->
+        <div>
+          <ul>
+            <li>shortName: {{pr.shortName}} id: {{pr.id}}</li>
+            <li>longName: {{pr.longName}}</li>
+            <li>state: {{pr.state}}</li>
+            <li>type: {{pr.type}}</li>
+            <li>bulkOrigin: {{pr.bulkOrigin}}</li>
+            <li>originalMrId: {{pr.originalMrId}}</li>
+            <li>parentMrId: {{pr.parentMrId}}</li>
+            <li>phaseId: {{pr.phaseId}}</li>
+            <li>fundingLines:</li>
+            <ul *ngFor="let fl of pr.fundingLines; index as i">
+              <li>FUNDINGLINE {{i+1}}: id: {{fl.id}}</li>
+              <li>item: {{fl.item}}</li>
+              <li>appropriation: {{fl.appropriation}}</li>
+              <li>blin: {{fl.blin}}</li>
+              <li>fy: {{fl.fy}}</li>
+              <li>opAgency: {{fl.opAgency}}</li>
+              <li>funds:
+                <i *ngFor="let y of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
+                  <span *ngIf="fl.funds[y]">{{y}}: {{fl.funds[y]}}</span>
+                </i>
+              </li>              
+              <li>variants:</li>              
+              <ul *ngFor="let variant of fl.variants; index as j">
+                  <li>VARIANT {{j+1}}</li>
+                  <li>branch: {{variant.branch}}</li>
+                  <li>contractor: {{variant.contractor}}</li>
+                  <li>description: {{variant.description}}</li>
+                  <li>longName: {{variant.longName}}</li>
+                  <li>shortName: {{variant.shortName}}</li>
+                  <li>unitCost: {{variant.unitCost}}</li>
+                  <li>quantities:
+                  <i *ngFor="let y of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
+                      <span *ngIf="variant.quantity[y]">{{y}}: {{variant.quantity[y]}}</span>
+                  </i> 
+                  </li>
+                </ul>
+              </ul>
+            </ul>
+        </div>
+        <!-- END CRAP -->
+
       </div>
     </div>
   </div>
