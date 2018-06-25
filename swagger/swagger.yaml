@@ -2717,10 +2717,6 @@ definitions:
         type: "integer"
       status:
         type: "string"
-      executionLines:
-        type: "array"
-        items:
-          $ref: "#/definitions/ExecutionLine"
   SpendPlan:
     type: "object"
     properties:
