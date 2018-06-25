@@ -53,9 +53,9 @@ export class UfrVariantsComponent implements OnInit {
   sum(variant:Variant, startyear, endyear): number {
     var sum: number=0;
     for (var year = startyear; year <= endyear; year++){
-      if (variant.quantity[year]) {
-        sum += variant.quantity[year];
-      }
+      //if (variant.quantity[year]) {
+      //  sum += variant.quantity[year];
+      //}
     }
     return sum;
   }
@@ -82,9 +82,9 @@ export class UfrVariantsComponent implements OnInit {
           }
 
           var variant: Variant = {
-            quantity: qtys,
-            branch: 'USA',
-            unitCost: 1.0
+            //quantity: qtys,
+            //branch: 'USA',
+            //unitCost: 1.0
           };
           fl.variants.push(variant);
           my.blinsleft.delete(my.newblin);          
@@ -107,9 +107,9 @@ export class UfrVariantsComponent implements OnInit {
     }
 
     var variant: Variant = {
-      quantity: qtys,
-      branch: 'USA',
-      unitCost: 1.0
+      //quantity: qtys,
+      //branch: 'USA',
+      //unitCost: 1.0
     };
     fl.variants.push(variant);
   }

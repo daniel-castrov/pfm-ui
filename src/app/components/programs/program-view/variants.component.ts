@@ -37,31 +37,31 @@ export class VariantsComponent implements OnInit {
 
         var sum = 0;
         var map: Map<number, number> = new Map<number, number>();
-        for (var k in variant.quantity) {
-          var year: number = Number(k);
-          var amt = variant.quantity[k];
-          map.set(year, amt);
-          sum += amt;
+        // for (var k in variant.quantity) {
+        //   var year: number = Number(k);
+        //   var amt = variant.quantity[k];
+        //   map.set(year, amt);
+        //   sum += amt;
 
-          my.total += amt;
-          if (!my.totals.has(year)) {
-            my.totals.set(year, 0);
-          }
-          my.totals.set(year, my.totals.get(year) + amt);
-        }
+        //   my.total += amt;
+        //   if (!my.totals.has(year)) {
+        //     my.totals.set(year, 0);
+        //   }
+        //   my.totals.set(year, my.totals.get(year) + amt);
+        // }
 
-        var vl: VariantLine = {
-          cycle: fl.fy,
-          name: variant.longName,
-          id: variant.shortName,
-          description: variant.description,
-          branch: variant.branch,
-          contractor: variant.contractor,
-          unitcost: variant.unitCost,
-          quantities: map,
-          total: sum
-        };
-        my.varmap.get( variant.shortName ).push(vl);
+        // var vl: VariantLine = {
+        //   cycle: fl.fy,
+        //   name: variant.longName,
+        //   id: variant.shortName,
+        //   description: variant.description,
+        //   branch: variant.branch,
+        //   contractor: variant.contractor,
+        //   unitcost: variant.unitCost,
+        //   quantities: map,
+        //   total: sum
+        // };
+        // my.varmap.get( variant.shortName ).push(vl);
       });
     });
 

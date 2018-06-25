@@ -219,17 +219,20 @@
               <li>variants:</li>              
               <ul *ngFor="let variant of fl.variants; index as j">
                   <li>VARIANT {{j+1}}</li>
-                  <li>branch: {{variant.branch}}</li>
-                  <li>contractor: {{variant.contractor}}</li>
-                  <li>description: {{variant.description}}</li>
-                  <li>longName: {{variant.longName}}</li>
+                  <li>{{variant}}</li>
                   <li>shortName: {{variant.shortName}}</li>
-                  <li>unitCost: {{variant.unitCost}}</li>
-                  <li>quantities:
-                  <i *ngFor="let y of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
-                      <span *ngIf="variant.quantity[y]">{{y}}: {{variant.quantity[y]}}</span>
-                  </i> 
-                  </li>
+                  <li>longName: {{variant.longName}}</li>
+                  <ul *ngFor="let serviceLine of variant.serviceLines; index as k">
+                    <li>SERVICE LINE {{ k+1 }}</li>
+                    <li>branch: {{serviceLine.branch}}</li>
+                    <li>contractor: {{serviceLine.contractor}}</li>
+                    <li>unitCost: {{serviceLine.unitCost}}</li>
+                    <li>quantities: 
+                    <i *ngFor="let y2 of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
+                        <span *ngIf="serviceLine.quantity[y2]">{{y2}}: {{serviceLine.quantity[y2]}}</span>
+                    </i> 
+                    </li>
+                  </ul>
                 </ul>
               </ul>
             </ul>

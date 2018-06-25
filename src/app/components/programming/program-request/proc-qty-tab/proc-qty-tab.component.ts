@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnChanges } from '@angular/core';
 import { ProgrammaticRequest} from '../../../../generated'
 import { FeedbackComponent } from './../../../feedback/feedback.component';
 
@@ -19,6 +19,11 @@ export class ProcQtyTabComponent implements OnInit {
   @Input() pr: ProgrammaticRequest;
 
   constructor() { }
+
+  ngOnChanges(){
+    if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
+    console.log(this.pr)
+  }
 
   ngOnInit() {
 
@@ -80,5 +85,4 @@ export class ProcQtyTabComponent implements OnInit {
     });
   */
   }
-
 }

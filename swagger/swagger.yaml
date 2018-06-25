@@ -2367,8 +2367,13 @@ definitions:
         type: "string"
       longName:
         type: "string"
-      description:
-        type: "string"
+      serviceLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/ServiceLine"
+  ServiceLine:
+    type: "object"
+    properties:
       branch:
         type: "string"
       contractor:
