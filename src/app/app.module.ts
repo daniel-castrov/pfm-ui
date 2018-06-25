@@ -55,7 +55,7 @@ import { NoAccessInterceptor } from './components/interceptors/noAccessIntercept
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { PlanningComponent } from './components/planning/planning.component';
-import { ProcQtyTabComponent } from './components/programming/program-request/proc-qty-tab/proc-qty-tab.component';
+import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
@@ -209,7 +209,7 @@ const appRoutes: Routes = [
     NotImplementedComponent,
     PlanningComponent,
     PomComponent,
-    ProcQtyTabComponent,
+    VariantsTabComponent,
     ProgramComponent,
     ProgramExportComponent,
     ProgramRequestComponent,
