@@ -4,22 +4,37 @@
     <ng-container *ngFor="let varname of varkeys">
       <variant-line [startyear]="startyear" [variants]="varmap.get( varname )"></variant-line>
     </ng-container>
-    <div class="row">
-      <div class="col-12 mb-4">
-        <span class="mr-4">
-          <button class="btn btn-primary">
-            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            Add Variant
-          </button>
-        </span>
-        <span class="mr-4">for</span>
-        <span class="form-group inline-name mr-5">
-          <select class="form-control-sm dropdown-width mb-2">
-            <option>PHM0001</option>
-            <option>items</option>
-            <option>items</option>
-          </select>
-        </span>
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-3">
+            <span class="form-group">
+              <div class="primary-label mb-1">Select BLIN</div>
+              <select class="form-control-sm dropdown-width">
+                <option value=""></option>
+                <option>PHM0001</option>
+              </select>
+            </span>
+          </div>
+          <div class="col-3">
+            <span class="form-group">
+              <div class="primary-label mb-1">Select Item</div>
+              <select class="form-control-sm dropdown-width">
+                <option value=""></option>
+                <option>items</option>
+                <option>items</option>
+              </select>
+            </span>
+          </div>
+          <div class="col-3 mt-4">
+            <span>
+              <button class="btn btn-primary">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                <span class="mr-1">Add Variant</span>
+              </button>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row mb-4">
@@ -30,9 +45,10 @@
         <span class="form-group">
           <label class="variant-titles mr-sm-4">Variant Name</label>
         </span>
-        <span class="remove-variant" title="Remove Variant Table">
+        <span class="remove-variant" title="Remove Variant">
           <i class="fa fa-trash"></i>
         </span>
+        <span class="h6 remove-text">Remove Variant</span>
         <!-- <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
           <i class="fa fa-trash"></i>
         </span> -->
@@ -54,10 +70,10 @@
             </thead>
             <tbody>
               <tr>
-                <td class="row-white" rowspan="3">JSA</td>
-                <td class="row-white" rowspan="3">Company</td>
-                <td class="row-white" rowspan="3">$50.17</td>
-                <td class="row-white cell-bottom-border-white">PBR18</td>
+                <td class="text-center" rowspan="3">JSA</td>
+                <td class="text-center" rowspan="3">Company</td>
+                <td class="text-center" rowspan="3">$50.17</td>
+                <td>PB18</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -66,7 +82,7 @@
                 <td class="text-right"></td>
               </tr>
               <tr>
-                <td class="row-white cell-bottom-border-white">POM19</td>
+                <td>POM19</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">369</td>
@@ -75,7 +91,7 @@
                 <td class="text-right">6219</td>
               </tr>
               <tr class="row-lt-green">
-                <td class="row-white cell-left-bottom-border-white">Difference</td>
+                <td>Delta</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -84,10 +100,10 @@
                 <td class="text-right"></td>
               </tr>
               <tr class="row-border-top">
-                <td class="row-white" rowspan="3">JSA</td>
-                <td class="row-white" rowspan="3">Company 1</td>
-                <td class="row-white" rowspan="3">$46.38</td>
-                <td class="row-white cell-bottom-border-white">PBR18</td>
+                <td class="text-center" rowspan="3">JSA</td>
+                <td class="text-center" rowspan="3">Company 1</td>
+                <td class="text-center" rowspan="3">$46.38</td>
+                <td class="">PB18</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -96,7 +112,7 @@
                 <td class="text-right"></td>
               </tr>
               <tr>
-                <td class="row-white cell-bottom-border-white">POM19</td>
+                <td>POM19</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">656</td>
@@ -105,7 +121,7 @@
                 <td class="text-right">2914</td>
               </tr>
               <tr class="row-lt-green">
-                <td class="row-white cell-left-bottom-border-white">Difference</td>
+                <td>Delta</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -114,10 +130,10 @@
                 <td class="text-right"></td>
               </tr>
               <tr class="row-border-top">
-                <td class="row-white" rowspan="3">JSN</td>
-                <td class="row-white" rowspan="3">Company 2</td>
-                <td class="row-white" rowspan="3">$45.67</td>
-                <td class="row-white cell-bottom-border-white">PBR18</td>
+                <td class="text-center" rowspan="3">JSN</td>
+                <td class="text-center" rowspan="3">Company 2</td>
+                <td class="text-center" rowspan="3">$45.67</td>
+                <td class="">PB18</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -126,7 +142,7 @@
                 <td class="text-right"></td>
               </tr>
               <tr>
-                <td class="row-white cell-bottom-border-white">POM19</td>
+                <td>POM19</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">3634</td>
@@ -135,7 +151,7 @@
                 <td class="text-right">2826</td>
               </tr>
               <tr class="row-lt-green">
-                <td class="row-white cell-left-bottom-border-white">Difference</td>
+                <td>Delta</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -144,10 +160,10 @@
                 <td class="text-right"></td>
               </tr>
               <tr class="row-border-top">
-                <td class="row-white" rowspan="3">JSMC</td>
-                <td class="row-white" rowspan="3">Company 3</td>
-                <td class="row-white" rowspan="3">$50.17</td>
-                <td class="row-white cell-bottom-border-white">PBR18</td>
+                <td class="text-center" rowspan="3">JSMC</td>
+                <td class="text-center" rowspan="3">Company 3</td>
+                <td class="text-center" rowspan="3">$50.17</td>
+                <td>PB18</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -156,7 +172,7 @@
                 <td class="text-right"></td>
               </tr>
               <tr>
-                <td class="row-white cell-bottom-border-white">POM19</td>
+                <td>POM19</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">0</td>
                 <td contenteditable="true" class="editable-field">181</td>
@@ -165,7 +181,7 @@
                 <td class="text-right">440</td>
               </tr>
               <tr class="row-lt-green">
-                <td class="row-white cell-left-bottom-border-white">Difference</td>
+                <td>Delta</td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right"></td>
@@ -174,19 +190,19 @@
                 <td class="text-right"></td>
               </tr>
               <tr class="row-border-top">
-                <td colspan="3" class="cell-left-border-white cell-bottom-border-white">
+                <td colspan="3">
                   <button class="btn btn-light btn pull-left">
                       <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
                       Add Service Line
                     </button>
                 </td>
-                <td class="text-right row-white font-weight-bold">Totals:</td>
-                <td class="text-right row-white">0</td>
-                <td class="text-right row-white">0</td>
-                <td class="text-right row-white">2900</td>
-                <td class="text-right row-white">4117</td>
-                <td class="text-right row-white">5382</td>
-                <td class="text-right row-white">12399</td>
+                <td class="text-right font-weight-bold">Totals:</td>
+                <td class="text-right">0</td>
+                <td class="text-right">0</td>
+                <td class="text-right">2900</td>
+                <td class="text-right">4117</td>
+                <td class="text-right">5382</td>
+                <td class="text-right">12399</td>
               </tr>
             </tbody>
           </table>
@@ -215,8 +231,8 @@
                 <i *ngFor="let y of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
                   <span *ngIf="fl.funds[y]">{{y}}: {{fl.funds[y]}}</span>
                 </i>
-              </li>              
-              <li>variants:</li>              
+              </li>
+              <li>variants:</li>
               <ul *ngFor="let variant of fl.variants; index as j">
                   <li>VARIANT {{j+1}}</li>
                   <li>{{variant}}</li>
@@ -227,10 +243,10 @@
                     <li>branch: {{serviceLine.branch}}</li>
                     <li>contractor: {{serviceLine.contractor}}</li>
                     <li>unitCost: {{serviceLine.unitCost}}</li>
-                    <li>quantities: 
+                    <li>quantities:
                     <i *ngFor="let y2 of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
                         <span *ngIf="serviceLine.quantity[y2]">{{y2}}: {{serviceLine.quantity[y2]}}</span>
-                    </i> 
+                    </i>
                     </li>
                   </ul>
                 </ul>
