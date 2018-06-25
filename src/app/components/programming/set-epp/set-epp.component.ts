@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, Input, ElementRef, Renderer } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
-import * as $ from 'jquery';
+import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -17,54 +17,87 @@ declare const $: any;
 export class SetEppComponent implements OnInit {
 
   form: FormGroup;
-  loading: boolean = false
-  fileName: string
-  responseError: string
+  loading: boolean = false;
+  fileName: string;
+  responseError: string;
+  data: any = [];
+  currentPage: number;
+  totalPages: number;
 
-  @ViewChild(HeaderComponent) header
-  @ViewChild('fileInput') fileInput: ElementRef
-
+  @ViewChild(HeaderComponent) header;
+  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   constructor(private fb: FormBuilder,
-     private eppService: EppService) {
+              private eppService: EppService) {
     this.createForm();
   }
 
   ngOnInit() {
-    //TODO: initialize the existing EPP data
+    this.eppService.getAll().subscribe(response => {
+      if (!response.error) {
+        this.data = response.result;
+      } else {
+        alert(response.error);
+      }
+    });
   }
 
   onFileChange(event){
-    let reader = new FileReader()
+    let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = () => {
-        this.form.controls['epp-input-file'].setValue(file); 
-        this.fileName = file.name
-      };
+        this.form.controls['epp-input-file'].setValue(file);
+        this.fileName = file.name;
+      }
     }
   }
 
   onSubmit() {
     const formModel = this.prepareSave();
     this.loading = true;
-    this.eppService.importFile(formModel.get('name'), formModel.get('file')).subscribe(response => {  
+    this.eppService.importFile(formModel.get('name'), formModel.get('file')).subscribe(response => {
       if (!response.error) {
+        this.data = response.result;
+        this.agGrid.api.sizeColumnsToFit();
         $("#epp-modal").modal("hide");
-        //TODO: update EPP table
       } else {
-        this.responseError = response.error
+        this.responseError = response.error;
       }
-      this.loading = false
+      this.loading = false;
     });
   }
-  
+
   clearFile() {
-    this.fileName = ''
-    this.responseError = ''
+    this.fileName = '';
+    this.responseError = '';
     this.fileInput.nativeElement.value = '';
     this.form.get('epp-input-file').setValue(null);
+  }
+
+  onBtFirst() {
+    this.agGrid.api.paginationGoToFirstPage();
+  }
+
+  onBtLast() {
+    this.agGrid.api.paginationGoToLastPage();
+  }
+
+  onBtNext() {
+    this.agGrid.api.paginationGoToNextPage();
+  }
+
+  onBtPrevious() {
+    this.agGrid.api.paginationGoToPreviousPage();
+  }
+
+  onPaginationChanged() {
+    if (this.agGrid.api) {
+      this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
+      this.totalPages = this.agGrid.api.paginationGetTotalPages();
+    }
   }
 
   private prepareSave(): any {
@@ -79,4 +112,39 @@ export class SetEppComponent implements OnInit {
       'epp-input-file': ['', Validators.required]
     });
   }
+
+  onGridReady(params) {
+    params.api.sizeColumnsToFit();
+  }
+
+  currencyCellRenderer(value) {
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    });
+    return usdFormate.format(value);
+  }
+
+  generateFundingLine(params){
+    return params.data.appropriation + '/' + params.data.blin + '/' + params.data.item + '/' + params.data.opAgency;
+  }
+
+  getFiscalYear(params, year) {
+    return this.currencyCellRenderer(params.data.fySums[year]);
+  }
+
+  columnDefs = [
+    {headerName: 'Program', field: 'mrId' },
+    {headerName: 'Funding Lines', valueGetter: params => {return this.generateFundingLine(params)}},
+    {headerName: 'FY24', valueGetter: params => {return this.getFiscalYear(params, 2024)}},
+    {headerName: 'FY25', valueGetter: params => {return this.getFiscalYear(params, 2025)}},
+    {headerName: 'FY26', valueGetter: params => {return this.getFiscalYear(params, 2026)}},
+    {headerName: 'FY27', valueGetter: params => {return this.getFiscalYear(params, 2027)}},
+    {headerName: 'FY28', valueGetter: params => {return this.getFiscalYear(params, 2028)}},
+    {headerName: 'FY29', valueGetter: params => {return this.getFiscalYear(params, 2029)}},
+    {headerName: 'FY30', valueGetter: params => {return this.getFiscalYear(params, 2030)}},
+    {headerName: 'FY31', valueGetter: params => {return this.getFiscalYear(params, 2031)}},
+    {headerName: 'FY32', valueGetter: params => {return this.getFiscalYear(params, 2032)}}
+  ];
 }

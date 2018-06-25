@@ -375,7 +375,7 @@ paths:
       - in: "path"
         name: "id"
         required: true
-        type: "string"        
+        type: "string"
     put:
       tags:
       - "PR"
@@ -398,7 +398,7 @@ paths:
       - in: "path"
         name: "id"
         required: true
-        type: "string"    
+        type: "string"
   /pr:
     post:
       tags:
@@ -1032,7 +1032,7 @@ paths:
         403:
           description: "Forbidden"
         500:
-          description: "An unexpected error occured."  
+          description: "An unexpected error occured."
     delete:
       tags:
       - "Permission"
@@ -1768,7 +1768,18 @@ paths:
         403:
           description: "Forbidden/not authorized"
         500:
-          description: "An unexpected error occured." 
+          description: "An unexpected error occured."
+  /epp:
+    get:
+      tags:
+      - "epp"
+      summary: "Gets all the epp in existence"
+      description: "Gets all the epp in existence"
+      operationId: "getAll"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
 # STOP PROGRAMS
 ##############################################################################
 # START UFRs
@@ -1934,7 +1945,7 @@ paths:
 # STOP UFRs
 ##############################################################################
 # START SNAPSHOTS
-# 
+#
   /snapshots:
     get:
       operationId: "getAll"
@@ -1979,7 +1990,7 @@ paths:
 # STOP SNAPSHOTS
 ##############################################################################
 # START EXECUTION
-# 
+#
   /execution/community/{communityId}:
     get:
       operationId: "getByCommunity"
@@ -2056,7 +2067,7 @@ paths:
 #################################################################
 #
 # START DEFINITONS
-# 
+#
 definitions:
   AuthUser:
     type: "object"
@@ -2442,7 +2453,7 @@ definitions:
         type: "integer"
       to:
         type: "integer"
-      yoe: 
+      yoe:
         type: "boolean"
       active:
         type: "boolean"
@@ -2540,7 +2551,7 @@ definitions:
             $ref: "#/definitions/TOA"
       status:
         type: "string"
-      startdate: 
+      startdate:
         type: "integer"
       enddate:
         type: "integer"
@@ -2596,10 +2607,10 @@ definitions:
       id:
         type: "string"
       communityId:
-        type: "string"      
+        type: "string"
       fy:
         type: "integer"
-      startdate: 
+      startdate:
         type: "integer"
       enddate:
         type: "integer"
@@ -2640,7 +2651,7 @@ definitions:
       id:
         type: "string"
       communityId:
-        type: "string"      
+        type: "string"
       fy:
         type: "integer"
       status:
