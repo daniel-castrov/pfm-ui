@@ -67,7 +67,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
     }
     {
       this.blins = await this.globalsService.tagAbbreviationsForBlin();
-      this.blin = this.getBlins()[0];
+      this.blin = this.getInitiallySelectedBlins()[0];
     }
   }
 
@@ -194,7 +194,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
     }
   }
 
-  getBlins(): string[] {
+  // wierd algorithm for initial BLINs selection based on the initial this.appropriation selection. Possibly flawn.
+  getInitiallySelectedBlins(): string[] {
     if ('PROC' === this.appropriation) return this.blins.filter(blin => (blin.match(/00/)));
     else if ('RDTE' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[1-4]/)));
     else if ('O&M' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[5-7]/)));
