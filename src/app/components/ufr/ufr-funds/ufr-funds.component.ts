@@ -32,7 +32,7 @@ export class UfrFundsComponent implements OnInit {
   private flfunds = {};
   private appr: string;
   private blin: string;
-  private agency: string;
+  private opagency: string;
   private item: string;
 
   constructor(private pomsvc: POMService, 
@@ -51,7 +51,7 @@ export class UfrFundsComponent implements OnInit {
       
       // get the data from the UFR into our tabledata structure
       my.current.fundingLines.forEach(fund => { 
-        var key = fund.appropriation + fund.blin;
+        var key = fund.appropriation + fund.blin + fund.item + fund.opAgency;
         var cfunds: Map<number, number> = new Map<number, number>();
         var tfunds: Map<number, number> = new Map<number, number>();
         var mfunds: Map<number, number> = new Map<number, number>();
@@ -66,6 +66,8 @@ export class UfrFundsComponent implements OnInit {
         my.rows.set(key, {
           blin: fund.blin,
           appropriation: fund.appropriation,
+          opagency: fund.opAgency,
+          item: fund.item,
           ufrfunds: cfunds,
           totalfunds: tfunds,
           modelfunds: mfunds
@@ -88,6 +90,8 @@ export class UfrFundsComponent implements OnInit {
               my.rows.set(key, {
                 appropriation: fund.appropriation,
                 blin: fund.blin,
+                opagency: fund.opAgency,
+                item: fund.item,
                 modelfunds: new Map<number, number>(),
                 ufrfunds: new Map<number, number>(),
                 totalfunds: new Map<number, number>()
@@ -111,7 +115,7 @@ export class UfrFundsComponent implements OnInit {
 
       {
         this.agencies = await this.globalsService.tagAbbreviationsForOpAgency();
-        this.agency = this.agencies[0];
+        this.opagency = this.agencies[0];
       }
       {
         this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
@@ -152,6 +156,8 @@ export class UfrFundsComponent implements OnInit {
       this.rows.set(key, {
         appropriation: my.appr,
         blin: my.blin,
+        opagency: my.opagency,
+        item: my.item,
         ufrfunds: ufunds,
         totalfunds: tfunds,
         modelfunds: new Map<number, number>()
@@ -162,7 +168,7 @@ export class UfrFundsComponent implements OnInit {
         appropriation: my.appr,
         blin: my.blin,
         fy: my.pom.fy,
-        opAgency: my.agency,
+        opAgency: my.opagency,
         funds: my.flfunds,
         variants: []
       };
@@ -252,6 +258,8 @@ export class UfrFundsComponent implements OnInit {
 interface tabledata {
   appropriation: string,
   blin: string,
+  opagency: string,
+  item: string,
   modelfunds?: Map<number, number>,
   ufrfunds?: Map<number, number>,
   totalfunds?: Map<number, number>

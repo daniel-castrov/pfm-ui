@@ -7,6 +7,8 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
             <td>PY-1</td>
             <td>PY</td>
             <td>CY</td>
@@ -20,6 +22,8 @@
           <tr>
             <th class="header-column-width">Appropriation</th>
             <th class="header-column-width">Budget</th>
+            <td>Item</td>
+            <td>OpAgency</td>
             <th>Cycle</th>
             <th>{{fy-3}}</th>
             <th>{{fy-2}}</th>
@@ -37,6 +41,8 @@
             <tr>
               <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
               <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
+              <td class="row-lt-gray text-center" rowspan="3">{{row.item}}</td>
+              <td class="row-lt-gray text-center" rowspan="3">{{row.opagency}}</td>
               <td>{{fy|FY:'POM'}}</td>
               <td class="text-right">{{row.modelfunds.get(fy-3) | dashForZero}}</td>
               <td class="text-right">{{row.modelfunds.get(fy-2) | dashForZero}}</td>
@@ -134,7 +140,7 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-2 primary-label">OpAgency</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="agency">
+            <select class="form-control-sm dropdown-width" [(ngModel)]="opagency">
               <option *ngFor="let c of agencies">{{c}}</option>
             </select>
           </span>
