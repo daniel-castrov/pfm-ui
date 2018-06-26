@@ -4,7 +4,7 @@ import { Program } from '../../../../generated/model/program';
 import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Row } from './Row';
 import { PRService } from '../../../../generated/api/pR.service';
-import { ProgramRequestPageModeService } from '../../program-request/page-mode/page-mode.service';
+import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 
 @Component({
   selector: 'programmatic-requests',

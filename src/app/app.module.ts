@@ -59,7 +59,7 @@ import { ProcQtyTabComponent } from './components/programming/program-request/pr
 import { ProgramComponent } from './components/programs/program-view/program.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
-import { ProgramRequestComponent } from './components/programming/program-request/main/main.component';
+import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramSearchComponent } from './components/programs/program-search/program-search.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
@@ -116,7 +116,7 @@ import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
-import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode/page-mode.service';
+import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
 import { EppService } from './generated';
 
