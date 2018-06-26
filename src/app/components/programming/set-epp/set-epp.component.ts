@@ -168,7 +168,7 @@ export class SetEppComponent implements OnInit {
   }
 
   columnDefs = [
-    {headerName: 'Program', field: 'mrId' },
+    {headerName: 'Program', field: 'programShortName' },
     {headerName: 'Funding Lines', valueGetter: params => {return this.generateFundingLine(params)}}
   ];
 }
