@@ -3,7 +3,412 @@
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">Funds Update</span>
+        <span class="h5 mr-2">Funds Update for Fiscal Year </span>
+        <span>
+          <select class="form-control-sm dropdown-year-width mb-2">
+            <option>2018</option>
+           </select>
+         </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-8">
+        <fieldset>
+          <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i> Filter</legend>
+          <div class="row">
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Program</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="program">
+                  <option *ngFor="let program of programs" [ngValue]="program">{{program}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Appropriation</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
+                  <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">BA/BLIN</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
+                  <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Item</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="item">
+                  <option *ngFor="let item of items" [ngValue]="item">{{item}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">OpAgency</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency">
+                  <option *ngFor="let opAgency of opAgencies">{{opAgency}}</option>
+                </select>
+              </span>
+            </div>
+           </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12 col-lg-10">
+          <table class="funds-update-table">
+            <thead>
+              <tr>
+                <th class="large-column">Program</th>
+                <th>Appr.</th>
+                <th>Budget</th>
+                <th>Item</th>
+                <th class="med-column">OpAgency</th>
+                <th>Initial Funds</th>
+                <th>CRA</th>
+                <th>Appr. Actions</th>
+                <th>Ext. Repr.</th>
+                <th>ETR</th>
+                <th>Real</th>
+                <th>TOA</th>
+                <th>Released</th>
+                <th>Withhold</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 1</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">New Fund
+
+                  <span class="remove-fund" data-toggle="modal">
+                    <i class="fa fa-trash"></i>
+                  </span>
+                </td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 2</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 3</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 4</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 5</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 6</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 7</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 8</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">10</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 9</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">600</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 10</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">300</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 11</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">100</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 12</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">400</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 13</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">4000</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+              <tr>
+                <td class="lt-grey clickable large-column">Program 14</td>
+                <td class="lt-grey">RDT&amp;E</td>
+                <td class="lt-grey">BAS</td>
+                <td class="lt-grey">65</td>
+                <td class="lt-grey text-center med-column">5Y</td>
+                <td class="lt-green text-right">3000</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">-</td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10">
+        <div class="pull-right program-controls">
+          <span>
+            <button class="btn btn-primary">Charge</button>
+          </span>
+          <span>
+            <button class="btn btn-secondary">Release</button>
+          </span>
+          <span>
+            <button class="btn btn-success">Withhold</button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-10">
+        <fieldset>
+          <legend>Add Execution Line</legend>
+          <div class="row">
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Program</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="program">
+                  <option *ngFor="let program of programs" [ngValue]="program">{{program}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Appropriation</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
+                  <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-md-2 col-lg-1">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Budget</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
+                  <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Item</div>
+                  <input class="mb-2 form-control forminput">
+              </span>
+            </div>
+            <div class="col-md-2 col-lg-1">
+              <span class="form-group">
+                <div class="mb-1 primary-label">OpAgency</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency">
+                  <option *ngFor="let opAgency of opAgencies">{{opAgency}}</option>
+                </select>
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="form-group">
+                <div class="mb-1 primary-label">Funds</div>
+                <span class="form-group">
+                  <input class="mb-2 form-control forminput">
+                </span>
+              </span>
+            </div>
+            <div class="col-md-12 col-lg-2">
+              <span class="form-group">
+                  <div class="primary-label"> </div>
+                  <button class="btn btn-primary mt-4">
+                    <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                   Add Execution Line
+                 </button>
+               </span>
+             </div>
+           </div>
+        </fieldset>
+        <j-feedback></j-feedback>
       </div>
     </div>
   </div>
