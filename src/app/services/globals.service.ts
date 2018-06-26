@@ -1,3 +1,5 @@
+import { CommunityService } from './../generated/api/community.service';
+import { Community } from './../generated/model/community';
 import { User } from './../generated/model/user';
 import { Observable } from 'rxjs/Observable';
 import { RestResult } from './../generated/model/restResult';
@@ -11,11 +13,18 @@ import { Tag } from '../generated/model/tag';
 export class GlobalsService {
 
   constructor(private myDetailsService: MyDetailsService,
-              private programsService: ProgramsService) {}
+              private programsService: ProgramsService,
+              private communityService: CommunityService) {}
 
   // TODO: make it cache
   user(): Observable<User> {
     return this.myDetailsService.getCurrentUser().map( (response: RestResult) => response.result );
+  }
+
+  async currentCommunity(): Promise<Community> {
+    const user: User = await this.user().toPromise();
+    const community: Community = (await this.communityService.getById(user.currentCommunityId).toPromise()).result;
+    return community;
   }
 
   private tagAbbreviations(type: string): Promise<string[]> {

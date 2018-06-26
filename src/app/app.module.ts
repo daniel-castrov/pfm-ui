@@ -119,6 +119,7 @@ import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
 import { EppService } from './generated';
+import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -272,6 +273,7 @@ const appRoutes: Routes = [
     GlobalsService,
     Injectables,
     JoinCommunityRequestService,
+    AutoValuesService,
     LeaveCommunityRequestService,
     MyDetailsService,
     OrganizationService,

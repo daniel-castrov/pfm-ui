@@ -1,3 +1,4 @@
+import { AutoValuesService } from './AutoValues.service';
 import { FeedbackComponent } from './../../../feedback/feedback.component';
 import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
@@ -30,32 +31,34 @@ export class FundsTabComponent implements OnChanges, OnInit {
   private item: string;
   private opAgencies: string[] = [];
   private opAgency: string;
+  private programElement: string;
 
-  constructor(private pomService: POMService, 
+  constructor(private pomService: POMService,
               private pbService: PBService,
               private prService: PRService,
-              private globalsService: GlobalsService) {}
+              private globalsService: GlobalsService,
+              private initializerService: AutoValuesService ) {}
 
-  ngOnInit() {
-    this.loadDropdownOptions();
+  async ngOnInit() {
+    await this.loadDropdownOptions();
   }
-
+  
   ngOnChanges() {
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     this.initTable();
   }
-
+  
   private initTable() {
     this.setPomFiscalYear();
     this.setPOMtoRows();
     this.setPBtoRows();
   }
-
+  
   private async setPomFiscalYear() {
     const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.pomFy = pom.fy;
   }
-
+  
   private async loadDropdownOptions() {
     {
       this.opAgencies = await this.globalsService.tagAbbreviationsForOpAgency();
@@ -68,9 +71,22 @@ export class FundsTabComponent implements OnChanges, OnInit {
     {
       this.blins = await this.globalsService.tagAbbreviationsForBlin();
       this.blin = this.getInitiallySelectedBlins()[0];
+      this.updateProgramElement();
     }
   }
 
+  onBlinChange() {
+    this.updateProgramElement();
+  }
+
+  onItemChange() {
+    this.updateProgramElement();
+  }
+
+  async updateProgramElement() {
+    this.programElement = await this.initializerService.programElement(this.blin, this.item);
+  }
+  
   private setPOMtoRows() {
     this.rows.clear();
     this.pr.fundingLines.forEach(fund => {
