@@ -10,15 +10,19 @@
           <div class="col-3">
             <span class="form-group">
               <div class="primary-label mb-1">Select Funding Line</div>
-              <select class="form-control-sm dropdown-width">
+              <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false"
+              (change)="buildTables()">
                 <option value=""></option>
-                <option>approprition / budget / item / opAgency </option>
+                <option *ngFor="let fl of pr.fundingLines" [ngValue]="fl"> 
+                  {{fl.appropriation}} / {{fl.blin}} / {{fl.item}} / {{fl.opAgency}}
+                </option>
               </select>
             </span>
           </div>
+          <div class="col-3 mt-4"></div>
           <div class="col-3 mt-4">
             <span>
-              <button class="btn btn-primary">
+              <button class="btn btn-primary" (click)="addVariant()">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 <span class="mr-1">Add Variant</span>
               </button>
@@ -27,22 +31,26 @@
         </div>
       </div>
     </div>
-    <div class="row mb-4">
-      <div class="col-md-12">
+    <div *ngIf="fund" class="row mb-4">
+      <div *ngFor="let variant of variants" class="col-md-12" id="variant">
         <span class="form-group">
-          <label class="variant-titles mr-sm-4">Variant ID</label>
+          <label class="variant-titles mr-sm-4">{{variant.shortName}}</label>
         </span>
         <span class="form-group">
-          <label class="variant-titles mr-sm-4">Variant Name</label>
+          <label class="variant-titles mr-sm-4">{{variant.longName}}</label>
         </span>
         <span class="remove-variant" title="Remove Variant">
           <i class="fa fa-trash"></i>
         </span>
+
         <span class="h6 remove-text">Remove Variant</span>
-        <!-- <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
-          <i class="fa fa-trash"></i>
-        </span> -->
-        <div id="proc-qty" class="table-editable">
+        <!-- 
+          <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" 
+                (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
+            <i class="fa fa-trash"></i>
+          </span> 
+        -->
+        <div class="table-editable">
           <table class="proc-qty">
             <thead>
               <tr>
@@ -50,201 +58,50 @@
                 <th>Contractor</th>
                 <th>Unit Costs</th>
                 <th>Cycle</th>
-                <th>FY19</th>
-                <th>FY20</th>
-                <th>FY22</th>
-                <th>FY23</th>
-                <th>FY24</th>
+                <th *ngFor="let year of years">{{year}}</th>
                 <th>Total</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="text-center" rowspan="3">JSA</td>
-                <td class="text-center" rowspan="3">Company</td>
-                <td class="text-center" rowspan="3">$50.17</td>
-                <td>PB18</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-              </tr>
-              <tr>
-                <td>POM19</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">369</td>
-                <td contenteditable="true" class="editable-field">2280</td>
-                <td contenteditable="true" class="editable-field">3520</td>
-                <td class="text-right">6219</td>
-              </tr>
-              <tr class="row-lt-green">
-                <td>Delta</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-              </tr>
+              <ng-container *ngFor="let serviceLine of variant.serviceLines">
               <tr class="row-border-top">
-                <td class="text-center" rowspan="3">JSA</td>
-                <td class="text-center" rowspan="3">Company 1</td>
-                <td class="text-center" rowspan="3">$46.38</td>
-                <td class="">PB18</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
+                <td class="text-center" rowspan="3">{{serviceLine.branch}}</td>
+                <td class="text-center" rowspan="3">{{serviceLine.contractor}}</td>
+                <td class="text-center" rowspan="3">{{serviceLine.unitCost}}</td>
+                <td>PB{{pomFy-1}}</td>
+                <td *ngFor="let year of years" class="text-right">{{serviceLine.pbQty[year] | dashForZero}}</td>
+                <td class="text-right">{{serviceLine.pbQty['sum'] | dashForZero }}</td>
               </tr>
               <tr>
-                <td>POM19</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">656</td>
-                <td contenteditable="true" class="editable-field">1137</td>
-                <td contenteditable="true" class="editable-field">1121</td>
-                <td class="text-right">2914</td>
+                <td>POM{{pomFy}}</td>
+                <td *ngFor="let year of years"
+                  contenteditable="true" class="editable-field" 
+                  digits (blur)="onedit($event.target.textContent, variant, serviceLine, year)">
+                    {{serviceLine.prQty[year] | dashForZero}}
+                  </td>
+                <td class="text-right">{{serviceLine.prQty['sum'] | dashForZero }}</td>
               </tr>
               <tr class="row-lt-green">
                 <td>Delta</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
+                <td *ngFor="let year of years" class="text-right">{{serviceLine.deltaQty[year]}}</td>
+                <td class="text-right">{{serviceLine.deltaQty['sum']}}</td>
               </tr>
-              <tr class="row-border-top">
-                <td class="text-center" rowspan="3">JSN</td>
-                <td class="text-center" rowspan="3">Company 2</td>
-                <td class="text-center" rowspan="3">$45.67</td>
-                <td class="">PB18</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-              </tr>
-              <tr>
-                <td>POM19</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">3634</td>
-                <td contenteditable="true" class="editable-field">570</td>
-                <td contenteditable="true" class="editable-field">562</td>
-                <td class="text-right">2826</td>
-              </tr>
-              <tr class="row-lt-green">
-                <td>Delta</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-              </tr>
-              <tr class="row-border-top">
-                <td class="text-center" rowspan="3">JSMC</td>
-                <td class="text-center" rowspan="3">Company 3</td>
-                <td class="text-center" rowspan="3">$50.17</td>
-                <td>PB18</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-              </tr>
-              <tr>
-                <td>POM19</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">0</td>
-                <td contenteditable="true" class="editable-field">181</td>
-                <td contenteditable="true" class="editable-field">130</td>
-                <td contenteditable="true" class="editable-field">129</td>
-                <td class="text-right">440</td>
-              </tr>
-              <tr class="row-lt-green">
-                <td>Delta</td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-                <td class="text-right"></td>
-              </tr>
+            </ng-container>
+
               <tr class="row-border-top">
                 <td colspan="3">
-                  <button class="btn btn-light btn pull-left">
+                  <button class="btn btn-light btn pull-left" (click)="addServiceLine(variant)">
                       <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
                       Add Service Line
                     </button>
                 </td>
                 <td class="text-right font-weight-bold">Totals:</td>
-                <td class="text-right">0</td>
-                <td class="text-right">0</td>
-                <td class="text-right">2900</td>
-                <td class="text-right">4117</td>
-                <td class="text-right">5382</td>
-                <td class="text-right">12399</td>
+                <td *ngFor="let year of years" class="text-right">{{variant.totalQty[year]   | dashForZero }}</td>
+                <td class="text-right">{{variant.totalQty['sum'] | dashForZero }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-
-        <!-- CRAP -->
-        <div>
-          <ul>
-            <li>shortName: {{pr.shortName}} id: {{pr.id}}</li>
-            <li>longName: {{pr.longName}}</li>
-            <li>state: {{pr.state}}</li>
-            <li>type: {{pr.type}}</li>
-            <li>bulkOrigin: {{pr.bulkOrigin}}</li>
-            <li>originalMrId: {{pr.originalMrId}}</li>
-            <li>parentMrId: {{pr.parentMrId}}</li>
-            <li>phaseId: {{pr.phaseId}}</li>
-            <li>fundingLines:</li>
-            <ul *ngFor="let fl of pr.fundingLines; index as i">
-              <li>FUNDINGLINE {{i+1}}: id: {{fl.id}}</li>
-              <li>item: {{fl.item}}</li>
-              <li>appropriation: {{fl.appropriation}}</li>
-              <li>blin: {{fl.blin}}</li>
-              <li>fy: {{fl.fy}}</li>
-              <li>opAgency: {{fl.opAgency}}</li>
-              <li>funds:
-                <i *ngFor="let y of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
-                  <span *ngIf="fl.funds[y]">{{y}}: {{fl.funds[y]}}</span>
-                </i>
-              </li>
-              <li>variants:</li>
-              <ul *ngFor="let variant of fl.variants; index as j">
-                  <li>VARIANT {{j+1}}</li>
-                  <li>{{variant}}</li>
-                  <li>shortName: {{variant.shortName}}</li>
-                  <li>longName: {{variant.longName}}</li>
-                  <ul *ngFor="let serviceLine of variant.serviceLines; index as k">
-                    <li>SERVICE LINE {{ k+1 }}</li>
-                    <li>branch: {{serviceLine.branch}}</li>
-                    <li>contractor: {{serviceLine.contractor}}</li>
-                    <li>unitCost: {{serviceLine.unitCost}}</li>
-                    <li>quantities:
-                    <i *ngFor="let y2 of [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024]">
-                        <span *ngIf="serviceLine.quantity[y2]">{{y2}}: {{serviceLine.quantity[y2]}}</span>
-                    </i>
-                    </li>
-                  </ul>
-                </ul>
-              </ul>
-            </ul>
-        </div>
-        <!-- END CRAP -->
-
       </div>
     </div>
   </div>

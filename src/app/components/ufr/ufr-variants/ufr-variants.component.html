@@ -1,120 +1,107 @@
-<ng-template #noqty>
-<td contenteditable="true" class="editable-field"></td>
-</ng-template>
-
-
 <div class="row">
-  <!--Left column begins-->
-  <div class="col-md-12">
-    <div *ngIf="0===blinsleft.size">There are no PROC funding lines in this UFR</div>
-    <div class="row" *ngIf="blinsleft.size>0">
-      <div class="col-12 mb-2">
-        <span class="mr-4">
-          <button class="btn btn-primary" (click)="newtable()">
-            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            Add Variant Table
-          </button>
-        </span>
-        <span class="mr-4">for</span>
-        <span class="form-group inline-name mr-5">
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="newblin">
-            <option *ngFor="let blin of blinsleft" [ngValue]="blin" >{{blin}}</option>
-          </select>
-        </span>
-      </div>
-    </div>
-
-    <ng-container *ngFor="let fund of current.fundingLines">
-      <ng-container *ngIf="fund.variants.length>0">
-      <div class="row mb-2">
-        <div class="col-md-12">
-          <div id="proc-qty" class="table-editable">
-            {{fund.blin}}
-            <table class="proc-qty">
-              <thead>
-                <tr>
-                  <th class="row-width">Service</th>
-                  <th class="row-width">Description</th>
-                  <th class="row-width">Contractor</th>
-                  <th colspan="2">Unit Costs</th>
-                  <th>{{fy|FY}}</th>
-                  <th>{{fy+1|FY}}</th>
-                  <th>{{fy+2|FY}}</th>
-                  <th>{{fy+3|FY}}</th>
-                  <th>{{fy+4|FY}}</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>  
-                <!--              
-                <ng-container *ngFor="let variant of fund.variants">
-                <tr>
-                  <td class="row-white" rowspan="3">
-                    <select [(ngModel)]="variant.branch" name="branch">
-                      <option [ngValue]="'USA'">Army</option>
-                      <option [ngValue]="'USN'">Navy</option>
-                      <option [ngValue]="'USAF'">Air Force</option>
-                      <option [ngValue]="'USM'">Marines</option>
-                      <option [ngValue]="'USCG'">Coast Guard</option>
-                    </select>
-                  </td>
-                  <td class="row-white" rowspan="3" contenteditable="true" class="editable-field">{{variant.description}}</td>
-                  <td class="row-white" rowspan="3" contenteditable="true" class="editable-field">{{variant.contractor}}</td>
-                  <td class="row-white text-right cell-right-border-white" rowspan="3" contenteditable="true" class="editable-field">${{variant.unitCost}}</td>
-                  <td class="row-white cell-bottom-border-white">{{fy|FY:'PBR'}}</td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                </tr>
-                <tr>
-                  <td class="row-white cell-bottom-border-white">{{fy|FY:'POM'}}</td>
-                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy]" digits (blur)="newedit($event.target.textContent,variant,fy)">{{variant.quantity[fy]}}</td>
-                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+1]" digits (blur)="newedit($event.target.textContent,variant,fy+1)">{{variant.quantity[fy+1]}}</td>
-                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+2]" digits (blur)="newedit($event.target.textContent,variant,fy+2)">{{variant.quantity[fy+2]}}</td>
-                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+3]" digits (blur)="newedit($event.target.textContent,variant,fy+3)">{{variant.quantity[fy+3]}}</td>
-                  <td contenteditable="true" class="editable-field" *ngIf="variant.quantity[fy+4]" digits (blur)="newedit($event.target.textContent,variant,fy+4)">{{variant.quantity[fy+4]}}</td>
-                  <td>{{sum(variant, fy, fy+4)}}</td>
-                </tr>
-                <tr class="row-lt-green">
-                  <td class="row-white cell-left-bottom-border-white">Difference</td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                  <td class="text-right"></td>
-                </tr>                  
-                </ng-container-->
-                <tr class="row-border-top">
-                  <td colspan="4" class="cell-left-border-white cell-bottom-border-white">
-                  </td>
-                  <td class="text-right row-white font-weight-bold">Totals:</td>
-                  <td class="text-right row-white">0</td>
-                  <td class="text-right row-white">0</td>
-                  <td class="text-right row-white">2900</td>
-                  <td class="text-right row-white">4117</td>
-                  <td class="text-right row-white">5382</td>
-                  <td class="text-right row-white">12399</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="row mb-2" *ngIf="fund.variants.length<6"> <!-- there are 5 service branches -->
-              <div class="col-md-12">
-                <button class="btn btn-light btn pull-left" (click)="newbranchline(fund)">
-                  <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                  Add Service Line
-                </button>
-              </div>
+    <div class="col-md-12">
+      <ng-container *ngFor="let varname of varkeys">
+        <variant-line [startyear]="startyear" [variants]="varmap.get( varname )"></variant-line>
+      </ng-container>
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-3">
+              <span class="form-group">
+                <div class="primary-label mb-1">Select Funding Line</div>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false"
+                (change)="buildTables()">
+                  <option value=""></option>
+                  <option *ngFor="let fl of current.fundingLines" [ngValue]="fl"> 
+                    {{fl.appropriation}} / {{fl.blin}} / {{fl.item}} / {{fl.opAgency}}
+                  </option>
+                </select>
+              </span>
             </div>
-
+            <div class="col-3 mt-4"></div>
+            <div class="col-3 mt-4">
+              <span>
+                <button class="btn btn-primary" (click)="addVariant()">
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                  <span class="mr-1">Add Variant</span>
+                </button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
-      </ng-container>
-     </ng-container>
+      <div *ngIf="fund" class="row mb-4">
+        <div *ngFor="let variant of variants" class="col-md-12" id="variant">
+          <span class="form-group">
+            <label class="variant-titles mr-sm-4">{{variant.shortName}}</label>
+          </span>
+          <span class="form-group">
+            <label class="variant-titles mr-sm-4">{{variant.longName}}</label>
+          </span>
+          <span class="remove-variant" title="Remove Variant">
+            <i class="fa fa-trash"></i>
+          </span>
+  
+          <span class="h6 remove-text">Remove Variant</span>
+          <!-- 
+            <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" 
+                  (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
+              <i class="fa fa-trash"></i>
+            </span> 
+          -->
+          <div class="table-editable">
+            <table class="proc-qty">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Contractor</th>
+                  <th>Unit Costs</th>
+                  <th>Cycle</th>
+                  <th *ngFor="let year of years">{{year}}</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let serviceLine of variant.serviceLines">
+                <tr class="row-border-top">
+                  <td class="text-center" rowspan="3">{{serviceLine.branch}}</td>
+                  <td class="text-center" rowspan="3">{{serviceLine.contractor}}</td>
+                  <td class="text-center" rowspan="3">{{serviceLine.unitCost}}</td>
+                  <td>PB{{pomFy-1}}</td>
+                  <td *ngFor="let year of years" class="text-right">{{serviceLine.pbQty[year] | dashForZero}}</td>
+                  <td class="text-right">{{serviceLine.pbQty['sum'] | dashForZero }}</td>
+                </tr>
+                <tr>
+                  <td>POM{{pomFy}}</td>
+                  <td *ngFor="let year of years"
+                    contenteditable="true" class="editable-field" 
+                    digits (blur)="onedit($event.target.textContent, variant, serviceLine, year)">
+                      {{serviceLine.prQty[year] | dashForZero}}
+                    </td>
+                  <td class="text-right">{{serviceLine.prQty['sum'] | dashForZero }}</td>
+                </tr>
+                <tr class="row-lt-green">
+                  <td>Delta</td>
+                  <td *ngFor="let year of years" class="text-right">{{serviceLine.deltaQty[year]}}</td>
+                  <td class="text-right">{{serviceLine.deltaQty['sum']}}</td>
+                </tr>
+              </ng-container>
+  
+                <tr class="row-border-top">
+                  <td colspan="3">
+                    <button class="btn btn-light btn pull-left" (click)="addServiceLine(variant)">
+                        <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                        Add Service Line
+                      </button>
+                  </td>
+                  <td class="text-right font-weight-bold">Totals:</td>
+                  <td *ngFor="let year of years" class="text-right">{{variant.totalQty[year]   | dashForZero }}</td>
+                  <td class="text-right">{{variant.totalQty['sum'] | dashForZero }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>

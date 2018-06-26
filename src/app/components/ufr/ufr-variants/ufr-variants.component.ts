@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Program, FundingLine, IntMap, UFR, POMService, Pom, Variant, ProgramsService, PRService, ProgrammaticRequest } from '../../../generated';
+import { Component, OnInit, Input, ViewChild, OnChanges } from '@angular/core';
+import { UFR, FundingLine, POMService, Pom, IntMap} from '../../../generated'
+import { FeedbackComponent } from '../../feedback/feedback.component';
 
 @Component({
   selector: 'ufr-variants',
@@ -7,118 +8,180 @@ import { Program, FundingLine, IntMap, UFR, POMService, Pom, Variant, ProgramsSe
   styleUrls: ['./ufr-variants.component.scss']
 })
 export class UfrVariantsComponent implements OnInit {
+
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() current: UFR;
   @Input() editable: boolean = false;
 
-  private pom: Pom;
-  private fy: number = new Date().getFullYear() + 2;
-  private model: ProgrammaticRequest;
-  private newblin: string = '';
-  private blinsleft: Set<string> = new Set<string>();
-  private uvals: Map<number, number> = new Map<number, number>();
-  private cvals: Map<number, number> = new Map<number, number>();
-  private diffs: {} = {};
+  pomFy:number;
+  fund:FundingLine;
+  variants:MyVariant[] = [];
+  years:string[];
 
-  constructor(private pomsvc: POMService, private prsvc :PRService) { }
+  constructor(private pomService: POMService ) { }
 
   ngOnInit() {
-    var my: UfrVariantsComponent = this;
-    
-    my.blinsleft.clear();
-    this.pomsvc.getById(this.current.phaseId).subscribe(data => {
-      my.pom = data.result;
-      my.fy = my.pom.fy;
+  }
 
-      // we want a list of tables we can create, so get PROC blins 
-      // that don't already have variants
-      my.current.fundingLines.filter(fl => ('PROC' === fl.appropriation && 0 === fl.variants.length)).forEach(fl => {
-        my.blinsleft.add(fl.blin);
-        if (1 === my.blinsleft.size) {
-          my.newblin = fl.blin;
-        }
-      });
+  ngOnChanges(){
+    if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
+    if ( !this.pomFy ){
+      this.setPomFiscalYear();
+    }
+    if ( this.fund ){
+      this.buildTables();
+    }
+  }
 
-      if (my.current.originalMrId) {
-        my.prsvc.getByPhaseAndMrId(my.pom.id, my.current.originalMrId).subscribe(model => {
-          // get the current values for this program
-          my.model = model.result;
-          //console.log(my.model);
+  buildTables(){ 
+    //console.log(this.fund);
+    let newfund = JSON.parse(JSON.stringify(this.fund));
+
+    this.fund.variants.forEach( variant => {
+
+      let totalq:IntMap = {};
+      let myServiceLines:MyServiceLine[] = [];
+
+      variant.serviceLines.forEach( sl => {
+
+        let pbq:IntMap = {};
+        let prq:IntMap = {};
+        let deltaq:IntMap = {};
+
+        this.years.forEach( year => {
+          let num:number=0
+          if (sl.quantity[year] &&  !isNaN(sl.quantity[year])  ){
+            num = sl.quantity[year];
+          }
+          pbq[year] = num;
+          prq[year] = num;
+          deltaq[year] = 0;
+          
         });
-      }
 
-      my.sumtotals();
+        let line:MyServiceLine = {
+          branch:sl.branch,
+          contractor:sl.contractor,
+          unitCost:sl.unitCost,
+          pbQty:pbq,
+          prQty:prq,
+          deltaQty:deltaq
+        }
+        myServiceLines.push(line);        
+      });
+      this.buildSumColumn(myServiceLines);
+      
+      let myvariant:MyVariant = {
+        shortName: variant.shortName,
+        longName: variant.longName,
+        serviceLines:myServiceLines,
+        totalQty: this.buildSumRow(myServiceLines)
+      }
+      this.variants.push(myvariant);
+    });
+    //console.log( this.variants );
+  }
+
+  onedit(newval, variant:MyVariant, serviceLine:MyServiceLine, year) {
+      var thisyear:number = Number.parseInt(year);
+      
+      var thisvalue = Number.parseInt(newval.replace(/[^0-9]/g, ''));
+      if (''===newval || Number.isNaN(thisvalue)) {
+        thisvalue = 0;
+      }
+      serviceLine.prQty[year] = thisvalue;
+      serviceLine.deltaQty[year] = serviceLine.pbQty[year] - serviceLine.prQty[year];
+      this.buildSumColumn(variant.serviceLines);
+      variant.totalQty = this.buildSumRow(variant.serviceLines);
+  }
+
+  buildSumColumn(serviceLines:MyServiceLine[]){
+    serviceLines.forEach( sl => {
+      sl.pbQty["sum"] = 0 ;
+      sl.prQty["sum"] = 0 ;
+      sl.deltaQty["sum"] = 0 ;
+      this.years.forEach( year => {
+          sl.pbQty["sum"] = sl.pbQty["sum"] + sl.pbQty[year];
+          sl.prQty["sum"] = sl.prQty["sum"] + sl.prQty[year];
+          sl.deltaQty["sum"] = sl.deltaQty["sum"] + sl.deltaQty[year];
+      });
     });
   }
 
-  sum(variant:Variant, startyear, endyear): number {
-    var sum: number=0;
-    for (var year = startyear; year <= endyear; year++){
-      //if (variant.quantity[year]) {
-      //  sum += variant.quantity[year];
-      //}
-    }
+  buildSumRow(serviceLines:MyServiceLine[]): IntMap {
+    let sum:IntMap = {};
+    this.years.forEach( year => sum[year]=0 );
+    serviceLines.forEach( sl => {
+      this.years.forEach( year => sum[year] = sum[year] + sl.prQty[year] );
+    });
     return sum;
   }
 
-  sumtotals() {
-    
+  addVariant(){
+    let myvariant:MyVariant = {
+      shortName: "New Name",
+      longName: "New Long Name",
+      serviceLines:[],
+      totalQty: {}
+    }
+    this.variants.push(myvariant);
   }
 
-  newtable() {
-    if ('' === this.newblin) {
-      return;
-    }
+  addServiceLine(variant:MyVariant){
+    //console.log(variant);
+    variant.serviceLines.push(this.createNewServiceLine());  
+  }
 
-    var my: UfrVariantsComponent = this;
-    
-    // find the funding line with this blin, and add a new variant
-    this.current.fundingLines.forEach(fl => { 
-      if (fl.blin === my.newblin) {
-        if (0 === fl.variants.length) {
-          // add a new variant
-          var qtys: IntMap = {};
-          for (var i = 0; i < 5; i++){
-            qtys[my.pom.fy + i] = 1;
-          }
+  createNewServiceLine():MyServiceLine{
+    let pbq:IntMap = {};
+    let prq:IntMap = {};
+    let deltaq:IntMap = {};
 
-          var variant: Variant = {
-            //quantity: qtys,
-            //branch: 'USA',
-            //unitCost: 1.0
-          };
-          fl.variants.push(variant);
-          my.blinsleft.delete(my.newblin);          
-        }
-        else {
-          // nothing to do...we already have a table for this variant
-        }
-      }
+    this.years.forEach( year => {
+      pbq[year] = 0;
+      prq[year] = 0;
+      deltaq[year] = 0;
     });
+    pbq["sum"] = 0;
+    prq["sum"] = 0;
+    deltaq["sum"] = 0;
 
-    if (1 == my.blinsleft.size) {
-      my.newblin = my.blinsleft.entries().next().value[0];
+    let line:MyServiceLine = {
+      branch:"Branch",
+      contractor:"Contractor",
+      unitCost:0,
+      pbQty:pbq,
+      prQty:prq,
+      deltaQty:deltaq
     }
+    return line;
   }
 
-  newbranchline(fl) {
-    var qtys: IntMap = {};
-    for (var i = 0; i < 5; i++) {
-      qtys[this.pom.fy + i] = 1;
-    }
-
-    var variant: Variant = {
-      //quantity: qtys,
-      //branch: 'USA',
-      //unitCost: 1.0
-    };
-    fl.variants.push(variant);
-  }
-
-  newedit(newvalstr, variant, fy) {
-    var qty = Number.parseInt(newvalstr);
-    variant.quantity[fy] = qty;
-
-    console.log(this.current);
+  private async setPomFiscalYear() {
+    const pom: Pom = (await this.pomService.getById(this.current.phaseId).toPromise()).result;
+    this.pomFy = pom.fy-4;
+    this.years = [ 
+      (this.pomFy).toString(), 
+      (this.pomFy+1).toString(), 
+      (this.pomFy+2).toString(), 
+      (this.pomFy+3).toString(), 
+      (this.pomFy+4).toString()
+    ];
   }
 }
 
+export interface MyVariant {
+  shortName: string,
+  longName: string,
+  serviceLines:MyServiceLine[];
+  totalQty: IntMap
+}
+
+export interface MyServiceLine {
+  branch: string,
+  contractor: string,
+  unitCost: number,
+  pbQty: IntMap,
+  prQty: IntMap,
+  deltaQty: IntMap,
+}
