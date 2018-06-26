@@ -30,13 +30,14 @@ import { CreatePomSessionComponent } from './components/programming/create-pom-s
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { CreateExecutionPhaseComponent } from './components/programming/create-execution-phase/create-execution-phase.component';
+import { CreateExecutionPhaseComponent } from './components/execution/create-execution-phase/create-execution-phase.component';
 import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsComponent } from './components/programs/program-view/funds.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
+import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
@@ -132,8 +133,8 @@ const appRoutes: Routes = [
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
-  {path:'program-request', component:ProgramRequestComponent},
   {path:'filter', component:FilterComponent},
+  {path:'funds-update', component:FundsUpdateComponent},
   {path:'header', component:HeaderComponent},
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
@@ -147,6 +148,7 @@ const appRoutes: Routes = [
   {path:'program-search', component:ProgramSearchComponent},
   {path:'program-view/:id', component:ProgramViewComponent},
   {path:'my-community', component:MyCommunitiesComponent},
+  {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
@@ -186,6 +188,7 @@ const appRoutes: Routes = [
     FilterComponent,
     FundsComponent,
     FundsTabComponent,
+    FundsUpdateComponent,
     FyPipe,
     HeaderComponent,
     HeaderOpenComponent,
