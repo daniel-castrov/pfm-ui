@@ -20,7 +20,7 @@ export class SetEppComponent implements OnInit {
   loading: boolean = false;
   fileName: string;
   responseError: string;
-  data: any = [];
+  data = [];
   currentPage: number;
   totalPages: number;
 
@@ -37,6 +37,7 @@ export class SetEppComponent implements OnInit {
     this.eppService.getAll().subscribe(response => {
       if (!response.error) {
         this.data = response.result;
+        this.generateFiscalYearColumns(this.data);
       } else {
         alert(response.error);
       }
@@ -61,6 +62,7 @@ export class SetEppComponent implements OnInit {
     this.eppService.importFile(formModel.get('name'), formModel.get('file')).subscribe(response => {
       if (!response.error) {
         this.data = response.result;
+        this.generateFiscalYearColumns(this.data);
         this.agGrid.api.sizeColumnsToFit();
         $("#epp-modal").modal("hide");
       } else {
@@ -100,6 +102,12 @@ export class SetEppComponent implements OnInit {
     }
   }
 
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
   private prepareSave(): any {
     let input = new FormData();
     input.append('name', this.fileName);
@@ -113,15 +121,11 @@ export class SetEppComponent implements OnInit {
     });
   }
 
-  onGridReady(params) {
-    params.api.sizeColumnsToFit();
-  }
-
   currencyCellRenderer(value) {
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2
+      minimumFractionDigits: 0
     });
     return usdFormate.format(value);
   }
@@ -134,17 +138,37 @@ export class SetEppComponent implements OnInit {
     return this.currencyCellRenderer(params.data.fySums[year]);
   }
 
+  generateFiscalYearColumns(data) {
+    if (data && data.length > 0) {
+      let keys = Object.keys(data[0].fySums);
+      keys.forEach(key => {
+        let columnKey = key.replace('20', 'FY')
+        let colDef = {
+          headerName: columnKey,
+          maxWidth: 92,
+          type: "numericColumn",
+          valueGetter: params => {return this.getFiscalYear(params, key)}
+        };
+        if(!this.exist(this.columnDefs, colDef)) {
+          this.columnDefs.push(colDef);
+        }
+      });
+      this.agGrid.api.setColumnDefs(this.columnDefs);
+      this.agGrid.api.sizeColumnsToFit();
+    }
+  }
+
+  private exist(arr, value) {
+    for(var i = 0; i < arr.length; i++) {
+      if (arr[i].headerName === value.headerName) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   columnDefs = [
     {headerName: 'Program', field: 'mrId' },
-    {headerName: 'Funding Lines', valueGetter: params => {return this.generateFundingLine(params)}},
-    {headerName: 'FY24', valueGetter: params => {return this.getFiscalYear(params, 2024)}},
-    {headerName: 'FY25', valueGetter: params => {return this.getFiscalYear(params, 2025)}},
-    {headerName: 'FY26', valueGetter: params => {return this.getFiscalYear(params, 2026)}},
-    {headerName: 'FY27', valueGetter: params => {return this.getFiscalYear(params, 2027)}},
-    {headerName: 'FY28', valueGetter: params => {return this.getFiscalYear(params, 2028)}},
-    {headerName: 'FY29', valueGetter: params => {return this.getFiscalYear(params, 2029)}},
-    {headerName: 'FY30', valueGetter: params => {return this.getFiscalYear(params, 2030)}},
-    {headerName: 'FY31', valueGetter: params => {return this.getFiscalYear(params, 2031)}},
-    {headerName: 'FY32', valueGetter: params => {return this.getFiscalYear(params, 2032)}}
+    {headerName: 'Funding Lines', valueGetter: params => {return this.generateFundingLine(params)}}
   ];
 }
