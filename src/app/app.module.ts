@@ -18,6 +18,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { environment } from '../environments/environment'
+import { AgGridModule } from 'ag-grid-angular';
 
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
@@ -260,7 +261,8 @@ const appRoutes: Routes = [
     TabsModule.forRoot(),
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AgGridModule.withComponents([])
   ],
   providers: [
     AssignRoleRequestService,
