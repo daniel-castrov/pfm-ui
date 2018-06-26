@@ -2645,6 +2645,12 @@ definitions:
         type: "integer"
       status:
         type: "string"
+      osdObligationGoals:
+        type: "object"
+        $ref: "#/definitions/SpendPlan"
+      osdExpenditureGoals:
+        type: "object"
+        $ref: "#/definitions/SpendPlan"
   SpendPlan:
     type: "object"
     properties:
