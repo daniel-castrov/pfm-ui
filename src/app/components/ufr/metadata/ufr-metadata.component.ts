@@ -35,8 +35,9 @@ export class UfrMetadataComponent implements OnInit {
           });
         });
 
+        console.log(tagmap);
         my.tagnames = tagmap;
-        //console.log(my.tagnames);
+        console.log(my.tagnames);
       });
 
       //console.log(my.current);
@@ -48,8 +49,5 @@ export class UfrMetadataComponent implements OnInit {
         my.parentname = data.result;
       });
     }
-
-
   }
-
 }

@@ -2438,6 +2438,28 @@ definitions:
         type: "array"
         items:
           type: "string"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
+      functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
+        type: "string"
   ProgramFilter:
     type: "object"
     properties:
@@ -2515,7 +2537,7 @@ definitions:
         type: "integer"
       creationTime:
         type: "integer"
-      coreCapability:
+      cca:
         type: "string"
       milestoneImpact:
         type: "string"
@@ -2536,6 +2558,28 @@ definitions:
       name:
         type: "string"
       organization:
+        type: "string"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
+      functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
         type: "string"
   Pom:
     type: "object"
@@ -2587,7 +2631,27 @@ definitions:
         type: "string"
       phaseId:
         type: "string"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
       functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
         type: "string"
   PB:
     type: "object"
