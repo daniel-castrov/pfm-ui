@@ -2587,27 +2587,6 @@ definitions:
         type: "string"
       phaseId:
         type: "string"
-  FundingLine:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      appropriation:
-        type: "string"
-      blin:
-        type: "string"
-      opAgency:
-        type: "string"
-      item:
-        type: "string"
-      funds:
-        $ref: "#/definitions/IntMap"
-      fy:
-        type: "number"
-      variants:
-        type: "array"
-        items:
-          $ref: "#/definitions/Variant"
   PB:
     type: "object"
     properties:
