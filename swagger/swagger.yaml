@@ -2324,7 +2324,7 @@ definitions:
         type: "string"
       appropriation:
         type: "string"
-      blin:
+      baOrBlin:
         type: "string"
       opAgency:
         type: "string"

@@ -40,7 +40,7 @@
           <ng-container *ngFor="let row of (rows | mapAsList: 'values')">
           <tr>
             <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
-            <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
+            <td class="row-lt-gray text-center" rowspan="3">{{row.baOrBlin}}</td>
             <td class="row-lt-gray text-center" rowspan="3">{{row.item}}</td>
             <td class="row-lt-gray text-center" rowspan="3">{{row.opAgency}}</td>
             <td>PB{{pbFy-2000}}</td>
@@ -59,11 +59,11 @@
             <td class="text-right">{{row.prFunds.get(pomFy-3) | dashForZero}}</td>
             <td class="text-right">{{row.prFunds.get(pomFy-2) | dashForZero}}</td>
             <td class="text-right">{{row.prFunds.get(pomFy-1) | dashForZero}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy)">{{row.prFunds.get(pomFy)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+1)">{{row.prFunds.get(pomFy+1)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+2)">{{row.prFunds.get(pomFy+2)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+3)">{{row.prFunds.get(pomFy+3)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+4)">{{row.prFunds.get(pomFy+4)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, pomFy)">{{row.prFunds.get(pomFy)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, pomFy+1)">{{row.prFunds.get(pomFy+1)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, pomFy+2)">{{row.prFunds.get(pomFy+2)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, pomFy+3)">{{row.prFunds.get(pomFy+3)}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, pomFy+4)">{{row.prFunds.get(pomFy+4)}}</td>
             <td contenteditable="true" class="editable-field">-</td>
           </tr>
           <tr class="row-light">
@@ -124,8 +124,8 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-1 primary-label">BA/BLIN</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="blin" (ngModelChange)="onBlinChange()">
-              <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="baOrBlin" (ngModelChange)="onBaOrBlinChange()">
+              <option *ngFor="let baOrBlin of baOrBlins" [ngValue]="baOrBlin">{{baOrBlin}}</option>
             </select>
           </span>
         </div>

@@ -26,8 +26,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
   // for the add FL section
   private appropriations: string[] = [];
   private appropriation: string;
-  private blins: string[] = [];
-  private blin: string;
+  private baOrBlins: string[] = [];
+  private baOrBlin: string;
   private item: string;
   private opAgencies: string[] = [];
   private opAgency: string;
@@ -69,13 +69,13 @@ export class FundsTabComponent implements OnChanges, OnInit {
       this.appropriation = this.appropriations[0];
     }
     {
-      this.blins = await this.globalsService.tagAbbreviationsForBlin();
-      this.blin = this.getInitiallySelectedBlins()[0];
-      this.onBlinChange();
+      this.baOrBlins = await this.globalsService.tagAbbreviationsForBlin();
+      this.baOrBlin = this.getInitiallySelectedBlins()[0];
+      this.onBaOrBlinChange();
     }
   }
 
-  onBlinChange() {
+  onBaOrBlinChange() {
     this.updateProgramElement();
     this.updateItem();
   }
@@ -85,17 +85,17 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
   async updateProgramElement() {
-    this.programElement = await this.autoValuesService.programElement(this.blin, this.item);
+    this.programElement = await this.autoValuesService.programElement(this.baOrBlin, this.item);
   }
   
   updateItem() {
-    this.item = this.autoValuesService.item(this.pr.functionalArea, this.blin);
+    this.item = this.autoValuesService.item(this.pr.functionalArea, this.baOrBlin);
   }
   
   private setPOMtoRows() {
     this.rows.clear();
     this.pr.fundingLines.forEach(fund => {
-      var key = Key.create(fund.appropriation, fund.blin, fund.item, fund.opAgency);
+      var key = Key.create(fund.appropriation, fund.baOrBlin, fund.baOrBlin, fund.opAgency);
       var prFunds: Map<number, number> = new Map<number, number>();
       var totalFunds: Map<number, number> = new Map<number, number>();
       var pbFunds: Map<number, number> = new Map<number, number>();
@@ -107,7 +107,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
       });
       this.rows.set(key, {
         appropriation: fund.appropriation,
-        blin: fund.blin,
+        baOrBlin: fund.baOrBlin,
         item: fund.item,
         opAgency: fund.opAgency,
         prFunds: prFunds,
@@ -128,11 +128,11 @@ export class FundsTabComponent implements OnChanges, OnInit {
     const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
 
     pbPr.fundingLines.forEach(fund => {
-      var key = Key.create(fund.appropriation, fund.blin, fund.item, fund.opAgency);
+      var key = Key.create(fund.appropriation, fund.baOrBlin, fund.baOrBlin, fund.opAgency);
       if (!this.rows.has(key)) {
         this.rows.set(key, {
           appropriation: fund.appropriation,
-          blin: fund.blin,
+          baOrBlin: fund.baOrBlin,
           item: fund.item,
           opAgency: fund.opAgency,
           pbFunds: new Map(),
@@ -154,7 +154,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
   addFundingLine() {
-    var key: string = Key.create(this.appropriation, this.blin, this.item, this.opAgency);
+    var key: string = Key.create(this.appropriation, this.baOrBlin, this.item, this.opAgency);
     if (this.rows.has(key)) {
       this.feedback.failure('Funding Line already exists');
     } else {
@@ -162,7 +162,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
       var fundingLine: FundingLine = {
         fy: this.pomFy,
         appropriation: this.appropriation,
-        blin: this.blin,
+        baOrBlin: this.baOrBlin,
         item: this.item,
         opAgency: this.opAgency,
         programElement: this.programElement,
@@ -175,7 +175,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
 
-  onedit(newval, appr, blin, year) {
+  onedit(newval, appr, baOrBlin, year) {
     var thisyear:number = Number.parseInt(year);
     
     var thisvalue = Number.parseInt(newval.replace(/[^0-9]/g, ''));
@@ -183,7 +183,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
       thisvalue = 0;
     }
 
-    var thisrow = this.rows.get(appr + blin);
+    var thisrow = this.rows.get(appr + baOrBlin);
 
     var oldvalue: number = (thisrow.prFunds.has(year) ? thisrow.prFunds.get(year) : 0);
     var oldtotal: number = (thisrow.totalFunds.has(year) ? thisrow.totalFunds.get(year) : 0);
@@ -195,7 +195,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
     // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR
     var found = false;
     this.pr.fundingLines.forEach(fl => { 
-      if (appr === fl.appropriation && blin === fl.blin) {
+      if (appr === fl.appropriation && baOrBlin === fl.baOrBlin) {
         fl.funds[year] = thisvalue;
         found = true;
       }
@@ -207,7 +207,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
 
       this.pr.fundingLines.push({
         appropriation: appr,
-        blin: blin,
+        baOrBlin: baOrBlin,
         fy: this.pomFy,
         funds: funds,
         item: this.item,
@@ -218,10 +218,10 @@ export class FundsTabComponent implements OnChanges, OnInit {
 
   // wierd algorithm for initial BLINs selection based on the initial this.appropriation selection. Possibly flawn.
   getInitiallySelectedBlins(): string[] {
-    if ('PROC' === this.appropriation) return this.blins.filter(blin => (blin.match(/00/)));
-    else if ('RDTE' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[1-4]/)));
-    else if ('O&M' === this.appropriation) return this.blins.filter(blin => (blin.match(/BA[5-7]/)));
-    else return this.blins;
+    if ('PROC' === this.appropriation) return this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/00/)));
+    else if ('RDTE' === this.appropriation) return this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-4]/)));
+    else if ('O&M' === this.appropriation) return this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[5-7]/)));
+    else return this.baOrBlins;
   }
 
 

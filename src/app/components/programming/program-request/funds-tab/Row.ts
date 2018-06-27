@@ -1,6 +1,6 @@
 export interface Row {
   appropriation: string,
-  blin: string,
+  baOrBlin: string,
   item: string,
   opAgency: string,
   pbFunds: Map<number, number>,
