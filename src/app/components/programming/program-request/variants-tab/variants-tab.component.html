@@ -13,7 +13,7 @@
               <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false"
               (change)="buildTables()">
                 <option value=""></option>
-                <option *ngFor="let fl of pr.fundingLines" [ngValue]="fl"> 
+                <option *ngFor="let fl of pr.fundingLines" [ngValue]="fl">
                   {{fl.appropriation}} / {{fl.blin}} / {{fl.item}} / {{fl.opAgency}}
                 </option>
               </select>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div *ngIf="fund" class="row mb-4">
-      <div *ngFor="let variant of variants" class="col-md-12" id="variant">
+      <div *ngFor="let variant of variants" class="col-md-12 mb-4" id="variant">
         <span class="form-group">
           <label class="variant-titles mr-sm-4">{{variant.shortName}}</label>
         </span>
@@ -46,11 +46,11 @@
         </span>
 
         <span class="h6 remove-text">Remove Variant</span>
-        <!-- 
-          <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" 
+        <!--
+          <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal"
                 (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
             <i class="fa fa-trash"></i>
-          </span> 
+          </span>
         -->
         <div class="table-editable">
           <table class="proc-qty">
@@ -77,7 +77,7 @@
               <tr>
                 <td>POM{{pomFy}}</td>
                 <td *ngFor="let year of years"
-                  contenteditable="true" class="editable-field" 
+                  contenteditable="true" class="editable-field"
                   digits (blur)="onedit($event.target.textContent, variant, serviceLine, year)">
                     {{serviceLine.prQty[year] | dashForZero}}
                   </td>
@@ -89,13 +89,32 @@
                 <td class="text-right">{{serviceLine.deltaQty['sum']}}</td>
               </tr>
             </ng-container>
-
               <tr class="row-border-top">
                 <td colspan="3">
-                  <button class="btn btn-light btn pull-left" (click)="addServiceLine(variant)">
+                  <button class="btn btn-light mb-2">
                       <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                      Add Service Line
+                      New Service Line
                     </button>
+                    <div class="card">
+                      <div class="form-group inline-name">
+                        <label class="mb-1">Service</label>
+                        <select class="form-control-sm dropdown-width mb-2">
+                          <option value=""></option>
+                          <option>items</option>
+                        </select>
+                      </div>
+                      <div class="form-group inline-name">
+                       <label>Contractor</label>
+                       <input type="text" class="form-control forminput mr-3">
+                      </div>
+                      <div class="form-group inline-name">
+                        <label>Unit Cost</label>
+                        <input type="number" class="form-control forminput mr-3">
+                      </div>
+                      <button class="btn btn-primary" (click)="addServiceLine(variant)">
+                        Add Service Line
+                      </button>
+                  </div>
                 </td>
                 <td class="text-right font-weight-bold">Totals:</td>
                 <td *ngFor="let year of years" class="text-right">{{variant.totalQty[year]   | dashForZero }}</td>
