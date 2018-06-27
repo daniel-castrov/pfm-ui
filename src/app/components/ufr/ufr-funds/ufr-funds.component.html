@@ -40,7 +40,7 @@
           <ng-container *ngFor="let row of rows | mapAsList : 'values'">
             <tr>
               <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
+              <td class="row-lt-gray text-center" rowspan="3">{{row.baOrBlin}}</td>
               <td class="row-lt-gray text-center" rowspan="3">{{row.item}}</td>
               <td class="row-lt-gray text-center" rowspan="3">{{row.opagency}}</td>
               <td>{{fy|FY:'POM'}}</td>
@@ -59,11 +59,11 @@
               <td class="text-right">{{row.ufrfunds.get(fy-3) | dashForZero}}</td>
               <td class="text-right">{{row.ufrfunds.get(fy-2) | dashForZero}}</td>
               <td class="text-right">{{row.ufrfunds.get(fy-1) | dashForZero}}</td> 
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy)">{{row.ufrfunds.get(fy)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+1)">{{row.ufrfunds.get(fy+1)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+2)">{{row.ufrfunds.get(fy+2)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+3)">{{row.ufrfunds.get(fy+3)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, fy+4)">{{row.ufrfunds.get(fy+4)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy)">{{row.ufrfunds.get(fy)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+1)">{{row.ufrfunds.get(fy+1)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+2)">{{row.ufrfunds.get(fy+2)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+3)">{{row.ufrfunds.get(fy+3)}}</td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+4)">{{row.ufrfunds.get(fy+4)}}</td>
               <td>??</td>
             </tr>
             <tr class="row-light">
