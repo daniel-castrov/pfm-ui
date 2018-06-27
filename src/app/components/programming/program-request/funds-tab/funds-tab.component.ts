@@ -160,6 +160,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
         blin: this.blin,
         item: this.item,
         opAgency: this.opAgency,
+        programElement: this.programElement,
         funds: {},
         variants: []
       };
