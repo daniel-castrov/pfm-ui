@@ -5,7 +5,6 @@ import { OnInit, Injectable } from '@angular/core';
 @Injectable()
 export class AutoValuesService {
 
-    private currentCommunity: Community;
     constructor(private globalsService: GlobalsService) {}
 
     async programElement(ba: string, item: string): Promise<string> {
@@ -28,6 +27,13 @@ export class AutoValuesService {
         } else {
             return '';
         }
+    }
+
+    item(functionalArea: string, ba: string): string {
+        if(['BA1','BA2','BA3','BA4','BA5','BA6','BA7'].includes(ba))
+            return functionalArea + ba;
+        else
+            return '';
     }
 
 }

@@ -37,7 +37,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
               private pbService: PBService,
               private prService: PRService,
               private globalsService: GlobalsService,
-              private initializerService: AutoValuesService ) {}
+              private autoValuesService: AutoValuesService ) {}
 
   async ngOnInit() {
     await this.loadDropdownOptions();
@@ -71,12 +71,13 @@ export class FundsTabComponent implements OnChanges, OnInit {
     {
       this.blins = await this.globalsService.tagAbbreviationsForBlin();
       this.blin = this.getInitiallySelectedBlins()[0];
-      this.updateProgramElement();
+      this.onBlinChange();
     }
   }
 
   onBlinChange() {
     this.updateProgramElement();
+    this.updateItem();
   }
 
   onItemChange() {
@@ -84,7 +85,11 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
   async updateProgramElement() {
-    this.programElement = await this.initializerService.programElement(this.blin, this.item);
+    this.programElement = await this.autoValuesService.programElement(this.blin, this.item);
+  }
+  
+  updateItem() {
+    this.item = this.autoValuesService.item(this.pr.functionalArea, this.blin);
   }
   
   private setPOMtoRows() {

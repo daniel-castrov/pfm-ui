@@ -2587,6 +2587,8 @@ definitions:
         type: "string"
       phaseId:
         type: "string"
+      functionalArea:
+        type: "string"
   PB:
     type: "object"
     properties:
