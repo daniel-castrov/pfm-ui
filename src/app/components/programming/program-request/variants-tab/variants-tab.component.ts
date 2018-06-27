@@ -1,17 +1,16 @@
 import { Component, OnInit, Input, ViewChild, OnChanges } from '@angular/core';
-import { UFR, FundingLine, POMService, Pom, IntMap} from '../../../generated'
-import { FeedbackComponent } from '../../feedback/feedback.component';
+import { ProgrammaticRequest, FundingLine, POMService, Pom, IntMap} from '../../../../generated'
+import { FeedbackComponent } from './../../../feedback/feedback.component';
 
 @Component({
-  selector: 'ufr-variants',
-  templateUrl: './ufr-variants.component.html',
-  styleUrls: ['./ufr-variants.component.scss']
+  selector: 'variants-tab',
+  templateUrl: './variants-tab.component.html',
+  styleUrls: ['./variants-tab.component.scss']
 })
-export class UfrVariantsComponent implements OnInit {
+export class VariantsTabComponent implements OnInit {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
-  @Input() current: UFR;
-  @Input() editable: boolean = false;
+  @Input() pr: ProgrammaticRequest;
 
   pomFy:number;
   fund:FundingLine;
@@ -24,7 +23,7 @@ export class UfrVariantsComponent implements OnInit {
   }
 
   ngOnChanges(){
-    if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
+    if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     if ( !this.pomFy ){
       this.setPomFiscalYear();
     }
@@ -158,7 +157,7 @@ export class UfrVariantsComponent implements OnInit {
   }
 
   private async setPomFiscalYear() {
-    const pom: Pom = (await this.pomService.getById(this.current.phaseId).toPromise()).result;
+    const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.pomFy = pom.fy-4;
     this.years = [ 
       (this.pomFy).toString(), 
