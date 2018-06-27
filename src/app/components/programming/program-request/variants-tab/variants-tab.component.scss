@@ -130,3 +130,17 @@ $light-green: #ebf2de;
     }
   }
 }
+
+.dropdown-width {
+  width: 100%;
+}
+
+.remove-text {
+  font-size: 11px;
+  cursor: pointer;
+  color: $dark-grey;
+  &:hover {
+    color: red;
+    opacity: .9;
+  }
+}
