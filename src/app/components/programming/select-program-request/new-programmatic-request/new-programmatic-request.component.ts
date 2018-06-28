@@ -5,7 +5,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 // Other Components
 import { Pom } from '../../../../generated/model/pom';
-import { ProgramRequestPageModeService } from '../../program-request/page-mode/page-mode.service';
+import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 
 @Component({
   selector: 'new-programmatic-request',

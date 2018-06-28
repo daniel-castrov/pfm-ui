@@ -1,15 +1,15 @@
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
-import { PRService } from './../../../../generated/api/pR.service';
+import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
+import { PRService } from './../../../generated/api/pR.service';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService } from '../page-mode/page-mode.service';
+import { ProgramRequestPageModeService } from './page-mode.service';
 
 
 @Component({
   selector: 'program-request',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  templateUrl: './program-request.component.html',
+  styleUrls: ['./program-request.component.scss']
 })
 export class ProgramRequestComponent implements OnInit {
 
