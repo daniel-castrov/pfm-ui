@@ -72,6 +72,7 @@ import { UpdatePomSessionComponent } from './components/programming/update-pom-s
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
+import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
@@ -157,6 +158,7 @@ const appRoutes: Routes = [
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
+  {path:'update-program-execution', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
@@ -239,6 +241,7 @@ const appRoutes: Routes = [
     UfrTabComponent,
     UfrJustificationComponent,
     UpdatePomSessionComponent,
+    UpdateProgramExecutionComponent,
     ValuesPipe,
     WorksheetManagementComponent,
     DashForZeroPipe,
