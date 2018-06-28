@@ -2332,6 +2332,8 @@ definitions:
         type: "string"
       programElement:
         type: "string"
+      acquisitionType:
+        type: "string"
       fy:
         type: "integer"
       funds:

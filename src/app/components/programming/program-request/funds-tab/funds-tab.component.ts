@@ -32,6 +32,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
   private opAgencies: string[] = [];
   private opAgency: string;
   private programElement: string;
+  private acquisitionTypes: string[];
+  private acquisitionType: string;
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -74,6 +76,10 @@ export class FundsTabComponent implements OnChanges, OnInit {
       this.baOrBlin = this.getInitiallySelectedBlins()[0];
       this.onBaOrBlinChange();
     }
+    {
+      this.acquisitionTypes = await this.globalsService.tagAbbreviationsForAcquisitionType();
+      this.acquisitionType = this.acquisitionTypes[0];
+    }
   }
 
   onAppropriationChange() {
@@ -105,7 +111,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
   private setPOMtoRows() {
     this.rows.clear();
     this.pr.fundingLines.forEach(fund => {
-      var key = Key.create(fund.appropriation, fund.baOrBlin, fund.baOrBlin, fund.opAgency);
+      var key = Key.create(fund.appropriation, fund.baOrBlin, fund.item, fund.opAgency);
       var prFunds: Map<number, number> = new Map<number, number>();
       var totalFunds: Map<number, number> = new Map<number, number>();
       var pbFunds: Map<number, number> = new Map<number, number>();
@@ -164,7 +170,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
   addFundingLine() {
-    var key: string = Key.create(this.appropriation, this.baOrBlin, this.item, this.opAgency);
+    const key: string = Key.create(this.appropriation, this.baOrBlin, this.item, this.opAgency);
     if (this.rows.has(key)) {
       this.feedback.failure('Funding Line already exists');
     } else {
@@ -193,13 +199,14 @@ export class FundsTabComponent implements OnChanges, OnInit {
       thisvalue = 0;
     }
 
-    var thisrow = this.rows.get(appr + baOrBlin);
+    const key: string = Key.create(this.appropriation, this.baOrBlin, this.item, this.opAgency);
+    const row: Row = this.rows.get(key);
 
-    var oldvalue: number = (thisrow.prFunds.has(year) ? thisrow.prFunds.get(year) : 0);
-    var oldtotal: number = (thisrow.totalFunds.has(year) ? thisrow.totalFunds.get(year) : 0);
+    var oldvalue: number = (row.prFunds.has(year) ? row.prFunds.get(year) : 0);
+    var oldtotal: number = (row.totalFunds.has(year) ? row.totalFunds.get(year) : 0);
     var newamt = oldtotal - oldvalue + thisvalue;
-    thisrow.prFunds.set(year, thisvalue);
-    thisrow.totalFunds.set(year, newamt);
+    row.prFunds.set(year, thisvalue);
+    row.totalFunds.set(year, newamt);
 
     // finally, we need to update our actual funding lines...
     // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR

@@ -103,7 +103,7 @@ export class VariantsTabComponent implements OnInit {
 
     let thePbFund:FundingLine; 
     pbPr.fundingLines.forEach(fl => {
-      if (  fl.appropriation === this.fund.appropriation && fl.blin === this.fund.blin
+      if (  fl.appropriation === this.fund.appropriation && fl.baOrBlin === this.fund.baOrBlin
             && fl.item === this.fund.item && fl.opAgency === this.fund.opAgency){ 
         thePbFund=fl; 
       }

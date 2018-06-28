@@ -58,6 +58,10 @@ export class GlobalsService {
     return this.tagAbbreviations('BA');
   }
 
+  tagAbbreviationsForAcquisitionType(): Promise<string[]> {
+    return this.tagAbbreviations('Acquisition Type');
+  }
+
   
 
 }
