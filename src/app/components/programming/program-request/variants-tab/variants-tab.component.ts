@@ -22,6 +22,9 @@ export class VariantsTabComponent implements OnInit {
   fund:FundingLine;
   variants:MyVariant[] = [];
   years:string[];
+  showAddVariant=false;
+  newVariantName:string;
+  newVariantDesc:string;
 
   constructor(private pomService: POMService, 
     private pbService: PBService,
@@ -113,7 +116,7 @@ export class VariantsTabComponent implements OnInit {
         let key = vrnt.shortName+sl.branch+sl.contractor+sl.unitCost;
         this.years.forEach( year => {
           let num:number=0
-          if (serLines.get( key ).quantity[year] &&  !isNaN(serLines.get( key ).quantity[year])  ){
+          if ( serLines.get( key ) && serLines.get( key ).quantity[year] &&  !isNaN(serLines.get( key ).quantity[year])  ){
             num = serLines.get( key ).quantity[year];
           }
           sl.pbQty[year] = num;
@@ -177,8 +180,8 @@ export class VariantsTabComponent implements OnInit {
 
   addVariant(){
     let myvariant:MyVariant = {
-      shortName: "New Name",
-      longName: "New Long Name",
+      shortName: this.newVariantName,
+      longName: this.newVariantDesc,
       serviceLines:[],
       totalQty: {}
     }
@@ -190,11 +193,13 @@ export class VariantsTabComponent implements OnInit {
       serviceLines:[]
     }
     this.fund.variants.push(variant);
+    
+    this.showAddVariant=false;
   }
 
   addServiceLine(myVariant:MyVariant){
-    let branch="Branch";
-    let contractor="Contractor";
+    let branch="USA";
+    let contractor="A Private Contractor";
     let unitCost=0;
 
     myVariant.serviceLines.push(this.createNewMyServiceLine(branch, contractor, unitCost));
