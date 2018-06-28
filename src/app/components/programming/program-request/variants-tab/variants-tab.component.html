@@ -1,5 +1,4 @@
 <div class="row">
-  <!--Left column begins-->
   <div class="col-md-12">
     <div class="row mb-4">
       <div class="col-12">
@@ -32,8 +31,8 @@
                 (click)="deleteVariant(variant)">
             <i class="fa fa-trash"></i>
           </span>
-       
-          <div class="table-editable">
+
+        <div class="table-editable">
           <table class="proc-qty">
             <thead>
               <tr>
@@ -80,32 +79,35 @@
                 <td class="text-right">{{variant.totalQty['sum'] | dashForZero }}</td>
               </tr>
               <tr>
-                <td colspan="10">
-                  <div class="row">
-                    <button class="btn btn-light" (click)="toggleShowAddServiceLine(variantIndex)">
-                      <i *ngIf="showAddServiceLine[variantIndex]" class="fa fa-minus-circle icon-pad" aria-hidden="true"></i>
-                      <i *ngIf="!showAddServiceLine[variantIndex]" class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                      New Service Line
-                    </button>
+                <td colspan="9" class="white-border">
+                  <div class="row mb-2">
+                    <div class="col-2">
+                      <button class="btn btn-light" (click)="toggleShowAddServiceLine(variantIndex)">
+                        <i *ngIf="showAddServiceLine[variantIndex]" class="fa fa-minus-circle icon-pad" aria-hidden="true"></i>
+                        <i *ngIf="!showAddServiceLine[variantIndex]" class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                        New Service Line
+                      </button>
+                    </div>
                     <div *ngIf="showAddServiceLine[variantIndex]" class="col-10">
                       <div class="row">
                         <div class="col-2">
-                          <label class="mb-0">Service</label>
+                          <label class="mb-1">Service</label>
                           <select name="branchSelect" class="form-control-sm dropdown-width mb-0 mr-3" [(ngModel)]="newServiceLineBranch">
                             <option value=""></option>
                             <option *ngFor="let branch of branches" [ngValue]="branch">{{branch}}</option>
                           </select>
                         </div>
                         <div class="col-2">
-                          <label>Contractor</label>
+                          <label class="mb-1">Contractor</label>
                           <input class="form-control forminput mb-0 mr-3" [(ngModel)]="newServiceLineContractor">
                         </div>
                         <div class="col-2">
-                          <label>Unit Cost</label>
+                          <label class="mb-1">Unit Cost</label>
                           <input class="form-control forminput mb-0 mr-3" type="number" [(ngModel)]="newServiceLineUnitCost">
                         </div>
-                        <div class="col-1">
-                          <button class="btn btn-primary mt-2" (click)="addServiceLine(variant, variantIndex)">
+                        <div class="col-2">
+                          <label></label>
+                          <button class="btn btn-primary" (click)="addServiceLine(variant, variantIndex)">
                             Add Service Line
                           </button>
                         </div>
@@ -115,16 +117,15 @@
                 </td>
               </tr>
             </tbody>
+
           </table>
         </div>
       </div>
-
-
       <div lass="row">
         <div class="col-12 mb-3">
           <fieldset>
             <legend>Add Variant</legend>
-            <div *ngIf="!showAddVariant" class="col-5 mt-4">
+            <div *ngIf="!showAddVariant" class="col-12 mt-4">
               <span>
                 <button class="btn btn-primary" (click)="showAddVariant=true">
                   <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -149,7 +150,7 @@
                   </span>
                 </span>
               </div>
-              <div class="col-2">
+              <div class="col-3">
                 <span class="form-group">
                   <div class="primary-label"> </div>
                   <button class="btn btn-primary mt-4" (click)="addVariant()" [disabled]="!(newVariantName && newVariantDesc)">
@@ -163,7 +164,6 @@
           <j-feedback></j-feedback>
         </div>
       </div>
-
     </div>
   </div>
 </div>
