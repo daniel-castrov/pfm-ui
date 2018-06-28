@@ -116,7 +116,7 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-1 primary-label">Appropriation</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
+            <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation" (ngModelChange)="onAppropriationChange()">
               <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
             </select>
           </span>

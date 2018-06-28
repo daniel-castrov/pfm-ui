@@ -54,6 +54,10 @@ export class GlobalsService {
     return this.tagAbbreviations('BLIN');
   }
 
+  tagAbbreviationsForBa(): Promise<string[]> {
+    return this.tagAbbreviations('BA');
+  }
+
   
 
 }

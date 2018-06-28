@@ -67,12 +67,17 @@ export class FundsTabComponent implements OnChanges, OnInit {
     {
       this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
       this.appropriation = this.appropriations[0];
+      this.onAppropriationChange();
     }
     {
       this.baOrBlins = await this.globalsService.tagAbbreviationsForBlin();
       this.baOrBlin = this.getInitiallySelectedBlins()[0];
       this.onBaOrBlinChange();
     }
+  }
+
+  onAppropriationChange() {
+    this.updateBaOrBlins();
   }
 
   onBaOrBlinChange() {
@@ -83,7 +88,12 @@ export class FundsTabComponent implements OnChanges, OnInit {
   onItemChange() {
     this.updateProgramElement();
   }
-
+  
+  async updateBaOrBlins() {
+    this.baOrBlins = await this.autoValuesService.baOrBlins(this.appropriation);
+    this.onBaOrBlinChange()
+  }
+  
   async updateProgramElement() {
     this.programElement = await this.autoValuesService.programElement(this.baOrBlin, this.item);
   }
