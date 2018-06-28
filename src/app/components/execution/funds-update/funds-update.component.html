@@ -5,8 +5,9 @@
       <div class="col-md-7 col-sm-12 mb-4">
         <span class="h5 mr-2">Funds Update for Fiscal Year </span>
         <span>
-          <select class="form-control-sm dropdown-year-width mb-2">
-            <option>2018</option>
+          <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
+            <option></option>
+            <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
            </select>
          </span>
       </div>
@@ -19,15 +20,17 @@
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">Program</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="program">
-                  <option *ngFor="let program of programs" [ngValue]="program">{{program}}</option>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="mrid" (change)="filter()">
+                  <option></option>
+                  <option *ngFor="let program of programs | mapAsList" [ngValue]="program.key">{{program.value}}</option>
                 </select>
               </span>
             </div>
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">Appropriation</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
+                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation" (change)="filter()">
+                  <option></option>
                   <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
                 </select>
               </span>
@@ -35,7 +38,8 @@
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">BA/BLIN</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
+                <select class="form-control-sm dropdown-width" [(ngModel)]="blin" (change)="filter()">
+                  <option></option>
                   <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
                 </select>
               </span>
@@ -43,7 +47,8 @@
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">Item</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="item">
+                <select class="form-control-sm dropdown-width" [(ngModel)]="item" (change)="filter()">
+                  <option></option>
                   <option *ngFor="let item of items" [ngValue]="item">{{item}}</option>
                 </select>
               </span>
@@ -51,7 +56,8 @@
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">OpAgency</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency">
+                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency" (change)="filter()">
+                  <option></option>
                   <option *ngFor="let opAgency of opAgencies">{{opAgency}}</option>
                 </select>
               </span>
@@ -82,250 +88,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 1</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
+              <tr *ngFor="let line of filteredexelines">
+                <td class="lt-grey clickable large-column">{{programs.get(line.mrId)}}</td>
+                <td class="lt-grey">{{line.appropriation}}</td>
+                <td class="lt-grey">{{line.blin}}</td>
+                <td class="lt-grey">{{line.item}}</td>
+                <td class="lt-grey text-center med-column">{{line.opAgency}}</td>
                 <td class="lt-green text-right">-</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
                 <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">New Fund
-
-                  <span class="remove-fund" data-toggle="modal">
-                    <i class="fa fa-trash"></i>
-                  </span>
-                </td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 2</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 3</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 4</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 5</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 6</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 7</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 8</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">10</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 9</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">600</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 10</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">300</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 11</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">100</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 12</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">400</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 13</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">4000</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-              </tr>
-              <tr>
-                <td class="lt-grey clickable large-column">Program 14</td>
-                <td class="lt-grey">RDT&amp;E</td>
-                <td class="lt-grey">BAS</td>
-                <td class="lt-grey">65</td>
-                <td class="lt-grey text-center med-column">5Y</td>
-                <td class="lt-green text-right">3000</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
-                <td class="dark-green text-right">-</td>
+                <td class="dark-green text-right">{{line.toa}}</td>
+                <td class="dark-green text-right">{{line.released}}</td>
+                <td class="dark-green text-right">{{line.withheld}}</td>
               </tr>
             </tbody>
           </table>
@@ -354,8 +131,8 @@
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">Program</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="program">
-                  <option *ngFor="let program of programs" [ngValue]="program">{{program}}</option>
+                <select class="form-control-sm dropdown-width" [(ngModel)]="mrid">
+                  <option *ngFor="let program of programs|mapAsList" [ngValue]="program.key">{{program.value}}</option>
                 </select>
               </span>
             </div>

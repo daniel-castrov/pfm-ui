@@ -1570,6 +1570,15 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /programs/fullnamemap:
+      get:
+        tags:
+        - "Programs"
+        operationId: "getIdNameMap"
+        summary: "Get a mapping of mrId-to-full (short)name"
+        description: "Returns a mapping"
+        produces:
+        - "application/json"
   /programs/{mrId}/fullname:
     get:
       tags:
@@ -2061,6 +2070,40 @@ paths:
         description: "the file to upload"
         required: true
         type: "file"
+  /executionline/phase/{phaseId}:
+    get:
+      operationId: "getExecutionLinesByPhase"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "mrId"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "appr"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "blin"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "item"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "opAgency"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution lines for this execution phase"
+      description: "Returns the execution lines"
+      produces:
+      - "application/json"
 # STOP EXECUTION
 #################################################################
 # END PATHS
@@ -2682,6 +2725,8 @@ definitions:
       mrId:
         type: "string"
       toa:
+        type: "integer"
+      released:
         type: "integer"
       withheld:
         type: "integer"
