@@ -4,7 +4,6 @@ import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService,
 import { GlobalsService } from '../../../../services/globals.service';
 
 import { FeedbackComponent } from '../../../feedback/feedback.component';
-import { WSAEPROVIDERFAILEDINIT } from 'constants';
 import { ElementInstructionMap } from '@angular/animations/browser/src/dsl/element_instruction_map';
 import { forEach } from '@angular/router/src/utils/collection';
 
@@ -22,9 +21,17 @@ export class VariantsTabComponent implements OnInit {
   fund:FundingLine;
   variants:MyVariant[] = [];
   years:string[];
+
   showAddVariant=false;
   newVariantName:string;
   newVariantDesc:string;
+
+  showAddServiceLine:boolean[]=[];
+  newService:string;
+  newContractor:string;
+  newUnitCost:number;
+
+  services:string[]=["USA","USN","USAF","USMC","USCG","USCG"];
 
   constructor(private pomService: POMService, 
     private pbService: PBService,
@@ -81,7 +88,8 @@ export class VariantsTabComponent implements OnInit {
         totalQty: this.buildSumRow(myServiceLines)
       }
       this.variants.push(myvariant);
-    });
+      this.showAddServiceLine.push(false);
+    });    
     this.setPbQty();
   }
 
@@ -193,23 +201,23 @@ export class VariantsTabComponent implements OnInit {
       serviceLines:[]
     }
     this.fund.variants.push(variant);
-    
+
     this.showAddVariant=false;
   }
 
-  addServiceLine(myVariant:MyVariant){
-    let branch="USA";
-    let contractor="A Private Contractor";
-    let unitCost=0;
-
-    myVariant.serviceLines.push(this.createNewMyServiceLine(branch, contractor, unitCost));
+  addServiceLine(myVariant:MyVariant, variantNumber:number){
+  
+    console.log(this.newService, this.newContractor, this.newUnitCost);
+    
+    myVariant.serviceLines.push(this.createNewMyServiceLine(this.newService, this.newContractor, this.newUnitCost));
 
     this.fund.variants.forEach( variant => {
       if ( variant.longName === myVariant.longName ){
-        variant.serviceLines.push( this.createNewServiceLine(branch, contractor, unitCost) );
+        variant.serviceLines.push( this.createNewServiceLine(this.newService, this.newContractor, this.newUnitCost) );
         return;
       }
     });
+    this.toggleShowAddServiceLine(variantNumber);
   }
 
   createNewServiceLine(brnch:string, cntrctr:string, utCst:number): ServiceLine{
@@ -245,6 +253,14 @@ export class VariantsTabComponent implements OnInit {
       deltaQty:deltaq
     }
     return line;
+  }
+
+  toggleShowAddServiceLine(variantNumber:number){
+    for (let i=0; i<this.showAddServiceLine.length; i++ ){
+      if (i != variantNumber)
+      this.showAddServiceLine[i]=false;
+    }
+    this.showAddServiceLine[variantNumber]=!this.showAddServiceLine[variantNumber];
   }
 
   private async setYears() {
