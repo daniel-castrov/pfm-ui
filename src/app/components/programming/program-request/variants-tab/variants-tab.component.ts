@@ -19,7 +19,7 @@ export class VariantsTabComponent implements OnInit {
 
   pomFy:number;
   fund:FundingLine;
-  variants:MyVariant[] = [];
+  myVariants:MyVariant[] = [];
   years:string[];
 
   showAddVariant=false;
@@ -27,11 +27,11 @@ export class VariantsTabComponent implements OnInit {
   newVariantDesc:string;
 
   showAddServiceLine:boolean[]=[];
-  newService:string;
-  newContractor:string;
-  newUnitCost:number;
+  newServiceLineBranch:string;
+  newServiceLineContractor:string;
+  newServiceLineUnitCost:number;
 
-  services:string[]=["USA","USN","USAF","USMC","USCG","USCG"];
+  branches:string[]=["USA","USN","USAF","USMC","USCG","USCG"];
 
   constructor(private pomService: POMService, 
     private pbService: PBService,
@@ -48,7 +48,7 @@ export class VariantsTabComponent implements OnInit {
 
   buildTables(){ 
 
-    this.variants = [];
+    this.myVariants = [];
     this.fund.variants.forEach( variant => {
 
       let totalq:IntMap = {};
@@ -73,6 +73,7 @@ export class VariantsTabComponent implements OnInit {
           branch: sl.branch,
           contractor: sl.contractor,
           unitCost: sl.unitCost,
+          bulkOrigin:sl.bulkOrigin,
           pbQty: pbq,
           prQty: prq,
           deltaQty: deltaq
@@ -84,10 +85,11 @@ export class VariantsTabComponent implements OnInit {
       let myvariant:MyVariant = {
         shortName: variant.shortName,
         longName: variant.longName,
+        bulkOrigin: variant.bulkOrigin,
         serviceLines: myServiceLines,
         totalQty: this.buildSumRow(myServiceLines)
       }
-      this.variants.push(myvariant);
+      this.myVariants.push(myvariant);
       this.showAddServiceLine.push(false);
     });    
     this.setPbQty();
@@ -119,7 +121,7 @@ export class VariantsTabComponent implements OnInit {
       });
     });
 
-    this.variants.forEach( vrnt => 
+    this.myVariants.forEach( vrnt => 
       vrnt.serviceLines.forEach( sl => {
         let key = vrnt.shortName+sl.branch+sl.contractor+sl.unitCost;
         this.years.forEach( year => {
@@ -190,34 +192,70 @@ export class VariantsTabComponent implements OnInit {
     let myvariant:MyVariant = {
       shortName: this.newVariantName,
       longName: this.newVariantDesc,
+      bulkOrigin:false,
       serviceLines:[],
       totalQty: {}
     }
-    this.variants.push(myvariant);
+    this.myVariants.push(myvariant);
 
     let variant:Variant = {
       shortName:myvariant.shortName,
       longName:myvariant.longName,
+      bulkOrigin:false,
       serviceLines:[]
     }
     this.fund.variants.push(variant);
 
     this.showAddVariant=false;
+    this.newVariantName=null;
+    this.newVariantDesc=null;
+
+  }
+
+  deleteVariant( myvariant:MyVariant ){
+    console.log(myvariant.shortName);
+
+    let myIndex = this.myVariants.findIndex( variant => variant.shortName === myvariant.shortName );
+    this.myVariants.splice(myIndex,1);
+
+    let index = this.fund.variants.findIndex( variant => variant.shortName === myvariant.shortName );
+    this.fund.variants.splice(index,1);
+
   }
 
   addServiceLine(myVariant:MyVariant, variantNumber:number){
   
-    console.log(this.newService, this.newContractor, this.newUnitCost);
+    console.log(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost);
     
-    myVariant.serviceLines.push(this.createNewMyServiceLine(this.newService, this.newContractor, this.newUnitCost));
+    myVariant.serviceLines.push(this.createNewMyServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost));
 
     this.fund.variants.forEach( variant => {
       if ( variant.longName === myVariant.longName ){
-        variant.serviceLines.push( this.createNewServiceLine(this.newService, this.newContractor, this.newUnitCost) );
+        variant.serviceLines.push( this.createNewServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost) );
         return;
       }
     });
     this.toggleShowAddServiceLine(variantNumber);
+
+    this.newServiceLineBranch=null;
+    this.newServiceLineContractor=null;
+    this.newServiceLineUnitCost=null;
+  }
+
+  deleteServiceLine( myVa:MyVariant, mySl:MyServiceLine){
+
+    let myVIndex = this.myVariants.findIndex( variant => variant.shortName === myVa.shortName );
+    let mySLIndex = this.myVariants[myVIndex].serviceLines.findIndex( msl => 
+      msl.branch === mySl.branch && msl.contractor === mySl.contractor && msl.unitCost === mySl.unitCost 
+    );
+    this.myVariants[myVIndex].serviceLines.splice(mySLIndex,1);
+
+    let vIndex = this.fund.variants.findIndex( variant => variant.shortName === myVa.shortName );
+    let slIndex = this.fund.variants[vIndex].serviceLines.findIndex( sl => 
+      sl.branch === mySl.branch && sl.contractor === mySl.contractor && sl.unitCost === mySl.unitCost 
+    );
+    this.fund.variants[myVIndex].serviceLines.splice(slIndex,1);
+
   }
 
   createNewServiceLine(brnch:string, cntrctr:string, utCst:number): ServiceLine{
@@ -225,6 +263,7 @@ export class VariantsTabComponent implements OnInit {
       branch:brnch,
       contractor:cntrctr,
       unitCost:utCst,
+      bulkOrigin:false,
       quantity:{}
     }
     return sl;
@@ -248,6 +287,7 @@ export class VariantsTabComponent implements OnInit {
       branch:brnch,
       contractor:cntrctr,
       unitCost:utCst,
+      bulkOrigin:false,
       pbQty:pbq,
       prQty:prq,
       deltaQty:deltaq
@@ -275,6 +315,7 @@ export class VariantsTabComponent implements OnInit {
 export interface MyVariant {
   shortName: string,
   longName: string,
+  bulkOrigin: boolean,
   serviceLines:MyServiceLine[];
   totalQty: IntMap
 }
@@ -283,6 +324,7 @@ export interface MyServiceLine {
   branch: string,
   contractor: string,
   unitCost: number,
+  bulkOrigin: boolean,
   pbQty: IntMap,
   prQty: IntMap,
   deltaQty: IntMap,

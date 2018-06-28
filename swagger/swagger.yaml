@@ -2382,6 +2382,8 @@ definitions:
         type: "string"
       longName:
         type: "string"
+      bulkOrigin:
+        type: "boolean"
       serviceLines:
         type: "array"
         items:
@@ -2393,10 +2395,12 @@ definitions:
         type: "string"
       contractor:
         type: "string"
-      quantity:
-        $ref: "#/definitions/IntMap"
       unitCost:
         type: "number"
+      bulkOrigin:
+        type: "boolean"  
+      quantity:
+        $ref: "#/definitions/IntMap"
   Program:
     type: "object"
     properties:
