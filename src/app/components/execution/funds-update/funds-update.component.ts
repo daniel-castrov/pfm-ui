@@ -91,7 +91,6 @@ export class FundsUpdateComponent implements OnInit {
     var blinset: Set<string> = new Set<string>();
     var agencyset: Set<string> = new Set<string>();
 
-    console.log(my.allexelines);
     my.allexelines.forEach((x: ExecutionLine) => {
       if (x.appropriation) {
         apprset.add(x.appropriation.trim());
@@ -147,8 +146,6 @@ export class FundsUpdateComponent implements OnInit {
       toa:this.funds
     };
     
-    console.log(newline);
-
     this.allexelines.push(newline);
     this.refreshFilterDropdowns();
     this.filter();
