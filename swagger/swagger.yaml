@@ -2330,6 +2330,8 @@ definitions:
         type: "string"
       item:
         type: "string"
+      programElement:
+        type: "string"
       fy:
         type: "integer"
       funds:
@@ -2436,6 +2438,28 @@ definitions:
         type: "array"
         items:
           type: "string"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
+      functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
+        type: "string"
   ProgramFilter:
     type: "object"
     properties:
@@ -2513,7 +2537,7 @@ definitions:
         type: "integer"
       creationTime:
         type: "integer"
-      coreCapability:
+      cca:
         type: "string"
       milestoneImpact:
         type: "string"
@@ -2534,6 +2558,28 @@ definitions:
       name:
         type: "string"
       organization:
+        type: "string"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
+      functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
         type: "string"
   Pom:
     type: "object"
@@ -2585,27 +2631,28 @@ definitions:
         type: "string"
       phaseId:
         type: "string"
-  FundingLine:
-    type: "object"
-    properties:
-      id:
+      primaryCapability:
         type: "string"
-      appropriation:
+      coreCapability:
         type: "string"
-      blin:
+      secondaryCapability:
         type: "string"
-      opAgency:
+      functionalArea:
         type: "string"
-      item:
+      medicalArea:
         type: "string"
-      funds:
-        $ref: "#/definitions/IntMap"
-      fy:
-        type: "number"
-      variants:
-        type: "array"
-        items:
-          $ref: "#/definitions/Variant"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
+        type: "string"
   PB:
     type: "object"
     properties:

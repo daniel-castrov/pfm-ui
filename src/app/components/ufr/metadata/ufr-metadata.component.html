@@ -4,15 +4,15 @@
   </span>
 </ng-template>
 
-<ng-template #value let-area="area">
-  <select [(ngModel)]="current.tags[area]" class="form-control-sm dropdown-width" name="{{area}}">
-    <ng-container *ngIf="current.tags[area]">
-      <!-- we have an area set, but check that we have a recognized value -->
-    <option *ngIf="!tagnames.has(area) || (tagnames.has(area) && !tagnames.get(area).has(current.tags[area]))"
-        [ngValue]="current.tags[area] ">{{current.tags[area]}} (Unknown value)</option>
+<ng-template #value let-tagname="tagname" let-property="property">
+  <select [(ngModel)]="current[property]" class="form-control-sm dropdown-width" name="{{tagname}}">
+    <ng-container *ngIf="current[property]">
+      <!-- we have an tagname set, but check that we have a recognized value -->
+      <option *ngIf="!tagnames.has(tagname) || (tagnames.has(tagname) && !tagnames.get(tagname).has(current[property]))"
+          [ngValue]="current[property] ">{{current[property]}} (Unknown value)</option>
     </ng-container>
 
-    <option *ngFor="let t of tagnames.get(area) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
+    <option *ngFor="let t of tagnames.get(tagname) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
   </select>
 
   <!--span class="program-values" *ngIf="current?.tags[area] && tagnames.has( area ); else novalue">
@@ -24,7 +24,6 @@
     </ng-container>
   </span-->
 </ng-template>
-
 <form *ngIf="current && tagnames">
   <div class="row">
     <div class="col-9">
@@ -81,15 +80,15 @@
             <legend>Capability</legend>
             <span class="form-group inline-name">
               <label class="mb-1">Primary Cap.</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Primary Capability'}"></ng-container>
+              <ng-container *ngTemplateOutlet="value;context:{tagname:'Primary Capability', property:'primaryCapability'}"></ng-container>
              </span>
             <span class="form-group inline-name">
               <label>Core</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Core Capability Area'}"></ng-container>
+              <ng-container *ngTemplateOutlet="value;context:{tagname:'Core Capability Area', property:'coreCapability'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label>Secondary</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Secondary Capability'}"></ng-container>
+              <ng-container *ngTemplateOutlet="value;context:{tagname:'Secondary Capability', property:'secondaryCapability'}"></ng-container>
             </span>
             <!-- RPB: As far as I can tell, Tertiary Capability is a historical tag, not current -->
             <!--span class="form-group inline-name">
@@ -105,15 +104,15 @@
           <legend>Area</legend>
             <span class="form-group inline-name">
               <label class="mb-1">Functional</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Functional Area'}"></ng-container>
+              <ng-container *ngTemplateOutlet="value;context:{tagname:'Functional Area', property:'functionalArea'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Medical Cat.</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'Medical Category'}"></ng-container>
+              <ng-container *ngTemplateOutlet="value;context:{tagname:'Medical Category', property:'medicalArea'}"></ng-container>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">NBC Cat.</label>
-              <ng-container *ngTemplateOutlet="value;context:{area:'NBC Category'}"></ng-container>
+              <ng-container *ngTemplateOutlet="value;context:{tagname:'NBC Category', property:'nbcCategory'}"></ng-container>
             </span>
           </fieldset>
         </div>
@@ -128,11 +127,11 @@
           </span>
           <span class="form-group inline-name">
             <label>BSV Nat. Strat.</label>
-            <ng-container *ngTemplateOutlet="value;context:{area:'BSV National Strategy'}"></ng-container>
+            <ng-container *ngTemplateOutlet="value;context:{tagname:'BSV National Strategy', property:'bsvStrategy'}"></ng-container>
           </span>
           <span class="form-group inline-name">
             <label>DASD POM</label>
-            <ng-container *ngTemplateOutlet="value;context:{area:'DASD CBD'}"></ng-container>
+            <ng-container *ngTemplateOutlet="value;context:{tagname:'DASD CBD', property:'dasdCbd'}"></ng-container>
           </span>
         </div>
       </div>
@@ -140,11 +139,11 @@
         <div class="col-md-12">
           <span class="form-group inline-name">
             <label class="mb-1">Lead Component</label>
-            <ng-container *ngTemplateOutlet="value;context:{area:'Lead Component'}"></ng-container>
+            <ng-container *ngTemplateOutlet="value;context:{tagname:'Lead Component', property:'leadComponent'}"></ng-container>
           </span>
           <span class="form-group inline-name">
             <label class="mb-1">Manager</label>
-            <ng-container *ngTemplateOutlet="value;context:{area:'Manager'}"></ng-container>
+            <ng-container *ngTemplateOutlet="value;context:{tagname:'Manager', property:'manager'}"></ng-container>
           </span>
           <!--span class="form-group inline-name">
             <label class="mb-1">Branch</label>

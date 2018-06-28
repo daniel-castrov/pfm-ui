@@ -124,7 +124,7 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-1 primary-label">BA/BLIN</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
+            <select class="form-control-sm dropdown-width" [(ngModel)]="blin" (ngModelChange)="onBlinChange()">
               <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
             </select>
           </span>
@@ -133,7 +133,7 @@
           <span class="form-group">
             <div class="mb-1 primary-label">Item</div>
             <span class="form-group">
-              <input class="mb-2 form-control forminput" [(ngModel)]="item">
+              <input class="mb-2 form-control forminput" [(ngModel)]="item" (ngModelChange)="onItemChange()">
             </span>
           </span>
         </div>
@@ -149,7 +149,7 @@
           <span class="form-group">
             <div class="mb-1 primary-label">Program Element</div>
             <span class="form-group">
-              <input class="mb-2 form-control forminput">
+              <input class="mb-2 form-control forminput" [(ngModel)]="programElement">
             </span>
           </span>
         </div>
