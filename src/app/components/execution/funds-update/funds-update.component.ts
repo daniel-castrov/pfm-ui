@@ -36,6 +36,7 @@ export class FundsUpdateComponent implements OnInit {
   private blin: string;
   private item: string;
   private opAgency: string;
+  private funds: number;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService) { 
@@ -77,46 +78,52 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
 
     my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => { 
-      var apprset: Set<string> = new Set<string>();
-      var itemset: Set<string> = new Set<string>();
-      var blinset: Set<string> = new Set<string>();
-      var agencyset: Set<string> = new Set<string>();
-
-      data.result.forEach((x:ExecutionLine) => { 
-        if (x.appropriation) {
-          apprset.add(x.appropriation.trim());
-        }
-        if (x.item) {
-          itemset.add(x.item.trim());
-        }
-        if (x.blin) {
-          blinset.add(x.blin.trim());
-        }
-        if (x.opAgency ){
-          agencyset.add(x.opAgency.trim());
-        }
-
-        my.allexelines.push(x);
-      });
-
-      apprset.forEach(s => { 
-        my.appropriations.push(s);
-      });
-      itemset.forEach(s => {
-        my.items.push(s);
-      });
-      blinset.forEach(s => {
-        my.blins.push(s);
-      });
-      agencyset.forEach(s => {
-        my.opAgencies.push(s);
-      });
-
-      my.appropriations.sort();
-      my.items.sort();
-      my.blins.sort();
-      my.opAgencies.sort();      
+      my.allexelines = data.result;
+      my.refreshFilterDropdowns();
+      my.filter();
     });
+  }
+
+  refreshFilterDropdowns() {
+    var my: FundsUpdateComponent = this;
+    var apprset: Set<string> = new Set<string>();
+    var itemset: Set<string> = new Set<string>();
+    var blinset: Set<string> = new Set<string>();
+    var agencyset: Set<string> = new Set<string>();
+
+    console.log(my.allexelines);
+    my.allexelines.forEach((x: ExecutionLine) => {
+      if (x.appropriation) {
+        apprset.add(x.appropriation.trim());
+      }
+      if (x.item) {
+        itemset.add(x.item.trim());
+      }
+      if (x.blin) {
+        blinset.add(x.blin.trim());
+      }
+      if (x.opAgency) {
+        agencyset.add(x.opAgency.trim());
+      }
+    });
+
+    apprset.forEach(s => {
+      my.appropriations.push(s);
+    });
+    itemset.forEach(s => {
+      my.items.push(s);
+    });
+    blinset.forEach(s => {
+      my.blins.push(s);
+    });
+    agencyset.forEach(s => {
+      my.opAgencies.push(s);
+    });
+
+    my.appropriations.sort();
+    my.items.sort();
+    my.blins.sort();
+    my.opAgencies.sort();
   }
 
   filter() {
@@ -128,7 +135,22 @@ export class FundsUpdateComponent implements OnInit {
       .filter(x => (my.blin ? x.blin === my.blin : true))
       .filter(x => (my.item ? x.item === my.item : true))
       .filter(x => (my.opAgency ? x.opAgency === my.opAgency : true));
-    console.log(my.allexelines);
-    console.log(my.filteredexelines);
+  }
+
+  addline() {
+    var newline: ExecutionLine = {
+      appropriation: this.appropriation,
+      blin: this.blin,
+      item: this.item,
+      opAgency: this.opAgency,
+      mrId: this.mrid,
+      toa:this.funds
+    };
+    
+    console.log(newline);
+
+    this.allexelines.push(newline);
+    this.refreshFilterDropdowns();
+    this.filter();
   }
 }
