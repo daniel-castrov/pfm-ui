@@ -7,13 +7,49 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-7">
+        <span class="form-group mr-3">
+          <label class="primary-label">From</label>
+          <select class="form-control-sm dropdown-year-width mb-2">
+            <option value=""></option>
+            <option>2018</option>
+           </select>
+         </span>
+         <span class="form-group">
+           <label class="execution-titles">Name/Increment</label>
+         </span>
+      </div>
+      <div class="col-3">
+        <button class="btn btn-primary" (click)="submit()">Submit</button>
+      </div>
+    </div>
+    <div class="row mb-3">
       <div class="col-8">
         <span class="form-group">
-          <label class="mb-1">Notes:</label>
+          <label class="primary-label mb-1">Notes:</label>
           <textarea cols="30" rows="5" wrap="physical" class="form-control"></textarea>
         </span>
      </div>
    </div>
-   <button (click)="submit()">Submit</button>
+   <div class="row">
+     <div class="col-6 mb-4">
+       <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
+
+         <label class="primary-label">Attach Document:</label>
+         <div class="input-group input-group-sm">
+           <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
+           <span class="input-group-btn">
+             <span class="btn btn-secondary btn-file">
+             Browse… <input type="file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
+             </span>
+           </span>
+           <!-- <span class="input-group-btn">
+             <button class="btn btn-gray" type="submit">Ok</button>
+           </span> -->
+         </div>
+       </form>
+     </div>
+   </div>
+
   </div>
 </div>
