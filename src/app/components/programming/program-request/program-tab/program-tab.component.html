@@ -5,18 +5,14 @@
         <div class="col-md-6">
           <span class="form-group inline-name">
             <label class="mb-1">*Lead Component</label>
-            <select class="form-control-sm dropdown-width mb-2">
-              <option>items</option>
-              <option>items</option>
-              <option>items</option>
+            <select [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
+              <option *ngFor="let lc of dropdownValues.get('Lead Component')" [ngValue]="lc.abbr">{{lc.name}}</option>
             </select>
           </span>
           <span class="form-group inline-name">
             <label class="mb-1">*Manager</label>
-            <select class="form-control-sm dropdown-width mb-2">
-              <option>items</option>
-              <option>items</option>
-              <option>items</option>
+            <select [(ngModel)]="pr.manager" name="manager" class="form-control-sm dropdown-width mb-2">
+              <option *ngFor="let lc of dropdownValues.get('Manager')" [ngValue]="lc.abbr">{{lc.name}}</option>
             </select>
           </span>
           <div class="input-group browse-img">
@@ -40,26 +36,21 @@
             <legend>Capability</legend>
             <span class="form-group inline-name">
               <label class="mb-1">*Primary</label>
-              <select class="form-control-sm dropdown-width mb-2">
-                 <option>items</option>
-                 <option>items</option>
-                 <option>items</option>
-               </select>
+              <select [(ngModel)]="pr.primaryCapability" name="primaryCapability" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let lc of dropdownValues.get('Primary Capability')" [ngValue]="lc.abbr">{{lc.name}}</option>
+              </select>
              </span>
              <span class="form-group inline-name">
                 <label class="mb-1">*Core</label>
-                <select class="form-control-sm dropdown-width mb-2">
-                   <option>items</option>
-                   <option>items</option>
-                   <option>items</option>
+                <select [(ngModel)]="pr.coreCapability" name="coreCapability" class="form-control-sm dropdown-width mb-2">
+                  <option *ngFor="let lc of dropdownValues.get('Core Capability Area')" [ngValue]="lc.abbr">{{lc.name}}</option>
                 </select>
               </span>
               <span class="form-group inline-name">
                 <label class="mb-1">Secondary</label>
-                <select class="form-control-sm dropdown-width mb-2">>
-                  <option>items</option>
-                  <option>items</option>
-                  <option>items</option>
+                {{pr.secondaryCapability}}
+                <select [(ngModel)]="pr.secondaryCapability" name="secondaryCapability" class="form-control-sm dropdown-width mb-2">
+                  <option *ngFor="let lc of dropdownValues.get('Secondary Capability')" [ngValue]="lc.abbr">{{lc.name}}</option>
                 </select>
               </span>
           </fieldset>
@@ -71,34 +62,26 @@
             <legend>Area</legend>
             <span class="form-group inline-name mr-4">
               <label class="mb-1">*Functional</label>
-              <select class="form-control-sm dropdown-width mb-2">
-                 <option>items</option>
-                 <option>items</option>
-                 <option>items</option>
-               </select>
+              <select [(ngModel)]="pr.functionalArea" name="functionalArea" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let lc of dropdownValues.get('Functional Area')" [ngValue]="lc.abbr">{{lc.name}}</option>
+              </select>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1"> Medical &amp; Non-Medical</label>
-              <select class="form-control-sm dropdown-width mb-2">
-               <option>items</option>
-               <option>items</option>
-               <option>items</option>
+              <select [(ngModel)]="pr.medicalArea" name="medicalCategory" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let lc of dropdownValues.get('Medical Category')" [ngValue]="lc.abbr">{{lc.name}}</option>
               </select>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Emphasis</label>
-              <select class="form-control-sm dropdown-width mb-2">
-                <option>items</option>
-                <option>items</option>
-                <option>items</option>
-              </select>
+              <ng-container *ngIf="pr?.emphases && pr?.emphases.length>0; else novalue">
+                <span class="program-values" *ngFor="let e of pr.emphases">{{e}}</span>
+              </ng-container>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">DASD Taxonomy</label>
-              <select class="form-control-sm dropdown-width mb-2">
-                <option>items</option>
-                <option>items</option>
-                <option>items</option>
+              <select name="medicalCategory" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let lc of dropdownValues.get('DASD CBD')" [ngValue]="lc.abbr">{{lc.name}}</option>
               </select>
             </span>
           </fieldset>
@@ -107,6 +90,11 @@
     </div>
   </div>
 </form>
+<ng-template #novalue>
+  <span class="program-values">
+    <i>None</i>
+  </span>
+</ng-template>
 <!-- <form id="create-new-subprogram">
   <div class="row">
     <div class="col-9">

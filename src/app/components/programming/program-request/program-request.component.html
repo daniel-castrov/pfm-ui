@@ -1,6 +1,6 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="programRequestPageMode.initialized">
+  <div class="row main-content" *ngIf="programRequestPageMode.initialized && pr">
     <div class="col-12">
       <div class="row">
         <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfRecord">
@@ -53,7 +53,7 @@
       <div class="col-lg-10 col-md-12">
         <tabset class="program-tab-style" role="tablist">
           <tab heading="Program" id="tab1" role="tablist">
-            <program-tab role="tabpanel"></program-tab>
+            <program-tab [pr]="pr" role="tabpanel"></program-tab>
           </tab>
           <tab heading="Funds" id="tab2">
             <funds-tab [pr]="pr" role="tabpanel"></funds-tab>
