@@ -2367,13 +2367,15 @@ definitions:
         type: "string"
       appropriation:
         type: "string"
-      blin:
+      baOrBlin:
         type: "string"
       opAgency:
         type: "string"
       item:
         type: "string"
       programElement:
+        type: "string"
+      acquisitionType:
         type: "string"
       fy:
         type: "integer"
