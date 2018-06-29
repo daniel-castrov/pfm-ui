@@ -2421,8 +2421,8 @@ definitions:
     properties:
       shortName:
         type: "string"
-      longName:
-        type: "string"
+      number:
+        type: "integer"
       bulkOrigin:
         type: "boolean"
       serviceLines:

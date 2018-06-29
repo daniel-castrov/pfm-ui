@@ -73,7 +73,7 @@ export class UfrVariantsComponent implements OnInit {
       
       let myvariant:MyVariant = {
         shortName: variant.shortName,
-        longName: variant.longName,
+        longName: variant.shortName,
         serviceLines:myServiceLines,
         totalQty: this.buildSumRow(myServiceLines)
       }

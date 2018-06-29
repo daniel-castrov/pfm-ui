@@ -20,18 +20,12 @@
     <div *ngIf="fund" class="row mb-4">
       <div *ngFor="let variant of myVariants index as variantIndex" class="col-md-12 mb-4" id="variant">
         <span class="form-group">
-          <label class="variant-titles mr-sm-4">{{variant.shortName}}</label>
+          <label class="variant-titles mr-sm-4">{{variant.number}} {{variant.shortName}}</label>
         </span>
-        <!--
-        <span class="form-group">
-          <label class="variant-titles mr-sm-4">{{variant.longName}}</label>
-        </span>
-        -->
-          <span *ngIf="!variant?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal"
+        <span *ngIf="!variant?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal"
                 (click)="deleteVariant(variant)">
             <i class="fa fa-trash"></i>
-          </span>
-
+        </span>
         <div class="table-editable">
           <table class="proc-qty">
             <thead>
