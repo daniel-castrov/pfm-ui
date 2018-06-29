@@ -14,11 +14,14 @@ declare const $: any;
 declare const jQuery: any;
 
 @Component({
-  selector: 'app-create-execution-phase',
+  selector: 'create-execution-phase',
   templateUrl: './create-execution-phase.component.html',
   styleUrls: ['./create-execution-phase.component.scss']
 })
 export class CreateExecutionPhaseComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
+
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private modelpb: PB;
   private message: string;
@@ -34,8 +37,8 @@ export class CreateExecutionPhaseComponent implements OnInit {
 		document.addEventListener('click', fn);
 		document.addEventListener('touchstart', fn);
 
-    this.usvc.getCurrentUser().subscribe(p => { 
-      this.pbsvc.getByCommunityId(p.result.currentCommunityId).subscribe(data => { 
+    this.usvc.getCurrentUser().subscribe(p => {
+      this.pbsvc.getByCommunityId(p.result.currentCommunityId).subscribe(data => {
         data.result.forEach((pb: PB) => {
           this.yearpblkp.set(pb.fy, pb);
           this.modelpb = pb;
@@ -46,16 +49,15 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log('here I am');
     console.log(this.fileToUpload);
   }
 
 
   submit() {
     var my: CreateExecutionPhaseComponent = this;
-    
+
     this.esvc.createExecution(this.modelpb.communityId, this.modelpb.fy, this.fileToUpload,
-      this.modelpb.id ).subscribe(data => { 
+      this.modelpb.id ).subscribe(data => {
       if (data.result) {
         my.router.navigate(['/home']);
       }

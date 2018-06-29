@@ -17,7 +17,7 @@
 
           <label class="primary-label">Upload DoD Goals by selecting local Excel file:</label>
           <div class="input-group input-group-sm">
-            <input type="text" class="form-control form-input" placeholder="Choose file" readonly>
+            <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
             <span class="input-group-btn">
               <span class="btn btn-secondary btn-file">
               Browse… <input type="file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
