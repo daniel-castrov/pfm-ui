@@ -106,15 +106,22 @@ export class FundsUpdateComponent implements OnInit {
       }
     });
 
+    my.appropriations = [];
     apprset.forEach(s => {
       my.appropriations.push(s);
     });
+
+    my.items = [];
     itemset.forEach(s => {
       my.items.push(s);
     });
+
+    my.blins = [];
     blinset.forEach(s => {
       my.blins.push(s);
     });
+
+    my.opAgencies = [];
     agencyset.forEach(s => {
       my.opAgencies.push(s);
     });

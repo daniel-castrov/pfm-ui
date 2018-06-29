@@ -49,7 +49,6 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log('here I am');
     console.log(this.fileToUpload);
   }
 
