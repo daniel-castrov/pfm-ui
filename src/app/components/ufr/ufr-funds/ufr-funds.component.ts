@@ -27,11 +27,11 @@ export class UfrFundsComponent implements OnInit {
   
   // for the add FL section
   private appropriations: string[] = [];
-  private blins: string[] = [];
+  private baOrBlins: string[] = [];
   private agencies: string[] = [];
   private flfunds = {};
   private appr: string;
-  private blin: string;
+  private baOrBlin: string;
   private opagency: string;
   private item: string;
 
@@ -51,7 +51,7 @@ export class UfrFundsComponent implements OnInit {
       
       // get the data from the UFR into our tabledata structure
       my.current.fundingLines.forEach(fund => { 
-        var key = fund.appropriation + fund.blin + fund.item + fund.opAgency;
+        var key = fund.appropriation + fund.baOrBlin + fund.item + fund.opAgency;
         var cfunds: Map<number, number> = new Map<number, number>();
         var tfunds: Map<number, number> = new Map<number, number>();
         var mfunds: Map<number, number> = new Map<number, number>();
@@ -64,7 +64,7 @@ export class UfrFundsComponent implements OnInit {
         });
 
         my.rows.set(key, {
-          blin: fund.blin,
+          baOrBlin: fund.baOrBlin,
           appropriation: fund.appropriation,
           opagency: fund.opAgency,
           item: fund.item,
@@ -83,13 +83,13 @@ export class UfrFundsComponent implements OnInit {
           //console.log(my.model);
           //console.log('model check?');
           my.model.fundingLines.forEach(fund => {
-            var key = fund.appropriation + fund.blin;
+            var key = fund.appropriation + fund.baOrBlin;
 
             var newdata = false;
             if (!my.rows.has(key)) {
               my.rows.set(key, {
                 appropriation: fund.appropriation,
-                blin: fund.blin,
+                baOrBlin: fund.baOrBlin,
                 opagency: fund.opAgency,
                 item: fund.item,
                 modelfunds: new Map<number, number>(),
@@ -122,8 +122,8 @@ export class UfrFundsComponent implements OnInit {
         this.appr = this.appropriations[0];
       }
       {
-        this.blins = await this.globalsService.tagAbbreviationsForBlin();
-        this.blin = this.getBlins()[0];
+        this.baOrBlins = await this.globalsService.tagAbbreviationsForBlin();
+        this.baOrBlin = this.getBaOrBlins()[0];
       }
     });
   }
@@ -134,9 +134,9 @@ export class UfrFundsComponent implements OnInit {
 
   addfl() {
     var my: UfrFundsComponent = this;
-    var key: string = this.appr + this.blin;
+    var key: string = this.appr + this.baOrBlin;
     if (this.rows.has(key)) {
-      var tabledata = this.rows.get(this.appr + this.blin);
+      var tabledata = this.rows.get(this.appr + this.baOrBlin);
       var ufunds = tabledata.ufrfunds;
       Object.keys(this.flfunds).forEach(yearstr => {
         var year: number = Number.parseInt(yearstr);
@@ -155,7 +155,7 @@ export class UfrFundsComponent implements OnInit {
 
       this.rows.set(key, {
         appropriation: my.appr,
-        blin: my.blin,
+        baOrBlin: my.baOrBlin,
         opagency: my.opagency,
         item: my.item,
         ufrfunds: ufunds,
@@ -166,7 +166,7 @@ export class UfrFundsComponent implements OnInit {
       // now set this same data in the current data (for saves)
       var fl: FundingLine = {
         appropriation: my.appr,
-        blin: my.blin,
+        baOrBlin: my.baOrBlin,
         fy: my.pom.fy,
         opAgency: my.opagency,
         funds: my.flfunds,
@@ -177,7 +177,7 @@ export class UfrFundsComponent implements OnInit {
   }
 
 
-  onedit(newval, appr, blin, year) {
+  onedit(newval, appr, baOrBlin, year) {
     var my: UfrFundsComponent = this;
     var thisyear:number = Number.parseInt(year);
     
@@ -186,7 +186,7 @@ export class UfrFundsComponent implements OnInit {
       thisvalue = 0;
     }
 
-    var thisrow = this.rows.get(appr + blin);
+    var thisrow = this.rows.get(appr + baOrBlin);
 
     var oldvalue: number = (thisrow.ufrfunds.has(year) ? thisrow.ufrfunds.get(year) : 0);
     var oldtotal: number = (thisrow.totalfunds.has(year) ? thisrow.totalfunds.get(year) : 0);
@@ -198,7 +198,7 @@ export class UfrFundsComponent implements OnInit {
     // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR
     var found = false;
     this.current.fundingLines.forEach(fl => { 
-      if (appr === fl.appropriation && blin === fl.blin) {
+      if (appr === fl.appropriation && baOrBlin === fl.baOrBlin) {
         fl.funds[year] = thisvalue;
         found = true;
       }
@@ -210,7 +210,7 @@ export class UfrFundsComponent implements OnInit {
 
       this.current.fundingLines.push({
         appropriation: appr,
-        blin: blin,
+        baOrBlin: baOrBlin,
         fy: my.pom.fy,
         funds: funds,
         item: my.item,
@@ -219,16 +219,16 @@ export class UfrFundsComponent implements OnInit {
     }
   }
 
-  getBlins(): string[]{
+  getBaOrBlins(): string[]{
     var ret: string[] = [];
     if ('PROC' === this.appr) {
-      this.blins.filter(s => (s.match(/00/))).forEach(str => { ret.push(str) });
+      this.baOrBlins.filter(s => (s.match(/00/))).forEach(str => { ret.push(str) });
     }
     else if ('RDTE' === this.appr) {
-      this.blins.filter(s => (s.match(/BA[1-4]/))).forEach(str => { ret.push(str) });
+      this.baOrBlins.filter(s => (s.match(/BA[1-4]/))).forEach(str => { ret.push(str) });
     }
     else if ('O&M' === this.appr) {
-      this.blins.filter(s => (s.match(/BA[5-7]/))).forEach(str => { ret.push(str) });
+      this.baOrBlins.filter(s => (s.match(/BA[5-7]/))).forEach(str => { ret.push(str) });
     }
       
     return ret;
@@ -257,7 +257,7 @@ export class UfrFundsComponent implements OnInit {
 
 interface tabledata {
   appropriation: string,
-  blin: string,
+  baOrBlin: string,
   opagency: string,
   item: string,
   modelfunds?: Map<number, number>,

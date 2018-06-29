@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th class="header-column-width">Appropriation</th>
-            <th class="header-column-width">Budget</th>
+            <th class="header-column-width">BA/BLIN</th>
             <th class="header-column-width">Item</th>
             <th class="header-column-width">OpAgency</th>
             <th>Cycle</th>
@@ -24,7 +24,7 @@
           <ng-container *ngFor="let row of (rows | mapAsList: 'values')">
           <tr>
             <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
-            <td class="row-lt-gray text-center" rowspan="3">{{row.blin}}</td>
+            <td class="row-lt-gray text-center" rowspan="3">{{row.baOrBlin}}</td>
             <td class="row-lt-gray text-center" rowspan="3">{{row.item}}</td>
             <td class="row-lt-gray text-center" rowspan="3">{{row.opAgency}}</td>
             <td>PB{{pbFy-2000}}</td>
@@ -40,27 +40,27 @@
           </tr>
           <tr>
             <td>POM{{pomFy-2000}}</td>
-            <td class="text-right">{{row.prFunds.get(pomFy-3) | dashForZero}}</td>
-            <td class="text-right">{{row.prFunds.get(pomFy-2) | dashForZero}}</td>
-            <td class="text-right">{{row.prFunds.get(pomFy-1) | dashForZero}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy)">{{row.prFunds.get(pomFy)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+1)">{{row.prFunds.get(pomFy+1)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+2)">{{row.prFunds.get(pomFy+2)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+3)">{{row.prFunds.get(pomFy+3)}}</td>
-            <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.blin, pomFy+4)">{{row.prFunds.get(pomFy+4)}}</td>
+            <td class="text-right">{{row.fundingLine.funds[pomFy-3] | dashForZero}}</td>
+            <td class="text-right">{{row.fundingLine.funds[pomFy-2] | dashForZero}}</td>
+            <td class="text-right">{{row.fundingLine.funds[pomFy-1] | dashForZero}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onEdit($event.target.textContent, row, pomFy  )">{{row.fundingLine.funds[pomFy  ]}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onEdit($event.target.textContent, row, pomFy+1)">{{row.fundingLine.funds[pomFy+1]}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onEdit($event.target.textContent, row, pomFy+2)">{{row.fundingLine.funds[pomFy+2]}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onEdit($event.target.textContent, row, pomFy+3)">{{row.fundingLine.funds[pomFy+3]}}</td>
+            <td contenteditable="true" class="editable-field" digits (blur)="onEdit($event.target.textContent, row, pomFy+4)">{{row.fundingLine.funds[pomFy+4]}}</td>
             <td contenteditable="true" class="editable-field">-</td>
           </tr>
           <tr class="row-light">
-            <td>Total</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy-3) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy-2) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy-1) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy+1) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy+2) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy+3) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy+4) | dashForZero}}</td>
-            <td class="text-right">{{row.totalFunds.get(pomFy+5) | dashForZero}}</td>
+            <td>Delta</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy-3) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy-2) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy-1) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy+1) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy+2) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy+3) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy+4) | dashForZero}}</td>
+            <td class="text-right">{{row.deltaFunds.get(pomFy+5) | dashForZero}}</td>
           </tr>
           </ng-container>
 
@@ -68,19 +68,19 @@
               <td class="text-center medium-grey-cell" colspan="4" rowspan="3">Total Funds Request</td>
               <td>PB{{pbFy-2000}}</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-                {{totals( pomFy+year, 'POM' ) | dashForZero}}
+                {{totals( pomFy+year, 'PB' ) | dashForZero}}
               </td>
               <td class="text-right">-</td>
             </tr>
             <tr class="row-lt-gray font-weight-bold">
               <td>POM{{pomFy-2000}}</td>
               <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-                {{totals( pomFy+year, 'UFR' ) | dashForZero}}
+                {{totals( pomFy+year, 'POM' ) | dashForZero}}
               </td>
               <td class="text-right">-</td>
             </tr>
             <tr class="row-lt-gray font-weight-bold">
-              <td>Total</td>
+              <td>Delta</td>
               <ng-container *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
                 <td [ngClass]="{'text-right':true, 'text-danger': totals(pomFy+year)<0 }">{{totals( pomFy+year, 'TOTAL') | dashForZero}}</td>
               </ng-container>
@@ -100,7 +100,7 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-1 primary-label">Appropriation</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
+            <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation" (ngModelChange)="onAppropriationChange()">
               <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
             </select>
           </span>
@@ -108,8 +108,8 @@
         <div class="col-2">
           <span class="form-group">
             <div class="mb-1 primary-label">BA/BLIN</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="blin" (ngModelChange)="onBlinChange()">
-              <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="baOrBlin" (ngModelChange)="onBaOrBlinChange()">
+              <option *ngFor="let baOrBlin of baOrBlins" [ngValue]="baOrBlin">{{baOrBlin}}</option>
             </select>
           </span>
         </div>
@@ -139,13 +139,21 @@
         </div>
         <div class="col-2">
           <span class="form-group">
-              <div class="primary-label"> </div>
-              <button class="btn btn-primary mt-4" (click)="addFundingLine()" [disabled]="!(item)">
-                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-               Add Funding Line
-             </button>
-           </span>
-         </div>
+            <div class="mb-1 primary-label">Acquisition Type</div>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="acquisitionType">
+              <option *ngFor="let acquisitionType of acquisitionTypes">{{acquisitionType}}</option>
+            </select>
+          </span>
+        </div>
+        <div class="col-2">
+          <span class="form-group">
+            <div class="primary-label"> </div>
+            <button class="btn btn-primary mt-4" (click)="addFundingLine()" [disabled]="!(item)">
+              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+              Add Funding Line
+            </button>
+          </span>
+        </div>
        </div>
     </fieldset>
     <j-feedback></j-feedback>

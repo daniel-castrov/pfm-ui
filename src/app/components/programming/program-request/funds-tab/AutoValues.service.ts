@@ -1,6 +1,8 @@
 import { GlobalsService } from './../../../../services/globals.service';
 import { Community } from './../../../../generated/model/community';
-import { OnInit, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { of } from 'rxjs/observable/of';
+
 
 @Injectable()
 export class AutoValuesService {
@@ -36,4 +38,9 @@ export class AutoValuesService {
             return '';
     }
 
+    baOrBlins(appropriation: string): Promise<string[]> {
+        if(appropriation === 'RDT&E') return this.globalsService.tagAbbreviationsForBa();
+        if(appropriation === 'PROC') return this.globalsService.tagAbbreviationsForBlin();
+        return of([]).toPromise();
+    }
 }
