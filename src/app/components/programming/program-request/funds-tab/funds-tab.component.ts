@@ -47,10 +47,10 @@ export class FundsTabComponent implements OnChanges, OnInit {
   
   ngOnChanges() {
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
-    this.initTable();
+    this.initRows();
   }
   
-  private initTable() {
+  private initRows() {
     this.setPomFiscalYear();
     this.setPOMtoRows();
     this.setPBtoRows();
@@ -110,26 +110,14 @@ export class FundsTabComponent implements OnChanges, OnInit {
   
   private setPOMtoRows() {
     this.rows.clear();
-    this.pr.fundingLines.forEach(fund => {
-      var key = Key.create(fund.appropriation, fund.baOrBlin, fund.item, fund.opAgency);
-      var prFunds: Map<number, number> = new Map<number, number>();
-      var totalFunds: Map<number, number> = new Map<number, number>();
-      var pbFunds: Map<number, number> = new Map<number, number>();
-      Object.keys(fund.funds).forEach(function (yearstr) {
-        var year: number = Number.parseInt(yearstr);
-        prFunds.set(year, fund.funds[yearstr]);
-        totalFunds.set(year, fund.funds[yearstr]);
-        pbFunds.set(year, 0);
-      });
-      this.rows.set(key, {
-        appropriation: fund.appropriation,
-        baOrBlin: fund.baOrBlin,
-        item: fund.item,
-        opAgency: fund.opAgency,
-        prFunds: prFunds,
-        totalFunds: totalFunds,
-        pbFunds: pbFunds
-      });
+    this.pr.fundingLines.forEach(fundingLine => {
+      var key = Key.create(fundingLine.appropriation, fundingLine.baOrBlin, fundingLine.item, fundingLine.opAgency);
+      this.rows.set(key, new Row( fundingLine.appropriation,
+                                  fundingLine.baOrBlin,
+                                  fundingLine.item,
+                                  fundingLine.opAgency,
+                                  new Map<number, number>(),
+                                  fundingLine ) );
     });
   }
 
@@ -143,29 +131,15 @@ export class FundsTabComponent implements OnChanges, OnInit {
 
     const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
 
-    pbPr.fundingLines.forEach(fund => {
-      var key = Key.create(fund.appropriation, fund.baOrBlin, fund.baOrBlin, fund.opAgency);
-      if (!this.rows.has(key)) {
-        this.rows.set(key, {
-          appropriation: fund.appropriation,
-          baOrBlin: fund.baOrBlin,
-          item: fund.item,
-          opAgency: fund.opAgency,
-          pbFunds: new Map(),
-          prFunds: new Map(),
-          totalFunds: new Map()
+    pbPr.fundingLines.forEach(pbFundingLine => {
+      const key = Key.create(pbFundingLine.appropriation, pbFundingLine.baOrBlin, pbFundingLine.item, pbFundingLine.opAgency);
+      if (this.rows.has(key)) {
+        var row: Row = this.rows.get(key);
+        Object.keys(pbFundingLine.funds).forEach( yearstr => {
+          row.pbFunds.set(+yearstr, pbFundingLine.funds[yearstr]);
+          row.calculateTotalForYear(+yearstr);
         });
-      }
-      var row: Row = this.rows.get(key);
-      Object.keys(fund.funds).forEach(function (yearstr) {
-        var year: number = Number.parseInt(yearstr);
-        var amt: number = fund.funds[yearstr];
-        row.pbFunds.set(year, amt);
-        if (!row.prFunds.has(year)) {
-          row.prFunds.set(year, 0);
-        }
-        row.totalFunds.set(year, row.prFunds.get(year) + amt);
-      });
+      };
     });
   }
 
@@ -186,51 +160,13 @@ export class FundsTabComponent implements OnChanges, OnInit {
         variants: []
       };
       this.pr.fundingLines.push(fundingLine);
-      this.initTable();
+      this.initRows();
     }
   }
 
-
-  onedit(newval, appr, baOrBlin, year) {
-    var thisyear:number = Number.parseInt(year);
-    
-    var thisvalue = Number.parseInt(newval.replace(/[^0-9]/g, ''));
-    if (''===newval || Number.isNaN(thisvalue)) {
-      thisvalue = 0;
-    }
-
-    const key: string = Key.create(this.appropriation, this.baOrBlin, this.item, this.opAgency);
-    const row: Row = this.rows.get(key);
-
-    var oldvalue: number = (row.prFunds.has(year) ? row.prFunds.get(year) : 0);
-    var oldtotal: number = (row.totalFunds.has(year) ? row.totalFunds.get(year) : 0);
-    var newamt = oldtotal - oldvalue + thisvalue;
-    row.prFunds.set(year, thisvalue);
-    row.totalFunds.set(year, newamt);
-
-    // finally, we need to update our actual funding lines...
-    // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR
-    var found = false;
-    this.pr.fundingLines.forEach(fl => { 
-      if (appr === fl.appropriation && baOrBlin === fl.baOrBlin) {
-        fl.funds[year] = thisvalue;
-        found = true;
-      }
-    });
-    if (!found) {
-      console.debug('no matching FL found...adding new one');
-      var funds = {};
-      funds[year] = thisvalue;
-
-      this.pr.fundingLines.push({
-        appropriation: appr,
-        baOrBlin: baOrBlin,
-        fy: this.pomFy,
-        funds: funds,
-        item: this.item,
-        variants: []
-      });
-    }
+  onEdit(value: string, row: Row, year: number) {
+    row.fundingLine.funds[year] = +value;
+    row.calculateTotalForYear(year);
   }
 
   // wierd algorithm for initial BLINs selection based on the initial this.appropriation selection. Possibly flawn.
@@ -241,22 +177,13 @@ export class FundsTabComponent implements OnChanges, OnInit {
     else return this.baOrBlins;
   }
 
-
-
   totals(year: number, mode: string) {
     var sum: number = 0;
-    this.rows.forEach(data => {
-      if ('POM' === mode) {
-        sum += (data.pbFunds.has(year) ? data.pbFunds.get(year) : 0);
-      }
-      else if ('UFR' === mode) {
-        sum += (data.prFunds.has(year) ? data.prFunds.get(year) : 0 );
-      }
-      else if ('TOTAL' === mode) {
-        sum += (data.totalFunds.get(year) ? data.totalFunds.get(year) : 0);
-      }
+    this.rows.forEach(row => {
+           if ('PB'    === mode) sum += row.pbFunds.get(year)       || 0;
+      else if ('POM'   === mode) sum += row.fundingLine.funds[year] || 0;
+      else if ('TOTAL' === mode) sum += row.deltaFunds.get(year)    || 0;
     });
-
     return sum;
   }
 
