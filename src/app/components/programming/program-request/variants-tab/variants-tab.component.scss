@@ -133,6 +133,7 @@ $light-green: #ebf2de;
 
 .dropdown-width {
   width: 100%;
+  height: 32px;
 }
 
 .remove-text {
@@ -143,4 +144,21 @@ $light-green: #ebf2de;
     color: red;
     opacity: .9;
   }
+}
+
+.inline-name {
+  display: inline-block;
+  float: left;
+}
+
+.card {
+  padding: 5px;
+}
+
+input {
+  height: 32px;
+}
+
+.white-border {
+  border: 1px solid $white;
 }
