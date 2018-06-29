@@ -8,7 +8,12 @@ $light-grey: #eae9e9;
 $dark-grey: #848282;
 $light-green: #ebf2de;
 
-.proc-qty {
+fieldset {
+  margin: 0;
+  padding: 10px 20px;
+}
+
+.variants-table {
     background-color: $white;
     border-collapse: collapse;
     border: $grey-border;
@@ -45,13 +50,21 @@ $light-green: #ebf2de;
    height:400px;
    overflow:auto;//set tbody to auto
   }
+
+  .totals-line {
+    min-width: 520px;
+  }
+
+  .white-border {
+    border: 1px solid $white !important;
+  }
 }
 
-.proc-qty {
+.variants-table {
   // custom scroll background
   /* width */
   ::-webkit-scrollbar {
-      width: 5px;
+      width: 6px;
   }
 
   /* Track */
@@ -90,10 +103,6 @@ $light-green: #ebf2de;
       background-color: $light-grey;
     }
   }
-}
-
-.cell-left-border-white {
-  border-left: $white-border !important;
 }
 
 .row-white {
@@ -151,14 +160,6 @@ $light-green: #ebf2de;
   float: left;
 }
 
-.card {
-  padding: 5px;
-}
-
 input {
   height: 32px;
-}
-
-.white-border {
-  border: 1px solid $white;
 }
