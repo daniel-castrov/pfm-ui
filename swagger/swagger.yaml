@@ -2424,7 +2424,7 @@ definitions:
       shortName:
         type: "string"
       number:
-        type: "integer"
+        type: "number"
       bulkOrigin:
         type: "boolean"
       serviceLines:
