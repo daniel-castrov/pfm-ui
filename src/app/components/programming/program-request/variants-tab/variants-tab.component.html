@@ -1,31 +1,40 @@
 <div class="row">
   <div class="col-md-12">
+    <!-- Select a FundingLine -->
     <div class="row mb-4">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-3">
-            <span class="form-group">
-              <div class="primary-label mb-1">Select Funding Line</div>
-              <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false" (change)="buildTables()">
-                <option value=""></option>
-                <option *ngFor="let fl of pr.fundingLines" [ngValue]="fl">
-                  {{fl.appropriation}} / {{fl.blin}} / {{fl.item}} / {{fl.opAgency}}
-                </option>
-              </select>
-            </span>
-          </div>
-        </div>
+      <div class="col-3">
+        <span class="form-group">
+          <label class="primary-label mb-1">Select Funding Line</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false" (change)="buildTables()">
+            <option value=""></option>
+            <option *ngFor="let fl of pr.fundingLines" [ngValue]="fl">
+              {{fl.appropriation}} / {{fl.baOrBlin}} / {{fl.item}} / {{fl.opAgency}}
+            </option>
+          </select>
+        </span>
       </div>
     </div>
+
+    <!-- Show each variant for the selected FundingLine-->
     <div *ngIf="fund" class="row mb-4">
       <div *ngFor="let variant of myVariants index as variantIndex" class="col-md-12 mb-4" id="variant">
-        <span class="form-group">
-          <label class="variant-titles mr-sm-4">{{variant.number}} {{variant.shortName}}</label>
-        </span>
-        <span *ngIf="!variant?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal"
-                (click)="deleteVariant(variant)">
-            <i class="fa fa-trash"></i>
-        </span>
+        <div class="row">
+          <div class="col-5">
+            <label class="variant-titles mr-sm-4"><span>{{variant.number}}.</span> <span>{{variant.shortName}}</span></label>
+            <span *ngIf="!variant?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal" (click)="deleteVariant(variant)">
+              <i class="fa fa-trash"></i>
+            </span>
+          </div>
+          <div class="col-2">
+            <button class="btn btn-light" (click)="toggleShowAddServiceLine(variantIndex)">
+              <i *ngIf="showAddServiceLine[variantIndex]" class="fa fa-minus-circle icon-pad" aria-hidden="true"></i>
+              <i *ngIf="!showAddServiceLine[variantIndex]" class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+              New Service Line
+            </button>
+          </div>
+        </div>
+
+        <!-- Variants Tables -->
         <div class="table-editable">
           <table class="variants-table">
             <thead>
@@ -39,12 +48,13 @@
               </tr>
             </thead>
             <tbody>
+
+              <!-- Show each ServiceLine -->
               <ng-container *ngFor="let serviceLine of variant.serviceLines">
                 <tr class="row-border-top">
                   <td class="text-center" rowspan="3">
                     {{serviceLine.branch}}
-                    <span *ngIf="!serviceLine?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal"
-                      (click)="deleteServiceLine(variant, serviceLine)">
+                    <span *ngIf="!serviceLine?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal" (click)="deleteServiceLine(variant, serviceLine)">
                       <i class="fa fa-trash"></i>
                     </span>
                   </td>
@@ -59,7 +69,7 @@
                   <td *ngFor="let year of years" contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, variant, serviceLine, year)">
                     {{serviceLine.prQty[year] | dashForZero}}
                   </td>
-                  <td class="text-right">{{serviceLine.prQty['sum'] | dashForZero }}</td>
+                  <td class="text-right">{{serviceLine.prQty['sum']}}</td>
                 </tr>
                 <tr class="row-lt-green">
                   <td>Delta</td>
@@ -67,90 +77,74 @@
                   <td class="text-right">{{serviceLine.deltaQty['sum']}}</td>
                 </tr>
               </ng-container>
+
+              <!-- Last Row for adding a new -->
+              <tr *ngIf="showAddServiceLine[variantIndex]">
+                <td class="notdborder">
+                  <label class="mb-1">Service</label>
+                  <select name="branchSelect" class="form-control-sm dropdown-width mb-0 mr-3" [(ngModel)]="newServiceLineBranch">
+                    <option value=""></option>
+                    <option *ngFor="let branch of branches" [ngValue]="branch">{{branch}}</option>
+                  </select>
+                </td>
+                <td class="notdborder">
+                  <label class="mb-1">Contractor</label>
+                  <input class="form-control forminput mb-0 mr-3" [(ngModel)]="newServiceLineContractor">
+                </td>
+                <td class="notdborder">
+                  <label class="mb-1">Unit Cost</label>
+                  <input class="form-control forminput mb-0 mr-3" type="number" [(ngModel)]="newServiceLineUnitCost">
+                </td>
+                <td colspan="2" class="notdborder">
+                  <button class="btn btn-primary" (click)="addServiceLine(variant, variantIndex)" [disabled]="!(newServiceLineBranch) || !(newServiceLineContractor) || !(newServiceLineUnitCost)">
+                    Add Service Line
+                  </button>
+                </td>
+                <td colspan="5" class="notdborder">
+                  <j-feedback></j-feedback>
+                </td>
+              </tr>
               <tr class="row-border-top">
                 <td colspan="4" class="totals-line text-right font-weight-bold">Totals:</td>
                 <td *ngFor="let year of years" class="text-right">{{variant.totalQty[year] | dashForZero }}</td>
                 <td class="text-right">{{variant.totalQty['sum'] | dashForZero }}</td>
               </tr>
-              <tr>
-                <td colspan="9" class="white-border">
-                  <div class="row mb-2">
-                    <div class="col-2">
-                      <button class="btn btn-light" (click)="toggleShowAddServiceLine(variantIndex)">
-                        <i *ngIf="showAddServiceLine[variantIndex]" class="fa fa-minus-circle icon-pad" aria-hidden="true"></i>
-                        <i *ngIf="!showAddServiceLine[variantIndex]" class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                        New Service Line
-                      </button>
-                    </div>
-                    <div *ngIf="showAddServiceLine[variantIndex]" class="col-10">
-                      <div class="row">
-                        <div class="col-2">
-                          <label class="mb-1">Service</label>
-                          <select name="branchSelect" class="form-control-sm dropdown-width mb-0 mr-3" [(ngModel)]="newServiceLineBranch">
-                            <option value=""></option>
-                            <option *ngFor="let branch of branches" [ngValue]="branch">{{branch}}</option>
-                          </select>
-                        </div>
-                        <div class="col-2">
-                          <label class="mb-1">Contractor</label>
-                          <input class="form-control forminput mb-0 mr-3" [(ngModel)]="newServiceLineContractor">
-                        </div>
-                        <div class="col-2">
-                          <label class="mb-1">Unit Cost</label>
-                          <input class="form-control forminput mb-0 mr-3" type="number" [(ngModel)]="newServiceLineUnitCost">
-                        </div>
-                        <div class="col-2">
-                          <label></label>
-                          <button class="btn btn-primary" (click)="addServiceLine(variant, variantIndex)">
-                            Add Service Line
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
             </tbody>
-
           </table>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <fieldset>
-          <legend>Add Variant</legend>
-          <div class="row">
-            <div *ngIf="!showAddVariant" class="col-3">
-              <span>
-                <button class="btn btn-primary" (click)="showAddVariant=true">
-                  <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                  <span class="mr-1">New Variant</span>
-                </button>
-              </span>
-            </div>
+
+      <fieldset>
+        <legend>Add Variant</legend>
+        <div class="row">
+          <div class="col-4">
+            <button class="btn btn-primary" (click)="toggleShowAddVariance()">
+              <i *ngIf="!showAddVariant" class="fa fa-plus-circle" aria-hidden="true"></i>
+              <i *ngIf="showAddVariant" class="fa fa-minus-circle" aria-hidden="true"></i>
+              <span class="mr-1">New Variant</span>
+            </button>
           </div>
-          <div *ngIf="showAddVariant" class="row mb-3">
+          <ng-container *ngIf="showAddVariant">
+            <div class="col-1">
+              <span class="mr-1 mt-2">Name:</span>
+            </div>
             <div class="col-4">
               <span class="form-group">
-                <div class="mb-1 primary-label">Name</div>
-                <span class="form-group">
-                  <input class="mb-2 form-control forminput" [(ngModel)]="newVariantName">
-                </span>
+                <input class="mb-2 form-control forminput" [(ngModel)]="newVariantName">
               </span>
             </div>
-            <div class="col-3">
+            <div class="col-1">
               <span class="form-group">
-                <div class="primary-label"> </div>
-                <button class="btn btn-primary mt-4 mr-2" (click)="addVariant()" [disabled]="!(newVariantName)">
+                <button class="btn btn-primary" (click)="addVariant()" [disabled]="!(newVariantName)">
                   <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                  Add Variant
+                  <span class="mr-1">Add</span>
                 </button>
               </span>
             </div>
-          </div>
-        </fieldset>
-      </div>
+          </ng-container>
+        </div>
+      </fieldset>
     </div>
+    <j-feedback></j-feedback>
   </div>
 </div>

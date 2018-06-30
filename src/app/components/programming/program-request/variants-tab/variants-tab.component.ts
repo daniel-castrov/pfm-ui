@@ -189,9 +189,15 @@ export class VariantsTabComponent implements OnInit {
   }
 
   addVariant(){
+
+    if (this.myVariants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
+      this.feedback.failure('A Variant named "' + this.newVariantName + '" already exists');
+      return;
+    }
+
     let myvariant:MyVariant = {
       shortName: this.newVariantName,
-      number: 1,
+      number: this.getNextVariantNumber(),
       bulkOrigin:false,
       serviceLines:[],
       totalQty: {}
@@ -212,6 +218,14 @@ export class VariantsTabComponent implements OnInit {
 
   }
 
+  getNextVariantNumber(): number {
+    let n=0;
+    this.myVariants.forEach( variant => {
+      if ( variant.number > n ) n = variant.number;
+    })
+    return n+1;
+  }
+
   deleteVariant( myvariant:MyVariant ){
     console.log(myvariant.shortName);
 
@@ -224,10 +238,17 @@ export class VariantsTabComponent implements OnInit {
   }
 
   addServiceLine(myVariant:MyVariant, variantNumber:number){
-  
-    console.log(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost);
+
+    if (myVariant.serviceLines.filter(sl => 
+        (sl.branch === this.newServiceLineBranch && sl.contractor ===  this.newServiceLineContractor && sl.unitCost === this.newServiceLineUnitCost)
+      ).length > 0 ){
+      this.feedback.failure('Service Line already exists');
+      return;
+    }
     
-    myVariant.serviceLines.push(this.createNewMyServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost));
+    myVariant.serviceLines.push(
+      this.createNewMyServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost)
+    );
 
     this.fund.variants.forEach( variant => {
       if ( variant.number === myVariant.number &&  variant.shortName === myVariant.shortName ){
@@ -293,6 +314,10 @@ export class VariantsTabComponent implements OnInit {
       deltaQty:deltaq
     }
     return line;
+  }
+
+  toggleShowAddVariance(){
+    this.showAddVariant = !this.showAddVariant;
   }
 
   toggleShowAddServiceLine(variantNumber:number){
