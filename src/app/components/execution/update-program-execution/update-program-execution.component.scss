@@ -25,6 +25,10 @@ fieldset {
   width: 100px;
 }
 
+.dropdown-width {
+  width: 230px;
+}
+
 .btn-file{
     position:relative
 }
@@ -45,4 +49,10 @@ fieldset {
   input[readonly]{
     background-color:$white !important;
     cursor:text !important;
+  }
+
+  .form-input {
+    display: inline-block;
+    width: 300px;
+    margin-bottom: 10px;
   }
