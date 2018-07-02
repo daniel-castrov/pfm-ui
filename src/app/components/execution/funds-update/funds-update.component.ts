@@ -162,6 +162,11 @@ export class FundsUpdateComponent implements OnInit {
   highlight(row) {
     this.selectedRow = row;
     var exeline: ExecutionLine = this.filteredexelines[row];
-    this.router.navigate(['/update-program-execution', exeline.id]);
+    if (exeline.id) {
+      this.router.navigate(['/update-program-execution', exeline.id]);
+    }
+    else {
+      console.log('new exeline...no id to lookup');
+    }
   }
 }

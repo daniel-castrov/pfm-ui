@@ -31,7 +31,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   ngOnInit() {
 
     //jQuery for editing table
-    var $TABLE = $('#update-pom-execution');
+    var $TABLE = $('#update-program-execution');
     var $BTN = $('#export-btn');
     var $EXPORT = $('#export');
 
@@ -68,7 +68,24 @@ export class UpdateProgramExecutionComponent implements OnInit {
       $($rows.shift()).find('th:not(:empty)').each(function () {
         headers.push($(this).text().toLowerCase());
       });
-    
+
+      // Turn all existing rows into a loopable array
+      $rows.each(function () {
+        var $td = $(this).find('td');
+        var h = {};
+
+        // Use the headers from earlier to name our hash keys
+        headers.forEach(function (header, i) {
+          h[header] = $td.eq(i).text();
+        });
+
+        data.push(h);
+      });
+
+      // Output the result
+      $EXPORT.text(JSON.stringify(data));
+    });
+
     this.route.url.subscribe((segments: UrlSegment[]) => {
       console.log(segments);
 
@@ -76,10 +93,15 @@ export class UpdateProgramExecutionComponent implements OnInit {
       console.log(exelineid);
 
       this.exesvc.getExecutionLineById(exelineid).subscribe(data => {
-        this.current = data.result;
-        this.progsvc.getFullName(this.current.mrId).subscribe(d2 => {
-          this.progname = d2.result;
-        });
+        if (data.error) {
+          console.log(data.error);
+        }
+        else {
+          this.current = data.result;
+          this.progsvc.getFullName(this.current.mrId).subscribe(d2 => {
+            this.progname = d2.result;
+          });
+        }
       });
     });
   }
