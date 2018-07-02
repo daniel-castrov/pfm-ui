@@ -29,15 +29,55 @@ export class UpdateProgramExecutionComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+
+    //jQuery for editing table
+    var $TABLE = $('#update-pom-execution');
+    var $BTN = $('#export-btn');
+    var $EXPORT = $('#export');
+
+    $('.table-add').click(function () {
+      var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+      $TABLE.find('table').append($clone);
+    });
+
+    $('.table-remove').click(function () {
+      $(this).parents('tr').detach();
+    });
+
+    $('.table-up').click(function () {
+      var $row = $(this).parents('tr');
+      if ($row.index() === 1) return; // Don't go above the header
+      $row.prev().before($row.get(0));
+    });
+
+    $('.table-down').click(function () {
+      var $row = $(this).parents('tr');
+      $row.next().after($row.get(0));
+    });
+
+    // A few jQuery helpers for exporting only
+    jQuery.fn.pop = [].pop;
+    jQuery.fn.shift = [].shift;
+
+    $BTN.click(function () {
+      var $rows = $TABLE.find('tr:not(:hidden)');
+      var headers = [];
+      var data = [];
+
+      // Get the headers (add special header logic here)
+      $($rows.shift()).find('th:not(:empty)').each(function () {
+        headers.push($(this).text().toLowerCase());
+      });
+    
     this.route.url.subscribe((segments: UrlSegment[]) => {
       console.log(segments);
 
       var exelineid = segments[segments.length - 1].path;
       console.log(exelineid);
-      
-      this.exesvc.getExecutionLineById(exelineid).subscribe(data => { 
+
+      this.exesvc.getExecutionLineById(exelineid).subscribe(data => {
         this.current = data.result;
-        this.progsvc.getFullName(this.current.mrId).subscribe(d2 => { 
+        this.progsvc.getFullName(this.current.mrId).subscribe(d2 => {
           this.progname = d2.result;
         });
       });
