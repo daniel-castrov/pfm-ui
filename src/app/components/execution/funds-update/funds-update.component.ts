@@ -30,6 +30,7 @@ export class FundsUpdateComponent implements OnInit {
   private blins: string[] = [];
   private items: string[] = [];
   private opAgencies: string[] = [];
+  private selectedRow: number = -1;
 
   private mrid: string;
   private appropriation: string;
@@ -39,7 +40,7 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService) { 
+    private progsvc: ProgramsService, private router: Router) {
   }
 
   ngOnInit() {
@@ -156,5 +157,16 @@ export class FundsUpdateComponent implements OnInit {
     this.allexelines.push(newline);
     this.refreshFilterDropdowns();
     this.filter();
+  }
+
+  highlight(row) {
+    this.selectedRow = row;
+    var exeline: ExecutionLine = this.filteredexelines[row];
+    if (exeline.id) {
+      this.router.navigate(['/update-program-execution', exeline.id]);
+    }
+    else {
+      console.log('new exeline...no id to lookup');
+    }
   }
 }

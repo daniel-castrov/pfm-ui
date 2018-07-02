@@ -88,7 +88,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let line of filteredexelines">
+              <tr *ngFor="let line of filteredexelines; let idx=index" (click)="highlight(idx)" 
+                   [class.active]="idx == selectedRow">
                 <td class="lt-grey clickable large-column">{{programs.get(line.mrId)}}</td>
                 <td class="lt-grey">{{line.appropriation}}</td>
                 <td class="lt-grey">{{line.blin}}</td>

@@ -2070,7 +2070,7 @@ paths:
         description: "the file to upload"
         required: true
         type: "file"
-  /executionline/phase/{phaseId}:
+  /executionlines/phase/{phaseId}:
     get:
       operationId: "getExecutionLinesByPhase"
       parameters:
@@ -2102,6 +2102,56 @@ paths:
       - "Execution"
       summary: "Gets all the execution lines for this execution phase"
       description: "Returns the execution lines"
+      produces:
+      - "application/json"
+  /executionlines/phase/{phaseId}/transfer:
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates a transfer between Execution Lines"
+      description: "creates a transfer between Execution Lines"
+      operationId: "createTransfer"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: "string"
+                  format: "binary"
+                transfer:
+                  type: "string"
+                  format: "binary"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase containing the transfer"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "formData"
+        name: "transfer"
+        description: "The transfer object as Blob (sorry)"
+        required: true
+        type: "file"
+  /executionlines/{lineId}:
+    get:
+      operationId: "getExecutionLineById"
+      parameters:
+      - name: "lineId"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets one execution line"
+      description: "Returns an execution line"
       produces:
       - "application/json"
 # STOP EXECUTION
@@ -2782,5 +2832,17 @@ definitions:
         type: "array"
         items:
           type: "number"
+  ExecutionTransfer:
+    type: "object"
+    properties:
+      fromId:
+        type: "string"
+      toIdAmtLkp:
+        type: "object"
+        $ref: "#/definitions/IntMap"
+      transType:
+        type: "string"
+      eventType:
+        type: "string"
 ##############################################################################
 # ENDFILE
