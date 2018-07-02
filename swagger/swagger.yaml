@@ -2441,7 +2441,7 @@ definitions:
       unitCost:
         type: "number"
       bulkOrigin:
-        type: "boolean"  
+        type: "boolean"
       quantity:
         $ref: "#/definitions/IntMap"
   Program:
@@ -2701,6 +2701,8 @@ definitions:
       manager:
         type: "string"
       acquisitionType:
+        type: "string"
+      emphases:
         type: "string"
   PB:
     type: "object"
