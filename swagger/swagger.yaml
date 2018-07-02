@@ -2403,13 +2403,15 @@ definitions:
         type: "string"
       appropriation:
         type: "string"
-      blin:
+      baOrBlin:
         type: "string"
       opAgency:
         type: "string"
       item:
         type: "string"
       programElement:
+        type: "string"
+      acquisitionType:
         type: "string"
       fy:
         type: "integer"
@@ -2457,8 +2459,8 @@ definitions:
     properties:
       shortName:
         type: "string"
-      longName:
-        type: "string"
+      number:
+        type: "number"
       bulkOrigin:
         type: "boolean"
       serviceLines:
@@ -2475,7 +2477,7 @@ definitions:
       unitCost:
         type: "number"
       bulkOrigin:
-        type: "boolean"  
+        type: "boolean"
       quantity:
         $ref: "#/definitions/IntMap"
   Program:
@@ -2735,6 +2737,8 @@ definitions:
       manager:
         type: "string"
       acquisitionType:
+        type: "string"
+      emphases:
         type: "string"
   PB:
     type: "object"

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {ProgrammaticRequest} from "../../../../generated";
+import {ProgramsService} from "../../../../generated/api/programs.service";
 
 @Component({
   selector: 'program-tab',
@@ -6,10 +8,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./program-tab.component.scss']
 })
 export class ProgramTabComponent implements OnInit {
+  @Input()
+  pr : ProgrammaticRequest;
 
-  constructor() { }
+  tags = ['Lead Component',
+    'Manager',
+    'Primary Capability',
+    'Core Capability Area',
+    'Secondary Capability',
+    'Functional Area',
+    'Medical Category',
+    'DASD CBD'
+  ];
+
+  dropdownValues= new Map();
+
+  constructor(private programsService: ProgramsService) { }
 
   ngOnInit() {
-  }
 
+    this.tags.forEach(tag => {
+      this.programsService.getTagsByType(tag).subscribe(data => {
+        this.dropdownValues.set(tag, data.result);
+      })
+    });
+  }
 }

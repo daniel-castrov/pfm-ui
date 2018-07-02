@@ -84,7 +84,7 @@ export class VariantsTabComponent implements OnInit {
       
       let myvariant:MyVariant = {
         shortName: variant.shortName,
-        longName: variant.longName,
+        number: variant.number,
         bulkOrigin: variant.bulkOrigin,
         serviceLines: myServiceLines,
         totalQty: this.buildSumRow(myServiceLines)
@@ -105,7 +105,7 @@ export class VariantsTabComponent implements OnInit {
 
     let thePbFund:FundingLine; 
     pbPr.fundingLines.forEach(fl => {
-      if (  fl.appropriation === this.fund.appropriation && fl.blin === this.fund.blin
+      if (  fl.appropriation === this.fund.appropriation && fl.baOrBlin === this.fund.baOrBlin
             && fl.item === this.fund.item && fl.opAgency === this.fund.opAgency){ 
         thePbFund=fl; 
       }
@@ -155,7 +155,7 @@ export class VariantsTabComponent implements OnInit {
 
   saveToThisFund(newval, myVariant:MyVariant, mySl:MyServiceLine, year){
     this.fund.variants.forEach( variant => {
-      if ( variant.longName === myVariant.longName ){
+      if ( variant.number === myVariant.number ){
         variant.serviceLines.forEach( sl => {
           if ( sl.branch === mySl.branch && sl.contractor === mySl.contractor && sl.unitCost === mySl.unitCost ){
             sl.quantity[year] = newval;
@@ -189,9 +189,15 @@ export class VariantsTabComponent implements OnInit {
   }
 
   addVariant(){
+
+    if (this.myVariants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
+      this.feedback.failure('A Variant named "' + this.newVariantName + '" already exists');
+      return;
+    }
+
     let myvariant:MyVariant = {
       shortName: this.newVariantName,
-      longName: this.newVariantDesc,
+      number: this.getNextVariantNumber(),
       bulkOrigin:false,
       serviceLines:[],
       totalQty: {}
@@ -200,7 +206,7 @@ export class VariantsTabComponent implements OnInit {
 
     let variant:Variant = {
       shortName:myvariant.shortName,
-      longName:myvariant.longName,
+      number:myvariant.number,
       bulkOrigin:false,
       serviceLines:[]
     }
@@ -210,6 +216,14 @@ export class VariantsTabComponent implements OnInit {
     this.newVariantName=null;
     this.newVariantDesc=null;
 
+  }
+
+  getNextVariantNumber(): number {
+    let n=0;
+    this.myVariants.forEach( variant => {
+      if ( variant.number > n ) n = variant.number;
+    })
+    return n+1;
   }
 
   deleteVariant( myvariant:MyVariant ){
@@ -224,13 +238,20 @@ export class VariantsTabComponent implements OnInit {
   }
 
   addServiceLine(myVariant:MyVariant, variantNumber:number){
-  
-    console.log(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost);
+
+    if (myVariant.serviceLines.filter(sl => 
+        (sl.branch === this.newServiceLineBranch && sl.contractor ===  this.newServiceLineContractor && sl.unitCost === this.newServiceLineUnitCost)
+      ).length > 0 ){
+      this.feedback.failure('Service Line already exists');
+      return;
+    }
     
-    myVariant.serviceLines.push(this.createNewMyServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost));
+    myVariant.serviceLines.push(
+      this.createNewMyServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost)
+    );
 
     this.fund.variants.forEach( variant => {
-      if ( variant.longName === myVariant.longName ){
+      if ( variant.number === myVariant.number &&  variant.shortName === myVariant.shortName ){
         variant.serviceLines.push( this.createNewServiceLine(this.newServiceLineBranch, this.newServiceLineContractor, this.newServiceLineUnitCost) );
         return;
       }
@@ -295,6 +316,10 @@ export class VariantsTabComponent implements OnInit {
     return line;
   }
 
+  toggleShowAddVariance(){
+    this.showAddVariant = !this.showAddVariant;
+  }
+
   toggleShowAddServiceLine(variantNumber:number){
     for (let i=0; i<this.showAddServiceLine.length; i++ ){
       if (i != variantNumber)
@@ -314,7 +339,7 @@ export class VariantsTabComponent implements OnInit {
 
 export interface MyVariant {
   shortName: string,
-  longName: string,
+  number: number,
   bulkOrigin: boolean,
   serviceLines:MyServiceLine[];
   totalQty: IntMap

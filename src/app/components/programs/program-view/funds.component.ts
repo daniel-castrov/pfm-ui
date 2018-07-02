@@ -29,7 +29,7 @@ export class FundsComponent implements OnInit {
     curr.funding.sort(function (a: FundingLine, b: FundingLine) {
       var diff = a.appropriation.localeCompare(b.appropriation);
       if ( 0 === diff ) {
-        diff = a.blin.localeCompare(b.blin);
+        diff = a.baOrBlin.localeCompare(b.baOrBlin);
         if (0 == diff) {
           diff = a.fy - b.fy;
         }
@@ -41,7 +41,7 @@ export class FundsComponent implements OnInit {
     var blockmap: Map<string, AppropriationBlock> = new Map<string, AppropriationBlock>();
     var blinmap: Map<string, BlinBlock> = new Map<string, BlinBlock>();
     curr.funding.forEach(function (x: FundingLine) {
-      var blinmapkey = x.appropriation + '-' + x.blin;
+      var blinmapkey = x.appropriation + '-' + x.baOrBlin;
 
       var appblock:AppropriationBlock = null;
       if (!blockmap.has(x.appropriation)) {
@@ -58,7 +58,7 @@ export class FundsComponent implements OnInit {
       var blinblock: BlinBlock = null;
       if (!blinmap.has(blinmapkey)) {
         blinblock = {
-          blin: x.blin,
+          blin: x.baOrBlin,
           cfunds: [],
           rowspan: 0
         };

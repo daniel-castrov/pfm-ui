@@ -13,12 +13,13 @@ import { ProgramRequestPageModeService } from './page-mode.service';
 })
 export class ProgramRequestComponent implements OnInit {
 
-  private pr: ProgrammaticRequest = {};
+  pr: ProgrammaticRequest;
 
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService ) {
-      this.pr.fundingLines = [];
-    }
+
+  }
+
 
   async ngOnInit() {
     if(this.programRequestPageMode.id) {
