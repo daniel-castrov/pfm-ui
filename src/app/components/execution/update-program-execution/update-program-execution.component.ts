@@ -10,6 +10,7 @@ import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
+import { ExecutionLine, ProgramsService } from '../../../generated';
 
 declare const $: any;
 declare const jQuery: any;
@@ -21,13 +22,25 @@ declare const jQuery: any;
 })
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  private current: ExecutionLine;
+  private progname: string;
 
-  constructor(private exesvc:ExecutionService, private route: ActivatedRoute) { }
+  constructor(private exesvc: ExecutionService, private progsvc:ProgramsService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.url.subscribe((segments: UrlSegment[]) => {
-      var ufrid = segments[segments.length - 1].path;
-      console.log('exe line id: ' + ufrid);
+      console.log(segments);
+
+      var exelineid = segments[segments.length - 1].path;
+      console.log(exelineid);
+      
+      this.exesvc.getExecutionLineById(exelineid).subscribe(data => { 
+        this.current = data.result;
+        this.progsvc.getFullName(this.current.mrId).subscribe(d2 => { 
+          this.progname = d2.result;
+        });
+      });
     });
   }
 

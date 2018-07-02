@@ -2070,7 +2070,7 @@ paths:
         description: "the file to upload"
         required: true
         type: "file"
-  /executionline/phase/{phaseId}:
+  /executionlines/phase/{phaseId}:
     get:
       operationId: "getExecutionLinesByPhase"
       parameters:
@@ -2104,7 +2104,7 @@ paths:
       description: "Returns the execution lines"
       produces:
       - "application/json"
-  /executionline/phase/{phaseId}/transfer:
+  /executionlines/phase/{phaseId}/transfer:
     post:
       tags:
       - "Execution"
@@ -2140,6 +2140,20 @@ paths:
         description: "The transfer object as Blob (sorry)"
         required: true
         type: "file"
+  /executionlines/{lineId}:
+    get:
+      operationId: "getExecutionLineById"
+      parameters:
+      - name: "lineId"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets one execution line"
+      description: "Returns an execution line"
+      produces:
+      - "application/json"
 # STOP EXECUTION
 #################################################################
 # END PATHS
