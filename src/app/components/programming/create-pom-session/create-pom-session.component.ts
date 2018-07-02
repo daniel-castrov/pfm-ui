@@ -247,14 +247,13 @@ export class CreatePomSessionComponent implements OnInit {
 
   loadFY4fromEpp() {
 
-
     if (this.useEpp == true) {
       // show the FY + 4 data from the epp table
-      this.getYear5ToasFromEpp( this.fy+7 );
+      this.getYear5ToasFromEpp( this.fy+4 );
     } else {
       // replace all values in fy+4 with 0
-      this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy + 4, 0));
-      this.toas.set(this.fy + 4, 0);
+      this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy+4, 0));
+      this.toas.set(this.fy+4, 0);
     }
     this.resetTotals();
   }
