@@ -40,7 +40,7 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService) { 
+    private progsvc: ProgramsService, private router: Router) {
   }
 
   ngOnInit() {
@@ -161,6 +161,7 @@ export class FundsUpdateComponent implements OnInit {
 
   highlight(row) {
     this.selectedRow = row;
-    console.log(row);
+    var exeline: ExecutionLine = this.filteredexelines[row];
+    this.router.navigate(['/update-program-execution', exeline.id]);
   }
 }

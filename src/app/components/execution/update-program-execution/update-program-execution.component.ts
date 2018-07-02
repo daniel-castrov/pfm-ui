@@ -9,7 +9,7 @@ import { ExecutionService } from '../../../generated/api/execution.service'
 import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 
 declare const $: any;
 declare const jQuery: any;
@@ -20,12 +20,15 @@ declare const jQuery: any;
   styleUrls: ['./update-program-execution.component.scss']
 })
 export class UpdateProgramExecutionComponent implements OnInit {
-
   @ViewChild(HeaderComponent) header;
 
-  constructor(private exesvc:ExecutionService) { }
+  constructor(private exesvc:ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.url.subscribe((segments: UrlSegment[]) => {
+      var ufrid = segments[segments.length - 1].path;
+      console.log('exe line id: ' + ufrid);
+    });
   }
 
   submit() {

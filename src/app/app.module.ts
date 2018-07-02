@@ -158,7 +158,7 @@ const appRoutes: Routes = [
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
-  {path:'update-program-execution', component:UpdateProgramExecutionComponent},
+  {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   { path: 'exporter', component: ProgramExportComponent },
