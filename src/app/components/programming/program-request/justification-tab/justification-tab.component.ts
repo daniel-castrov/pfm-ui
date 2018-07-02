@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {ProgrammaticRequest} from "../../../../generated";
 
 @Component({
   selector: 'justification-tab',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./justification-tab.component.scss']
 })
 export class JustificationTabComponent implements OnInit {
+
+  @Input()
+  pr : ProgrammaticRequest;
 
   constructor() { }
 

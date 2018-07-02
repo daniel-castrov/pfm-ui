@@ -2704,6 +2704,10 @@ definitions:
         type: "string"
       emphases:
         type: "string"
+      justification:
+        type: "string"
+      impactN:
+        type: "string"
   PB:
     type: "object"
     properties:

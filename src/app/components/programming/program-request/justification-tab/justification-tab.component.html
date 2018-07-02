@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="title mb-2">Rationale:</div>
       <div class="form-group">
-        <textarea cols="50" rows="4" wrap="physical" class="form-control"></textarea>
+        <textarea cols="50" rows="4" wrap="physical" class="form-control" name="justification" [(ngModel)]="pr.justification"></textarea>
       </div>
     </div>
   </div>
@@ -11,7 +11,7 @@
     <div class="col-md-12">
       <div class="title mb-2">Impact if not funded:</div>
       <div class="form-group">
-        <textarea cols="50" rows="4" wrap="physical" class="form-control" id="impact"></textarea>
+        <textarea cols="50" rows="4" wrap="physical" class="form-control" name="impactN" [(ngModel)]="pr.impactN"></textarea>
       </div>
     </div>
   </div>
