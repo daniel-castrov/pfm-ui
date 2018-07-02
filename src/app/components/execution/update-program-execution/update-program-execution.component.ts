@@ -36,10 +36,15 @@ export class UpdateProgramExecutionComponent implements OnInit {
       console.log(exelineid);
       
       this.exesvc.getExecutionLineById(exelineid).subscribe(data => { 
-        this.current = data.result;
-        this.progsvc.getFullName(this.current.mrId).subscribe(d2 => { 
-          this.progname = d2.result;
-        });
+        if (data.error) {
+          console.log(data.error);
+        }
+        else {
+          this.current = data.result;
+          this.progsvc.getFullName(this.current.mrId).subscribe(d2 => {
+            this.progname = d2.result;
+          });
+        }
       });
     });
   }
