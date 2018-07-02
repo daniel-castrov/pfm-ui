@@ -10,9 +10,13 @@ import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
 import { PBService } from '../../../generated/api/pB.service';
 import { POMService } from '../../../generated/api/pOM.service';
+import { EppService } from '../../../generated/api/epp.service';
+import { ProgramsService } from '../../../generated/api/programs.service';
 import { IntMap } from '../../../generated/model/intMap';
 import { Pom } from '../../../generated/model/pom';
 import { PB } from '../../../generated/model/pB';
+import { Program } from '../../../generated/model/program';
+
 
 import * as $ from 'jquery';
 import { Router } from '@angular/router';
@@ -38,12 +42,12 @@ export class CreatePomSessionComponent implements OnInit {
   private tooMuchToa: boolean = false;
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
-  
+
   private useEpp = false;
 
   constructor(private detailsvc: MyDetailsService, private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
-    private router: Router) {
+    private eppsvc: EppService, private programsvc: ProgramsService, private router: Router) {
   }
 
   ngOnInit() {
@@ -111,10 +115,10 @@ export class CreatePomSessionComponent implements OnInit {
     var my: CreatePomSessionComponent = this;
     this.detailsvc.getCurrentUser().subscribe((person) => {
       forkJoin([my.communityService.getById(person.result.currentCommunityId),
-        my.orgsvc.getByCommunityId(person.result.currentCommunityId),
-        my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-        my.pbsvc.getLatest(person.result.currentCommunityId),
-        my.pomsvc.getToaSamples(person.result.currentCommunityId)
+      my.orgsvc.getByCommunityId(person.result.currentCommunityId),
+      my.pomsvc.getByCommunityId(person.result.currentCommunityId),
+      my.pbsvc.getLatest(person.result.currentCommunityId),
+      my.pomsvc.getToaSamples(person.result.currentCommunityId)
       ]).subscribe(data => {
         var community = data[0].result;
         my.orgs = data[1].result;
@@ -143,7 +147,7 @@ export class CreatePomSessionComponent implements OnInit {
       my.toas.set(my.fy + i, 0);
       my.baseline.set(my.fy + i, 0);
     }
-    samplepom.communityToas.forEach( (toa: TOA) => { 
+    samplepom.communityToas.forEach((toa: TOA) => {
       my.toas.set(toa.year, toa.amount);
       my.baseline.set(toa.year, toa.amount);
     });
@@ -185,7 +189,7 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   editfield(event, id, fy) {
-    var val: number = Number.parseInt(event.target.innerText.replace(/,/g,''));
+    var val: number = Number.parseInt(event.target.innerText.replace(/,/g, ''));
     if (val > 99999999) {
       val = 99999999;
     }
@@ -218,7 +222,7 @@ export class CreatePomSessionComponent implements OnInit {
           my.orgsums.set(my.community.id, 0);
         }
         my.orgsums.set(my.community.id, my.orgsums.get(my.community.id) + val);
-      }  
+      }
     });
 
     //console.log(my.orgtoas);
@@ -235,32 +239,63 @@ export class CreatePomSessionComponent implements OnInit {
           if (my.yeardiffs.get(year) < 0) {
             my.tooMuchToa = true;
           }
-        }  
+        }
       });
     });
 
   }
 
-  loadFY4fromEpp(){
+  loadFY4fromEpp() {
 
-    if ( this.useEpp==true ) {
-      // start dummy code 
-      // Replace with calls to get actual EPP data
-      var n = this.orgs.length;
-      var t=125;
-      this.orgs.forEach( org => {
-      this.orgtoas.get(org.id).set(this.fy+4,t);
-      this.toas.set(this.fy+4, n*t);
-      }); // end dummy code
+
+    if (this.useEpp == true) {
+      // show the FY + 4 data from the epp table
+      this.getYear5ToasFromEpp( this.fy+7 );
     } else {
-      // replace any values in fy+4 with 0
-      this.orgs.forEach( org => {
-      this.orgtoas.get(org.id).set(this.fy+4,0);
-      this.toas.set(this.fy+4, 0);
-      });
+      // replace all values in fy+4 with 0
+      this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy + 4, 0));
+      this.toas.set(this.fy + 4, 0);
     }
     this.resetTotals();
   }
+
+  getYear5ToasFromEpp(eppYear:number) {
+
+    forkJoin([
+      this.eppsvc.getAll(),
+      this.programsvc.getProgramsByCommunity(this.community.id),
+    ]).subscribe(data => {
+
+      let eppData = data[0].result;
+      let programs: Program[] = data[1].result;
+
+      let eppOrgToa = {};
+      this.orgs.forEach(org => {
+        eppOrgToa[org.id] = 0;
+      });
+
+      eppData.forEach( eppDataRow => {
+        let amount = 0;
+        if (eppDataRow.fySums[eppYear]) {
+          amount = eppDataRow.fySums[eppYear];
+        }
+        let index = programs.findIndex(program => program.shortName === eppDataRow.programShortName);
+        if (index > 0) {
+          eppOrgToa[programs[index].organization] += amount;
+        }
+      });
+
+      let total = 0;
+      this.orgs.forEach(org => {
+        this.orgtoas.get(org.id).set(this.fy + 4, eppOrgToa[org.id]);
+        total += eppOrgToa[org.id];
+      });
+      this.toas.set(this.fy + 4, total);
+    });
+
+  }
+
+
 
   submit() {
     var my: CreatePomSessionComponent = this;
