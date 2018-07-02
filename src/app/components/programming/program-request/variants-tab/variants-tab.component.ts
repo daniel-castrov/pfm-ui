@@ -15,7 +15,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class VariantsTabComponent implements OnInit {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
-  @Input() pr: ProgrammaticRequest;
+  @Input() current: ProgrammaticRequest;
+  @Input() editable:boolean;
 
   pomFy:number;
   fund:FundingLine;
@@ -42,7 +43,7 @@ export class VariantsTabComponent implements OnInit {
   }
 
   ngOnChanges(){
-    if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()    
+    if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()    
     this.setYears();
   }
 
@@ -100,8 +101,8 @@ export class VariantsTabComponent implements OnInit {
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
     let pbFy = pb.fy;
 
-    if(!this.pr.originalMrId) return;
-    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
+    if(!this.current.originalMrId) return;
+    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.current.originalMrId).toPromise()).result;
 
     let thePbFund:FundingLine; 
     pbPr.fundingLines.forEach(fl => {
@@ -329,7 +330,7 @@ export class VariantsTabComponent implements OnInit {
   }
 
   private async setYears() {
-    const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
+    const pom: Pom = (await this.pomService.getById(this.current.phaseId).toPromise()).result;
     this.pomFy = pom.fy-4;
     this.years = [ (this.pomFy).toString(), (this.pomFy+1).toString(), 
       (this.pomFy+2).toString(), (this.pomFy+3).toString(), (this.pomFy+4).toString()

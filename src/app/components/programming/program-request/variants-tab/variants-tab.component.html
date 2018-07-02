@@ -7,7 +7,7 @@
           <label class="primary-label mb-1">Select Funding Line</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false" (change)="buildTables()">
             <option value=""></option>
-            <option *ngFor="let fl of pr.fundingLines" [ngValue]="fl">
+            <option *ngFor="let fl of current.fundingLines" [ngValue]="fl">
               {{fl.appropriation}} / {{fl.baOrBlin}} / {{fl.item}} / {{fl.opAgency}}
             </option>
           </select>

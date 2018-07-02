@@ -111,7 +111,6 @@ import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.compo
 import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
 import { UfrMetadataComponent } from './components/ufr/metadata/ufr-metadata.component';
 import { UfrFundsComponent } from './components/ufr/ufr-funds/ufr-funds.component';
-import { UfrVariantsComponent } from './components/ufr/ufr-variants/ufr-variants.component';
 import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
 import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
@@ -237,7 +236,6 @@ const appRoutes: Routes = [
     UfrViewComponent,
     UfrMetadataComponent,
     UfrFundsComponent,
-    UfrVariantsComponent,
     UfrTabComponent,
     UfrJustificationComponent,
     UpdatePomSessionComponent,
