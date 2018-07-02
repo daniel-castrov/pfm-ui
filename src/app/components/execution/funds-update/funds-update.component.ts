@@ -30,6 +30,7 @@ export class FundsUpdateComponent implements OnInit {
   private blins: string[] = [];
   private items: string[] = [];
   private opAgencies: string[] = [];
+  private selectedRow: number = -1;
 
   private mrid: string;
   private appropriation: string;
@@ -156,5 +157,10 @@ export class FundsUpdateComponent implements OnInit {
     this.allexelines.push(newline);
     this.refreshFilterDropdowns();
     this.filter();
+  }
+
+  highlight(row) {
+    this.selectedRow = row;
+    console.log(row);
   }
 }

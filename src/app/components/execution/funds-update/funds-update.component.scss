@@ -162,3 +162,7 @@ input {
     text-decoration: none;
   }
 }
+
+table tr.active td {
+  background-color: rgb(57, 146, 219) !important;
+}
