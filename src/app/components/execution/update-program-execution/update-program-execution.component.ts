@@ -29,6 +29,10 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private fy: number;
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
+  private etype: string;
+  private ttype: string;
+  private longname: string;
+
   constructor(private exesvc: ExecutionService, private progsvc:ProgramsService,
     private route: ActivatedRoute) { }
 
@@ -115,15 +119,18 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   submit() {
-    /*
     var et: ExecutionTransfer = {
       toIdAmtLkp: {},
-      fromId: 'from id',
-      eventType: 'etype',
-      transType: 'REALIGNMENT'
+      fromId: this.current.id,
+      eventType: this.etype,
+      transType: this.ttype
     };
-    et.toIdAmtLkp['09848'] = 56;
+    this.updateexelines.forEach(l => { 
+      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+    });
 
+  
+    /*
     this.exesvc.createTransfer("1234", new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
     */
@@ -148,8 +155,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   setline(updateidx: number, lineidx: number ) {
-    console.log(updateidx + ' ... ' + lineidx);
-
     var my: UpdateProgramExecutionComponent = this;
     var toupdate: ExecutionLine = my.updateexelines[updateidx];
 
@@ -158,6 +163,8 @@ export class UpdateProgramExecutionComponent implements OnInit {
     toupdate.blin = l.blin;
     toupdate.item = l.item;
     toupdate.opAgency = l.opAgency;
+    toupdate.toa = 0;
+    toupdate.released = 0;
   }
 
   getLineChoices(mrid): ExecutionLine[]{
