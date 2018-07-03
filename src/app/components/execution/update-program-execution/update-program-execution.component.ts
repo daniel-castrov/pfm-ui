@@ -11,6 +11,7 @@ import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 import { ExecutionLine, ProgramsService } from '../../../generated';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 declare const $: any;
 declare const jQuery: any;
@@ -23,7 +24,10 @@ declare const jQuery: any;
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private current: ExecutionLine;
-  private progname: string;
+  private allexelines: ExecutionLine[] = [];
+  private updateexelines: ExecutionLine[] = [];
+  private fy: number;
+  private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
   constructor(private exesvc: ExecutionService, private progsvc:ProgramsService,
     private route: ActivatedRoute) { }
@@ -86,22 +90,26 @@ export class UpdateProgramExecutionComponent implements OnInit {
       $EXPORT.text(JSON.stringify(data));
     });
 
+    var my: UpdateProgramExecutionComponent = this;
     this.route.url.subscribe((segments: UrlSegment[]) => {
-      console.log(segments);
-
       var exelineid = segments[segments.length - 1].path;
-      console.log(exelineid);
 
-      this.exesvc.getExecutionLineById(exelineid).subscribe(data => {
-        if (data.error) {
-          console.log(data.error);
-        }
-        else {
-          this.current = data.result;
-          this.progsvc.getFullName(this.current.mrId).subscribe(d2 => {
-            this.progname = d2.result;
-          });
-        }
+      forkJoin([
+        my.exesvc.getExecutionLineById(exelineid),
+        my.progsvc.getIdNameMap()
+      ]).subscribe(data => { 
+        my.current = data[0].result;
+
+        my.exesvc.getExecutionLinesByPhase(my.current.phaseId).subscribe(d2 => {
+          my.allexelines = d2.result;
+        });
+        my.exesvc.getById(my.current.phaseId).subscribe(d2 => {
+          my.fy = d2.result.fy;
+        });
+
+        Object.getOwnPropertyNames(data[1].result).forEach(id => {
+          my.programIdNameLkp.set(id, data[1].result[id]);
+        });
       });
     });
   }
@@ -119,5 +127,40 @@ export class UpdateProgramExecutionComponent implements OnInit {
     this.exesvc.createTransfer("1234", new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
     */
+  }
+
+  fullname(exeline: ExecutionLine): string {
+    if( this.programIdNameLkp && exeline ){
+      return this.programIdNameLkp.get(exeline.mrId);
+    }
+    else {
+      return '';
+    }
+  
+  }
+
+  addrow() {
+    this.updateexelines.push({});
+  }
+
+  removerow(i) {
+    this.updateexelines.splice(i, 1);
+  }
+
+  setline(updateidx: number, lineidx: number ) {
+    console.log(updateidx + ' ... ' + lineidx);
+
+    var my: UpdateProgramExecutionComponent = this;
+    var toupdate: ExecutionLine = my.updateexelines[updateidx];
+
+    var l: ExecutionLine = my.getLineChoices(toupdate.mrId)[lineidx-1];
+    toupdate.appropriation = l.appropriation;
+    toupdate.blin = l.blin;
+    toupdate.item = l.item;
+    toupdate.opAgency = l.opAgency;
+  }
+
+  getLineChoices(mrid): ExecutionLine[]{
+    return this.allexelines.filter(x => x.mrId === mrid);
   }
 }

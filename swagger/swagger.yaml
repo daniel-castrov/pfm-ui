@@ -2800,6 +2800,8 @@ definitions:
         type: "integer"
       outlays:
         type: "integer"
+      phaseId:
+        type: "string"
       spendPlans:
         type: "array"
         items:
