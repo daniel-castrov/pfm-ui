@@ -169,9 +169,6 @@ input[readonly]{
       min-width: 120px;
       color: $black;
       max-height: 20px;
-      border: 1px solid $black;
-      padding: 6px 10px;
-      margin: 2px;
       text-align: right;
       &:hover {
         cursor: pointer;

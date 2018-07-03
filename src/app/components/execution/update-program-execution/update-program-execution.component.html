@@ -138,8 +138,7 @@
 
               <td>{{line.toa}}</td>
               <td>{{line.released}}</td>
-              <td contenteditable="true">
-                <span class="editable-field" digits></span>
+              <td class="editable-field" contenteditable="true" digits>
               </td>
               <td class="text-center">
                 <span class="remove-pom-line" title="Remove" (click)="removerow(idx)">
@@ -148,13 +147,11 @@
               </td>
             </tr>
             <tr class="table-bordered">
-              <td colspan="3" class="text-right">Total:</td>
+              <td colspan="2" class="text-right">Total:</td>
               <td></td>
-              <td contenteditable="true">
-                <span class="editable-field">145</span>
-              </td>
-              <td class="text-center">
-              </td>
+              <td></td>
+              <td class="text-right">145 </td>
+              <td></td>
             </tr>
           </table>
         </div>
