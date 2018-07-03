@@ -12,7 +12,9 @@ export class UiProgrammaticRequest {
   get parentId():string {return this.programmaticRequest.parentMrId}
   get bulkOrigin():boolean {return this.programmaticRequest.bulkOrigin}
   getToa(year:number): any {
-      const sum = this.programmaticRequest.fundingLines.map( fundingLine=>fundingLine.funds[year] ).reduce((a,b)=>a+b, 0);
+      const sum = this.programmaticRequest.fundingLines
+          .map( fundingLine=>fundingLine.funds[year] )
+          .reduce((a,b)=>a+b, 0);
       return isNaN(sum) ? '' : sum;
   }
   get isSubprogram(): boolean {

@@ -1,6 +1,6 @@
 import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
 import { PRService } from './../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 // Other Components
 import { ProgramRequestPageModeService } from './page-mode.service';

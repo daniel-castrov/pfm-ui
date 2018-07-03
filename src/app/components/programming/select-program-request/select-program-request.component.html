@@ -3,7 +3,7 @@
   <div class="col-lg-12 col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5">Summary of Program Requests for POM{{by-2000}}</span>
+        <span class="h5">Summary of Program Requests for POM{{pom?.fy-2000}}</span>
       </div>
       <div class="col-md-3 col-sm-12">
         <span>
@@ -16,12 +16,12 @@
         <new-programmatic-request [pom]="pom"></new-programmatic-request>
       </div>
       <div class="col-lg-6 col-md-12 col-sm-12">
-        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom" [by]="by"></j-pom>
+        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom"></j-pom>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
-        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="by" (deleted)="ngOnInit()"></programmatic-requests>
+        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="pom?.fy" (deleted)="reloadPrs()"></programmatic-requests>
       </div>
     </div>
   </div>
