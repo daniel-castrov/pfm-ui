@@ -13,11 +13,11 @@ import { ProgramRequestPageModeService } from './page-mode.service';
 })
 export class ProgramRequestComponent implements OnInit {
 
-  pr: ProgrammaticRequest;
+  pr: ProgrammaticRequest = {};
 
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService ) {
-
+    this.pr.fundingLines = [];
   }
 
 
