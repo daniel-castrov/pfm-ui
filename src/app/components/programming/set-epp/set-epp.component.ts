@@ -131,7 +131,11 @@ export class SetEppComponent implements OnInit {
   }
 
   generateFundingLine(params){
-    return params.data.appropriation + '/' + params.data.blin + '/' + params.data.item + '/' + params.data.opAgency;
+    let result = params.data.appropriation !== null? params.data.appropriation : '';
+    result = result.concat(params.data.blin !== null? ('/').concat(params.data.blin) : '');
+    result = result.concat(params.data.item !== null? ('/').concat(params.data.item) : '');
+    result = result.concat(params.data.opAgency !== null? ('/').concat(params.data.opAgency): '');
+    return result;
   }
 
   getFiscalYear(params, year) {
