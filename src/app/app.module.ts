@@ -26,6 +26,7 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
 import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
@@ -130,6 +131,7 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
+  {path:'appropriation-release', component:AppropriationReleaseComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
@@ -176,6 +178,7 @@ const appRoutes: Routes = [
     AccessChangeApprovalComponent,
     AppComponent,
     ApplyComponent,
+    AppropriationReleaseComponent,
     ApproveRequestsComponent,
     BulkTabComponent,
     HeaderUserComponent,
