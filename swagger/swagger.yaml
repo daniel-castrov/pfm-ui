@@ -2002,7 +2002,7 @@ paths:
 #
   /execution/community/{communityId}:
     get:
-      operationId: "getByCommunity"
+      operationId: "getByCommunityId"
       parameters:
       - name: "communityId"
         in: "path"
