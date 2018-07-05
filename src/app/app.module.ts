@@ -92,6 +92,7 @@ import { OrganizationService } from './generated/api/organization.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
+import { RolesPermissionsService } from './generated/api/rolesPermissions.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleResourceService } from './generated/api/userRoleResource.service';
@@ -117,6 +118,8 @@ import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
+import { RbacRoleDirective } from './directives/rbac.role.directive';
+import { RbacPermissionDirective } from './directives/rbac.permission.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
@@ -245,6 +248,8 @@ const appRoutes: Routes = [
     DashForZeroPipe,
     NewUfrComponent,
     OnlyDigitsDirective,
+    RbacRoleDirective,
+    RbacPermissionDirective,
     FyPipe,
     MapAsListPipe,
     SetEppComponent
@@ -285,6 +290,7 @@ const appRoutes: Routes = [
     OrganizationService,
     ProgramRequestPageModeService,
     ProgramsWithFullNameService,
+    RolesPermissionsService,
     RoleService,
     StrangerService,
     UserRoleResourceService,
