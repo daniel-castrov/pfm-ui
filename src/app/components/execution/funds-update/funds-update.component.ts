@@ -49,7 +49,7 @@ export class FundsUpdateComponent implements OnInit {
       forkJoin([
         my.progsvc.getIdNameMap(),
         //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
-        my.exesvc.getByCommunity(deets.result.currentCommunityId, 'CREATED')
+        my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
       ]).subscribe(data => { 
         var lookup: {id:string, name:string}[] = [];
         Object.getOwnPropertyNames(data[0].result).forEach(mrid => { 

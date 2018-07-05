@@ -9,6 +9,7 @@ import { ExecutionService } from '../../../generated/api/execution.service'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 declare const $: any;
 declare const jQuery: any;
@@ -38,11 +39,26 @@ export class CreateExecutionPhaseComponent implements OnInit {
 		document.addEventListener('touchstart', fn);
 
     this.usvc.getCurrentUser().subscribe(p => {
-      this.pbsvc.getByCommunityId(p.result.currentCommunityId).subscribe(data => {
-        data.result.forEach((pb: PB) => {
-          this.yearpblkp.set(pb.fy, pb);
-          this.modelpb = pb;
+      forkJoin([
+        this.pbsvc.getByCommunityId(p.result.currentCommunityId),
+        this.esvc.getByCommunityId(p.result.currentCommunityId)
+      ]).subscribe(data => {
+        var existingExeYears: Set<number> = new Set<number>();
+        data[1].result.forEach((exe: Execution) => {
+          existingExeYears.add(exe.fy);
         });
+        
+        data[0].result.forEach((pb: PB) => {
+          if (!existingExeYears.has(pb.fy)) {
+            this.yearpblkp.set(pb.fy, pb);
+            this.modelpb = pb;
+          }
+        });
+
+        if (this.yearpblkp.size < 1) {
+          this.message = 'All available Execution Phases have been created';
+        }
+
       });
     });
   }
