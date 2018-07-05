@@ -84,6 +84,7 @@ input[readonly]{
   }
 
   td {
+    border: $grey-border;
     max-height: 20px;
     min-width: 140px;
     padding: 10px 6px;
