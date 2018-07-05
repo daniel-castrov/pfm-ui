@@ -1,10 +1,8 @@
 import { ProgramsWithFullNameService, ProgramWithFullName } from './../../../../services/fetch-programs.service';
 import { Router } from '@angular/router';
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
 import { Component, Input, OnInit } from '@angular/core';
 
 // Other Components
-import { Pom } from '../../../../generated/model/pom';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 
 @Component({
@@ -15,7 +13,7 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 export class NewProgrammaticRequestComponent implements OnInit {
 
   addNewPrFor: string;
-  @Input() pom: Pom;
+  @Input() pomId: string;
   programs: ProgramWithFullName[];
   selectedProgram: ProgramWithFullName;
 
@@ -33,15 +31,15 @@ export class NewProgrammaticRequestComponent implements OnInit {
   async next() {
     switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
-        this.programRequestPageMode.setProgramOfRecord(this.pom.id);
+        this.programRequestPageMode.setProgramOfRecord(this.pomId);
         this.programRequestPageMode.originatingProgramId = this.selectedProgram.id;
         break;
       case 'A New Subprogram':
-        this.programRequestPageMode.setNewSubprogram(this.pom.id);
+        this.programRequestPageMode.setNewSubprogram(this.pomId);
         this.programRequestPageMode.parentId = this.selectedProgram.id;
         break;
       case 'A New Program':
-        this.programRequestPageMode.setNewProgram(this.pom.id);
+        this.programRequestPageMode.setNewProgram(this.pomId);
     }
     this.router.navigate(['/program-request']);
   }

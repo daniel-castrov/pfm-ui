@@ -41,8 +41,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
               private globalsService: GlobalsService,
               private autoValuesService: AutoValuesService ) {}
 
-  async ngOnInit() {
-    await this.loadDropdownOptions();
+  ngOnInit() {
+    this.loadDropdownOptions();
   }
   
   ngOnChanges() {
@@ -156,6 +156,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
         item: this.item,
         opAgency: this.opAgency,
         programElement: this.programElement,
+        acquisitionType: this.acquisitionType,
         funds: {},
         variants: []
       };
