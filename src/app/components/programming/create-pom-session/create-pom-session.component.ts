@@ -225,9 +225,6 @@ export class CreatePomSessionComponent implements OnInit {
       }
     });
 
-    //console.log(my.orgtoas);
-    //console.log(my.toas);
-
     amt = 0;
     my.orgtoas.forEach(function (toas, orgid) {
       my.orgsums.set(orgid, 0);
@@ -248,14 +245,15 @@ export class CreatePomSessionComponent implements OnInit {
   loadFY4fromEpp() {
 
     if (this.useEpp == true) {
-      // show the FY + 4 data from the epp table
+      // show the FY + 4 data from the epp data
       this.getYear5ToasFromEpp( this.fy+4 );
     } else {
       // replace all values in fy+4 with 0
       this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy+4, 0));
       this.toas.set(this.fy+4, 0);
+      this.resetTotals();
     }
-    this.resetTotals();
+    
   }
 
   getYear5ToasFromEpp(eppYear:number) {
@@ -290,6 +288,7 @@ export class CreatePomSessionComponent implements OnInit {
         total += eppOrgToa[org.id];
       });
       this.toas.set(this.fy + 4, total);
+      this.resetTotals();
     });
 
   }
