@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
           <fieldset>
             <legend>Area</legend>
             <span class="form-group inline-name mr-4">
@@ -73,17 +73,19 @@
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Emphasis</label>
-              <ng-container *ngIf="pr?.emphases && pr?.emphases.length>0; else novalue">
-                <span class="program-values" *ngFor="let e of pr.emphases">{{e}}</span>
-              </ng-container>
+              <select name="medicalCategory" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let dasd of dropdownValues.get('Emphasis Areas')" [ngValue]="dasd.abbr">{{dasd.name}}</option>
+              </select>
             </span>
-            <span class="form-group inline-name">
+          </fieldset>
+        </div>
+        <div class="col-md-3">
+          <span class="form-group inline-name">
               <label class="mb-1">DASD Taxonomy</label>
               <select name="medicalCategory" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let dasd of dropdownValues.get('DASD CBD')" [ngValue]="dasd.abbr">{{dasd.name}}</option>
               </select>
             </span>
-          </fieldset>
         </div>
       </div>
     </div>
