@@ -73,8 +73,8 @@
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Emphasis</label>
-              <select name="medicalCategory" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let dasd of dropdownValues.get('Emphasis Areas')" [ngValue]="dasd.abbr">{{dasd.name}}</option>
+              <select name="emphasis" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let e of dropdownValues.get('Emphasis Areas')" [ngValue]="e.abbr">{{e.name}}</option>
               </select>
             </span>
           </fieldset>
