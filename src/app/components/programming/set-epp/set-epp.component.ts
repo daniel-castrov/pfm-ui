@@ -122,6 +122,9 @@ export class SetEppComponent implements OnInit {
   }
 
   currencyCellRenderer(value) {
+    if(isNaN(value)) {
+      value = 0;
+    }
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -142,10 +145,16 @@ export class SetEppComponent implements OnInit {
     return this.currencyCellRenderer(params.data.fySums[year]);
   }
 
-  generateFiscalYearColumns(data) {
-    if (data && data.length > 0) {
-      let keys = Object.keys(data[0].fySums);
-      keys.forEach(key => {
+  generateFiscalYearColumns(eppList) {
+    if (eppList && eppList.length > 0) {
+      let columnKeys = [];
+      eppList.forEach(epp => {
+        Object.keys(epp.fySums).forEach(year => {
+          columnKeys.push(year);
+          })
+      });
+      columnKeys.sort();
+      Array.from(new Set(columnKeys)).forEach(key => {
         let columnKey = key.replace('20', 'FY')
         let colDef = {
           headerName: columnKey,
