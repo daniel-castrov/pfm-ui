@@ -1,3 +1,4 @@
+import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { Observable } from 'rxjs/Observable';
 import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 import { Component, Input, OnChanges } from '@angular/core';
@@ -11,8 +12,8 @@ import { ProgrammaticRequest } from '../../../../generated/model/programmaticReq
 })
 export class PomComponent implements OnChanges {
   
-  @Input() private pomProgrammaticRequests: ProgrammaticRequest[];
-  @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
+  @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
+  @Input() private pbProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pom: Pom;
   @Input() private by: number;
 
@@ -43,7 +44,7 @@ export class PomComponent implements OnChanges {
     }
   }
 
-  aggregate(prs: ProgrammaticRequest[], year: number): number {
+  aggregate(prs: ProgramRequestWithFullName[], year: number): number {
     return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a,b)=>a+b);
   }
 }

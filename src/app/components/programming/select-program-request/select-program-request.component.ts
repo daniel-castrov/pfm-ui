@@ -1,3 +1,5 @@
+import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
+import { WithFullNameService } from './../../../services/with-full-name.service';
 import { GlobalsService } from './../../../services/globals.service';
 import { POMService } from './../../../generated/api/pOM.service';
 import { Component, OnInit } from '@angular/core';
@@ -19,7 +21,7 @@ export class SelectProgramRequestComponent implements OnInit {
   private currentCommunityId: string;
 
   private pom: Pom;
-  private pomProgrammaticRequests: ProgrammaticRequest[];
+  private pomProgrammaticRequests: ProgramRequestWithFullName[];
   private pb: PB;
   private pbProgrammaticRequests: ProgrammaticRequest[];
   private thereAreOutstandingPRs: boolean;
@@ -27,6 +29,7 @@ export class SelectProgramRequestComponent implements OnInit {
   constructor(private pomService: POMService,
               private pbService: PBService,
               private prService: PRService,
+              private withFullNameService: WithFullNameService,
               private globalsService: GlobalsService ) {}
 
   async ngOnInit() {
@@ -37,21 +40,19 @@ export class SelectProgramRequestComponent implements OnInit {
 
   async reloadPrs() {
     await this.initPomPrs();
-    this.thereAreOutstandingPRs = this.pomProgrammaticRequests.filter(pr => pr.state === 'OUTSTANDING').length > 0;4
+    this.thereAreOutstandingPRs = this.pomProgrammaticRequests.filter(pr => pr.state === 'OUTSTANDING').length > 0;
   }
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       // can't use getOpen here, because we need to handle open *or* created pom
-      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(poms => { 
+      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => { 
         for (var i = 0; i < poms.result.length; i++){
           var pom: Pom = poms.result[i];
           if ('CREATED' === pom.status || 'OPEN' === pom.status) {
             this.pom = pom;
-            this.prService.getByPhase(this.pom.id).subscribe(prrslt => { 
-              this.pomProgrammaticRequests = prrslt.result;
-              resolve();
-            });
+            this.pomProgrammaticRequests = (await this.withFullNameService.programRequests(this.pom.id));
+            resolve();
             break;
           }
         }

@@ -1,12 +1,13 @@
-import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
+import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
 import { FundingLine } from '../../../generated/model/fundingLine';
 
 export class UiProgrammaticRequest {
-  constructor(public programmaticRequest: ProgrammaticRequest) {}
+  constructor(public programmaticRequest: ProgramRequestWithFullName) {}
 
   get id():string {return this.programmaticRequest.id}
   get state():string {return this.programmaticRequest.state}
   get shortName():string {return this.programmaticRequest.shortName}
+  get fullname():string {return this.programmaticRequest.fullname}
   get longName():string {return this.programmaticRequest.longName}
   get fundingLines():FundingLine[] {return this.programmaticRequest.fundingLines}
   get parentId():string {return this.programmaticRequest.parentMrId}

@@ -131,6 +131,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
 
     const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
 
+    if(!pbPr) return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
+
     pbPr.fundingLines.forEach(pbFundingLine => {
       const key = Key.create(pbFundingLine.appropriation, pbFundingLine.baOrBlin, pbFundingLine.item, pbFundingLine.opAgency);
       if (this.rows.has(key)) {
@@ -161,7 +163,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
         variants: []
       };
       this.pr.fundingLines.push(fundingLine);
-      this.initRows();
+      this.setPOMtoRows();
+      this.setPBtoRows();
     }
   }
 
