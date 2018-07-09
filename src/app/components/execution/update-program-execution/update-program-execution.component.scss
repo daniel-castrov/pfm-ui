@@ -83,11 +83,18 @@ input[readonly]{
     border: $grey-border;
     max-height: 20px;
     min-width: 140px;
-    padding: 10px 6px;
+    padding: 10px 6px 2px 6px;
   }
 
   .execution-title {
     background-color: $white;
+  }
+
+  .total-row {
+    border: none;
+    background-color: $white !important;
+    min-width: 140px;
+    font-weight: bold;
   }
 
  .large-column {
