@@ -3,14 +3,24 @@
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">FY18 - Appropriation Release for Program Execution Line(s)</span>
+        <span class="h5 mr-2">FY18 - Charges to Program Execution Line(s)</span>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-8">
+        <span class="form-group mr-3">
+          <label class="primary-label">From</label>
+          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown">
+            <option></option>
+            <option>2018</option>
+          </select>
+        </span>
+        <span class="form-group">
+          <label class="execution-titles">{{fullname(current)}}</label>
+        </span>
       </div>
       <div class="col-4 pull-right">
-        <button class="btn btn-primary" (click)="submit()">Release</button>
+        <button class="btn btn-primary" (click)="submit()">Charge</button>
       </div>
     </div>
     <div class="row mb-3">
@@ -24,19 +34,13 @@
           </select>
         </div>
       </div>
-      <div class="col-1">
+      <div class="col-2">
         <div class="form-group">
-          <label class="primary-label">Select:</label>
-          <select class="form-control-sm dropdown-width-small">
-            <option value=""></option>
-            <option value="">1</option>
-            <option value="">2</option>
-            <option value="">3</option>
-            <option value="">4</option>
-          </select>
+         <label class="primary-label">Additional ID's</label>
+         <input class="form-control form-input-medium">
         </div>
       </div>
-      <div class="col-9">
+      <div class="col-8">
          <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
           <input class="form-control long-form-input">
@@ -45,7 +49,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-        <div id="update-program-execution" class="table-editable">
+        <div id="charges-execution-lines" class="table-editable">
           <table class="execution-table table-striped">
             <tr class="execution-title font-weight-bold text-center">
               <th class="large-column text-left">
@@ -158,7 +162,7 @@
        <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
          <label class="primary-label">Attach Document:</label>
          <div class="input-group input-group-sm">
-           <input type="file" class="custom-file-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
+           <input type="file" class="custom-file-input" placeholder="Choose file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
            <label class="custom-file-label" for="charges">Chose file</label>
          </div>
        </form>

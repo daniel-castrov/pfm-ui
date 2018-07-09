@@ -34,6 +34,11 @@ fieldset {
   width: 100px;
 }
 
+.form-input-medium {
+  width: 180px;
+  margin-bottom: 10px;
+}
+
 .btn-file{
     position:relative
 }
@@ -56,14 +61,14 @@ input[readonly]{
   cursor:text !important;
 }
 
-.long-form-input {
-  width: 650px;
-  margin-bottom: 10px;
-}
-
 .form-input {
   display: inline-block;
   width: 300px;
+  margin-bottom: 10px;
+}
+
+.long-form-input {
+  width: 650px;
   margin-bottom: 10px;
 }
 
@@ -72,7 +77,6 @@ input[readonly]{
     background-color: #ccc;
   }
 }
-
 .execution-table {
   width: 1200px;
 
@@ -81,7 +85,7 @@ input[readonly]{
     background-color: $white;
     max-height: 20px;
     min-width: 140px;
-    padding: 10px 6px;
+    padding: 6px;
   }
 
   td {
@@ -123,7 +127,6 @@ input[readonly]{
 
     tr > td {
      padding: 4px;
-     border: none;
       }
     }
 

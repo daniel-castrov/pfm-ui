@@ -28,11 +28,12 @@ import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
-import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
+import { ChargesComponent } from './components/execution/charges/charges.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { CreateExecutionPhaseComponent } from './components/execution/create-execution-phase/create-execution-phase.component';
+import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
 import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
@@ -132,6 +133,7 @@ const appRoutes: Routes = [
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'appropriation-release', component:AppropriationReleaseComponent},
+  {path:'charges', component:ChargesComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
@@ -183,6 +185,7 @@ const appRoutes: Routes = [
     BulkTabComponent,
     HeaderUserComponent,
     CalculateTabComponent,
+    ChargesComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
