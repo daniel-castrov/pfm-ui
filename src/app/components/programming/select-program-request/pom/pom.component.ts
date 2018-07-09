@@ -25,11 +25,11 @@ export class PomComponent implements OnChanges {
     if(this.pbProgrammaticRequests && this.pomProgrammaticRequests && this.pom) {
       this.by = this.pom.fy;
       for(let year:number=this.by; year<this.by+5; year++) {
-        this.baseline[year] = this.aggregate(this.pbProgrammaticRequests, year);
+        this.baseline[year] = this.aggregateToas(this.pbProgrammaticRequests, year);
       }
 
       for(let year:number=this.by; year<this.by+5; year++) {
-        this.pomRequests[year] = this.aggregate(this.pomProgrammaticRequests, year);
+        this.pomRequests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
       }
 
       this.pom.communityToas.forEach( (toa)=> {
@@ -42,7 +42,16 @@ export class PomComponent implements OnChanges {
     }
   }
 
-  aggregate(prs: ProgramRequestWithFullName[], year: number): number {
+  aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
     return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a,b)=>a+b);
   }
+
+  totalColumns(column: number[]): number {
+    let result: number = 0;
+    for(let year: number = this.by; year<this.by+5; year++) {
+      result += column[year];
+    }
+    return result;
+  }
+
 }

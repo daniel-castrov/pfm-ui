@@ -63,10 +63,10 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.router.navigate(['/program-request']);    
   }
 
-  total(pr: UiProgrammaticRequest): number {
+  totalColumns(uiPr: UiProgrammaticRequest): number {
     let result: number = 0;
     for(let year: number = this.pomFy-3; year<this.pomFy+5; year++) {
-      result += pr.getToa(year);
+      result += uiPr.getToa(year);
     }
     return result;
   }
