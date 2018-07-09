@@ -17,21 +17,18 @@
           <td> </td>
         </tr>
         <tr>
-          <th class="largest-column">Parent</th>
-          <!-- <th class="large-column">Program</th>
-          <th class="large-column">Subprogram</th>
-          <th class="large-column">Variant</th> -->
+          <th class="largest-column">Program</th>
           <th class="largest-column">Status</th>
           <th>Cycle</th>
-          <th>{{by-3 | FY}}</th>
-          <th>{{by-2 | FY}}</th>
-          <th>{{by-1 | FY}}</th>
-          <th>{{by   | FY}}</th>
-          <th>{{by+1 | FY}}</th>
-          <th>{{by+2 | FY}}</th>
-          <th>{{by+3 | FY}}</th>
-          <th>{{by+4 | FY}}</th>
-          <th> >>{{by+4 | FY}}</th>
+          <th>{{pomFy-3 | FY}}</th>
+          <th>{{pomFy-2 | FY}}</th>
+          <th>{{pomFy-1 | FY}}</th>
+          <th>{{pomFy   | FY}}</th>
+          <th>{{pomFy+1 | FY}}</th>
+          <th>{{pomFy+2 | FY}}</th>
+          <th>{{pomFy+3 | FY}}</th>
+          <th>{{pomFy+4 | FY}}</th>
+          <th> >>{{pomFy+4 | FY}}</th>
         </tr>
       </thead>
       <div class="table-body">
@@ -44,27 +41,27 @@
               </span>
             </td>
             <td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{pr.pom?.state}}</a></td>
-            <td>PB</td>
-            <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by-2)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by-1)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by+1)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by+2)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by+3)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(by+4)}}</td>
+            <td>PB{{pbFy - 2000}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy-3)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy-2)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy-1)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+1)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+2)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+3)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+4)}}</td>
             <td class="text-right"></td>
           </tr>
           <tr>
-            <td>POM</td>
-            <td class="text-right">{{pr.pom?.getToa(by-3)}}</td>
-            <td class="text-right">{{pr.pom?.getToa(by-2)}}</td>
-            <td class="text-right">{{pr.pom?.getToa(by-1)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+1)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+2)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+3)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(by+4)}}</td>
+            <td>POM{{pomFy - 2000}}</td>
+            <td class="text-right">{{pr.pom?.getToa(pomFy-3)}}</td>
+            <td class="text-right">{{pr.pom?.getToa(pomFy-2)}}</td>
+            <td class="text-right">{{pr.pom?.getToa(pomFy-1)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+1)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+2)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+3)}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+4)}}</td>
             <td class="cell-lt-grey text-right"></td>
           </tr>
         </tbody>

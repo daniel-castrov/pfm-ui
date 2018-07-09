@@ -1,9 +1,7 @@
 import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
-import { Observable } from 'rxjs/Observable';
 import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 import { Component, Input, OnChanges } from '@angular/core';
 import { Pom } from '../../../../generated/model/pom';
-import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 
 @Component({
   selector: 'j-pom',

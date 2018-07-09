@@ -1,5 +1,4 @@
-import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
-import { WithFullNameService } from './../../../services/with-full-name.service';
+import { ProgramRequestWithFullName, WithFullNameService } from './../../../services/with-full-name.service';
 import { GlobalsService } from './../../../services/globals.service';
 import { POMService } from './../../../generated/api/pOM.service';
 import { Component, OnInit } from '@angular/core';
