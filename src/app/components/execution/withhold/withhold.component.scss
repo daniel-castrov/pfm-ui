@@ -1,0 +1,222 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-green: #ebf2de;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+$dark-green: #61bb69;
+$light-grey-border: 1px solid #eae9e9;
+
+fieldset {
+  padding: 20px;
+  min-height: 70px;
+}
+
+.execution-titles {
+  font-size: 20px;
+  padding: 0;
+  color: #4f7494;
+  font-weight: 500;
+}
+
+.dropdown-year-width {
+  width: 100px;
+}
+
+.dropdown-width {
+  width: 230px;
+}
+
+.dropdown-width-small {
+  width: 100px;
+}
+
+.form-input-medium {
+  width: 180px;
+  margin-bottom: 10px;
+}
+
+.btn-file{
+    position:relative
+}
+
+.btn-file input[type=file]{
+  position:absolute;
+  top:0;
+  right:0;
+  min-width:100%;
+  min-height:100%;
+  text-align:right;
+  filter:alpha(opacity=0);
+  opacity:0;
+  cursor:inherit;
+  display:block
+}
+
+input[readonly]{
+  background-color:$white !important;
+  cursor:text !important;
+}
+
+.form-input {
+  display: inline-block;
+  width: 300px;
+  margin-bottom: 10px;
+}
+
+.long-form-input {
+  width: 650px;
+  margin-bottom: 10px;
+}
+
+.table-striped {
+  tbody tr:nth-of-type(odd) {
+    background-color: #ccc;
+  }
+}
+.execution-table {
+  width: 1200px;
+
+  th {
+    border: none;
+    background-color: $white;
+    max-height: 20px;
+    min-width: 140px;
+    padding: 6px;
+  }
+
+  td {
+    border: $grey-border;
+    max-height: 20px;
+    min-width: 140px;
+    padding: 10px 6px 2px 6px;
+  }
+
+  .execution-title {
+    background-color: $white;
+  }
+
+  .total-row {
+    border: none;
+    background-color: $white !important;
+    min-width: 140px;
+    font-weight: bold;
+  }
+
+ .large-column {
+    width: 450px;
+  }
+
+  .not-editable {
+    text-align: right;
+
+    &:before {
+      content: "";
+    }
+  }
+
+  .table-editable {
+    position: relative;
+
+    th {
+      padding: 8px;
+    }
+
+    tr > td {
+     padding: 4px;
+      }
+    }
+
+    .fa {
+      font-size: 20px;
+    }
+  }
+
+  .table-remove {
+    color: #700;
+    cursor: pointer;
+
+    &:hover {
+      color: #f00;
+    }
+  }
+
+  .table-up, .table-down {
+    color: #007;
+    cursor: pointer;
+
+    &:hover {
+      color: #00f;
+    }
+  }
+
+  .table-add {
+    color: #070;
+    cursor: pointer;
+    position: absolute;
+    top: 8px;
+    right: 0;
+
+    &:hover {
+      color: #0b0;
+    }
+
+    .row-light {
+      background-color: $light-grey;
+      color: $black;
+    }
+
+  }
+
+  .table-editable  {
+    .row-white {
+      background-color: $white;
+    }
+
+    .editable-field {
+      background-color: $light-blue;
+      min-width: 120px;
+      color: $black;
+      max-height: 20px;
+      text-align: right;
+      &:hover {
+        cursor: pointer;
+        background-color: $light-grey;
+      }
+    }
+  }
+
+  .editable-field {
+
+    &:hover {
+      cursor: pointer;
+      background-color: #cccccc;
+    }
+    &:before {
+      content: "";
+    }
+  }
+
+  .empty-row {
+    height: 30px;
+    padding: 0;
+    content: '';
+  }
+
+  .remove-pom-line {
+   i {
+       &.fa {
+        color: $black;
+        opacity: .5;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      &.fa:hover {
+        color: red;
+        opacity: .9;
+      }
+    }
+  }
