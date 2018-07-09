@@ -3,28 +3,25 @@
   <div class="col-lg-12 col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5">Summary of Program Requests for POM{{by-2000}}</span>
+        <span class="h5">Summary of Program Requests for POM{{pom?.fy-2000}}</span>
       </div>
       <div class="col-md-3 col-sm-12">
-        <span *ngIf="editview">
+        <span>
           <button class="btn-primary btn pull-right" (click)=submit() [disabled]="thereAreOutstandingPRs">Submit All</button>
         </span>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-4 col-md-12 col-sm-12">
-        <new-programmatic-request *ngIf="editview" [pom]="pom"></new-programmatic-request>
-        <span *ngIf="!editview">
-            <button class="btn-primary btn pull-right" (click)="openPom()">Open POM Session</button>
-        </span>
+        <new-programmatic-request [pomId]="pom?.id"></new-programmatic-request>
       </div>
       <div class="col-lg-6 col-md-12 col-sm-12">
-        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom" [by]="by"></j-pom>
+        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom"></j-pom>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
-        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="by" [editable]="editview" (deleted)="ngOnInit()"></programmatic-requests>
+        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="pom?.fy" (deleted)="reloadPrs()"></programmatic-requests>
       </div>
     </div>
   </div>

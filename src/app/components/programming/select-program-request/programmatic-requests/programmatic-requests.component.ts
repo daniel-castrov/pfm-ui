@@ -1,6 +1,6 @@
+import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
-import { Program } from '../../../../generated/model/program';
 import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Row } from './Row';
 import { PRService } from '../../../../generated/api/pR.service';
@@ -13,12 +13,11 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 })
 export class ProgrammaticRequestsComponent implements OnChanges {
 
-  @Input() private pomProgrammaticRequests: ProgrammaticRequest[];
+  @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
   @Input() private by: number;
   @Input() private editable:boolean;
   private mapNameToRow = {};
-  private mapIdToRow = {};
   @Output() deleted: EventEmitter<any> = new EventEmitter();
 
   // used only during PR deletion

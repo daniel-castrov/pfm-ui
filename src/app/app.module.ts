@@ -1,5 +1,5 @@
 import { GlobalsService } from './services/globals.service';
-import { ProgramsWithFullNameService } from './services/fetch-programs.service';
+import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
 // app.modules
@@ -154,7 +154,7 @@ const appRoutes: Routes = [
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
-  {path:'select-program-request/:view', component:SelectProgramRequestComponent},
+  {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
@@ -284,7 +284,7 @@ const appRoutes: Routes = [
     MyDetailsService,
     OrganizationService,
     ProgramRequestPageModeService,
-    ProgramsWithFullNameService,
+    WithFullNameService,
     RoleService,
     StrangerService,
     UserRoleResourceService,

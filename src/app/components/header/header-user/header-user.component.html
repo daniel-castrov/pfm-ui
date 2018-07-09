@@ -72,7 +72,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
-          <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request/edit">Program Request</a>
+          <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
           <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" disabled>Program Request</a>
           <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
           <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" disable class="dropdown-item">UFR Request</a>
@@ -86,7 +86,7 @@
 
         <ng-container *ngIf="pomStatusIsCreated">
           <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/select-program-request/review">Open POM Session</a>
+          <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
           <a class="dropdown-item" disabled>Update POM Session</a>
         </ng-container>
 

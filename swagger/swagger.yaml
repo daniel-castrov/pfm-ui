@@ -2606,6 +2606,10 @@ definitions:
         type: "string"
       originalMrId:
         type: "string"
+      creationTimeReferenceId:
+        type: "string"
+      creationTimeType:
+        type: "string"
       infolink:
         type: "string"
       imgLink:
@@ -2725,6 +2729,10 @@ definitions:
       originalMrId:
         type: "string"
       parentMrId:
+        type: "string"
+      creationTimeReferenceId:
+        type: "string"
+      creationTimeType:
         type: "string"
       type:
         type: "string"

@@ -38,7 +38,7 @@
         <tbody *ngFor="let pr of (mapNameToRow | values)">
           <tr>
             <td class="row-lt-gray text-center largest-column" rowspan="2">
-              <span class="clickable" (click)="editPR(pr.pom.id)">{{ pr.pom.isSubprogram ? pr.pom.parentMrId : pr.pom?.shortName}}{{ pr.pom.isNonVariantSubprogram ? pr.pom?.shortName : ''}}{{ pr.pom.isVariantSubprogram ? pr.pom?.shortName : ''}}</span>
+              <span class="clickable" (click)="editPR(pr.pom.id)">{{pr.pom?.fullname}}</span>
               <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
                 <i class="fa fa-trash"></i>
               </span>
