@@ -154,7 +154,7 @@ const appRoutes: Routes = [
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
-  {path:'select-program-request', component:SelectProgramRequestComponent},
+  {path:'select-program-request/:view', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},

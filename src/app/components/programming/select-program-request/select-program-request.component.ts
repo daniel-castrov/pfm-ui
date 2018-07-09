@@ -1,6 +1,7 @@
 import { MyDetailsService } from './../../../generated/api/myDetails.service';
 import { POMService } from './../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -27,12 +28,23 @@ export class SelectProgramRequestComponent implements OnInit {
   private pb: PB;
   private pbProgrammaticRequests: ProgrammaticRequest[];
   private thereAreOutstandingPRs: boolean;
+  private editview:boolean = false;
 
   constructor(private myDetailsService: MyDetailsService,
               private pomService: POMService,
               private pbService: PBService,
-              private prService: PRService
-  ) {}
+              private prService: PRService,
+              private router: Router,
+              private route: ActivatedRoute,
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      console.log( params.view );
+      if ( params.view === "edit" ){
+        this.editview = true;
+      }
+      console.log( this.editview );
+    });
+  }
 
   async ngOnInit() {
     const user: User = (await this.myDetailsService.getCurrentUser().toPromise()).result;
