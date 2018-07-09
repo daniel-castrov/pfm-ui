@@ -2854,5 +2854,9 @@ definitions:
         type: "string"
       eventType:
         type: "string"
+      reason:
+        type: "string"
+      longname:
+        type: "string"
 ##############################################################################
 # ENDFILE

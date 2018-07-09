@@ -24,6 +24,7 @@ declare const jQuery: any;
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private current: ExecutionLine;
+  private phase: Execution;
   private allexelines: ExecutionLine[] = [];
   private updateexelines: ExecutionLine[] = [];
   private fy: number;
@@ -32,6 +33,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private etype: string;
   private ttype: string;
   private longname: string;
+  private reason: string;
 
   constructor(private exesvc: ExecutionService, private progsvc:ProgramsService,
     private route: ActivatedRoute) { }
@@ -108,7 +110,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
           my.allexelines = d2.result;
         });
         my.exesvc.getById(my.current.phaseId).subscribe(d2 => {
-          my.fy = d2.result.fy;
+          my.phase = d2.result;
         });
 
         Object.getOwnPropertyNames(data[1].result).forEach(id => {
@@ -123,17 +125,21 @@ export class UpdateProgramExecutionComponent implements OnInit {
       toIdAmtLkp: {},
       fromId: this.current.id,
       eventType: this.etype,
-      transType: this.ttype
+      transType: this.ttype,
+      reason: this.reason,
+      longname: this.longname
     };
     this.updateexelines.forEach(l => { 
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
-  
-    /*
-    this.exesvc.createTransfer("1234", new Blob(["stuff"]),
+    console.log(this.updateexelines);
+
+    console.log(et);
+
+
+    this.exesvc.createTransfer(this.phase.id, new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
-    */
   }
 
   fullname(exeline: ExecutionLine): string {
@@ -165,9 +171,27 @@ export class UpdateProgramExecutionComponent implements OnInit {
     toupdate.opAgency = l.opAgency;
     toupdate.toa = 0;
     toupdate.released = 0;
+    toupdate.id = l.id;
   }
 
   getLineChoices(mrid): ExecutionLine[]{
     return this.allexelines.filter(x => x.mrId === mrid);
+  }
+
+  onedit(amtstr, updateidx) {
+    var my: UpdateProgramExecutionComponent = this;
+    var toupdate: ExecutionLine = my.updateexelines[updateidx];
+    toupdate.released = Number.parseInt(amtstr);
+  }
+
+  total(): number {
+    var my: UpdateProgramExecutionComponent = this;
+
+    var tot: number = 0;
+    for (var i = 0; i < my.updateexelines.length; i++){
+      tot += my.updateexelines[i].released;
+    }
+
+    return tot;
   }
 }

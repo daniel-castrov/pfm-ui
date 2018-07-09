@@ -7,7 +7,7 @@
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">{{fy|FY}} - Funds Update for Program Execution</span>
+        <span class="h5 mr-2">{{phase?.fy|FY}} - Funds Update for Program Execution</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -78,7 +78,7 @@
       <div class="col-7">
          <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input">
+          <input class="form-control long-form-input" [(ngModel)]="longname">
         </div>
       </div>
     </div>
@@ -138,8 +138,7 @@
 
               <td>{{line.toa}}</td>
               <td>{{line.released}}</td>
-              <td class="editable-field" contenteditable="true">
-              </td>
+              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, idx)">{{line.released}}</td>
               <td class="text-center">
                 <span class="remove-pom-line" title="Remove" (click)="removerow(idx)">
                   <i class="fa fa-trash"></i>
@@ -150,7 +149,7 @@
               <td colspan="2" class="text-right">Total:</td>
               <td></td>
               <td></td>
-              <td class="text-right">145 </td>
+              <td class="text-right">{{total()}} </td>
               <td></td>
             </tr>
           </table>
@@ -161,7 +160,7 @@
       <div class="col-9">
         <span class="form-group">
           <label class="primary-label mb-1">Notes:</label>
-          <textarea cols="30" rows="5" wrap="physical" class="form-control"></textarea>
+          <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
         </span>
      </div>
    </div>
