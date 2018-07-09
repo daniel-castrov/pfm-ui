@@ -14,8 +14,7 @@
         </span>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.middleInitial" #createUserRequestMiddleInitial="ngModel" [ngClass]="{'is-invalid':createUserRequestMiddleInitial.errors && createUserRequestMiddleInitial.touched}"
-            class="form-control middle" name="middleInitial" placeholder="*MI" minlength="1" maxlength="1" required>
-            <span [hidden]="!createUserRequestMiddleInitial.errors?.required" class="invalid-feedback">*Middle Name is required</span>
+            class="form-control middle" name="middleInitial" placeholder="MI" minlength="1" maxlength="1">
             <span [hidden]="!createUserRequestMiddleInitial.errors?.minlength" class="invalid-feedback">*Middle Name must be 1 character</span>
             <span [hidden]="!createUserRequestMiddleInitial.errors?.maxlength" class="invalid-feedback">*Middle Name can only be 1 character</span>
 
@@ -27,8 +26,7 @@
           <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name must be at least 2 characters</span>
         </span>
         <div class="form-group nda" *ngIf="stranger?.contractor">
-          <span *ngIf="!ndaSatisfied">*If you are a contractor you must sign the NDA.</span>
-          <a *ngIf="!ndaSatisfied" class="nda-not-valid" data-toggle="modal" href="#myModal"> Please click here to sign the NDA.</a>
+          <span *ngIf="!ndaSatisfied">*If you are a contractor please <a *ngIf="!ndaSatisfied" class="nda-not-valid" data-toggle="modal" href="#myModal">click here</a> to sign the NDA.</span>
           <a *ngIf="ndaSatisfied">The NDA has been signed.</a>
           <span *ngIf="!ndaSatisfied">
             <i class="fa fa-exclamation-triangle nda-not-valid" aria-hidden="true"></i>
