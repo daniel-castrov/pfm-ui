@@ -75,6 +75,7 @@ import { UserApprovalComponent } from './components/user-management/approval-new
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { VariantsComponent } from './components/programs/program-view/variants.component';
 import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
+import { WithholdComponent } from './components/execution/withhold/withhold.component';
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
@@ -139,6 +140,8 @@ const appRoutes: Routes = [
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
+  {path:'create-new-pom', component: CreatePomSessionComponent},
+  {path:'exporter', component: ProgramExportComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
   {path:'header', component:HeaderComponent},
@@ -158,19 +161,17 @@ const appRoutes: Routes = [
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
+  {path:'set-epp', component: SetEppComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
-  { path: 'exporter', component: ProgramExportComponent },
-  { path: 'create-new-pom', component: CreatePomSessionComponent },
-  { path: 'ufr-search', component: UfrSearchComponent },
-  { path: 'ufr-view/:id', component: UfrViewComponent },
-  { path: 'worksheet-management', component: WorksheetManagementComponent},
-  { path: 'set-epp', component: SetEppComponent}
-
+  {path:'ufr-search', component: UfrSearchComponent},
+  {path:'ufr-view/:id', component: UfrViewComponent},
+  {path:'withhold', component: WithholdComponent},
+  {path:'worksheet-management', component: WorksheetManagementComponent}
 ];
 
 @NgModule({
@@ -192,6 +193,7 @@ const appRoutes: Routes = [
     CreateExecutionPhaseComponent,
     CreatePomSessionComponent,
     CurrentComponent,
+    DashForZeroPipe,
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
@@ -212,13 +214,16 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageSelfComponent,
     ManageUsersComponent,
+    MapAsListPipe,
     MyCommunitiesComponent,
     MyRolesComponent,
     NewProgrammaticRequestComponent,
+    NewUfrComponent,
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
     NotImplementedComponent,
+    OnlyDigitsDirective,
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
@@ -232,6 +237,7 @@ const appRoutes: Routes = [
     ProgrammaticRequestsComponent,
     RequestComponent,
     SelectProgramRequestComponent,
+    SetEppComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
@@ -247,13 +253,8 @@ const appRoutes: Routes = [
     UpdatePomSessionComponent,
     UpdateProgramExecutionComponent,
     ValuesPipe,
-    WorksheetManagementComponent,
-    DashForZeroPipe,
-    NewUfrComponent,
-    OnlyDigitsDirective,
-    FyPipe,
-    MapAsListPipe,
-    SetEppComponent
+    WithholdComponent,
+    WorksheetManagementComponent
   ],
 
   imports: [
