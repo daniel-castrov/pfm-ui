@@ -1,3 +1,4 @@
+import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
@@ -62,4 +63,11 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.router.navigate(['/program-request']);    
   }
 
+  total(pr: UiProgrammaticRequest): number {
+    let result: number = 0;
+    for(let year: number = this.pomFy-3; year<this.pomFy+5; year++) {
+      result += pr.getToa(year);
+    }
+    return result;
+  }
 }

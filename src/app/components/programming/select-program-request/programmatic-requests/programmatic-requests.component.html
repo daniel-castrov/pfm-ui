@@ -28,7 +28,7 @@
           <th>{{pomFy+2 | FY}}</th>
           <th>{{pomFy+3 | FY}}</th>
           <th>{{pomFy+4 | FY}}</th>
-          <th> >>{{pomFy+4 | FY}}</th>
+          <th>Total</th>
         </tr>
       </thead>
       <div class="table-body">
@@ -50,7 +50,7 @@
             <td class="text-right">{{pr.pb?.getToa(pomFy+2)}}</td>
             <td class="text-right">{{pr.pb?.getToa(pomFy+3)}}</td>
             <td class="text-right">{{pr.pb?.getToa(pomFy+4)}}</td>
-            <td class="text-right"></td>
+            <td class="text-right">{{total(pr.pb)}}</td>
           </tr>
           <tr>
             <td>POM{{pomFy - 2000}}</td>
@@ -62,7 +62,7 @@
             <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+2)}}</td>
             <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+3)}}</td>
             <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+4)}}</td>
-            <td class="cell-lt-grey text-right"></td>
+            <td class="cell-lt-grey text-right">{{total(pr.pom)}}</td>
           </tr>
         </tbody>
       </div>
