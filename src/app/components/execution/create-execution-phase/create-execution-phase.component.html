@@ -11,6 +11,7 @@
          </span>
       </div>
     </div>
+
     <div class="row">
       <div class="col-6 mb-4">
         <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
@@ -32,7 +33,7 @@
     </div>
     <div class="row">
       <div class="col-8  mb-4">
-        <button class="btn btn-primary pull-right" (click)="submit()">Create Phase</button>
+        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!modelpb">Create Phase</button>
       </div>
     </div>
     <div class="row">

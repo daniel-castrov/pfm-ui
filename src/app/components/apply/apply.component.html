@@ -13,8 +13,11 @@
           <span [hidden]="!createUserRequestFirstName?.errors?.minlength" class="invalid-feedback">*First Name must be at least 2 characters</span>
         </span>
         <span class="form-group inline-name">
-          <input type="text" [(ngModel)]="createUserRequest.middleInitial" #createUserRequestMiddleInitial="ngModel"
-            class="form-control middle" name="middleInitial" placeholder="MI" minlength="1">
+          <input type="text" [(ngModel)]="createUserRequest.middleInitial" #createUserRequestMiddleInitial="ngModel" [ngClass]="{'is-invalid':createUserRequestMiddleInitial.errors && createUserRequestMiddleInitial.touched}"
+            class="form-control middle" name="middleInitial" placeholder="MI" minlength="1" maxlength="1">
+            <span [hidden]="!createUserRequestMiddleInitial.errors?.minlength" class="invalid-feedback">*Middle Name must be 1 character</span>
+            <span [hidden]="!createUserRequestMiddleInitial.errors?.maxlength" class="invalid-feedback">*Middle Name can only be 1 character</span>
+
         </span>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.lastName" #createUserRequestLastName="ngModel" [ngClass]="{'is-invalid':createUserRequestLastName.errors && createUserRequestLastName.touched}"
@@ -23,8 +26,8 @@
           <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name must be at least 2 characters</span>
         </span>
         <div class="form-group nda" *ngIf="stranger?.contractor">
-          <a *ngIf="!ndaSatisfied" data-toggle="modal" href="#myModal">*Sign NDA</a>
-          <a *ngIf="ndaSatisfied" data-toggle="modal"  href="#myModal">Signed NDA</a>
+          <span *ngIf="!ndaSatisfied">*If you are a contractor please <a *ngIf="!ndaSatisfied" class="nda-not-valid" data-toggle="modal" href="#myModal">click here</a> to sign the NDA.</span>
+          <a *ngIf="ndaSatisfied">The NDA has been signed.</a>
           <span *ngIf="!ndaSatisfied">
             <i class="fa fa-exclamation-triangle nda-not-valid" aria-hidden="true"></i>
           </span>
@@ -84,10 +87,9 @@
             name="city" placeholder="Street, City, State, Zipcode">
         </div>
         <div class="form-group dropdown-select">
-          <label for="communites">*Community Access Request</label>
           <div>
             <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" required #communityId="ngModel">
-              <option value=""></option>
+              <option value="">*Community Access Request</option>
               <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
             </select>
             <div [hidden]="communityId.valid || communityId.pristine" class="alert alert-danger">*Community required</div>

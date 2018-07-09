@@ -64,11 +64,9 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
   <ul class="navbar-nav mr-auto">
     <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Planning</a>
+      <a class="nav-link dropdown-toggle" [class.disabled]="!authUser.rolenames.includes('POM_Manager')" href="#" id="dropdown08" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Planning</a>
         <div class="dropdown-menu" aria-labelledby="dropdown08">
-          <ng-container *ngIf="authUser.rolenames.includes('POM_Manager')">
-            <a class="dropdown-item" href="#" routerLink="/set-epp">Set EPP</a>
-          </ng-container>
+          <a class="dropdown-item" href="#" routerLink="/set-epp">Set EPP</a>
         </div>
       </li>
       <li class="nav-item dropdown">

@@ -1,9 +1,9 @@
 import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
 import { PRService } from './../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService } from './page-mode.service';
+import { ProgramRequestPageModeService, Type } from './page-mode.service';
 
 
 @Component({
@@ -13,11 +13,11 @@ import { ProgramRequestPageModeService } from './page-mode.service';
 })
 export class ProgramRequestComponent implements OnInit {
 
-  pr: ProgrammaticRequest;
+  pr: ProgrammaticRequest = {};
 
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService ) {
-
+    this.pr.fundingLines = [];
   }
 
 
@@ -33,12 +33,13 @@ export class ProgramRequestComponent implements OnInit {
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
     } else {
       this.pr.phaseId = this.programRequestPageMode.phaseId;
-      this.pr.originalMrId = this.programRequestPageMode.originatingProgramId;
-      this.pr.parentMrId = this.programRequestPageMode.parentId;
+      if(this.programRequestPageMode.programOfMrDb)  this.pr.originalMrId = this.programRequestPageMode.referenceId;
+      this.pr.creationTimeType = Type[this.programRequestPageMode.type];
+      this.pr.creationTimeReferenceId = this.programRequestPageMode.referenceId;
       this.pr.bulkOrigin = false;
       this.pr.state = 'OUTSTANDING';
-      if(this.programRequestPageMode.newProgram) this.pr.type = 'PROGRAM';
-      if(this.programRequestPageMode.newSubprogram) this.pr.type = 'INCREMENT';
+      if(this.programRequestPageMode.newProgram || this.programRequestPageMode.programOfMrDb) this.pr.type = 'PROGRAM';
+      if(this.programRequestPageMode.subprogramOfMrDb || this.programRequestPageMode.subProgramOfPrOrUfr) this.pr.type = 'INCREMENT';
       this.pr = (await this.prService.create(this.pr).toPromise()).result;
     }
   }
