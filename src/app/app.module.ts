@@ -120,6 +120,7 @@ import { ProgramRequestPageModeService } from './components/programming/program-
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
 import { EppService } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
+import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -128,15 +129,14 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
-  {path:'appropriation-release', component:AppropriationReleaseComponent},
-  {path:'charges', component:ChargesComponent},
+  {path:'appropriation-release/:phaseId', component:AppropriationReleaseComponent},
+  {path:'charges/:phaseId', component:ChargesComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent},
-  {path:'exporter', component: ProgramExportComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
   {path:'header', component:HeaderComponent},
@@ -162,7 +162,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
-  {path:'withhold', component: WithholdComponent},
+  {path:'withhold/:phaseId', component: WithholdComponent},
   { path: 'create-new-pom', component: CreatePomSessionComponent },
   { path: 'worksheet-management', component: WorksheetManagementComponent},
   { path: 'set-epp', component: SetEppComponent}
@@ -248,7 +248,8 @@ const appRoutes: Routes = [
     RbacPermissionDirective,
     FyPipe,
     MapAsListPipe,
-    SetEppComponent
+    SetEppComponent,
+    ExecutionLineTableComponent
   ],
 
   imports: [

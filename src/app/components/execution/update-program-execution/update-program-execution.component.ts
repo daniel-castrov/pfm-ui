@@ -27,7 +27,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private phase: Execution;
   private allexelines: ExecutionLine[] = [];
   private updateexelines: ExecutionLine[] = [];
-  private fy: number;
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
   private etype: string;

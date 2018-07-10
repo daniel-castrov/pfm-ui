@@ -8,7 +8,8 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ExecutionLine } from '../../../generated';
 
 declare const $: any;
 declare const jQuery: any;
@@ -21,10 +22,11 @@ declare const jQuery: any;
 
 
 export class AppropriationReleaseComponent implements OnInit {
-
   @ViewChild(HeaderComponent) header;
+  private updatelines: ExecutionLine[] = [];
+  private phase:Execution;
 
-  constructor() { }
+  constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
 
@@ -82,7 +84,12 @@ export class AppropriationReleaseComponent implements OnInit {
 
       // Output the result
       $EXPORT.text(JSON.stringify(data));
+
+    });
+    this.route.params.subscribe(data => { 
+      this.exesvc.getById(data.phaseId).subscribe(d2 => { 
+        this.phase = d2.result;
+      });
     });
   }
-
 }

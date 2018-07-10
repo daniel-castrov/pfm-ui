@@ -85,74 +85,7 @@
     <div class="row mb-3">
       <div class="col-12">
         <div id="update-program-execution" class="table-editable">
-          <table class="execution-table table-striped">
-            <tr class="execution-title font-weight-bold text-center">
-              <th class="large-column text-left">
-                <span>
-                  <button class="btn btn-light" (click)="addrow()">
-                    <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                    to select target programs
-                  </button>
-                </span>
-              </th>
-              <th class="large-column">
-                Execution Line
-              </th>
-              <th>
-                TOA
-              </th>
-              <th>
-                Released
-              </th>
-              <th>
-                Amount
-              </th>
-              <th>
-                Remove
-              </th>
-            </tr>
-
-            <tr class="table-bordered" *ngFor="let line of updateexelines; let idx=index">
-              <td *ngIf="line?.mrId" class="large-column">{{fullname(line)}}</td>
-              <td *ngIf="!line?.mrId" class="large-column">
-                <select class="form-control-sm dropdown-width mb-2" name="progdd" [(ngModel)]="line.mrId">
-                  <option value="">Select Program</option>
-                  <option *ngFor="let en of programIdNameLkp | mapAsList" [value]="en.key">{{en.value}}</option>
-                </select>
-              </td>
-
-              <td *ngIf="line.mrId && line.appropriation">
-                <ng-container *ngTemplateOutlet="idline;context:{line:line}"></ng-container>
-              </td>
-              <td *ngIf="line.mrId && !line.appropriation">
-                <select class="form-control-sm dropdown-width mb-2" name="linedd" (change)="setline(idx, $event.target.selectedIndex)">
-                  <option value="">Select Execution Line</option>
-                  <option *ngFor="let l of getLineChoices(line.mrId)" [ngValue]="l.id">
-                    <ng-container *ngTemplateOutlet="idline;context:{line:l}"></ng-container>
-                  </option>
-                </select>
-              </td>
-              <td *ngIf="!line.mrId">
-                Select a Program first
-              </td>
-
-              <td>{{line.toa}}</td>
-              <td>{{line.released}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, idx)">{{line.released}}</td>
-              <td class="text-center">
-                <span class="remove-pom-line" title="Remove" (click)="removerow(idx)">
-                  <i class="fa fa-trash"></i>
-                </span>
-              </td>
-            </tr>
-            <tr class="total-row">
-              <td colspan="2" class="text-right">Total:</td>
-              <td></td>
-              <td></td>
-              <td class="text-right">{{total()}} </td>
-              <td></td>
-            </tr>
-          </table>
+          <app-execution-line-table [phase]="phase" [updatelines]="updateexelines"></app-execution-line-table>
         </div>
       </div>
     </div>

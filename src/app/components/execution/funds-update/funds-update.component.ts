@@ -25,7 +25,7 @@ export class FundsUpdateComponent implements OnInit {
   private selectedexe: Execution;
   private allexelines: ExecutionLine[] = [];
   private filteredexelines: ExecutionLine[] = [];
-  private programs: Map<string, string>=new Map<string,string>();
+  private programs: Map<string, string> = new Map<string, string>();
   private appropriations: string[] = [];
   private blins: string[] = [];
   private items: string[] = [];
