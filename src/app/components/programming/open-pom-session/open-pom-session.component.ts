@@ -94,16 +94,8 @@ export class OpenPomSessionComponent implements OnInit {
         this.pomStatusIsCreated = false;
         this.feedback.success('The POM Session is now OPEN');
         this.header.refreshActions();
-        // this.sleep(4000).then(() => {
-        //   this.router.navigate(['/home']);
-        // })
       });
     }
-  }
-
-
-  sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
   }
 
   async submit() {

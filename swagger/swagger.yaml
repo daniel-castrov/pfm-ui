@@ -17,6 +17,7 @@ tags:
 - name: "PB"
 - name: "Permission"
 - name: "POM"
+- name: "PomWorksheet"
 - name: "PR"
 - name: "Programs"
 - name: "Role"
@@ -351,6 +352,21 @@ paths:
         required: true
         type: "string"
 # STOP POM
+##############################################################################
+# START POMWORKSHEET
+  /pomworksheets/pom/{pomId}:
+    get:
+      tags:
+      - "PomWorksheet"
+      operationId: "getByPomId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+# STOP POMWORKSHEET
 ##############################################################################
 # START PR
   /pr/phase/{phaseId}:
@@ -2779,6 +2795,36 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
+  PomWorksheet:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      pomId:
+        type: "string"
+      name:
+        type: "string"
+      notes:
+        type: "string"
+      createDate:
+        type: "integer"
+      lastUpdateDate:
+        type: "integer"
+      rows:
+        type: "object"
+        $ref: "#/definitions/PomWorksheetRow"
+  PomWorksheetRow:
+    type: "object"
+    properties:
+      programRequestId:
+        type: "string"
+      programRequestFullname:
+        type: "string"
+      coreCapability:
+        type: "string"
+      fund:
+        type: "object"
+        $ref: "#/definitions/FundingLine"
   ProgrammaticRequest:
     type: "object"
     properties:
