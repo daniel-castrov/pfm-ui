@@ -3,7 +3,7 @@
   <div class="row main-content" *ngIf="programRequestPageMode.initialized">
     <div class="col-12">
       <div class="row">
-        <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfRecord">
+        <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfMrDb">
           <div class="h5 mb-4">Program Request for Program:</div>
             <span class="form-group">
               <label class="main-titles mr-sm-4">{{pr.shortName}}</label>
@@ -12,7 +12,7 @@
               <label class="main-titles mr-sm-4">{{pr.longName}}</label>
             </span>
         </div>
-        <div class="col-6" id="create-new-subprogram" *ngIf="!programRequestPageMode.id && programRequestPageMode.newSubprogram">
+        <div class="col-6" id="create-new-subprogram" *ngIf="!programRequestPageMode.id && (programRequestPageMode.newSubprogramOfMrDb || programRequestPageMode.newSubprogramOfPrOrUfr)">
           <div class="h5 mb-4">Program Request - Creating New Sub-Program for Program:</div>
           <input type="text" class="form-control forminput mr-2" [(ngModel)]="pr.shortName" placeholder="Subprogram ID" aria-label="short name">
           <input type="text" class="form-control forminput" [(ngModel)]="pr.longName" placeholder="Subprogram Name" aria-label="short name">

@@ -18,7 +18,8 @@ export class ProgramTabComponent implements OnInit {
     'Secondary Capability',
     'Functional Area',
     'Medical Category',
-    'DASD CBD'
+    'DASD CBD',
+    'Emphasis Areas'
   ];
 
   dropdownValues= new Map();

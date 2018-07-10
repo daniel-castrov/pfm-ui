@@ -1,5 +1,5 @@
+import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
-import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 
 export class Row {
@@ -7,11 +7,11 @@ export class Row {
   pom: UiProgrammaticRequest;
   pb: UiProgrammaticRequest;
 
-  constructor(pr: ProgrammaticRequest) {
+  constructor(pr: ProgramRequestWithFullName) {
     this.pom = new UiProgrammaticRequest(pr);
   }
 
-  addPbPr(pr: ProgrammaticRequest) {
+  addPbPr(pr: ProgramRequestWithFullName) {
     this.pb = new UiProgrammaticRequest(pr);
   }
 }

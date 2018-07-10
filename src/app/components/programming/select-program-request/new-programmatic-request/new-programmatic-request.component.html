@@ -7,9 +7,9 @@
               {{addNewPrFor ? addNewPrFor : 'Select an option'}}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" (click)="addNewPrFor='An Existing Program of Record'">An Existing Program of Record</a>
-              <a class="dropdown-item" (click)="addNewPrFor='A New Subprogram'">A New Subprogram</a>
-              <a class="dropdown-item" (click)="addNewPrFor='A New Program'">A New Program</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('An Existing Program of Record')">An Existing Program of Record</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New Subprogram')">A New Subprogram</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New Program')">A New Program</a>
           </div>
         </div>
       </div>
@@ -28,8 +28,8 @@
           </label>
         </div>
         <div class="dropdown-label">
-          <select [(ngModel)]="selectedProgram" class="form-control-sm" name="dummy">
-            <option *ngFor="let program of programs" [ngValue]="program">{{program.fullname}}</option>
+          <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
+            <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.fullname}}</option>
           </select>
         </div>
       </div>

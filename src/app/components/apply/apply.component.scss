@@ -1,9 +1,18 @@
+
+label {
+  color: #6b757c;
+  width: 300px;
+  margin: 0;
+}
+
+select,
+option {
+  color: #252627;
+  width: 300px;
+  margin: 0;
+}
+
 .applyform {
-  label, select {
-    color: #8a8787;
-    width: 300px;
-    margin: 0;
-  }
 
   .form-formatting {
     background-color: none;
@@ -30,6 +39,7 @@
 
   .alert-danger {
     color: #dc3545;
+    font-size: 12px;
     background-color: none;
     border: none;
   }
@@ -51,7 +61,6 @@
     margin-bottom: .3rem;
   }
 
-
   .nda {
     padding: 0 2px;
     clear: both;
@@ -66,8 +75,12 @@
     color: green;
   }
 
-  .nda-not-valid {
-    color: #676775;
+  .nda-not-valid  {
+    color: #dc3545;
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   .controls {
