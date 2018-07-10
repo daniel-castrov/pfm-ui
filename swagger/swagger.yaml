@@ -365,6 +365,50 @@ paths:
         name: "phaseId"
         required: true
         type: "string"
+  /pr/uploadImage:
+    post:
+      tags:
+      - "PR"
+      operationId: "uploadImage"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "The PR image file"
+        required: true
+        type: file
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /pr/downloadImage:
+    get:
+      tags:
+      - "PR"
+      operationId: "downloadImage"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        required: true
+        type: "string"
   /pr/{id}:
     get:
       tags:
@@ -2835,6 +2879,10 @@ definitions:
       justification:
         type: "string"
       impactN:
+        type: "string"
+      imageName:
+        type: "string"
+      imageArea:
         type: "string"
   PB:
     type: "object"
