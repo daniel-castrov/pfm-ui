@@ -20,6 +20,7 @@ tags:
 - name: "PR"
 - name: "Programs"
 - name: "Role"
+- name: "RolesPermissions"
 - name: "Snapshots"
 - name: "Stranger"
 - name: "UFRs"
@@ -1274,6 +1275,79 @@ paths:
           description: "Forbidden/not authorized"
 # STOP ROLES
 ##############################################################################
+# START rolesandpermission
+  /hasrole/{roleName}:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns true if the current user has rolename"
+      description: "Returns true if the current user has rolename"
+      operationId: "hasRole"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleName"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "true or false"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /hasroles/{roleNames}:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns array of t/f for each string"
+      description: "Returns array of t/f for each string"
+      operationId: "hasRoles"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleNames"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "true or false"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /ispermitted/{permission}:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns true if the current user has permission"
+      description: "Returns true if the current user has permission"
+      operationId: "hasPermission"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "permission"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "true or false"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+
+
+# END rolesandpermission
 # START STRANGER
   /stranger:
     get:
