@@ -3,7 +3,7 @@
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">FY18 - Charges to Program Execution Line(s)</span>
+        <span class="h5 mr-2">{{phase?.fy|FY}} - Charges to Program Execution Line(s)</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -15,9 +15,9 @@
             <option>2018</option>
           </select>
         </span>
-        <span class="form-group">
+        <!--span class="form-group">
           <label class="execution-titles">{{fullname(current)}}</label>
-        </span>
+        </span-->
       </div>
       <div class="col-4 pull-right">
         <button class="btn btn-primary" (click)="submit()">Charge</button>
@@ -50,102 +50,7 @@
     <div class="row mb-3">
       <div class="col-12">
         <div id="charges-execution-lines" class="table-editable">
-          <table class="execution-table table-striped">
-            <tr class="execution-title font-weight-bold text-center">
-              <th class="large-column text-left">
-                <span>
-                  <button class="btn btn-light">
-                    <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                    to select target programs
-                  </button>
-                </span>
-              </th>
-              <th class="large-column">
-                Execution Line
-              </th>
-              <th>
-                TOA
-              </th>
-              <th>
-                Released
-              </th>
-              <th>
-                Amount
-              </th>
-              <th>
-                Remove
-              </th>
-            </tr>
-            <tr class="table-bordered">
-              <td class="large-column">JEM Increment 1</td>
-              <td class="large-column">JRDT&amp;E/BA4/IS4/5y</td>
-              <td>1200</td>
-              <td>1000</td>
-              <td class="editable-field" contenteditable="true">100  </td>
-              <td class="text-center">
-                <span class="remove-pom-line" title="Remove">
-                  <i class="fa fa-trash"></i>
-                </span>
-              </td>
-            </tr>
-            <tr class="table-bordered">
-              <td class="large-column">JEM</td>
-              <td class="large-column">JRDT&amp;E/BA4/IS5/5y</td>
-              <td>1000</td>
-              <td>929</td>
-              <td class="editable-field" contenteditable="true">
-                20
-              </td>
-              <td class="text-center">
-                <span class="remove-pom-line" title="Remove">
-                  <i class="fa fa-trash"></i>
-                </span>
-              </td>
-            </tr>
-            <tr class="table-bordered">
-              <td class="large-column">Prox/Sub1/Sub2/Sub3</td>
-              <td class="large-column">JRDT&amp;E/BA4/IS5/5y</td>
-              <td>1000</td>
-              <td>929</td>
-              <td class="editable-field" contenteditable="true">25</td>
-              <td class="text-center">
-                <span class="remove-pom-line" title="Remove">
-                  <i class="fa fa-trash"></i>
-                </span>
-              </td>
-            </tr>
-            <tr class="table-bordered">
-              <td class="large-column">
-                <select class="form-control-sm dropdown-width mb-2">
-                  <option value="">Select Program</option>
-                  <option>---</option>
-                  <option>---</option>
-                </select>
-              </td>
-              <td class="large-column">
-                <select class="form-control-sm dropdown-width mb-2">
-                  <option value="">Select Execution Line</option>
-                  <option>---</option>
-                  <option>---</option>
-                </select>
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="text-center">
-                <span class="remove-pom-line" title="Remove">
-                  <i class="fa fa-trash"></i>
-                </span>
-              </td>
-            </tr>
-            <tr class="total-row">
-              <td colspan="2" class="text-right">Total:</td>
-              <td></td>
-              <td></td>
-              <td class="text-right">145 </td>
-              <td></td>
-            </tr>
-          </table>
+          <app-execution-line-table [phase]="phase" [updatelines]="updatelines"></app-execution-line-table>
         </div>
       </div>
     </div>

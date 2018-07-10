@@ -24,8 +24,10 @@ declare const jQuery: any;
 export class ChargesComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
+  private updatelines: ExecutionLine[] = [];
+  private phase: Execution;
 
-  constructor() { }
+  constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     //jQuery for editing table
@@ -82,6 +84,12 @@ export class ChargesComponent implements OnInit {
 
       // Output the result
       $EXPORT.text(JSON.stringify(data));
+    });
+
+    this.route.params.subscribe(data => {
+      this.exesvc.getById(data.phaseId).subscribe(d2 => {
+        this.phase = d2.result;
+      });
     });
   }
 }

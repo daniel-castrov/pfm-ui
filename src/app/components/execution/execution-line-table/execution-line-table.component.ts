@@ -33,8 +33,8 @@ export class ExecutionLineTableComponent implements OnInit {
     forkJoin([
       my.progsvc.getIdNameMap()
     ]).subscribe(data => {
-
-      my.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(d2 => {
+      console.log(my.phase);
+      my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
         my.allexelines = d2.result;
       });
 
