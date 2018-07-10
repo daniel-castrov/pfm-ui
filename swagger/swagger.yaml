@@ -2427,8 +2427,6 @@ definitions:
         type: "string"
       acquisitionType:
         type: "string"
-      fy:
-        type: "integer"
       funds:
         $ref: "#/definitions/IntMap"
       variants:
