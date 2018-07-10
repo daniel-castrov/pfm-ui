@@ -1,73 +1,115 @@
-import { Component, OnInit } from '@angular/core';
-import { GlobalsService } from '../../../services/globals.service';
-import { User, Pom, POMService, PBService, PRService } from '../../../generated/';
-import { forkJoin } from "rxjs/observable/forkJoin";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import {  HeaderComponent } from '../../header/header.component'
+import { GlobalsService } from './../../../services/globals.service';
+import { WithFullNameService } from './../../../services/with-full-name.service';
+import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
+import { User, Pom, ProgrammaticRequest, POMService, PBService, PRService } from '../../../generated/';
+import { FeedbackComponent } from '../../feedback/feedback.component';
 
 @Component({
-
   selector: 'app-open-pom-session',
   templateUrl: './open-pom-session.component.html',
   styleUrls: ['./open-pom-session.component.scss']
 })
+
 export class OpenPomSessionComponent implements OnInit {
 
-  private allPrsSubmitted:boolean=true;
-  private pomStatusIsOpen:boolean=true;
+  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
+
   private pom:Pom;
-  private pomProgrammaticRequests;
-  private pbProgrammaticRequests;
+  private pomProgrammaticRequests:ProgramRequestWithFullName[];
+  private pbProgrammaticRequests:ProgrammaticRequest[];
   private pb;
-  private allSumitted:boolean = false;
   private by;
+  private currentCommunityId:string;
+
+  private allPrsSubmitted:boolean;
+  private pomStatusIsCreated:boolean;
 
   constructor( 
     private pomService: POMService,
     private pbService: PBService,
     private globalsService: GlobalsService,
     private prService: PRService,
+    private withFullNameService: WithFullNameService,
+    private router: Router,
   ) { 
   }
 
   async ngOnInit() {
-    const user:User = await this.globalsService.user().toPromise();
-    await Promise.all([this.initPomPrs(user),this.initPbPrs(user)]);
-    this.by=this.pom.fy;
-  }
 
-  initPomPrs(user: User): Promise<any> {
-    return new Promise(async (resolve, reject) => {
-      // can't use getOpen here, because we need to handle open *or* created pom
-      this.pomService.getByCommunityId(user.currentCommunityId).subscribe(poms => { 
-        for (var i = 0; i < poms.result.length; i++){
-          var pom: Pom = poms.result[i];
-          if ('CREATED' === pom.status || 'OPEN' === pom.status) {
-            this.pom = pom;
-            this.pom.fy = pom.fy;
-            this.prService.getByPhase(this.pom.id).subscribe(prrslt => { 
-              this.pomProgrammaticRequests = prrslt.result;
-              resolve();
-            });
+    this.globalsService.user().subscribe(async usr =>{
+      const user:User = usr;
+      this.currentCommunityId = user.currentCommunityId;
+
+      await this.initPomPrs();
+
+      if ( !this.pom || null==this.pom ){ 
+        this.pomStatusIsCreated = false;
+        this.feedback.failure('No POM Session in the "CREATED" state was found');
+      } else {
+
+        await this.initPbPrs();
+
+        this.by = this.pom.fy;
+        this.allPrsSubmitted = true;
+        for ( var i = 0; i< this.pomProgrammaticRequests.length; i++ ){
+          if ( this.pomProgrammaticRequests[i].state  != "SUBMITTED" ){
+            this.allPrsSubmitted = false;
             break;
           }
         }
+      }
+    });
+  }
+
+  initPomPrs(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => { 
+        for (var i = 0; i < poms.result.length; i++){
+          var pom: Pom = poms.result[i];
+          if ('CREATED' === pom.status) {
+            this.pom = pom;
+            this.pomStatusIsCreated = true;
+            this.pomProgrammaticRequests = (await this.withFullNameService.programRequests(this.pom.id));
+            resolve();
+            break;
+          }
+        }
+        resolve();
       });
     });
   }
 
-  initPbPrs(user: User): Promise<any> {
-    return new Promise( async (resolve, reject) => {
-      this.pb = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
-      this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
-      resolve();
-    });
+  async initPbPrs() {
+    this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
+    this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
   }
 
-  // openPom( event ) {
-  //   if (this.allPrsSubmitted) {
-  //     this.pomService.open(this.pomId).subscribe(data => {
-  //       this.pomStatusIsOpen = true;
-  //     });
-  //   }
-  // }
+  openPom( event ) {
+    if (this.allPrsSubmitted) {
+      this.pomService.open(this.pom.id).subscribe(data => {
+        this.pomStatusIsCreated = false;
+        this.feedback.success('The POM Session is now OPEN');
+        this.header.refreshActions();
+        // this.sleep(4000).then(() => {
+        //   this.router.navigate(['/home']);
+        // })
+      });
+    }
+  }
+
+
+  sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  async submit() {
+    await this.pomService.submit(this.pom.id).toPromise();
+    this.initPomPrs();
+    this.allPrsSubmitted=true;
+  }
 
 }

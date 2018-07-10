@@ -63,6 +63,7 @@ import { RequestComponent } from './components/user-management/my-communities/re
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
+import { OpenPomSessionComponent } from './components/programming/open-pom-session/open-pom-session.component'
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
@@ -149,6 +150,7 @@ const appRoutes: Routes = [
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
+  {path:'open-pom-session', component:OpenPomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
@@ -222,6 +224,7 @@ const appRoutes: Routes = [
     UfrTabComponent,
     UfrJustificationComponent,
     UpdatePomSessionComponent,
+    OpenPomSessionComponent,
     UpdateProgramExecutionComponent,
     ValuesPipe,
     WorksheetManagementComponent,
