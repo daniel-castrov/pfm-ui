@@ -36,7 +36,6 @@ import { ElevationComponent } from './components/user-management/manage-self/ele
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
-import { FundsComponent } from './components/programs/program-view/funds.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -58,20 +57,14 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
-import { ProgramComponent } from './components/programs/program-view/program.component';
-import { ProgramsComponent } from './components/programs/programs.component';
-import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
-import { ProgramSearchComponent } from './components/programs/program-search/program-search.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
-import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
-import { VariantsComponent } from './components/programs/program-view/variants.component';
 import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
 
@@ -95,7 +88,6 @@ import { RoleService } from './generated/api/role.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleResourceService } from './generated/api/userRoleResource.service';
-import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
@@ -146,9 +138,6 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'planning', component:PlanningComponent},
-  {path:'programs', component:ProgramsComponent},
-  {path:'program-search', component:ProgramSearchComponent},
-  {path:'program-view/:id', component:ProgramViewComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
@@ -160,7 +149,6 @@ const appRoutes: Routes = [
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
-  { path: 'exporter', component: ProgramExportComponent },
   { path: 'create-new-pom', component: CreatePomSessionComponent },
   { path: 'ufr-search', component: UfrSearchComponent },
   { path: 'ufr-view/:id', component: UfrViewComponent },
@@ -189,7 +177,6 @@ const appRoutes: Routes = [
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
-    FundsComponent,
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
@@ -216,21 +203,14 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
-    ProgramComponent,
-    ProgramExportComponent,
     ProgramRequestComponent,
-    ProgramSearchComponent,
     ProgramTabComponent,
-    ProgramViewComponent,
-    ProgramsComponent,
     ProgrammaticRequestsComponent,
     RequestComponent,
     SelectProgramRequestComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
-    VariantsComponent,
-    VariantLineComponent,
     TransferTabComponent,
     UfrSearchComponent,
     UfrViewComponent,
