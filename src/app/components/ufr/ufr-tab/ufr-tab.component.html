@@ -26,7 +26,7 @@
       <div class="col-3">
         <span class="form-group inline-name">
           <label class="mb-1">Core Capability</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.cca">
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="current.coreCapability2">
             <option *ngFor="let c of capabilities" [ngValue]="c.abbr" [title]="c.name">{{c.name}}</option>
           </select>
         </span>
