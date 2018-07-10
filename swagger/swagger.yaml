@@ -2638,7 +2638,7 @@ definitions:
         type: "integer"
       creationTime:
         type: "integer"
-      cca:
+      coreCapability2:
         type: "string"
       milestoneImpact:
         type: "string"
@@ -2650,8 +2650,6 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/FundingLine"
-      fy:
-        type: "integer"
       emphases:
         type: "array"
         items:
