@@ -3,7 +3,6 @@ import { FeedbackComponent } from './../../../feedback/feedback.component';
 import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
-import { ProgramViewComponent } from './../../../programs/program-view/program-view.component';
 import { Component, Input, ApplicationRef, OnChanges, ViewChild, OnInit } from '@angular/core'
 import { forkJoin } from "rxjs/observable/forkJoin"
 import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest, Tag, ProgramsService } from '../../../../generated'
@@ -152,7 +151,6 @@ export class FundsTabComponent implements OnChanges, OnInit {
     } else {
       // now set this same data in the current data (for saves)
       var fundingLine: FundingLine = {
-        fy: this.pomFy,
         appropriation: this.appropriation,
         baOrBlin: this.baOrBlin,
         item: this.item,

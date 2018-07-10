@@ -38,7 +38,6 @@ import { ElevationComponent } from './components/user-management/manage-self/ele
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
-import { FundsComponent } from './components/programs/program-view/funds.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -60,20 +59,14 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
-import { ProgramComponent } from './components/programs/program-view/program.component';
-import { ProgramsComponent } from './components/programs/programs.component';
-import { ProgramExportComponent } from './components/programs/program-export/program-export.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
-import { ProgramSearchComponent } from './components/programs/program-search/program-search.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
-import { ProgramViewComponent } from './components/programs/program-view/program-view.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
-import { VariantsComponent } from './components/programs/program-view/variants.component';
 import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
 import { WithholdComponent } from './components/execution/withhold/withhold.component';
 import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
@@ -95,10 +88,10 @@ import { OrganizationService } from './generated/api/organization.service';
 import { ProgramsService } from './generated/api/programs.service';
 import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
+import { RolesPermissionsService } from './generated/api/rolesPermissions.service';
 import { StrangerService } from './generated/api/stranger.service';
 import { UserService } from './generated/api/user.service';
 import { UserRoleResourceService } from './generated/api/userRoleResource.service';
-import { VariantLineComponent } from './components/programs/program-view/variant-line/variant-line.component';
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
 import { ElevationService } from './services/elevation.component';
@@ -120,6 +113,8 @@ import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
+import { RbacRoleDirective } from './directives/rbac.role.directive';
+import { RbacPermissionDirective } from './directives/rbac.permission.directive';
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
@@ -153,9 +148,6 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'planning', component:PlanningComponent},
-  {path:'programs', component:ProgramsComponent},
-  {path:'program-search', component:ProgramSearchComponent},
-  {path:'program-view/:id', component:ProgramViewComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
@@ -171,7 +163,9 @@ const appRoutes: Routes = [
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'withhold', component: WithholdComponent},
-  {path:'worksheet-management', component: WorksheetManagementComponent}
+  { path: 'create-new-pom', component: CreatePomSessionComponent },
+  { path: 'worksheet-management', component: WorksheetManagementComponent},
+  { path: 'set-epp', component: SetEppComponent}
 ];
 
 @NgModule({
@@ -197,7 +191,6 @@ const appRoutes: Routes = [
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
-    FundsComponent,
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
@@ -227,13 +220,8 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
-    ProgramComponent,
-    ProgramExportComponent,
     ProgramRequestComponent,
-    ProgramSearchComponent,
     ProgramTabComponent,
-    ProgramViewComponent,
-    ProgramsComponent,
     ProgrammaticRequestsComponent,
     RequestComponent,
     SelectProgramRequestComponent,
@@ -241,8 +229,6 @@ const appRoutes: Routes = [
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
-    VariantsComponent,
-    VariantLineComponent,
     TransferTabComponent,
     UfrSearchComponent,
     UfrViewComponent,
@@ -254,7 +240,15 @@ const appRoutes: Routes = [
     UpdateProgramExecutionComponent,
     ValuesPipe,
     WithholdComponent,
-    WorksheetManagementComponent
+    WorksheetManagementComponent,
+    DashForZeroPipe,
+    NewUfrComponent,
+    OnlyDigitsDirective,
+    RbacRoleDirective,
+    RbacPermissionDirective,
+    FyPipe,
+    MapAsListPipe,
+    SetEppComponent
   ],
 
   imports: [
@@ -291,6 +285,7 @@ const appRoutes: Routes = [
     MyDetailsService,
     OrganizationService,
     ProgramRequestPageModeService,
+    RolesPermissionsService,
     WithFullNameService,
     RoleService,
     StrangerService,

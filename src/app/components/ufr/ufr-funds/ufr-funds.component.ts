@@ -167,7 +167,6 @@ export class UfrFundsComponent implements OnInit {
       var fl: FundingLine = {
         appropriation: my.appr,
         baOrBlin: my.baOrBlin,
-        fy: my.pom.fy,
         opAgency: my.opagency,
         funds: my.flfunds,
         variants: []
@@ -211,7 +210,6 @@ export class UfrFundsComponent implements OnInit {
       this.current.fundingLines.push({
         appropriation: appr,
         baOrBlin: baOrBlin,
-        fy: my.pom.fy,
         funds: funds,
         item: my.item,
         variants: []
