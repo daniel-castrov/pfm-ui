@@ -64,6 +64,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   totalColumns(uiPr: UiProgrammaticRequest): number {
+    if(!uiPr) return 0;
     let result: number = 0;
     for(let year: number = this.pomFy-3; year<this.pomFy+5; year++) {
       result += uiPr.getToa(year);

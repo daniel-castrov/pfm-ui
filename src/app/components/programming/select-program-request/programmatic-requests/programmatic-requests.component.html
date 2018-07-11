@@ -42,27 +42,27 @@
             </td>
             <td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{pr.pom?.state}}</a></td>
             <td>PB{{pbFy - 2000}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy-3)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy-2)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy-1)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+1)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+2)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+3)}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+4)}}</td>
-            <td class="text-right">{{totalColumns(pr.pb)}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy-3) | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy-2) | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy-1) | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy)   | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+1) | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+2) | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+3) | dashForZero}}</td>
+            <td class="text-right">{{pr.pb?.getToa(pomFy+4) | dashForZero}}</td>
+            <td class="text-right">{{totalColumns(pr.pb)    | dashForZero}}</td>
           </tr>
           <tr>
             <td>POM{{pomFy - 2000}}</td>
-            <td class="text-right">{{pr.pom?.getToa(pomFy-3)}}</td>
-            <td class="text-right">{{pr.pom?.getToa(pomFy-2)}}</td>
-            <td class="text-right">{{pr.pom?.getToa(pomFy-1)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+1)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+2)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+3)}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+4)}}</td>
-            <td class="cell-lt-grey text-right">{{totalColumns(pr.pom)}}</td>
+            <td class="text-right">{{pr.pom?.getToa(pomFy-3) | dashForZero}}</td>
+            <td class="text-right">{{pr.pom?.getToa(pomFy-2) | dashForZero}}</td>
+            <td class="text-right">{{pr.pom?.getToa(pomFy-1) | dashForZero}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy)   | dashForZero}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+1) | dashForZero}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+2) | dashForZero}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+3) | dashForZero}}</td>
+            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+4) | dashForZero}}</td>
+            <td class="cell-lt-grey text-right">{{totalColumns(pr.pom)    | dashForZero}}</td>
           </tr>
         </tbody>
       </div>
