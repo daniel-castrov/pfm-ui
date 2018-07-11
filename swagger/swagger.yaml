@@ -2811,8 +2811,9 @@ definitions:
       lastUpdateDate:
         type: "integer"
       rows:
-        type: "object"
-        $ref: "#/definitions/PomWorksheetRow"
+        type: "array"
+        items:
+          $ref: "#/definitions/PomWorksheetRow"
   PomWorksheetRow:
     type: "object"
     properties:

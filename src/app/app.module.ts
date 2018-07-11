@@ -67,7 +67,7 @@ import { OpenPomSessionComponent } from './components/programming/open-pom-sessi
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
-import { WorksheetManagementComponent } from './components/programming/worksheet-management/worksheet-management.component';
+import { WorksheetManagementComponent } from './components/programming/pom-worksheet/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
 import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service';
@@ -118,6 +118,10 @@ import { ProgramRequestPageModeService } from './components/programming/program-
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
 import { EppService } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
+import { PomWorksheetService } from './generated/api/pomWorksheet.service';
+import { PomWorksheet } from './generated/model/pomWorksheet';
+import { PomWorksheetRow } from './generated/model/pomWorksheetRow';
+import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -158,6 +162,7 @@ const appRoutes: Routes = [
   { path: 'ufr-search', component: UfrSearchComponent },
   { path: 'ufr-view/:id', component: UfrViewComponent },
   { path: 'worksheet-management', component: WorksheetManagementComponent},
+  { path: 'worksheet', component: WorksheetComponent},
   { path: 'set-epp', component: SetEppComponent}
 
 ];
@@ -235,7 +240,8 @@ const appRoutes: Routes = [
     RbacPermissionDirective,
     FyPipe,
     MapAsListPipe,
-    SetEppComponent
+    SetEppComponent,
+    WorksheetComponent
   ],
 
   imports: [
@@ -281,6 +287,7 @@ const appRoutes: Routes = [
     UserService,
     RequestsService,
     POMService,
+    PomWorksheetService,
     PRService,
     PBService,
     UFRsService,
