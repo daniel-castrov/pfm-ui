@@ -30,6 +30,7 @@ export class ChargesComponent implements OnInit {
   private etype: string;
   private other: string;
   private longname: string;
+  
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
