@@ -21,6 +21,7 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   private pomWorksheet:PomWorksheet[]=[];
+  private fy:number;
 
   constructor( 
     private pomSvc:POMService,
@@ -37,6 +38,7 @@ export class WorksheetManagementComponent implements OnInit {
       
       this.pomSvc.getOpen(user.currentCommunityId).subscribe( data => {
         let pom:Pom = data.result;
+        this.fy = pom.fy;
         this.pomWSSvc.getByPomId(pom.id).subscribe( data2 => {
           this.pomWorksheet = data2.result;
           console.log(this.pomWorksheet);

@@ -2804,6 +2804,8 @@ definitions:
         type: "string"
       name:
         type: "string"
+      version:
+        type: "integer"  
       notes:
         type: "string"
       createDate:

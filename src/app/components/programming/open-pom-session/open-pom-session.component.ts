@@ -97,11 +97,4 @@ export class OpenPomSessionComponent implements OnInit {
       });
     }
   }
-
-  async submit() {
-    await this.pomService.submit(this.pom.id).toPromise();
-    this.initPomPrs();
-    this.allPrsSubmitted=true;
-  }
-
 }
