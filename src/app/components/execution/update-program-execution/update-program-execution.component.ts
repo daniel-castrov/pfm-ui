@@ -132,11 +132,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
-    console.log(this.updateexelines);
-
-    console.log(et);
-
-
     this.exesvc.createTransfer(this.phase.id, new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
   }
@@ -148,49 +143,5 @@ export class UpdateProgramExecutionComponent implements OnInit {
     else {
       return '';
     }
-  
-  }
-
-  addrow() {
-    this.updateexelines.push({});
-  }
-
-  removerow(i) {
-    this.updateexelines.splice(i, 1);
-  }
-
-  setline(updateidx: number, lineidx: number ) {
-    var my: UpdateProgramExecutionComponent = this;
-    var toupdate: ExecutionLine = my.updateexelines[updateidx];
-
-    var l: ExecutionLine = my.getLineChoices(toupdate.mrId)[lineidx-1];
-    toupdate.appropriation = l.appropriation;
-    toupdate.blin = l.blin;
-    toupdate.item = l.item;
-    toupdate.opAgency = l.opAgency;
-    toupdate.toa = 0;
-    toupdate.released = 0;
-    toupdate.id = l.id;
-  }
-
-  getLineChoices(mrid): ExecutionLine[]{
-    return this.allexelines.filter(x => x.mrId === mrid);
-  }
-
-  onedit(amtstr, updateidx) {
-    var my: UpdateProgramExecutionComponent = this;
-    var toupdate: ExecutionLine = my.updateexelines[updateidx];
-    toupdate.released = Number.parseInt(amtstr);
-  }
-
-  total(): number {
-    var my: UpdateProgramExecutionComponent = this;
-
-    var tot: number = 0;
-    for (var i = 0; i < my.updateexelines.length; i++){
-      tot += my.updateexelines[i].released;
-    }
-
-    return tot;
   }
 }

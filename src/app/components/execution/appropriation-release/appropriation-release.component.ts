@@ -9,7 +9,7 @@ import { ExecutionService } from '../../../generated/api/execution.service'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ExecutionLine } from '../../../generated';
+import { ExecutionLine, ExecutionTransfer } from '../../../generated';
 
 declare const $: any;
 declare const jQuery: any;
@@ -24,7 +24,11 @@ declare const jQuery: any;
 export class AppropriationReleaseComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private updatelines: ExecutionLine[] = [];
-  private phase:Execution;
+  private phase: Execution;
+  private reason: string;
+  private etype: string;
+  private ttype: string;
+  private longname: string;
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
@@ -91,5 +95,22 @@ export class AppropriationReleaseComponent implements OnInit {
         this.phase = d2.result;
       });
     });
+  }
+
+  submit() {
+    var et: ExecutionTransfer = {
+      toIdAmtLkp: {},
+      eventType: this.etype,
+      other: this.ttype,
+      reason: this.reason,
+      longname: this.longname
+    };
+    this.updatelines.forEach(l => {
+      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+    });
+
+    this.exesvc.createRelease(this.phase.id, new Blob(["stuff"]),
+      new Blob([JSON.stringify(et)])).subscribe();
+
   }
 }
