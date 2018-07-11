@@ -26,7 +26,11 @@ export class ChargesComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private updatelines: ExecutionLine[] = [];
   private phase: Execution;
-
+  private reason: string;
+  private etype: string;
+  private other: string;
+  private longname: string;
+  
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -36,5 +40,21 @@ export class ChargesComponent implements OnInit {
         this.phase = d2.result;
       });
     });
+  }
+
+  submit() {
+    var et: ExecutionTransfer = {
+      toIdAmtLkp: {},
+      eventType: this.etype,
+      other: this.other,
+      reason: this.reason,
+      longname: this.longname
+    };
+    this.updatelines.forEach(l => {
+      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+    });
+
+    this.exesvc.createCharge(this.phase.id, new Blob(["stuff"]),
+      new Blob([JSON.stringify(et)])).subscribe();
   }
 }

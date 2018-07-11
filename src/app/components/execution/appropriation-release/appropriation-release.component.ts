@@ -27,7 +27,7 @@ export class AppropriationReleaseComponent implements OnInit {
   private phase: Execution;
   private reason: string;
   private etype: string;
-  private ttype: string;
+  private other: string;
   private longname: string;
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
@@ -45,7 +45,7 @@ export class AppropriationReleaseComponent implements OnInit {
     var et: ExecutionTransfer = {
       toIdAmtLkp: {},
       eventType: this.etype,
-      other: this.ttype,
+      other: this.other,
       reason: this.reason,
       longname: this.longname
     };
@@ -55,6 +55,5 @@ export class AppropriationReleaseComponent implements OnInit {
 
     this.exesvc.createRelease(this.phase.id, new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
-
   }
 }
