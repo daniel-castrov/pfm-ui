@@ -37,13 +37,21 @@
       <div class="table-body">
         <tbody *ngFor="let pr of (mapNameToRow | values)">
           <tr>
-            <td class="row-lt-gray text-center largest-column" rowspan="2">
-              <span class="clickable" (click)="editPR(pr.pom.id)">{{pr.pom?.fullname}}</span>
-              <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
-                <i class="fa fa-trash"></i>
-              </span>
-            </td>
-            <td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{pr.pom?.state}}</a></td>
+            <ng-container *ngIf="!reviewOnly">
+              <td class="row-lt-gray text-center largest-column" rowspan="2">
+                <span class="clickable" (click)="editPR(pr.pom.id)">{{pr.pom?.fullname}}</span>
+                <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
+                  <i class="fa fa-trash"></i>
+                </span>
+              </td>
+              <td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{pr.pom?.state}}</a></td>
+            </ng-container>
+            <ng-container *ngIf="reviewOnly">
+              <td class="row-lt-gray text-center largest-column" rowspan="2">
+                <span>{{pr.pom?.fullname}}</span>
+              </td>
+              <td class="row-lt-gray text-center largest-column" rowspan="2">{{pr.pom?.state}}</td>
+            </ng-container>
             <td>PB</td>
             <td class="text-right">{{pr.pb?.getToa(by-3)}}</td>
             <td class="text-right">{{pr.pb?.getToa(by-2)}}</td>
@@ -73,25 +81,27 @@
   </div>
 </div>
 
-<div class="row mb-3" >
-  <div class="col-12">
-    <div id="modal" class="modal fade in" >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <a class="btn" data-dismiss="modal">
-              <i class="fa fa-times-circle" aria-hidden="true"></i>
-            </a>
-          </div>
-          <div class="modal-body">
-            <p>Are you sure you want to remove program request <span class="remove-program">{{nameToDelete}}</span>?</p>
-            <span class="mb-2">
-              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="delete()">Yes</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-            </span>
+<ng-container *ngIf="!reviewOnly">
+  <div class="row mb-3" >
+    <div class="col-12">
+      <div id="modal" class="modal fade in" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <a class="btn" data-dismiss="modal">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+              </a>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to remove program request <span class="remove-program">{{nameToDelete}}</span>?</p>
+              <span class="mb-2">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="delete()">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</ng-container>

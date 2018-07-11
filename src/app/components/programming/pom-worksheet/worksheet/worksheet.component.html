@@ -3,32 +3,32 @@
 <table cellpadding="10px" border="1px">
 
   <tr>
-    <td>programRequestId</td>
-    <td>coreCapability</td>
-    <td>programRequestFullname</td>
-    <td>appropriation</td>
-    <td>baOrBlin</td>
-    <td>item</td>
-    <td>opAgency</td>
-    <td>fy</td>
-    <td>fy+1</td>
-    <td>fy+2</td>
-    <td>fy+3</td>
-    <td>fy+4</td>
+    <!-- <td>programRequestId</td> -->
+    <td>PR Fullname</td>
+    <td>Core Capability</td>
+    <td>Appropriation</td>
+    <td>BA/Blin</td>
+    <td>Item</td>
+    <td>OpAgency</td>
+    <td>{{fy}}</td>
+    <td>{{fy+1}}</td>
+    <td>{{fy+2}}</td>
+    <td>{{fy+3}}</td>
+    <td>{{fy+4}}</td>
   </tr>
   <tr *ngFor="let row of rows">
-    <td>{{row.programRequestId}}</td>
-    <td>{{row.coreCapability}}</td>
+    <!-- <td>{{row.programRequestId}}</td> -->
     <td>{{row.programRequestFullname}}</td> 
+    <td>{{row.coreCapability}}</td>
     <td>{{row.fund.appropriation}}</td>
     <td>{{row.fund.baOrBlin}}</td>
     <td>{{row.fund.item}}</td>
     <td>{{row.fund.opAgency}}</td>
-    <td style="background-color:lightblue">{{row.fund.funds[fy]}}</td>
-    <td style="background-color:lightblue">{{row.fund.funds[fy+1]}}</td>
-    <td style="background-color:lightblue">{{row.fund.funds[fy+2]}}</td>
-    <td style="background-color:lightblue">{{row.fund.funds[fy+3]}}</td>
-    <td style="background-color:lightblue">{{row.fund.funds[fy+4]}}</td>
+    <td class="ltblue">{{row.fund.funds[fy]}}</td>
+    <td class="ltblue">{{row.fund.funds[fy+1]}}</td>
+    <td class="ltblue">{{row.fund.funds[fy+2]}}</td>
+    <td class="ltblue">{{row.fund.funds[fy+3]}}</td>
+    <td class="ltblue">{{row.fund.funds[fy+4]}}</td>
   </tr>
 </table>
   
