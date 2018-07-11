@@ -1,0 +1,31 @@
+<j-header></j-header>
+<div *ngIf="pomStatusIsCreated" class="row main-content">
+  <div class="col-lg-12 col-md-12">
+    <div class="row">
+      <div class="col-md-7 col-sm-12 mb-4">
+        <span class="h5">Review Program Requests for POM{{by-2000}}</span> 
+      </div>
+      <div class="col-md-3 col-sm-12">
+        <span>
+          <button class="btn-primary btn pull-right" (click)=openPom() [disabled]="!allPrsSubmitted">Open POM Session</button>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-sm-12">
+        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom" [by]="by"></j-pom>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" 
+                               [pbProgrammaticRequests]="pbProgrammaticRequests" 
+                               [pomFy]="pom?.fy" 
+                               [pbFy]="pb?.fy" 
+                               [reviewOnly]="true">
+        </programmatic-requests>
+      </div>
+    </div>
+  </div>
+</div>
+<j-feedback></j-feedback>

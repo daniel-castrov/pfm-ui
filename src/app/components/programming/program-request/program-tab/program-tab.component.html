@@ -3,31 +3,34 @@
     <div class="col-10">
       <div class="row">
         <div class="col-md-6">
-          <span class="form-group inline-name">
-            <label class="mb-1">*Lead Component</label>
-            <select [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
-              <option *ngFor="let lc of dropdownValues.get('Lead Component')" [ngValue]="lc.abbr">{{lc.name}}</option>
-            </select>
-          </span>
-          <span class="form-group inline-name">
-            <label class="mb-1">*Manager</label>
-            <select [(ngModel)]="pr.manager" name="manager" class="form-control-sm dropdown-width mb-2">
-              <option *ngFor="let m of dropdownValues.get('Manager')" [ngValue]="m.abbr">{{m.name}}</option>
-            </select>
-          </span>
-          <div class="input-group browse-img">
-            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Broswe Picture" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-              <span class="input-group-text">Browse</span>
+          <div class="row">
+            <span class="col form-group inline-name">
+              <label class="mb-1">*Lead Component</label>
+              <select [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let lc of dropdownValues.get('Lead Component')" [ngValue]="lc.abbr">{{lc.name}}</option>
+              </select>
+            </span>
+            <span class="col form-group inline-name">
+              <label class="mb-1">*Manager</label>
+              <select [(ngModel)]="pr.manager" name="manager" class="form-control-sm dropdown-width mb-2">
+                <option *ngFor="let m of dropdownValues.get('Manager')" [ngValue]="m.abbr">{{m.name}}</option>
+              </select>
+            </span>
+          </div>
+          <div class="row px-3">
+            <div class="col input-group browse-img">
+              <input type="file" class="custom-file-input" id="image-file" (change)="onFileChange($event)" required #fileInput>
+              <label class="custom-file-label" for="image-file">{{fileName}}</label>
             </div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="card border-light mb-3">
+          <div *ngIf="!imagePath"  class="card border-light mb-3">
             <div class="img-placeholder">
               <i class="fa fa-picture-o" aria-hidden="true"></i>
             </div>
           </div>
+          <img *ngIf="imagePath" [src]="imagePath" class="img-thumbnail">
         </div>
       </div>
       <div class="row">
@@ -56,7 +59,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
           <fieldset>
             <legend>Area</legend>
             <span class="form-group inline-name mr-4">

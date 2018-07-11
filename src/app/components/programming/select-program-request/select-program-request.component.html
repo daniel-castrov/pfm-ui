@@ -7,6 +7,9 @@
       </div>
       <div class="col-md-3 col-sm-12">
         <span>
+          <button class="btn-primary btn pull-right" (click)=submit() >For Demo Only - Submit All</button>
+        </span>
+        <span>
           <button class="btn-primary btn pull-right" (click)=submit() [disabled]="thereAreOutstandingPRs">Submit All</button>
         </span>
       </div>
@@ -25,6 +28,7 @@
                                [pbProgrammaticRequests]="pbProgrammaticRequests" 
                                [pomFy]="pom?.fy" 
                                [pbFy]="pb?.fy" 
+                               [reviewOnly]="false" 
                                (deleted)="reloadPrs()">
         </programmatic-requests>
       </div>

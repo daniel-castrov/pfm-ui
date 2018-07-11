@@ -52,13 +52,4 @@ export class HeaderUserComponent implements OnInit {
       });
     });
   }
-
-  openPom( event ) {
-    if (this.pomStatusIsCreated) {
-      this.pomService.open(this.pomId).subscribe(data => {
-        this.pomStatusIsCreated = false;
-        this.pomStatusIsOpen = true;
-      });
-    }
-  }
 }

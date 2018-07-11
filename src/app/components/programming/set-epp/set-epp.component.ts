@@ -59,7 +59,7 @@ export class SetEppComponent implements OnInit {
   onSubmit() {
     const formModel = this.prepareSave();
     this.loading = true;
-    this.eppService.importFile(formModel.get('name'), formModel.get('file')).subscribe(response => {
+    this.eppService.importFile(formModel.get('file')).subscribe(response => {
       if (!response.error) {
         this.data = response.result;
         this.generateFiscalYearColumns(this.data);
