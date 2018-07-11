@@ -16,6 +16,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
   @Input() private by: number;
+  @Input() private reviewOnly:boolean;
   private mapNameToRow = {};
   @Output() deleted: EventEmitter<any> = new EventEmitter();
 

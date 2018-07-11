@@ -4,38 +4,24 @@
     <div class="col-10">
       <div class="row">
         <div class="col-6" id="update-pom-session">
-          <div class="h5 mb-4">Worksheet Managment POM 2019</div>
+          <div class="h5 mb-4">Worksheet Managment POM {{fy}}</div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-9">
-          <mat-table [dataSource]="datasource" matSort matSortActive="worksheetname" matSortDirection="asc">
-            <ng-container matColumnDef="checkbox">
-              <mat-header-cell class="checkbox" *matHeaderCellDef mat-sort-header> </mat-header-cell>
-              <mat-cell></mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="worksheetname">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Worksheet Name</mat-header-cell>
-              <mat-cell></mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="version">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Version</mat-header-cell>
-              <mat-cell></mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="created">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Created</mat-header-cell>
-              <mat-cell></mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="lastupdated">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</mat-header-cell>
-              <mat-cell></mat-cell>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="['checkbox', 'worksheetname', 'version', 'created', 'lastupdated']"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: ['checkbox', 'worksheetname', 'version', 'created', 'lastupdated']"
-             (click)="navigate( row )"></mat-row>
-          </mat-table>
-          <mat-paginator [pageSize]="10"></mat-paginator>
-         </div>
+        <div class="col-9">
+          <p>Table for data verification only</p>
+          <table cellpadding="20px" border="1px">
+            <tr>
+              <th>Worksheet Name</th><th>Version</th><th>Created</th><th>Last Updated</th>
+            </tr>
+            <tr *ngFor="let ws of pomWorksheet">
+              <td><a  href="#" routerLink="/worksheet">{{ws.name}}</a></td>
+              <td>{{ws.version}}</td>
+              <td>{{ws.createDate | date:'MM/dd/yyyy' }}</td>
+              <td>{{ws.lastUpdateDate | date:'MM/dd/yyyy h:mma' }}</td>
+            </tr>
+          </table>
+        </div>
         <div class="col-3">
           <div class="pull-right">
             <ul class="worksheet-controls">
@@ -48,6 +34,7 @@
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col-md-12">
           <fieldset>

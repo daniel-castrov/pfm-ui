@@ -30,7 +30,8 @@ export class SelectProgramRequestComponent implements OnInit {
               private pbService: PBService,
               private prService: PRService,
               private withFullNameService: WithFullNameService,
-              private globalsService: GlobalsService ) {}
+              private globalsService: GlobalsService
+  ) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.globalsService.user().toPromise()).currentCommunityId;

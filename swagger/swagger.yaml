@@ -17,6 +17,7 @@ tags:
 - name: "PB"
 - name: "Permission"
 - name: "POM"
+- name: "PomWorksheet"
 - name: "PR"
 - name: "Programs"
 - name: "Role"
@@ -352,6 +353,21 @@ paths:
         type: "string"
 # STOP POM
 ##############################################################################
+# START POMWORKSHEET
+  /pomworksheets/pom/{pomId}:
+    get:
+      tags:
+      - "PomWorksheet"
+      operationId: "getByPomId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+# STOP POMWORKSHEET
+##############################################################################
 # START PR
   /pr/phase/{phaseId}:
     get:
@@ -363,6 +379,50 @@ paths:
       parameters:
       - in: "path"
         name: "phaseId"
+        required: true
+        type: "string"
+  /pr/uploadImage:
+    post:
+      tags:
+      - "PR"
+      operationId: "uploadImage"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "The PR image file"
+        required: true
+        type: file
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /pr/downloadImage:
+    get:
+      tags:
+      - "PR"
+      operationId: "downloadImage"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
         required: true
         type: "string"
   /pr/{id}:
@@ -1831,11 +1891,6 @@ paths:
                   type: string
                   format: binary
       parameters:
-      - in: "query"
-        name: "name"
-        description: "the name of the EPP spreadsheet file"
-        required: true
-        type: "string"
       - in: "formData"
         name: "file"
         description: "The EPP spreadsheet file"
@@ -2887,6 +2942,39 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
+  PomWorksheet:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      pomId:
+        type: "string"
+      name:
+        type: "string"
+      version:
+        type: "integer"  
+      notes:
+        type: "string"
+      createDate:
+        type: "integer"
+      lastUpdateDate:
+        type: "integer"
+      rows:
+        type: "array"
+        items:
+          $ref: "#/definitions/PomWorksheetRow"
+  PomWorksheetRow:
+    type: "object"
+    properties:
+      programRequestId:
+        type: "string"
+      programRequestFullname:
+        type: "string"
+      coreCapability:
+        type: "string"
+      fund:
+        type: "object"
+        $ref: "#/definitions/FundingLine"
   ProgrammaticRequest:
     type: "object"
     properties:
@@ -2943,6 +3031,10 @@ definitions:
       justification:
         type: "string"
       impactN:
+        type: "string"
+      imageName:
+        type: "string"
+      imageArea:
         type: "string"
   PB:
     type: "object"
