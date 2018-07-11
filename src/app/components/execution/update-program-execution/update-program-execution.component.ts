@@ -11,6 +11,7 @@ import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 import { ExecutionLine, ProgramsService } from '../../../generated';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 declare const $: any;
 declare const jQuery: any;
@@ -23,44 +24,124 @@ declare const jQuery: any;
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private current: ExecutionLine;
-  private progname: string;
+  private phase: Execution;
+  private allexelines: ExecutionLine[] = [];
+  private updateexelines: ExecutionLine[] = [];
+  private programIdNameLkp: Map<string, string> = new Map<string, string>();
+
+  private etype: string;
+  private ttype: string;
+  private longname: string;
+  private reason: string;
 
   constructor(private exesvc: ExecutionService, private progsvc:ProgramsService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.url.subscribe((segments: UrlSegment[]) => {
-      console.log(segments);
 
+    //jQuery for editing table
+    var $TABLE = $('#update-program-execution');
+    var $BTN = $('#export-btn');
+    var $EXPORT = $('#export');
+
+    $('.table-add').click(function () {
+      var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+      $TABLE.find('table').append($clone);
+    });
+
+    $('.table-remove').click(function () {
+      $(this).parents('tr').detach();
+    });
+
+    $('.table-up').click(function () {
+      var $row = $(this).parents('tr');
+      if ($row.index() === 1) return; // Don't go above the header
+      $row.prev().before($row.get(0));
+    });
+
+    $('.table-down').click(function () {
+      var $row = $(this).parents('tr');
+      $row.next().after($row.get(0));
+    });
+
+    // A few jQuery helpers for exporting only
+    jQuery.fn.pop = [].pop;
+    jQuery.fn.shift = [].shift;
+
+    $BTN.click(function () {
+      var $rows = $TABLE.find('tr:not(:hidden)');
+      var headers = [];
+      var data = [];
+
+      // Get the headers (add special header logic here)
+      $($rows.shift()).find('th:not(:empty)').each(function () {
+        headers.push($(this).text().toLowerCase());
+      });
+
+      // Turn all existing rows into a loopable array
+      $rows.each(function () {
+        var $td = $(this).find('td');
+        var h = {};
+
+        // Use the headers from earlier to name our hash keys
+        headers.forEach(function (header, i) {
+          h[header] = $td.eq(i).text();
+        });
+
+        data.push(h);
+      });
+
+      // Output the result
+      $EXPORT.text(JSON.stringify(data));
+    });
+
+    var my: UpdateProgramExecutionComponent = this;
+    this.route.url.subscribe((segments: UrlSegment[]) => {
       var exelineid = segments[segments.length - 1].path;
-      console.log(exelineid);
-      
-      this.exesvc.getExecutionLineById(exelineid).subscribe(data => { 
-        if (data.error) {
-          console.log(data.error);
-        }
-        else {
-          this.current = data.result;
-          this.progsvc.getFullName(this.current.mrId).subscribe(d2 => {
-            this.progname = d2.result;
-          });
-        }
+
+      forkJoin([
+        my.exesvc.getExecutionLineById(exelineid),
+        my.progsvc.getIdNameMap()
+      ]).subscribe(data => { 
+        my.current = data[0].result;
+
+        my.exesvc.getExecutionLinesByPhase(my.current.phaseId).subscribe(d2 => {
+          my.allexelines = d2.result;
+        });
+        my.exesvc.getById(my.current.phaseId).subscribe(d2 => {
+          my.phase = d2.result;
+        });
+
+        Object.getOwnPropertyNames(data[1].result).forEach(id => {
+          my.programIdNameLkp.set(id, data[1].result[id]);
+        });
       });
     });
   }
 
   submit() {
-    /*
     var et: ExecutionTransfer = {
       toIdAmtLkp: {},
-      fromId: 'from id',
-      eventType: 'etype',
-      transType: 'REALIGNMENT'
+      fromId: this.current.id,
+      eventType: this.etype,
+      transType: this.ttype,
+      reason: this.reason,
+      longname: this.longname
     };
-    et.toIdAmtLkp['09848'] = 56;
+    this.updateexelines.forEach(l => { 
+      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+    });
 
-    this.exesvc.createTransfer("1234", new Blob(["stuff"]),
+    this.exesvc.createTransfer(this.phase.id, new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
-    */
+  }
+
+  fullname(exeline: ExecutionLine): string {
+    if( this.programIdNameLkp && exeline ){
+      return this.programIdNameLkp.get(exeline.mrId);
+    }
+    else {
+      return '';
+    }
   }
 }

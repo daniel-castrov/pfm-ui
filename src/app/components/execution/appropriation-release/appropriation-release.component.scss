@@ -30,6 +30,10 @@ fieldset {
   width: 230px;
 }
 
+.dropdown-width-small {
+  width: 100px;
+}
+
 .btn-file{
     position:relative
 }
@@ -52,13 +56,13 @@ input[readonly]{
   cursor:text !important;
 }
 
-.form-input {
-  display: inline-block;
-  width: 300px;
+.long-form-input {
+  width: 650px;
   margin-bottom: 10px;
 }
 
-.long-form-input {
-  width: 650px;
+.form-input {
+  display: inline-block;
+  width: 300px;
   margin-bottom: 10px;
 }

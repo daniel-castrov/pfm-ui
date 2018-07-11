@@ -2,29 +2,19 @@ import { ProgramRequestWithFullName } from './../../../services/with-full-name.s
 import { FundingLine } from '../../../generated/model/fundingLine';
 
 export class UiProgrammaticRequest {
-  constructor(public programmaticRequest: ProgramRequestWithFullName) {}
+  constructor(public pr: ProgramRequestWithFullName) {}
 
-  get id():string {return this.programmaticRequest.id}
-  get state():string {return this.programmaticRequest.state}
-  get shortName():string {return this.programmaticRequest.shortName}
-  get fullname():string {return this.programmaticRequest.fullname}
-  get longName():string {return this.programmaticRequest.longName}
-  get fundingLines():FundingLine[] {return this.programmaticRequest.fundingLines}
-  get parentId():string {return this.programmaticRequest.parentMrId}
-  get bulkOrigin():boolean {return this.programmaticRequest.bulkOrigin}
-  getToa(year:number): any {
-      const sum = this.programmaticRequest.fundingLines
-          .map( fundingLine=>fundingLine.funds[year] )
+  get id():string {return this.pr.id}
+  get state():string {return this.pr.state}
+  get shortName():string {return this.pr.shortName}
+  get fullname():string {return this.pr.fullname}
+  get longName():string {return this.pr.longName}
+  get fundingLines():FundingLine[] {return this.pr.fundingLines}
+  get parentId():string {return this.pr.parentMrId}
+  get bulkOrigin():boolean {return this.pr.bulkOrigin}
+  getToa(year:number): number {
+      return this.pr.fundingLines
+          .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
           .reduce((a,b)=>a+b, 0);
-      return isNaN(sum) ? '' : sum;
-  }
-  get isSubprogram(): boolean {
-    return this.programmaticRequest.parentMrId !== null;
-  }
-  get isNonVariantSubprogram(): boolean {
-    return this.isSubprogram && this.programmaticRequest.type !== 'VARIANT';
-  }
-  get isVariantSubprogram(): boolean {
-    return this.isSubprogram && this.programmaticRequest.type === 'VARIANT';
   }
 }

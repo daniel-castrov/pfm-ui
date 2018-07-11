@@ -1,3 +1,4 @@
+import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
@@ -15,7 +16,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
-  @Input() private by: number;
+  @Input() private pomFy: number;
+  @Input() private pbFy: number;
   @Input() private reviewOnly:boolean;
   private mapNameToRow = {};
   @Output() deleted: EventEmitter<any> = new EventEmitter();
@@ -62,4 +64,12 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.router.navigate(['/program-request']);    
   }
 
+  totalColumns(uiPr: UiProgrammaticRequest): number {
+    if(!uiPr) return 0;
+    let result: number = 0;
+    for(let year: number = this.pomFy-3; year<this.pomFy+5; year++) {
+      result += uiPr.getToa(year);
+    }
+    return result;
+  }
 }

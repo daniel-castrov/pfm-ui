@@ -1,0 +1,73 @@
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-7 col-sm-12 mb-4">
+        <span class="h5 mr-2">{{phase.fy|FY}} - Appropriation Release for Program Execution Line(s)</span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-8">
+      </div>
+      <div class="col-4 pull-right">
+        <button class="btn btn-primary" (click)="submit()">Release</button>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12 col-lg-2">
+        <div class="form-group">
+          <label class="primary-label">Select Event Type:</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
+            <option value=""></option>
+            <option [ngValue]="'CRA'">CRA</option>
+            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-1">
+        <div class="form-group">
+          <label class="primary-label">Select:</label>
+          <select class="form-control-sm dropdown-width-small" [(ngModel)]="other">
+            <option value=""></option>
+            <option [ngValue]="'1'">1</option>
+            <option [ngValue]="'2'">2</option>
+            <option [ngValue]="'3'">3</option>
+            <option [ngValue]="'4'">4</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-9">
+         <div class="form-group">
+          <label class="primary-label">Event Long Name:</label>
+          <input class="form-control long-form-input" [(ngModel)]="longname">
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-12">
+        <div id="update-program-execution" class="table-editable">
+          <app-execution-line-table [phase]="phase" [updatelines]="updatelines"></app-execution-line-table>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12 col-lg-9">
+        <span class="form-group">
+          <label class="primary-label mb-1">Notes:</label>
+          <textarea cols="30" rows="5" wrap="physical" class="form-control"[(ngModel)]="reason"></textarea>
+        </span>
+     </div>
+   </div>
+   <div class="row">
+     <div class="col-4 mb-4">
+       <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
+         <label class="primary-label">Attach Document:</label>
+         <div class="input-group input-group-sm">
+           <input type="file" class="custom-file-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
+           <label class="custom-file-label" for="charges">Chose file</label>
+         </div>
+       </form>
+     </div>
+   </div>
+  </div>
+</div>

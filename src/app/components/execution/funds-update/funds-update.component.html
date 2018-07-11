@@ -113,13 +113,13 @@
       <div class="col-10">
         <div class="pull-right program-controls">
           <span>
-            <button class="btn btn-primary">Charge</button>
+            <button class="btn btn-primary" [routerLink]="['/charges', selectedexe?.id]">Charge</button>
           </span>
           <span>
-            <button class="btn btn-secondary">Release</button>
+            <button class="btn btn-secondary" [routerLink]="['/appropriation-release', selectedexe?.id]">Release</button>
           </span>
           <span>
-            <button class="btn btn-success">Withhold</button>
+            <button class="btn btn-success" [routerLink]="['/withhold', selectedexe?.id]">Withhold</button>
           </span>
         </div>
       </div>

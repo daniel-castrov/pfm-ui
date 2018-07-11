@@ -7,45 +7,45 @@
       <th>{{by+2 | FY}}</th>
       <th>{{by+3 | FY}}</th>
       <th>{{by+4 | FY}}</th>
-      <th></th>
+      <th>Total</th>
     </tr>
   </thead>
   <tbody>
     <tr class="font-dark-grey font-weight-bold">
       <td class="text-right large-column">Baseline</td>
-      <td class="text-right">{{baseline[by]}}</td>
-      <td class="text-right">{{baseline[by+1]}}</td>
-      <td class="text-right">{{baseline[by+2]}}</td>
-      <td class="text-right">{{baseline[by+3]}}</td>
-      <td class="text-right">{{baseline[by+4]}}</td>
-      <td class="text-right">-</td>
+      <td class="text-right">{{baseline[by] | dashForZero}}</td>
+      <td class="text-right">{{baseline[by+1] | dashForZero}}</td>
+      <td class="text-right">{{baseline[by+2] | dashForZero}}</td>
+      <td class="text-right">{{baseline[by+3] | dashForZero}}</td>
+      <td class="text-right">{{baseline[by+4] | dashForZero}}</td>
+      <td class="text-right">{{totalColumns(baseline) | dashForZero}}</td>
     </tr>
     <tr class="font-weight-bold">
       <td class="text-right large-column">Allocated TOA</td>
-      <td class="text-right">{{allocatedToas[by]}}</td>
-      <td class="text-right">{{allocatedToas[by+1]}}</td>
-      <td class="text-right">{{allocatedToas[by+2]}}</td>
-      <td class="text-right">{{allocatedToas[by+3]}}</td>
-      <td class="text-right">{{allocatedToas[by+4]}}</td>
-      <td class="text-right">-</td>
+      <td class="text-right">{{allocatedToas[by] | dashForZero}}</td>
+      <td class="text-right">{{allocatedToas[by+1] | dashForZero}}</td>
+      <td class="text-right">{{allocatedToas[by+2] | dashForZero}}</td>
+      <td class="text-right">{{allocatedToas[by+3] | dashForZero}}</td>
+      <td class="text-right">{{allocatedToas[by+4] | dashForZero}}</td>
+      <td class="text-right">{{totalColumns(allocatedToas) | dashForZero}}</td>
     </tr>
     <tr>
       <td class="text-right large-column">POM {{by-2000}} Requests</td>
-      <td class="text-right">{{pomRequests[by]}}</td>
-      <td class="text-right">{{pomRequests[by+1]}}</td>
-      <td class="text-right">{{pomRequests[by+2]}}</td>
-      <td class="text-right">{{pomRequests[by+3]}}</td>
-      <td class="text-right">{{pomRequests[by+4]}}</td>
-      <td class="text-right">-</td>
+      <td class="text-right">{{pomRequests[by] | dashForZero}}</td>
+      <td class="text-right">{{pomRequests[by+1] | dashForZero}}</td>
+      <td class="text-right">{{pomRequests[by+2] | dashForZero}}</td>
+      <td class="text-right">{{pomRequests[by+3] | dashForZero}}</td>
+      <td class="text-right">{{pomRequests[by+4] | dashForZero}}</td>
+      <td class="text-right">{{totalColumns(pomRequests) | dashForZero}}</td>
     </tr>
     <tr>
       <td class="text-right large-column">TOA Difference</td>
-      <td class="text-right">{{difference[by]}}</td>
-      <td class="text-right">{{difference[by+1]}}</td>
-      <td class="text-right">{{difference[by+2]}}</td>
-      <td class="text-right">{{difference[by+3]}}</td>
-      <td class="text-right">{{difference[by+4]}}</td>
-      <td class="text-right">-</td>
+      <td class="text-right">{{difference[by] | dashForZero}}</td>
+      <td class="text-right">{{difference[by+1] | dashForZero}}</td>
+      <td class="text-right">{{difference[by+2] | dashForZero}}</td>
+      <td class="text-right">{{difference[by+3] | dashForZero}}</td>
+      <td class="text-right">{{difference[by+4] | dashForZero}}</td>
+      <td class="text-right">{{totalColumns(difference) | dashForZero}}</td>
     </tr>
   </tbody>
 </table>

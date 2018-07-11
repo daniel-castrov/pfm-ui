@@ -1,32 +1,38 @@
+<ng-template #idline let-line="line">
+    {{line?.appropriation}}/{{line?.blin}}/{{line?.item}}/{{line?.opAgency}}
+</ng-template>
+
 <j-header></j-header>
 <div class="row main-content">
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">FY18 - Funds Update for Program Execution</span>
+        <span class="h5 mr-2">{{phase?.fy|FY}} - Funds Update for Program Execution</span>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-8">
         <span class="form-group mr-3">
           <label class="primary-label">From</label>
-          <select class="form-control-sm dropdown-year-width mb-2">
-            <option value=""></option>
+          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown">
+            <option></option>
             <option>2018</option>
-           </select>
-         </span>
-         <span class="form-group">
-           <label class="execution-titles">{{progname}}</label>
-         </span>
+          </select>
+        </span>
+        <span class="form-group">
+          <label class="execution-titles">{{fullname(current)}}</label>
+        </span>
       </div>
-      <div class="col-4">
+      <div class="col-4 pull-right">
         <button class="btn btn-primary" (click)="submit()">Submit</button>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-4">
          <span class="form-group">
-           <label class="execution-titles">{{current.appropriation}}/{{current.blin}}/{{current.item}}/{{current.opAgency}}</label>
+          <label class="execution-titles">
+            <ng-container *ngTemplateOutlet="idline;context:{line:current}"></ng-container>
+          </label>
          </span>
       </div>
       <div class="col-1">
@@ -49,58 +55,62 @@
       <div class="col-6">
         <span class="form-group ">
           <label class="primary-label mr-2">Select Transaction Type:</label>
-          <select class="form-control-sm dropdown-width mb-2">
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ttype">
             <option value=""></option>
-            <option>BTR</option>
-            <option>External</option>
-           <option>Realignment</option>
-           </select>
+            <option [ngValue]="'BTR'">BTR</option>
+            <option [ngValue]="'EXTERNAL'">External</option>
+            <option [ngValue]="'REALIGNMENT'">Realignment</option>
+          </select>
          </span>
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-3">
-        <span class="form-group mr-3">
-          <label class="primary-label mr-2">Select Event Type:</label>
-          <select class="form-control-sm dropdown-width mb-2">
+      <div class="col-md-12 col-lg-2">
+        <div class="form-group">
+          <label class="primary-label">Select Event Type:</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
             <option value=""></option>
+            <option [ngValue]="'CRA'">CRA</option>
+            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
           </select>
-        </span>
+        </div>
       </div>
-      <div class="col-7">
-       <span class="form-group mr-2">
-         <label class="primary-label mr-2">Event Long Name:</label>
-       </span>
-        <input class="form-control form-input">
+      <div class="col-md-12 col-lg-7">
+         <div class="form-group">
+          <label class="primary-label">Event Long Name:</label>
+          <input class="form-control long-form-input" [(ngModel)]="longname">
+        </div>
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-8">
+      <div class="col-12">
+        <div id="update-program-execution" class="table-editable">
+          <app-execution-line-table [phase]="phase" [updatelines]="updateexelines"></app-execution-line-table>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12 col-lg-9">
         <span class="form-group">
           <label class="primary-label mb-1">Notes:</label>
-          <textarea cols="30" rows="5" wrap="physical" class="form-control"></textarea>
+          <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
         </span>
      </div>
    </div>
    <div class="row">
      <div class="col-6 mb-4">
        <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
-
          <label class="primary-label">Attach Document:</label>
-         <div class="input-group input-group-sm">
+         <div class="input-group input-group">
            <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
            <span class="input-group-btn">
              <span class="btn btn-secondary btn-file">
              Browse… <input type="file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
              </span>
            </span>
-           <!-- <span class="input-group-btn">
-             <button class="btn btn-gray" type="submit">Ok</button>
-           </span> -->
          </div>
        </form>
      </div>
    </div>
-
   </div>
 </div>

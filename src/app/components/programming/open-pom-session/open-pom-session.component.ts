@@ -33,10 +33,7 @@ export class OpenPomSessionComponent implements OnInit {
     private pbService: PBService,
     private globalsService: GlobalsService,
     private prService: PRService,
-    private withFullNameService: WithFullNameService,
-    private router: Router,
-  ) { 
-  }
+    private withFullNameService: WithFullNameService ) {}
 
   async ngOnInit() {
 

@@ -26,12 +26,14 @@ import { AboutPrivateComponent } from './components/about-private/about-private.
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
-import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
+import { ChargesComponent } from './components/execution/charges/charges.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { CreateExecutionPhaseComponent } from './components/execution/create-execution-phase/create-execution-phase.component';
+import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
 import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
@@ -67,6 +69,7 @@ import { OpenPomSessionComponent } from './components/programming/open-pom-sessi
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
 import { UserListComponent } from './components/user-management/user-list/user-list.component';
 import { UpdateProgramExecutionComponent } from './components/execution/update-program-execution/update-program-execution.component';
+import { WithholdComponent } from './components/execution/withhold/withhold.component';
 import { WorksheetManagementComponent } from './components/programming/pom-worksheet/worksheet-management/worksheet-management.component';
 
 // GENERATED APIs AND MODELS
@@ -118,6 +121,7 @@ import { ProgramRequestPageModeService } from './components/programming/program-
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
 import { EppService } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
+import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { PomWorksheet } from './generated/model/pomWorksheet';
 import { PomWorksheetRow } from './generated/model/pomWorksheetRow';
@@ -130,11 +134,14 @@ const appRoutes: Routes = [
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
+  {path:'appropriation-release/:phaseId', component:AppropriationReleaseComponent},
+  {path:'charges/:phaseId', component:ChargesComponent},
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
+  {path:'create-new-pom', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
   {path:'header', component:HeaderComponent},
@@ -151,6 +158,7 @@ const appRoutes: Routes = [
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
+  {path:'set-epp', component: SetEppComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
@@ -158,13 +166,13 @@ const appRoutes: Routes = [
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
+  {path:'ufr-search', component: UfrSearchComponent},
+  {path:'ufr-view/:id', component: UfrViewComponent},
+  {path:'withhold/:phaseId', component: WithholdComponent},
   { path: 'create-new-pom', component: CreatePomSessionComponent },
-  { path: 'ufr-search', component: UfrSearchComponent },
-  { path: 'ufr-view/:id', component: UfrViewComponent },
   { path: 'worksheet-management', component: WorksheetManagementComponent},
   { path: 'worksheet', component: WorksheetComponent},
   { path: 'set-epp', component: SetEppComponent}
-
 ];
 
 @NgModule({
@@ -174,16 +182,19 @@ const appRoutes: Routes = [
     AccessChangeApprovalComponent,
     AppComponent,
     ApplyComponent,
+    AppropriationReleaseComponent,
     ApproveRequestsComponent,
     BulkTabComponent,
     HeaderUserComponent,
     CalculateTabComponent,
+    ChargesComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
     ContactComponent,
     CreateExecutionPhaseComponent,
     CreatePomSessionComponent,
     CurrentComponent,
+    DashForZeroPipe,
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
@@ -203,13 +214,16 @@ const appRoutes: Routes = [
     ManageSelfComponent,
     ManageSelfComponent,
     ManageUsersComponent,
+    MapAsListPipe,
     MyCommunitiesComponent,
     MyRolesComponent,
     NewProgrammaticRequestComponent,
+    NewUfrComponent,
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
     NotImplementedComponent,
+    OnlyDigitsDirective,
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
@@ -218,6 +232,7 @@ const appRoutes: Routes = [
     ProgrammaticRequestsComponent,
     RequestComponent,
     SelectProgramRequestComponent,
+    SetEppComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
@@ -232,6 +247,7 @@ const appRoutes: Routes = [
     OpenPomSessionComponent,
     UpdateProgramExecutionComponent,
     ValuesPipe,
+    WithholdComponent,
     WorksheetManagementComponent,
     DashForZeroPipe,
     NewUfrComponent,
@@ -241,6 +257,7 @@ const appRoutes: Routes = [
     FyPipe,
     MapAsListPipe,
     SetEppComponent,
+    ExecutionLineTableComponent,
     WorksheetComponent
   ],
 
