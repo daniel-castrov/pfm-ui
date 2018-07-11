@@ -2964,5 +2964,7 @@ definitions:
         type: "string"
       longname:
         type: "string"
+      other:
+        type: "string"
 ##############################################################################
 # ENDFILE

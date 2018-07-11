@@ -17,29 +17,29 @@
       <div class="col-md-12 col-lg-2">
         <div class="form-group">
           <label class="primary-label">Select Event Type:</label>
-          <select class="form-control-sm dropdown-width">
+          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
             <option value=""></option>
-            <option value="">CRA</option>
-            <option value="">Appropriation</option>
+            <option [ngValue]="'CRA'">CRA</option>
+            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
           </select>
         </div>
       </div>
       <div class="col-md-12 col-lg-1">
         <div class="form-group">
           <label class="primary-label">Select:</label>
-          <select class="form-control-sm dropdown-width-small">
+          <select class="form-control-sm dropdown-width-small" [(ngModel)]="ttype">
             <option value=""></option>
-            <option value="">1</option>
-            <option value="">2</option>
-            <option value="">3</option>
-            <option value="">4</option>
+            <option [ngValue]="'1'">1</option>
+            <option [ngValue]="'2'">2</option>
+            <option [ngValue]="'3'">3</option>
+            <option [ngValue]="'4'">4</option>
           </select>
         </div>
       </div>
       <div class="col-md-12 col-lg-9">
          <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input">
+          <input class="form-control long-form-input" [(ngModel)]="longname">
         </div>
       </div>
     </div>
@@ -54,7 +54,7 @@
       <div class="col-md-12 col-lg-9">
         <span class="form-group">
           <label class="primary-label mb-1">Notes:</label>
-          <textarea cols="30" rows="5" wrap="physical" class="form-control"></textarea>
+          <textarea cols="30" rows="5" wrap="physical" class="form-control"[(ngModel)]="reason"></textarea>
         </span>
      </div>
    </div>
