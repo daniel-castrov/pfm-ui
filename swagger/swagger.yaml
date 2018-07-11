@@ -2250,6 +2250,78 @@ paths:
         description: "The transfer object as Blob (sorry)"
         required: true
         type: "file"
+  /executionlines/phase/{phaseId}/charge:
+    post:
+      tags:
+      - "Execution"
+      summary: "Releases money to Execution Lines"
+      description: "releases money to Execution Lines"
+      operationId: "createCharge"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: "string"
+                  format: "binary"
+                transfer:
+                  type: "string"
+                  format: "binary"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase containing the transfer"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "formData"
+        name: "transfer"
+        description: "The transfer object as Blob (sorry)"
+        required: true
+        type: "file"
+  /executionlines/phase/{phaseId}/withhold:
+    post:
+      tags:
+      - "Execution"
+      summary: "Releases money to Execution Lines"
+      description: "releases money to Execution Lines"
+      operationId: "createWithhold"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: "string"
+                  format: "binary"
+                transfer:
+                  type: "string"
+                  format: "binary"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase containing the transfer"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "formData"
+        name: "transfer"
+        description: "The transfer object as Blob (sorry)"
+        required: true
+        type: "file"
   /executionlines/{lineId}:
     get:
       operationId: "getExecutionLineById"
