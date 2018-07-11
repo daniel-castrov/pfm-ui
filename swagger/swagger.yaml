@@ -1891,11 +1891,6 @@ paths:
                   type: string
                   format: binary
       parameters:
-      - in: "query"
-        name: "name"
-        description: "the name of the EPP spreadsheet file"
-        required: true
-        type: "string"
       - in: "formData"
         name: "file"
         description: "The EPP spreadsheet file"
