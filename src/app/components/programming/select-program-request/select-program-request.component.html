@@ -24,7 +24,13 @@
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
-        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [by]="pom?.fy" [reviewOnly]=false (deleted)="reloadPrs()"></programmatic-requests>
+        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests" 
+                               [pbProgrammaticRequests]="pbProgrammaticRequests" 
+                               [pomFy]="pom?.fy" 
+                               [pbFy]="pb?.fy" 
+                               [reviewOnly]="false" 
+                               (deleted)="reloadPrs()">
+        </programmatic-requests>
       </div>
     </div>
   </div>
