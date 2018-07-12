@@ -126,6 +126,7 @@ import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { PomWorksheet } from './generated/model/pomWorksheet';
 import { PomWorksheetRow } from './generated/model/pomWorksheetRow';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
+import {LibraryComponent} from "./components/manage/library/library.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -169,10 +170,11 @@ const appRoutes: Routes = [
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
-  { path: 'create-new-pom', component: CreatePomSessionComponent },
-  { path: 'worksheet-management', component: WorksheetManagementComponent},
-  { path: 'worksheet', component: WorksheetComponent},
-  { path: 'set-epp', component: SetEppComponent}
+  {path:'create-new-pom', component: CreatePomSessionComponent },
+  {path:'worksheet-management', component: WorksheetManagementComponent},
+  {path:'worksheet', component: WorksheetComponent},
+  {path:'set-epp', component: SetEppComponent},
+  {path:'library', component: LibraryComponent}
 ];
 
 @NgModule({
@@ -258,7 +260,8 @@ const appRoutes: Routes = [
     MapAsListPipe,
     SetEppComponent,
     ExecutionLineTableComponent,
-    WorksheetComponent
+    WorksheetComponent,
+    LibraryComponent
   ],
 
   imports: [

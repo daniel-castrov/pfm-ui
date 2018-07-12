@@ -72,7 +72,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
-          
+
           <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
           <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" disabled>Program Request</a>
           <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
@@ -139,6 +139,8 @@
           <!--a class="dropdown-item" href="#" routerLink="/program-search">View Program</a-->
           <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Edit Program</a>
           <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Create Program</a>
+          <hr/>
+          <a class="dropdown-item" href="#" routerLink="/library">Library</a>
         </div>
       </li>
       <li class="nav-item dropdown">
