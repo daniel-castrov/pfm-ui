@@ -3027,7 +3027,9 @@ definitions:
       acquisitionType:
         type: "string"
       emphases:
-        type: "string"
+        type: "array"
+        items:
+          type: "string"
       justification:
         type: "string"
       impactN:
