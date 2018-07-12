@@ -79,7 +79,7 @@
                 <td class="not-editable">{{orgsums.get(o.id)|number:'1.0'}}</td>
               </tr>
 
-              <tr class="sum-difference">
+              <tr class="sum-difference font-weight-bold">
                 <td class="text-left"><span class="difference-label">TOA Delta</span></td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy) < 0}">{{yeardiffs.get(fy)|number:'1.0'}}</td>
                 <td class="not-editable" [ngClass]="{'exceed-sum':yeardiffs.get(fy+1) < 0}">{{yeardiffs.get(fy+1)|number:'1.0'}}</td>

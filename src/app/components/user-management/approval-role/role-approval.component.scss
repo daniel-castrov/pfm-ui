@@ -47,6 +47,11 @@ $white: #ffffff;
   td {
     padding: 5px;
   }
+
+  tbody  {
+    vertical-align: top;
+  }
+  
   .column-1 {
     width: 30%
   }
@@ -66,8 +71,14 @@ $white: #ffffff;
   border: #999 1px solid;
 }
 
-.my-roles-table {
+.my-roles-list {
   width: 100%;
+  min-height: 150px;
+
+  th {
+   padding: 2px 10px;
+ }
+
  td {
     padding: 2px 10px;
   }
