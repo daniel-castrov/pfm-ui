@@ -1910,12 +1910,26 @@ paths:
   /epp:
     get:
       tags:
-      - "epp"
+      - "Epp"
       summary: "Gets all the epp in existence"
       description: "Gets all the epp in existence"
       operationId: "getAll"
       consumes:
       - "application/json"
+      produces:
+      - "application/json"
+  /epp/{communityId}:
+    get:
+      tags:
+      - "Epp"
+      operationId: "getByCommunityId"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets all Epps for a given community"
+      description: "Returns List of Epps"
       produces:
       - "application/json"
 # STOP PROGRAMS
