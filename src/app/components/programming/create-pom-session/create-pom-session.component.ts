@@ -259,7 +259,7 @@ export class CreatePomSessionComponent implements OnInit {
   getYear5ToasFromEpp(eppYear:number) {
 
     forkJoin([
-      this.eppsvc.getAll(),
+      this.eppsvc.getValid(this.community.id, this.pb.id),
       this.programsvc.getProgramsByCommunity(this.community.id),
     ]).subscribe(data => {
 
@@ -321,8 +321,6 @@ export class CreatePomSessionComponent implements OnInit {
       fy: this.fy
     };
 
-    //console.log('calling setToas!');
-    //console.log(transfer);
     this.pomsvc.createPom(this.community.id, this.fy, transfer, my.pb.id).subscribe(
       (data) => {
         if (data.result) {

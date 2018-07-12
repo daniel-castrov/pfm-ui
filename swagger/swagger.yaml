@@ -212,6 +212,11 @@ paths:
         description: "the PB to use as a model"
         required: false
         type: "string"
+      - in: "query"
+        name: "useepp"
+        description: "set to 'true' to use epp data for 5th year"
+        required: false
+        type: "boolean"
       - in: "body"
         name: "body"
         description: "a POM object"
@@ -1871,8 +1876,9 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-
-
+# STOP PROGRAMS
+##############################################################################
+# START EPPs
   /epp/importFile:
     post:
       tags:
@@ -1932,7 +1938,25 @@ paths:
       description: "Returns List of Epps"
       produces:
       - "application/json"
-# STOP PROGRAMS
+  /epp/{communityId}/phase/{phaseId}:
+    get:
+      tags:
+      - "Epp"
+      operationId: "getValid"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets all Epps for a given community and phase that are valid"
+      description: "Returns List of Epps"
+      produces:
+      - "application/json"
+# STOP EPP
 ##############################################################################
 # START UFRs
   /ufr/{ufrId}:
