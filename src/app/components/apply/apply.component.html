@@ -5,7 +5,7 @@
     </div>
     <div class="col-lg-10 applyform">
       <form novalidate #applyForm="ngForm" (ngSubmit)="onSubmit(applyForm)">
-        <div class="h5 mb-2">User Action Application</div>
+        <div class="h5 mb-2">User Application</div>
         <span class="form-group inline-name">
           <input type="text" [(ngModel)]="createUserRequest.firstName" #createUserRequestFirstName="ngModel" [ngClass]="{'is-invalid':createUserRequestFirstName.errors && createUserRequestFirstName.touched}"
             class="form-control applyinput" name="firstName" placeholder="*First Name" minlength="2" required>
