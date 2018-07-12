@@ -321,7 +321,7 @@ export class CreatePomSessionComponent implements OnInit {
       fy: this.fy
     };
 
-    this.pomsvc.createPom(this.community.id, this.fy, transfer, my.pb.id).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
           my.editsOk = false;
