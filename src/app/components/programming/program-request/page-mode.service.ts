@@ -12,10 +12,10 @@ export enum Type {
 export class ProgramRequestPageModeService {
 
   private _initialized: boolean;
-  private _id: string;           // null if a PR is being created, an id if an existing PR is being edited
-  public type: Type;            // applicable only when this._id is not defined
-  public reference: ProgramWithFullName | ProgramRequestWithFullName;    // applicable only when this._id is not defined
-  public phaseId: string;        // applicable only when this._id is not defined
+  private _id: string;                                                    // null if a PR is being created, an id if an existing PR is being edited
+  public type: Type;                                                      // applicable only when this._id is not defined
+  public reference: ProgramWithFullName | ProgramRequestWithFullName;     // applicable only when this._id is not defined
+  public phaseId: string;                                                 // applicable only when this._id is not defined
 
   // edit mode
   set id(id:string) {
@@ -51,7 +51,7 @@ export class ProgramRequestPageModeService {
     return this.type === Type.SUBPROGRAM_OF_MRDB;
   }
 
-  get subProgramOfPrOrUfr(): boolean {
+  get subprogramOfPrOrUfr(): boolean {
     return this.type === Type.SUBPROGRAM_OF_PR_OR_UFR;
   }
 

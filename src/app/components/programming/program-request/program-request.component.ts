@@ -37,6 +37,8 @@ export class ProgramRequestComponent implements OnInit {
         case Type.PROGRAM_OF_MRDB:
           this.pr.originalMrId = this.programRequestPageMode.reference.id;
           this.pr.type = 'PROGRAM';
+          this.pr.longName = this.programRequestPageMode.reference.longName;
+          this.pr.shortName = this.programRequestPageMode.reference.shortName;
           this.initPrWith(this.programRequestPageMode.reference);
           break;
         case Type.SUBPROGRAM_OF_MRDB:
@@ -73,12 +75,10 @@ export class ProgramRequestComponent implements OnInit {
     this.pr.emphases = program.emphases.slice();
     this.pr.functionalArea = program.functionalArea;
     this.pr.leadComponent = program.leadComponent;
-    this.pr.longName = program.longName;
     this.pr.manager = program.manager;
     this.pr.medicalArea = program.medicalArea;
     this.pr.nbcCategory = program.nbcCategory;
     this.pr.primaryCapability = program.primaryCapability;
     this.pr.secondaryCapability = program.secondaryCapability;
-    this.pr.shortName = program.shortName;
   }  
 }
