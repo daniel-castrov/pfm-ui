@@ -259,7 +259,7 @@ export class CreatePomSessionComponent implements OnInit {
   getYear5ToasFromEpp(eppYear:number) {
 
     forkJoin([
-      this.eppsvc.getAll(),
+      this.eppsvc.getValid(this.community.id, this.pb.id),
       this.programsvc.getProgramsByCommunity(this.community.id),
     ]).subscribe(data => {
 
@@ -276,7 +276,7 @@ export class CreatePomSessionComponent implements OnInit {
         if (eppDataRow.fySums[eppYear]) {
           amount = eppDataRow.fySums[eppYear];
         }
-        let index = programs.findIndex(program => program.shortName === eppDataRow.programShortName);
+        let index = programs.findIndex(program => program.shortName === eppDataRow.shortName);
         if (index > 0) {
           eppOrgToa[programs[index].organization] += amount;
         }
@@ -321,9 +321,7 @@ export class CreatePomSessionComponent implements OnInit {
       fy: this.fy
     };
 
-    //console.log('calling setToas!');
-    //console.log(transfer);
-    this.pomsvc.createPom(this.community.id, this.fy, transfer, my.pb.id).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
           my.editsOk = false;
