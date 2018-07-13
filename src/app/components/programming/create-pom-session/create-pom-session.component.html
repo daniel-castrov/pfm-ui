@@ -95,6 +95,11 @@
                     <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
                   </div>
                 </td>
+                <td colspan="2" class="text-right">
+                    <div *ngIf="!editsOk">
+                      <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Reset TOAs</button>
+                    </div>
+                </td>
               </tr>
             </table>
           </div>
@@ -110,6 +115,27 @@
           </fieldset>
         </div>
       </div>
+      
+      <!-- Bootstrap Modal Dialog -->
+      <div id="myModal" class="modal fade in">
+          <div class="modal-dialog">
+            <div class="modal-content nda-content">
+              <div class="modal-header">
+                <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                <h2>Caution</h2>
+              </div>
+              <div class="modal-body">
+                <p>Clicking <u>Continue</u> will update all TOAs for the current POM Session 
+                  and revert any currently <b>"Submitted"</b> Program Requests to the <b>"Outstanding"</b> state.</p>
+                <span class="controls mb-2">
+                    <button class="btn btn-primary btn" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn" data-dismiss="modal" (click)="resetTOAs()">Continue</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
   </div>
 </div>

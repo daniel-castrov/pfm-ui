@@ -37,6 +37,7 @@ export class CreatePomSessionComponent implements OnInit {
   private baseline: Map<number, number> = new Map<number, number>();
   private toas: Map<number, number> = new Map<number, number>();
   private orgtoas: Map<string, Map<number, number>> = new Map<string, Map<number, number>>();
+  private originalFyplus4 ={};
   private pb: PB;
   private editsOk: boolean = true;
   private tooMuchToa: boolean = false;
@@ -186,6 +187,14 @@ export class CreatePomSessionComponent implements OnInit {
         });
       }
     });
+
+    // Remember the original fy+4 data to allow toggling between orig and epp
+    my.orgs.forEach(org => {
+      my.originalFyplus4[org.id] = my.orgtoas.get(org.id).get(this.fy+4);
+    });
+    my.originalFyplus4[my.community.id] = my.toas.get(this.fy+4);
+
+
   }
 
   editfield(event, id, fy) {
@@ -248,9 +257,9 @@ export class CreatePomSessionComponent implements OnInit {
       // show the FY + 4 data from the epp data
       this.getYear5ToasFromEpp( this.fy+4 );
     } else {
-      // replace all values in fy+4 with 0
-      this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy+4, 0));
-      this.toas.set(this.fy+4, 0);
+      // replace all values in fy+4 with the original fy+4 data
+      this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy+4, this.originalFyplus4[org.id] ));
+      this.toas.set(this.fy+4, this.originalFyplus4[this.community.id]);
       this.resetTotals();
     }
     
@@ -293,9 +302,41 @@ export class CreatePomSessionComponent implements OnInit {
 
   }
 
-
-
   submit() {
+    
+    var my: CreatePomSessionComponent = this;
+
+    var transfer:Pom = my.buildTransfer();
+
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
+      (data) => {
+        if (data.result) {
+          my.editsOk = false;
+          my.router.navigate(['/home']);
+        }
+      });
+  }
+
+  resetTOAs() {
+    var my: CreatePomSessionComponent = this;
+
+    var transfer:Pom = my.buildTransfer();
+
+    console.log(transfer);
+
+    // this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
+    //   (data) => {
+    //     if (data.result) {
+    //       my.editsOk = false;
+    //       my.router.navigate(['/home']);
+    //     }
+    //   });
+
+  }
+
+
+  buildTransfer():Pom{
+
     var my: CreatePomSessionComponent = this;
     var toas: TOA[] = [];
     my.toas.forEach(function (amt, yr) {
@@ -321,12 +362,10 @@ export class CreatePomSessionComponent implements OnInit {
       fy: this.fy
     };
 
-    this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
-      (data) => {
-        if (data.result) {
-          my.editsOk = false;
-          my.router.navigate(['/home']);
-        }
-      });
+    return transfer;
+
   }
+
+
+
 }
