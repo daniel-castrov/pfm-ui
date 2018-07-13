@@ -123,9 +123,8 @@ import { EppService } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
-import { PomWorksheet } from './generated/model/pomWorksheet';
-import { PomWorksheetRow } from './generated/model/pomWorksheetRow';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
+import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -169,10 +168,9 @@ const appRoutes: Routes = [
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
-  { path: 'create-new-pom', component: CreatePomSessionComponent },
-  { path: 'worksheet-management', component: WorksheetManagementComponent},
-  { path: 'worksheet', component: WorksheetComponent},
-  { path: 'set-epp', component: SetEppComponent}
+  {path:'create-new-pom', component: CreatePomSessionComponent },
+  {path:'worksheet-management', component: WorksheetManagementComponent},
+  {path:'worksheet', component: WorksheetComponent}
 ];
 
 @NgModule({
@@ -256,9 +254,9 @@ const appRoutes: Routes = [
     RbacPermissionDirective,
     FyPipe,
     MapAsListPipe,
-    SetEppComponent,
     ExecutionLineTableComponent,
-    WorksheetComponent
+    WorksheetComponent,
+    FileUploadComponent
   ],
 
   imports: [

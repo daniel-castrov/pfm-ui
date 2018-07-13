@@ -18,9 +18,8 @@
             </span>
           </div>
           <div class="row px-3">
-            <div class="col input-group browse-img">
-              <input type="file" class="custom-file-input" id="image-file" (change)="onFileChange($event)" required #fileInput>
-              <label class="custom-file-label" for="image-file">{{fileName}}</label>
+            <div class="col">
+              <file-upload [area]="fileArea" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
             </div>
           </div>
         </div>
