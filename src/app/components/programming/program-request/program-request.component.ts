@@ -29,14 +29,14 @@ export class ProgramRequestComponent implements OnInit {
 
       this.pr.phaseId = this.programRequestPageMode.phaseId;
       this.pr.creationTimeType = Type[this.programRequestPageMode.type];
-      this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
       this.pr.bulkOrigin = false;
       this.pr.state = 'OUTSTANDING';
 
       switch(this.programRequestPageMode.type) {
         case Type.PROGRAM_OF_MRDB:
           this.pr.originalMrId = this.programRequestPageMode.reference.id;
-          this.pr.type = 'PROGRAM';
+          this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
+          this.pr.type = this.programRequestPageMode.reference.type;
           this.pr.longName = this.programRequestPageMode.reference.longName;
           this.pr.shortName = this.programRequestPageMode.reference.shortName;
           this.initPrWith(this.programRequestPageMode.reference);
@@ -44,9 +44,11 @@ export class ProgramRequestComponent implements OnInit {
         case Type.SUBPROGRAM_OF_MRDB:
           this.initPrWith(this.programRequestPageMode.reference);
           this.pr.type = 'INCREMENT';
+          this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
           break
         case Type.SUBPROGRAM_OF_PR_OR_UFR:
           this.pr.type = 'INCREMENT';
+          this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
           this.initPrWith(this.programRequestPageMode.reference);
           break;
         case Type.NEW_PROGRAM:
