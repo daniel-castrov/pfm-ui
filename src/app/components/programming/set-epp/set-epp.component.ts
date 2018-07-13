@@ -6,6 +6,9 @@ import {AgGridNg2} from 'ag-grid-angular';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EppService } from '../../../generated/api/epp.service';
+import { GlobalsService } from '../../../services/globals.service';
+import { User } from '../../../generated';
+
 declare const $: any;
 
 @Component({
@@ -23,24 +26,29 @@ export class SetEppComponent implements OnInit {
   data = [];
   currentPage: number;
   totalPages: number;
+  communityId:string;
 
   @ViewChild(HeaderComponent) header;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   constructor(private fb: FormBuilder,
-              private eppService: EppService) {
+              private eppService: EppService,
+              private globalsSvc:GlobalsService) {
     this.createForm();
   }
 
   ngOnInit() {
-    this.eppService.getAll().subscribe(response => {
-      if (!response.error) {
-        this.data = response.result;
-        this.generateFiscalYearColumns(this.data);
-      } else {
-        alert(response.error);
-      }
+    this.globalsSvc.user().subscribe( user => {
+      this.communityId=user.currentCommunityId;
+      this.eppService.getByCommunityId(this.communityId).subscribe(response => {
+        if (!response.error) {
+          this.data = response.result;
+          this.generateFiscalYearColumns(this.data);
+        } else {
+          alert(response.error);
+        }
+      });
     });
   }
 
@@ -181,7 +189,7 @@ export class SetEppComponent implements OnInit {
   }
 
   columnDefs = [
-    {headerName: 'Program', field: 'programShortName' },
+    {headerName: 'Program', field: 'shortName' },
     {headerName: 'Funding Lines', valueGetter: params => {return this.generateFundingLine(params)}}
   ];
 }
