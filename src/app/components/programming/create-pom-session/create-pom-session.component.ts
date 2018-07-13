@@ -276,7 +276,7 @@ export class CreatePomSessionComponent implements OnInit {
         if (eppDataRow.fySums[eppYear]) {
           amount = eppDataRow.fySums[eppYear];
         }
-        let index = programs.findIndex(program => program.shortName === eppDataRow.programShortName);
+        let index = programs.findIndex(program => program.shortName === eppDataRow.shortName);
         if (index > 0) {
           eppOrgToa[programs[index].organization] += amount;
         }
