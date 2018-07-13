@@ -1,7 +1,8 @@
+import { NewProgrammaticRequestComponent } from './new-programmatic-request/new-programmatic-request.component';
 import { ProgramRequestWithFullName, WithFullNameService } from './../../../services/with-full-name.service';
 import { GlobalsService } from './../../../services/globals.service';
 import { POMService } from './../../../generated/api/pOM.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 // Other Components
 import { Pom } from '../../../generated/model/pom';
@@ -17,8 +18,8 @@ import { PBService } from '../../../generated/api/pB.service';
 })
 export class SelectProgramRequestComponent implements OnInit {
 
+  @ViewChild(NewProgrammaticRequestComponent) newProgrammaticRequestComponent: NewProgrammaticRequestComponent;
   private currentCommunityId: string;
-
   private pom: Pom;
   private pomProgrammaticRequests: ProgramRequestWithFullName[];
   private pb: PB;
@@ -63,6 +64,11 @@ export class SelectProgramRequestComponent implements OnInit {
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
     this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
+  }
+
+  onDeletePr() {
+    this.reloadPrs();
+    this.newProgrammaticRequestComponent.addNewPrFor = null;
   }
 
   async submit() {

@@ -45,15 +45,15 @@ export class NewProgrammaticRequestComponent implements OnInit {
     switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
         this.programRequestPageMode.set(Type.PROGRAM_OF_MRDB , this.pomId);
-        this.programRequestPageMode.referenceId = this.selectedProgramOrPr.id;
+        this.programRequestPageMode.reference = this.selectedProgramOrPr;
         break;
       case 'A New Subprogram':
         if(this.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(Type.SUBPROGRAM_OF_MRDB, this.pomId);
-          this.programRequestPageMode.referenceId = this.selectedProgramOrPr.id;
+          this.programRequestPageMode.reference = this.selectedProgramOrPr;
         } else { // a PR has been selected
           this.programRequestPageMode.set(Type.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
-          this.programRequestPageMode.referenceId = this.selectedProgramOrPr.id;
+          this.programRequestPageMode.reference = this.selectedProgramOrPr;
         }
         break;
       case 'A New Program':
