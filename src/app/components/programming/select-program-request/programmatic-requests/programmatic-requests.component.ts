@@ -72,4 +72,9 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     }
     return result;
   }
+
+  state(uiPr: UiProgrammaticRequest) {
+    if(!uiPr.bulkOrigin && uiPr.state == 'SAVED') return 'DRAFT';
+    return uiPr.state;
+  }
 }

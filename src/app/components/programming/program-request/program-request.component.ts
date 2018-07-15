@@ -30,7 +30,7 @@ export class ProgramRequestComponent implements OnInit {
       this.pr.phaseId = this.programRequestPageMode.phaseId;
       this.pr.creationTimeType = Type[this.programRequestPageMode.type];
       this.pr.bulkOrigin = false;
-      this.pr.state = 'OUTSTANDING';
+      this.pr.state = 'SAVED';
 
       switch(this.programRequestPageMode.type) {
         case Type.PROGRAM_OF_MRDB:

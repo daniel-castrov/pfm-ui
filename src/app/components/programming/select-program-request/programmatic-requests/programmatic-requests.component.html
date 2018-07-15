@@ -41,13 +41,13 @@
                   <i class="fa fa-trash"></i>
                 </span>
               </td>
-              <td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{pr.pom?.state}}</a></td>
+              <td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{state(pr.pom)}}</a></td>
             </ng-container>
             <ng-container *ngIf="reviewOnly">
               <td class="row-lt-gray text-center largest-column" rowspan="2">
                 <span>{{pr.pom?.fullname}}</span>
               </td>
-              <td class="row-lt-gray text-center largest-column" rowspan="2">{{pr.pom?.state}}</td>
+              <td class="row-lt-gray text-center largest-column" rowspan="2">{{state(pr.pom)}}</td>
             </ng-container>
             <td>PB{{pbFy - 2000}}</td>
             <td class="text-right">{{pr.pb?.getToa(pomFy-3) | dashForZero}}</td>
