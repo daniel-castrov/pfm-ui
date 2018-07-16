@@ -91,13 +91,13 @@
               <tr>
                 <td colspan="5"></td>
                 <td colspan="2" class="text-right">
-                  <div *ngIf="editsOk">
-                    <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submit()">Create POM</button>
+                  <div *ngIf="pomStatus!='CREATED' && pomStatus!='OPEN'">
+                    <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
                   </div>
                 </td>
                 <td colspan="2" class="text-right">
-                    <div *ngIf="!editsOk">
-                      <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Reset TOAs</button>
+                    <div *ngIf="pomStatus=='CREATED'">
+                      <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Update TOAs</button>
                     </div>
                 </td>
               </tr>
@@ -129,7 +129,7 @@
                   and revert any currently <b>"Submitted"</b> Program Requests to the <b>"Outstanding"</b> state.</p>
                 <span class="controls mb-2">
                     <button class="btn btn-primary btn" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary btn" data-dismiss="modal" (click)="resetTOAs()">Continue</button>
+                    <button class="btn btn-primary btn" data-dismiss="modal" (click)="updatePom()">Continue</button>
                 </span>
               </div>
             </div>

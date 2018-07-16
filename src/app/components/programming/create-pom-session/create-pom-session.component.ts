@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { forkJoin } from "rxjs/observable/forkJoin";
 
 import { HeaderComponent } from '../../../components/header/header.component';
-import { MyDetailsService } from '../../../generated/api/myDetails.service';
+import { GlobalsService } from './../../../services/globals.service';
 import { Community } from '../../../generated/model/community';
 import { Organization } from '../../../generated/model/organization';
 import { TOA } from '../../../generated/model/tOA';
@@ -39,16 +39,18 @@ export class CreatePomSessionComponent implements OnInit {
   private orgtoas: Map<string, Map<number, number>> = new Map<string, Map<number, number>>();
   private originalFyplus4 ={};
   private pb: PB;
-  private editsOk: boolean = true;
+  private editsOk: boolean = false;
+  private pomStatus: string;
   private tooMuchToa: boolean = false;
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
   private useEpp = false;
 
-  constructor(private detailsvc: MyDetailsService, private communityService: CommunityService,
+  constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
-    private eppsvc: EppService, private programsvc: ProgramsService, private router: Router) {
+    private eppsvc: EppService, private programsvc: ProgramsService, private router: Router,
+    private globalsvc: GlobalsService ) {
   }
 
   ngOnInit() {
@@ -110,24 +112,25 @@ export class CreatePomSessionComponent implements OnInit {
     });
 
     this.fetch();
+
   }
 
   fetch() {
     var my: CreatePomSessionComponent = this;
-    this.detailsvc.getCurrentUser().subscribe((person) => {
-      forkJoin([my.communityService.getById(person.result.currentCommunityId),
-      my.orgsvc.getByCommunityId(person.result.currentCommunityId),
-      my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-      my.pbsvc.getLatest(person.result.currentCommunityId),
-      my.pomsvc.getToaSamples(person.result.currentCommunityId)
+    this.globalsvc.user().subscribe( user => {
+      forkJoin([my.communityService.getById(user.currentCommunityId),
+      my.orgsvc.getByCommunityId(user.currentCommunityId),
+      my.pomsvc.getByCommunityId(user.currentCommunityId),
+      my.pbsvc.getLatest(user.currentCommunityId),
+      my.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
-        var community = data[0].result;
+
+        my.community  = data[0].result;
         my.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
         my.pb = data[3].result;
         var samplepom: Pom = data[4].result;
 
-        my.community = community;
         my.fy = my.pb.fy + 1;
 
         my.toas.clear();
@@ -140,20 +143,15 @@ export class CreatePomSessionComponent implements OnInit {
     });
   }
 
+
   setInitialValuesAndEditable(poms: Pom[], samplepom: Pom) {
     var my: CreatePomSessionComponent = this;
 
     // set everything to 0, just to be safe
+    my.editsOk=false;
     for (var i = 0; i < 5; i++) {
       my.toas.set(my.fy + i, 0);
-      my.baseline.set(my.fy + i, 0);
     }
-    samplepom.communityToas.forEach((toa: TOA) => {
-      my.toas.set(toa.year, toa.amount);
-      my.baseline.set(toa.year, toa.amount);
-    });
-
-    // set org toas to 0 as well, then update after
     my.orgs.forEach(function (org) {
       var tszeros: Map<number, number> = new Map<number, number>();
       for (var i = 0; i < 5; i++) {
@@ -162,40 +160,68 @@ export class CreatePomSessionComponent implements OnInit {
       my.orgtoas.set(org.id, tszeros);
     });
 
-    Object.keys(samplepom.orgToas).forEach(orgid => {
-      samplepom.orgToas[orgid].forEach(toa => {
-        my.orgtoas.get(orgid).set(toa.year, toa.amount);
-      });
-    });
+    // 2 Always set the baseline from the previous pb
+    for (var i = 0; i < 5; i++) {
+      my.baseline.set(my.fy + i, 0);
+    }
 
-    my.editsOk = true;
-    poms.forEach(function (x) {
-      if (x.fy === my.fy) {
-        my.editsOk = false;
-
-        // we have a POM for this FY, so fill in the values
-        x.communityToas.forEach((toa) => {
-          my.toas.set(toa.year, toa.amount);
-        });
-
-        Object.keys(x.orgToas).forEach(key => {
-          var toamap: Map<number, number> = new Map<number, number>();
-          x.orgToas[key].forEach(toa => {
-            toamap.set(toa.year, toa.amount);
-          });
-          my.orgtoas.set(key, toamap);
-        });
+    // Do we have a pom or are we creating a new one from the latest PB?
+    var currentPom:Pom=null;
+    for (var i=0; i<poms.length; i++){
+      my.pomStatus =  poms[i].status;
+      if ( poms[i].status === "CREATED" ){
+        currentPom=poms[i];
+        break;
       }
-    });
+    }
+
+    if ( null == currentPom ){
+      // 3a use the values from the samplepom ( the previous pb )
+      my.editsOk=true;
+
+      samplepom.communityToas.forEach((toa: TOA) => {
+        my.toas.set(toa.year, toa.amount);
+        my.baseline.set(toa.year, toa.amount);
+      });
+
+      Object.keys(samplepom.orgToas).forEach(orgid => {
+        samplepom.orgToas[orgid].forEach(toa => {
+          my.orgtoas.get(orgid).set(toa.year, toa.amount);
+        });
+      });
+    }
+    else if (my.pomStatus=="CREATED"){
+      // 3b User the values from the currentPom
+      my.editsOk=true;
+
+      currentPom.communityToas.forEach((toa) => {
+        my.toas.set(toa.year, toa.amount);
+      });
+
+      Object.keys(currentPom.orgToas).forEach(key => {
+        var toamap: Map<number, number> = new Map<number, number>();
+        currentPom.orgToas[key].forEach(toa => {
+          toamap.set(toa.year, toa.amount);
+        });
+        my.orgtoas.set(key, toamap);
+      });
+    }
+    else {
+      my.editsOk=false;
+    }
+
 
     // Remember the original fy+4 data to allow toggling between orig and epp
     my.orgs.forEach(org => {
-      my.originalFyplus4[org.id] = my.orgtoas.get(org.id).get(this.fy+4);
+      my.originalFyplus4[org.id] = my.orgtoas.get(org.id).get(my.fy+4);
     });
-    my.originalFyplus4[my.community.id] = my.toas.get(this.fy+4);
-
+    my.originalFyplus4[my.community.id] = my.toas.get(my.fy+4);
 
   }
+
+
+
+
 
   editfield(event, id, fy) {
     var val: number = Number.parseInt(event.target.innerText.replace(/,/g, ''));
@@ -302,38 +328,31 @@ export class CreatePomSessionComponent implements OnInit {
 
   }
 
-  submit() {
-    
-    var my: CreatePomSessionComponent = this;
+  submitNewPom() {    
 
+    var my: CreatePomSessionComponent = this;
     var transfer:Pom = my.buildTransfer();
 
     this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
-          my.editsOk = false;
           my.router.navigate(['/home']);
         }
       });
   }
 
-  resetTOAs() {
-    var my: CreatePomSessionComponent = this;
+  updatePom() {
 
+    var my: CreatePomSessionComponent = this;
     var transfer:Pom = my.buildTransfer();
 
-    console.log(transfer);
-
-    // this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
-    //   (data) => {
-    //     if (data.result) {
-    //       my.editsOk = false;
-    //       my.router.navigate(['/home']);
-    //     }
-    //   });
-
+    this.pomsvc.updateCurrentPom( this.community.id, transfer, this.useEpp ).subscribe(
+      (data) => {
+        if (data.result) {
+          my.router.navigate(['/home']);
+        }
+      });
   }
-
 
   buildTransfer():Pom{
 
@@ -363,9 +382,6 @@ export class CreatePomSessionComponent implements OnInit {
     };
 
     return transfer;
-
   }
-
-
 
 }
