@@ -70,7 +70,7 @@ export class OpenPomSessionComponent implements OnInit {
           if ('CREATED' === pom.status) {
             this.pom = pom;
             this.pomStatusIsCreated = true;
-            this.pomProgrammaticRequests = (await this.withFullNameService.programRequests(this.pom.id));
+            this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
             resolve();
             break;
           }

@@ -2,7 +2,6 @@ import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
-import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Row } from './Row';
 import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
@@ -15,7 +14,7 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 export class ProgrammaticRequestsComponent implements OnChanges {
 
   @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
-  @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
+  @Input() private pbProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pomFy: number;
   @Input() private pbFy: number;
   @Input() private reviewOnly:boolean;
@@ -39,11 +38,11 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   private createMapNameToRow() {
     const result = {};
     this.pomProgrammaticRequests.forEach(pr => {
-      result[pr.shortName] = new Row(pr);
+      result[pr.fullname] = new Row(pr);
     });
     this.pbProgrammaticRequests.forEach(pr => {
       if (result[pr.shortName]) {
-        result[pr.shortName].addPbPr(pr);
+        result[pr.fullname].addPbPr(pr);
       };
     });
     return result;

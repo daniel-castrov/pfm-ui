@@ -29,21 +29,48 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
-  async programRequests(phaseId: string): Promise<ProgramRequestWithFullName[]> {
-    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
+/**
+ * The PRs can form a hierarchy in two different ways:
+ * 
+ *  - using the creation time data (creationTimeReferenceId) where a PR w/o a program can have a parent be another PR and so on until a PR
+ * in the chain has a parent in the MRDB Programs collection via its parentMrId field. From there on parenting is established via the Programs collection.
+ * This is applicable to the POM PRs while they are being modified/worked on.
+ * Example full name resulting from such a hierarchy: /ROOT_PROGRAM/SUBPROGRAM_1/pr_1/pr_2,  where upper case is a Program name and lower case is a PR name.
+ * 
+ *  - using the archival data (parentMrId). In this case the PR does have a Program in MRDB. Example: /ROOT_PROGRAM/SUBPROGRAM_1, i.e. the Program of the PR.
+ * This is applicable to PB PRs while the POM PRs are being worked on.
+ * 
+ * NB: Capitatalization illustrates how the full name is constructed and not how it is represented to the user in the UI.
+ */
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
-    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgram(prs);
-    
-    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
-      ({ ...pr, fullname: this.prFullName(pr, mapIdToProgram, mapIdToPr) })
-    );
+async programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
+  const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+  const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
 
-    return this.sort(result);
-  }
+  const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+  const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgram(prs);
+  
+  const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
+    ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
+  );
 
-  private sort(withFullName: WithFullName[]): WithFullName[] {
+  return this.sort(result);
+}
+
+async programRequestsWithFullNamesDerivedFromArchivalData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
+  const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+  const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
+
+  const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+
+  const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
+    ({ ...pr, fullname: this.prFullNameDerivedFromArchivalData(pr, mapIdToProgram) })
+  );
+
+  return this.sort(result);
+}
+
+private sort(withFullName: WithFullName[]): WithFullName[] {
     return withFullName.sort((a: WithFullName, b: WithFullName) => {
       if (a.fullname === b.fullname) return 0;
       return (a.fullname < b.fullname ? -1 : 1);
@@ -56,10 +83,10 @@ export class WithFullNameService {
     return mapIdToProgramOrPr;
   }
 
-  private prFullName(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
+  private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
     var parentName = '';
     if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_PR_OR_UFR]) {
-      parentName = this.prFullName(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
+      parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
     } else if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_MRDB]) {
       parentName = this.programFullName(mapIdToProgram.get(pr.creationTimeReferenceId), mapIdToProgram) + '/';
     } else if (pr.creationTimeType === Type[Type.PROGRAM_OF_MRDB]) {
@@ -75,6 +102,10 @@ export class WithFullNameService {
     return parentName + pr.shortName;
   }
 
+  private prFullNameDerivedFromArchivalData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>): string {
+    return this.programFullName(mapIdToProgram.get(pr.originalMrId), mapIdToProgram);
+  }
+
   private programFullName(program: Program, mapIdToProgram: Map<string, Program>): string {
     let parentName = '';
     if (program.parentMrId) {
@@ -82,4 +113,5 @@ export class WithFullNameService {
     }
     return parentName + program.shortName;
   }
+
 }
