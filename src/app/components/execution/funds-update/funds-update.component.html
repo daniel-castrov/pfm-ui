@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12 col-lg-8">
+      <div class="col-12">
         <fieldset>
           <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i> Filter</legend>
           <div class="row">
@@ -93,6 +93,7 @@
             <ag-grid-column headerName="Withhold" field="withheld"></ag-grid-column>
           </ag-grid-angular>
 
+      <div class="col-12">
           <table class="funds-update-table">
             <thead>
               <tr>
@@ -113,7 +114,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let line of filteredexelines; let idx=index" (click)="highlight(idx)" 
+              <tr *ngFor="let line of filteredexelines; let idx=index" (click)="highlight(idx)"
                    [class.active]="idx == selectedRow">
                 <td class="lt-grey clickable large-column">{{programs.get(line.mrId)}}</td>
                 <td class="lt-grey">{{line.appropriation}}</td>
@@ -135,7 +136,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-10">
+      <div class="col-12">
         <div class="pull-right program-controls">
           <span>
             <button class="btn btn-primary" [routerLink]="['/charges', selectedexe?.id]">Charge</button>
@@ -150,7 +151,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12 col-lg-10">
+      <div class="col-12">
         <fieldset>
           <legend>Add Execution Line</legend>
           <div class="row">

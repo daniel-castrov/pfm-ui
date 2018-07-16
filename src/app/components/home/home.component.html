@@ -1,30 +1,28 @@
 <j-header></j-header>
 <div class="row main-content" *ngIf="header.authUser">
   <div class="error" *ngFor="let error of resultError">{{error}}</div>
-  <div class="col-lg-5 col-sm-10">
+  <div class="col-lg-6 col-sm-12">
     <div class="card-header">
       Welcome back <strong> {{ header.authUser.fullName }}</strong>
     </div>
     <div class="card-container">
     </div>
   </div>
-  <div class="col-lg-5 col-sm-10">
+  <div class="col-lg-6 col-md-12">
     <div class="card-header">
       My ToDo
     </div>
     <div class="card-container">
     </div>
   </div>
-  <div class="col-2 col-md-2">
-  </div>
-  <div class="col-lg-5 col-sm-10">
+  <div class="col-lg-6 col-md-12">
     <div class="card-header">
       Reports
     </div>
     <div class="card-container">
     </div>
   </div>
-  <div class="col-lg-5 col-sm-10">
+  <div class="col-lg-6 col-md-12">
     <div class="card-header">
       Favorite Links
     </div>
@@ -32,7 +30,5 @@
       <span class="add-link">
         <i class="fa fa-plus" aria-hidden="true"></i> Add Link</span>
     </div>
-  </div>
-  <div class="col-2 col-md-2">
   </div>
 </div>

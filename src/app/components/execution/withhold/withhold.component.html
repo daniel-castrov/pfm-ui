@@ -1,6 +1,6 @@
 <j-header></j-header>
 <div class="row main-content">
-  <div class="col-md-12">
+  <div class="col-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
         <span class="h5 mr-2">{{phase.fy|FY}} - Withhold to Program Execution Line(s)</span>
@@ -19,8 +19,8 @@
           <label class="execution-titles">{{fullname(current)}}</label>
         </span-->
       </div>
-      <div class="col-4 pull-right">
-        <button class="btn btn-primary" (click)="submit()">Withheld</button>
+      <div class="col-4">
+        <button class="btn btn-primary pull-right" (click)="submit()">Withheld</button>
       </div>
     </div>
     <div class="row mb-3">
@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-md-12 col-lg-9">
+      <div class="col-12">
         <span class="form-group">
           <label class="primary-label mb-1">Notes:</label>
           <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
