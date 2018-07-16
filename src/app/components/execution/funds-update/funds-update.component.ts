@@ -8,7 +8,7 @@ import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine }
 import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
-
+import {AgGridNg2} from 'ag-grid-angular';
 
 declare const $: any;
 declare const jQuery: any;
@@ -21,6 +21,8 @@ declare const jQuery: any;
 
 export class FundsUpdateComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild("agGrid") private agGrid: AgGridNg2;
+
   private exephases: Execution[];
   private selectedexe: Execution;
   private allexelines: ExecutionLine[] = [];

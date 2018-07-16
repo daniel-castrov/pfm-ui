@@ -68,6 +68,31 @@
     </div>
     <div class="row mb-3">
       <div class="col-md-12 col-lg-10">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+            [enableSorting]="true"
+            [enableFilter]="true" 
+            [gridAutoHeight]="true" 
+            [pagination]="true"
+            [rowData]="filteredexelines"
+            [paginationPageSize]="15"
+            [suppressPaginationPanel]="true">
+
+            <ag-grid-column headerName="Program" field="mrId" class="large-column"></ag-grid-column>
+            <ag-grid-column headerName="Appr." field="appropriation"></ag-grid-column>
+            <ag-grid-column headerName="Budget" field="blin"></ag-grid-column>
+            <ag-grid-column headerName="Item" field="item"></ag-grid-column>
+            <ag-grid-column headerName="OpAgency" field=""></ag-grid-column>
+            <ag-grid-column headerName="Initial Funds" field=""></ag-grid-column>
+            <ag-grid-column headerName="CRA" field=""></ag-grid-column>
+            <ag-grid-column headerName="Appr. Actions" field=""></ag-grid-column>
+            <ag-grid-column headerName="Ext. Repr." field=""></ag-grid-column>
+            <ag-grid-column headerName="ETR" field=""></ag-grid-column>
+            <ag-grid-column headerName="Real" field=""></ag-grid-column>
+            <ag-grid-column headerName="TOA" field="toa"></ag-grid-column>
+            <ag-grid-column headerName="Released" field="released"></ag-grid-column>
+            <ag-grid-column headerName="Withhold" field="withheld"></ag-grid-column>
+          </ag-grid-angular>
+
           <table class="funds-update-table">
             <thead>
               <tr>
