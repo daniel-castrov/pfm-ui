@@ -41,7 +41,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       result[pr.fullname] = new Row(pr);
     });
     this.pbProgrammaticRequests.forEach(pr => {
-      if (result[pr.shortName]) {
+      if (result[pr.fullname]) {
         result[pr.fullname].addPbPr(pr);
       };
     });
