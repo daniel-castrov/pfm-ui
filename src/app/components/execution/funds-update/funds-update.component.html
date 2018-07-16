@@ -75,7 +75,8 @@
             [pagination]="true"
             [rowData]="filteredexelines"
             [paginationPageSize]="15"
-            [suppressPaginationPanel]="true">
+            (gridReady)="onGridReady($event)"
+            [suppressPaginationPanel]="false">
 
             <ag-grid-column headerName="Program" field="mrId" class="large-column"></ag-grid-column>
             <ag-grid-column headerName="Appr." field="appropriation"></ag-grid-column>

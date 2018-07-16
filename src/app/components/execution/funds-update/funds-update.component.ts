@@ -171,4 +171,8 @@ export class FundsUpdateComponent implements OnInit {
       console.log('new exeline...no id to lookup');
     }
   }
+
+  onGridReady(params) {
+    params.api.sizeColumnsToFit();
+  }
 }
