@@ -3145,6 +3145,18 @@ definitions:
         type: "integer"
       outlays:
         type: "integer"
+      initial:
+        type: "integer"
+      craTotal:
+        type: "integer"
+      apprTotal:
+        type: "integer"
+      ousdcTotal:
+        type: "integer"
+      btrTotal:
+        type: "integer"
+      realignedTotal:
+        type: "integer"
       phaseId:
         type: "string"
       spendPlans:

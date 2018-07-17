@@ -70,27 +70,31 @@ export class FundsUpdateComponent implements OnInit {
       },
       {
         headerName: 'Initial Funds',
-        field: ''
+        field: 'initial'
       },
       {
         headerName: 'CRA',
-        field: ''
+        field: 'craTotal'
+      },
+      {
+        headerName: 'Realigned',
+        field: 'realignedTotal'
       },
       {
         headerName: 'Appr. Actions',
-        field: ''
+        field: 'apprTotal'
       },
       {
-        headerName: 'Ext. Repr.',
-        field: ''
+        headerName: 'OUSD(C) Actions',
+        field: 'ousdcTotal'
       },
       {
-        headerName: 'ETR',
-        field: ''
+        headerName: 'BTR',
+        field: 'btrTotal'
       },
       {
-        headerName: 'Real',
-        field: ''
+        headerName: 'Withheld',
+        field: 'withheld'
       },
       {
         headerName: 'TOA',
@@ -100,10 +104,6 @@ export class FundsUpdateComponent implements OnInit {
         headerName: 'Released',
         field: 'released'
       },
-      {
-        headerName: 'Withhold',
-        field: 'withheld'
-      }
     ];
   }
 
