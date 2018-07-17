@@ -15,7 +15,7 @@
             <label>Program Type:</label> <span class="mr-sm-4">{{pr.type}}</span>
           </span>
         </div>
-        <div class="col-6" id="create-new-subprogram" 
+        <div class="col-6" id="create-new-subprogram"
             *ngIf="!programRequestPageMode.id && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
           <div class="h5 mb-4">Program Request - Creating New Sub-Program for Program:</div>
           <label for="id">Id:</label>
@@ -23,7 +23,7 @@
           <label for="name">Name:</label>
           <input id="name" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
           <label for="type">Program Type:</label>
-          <select id="type" [(ngModel)]="pr.type" class="form-control-sm" name="dummy">
+          <select id="type" [(ngModel)]="pr.type" class="form-control-sm type-dropdown" name="dummy">
             <option *ngFor="let type of ['INCREMENT','VARIANT','FOS']" [ngValue]="type">{{type}}</option>
           </select>
         </div>
@@ -37,7 +37,7 @@
             <label>Program Type:</label> <span class="mr-sm-4">{{pr.type}}</span>
           </span>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="col-6">
           <div class="pull-right mb-2" aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
@@ -65,7 +65,7 @@
       </div>
     </div>
     <div class="row main-content">
-      <div class="col-lg-10 col-md-12">
+      <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
           <tab heading="Program" id="tab1" role="tablist">
             <program-tab [pr]="pr" role="tabpanel"></program-tab>
