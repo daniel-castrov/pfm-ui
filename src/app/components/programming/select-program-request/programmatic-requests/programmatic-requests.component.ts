@@ -2,7 +2,6 @@ import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
-import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Row } from './Row';
 import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
@@ -15,10 +14,10 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 export class ProgrammaticRequestsComponent implements OnChanges {
 
   @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
-  @Input() private pbProgrammaticRequests: ProgrammaticRequest[];
+  @Input() private pbProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pomFy: number;
   @Input() private pbFy: number;
-  @Input() private reviewOnly:boolean;
+  @Input() private reviewOnly: boolean;
   private mapNameToRow = {};
   @Output() deleted: EventEmitter<any> = new EventEmitter();
 
@@ -39,11 +38,11 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   private createMapNameToRow() {
     const result = {};
     this.pomProgrammaticRequests.forEach(pr => {
-      result[pr.shortName] = new Row(pr);
+      result[pr.fullname] = new Row(pr);
     });
     this.pbProgrammaticRequests.forEach(pr => {
-      if (result[pr.shortName]) {
-        result[pr.shortName].addPbPr(pr);
+      if (result[pr.fullname]) {
+        result[pr.fullname].addPbPr(pr);
       };
     });
     return result;
@@ -71,5 +70,10 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       result += uiPr.getToa(year);
     }
     return result;
+  }
+
+  state(uiPr: UiProgrammaticRequest) {
+    if(!uiPr.bulkOrigin && uiPr.state == 'SAVED') return 'DRAFT';
+    return uiPr.state;
   }
 }
