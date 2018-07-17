@@ -261,6 +261,33 @@ paths:
         description: "The community id"
         required: true
         type: "string"
+    put:
+      tags:
+      - "POM"
+      summary: "Updates currently CREATED POM session"
+      description: "Updates TOA values for a Community and its organizations"
+      operationId: "updateCurrentPom"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "useepp"
+        description: "set to 'true' to use epp data for 5th year"
+        required: false
+        type: "boolean"
+      - in: "body"
+        name: "body"
+        description: "a POM object"
+        required: true
+        schema:
+          $ref: "#/definitions/Pom"
   /pom/community/{communityId}/sample:
     get:
       tags:
