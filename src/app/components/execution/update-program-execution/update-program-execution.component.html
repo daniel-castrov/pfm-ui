@@ -4,14 +4,14 @@
 
 <j-header></j-header>
 <div class="row main-content">
-  <div class="col-md-12">
+  <div class="col-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
         <span class="h5 mr-2">{{phase?.fy|FY}} - Funds Update for Program Execution</span>
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-8">
+      <div class="col-10">
         <span class="form-group mr-3">
           <label class="primary-label">From</label>
           <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown">
@@ -23,8 +23,8 @@
           <label class="execution-titles">{{fullname(current)}}</label>
         </span>
       </div>
-      <div class="col-4 pull-right">
-        <button class="btn btn-primary" (click)="submit()">Submit</button>
+      <div class="col-2">
+        <button class="btn btn-primary pull-right" (click)="submit()">Submit</button>
       </div>
     </div>
     <div class="row mb-3">
@@ -90,7 +90,7 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-md-12 col-lg-9">
+      <div class="col-md-12">
         <span class="form-group">
           <label class="primary-label mb-1">Notes:</label>
           <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>

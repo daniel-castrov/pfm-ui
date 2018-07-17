@@ -1,7 +1,6 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {ProgrammaticRequest} from "../../../../generated";
+import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {FileResponse, ProgrammaticRequest, UserService} from "../../../../generated";
 import {ProgramsService} from "../../../../generated/api/programs.service";
-import {PRService} from "../../../../generated/api/pR.service";
 
 import {DomSanitizer} from '@angular/platform-browser';
 
@@ -15,8 +14,8 @@ export class ProgramTabComponent implements OnInit, OnChanges {
   @Input()
   pr : ProgrammaticRequest;
 
+  fileArea: string = 'pr';
   imagePath: string;
-  fileName: string;
 
   tags = ['Lead Component',
     'Manager',
@@ -32,11 +31,10 @@ export class ProgramTabComponent implements OnInit, OnChanges {
   dropdownValues= new Map();
 
   constructor(private programsService: ProgramsService,
-              private prService: PRService,
+              private userService: UserService,
               private sanitization: DomSanitizer) { }
 
   ngOnInit() {
-
     this.tags.forEach(tag => {
       this.programsService.getTagsByType(tag).subscribe(data => {
         this.dropdownValues.set(tag, data.result);
@@ -46,29 +44,20 @@ export class ProgramTabComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.pr.imageName) {
-      this.prService.downloadImage(this.pr.imageName).subscribe(response => {
+      this.userService.downloadFile(this.pr.imageName, this.fileArea).subscribe(response => {
         if (response.result) {
-          this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(response.result) as string;
+          let fileResponse = response.result as FileResponse;
+          let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
+          this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
         }
       });
     }
   }
 
-  onFileChange(event){
-    let reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      reader.onload = () => {
-        this.fileName = file.name;
-        this.imagePath = reader.result;
-        this.prService.uploadImage(file).subscribe(response => {
-          if (response.result) {
-            this.pr.imageName = response.result;
-            this.pr.imageArea = "pr";
-          }
-        })
-      }
-      reader.readAsDataURL(file);
-    }
+  onFileUploaded(fileResponse: FileResponse){
+    let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
+    this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
+    this.pr.imageName = fileResponse.id;
+    this.pr.imageArea = this.fileArea;
   }
 }
