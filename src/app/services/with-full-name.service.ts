@@ -20,7 +20,7 @@ export class WithFullNameService {
 
   async programs(): Promise<ProgramWithFullName[]> {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
     
     const result: ProgramWithFullName[] = programs.map( (program: Program) => 
       ({ ...program, fullname: this.programFullName(program, mapIdToProgram) })
@@ -43,48 +43,58 @@ export class WithFullNameService {
  * NB: Capitatalization illustrates how the full name is constructed and not how it is represented to the user in the UI.
  */
 
-async programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
-  const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-  const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
+  async programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
+    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-  const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
-  const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgram(prs);
-  
-  const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
-    ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
-  );
+    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
+    
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
+      ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
+    );
 
-  return this.sort(result);
-}
+    return this.sort(result);
+  }
 
-async programRequestsWithFullNamesDerivedFromArchivalData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
-  const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-  const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
+  async programRequestsWithFullNamesDerivedFromArchivalData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
+    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-  const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
 
-  const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
-    ({ ...pr, fullname: this.prFullNameDerivedFromArchivalData(pr, mapIdToProgram) })
-  );
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
+      ({ ...pr, fullname: this.prFullNameDerivedFromArchivalData(pr, mapIdToProgram) })
+    );
 
-  return this.sort(result);
-}
+    return this.sort(result);
+  }
 
-private sort(withFullName: WithFullName[]): WithFullName[] {
+  async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, phaseId: string): Promise<string> {
+    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
+
+    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
+
+    return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);
+  }
+
+  private sort(withFullName: WithFullName[]): WithFullName[] {
     return withFullName.sort((a: WithFullName, b: WithFullName) => {
       if (a.fullname === b.fullname) return 0;
       return (a.fullname < b.fullname ? -1 : 1);
     });
   }
 
-  private createMapIdToProgram<T>(programsOrPrs: T[]): Map<string, T> {
+  private createMapIdToProgramOrPr<T>(programsOrPrs: T[]): Map<string, T> {
     const mapIdToProgramOrPr: Map<string, T> = new Map();
     programsOrPrs.forEach( (programOrPr: any) => mapIdToProgramOrPr.set(programOrPr.id, programOrPr) );
     return mapIdToProgramOrPr;
   }
 
   private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
-    var parentName = '';
+      var parentName = '';
     if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_PR_OR_UFR]) {
       parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
     } else if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_MRDB]) {
