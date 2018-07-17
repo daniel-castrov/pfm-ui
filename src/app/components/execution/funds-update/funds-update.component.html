@@ -12,60 +12,6 @@
          </span>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <fieldset>
-          <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i> Filter</legend>
-          <div class="row">
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Program</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="mrid" (change)="filter()">
-                  <option></option>
-                  <option *ngFor="let program of programs | mapAsList" [ngValue]="program.key">{{program.value}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Appropriation</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation" (change)="filter()">
-                  <option></option>
-                  <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">BA/BLIN</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="blin" (change)="filter()">
-                  <option></option>
-                  <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Item</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="item" (change)="filter()">
-                  <option></option>
-                  <option *ngFor="let item of items" [ngValue]="item">{{item}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">OpAgency</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency" (change)="filter()">
-                  <option></option>
-                  <option *ngFor="let opAgency of opAgencies">{{opAgency}}</option>
-                </select>
-              </span>
-            </div>
-           </div>
-        </fieldset>
-      </div>
-    </div>
     <div class="row mb-3">
       <div class="col-md-12 col-lg-10">
           <ag-grid-angular #agGrid class="ag-theme-balham"
