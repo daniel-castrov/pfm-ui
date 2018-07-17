@@ -75,65 +75,10 @@
             [pagination]="true"
             [rowData]="filteredexelines"
             [paginationPageSize]="15"
+            [columnDefs]="columnDefs"
             (gridReady)="onGridReady($event)"
             [suppressPaginationPanel]="false">
-
-            <ag-grid-column headerName="Program" field="mrId" class="large-column"></ag-grid-column>
-            <ag-grid-column headerName="Appr." field="appropriation"></ag-grid-column>
-            <ag-grid-column headerName="Budget" field="blin"></ag-grid-column>
-            <ag-grid-column headerName="Item" field="item"></ag-grid-column>
-            <ag-grid-column headerName="OpAgency" field=""></ag-grid-column>
-            <ag-grid-column headerName="Initial Funds" field=""></ag-grid-column>
-            <ag-grid-column headerName="CRA" field=""></ag-grid-column>
-            <ag-grid-column headerName="Appr. Actions" field=""></ag-grid-column>
-            <ag-grid-column headerName="Ext. Repr." field=""></ag-grid-column>
-            <ag-grid-column headerName="ETR" field=""></ag-grid-column>
-            <ag-grid-column headerName="Real" field=""></ag-grid-column>
-            <ag-grid-column headerName="TOA" field="toa"></ag-grid-column>
-            <ag-grid-column headerName="Released" field="released"></ag-grid-column>
-            <ag-grid-column headerName="Withhold" field="withheld"></ag-grid-column>
           </ag-grid-angular>
-
-      <div class="col-12">
-          <table class="funds-update-table">
-            <thead>
-              <tr>
-                <th class="large-column">Program</th>
-                <th>Appr.</th>
-                <th>Budget</th>
-                <th>Item</th>
-                <th class="med-column">OpAgency</th>
-                <th>Initial Funds</th>
-                <th>CRA</th>
-                <th>Appr. Actions</th>
-                <th>Ext. Repr.</th>
-                <th>ETR</th>
-                <th>Real</th>
-                <th>TOA</th>
-                <th>Released</th>
-                <th>Withhold</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let line of filteredexelines; let idx=index" (click)="highlight(idx)"
-                   [class.active]="idx == selectedRow">
-                <td class="lt-grey clickable large-column">{{programs.get(line.mrId)}}</td>
-                <td class="lt-grey">{{line.appropriation}}</td>
-                <td class="lt-grey">{{line.blin}}</td>
-                <td class="lt-grey">{{line.item}}</td>
-                <td class="lt-grey text-center med-column">{{line.opAgency}}</td>
-                <td class="lt-green text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="text-right">-</td>
-                <td class="dark-green text-right">{{line.toa}}</td>
-                <td class="dark-green text-right">{{line.released}}</td>
-                <td class="dark-green text-right">{{line.withheld}}</td>
-              </tr>
-            </tbody>
-          </table>
       </div>
     </div>
     <div class="row">

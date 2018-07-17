@@ -9,6 +9,7 @@ import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import {AgGridNg2} from 'ag-grid-angular';
+import { PARAMETERS } from '@angular/core/src/util/decorators';
 
 declare const $: any;
 declare const jQuery: any;
@@ -41,8 +42,69 @@ export class FundsUpdateComponent implements OnInit {
   private opAgency: string;
   private funds: number;
 
+  private columnDefs: any[];
+
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private router: Router) {
+    var my: FundsUpdateComponent = this;
+    this.columnDefs = [
+      {
+        headerName: "Program",
+        valueGetter: params => { return my.programs.get(params.data.mrId) }
+      },
+      {
+        headerName: 'Appr.',
+        field:'appropriation'
+      },
+      {
+        headerName: 'Budget',
+        field: 'blin'
+      },
+      {
+        headerName: 'Item',
+        field: 'item'
+      },
+      {
+        headerName: 'opAgency',
+        field: 'opAgency'
+      },
+      {
+        headerName: 'Initial Funds',
+        field: ''
+      },
+      {
+        headerName: 'CRA',
+        field: ''
+      },
+      {
+        headerName: 'Appr. Actions',
+        field: ''
+      },
+      {
+        headerName: 'Ext. Repr.',
+        field: ''
+      },
+      {
+        headerName: 'ETR',
+        field: ''
+      },
+      {
+        headerName: 'Real',
+        field: ''
+      },
+      {
+        headerName: 'TOA',
+        field: 'toa'
+      },
+      {
+        headerName: 'Released',
+        field: 'released'
+      },
+      {
+        headerName: 'Withhold',
+        field: 'withheld'
+      }
+    ];
   }
 
   ngOnInit() {
@@ -174,5 +236,10 @@ export class FundsUpdateComponent implements OnInit {
 
   onGridReady(params) {
     params.api.sizeColumnsToFit();
+  }
+
+  fullname(params): string {
+    console.log(params);
+    return this.programs.get(params.data.mrId);
   }
 }
