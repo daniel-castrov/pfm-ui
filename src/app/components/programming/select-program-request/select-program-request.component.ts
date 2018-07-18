@@ -7,7 +7,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 // Other Components
 import { Pom } from '../../../generated/model/pom';
 import { PRService } from '../../../generated/api/pR.service';
-import { ProgrammaticRequest } from '../../../generated/model/programmaticRequest';
 import { PB } from '../../../generated/model/pB';
 import { PBService } from '../../../generated/api/pB.service';
 
@@ -23,7 +22,7 @@ export class SelectProgramRequestComponent implements OnInit {
   private pom: Pom;
   private pomProgrammaticRequests: ProgramRequestWithFullName[];
   private pb: PB;
-  private pbProgrammaticRequests: ProgrammaticRequest[];
+  private pbProgrammaticRequests: ProgramRequestWithFullName[];
   private thereAreOutstandingPRs: boolean;
 
   constructor(private pomService: POMService,
@@ -48,11 +47,11 @@ export class SelectProgramRequestComponent implements OnInit {
     return new Promise(async (resolve, reject) => {
       // can't use getOpen here, because we need to handle open *or* created pom
       this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => { 
-        for (var i = 0; i < poms.result.length; i++){
+        for (var i = 0; i < poms.result.length; i++) {
           var pom: Pom = poms.result[i];
           if ('CREATED' === pom.status || 'OPEN' === pom.status) {
             this.pom = pom;
-            this.pomProgrammaticRequests = (await this.withFullNameService.programRequests(this.pom.id));
+            this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
             resolve();
             break;
           }
@@ -63,7 +62,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
+    this.pbProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
   }
 
   onDeletePr() {

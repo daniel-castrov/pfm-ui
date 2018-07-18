@@ -80,35 +80,27 @@
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
 
-        <ng-container *ngIf="pomStatusIsOpen">
-          <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" disabled>Open POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
-        </ng-container>
+          <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
+            <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+            <a class="dropdown-item" disabled>Open POM Session</a>
+            <a class="dropdown-item" disabled>Update POM Session</a>
+            <a class="dropdown-item" disabled>Worksheet Mgmt</a>
+          </ng-container>
+ 
+          <ng-container *ngIf="pomStatusIsCreated">
+            <a class="dropdown-item" href="#" routerLink="/create-new-pom"><span class="strike">Create POM Session</span> Update TOAs</a>
+            <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+            <a class="dropdown-item" disabled>Update POM Session</a>
+            <a class="dropdown-item" disabled>Worksheet Mgmt</a>
+          </ng-container>
+    
+          <ng-container *ngIf="pomStatusIsOpen">
+            <a class="dropdown-item" disabled>Create POM Session</a>
+            <a class="dropdown-item" disabled>Open POM Session</a>
+            <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
+            <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
+          </ng-container>
 
-        <ng-container *ngIf="pomStatusIsCreated">
-          <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
-          <a class="dropdown-item" disabled>Update POM Session</a>
-          <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-        </ng-container>
-
-        <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
-          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-          <a class="dropdown-item" disabled>Open POM Session</a>
-          <a class="dropdown-item" disabled>Update POM Session</a>
-          <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-        </ng-container>
-
-          <!--<a class="dropdown-item" href="#" routerLink="/home">Submit Funds Request</a>
-          <a class="dropdown-item" href="#" routerLink="/planning">Planning Session</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Approve Fund Request</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Create/Update Program Schedule</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Create/Update Program Justificaton</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Summary of Request</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Create UFR</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Generate POM Submission</a-->
         </div>
       </li>
       <li class="nav-item">
@@ -124,13 +116,6 @@
       </li>
       <li class="nav-item dropdown">
         <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
-        <!-- <div class="dropdown-menu" aria-labelledby="dropdown02">
-          <a class="dropdown-item" href="#" routerLink="/home">Planning</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Execution</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Budget</a>
-          <a class="dropdown-item" href="#" routerLink="/home">Programs</a>
-          <a class="dropdown-item" href="#" routerLink="/home">System</a>
-        </div> -->
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
