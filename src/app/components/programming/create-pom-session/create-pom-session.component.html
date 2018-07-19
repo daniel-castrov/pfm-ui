@@ -2,15 +2,44 @@
   <td></td>
 </ng-template>
 <j-header></j-header>
+
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated && community && fy">
     <div class="col-md-12">
+
+      <div>
+        <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable"
+          [enableSorting]="true"
+          [enableFilter]="true"
+          [enableColResize]="true"
+          gridAutoHeight
+          [rowData]="rowDataCommunity"
+          [columnDefs]="columnDefsCommunity">
+        </ag-grid-angular>
+      </div>
+      <br/><hr/><br/>
+      <div>
+          <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable"
+            [enableSorting]="true"
+            [enableFilter]="true"
+            [enableColResize]="true"
+            gridAutoHeight
+            [rowData]="rowDataOrgs"
+            [columnDefs]="columnDefsOrgs">
+          </ag-grid-angular>
+        </div>
+
+
+
       <div class="row">
         <div class="col-lg-6 col-md-12">
           <div class="h5 mb-2">
-            <ng-container *ngIf="editsOk">
+            <ng-container *ngIf="editsOk && !pomIsCreated">
               <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy| FY}}</span>
             </ng-container>
+            <ng-container *ngIf="editsOk && pomIsCreated" >
+                <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs for {{fy| FY}}</span>
+            </ng-container>  
             <ng-container *ngIf="!editsOk">
               <span class="h5 mr-sm-2 mb-2">POM Session for {{fy| FY}}</span>
             </ng-container>
@@ -53,9 +82,10 @@
               </tr>
               <tr>
                 <td class="font-weight-bold toa-table-title" colspan="5">Set Organization's sub-TOA ($K)</td>
-                <td class="thh" colspan="1">
+                <td *ngIf="!pomIsCreated"  class="thh" colspan="1">
                   <input type="checkbox" id="eppToggle" [(ngModel)]="useEpp" (change)="loadFY4fromEpp()"> Use EPP Data
                 </td>
+                <td *ngIf="ppomIsCreated" ></td>
                 <td class="not-editable" colspan="1"></td>
               </tr>
 
@@ -91,12 +121,12 @@
               <tr>
                 <td colspan="5"></td>
                 <td colspan="2" class="text-right">
-                  <div *ngIf="pomStatus!='CREATED' && pomStatus!='OPEN'">
+                  <div *ngIf="!pomIsCreated && !pomIsOpen">
                     <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
                   </div>
                 </td>
                 <td colspan="2" class="text-right">
-                    <div *ngIf="pomStatus=='CREATED'">
+                    <div *ngIf="pomIsCreated">
                       <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Update TOAs</button>
                     </div>
                 </td>

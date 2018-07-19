@@ -40,8 +40,10 @@ export class CreatePomSessionComponent implements OnInit {
   private originalFyplus4 ={};
   private pb: PB;
   private editsOk: boolean = false;
-  private pomStatus: string;
+  private pomIsCreated: boolean = false;
+  private pomIsOpen: boolean = false;
   private tooMuchToa: boolean = false;
+
   private orgsums: Map<string, number> = new Map<string, number>();
   private yeardiffs: Map<number, number> = new Map<number, number>();
 
@@ -52,6 +54,29 @@ export class CreatePomSessionComponent implements OnInit {
     private eppsvc: EppService, private programsvc: ProgramsService, private router: Router,
     private globalsvc: GlobalsService ) {
   }
+
+  // AG-GRID
+
+  columnDefsOrgs =[];
+  rowDataOrgs:any[] = [];
+
+  columnDefsCommunity =[];
+  rowDataCommunity:any[] = [];
+
+
+//   columnDefs = [
+//     {headerName: 'Organization', field: 'org' },
+//     {headerName: '', field: 'model' },
+//     {headerName: 'Price', field: 'price'}
+// ];
+
+// rowData = [
+//     { make: 'Toyota', model: 'Celica', price: 35000 },
+//     { make: 'Ford', model: 'Mondeo', price: 32000 },
+//     { make: 'Porsche', model: 'Boxter', price: 72000 }
+// ];
+
+
 
   ngOnInit() {
 
@@ -138,11 +163,86 @@ export class CreatePomSessionComponent implements OnInit {
         my.baseline.clear();
 
         my.setInitialValuesAndEditable(poms, samplepom);
+        my.setInitialValuesAndEditableforAG_Grid(poms, samplepom);
+        
         my.resetTotals();
       });
     });
   }
 
+  setInitialValuesAndEditableforAG_Grid(poms: Pom[], samplepom: Pom) {
+
+    this.columnDefsOrgs = this.setGridHeader("Organization");
+    this.columnDefsCommunity = this.setGridHeader("Community");
+
+    // BaseLine
+    let row = {}
+    row["name"] = this.community.abbreviation+" Baseline";
+    let total:number = 0;
+    for (var i = 0; i < 5; i++) {
+        row[(this.fy+ i).toString()] =  this.baseline.get(this.fy + i);
+        total += this.baseline.get(this.fy + i);
+    }
+    row["total"] = total;
+    this.rowDataCommunity.push( row );
+
+    // Community Toas
+    row = {}
+    row["name"] = this.community.abbreviation+" TOA";
+    total = 0;
+    for (var i = 0; i < 5; i++) {
+        row[(this.fy+ i).toString()] =  this.toas.get(this.fy + i);
+        total += this.toas.get(this.fy + i);
+    }
+    row["total"] = total;
+    this.rowDataCommunity.push( row );
+
+    // Org Toas
+    var orgMap: Map<string, string> = new Map<string, string>();
+    this.orgs.forEach( org =>  orgMap.set( org.id, org.abbreviation ) );
+
+
+    Array.from(this.orgtoas.keys()).forEach ( key => {
+      row = {};
+      total = 0;
+      row["name"] = orgMap.get( key );
+      
+      let data = this.orgtoas.get( key );
+
+      for (var i = 0; i < 5; i++) {
+        row[(this.fy+ i).toString()] = data.get( this.fy+ i );
+        total += data.get( this.fy+ i );
+      }
+      row["total"] = total;
+      this.rowDataOrgs.push( row );
+    });
+
+  } 
+
+  setGridHeader(column1Name:string): any {
+
+    let colDefs = [];
+
+    colDefs.push( 
+      { headerName: column1Name, 
+        field: 'name', 
+        width: 178,
+        editable: false });
+    for (var i = 0; i < 5; i++) {
+      colDefs.push( 
+        { headerName: "FY" + (this.fy + i - 2000) , 
+          field: (this.fy+ i).toString(), 
+          width: 100,
+          type: "numericColumn",
+          editable:true});
+    }
+    colDefs.push( 
+      { headerName: "FY" + (this.fy-2000) + "-"+ "FY" + (this.fy+4-2000), 
+        field: 'total', 
+        width: 120,
+        editable: false  });
+    return colDefs;
+  }
 
   setInitialValuesAndEditable(poms: Pom[], samplepom: Pom) {
     var my: CreatePomSessionComponent = this;
@@ -159,20 +259,28 @@ export class CreatePomSessionComponent implements OnInit {
       }
       my.orgtoas.set(org.id, tszeros);
     });
-
-    // 2 Always set the baseline from the previous pb
     for (var i = 0; i < 5; i++) {
       my.baseline.set(my.fy + i, 0);
     }
 
+    // 2 Always set the baseline from the previous pb
+    samplepom.communityToas.forEach((toa: TOA) => {
+      my.baseline.set(toa.year, toa.amount);
+    });
+
     // Do we have a pom or are we creating a new one from the latest PB?
     var currentPom:Pom=null;
-    for (var i=0; i<poms.length; i++){
-      my.pomStatus =  poms[i].status;
+    for (var i=0; i<poms.length; i++){      
       if ( poms[i].status === "CREATED" ){
+        this.pomIsCreated=true;
         currentPom=poms[i];
         break;
-      }
+      } 
+      if ( poms[i].status === "OPEN" ){
+        this.pomIsOpen=true;
+        currentPom=poms[i];
+        break;
+      } 
     }
 
     if ( null == currentPom ){
@@ -181,7 +289,7 @@ export class CreatePomSessionComponent implements OnInit {
 
       samplepom.communityToas.forEach((toa: TOA) => {
         my.toas.set(toa.year, toa.amount);
-        my.baseline.set(toa.year, toa.amount);
+        //my.baseline.set(toa.year, toa.amount);
       });
 
       Object.keys(samplepom.orgToas).forEach(orgid => {
@@ -190,7 +298,7 @@ export class CreatePomSessionComponent implements OnInit {
         });
       });
     }
-    else if (my.pomStatus=="CREATED"){
+    else if (this.pomIsCreated){
       // 3b User the values from the currentPom
       my.editsOk=true;
 

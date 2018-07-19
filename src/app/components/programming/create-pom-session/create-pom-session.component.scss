@@ -150,10 +150,14 @@ fieldset {
     color: $black;
     text-align: right;
     &:hover {
-      cursor: pointer;
+      cursor: pointer; 
       background-color: $light-grey;
     }
   }
+}
+
+.agtoatable{
+  width:800px;
 }
 
 .toa-alert {
