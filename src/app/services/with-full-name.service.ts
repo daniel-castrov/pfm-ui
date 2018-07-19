@@ -72,11 +72,11 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
-  async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, phaseId: string): Promise<string> {
+  async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest): Promise<string> {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(pr.phaseId).toPromise()).result;
     const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
 
     return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);

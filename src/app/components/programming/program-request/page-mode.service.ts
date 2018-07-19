@@ -23,7 +23,7 @@ export class ProgramRequestPageModeService {
     this._id = id;
   }
 
-  // crete mode
+  // create mode
   set(type: Type, phaseId: string) {
     this.init();
     this.type = type;

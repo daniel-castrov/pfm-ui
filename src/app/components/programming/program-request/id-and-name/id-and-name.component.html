@@ -1,0 +1,42 @@
+<div id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfMrDb">
+    <div class="h5 mb-4">Program Request for Program:</div>
+    <span class="form-group">
+        <label>Program ID:</label> <span class="mr-sm-4">{{parentFullName}}{{pr.shortName}}</span>
+    </span>
+    <span class="form-group">
+        <label>Name:</label> <span class="mr-sm-4">{{pr.longName}}</span>
+    </span>
+    <span class="form-group">
+        <label>Program Type:</label> <span class="mr-sm-4">{{pr.type}}</span>
+    </span>
+</div>
+<div id="create-new-subprogram"
+        *ngIf="!programRequestPageMode.id && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
+    <div class="h5 mb-4">Program Request - Creating New Sub-Program for Program:</div>
+    <label for="id">Id:</label>{{parentFullName}}
+    <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput mr-2" [(ngModel)]="pr.shortName" aria-label="short name">
+    <label for="name">Name:</label>
+    <input id="name" [formControl]="longname" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
+    <label for="type">Program Type:</label>
+    <select id="type" [(ngModel)]="pr.type" class="form-control-sm type-dropdown" name="dummy">
+        <option *ngFor="let type of ['INCREMENT','VARIANT','FOS']" [ngValue]="type">{{type}}</option>
+    </select>
+    <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
+    <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>
+    <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program name is required</div>
+    <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program name already exists</div>
+</div>
+<div id="create-new-toplevel" *ngIf="!programRequestPageMode.id && programRequestPageMode.newProgram">
+    <div class="h5 mb-4">Program Request - Create new Top Level Program:</div>
+    <label for="id">Id:</label>
+    <input id="id"  [formControl]="shortname" type="text" class="shortname form-control forminput mr-2" [(ngModel)]="pr.shortName" aria-label="short name">
+    <label for="name">Name:</label>
+    <input id="name"  [formControl]="longname" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
+    <span class="form-group">
+        <label>Program Type:</label> <span class="mr-sm-4">{{pr.type}}</span>
+    </span>
+    <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
+    <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>
+    <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program name is required</div>
+    <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program name already exists</div>
+</div>
