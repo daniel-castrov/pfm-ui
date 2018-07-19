@@ -12,15 +12,15 @@ export enum Type {
 export class ProgramRequestPageModeService {
 
   private _initialized: boolean;
-  private _id: string;                                                    // null if a PR is being created, an id if an existing PR is being edited
-  public type: Type;                                                      // applicable only when this._id is not defined
-  public reference: ProgramWithFullName | ProgramRequestWithFullName;     // applicable only when this._id is not defined
-  public phaseId: string;                                                 // applicable only when this._id is not defined
+  private _prId: string;                                                  // null if a PR is being created, an id if an existing PR is being edited
+  public type: Type;                                                      // applicable only when this._prId is not defined
+  public reference: ProgramWithFullName | ProgramRequestWithFullName;     // applicable only when this._prId is not defined
+  public phaseId: string;                                                 // applicable only when this._prId is not defined
 
   // edit mode
-  set id(id:string) {
+  set prId(id:string) {
     this.init();
-    this._id = id;
+    this._prId = id;
   }
 
   // create mode
@@ -32,15 +32,15 @@ export class ProgramRequestPageModeService {
 
   private init() {
     this._initialized = true;
-    this._id = null;
+    this._prId = null;
     this.type = null;
     this.reference = null;
     this.phaseId = null;
   }
 
   // begin properties
-  get id() {
-    return this._id;
+  get prId() {
+    return this._prId;
   }
 
   get programOfMrDb(): boolean {

@@ -3,7 +3,7 @@ import { ProgrammaticRequest } from './../../../../generated/model/programmaticR
 import { Component, Input } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService } from './../page-mode.service';
+import { ProgramRequestPageModeService, Type } from './../page-mode.service';
 import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -32,6 +32,21 @@ export class IdAndNameComponent {
     this.invalidLongNames = this.getInvalidLongNames(programsPlusPrs);
   }
 
+  get invalid(): boolean {
+    if(this.programRequestPageMode.prId) {
+      return false;
+    } else {
+      switch (this.programRequestPageMode.type) {
+        case Type.PROGRAM_OF_MRDB:
+          return false;
+        case Type.SUBPROGRAM_OF_MRDB: case Type.SUBPROGRAM_OF_PR_OR_UFR: case Type.NEW_PROGRAM:
+          return this.shortname.invalid || this.longname.invalid;
+        default:
+          console.log('Wrong programRequestPageMode.type in IdAndNameComponent.invalid()');
+      }
+    }
+  }
+
   private getInvalidShortNames(programsPlusPrs: WithFullName[]): Set<string> {
     const nonUniqueInvalidNames: string[] = programsPlusPrs
                           .filter( (programOrPr: WithFullName) => programOrPr.fullname.startsWith(this.parentFullName) )
@@ -56,13 +71,13 @@ export class IdAndNameComponent {
   }
 
   private validShortName(control: AbstractControl): ValidationErrors | null {
-    if(!this.invalidShortNames) return null; // if ngOnInit() has not been called yet there cannot be any validation
+    if(!this.invalidShortNames) return null; // if init(...) has not been called yet there cannot be any validation
     if(this.invalidShortNames.has(this.pr.shortName.toLocaleUpperCase())) return {alreadyExists:true};
     return null;
   }
 
   private validLongName(control: AbstractControl): ValidationErrors | null {
-    if(!this.invalidLongNames) return null; // if ngOnInit() has not been called yet there cannot be any validation
+    if(!this.invalidLongNames) return null; // if init(...) has not been called yet there cannot be any validation
     if(this.invalidLongNames.has(this.pr.longName.toLocaleUpperCase()))  return {alreadyExists:true};
     return null;
   }

@@ -59,7 +59,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
   
   editPR(prId: string) {
-    this.programRequestPageMode.id = prId;
+    this.programRequestPageMode.prId = prId;
     this.router.navigate(['/program-request']);    
   }
 

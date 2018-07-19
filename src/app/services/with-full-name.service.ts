@@ -104,20 +104,25 @@ export class WithFullNameService {
   }
 
   private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
-      var parentName = '';
-    if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_PR_OR_UFR]) {
-      parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
-    } else if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_MRDB]) {
-      parentName = this.programFullName(mapIdToProgram.get(pr.creationTimeReferenceId), mapIdToProgram) + '/';
-    } else if (pr.creationTimeType === Type[Type.PROGRAM_OF_MRDB]) {
-      const program: Program = mapIdToProgram.get(pr.creationTimeReferenceId);
-      if(program.parentMrId) {
-        parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
-      }
-    } else if (pr.creationTimeType === Type[Type.PROGRAM_OF_MRDB]) {
-      // do nothing
-    } else {
-      console.log('Error!!! Programmatic Request creation time type not set.');
+    var parentName = '';
+    switch(pr.creationTimeType) {
+      case Type[Type.SUBPROGRAM_OF_PR_OR_UFR]:
+        parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
+        break;
+      case Type[Type.SUBPROGRAM_OF_MRDB]:
+        parentName = this.programFullName(mapIdToProgram.get(pr.creationTimeReferenceId), mapIdToProgram) + '/';
+        break;
+      case Type[Type.PROGRAM_OF_MRDB]:
+        const program: Program = mapIdToProgram.get(pr.creationTimeReferenceId);
+        if(program.parentMrId) {
+          parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
+        }
+        break;
+      case Type[Type.NEW_PROGRAM]:
+        // do nothing
+        break;
+      default:
+        console.log('Error!!! Programmatic Request creation time type not set.');
     }
     return parentName + pr.shortName;
   }

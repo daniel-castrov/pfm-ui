@@ -22,10 +22,10 @@
               <button class="btn btn-primary">Validate</button>
             </span>
             <span>
-              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="idAndName.shortname.invalid || idAndName.longname.invalid || pr.state=='SUBMITTED'">Save</button>
+              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="idAndName.invalid || pr.state=='SUBMITTED'">Save</button>
             </span>
             <span>
-              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="idAndName.shortname.invalid || idAndName.longname.invalid || pr.state=='SUBMITTED'">Submit</button>
+              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="idAndName.invalid || pr.state=='SUBMITTED'">Submit</button>
             </span>
           </div>
         </div>

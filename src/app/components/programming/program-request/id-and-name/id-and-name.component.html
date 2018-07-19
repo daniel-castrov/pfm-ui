@@ -1,4 +1,4 @@
-<div id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfMrDb">
+<div id="program-request" *ngIf="programRequestPageMode.prId || programRequestPageMode.programOfMrDb">
     <div class="h5 mb-4">Program Request for Program:</div>
     <span class="form-group">
         <label>Program ID:</label> <span class="mr-sm-4">{{parentFullName}}{{pr.shortName}}</span>
@@ -11,7 +11,7 @@
     </span>
 </div>
 <div id="create-new-subprogram"
-        *ngIf="!programRequestPageMode.id && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
+        *ngIf="!programRequestPageMode.prId && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
     <div class="h5 mb-4">Program Request - Creating New Sub-Program for Program:</div>
     <label for="id">Id:</label>{{parentFullName}}
     <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput mr-2" [(ngModel)]="pr.shortName" aria-label="short name">
@@ -26,7 +26,7 @@
     <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program name is required</div>
     <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program name already exists</div>
 </div>
-<div id="create-new-toplevel" *ngIf="!programRequestPageMode.id && programRequestPageMode.newProgram">
+<div id="create-new-toplevel" *ngIf="!programRequestPageMode.prId && programRequestPageMode.newProgram">
     <div class="h5 mb-4">Program Request - Create new Top Level Program:</div>
     <label for="id">Id:</label>
     <input id="id"  [formControl]="shortname" type="text" class="shortname form-control forminput mr-2" [(ngModel)]="pr.shortName" aria-label="short name">

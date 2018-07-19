@@ -15,7 +15,7 @@ import { ProgramRequestPageModeService, Type } from './page-mode.service';
 export class ProgramRequestComponent implements OnInit {
 
   private pr: ProgrammaticRequest = {};
-  @ViewChild(IdAndNameComponent) private idAndName: IdAndNameComponent;
+  @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
 
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService ) {
@@ -24,12 +24,12 @@ export class ProgramRequestComponent implements OnInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.idAndName.init(this.pr);
+    this.idAndNameComponent.init(this.pr);
   }
 
   private async initPr() {
-    if (this.programRequestPageMode.id) { // PR is in edit mode
-      this.pr = (await this.prService.getById(this.programRequestPageMode.id).toPromise()).result;
+    if (this.programRequestPageMode.prId) { // PR is in edit mode
+      this.pr = (await this.prService.getById(this.programRequestPageMode.prId).toPromise()).result;
     } else { // PR is in create mode
       this.initPrFields();
     }
