@@ -22,6 +22,7 @@
             [rowData]="filteredexelines"
             [paginationPageSize]="15"
             [columnDefs]="columnDefs"
+            [frameworkComponents]='agcomps'
             (gridReady)="onGridReady($event)"
             [suppressPaginationPanel]="false">
           </ag-grid-angular>

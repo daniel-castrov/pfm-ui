@@ -9,7 +9,7 @@ import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import {AgGridNg2} from 'ag-grid-angular';
-import { PARAMETERS } from '@angular/core/src/util/decorators';
+import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 declare const $: any;
 declare const jQuery: any;
@@ -43,14 +43,21 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
 
   private columnDefs: any[];
+  private agcomps: any;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private router: Router) {
     var my: FundsUpdateComponent = this;
+
+
+    this.agcomps = {
+      programCellRendererComponent: ProgramCellRendererComponent
+    };
+
     this.columnDefs = [
       {
         headerName: "Program",
-        valueGetter: params => { return my.programs.get(params.data.mrId) }
+        cellRenderer: 'programCellRendererComponent'
       },
       {
         headerName: 'Appr.',
@@ -119,6 +126,7 @@ export class FundsUpdateComponent implements OnInit {
         Object.getOwnPropertyNames(data[0].result).forEach(mrid => { 
           lookup.push( {id:mrid, name: data[0].result[mrid]})
         });
+
 
         lookup.sort((a, b) => { 
           if (a.name === b.name) {
