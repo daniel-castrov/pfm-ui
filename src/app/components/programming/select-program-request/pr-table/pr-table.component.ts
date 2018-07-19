@@ -42,14 +42,14 @@ export class PrTableComponent implements OnInit {
   ngOnInit() {
     this.globalsSvc.user().subscribe( user => {
       this.communityId=user.currentCommunityId;
-      this.eppService.getByCommunityId(this.communityId).subscribe(response => {
-        if (!response.error) {
-          this.data = response.result;
-          this.generateFiscalYearColumns(this.data);
-        } else {
-          alert(response.error);
-        }
-      });
+      // this.eppService.getByCommunityId(this.communityId).subscribe(response => {
+      //   if (!response.error) {
+      //     this.data = response.result;
+      //     this.generateFiscalYearColumns(this.data);
+      //   } else {
+      //     alert(response.error);
+      //   }
+      // });
     });
   }
 
@@ -144,9 +144,9 @@ export class PrTableComponent implements OnInit {
           type: "numericColumn",
           valueGetter: params => {return this.getFiscalYear(params, key)}
         };
-        if(!this.exist(this.columnDefs, colDef)) {
-          this.columnDefs.push(colDef);
-        }
+        // if(!this.exist(this.columnDefs, colDef)) {
+        //   this.columnDefs.push(colDef);
+        // }
       });
       this.agGrid.api.setColumnDefs(this.columnDefs);
       this.agGrid.api.sizeColumnsToFit();
@@ -160,12 +160,14 @@ export class PrTableComponent implements OnInit {
       field: 'shortName',
       width: 160,
       sort: "asc",
-      cellRenderer: "showCellRenderer",
-         rowSpan: function(params) {
-           if (params.data.shortName) {
-             return 2;
-           }
-      },
+      rowSpan: function(params) {
+          var shortName = params.data.shortName;
+          if (shortName === "Program") {
+            return 2;
+          } else if (shortName === "Sub Program") {
+            return 2;
+          }
+        },
       cellStyle: { backgroundColor: "#CCCCCC" }
     },
     {
@@ -173,12 +175,16 @@ export class PrTableComponent implements OnInit {
       field: 'status',
       width: 130,
       sort: "asc",
-      cellRenderer: "showCellRenderer",
-         rowSpan: function(params) {
-           if (params.data.status) {
-             return 2;
-           }
-      },
+      rowSpan: function(params) {
+          var status = params.data.status;
+          if (status === "Outstanding") {
+            return 2;
+          } else if (status === "Saved") {
+            return 2;
+          } else if (status === "Submitted") {
+            return 2;
+          }
+        },
       cellStyle: { backgroundColor: "#CCCCCC" }
     },
     {
@@ -186,12 +192,12 @@ export class PrTableComponent implements OnInit {
       field: "date",
       width: 110,
       sort: "asc",
-      cellRenderer: "showCellRenderer",
-         rowSpan: function(params) {
-           if (params.data.date) {
-             return 2;
-           }
-      },
+      rowSpan: function(params) {
+          var date = params.data.date;
+          if (date === "2012") {
+            return 2;
+          }
+        },
       cellStyle: { backgroundColor: "#CCCCCC" }
     },
     {
