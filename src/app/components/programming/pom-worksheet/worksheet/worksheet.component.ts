@@ -50,7 +50,7 @@ export class WorksheetComponent implements OnInit {
 
   async initPbPrs() {
     let pomProgrammaticRequests:ProgramRequestWithFullName[] =
-       (await this.withFullNameService.programRequests(this.pom.id));
+       (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
        this.fullnameMap={};
        pomProgrammaticRequests.forEach( pr => {
         this.fullnameMap[pr.id] = pr.fullname;

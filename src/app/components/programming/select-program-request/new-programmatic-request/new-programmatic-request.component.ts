@@ -63,7 +63,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
   }
   
   private async programsMunisPrs(): Promise<ProgramWithFullName[]> {
-    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequests(this.pomId);
+    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
     
     const referenceIds: Set<string> = new Set();
     prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
@@ -72,7 +72,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
   }
 
   private async programsPlusPrs(): Promise<WithFullName[]> {
-    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequests(this.pomId);
+    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
     const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== Type[Type.PROGRAM_OF_MRDB]);
 
     return (<WithFullName[]>this.allPrograms).concat(prsWithoutPrograms);

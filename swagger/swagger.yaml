@@ -413,50 +413,6 @@ paths:
         name: "phaseId"
         required: true
         type: "string"
-  /pr/uploadImage:
-    post:
-      tags:
-      - "PR"
-      operationId: "uploadImage"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
-      parameters:
-      - in: "formData"
-        name: "file"
-        description: "The PR image file"
-        required: true
-        type: file
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A collection of Programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /pr/downloadImage:
-    get:
-      tags:
-      - "PR"
-      operationId: "downloadImage"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "query"
-        name: "id"
-        required: true
-        type: "string"
   /pr/{id}:
     get:
       tags:
@@ -1528,6 +1484,51 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /users/uploadFile:
+    post:
+      tags:
+      - "User"
+      operationId: "uploadFile"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "upload a document to the server"
+        required: true
+        type: file
+      - in: "query"
+        name: "area"
+        description: "the area where the file is going to be stored"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+  /users/downloadFile:
+    get:
+      tags:
+      - "User"
+      operationId: "downloadFile"
+      parameters:
+      - in: "query"
+        name: "id"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "area"
+        description: "the area where the file is located"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
   /users/community/{commId}:
     get:
       tags:
@@ -3017,7 +3018,7 @@ definitions:
       name:
         type: "string"
       version:
-        type: "integer"  
+        type: "integer"
       notes:
         type: "string"
       createDate:
@@ -3210,6 +3211,15 @@ definitions:
       longname:
         type: "string"
       other:
+        type: "string"
+  FileResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      content:
+        type: "string"
+      contentType:
         type: "string"
 ##############################################################################
 # ENDFILE

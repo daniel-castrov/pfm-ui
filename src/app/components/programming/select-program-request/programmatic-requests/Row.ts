@@ -1,5 +1,4 @@
 import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
 import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
 
 export class Row {
