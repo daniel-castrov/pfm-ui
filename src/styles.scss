@@ -4,6 +4,18 @@
 @import "~ag-grid/dist/styles/ag-grid.css";
 @import "~ag-grid/dist/styles/ag-theme-balham.css";
 
+$black: #000000;
+$dark-grey: #848282;
+$dark-green: #61bb69;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-green: #ebf2de;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$primary-color: #25527a;
+$white-border: 1px solid #ffffff;
+$white: #ffffff;
+
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #fff;
@@ -439,4 +451,38 @@ tab {
 
 .ag-body-viewport {
   margin-bottom: -2px;
+}
+
+.ag-cell-edit {
+  background-color: #c6d9f1;
+  color: $black;
+  text-align: right;
+  &:hover {
+    cursor: pointer;
+    background-color: $light-grey;
+  }
+}
+
+.ag-cell-light-green {
+  background-color: $light-green;
+  color: $black;
+}
+
+.ag-cell-dark-green {
+  background-color: $dark-green;
+  color: $white;
+}
+
+.ag-cell-light-grey {
+  background-color: $light-grey;
+  color: $black;
+}
+
+.ag-medium-gray-cell {
+  background-color: $medium-grey;
+  color: $black;
+}
+
+.ag-cell-white {
+  background-color: $white;
 }
