@@ -1,3 +1,4 @@
+import { ProgramRequestWithFullName, ProgramWithFullName} from './with-full-name.service';
 import { Type } from './../components/programming/program-request/page-mode.service';
 import { PRService } from './../generated/api/pR.service';
 import { ProgrammaticRequest } from './../generated/model/programmaticRequest';
@@ -11,6 +12,7 @@ export interface WithFullName {
 
 export interface ProgramWithFullName extends Program, WithFullName {};
 export interface ProgramRequestWithFullName extends ProgrammaticRequest, WithFullName {};
+export type ProgramOrPrWithFullName = ProgramWithFullName | ProgramRequestWithFullName;
 
 @Injectable()
 export class WithFullNameService {
@@ -78,6 +80,14 @@ export class WithFullNameService {
     const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
 
     return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);
+  }
+
+  async programsPlusPrs(phaseId: string): Promise<WithFullName[]> {
+    const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
+    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== Type[Type.PROGRAM_OF_MRDB]);
+
+    const programs: ProgramWithFullName[] = (await this.programs());
+    return (<WithFullName[]>programs).concat(prsWithoutPrograms);
   }
 
   private sort(withFullName: WithFullName[]): WithFullName[] {
