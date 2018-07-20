@@ -1,11 +1,11 @@
-import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from './../../../services/with-full-name.service';
+import { IdAndNameComponent } from './id-and-name/id-and-name.component';
+import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
 import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
 import { PRService } from './../../../generated/api/pR.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 // Other Components
 import { ProgramRequestPageModeService, Type } from './page-mode.service';
-
 
 @Component({
   selector: 'program-request',
@@ -14,39 +14,28 @@ import { ProgramRequestPageModeService, Type } from './page-mode.service';
 })
 export class ProgramRequestComponent implements OnInit {
 
-  pr: ProgrammaticRequest = {};
-  parentFullName: string;
+  private pr: ProgrammaticRequest = {};
+  @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
 
   constructor( private prService: PRService,
-               private programRequestPageMode: ProgramRequestPageModeService,
-               private withFullNameService: WithFullNameService ) {
+               private programRequestPageMode: ProgramRequestPageModeService ) {
     this.pr.fundingLines = [];
   }
 
-
   async ngOnInit() {
-    let phaseId: string;
-    if(this.programRequestPageMode.id) { // PR is in edit mode
-      this.pr = (await this.prService.getById(this.programRequestPageMode.id).toPromise()).result;
-      phaseId = this.pr.phaseId;
-      this.initParentFullname(phaseId);
+    await this.initPr();
+    this.idAndNameComponent.init(this.pr);
+  }
+
+  private async initPr() {
+    if (this.programRequestPageMode.prId) { // PR is in edit mode
+      this.pr = (await this.prService.getById(this.programRequestPageMode.prId).toPromise()).result;
     } else { // PR is in create mode
-      this.initPr();
-      phaseId = this.programRequestPageMode.phaseId;      
-      this.initParentFullname(phaseId);
+      this.initPrFields();
     }
   }
 
-  private async initParentFullname(phaseId: string) {
-    const prFullName: string = await this.withFullNameService.fullNameDerivedFromCreationTimeData(this.pr, phaseId);
-    if (prFullName.lastIndexOf('/') == -1) {
-      this.parentFullName = '';
-    } else {
-      this.parentFullName = prFullName.substring(0, prFullName.lastIndexOf('/') + 1);
-    }
-  }
-
-  private initPr() {
+  private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
     this.pr.creationTimeType = Type[this.programRequestPageMode.type];
     this.pr.bulkOrigin = false;
@@ -66,7 +55,7 @@ export class ProgramRequestComponent implements OnInit {
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         break;
       case Type.SUBPROGRAM_OF_PR_OR_UFR:
-        this.pr.type = 'INCREMENT';
+        this.pr.type = 'INCREMENT';        
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
@@ -83,6 +72,7 @@ export class ProgramRequestComponent implements OnInit {
     this.pr.bsvStrategy = program.bsvStrategy;
     this.pr.commodityArea = program.commodityArea;
     this.pr.coreCapability = program.coreCapability;
+    this.pr.description = program.description;
     this.pr.emphases = program.emphases.slice();
     this.pr.functionalArea = program.functionalArea;
     this.pr.leadComponent = program.leadComponent;

@@ -126,6 +126,8 @@ import { ExecutionLineTableComponent } from './components/execution/execution-li
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
+import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
+import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -206,6 +208,7 @@ const appRoutes: Routes = [
     HeaderStrangerComponent,
     HeaderUserComponent,
     HomeComponent,
+    IdAndNameComponent,
     JustificationTabComponent,
     LoginComponent,
     MamageCommunityDetailsComponent,
@@ -259,9 +262,12 @@ const appRoutes: Routes = [
     MapAsListPipe,
     ExecutionLineTableComponent,
     WorksheetComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    ProgramCellRendererComponent
   ],
-
+  entryComponents: [
+    ProgramCellRendererComponent
+  ],
   imports: [
     AccordionModule.forRoot(),
     AngularDualListBoxModule,
@@ -313,7 +319,6 @@ const appRoutes: Routes = [
     ExecutionService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
-
   ],
   bootstrap: [AppComponent]
 })

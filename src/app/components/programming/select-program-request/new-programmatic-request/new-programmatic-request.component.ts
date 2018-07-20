@@ -36,7 +36,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
         this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
         break;
       case 'A New Subprogram':
-        this.selectableProgramsOrPrs = await this.programsPlusPrs();
+        this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
         this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
     }
   }
@@ -69,13 +69,6 @@ export class NewProgrammaticRequestComponent implements OnInit {
     prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
     
     return this.allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
-  }
-
-  private async programsPlusPrs(): Promise<WithFullName[]> {
-    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== Type[Type.PROGRAM_OF_MRDB]);
-
-    return (<WithFullName[]>this.allPrograms).concat(prsWithoutPrograms);
   }
 
   private isProgram(programOrPr): boolean {
