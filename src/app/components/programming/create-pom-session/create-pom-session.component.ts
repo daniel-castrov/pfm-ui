@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { GridOptions }  from 'ag-grid'
+import { GridOptions, GridApi }  from 'ag-grid'
 
 import { HeaderComponent } from '../../../components/header/header.component';
 import { GlobalsService } from './../../../services/globals.service';
@@ -25,24 +25,22 @@ import { Program } from '../../../generated/model/program';
 })
 
 export class CreatePomSessionComponent implements OnInit {
+
   @ViewChild(HeaderComponent) header;
+
   private fy: number;
   private community: Community;
   private orgs: Organization[];
-
-  private toas: Map<number, number> = new Map<number, number>();
-  private orgtoas: Map<string, Map<number, number>> = new Map<string, Map<number, number>>();
-  private originalFyplus4 ={};
   private pb: PB;
+
+  private orgMap: Map<string, string> = new Map<string, string>();
+  private originalFyplus4 ={};
+
   private editsOk: boolean = false;
   private pomIsCreated: boolean = false;
-
   private pomIsOpen: boolean = false;
   private tooMuchToa: boolean = false;
-
-
   private useEpp = false;
-
   private submitted = false;
 
   constructor(private communityService: CommunityService,
@@ -51,29 +49,30 @@ export class CreatePomSessionComponent implements OnInit {
     private globalsvc: GlobalsService ) {
   }
 
-  // AG-GRID --- A Community grid and an Orgs grid
-
   private gridOptionsCommunity:GridOptions = {};
-  private gridApiCommunity;
-  private gridColumnApiCommunity;
+  private rowsCommunity = [];
+  //private gridApiCommunity:GridApi;
+  //private gridColumnApiCommunity;
 
   private gridOptionsOrgs:GridOptions = {};
-  private gridApiOrg;
-  private gridColumnApiOrg;
+  private rowsOrgs = [];
+  //private gridApiOrgs:GridApi;
+  //private gridColumnApiOrgs;
 
+  private rowOrgsDelta = [];
 
   ngOnInit() {
     this.fetch();
   }
 
   onGridReadyCommunity(params) {
-    this.gridApiCommunity = params.api;
-    this.gridColumnApiCommunity = params.columnApi;
+    //this.gridApiCommunity = params.api;
+    //this.gridColumnApiCommunity = params.columnApi;
   }
 
-  onGridReadyOrg(params) {
-    this.gridApiOrg = params.api;
-    this.gridColumnApiOrg = params.columnApi;
+  onGridReadyOrgs(params) {
+    //this.gridApiOrgs = params.api;
+    //this.gridColumnApiOrgs = params.columnApi;
   }
 
   initAgGrids(fy:number){
@@ -82,7 +81,6 @@ export class CreatePomSessionComponent implements OnInit {
     this.gridOptionsCommunity.enableSorting=true;
     this.gridOptionsCommunity.enableFilter=true;
     this.gridOptionsCommunity.enableColResize=true;
-    this.gridOptionsCommunity.rowData=[];
     this.gridOptionsCommunity.onCellValueChanged = params => this.setDeltaRow(fy); 
 
     this.gridOptionsOrgs.columnDefs = this.setAgGridColDefs("Organization",fy);
@@ -90,9 +88,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.gridOptionsOrgs.enableSorting=true;
     this.gridOptionsOrgs.enableFilter=true;
     this.gridOptionsOrgs.enableColResize=true;
-    this.gridOptionsOrgs.rowData=[];
     this.gridOptionsOrgs.onCellValueChanged = params => this.setDeltaRow(fy); 
- 
   }
 
   setAgGridColDefs(column1Name:string, fy:number): any {
@@ -101,10 +97,10 @@ export class CreatePomSessionComponent implements OnInit {
 
     colDefs.push( 
       { headerName: column1Name, 
-        field: 'name', 
+        field: 'orgid', 
         width: 178,
         editable: false,
-        pinnedRowCellRenderer: ""
+        valueGetter: params => this.orgName( params.data.orgid )
       });
 
     for (var i = 0; i < 5; i++) {
@@ -134,8 +130,15 @@ export class CreatePomSessionComponent implements OnInit {
       let n:number = parseInt( data[fy+i], 10 );
       total += n;
     }
-    this.setDeltaRow(fy);
     return total;
+  }
+
+  orgName( id:string ){
+    if ( null == this.orgMap.get(id) ){
+      return id;
+    } else {
+      return this.orgMap.get(id);
+    }
   }
 
   currencyFormatter( params ) {
@@ -162,9 +165,7 @@ export class CreatePomSessionComponent implements OnInit {
         var samplepom: Pom = data[4].result;
 
         my.fy = my.pb.fy + 1;
-
-        my.toas.clear();
-        my.orgtoas.clear();
+        this.orgs.forEach( org =>  my.orgMap.set( org.id, org.abbreviation ) );
 
         my.initAgGrids(my.fy);
         my.setInitialValuesAndEditableforAgGrid(my.fy, poms, samplepom);
@@ -213,7 +214,7 @@ export class CreatePomSessionComponent implements OnInit {
 
       // BaseLine
       let row = {} 
-      row["name"] = this.community.abbreviation+" Baseline";
+      row["orgid"] = this.community.abbreviation+" Baseline";
 
       samplepom.communityToas.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;
@@ -221,96 +222,82 @@ export class CreatePomSessionComponent implements OnInit {
       for (var i = 0; i < 5; i++) {
         if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
       }
-      this.gridOptionsCommunity.rowData=[row];
+      this.rowsCommunity.push(row);
 
       // Community Toas
       row = {}
-      row["name"] = this.community.abbreviation+" TOA";
+      row["orgid"] = this.community.abbreviation+" TOA";
       pomData.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount -2;
+        row[toa.year] = toa.amount +2 ;
       });
       for (var i = 0; i < 5; i++) {
         if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
       }
-      this.gridOptionsCommunity.rowData.push( row );
+      this.rowsCommunity.push(row);
     
       // Org TOAs
-      var orgMap: Map<string, string> = new Map<string, string>();
-      this.orgs.forEach( org =>  orgMap.set( org.id, org.abbreviation ) );
-
       Object.keys(pomData.orgToas).forEach(key => {
         var toamap: Map<number, number> = new Map<number, number>();
 
         row = {};
         let total = 0;
-        row["name"] = orgMap.get( key );
+        row["orgid"] = key ;
           pomData.orgToas[key].forEach( (toa:TOA) => {
             row[toa.year] = toa.amount;
           });
-        this.gridOptionsOrgs.rowData.push( row );
+        this.rowsOrgs.push(row);
         });
-        this.gridOptionsOrgs.rowData.forEach( roww => {
+          this.rowsOrgs.forEach( roww => {
           for (var i = 0; i < 5; i++) {
             if ( roww[ fy+i ] == undefined ) roww[ fy+i ] = 0;
           }
         });
     }
+
+    this.rowsOrgs.forEach( rowww => {
+        this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
+    });
+
   } 
 
   setDeltaRow(fy:number) {
 
-    console.log( "Fired" )
-
     let deltaRow = {};
     for (var i = 0; i < 5; i++) {
-      deltaRow[fy+i] = this.gridOptionsCommunity.rowData[1][fy+ i];
+      deltaRow[fy+i] = this.rowsCommunity[1][fy+ i];
     }
-
-    this.gridOptionsOrgs.rowData.forEach( row => {
-      for (var i = 0; i < 5; i++) {
+      this.rowsOrgs.forEach( row => {
+    for (var i = 0; i < 5; i++) {
         deltaRow[fy+i] = deltaRow[fy+i] - row[fy+i]
       }
      });
-
-    this.gridOptionsOrgs.pinnedBottomRowData=[];
-    deltaRow["name"] = "Delta";
-    this.gridOptionsOrgs.pinnedBottomRowData.push( deltaRow );
+    this.rowOrgsDelta = [];
+    deltaRow["orgid"] = "Delta";
+    this.rowOrgsDelta = [deltaRow];
   }
 
+  private useEppData() {
 
-  editfield(event, id, fy) {
-    var val: number = Number.parseInt(event.target.innerText.replace(/,/g, ''));
-    if (val > 99999999) {
-      val = 99999999;
-    }
-
-    if (id === this.community.id) {
-      this.toas.set(Number.parseInt(fy), val);
-    }
-    else {
-      this.orgtoas.get(id).set(Number.parseInt(fy), val);
-    }
-
-    this.setDeltaRow(fy);
-  }
-
- 
-
-  loadFY4fromEpp() {
-
+    // This only effects FY + 4 Data
     if (this.useEpp == true) {
       // show the FY + 4 data from the epp data
-      this.getYear5ToasFromEpp( this.fy+4 );
+      this.getEppData( this.fy+4 );
     } else {
       // replace all values in fy+4 with the original fy+4 data
-      this.orgs.forEach(org => this.orgtoas.get(org.id).set(this.fy+4, this.originalFyplus4[org.id] ));
-      this.toas.set(this.fy+4, this.originalFyplus4[this.community.id]);
+      this.rowsCommunity[1][this.fy+4] = this.originalFyplus4[this.community.id];
+
+      this.rowsOrgs.forEach( row =>  {
+        row[this.fy+4] = this.originalFyplus4[row["orgid"]] 
+        console.log( row[this.fy+4] + " -- " + this.originalFyplus4[row["orgid"]] );
+      }); 
+      
+      
       this.setDeltaRow(this.fy);
     }
     
   }
 
-  getYear5ToasFromEpp(eppYear:number) {
+  private getEppData(eppYear:number) {
 
     forkJoin([
       this.eppsvc.getValid(this.community.id, this.pb.id),
@@ -338,10 +325,16 @@ export class CreatePomSessionComponent implements OnInit {
 
       let total = 0;
       this.orgs.forEach(org => {
-        this.orgtoas.get(org.id).set(this.fy + 4, eppOrgToa[org.id]);
-        total += eppOrgToa[org.id];
+        for (var j = 0; j < this.rowsOrgs.length; j++){
+          let row = this.rowsOrgs[j];
+          if ( row["orgid"] == org.id ){
+            row[this.fy + 4] =  eppOrgToa[org.id];
+            total += eppOrgToa[org.id];
+            break;
+          }
+        }
       });
-      this.toas.set(this.fy + 4, total);
+      this.rowsCommunity[1][this.fy + 4] = total;
       this.setDeltaRow(this.fy);
     });
 
@@ -349,51 +342,53 @@ export class CreatePomSessionComponent implements OnInit {
 
   submitNewPom() {    
 
-    var my: CreatePomSessionComponent = this;
-    my.submitted=true;
-    var transfer:Pom = my.buildTransfer();
+    this.submitted=true;
+    var transfer:Pom = this.buildTransfer();
+    
+    console.log(transfer);
 
-    this.pomsvc.createPom( this.community.id, this.fy, transfer, my.pb.id, this.useEpp ).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.pb.id, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
-          my.router.navigate(['/home']);
+          this.router.navigate(['/home']);
         }
       });
   }
 
   updatePom() {
 
-    var my: CreatePomSessionComponent = this;
-    my.submitted=true;
-    var transfer:Pom = my.buildTransfer();
+    this.submitted=true;
+    var transfer:Pom = this.buildTransfer();
 
     this.pomsvc.updateCurrentPom( this.community.id, transfer, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
-          my.router.navigate(['/home']);
+          this.router.navigate(['/home']);
         }
       });
   }
 
-  buildTransfer():Pom{
+  private buildTransfer(): Pom {
 
-    var my: CreatePomSessionComponent = this;
     var toas: TOA[] = [];
-    my.toas.forEach(function (amt, yr) {
-      var t: TOA = {
-        year: yr,
-        amount: amt
-      };
-      toas.push(t);
-    });
+
+    for (var i=0; i < 5; i++){
+      toas.push(
+        { year: this.fy+i, amount: parseInt(this.rowsCommunity[1][this.fy+i],10) }
+
+        
+      );
+    }
 
     var otoas: { [key: string]: TOA[]; } = {};
-    my.orgtoas.forEach(function (toamap, orgid) {
+    this.rowsOrgs.forEach( row => {
       var tlist: TOA[] = [];
-      my.orgtoas.get(orgid).forEach(function (amt, yr) {
-        tlist.push({ year: yr, amount: amt });
-      });
-      otoas[orgid] = tlist;
+      for (var i=0; i < 5; i++){
+        tlist.push(
+          { year: this.fy+i, amount: row[ this.fy+i ]  }
+        );
+      }
+      otoas[row["orgid"]] = tlist;
     });
 
     var transfer: Pom = {
@@ -401,199 +396,7 @@ export class CreatePomSessionComponent implements OnInit {
       orgToas: otoas,
       fy: this.fy
     };
-
     return transfer;
   }
-
-
-
-
-
-  // ngOnInit() {
-
-    // //jQuery for editing table
-    // var $TABLE = $('#toa2', '#toa2');
-    // var $BTN = $('#export-btn');
-    // var $EXPORT = $('#export');
-
-    // $('.table-add').click(function () {
-    //   var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-    //   $TABLE.find('table').append($clone);
-    // });
-
-    // $('.table-remove').click(function () {
-    //   $(this).parents('tr').detach();
-    // });
-
-    // $('.table-up').click(function () {
-    //   var $row = $(this).parents('tr');
-    //   if ($row.index() === 1) return; // Don't go above the header
-    //   $row.prev().before($row.get(0));
-    // });
-
-    // $('.table-down').click(function () {
-    //   var $row = $(this).parents('tr');
-    //   $row.next().after($row.get(0));
-    // });
-
-    // // A few jQuery helpers for exporting only
-    // jQuery.fn.pop = [].pop;
-    // jQuery.fn.shift = [].shift;
-
-    // $BTN.click(function () {
-    //   var $rows = $TABLE.find('tr:not(:hidden)');
-    //   var headers = [];
-    //   var data = [];
-
-    //   // Get the headers (add special header logic here)
-    //   $($rows.shift()).find('th:not(:empty)').each(function () {
-    //     headers.push($(this).text().toLowerCase());
-    //   });
-
-    //   // Turn all existing rows into a loopable array
-    //   $rows.each(function () {
-    //     var $td = $(this).find('td');
-    //     var h = {};
-
-    //     // Use the headers from earlier to name our hash keys
-    //     headers.forEach(function (header, i) {
-    //       h[header] = $td.eq(i).text();
-    //     });
-
-    //     data.push(h);
-    //   });
-
-    //   // Output the result
-    //   $EXPORT.text(JSON.stringify(data));
-    // });
-
-  //   this.fetch();
-
-  // }
-
-
- // setInitialValuesAndEditable(poms: Pom[], samplepom: Pom) {
-  //   var my: CreatePomSessionComponent = this;
-
-  //   // set everything to 0, just to be safe
-  //   my.editsOk=false;
-  //   for (var i = 0; i < 5; i++) {
-  //     my.toas.set(my.fy + i, 0);
-  //   }
-  //   my.orgs.forEach(function (org) {
-  //     var tszeros: Map<number, number> = new Map<number, number>();
-  //     for (var i = 0; i < 5; i++) {
-  //       tszeros.set(my.fy + i, 0);
-  //     }
-  //     my.orgtoas.set(org.id, tszeros);
-  //   });
-  //   for (var i = 0; i < 5; i++) {
-  //     my.baseline.set(my.fy + i, 0);
-  //   }
-
-  //   // 2 Always set the baseline from the previous pb
-  //   samplepom.communityToas.forEach((toa: TOA) => {
-  //     my.baseline.set(toa.year, toa.amount);
-  //   });
-
-  //   // Do we have a pom or are we creating a new one from the latest PB?
-  //   var currentPom:Pom=null;
-  //   for (var i=0; i<poms.length; i++){      
-  //     if ( poms[i].status === "CREATED" ){
-  //       this.pomIsCreated=true;
-  //       currentPom=poms[i];
-  //       break;
-  //     } 
-  //     if ( poms[i].status === "OPEN" ){
-  //       this.pomIsOpen=true;
-  //       currentPom=poms[i];
-  //       break;
-  //     } 
-  //   }
-
-  //   if ( null == currentPom ){
-  //     // 3a use the values from the samplepom ( the previous pb )
-  //     my.editsOk=true;
-
-  //     samplepom.communityToas.forEach((toa: TOA) => {
-  //       my.toas.set(toa.year, toa.amount);
-  //       //my.baseline.set(toa.year, toa.amount);
-  //     });
-
-  //     Object.keys(samplepom.orgToas).forEach(orgid => {
-  //       samplepom.orgToas[orgid].forEach(toa => {
-  //         my.orgtoas.get(orgid).set(toa.year, toa.amount);
-  //       });
-  //     });
-  //   }
-  //   else if (this.pomIsCreated){
-  //     // 3b User the values from the currentPom
-  //     my.editsOk=true;
-
-  //     currentPom.communityToas.forEach((toa) => {
-  //       my.toas.set(toa.year, toa.amount);
-  //     });
-
-  //     Object.keys(currentPom.orgToas).forEach(key => {
-  //       var toamap: Map<number, number> = new Map<number, number>();
-  //       currentPom.orgToas[key].forEach(toa => {
-  //         toamap.set(toa.year, toa.amount);
-  //       });
-  //       my.orgtoas.set(key, toamap);
-  //     });
-  //   }
-  //   else {
-  //     my.editsOk=false;
-  //   }
-
-
-  //   // Remember the original fy+4 data to allow toggling between orig and epp
-  //   my.orgs.forEach(org => {
-  //     my.originalFyplus4[org.id] = my.orgtoas.get(org.id).get(my.fy+4);
-  //   });
-  //   my.originalFyplus4[my.community.id] = my.toas.get(my.fy+4);
-
-  // }
-
-
-  // setTotals() {
-  //   var my: CreatePomSessionComponent = this;
-
-  //   // update our running totals
-  //   my.orgsums.clear();
-  //   my.yeardiffs.clear();
-  //   my.tooMuchToa = false;
-
-  //   var amt = 0;
-  //   my.toas.forEach(function (val, year) {
-  //     if (year >= my.fy) {
-  //       amt += val;
-  //       my.yeardiffs.set(year, val);
-
-  //       if (!my.orgsums.has(my.community.id)) {
-  //         my.orgsums.set(my.community.id, 0);
-  //       }
-  //       my.orgsums.set(my.community.id, my.orgsums.get(my.community.id) + val);
-  //     }
-  //   });
-
-  //   amt = 0;
-  //   my.orgtoas.forEach(function (toas, orgid) {
-  //     my.orgsums.set(orgid, 0);
-  //     toas.forEach(function (amt, year) {
-  //       if (year >= my.fy) {
-  //         my.yeardiffs.set(year, my.yeardiffs.get(year) - amt);
-  //         my.orgsums.set(orgid, my.orgsums.get(orgid) + amt);
-
-  //         if (my.yeardiffs.get(year) < 0) {
-  //           my.tooMuchToa = true;
-  //         }
-  //       }
-  //     });
-  //   });
-
-  // }
-
-
 
 }

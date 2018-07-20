@@ -33,7 +33,10 @@
         <div class="col-lg-6 col-md-12">
           <div>
             <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable"
-              [gridOptions]="gridOptionsCommunity" (gridReady)="onGridReadyCommunity($event)">
+              [gridOptions]="gridOptionsCommunity"
+              (gridReady)="onGridReadyCommunity($event)"
+              [rowData]="rowsCommunity"
+              >
             </ag-grid-angular>
           </div>
         </div>
@@ -45,7 +48,7 @@
         </div>
         <div class="col-lg-2 col-md-4">
           <ng-container *ngIf="!pomIsCreated">
-            <input type="checkbox" id="eppToggle" [(ngModel)]="useEpp" (change)="loadFY4fromEpp()"> Use EPP Data
+            <input type="checkbox" id="eppToggle" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
           </ng-container>
         </div>
       </div>
@@ -54,7 +57,10 @@
         <div class="col-lg-6 col-md-12">
           <div>
             <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable"
-              [gridOptions]="gridOptionsOrgs">
+              [gridOptions]="gridOptionsOrgs" 
+              (gridReady)="onGridReadyOrgs($event)"
+              [rowData]="rowsOrgs"
+              [pinnedBottomRowData]="rowOrgsDelta">
             </ag-grid-angular>
           </div>
         </div>
