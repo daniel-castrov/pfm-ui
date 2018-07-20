@@ -59,6 +59,16 @@ export class FundsUpdateComponent implements OnInit {
       });
     });
 
+    var namesorter = function (mrId1, mrId2) {
+      var name1 = my.programs.get(mrId1);
+      var name2 = my.programs.get(mrId2);
+      if (name1 === name2){
+        return 0;
+      }
+
+      return (name1 < name2 ? -1 : 1);
+    }
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -74,6 +84,8 @@ export class FundsUpdateComponent implements OnInit {
         {
           headerName: "Program",
           cellRenderer: 'programCellRendererComponent',
+          comparator: namesorter,
+          valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',

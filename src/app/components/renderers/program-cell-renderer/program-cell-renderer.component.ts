@@ -16,7 +16,6 @@ export class ProgramCellRendererComponent implements ICellRendererAngularComp {
 
   agInit(param) {
     this.params = param;
-    console.log(param);
   }
 
   fullname(): string {
