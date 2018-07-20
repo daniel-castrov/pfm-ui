@@ -14,17 +14,10 @@
     </div>
     <div class="row mb-3">
       <div class="col-md-12 col-lg-10">
-          <ag-grid-angular #agGrid class="ag-theme-balham"
-            [enableSorting]="true"
-            [enableFilter]="true" 
-            [gridAutoHeight]="true" 
-            [pagination]="true"
+          <ag-grid-angular #agGrid class="ag-theme-balham" 
+            [gridOptions]="agOptions"
             [rowData]="filteredexelines"
-            [paginationPageSize]="15"
-            [columnDefs]="columnDefs"
-            [frameworkComponents]='agcomps'
-            (gridReady)="onGridReady($event)"
-            [suppressPaginationPanel]="false">
+            (gridReady) = "onGridReady($event)">
           </ag-grid-angular>
       </div>
     </div>

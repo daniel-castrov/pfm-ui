@@ -8,7 +8,8 @@ import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine }
 import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
-import {AgGridNg2} from 'ag-grid-angular';
+import { GridOptions } from 'ag-grid';
+import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 declare const $: any;
@@ -42,76 +43,92 @@ export class FundsUpdateComponent implements OnInit {
   private opAgency: string;
   private funds: number;
 
-  private columnDefs: any[];
-  private agcomps: any;
+  private agOptions: GridOptions;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private router: Router) {
     var my: FundsUpdateComponent = this;
 
-
-    this.agcomps = {
+    var agcomps:any = {
       programCellRendererComponent: ProgramCellRendererComponent
     };
 
-    this.columnDefs = [
-      {
-        headerName: "Program",
-        cellRenderer: 'programCellRendererComponent'
+    my.progsvc.getIdNameMap().subscribe(data => { 
+      Object.getOwnPropertyNames(data.result).forEach(mrId => { 
+        my.programs.set(mrId, data.result[mrId]);
+      });
+    });
+
+    this.agOptions = <GridOptions>{
+      enableSorting: true,
+      enableFilter: true,
+      gridAutoHeight: true,
+      pagination: true,
+      paginationPageSize: 30,
+      suppressPaginationPanel: false,
+      frameworkComponents: agcomps,
+      context: {
+        programlkp: my.programs
       },
-      {
-        headerName: 'Appr.',
-        field:'appropriation'
-      },
-      {
-        headerName: 'Budget',
-        field: 'blin'
-      },
-      {
-        headerName: 'Item',
-        field: 'item'
-      },
-      {
-        headerName: 'opAgency',
-        field: 'opAgency'
-      },
-      {
-        headerName: 'Initial Funds',
-        field: 'initial'
-      },
-      {
-        headerName: 'CRA',
-        field: 'craTotal'
-      },
-      {
-        headerName: 'Realigned',
-        field: 'realignedTotal'
-      },
-      {
-        headerName: 'Appr. Actions',
-        field: 'apprTotal'
-      },
-      {
-        headerName: 'OUSD(C) Actions',
-        field: 'ousdcTotal'
-      },
-      {
-        headerName: 'BTR',
-        field: 'btrTotal'
-      },
-      {
-        headerName: 'Withheld',
-        field: 'withheld'
-      },
-      {
-        headerName: 'TOA',
-        field: 'toa'
-      },
-      {
-        headerName: 'Released',
-        field: 'released'
-      },
-    ];
+      columnDefs: [
+        {
+          headerName: "Program",
+          cellRenderer: 'programCellRendererComponent',
+        },
+        {
+          headerName: 'Appr.',
+          field: 'appropriation'
+        },
+        {
+          headerName: 'Budget',
+          field: 'blin'
+        },
+        {
+          headerName: 'Item',
+          field: 'item'
+        },
+        {
+          headerName: 'opAgency',
+          field: 'opAgency'
+        },
+        {
+          headerName: 'Initial Funds',
+          field: 'initial'
+        },
+        {
+          headerName: 'CRA',
+          field: 'craTotal'
+        },
+        {
+          headerName: 'Realigned',
+          field: 'realignedTotal'
+        },
+        {
+          headerName: 'Appr. Actions',
+          field: 'apprTotal'
+        },
+        {
+          headerName: 'OUSD(C) Actions',
+          field: 'ousdcTotal'
+        },
+        {
+          headerName: 'BTR',
+          field: 'btrTotal'
+        },
+        {
+          headerName: 'Withheld',
+          field: 'withheld'
+        },
+        {
+          headerName: 'TOA',
+          field: 'toa'
+        },
+        {
+          headerName: 'Released',
+          field: 'released'
+        },
+      ]
+    };        
   }
 
   ngOnInit() {
@@ -135,6 +152,7 @@ export class FundsUpdateComponent implements OnInit {
           return (a.name < b.name ? -1 : 1);
         });
 
+        my.programs = new Map<string, string>();
         for (var i = 0; i < lookup.length; i++ ){
           my.programs.set(lookup[i].id, lookup[i].name);
         }
