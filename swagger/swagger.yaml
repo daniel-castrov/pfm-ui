@@ -2766,7 +2766,7 @@ definitions:
     type: "object"
     properties:
       year:
-        type: "integer"
+        type: "number"
       amount:
         type: "number"
   Variant:
