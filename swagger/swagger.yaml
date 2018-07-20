@@ -29,6 +29,7 @@ tags:
 - name: "UserRoleResource"
 - name: "Epp"
 - name: "Execution"
+- name: "Library"
 
 #
 ##############################################################################
@@ -2459,6 +2460,16 @@ paths:
       - "application/json"
 # STOP EXECUTION
 #################################################################
+# START LIBRARY
+  /library:
+    get:
+      tags:
+      - "Library"
+      summary: "Get all"
+      description: "Get all the documents in the library"
+      operationId: "getAll"
+      produces:
+      - "application/json"
 # END PATHS
 #################################################################
 #
@@ -3207,5 +3218,15 @@ definitions:
         type: "string"
       contentType:
         type: "string"
+  FileMetadata:
+    type: "object"
+    properties:
+      metadata:
+        type: "object"
+        additionalProperties:
+        type: "object"
+        properties:
+          area:
+            type: "string"
 ##############################################################################
 # ENDFILE

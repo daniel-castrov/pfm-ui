@@ -4,6 +4,7 @@ import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
+import {FileMetadata, LibraryService} from "../../../generated";
 declare const $: any;
 
 @Component({
@@ -17,25 +18,33 @@ export class LibraryComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  data = [];
+  data: Array<FileMetadata>;
   currentPage: number;
   totalPages: number;
 
-  constructor() {}
+  constructor(private libraryService: LibraryService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.libraryService.getAll().subscribe(data => {
+      this.data = data.result;
+      this.agGrid.api.sizeColumnsToFit();
+    })
+
+  }
 
   columnDefs = [
-    {headerName: 'File Name', field: 'fileName'},
-    {headerName: 'File Area', field: 'fileArea'},
+    {headerName: 'File Name', valueGetter: 'data.metadata.Name'},
+    {headerName: 'File Area', valueGetter: 'data.metadata.area'},
+    {headerName: 'Date', valueGetter: 'data.metadata.IngestDate'},
+    {headerName: 'Type', valueGetter: 'data.metadata.MimeType'},
     {headerName: '', cellRenderer: this.viewBtn}
   ];
 
   viewBtn(params) {
-    return '<button class="btn btn-primary" (click)="onBtnView(params.fileName, params.fileArea)"/>'
+    return '<button class="btn btn-primary" (click)="onBtnView('+ params +')">View</button>'
   }
 
-  onBtnView(fileName, fileArea) {
+  onBtnView(params) {
     //TODO: link to the file to either display online or download it
   }
 

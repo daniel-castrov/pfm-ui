@@ -39,17 +39,17 @@
           </ag-grid-angular>
           <ul *ngIf="data?.length > 0" class="pagination justify-content-center">
             <li class="page-item">
-              <a class="page-link" (click)="onBtFirst()">First</a>
+              <a class="page-link" (click)="onBtnFirst()">First</a>
             </li>
             <li class="page-item">
-              <a class="page-link" (click)="onBtPrevious()">Previous</a>
+              <a class="page-link" (click)="onBtnPrevious()">Previous</a>
             </li>
             <li class="page-link align-self-center disabled">Page {{currentPage}} of {{totalPages}}</li>
             <li class="page-item">
-              <a class="page-link" (click)="onBtNext()">Next</a>
+              <a class="page-link" (click)="onBtnNext()">Next</a>
             </li>
             <li class="page-item">
-              <a class="page-link" (click)="onBtLast()">Last</a>
+              <a class="page-link" (click)="onBtnLast()">Last</a>
             </li>
           </ul>
         </div>
