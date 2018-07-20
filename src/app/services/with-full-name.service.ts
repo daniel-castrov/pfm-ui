@@ -1,3 +1,4 @@
+import { ProgramRequestWithFullName, ProgramWithFullName} from './with-full-name.service';
 import { Type } from './../components/programming/program-request/page-mode.service';
 import { PRService } from './../generated/api/pR.service';
 import { ProgrammaticRequest } from './../generated/model/programmaticRequest';
@@ -11,6 +12,7 @@ export interface WithFullName {
 
 export interface ProgramWithFullName extends Program, WithFullName {};
 export interface ProgramRequestWithFullName extends ProgrammaticRequest, WithFullName {};
+export type ProgramOrPrWithFullName = ProgramWithFullName | ProgramRequestWithFullName;
 
 @Injectable()
 export class WithFullNameService {
@@ -70,14 +72,22 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
-  async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, phaseId: string): Promise<string> {
+  async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest): Promise<string> {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(pr.phaseId).toPromise()).result;
     const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
 
     return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);
+  }
+
+  async programsPlusPrs(phaseId: string): Promise<WithFullName[]> {
+    const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
+    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== Type[Type.PROGRAM_OF_MRDB]);
+
+    const programs: ProgramWithFullName[] = (await this.programs());
+    return (<WithFullName[]>programs).concat(prsWithoutPrograms);
   }
 
   private sort(withFullName: WithFullName[]): WithFullName[] {
@@ -94,20 +104,25 @@ export class WithFullNameService {
   }
 
   private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
-      var parentName = '';
-    if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_PR_OR_UFR]) {
-      parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
-    } else if (pr.creationTimeType === Type[Type.SUBPROGRAM_OF_MRDB]) {
-      parentName = this.programFullName(mapIdToProgram.get(pr.creationTimeReferenceId), mapIdToProgram) + '/';
-    } else if (pr.creationTimeType === Type[Type.PROGRAM_OF_MRDB]) {
-      const program: Program = mapIdToProgram.get(pr.creationTimeReferenceId);
-      if(program.parentMrId) {
-        parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
-      }
-    } else if (pr.creationTimeType === Type[Type.PROGRAM_OF_MRDB]) {
-      // do nothing
-    } else {
-      console.log('Error!!! Programmatic Request creation time type not set.');
+    var parentName = '';
+    switch(pr.creationTimeType) {
+      case Type[Type.SUBPROGRAM_OF_PR_OR_UFR]:
+        parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
+        break;
+      case Type[Type.SUBPROGRAM_OF_MRDB]:
+        parentName = this.programFullName(mapIdToProgram.get(pr.creationTimeReferenceId), mapIdToProgram) + '/';
+        break;
+      case Type[Type.PROGRAM_OF_MRDB]:
+        const program: Program = mapIdToProgram.get(pr.creationTimeReferenceId);
+        if(program.parentMrId) {
+          parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
+        }
+        break;
+      case Type[Type.NEW_PROGRAM]:
+        // do nothing
+        break;
+      default:
+        console.log('Error!!! Programmatic Request creation time type not set.');
     }
     return parentName + pr.shortName;
   }

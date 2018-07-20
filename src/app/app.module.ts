@@ -126,6 +126,7 @@ import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
+import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -205,6 +206,7 @@ const appRoutes: Routes = [
     HeaderStrangerComponent,
     HeaderUserComponent,
     HomeComponent,
+    IdAndNameComponent,
     JustificationTabComponent,
     LoginComponent,
     MamageCommunityDetailsComponent,
