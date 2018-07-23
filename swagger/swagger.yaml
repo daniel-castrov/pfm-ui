@@ -2299,6 +2299,24 @@ paths:
       description: "Returns the execution lines"
       produces:
       - "application/json"
+    put:
+      operationId: "createExecutionLine"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "line"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExecutionLine"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution lines for this execution phase"
+      description: "Returns the execution lines"
+      produces:
+      - "application/json"
   /executionlines/phase/{phaseId}/transfer:
     post:
       tags:
