@@ -53,8 +53,8 @@ export class FundsUpdateComponent implements OnInit {
       programCellRendererComponent: ProgramCellRendererComponent
     };
 
-    my.progsvc.getIdNameMap().subscribe(data => { 
-      Object.getOwnPropertyNames(data.result).forEach(mrId => { 
+    my.progsvc.getIdNameMap().subscribe(data => {
+      Object.getOwnPropertyNames(data.result).forEach(mrId => {
         my.programs.set(mrId, data.result[mrId]);
       });
     });
@@ -85,79 +85,93 @@ export class FundsUpdateComponent implements OnInit {
           headerName: "Program",
           cellRenderer: 'programCellRendererComponent',
           comparator: namesorter,
+          cellClass: ['ag-cell-light-grey'],
           valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',
-          field: 'appropriation'
+          field: 'appropriation',
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Budget',
-          field: 'blin'
+          field: 'blin',
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Item',
-          field: 'item'
+          field: 'item',
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'opAgency',
-          field: 'opAgency'
+          field: 'opAgency',
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Initial Funds',
-          field: 'initial'
+          field: 'initial',
+          cellClass: ['ag-cell-light-green']
         },
         {
           headerName: 'CRA',
-          field: 'craTotal'
+          field: 'craTotal',
+          cellClass: ['ag-cell-white']
         },
         {
           headerName: 'Realigned',
-          field: 'realignedTotal'
+          field: 'realignedTotal',
+          cellClass: ['ag-cell-white']
         },
         {
           headerName: 'Appr. Actions',
-          field: 'apprTotal'
+          field: 'apprTotal',
+          cellClass: ['ag-cell-white']
         },
         {
           headerName: 'OUSD(C) Actions',
-          field: 'ousdcTotal'
+          field: 'ousdcTotal',
+          cellClass: ['ag-cell-white']
         },
         {
           headerName: 'BTR',
-          field: 'btrTotal'
+          field: 'btrTotal',
+          cellClass: ['ag-cell-white']
         },
         {
           headerName: 'Withheld',
-          field: 'withheld'
+          field: 'withheld',
+          cellClass: ['ag-cell-dark-green']
         },
         {
           headerName: 'TOA',
-          field: 'toa'
+          field: 'toa',
+          cellClass: ['ag-cell-dark-green']
         },
         {
           headerName: 'Released',
-          field: 'released'
+          field: 'released',
+          cellClass: ['ag-cell-dark-green']
         },
       ]
-    };        
+    };
   }
 
   ngOnInit() {
     var my: FundsUpdateComponent = this;
-    my.usersvc.getCurrentUser().subscribe(deets => { 
+    my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
         my.progsvc.getIdNameMap(),
         //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
         my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
-      ]).subscribe(data => { 
+      ]).subscribe(data => {
         var lookup: {id:string, name:string}[] = [];
-        Object.getOwnPropertyNames(data[0].result).forEach(mrid => { 
+        Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
           lookup.push( {id:mrid, name: data[0].result[mrid]})
         });
 
 
-        lookup.sort((a, b) => { 
+        lookup.sort((a, b) => {
           if (a.name === b.name) {
             return 0;
           }
@@ -180,7 +194,7 @@ export class FundsUpdateComponent implements OnInit {
   fetchLines() {
     var my: FundsUpdateComponent = this;
 
-    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => { 
+    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.allexelines = data.result;
       my.refreshFilterDropdowns();
       my.filter();
@@ -255,7 +269,7 @@ export class FundsUpdateComponent implements OnInit {
       mrId: this.mrid,
       toa:this.funds
     };
-    
+
     this.allexelines.push(newline);
     this.refreshFilterDropdowns();
     this.filter();
