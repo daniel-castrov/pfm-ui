@@ -33,15 +33,21 @@ export class CreatePomSessionComponent implements OnInit {
   private orgs: Organization[];
   private pb: PB;
 
-  private orgMap: Map<string, string> = new Map<string, string>();
-  private originalFyplus4 ={};
+  private orgMap: Map<string, string>;
+  private originalFyplus4;
 
-  private editsOk: boolean = false;
-  private pomIsCreated: boolean = false;
-  private pomIsOpen: boolean = false;
-  private tooMuchToa: boolean = false;
-  private useEpp = false;
-  private submitted = false;
+  private editsOk: boolean;
+  private pomIsCreated: boolean;
+  private pomIsOpen: boolean;
+  private tooMuchToa: boolean;
+  private useEpp: boolean;
+  private submitted:boolean;
+
+  private gridOptionsCommunity:GridOptions;
+  private rowsCommunity;
+  private gridOptionsOrgs:GridOptions;
+  private rowsOrgs;
+  private pinnedRowOrgsDelta;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
@@ -49,49 +55,28 @@ export class CreatePomSessionComponent implements OnInit {
     private globalsvc: GlobalsService ) {
   }
 
-  private gridOptionsCommunity:GridOptions = {};
-  private rowsCommunity = [];
-  //private gridApiCommunity:GridApi;
-  //private gridColumnApiCommunity;
 
-  private gridOptionsOrgs:GridOptions = {};
-  private rowsOrgs = [];
-  //private gridApiOrgs:GridApi;
-  //private gridColumnApiOrgs;
-
-  private rowOrgsDelta = [];
 
   ngOnInit() {
-    this.fetch();
+    this.gridOptionsCommunity = {};
+    this.gridOptionsOrgs = {};
+    this.myinit();
   }
 
-  onGridReadyCommunity(params) {
-    //this.gridApiCommunity = params.api;
-    //this.gridColumnApiCommunity = params.columnApi;
-  }
-
-  onGridReadyOrgs(params) {
-    //this.gridApiOrgs = params.api;
-    //this.gridColumnApiOrgs = params.columnApi;
-  }
-
-  initAgGrids(fy:number){
+  // Initialize both grids
+  private initAgGrids(fy:number){
+    
     this.gridOptionsCommunity.columnDefs=this.setAgGridColDefs("Community", fy);
     this.gridOptionsCommunity.gridAutoHeight=true;
-    this.gridOptionsCommunity.enableSorting=true;
-    this.gridOptionsCommunity.enableFilter=true;
-    this.gridOptionsCommunity.enableColResize=true;
     this.gridOptionsCommunity.onCellValueChanged = params => this.setDeltaRow(fy); 
 
     this.gridOptionsOrgs.columnDefs = this.setAgGridColDefs("Organization",fy);
     this.gridOptionsOrgs.gridAutoHeight=true;
-    this.gridOptionsOrgs.enableSorting=true;
-    this.gridOptionsOrgs.enableFilter=true;
-    this.gridOptionsOrgs.enableColResize=true;
     this.gridOptionsOrgs.onCellValueChanged = params => this.setDeltaRow(fy); 
   }
 
-  setAgGridColDefs(column1Name:string, fy:number): any {
+  // Set similar column definitions for both grids
+  private setAgGridColDefs(column1Name:string, fy:number): any {
 
     let colDefs = [];
 
@@ -100,7 +85,8 @@ export class CreatePomSessionComponent implements OnInit {
         field: 'orgid', 
         width: 178,
         editable: false,
-        valueGetter: params => this.orgName( params.data.orgid )
+        valueGetter: params => this.orgName( params.data.orgid ),
+        cellRenderer: params => '<b>'+params.value+'</b>'
       });
 
     for (var i = 0; i < 5; i++) {
@@ -109,7 +95,8 @@ export class CreatePomSessionComponent implements OnInit {
           field: (fy+ i).toString(), 
           width: 100,
           editable:true,
-          valueFormatter: this.currencyFormatter
+          filter:'agNumberColumnFilter',
+          cellRenderer: params => this.negativeNumberRenderer(params)
         });
     }
     colDefs.push( 
@@ -117,23 +104,25 @@ export class CreatePomSessionComponent implements OnInit {
         field: 'total', 
         width: 120,
         editable: false,
-        valueFormatter: this.currencyFormatter,
-        valueGetter: params => this.rowTotal( params.data, fy )
+        filter:'agNumberColumnFilter',
+        valueGetter: params => this.rowTotal( params.data, fy ),
+        cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>'
       });
 
     return colDefs;
   }
   
-  rowTotal( data, fy:number ){
+  // A valueGetter for totaling a row
+  private rowTotal( data, fy:number ){
     let total:number=0;
     for (var i = 0; i < 5; i++) {
-      let n:number = parseInt( data[fy+i], 10 );
-      total += n;
+      total += parseInt(data[fy+i],10);
     }
     return total;
   }
 
-  orgName( id:string ){
+  // A valueGetter for looking up an org name
+  private orgName( id:string ){
     if ( null == this.orgMap.get(id) ){
       return id;
     } else {
@@ -141,48 +130,73 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
-  currencyFormatter( params ) {
+  // helper for currency formatting
+  private formatCurrency( params ) {
     let str = Math.floor( params.value )
       .toString()
       .replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );    
     return "$ " + str;
   }
 
-  fetch() {
-    var my: CreatePomSessionComponent = this;
+  // a sinple CellRenderrer for negative numbers
+  private negativeNumberRenderer( params ){
+    
+    if ( params.value < 0 ){
+      return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
+    } else {
+      return this.formatCurrency( params );
+    }
+  }
+
+  // Init and fetch all
+  private myinit() {
+
     this.globalsvc.user().subscribe( user => {
-      forkJoin([my.communityService.getById(user.currentCommunityId),
-      my.orgsvc.getByCommunityId(user.currentCommunityId),
-      my.pomsvc.getByCommunityId(user.currentCommunityId),
-      my.pbsvc.getLatest(user.currentCommunityId),
-      my.pomsvc.getToaSamples(user.currentCommunityId)
+      forkJoin([this.communityService.getById(user.currentCommunityId),
+        this.orgsvc.getByCommunityId(user.currentCommunityId),
+        this.pomsvc.getByCommunityId(user.currentCommunityId),
+        this.pbsvc.getLatest(user.currentCommunityId),
+        this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
 
-        my.community  = data[0].result;
-        my.orgs = data[1].result;
+        this.rowsCommunity = [];
+        this.rowsOrgs = [];
+        this.pinnedRowOrgsDelta = [];
+        this.orgs = [];
+        this.orgMap = new Map<string, string>();
+        this.originalFyplus4 ={};
+        this.editsOk = false;
+        this.pomIsCreated = false;
+        this.pomIsOpen = false;
+        this.tooMuchToa = false;
+        this.useEpp = false;
+        this.submitted = false;
+
+        this.community  = data[0].result;
+        this.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
-        my.pb = data[3].result;
+        this.pb = data[3].result;
         var samplepom: Pom = data[4].result;
 
-        my.fy = my.pb.fy + 1;
-        this.orgs.forEach( org =>  my.orgMap.set( org.id, org.abbreviation ) );
+        this.fy = this.pb.fy + 1;
+        this.orgs.forEach( org =>  this.orgMap.set( org.id, org.abbreviation ) );
 
-        my.initAgGrids(my.fy);
-        my.setInitialValuesAndEditableforAgGrid(my.fy, poms, samplepom);
-        my.setDeltaRow(my.fy);
+        this.initAgGrids(this.fy);
+        this.setInitialValuesAndEditableforAgGrid(this.fy, poms, samplepom);
+        this.setDeltaRow(this.fy);
 
       });
     });
   }
-
   
-  setInitialValuesAndEditableforAgGrid(fy:number, poms: Pom[], samplepom: Pom) {
+  private setInitialValuesAndEditableforAgGrid(fy:number, poms: Pom[], samplepom: Pom) {
     
     this.editsOk=false;
+    let i:number;
 
     // Is this a new POM?
     var currentPom:Pom=null;
-    for (var i=0; i<poms.length; i++){      
+    for (i=0; i<poms.length; i++){      
       if ( poms[i].status === "CREATED" ){
         this.pomIsCreated=true;
         currentPom=poms[i];
@@ -219,7 +233,7 @@ export class CreatePomSessionComponent implements OnInit {
       samplepom.communityToas.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;
       });
-      for (var i = 0; i < 5; i++) {
+      for (i = 0; i < 5; i++) {
         if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
       }
       this.rowsCommunity.push(row);
@@ -228,9 +242,9 @@ export class CreatePomSessionComponent implements OnInit {
       row = {}
       row["orgid"] = this.community.abbreviation+" TOA";
       pomData.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount +2 ;
+        row[toa.year] = toa.amount;
       });
-      for (var i = 0; i < 5; i++) {
+      for (i = 0; i < 5; i++) {
         if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
       }
       this.rowsCommunity.push(row);
@@ -247,33 +261,47 @@ export class CreatePomSessionComponent implements OnInit {
           });
         this.rowsOrgs.push(row);
         });
-          this.rowsOrgs.forEach( roww => {
-          for (var i = 0; i < 5; i++) {
-            if ( roww[ fy+i ] == undefined ) roww[ fy+i ] = 0;
+        this.rowsOrgs.forEach( roww => {
+        for (i = 0; i < 5; i++) {
+          if ( roww[ fy+i ] == undefined ) {
+            roww[ fy+i ] = 0;
           }
-        });
+          
+        }
+      });
     }
-
+    
+    this.originalFyplus4[this.community.id]  =   this.rowsCommunity[1][this.fy+4];
     this.rowsOrgs.forEach( rowww => {
         this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
     });
 
   } 
 
-  setDeltaRow(fy:number) {
+  // Compute and set the bottom 'pinned' row.
+  private setDeltaRow(fy:number) {
+
+    this.tooMuchToa = false;
+
+    let i:number;
 
     let deltaRow = {};
-    for (var i = 0; i < 5; i++) {
-      deltaRow[fy+i] = this.rowsCommunity[1][fy+ i];
+    for (i = 0; i < 5; i++) {
+      deltaRow[fy+i] =  this.rowsCommunity[1][fy+ i];
     }
-      this.rowsOrgs.forEach( row => {
-    for (var i = 0; i < 5; i++) {
+      
+    this.rowsOrgs.forEach( row => {
+      for (i = 0; i < 5; i++) {
         deltaRow[fy+i] = deltaRow[fy+i] - row[fy+i]
+        if (deltaRow[fy+i] <0 ){
+          this.tooMuchToa = true;
+
+        }
       }
      });
-    this.rowOrgsDelta = [];
+    this.pinnedRowOrgsDelta = [];
     deltaRow["orgid"] = "Delta";
-    this.rowOrgsDelta = [deltaRow];
+    this.pinnedRowOrgsDelta = [deltaRow];
   }
 
   private useEppData() {
@@ -288,11 +316,13 @@ export class CreatePomSessionComponent implements OnInit {
 
       this.rowsOrgs.forEach( row =>  {
         row[this.fy+4] = this.originalFyplus4[row["orgid"]] 
-        console.log( row[this.fy+4] + " -- " + this.originalFyplus4[row["orgid"]] );
       }); 
-      
-      
       this.setDeltaRow(this.fy);
+
+      // refresh both grids
+      this.gridOptionsCommunity.api.refreshCells();
+      this.gridOptionsOrgs.api.refreshCells();
+
     }
     
   }
@@ -336,17 +366,19 @@ export class CreatePomSessionComponent implements OnInit {
       });
       this.rowsCommunity[1][this.fy + 4] = total;
       this.setDeltaRow(this.fy);
+
+      // refresh both grids
+      this.gridOptionsCommunity.api.refreshCells();
+      this.gridOptionsOrgs.api.refreshCells();
     });
 
   }
 
-  submitNewPom() {    
+  private submitNewPom() {    
 
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
     
-    console.log(transfer);
-
     this.pomsvc.createPom( this.community.id, this.fy, transfer, this.pb.id, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
@@ -355,7 +387,12 @@ export class CreatePomSessionComponent implements OnInit {
       });
   }
 
-  updatePom() {
+
+  private reload(){
+    this.myinit(); 
+  }
+
+  private updatePom() {
 
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
@@ -371,12 +408,9 @@ export class CreatePomSessionComponent implements OnInit {
   private buildTransfer(): Pom {
 
     var toas: TOA[] = [];
-
     for (var i=0; i < 5; i++){
       toas.push(
-        { year: this.fy+i, amount: parseInt(this.rowsCommunity[1][this.fy+i],10) }
-
-        
+        { year: this.fy+i, amount: this.rowsCommunity[1][this.fy+i] }
       );
     }
 
