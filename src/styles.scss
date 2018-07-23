@@ -433,3 +433,37 @@ tab {
 .ag-body-viewport {
   margin-bottom: -2px;
 }
+
+.ag-cell-edit {
+  background-color: #c6d9f1;
+  color: $black;
+  text-align: right;
+  &:hover {
+    cursor: pointer;
+    background-color: $light-grey;
+  }
+}
+
+.ag-cell-light-green {
+  background-color: $light-green;
+  color: $black;
+}
+
+.ag-cell-dark-green {
+  background-color: $dark-green;
+  color: $white;
+}
+
+.ag-cell-light-grey {
+  background-color: $light-grey;
+  color: $black;
+}
+
+.ag-medium-gray-cell {
+  background-color: $medium-grey;
+  color: $black;
+}
+
+.ag-cell-white {
+  background-color: $white;
+}
