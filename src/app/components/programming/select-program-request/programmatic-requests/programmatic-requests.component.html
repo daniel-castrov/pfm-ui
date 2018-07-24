@@ -20,6 +20,8 @@
                  [paginationPageSize]="15"
                  (paginationChanged)="onPaginationChanged($event)"
                  [suppressPaginationPanel]="true"
+                 [frameworkComponents]="frameworkComponents"
+                 [context]="context"
                  (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ul class="pagination justify-content-center">
@@ -37,86 +39,6 @@
     <a class="page-link" (click)="onBtLast()">Last</a>
   </li>
 </ul>
-<div style="display: none;" class="row">
-  <div class="col-12">
-    <table class="pr-table">
-      <thead>
-        <tr class="white-top-table-header font-italic">
-          <td class="largest-column"> </td>
-          <td class="largest-column"> </td>
-          <td> </td>
-          <td class="text-center">PY-1</td>
-          <td class="text-center">PY</td>
-          <td class="text-center">CY</td>
-          <td class="text-center">BY</td>
-          <td class="text-center">BY+1</td>
-          <td class="text-center">BY+2</td>
-          <td class="text-center">BY+3</td>
-          <td class="text-center">BY+4</td>
-          <td> </td>
-        </tr>
-        <tr>
-          <!--<th class="largest-column">Program</th>-->
-          <th class="largest-column">Status</th>
-          <th>Cycle</th>
-          <th>{{pomFy-3 | FY}}</th>
-          <th>{{pomFy-2 | FY}}</th>
-          <th>{{pomFy-1 | FY}}</th>
-          <th>{{pomFy   | FY}}</th>
-          <th>{{pomFy+1 | FY}}</th>
-          <th>{{pomFy+2 | FY}}</th>
-          <th>{{pomFy+3 | FY}}</th>
-          <th>{{pomFy+4 | FY}}</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <div class="table-body">
-        <tbody *ngFor="let pr of (mapNameToRow | values)">
-          <tr>
-            <ng-container *ngIf="!reviewOnly">
-              <td class="row-lt-gray text-center largest-column" rowspan="2">
-                <span class="clickable" (click)="editPR(pr.pom.id)">{{pr.pom?.fullname}}</span>
-                <span *ngIf="!pr.pom?.bulkOrigin" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues(pr.pom.id, pr.pom.shortName)">
-                  <i class="fa fa-trash"></i>
-                </span>
-              </td>
-              <!--<td class="row-lt-gray text-center clickable largest-column" rowspan="2" (click)="editPR(pr.pom.id)"><a [class.text-danger]="pr.pom?.state=='OUTSTANDING'">{{state(pr.pom)}}</a></td>-->
-            </ng-container>
-            <ng-container *ngIf="reviewOnly">
-              <td class="row-lt-gray text-center largest-column" rowspan="2">
-                <span>{{pr.pom?.fullname}}</span>
-              </td>
-              <!--<td class="row-lt-gray text-center largest-column" rowspan="2">{{state(pr.pom)}}</td>-->
-            </ng-container>
-            <td>PB{{pbFy - 2000}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy-3) | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy-2) | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy-1) | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy)   | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+1) | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+2) | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+3) | dashForZero}}</td>
-            <td class="text-right">{{pr.pb?.getToa(pomFy+4) | dashForZero}}</td>
-            <td class="text-right">{{totalColumns(pr.pb)    | dashForZero}}</td>
-          </tr>
-          <tr>
-            <td>POM{{pomFy - 2000}}</td>
-            <td class="text-right">{{pr.pom?.getToa(pomFy-3) | dashForZero}}</td>
-            <td class="text-right">{{pr.pom?.getToa(pomFy-2) | dashForZero}}</td>
-            <td class="text-right">{{pr.pom?.getToa(pomFy-1) | dashForZero}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy)   | dashForZero}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+1) | dashForZero}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+2) | dashForZero}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+3) | dashForZero}}</td>
-            <td class="cell-lt-grey text-right">{{pr.pom?.getToa(pomFy+4) | dashForZero}}</td>
-            <td class="cell-lt-grey text-right">{{totalColumns(pr.pom)    | dashForZero}}</td>
-          </tr>
-        </tbody>
-      </div>
-    </table>
-  </div>
-</div>
-
 <ng-container *ngIf="!reviewOnly">
   <div class="row mb-3" >
     <div class="col-12">

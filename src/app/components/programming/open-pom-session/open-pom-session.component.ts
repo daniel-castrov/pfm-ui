@@ -4,7 +4,7 @@ import {  HeaderComponent } from '../../header/header.component'
 import { GlobalsService } from './../../../services/globals.service';
 import { WithFullNameService } from './../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
-import { User, Pom, ProgrammaticRequest, POMService, PBService, PRService } from '../../../generated/';
+import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated/';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 @Component({
@@ -28,11 +28,10 @@ export class OpenPomSessionComponent implements OnInit {
   private allPrsSubmitted:boolean;
   private pomStatusIsCreated:boolean;
 
-  constructor( 
+  constructor(
     private pomService: POMService,
     private pbService: PBService,
     private globalsService: GlobalsService,
-    private prService: PRService,
     private withFullNameService: WithFullNameService ) {}
 
   async ngOnInit() {
@@ -43,7 +42,7 @@ export class OpenPomSessionComponent implements OnInit {
 
       await this.initPomPrs();
 
-      if ( !this.pom || null==this.pom ){ 
+      if ( !this.pom || null==this.pom ){
         this.pomStatusIsCreated = false;
         this.feedback.failure('No POM Session in the "CREATED" state was found');
       } else {
@@ -64,7 +63,7 @@ export class OpenPomSessionComponent implements OnInit {
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => { 
+      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => {
         for (var i = 0; i < poms.result.length; i++){
           var pom: Pom = poms.result[i];
           if ('CREATED' === pom.status) {
@@ -82,7 +81,7 @@ export class OpenPomSessionComponent implements OnInit {
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbProgrammaticRequests = (await this.prService.getByPhase(this.pb.id).toPromise()).result;
+    this.pbProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
   }
 
   openPom( event ) {

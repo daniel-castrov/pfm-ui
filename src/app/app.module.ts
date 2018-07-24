@@ -128,6 +128,7 @@ import { WorksheetComponent } from './components/programming/pom-worksheet/works
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
 import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
+import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -263,10 +264,12 @@ const appRoutes: Routes = [
     ExecutionLineTableComponent,
     WorksheetComponent,
     FileUploadComponent,
-    ProgramCellRendererComponent
+    ProgramCellRendererComponent,
+    SummaryProgramCellRenderer
   ],
   entryComponents: [
-    ProgramCellRendererComponent
+    ProgramCellRendererComponent,
+    SummaryProgramCellRenderer
   ],
   imports: [
     AccordionModule.forRoot(),

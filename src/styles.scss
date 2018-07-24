@@ -30,6 +30,10 @@ color:  #23527c;
 text-decoration: none;
 }
 
+.text-primary{
+  color: $primary-color !important;
+}
+
 a:hover {
 opacity: .8;
 color:  #23527c;
