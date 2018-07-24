@@ -450,6 +450,7 @@ tab {
   margin-bottom: -2px;
 }
 
+
 .ag-cell-edit {
   background-color: #c6d9f1;
   color: $black;
@@ -482,4 +483,13 @@ tab {
 
 .ag-cell-white {
   background-color: $white;
+}
+
+.ag-clickable {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $primary-color;
+  &:hover {
+    text-decoration: none;
+  }
 }

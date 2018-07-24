@@ -76,7 +76,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         headerName: 'Program',
         field: 'fullname',
         sort: "asc",
-        cellClass: 'text-primary',
+        cellClass: ['ag-cell-light-grey','ag-clickable'],
         cellRenderer: 'summaryProgramCellRenderer'
       },
       {
@@ -89,6 +89,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       {
         headerName: 'Cycle',
         width: 50,
+        cellClass: ['ag-cell-light-grey'],
         valueGetter: params => {
           if (params.data.type == 'pb') {
             return 'PB' + (this.pbFy - 2000);
