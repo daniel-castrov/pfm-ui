@@ -21,6 +21,8 @@ export class FundsUpdateComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
+
+
   private exephases: Execution[];
   private selectedexe: Execution;
   private allexelines: ExecutionLine[] = [];
@@ -31,7 +33,7 @@ export class FundsUpdateComponent implements OnInit {
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-
+  private currentPage: number;
   private mrid: string;
   private appropriation: string;
   private blin: string;
