@@ -15,11 +15,31 @@
     <div class="row mb-3">
       <div class="col-12">
         <ag-grid-angular #agGrid class="ag-theme-balham"
+          [pagination]="true"
+          [paginationPageSize]="15"
+          (paginationChanged)="onPaginationChanged($event)"
+          [suppressPaginationPanel]="true"
+          [frameworkComponents]="frameworkComponents"
           [gridOptions]="agOptions"
           [rowData]="filteredexelines"
           [enableColResize]="true"
           (gridReady) = "onGridReady($event)">
         </ag-grid-angular>
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" (click)="onBtFirst()">First</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" (click)="onBtPrevious()">Previous</a>
+          </li>
+          <li class="page-link align-self-center disabled">Page {{currentPage}} of {{totalPages}}</li>
+          <li class="page-item">
+            <a class="page-link" (click)="onBtNext()">Next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" (click)="onBtLast()">Last</a>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="row">
