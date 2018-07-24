@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
-import * as $ from 'jquery'
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component'
@@ -11,9 +10,6 @@ import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
-
-declare const $: any;
-declare const jQuery: any;
 
 @Component({
   selector: 'funds-update',
@@ -85,72 +81,100 @@ export class FundsUpdateComponent implements OnInit {
           headerName: "Program",
           cellRenderer: 'programCellRendererComponent',
           comparator: namesorter,
-          cellClass: ['ag-cell-light-grey'],
+          width: 140,
+          minWidth: 120,
+          cellClass: ['ag-cell-light-grey','clickable'],
           valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',
           field: 'appropriation',
+          width: 70,
+          minWidth: 70,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Budget',
           field: 'blin',
+          width: 90,
+          minWidth: 90,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Item',
           field: 'item',
+          width: 70,
+          minWidth: 70,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'opAgency',
           field: 'opAgency',
+          width: 90,
+          minWidth: 90,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Initial Funds',
           field: 'initial',
+          width: 100,
+          minWidth: 100,
           cellClass: ['ag-cell-light-green']
         },
         {
           headerName: 'CRA',
           field: 'craTotal',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-white']
         },
         {
           headerName: 'Realigned',
           field: 'realignedTotal',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-white']
         },
         {
           headerName: 'Appr. Actions',
           field: 'apprTotal',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-white']
         },
         {
           headerName: 'OUSD(C) Actions',
           field: 'ousdcTotal',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-white']
         },
         {
           headerName: 'BTR',
           field: 'btrTotal',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-white']
         },
         {
           headerName: 'Withheld',
           field: 'withheld',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-dark-green']
         },
         {
           headerName: 'TOA',
           field: 'toa',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-dark-green']
         },
         {
           headerName: 'Released',
           field: 'released',
+          width: 92,
+          minWidth: 92,
           cellClass: ['ag-cell-dark-green']
         },
       ]

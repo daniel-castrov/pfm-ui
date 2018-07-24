@@ -479,3 +479,12 @@ tab {
 .ag-cell-white {
   background-color: $white;
 }
+
+.ag-clickable {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $primary-color;
+  &:hover {
+    text-decoration: none;
+  }
+}

@@ -14,11 +14,12 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-          <ag-grid-angular #agGrid class="ag-theme-balham"
-            [gridOptions]="agOptions"
-            [rowData]="filteredexelines"
-            (gridReady) = "onGridReady($event)">
-          </ag-grid-angular>
+        <ag-grid-angular #agGrid class="ag-theme-balham"
+          [gridOptions]="agOptions"
+          [rowData]="filteredexelines"
+          [enableColResize]="true"
+          (gridReady) = "onGridReady($event)">
+        </ag-grid-angular>
       </div>
     </div>
     <div class="row">
