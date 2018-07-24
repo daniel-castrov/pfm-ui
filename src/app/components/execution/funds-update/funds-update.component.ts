@@ -81,84 +81,85 @@ export class FundsUpdateComponent implements OnInit {
           headerName: "Program",
           cellRenderer: 'programCellRendererComponent',
           comparator: namesorter,
-          width: 130,
-          minWidth: 130,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
           valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',
           field: 'appropriation',
-          width: 100,
-          minWidth: 100,
+          width: 92,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Budget',
           field: 'blin',
-          width: 80,
-          minWidth: 80,
+          width: 92,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Item',
           field: 'item',
-          width: 80,
-          minWidth: 80,
+          width: 92,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'opAgency',
           field: 'opAgency',
-          width: 90,
-          minWidth: 90,
+          width: 92,
           cellClass: ['ag-cell-light-grey','text-center']
         },
         {
           headerName: 'Initial Funds',
           field: 'initial',
-          width: 90,
-          minWidth: 90,
+          width: 92,
           cellClass: ['ag-cell-light-green','text-right']
         },
         {
           headerName: 'CRA',
           field: 'craTotal',
+          width: 92,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Realigned',
           field: 'realignedTotal',
+          width: 92,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Appr. Actions',
           field: 'apprTotal',
+          width: 92,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'OUSD(C) Actions',
           field: 'ousdcTotal',
+          width: 92,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'BTR',
           field: 'btrTotal',
+          width: 92,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Withheld',
           field: 'withheld',
+          width: 92,
           cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'TOA',
           field: 'toa',
+          width: 92,
           cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'Released',
           field: 'released',
+          width: 92,
           cellClass: ['ag-cell-dark-green','text-right']
         },
       ]
@@ -296,6 +297,11 @@ export class FundsUpdateComponent implements OnInit {
 
   onGridReady(params) {
     params.api.sizeColumnsToFit();
+    window.addEventListener("resize", function() {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
   }
 
   fullname(params): string {
