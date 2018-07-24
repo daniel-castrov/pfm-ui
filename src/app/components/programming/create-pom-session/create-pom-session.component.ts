@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { GridOptions, GridApi }  from 'ag-grid'
+import { GridOptions, GridApi }  from 'ag-grid';
 
 import { HeaderComponent } from '../../../components/header/header.component';
+import { NumericEditor } from "./numeric-editor.component";
 import { GlobalsService } from './../../../services/globals.service';
 import { CommunityService } from '../../../generated/api/community.service';
 import { OrganizationService } from '../../../generated/api/organization.service';
@@ -48,6 +49,7 @@ export class CreatePomSessionComponent implements OnInit {
   private gridOptionsOrgs:GridOptions;
   private rowsOrgs;
   private pinnedRowOrgsDelta;
+  private frameworkComponents;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService, private pomsvc: POMService, private pbsvc: PBService,
@@ -60,6 +62,9 @@ export class CreatePomSessionComponent implements OnInit {
   ngOnInit() {
     this.gridOptionsCommunity = {};
     this.gridOptionsOrgs = {};
+    this.frameworkComponents = {
+      numericEditor: NumericEditor
+    };
     this.myinit();
   }
 
@@ -94,7 +99,8 @@ export class CreatePomSessionComponent implements OnInit {
         { headerName: "FY" + (fy + i - 2000) , 
           field: (fy+ i).toString(), 
           width: 100,
-          editable:true,
+          //editable:true,
+          cellEditor: "numericEditor",
           filter:'agNumberColumnFilter',
           cellRenderer: params => this.negativeNumberRenderer(params)
         });
