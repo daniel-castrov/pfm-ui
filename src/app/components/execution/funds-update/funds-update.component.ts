@@ -34,6 +34,7 @@ export class FundsUpdateComponent implements OnInit {
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
   private currentPage: number;
+  private totalPages: number;
   private mrid: string;
   private appropriation: string;
   private blin: string;

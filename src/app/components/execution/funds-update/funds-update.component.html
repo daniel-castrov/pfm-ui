@@ -18,6 +18,7 @@
           [gridOptions]="agOptions"
           [rowData]="filteredexelines"
           [enableColResize]="true"
+          (paginationChanged)="onPaginationChanged($event)"
           (gridReady) = "onGridReady($event)">
         </ag-grid-angular>
         <ul class="pagination justify-content-center">
