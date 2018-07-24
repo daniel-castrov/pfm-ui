@@ -3,41 +3,8 @@
   <div class="row main-content" *ngIf="programRequestPageMode.initialized">
     <div class="col-12">
       <div class="row">
-        <div class="col-6" id="program-request" *ngIf="programRequestPageMode.id || programRequestPageMode.programOfMrDb">
-          <div class="h5 mb-4">Program Request for Program:</div>
-          <span class="form-group">
-            <label>Program ID:</label> <span class="mr-sm-4">{{parentFullName}}{{pr.shortName}}</span>
-          </span>
-          <span class="form-group">
-            <label>Name:</label> <span class="mr-sm-4">{{pr.longName}}</span>
-          </span>
-          <span class="form-group">
-            <label>Program Type:</label> <span class="mr-sm-4">{{pr.type}}</span>
-          </span>
-        </div>
-        <div class="col-6" id="create-new-subprogram"
-            *ngIf="!programRequestPageMode.id && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
-          <div class="h5 mb-4">Program Request - Creating New Sub-Program for Program:</div>
-          <label for="id">Id:</label>{{parentFullName}}
-          <input id="id" type="text" class="shortname form-control forminput mr-2" [(ngModel)]="pr.shortName" aria-label="short name">
-          <label for="name">Name:</label>
-          <input id="name" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
-          <label for="type">Program Type:</label>
-          <select id="type" [(ngModel)]="pr.type" class="form-control-sm type-dropdown" name="dummy">
-            <option *ngFor="let type of ['INCREMENT','VARIANT','FOS']" [ngValue]="type">{{type}}</option>
-          </select>
-        </div>
-        <div class="col-6" id="create-new-toplevel" *ngIf="!programRequestPageMode.id && programRequestPageMode.newProgram">
-          <div class="h5 mb-4">Program Request - Create new Top Level Program:</div>
-          <label for="id">Id:</label>
-          <input id="id" type="text" class="shortname form-control forminput mr-2" [(ngModel)]="pr.shortName" aria-label="short name">
-          <label for="name">Name:</label>
-          <input id="name" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
-          <span class="form-group">
-            <label>Program Type:</label> <span class="mr-sm-4">{{pr.type}}</span>
-          </span>
-        </div>
-        <div class="col-6">
+        <id-and-name #idAndName class="col-8" [pr]="pr"></id-and-name>
+        <div class="col-4">
           <div class="pull-right mb-2" aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
@@ -55,10 +22,10 @@
               <button class="btn btn-primary">Validate</button>
             </span>
             <span>
-              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="!pr.shortName || !pr.longName || !pr.type">Save</button>
+              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="idAndName.invalid || pr.state=='SUBMITTED'">Save</button>
             </span>
             <span>
-              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="pr.state=='SUBMITTED'">Submit</button>
+              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="idAndName.invalid || pr.state=='SUBMITTED'">Submit</button>
             </span>
           </div>
         </div>
@@ -70,7 +37,7 @@
           <tab heading="Program" id="tab1" role="tablist">
             <program-tab [pr]="pr" role="tabpanel"></program-tab>
           </tab>
-          <tab heading="Funds" id="tab2">
+          <tab heading="Funds" id="tab2" active="true">
             <funds-tab [pr]="pr" role="tabpanel"></funds-tab>
           </tab>
           <tab heading="Variants" id="tab3">

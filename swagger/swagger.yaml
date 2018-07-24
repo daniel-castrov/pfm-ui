@@ -2777,7 +2777,7 @@ definitions:
     type: "object"
     properties:
       year:
-        type: "integer"
+        type: "number"
       amount:
         type: "number"
   Variant:
@@ -3057,6 +3057,8 @@ definitions:
     properties:
       id:
         type: "string"
+      description:
+        type: "string"
       state:
         type: "string"
       fundingLines:
@@ -3157,6 +3159,20 @@ definitions:
         type: "integer"
       outlays:
         type: "integer"
+      initial:
+        type: "integer"
+      craTotal:
+        type: "integer"
+      apprTotal:
+        type: "integer"
+      ousdcTotal:
+        type: "integer"
+      btrTotal:
+        type: "integer"
+      realignedTotal:
+        type: "integer"
+      hasTransactions:
+        type: "boolean"
       phaseId:
         type: "string"
       spendPlans:
