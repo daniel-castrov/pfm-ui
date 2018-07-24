@@ -71,7 +71,7 @@ export class FundsUpdateComponent implements OnInit {
       gridAutoHeight: true,
       pagination: true,
       paginationPageSize: 30,
-      suppressPaginationPanel: false,
+      suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
         programlkp: my.programs
@@ -81,30 +81,30 @@ export class FundsUpdateComponent implements OnInit {
           headerName: "Program",
           cellRenderer: 'programCellRendererComponent',
           comparator: namesorter,
-          width: 140,
-          minWidth: 120,
-          cellClass: ['ag-cell-light-grey','clickable'],
+          width: 130,
+          minWidth: 130,
+          cellClass: ['ag-cell-light-grey','ag-clickable'],
           valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',
           field: 'appropriation',
-          width: 70,
-          minWidth: 70,
+          width: 100,
+          minWidth: 100,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Budget',
           field: 'blin',
-          width: 90,
-          minWidth: 90,
+          width: 80,
+          minWidth: 80,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Item',
           field: 'item',
-          width: 70,
-          minWidth: 70,
+          width: 80,
+          minWidth: 80,
           cellClass: ['ag-cell-light-grey']
         },
         {
@@ -112,70 +112,54 @@ export class FundsUpdateComponent implements OnInit {
           field: 'opAgency',
           width: 90,
           minWidth: 90,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey','text-center']
         },
         {
           headerName: 'Initial Funds',
           field: 'initial',
-          width: 100,
-          minWidth: 100,
-          cellClass: ['ag-cell-light-green']
+          width: 90,
+          minWidth: 90,
+          cellClass: ['ag-cell-light-green','text-right']
         },
         {
           headerName: 'CRA',
           field: 'craTotal',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-white']
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Realigned',
           field: 'realignedTotal',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-white']
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Appr. Actions',
           field: 'apprTotal',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-white']
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'OUSD(C) Actions',
           field: 'ousdcTotal',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-white']
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'BTR',
           field: 'btrTotal',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-white']
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Withheld',
           field: 'withheld',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-dark-green']
+          cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'TOA',
           field: 'toa',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-dark-green']
+          cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'Released',
           field: 'released',
-          width: 92,
-          minWidth: 92,
-          cellClass: ['ag-cell-dark-green']
+          cellClass: ['ag-cell-dark-green','text-right']
         },
       ]
     };
@@ -318,4 +302,21 @@ export class FundsUpdateComponent implements OnInit {
     console.log(params);
     return this.programs.get(params.data.mrId);
   }
+
+
+    onBtFirst() {
+      this.agGrid.api.paginationGoToFirstPage();
+    }
+
+    onBtLast() {
+      this.agGrid.api.paginationGoToLastPage();
+    }
+
+    onBtNext() {
+      this.agGrid.api.paginationGoToNextPage();
+    }
+
+    onBtPrevious() {
+      this.agGrid.api.paginationGoToPreviousPage();
+    }
 }
