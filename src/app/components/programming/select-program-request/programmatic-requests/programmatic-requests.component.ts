@@ -83,6 +83,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         headerName: 'Status',
         valueGetter: params => this.getStatus(params),
         cellClass: params => this.getStatusClass(params),
+        cellStyle: { backgroundColor: "#eae9e9" },
         cellRenderer: 'summaryProgramCellRenderer',
         width: 60
       },
