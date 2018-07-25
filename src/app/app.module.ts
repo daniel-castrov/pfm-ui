@@ -128,6 +128,7 @@ import { FileUploadComponent } from "./components/file-upload/file-upload.compon
 import {LibraryComponent} from "./components/manage/library/library.component";
 import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
 import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
+import {LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -263,10 +264,12 @@ const appRoutes: Routes = [
     WorksheetComponent,
     FileUploadComponent,
     LibraryComponent,
-    ProgramCellRendererComponent
+    ProgramCellRendererComponent,
+    LibraryViewCellRenderer
   ],
   entryComponents: [
-    ProgramCellRendererComponent
+    ProgramCellRendererComponent,
+    LibraryViewCellRenderer
   ],
   imports: [
     AccordionModule.forRoot(),

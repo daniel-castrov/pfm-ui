@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 // Other Components
-import {FileResponse, UserService} from "../../generated";
+import {FileResponse, LibraryService} from "../../generated";
 
 declare const $: any;
 
@@ -18,7 +18,7 @@ export class FileUploadComponent implements OnInit {
 
   fileName: string;
 
-  constructor(private userService: UserService) {}
+  constructor(private libraryService: LibraryService) {}
 
   ngOnInit() {}
 
@@ -29,7 +29,7 @@ export class FileUploadComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.fileName = file.name;
-        this.userService.uploadFile(file, this.area).subscribe(response => {
+        this.libraryService.uploadFile(file, this.area).subscribe(response => {
           if (response.result) {
             this.fileUploadEvent.emit(response.result);
           }
