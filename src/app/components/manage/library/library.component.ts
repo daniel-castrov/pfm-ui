@@ -119,7 +119,7 @@ export class LibraryComponent implements OnInit {
   }
 
   dateFormatter(params){
-    let dateFormat = 'dd/MM/yyyy hh:mm:ss a';
+    let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
     let parsedDate = Date.parse(params.value);
     return this.datePipe.transform(parsedDate, dateFormat);
   }
