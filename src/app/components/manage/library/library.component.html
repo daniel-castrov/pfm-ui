@@ -9,12 +9,7 @@
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <button class="btn btn-primary btn float-right">Action</button>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-12">
-          <div>
+          <div *ngIf="data?.length > 15">
             Page Size:
             <select class="form-control-sm dropdown-width mb-2" id="page-size">
               <option value="15" selected>15</option>
