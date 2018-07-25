@@ -14,13 +14,28 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-          <ag-grid-angular #agGrid class="ag-theme-balham"
+        <ag-grid-angular #agGrid class="ag-theme-balham"
             [gridOptions]="agOptions"
             [rowData]="exelines"
             [rowSelection]="'single'"
             (selectionChanged)="onSelectionChanged($event)"
             (gridReady)="onGridReady($event)">
-          </ag-grid-angular>
+        </ag-grid-angular>
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" (click)="onBtFirst()">First</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" (click)="onBtPrevious()">Previous</a>
+          </li>
+          <li class="page-link align-self-center disabled">Page {{currentPage}} of {{totalPages}}</li>
+          <li class="page-item">
+            <a class="page-link" (click)="onBtNext()">Next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" (click)="onBtLast()">Last</a>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="row">
