@@ -19,6 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { environment } from '../environments/environment'
 import { AgGridModule } from 'ag-grid-angular';
+import 'ag-grid-enterprise';
 
 // COMPONENTS
 import { AboutComponent } from './components/about/about.component';
