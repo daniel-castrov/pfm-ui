@@ -38,7 +38,7 @@
             <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable"
               [gridOptions]="gridOptionsCommunity"
               [rowData]="rowsCommunity"
-              >
+              [pinnedTopRowData]="pinnedRowCommunityBaseline">
             </ag-grid-angular>
           </div>
         </div>
@@ -100,7 +100,7 @@
             </div>
             <div class="modal-body">
               <p>Clicking <u>Continue</u> will update all TOAs for the current POM Session 
-                and revert any currently <b>"Submitted"</b> Program Requests to the <b>"Outstanding"</b> state.</p>
+                and revert any currently <b>"Submitted"</b> Program Requests to the <b>"Saved"</b> state.</p>
               <span class="controls mb-2">
                   <button class="btn btn-primary btn" data-dismiss="modal">Cancel</button>
                   <button class="btn btn-primary btn" data-dismiss="modal" (click)="updatePom()">Continue</button>
