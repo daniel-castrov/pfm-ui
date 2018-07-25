@@ -115,54 +115,72 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Initial Funds',
           field: 'initial',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-light-green','text-right']
         },
         {
           headerName: 'CRA',
           field: 'craTotal',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Realigned',
           field: 'realignedTotal',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Appr. Actions',
           field: 'apprTotal',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'OUSD(C) Actions',
           field: 'ousdcTotal',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'BTR',
           field: 'btrTotal',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Withheld',
           field: 'withheld',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'TOA',
           field: 'toa',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'Released',
           field: 'released',
           width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
       ]
