@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions }  from 'ag-grid';
-import { HeaderComponent } from '../../../components/header/header.component';
-import { GlobalsService } from './../../../services/globals.service';
+import { HeaderComponent } from '../../header/header.component';
+import { GlobalsService } from '../../../services/globals.service';
+import { NumericCellEditor } from './numeric-celleditior.component';
 import { CommunityService, OrganizationService, PBService, POMService, EppService, ProgramsService} from '../../../generated';
 import { Community, Organization, TOA, Pom, PB, Program} from '../../../generated';
 
@@ -59,12 +60,18 @@ export class CreatePomSessionComponent implements OnInit {
       columnDefs : this.setAgGridColDefs("Community", fy),
       gridAutoHeight : true,
       onCellValueChanged : params => this.setDeltaRow(fy),
+      frameworkComponents: {
+        numericCellEditor: NumericCellEditor    
+      }
     }
 
     this.gridOptionsOrgs = {
       columnDefs : this.setAgGridColDefs("Organization", fy),
       gridAutoHeight : true,
       onCellValueChanged : params => this.setDeltaRow(fy),
+      frameworkComponents: {
+        numericCellEditor: NumericCellEditor    
+      }
     }
   }
 
@@ -88,7 +95,8 @@ export class CreatePomSessionComponent implements OnInit {
           field: (fy+ i).toString(), 
           width: 100,
           editable: params => this.shouldEdit(params),
-          cellRenderer: params => this.negativeNumberRenderer(params)
+          cellRenderer: params => this.negativeNumberRenderer(params),
+          cellEditor: "numericCellEditor",
         });
     }
     colDefs.push( 
