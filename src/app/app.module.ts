@@ -29,6 +29,7 @@ import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
 import { ApproveRequestsComponent } from './components/user-management/approve-requests/approve-requests.component';
+import { NumericCellEditor } from './components/programming/create-pom-session/numeric-celleditior.component';
 import { ChargesComponent } from './components/execution/charges/charges.component';
 import { CommunityJoinComponent } from './components/user-management/approval-community/community-join.component';
 import { CommunityLeaveComponent } from './components/user-management/approval-community/community-leave.component';
@@ -188,6 +189,7 @@ const appRoutes: Routes = [
     BulkTabComponent,
     HeaderUserComponent,
     CalculateTabComponent,
+    NumericCellEditor,
     ChargesComponent,
     CommunityJoinComponent,
     CommunityLeaveComponent,
@@ -283,7 +285,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([NumericCellEditor])
   ],
   providers: [
     AssignRoleRequestService,
