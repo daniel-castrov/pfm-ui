@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
-import * as $ from 'jquery'
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component'
@@ -12,9 +11,6 @@ import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
-declare const $: any;
-declare const jQuery: any;
-
 @Component({
   selector: 'funds-update',
   templateUrl: './funds-update.component.html',
@@ -24,6 +20,8 @@ declare const jQuery: any;
 export class FundsUpdateComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
+
+
 
   private exephases: Execution[];
   private selectedexe: Execution;
@@ -35,7 +33,8 @@ export class FundsUpdateComponent implements OnInit {
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-
+  private currentPage: number;
+  private totalPages: number;
   private mrid: string;
   private appropriation: string;
   private blin: string;
@@ -53,8 +52,8 @@ export class FundsUpdateComponent implements OnInit {
       programCellRendererComponent: ProgramCellRendererComponent
     };
 
-    my.progsvc.getIdNameMap().subscribe(data => { 
-      Object.getOwnPropertyNames(data.result).forEach(mrId => { 
+    my.progsvc.getIdNameMap().subscribe(data => {
+      Object.getOwnPropertyNames(data.result).forEach(mrId => {
         my.programs.set(mrId, data.result[mrId]);
       });
     });
@@ -75,7 +74,7 @@ export class FundsUpdateComponent implements OnInit {
       gridAutoHeight: true,
       pagination: true,
       paginationPageSize: 30,
-      suppressPaginationPanel: false,
+      suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
         programlkp: my.programs
@@ -85,79 +84,124 @@ export class FundsUpdateComponent implements OnInit {
           headerName: "Program",
           cellRenderer: 'programCellRendererComponent',
           comparator: namesorter,
+          cellClass: ['ag-cell-light-grey','ag-clickable'],
           valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',
-          field: 'appropriation'
+          field: 'appropriation',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Budget',
-          field: 'blin'
+          field: 'blin',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Item',
-          field: 'item'
+          field: 'item',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'opAgency',
-          field: 'opAgency'
+          field: 'opAgency',
+          width: 92,
+          cellClass: ['ag-cell-light-grey','text-center']
         },
         {
           headerName: 'Initial Funds',
-          field: 'initial'
+          field: 'initial',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-light-green','text-right']
         },
         {
           headerName: 'CRA',
-          field: 'craTotal'
+          field: 'craTotal',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Realigned',
-          field: 'realignedTotal'
+          field: 'realignedTotal',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Appr. Actions',
-          field: 'apprTotal'
+          field: 'apprTotal',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'OUSD(C) Actions',
-          field: 'ousdcTotal'
+          field: 'ousdcTotal',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'BTR',
-          field: 'btrTotal'
+          field: 'btrTotal',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Withheld',
-          field: 'withheld'
+          field: 'withheld',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'TOA',
-          field: 'toa'
+          field: 'toa',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'Released',
-          field: 'released'
+          field: 'released',
+          width: 92,
+          suppressSorting: true,
+          suppressFilter: true,
+          cellClass: ['ag-cell-dark-green','text-right']
         },
       ]
-    };        
+    };
   }
 
   ngOnInit() {
     var my: FundsUpdateComponent = this;
-    my.usersvc.getCurrentUser().subscribe(deets => { 
+    my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
         my.progsvc.getIdNameMap(),
         //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
         my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
-      ]).subscribe(data => { 
+      ]).subscribe(data => {
         var lookup: {id:string, name:string}[] = [];
-        Object.getOwnPropertyNames(data[0].result).forEach(mrid => { 
+        Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
           lookup.push( {id:mrid, name: data[0].result[mrid]})
         });
 
 
-        lookup.sort((a, b) => { 
+        lookup.sort((a, b) => {
           if (a.name === b.name) {
             return 0;
           }
@@ -180,7 +224,7 @@ export class FundsUpdateComponent implements OnInit {
   fetchLines() {
     var my: FundsUpdateComponent = this;
 
-    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => { 
+    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.allexelines = data.result;
       my.refreshFilterDropdowns();
       my.filter();
@@ -255,7 +299,7 @@ export class FundsUpdateComponent implements OnInit {
       mrId: this.mrid,
       toa:this.funds
     };
-    
+
     this.allexelines.push(newline);
     this.refreshFilterDropdowns();
     this.filter();
@@ -274,10 +318,45 @@ export class FundsUpdateComponent implements OnInit {
 
   onGridReady(params) {
     params.api.sizeColumnsToFit();
+    window.addEventListener("resize", function() {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
   }
 
   fullname(params): string {
     console.log(params);
     return this.programs.get(params.data.mrId);
   }
+
+
+    onBtFirst() {
+      this.agGrid.api.paginationGoToFirstPage();
+    }
+
+    onBtLast() {
+      this.agGrid.api.paginationGoToLastPage();
+    }
+
+    onBtNext() {
+      this.agGrid.api.paginationGoToNextPage();
+    }
+
+    onBtPrevious() {
+      this.agGrid.api.paginationGoToPreviousPage();
+    }
+
+    onPaginationChanged() {
+      if (this.agGrid.api) {
+        this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
+        this.totalPages = this.agGrid.api.paginationGetTotalPages();
+      }
+    }
+
+    onPageSizeChanged(event) {
+      var selectedValue = Number(event.target.value);
+      this.agGrid.api.paginationSetPageSize(selectedValue);
+      this.agGrid.api.sizeColumnsToFit();
+    }
 }
