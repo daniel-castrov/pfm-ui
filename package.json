@@ -26,6 +26,7 @@
     "@ng-bootstrap/ng-bootstrap": "^1.1.2",
     "ag-grid": "^18.0.1",
     "ag-grid-angular": "^18.0.1",
+    "ag-grid-enterprise": "^18.1.1",
     "angular-dual-listbox": "^4.7.0",
     "angular-popper": "^1.0.0-beta-1",
     "bootstrap": "^4.1.0",
