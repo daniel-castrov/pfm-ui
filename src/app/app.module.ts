@@ -102,7 +102,6 @@ import { HeaderOpenComponent } from './components/header/header-open/header-open
 import { POMService } from './generated/api/pOM.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
-import { PrTableComponent } from './components/programming/select-program-request/pr-table/pr-table.component';
 import { UFRsService } from './generated/api/uFRs.service';
 import { ExecutionService } from './generated/api/execution.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
@@ -163,7 +162,6 @@ const appRoutes: Routes = [
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-request', component:ProgramRequestComponent},
-  {path:'pr-table', component:PrTableComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
@@ -237,7 +235,6 @@ const appRoutes: Routes = [
     OnlyDigitsDirective,
     PlanningComponent,
     PomComponent,
-    PrTableComponent,
     VariantsTabComponent,
     ProgramRequestComponent,
     ProgramTabComponent,
