@@ -126,6 +126,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     columnKeys = Array.from(new Set(columnKeys));
     Array.from(columnKeys).forEach((year, index) => {
       let subHeader;
+      let cellClass = [];
       switch(Number(year)) {
         case (this.pomFy + 4):
           subHeader = 'BY+4';
@@ -144,21 +145,24 @@ export class ProgrammaticRequestsComponent implements OnChanges {
           break;
         case this.pomFy - 1:
           subHeader = 'CY';
+          cellClass = ['ag-cell-white'];
           break;
         case this.pomFy - 2:
           subHeader = 'PY';
+          cellClass = ['ag-cell-white'];
           break;
         case this.pomFy -3:
           subHeader = 'PY-1';
+          cellClass = ['ag-cell-white'];
           break;
       }
       if (subHeader) {
         let colDef = {
           headerName: subHeader,
-          cellClass: ['ag-cell-white'],
           children: [{
             headerName: year,
             maxWidth: 92,
+            cellClass: cellClass,
             type: "numericColumn",
             valueGetter: params => {return this.getToa(params.data, year)}
           }]
