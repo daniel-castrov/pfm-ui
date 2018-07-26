@@ -24,7 +24,7 @@
       </div>
 
       <div class="row">
-        <div class="col-6">
+        <div class="col-5">
           <span class="font-weight-bold toa-table-title">Set TOA for {{community.abbreviation}} Community ($K)</span>
         </div>
         <div class="col-1">
@@ -49,7 +49,7 @@
         <div class="col-5">
           <span class="font-weight-bold toa-table-title">Set Organization's sub-TOA ($K)</span>
         </div>
-        <div class="col-2">
+        <div class="col-1">
           <ng-container *ngIf="!pomIsCreated">
             <input type="checkbox" id="eppToggle" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
           </ng-container>
@@ -81,7 +81,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-12 col-lg-8">
+        <div class="col-md-12 col-lg-6">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
             <div *ngIf="editsOk">
