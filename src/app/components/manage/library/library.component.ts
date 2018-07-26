@@ -128,11 +128,22 @@ export class LibraryComponent implements OnInit {
     this.libraryService.downloadFile(fileId, fileArea).subscribe(response => {
       if (response.result) {
         let fileResponse = response.result as FileResponse;
-        let filePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
-        var win = window.open();
-        win.document.write('<iframe src="' + filePath  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; margin: -8px!important;" allowfullscreen></iframe>');
+        this.convertAndOpen(fileResponse.content, fileResponse.contentType);
       }
     });
+  }
+
+  convertAndOpen(content, type){
+    var byteCharacters = atob(content);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], {type: type});
+
+    var url= window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
   onBtnFirst() {
