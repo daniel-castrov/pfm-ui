@@ -59,6 +59,8 @@ export class CreatePomSessionComponent implements OnInit {
     this.gridOptionsCommunity = {
       columnDefs : this.setAgGridColDefs("Community", fy),
       gridAutoHeight : true,
+      suppressDragLeaveHidesColumns:true,
+      suppressMovableColumns: true,
       onCellValueChanged : params => this.setDeltaRow(fy),
       frameworkComponents: {
         numericCellEditor: NumericCellEditor    
@@ -68,6 +70,8 @@ export class CreatePomSessionComponent implements OnInit {
     this.gridOptionsOrgs = {
       columnDefs : this.setAgGridColDefs("Organization", fy),
       gridAutoHeight : true,
+      suppressDragLeaveHidesColumns:true,
+      suppressMovableColumns: true,
       onCellValueChanged : params => this.setDeltaRow(fy),
       frameworkComponents: {
         numericCellEditor: NumericCellEditor    
