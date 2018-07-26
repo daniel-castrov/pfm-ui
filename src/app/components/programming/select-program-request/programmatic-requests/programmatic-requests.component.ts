@@ -53,7 +53,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         data.push(pr);
       });
       this.data = data;
-      console.log(this.data)
       this.defineColumns(this.data);
     }
     setTimeout(() => {
