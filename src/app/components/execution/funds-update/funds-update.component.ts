@@ -330,33 +330,9 @@ export class FundsUpdateComponent implements OnInit {
     return this.programs.get(params.data.mrId);
   }
 
-
-    onBtFirst() {
-      this.agGrid.api.paginationGoToFirstPage();
-    }
-
-    onBtLast() {
-      this.agGrid.api.paginationGoToLastPage();
-    }
-
-    onBtNext() {
-      this.agGrid.api.paginationGoToNextPage();
-    }
-
-    onBtPrevious() {
-      this.agGrid.api.paginationGoToPreviousPage();
-    }
-
-    onPaginationChanged() {
-      if (this.agGrid.api) {
-        this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
-        this.totalPages = this.agGrid.api.paginationGetTotalPages();
-      }
-    }
-
-    onPageSizeChanged(event) {
-      var selectedValue = Number(event.target.value);
-      this.agGrid.api.paginationSetPageSize(selectedValue);
-      this.agGrid.api.sizeColumnsToFit();
-    }
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
 }
