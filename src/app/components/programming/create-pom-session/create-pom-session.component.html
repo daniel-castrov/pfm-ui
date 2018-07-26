@@ -8,7 +8,7 @@
     <div class="col-12">
 
       <div class="row">
-        <div class="col-lg-5 col-md-10">
+        <div class="col-12">
           <div class="h5 mb-2">
             <ng-container *ngIf="editsOk && !pomIsCreated">
               <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy| FY}}</span>
@@ -21,18 +21,18 @@
             </ng-container>
           </div>
         </div>
-        <div class="col-lg-1 col-md-2">
-          <button class="btn" (click)="reload()">Reload</button>
-        </div>
       </div>
 
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-6">
           <span class="font-weight-bold toa-table-title">Set TOA for {{community.abbreviation}} Community ($K)</span>
         </div>
+        <div class="col-1">
+          <button class="btn btn-secondary pull-right" (click)="reload()">Reload</button>
+        </div>
       </div>
 
-      <div class="row">
+      <div class="row mb-2">
         <div class="col-12">
           <div>
             <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable"
@@ -46,10 +46,10 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-5 col-md-10">
+        <div class="col-5">
           <span class="font-weight-bold toa-table-title">Set Organization's sub-TOA ($K)</span>
         </div>
-        <div class="col-lg-2 col-md-4">
+        <div class="col-2">
           <ng-container *ngIf="!pomIsCreated">
             <input type="checkbox" id="eppToggle" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
           </ng-container>
@@ -81,7 +81,7 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-md-12 col-lg-8">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
             <div *ngIf="editsOk">
