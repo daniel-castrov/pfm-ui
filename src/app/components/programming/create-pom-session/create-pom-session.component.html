@@ -42,7 +42,8 @@
               [gridOptions]="gridOptionsCommunity"
               [rowData]="rowsCommunity"
               [toolPanelSuppressSideButtons]="true"
-              [pinnedTopRowData]="pinnedRowCommunityBaseline">
+              [pinnedTopRowData]="pinnedRowCommunityBaseline"
+              (gridReady) = "onGridReady($event)">
             </ag-grid-angular>
           </div>
         </div>
@@ -66,7 +67,8 @@
               [gridOptions]="gridOptionsOrgs"
               [rowData]="rowsOrgs"
               [toolPanelSuppressSideButtons]="true"
-              [pinnedBottomRowData]="pinnedRowOrgsDelta">
+              [pinnedBottomRowData]="pinnedRowOrgsDelta"
+              (gridReady) = "onGridReady($event)">
             </ag-grid-angular>
           </div>
         </div>
