@@ -90,7 +90,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       {
         headerName: 'Cycle',
         width: 50,
-        cellClass: ['ag-cell-light-grey'],
+        cellClass: ['ag-cell-white'],
         valueGetter: params => {
           if (params.data.type == 'pb') {
             return 'PB' + (this.pbFy - 2000);
@@ -141,6 +141,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       if (subHeader) {
         let colDef = {
           headerName: subHeader,
+          cellClass: ['ag-cell-white'],
           children: [{
             headerName: year,
             maxWidth: 92,

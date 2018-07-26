@@ -482,6 +482,7 @@ tab {
 
 .ag-cell-white {
   background-color: $white;
+  color: $black;
 }
 
 .ag-clickable {
@@ -491,4 +492,30 @@ tab {
   &:hover {
     text-decoration: none;
   }
+}
+
+
+// hack for top header of PR table
+
+.pr-table {
+
+  .ag-header-group-cell-no-group,
+   .ag-header-group-cell {
+      text-align: center !important;
+      background-color: $white !important;
+
+      &.ag-header-group-cell-with-group {
+        background-color: $white !important;
+      }
+
+      .ag-header-group-text {
+          color: $black !important;
+          text-align: center !important;
+          width: 92px;
+      }
+    }
+    .ag-header-group-text {
+        color: $black !important;
+        text-align: center !important;
+    }
 }
