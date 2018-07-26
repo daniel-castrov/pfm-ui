@@ -268,7 +268,7 @@ const appRoutes: Routes = [
     WorksheetComponent,
     FileUploadComponent,
     ProgramCellRendererComponent,
-    AgGridPaginationComponent
+    AgGridPaginationComponent,
     LibraryComponent,
     ProgramCellRendererComponent,
     LibraryViewCellRenderer
