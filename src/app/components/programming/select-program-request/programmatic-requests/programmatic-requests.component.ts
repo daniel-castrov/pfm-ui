@@ -52,6 +52,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         pr.type = 'pb';
         data.push(pr);
       });
+      this.sortObjects(data, ['fullname', ['type', 'desc']]);
       this.data = data;
       this.defineColumns(this.data);
     }
@@ -74,7 +75,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       {
         headerName: 'Program',
         field: 'fullname',
-        sort: "asc",
         cellClass: ['ag-cell-light-grey','ag-clickable', 'row-span'],
         cellRenderer: 'summaryProgramCellRenderer',
         rowSpan: function(params) {
@@ -87,6 +87,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       },
       {
         headerName: 'Status',
+        suppressSorting: true,
         valueGetter: params => this.getStatus(params),
         cellClass: params => this.getStatusClass(params),
         cellStyle: { backgroundColor: "#eae9e9" },
@@ -103,6 +104,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       {
         headerName: 'Cycle',
         width: 50,
+        suppressSorting: true,
         cellClass: ['ag-cell-white'],
         valueGetter: params => {
           if (params.data.type == 'pb') {
@@ -227,32 +229,48 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     return 'text-primary row-span';
   }
 
-  onBtFirst() {
-    this.agGrid.api.paginationGoToFirstPage();
-  }
-
-  onBtLast() {
-    this.agGrid.api.paginationGoToLastPage();
-  }
-
-  onBtNext() {
-    this.agGrid.api.paginationGoToNextPage();
-  }
-
-  onBtPrevious() {
-    this.agGrid.api.paginationGoToPreviousPage();
-  }
-
-  onPaginationChanged() {
-    if (this.agGrid.api) {
-      this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
-      this.totalPages = this.agGrid.api.paginationGetTotalPages();
-    }
-  }
-
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);
     this.agGrid.api.paginationSetPageSize(selectedValue);
     this.agGrid.api.sizeColumnsToFit();
+  }
+
+  sortObjects(objArray, properties) {
+    var primers = arguments[2] || {};
+
+    properties = properties.map(function(prop) {
+      if( !(prop instanceof Array) ) {
+        prop = [prop, 'asc']
+      }
+      if( prop[1].toLowerCase() == 'desc' ) {
+        prop[1] = -1;
+      } else {
+        prop[1] = 1;
+      }
+      return prop;
+    });
+
+    function valueCmp(x, y) {
+      return x > y ? 1 : x < y ? -1 : 0;
+    }
+
+    function arrayCmp(a, b) {
+      var arr1 = [], arr2 = [];
+      properties.forEach(function(prop) {
+        var aValue = a[prop[0]],
+          bValue = b[prop[0]];
+        if( typeof primers[prop[0]] != 'undefined' ) {
+          aValue = primers[prop[0]](aValue);
+          bValue = primers[prop[0]](bValue);
+        }
+        arr1.push( prop[1] * valueCmp(aValue, bValue) );
+        arr2.push( prop[1] * valueCmp(bValue, aValue) );
+      });
+      return arr1 < arr2 ? -1 : 1;
+    }
+
+    objArray.sort(function(a, b) {
+      return arrayCmp(a, b);
+    });
   }
 }
