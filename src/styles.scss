@@ -480,11 +480,67 @@ tab {
   background-color: $white;
 }
 
-.ag-clickable {
-  cursor: pointer;
-  text-decoration: underline;
-  color: $primary-color;
+.ag-cell-edit {
+  background-color: #c6d9f1;
+  color: $black;
+  text-align: right;
   &:hover {
-    text-decoration: none;
+    cursor: pointer;
+    background-color: $light-grey;
   }
+}
+
+.ag-cell-light-green {
+  background-color: $light-green;
+  color: $black;
+}
+
+.ag-cell-dark-green {
+  background-color: $dark-green;
+  color: $white;
+}
+
+.ag-cell-light-grey {
+  background-color: $light-grey;
+  color: $black;
+}
+
+.ag-medium-gray-cell {
+  background-color: $medium-grey;
+  color: $black;
+}
+
+.ag-cell-white {
+  background-color: $white;
+  color: $black;
+}
+
+.ag-clickable {
+  color: $primary-color;
+}
+
+// hack for top header of PR table
+
+.pr-table {
+
+  .ag-header-group-cell-no-group,
+   .ag-header-group-cell {
+      text-align: center !important;
+      background-color: $white !important;
+
+      &.ag-header-group-cell-with-group {
+        background-color: $white !important;
+      }
+
+      .ag-header-group-text {
+          color: $black !important;
+          text-align: center !important;
+          width: 92px;
+      }
+    }
+    .ag-header-group-text {
+        color: $black !important;
+        font-style: italic;
+        text-align: center !important;
+    }
 }
