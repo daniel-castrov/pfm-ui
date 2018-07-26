@@ -121,14 +121,17 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService } from './generated';
+import { EppService, LibraryService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
+import { LibraryComponent } from "./components/manage/library/library.component";
 import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
 import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
+import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
+import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-pagination/ag-grid-pagination.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -172,9 +175,10 @@ const appRoutes: Routes = [
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
-  {path:'create-new-pom', component: CreatePomSessionComponent },
   {path:'worksheet-management', component: WorksheetManagementComponent},
-  {path:'worksheet', component: WorksheetComponent}
+  {path:'worksheet', component: WorksheetComponent},
+  {path:'create-new-pom', component: CreatePomSessionComponent },
+  {path:'library', component: LibraryComponent}
 ];
 
 @NgModule({
@@ -263,10 +267,15 @@ const appRoutes: Routes = [
     ExecutionLineTableComponent,
     WorksheetComponent,
     FileUploadComponent,
-    ProgramCellRendererComponent
+    ProgramCellRendererComponent,
+    AgGridPaginationComponent,
+    LibraryComponent,
+    ProgramCellRendererComponent,
+    LibraryViewCellRenderer
   ],
   entryComponents: [
-    ProgramCellRendererComponent
+    ProgramCellRendererComponent,
+    LibraryViewCellRenderer
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -317,6 +326,7 @@ const appRoutes: Routes = [
     UFRsService,
     EppService,
     ExecutionService,
+    LibraryService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
   ],

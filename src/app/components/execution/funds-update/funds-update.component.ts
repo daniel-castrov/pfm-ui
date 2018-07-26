@@ -30,8 +30,6 @@ export class FundsUpdateComponent implements OnInit {
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-  private currentPage: number;
-  private totalPages: number;
   private mrid: string;
   private appropriation: string;
   private blin: string;
@@ -308,33 +306,9 @@ export class FundsUpdateComponent implements OnInit {
     });
   }
 
-
-    onBtFirst() {
-      this.agGrid.api.paginationGoToFirstPage();
-    }
-
-    onBtLast() {
-      this.agGrid.api.paginationGoToLastPage();
-    }
-
-    onBtNext() {
-      this.agGrid.api.paginationGoToNextPage();
-    }
-
-    onBtPrevious() {
-      this.agGrid.api.paginationGoToPreviousPage();
-    }
-
-    onPaginationChanged() {
-      if (this.agGrid.api) {
-        this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
-        this.totalPages = this.agGrid.api.paginationGetTotalPages();
-      }
-    }
-
-    onPageSizeChanged(event) {
-      var selectedValue = Number(event.target.value);
-      this.agGrid.api.paginationSetPageSize(selectedValue);
-      this.agGrid.api.sizeColumnsToFit();
-    }
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
 }

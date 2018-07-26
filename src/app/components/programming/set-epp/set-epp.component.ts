@@ -7,7 +7,6 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EppService } from '../../../generated/api/epp.service';
 import { GlobalsService } from '../../../services/globals.service';
-import { User } from '../../../generated';
 
 declare const $: any;
 
@@ -24,8 +23,6 @@ export class SetEppComponent implements OnInit {
   fileName: string;
   responseError: string;
   data = [];
-  currentPage: number;
-  totalPages: number;
   communityId:string;
 
   @ViewChild(HeaderComponent) header;
@@ -85,29 +82,6 @@ export class SetEppComponent implements OnInit {
     this.responseError = '';
     this.fileInput.nativeElement.value = '';
     this.form.get('epp-input-file').setValue(null);
-  }
-
-  onBtFirst() {
-    this.agGrid.api.paginationGoToFirstPage();
-  }
-
-  onBtLast() {
-    this.agGrid.api.paginationGoToLastPage();
-  }
-
-  onBtNext() {
-    this.agGrid.api.paginationGoToNextPage();
-  }
-
-  onBtPrevious() {
-    this.agGrid.api.paginationGoToPreviousPage();
-  }
-
-  onPaginationChanged() {
-    if (this.agGrid.api) {
-      this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
-      this.totalPages = this.agGrid.api.paginationGetTotalPages();
-    }
   }
 
   onPageSizeChanged(event) {
