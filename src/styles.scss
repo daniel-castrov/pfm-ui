@@ -544,3 +544,11 @@ tab {
         text-align: center !important;
     }
 }
+
+
+// hack for floating bottom / pinned row for sub toa table
+.sub-toa {
+  .ag-floating-bottom {
+    border-top: 1px solid $black;
+  }
+}
