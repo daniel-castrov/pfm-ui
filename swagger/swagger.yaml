@@ -29,6 +29,7 @@ tags:
 - name: "UserRoleResource"
 - name: "Epp"
 - name: "Execution"
+- name: "Library"
 
 #
 ##############################################################################
@@ -1484,51 +1485,6 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
-  /users/uploadFile:
-    post:
-      tags:
-      - "User"
-      operationId: "uploadFile"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
-      parameters:
-      - in: "formData"
-        name: "file"
-        description: "upload a document to the server"
-        required: true
-        type: file
-      - in: "query"
-        name: "area"
-        description: "the area where the file is going to be stored"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-  /users/downloadFile:
-    get:
-      tags:
-      - "User"
-      operationId: "downloadFile"
-      parameters:
-      - in: "query"
-        name: "id"
-        required: true
-        type: "string"
-      - in: "query"
-        name: "area"
-        description: "the area where the file is located"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
   /users/community/{commId}:
     get:
       tags:
@@ -2299,6 +2255,44 @@ paths:
       description: "Returns the execution lines"
       produces:
       - "application/json"
+    put:
+      operationId: "createExecutionLine"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "line"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExecutionLine"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution lines for this execution phase"
+      description: "Returns the execution lines"
+      produces:
+      - "application/json"
+  /executiontransfer/phase/{phaseId}:
+    get:
+      operationId: "getExecutionTransfersByPhase"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution transfers for this execution phase"
+      description: "Returns the execution transfers"
+      produces:
+      - "application/json"
   /executionlines/phase/{phaseId}/transfer:
     post:
       tags:
@@ -2459,6 +2453,61 @@ paths:
       - "application/json"
 # STOP EXECUTION
 #################################################################
+# START LIBRARY
+  /library:
+    get:
+      tags:
+      - "Library"
+      summary: "Get all"
+      description: "Get all the documents in the library"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+  /library/uploadFile:
+    post:
+      tags:
+      - "Library"
+      operationId: "uploadFile"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "upload a document to the server"
+        required: true
+        type: file
+      - in: "query"
+        name: "area"
+        description: "the area where the file is going to be stored"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+  /library/downloadFile:
+    get:
+      tags:
+      - "Library"
+      operationId: "downloadFile"
+      parameters:
+      - in: "query"
+        name: "id"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "area"
+        description: "the area where the file is located"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
 # END PATHS
 #################################################################
 #
@@ -3223,5 +3272,15 @@ definitions:
         type: "string"
       contentType:
         type: "string"
+  FileMetadata:
+    type: "object"
+    properties:
+      metadata:
+        type: "object"
+        additionalProperties:
+        type: "object"
+        properties:
+          area:
+            type: "string"
 ##############################################################################
 # ENDFILE

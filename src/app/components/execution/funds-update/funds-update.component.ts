@@ -21,20 +21,15 @@ export class FundsUpdateComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-
-
   private exephases: Execution[];
   private selectedexe: Execution;
-  private allexelines: ExecutionLine[] = [];
-  private filteredexelines: ExecutionLine[] = [];
+  private exelines: ExecutionLine[] = [];
   private programs: Map<string, string> = new Map<string, string>();
   private appropriations: string[] = [];
   private blins: string[] = [];
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-  private currentPage: number;
-  private totalPages: number;
   private mrid: string;
   private appropriation: string;
   private blin: string;
@@ -77,7 +72,8 @@ export class FundsUpdateComponent implements OnInit {
       suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
-        programlkp: my.programs
+        programlkp: my.programs,
+        route: '/update-program-execution'
       },
       columnDefs: [
         {
@@ -216,18 +212,15 @@ export class FundsUpdateComponent implements OnInit {
         my.exephases = data[1].result;
         my.selectedexe = my.exephases[0];
         my.fetchLines();
-        my.filteredexelines = my.allexelines;
       });
     });
   }
 
   fetchLines() {
     var my: FundsUpdateComponent = this;
-
-    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
-      my.allexelines = data.result;
-      my.refreshFilterDropdowns();
-      my.filter();
+    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => { 
+      my.exelines = data.result;
+      this.refreshFilterDropdowns();
     });
   }
 
@@ -238,7 +231,7 @@ export class FundsUpdateComponent implements OnInit {
     var blinset: Set<string> = new Set<string>();
     var agencyset: Set<string> = new Set<string>();
 
-    my.allexelines.forEach((x: ExecutionLine) => {
+    my.exelines.forEach((x: ExecutionLine) => {
       if (x.appropriation) {
         apprset.add(x.appropriation.trim());
       }
@@ -279,17 +272,6 @@ export class FundsUpdateComponent implements OnInit {
     my.opAgencies.sort();
   }
 
-  filter() {
-    // filter our existing data based on the various dropdowns
-    var my: FundsUpdateComponent = this;
-    my.filteredexelines = my.allexelines
-      .filter(x => (my.mrid ? x.mrId === my.mrid : true))
-      .filter(x => (my.appropriation ? x.appropriation === my.appropriation : true))
-      .filter(x => (my.blin ? x.blin === my.blin : true))
-      .filter(x => (my.item ? x.item === my.item : true))
-      .filter(x => (my.opAgency ? x.opAgency === my.opAgency : true));
-  }
-
   addline() {
     var newline: ExecutionLine = {
       appropriation: this.appropriation,
@@ -297,23 +279,16 @@ export class FundsUpdateComponent implements OnInit {
       item: this.item,
       opAgency: this.opAgency,
       mrId: this.mrid,
-      toa:this.funds
+      toa: this.funds,
+      initial: this.funds
     };
-
-    this.allexelines.push(newline);
-    this.refreshFilterDropdowns();
-    this.filter();
-  }
-
-  highlight(row) {
-    this.selectedRow = row;
-    var exeline: ExecutionLine = this.filteredexelines[row];
-    if (exeline.id) {
-      this.router.navigate(['/update-program-execution', exeline.id]);
-    }
-    else {
-      console.log('new exeline...no id to lookup');
-    }
+    
+    this.exesvc.createExecutionLine(this.selectedexe.id, newline).subscribe(data => { 
+      newline.id = data.result;
+      this.agOptions.api.paginationGoToLastPage();
+      this.agOptions.api.addItems([newline]);
+      this.refreshFilterDropdowns();
+    });
   }
 
   onGridReady(params) {
@@ -325,38 +300,15 @@ export class FundsUpdateComponent implements OnInit {
     });
   }
 
-  fullname(params): string {
-    console.log(params);
-    return this.programs.get(params.data.mrId);
+  onSelectionChanged() {
+    this.agOptions.api.getSelectedRows().forEach(row => { 
+      this.selectedRow = row;
+    });
   }
 
-
-    onBtFirst() {
-      this.agGrid.api.paginationGoToFirstPage();
-    }
-
-    onBtLast() {
-      this.agGrid.api.paginationGoToLastPage();
-    }
-
-    onBtNext() {
-      this.agGrid.api.paginationGoToNextPage();
-    }
-
-    onBtPrevious() {
-      this.agGrid.api.paginationGoToPreviousPage();
-    }
-
-    onPaginationChanged() {
-      if (this.agGrid.api) {
-        this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
-        this.totalPages = this.agGrid.api.paginationGetTotalPages();
-      }
-    }
-
-    onPageSizeChanged(event) {
-      var selectedValue = Number(event.target.value);
-      this.agGrid.api.paginationSetPageSize(selectedValue);
-      this.agGrid.api.sizeColumnsToFit();
-    }
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
 }

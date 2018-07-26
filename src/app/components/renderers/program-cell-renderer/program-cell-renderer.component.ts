@@ -11,7 +11,7 @@ export class ProgramCellRendererComponent implements ICellRendererAngularComp {
   private progname;
   private _id;
 
-  constructor() { 
+  constructor() {
   }
 
   agInit(param) {
@@ -24,11 +24,15 @@ export class ProgramCellRendererComponent implements ICellRendererAngularComp {
       : this.params.data.mrId);
   }
 
-  id(): string{
+  id(): string {
     return this.params.data.id;
   }
 
-  refresh(): boolean { 
+  route(): string {
+    return this.params.context.route;
+  }
+
+  refresh(): boolean {
     return true;
   }
 }
