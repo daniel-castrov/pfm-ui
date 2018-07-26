@@ -498,7 +498,7 @@ tab {
 .pr-table {
 
   .ag-header-group-cell-no-group,
-   .ag-header-group-cell {
+  .ag-header-group-cell {
       text-align: center !important;
       background-color: $white !important;
 
@@ -512,8 +512,10 @@ tab {
           width: 92px;
       }
     }
+    
     .ag-header-group-text {
         color: $black !important;
         text-align: center !important;
+        font-style: italic;
     }
 }
