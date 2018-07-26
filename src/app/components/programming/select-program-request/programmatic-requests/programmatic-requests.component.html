@@ -11,7 +11,9 @@
 </div>
 <ag-grid-angular #agGrid
                  class="ag-theme-balham pr-table"
+                 [showToolPanel]="false"
                  [enableSorting]="true"
+                 [pivotMode]="false"
                  [enableFilter]="true"
                  [gridAutoHeight]="true"
                  [rowData]="data"
