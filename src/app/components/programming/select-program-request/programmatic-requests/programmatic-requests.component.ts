@@ -131,35 +131,41 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       switch(Number(year)) {
         case (this.pomFy + 4):
           subHeader = 'BY+4';
+          cellClass = ['text-right'];
           break;
         case this.pomFy + 3:
           subHeader = 'BY+3';
+          cellClass = ['text-right'];
           break;
         case this.pomFy + 2:
           subHeader = 'BY+2';
+          cellClass = ['text-right'];
           break;
         case this.pomFy + 1:
           subHeader = 'BY+1';
+          cellClass = ['text-right'];
           break;
         case this.pomFy:
           subHeader = 'BY';
+          cellClass = ['text-right'];
           break;
         case this.pomFy - 1:
           subHeader = 'CY';
-          cellClass = ['ag-cell-white'];
+          cellClass = ['ag-cell-white', 'text-right'];
           break;
         case this.pomFy - 2:
           subHeader = 'PY';
-          cellClass = ['ag-cell-white'];
+          cellClass = ['ag-cell-white', 'text-right'];
           break;
         case this.pomFy -3:
           subHeader = 'PY-1';
-          cellClass = ['ag-cell-white'];
+          cellClass = ['ag-cell-white', 'text-right'];
           break;
       }
       if (subHeader) {
         let colDef = {
           headerName: subHeader,
+          type: "numericColumn",
           children: [{
             headerName: year,
             maxWidth: 92,
