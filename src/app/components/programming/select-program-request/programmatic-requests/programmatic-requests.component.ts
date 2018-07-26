@@ -76,8 +76,15 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         headerName: 'Program',
         field: 'fullname',
         sort: "asc",
-        cellClass: ['ag-cell-light-grey','ag-clickable'],
-        cellRenderer: 'summaryProgramCellRenderer'
+        cellClass: ['ag-cell-light-grey','ag-clickable', 'row-span'],
+        cellRenderer: 'summaryProgramCellRenderer',
+        rowSpan: function(params) {
+          if (params.data.type == 'pom') {
+            return 2;
+          } else {
+            return 1;
+          }
+        }
       },
       {
         headerName: 'Status',
@@ -85,7 +92,14 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellClass: params => this.getStatusClass(params),
         cellStyle: { backgroundColor: "#eae9e9" },
         cellRenderer: 'summaryProgramCellRenderer',
-        width: 60
+        width: 60,
+        rowSpan: function(params) {
+          if (params.data.type == 'pom') {
+            return 2;
+          } else {
+            return 1;
+          }
+        }
       },
       {
         headerName: 'Cycle',
@@ -205,9 +219,9 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   getStatusClass(params) {
     if(params.data.state === 'OUTSTANDING') {
-      return 'text-danger';
+      return 'text-danger row-span';
     }
-    return 'text-primary';
+    return 'text-primary row-span';
   }
 
   onBtFirst() {

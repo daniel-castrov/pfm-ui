@@ -15,7 +15,6 @@ export class SummaryProgramCellRenderer implements ICellRendererAngularComp {
 
   agInit(param) {
     this.params = param;
-    console.log(this.params)
   }
 
   public editPR() {
