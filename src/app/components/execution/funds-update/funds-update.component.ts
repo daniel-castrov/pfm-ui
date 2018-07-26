@@ -33,8 +33,6 @@ export class FundsUpdateComponent implements OnInit {
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-  private currentPage: number;
-  private totalPages: number;
   private mrid: string;
   private appropriation: string;
   private blin: string;
