@@ -2317,6 +2317,26 @@ paths:
       description: "Returns the execution lines"
       produces:
       - "application/json"
+  /executiontransfer/phase/{phaseId}:
+    get:
+      operationId: "getExecutionTransfersByPhase"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution transfers for this execution phase"
+      description: "Returns the execution transfers"
+      produces:
+      - "application/json"
   /executionlines/phase/{phaseId}/transfer:
     post:
       tags:
