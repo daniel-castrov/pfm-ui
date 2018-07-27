@@ -22,8 +22,6 @@ export class LibraryComponent implements OnInit {
 
   datePipe: DatePipe = new DatePipe('en-US')
   data: Array<FileMetadata>;
-  currentPage: number;
-  totalPages: number;
   columnDefs= [];
   frameworkComponents = {libraryViewCellRenderer: LibraryViewCellRenderer};
   context = {parentComponent: this};
@@ -144,29 +142,6 @@ export class LibraryComponent implements OnInit {
 
     var url= window.URL.createObjectURL(blob);
     window.open(url);
-  }
-
-  onBtnFirst() {
-    this.agGrid.api.paginationGoToFirstPage();
-  }
-
-  onBtnLast() {
-    this.agGrid.api.paginationGoToLastPage();
-  }
-
-  onBtnNext() {
-    this.agGrid.api.paginationGoToNextPage();
-  }
-
-  onBtnPrevious() {
-    this.agGrid.api.paginationGoToPreviousPage();
-  }
-
-  onPaginationChanged() {
-    if (this.agGrid.api) {
-      this.currentPage = this.agGrid.api.paginationGetCurrentPage() + 1;
-      this.totalPages = this.agGrid.api.paginationGetTotalPages();
-    }
   }
 
   onPageSizeChanged(event) {

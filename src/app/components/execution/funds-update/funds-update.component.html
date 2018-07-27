@@ -20,6 +20,8 @@
             [rowSelection]="'single'"
             (selectionChanged)="onSelectionChanged($event)"
             [enableColResize]="true"
+            [toolPanelSuppressSideButtons]="true"
+            [suppressDragLeaveHidesColumns]="true"
             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
             (gridReady) = "onGridReady($event)">
         </ag-grid-angular>

@@ -32,6 +32,8 @@
                            [gridAutoHeight]="true"
                            [rowData]="data"
                            [columnDefs]="columnDefs"
+                           [toolPanelSuppressSideButtons]="true"
+                           [suppressDragLeaveHidesColumns]="true"
                            [pagination]="true"
                            [paginationPageSize]="15"
                            (paginationChanged)="agGridPagination.onPaginationChanged($event)"

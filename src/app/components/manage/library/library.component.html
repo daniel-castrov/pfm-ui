@@ -29,27 +29,15 @@
                            [columnDefs]="columnDefs"
                            [pagination]="true"
                            [paginationPageSize]="15"
-                           (paginationChanged)="onPaginationChanged($event)"
+                           (paginationChanged)="agGridPagination.onPaginationChanged($event)"
                            [suppressPaginationPanel]="true"
+                           [toolPanelSuppressSideButtons]="true"
+                           [suppressDragLeaveHidesColumns]="true"
                            [frameworkComponents]="frameworkComponents"
                            [context]="context"
                            (gridReady)="onGridReady($event)">
           </ag-grid-angular>
-          <ul *ngIf="data?.length > 15" class="pagination justify-content-center">
-            <li class="page-item">
-              <a class="page-link" (click)="onBtnFirst()">First</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" (click)="onBtnPrevious()">Previous</a>
-            </li>
-            <li class="page-link align-self-center disabled">Page {{currentPage}} of {{totalPages}}</li>
-            <li class="page-item">
-              <a class="page-link" (click)="onBtnNext()">Next</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" (click)="onBtnLast()">Last</a>
-            </li>
-          </ul>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>
       </div>
     </div>
