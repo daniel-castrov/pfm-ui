@@ -1,0 +1,45 @@
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12" id="set-epp">
+          <div class="h5 mb-4">Library</div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div *ngIf="data?.length > 15">
+            Page Size:
+            <select class="form-control-sm dropdown-width mb-2" id="page-size">
+              <option value="15" selected>15</option>
+              <option value="30">30</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+            </select>
+          </div>
+          <ag-grid-angular #agGrid
+                           class="ag-theme-balham"
+                           [enableSorting]="true"
+                           [enableFilter]="true"
+                           [gridAutoHeight]="true"
+                           [rowData]="data"
+                           [columnDefs]="columnDefs"
+                           [pagination]="true"
+                           [paginationPageSize]="15"
+                           (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+                           [suppressPaginationPanel]="true"
+                           [toolPanelSuppressSideButtons]="true"
+                           [suppressDragLeaveHidesColumns]="true"
+                           [frameworkComponents]="frameworkComponents"
+                           [context]="context"
+                           (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
