@@ -30,6 +30,10 @@ color:  #23527c;
 text-decoration: none;
 }
 
+.text-primary{
+  color: $primary-color !important;
+}
+
 a:hover {
 opacity: .8;
 color:  #23527c;
@@ -435,6 +439,10 @@ tab {
   border-right: 1px solid #7b8389 !important;
 }
 
+.row-span {
+  border-bottom: 1px solid #7b8389 !important;
+}
+
 .ag-root {
   border: none;
   border-bottom: 1px solid #7b8389 !important;
@@ -478,13 +486,36 @@ tab {
 
 .ag-cell-white {
   background-color: $white;
+  color: $black;
 }
 
 .ag-clickable {
-  cursor: pointer;
-  text-decoration: underline;
   color: $primary-color;
-  &:hover {
-    text-decoration: none;
-  }
+}
+
+// hack for top header of PR table
+
+.pr-table {
+
+  .ag-header-group-cell-no-group,
+  .ag-header-group-cell {
+      text-align: center !important;
+      background-color: $white !important;
+
+      &.ag-header-group-cell-with-group {
+        background-color: $white !important;
+      }
+
+      .ag-header-group-text {
+          color: $black !important;
+          text-align: center !important;
+          width: 92px;
+      }
+    }
+    
+    .ag-header-group-text {
+        color: $black !important;
+        text-align: center !important;
+        font-style: italic;
+    }
 }

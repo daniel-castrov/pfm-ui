@@ -3,7 +3,7 @@ import { FundingLine } from '../../../generated/model/fundingLine';
 
 export class UiProgrammaticRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
-
+  type: string
   get id():string {return this.pr.id}
   get state():string {return this.pr.state}
   get shortName():string {return this.pr.shortName}
