@@ -489,6 +489,41 @@ tab {
   color: $black;
 }
 
+.ag-cell-edit {
+  background-color: #c6d9f1;
+  color: $black;
+  text-align: left;
+  &:hover {
+    cursor: pointer;
+    background-color: $light-grey;
+  }
+}
+
+.ag-cell-light-green {
+  background-color: $light-green;
+  color: $black;
+}
+
+.ag-cell-dark-green {
+  background-color: $dark-green;
+  color: $white;
+}
+
+.ag-cell-light-grey {
+  background-color: $light-grey;
+  color: $black;
+}
+
+.ag-medium-gray-cell {
+  background-color: $medium-grey;
+  color: $black;
+}
+
+.ag-cell-white {
+  background-color: $white;
+  color: $black;
+}
+
 .ag-clickable {
   color: $primary-color;
 }
@@ -512,7 +547,7 @@ tab {
           width: 92px;
       }
     }
-    
+
     .ag-header-group-text {
         color: $black !important;
         text-align: center !important;

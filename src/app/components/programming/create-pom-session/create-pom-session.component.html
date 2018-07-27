@@ -5,10 +5,10 @@
 
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated && community && fy">
-    <div class="col-md-12">
+    <div class="col-12">
 
       <div class="row">
-        <div class="col-lg-5 col-md-10">
+        <div class="col-12">
           <div class="h5 mb-2">
             <ng-container *ngIf="editsOk && !pomIsCreated">
               <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy| FY}}</span>
@@ -21,19 +21,22 @@
             </ng-container>
           </div>
         </div>
-        <div class="col-lg-1 col-md-2">
-          <button class="btn" (click)="reload()">Reload</button>
-        </div>
       </div>
 
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-3">
           <span class="font-weight-bold toa-table-title">Set TOA for {{community.abbreviation}} Community ($K)</span>
         </div>
+        <div class="col-2">
+
+          <button class="btn-sm btn-secondary" (click)="reload()">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Reload</button>
+        </div>
       </div>
 
-      <div class="row">
-        <div class="col-lg-6 col-md-12">
+      <div class="row mb-2">
+        <div class="col-12">
           <div>
             <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable"
               [gridOptions]="gridOptionsCommunity"
@@ -48,20 +51,22 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-5 col-md-10">
+        <div class="col-3">
           <span class="font-weight-bold toa-table-title">Set Organization's sub-TOA ($K)</span>
         </div>
-        <div class="col-lg-2 col-md-4">
+        <div class="col-2">
           <ng-container *ngIf="!pomIsCreated">
-            <input type="checkbox" id="eppToggle" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
+            <span class="pull-right">
+              <input type="checkbox" id="eppToggle" class="mr-1" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
+            </span>
           </ng-container>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-12">
           <div>
-            <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable"
+            <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable sub-toa"
               [gridOptions]="gridOptionsOrgs"
               [rowData]="rowsOrgs"
               [toolPanelSuppressSideButtons]="true"
@@ -73,7 +78,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row mb-2">
         <div class="col-lg-2 col-md-3">
           <ng-container *ngIf="!pomIsCreated && !pomIsOpen">
             <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
@@ -85,7 +90,7 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-md-12 col-lg-9">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
             <div *ngIf="editsOk">
