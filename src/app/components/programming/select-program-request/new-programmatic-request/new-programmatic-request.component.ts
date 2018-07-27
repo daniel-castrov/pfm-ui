@@ -1,9 +1,10 @@
+import { CreationTimeType } from './../../../../generated/model/creationTimeType';
 import { WithFullNameService, ProgramWithFullName, ProgramRequestWithFullName, WithFullName } from '../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService, Type } from '../../program-request/page-mode.service';
+import { ProgramRequestPageModeService} from '../../program-request/page-mode.service';
 
 @Component({
   selector: 'new-programmatic-request',
@@ -44,20 +45,20 @@ export class NewProgrammaticRequestComponent implements OnInit {
   async next() {
     switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
-        this.programRequestPageMode.set(Type.PROGRAM_OF_MRDB , this.pomId);
+        this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB , this.pomId);
         this.programRequestPageMode.reference = this.selectedProgramOrPr;
         break;
       case 'A New Subprogram':
         if(this.isProgram(this.selectedProgramOrPr)) {
-          this.programRequestPageMode.set(Type.SUBPROGRAM_OF_MRDB, this.pomId);
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB, this.pomId);
           this.programRequestPageMode.reference = this.selectedProgramOrPr;
         } else { // a PR has been selected
-          this.programRequestPageMode.set(Type.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
           this.programRequestPageMode.reference = this.selectedProgramOrPr;
         }
         break;
       case 'A New Program':
-        this.programRequestPageMode.set(Type.NEW_PROGRAM, this.pomId);
+        this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM, this.pomId);
     }
     this.router.navigate(['/program-request']);
   }

@@ -3,7 +3,7 @@ export type {{classname}} = {{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last
 export const {{classname}} = {
 {{#allowableValues}}
 {{#enumVars}}
-    {{name}}: {{{value}}} as {{classname}}{{^-last}},{{/-last}}
+    {{{value}}}: {{{value}}} as {{classname}}{{^-last}},{{/-last}}
 {{/enumVars}}
 {{/allowableValues}}
 }

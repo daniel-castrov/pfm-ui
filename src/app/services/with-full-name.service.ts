@@ -1,5 +1,5 @@
+import { CreationTimeType } from './../generated/model/creationTimeType';
 import { ProgramRequestWithFullName, ProgramWithFullName} from './with-full-name.service';
-import { Type } from './../components/programming/program-request/page-mode.service';
 import { PRService } from './../generated/api/pR.service';
 import { ProgrammaticRequest } from './../generated/model/programmaticRequest';
 import { ProgramsService } from './../generated/api/programs.service';
@@ -84,7 +84,7 @@ export class WithFullNameService {
 
   async programsPlusPrs(phaseId: string): Promise<WithFullName[]> {
     const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
-    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== Type[Type.PROGRAM_OF_MRDB]);
+    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB);
 
     const programs: ProgramWithFullName[] = (await this.programs());
     return (<WithFullName[]>programs).concat(prsWithoutPrograms);
@@ -106,19 +106,19 @@ export class WithFullNameService {
   private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
     var parentName = '';
     switch(pr.creationTimeType) {
-      case Type[Type.SUBPROGRAM_OF_PR_OR_UFR]:
+      case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
         parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
         break;
-      case Type[Type.SUBPROGRAM_OF_MRDB]:
+      case CreationTimeType.SUBPROGRAM_OF_MRDB:
         parentName = this.programFullName(mapIdToProgram.get(pr.creationTimeReferenceId), mapIdToProgram) + '/';
         break;
-      case Type[Type.PROGRAM_OF_MRDB]:
+      case CreationTimeType.PROGRAM_OF_MRDB:
         const program: Program = mapIdToProgram.get(pr.creationTimeReferenceId);
         if(program.parentMrId) {
           parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
         }
         break;
-      case Type[Type.NEW_PROGRAM]:
+      case CreationTimeType.NEW_PROGRAM:
         // do nothing
         break;
       default:
