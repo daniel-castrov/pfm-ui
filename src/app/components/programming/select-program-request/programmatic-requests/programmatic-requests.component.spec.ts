@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectProgramRequestComponent } from './select-program-request.component';
+import { SelectProgramRequestComponent } from '../select-program-request.component';
 
 describe('SelectProgramRequestComponent', () => {
   let component: SelectProgramRequestComponent;

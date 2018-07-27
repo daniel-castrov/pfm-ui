@@ -440,7 +440,16 @@ export class CreatePomSessionComponent implements OnInit {
     return transfer;
   }
 
-  onGridReady(params) {
+  onGridReadyCom(params) {
+    params.api.sizeColumnsToFit();
+    window.addEventListener("resize", function() {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
+  }
+
+  onGridReadyOrgs(params) {
     params.api.sizeColumnsToFit();
     window.addEventListener("resize", function() {
       setTimeout(() => {

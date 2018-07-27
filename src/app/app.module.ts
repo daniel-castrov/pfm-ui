@@ -132,6 +132,7 @@ import { ProgramCellRendererComponent } from './components/renderers/program-cel
 import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-pagination/ag-grid-pagination.component";
+import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -267,7 +268,7 @@ const appRoutes: Routes = [
     ExecutionLineTableComponent,
     WorksheetComponent,
     FileUploadComponent,
-    ProgramCellRendererComponent,
+    SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
     ProgramCellRendererComponent,
@@ -275,6 +276,7 @@ const appRoutes: Routes = [
   ],
   entryComponents: [
     ProgramCellRendererComponent,
+    SummaryProgramCellRenderer,
     LibraryViewCellRenderer
   ],
   imports: [
