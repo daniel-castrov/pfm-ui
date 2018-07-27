@@ -19,7 +19,7 @@
     <input id="name" [formControl]="longname" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
     <label for="type">Program Type:</label>
     <select id="type" [(ngModel)]="pr.type" class="form-control-sm type-dropdown" name="dummy">
-        <option *ngFor="let type of ['INCREMENT','VARIANT','FOS']" [ngValue]="type">{{type}}</option>
+        <option *ngFor="let type of subprogramTypes()" [ngValue]="type">{{type}}</option>
     </select>
     <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
     <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>

@@ -1,11 +1,14 @@
+import { ProgrammaticRequestState } from './../../../generated/model/programmaticRequestState';
+import { CreationTimeType } from './../../../generated/model/creationTimeType';
+import { ProgramType } from './../../../generated/model/programType';
 import { IdAndNameComponent } from './id-and-name/id-and-name.component';
 import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
 import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
 import { PRService } from './../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Type } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService, Type } from './page-mode.service';
+import { ProgramRequestPageModeService} from './page-mode.service';
 
 @Component({
   selector: 'program-request',
@@ -37,11 +40,11 @@ export class ProgramRequestComponent implements OnInit {
 
   private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
-    this.pr.creationTimeType = Type[this.programRequestPageMode.type];
+    this.pr.creationTimeType = this.programRequestPageMode.type;
     this.pr.bulkOrigin = false;
     this.pr.state = 'SAVED';
     switch (this.programRequestPageMode.type) {
-      case Type.PROGRAM_OF_MRDB:
+      case CreationTimeType.PROGRAM_OF_MRDB:
         this.pr.originalMrId = this.programRequestPageMode.reference.id;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.pr.type = this.programRequestPageMode.reference.type;
@@ -49,18 +52,18 @@ export class ProgramRequestComponent implements OnInit {
         this.pr.shortName = this.programRequestPageMode.reference.shortName;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
-      case Type.SUBPROGRAM_OF_MRDB:
+      case CreationTimeType.SUBPROGRAM_OF_MRDB:
         this.initPrWith(this.programRequestPageMode.reference);
-        this.pr.type = 'INCREMENT';
+        this.pr.type = ProgramType.GENERIC;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         break;
-      case Type.SUBPROGRAM_OF_PR_OR_UFR:
-        this.pr.type = 'INCREMENT';        
+      case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
+        this.pr.type = ProgramType.GENERIC;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
-      case Type.NEW_PROGRAM:
-        this.pr.type = 'PROGRAM';
+      case CreationTimeType.NEW_PROGRAM:
+        this.pr.type = ProgramType.PROGRAM;
         break;
       default:
         console.log('Wrong programRequestPageMode.type');
@@ -83,7 +86,7 @@ export class ProgramRequestComponent implements OnInit {
     this.pr.secondaryCapability = program.secondaryCapability;
   }
 
-  async save(state: string) {
+  async save(state: ProgrammaticRequestState) {
     if(this.pr.id) {
       this.pr.state = state;
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;

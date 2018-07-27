@@ -2864,7 +2864,7 @@ definitions:
       longName:
         type: "string"
       type:
-        type: "string"
+        $ref: "#/definitions/ProgramType"
       execution:
         type: "string"
       organization:
@@ -2959,7 +2959,7 @@ definitions:
       creationTimeReferenceId:
         type: "string"
       creationTimeType:
-        type: "string"
+        $ref: "#/definitions/CreationTimeType"
       infolink:
         type: "string"
       imgLink:
@@ -3098,7 +3098,7 @@ definitions:
       description:
         type: "string"
       state:
-        type: "string"
+        $ref: "#/definitions/ProgrammaticRequestState"
       fundingLines:
         type: "array"
         items:
@@ -3116,9 +3116,9 @@ definitions:
       creationTimeReferenceId:
         type: "string"
       creationTimeType:
-        type: "string"
+        $ref: "#/definitions/CreationTimeType"
       type:
-        type: "string"
+          $ref: "#/definitions/ProgramType"
       phaseId:
         type: "string"
       primaryCapability:
@@ -3155,6 +3155,12 @@ definitions:
         type: "string"
       imageArea:
         type: "string"
+  ProgramType:
+    enum: [PROGRAM, GENERIC, INCREMENT, FOS]
+  CreationTimeType:
+    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR_OR_UFR, NEW_PROGRAM]
+  ProgrammaticRequestState:
+    enum: [OUTSTANDING, SAVED, SUBMITTED]
   PB:
     type: "object"
     properties:

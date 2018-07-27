@@ -1,10 +1,12 @@
+import { CreationTimeType } from './../../../../generated/model/creationTimeType';
 import { WithFullName, WithFullNameService, ProgramOrPrWithFullName } from './../../../../services/with-full-name.service';
 import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
 import { Component, Input } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService, Type } from './../page-mode.service';
+import { ProgramRequestPageModeService} from './../page-mode.service';
 import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
+import { ProgramType } from '../../../../generated/model/programType';
 
 @Component({
   selector: 'id-and-name',
@@ -37,9 +39,11 @@ export class IdAndNameComponent {
       return false;
     } else {
       switch (this.programRequestPageMode.type) {
-        case Type.PROGRAM_OF_MRDB:
+        case CreationTimeType.PROGRAM_OF_MRDB:
           return false;
-        case Type.SUBPROGRAM_OF_MRDB: case Type.SUBPROGRAM_OF_PR_OR_UFR: case Type.NEW_PROGRAM:
+        case CreationTimeType.SUBPROGRAM_OF_MRDB: 
+        case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR: 
+        case CreationTimeType.NEW_PROGRAM:
           return this.shortname.invalid || this.longname.invalid;
         default:
           console.log('Wrong programRequestPageMode.type in IdAndNameComponent.invalid()');
@@ -91,4 +95,11 @@ export class IdAndNameComponent {
     }
   }
 
+  private subprogramTypes() {
+    if(this.programRequestPageMode.reference.type === ProgramType.GENERIC) {
+      return [ProgramType.GENERIC]
+    } else {
+      return [ProgramType.INCREMENT, ProgramType.GENERIC, ProgramType.FOS]
+    }
+  }
 }
