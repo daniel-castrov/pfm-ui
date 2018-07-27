@@ -492,7 +492,7 @@ tab {
 .ag-cell-edit {
   background-color: #c6d9f1;
   color: $black;
-  text-align: right;
+  text-align: left;
   &:hover {
     cursor: pointer;
     background-color: $light-grey;
@@ -547,7 +547,7 @@ tab {
           width: 92px;
       }
     }
-    
+
     .ag-header-group-text {
         color: $black !important;
         text-align: center !important;
