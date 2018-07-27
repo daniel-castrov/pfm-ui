@@ -3,7 +3,7 @@ import { FundingLine } from '../../../generated/model/fundingLine';
 
 export class UiProgrammaticRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
-  type: string
+  phaseType: PhaseType
   get id():string {return this.pr.id}
   get state():string {return this.pr.state}
   get shortName():string {return this.pr.shortName}
@@ -17,4 +17,9 @@ export class UiProgrammaticRequest {
           .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
           .reduce((a,b)=>a+b, 0);
   }
+}
+
+export enum PhaseType {
+  POM = 'pom',
+  PB = 'pb'
 }

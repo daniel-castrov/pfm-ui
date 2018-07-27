@@ -5,6 +5,7 @@ import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
+import {PhaseType, UiProgrammaticRequest} from "../UiProgrammaticRequest";
 
 @Component({
   selector: 'programmatic-requests',
@@ -26,8 +27,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   data = [];
-  currentPage: number;
-  totalPages: number;
   context: any;
   columnDefs = [];
 
@@ -45,14 +44,16 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
       let data = []
       this.pomProgrammaticRequests.forEach(pr => {
-        pr.type = 'pom';
-        data.push(pr);
+        let programmaticRequest = new UiProgrammaticRequest(pr);
+        programmaticRequest.phaseType = PhaseType.POM
+        data.push(programmaticRequest);
       });
       this.pbProgrammaticRequests.forEach(pr => {
-        pr.type = 'pb';
-        data.push(pr);
+        let programmaticRequest = new UiProgrammaticRequest(pr);
+        programmaticRequest.phaseType = PhaseType.PB
+        data.push(programmaticRequest);
       });
-      this.sortObjects(data, ['fullname', ['type', 'desc']]);
+      this.sortObjects(data, ['fullname', ['phaseType', 'desc']]);
       this.data = data;
       this.defineColumns(this.data);
     }
@@ -78,7 +79,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellClass: ['ag-cell-light-grey','ag-clickable', 'row-span'],
         cellRenderer: 'summaryProgramCellRenderer',
         rowSpan: function(params) {
-          if (params.data.type == 'pom') {
+          if (params.data.phaseType == PhaseType.POM) {
             return 2;
           } else {
             return 1;
@@ -94,7 +95,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellRenderer: 'summaryProgramCellRenderer',
         width: 60,
         rowSpan: function(params) {
-          if (params.data.type == 'pom') {
+          if (params.data.phaseType == PhaseType.POM) {
             return 2;
           } else {
             return 1;
@@ -107,7 +108,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         suppressSorting: true,
         cellClass: ['ag-cell-white'],
         valueGetter: params => {
-          if (params.data.type == 'pb') {
+          if (params.data.phaseType == PhaseType.PB) {
             return 'PB' + (this.pbFy - 2000);
           } else {
             return 'POM' + (this.pomFy - 2000);
