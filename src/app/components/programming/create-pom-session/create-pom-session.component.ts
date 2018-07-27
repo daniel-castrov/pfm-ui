@@ -101,6 +101,11 @@ export class CreatePomSessionComponent implements OnInit {
           editable: params => this.shouldEdit(params),
           cellRenderer: params => this.negativeNumberRenderer(params),
           cellEditor: "numericCellEditor",
+          cellClassRules: {
+          'ag-cell-edit': params => {
+            return params.data.orgid !== 'Delta' && params.data.orgid !== 'CBDP Baseline'
+          }
+        }
         });
     }
     colDefs.push(
