@@ -1,6 +1,5 @@
 import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
 import { FundingLine } from '../../../generated/model/fundingLine';
-import {PhaseType} from "../../../enums";
 
 export class UiProgrammaticRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
@@ -18,4 +17,9 @@ export class UiProgrammaticRequest {
           .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
           .reduce((a,b)=>a+b, 0);
   }
+}
+
+export enum PhaseType {
+  POM = 'pom',
+  PB = 'pb'
 }

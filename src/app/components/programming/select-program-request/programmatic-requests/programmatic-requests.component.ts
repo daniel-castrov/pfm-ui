@@ -5,8 +5,7 @@ import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
-import {UiProgrammaticRequest} from "../UiProgrammaticRequest";
-import {PhaseType} from "../../../../enums";
+import {PhaseType, UiProgrammaticRequest} from "../UiProgrammaticRequest";
 
 @Component({
   selector: 'programmatic-requests',
