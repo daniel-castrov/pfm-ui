@@ -1,9 +1,10 @@
 import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
 import { FundingLine } from '../../../generated/model/fundingLine';
+import {PhaseType} from "../../../enums";
 
 export class UiProgrammaticRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
-  type: string
+  phaseType: PhaseType
   get id():string {return this.pr.id}
   get state():string {return this.pr.state}
   get shortName():string {return this.pr.shortName}
