@@ -25,6 +25,7 @@ export class LibraryComponent implements OnInit {
   columnDefs= [];
   frameworkComponents = {libraryViewCellRenderer: LibraryViewCellRenderer};
   context = {parentComponent: this};
+  menuTabs = ['filterMenuTab'];
 
   constructor(private libraryService: LibraryService) {}
 
@@ -32,14 +33,19 @@ export class LibraryComponent implements OnInit {
     this.columnDefs = [
       {
         headerName: 'File Area',
+        filter: 'agTextColumnFilter',
         valueGetter: params => this.areaGetter(params),
+        menuTabs: this.menuTabs,
       },
       {
         headerName: 'File Name',
+        filter: 'agTextColumnFilter',
+        menuTabs: this.menuTabs,
         valueGetter: 'data.metadata.Name'
       },
       {
         headerName: 'Date',
+        menuTabs: this.menuTabs,
         width: 60,
         filter: 'agDateColumnFilter',
         valueFormatter: params => this.dateFormatter(params),
@@ -66,6 +72,7 @@ export class LibraryComponent implements OnInit {
         width: 30,
         autoHeight: true,
         cellRenderer: params => this.typeCellRenderer(params),
+        suppressMenu: true,
         cellStyle: {'text-align': 'center'}
       },
       {
@@ -73,6 +80,7 @@ export class LibraryComponent implements OnInit {
         width: 30,
         autoHeight: true,
         cellRenderer: 'libraryViewCellRenderer',
+        suppressMenu: true,
         cellStyle: {'text-align': 'center'}
       }
     ];

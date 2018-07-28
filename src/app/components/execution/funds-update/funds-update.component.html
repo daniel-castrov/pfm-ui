@@ -22,6 +22,7 @@
             [enableColResize]="true"
             [toolPanelSuppressSideButtons]="true"
             [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
             (gridReady) = "onGridReady($event)">
         </ag-grid-angular>

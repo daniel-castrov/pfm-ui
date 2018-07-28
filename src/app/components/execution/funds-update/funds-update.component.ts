@@ -36,6 +36,7 @@ export class FundsUpdateComponent implements OnInit {
   private item: string;
   private opAgency: string;
   private funds: number;
+  private menuTabs = ['filterMenuTab'];
 
   private agOptions: GridOptions;
 
@@ -78,105 +79,124 @@ export class FundsUpdateComponent implements OnInit {
       columnDefs: [
         {
           headerName: "Program",
+          filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
           comparator: namesorter,
+          menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
           valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr.',
+          filter: 'agTextColumnFilter',
           field: 'appropriation',
           width: 92,
+          menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Budget',
+          filter: 'agTextColumnFilter',
           field: 'blin',
           width: 92,
+          menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Item',
+          filter: 'agTextColumnFilter',
           field: 'item',
           width: 92,
+          menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'opAgency',
+          filter: 'agTextColumnFilter',
           field: 'opAgency',
           width: 92,
+          menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','text-center']
         },
         {
           headerName: 'Initial Funds',
           field: 'initial',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-light-green','text-right']
         },
         {
           headerName: 'CRA',
           field: 'craTotal',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Realigned',
           field: 'realignedTotal',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Appr. Actions',
           field: 'apprTotal',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'OUSD(C) Actions',
           field: 'ousdcTotal',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'BTR',
           field: 'btrTotal',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
         {
           headerName: 'Withheld',
           field: 'withheld',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'TOA',
           field: 'toa',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
         {
           headerName: 'Released',
           field: 'released',
+          valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
           suppressSorting: true,
-          suppressFilter: true,
+          suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
       ]
@@ -212,16 +232,29 @@ export class FundsUpdateComponent implements OnInit {
         my.exephases = data[1].result;
         my.selectedexe = my.exephases[0];
         my.fetchLines();
+        this.agGrid.api.sizeColumnsToFit();
       });
     });
   }
 
   fetchLines() {
     var my: FundsUpdateComponent = this;
-    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => { 
+    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.exelines = data.result;
       this.refreshFilterDropdowns();
     });
+  }
+
+  currencyFormatter(value) {
+    if(isNaN(value.value)) {
+      value.value = 0;
+    }
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0
+    });
+    return usdFormate.format(value.value);
   }
 
   refreshFilterDropdowns() {
@@ -282,8 +315,8 @@ export class FundsUpdateComponent implements OnInit {
       toa: this.funds,
       initial: this.funds
     };
-    
-    this.exesvc.createExecutionLine(this.selectedexe.id, newline).subscribe(data => { 
+
+    this.exesvc.createExecutionLine(this.selectedexe.id, newline).subscribe(data => {
       newline.id = data.result;
       this.agOptions.api.paginationGoToLastPage();
       this.agOptions.api.addItems([newline]);
@@ -292,7 +325,9 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   onGridReady(params) {
-    params.api.sizeColumnsToFit();
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
     window.addEventListener("resize", function() {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
@@ -301,14 +336,8 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   onSelectionChanged() {
-    this.agOptions.api.getSelectedRows().forEach(row => { 
+    this.agOptions.api.getSelectedRows().forEach(row => {
       this.selectedRow = row;
     });
-  }
-
-  onPageSizeChanged(event) {
-    var selectedValue = Number(event.target.value);
-    this.agGrid.api.paginationSetPageSize(selectedValue);
-    this.agGrid.api.sizeColumnsToFit();
   }
 }

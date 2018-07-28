@@ -25,6 +25,7 @@ export class SetEppComponent implements OnInit {
   responseError: string;
   data = [];
   communityId:string;
+  menuTabs = ['filterMenuTab'];
 
   @ViewChild(HeaderComponent) header;
   @ViewChild('fileInput') fileInput: ElementRef;
@@ -104,16 +105,16 @@ export class SetEppComponent implements OnInit {
     });
   }
 
-  currencyCellRenderer(value) {
-    if(isNaN(value)) {
-      value = 0;
+  currencyFormatter(value) {
+    if(isNaN(value.value)) {
+      value.value = 0;
     }
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0
     });
-    return usdFormate.format(value);
+    return usdFormate.format(value.value);
   }
 
   generateFundingLine(params){
@@ -125,7 +126,7 @@ export class SetEppComponent implements OnInit {
   }
 
   getFiscalYear(params, year) {
-    return this.currencyCellRenderer(params.data.fySums[year]);
+      return params.data.fySums[year];
   }
 
   generateFiscalYearColumns(eppList) {
@@ -143,7 +144,10 @@ export class SetEppComponent implements OnInit {
           headerName: columnKey,
           maxWidth: 92,
           type: "numericColumn",
-          valueGetter: params => {return this.getFiscalYear(params, key)}
+          filter: "agNumberColumnFilter",
+          menuTabs: this.menuTabs,
+          valueGetter: params => {return this.getFiscalYear(params, key)},
+          valueFormatter: params => {return this.currencyFormatter(params)}
         };
         if(!this.exist(this.columnDefs, colDef)) {
           this.columnDefs.push(colDef);
@@ -164,7 +168,7 @@ export class SetEppComponent implements OnInit {
   }
 
   columnDefs = [
-    {headerName: 'Program', field: 'shortName' },
-    {headerName: 'Funding Lines', valueGetter: params => {return this.generateFundingLine(params)}}
+    {headerName: 'Program', field: 'shortName', filter: 'agTextColumnFilter', menuTabs: this.menuTabs},
+    {headerName: 'Funding Lines', filter: 'agTextColumnFilter', menuTabs: this.menuTabs, valueGetter: params => {return this.generateFundingLine(params)}}
   ];
 }

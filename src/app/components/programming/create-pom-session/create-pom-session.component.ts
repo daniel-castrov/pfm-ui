@@ -40,6 +40,7 @@ export class CreatePomSessionComponent implements OnInit {
   private gridOptionsOrgs:GridOptions;
   private rowsOrgs;
   private pinnedRowOrgsDelta;
+  private menuTabs = ['filterMenuTab'];
 
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -86,6 +87,7 @@ export class CreatePomSessionComponent implements OnInit {
 
     colDefs.push(
       { headerName: column1Name,
+        suppressMenu: true,
         field: 'orgid',
         width: 178,
         editable: false,
@@ -96,6 +98,7 @@ export class CreatePomSessionComponent implements OnInit {
     for (var i = 0; i < 5; i++) {
       colDefs.push(
         { headerName: "FY" + (fy + i - 2000) ,
+          suppressMenu: true,
           field: (fy+ i).toString(),
           width: 100,
           editable: params => this.shouldEdit(params),
@@ -110,6 +113,7 @@ export class CreatePomSessionComponent implements OnInit {
     }
     colDefs.push(
       { headerName: "FY" + (fy-2000) + "-"+ "FY" + (fy+4-2000),
+        suppressMenu: true,
         field: 'total',
         width: 120,
         editable: false,

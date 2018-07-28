@@ -24,6 +24,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   // used only during PR deletion
   private idToDelete: string;
   private nameToDelete: string;
+  private menuTabs = ['filterMenuTab'];
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   data = [];
@@ -75,6 +76,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.columnDefs = [
       {
         headerName: 'Program',
+        menuTabs: this.menuTabs,
+        filter: 'agTextColumnFilter',
         field: 'fullname',
         cellClass: ['ag-cell-light-grey','ag-clickable', 'row-span'],
         cellRenderer: 'summaryProgramCellRenderer',
@@ -88,6 +91,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       },
       {
         headerName: 'Status',
+        menuTabs: this.menuTabs,
+        filter: 'agTextColumnFilter',
         suppressSorting: true,
         valueGetter: params => this.getStatus(params),
         cellClass: params => this.getStatusClass(params),
@@ -104,6 +109,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       },
       {
         headerName: 'Cycle',
+        menuTabs: this.menuTabs,
+        filter: 'agTextColumnFilter',
         width: 50,
         suppressSorting: true,
         cellClass: ['ag-cell-white'],
@@ -169,10 +176,13 @@ export class ProgrammaticRequestsComponent implements OnChanges {
           type: "numericColumn",
           children: [{
             headerName: year,
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
             maxWidth: 92,
             cellClass: cellClass,
             type: "numericColumn",
-            valueGetter: params => {return this.getToa(params.data, year)}
+            valueGetter: params => {return this.getToa(params.data, year)},
+            valueFormatter: params => {return this.currencyFormatter(params)}
           }]
         };
         this.columnDefs.push(colDef);
@@ -183,9 +193,12 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
     let totalColDef = {
       headerName: 'Total',
+      menuTabs: this.menuTabs,
+      filter: "agNumberColumnFilter",
       maxWidth: 92,
       type: "numericColumn",
-      valueGetter: params => {return this.getTotal(params.data, columnKeys)}
+      valueGetter: params => {return this.getTotal(params.data, columnKeys)},
+      valueFormatter: params => {return this.currencyFormatter(params)}
     };
     this.columnDefs.push(totalColDef);
     this.agGrid.api.setColumnDefs(this.columnDefs);
@@ -225,8 +238,14 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   getStatus(params) {
-    if(!params.data.bulkOrigin && params.data.state == 'SAVED') return 'DRAFT';
-    return params.data.state;
+    if (params.data.phaseType == PhaseType.POM) {
+      if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
+        return 'DRAFT';
+      }
+      return params.data.state;
+    } else {
+      return '';
+    }
   }
 
   getStatusClass(params) {
@@ -234,6 +253,18 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       return 'text-danger row-span';
     }
     return 'text-primary row-span';
+  }
+
+  currencyFormatter(value) {
+    if(isNaN(value.value)) {
+      value.value = 0;
+    }
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0
+    });
+    return usdFormate.format(value.value);
   }
 
   onPageSizeChanged(event) {
