@@ -59,6 +59,7 @@ import { NoAccessComponent } from './components/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
+import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
@@ -159,6 +160,7 @@ const appRoutes: Routes = [
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
+  {path:'oe-update', component:OeUpdateComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-request', component:ProgramRequestComponent},
@@ -232,6 +234,7 @@ const appRoutes: Routes = [
     NoAccessComponent,
     NotFoundComponent,
     NotImplementedComponent,
+    OeUpdateComponent,
     OnlyDigitsDirective,
     PlanningComponent,
     PomComponent,
