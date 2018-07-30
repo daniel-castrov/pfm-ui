@@ -107,11 +107,72 @@ export class OeUpdateComponent implements OnInit {
     ];
 
     rowData = [
-        { make: 'Toyota', model: 'Celica', price: 35000 },
-        { make: 'Ford', model: 'Mondeo', price: 32000 },
-        { make: 'Porsche', model: 'Boxter', price: 72000 }
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing4', item: 'item 4', update: 300 },
+        { program: 'testing', item: 'item 1', update: 35000 },
+        { program: 'testing2', item: 'item 2', update: 5000 },
+        { program: 'testing3', item: 'item 3', update: 4000 },
+        { program: 'testing4', item: 'item 4', update: 300 }
     ];
 
+    onPageSizeChanged(event) {
+      var selectedValue = Number(event.target.value);
+      this.agGrid.api.paginationSetPageSize(selectedValue);
+      this.agGrid.api.sizeColumnsToFit();
+    }
 
     onGridReady(params) {
       setTimeout(() => {
