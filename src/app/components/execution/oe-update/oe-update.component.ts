@@ -99,7 +99,7 @@ export class OeUpdateComponent implements OnInit {
         maxWidth: 92
       },
       {
-        headerName: 'Upate',
+        headerName: 'Last Upated',
         field: 'update',
         cellClass: ['ag-cell-white'],
         maxWidth: 92
