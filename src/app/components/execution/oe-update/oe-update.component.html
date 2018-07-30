@@ -16,8 +16,11 @@
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham"
             id="myGrid"
+            [enableSorting]="true"
+            [animateRows]="true"
+            [enableFilter]="false"
+            [gridAutoHeight]="true"
             [gridOptions]="agOptions"
-            id="myGrid"
             [rowData]="rowData"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
@@ -28,6 +31,8 @@
             [suppressMovableColumns]="true"
             [enableFilter]="true"
             [floatingFilter]="true"
+            [pagination]="true"
+            [paginationPageSize]="20"
             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
             (gridReady)="onGridReady($event)"
             >
@@ -40,59 +45,28 @@
         <fieldset>
           <legend>Import O&amp;E Update</legend>
           <div class="row">
-            <div class="col-2">
+            <div class="col-md-4 col-lg-5">
               <span class="form-group">
-                <div class="mb-1 primary-label">Program</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="mrid">
-                  <option></option>
-                  <option *ngFor="let program of programs|mapAsList" [ngValue]="program.key">{{program.value}}</option>
+                <div class="mb-1 primary-label">O&amp;O Data</div>
+                <select class="form-control-sm dropdown-width">
+                  <option>Enter/Select Program</option>
                 </select>
               </span>
             </div>
-            <div class="col-2">
+            <div class="col-md-1 col-lg-2">
               <span class="form-group">
-                <div class="mb-1 primary-label">Appropriation</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
-                  <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
+                <div class="mb-1 primary-label">Type</div>
+                <select class="form-control-sm dropdown-width">
+                  <option>DAI</option>
                 </select>
               </span>
             </div>
-            <div class="col-md-2 col-lg-1">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Budget</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
-                  <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Item</div>
-                  <input class="mb-2 form-control forminput" [(ngModel)]="item">
-              </span>
-            </div>
-            <div class="col-md-2 col-lg-1">
-              <span class="form-group">
-                <div class="mb-1 primary-label">OpAgency</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency">
-                  <option *ngFor="let opAgency of opAgencies">{{opAgency}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Funds</div>
-                <span class="form-group">
-                  <input class="mb-2 form-control forminput" [(ngModel)]="funds" digits>
-                </span>
-              </span>
-            </div>
-            <div class="col-md-12 col-lg-2">
+            <div class="col-md-4 col-lg-2">
               <span class="form-group">
                   <div class="primary-label"> </div>
                   <button class="btn btn-primary mt-4" (click)="addline()">
-                    <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                   Add Execution Line
+                    <i class="fa fa-download icon-pad" aria-hidden="true"></i>
+                  Import
                  </button>
                </span>
              </div>
