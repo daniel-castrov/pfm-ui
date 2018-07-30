@@ -18,7 +18,7 @@ export class SummaryProgramCellRenderer implements ICellRendererAngularComp {
   }
 
   public editPR() {
-    this.params.context.componentParent.editPR(this.params.data.id);
+    this.params.context.componentParent.editPR(this.params.rowIndex);
   }
 
   saveDeletionValues() {

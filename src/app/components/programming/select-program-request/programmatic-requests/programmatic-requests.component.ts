@@ -54,7 +54,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         programmaticRequest.phaseType = PhaseType.PB
         data.push(programmaticRequest);
       });
-      this.sortObjects(data, ['fullname', ['phaseType', 'desc']]);
+      this.sortObjects(data, ['fullname', 'phaseType']);
       this.data = data;
       this.defineColumns(this.data);
     }
@@ -82,7 +82,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellClass: ['ag-cell-light-grey','ag-clickable', 'row-span'],
         cellRenderer: 'summaryProgramCellRenderer',
         rowSpan: function(params) {
-          if (params.data.phaseType == PhaseType.POM) {
+          if (params.data.phaseType == PhaseType.PB) {
             return 2;
           } else {
             return 1;
@@ -100,7 +100,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellRenderer: 'summaryProgramCellRenderer',
         width: 60,
         rowSpan: function(params) {
-          if (params.data.phaseType == PhaseType.POM) {
+          if (params.data.phaseType == PhaseType.PB) {
             return 2;
           } else {
             return 1;
@@ -232,13 +232,15 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.deleted.emit();
   }
 
-  editPR(prId: string) {
-    this.programRequestPageMode.prId = prId;
+  editPR(index: number) {
+    let displayModel = this.agGrid.api.getModel();
+    let node = displayModel.getRow(index + 1);
+    this.programRequestPageMode.prId = node.data.pr.id;
     this.router.navigate(['/program-request']);
   }
 
   getStatus(params) {
-    if (params.data.phaseType == PhaseType.POM) {
+    if (params.data.phaseType == PhaseType.PB) {
       if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
         return 'DRAFT';
       }
