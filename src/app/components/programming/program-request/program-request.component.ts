@@ -5,7 +5,7 @@ import { IdAndNameComponent } from './id-and-name/id-and-name.component';
 import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
 import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
 import { PRService } from './../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild, Type } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 
 // Other Components
 import { ProgramRequestPageModeService} from './page-mode.service';
