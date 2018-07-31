@@ -418,6 +418,46 @@ tab {
   }
 }
 
+// fieldset tables for form elements
+
+.fieldset-table {
+
+ thead {
+
+   margin: 0;
+   padding: 0;
+
+    tr {
+      margin: 0 5px;
+    }
+
+    th {
+      font-weight: normal;
+      padding: 0 10px;
+    }
+  }
+
+  tbody {
+
+    margin: 0;
+    padding: 0;
+
+    tr {
+      margin: 0 5px;
+    }
+
+    td {
+      font-weight: normal;
+      padding: 0 10px;
+    }
+
+    .btn {
+      margin: 0;
+    }
+  }
+}
+
+
 //ag-grid customization starts here
 
 .ag-header-container {
