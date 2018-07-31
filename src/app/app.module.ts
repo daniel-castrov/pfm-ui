@@ -25,6 +25,7 @@ import 'ag-grid-enterprise';
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
+import { ActualsTabComponent } from './components/execution/actuals-tab/actuals-tab.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
@@ -42,6 +43,7 @@ import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
+import { GraphsTabComponent } from './components/execution/graphs-tab/graphs-tab.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
@@ -135,6 +137,7 @@ import { IdAndNameComponent } from './components/programming/program-request/id-
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-pagination/ag-grid-pagination.component";
 import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
+
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -190,6 +193,7 @@ const appRoutes: Routes = [
     AboutComponent,
     AboutPrivateComponent,
     AccessChangeApprovalComponent,
+    ActualsTabComponent,
     AppComponent,
     ApplyComponent,
     AppropriationReleaseComponent,
@@ -212,6 +216,7 @@ const appRoutes: Routes = [
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
+    GraphsTabComponent,
     HeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
