@@ -57,32 +57,46 @@
         <fieldset>
           <legend>Import O&amp;E Update</legend>
           <div class="row">
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">O&amp;O Data</div>
-                <select class="form-control-sm">
-                  <option>Enter/Select Program</option>
-                </select>
-              </span>
+            <div class="col-12">
+              <table class="fieldset-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="mb-1 primary-label">O&amp;O Data</div>
+                    </th>
+                    <th>
+                      <div class="mb-1 primary-label">Type</div>
+                    </th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="form-group">
+                          <select class="form-control-sm">
+                            <option>Enter/Select Program</option>
+                          </select>
+                        </span>
+                    </td>
+                    <td>
+                      <span class="form-group">
+                        <select class="form-control-sm">
+                          <option>DAI</option>
+                        </select>
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary" (click)="addline()">
+                        <i class="fa fa-download icon-pad" aria-hidden="true"></i>
+                      Import
+                     </button>
+                   </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="col-1">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Type</div>
-                <select class="form-control-sm">
-                  <option>DAI</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                  <div class="primary-label"> </div>
-                  <button class="btn btn-primary mt-4" (click)="addline()">
-                    <i class="fa fa-download icon-pad" aria-hidden="true"></i>
-                  Import
-                 </button>
-               </span>
-             </div>
-           </div>
+          </div>
         </fieldset>
         <j-feedback></j-feedback>
       </div>

@@ -12,7 +12,7 @@ import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 @Component({
-  selector: 'app-oe-update',
+  selector: 'oe-update',
   templateUrl: './oe-update.component.html',
   styleUrls: ['./oe-update.component.scss']
 })
