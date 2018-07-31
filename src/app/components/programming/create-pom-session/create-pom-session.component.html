@@ -27,7 +27,7 @@
         <div class="col-lg-3 col-md-6">
           <span class="font-weight-bold toa-table-title">Set TOA for {{community.abbreviation}} Community ($K)</span>
         </div>
-        <div class="col-3">
+        <div class="col-4">
           <span class="pull-right">
             <button class="btn-sm btn-secondary" (click)="reload()">
               <i class="fa fa-refresh" aria-hidden="true"></i>
@@ -40,7 +40,7 @@
       <div class="row mb-2">
         <div class="col-12">
           <div>
-            <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable"
+            <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable set-toa"
               [gridOptions]="gridOptionsCommunity"
               [rowData]="rowsCommunity"
               [toolPanelSuppressSideButtons]="true"
@@ -56,7 +56,7 @@
         <div class="col-lg-3 col-md-6">
           <span class="font-weight-bold toa-table-title">Set Organization's sub-TOA ($K)</span>
         </div>
-        <div class="col-3">
+        <div class="col-4">
           <ng-container *ngIf="!pomIsCreated">
             <span class="pull-right">
               <input type="checkbox" id="eppToggle" class="mr-1" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
@@ -92,7 +92,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-12 col-lg-6">
+        <div class="col-md-12 col-lg-7">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
             <div *ngIf="editsOk">
