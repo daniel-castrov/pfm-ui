@@ -102,11 +102,11 @@ export class ActualsTabComponent implements OnInit {
     ];
 
     rowData = [
-        { actuals: 'testing', mar: 'item 1', jun: 35000 },
-        { actuals: 'testing2', sept: 'item 1', aug: 500 },
-        { actuals: 'testing3', dec: 'item 1', oct: 5550 },
-        { actuals: 'testing4', may: 'item 1', jul: 45000 },
-        { actuals: 'testing5', oct: 'item 1', feb: 50000 },
+        { actuals: 'Funds', mar: 'item 1', jun: 35000 },
+        { actuals: 'Released', sept: 'item 1', aug: 500 },
+        { actuals: 'Committed (Monthly)', dec: 'item 1', oct: 5550 },
+        { actuals: 'Cummulative Committed', may: 'item 1', jul: 45000 },
+        { actuals: 'Obligated (Monthly)', oct: 'item 1', feb: 50000 },
         { actuals: 'testing6', jan: 'item 1', nov: 70000 },
         { actuals: 'testing7', aug: 'item 1', dec: 745000 },
         { actuals: 'testing8', apr: 'item 1', aug: 590000 },
