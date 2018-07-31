@@ -33,71 +33,71 @@ export class ActualsTabComponent implements OnInit {
         headerName: 'Oct',
         field: 'oct',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Nov',
         field: 'nov',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
         {headerName: 'Dec',
         field: 'dec',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
         {headerName: 'Jan',
         field: 'jan',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Feb',
-        field: 'Feb',
+        field: 'feb',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Mar',
         field: 'mar',
         maxWidth: 80,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Apr',
         field: 'apr',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'May',
         field: 'may',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Jun',
         field: 'jun',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Jul',
         field: 'jul',
         maxWidth: 80,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Aug',
         field: 'aug',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Sep',
         field: 'sep',
         maxWidth: 88,
-        cellClass: ['ag-cell-white']
+        cellClass: ['ag-cell-white', 'text-right']
       }
     ];
 
@@ -116,11 +116,6 @@ export class ActualsTabComponent implements OnInit {
         { actuals: 'testing3', dec: 'item 1', oct: 5550 }
     ];
 
-    onPageSizeChanged(event) {
-      var selectedValue = Number(event.target.value);
-      this.agGrid.api.paginationSetPageSize(selectedValue);
-      this.agGrid.api.sizeColumnsToFit();
-    }
 
     onGridReady(params) {
       setTimeout(() => {
