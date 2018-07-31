@@ -61,6 +61,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
 import { PlanningComponent } from './components/planning/planning.component';
+import { ProgramExecutionLineComponent } from './components/execution/program-execution-line/program-execution-line.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
@@ -134,7 +135,6 @@ import { IdAndNameComponent } from './components/programming/program-request/id-
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-pagination/ag-grid-pagination.component";
 import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
-
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -163,6 +163,7 @@ const appRoutes: Routes = [
   {path:'oe-update', component:OeUpdateComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
+  {path:'program-execution-line', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
@@ -239,6 +240,7 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
+    ProgramExecutionLineComponent,
     ProgramRequestComponent,
     ProgramTabComponent,
     ProgrammaticRequestsComponent,
