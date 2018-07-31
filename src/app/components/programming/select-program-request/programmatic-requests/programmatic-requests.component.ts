@@ -240,18 +240,20 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   getStatus(params) {
-    if (params.data.phaseType == PhaseType.PB) {
-      if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
+    let node = this.data[params.node.rowIndex + 1];
+    if (node.phaseType == PhaseType.POM) {
+      if(!node.bulkOrigin && node.state == 'SAVED'){
         return 'DRAFT';
       }
-      return params.data.state;
+      return node.state;
     } else {
       return '';
     }
   }
 
   getStatusClass(params) {
-    if(params.data.state === 'OUTSTANDING') {
+    let node = this.data[params.node.rowIndex + 1];
+    if(node.state === 'OUTSTANDING') {
       return 'text-danger row-span';
     }
     return 'text-primary row-span';
