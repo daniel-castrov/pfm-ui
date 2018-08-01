@@ -455,12 +455,24 @@ label {
 
 .btn-toggle.btn-secondary {
   color: #6b7381;
-  background: $dark-green;
+  background: $dark-grey;
 }
 .btn-toggle.btn-secondary:before,
 .btn-toggle.btn-secondary:after {
   color: #6b7381;
 }
 .btn-toggle.btn-secondary.active {
+ background-color: #ff8300;
+}
+
+.btn-toggle.btn-success {
+  color: #6b7381;
   background: $dark-green;
+}
+.btn-toggle.btn-success:before,
+.btn-toggle.btn-success:after {
+  color: #6b7381;
+}
+.btn-toggle.btn-success.active {
+ background-color: #ff8300;
 }
