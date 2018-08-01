@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-12">
+      <ag-grid-angular #agGrid class="ag-theme-balham"
+        [enableSorting]="true"
+        [enableFilter]="false"
+        [gridAutoHeight]="true"
+        [gridOptions]="agOptions"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [columnTypes]="columnTypes"
+        [toolPanelSuppressSideButtons]="true"
+        [pagination]="true"
+        [paginationPageSize]="20"
+        (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+        [enableColResize]="true"
+        [suppressDragLeaveHidesColumns]="true"
+        [suppressMovableColumns]="true"
+        [suppressPaginationPanel]="true"
+        (gridReady)="onGridReady($event)"
+        >
+      </ag-grid-angular>
+      <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+  </div>
+</div>

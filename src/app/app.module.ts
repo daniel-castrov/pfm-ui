@@ -69,6 +69,7 @@ import { ProgramRequestComponent } from './components/programming/program-reques
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
+import { SpendPlansTabComponent } from './components/execution/spend-plans-tab/spend-plans-tab.component';
 import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { OpenPomSessionComponent } from './components/programming/open-pom-session/open-pom-session.component'
@@ -252,6 +253,7 @@ const appRoutes: Routes = [
     RequestComponent,
     SelectProgramRequestComponent,
     SetEppComponent,
+    SpendPlansTabComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,

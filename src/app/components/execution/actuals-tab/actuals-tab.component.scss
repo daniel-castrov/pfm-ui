@@ -453,6 +453,19 @@ label {
   display: none;
 }
 
+.btn-toggle.btn-primary {
+  color: #6b7381;
+  background: $primary-color;
+}
+
+.btn-toggle.btn-primary:before,
+.btn-toggle.btn-primary:after {
+  color: #6b7381;
+}
+.btn-toggle.btn-primary.active {
+
+}
+
 .btn-toggle.btn-secondary {
   color: #6b7381;
   background: $dark-grey;
