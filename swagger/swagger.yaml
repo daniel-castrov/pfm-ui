@@ -3187,6 +3187,8 @@ definitions:
         type: "string"
       item:
         type: "string"
+      programElement:
+        type: "string"
       mrId:
         type: "string"
       toa:
