@@ -1,0 +1,105 @@
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-lg-7 col-md-12 mb-4">
+        <span class="h5 mr-2">O&amp;E Update for Fiscal Year  </span>
+        <span>
+          <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
+            <option></option>
+            <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
+           </select>
+         </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <span>Page Size:</span>
+        <span class="dropdown-inline">
+          <select class="form-control-sm mb-2" (change)="onPageSizeChanged($event)" id="page-size">
+            <option value="20" selected="">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-12">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+            id="myGrid"
+            [enableSorting]="true"
+            [enableFilter]="false"
+            [gridAutoHeight]="true"
+            [gridOptions]="agOptions"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [columnTypes]="columnTypes"
+            [toolPanelSuppressSideButtons]="true"
+            [pagination]="true"
+            [paginationPageSize]="20"
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            [enableColResize]="true"
+            [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
+            [suppressPaginationPanel]="true"
+            (gridReady)="onGridReady($event)"
+            >
+          </ag-grid-angular>
+        <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <fieldset>
+          <legend>Import O&amp;E Update</legend>
+          <div class="row">
+            <div class="col-12">
+              <table class="fieldset-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="mb-1 primary-label">O&amp;O Data</div>
+                    </th>
+                    <th>
+                      <div class="mb-1 primary-label">Type</div>
+                    </th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="form-group">
+                          <select class="form-control-sm">
+                            <option>Enter/Select Program</option>
+                          </select>
+                        </span>
+                    </td>
+                    <td>
+                      <span class="form-group">
+                        <select class="form-control-sm">
+                          <option>DAI</option>
+                        </select>
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary" (click)="addline()">
+                        <i class="fa fa-download icon-pad" aria-hidden="true"></i>
+                      Import
+                     </button>
+                   </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </fieldset>
+        <j-feedback></j-feedback>
+      </div>
+    </div>
+  </div>
+</div>
