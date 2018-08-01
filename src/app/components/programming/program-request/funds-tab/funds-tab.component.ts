@@ -3,9 +3,8 @@ import { FeedbackComponent } from './../../../feedback/feedback.component';
 import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
-import { Component, Input, ApplicationRef, OnChanges, ViewChild, OnInit } from '@angular/core'
-import { forkJoin } from "rxjs/observable/forkJoin"
-import { Program, FundingLine, IntMap, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest, Tag, ProgramsService } from '../../../../generated'
+import { Component, Input, OnChanges, ViewChild, OnInit } from '@angular/core'
+import { FundingLine, POMService, Pom, PRService, PBService, ProgrammaticRequest } from '../../../../generated'
 import { Row } from './Row';
 import { Key } from './Key';
 
@@ -19,7 +18,6 @@ export class FundsTabComponent implements OnChanges, OnInit {
   @Input() pr: ProgrammaticRequest;
   private pomFy: number;
   private pbFy: number;
-  // key is appropriation+blin
   private rows: Map<string, Row> = new Map<string, Row>();
   
   // for the add FL section
