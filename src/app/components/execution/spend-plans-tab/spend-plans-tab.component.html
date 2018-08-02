@@ -1,44 +1,60 @@
-<div class="row mb-2">
-  <div class="col-12">
-      <ag-grid-angular #agGrid class="ag-theme-balham"
-        id="myGrid"
-        [enableSorting]="true"
-        [enableColResize]="true"
-        [enableFilter]="false"
-        [gridAutoHeight]="true"
-        [gridOptions]="agOptions"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        [columnTypes]="columnTypes"
-        [toolPanelSuppressSideButtons]="true"
-        [pagination]="true"
-        [paginationPageSize]="20"
-        (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-        [suppressDragLeaveHidesColumns]="true"
-        [suppressMovableColumns]="true"
-        [suppressPaginationPanel]="true"
-        (gridReady)="onGridReady($event)"
-        >
-      </ag-grid-angular>
-      <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <fieldset>
-      <legend>Add Spend Plan</legend>
-      <div class="row">
-        <div class="col-11">
-          <add-spend-plan></add-spend-plan>
-        </div>
-        <div class="col-1">
-          <button class="btn btn-primary pull-right" (click)="save('SUBMITTED')">
-            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            Add
-          </button>
-        </div>
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-lg-7 col-md-12 mb-4">
+        <span class="h5 mr-2">Spend Plan Update</span>
+        <span>
+          <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
+            <option></option>
+            <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
+           </select>
+         </span>
       </div>
-    </fieldset>
+    </div>
+    <div class="row mb-3">
+      <div class="col-12">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+            id="myGrid"
+            [enableSorting]="true"
+            [enableColResize]="true"
+            [enableFilter]="false"
+            [gridAutoHeight]="true"
+            [gridOptions]="agOptions"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [columnTypes]="columnTypes"
+            [toolPanelSuppressSideButtons]="true"
+            [pagination]="true"
+            [paginationPageSize]="20"
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
+            [suppressPaginationPanel]="true"
+            (gridReady)="onGridReady($event)"
+            >
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <fieldset>
+          <legend>Add Spend Plan</legend>
+          <div class="row">
+            <div class="col-11">
+              <add-spend-plan></add-spend-plan>
+            </div>
+            <div class="col-1">
+              <button class="btn btn-primary pull-right" (click)="save('SUBMITTED')">
+                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                Add
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
   </div>
 </div>

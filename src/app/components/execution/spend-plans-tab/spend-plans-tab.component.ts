@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
+import { HeaderComponent } from '../../../components/header/header.component'
 import { Router } from '@angular/router'
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
@@ -13,7 +14,7 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
   styleUrls: ['./spend-plans-tab.component.scss']
 })
 export class SpendPlansTabComponent implements OnInit {
-
+  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private spendplans: Map<string, string> = new Map<string, string>();
@@ -35,12 +36,13 @@ export class SpendPlansTabComponent implements OnInit {
         {
           headerName: 'RDT&E',
           field: 'rdte',
-          maxWidth: 320,
           cellClass: ['ag-cell-white'],
+          maxWidth: 220,
           children: [
           {
             headerName: 'Spend Plans',
             field: 'spendplans',
+            maxWidth: 220,
             cellClass: ['ag-cell-white'],
             // colSpan: function(params) {
             //    var spendplans = params.data.spendplans;

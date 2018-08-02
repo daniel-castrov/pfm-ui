@@ -175,6 +175,7 @@ const appRoutes: Routes = [
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
   {path:'set-epp', component: SetEppComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
+  {path:'spend-plan-update', component:SpendPlansTabComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
