@@ -40,8 +40,8 @@ export class AddSpendPlanComponent implements OnInit {
     this.columnDefs = [
         {
           headerName: 'After Appropriation',
+          field: 'afterAppropriation',
           maxWidth: 320,
-          cellClass: ['ag-cell-white'],
           children: [
           {
             headerName: 'Spend Plans',
@@ -52,6 +52,7 @@ export class AddSpendPlanComponent implements OnInit {
       },
       {
         headerName: 'First Year',
+        field: 'firstYear',
         children: [
         {
           headerName: 'Oct',

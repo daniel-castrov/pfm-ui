@@ -127,7 +127,7 @@ export class ActualsTabComponent implements OnInit {
         { actuals: 'Cummulative Outlayed', jan: 'item 1', nov: 70000 },
         { actuals: 'OSD Goal', aug: 'item 1', dec: 745000 },
         { actuals: 'Delta', apr: 'item 1', aug: 590000 },
-        { actuals: 'Actulals (Monthly)', mar: 'item 1', sep: 69050 },
+        { actuals: 'Actuals (Monthly)', mar: 'item 1', sep: 69050 },
         { actuals: 'Cummulative Actuals', mar: 'item 1', jun: 35000 },
     ];
 

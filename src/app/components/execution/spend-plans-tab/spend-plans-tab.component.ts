@@ -21,6 +21,7 @@ export class SpendPlansTabComponent implements OnInit {
   private selectedRow: number = -1;
   private columnDefs: any[];
   private rowData: any[];
+  private defaultColDef: any[];
 
   ngOnInit() {}
 
@@ -28,29 +29,35 @@ export class SpendPlansTabComponent implements OnInit {
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
-      enableSorting: true,
-      enableFilter: true,
-      gridAutoHeight: true,
-      pagination: true,
-      paginationPageSize: 30,
-      suppressPaginationPanel: true,
     }
 
     this.columnDefs = [
         {
           headerName: 'RDT&E',
+          field: 'rdte',
           maxWidth: 320,
           cellClass: ['ag-cell-white'],
           children: [
           {
             headerName: 'Spend Plans',
             field: 'spendplans',
-            cellClass: ['ag-cell-white']
+            cellClass: ['ag-cell-white'],
+            // colSpan: function(params) {
+            //    var spendplans = params.data.spendplans;
+            //    if (spendplans === "Baseline") {
+            //      return 2;
+            //    } else if (spendplans === "Obligated") {
+            //      return 4;
+            //    } else {
+            //      return 1;
+            //   }
+            // }
           }
         ],
       },
       {
         headerName: 'First Year',
+        field: 'firstYear',
         children: [
         {
           headerName: 'Oct',
