@@ -28,7 +28,17 @@
   <div class="col-12">
     <fieldset>
       <legend>Add Spend Plan</legend>
-      <add-spend-plan></add-spend-plan>
+      <div class="row">
+        <div class="col-11">
+          <add-spend-plan></add-spend-plan>
+        </div>
+        <div class="col-1">
+          <button class="btn btn-primary pull-right" (click)="save('SUBMITTED')">
+            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+            Add
+          </button>
+        </div>
+      </div>
     </fieldset>
   </div>
 </div>
