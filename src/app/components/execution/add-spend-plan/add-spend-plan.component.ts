@@ -8,11 +8,12 @@ import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 @Component({
-  selector: 'spend-plans-tab',
-  templateUrl: './spend-plans-tab.component.html',
-  styleUrls: ['./spend-plans-tab.component.scss']
+  selector: 'add-spend-plan',
+  templateUrl: './add-spend-plan.component.html',
+  styleUrls: ['./add-spend-plan.component.scss']
 })
-export class SpendPlansTabComponent implements OnInit {
+
+export class AddSpendPlanComponent implements OnInit {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
@@ -38,7 +39,7 @@ export class SpendPlansTabComponent implements OnInit {
 
     this.columnDefs = [
         {
-          headerName: 'RDT&E',
+          headerName: 'After Appropriation',
           maxWidth: 320,
           cellClass: ['ag-cell-white'],
           children: [
@@ -46,7 +47,7 @@ export class SpendPlansTabComponent implements OnInit {
             headerName: 'Spend Plans',
             field: 'spendplans',
             cellClass: ['ag-cell-white']
-          }
+          },
         ],
       },
       {
@@ -55,93 +56,84 @@ export class SpendPlansTabComponent implements OnInit {
         {
           headerName: 'Oct',
           field: 'oct',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Nov',
           field: 'nov',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Dec',
           field: 'dec',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Jan',
           field: 'jan',
           maxWidth: 80,
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Feb',
           field: 'feb',
           maxWidth: 80,
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Mar',
           field: 'mar',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Apr',
           field: 'apr',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'May',
           field: 'may',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Jun',
           field: 'jun',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Jul',
           field: 'jul',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Aug',
           field: 'aug',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         },
         {
           headerName: 'Sep',
           field: 'sep',
-          cellClass: ['ag-cell-white', 'text-right']
+          cellClass: ['ag-cell-edit', 'text-right']
         }
       ]
     }
   ];
-
   this.rowData = [
-      { spendplans: 'Baseline', mar: 'item 1', jun: 35000 },
-      { spendplans: 'Obligated', sept: 'item 1', aug: 500 },
-      { spendplans: 'In House/Other', dec: 'item 1', oct: 5550 },
-      { spendplans: 'Contracted', may: 'item 1', jul: 45000 },
-      { spendplans: 'Outlayed', oct: 'item 1', feb: 50000 },
-      { spendplans: 'Cummulative Obligated', jan: 'item 1', nov: 7000 },
-      { spendplans: 'In House', aug: 'item 1', dec: 7450 },
-      { spendplans: 'Delta', apr: 'item 1', aug: 5900 },
-      { spendplans: 'Outlayed (Monthly)', oct: 'item 1', feb: 50000 },
-      { spendplans: 'Cummulative Outlayed', jan: 'item 1', nov: 70000 },
-      { spendplans: 'OSD Goal', aug: 'item 1', dec: 7000 },
-      { spendplans: 'Delta', apr: 'item 1', aug: 59000 },
-      { spendplans: 'Actulals (Monthly)', mar: 'item 1', sep: 69050 },
-      { spendplans: 'Cummulative Actuals', mar: 'item 1', jun: 35000 }
-  ];
+      { spendplans1: 'Baseline', mar: 'item 1', jun: 35000 },
+      { spendplans2: 'Obligated', sept: 'item 1', aug: 500 },
+      { spendplans3: 'In House/Other', dec: 'item 1', oct: 5550 },
+      { spendplans3: 'Contracted', may: 'item 1', jul: 45000 },
+      { spendplans2: 'Outlayed', oct: 'item 1', feb: 50000 }
+    ];
+  }
 
-}
 
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);
     this.agGrid.api.paginationSetPageSize(selectedValue);
     this.agGrid.api.sizeColumnsToFit();
   }
+
    onGridReady(params) {
      setTimeout(() => {
        params.api.sizeColumnsToFit();

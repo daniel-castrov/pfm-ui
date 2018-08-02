@@ -23,6 +23,9 @@ export class ActualsTabComponent implements OnInit {
   private columnDefs: any[];
   private rowData: any[];
 
+  ngOnInit() {}
+
+
   constructor() {
 
     this.columnDefs = [
@@ -130,7 +133,6 @@ export class ActualsTabComponent implements OnInit {
 
   }
 
-  ngOnInit() {}
 
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);

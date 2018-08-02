@@ -26,6 +26,7 @@ import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
 import { ActualsTabComponent } from './components/execution/actuals-tab/actuals-tab.component';
+import { AddSpendPlanComponent } from './components/execution/add-spend-plan/add-spend-plan.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
@@ -195,6 +196,7 @@ const appRoutes: Routes = [
     AboutPrivateComponent,
     AccessChangeApprovalComponent,
     ActualsTabComponent,
+    AddSpendPlanComponent,
     AppComponent,
     ApplyComponent,
     AppropriationReleaseComponent,
