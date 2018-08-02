@@ -5,7 +5,7 @@ import { IdAndNameComponent } from './id-and-name/id-and-name.component';
 import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
 import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
 import { PRService } from './../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild, Type } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
 // Other Components
 import { ProgramRequestPageModeService} from './page-mode.service';
@@ -15,19 +15,24 @@ import { ProgramRequestPageModeService} from './page-mode.service';
   templateUrl: './program-request.component.html',
   styleUrls: ['./program-request.component.scss']
 })
-export class ProgramRequestComponent implements OnInit {
+export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private pr: ProgrammaticRequest = {};
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
 
   constructor( private prService: PRService,
-               private programRequestPageMode: ProgramRequestPageModeService ) {
+               private programRequestPageMode: ProgramRequestPageModeService,
+               private cd: ChangeDetectorRef ) {
     this.pr.fundingLines = [];
   }
 
   async ngOnInit() {
     await this.initPr();
     this.idAndNameComponent.init(this.pr);
+  }
+
+  ngAfterViewInit() {
+    this.cd.detectChanges()
   }
 
   private async initPr() {
@@ -95,4 +100,21 @@ export class ProgramRequestComponent implements OnInit {
     }
   }
 
+  private isNotSavable(): boolean {
+    if(this.idAndNameComponent) { // the first time this method is called @ViewChild has not been processed and this.idAndNameComponent is undefined
+      return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+    } else {
+      return true;
+    }
+  }
+
+  private isNotSubmittable(): boolean {
+    if(this.pr.type == ProgramType.GENERIC) return true;
+
+    if(this.idAndNameComponent) { // the first time this method is called @ViewChild has not been processed and this.idAndNameComponent is undefined
+      return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+    } else {
+      return true;
+    }
+  }
 }

@@ -13,12 +13,12 @@ export class PomComponent implements OnChanges {
   @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pbProgrammaticRequests: ProgramRequestWithFullName[];
   @Input() private pom: Pom;
-  @Input() private by: number;
+  private by: number;
 
-  baseline = {};
-  pomRequests = {};
-  allocatedToas = {};
-  difference = {};
+  baseline: {[year:number]:number} = {};
+  pomRequests: {[year:number]:number} = {};
+  allocatedToas: {[year:number]:number} = {};
+  difference: {[year:number]:number} = {};
 
   ngOnChanges() {
 
