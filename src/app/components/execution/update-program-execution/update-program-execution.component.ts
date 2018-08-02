@@ -132,8 +132,9 @@ export class UpdateProgramExecutionComponent implements OnInit {
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
-    this.exesvc.createTransfer(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+    console.log( 'I don\'t do anything yet!')
+    //this.exesvc.createTransfer(this.phase.id, new Blob(["stuff"]),
+    //  new Blob([JSON.stringify(et)])).subscribe();
   }
 
   fullname(exeline: ExecutionLine): string {

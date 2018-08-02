@@ -53,7 +53,7 @@ export class AppropriationReleaseComponent implements OnInit {
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
-    this.exesvc.createRelease(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
+      new Blob([JSON.stringify(et)]), 'EXE_RELEASE').subscribe();
   }
 }

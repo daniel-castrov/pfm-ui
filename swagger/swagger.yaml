@@ -2273,6 +2273,49 @@ paths:
       description: "Returns the execution lines"
       produces:
       - "application/json"
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates an execution event"
+      description: "creates an execution event"
+      operationId: "createExecutionEvent"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: "string"
+                  format: "binary"
+                transfer:
+                  type: "string"
+                  format: "binary"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase containing the transfer"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "formData"
+        name: "transfer"
+        description: "The transfer object as Blob (sorry)"
+        required: true
+        type: "file"
+      - in: "query"
+        name: "type"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "fromIsSource"
+        required: false
+        type: "boolean"
   /executiontransfer/phase/{phaseId}:
     get:
       operationId: "getExecutionTransfersByPhase"
@@ -2293,150 +2336,15 @@ paths:
       description: "Returns the execution transfers"
       produces:
       - "application/json"
-  /executionlines/phase/{phaseId}/transfer:
-    post:
+  /executiontransfer/dropdowns:
+    get:
+      operationId: "getExecutionDropdowns"
       tags:
       - "Execution"
-      summary: "Creates a transfer between Execution Lines"
-      description: "creates a transfer between Execution Lines"
-      operationId: "createTransfer"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}/release:
-    post:
-      tags:
-      - "Execution"
-      summary: "Releases money to Execution Lines"
-      description: "releases money to Execution Lines"
-      operationId: "createRelease"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}/charge:
-    post:
-      tags:
-      - "Execution"
-      summary: "Releases money to Execution Lines"
-      description: "releases money to Execution Lines"
-      operationId: "createCharge"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}/withhold:
-    post:
-      tags:
-      - "Execution"
-      summary: "Releases money to Execution Lines"
-      description: "releases money to Execution Lines"
-      operationId: "createWithhold"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
+      summary: "Gets all the subtypes for the execution pages"
+      description: "Returns the execution transfer subtypes"
+      produces:
+      - "application/json"
   /executionlines/{lineId}:
     get:
       operationId: "getExecutionLineById"
@@ -3253,6 +3161,15 @@ definitions:
         type: "array"
         items:
           type: "number"
+  ExecutionDropDown:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      type:
+        type: "string"
   ExecutionTransfer:
     type: "object"
     properties:

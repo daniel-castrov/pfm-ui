@@ -54,7 +54,8 @@ export class ChargesComponent implements OnInit {
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
-    this.exesvc.createCharge(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+    console.error( 'I don\'t do anything!')
+    //this.exesvc.createCharge(this.phase.id, new Blob(["stuff"]),
+    //  new Blob([JSON.stringify(et)])).subscribe();
   }
 }

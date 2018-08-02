@@ -10,7 +10,7 @@ import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
-import { ExecutionLine, ProgramsService } from '../../../generated';
+import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
 declare const $: any;
@@ -30,14 +30,18 @@ export class WithholdComponent implements OnInit {
   private etype: string;
   private other: string;
   private longname: string;
+  private subtypes: ExecutionDropDown[];
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-
     this.route.params.subscribe(data => {
-      this.exesvc.getById(data.phaseId).subscribe(d2 => {
-        this.phase = d2.result;
+      forkJoin([
+        this.exesvc.getById(data.phaseId),
+        this.exesvc.getExecutionDropdowns()
+      ]).subscribe(d2 => {
+        this.phase = d2[0].result;
+        this.subtypes = d2[1].result.filter(x => ('EXE_WITHHOLD' === x.type));
       });
     });
   }
@@ -54,7 +58,7 @@ export class WithholdComponent implements OnInit {
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
-    this.exesvc.createWithhold(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
+      new Blob([JSON.stringify(et)]), 'EXE_WITHHOLD').subscribe();
   }
 }
