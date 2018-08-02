@@ -2,8 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
 import { Router } from '@angular/router'
+import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
+import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 @Component({
   selector: 'actuals-tab',
@@ -17,6 +19,7 @@ export class ActualsTabComponent implements OnInit {
 
   private actuals: Map<string, string> = new Map<string, string>();
   private agOptions: GridOptions;
+  private selectedRow: number = -1;
   private columnDefs: any[];
   private rowData: any[];
 
@@ -129,14 +132,20 @@ export class ActualsTabComponent implements OnInit {
 
   ngOnInit() {}
 
-    onGridReady(params) {
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+  onGridReady(params) {
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
+    window.addEventListener("resize", function() {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
-      }, 500);
-      window.addEventListener("resize", function() {
-        setTimeout(() => {
-          params.api.sizeColumnsToFit();
-        });
       });
-    }
+    });
   }
+}
