@@ -17,45 +17,68 @@ export class SpendPlansTabComponent implements OnInit {
   private spendPlans: Map<string, string> = new Map<string, string>();
   private selectedRow: number = -1;
   private agOptions: GridOptions;
-  private menuTabs = ['filterMenuTab'];
+  private columnDefs: any[];
+  private rowData: any[];
 
-  constructor() { }
 
-  ngOnInit() {}
+  constructor() {
 
-    columnDefs = [
+    this.columnDefs = [
+
       {
-        headerName: 'Spend Plans',
-        field: 'spendPlans',
-        filter: 'agTextColumnFilter',
-        cellClass: ['ag-cell-white']
-      },
+        headerName: 'RDT&E',
+        cellClass: ['ag-cell-white'],
+        children: [
+        {
+          headerName: 'Spend Plans',
+          field: 'spendPlans',
+          cellClass: ['ag-cell-white'],
+          children: [
+            {
+              field: '',
+              cellClass: ['ag-cell-white']
+            },
+            {
+              field: '',
+              cellClass: ['ag-cell-white', 'text-center']
+            },
+            {
+              field: '',
+              cellClass: ['ag-cell-white', 'text-right']
+            }
+          ]
+        },
+      ],
+    },
+    {
+      headerName: 'First Year',
+      children: [
       {
         headerName: 'Oct',
         field: 'oct',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Nov',
         field: 'nov',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
         {headerName: 'Dec',
         field: 'dec',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
         {headerName: 'Jan',
         field: 'jan',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Feb',
         field: 'feb',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
@@ -67,19 +90,19 @@ export class SpendPlansTabComponent implements OnInit {
       {
         headerName: 'Apr',
         field: 'apr',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'May',
         field: 'may',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Jun',
         field: 'jun',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
@@ -91,18 +114,20 @@ export class SpendPlansTabComponent implements OnInit {
       {
         headerName: 'Aug',
         field: 'aug',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       },
       {
         headerName: 'Sep',
         field: 'sep',
-        maxWidth: 88,
+        maxWidth: 80,
         cellClass: ['ag-cell-white', 'text-right']
       }
-    ];
+    ]
+  }
+];
 
-    rowData = [
+    this.rowData = [
         { spendPlans: 'Funds', mar: 'item 1', jun: 35000 },
         { spendPlans: 'Released', sept: 'item 1', aug: 500 },
         { spendPlans: 'Committed (Monthly)', dec: 'item 1', oct: 5550 },
@@ -132,6 +157,11 @@ export class SpendPlansTabComponent implements OnInit {
         { spendPlans: 'testing2', sept: 'item 1', aug: 500 },
         { spendPlans: 'testing3', dec: 'item 1', oct: 5550 }
     ];
+
+   }
+
+  ngOnInit() {}
+
 
     onPageSizeChanged(event) {
       var selectedValue = Number(event.target.value);

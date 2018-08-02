@@ -608,6 +608,17 @@ tab {
     }
 }
 
+//hack for top header of actuals tables
+// hack for top header of PR table
+
+.actuals-table {
+
+   .ag-header-group-cell-label span {
+     text-align: center;
+     width: 100%;
+  }
+}
+
 // fix for extra row space under Set TOA for CBDP Community ($K) table
 
   .set-toa {
