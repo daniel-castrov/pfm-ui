@@ -22,6 +22,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   private current: ExecutionLine;
   private phase: Execution;
+  private allexelines: ExecutionLine[] = [];
   private updateexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
