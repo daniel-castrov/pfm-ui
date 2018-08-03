@@ -27,24 +27,24 @@ export class OeUpdateComponent implements OnInit {
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-  private mrid: string;
-  private appropriation: string;
-  private blin: string;
-  private item: string;
-  private opAgency: string;
-  private funds: number;
-  private menuTabs = ['filterMenuTab'];
+  private columnDefs: any[];
+  private rowData: any[];
 
   private agOptions: GridOptions;
 
   ngOnInit() {}
 
-    columnDefs = [
+  constructor() {
+    this.columnDefs = [
       {
         headerName: 'Program',
         field: 'program',
         filter: 'agTextColumnFilter',
-        cellClass: ['ag-cell-light-grey','ag-clickable']
+        cellClass: ['ag-cell-light-grey','ag-link'],
+        cellRenderer: function(params){
+          return "<a href='/program-execution-line"
+          + "'> "+params.value+"</a>";
+        }
       },
       {
         headerName: 'Appr',
@@ -106,7 +106,7 @@ export class OeUpdateComponent implements OnInit {
       }
     ];
 
-    rowData = [
+    this.rowData = [
         { program: 'testing', item: 'item 1', update: 35000 },
         { program: 'testing2', item: 'item 2', update: 5000 },
         { program: 'testing3', item: 'item 3', update: 4000 },
@@ -167,6 +167,7 @@ export class OeUpdateComponent implements OnInit {
         { program: 'testing3', item: 'item 3', update: 4000 },
         { program: 'testing4', item: 'item 4', update: 300 }
     ];
+  }
 
     onPageSizeChanged(event) {
       var selectedValue = Number(event.target.value);

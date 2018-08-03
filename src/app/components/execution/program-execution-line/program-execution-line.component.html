@@ -1,0 +1,33 @@
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-8">
+        <div class="h5 mb-4">FY18 - O&amp;E Update for Program Execution Line</div>
+        <span class="form-group">
+          <span class="mr-sm-4">NGCD/Increment 1</span>
+        </span>
+        <span class="form-group">
+            <span class="mr-sm-4">RDTE/BA4/IS4/5Y</span>
+        </span>
+      </div>
+      <div class="col-4">
+        <div class="pull-right program-controls">
+          <button class="btn btn-primary mt-5" (click)="save('SUBMITTED')">Submit</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <tabset class="program-tab-style" role="tablist">
+          <tab heading="Actuals" id="tab1" active="true">
+            <actuals-tab role="tabpanel"></actuals-tab>
+          </tab>
+          <tab heading="Graph" id="tab2">
+            <graphs-tab role="tabpanel"></graphs-tab>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>

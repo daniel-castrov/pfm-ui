@@ -4,6 +4,7 @@
 @import "~ag-grid/dist/styles/ag-grid.css";
 @import "~ag-grid/dist/styles/ag-theme-balham.css";
 
+// variables
 $black: #000000;
 $dark-grey: #848282;
 $dark-green: #61bb69;
@@ -13,8 +14,10 @@ $light-green: #ebf2de;
 $light-grey: #eae9e9;
 $medium-grey: #dddddd;
 $primary-color: #25527a;
+$red: #ff0000;
 $white-border: 1px solid #ffffff;
 $white: #ffffff;
+$yellow: #fec001;
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -564,8 +567,27 @@ tab {
   color: $black;
 }
 
+.ag-cell-yellow {
+  background-color: $yellow;
+  color: $black;
+}
+
+.ag-cell-red {
+  background-color: $red;
+  color: $black;
+}
+
 .ag-clickable {
   color: $primary-color;
+}
+
+.ag-link {
+  color: $primary-color;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 // hack for top header of PR table
@@ -593,6 +615,17 @@ tab {
         text-align: center !important;
         font-style: italic;
     }
+}
+
+//hack for top header of actuals tables
+// hack for top header of PR table
+
+.actuals-table {
+
+   .ag-header-group-cell-label span {
+     text-align: center;
+     width: 100%;
+  }
 }
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table
