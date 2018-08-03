@@ -1,3 +1,19 @@
+<ag-grid-angular #agGrid
+                 class="ag-theme-balham group-header-white"
+                 [gridAutoHeight]="true"
+                 [toolPanelSuppressSideButtons]="true"
+                 [suppressMovableColumns]="true"
+                 [suppressRowTransform]="true"
+                 [showToolPanel]="false"
+                 [enableSorting]="true"
+                 [enableFilter]="true"
+                 [rowData]="data"
+                 [singleClickEdit]="true"
+                 [stopEditingWhenGridLosesFocus]=true
+                 (cellValueChanged)="onCellValueChanged($event)"
+                 [pinnedBottomRowData]="pinnedBottomData">
+
+</ag-grid-angular>
 <div class="row">
   <div class="col-12 mb-3">
     <div id="pr-funds" class="table-editable">

@@ -25,6 +25,7 @@ export class UiProgrammaticRequest {
 }
 
 export enum PhaseType {
-  POM = 'pom',
-  PB = 'pb'
+  POM = 'POM',
+  PB = 'PB',
+  DELTA = 'Delta'
 }
