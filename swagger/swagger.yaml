@@ -2308,14 +2308,8 @@ paths:
         description: "The transfer object as Blob (sorry)"
         required: true
         type: "file"
-      - in: "query"
-        name: "type"
-        required: true
-        type: "string"
-      - in: "query"
-        name: "fromIsSource"
-        required: false
-        type: "boolean"
+      produces:
+      - "application/json"
   /executiontransfer/phase/{phaseId}:
     get:
       operationId: "getExecutionTransfersByPhase"
@@ -3170,21 +3164,21 @@ definitions:
         type: "string"
       type:
         type: "string"
+      subtype:
+        type: "string"
   ExecutionTransfer:
     type: "object"
     properties:
       fromId:
         type: "string"
+      fromIsSource:
+        type: "boolean"
       toIdAmtLkp:
         type: "object"
         $ref: "#/definitions/IntMap"
-      transType:
-        type: "string"
-      eventType:
+      type:
         type: "string"
       reason:
-        type: "string"
-      longname:
         type: "string"
       other:
         type: "string"

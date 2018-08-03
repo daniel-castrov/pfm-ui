@@ -3,7 +3,7 @@
   <div class="col-md-12">
     <div class="row mb-4">
       <div class="col-md-7 col-sm-12">
-        <span class="h5 mr-2">{{phase.fy|FY}} - Appropriation Release for Program Execution Line(s)</span>
+        <span class="h5 mr-2">{{phase?.fy|FY}} - Appropriation Release for Program Execution Line(s)</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -14,13 +14,11 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-md-12 col-lg-2">
+      <div class="col-2">
         <div class="form-group">
           <label class="primary-label">Select Event Type:</label>
-          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option value=""></option>
-            <option [ngValue]="'CRA'">CRA</option>
-            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="etype" (change)="updatetable()">
+            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
           </select>
         </div>
       </div>
@@ -37,9 +35,9 @@
         </div>
       </div>
       <div class="col-md-12 col-lg-9">
-         <div class="form-group">
+        <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input" [(ngModel)]="longname">
+          <label>{{etype?.description}}</label>
         </div>
       </div>
     </div>

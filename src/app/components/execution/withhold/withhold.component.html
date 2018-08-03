@@ -3,7 +3,7 @@
   <div class="col-12">
     <div class="row">
       <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">{{phase.fy|FY}} - Withhold to Program Execution Line(s)</span>
+        <span class="h5 mr-2">{{phase?.fy|FY}} - Withhold to Program Execution Line(s)</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -28,15 +28,14 @@
         <div class="form-group">
           <label class="primary-label">Select Event Type:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option value=""></option>
-            <option [ngValue]="'ODASD(CBD) Withhold'">ODASD(CBD) Withhold</option>
+            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
           </select>
         </div>
       </div>
       <div class="col-10">
          <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input" [(ngModel)]="longname">
+          <label>{{etype?.description}}</label>
         </div>
       </div>
     </div>

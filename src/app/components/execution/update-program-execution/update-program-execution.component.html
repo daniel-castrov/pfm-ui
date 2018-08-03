@@ -13,10 +13,9 @@
     <div class="row mb-3">
       <div class="col-10">
         <span class="form-group mr-3">
-          <label class="primary-label">From</label>
-          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown">
-            <option></option>
-            <option>2018</option>
+          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown" [(ngModel)]="fromIsSource">
+            <option [value]="'true'">From</option>
+            <option [value]="'false'">To</option>
           </select>
         </span>
         <span class="form-group">
@@ -53,32 +52,24 @@
     </div>
     <div class="row mb-3">
       <div class="col-6">
-        <span class="form-group ">
-          <label class="primary-label mr-2">Select Transaction Type:</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ttype">
-            <option value=""></option>
-            <option [ngValue]="'BTR'">BTR</option>
-            <option [ngValue]="'EXTERNAL'">External</option>
-            <option [ngValue]="'REALIGNMENT'">Realignment</option>
-          </select>
-         </span>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-md-12 col-lg-2">
         <div class="form-group">
           <label class="primary-label">Select Event Type:</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="type" (change)="updatedropdowns()">
+            <option *ngFor="let t of types|mapAsList" [ngValue]="t.key">{{t.value}}</option>
+          </select>
+        
+          <label class="primary-label">Select Event Subtype:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option value=""></option>
-            <option [ngValue]="'CRA'">CRA</option>
-            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
+            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
           </select>
         </div>
       </div>
+    </div>
+    <div class="row mb-3">
       <div class="col-md-12 col-lg-7">
-         <div class="form-group">
+        <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input" [(ngModel)]="longname">
+          <label class="primary-label">{{etype?.description}}</label>
         </div>
       </div>
     </div>

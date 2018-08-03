@@ -27,7 +27,7 @@ export class WithholdComponent implements OnInit {
   private updatelines: ExecutionLine[] = [];
   private phase: Execution;
   private reason: string;
-  private etype: string;
+  private etype: ExecutionDropDown;
   private other: string;
   private longname: string;
   private subtypes: ExecutionDropDown[];
@@ -49,16 +49,15 @@ export class WithholdComponent implements OnInit {
   submit() {
     var et: ExecutionTransfer = {
       toIdAmtLkp: {},
-      eventType: this.etype,
+      type: this.etype.subtype,
       other: this.other,
       reason: this.reason,
-      longname: this.longname
     };
     this.updatelines.forEach(l => {
       et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
     });
 
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)]), 'EXE_WITHHOLD').subscribe();
+      new Blob([JSON.stringify(et)])).subscribe();
   }
 }

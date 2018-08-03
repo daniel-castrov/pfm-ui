@@ -27,11 +27,13 @@
       <div class="col-md-12 col-lg-2">
         <div class="form-group">
           <label class="primary-label">Select Event Type:</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="type" (change)="updatedropdowns()">
+            <option *ngFor="let t of types|mapAsList" [ngValue]="t.key">{{t.value}}</option>
+          </select>
+
+          <label class="primary-label">Select Event Subtype:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option value=""></option>
-            <option [ngValue]="'SECTION'">Section</option>
-            <option [ngValue]="'CRA'">CRA</option>
-            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
+            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
           </select>
         </div>
       </div>
@@ -44,7 +46,7 @@
       <div class="col-md-12 col-lg-8">
          <div class="form-group">
           <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input" [(ngModel)]="longname">
+          <label class="primary-label">{{etype?.description}}</label>
         </div>
       </div>
     </div>
