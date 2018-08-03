@@ -43,7 +43,7 @@ export class OeUpdateComponent implements OnInit {
         cellClass: ['ag-cell-light-grey','ag-link'],
         cellRenderer: function(params){
           return "<a href='/program-execution-line"
-          + "'>link "+params.value+"</a>";
+          + "'> "+params.value+"</a>";
         }
       },
       {
