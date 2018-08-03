@@ -40,7 +40,11 @@ export class OeUpdateComponent implements OnInit {
         headerName: 'Program',
         field: 'program',
         filter: 'agTextColumnFilter',
-        cellClass: ['ag-cell-light-grey','ag-clickable']
+        cellClass: ['ag-cell-light-grey','ag-link'],
+        cellRenderer: function(params){
+          return "<a href='/program-execution-line"
+          + "'>link "+params.value+"</a>";
+        }
       },
       {
         headerName: 'Appr',

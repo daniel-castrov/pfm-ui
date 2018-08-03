@@ -581,6 +581,15 @@ tab {
   color: $primary-color;
 }
 
+.ag-link {
+  color: $primary-color;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 // hack for top header of PR table
 
 .pr-table {
