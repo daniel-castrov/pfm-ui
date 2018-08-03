@@ -1,10 +1,11 @@
-import { ProgrammaticRequestState } from './../../../generated/model/programmaticRequestState';
-import { CreationTimeType } from './../../../generated/model/creationTimeType';
-import { ProgramType } from './../../../generated/model/programType';
-import { IdAndNameComponent } from './id-and-name/id-and-name.component';
+import { PRUtils } from './../../../services/pr.utils.service';
 import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
-import { ProgrammaticRequest } from './../../../generated/model/programmaticRequest';
-import { PRService } from './../../../generated/api/pR.service';
+import { ProgrammaticRequestState } from '../../../generated/model/programmaticRequestState';
+import { CreationTimeType } from '../../../generated/model/creationTimeType';
+import { ProgramType } from '../../../generated/model/programType';
+import { IdAndNameComponent } from './id-and-name/id-and-name.component';
+import { ProgrammaticRequest } from '../../../generated/model/programmaticRequest';
+import { PRService } from '../../../generated/api/pR.service';
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
 // Other Components
@@ -18,6 +19,7 @@ import { ProgramRequestPageModeService} from './page-mode.service';
 export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private pr: ProgrammaticRequest = {};
+  private prs: ProgrammaticRequest[];
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
 
   constructor( private prService: PRService,
@@ -29,6 +31,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     await this.initPr();
     this.idAndNameComponent.init(this.pr);
+    this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
   }
 
   ngAfterViewInit() {
@@ -42,6 +45,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       this.initPrFields();
     }
   }
+
 
   private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
@@ -101,20 +105,18 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private isNotSavable(): boolean {
-    if(this.idAndNameComponent) { // the first time this method is called @ViewChild has not been processed and this.idAndNameComponent is undefined
-      return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
-    } else {
-      return true;
-    }
+    if(!this.idAndNameComponent) return true // not fully initilized yet
+    return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
   private isNotSubmittable(): boolean {
-    if(this.pr.type == ProgramType.GENERIC) return true;
+    if( !this.prs || !this.idAndNameComponent ) return true // not fully initilized yet
+    if( this.pr.type == ProgramType.GENERIC ) return true;
+    if( this.thereAreOutstandingGenericSubprogramsAmongTheChildren() ) return true;
+    return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+  }
 
-    if(this.idAndNameComponent) { // the first time this method is called @ViewChild has not been processed and this.idAndNameComponent is undefined
-      return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
-    } else {
-      return true;
-    }
+  private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
+    return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.state === 'OUTSTANDING');
   }
 }
