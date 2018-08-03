@@ -1,8 +1,8 @@
 <j-header></j-header>
 <div class="row main-content">
   <div class="col-md-12">
-    <div class="row">
-      <div class="col-lg-7 col-md-12 mb-4">
+    <div class="row mb-2">
+      <div class="col-8">
         <span class="h5 mr-2">Spend Plan Update</span>
         <span>
           <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
@@ -10,6 +10,21 @@
             <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
            </select>
          </span>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-8">
+        <span class="form-group">
+          <span class="mr-sm-4">NGCD/Increment 1</span>
+        </span>
+        <span class="form-group">
+            <span class="mr-sm-4">RDTE/BA4/IS4/5Y</span>
+        </span>
+      </div>
+      <div class="col-4">
+        <div class="pull-right program-controls">
+          <button class="btn btn-primary" (click)="save('SUBMITTED')">Submit</button>
+        </div>
       </div>
     </div>
     <div class="row mb-3">
