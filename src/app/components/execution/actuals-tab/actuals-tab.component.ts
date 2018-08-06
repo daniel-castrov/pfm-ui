@@ -36,7 +36,7 @@ export class ActualsTabComponent implements OnInit {
               headerName: 'Actuals',
               field: 'actuals',
               filter: 'agTextColumnFilter',
-              cellClass: ['ag-cell-white', 'ag-clickable'],
+              cellClass: ['ag-cell-white', 'ag-link'],
               cellRenderer: function(params){
                 return "<a data-toggle='modal' + href='#myModal"
                 + "'> "+params.value+"</a>";
