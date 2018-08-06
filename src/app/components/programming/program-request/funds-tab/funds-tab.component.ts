@@ -6,8 +6,8 @@ import { FeedbackComponent } from './../../../feedback/feedback.component';
 import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
-import {Component, Input, OnChanges, ViewChild, OnInit, ViewEncapsulation} from '@angular/core'
-import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType } from '../../../../generated'
+import { Component, Input, OnChanges, ViewChild, OnInit, ViewEncapsulation } from '@angular/core'
+import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType, IntMap } from '../../../../generated'
 import { Row } from './Row';
 import { Key } from './Key';
 import { PhaseType } from "../../select-program-request/UiProgrammaticRequest";
