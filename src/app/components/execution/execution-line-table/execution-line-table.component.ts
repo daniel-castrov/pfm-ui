@@ -9,6 +9,7 @@ import { GlobalsService } from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExcelTable } from 'ag-grid/dist/lib/interfaces/iExcelCreator';
+import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
 
 declare const $: any;
 declare const jQuery: any;
@@ -21,7 +22,8 @@ declare const jQuery: any;
 export class ExecutionLineTableComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @Input() private phase: Execution;
-  @Input() private updatelines: ExecutionLine[];
+  @Input() private sourceOrTarget: string = 'target';
+  @Input() private updatelines: ExecutionLineWrapper[] = [];
   private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
@@ -99,11 +101,19 @@ export class ExecutionLineTableComponent implements OnInit {
       Object.getOwnPropertyNames(data[0].result).forEach(id => {
         my.programIdNameLkp.set(id, data[0].result[id]);
       });
+
+      my.allexelines.sort((a, b) => {
+        if (my.fullname(a) === my.fullname(b)) {
+          return 0;
+        }
+        return (my.fullname(a) < my.fullname(b) ? -1 : 1);
+      });
     });
   }
 
   fullname(exeline: ExecutionLine): string {
     if (this.programIdNameLkp && exeline) {
+      console.log(exeline);
       return this.programIdNameLkp.get(exeline.mrId);
     }
     else {
@@ -112,7 +122,10 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   addrow() {
-    this.updatelines.push({});
+    this.updatelines.push({
+      line: {},
+      amt: 0
+    });
   }
 
   removerow(i) {
@@ -120,17 +133,19 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   setline(updateidx: number, lineidx: number) {
+    console.log('setline');
     var my: ExecutionLineTableComponent = this;
-    var toupdate: ExecutionLine = my.updatelines[updateidx];
+    var toupdate: ExecutionLineWrapper = my.updatelines[updateidx];
 
-    var l: ExecutionLine = my.getLineChoices(toupdate.mrId)[lineidx - 1];
-    toupdate.appropriation = l.appropriation;
-    toupdate.blin = l.blin;
-    toupdate.item = l.item;
-    toupdate.opAgency = l.opAgency;
-    toupdate.toa = 0;
-    toupdate.released = 0;
-    toupdate.id = l.id;
+    var l: ExecutionLine = my.getLineChoices(toupdate.line.mrId)[lineidx - 1];
+    toupdate.line.appropriation = l.appropriation;
+    toupdate.line.blin = l.blin;
+    toupdate.line.item = l.item;
+    toupdate.line.opAgency = l.opAgency;
+    toupdate.line.toa = 0;
+    toupdate.line.released = 0;
+    toupdate.line.id = l.id;
+    console.log( 'done')
   }
 
   getLineChoices(mrid): ExecutionLine[] {
@@ -139,8 +154,8 @@ export class ExecutionLineTableComponent implements OnInit {
 
   onedit(amtstr, updateidx) {
     var my: ExecutionLineTableComponent = this;
-    var toupdate: ExecutionLine = my.updatelines[updateidx];
-    toupdate.released = Number.parseInt(amtstr);
+    var toupdate: ExecutionLineWrapper = my.updatelines[updateidx];
+    toupdate.amt = Number.parseInt(amtstr);
   }
 
   total(): number {
@@ -148,11 +163,40 @@ export class ExecutionLineTableComponent implements OnInit {
 
     var tot: number = 0;
     for (var i = 0; i < my.updatelines.length; i++) {
-      if (my.updatelines[i].released) {
-        tot += my.updatelines[i].released;
+      if (my.updatelines[i].line.released) {
+        tot += my.updatelines[i].line.released;
       }
     }
 
     return tot;
+  }
+
+  updateapprs(idx) {
+    if (1 == this.getLineChoices(this.updatelines[idx].line.mrId).length) {
+      this.updatelines[idx] = {
+        line: this.getLineChoices(this.updatelines[idx].line.mrId)[0],
+        amt: 0
+      } 
+    }
+  }
+
+  sortedProgramFullnames(): {}[] {
+    var list: {}[] = [];
+    this.programIdNameLkp.forEach((v, k) => { 
+      list.push({
+        key: k,
+        value: v
+      });
+    });
+
+    list.sort((a:any, b:any) => {
+      if (a.value === b.value) {
+        return 0;
+      }
+
+      return (a.value < b.value ? -1 : 1);
+    });
+
+    return list;
   }
 }

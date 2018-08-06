@@ -12,6 +12,7 @@ import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 
 @Component({
   selector: 'update-program-execution',
@@ -20,10 +21,9 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 })
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
-  private current: ExecutionLine;
+  private current: ExecutionLineWrapper = { line: {} };
   private phase: Execution;
-  private allexelines: ExecutionLine[] = [];
-  private updateexelines: ExecutionLine[] = [];
+  private updatelines: ExecutionLineWrapper[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
   private types: Map<string, string> = new Map<string, string>();
@@ -31,7 +31,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private subtypes: ExecutionDropDown[];
   private etype: ExecutionDropDown;
   private type: string;
-  private fromIsSource: boolean = false;
+  private fromIsSource: boolean = true;
 
   private reason: string;
 
@@ -48,12 +48,11 @@ export class UpdateProgramExecutionComponent implements OnInit {
         my.progsvc.getIdNameMap(),
         my.exesvc.getExecutionDropdowns()
       ]).subscribe(data => {
-        my.current = data[0].result;
+        my.current = {
+          line: data[0].result
+        };
 
-        my.exesvc.getExecutionLinesByPhase(my.current.phaseId).subscribe(d2 => {
-          my.allexelines = d2.result;
-        });
-        my.exesvc.getById(my.current.phaseId).subscribe(d2 => {
+        my.exesvc.getById(my.current.line.phaseId).subscribe(d2 => {
           my.phase = d2.result;
         });
 
@@ -74,14 +73,14 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
   submit() {
     var et: ExecutionTransfer = {
-      fromId: this.current.id,
+      fromId: this.current.line.id,
       fromIsSource: this.fromIsSource,
       toIdAmtLkp: {},
       type: this.etype.subtype,
       reason: this.reason,
     };
-    this.updateexelines.forEach(l => {
-      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+    this.updatelines.forEach(l => {
+      et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
