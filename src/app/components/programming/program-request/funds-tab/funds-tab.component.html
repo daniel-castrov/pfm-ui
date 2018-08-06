@@ -1,3 +1,7 @@
+<button class="btn btn-primary" (click)="addRow()">
+  <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+  Add Funding Line
+</button>
 <ag-grid-angular #agGrid
                  class="ag-theme-balham group-header-white"
                  [gridAutoHeight]="true"
@@ -9,9 +13,8 @@
                  [enableFilter]="true"
                  [rowData]="data"
                  [singleClickEdit]="true"
-                 [stopEditingWhenGridLosesFocus]=true
-                 (cellValueChanged)="onCellValueChanged($event)"
-                 [pinnedBottomRowData]="pinnedBottomData">
+                 [pinnedBottomRowData]="pinnedBottomData"
+  [editType]="editType">
 
 </ag-grid-angular>
 <div class="row">
