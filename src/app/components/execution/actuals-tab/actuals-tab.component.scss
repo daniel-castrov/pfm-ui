@@ -493,22 +493,46 @@ label {
 
 .modal {
 
- .modal-header {
-    border-bottom: none;
-    position: relative;
+  margin-left: -280px;
 
-   .btn {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin-top: 0;
-      height: 30px;
-      border-top-left-radius: 0;
-      border-bottom-right-radius: 0;
+  .modal-content {
+    width: 900px;
+  }
 
-      > i {
-        font-size: 26px;
-      }
+  .modal-body {
+    padding: 2rem;
+
+    .btn {
+      margin: 0 0 0 10px;
+      width: 120px;
+    }
+
+    .actuals {
+      width: 480px;
+    }
+
+    .number-months {
+      width: 60px;
+      display: inline-block;
     }
   }
-}
+
+  .modal-header {
+     border-bottom: none;
+     position: relative;
+
+    .btn {
+       position: absolute;
+       top: 0;
+       right: 0;
+       margin-top: 0;
+       height: 30px;
+       border-top-left-radius: 0;
+       border-bottom-right-radius: 0;
+
+       > i {
+         font-size: 26px;
+       }
+     }
+   }
+ }
