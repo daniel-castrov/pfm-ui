@@ -12,6 +12,7 @@ import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 
 declare const $: any;
 declare const jQuery: any;
@@ -24,7 +25,7 @@ declare const jQuery: any;
 export class WithholdComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
-  private updatelines: ExecutionLine[] = [];
+  private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;
   private reason: string;
   private etype: ExecutionDropDown;
@@ -42,6 +43,8 @@ export class WithholdComponent implements OnInit {
       ]).subscribe(d2 => {
         this.phase = d2[0].result;
         this.subtypes = d2[1].result.filter(x => ('EXE_WITHHOLD' === x.type));
+        this.etype = this.subtypes[0];
+
       });
     });
   }
@@ -54,7 +57,7 @@ export class WithholdComponent implements OnInit {
       reason: this.reason,
     };
     this.updatelines.forEach(l => {
-      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+      et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
