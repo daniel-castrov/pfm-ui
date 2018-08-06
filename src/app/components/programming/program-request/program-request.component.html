@@ -3,7 +3,7 @@
   <div class="row main-content" *ngIf="programRequestPageMode.initialized">
     <div class="col-12">
       <div class="row">
-        <id-and-name #idAndName class="col-8" [pr]="pr"></id-and-name>
+        <id-and-name class="col-8" [pr]="pr"></id-and-name>
         <div class="col-4">
           <div class="pull-right mb-2" aria-label="breadcrumb">
               <ol class="breadcrumb">
@@ -22,10 +22,10 @@
               <button class="btn btn-primary">Validate</button>
             </span>
             <span>
-              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="idAndName.invalid || pr.state=='SUBMITTED'">Save</button>
+              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="isNotSavable()">Save</button>
             </span>
             <span>
-              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="idAndName.invalid || pr.state=='SUBMITTED'">Submit</button>
+              <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="isNotSubmittable()">Submit</button>
             </span>
           </div>
         </div>
@@ -38,7 +38,7 @@
             <program-tab [pr]="pr" role="tabpanel"></program-tab>
           </tab>
           <tab heading="Funds" id="tab2" active="true">
-            <funds-tab [pr]="pr" role="tabpanel"></funds-tab>
+            <funds-tab [pr]="pr" [prs]="prs" role="tabpanel"></funds-tab>
           </tab>
           <tab heading="Variants" id="tab3">
             <variants-tab [current]="pr" [editable]="true" role="tabpanel"></variants-tab>

@@ -25,6 +25,8 @@ import 'ag-grid-enterprise';
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
+import { ActualsTabComponent } from './components/execution/actuals-tab/actuals-tab.component';
+import { AddSpendPlanComponent } from './components/execution/add-spend-plan/add-spend-plan.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
@@ -42,6 +44,7 @@ import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
+import { GraphsTabComponent } from './components/execution/graphs-tab/graphs-tab.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
@@ -61,11 +64,13 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
 import { PlanningComponent } from './components/planning/planning.component';
+import { ProgramExecutionLineComponent } from './components/execution/program-execution-line/program-execution-line.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
+import { SpendPlansTabComponent } from './components/execution/spend-plans-tab/spend-plans-tab.component';
 import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { OpenPomSessionComponent } from './components/programming/open-pom-session/open-pom-session.component'
@@ -163,12 +168,14 @@ const appRoutes: Routes = [
   {path:'oe-update', component:OeUpdateComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
+  {path:'program-execution-line', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
   {path:'set-epp', component: SetEppComponent},
   {path:'select-program-request', component:SelectProgramRequestComponent},
+  {path:'spend-plan-update', component:SpendPlansTabComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
@@ -189,6 +196,8 @@ const appRoutes: Routes = [
     AboutComponent,
     AboutPrivateComponent,
     AccessChangeApprovalComponent,
+    ActualsTabComponent,
+    AddSpendPlanComponent,
     AppComponent,
     ApplyComponent,
     AppropriationReleaseComponent,
@@ -211,6 +220,7 @@ const appRoutes: Routes = [
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
+    GraphsTabComponent,
     HeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
@@ -239,12 +249,14 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
+    ProgramExecutionLineComponent,
     ProgramRequestComponent,
     ProgramTabComponent,
     ProgrammaticRequestsComponent,
     RequestComponent,
     SelectProgramRequestComponent,
     SetEppComponent,
+    SpendPlansTabComponent,
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
