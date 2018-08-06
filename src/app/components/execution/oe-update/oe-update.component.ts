@@ -58,13 +58,21 @@ export class OeUpdateComponent implements OnInit {
         cellClass: ['ag-cell-light-grey'],
         maxWidth: 92
       },
-        {headerName: 'Item',
+      {
+        headerName: 'Item',
         field: 'item',
         cellClass: ['ag-cell-light-grey'],
         maxWidth: 92
       },
-        {headerName: 'OpAgency',
+      {
+        headerName: 'OpAgency',
         field: 'opAgency',
+        cellClass: ['ag-cell-light-grey'],
+        maxWidth: 92
+      },
+      {
+        headerName: 'PE',
+        field: 'PE',
         cellClass: ['ag-cell-light-grey'],
         maxWidth: 92
       },
