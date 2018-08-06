@@ -1,3 +1,4 @@
+import { ProgramTabComponent } from './program-tab/program-tab.component';
 import { PRUtils } from './../../../services/pr.utils.service';
 import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
 import { ProgrammaticRequestState } from '../../../generated/model/programmaticRequestState';
@@ -21,6 +22,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   private pr: ProgrammaticRequest = {};
   private prs: ProgrammaticRequest[];
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
+  @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
 
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService,
@@ -110,10 +112,10 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private isNotSubmittable(): boolean {
-    if( !this.prs || !this.idAndNameComponent ) return true // not fully initilized yet
+    if( !this.prs || !this.idAndNameComponent || !this.programTabComponent ) return true // not fully initilized yet
     if( this.pr.type == ProgramType.GENERIC ) return true;
     if( this.thereAreOutstandingGenericSubprogramsAmongTheChildren() ) return true;
-    return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+    return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
