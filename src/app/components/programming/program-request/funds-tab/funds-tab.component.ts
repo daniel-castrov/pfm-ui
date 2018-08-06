@@ -1,10 +1,13 @@
+import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
+import { ProgramType } from './../../../../generated/model/programType';
+import { PRUtils } from './../../../../services/pr.utils.service';
 import { AutoValuesService } from './AutoValues.service';
 import { FeedbackComponent } from './../../../feedback/feedback.component';
 import { User } from './../../../../generated/model/user';
 import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
 import { Component, Input, OnChanges, ViewChild, OnInit } from '@angular/core'
-import { FundingLine, POMService, Pom, PRService, PBService, ProgrammaticRequest } from '../../../../generated'
+import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType } from '../../../../generated'
 import { Row } from './Row';
 import { Key } from './Key';
 
@@ -14,8 +17,12 @@ import { Key } from './Key';
   styleUrls: ['./funds-tab.component.scss']
 })
 export class FundsTabComponent implements OnChanges, OnInit {
+
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
-  @Input() pr: ProgrammaticRequest;
+  @Input() private pr: ProgrammaticRequest;
+  private parentPr: ProgrammaticRequest;
+  @Input() private prs: ProgrammaticRequest[];
+
   private pomFy: number;
   private pbFy: number;
   private rows: Map<string, Row> = new Map<string, Row>();
@@ -42,9 +49,12 @@ export class FundsTabComponent implements OnChanges, OnInit {
     this.loadDropdownOptions();
   }
   
-  ngOnChanges() {
+  async ngOnChanges() {
     if(!this.pr.phaseId) return; // the parent has not completed it's ngOnInit()
     this.initRows();
+    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+      this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result
+    }
   }
   
   private initRows() {
@@ -165,8 +175,30 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
   onEdit(value: string, row: Row, year: number) {
+    const oldValue = row.fundingLine.funds[year];
     row.fundingLine.funds[year] = +value;
+    if(!this.isValidBa(row.fundingLine.baOrBlin, year, +value)) {
+      row.fundingLine.funds[year] = oldValue;
+      this.initRows();
+      this.feedback.failure('value entered is invalid');
+    }
     row.calculateTotalForYear(year);
+  }
+
+  isValidBa(ba: string, year: number, value: number): boolean {
+    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR)  {
+      return this.isValidBaWithRespectToParent(ba, year) && this.isValidBaWithRespectToChildren(ba, year);
+    } else {
+      return true;
+    }
+  }
+
+  isValidBaWithRespectToParent(ba: string, year: number): boolean {
+    return PRUtils.isParentBaSumGreaterThanChildren(ba, year, this.parentPr, this.prs);
+  }
+
+  isValidBaWithRespectToChildren(ba: string, year: number): boolean {
+    return PRUtils.isParentBaSumGreaterThanChildren(ba, year, this.pr, this.prs);
   }
 
   // wierd algorithm for initial BLINs selection based on the initial this.appropriation selection. Possibly flawn.

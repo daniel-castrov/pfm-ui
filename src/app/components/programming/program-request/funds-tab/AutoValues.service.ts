@@ -1,5 +1,4 @@
 import { GlobalsService } from './../../../../services/globals.service';
-import { Community } from './../../../../generated/model/community';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 
