@@ -129,10 +129,19 @@ input {
 // PR Funds table
 
 .pr-funds-tab {
+  .ag-row {
+    &:hover {
+      background: #f1f1f1 !important;
+    }
+  }
+  .ag-row:last-child  {
+      background: $light-grey;
+  }
+
   .ag-row-odd {
     background: $white !important;
     &:hover {
-      background: #eae9e9 !important;
+      background: #f1f1f1 !important;
     }
   }
 }
