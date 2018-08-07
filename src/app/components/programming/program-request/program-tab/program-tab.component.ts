@@ -1,7 +1,6 @@
+import { GlobalsService } from './../../../../services/globals.service';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {FileResponse, LibraryService, ProgrammaticRequest} from "../../../../generated";
-import {ProgramsService} from "../../../../generated/api/programs.service";
-
+import {FileResponse, LibraryService, ProgrammaticRequest, Tag} from "../../../../generated";
 import {DomSanitizer} from '@angular/platform-browser';
 
 
@@ -11,13 +10,12 @@ import {DomSanitizer} from '@angular/platform-browser';
   styleUrls: ['./program-tab.component.scss']
 })
 export class ProgramTabComponent implements OnInit, OnChanges {
-  @Input()
-  pr : ProgrammaticRequest;
-
-  fileArea: string = 'pr';
+  @Input() pr : ProgrammaticRequest;
+  readonly fileArea= 'pr';
   imagePath: string;
 
-  tags = ['Lead Component',
+  readonly tagTypes: string[] = 
+  ['Lead Component',
     'Manager',
     'Primary Capability',
     'Core Capability Area',
@@ -28,18 +26,18 @@ export class ProgramTabComponent implements OnInit, OnChanges {
     'Emphasis Areas'
   ];
 
-  dropdownValues= new Map();
+  readonly mapTypeToTags = new Map<string, Tag[]>();
 
-  constructor(private programsService: ProgramsService,
+  constructor(private globalsService: GlobalsService,
               private libraryService: LibraryService,
-              private sanitization: DomSanitizer) { }
+              private sanitization: DomSanitizer) {}
 
   ngOnInit() {
-    this.tags.forEach(tag => {
-      this.programsService.getTagsByType(tag).subscribe(data => {
-        this.dropdownValues.set(tag, data.result);
-      })
-    });
+    this.tagTypes.forEach(tagType => 
+      this.globalsService.tags(tagType).subscribe((tags: Tag[]) => 
+        this.mapTypeToTags.set(tagType, tags)
+      )
+    );
   }
 
   ngOnChanges() {

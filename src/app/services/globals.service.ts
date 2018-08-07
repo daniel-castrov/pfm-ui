@@ -34,12 +34,16 @@ export class GlobalsService {
     return community;
   }
 
-  private tagAbbreviations(type: string): Promise<string[]> {
-    return this.programsService.getTagsByType(type)
-            .map((result: RestResult) => result.result)
+  tags(tagType: string): Observable<Tag[]> {
+    return this.programsService.getTagsByType(tagType)
+            .map((result: RestResult) => result.result);
+  }
+
+  private tagAbbreviations(tagType: string): Promise<string[]> {
+    return this.tags(tagType)
             .map((tags: Tag[]) => tags.map((tag:Tag)=>tag.abbr))
             .map((tags: string[]) => tags.sort())
-            .toPromise()
+            .toPromise();
   }
 
   tagAbbreviationsForOpAgency(): Promise<string[]> {
