@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
@@ -13,6 +13,7 @@ import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
+import { ExecutionLineFilter } from '../model/execution-line-filter';
 
 @Component({
   selector: 'update-program-execution',
@@ -32,6 +33,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private etype: ExecutionDropDown;
   private type: string;
   private fromIsSource: boolean = true;
+  private linefilter: ExecutionLineFilter;
 
   private reason: string;
 
@@ -99,5 +101,26 @@ export class UpdateProgramExecutionComponent implements OnInit {
   updatedropdowns() {
     this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
     this.etype = this.subtypes[0];
+    var my: UpdateProgramExecutionComponent = this;
+    if ('EXE_BTR' === this.type) {
+      // BTR-- only between same PE
+      this.linefilter = function (x: ExecutionLine): boolean {
+        return (x.programElement === my.current.line.programElement);
+      };
+    }
+    else if ('EXE_REALIGNMENT' === this.type) {
+      // realignment-- only between same blin as current
+      this.linefilter = function (x: ExecutionLine): boolean {
+        return (x.blin === my.current.line.blin);
+      };
+    }
+    else if ('EXE_REDISTRIBUTION' === this.type) {
+      // redistributions can do whatever
+      this.linefilter = function (x: ExecutionLine): boolean {
+        return true;
+      };
+    }
+
+    this.updatelines = this.updatelines.filter( elw=> my.linefilter(elw.line));
   }
 }

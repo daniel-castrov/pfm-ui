@@ -79,7 +79,11 @@
     <div class="row mb-3">
       <div class="col-12">
         <div id="update-program-execution" class="table-editable">
-          <app-execution-line-table [sourceOrTarget]="fromIsSource ? 'target' : 'source'" [phase]="phase" [updatelines]="updatelines"></app-execution-line-table>
+          <app-execution-line-table 
+          [sourceOrTarget]="fromIsSource ? 'target' : 'source'" 
+          [phase]="phase" 
+          [exelinefilter]="linefilter"
+          [updatelines]="updatelines"></app-execution-line-table>
         </div>
       </div>
     </div>

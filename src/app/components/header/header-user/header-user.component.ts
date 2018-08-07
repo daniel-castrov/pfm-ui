@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { RequestsService } from './../../../services/requests.service';
+import { RequestsService } from '../../../services/requests.service';
 import { Request } from '../../../services/request';
 import { ElevationService } from '../../../services/elevation.component';
 import { POMService } from '../../../generated/api/pOM.service';

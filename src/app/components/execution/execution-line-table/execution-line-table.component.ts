@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
 import { GlobalsService } from '../../../services/globals.service'
@@ -10,6 +10,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExcelTable } from 'ag-grid/dist/lib/interfaces/iExcelCreator';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
+import { ExecutionLineFilter } from '../model/execution-line-filter'
 
 declare const $: any;
 declare const jQuery: any;
@@ -24,6 +25,7 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() private phase: Execution;
   @Input() private sourceOrTarget: string = 'target';
   @Input() private updatelines: ExecutionLineWrapper[] = [];
+  @Input() private exelinefilter: ExecutionLineFilter;
   private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
@@ -31,8 +33,6 @@ export class ExecutionLineTableComponent implements OnInit {
     private progsvc: ProgramsService, private router: Router) { }
 
   ngOnInit() {
-
-
     //jQuery for editing table
     var $TABLE = $('.execution-line-table');
     var $BTN = $('#export-btn');
@@ -93,7 +93,7 @@ export class ExecutionLineTableComponent implements OnInit {
     forkJoin([
       my.progsvc.getIdNameMap()
     ]).subscribe(data => {
-      console.log(my.phase);
+      //console.log(my.phase);
       my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
         my.allexelines = d2.result;
       });
@@ -133,7 +133,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   setline(updateidx: number, lineidx: number) {
-    console.log('setline');
     var my: ExecutionLineTableComponent = this;
     var toupdate: ExecutionLineWrapper = my.updatelines[updateidx];
 
@@ -145,11 +144,12 @@ export class ExecutionLineTableComponent implements OnInit {
     toupdate.line.toa = 0;
     toupdate.line.released = 0;
     toupdate.line.id = l.id;
-    console.log( 'done')
   }
 
   getLineChoices(mrid): ExecutionLine[] {
-    return this.allexelines.filter(x => x.mrId === mrid);
+    return this.allexelines
+      .filter(x => x.mrId === mrid)
+      .filter(y => (this.exelinefilter ? this.exelinefilter(y) : true));
   }
 
   onedit(amtstr, updateidx) {
@@ -183,10 +183,12 @@ export class ExecutionLineTableComponent implements OnInit {
   sortedProgramFullnames(): {}[] {
     var list: {}[] = [];
     this.programIdNameLkp.forEach((v, k) => { 
-      list.push({
-        key: k,
-        value: v
-      });
+      if (this.getLineChoices(k).length > 0) {
+        list.push({
+          key: k,
+          value: v
+        });
+      }
     });
 
     list.sort((a:any, b:any) => {
