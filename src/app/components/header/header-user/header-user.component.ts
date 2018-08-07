@@ -36,20 +36,25 @@ export class HeaderUserComponent implements OnInit {
       this.requests = [];
     }
 
-    this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
-      this.pomStatusIsCreated = false;
-      this.pomStatusIsOpen = false;
 
-      data.result.forEach((p: Pom) => {
-        if ('CREATED' === p.status) {
-          this.pomStatusIsCreated = true;
-          this.pomId = p.id;
-        }
-        else if ('OPEN' === p.status) {
-          this.pomStatusIsOpen = true;
-          this.pomId = p.id;
-        }
+    if ( this.authUser.rolenames.includes('POM_Mangaer') ){
+
+      this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
+        this.pomStatusIsCreated = false;
+        this.pomStatusIsOpen = false;
+
+        data.result.forEach((p: Pom) => {
+          if ('CREATED' === p.status) {
+            this.pomStatusIsCreated = true;
+            this.pomId = p.id;
+          }
+          else if ('OPEN' === p.status) {
+            this.pomStatusIsOpen = true;
+            this.pomId = p.id;
+          }
+        });
       });
-    });
+    }
+    
   }
 }
