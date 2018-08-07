@@ -52,26 +52,44 @@
 </div>
 
 <!-- Modal Dialog -->
-<!-- <div id="myModal" class="modal fade in">
+<div id="myModal" class="modal fade in">
   <div class="modal-dialog">
-    <div class="modal-content nda-content">
+    <div class="modal-content">
       <div class="modal-header">
         <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-10">
-            <p>Why is the program behind?</p>
-
+          <div class="col-9">
+            <div class="mb-2">Why is the program behind?</div>
+            <div class="form-group">
+              <textarea cols="50" rows="4" wrap="physical" class="form-control"></textarea>
+            </div>
+            <div class="mb-2">What is the get well plan?</div>
+            <div class="form-group">
+              <textarea cols="50" rows="4" wrap="physical" class="form-control"></textarea>
+            </div>
           </div>
-          <div class="col-2">
-            <span class="controls mb-2">
-                <button class="btn btn-primary btn" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary btn" data-dismiss="modal" (click)="updatePom()">Continue</button>
+          <div class="col-3">
+            <div class="mt-4 mb-2">
+              <button class="btn btn-primary" data-dismiss="modal">Save</button>
+            </div>
+            <div>
+              <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-9">
+            <span class="mr-2">
+              Expected # of months to be on track:
+            </span>
+            <span>
+              <input type="number" class="form-control number-months" name="months" minlength="2" maxlength="2">
             </span>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div> -->
+</div>
