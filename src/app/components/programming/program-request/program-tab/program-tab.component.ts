@@ -60,4 +60,8 @@ export class ProgramTabComponent implements OnInit, OnChanges {
     this.pr.imageName = fileResponse.id;
     this.pr.imageArea = this.fileArea;
   }
+
+  get invalid(): boolean {
+    return !this.pr.leadComponent || !this.pr.manager || !this.pr.primaryCapability || !this.pr.coreCapability || !this.pr.functionalArea;
+  }  
 }
