@@ -6,6 +6,7 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgrammaticRequest} from "../UiProgrammaticRequest";
+import {CreationTimeType} from "../../../../generated";
 
 @Component({
   selector: 'programmatic-requests',
@@ -46,12 +47,23 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       let data = []
       this.pomProgrammaticRequests.forEach(pr => {
         let programmaticRequest = new UiProgrammaticRequest(pr);
-        programmaticRequest.phaseType = PhaseType.POM
+        programmaticRequest.phaseType = PhaseType.POM;
+        if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_MRDB) {
+          let prfn = this.pomProgrammaticRequests.filter((prfn: ProgramRequestWithFullName) => pr.creationTimeReferenceId === prfn.originalMrId)[0];
+          programmaticRequest.dataPath = [prfn.shortName, pr.shortName]
+        } else {
+          programmaticRequest.dataPath = [pr.shortName];
+        }
         data.push(programmaticRequest);
       });
       this.pbProgrammaticRequests.forEach(pr => {
         let programmaticRequest = new UiProgrammaticRequest(pr);
-        programmaticRequest.phaseType = PhaseType.PB
+        programmaticRequest.phaseType = PhaseType.PB;
+        // if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_MRDB) {
+        //   programmaticRequest.dataPath = [pr.creationTimeReferenceId, pr.id]
+        // } else {
+          programmaticRequest.dataPath = [pr.shortName];
+        // }
         data.push(programmaticRequest);
       });
       this.sortObjects(data, ['fullname', 'phaseType']);
@@ -61,6 +73,10 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()
     });
+  }
+
+  getDataPath(data) {
+    return data.dataPath;
   }
 
   onGridReady(params) {

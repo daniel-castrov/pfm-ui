@@ -5,6 +5,7 @@ import { ProgramType } from '../../../generated';
 export class UiProgrammaticRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
   phaseType: PhaseType
+  dataPath: string[];
   get id():string {return this.pr.id}
   get state():string {return this.pr.state}
   get shortName():string {return this.pr.shortName}
@@ -12,6 +13,7 @@ export class UiProgrammaticRequest {
   get longName():string {return this.pr.longName}
   get fundingLines():FundingLine[] {return this.pr.fundingLines}
   get parentId():string {return this.pr.parentMrId}
+  get originalMrId():string {return this.pr.originalMrId}
   get bulkOrigin():boolean {return this.pr.bulkOrigin}
   getToa(year:number): number {
     if(this.pr.type == ProgramType.GENERIC) {
