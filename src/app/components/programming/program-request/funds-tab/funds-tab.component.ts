@@ -193,7 +193,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
         field: 'phaseType',
         maxWidth: 92,
         suppressMenu: true,
-        cellClassRules: {'font-weight-bold': params => {return this.colSpanCount(params) > 1}},
+        cellClassRules: {'font-weight-bold ag-medium-gray-cell': params => {return this.colSpanCount(params) > 1}},
         valueGetter: params => {
           switch(params.data.phaseType) {
             case PhaseType.POM:
@@ -560,4 +560,3 @@ export class FundsTabComponent implements OnChanges, OnInit {
   }
 
 }
-
