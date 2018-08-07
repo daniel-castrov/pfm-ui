@@ -124,3 +124,15 @@ input {
 .ag-floating-bottom {
   border-top: 1px solid #7b8389 !important;
 }
+
+
+// PR Funds table
+
+.pr-funds-tab {
+  .ag-row-odd {
+    background: $white !important;
+    &:hover {
+      background: #eae9e9 !important;
+    }
+  }
+}
