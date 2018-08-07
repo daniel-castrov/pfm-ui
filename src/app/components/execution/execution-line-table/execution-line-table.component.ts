@@ -141,8 +141,8 @@ export class ExecutionLineTableComponent implements OnInit {
     toupdate.line.blin = l.blin;
     toupdate.line.item = l.item;
     toupdate.line.opAgency = l.opAgency;
-    toupdate.line.toa = 0;
-    toupdate.line.released = 0;
+    toupdate.line.toa = l.toa;
+    toupdate.line.released = l.released;
     toupdate.line.id = l.id;
   }
 
@@ -163,8 +163,8 @@ export class ExecutionLineTableComponent implements OnInit {
 
     var tot: number = 0;
     for (var i = 0; i < my.updatelines.length; i++) {
-      if (my.updatelines[i].line.released) {
-        tot += my.updatelines[i].line.released;
+      if (my.updatelines[i].amt ) {
+        tot += my.updatelines[i].amt;
       }
     }
 
