@@ -2,5 +2,8 @@
   Operate as Admin:
 </div>
 <div *ngIf="header.authUser.admin" class="card-container">
-  <input type="radio" (click)="elevationService.flip()" [checked]="elevationService.elevatedBoolean"> {{elevationService.elevatedString}}
+  <button type="button" class="btn btn-sm btn-toggle mt-3" (click)="elevationService.flip()" data-toggle="button" aria-pressed="false" autocomplete="off">
+     <div class="handle">{{elevationService.elevatedString}} </div>
+  </button>
+  <!-- <input type="radio" (click)="elevationService.flip()" [checked]="elevationService.elevatedBoolean"> {{elevationService.elevatedString}} -->
 </div>
