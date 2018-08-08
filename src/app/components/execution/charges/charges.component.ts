@@ -6,7 +6,7 @@ import { HeaderComponent } from '../../../components/header/header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
-import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
+import { ExecutionEvent } from '../../../generated/model/executionEvent'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
@@ -54,7 +54,7 @@ export class ChargesComponent implements OnInit {
   }
 
   submit() {
-    var et: ExecutionTransfer = {
+    var et: ExecutionEvent = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
       other: this.other,

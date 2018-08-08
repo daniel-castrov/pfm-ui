@@ -9,7 +9,7 @@ import { ExecutionService } from '../../../generated/api/execution.service'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ExecutionLine, ExecutionTransfer, ExecutionDropDown } from '../../../generated';
+import { ExecutionLine, ExecutionEvent, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 
@@ -48,7 +48,7 @@ export class AppropriationReleaseComponent implements OnInit {
   }
 
   submit() {
-    var et: ExecutionTransfer = {
+    var et: ExecutionEvent = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
       other: this.other,

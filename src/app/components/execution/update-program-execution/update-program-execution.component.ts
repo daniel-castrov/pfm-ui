@@ -6,7 +6,7 @@ import { HeaderComponent } from '../../header/header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
-import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
+import { ExecutionEvent } from '../../../generated/model/ExecutionEvent'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
@@ -74,7 +74,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   submit() {
-    var et: ExecutionTransfer = {
+    var et: ExecutionEvent = {
       fromId: this.current.line.id,
       fromIsSource: this.fromIsSource,
       toIdAmtLkp: {},
