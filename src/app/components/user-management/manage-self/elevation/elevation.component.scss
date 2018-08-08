@@ -52,12 +52,12 @@ input {
 }
 
 .btn-toggle:before {
-  content: 'Off';
+  // content: 'Off';
   left: -4rem;
 }
 
 .btn-toggle:after {
-  content: 'On';
+  // content: 'On';
   right: -4rem;
   opacity: .5;
 }
