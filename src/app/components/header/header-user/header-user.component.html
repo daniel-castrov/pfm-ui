@@ -8,7 +8,8 @@
           </a>
         </span>
         <div class="header-title">
-          JSCBIS :: <span class="current-community">{{authUser.currentCommunity?.abbreviation}}</span>
+          JSCBIS ::
+          <span class="current-community">{{authUser.currentCommunity?.abbreviation}}</span>
         </div>
       </div>
       <div class="col-6 col-md-3">
@@ -31,10 +32,6 @@
             <i class="fa fa-question-circle-o" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <!-- <a class="dropdown-item" href="#" routerLink="/home">Documentation</a>
-            <a class="dropdown-item" href="#" routerLink="/home">Library</a>
-            <a class="dropdown-item" href="#" routerLink="/home">Support Request</a> -->
-            <!-- <div class="dropdown-divider"></div> -->
             <a class="dropdown-item" routerLink="/about-private">About Us</a>
             <a class="dropdown-item" routerLink="/library">Library</a>
           </div>
@@ -45,7 +42,8 @@
             {{ authUser?.fullName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
-          <div *ngIf="authUser.rolenames.includes('User')" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <!-- <div *ngIf="authUser.rolenames.includes('User')" class="dropdown-menu" aria-labelledby="dropdownMenuLink"> -->
+          <div approle="User" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
             <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
             <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>
@@ -63,15 +61,20 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-  <ul class="navbar-nav mr-auto">
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" [class.disabled]="!authUser.rolenames.includes('POM_Manager')" href="#" id="dropdown08" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Planning</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown08">
-          <a class="dropdown-item" href="#" routerLink="/set-epp">Set EPP</a>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item dropdown">
+
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Planning
+        </a>
+        <div apppermission="POX:edit" class="dropdown-menu" aria-labelledby="dropdown08">
+            <a class="dropdown-item" href="#" routerLink="/set-epp">Set EPP</a>
         </div>
+
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" 
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
 
           <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
@@ -83,45 +86,46 @@
 
           <div apppermission="!POM:edit">
             <div class="dropdown-header">POM Management</div>
-            <!-- <a class="dropdown-item" disabled>Create POM Session</a>
-            <a class="dropdown-item" disabled>Update TOAs</a>
-            <a class="dropdown-item" disabled>Open POM Session</a>
-            <a class="dropdown-item" disabled>Update POM Session</a>
-            <a class="dropdown-item" disabled>Worksheet Mgmt</a> -->
           </div>
+          <div apppermission="POM:edit">
+            <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
+              <div class="dropdown-header">POM Management</div>
+              <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+              <a class="dropdown-item" disabled>Update TOAs</a>
+              <a class="dropdown-item" disabled>Open POM Session</a>
+              <a class="dropdown-item" disabled>Update POM Session</a>
+              <a class="dropdown-item" disabled>Worksheet Mgmt</a>
+            </ng-container>
 
-          <div apppermission="POM:edit" *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" >
-            <div class="dropdown-header">POM Management</div>
-            <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-            <a class="dropdown-item" disabled>Update TOAs</a>
-            <a class="dropdown-item" disabled>Open POM Session</a>
-            <a class="dropdown-item" disabled>Update POM Session</a>
-            <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-          </div>
+            <ng-container *ngIf="pomStatusIsCreated">
+              <div class="dropdown-header">POM Management</div>
+              <a class="dropdown-item" disabled>Create POM Session</a>
+              <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
+              <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+              <a class="dropdown-item" disabled>Update POM Session</a>
+              <a class="dropdown-item" disabled>Worksheet Mgmt</a>
+            </ng-container>
 
-          <div apppermission="POM:edit" *ngIf="pomStatusIsCreated">
-            <div class="dropdown-header">POM Management</div>
-            <a class="dropdown-item" disabled>Create POM Session</a>
-            <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
-            <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
-            <a class="dropdown-item" disabled>Update POM Session</a>
-            <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-          </div>
-
-          <div apppermission="POM:edit" *ngIf="pomStatusIsOpen">
-            <div class="dropdown-header">POM Management</div>
-            <a class="dropdown-item" disabled>Create POM Session</a>
-            <a class="dropdown-item" disabled>Update TOAs</a>
-            <a class="dropdown-item" disabled>Open POM Session</a>
-            <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
-            <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
+            <ng-container *ngIf="pomStatusIsOpen">
+              <div class="dropdown-header">POM Management</div>
+              <a class="dropdown-item" disabled>Create POM Session</a>
+              <a class="dropdown-item" disabled>Update TOAs</a>
+              <a class="dropdown-item" disabled>Open POM Session</a>
+              <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
+              <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
+            </ng-container>
           </div>
 
         </div>
       </li>
-      <li class="nav-item">
-        <a style="color:#6994b9;" class="nav-link" href="#" routerLink="/home">Budget</a>
+      
+      <li approle="User" class="nav-item">
+          <a class="nav-link" href="#" routerLink="/home">Budget</a>
       </li>
+      <li approle="Bugeter" class="nav-item">
+        <a style="color:#6994b9;" class="nav-link" disabled>Budget</a>
+      </li>
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Execution</a>
         <div class="dropdown-menu" aria-labelledby="dropdown12">
@@ -133,15 +137,18 @@
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+        <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">Reports</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
         <div class="dropdown-menu" aria-labelledby="dropdown06">
           <div class="dropdown-header">Programs</div>
           <!--a class="dropdown-item" href="#" routerLink="/program-search">View Program</a-->
-          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Edit Program</a>
-          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home" disable>Create Program</a>
+          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home"
+            disable>Edit Program</a>
+          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home"
+            disable>Create Program</a>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -160,8 +167,8 @@
 
   <div class="col-3">
     <span class="dropdown show actions-menu" *ngIf="authUser.rolenames.includes('User_Approver')">
-      <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true"
-        aria-expanded="false">
+      <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
         <div class="icon-wrapper">
           Actions
           <i class="fa fa-bell" aria-hidden="true"></i>
@@ -169,12 +176,14 @@
         </div>
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
-          <div *ngFor="let request of requests">
-            <ng-template #tipContent><strong>{{request?.type}}</strong><br/>{{request?.name}}</ng-template>
-            <a class="dropdown-item" href="#" routerLink="{{request.link}}" [ngbTooltip]="tipContent">
-              {{request?.date | date:'MM/dd/yyyy @ h:mma'}}
-            </a>
-          </div>
+        <div *ngFor="let request of requests">
+          <ng-template #tipContent>
+            <strong>{{request?.type}}</strong>
+            <br/>{{request?.name}}</ng-template>
+          <a class="dropdown-item" href="#" routerLink="{{request.link}}" [ngbTooltip]="tipContent">
+            {{request?.date | date:'MM/dd/yyyy @ h:mma'}}
+          </a>
+        </div>
       </div>
     </span>
   </div>

@@ -36,9 +36,7 @@ export class HeaderUserComponent implements OnInit {
       this.requests = [];
     }
 
-
-    if ( this.authUser.rolenames.includes('POM_Mangaer') ){
-
+    if ( this.authUser.rolenames.includes('POM_Manager') ){
       this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
         this.pomStatusIsCreated = false;
         this.pomStatusIsOpen = false;
