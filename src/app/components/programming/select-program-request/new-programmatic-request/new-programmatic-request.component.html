@@ -8,7 +8,9 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item" (click)="addNewPrRadio('An Existing Program of Record')">An Existing Program of Record</a>
-              <a class="dropdown-item" (click)="addNewPrRadio('A New Subprogram')">A New Subprogram</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New Increment Subprogram')">A New Increment Subprogram</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New FOS Subprogram')">A New FOS Subprogram</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New Generic Subprogram')">A New Generic Subprogram</a>
               <a class="dropdown-item" (click)="addNewPrRadio('A New Program')">A New Program</a>
           </div>
         </div>
@@ -21,7 +23,7 @@
       </div>
     </div>
     <div class="row">
-        <div class="col-md-6" *ngIf="addNewPrFor=='An Existing Program of Record' || addNewPrFor=='A New Subprogram'">
+        <div class="col-md-6" *ngIf="addNewPrFor && (addNewPrFor=='An Existing Program of Record' || addNewPrFor.indexOf('Subprogram') > -1)">
         <div class="dropdown-label mt-2">
           <label class="primary-label mb-2">
             Select a Program
