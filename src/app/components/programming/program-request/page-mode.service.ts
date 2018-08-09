@@ -20,10 +20,12 @@ export class ProgramRequestPageModeService {
   }
 
   // create mode
-  set(type: CreationTimeType, phaseId: string) {
+  set(type: CreationTimeType, phaseId: string, reference: ProgramWithFullName, programType: ProgramType) {
     this.init();
     this.type = type;
     this.phaseId = phaseId;
+    this.reference = reference;
+    this.programType = programType;
   }
 
   private init() {

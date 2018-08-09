@@ -52,38 +52,50 @@ export class NewProgrammaticRequestComponent implements OnInit {
   async next() {
     switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
-        this.programRequestPageMode.programType = ProgramType.PROGRAM;
-        this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB , this.pomId);
-        this.programRequestPageMode.reference = this.selectedProgramOrPr;
+        this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB,
+          this.pomId,
+          this.selectedProgramOrPr,
+          ProgramType.PROGRAM);
         break;
       case 'A New FOS Subprogram':
         this.programRequestPageMode.programType = ProgramType.FOS;
         if(this.isProgram(this.selectedProgramOrPr)) {
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB, this.pomId);
-          this.programRequestPageMode.reference = this.selectedProgramOrPr;
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.FOS);
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
-          this.programRequestPageMode.reference = this.selectedProgramOrPr;
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.FOS);
         }
         break;
       case 'A New Increment Subprogram':
-        this.programRequestPageMode.programType = ProgramType.INCREMENT;
         if(this.isProgram(this.selectedProgramOrPr)) {
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB, this.pomId);
-          this.programRequestPageMode.reference = this.selectedProgramOrPr;
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.INCREMENT);
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
-          this.programRequestPageMode.reference = this.selectedProgramOrPr;
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.INCREMENT);
         }
         break;
       case 'A New Generic Subprogram':
-        this.programRequestPageMode.programType = ProgramType.GENERIC;
-        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
-        this.programRequestPageMode.reference = this.selectedProgramOrPr;
+        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+          this.pomId,
+          this.selectedProgramOrPr,
+          ProgramType.GENERIC);
         break;
       case 'A New Program':
-        this.programRequestPageMode.programType = ProgramType.PROGRAM;
-        this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM, this.pomId);
+        this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM,
+          this.pomId,
+          null,
+          ProgramType.PROGRAM);
+        break;
     }
     this.router.navigate(['/program-request']);
   }
