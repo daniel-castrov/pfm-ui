@@ -26,6 +26,8 @@
       <div class="col-6 col-md-2">
       </div>
       <div class="col-6 col-md-4">
+
+        <!-- About Menu -->
         <span class="dropdown show">
           <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
@@ -36,13 +38,14 @@
             <a class="dropdown-item" routerLink="/library">Library</a>
           </div>
         </span>
+
+        <!-- User Menu -->
         <span class="dropdown show">
           <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
             {{ authUser?.fullName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
-          <!-- <div *ngIf="authUser.rolenames.includes('User')" class="dropdown-menu" aria-labelledby="dropdownMenuLink"> -->
           <div approle="User" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
             <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
@@ -54,33 +57,48 @@
   </div>
 </div>
 
-<!-- private header for user login -->
+<!-- Menu Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-    aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" 
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item dropdown">
 
+      <!-- Planning Menu -->
+      <li approle="!POM_Manager" class="nav-item dropdown">
+          <a style="color:#6994b9;" class="nav-link dropdown-toggle" id="dropdown08" disabled>Planning</a>
+      </li>
+      <li approle="POM_Manager" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Planning
         </a>
-        <div apppermission="POX:edit" class="dropdown-menu" aria-labelledby="dropdown08">
+        <div apppermission="POM:edit" class="dropdown-menu" aria-labelledby="dropdown08">
             <a class="dropdown-item" href="#" routerLink="/set-epp">Set EPP</a>
         </div>
-
       </li>
-      <li class="nav-item dropdown">
+
+      <!-- Programming Menu -->
+      <li approle="!POM_Manager||Funds_Requestor" class="nav-item dropdown">
+          <a style="color:#6994b9;" class="nav-link dropdown-toggle" id="dropdown08" disabled>Planning</a>
+      </li>
+      <li approle="POM_Manager||Funds_Requestor" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" 
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
 
-          <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
-          <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" disabled>Program Request</a>
-          <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
-          <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" disable class="dropdown-item">UFR Request</a>
+          <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
+            <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
+            <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
+          </ng-container>
+
+          <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">  
+            <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" disabled>Program Request</a>
+            <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" disable class="dropdown-item">UFR Request</a>
+          </ng-container>
+            
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
           <hr/>
 
@@ -119,14 +137,16 @@
         </div>
       </li>
       
-      <li approle="User" class="nav-item">
+      <!-- Budget Menu -->
+      <li apppermission="Budget:edit" class="nav-item">
           <a class="nav-link" href="#" routerLink="/home">Budget</a>
       </li>
       <li approle="Bugeter" class="nav-item">
         <a style="color:#6994b9;" class="nav-link" disabled>Budget</a>
       </li>
 
-      <li class="nav-item dropdown">
+      <!-- Execution Menu -->
+      <li approle="User" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Execution</a>
         <div class="dropdown-menu" aria-labelledby="dropdown12">
           <a class="dropdown-item" href="#" routerLink="/funds-update">Funds Update</a>
@@ -136,22 +156,43 @@
           <a class="dropdown-item" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
         </div>
       </li>
-      <li class="nav-item dropdown">
-        <a style="color:#6994b9;" class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">Reports</a>
+
+      <!-- Reports Menu -->
+      <li apppermission="!Report:read" class="nav-item dropdown">
+          <a style="color:#6994b9;" class="nav-link dropdown-toggle" id="dropdown02" disabled>Reports</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown06">
-          <div class="dropdown-header">Programs</div>
-          <!--a class="dropdown-item" href="#" routerLink="/program-search">View Program</a-->
-          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home"
-            disable>Edit Program</a>
-          <a class="dropdown-item" style="color:#6994b9 !important; background-color:#24527b; !important;" href="#" routerLink="/home"
-            disable>Create Program</a>
+      <li apppermission="Report:read" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">Reports</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown02">
+          <div class="dropdown-header">R-Forms</div>
+          <a class="dropdown-item" disabled>R1</a>
+          <a class="dropdown-item" disabled>R2</a>
+          <div class="dropdown-header">P-Forms</div>
+          <a class="dropdown-item" disabled>P1</a>
+          <a class="dropdown-item" disabled>P2</a>
         </div>
       </li>
-      <li class="nav-item dropdown">
+
+      <!-- Manage Menu -->
+      <li apppermission="!Program:edit" class="nav-item dropdown">
+          <a style="color:#6994b9;" class="nav-link dropdown-toggle" id="dropdown02" disabled>Manage</a>
+      </li>
+      <li apppermission="Program:edit" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" 
+          aria-haspopup="true" aria-expanded="false">Manage</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown06">
+          <div class="dropdown-header">Programs</div>
+          <a class="dropdown-item" disabled>Edit Program</a>
+          <a class="dropdown-item" disabled>Create Program</a>
+        </div>
+      </li>
+
+      <!-- Admin Menu -->
+      <li approle="Admin" class="nav-item dropdown">
+          <a style="color:#6994b9;" class="nav-link dropdown-toggle" id="dropdown02" disabled>Admin</a>
+      </li>
+      <li approle="!Admin" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/approve-requests">Approve Requests</a>
