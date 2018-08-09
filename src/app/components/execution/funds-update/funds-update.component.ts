@@ -10,6 +10,8 @@ import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+
 
 @Component({
   selector: 'funds-update',
@@ -45,7 +47,8 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
 
     var agcomps:any = {
-      programCellRendererComponent: ProgramCellRendererComponent
+      programCellRendererComponent: ProgramCellRendererComponent,
+      eventDetailsCellRendererComponent : EventDetailsCellRendererComponent
     };
 
     my.progsvc.getIdNameMap().subscribe(data => {
@@ -77,6 +80,15 @@ export class FundsUpdateComponent implements OnInit {
         route: '/update-program-execution'
       },
       columnDefs: [
+        {
+          width: 50,
+          headerName: "View",
+          filter: 'agTextColumnFilter',
+          cellRenderer: 'eventDetailsCellRendererComponent',
+          menuTabs: this.menuTabs,
+          cellClass: ['ag-cell-light-grey','ag-clickable'],
+          valueGetter: params => { return params.data.mrId; }
+        },
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',

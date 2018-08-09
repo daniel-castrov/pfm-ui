@@ -10,7 +10,7 @@ import { ExecutionEvent } from '../../../generated/model/executionEvent'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
-import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
+import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 
@@ -54,7 +54,7 @@ export class ChargesComponent implements OnInit {
   }
 
   submit() {
-    var et: ExecutionEvent = {
+    var et: ExecutionEventData = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
       other: this.other,

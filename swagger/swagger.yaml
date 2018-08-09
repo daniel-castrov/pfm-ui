@@ -3183,6 +3183,20 @@ definitions:
   ExecutionEvent:
     type: "object"
     properties:
+      eventType:
+        type: "string"
+      phaseId:
+        type: "string"
+      value:
+        type: "object"
+        $ref: "#/definitions/ExecutionEventData"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "number"
+  ExecutionEventData:
+    type: "object"
+    properties:
       fromId:
         type: "string"
       fromIsSource:
