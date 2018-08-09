@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService} from '../../program-request/page-mode.service';
+import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
+import {ProgramType} from "../../../../generated";
 
 @Component({
   selector: 'new-programmatic-request',
@@ -28,7 +29,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs()
   }
-  
+
   async addNewPrRadio(selection: string) {
     this.addNewPrFor = selection;
     switch(this.addNewPrFor) {
@@ -36,19 +37,27 @@ export class NewProgrammaticRequestComponent implements OnInit {
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
         this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
         break;
-      case 'A New Subprogram':
+      case 'A New FOS Subprogram':
+      case 'A New Increment Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
         this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
+        break;
+      case 'A New Generic Subprogram':
+        this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
+        this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
+        break;
     }
   }
-  
+
   async next() {
     switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
+        this.programRequestPageMode.programType = ProgramType.PROGRAM;
         this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB , this.pomId);
         this.programRequestPageMode.reference = this.selectedProgramOrPr;
         break;
-      case 'A New Subprogram':
+      case 'A New FOS Subprogram':
+        this.programRequestPageMode.programType = ProgramType.FOS;
         if(this.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB, this.pomId);
           this.programRequestPageMode.reference = this.selectedProgramOrPr;
@@ -57,18 +66,34 @@ export class NewProgrammaticRequestComponent implements OnInit {
           this.programRequestPageMode.reference = this.selectedProgramOrPr;
         }
         break;
+      case 'A New Increment Subprogram':
+        this.programRequestPageMode.programType = ProgramType.INCREMENT;
+        if(this.isProgram(this.selectedProgramOrPr)) {
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB, this.pomId);
+          this.programRequestPageMode.reference = this.selectedProgramOrPr;
+        } else { // a PR has been selected
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
+          this.programRequestPageMode.reference = this.selectedProgramOrPr;
+        }
+        break;
+      case 'A New Generic Subprogram':
+        this.programRequestPageMode.programType = ProgramType.GENERIC;
+        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR, this.pomId);
+        this.programRequestPageMode.reference = this.selectedProgramOrPr;
+        break;
       case 'A New Program':
+        this.programRequestPageMode.programType = ProgramType.PROGRAM;
         this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM, this.pomId);
     }
     this.router.navigate(['/program-request']);
   }
-  
+
   private async programsMunisPrs(): Promise<ProgramWithFullName[]> {
     const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-    
+
     const referenceIds: Set<string> = new Set();
     prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
-    
+
     return this.allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
   }
 
