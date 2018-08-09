@@ -6,7 +6,6 @@ import { RestResult } from '../generated/model/restResult';
 import { MyDetailsService } from '../generated/api/myDetails.service';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map'
-import { ProgramsService } from '../generated/api/programs.service';
 
 /**
  * This service is not caching now but it should/will in the future. At some point we should figure out
@@ -17,7 +16,7 @@ import { ProgramsService } from '../generated/api/programs.service';
  * user changes the current community.
  */
 @Injectable()
-export class GlobalsService {
+export class UserService {
 
   constructor(private myDetailsService: MyDetailsService,
               private communityService: CommunityService) {}

@@ -1,4 +1,4 @@
-import { TagsService } from './../../../services/tags.service';
+import { TagsService } from '../../../services/tags.service';
 import { Component, OnInit, Input, ApplicationRef } from '@angular/core'
 import {FundingLine, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest} from '../../../generated'
 

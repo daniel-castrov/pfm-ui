@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import {  HeaderComponent } from '../../header/header.component'
-import { GlobalsService } from './../../../services/globals.service';
-import { WithFullNameService } from './../../../services/with-full-name.service';
-import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
-import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated/';
+import { UserService } from '../../../services/user.service';
+import { WithFullNameService } from '../../../services/with-full-name.service';
+import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
+import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 @Component({
@@ -31,7 +30,7 @@ export class OpenPomSessionComponent implements OnInit {
   constructor(
     private pomService: POMService,
     private pbService: PBService,
-    private globalsService: GlobalsService,
+    private globalsService: UserService,
     private withFullNameService: WithFullNameService ) {}
 
   async ngOnInit() {

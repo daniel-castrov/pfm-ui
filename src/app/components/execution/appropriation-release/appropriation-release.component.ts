@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import * as $ from 'jquery';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'

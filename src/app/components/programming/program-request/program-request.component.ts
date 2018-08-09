@@ -1,6 +1,6 @@
 import { ProgramTabComponent } from './program-tab/program-tab.component';
-import { PRUtils } from './../../../services/pr.utils.service';
-import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
+import { PRUtils } from '../../../services/pr.utils.service';
+import { ProgramRequestWithFullName, ProgramWithFullName } from '../../../services/with-full-name.service';
 import { ProgrammaticRequestState } from '../../../generated/model/programmaticRequestState';
 import { CreationTimeType } from '../../../generated/model/creationTimeType';
 import { ProgramType } from '../../../generated/model/programType';

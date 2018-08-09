@@ -1,5 +1,5 @@
 import { TagsService } from './services/tags.service';
-import { GlobalsService } from './services/globals.service';
+import { UserService } from './services/user.service';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
@@ -100,7 +100,6 @@ import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
 import { RolesPermissionsService } from './generated/api/rolesPermissions.service';
 import { StrangerService } from './generated/api/stranger.service';
-import { UserService } from './generated/api/user.service';
 import { UserRoleResourceService } from './generated/api/userRoleResource.service';
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
@@ -321,7 +320,7 @@ const appRoutes: Routes = [
     CreateUserRequestService,
     DropRoleRequestService,
     ElevationService,
-    GlobalsService,
+    UserService,
     TagsService,
     Injectables,
     JoinCommunityRequestService,

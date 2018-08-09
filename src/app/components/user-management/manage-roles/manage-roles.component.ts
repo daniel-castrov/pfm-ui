@@ -6,7 +6,7 @@ import { AngularDualListBoxModule } from 'angular-dual-listbox';
 import { DualListComponent } from 'angular-dual-listbox';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 // Generated

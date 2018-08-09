@@ -4,7 +4,7 @@ import { NgForOf } from '@angular/common/src/directives';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 
 // Generated
 import { CommunityService } from '../../../generated';

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MatTableDataSource, MatPaginator, MatSort, MatSortable } from '@angular/material';
 import { forkJoin } from "rxjs/observable/forkJoin";
 
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 
 import { UFRsService } from '../../../generated/api/uFRs.service';
 import { UFR } from '../../../generated/model/uFR'

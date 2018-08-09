@@ -1,10 +1,10 @@
-import { CreationTimeType } from './../../../../generated/model/creationTimeType';
-import { WithFullName, WithFullNameService, ProgramOrPrWithFullName } from './../../../../services/with-full-name.service';
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
+import { CreationTimeType } from '../../../../generated/model/creationTimeType';
+import { WithFullName, WithFullNameService, ProgramOrPrWithFullName } from '../../../../services/with-full-name.service';
+import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
 import { Component, Input } from '@angular/core';
 
 // Other Components
-import { ProgramRequestPageModeService} from './../page-mode.service';
+import { ProgramRequestPageModeService} from '../page-mode.service';
 import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 import { ProgramType } from '../../../../generated/model/programType';
 

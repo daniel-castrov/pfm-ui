@@ -2,13 +2,11 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
-import { GlobalsService } from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
-import { ExcelTable } from 'ag-grid/dist/lib/interfaces/iExcelCreator';
 
 declare const $: any;
 declare const jQuery: any;

@@ -1,4 +1,4 @@
-import { TagsService } from './../../../../services/tags.service';
+import { TagsService } from '../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
 import {FileResponse, LibraryService, ProgrammaticRequest, Tag} from '../../../../generated';
 import {DomSanitizer} from '@angular/platform-browser';
