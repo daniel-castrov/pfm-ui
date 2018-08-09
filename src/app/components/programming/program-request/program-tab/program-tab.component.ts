@@ -1,4 +1,4 @@
-import { GlobalsService } from './../../../../services/globals.service';
+import { TagsService } from './../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
 import {FileResponse, LibraryService, ProgrammaticRequest, Tag} from '../../../../generated';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -39,7 +39,7 @@ export class ProgramTabComponent implements OnChanges {
     return null; // this field is not fully implemented
   }
 
-  constructor(private globalsService: GlobalsService,
+  constructor(private tagsService: TagsService,
               private libraryService: LibraryService,
               private sanitization: DomSanitizer) {}
 
@@ -57,11 +57,11 @@ export class ProgramTabComponent implements OnChanges {
     }
   }
 
-  private createMismatchingTags() {
+  private createMismatchingTags() { // creates tags for the 
     const prFields: IterableIterator<string> = this.prFieldsGenerator();
     this.tagTypes.forEach(async (tagType) => {
       const prField: string = prFields.next().value;
-      const tags: Tag[] = await this.globalsService.tags(tagType).toPromise();
+      const tags: Tag[] = await this.tagsService.tags(tagType).toPromise();
       this.mapTypeToTags.set(tagType, tags);
       this.createMismatchingTagIfNeeded(tags, tagType, prField);
     });

@@ -1,3 +1,4 @@
+import { TagsService } from './services/tags.service';
 import { GlobalsService } from './services/globals.service';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
@@ -321,6 +322,7 @@ const appRoutes: Routes = [
     DropRoleRequestService,
     ElevationService,
     GlobalsService,
+    TagsService,
     Injectables,
     JoinCommunityRequestService,
     AutoValuesService,

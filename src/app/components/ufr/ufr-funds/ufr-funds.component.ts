@@ -1,12 +1,6 @@
-import { GlobalsService } from './../../../services/globals.service';
+import { TagsService } from './../../../services/tags.service';
 import { Component, OnInit, Input, ApplicationRef } from '@angular/core'
-import { forkJoin } from "rxjs/observable/forkJoin"
-
-import {
-  Program, FundingLine, IntMap, UFR, POMService,
-  Pom, PRService, PBService, ProgrammaticRequest, Tag,
-  ProgramsService
-} from '../../../generated'
+import {FundingLine, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest} from '../../../generated'
 
 @Component({
   selector: 'ufr-funds',
@@ -38,7 +32,7 @@ export class UfrFundsComponent implements OnInit {
   constructor(private pomsvc: POMService, 
               private pbService: PBService,
               private prService: PRService,
-              private globalsService: GlobalsService) { }
+              private tagsService: TagsService) { }
   
   ngOnInit() {
     var my: UfrFundsComponent = this;
@@ -114,15 +108,15 @@ export class UfrFundsComponent implements OnInit {
       }  
 
       {
-        this.agencies = await this.globalsService.tagAbbreviationsForOpAgency();
+        this.agencies = await this.tagsService.tagAbbreviationsForOpAgency();
         this.opagency = this.agencies[0];
       }
       {
-        this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
+        this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
         this.appr = this.appropriations[0];
       }
       {
-        this.baOrBlins = await this.globalsService.tagAbbreviationsForBlin();
+        this.baOrBlins = await this.tagsService.tagAbbreviationsForBlin();
         this.baOrBlin = this.getBaOrBlins()[0];
       }
     });
