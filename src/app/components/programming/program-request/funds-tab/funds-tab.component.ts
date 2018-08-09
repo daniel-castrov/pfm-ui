@@ -5,7 +5,7 @@ import { PRUtils } from '../../../../services/pr.utils.service';
 import { AutoValuesService } from './AutoValues.service';
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 import { User } from '../../../../generated/model/user';
-import { UserService } from '../../../../services/user.service';
+import { UserUtils } from '../../../../services/user.utils.service';
 import { PB } from '../../../../generated/model/pB';
 import { Component, Input, OnChanges, ViewChild, OnInit } from '@angular/core'
 import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType } from '../../../../generated'
@@ -43,7 +43,7 @@ export class FundsTabComponent implements OnChanges, OnInit {
   constructor(private pomService: POMService,
               private pbService: PBService,
               private prService: PRService,
-              private globalsService: UserService,
+              private globalsService: UserUtils,
               private tagsService: TagsService,
               private autoValuesService: AutoValuesService ) {}
 

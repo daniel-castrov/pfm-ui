@@ -1,6 +1,6 @@
 import { NewProgrammaticRequestComponent } from './new-programmatic-request/new-programmatic-request.component';
 import { ProgramRequestWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
-import { UserService } from '../../../services/user.service';
+import { UserUtils } from '../../../services/user.utils.service';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
@@ -29,7 +29,7 @@ export class SelectProgramRequestComponent implements OnInit {
               private pbService: PBService,
               private prService: PRService,
               private withFullNameService: WithFullNameService,
-              private globalsService: UserService) {}
+              private globalsService: UserUtils) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.globalsService.user().toPromise()).currentCommunityId;

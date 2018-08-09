@@ -1,5 +1,5 @@
 import { TagsService } from './services/tags.service';
-import { UserService } from './services/user.service';
+import { UserUtils } from './services/user.utils.service';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
@@ -127,7 +127,7 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService, LibraryService} from './generated';
+import { EppService, LibraryService, UserService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
@@ -335,7 +335,7 @@ const appRoutes: Routes = [
     StrangerService,
     UserRoleResourceService,
     ProgramsService,
-    UserService,
+    UserUtils,
     RequestsService,
     POMService,
     PomWorksheetService,

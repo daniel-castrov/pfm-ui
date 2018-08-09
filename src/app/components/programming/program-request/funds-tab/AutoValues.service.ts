@@ -1,5 +1,5 @@
 import { TagsService } from '../../../../services/tags.service';
-import { UserService } from '../../../../services/user.service';
+import { UserUtils } from '../../../../services/user.utils.service';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 
@@ -7,7 +7,7 @@ import { of } from 'rxjs/observable/of';
 @Injectable()
 export class AutoValuesService {
 
-    constructor(private globalsService: UserService,
+    constructor(private globalsService: UserUtils,
                 private tagsService: TagsService) {}
 
     async programElement(ba: string, item: string): Promise<string> {

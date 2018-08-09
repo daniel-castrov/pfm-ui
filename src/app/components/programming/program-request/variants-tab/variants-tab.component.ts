@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild} from '@angular/core';
 import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
-import { UserService } from '../../../../services/user.service';
+import { UserUtils } from '../../../../services/user.utils.service';
 
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 
@@ -34,7 +34,7 @@ export class VariantsTabComponent {
   constructor(private pomService: POMService, 
     private pbService: PBService,
     private prService: PRService,
-    private globalsService: UserService ) { }
+    private globalsService: UserUtils ) { }
 
   ngOnChanges(){
     if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()    

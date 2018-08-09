@@ -16,7 +16,7 @@ import 'rxjs/add/operator/map'
  * user changes the current community.
  */
 @Injectable()
-export class UserService {
+export class UserUtils {
 
   constructor(private myDetailsService: MyDetailsService,
               private communityService: CommunityService) {}

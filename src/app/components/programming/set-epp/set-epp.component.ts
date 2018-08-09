@@ -6,7 +6,7 @@ import {AgGridNg2} from 'ag-grid-angular';
 import { HeaderComponent } from '../../header/header.component';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EppService } from '../../../generated/api/epp.service';
-import { UserService } from '../../../services/user.service';
+import { UserUtils } from '../../../services/user.utils.service';
 
 declare const $: any;
 
@@ -33,7 +33,7 @@ export class SetEppComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private eppService: EppService,
-              private globalsSvc:UserService) {
+              private globalsSvc:UserUtils) {
     this.createForm();
   }
 
