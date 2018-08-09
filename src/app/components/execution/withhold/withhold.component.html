@@ -9,7 +9,7 @@
     <div class="row mb-3">
       <div class="col-8">
         <!--span class="form-group mr-3">
-          <label class="primary-label">From</label>
+          <label>From</label>
           <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown">
             <option></option>
             <option>2018</option>
@@ -23,19 +23,21 @@
         <button class="btn btn-primary pull-right" (click)="submit()">Withhold</button>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-2">
+    <div class="row">
+      <div class="col-md-6 col-lg-2">
         <div class="form-group">
-          <label class="primary-label">Select Event Type:</label>
+          <label class="mr2">Select Event Type:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
             <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
           </select>
         </div>
       </div>
-      <div class="col-10">
-         <div class="form-group">
-          <label class="primary-label">Event Long Name:</label>
-          <label>{{etype?.description}}</label>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-6">
+        <div class="form-group">
+          <label class="mr-2">Event Long Name:</label>
+          <label class="primary-label">{{etype?.description}}</label>
         </div>
       </div>
     </div>
@@ -49,7 +51,7 @@
     <div class="row mb-3">
       <div class="col-12">
         <span class="form-group">
-          <label class="primary-label mb-1">Notes:</label>
+          <label class="mb-1">Notes:</label>
           <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
         </span>
      </div>
@@ -57,7 +59,7 @@
    <div class="row">
      <div class="col-4 mb-4">
        <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
-         <label class="primary-label">Attach Document:</label>
+         <label>Attach Document:</label>
          <div class="input-group input-group-sm">
            <input type="file" class="custom-file-input" placeholder="Choose file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
            <label class="custom-file-label" for="charges">Chose file</label>

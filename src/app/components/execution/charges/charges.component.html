@@ -7,33 +7,39 @@
       </div>
     </div>
     <div class="row mb-3">
+      <div class="col-8">
+        <!-- placeholder -->
+      </div>
       <div class="col-4">
         <button class="btn btn-primary pull-right" (click)="submit()">Charge</button>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-md-12 col-lg-2">
+    <div class="row mb-2">
+      <div class="col-md-6 col-lg-2">
         <div class="form-group">
-          <label class="primary-label">Select Event Type:</label>
+          <label>Select Event Type:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="type" (change)="updatedropdowns()">
             <option *ngFor="let t of types|mapAsList" [ngValue]="t.key">{{t.value}}</option>
           </select>
-
-          <label class="primary-label">Select Event Subtype:</label>
-          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
-          </select>
         </div>
       </div>
-      <div class="col-md-12 col-lg-2">
+      <div class="col-md-6 col-lg-2">
+        <label>Select Event Subtype:</label>
+        <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
+          <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
+        </select>
+      </div>
+      <div class="col-md-6 col-lg-2">
         <div class="form-group">
-         <label class="primary-label">Additional ID's</label>
+         <label>Additional ID&apos;s</label>
          <input class="form-control form-input-medium" [(ngModel)]="other">
         </div>
       </div>
-      <div class="col-md-12 col-lg-8">
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-6">
          <div class="form-group">
-          <label class="primary-label">Event Long Name:</label>
+          <label class="mr-2">Event Long Name:</label>
           <label class="primary-label">{{etype?.description}}</label>
         </div>
       </div>
@@ -48,7 +54,7 @@
     <div class="row mb-3">
       <div class="col-12">
         <span class="form-group">
-          <label class="primary-label mb-1">Notes:</label>
+          <label class="mb-1">Notes:</label>
           <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
         </span>
      </div>
@@ -56,7 +62,7 @@
    <div class="row">
      <div class="col-4 mb-4">
        <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
-         <label class="primary-label">Attach Document:</label>
+         <label>Attach Document:</label>
          <div class="input-group input-group-sm">
            <input type="file" class="custom-file-input" placeholder="Choose file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
            <label class="custom-file-label" for="charges">Chose file</label>
