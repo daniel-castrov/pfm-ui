@@ -189,10 +189,10 @@
       </li>
 
       <!-- Admin Menu -->
-      <li approle="Admin" class="nav-item dropdown">
+      <li approle="!Admin" class="nav-item dropdown">
           <a style="color:#6994b9;" class="nav-link dropdown-toggle" id="dropdown02" disabled>Admin</a>
       </li>
-      <li approle="!Admin" class="nav-item dropdown">
+      <li approle="Admin" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
           <a *ngIf="authUser.rolenames.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/approve-requests">Approve Requests</a>
