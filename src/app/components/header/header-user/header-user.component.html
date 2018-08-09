@@ -89,14 +89,14 @@
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
 
-          <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
-            <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
-            <a *ngIf="(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
+          <ng-container *ngIf="(pomStatusIsCreated||pomStatusIsOpen)">
+            <a class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
+            <a class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
           </ng-container>
 
           <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">  
-            <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" class="dropdown-item" disabled>Program Request</a>
-            <a *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)" disable class="dropdown-item">UFR Request</a>
+            <a class="dropdown-item" disabled>Program Request</a>
+            <a class="dropdown-item" disabled>UFR Request</a>
           </ng-container>
             
           <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
