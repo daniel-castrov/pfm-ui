@@ -10,11 +10,9 @@ import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
-import { ExecutionLine, ProgramsService } from '../../../generated';
+import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-
-declare const $: any;
-declare const jQuery: any;
+import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 
 @Component({
   selector: 'charges',
@@ -24,20 +22,33 @@ declare const jQuery: any;
 export class ChargesComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
-  private updatelines: ExecutionLine[] = [];
+  private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;
   private reason: string;
-  private etype: string;
   private other: string;
-  private longname: string;
+  private types: Map<string, string> = new Map<string, string>();
+  private allsubtypes: ExecutionDropDown[];
+  private subtypes: ExecutionDropDown[];
+  private etype: ExecutionDropDown;
+  private type: string;
   
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-
     this.route.params.subscribe(data => {
-      this.exesvc.getById(data.phaseId).subscribe(d2 => {
-        this.phase = d2.result;
+      forkJoin([
+        this.exesvc.getById(data.phaseId),
+        this.exesvc.getExecutionDropdowns()
+      ]).subscribe(d2 => {
+        this.phase = d2[0].result;
+
+        this.types.set('EXE_APPROPRIATION_ACTION', 'Appropriation Action');
+        this.types.set('EXE_CONGRESSIONAL_ACTION', 'Congressional Action');
+        this.types.set('EXE_OUSDC_ACTION', 'OUSD(c) Action');
+        this.allsubtypes = d2[1].result.filter(x => this.types.has(x.type));
+
+        this.type = 'EXE_APPROPRIATION_ACTION';
+        this.updatedropdowns();
       });
     });
   }
@@ -45,16 +56,20 @@ export class ChargesComponent implements OnInit {
   submit() {
     var et: ExecutionTransfer = {
       toIdAmtLkp: {},
-      eventType: this.etype,
+      type: this.etype.subtype,
       other: this.other,
-      reason: this.reason,
-      longname: this.longname
+      reason: this.reason
     };
     this.updatelines.forEach(l => {
-      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+      et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
-    this.exesvc.createCharge(this.phase.id, new Blob(["stuff"]),
+    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
+  }
+
+  updatedropdowns() {
+    this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
+    this.etype = this.subtypes[0];
   }
 }

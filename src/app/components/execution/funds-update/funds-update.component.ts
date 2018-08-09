@@ -122,7 +122,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-light-green','text-right']
         },
@@ -131,7 +131,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'craTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -140,7 +140,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'realignedTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -149,7 +149,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -158,7 +158,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -167,7 +167,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'btrTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -176,7 +176,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'withheld',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
@@ -185,7 +185,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
@@ -194,7 +194,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'released',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
