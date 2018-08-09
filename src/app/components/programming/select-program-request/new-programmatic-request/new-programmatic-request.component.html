@@ -1,7 +1,7 @@
 <fieldset class="custom-pr">
   <legend>Add New Program Request for:</legend>
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-5">
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {{addNewPrFor ? addNewPrFor : 'Select an option'}}
@@ -15,25 +15,19 @@
           </div>
         </div>
       </div>
-      <div class="col-md-1">
-          <button class="btn btn-primary btn pull-right" type="button" (click)="next()" [disabled]="!addNewPrFor || addNewPrFor=='Select an option'">
-          <span class="icon-pad">Next</span>
-          <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6" *ngIf="addNewPrFor && (addNewPrFor=='An Existing Program of Record' || addNewPrFor.indexOf('Subprogram') > -1)">
-        <div class="dropdown-label mt-2">
-          <label class="primary-label mb-2">
-            Select a Program
-          </label>
-        </div>
+      <div class="col-6" *ngIf="addNewPrFor && (addNewPrFor=='An Existing Program of Record' || addNewPrFor.indexOf('Subprogram') > -1)">
         <div class="dropdown-label">
           <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
+            <option value="Select a Program">Select a Program</option>
             <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.fullname}}</option>
           </select>
         </div>
+      </div>
+      <div class="col-1">
+          <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!addNewPrFor || addNewPrFor=='Select an option'">
+          <span class="icon-pad">Next</span>
+          <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </fieldset>
