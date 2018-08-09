@@ -41,8 +41,8 @@ export class IdAndNameComponent {
       switch (this.programRequestPageMode.type) {
         case CreationTimeType.PROGRAM_OF_MRDB:
           return false;
-        case CreationTimeType.SUBPROGRAM_OF_MRDB: 
-        case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR: 
+        case CreationTimeType.SUBPROGRAM_OF_MRDB:
+        case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
         case CreationTimeType.NEW_PROGRAM:
           return this.shortname.invalid || this.longname.invalid;
         default:
@@ -92,14 +92,6 @@ export class IdAndNameComponent {
       return '';
     } else {
       return prFullName.substring(0, prFullName.lastIndexOf('/') + 1);
-    }
-  }
-
-  private subprogramTypes() {
-    if(this.programRequestPageMode.reference.type === ProgramType.GENERIC) {
-      return [ProgramType.GENERIC]
-    } else {
-      return [ProgramType.INCREMENT, ProgramType.GENERIC, ProgramType.FOS]
     }
   }
 }
