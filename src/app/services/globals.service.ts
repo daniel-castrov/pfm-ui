@@ -1,9 +1,9 @@
-import { CommunityService } from './../generated/api/community.service';
-import { Community } from './../generated/model/community';
-import { User } from './../generated/model/user';
+import { CommunityService } from '../generated/api/community.service';
+import { Community } from '../generated/model/community';
+import { User } from '../generated/model/user';
 import { Observable } from 'rxjs/Observable';
-import { RestResult } from './../generated/model/restResult';
-import { MyDetailsService } from './../generated/api/myDetails.service';
+import { RestResult } from '../generated/model/restResult';
+import { MyDetailsService } from '../generated/api/myDetails.service';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map'
 import { ProgramsService } from '../generated/api/programs.service';

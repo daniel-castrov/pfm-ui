@@ -1,6 +1,7 @@
 <ng-template #idline let-line="line">
-  {{line?.appropriation}}/{{line?.blin}}/{{line?.item}}/{{line?.opAgency}}
+  {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
+
 <div class="table-editable">
   <table class="execution-table table-striped">
     <tr class="execution-title font-weight-bold text-center">
@@ -8,7 +9,7 @@
         <span>
           <button class="btn btn-light" (click)="addrow()">
             <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            to select target programs
+            to select {{sourceOrTarget}} programs
           </button>
         </span>
       </th>
@@ -29,33 +30,33 @@
       </th>
     </tr>
 
-    <tr class="table-bordered" *ngFor="let line of updatelines; let idx=index">
-      <td *ngIf="line?.mrId" class="large-column">{{fullname(line)}}</td>
-      <td *ngIf="!line?.mrId" class="large-column">
-        <select class="form-control-sm dropdown-width mb-2" name="progdd" [(ngModel)]="line.mrId">
+    <tr class="table-bordered" *ngFor="let wrap of updatelines; let idx=index">
+      <td *ngIf="wrap.line.mrId" class="large-column">{{fullname(wrap.line)}}</td>
+      <td *ngIf="!wrap.line.mrId" class="large-column">
+        <select class="form-control-sm dropdown-width mb-2" name="progdd" [(ngModel)]="wrap.line.mrId" (change)="updateapprs(idx)">
           <option value="">Select Program</option>
-          <option *ngFor="let en of programIdNameLkp | mapAsList" [value]="en.key">{{en.value}}</option>
+          <option *ngFor="let en of sortedProgramFullnames()" [value]="en.key">{{en.value}}</option>
         </select>
       </td>
 
-      <td *ngIf="line.mrId && line.appropriation">
-        <ng-container *ngTemplateOutlet="idline;context:{line:line}"></ng-container>
+      <td *ngIf="wrap.line.mrId && wrap.line.appropriation">
+        <ng-container *ngTemplateOutlet="idline;context:{line:wrap.line}"></ng-container>
       </td>
-      <td *ngIf="line.mrId && !line.appropriation">
+      <td *ngIf="wrap.line.mrId && !wrap.line.appropriation">
         <select class="form-control-sm dropdown-width mb-2" name="linedd" (change)="setline(idx, $event.target.selectedIndex)">
           <option value="">Select Execution Line</option>
-          <option *ngFor="let l of getLineChoices(line.mrId)" [ngValue]="l.id">
+          <option *ngFor="let l of getLineChoices(wrap.line.mrId)" [ngValue]="l.id">
             <ng-container *ngTemplateOutlet="idline;context:{line:l}"></ng-container>
           </option>
         </select>
       </td>
-      <td *ngIf="!line.mrId">
+      <td *ngIf="!wrap.line.mrId">
         Select a Program first
       </td>
 
-      <td>{{line.toa}}</td>
-      <td>{{line.released}}</td>
-      <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, idx)">{{line.released}}</td>
+      <td>{{wrap.line.toa}}</td>
+      <td>{{wrap.line.released}}</td>
+      <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, idx)">{{wrap.amt}}</td>
       <td class="text-center">
         <span class="remove-pom-line" title="Remove" (click)="removerow(idx)">
           <i class="fa fa-trash"></i>
