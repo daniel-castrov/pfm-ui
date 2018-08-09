@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ExecutionService, ProgramsService, ExecutionEvent, ExecutionLine, ExecutionDropDown } from '../../../generated';
 import { ActivatedRoute, UrlSegment } from '../../../../../node_modules/@angular/router';
 import { forkJoin } from '../../../../../node_modules/rxjs/observable/forkJoin';
+
+// Other Components
+import { HeaderComponent } from '../../header/header.component'
 
 @Component({
   selector: 'app-execution-line-details',
@@ -9,6 +12,8 @@ import { forkJoin } from '../../../../../node_modules/rxjs/observable/forkJoin';
   styleUrls: ['./execution-line-details.component.scss']
 })
 export class ExecutionLineDetailsComponent implements OnInit {
+
+  @ViewChild(HeaderComponent) header;
   private current: ExecutionLine;
   private events: EventItem[] = [];
   private dropdowns: ExecutionDropDown[] = [];
@@ -46,7 +51,7 @@ export class ExecutionLineDetailsComponent implements OnInit {
           else {
             amt = totalto;
           }
-          
+
           console.log(x);
 
           my.events.push({

@@ -1,4 +1,12 @@
-{{current| json}}
-<hr/>
-<div *ngFor="let t of events">{{t|json}}</div>
-
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6 mb-4">
+        {{current| json}}
+        <hr/>
+        <div *ngFor="let t of events">{{t|json}}</div>
+      </div>
+    </div>
+  </div>
+</div>

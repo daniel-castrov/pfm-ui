@@ -152,7 +152,7 @@ const appRoutes: Routes = [
   {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'appropriation-release/:phaseId', component:AppropriationReleaseComponent},
   {path:'charges/:phaseId', component:ChargesComponent},
-  { path: 'exedetails/:lineId', component: ExecutionLineDetailsComponent },
+  {path:'exedetails/:lineId', component: ExecutionLineDetailsComponent },
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
