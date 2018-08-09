@@ -8,8 +8,6 @@ import { GlobalsService } from './../../../../services/globals.service';
 import { PB } from './../../../../generated/model/pB';
 import { Component, Input, OnChanges, ViewChild, OnInit, ViewEncapsulation } from '@angular/core'
 import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType, IntMap } from '../../../../generated'
-import { Row } from './Row';
-import { Key } from './Key';
 import { PhaseType } from "../../select-program-request/UiProgrammaticRequest";
 import { DataRow } from "./DataRow";
 import { AgGridNg2 } from "ag-grid-angular";
@@ -20,35 +18,26 @@ import { AgGridNg2 } from "ag-grid-angular";
   styleUrls: ['./funds-tab.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class FundsTabComponent implements OnChanges, OnInit {
+export class FundsTabComponent implements OnChanges {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() private pr: ProgrammaticRequest;
   private parentPr: ProgrammaticRequest;
   @Input() private prs: ProgrammaticRequest[];
+  @Input() private isValid: boolean;
 
   private pomFy: number;
   private pbFy: number;
-  // key is appropriation+blin
-  private rows: Map<string, Row> = new Map<string, Row>();
 
   // for the add FL section
   private appropriations: string[] = [];
-  private appropriation: string;
   private baOrBlins: string[] = [];
-  private baOrBlin: string;
-  private item: string;
-  private opAgencies: string[] = [];
-  private opAgency: string;
-  private programElement: string;
-  private acquisitionTypes: string[];
-  private acquisitionType: string;
+  private filteredBlins: string[] = [];
   private columnKeys;
   public columnDefs = [];
   public data;
   public pinnedBottomData;
-  public editType= '';
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -56,16 +45,12 @@ export class FundsTabComponent implements OnChanges, OnInit {
               private globalsService: GlobalsService,
               private autoValuesService: AutoValuesService ) {}
 
-  ngOnInit() {
-    this.loadDropdownOptions();
-  }
-
   async ngOnChanges() {
     if(!this.pr.phaseId) {
       return;
     }
+    this.setPomFiscalYear();
     this.initDataRows();
-    this.initRows();
     if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
       this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result
     }
@@ -76,28 +61,46 @@ export class FundsTabComponent implements OnChanges, OnInit {
     this.getPBData().then(value => {
       let pbPr = value;
       this.pr.fundingLines.forEach(fundingLine => {
-        let pbRow: DataRow = new DataRow();
-        pbRow.fundingLine = pbPr.fundingLines.filter(fl =>
-          fundingLine.appropriation === fl.appropriation &&
-          fundingLine.opAgency === fl.opAgency &&
-          fundingLine.baOrBlin === fl.baOrBlin &&
-          fundingLine.item === fl.item
-        )[0];
-        pbRow.phaseType = PhaseType.PB;
-        data.push(pbRow);
-
         let pomRow: DataRow = {fundingLine: fundingLine, phaseType: PhaseType.POM}
-        data.push(pomRow);
+        let pbRow: DataRow = new DataRow();
 
-        let deltaRow: DataRow = new DataRow();
-        deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
-        deltaRow.phaseType = PhaseType.DELTA;
-        data.push(deltaRow);
+        if(pbPr !== undefined) {
+          pbRow.fundingLine = pbPr.fundingLines.filter(fl =>
+            fundingLine.appropriation === fl.appropriation &&
+            fundingLine.opAgency === fl.opAgency &&
+            fundingLine.baOrBlin === fl.baOrBlin &&
+            fundingLine.item === fl.item
+          )[0];
+          pbRow.phaseType = PhaseType.PB;
+        }
+
+        if (pbRow.fundingLine !== undefined && this.isPbFunded(pbRow.fundingLine.funds)) {
+          let deltaRow: DataRow = new DataRow();
+          deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
+          deltaRow.phaseType = PhaseType.DELTA;
+          data.push(pbRow);
+          data.push(pomRow);
+          data.push(deltaRow);
+        } else {
+          data.push(pomRow);
+        }
       });
       this.generateColumns(this.pr.fundingLines);
       this.data = data;
-      this.initPinnedBottomRows()
+      this.initPinnedBottomRows();
+      this.loadDropdownOptions();
     });
+  }
+
+  isPbFunded(funds): boolean {
+    let isFunded = false
+    Object.keys(funds).forEach(year => {
+      if(Number(year) >= this.pomFy && Number(funds[year]) !== 0) {
+        isFunded = true;
+        return false;
+      }
+    });
+    return isFunded;
   }
 
   initPinnedBottomRows(){
@@ -149,14 +152,18 @@ export class FundsTabComponent implements OnChanges, OnInit {
       {
         headerName: 'Appropriation',
         field: 'fundingLine.appropriation',
-        cellClass: ['row-span'],
         editable: true,
-        cellClassRules: {'font-weight-bold': params => {return this.colSpanCount(params) > 1}},
+        onCellValueChanged: params => this.onFundingLineValueChanged(params),
+        cellClassRules: {
+          'font-weight-bold': params => {return this.colSpanCount(params) > 1},
+          'row-span': params => {return this.rowSpanCount(params) > 1}
+          },
+        cellClass: 'funding-line-default',
         rowSpan: params => {return this.rowSpanCount(params)},
         colSpan: params => {return this.colSpanCount(params)},
         cellEditorSelector: params => {
           return {
-            component: 'select',
+            component: 'agSelectCellEditor',
             params: {values: this.appropriations}
           };
         }
@@ -165,27 +172,37 @@ export class FundsTabComponent implements OnChanges, OnInit {
         headerName: 'BA/BLIN',
         field: 'fundingLine.baOrBlin',
         editable: true,
+        onCellValueChanged: params => this.onFundingLineValueChanged(params),
         cellEditorSelector: params => {
           return {
-            component: 'select',
-            params: {values: this.baOrBlins}
+            component: 'agSelectCellEditor',
+            params: {values: this.filteredBlins}
           };
         },
-        cellClass: ['row-span'],
+        cellClass: 'funding-line-default',
+        cellClassRules: {
+          'row-span': params => {return this.rowSpanCount(params) > 1}
+        },
         rowSpan: params => {return this.rowSpanCount(params)}
        },
       {
         headerName: 'Item',
         field: 'fundingLine.item',
         editable: true,
-        cellClass: ['row-span'],
+        cellClass: 'funding-line-default',
+        cellClassRules: {
+          'row-span': params => {return this.rowSpanCount(params) > 1}
+        },
         rowSpan: params => {return this.rowSpanCount(params)}
       },
       {
         headerName: 'OpAgency',
         field: 'fundingLine.opAgency',
         editable: true,
-        cellClass: ['row-span'],
+        cellClass: 'funding-line-default',
+        cellClassRules: {
+          'row-span': params => {return this.rowSpanCount(params) > 1}
+        },
         rowSpan: params => {return this.rowSpanCount(params)}
       },
       {
@@ -204,86 +221,91 @@ export class FundsTabComponent implements OnChanges, OnInit {
               return params.data.phaseType;
           }
         }}];
+    this.columnKeys = [
+      this.pomFy - 3,
+      this.pomFy -2,
+      this.pomFy - 1,
+      this.pomFy,
+      this.pomFy + 1,
+      this.pomFy + 2,
+      this.pomFy + 3,
+      this.pomFy + 4];
 
-    if (data && data.length > 0) {
-      this.columnKeys = [];
-      data.forEach(fl => {
-        Object.keys(fl.funds).forEach(year => {
-          this.columnKeys.push(year);
-        })
-      });
-      this.columnKeys.sort();
-      this.columnKeys = Array.from(new Set(this.columnKeys));
-      this.columnKeys.forEach(key => {
+    this.columnKeys.forEach(key => {
 
-        let subHeader;
-        let cellClass = [];
-        switch(Number(key)) {
-          case (this.pomFy + 4):
-            subHeader = 'BY+4';
-            cellClass = ['text-right'];
-            break;
-          case this.pomFy + 3:
-            subHeader = 'BY+3';
-            cellClass = ['text-right'];
-            break;
-          case this.pomFy + 2:
-            subHeader = 'BY+2';
-            cellClass = ['text-right'];
-            break;
-          case this.pomFy + 1:
-            subHeader = 'BY+1';
-            cellClass = ['text-right'];
-            break;
-          case this.pomFy:
-            subHeader = 'BY';
-            cellClass = ['text-right'];
-            break;
-          case this.pomFy - 1:
-            subHeader = 'CY';
-            cellClass = ['ag-cell-white', 'text-right'];
-            break;
-          case this.pomFy - 2:
-            subHeader = 'PY';
-            cellClass = ['ag-cell-white', 'text-right'];
-            break;
-          case this.pomFy -3:
-            subHeader = 'PY-1';
-            cellClass = ['ag-cell-white', 'text-right'];
-            break;
-        }
-        if (subHeader) {
-          let colDef = {
-            headerName: subHeader,
-            type: "numericColumn",
-            children: [{
-              headerName: key,
-              field: 'fundingLine.funds.' + key,
-              maxWidth: 92,
-              suppressMenu: true,
-              cellClassRules: {
-                'ag-cell-edit': params => {
-                  return this.isEditable(params, key)
-                },
-                'font-weight-bold': params => {
-                  return this.colSpanCount(params) > 1
-                }
-              },
-              editable: params => {
+      let subHeader;
+      let cellClass = [];
+      switch(Number(key)) {
+        case (this.pomFy + 4):
+          subHeader = 'BY+4';
+          cellClass = ['text-right'];
+          break;
+        case this.pomFy + 3:
+          subHeader = 'BY+3';
+          cellClass = ['text-right'];
+          break;
+        case this.pomFy + 2:
+          subHeader = 'BY+2';
+          cellClass = ['text-right'];
+          break;
+        case this.pomFy + 1:
+          subHeader = 'BY+1';
+          cellClass = ['text-right'];
+          break;
+        case this.pomFy:
+          subHeader = 'BY';
+          cellClass = ['text-right'];
+          break;
+        case this.pomFy - 1:
+          subHeader = 'CY';
+          cellClass = ['ag-cell-white', 'text-right'];
+          break;
+        case this.pomFy - 2:
+          subHeader = 'PY';
+          cellClass = ['ag-cell-white', 'text-right'];
+          break;
+        case this.pomFy -3:
+          subHeader = 'PY-1';
+          cellClass = ['ag-cell-white', 'text-right'];
+          break;
+      }
+      if (subHeader) {
+        let colDef = {
+          headerName: subHeader,
+          type: "numericColumn",
+          children: [{
+            headerName: key,
+            field: 'fundingLine.funds.' + key,
+            maxWidth: 92,
+            suppressMenu: true,
+            cellClassRules: {
+              'ag-cell-edit': params => {
                 return this.isEditable(params, key)
               },
-              onCellValueChanged: params => this.onBudgetYearValueChanged(params),
-              valueFormatter: params => {
-                return this.currencyFormatter(params)
+              'font-weight-bold': params => {
+                return this.colSpanCount(params) > 1
               }
-            }]
-          };
-          this.columnDefs.push(colDef);
-        }
-        });
-      this.agGrid.api.setColumnDefs(this.columnDefs);
-      this.agGrid.api.sizeColumnsToFit();
-    }
+            },
+            cellStyle: params => {
+              if (!this.isValidBa(params.data.fundingLine.baOrBlin, key, params.data.fundingLine.funds[key])) {
+                return {color: 'red', 'font-weigh': 'bold'};
+              };
+            },
+            editable: params => {
+              return this.isEditable(params, key)
+            },
+            onCellValueChanged: params => this.onBudgetYearValueChanged(params),
+            valueFormatter: params => {
+              return this.currencyFormatter(params)
+            }
+          }]
+        };
+        this.columnDefs.push(colDef);
+      }
+      });
+    this.agGrid.api.setColumnDefs(this.columnDefs);
+    this.agGrid.api.sizeColumnsToFit();
+
   }
 
   addRow(){
@@ -292,34 +314,27 @@ export class FundsTabComponent implements OnChanges, OnInit {
       funds[key] = 0;
     });
     let emptyFundingLine = {
-      appropriation: '',
-      baOrBlin: '',
-      opAgency: '',
-      item: '',
-      programElement: '',
-      acquisitionType: '',
+      acquisitionType: null,
+      appropriation: null,
+      baOrBlin: null,
+      emphases: [],
       funds: funds,
+      id: null,
+      item: null,
+      opAgency: null,
+      programElement: null,
       variants: []
     };
-
-    let newPBRow: DataRow = new DataRow();
-    newPBRow.phaseType = PhaseType.PB;
-    newPBRow.fundingLine = JSON.parse(JSON.stringify(emptyFundingLine));
 
     let newPomRow: DataRow = new DataRow();
     newPomRow.phaseType = PhaseType.POM;
     newPomRow.fundingLine = JSON.parse(JSON.stringify(emptyFundingLine));
 
-    let newDeltaRow: DataRow = new DataRow();
-    newDeltaRow.phaseType = PhaseType.DELTA;
-    newDeltaRow.fundingLine = JSON.parse(JSON.stringify(emptyFundingLine));
-
-    this.data.push(newPBRow, newPomRow, newDeltaRow);
+    this.data.push(newPomRow);
     this.pr.fundingLines.push(newPomRow.fundingLine);
     this.agGrid.api.setRowData(this.data);
-    this.agGrid.api.setFocusedCell(this.data.length - 3, 'fundingLine.appropriation');
-    this.agGrid.api.startEditingCell({rowIndex: this.data.length - 3, colKey: 'fundingLine.appropriation'});
-    this.editType = 'fullRow';
+    this.agGrid.api.setFocusedCell(this.data.length - 1, 'fundingLine.appropriation');
+    this.agGrid.api.startEditingCell({rowIndex: this.data.length - 1, colKey: 'fundingLine.appropriation'});
   }
 
   isEditable(params, key): boolean{
@@ -365,75 +380,20 @@ export class FundsTabComponent implements OnChanges, OnInit {
     return deltaFundingLine;
   }
 
-  private initRows() {
-    this.setPomFiscalYear();
-    this.setPOMtoRows();
-    this.setPBtoRows();
-  }
-
   private async setPomFiscalYear() {
     const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.pomFy = pom.fy;
   }
 
   private async loadDropdownOptions() {
-    {
-      this.opAgencies = await this.globalsService.tagAbbreviationsForOpAgency();
-      this.opAgency = this.opAgencies[0];
+    this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
+    if(this.data.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
+      this.appropriations.splice(this.appropriations.indexOf('PROC'), 1);
     }
-    {
-      this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
-      this.appropriation = this.appropriations[0];
-      this.onAppropriationChange();
-    }
-    {
-      this.baOrBlins = await this.globalsService.tagAbbreviationsForBlin();
-      this.baOrBlin = this.getInitiallySelectedBlins()[0];
-      this.onBaOrBlinChange();
-    }
-    {
-      this.acquisitionTypes = await this.globalsService.tagAbbreviationsForAcquisitionType();
-      this.acquisitionType = this.acquisitionTypes[0];
-    }
-  }
 
-  onAppropriationChange() {
-    this.updateBaOrBlins();
-  }
-
-  onBaOrBlinChange() {
-    this.updateProgramElement();
-    this.updateItem();
-  }
-
-  onItemChange() {
-    this.updateProgramElement();
-  }
-
-  async updateBaOrBlins() {
-    this.baOrBlins = await this.autoValuesService.baOrBlins(this.appropriation);
-    this.onBaOrBlinChange()
-  }
-
-  async updateProgramElement() {
-    this.programElement = await this.autoValuesService.programElement(this.baOrBlin, this.item);
-  }
-
-  updateItem() {
-    this.item = this.autoValuesService.item(this.pr.functionalArea, this.baOrBlin);
-  }
-
-  private setPOMtoRows() {
-    this.rows.clear();
-    this.pr.fundingLines.forEach(fundingLine => {
-      var key = Key.create(fundingLine.appropriation, fundingLine.baOrBlin, fundingLine.item, fundingLine.opAgency);
-      this.rows.set(key, new Row( fundingLine.appropriation,
-                                  fundingLine.baOrBlin,
-                                  fundingLine.item,
-                                  fundingLine.opAgency,
-                                  new Map<number, number>(),
-                                  fundingLine ) );
-    });
+    let blins = await this.globalsService.tagAbbreviationsForBlin();
+    let bas = await this.globalsService.tagAbbreviationsForBa();
+    this.baOrBlins = blins.concat(bas);
   }
 
   private async getPBData(): Promise<ProgrammaticRequest>{
@@ -460,73 +420,43 @@ export class FundsTabComponent implements OnChanges, OnInit {
 
     let displayModel = this.agGrid.api.getModel();
     let pbNode = displayModel.getRow(params.node.rowIndex - 1);
+    if (pbNode !== undefined && pbNode.data.phaseType === PhaseType.PB) {
+      let deltaNode = displayModel.getRow(params.node.rowIndex + 1);
 
-    let deltaNode = displayModel.getRow(params.node.rowIndex + 1);
-
-    deltaNode.data.fundingLine = this.generateDelta(pomNode.fundingLine, pbNode.data.fundingLine);
+      deltaNode.data.fundingLine = this.generateDelta(pomNode.fundingLine, pbNode.data.fundingLine);
+    }
     this.agGrid.api.refreshCells();
     this.initPinnedBottomRows();
+    this.isValid = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
   }
 
-  private async setPBtoRows() {
-    const user: User = await this.globalsService.user().toPromise();
-    const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
-    this.pbFy = pb.fy;
+  onFundingLineValueChanged(params) {
+    if (params.colDef.headerName === 'Appropriation') {
+      this.filterBlins(params.data.fundingLine.appropriation);
+    }
+    if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
+      params.data.fundingLine.opAgency = this.pr.leadComponent
+      switch(params.data.fundingLine.appropriation){
+        case 'RDTE':
+        case 'RDT&E':
+          params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
+          break;
+        case 'PROC':
+          //TODO: show a table to let the user map (?)
+          break;
+      }
 
-    // there is no PB if there is no this.pr.originalMrId
-    if(!this.pr.originalMrId) return;
-
-    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
-
-    if(!pbPr) return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
-
-    pbPr.fundingLines.forEach(pbFundingLine => {
-      const key = Key.create(pbFundingLine.appropriation, pbFundingLine.baOrBlin, pbFundingLine.item, pbFundingLine.opAgency);
-      if (this.rows.has(key)) {
-        var row: Row = this.rows.get(key);
-        Object.keys(pbFundingLine.funds).forEach( yearstr => {
-          row.pbFunds.set(+yearstr, pbFundingLine.funds[yearstr]);
-          row.calculateTotalForYear(+yearstr);
+      if (params.data.fundingLine.item) {
+        this.autoValuesService.programElement(params.data.fundingLine.baOrBlin, params.data.fundingLine.item).then( pe => {
+          params.data.fundingLine.programElement = pe;
         });
-      };
-    });
-  }
-
-  addFundingLine() {
-    const key: string = Key.create(this.appropriation, this.baOrBlin, this.item, this.opAgency);
-    if (this.rows.has(key)) {
-      this.feedback.failure('Funding Line already exists');
-    } else {
-      // now set this same data in the current data (for saves)
-      var fundingLine: FundingLine = {
-        appropriation: this.appropriation,
-        baOrBlin: this.baOrBlin,
-        item: this.item,
-        opAgency: this.opAgency,
-        programElement: this.programElement,
-        acquisitionType: this.acquisitionType,
-        funds: {},
-        variants: []
-      };
-      this.pr.fundingLines.push(fundingLine);
-      this.setPOMtoRows();
-      this.setPBtoRows();
+      }
     }
-  }
-
-  onEdit(value: string, row: Row, year: number) {
-    const oldValue = row.fundingLine.funds[year];
-    row.fundingLine.funds[year] = +value;
-    if(!this.isValidBa(row.fundingLine.baOrBlin, year, +value)) {
-      row.fundingLine.funds[year] = oldValue;
-      this.initRows();
-      this.feedback.failure('value entered is invalid');
-    }
-    row.calculateTotalForYear(year);
+    this.agGrid.api.refreshCells();
   }
 
   isValidBa(ba: string, year: number, value: number): boolean {
-    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR)  {
+    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_MRDB) {
       return this.isValidBaWithRespectToParent(ba, year) && this.isValidBaWithRespectToChildren(ba, year);
     } else {
       return true;
@@ -541,22 +471,11 @@ export class FundsTabComponent implements OnChanges, OnInit {
     return PRUtils.isParentBaSumGreaterThanChildren(ba, year, this.pr, this.prs);
   }
 
-  // wierd algorithm for initial BLINs selection based on the initial this.appropriation selection. Possibly flawn.
-  getInitiallySelectedBlins(): string[] {
-    if ('PROC' === this.appropriation) return this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/00/)));
-    else if ('RDTE' === this.appropriation) return this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-4]/)));
-    else if ('O&M' === this.appropriation) return this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[5-7]/)));
-    else return this.baOrBlins;
+  filterBlins(appropriation) {
+    if ('PROC' === appropriation) {
+      this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/00/)));
+    } else {
+      this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-4]/)));
+    }
   }
-
-  totals(year: number, mode: string) {
-    var sum: number = 0;
-    this.rows.forEach(row => {
-           if ('PB'    === mode) sum += row.pbFunds.get(year)       || 0;
-      else if ('POM'   === mode) sum += row.fundingLine.funds[year] || 0;
-      else if ('TOTAL' === mode) sum += row.deltaFunds.get(year)    || 0;
-    });
-    return sum;
-  }
-
 }
