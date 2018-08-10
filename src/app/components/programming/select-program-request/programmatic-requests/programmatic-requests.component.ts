@@ -56,7 +56,14 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         programmaticRequest.phaseType = PhaseType.POM;
         if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
           let prfn = this.pomProgrammaticRequests.filter((prfn: ProgramRequestWithFullName) => pr.creationTimeReferenceId === prfn.id)[0];
-          programmaticRequest.dataPath = [prfn.shortName, pr.shortName]
+
+          if(prfn.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+            let subPrfn = this.pomProgrammaticRequests.filter((subPrfn: ProgramRequestWithFullName) => prfn.creationTimeReferenceId === subPrfn.id)[0];
+
+            programmaticRequest.dataPath = [subPrfn.shortName, prfn.shortName, pr.shortName];
+          } else {
+            programmaticRequest.dataPath = [prfn.shortName, pr.shortName];
+          }
         } else {
           programmaticRequest.dataPath = [pr.shortName];
         }
@@ -222,6 +229,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   getStatus(params) {
+    console.log(params);
     if (params.data.phaseType == PhaseType.POM) {
       if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
         return 'DRAFT';
