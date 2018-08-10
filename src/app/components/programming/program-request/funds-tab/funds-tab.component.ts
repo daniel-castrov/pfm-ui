@@ -7,10 +7,11 @@ import { FeedbackComponent } from '../../../feedback/feedback.component';
 import { User } from '../../../../generated/model/user';
 import { UserUtils } from '../../../../services/user.utils.service';
 import { PB } from '../../../../generated/model/pB';
-import { Component, Input, OnChanges, ViewChild, OnInit } from '@angular/core'
-import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType } from '../../../../generated'
-import { Row } from './Row';
-import { Key } from './Key';
+import {Component, Input, OnChanges, ViewChild, OnInit, ViewEncapsulation} from '@angular/core'
+import {FundingLine, POMService, Pom, PRService, PBService, CreationTimeType, IntMap} from '../../../../generated'
+import {AgGridNg2} from "ag-grid-angular";
+import {DataRow} from "./DataRow";
+import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 
 @Component({
   selector: 'funds-tab',
@@ -387,13 +388,13 @@ export class FundsTabComponent implements OnChanges {
   }
 
   private async loadDropdownOptions() {
-    this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
+    this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
     if(this.data.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
       this.appropriations.splice(this.appropriations.indexOf('PROC'), 1);
     }
 
-    let blins = await this.globalsService.tagAbbreviationsForBlin();
-    let bas = await this.globalsService.tagAbbreviationsForBa();
+    let blins = await this.tagsService.tagAbbreviationsForBlin();
+    let bas = await this.tagsService.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
   }
 
