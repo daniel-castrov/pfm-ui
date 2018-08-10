@@ -1371,6 +1371,24 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /getroles:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns array of rolenames for the current user"
+      description: "Returns array of rolenames for the current user"
+      operationId: "getRoles"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "rolenames"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
   /ispermitted/{permission}:
     get:
       tags:
@@ -2425,10 +2443,6 @@ definitions:
         type: "string"
       admin:
         type: "boolean"
-      rolenames:
-        type: "array"
-        items:
-          type: "string"
       currentCommunity:
         type: "object"
   Communication:
