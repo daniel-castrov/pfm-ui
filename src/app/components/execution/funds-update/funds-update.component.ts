@@ -118,6 +118,14 @@ export class FundsUpdateComponent implements OnInit {
           cellClass: ['ag-cell-light-grey','text-center']
         },
         {
+          headerName: 'PE',
+          filter: 'agTextColumnFilter',
+          field: 'programElement',
+          width: 92,
+          menuTabs: this.menuTabs,
+          cellClass: ['ag-cell-light-grey', 'text-center']
+        },
+        {
           headerName: 'Initial Funds',
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
