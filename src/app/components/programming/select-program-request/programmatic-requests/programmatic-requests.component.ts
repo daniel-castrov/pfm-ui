@@ -1,6 +1,6 @@
 import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
-import {Component, Input, OnChanges, Output, EventEmitter, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
 import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 import {AgGridNg2} from "ag-grid-angular";
@@ -11,7 +11,8 @@ import {CreationTimeType} from "../../../../generated";
 @Component({
   selector: 'programmatic-requests',
   templateUrl: './programmatic-requests.component.html',
-  styleUrls: ['./programmatic-requests.component.scss']
+  styleUrls: ['./programmatic-requests.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ProgrammaticRequestsComponent implements OnChanges {
 
@@ -160,6 +161,9 @@ export class ProgrammaticRequestsComponent implements OnChanges {
             filter: 'agTextColumnFilter',
             maxWidth: 92,
             cellClass: cellClass,
+            cellClassRules: {
+              'by': params => {return year >= this.pomFy && params.data.phaseType === PhaseType.POM}
+            },
             type: "numericColumn",
             valueGetter: params => {return this.getToa(params.data, year)},
             valueFormatter: params => {return this.currencyFormatter(params)}
