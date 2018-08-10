@@ -11,7 +11,7 @@ import {CreationTimeType} from "../../../../generated";
 @Component({
   selector: 'programmatic-requests',
   templateUrl: './programmatic-requests.component.html',
-  styleUrls: ['./programmatic-requests.component.scss'],
+  styleUrls: ['./programmatic-requests.component.scss', '../../../user-management/manage-self/elevation/elevation.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class ProgrammaticRequestsComponent implements OnChanges {
@@ -39,6 +39,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   data = [];
   context: any;
   columnDefs = [];
+  groupDefaultExpanded = -1;
 
   frameworkComponents = {
     summaryProgramCellRenderer: SummaryProgramCellRenderer,
@@ -62,19 +63,19 @@ export class ProgrammaticRequestsComponent implements OnChanges {
           if(prfn.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
             let subPrfn = this.pomProgrammaticRequests.filter((subPrfn: ProgramRequestWithFullName) => prfn.creationTimeReferenceId === subPrfn.id)[0];
 
-            programmaticRequest.dataPath = [subPrfn.shortName, prfn.shortName, pr.shortName];
+            programmaticRequest.dataPath = [subPrfn.fullname, prfn.shortName, pr.shortName];
           } else {
-            programmaticRequest.dataPath = [prfn.shortName, pr.shortName];
+            programmaticRequest.dataPath = [prfn.fullname, pr.shortName];
           }
         } else {
-          programmaticRequest.dataPath = [pr.shortName];
+          programmaticRequest.dataPath = [pr.fullname];
         }
         data.push(programmaticRequest);
       });
       this.pbProgrammaticRequests.forEach(pr => {
         let programmaticRequest = new UiProgrammaticRequest(pr);
         programmaticRequest.phaseType = PhaseType.PB;
-        programmaticRequest.dataPath = [pr.shortName, 'PB' + (this.pbFy - 2000)]
+        programmaticRequest.dataPath = [pr.fullname, '']
         data.push(programmaticRequest);
       });
       this.sortObjects(data, ['fullname', 'phaseType']);
@@ -99,6 +100,17 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     });
   }
 
+  toggleExpand(){
+    if(this.groupDefaultExpanded == -1){
+      this.groupDefaultExpanded = 0;
+      this.agGrid.api.collapseAll();
+    } else {
+      this.groupDefaultExpanded = -1;
+      this.agGrid.api.expandAll();
+    }
+    this.agGrid.api.onGroupExpandedOrCollapsed();
+  }
+
   defineColumns(programRequests){
     this.columnDefs = [
       {
@@ -111,6 +123,21 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellStyle: { backgroundColor: "#eae9e9" },
         cellRenderer: 'summaryProgramCellRenderer',
         width: 60
+      },
+      {
+        headerName: 'Cycle',
+        menuTabs: this.menuTabs,
+        filter: 'agTextColumnFilter',
+        width: 50,
+        suppressSorting: true,
+        cellClass: ['ag-cell-white'],
+        valueGetter: params => {
+          if (params.data.phaseType == PhaseType.PB) {
+            return 'PB' + (this.pbFy - 2000);;
+          } else {
+            return 'POM' + (this.pomFy - 2000);
+          }
+        }
       }
     ];
     let columnKeys= [];
@@ -231,7 +258,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   getStatus(params) {
-    console.log(params);
     if (params.data.phaseType == PhaseType.POM) {
       if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
         return 'DRAFT';

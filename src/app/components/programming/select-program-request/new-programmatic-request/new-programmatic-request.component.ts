@@ -111,6 +111,6 @@ export class NewProgrammaticRequestComponent implements OnInit {
   }
 
   private isProgram(programOrPr): boolean {
-    return (typeof programOrPr.fundingLines) === 'undefined';
+    return (typeof programOrPr.creationTimeType) === 'undefined';
   }
 }
