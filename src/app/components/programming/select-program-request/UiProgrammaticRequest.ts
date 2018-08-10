@@ -13,7 +13,6 @@ export class UiProgrammaticRequest {
   get longName():string {return this.pr.longName}
   get fundingLines():FundingLine[] {return this.pr.fundingLines}
   get parentId():string {return this.pr.parentMrId}
-  get originalMrId():string {return this.pr.originalMrId}
   get bulkOrigin():boolean {return this.pr.bulkOrigin}
   getToa(year:number): number {
     if(this.pr.type == ProgramType.GENERIC) {

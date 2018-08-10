@@ -222,7 +222,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   getStatus(params) {
-    console.log(params);
     if (params.data.phaseType == PhaseType.POM) {
       if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
         return 'DRAFT';
