@@ -33,7 +33,8 @@ export class WithholdComponent implements OnInit {
   private longname: string;
   private subtypes: ExecutionDropDown[];
 
-  constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
+  constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
+    private router: Router ) { }
 
   ngOnInit() {
     this.route.params.subscribe(data => {
@@ -61,6 +62,8 @@ export class WithholdComponent implements OnInit {
     });
 
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+      new Blob([JSON.stringify(et)])).subscribe(d => { 
+        this.router.navigate(['/funds-update']);
+      });
   }
 }

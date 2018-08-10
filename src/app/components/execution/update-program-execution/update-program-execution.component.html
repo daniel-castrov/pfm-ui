@@ -20,6 +20,7 @@
         </span>
         <span class="form-group">
           <label class="execution-titles">{{fullname(current.line)}}</label>
+          <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container>
         </span>
       </div>
       <div class="col-2">
@@ -27,13 +28,6 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-md-6 col-lg-4">
-         <span class="form-group">
-          <label class="execution-titles">
-            <!-- <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container> -->
-          </label>
-         </span>
-      </div>
       <div class="col-md-6 col-lg-2">
          <span class="form-group">
            <label class="mr-2">Toa:</label>
