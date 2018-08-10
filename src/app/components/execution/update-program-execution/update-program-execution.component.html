@@ -1,5 +1,5 @@
-<ng-template #idline let-line="line">
-    {{line?.appropriation}}/{{line?.blin}}/{{line?.item}}/{{line?.opAgency}}
+<ng-template #updateidline let-line="line">
+    {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
 
 <j-header></j-header>
@@ -12,15 +12,14 @@
     </div>
     <div class="row mb-3">
       <div class="col-10">
-        <span class="form-group mr-3">
-          <label class="primary-label">From</label>
-          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown">
-            <option></option>
-            <option>2018</option>
+        <span class="form-group mr-2">
+          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown" [(ngModel)]="fromIsSource">
+            <option [ngValue]="true">From</option>
+            <option [ngValue]="false">To</option>
           </select>
         </span>
         <span class="form-group">
-          <label class="execution-titles">{{fullname(current)}}</label>
+          <label class="execution-titles">{{fullname(current.line)}}</label>
         </span>
       </div>
       <div class="col-2">
@@ -28,71 +27,73 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-4">
+      <div class="col-md-6 col-lg-4">
          <span class="form-group">
           <label class="execution-titles">
-            <ng-container *ngTemplateOutlet="idline;context:{line:current}"></ng-container>
+            <!-- <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container> -->
           </label>
          </span>
       </div>
-      <div class="col-1">
+      <div class="col-md-6 col-lg-2">
          <span class="form-group">
-           <label class="primary-label">Toa</label>
+           <label class="mr-2">Toa:</label>
+           <label class="primary-label">{{current.line.toa}}</label>
          </span>
        </div>
-      <div class="col-1">
+      <div class="col-md-6 col-lg-2">
         <span class="form-group">
-         <label class="primary-label">Released</label>
+         <label class="mr-2">Released:</label>
+         <label class="primary-label">{{current.line.released}}</label>
        </span>
       </div>
-      <div class="col-1">
+      <div class="col-md-6 col-lg-2">
         <span class="form-group">
-          <label class="primary-label">Withheld</label>
+          <label class="mr-2">Withheld:</label>
+          <label class="primary-label">{{current.line.withhold}}</label>
         </span>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-6">
-        <span class="form-group ">
-          <label class="primary-label mr-2">Select Transaction Type:</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ttype">
-            <option value=""></option>
-            <option [ngValue]="'BTR'">BTR</option>
-            <option [ngValue]="'EXTERNAL'">External</option>
-            <option [ngValue]="'REALIGNMENT'">Realignment</option>
-          </select>
-         </span>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-md-12 col-lg-2">
+    <div class="row mb-2">
+      <div class="col-md-6 col-lg-2">
         <div class="form-group">
-          <label class="primary-label">Select Event Type:</label>
-          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option value=""></option>
-            <option [ngValue]="'CRA'">CRA</option>
-            <option [ngValue]="'APPROPRIATION'">Appropriation</option>
+          <label>Select Event Type:</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="type" (change)="updatedropdowns()">
+            <option *ngFor="let t of types|mapAsList" [ngValue]="t.key">{{t.value}}</option>
           </select>
         </div>
       </div>
-      <div class="col-md-12 col-lg-7">
-         <div class="form-group">
-          <label class="primary-label">Event Long Name:</label>
-          <input class="form-control long-form-input" [(ngModel)]="longname">
+      <div class="col-md-6 col-lg-2">
+        <div class="form-group">
+          <label>Select Event Subtype:</label>
+          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
+            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-lg-6">
+        <div class="form-group">
+          <label class="mr-2">Event Long Name:</label>
+          <label class="primary-label">{{etype?.description}}</label>
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-12">
         <div id="update-program-execution" class="table-editable">
-          <app-execution-line-table [phase]="phase" [updatelines]="updateexelines"></app-execution-line-table>
+          <app-execution-line-table
+          [sourceOrTarget]="fromIsSource ? 'target' : 'source'"
+          [phase]="phase"
+          [exelinefilter]="linefilter"
+          [updatelines]="updatelines"></app-execution-line-table>
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-12">
         <span class="form-group">
-          <label class="primary-label mb-1">Notes:</label>
+          <label class="mb-1">Notes:</label>
           <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
         </span>
      </div>
@@ -100,7 +101,7 @@
    <div class="row">
      <div class="col-6 mb-4">
        <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
-         <label class="primary-label">Attach Document:</label>
+         <label>Attach Document:</label>
          <div class="input-group input-group">
            <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
            <span class="input-group-btn">

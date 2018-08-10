@@ -1,11 +1,12 @@
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
-import { ProgramType } from './../../../../generated/model/programType';
-import { PRUtils } from './../../../../services/pr.utils.service';
+import { TagsService } from '../../../../services/tags.service';
+import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
+import { ProgramType } from '../../../../generated/model/programType';
+import { PRUtils } from '../../../../services/pr.utils.service';
 import { AutoValuesService } from './AutoValues.service';
-import { FeedbackComponent } from './../../../feedback/feedback.component';
-import { User } from './../../../../generated/model/user';
-import { GlobalsService } from './../../../../services/globals.service';
-import { PB } from './../../../../generated/model/pB';
+import { FeedbackComponent } from '../../../feedback/feedback.component';
+import { User } from '../../../../generated/model/user';
+import { UserUtils } from '../../../../services/user.utils.service';
+import { PB } from '../../../../generated/model/pB';
 import { Component, Input, OnChanges, ViewChild, OnInit } from '@angular/core'
 import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType } from '../../../../generated'
 import { Row } from './Row';
@@ -42,7 +43,8 @@ export class FundsTabComponent implements OnChanges, OnInit {
   constructor(private pomService: POMService,
               private pbService: PBService,
               private prService: PRService,
-              private globalsService: GlobalsService,
+              private globalsService: UserUtils,
+              private tagsService: TagsService,
               private autoValuesService: AutoValuesService ) {}
 
   ngOnInit() {
@@ -70,21 +72,21 @@ export class FundsTabComponent implements OnChanges, OnInit {
   
   private async loadDropdownOptions() {
     {
-      this.opAgencies = await this.globalsService.tagAbbreviationsForOpAgency();
+      this.opAgencies = await this.tagsService.tagAbbreviationsForOpAgency();
       this.opAgency = this.opAgencies[0];
     }
     {
-      this.appropriations = await this.globalsService.tagAbbreviationsForAppropriation();
+      this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
       this.appropriation = this.appropriations[0];
       this.onAppropriationChange();
     }
     {
-      this.baOrBlins = await this.globalsService.tagAbbreviationsForBlin();
+      this.baOrBlins = await this.tagsService.tagAbbreviationsForBlin();
       this.baOrBlin = this.getInitiallySelectedBlins()[0];
       this.onBaOrBlinChange();
     }
     {
-      this.acquisitionTypes = await this.globalsService.tagAbbreviationsForAcquisitionType();
+      this.acquisitionTypes = await this.tagsService.tagAbbreviationsForAcquisitionType();
       this.acquisitionType = this.acquisitionTypes[0];
     }
   }

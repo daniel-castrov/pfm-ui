@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 // Other Components
-import { HeaderComponent } from '../../components/header/header.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-home',

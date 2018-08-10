@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
-import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
@@ -123,7 +122,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-light-green','text-right']
         },
@@ -132,7 +131,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'craTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -141,7 +140,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'realignedTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -150,7 +149,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -159,7 +158,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -168,7 +167,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'btrTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
         },
@@ -177,7 +176,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'withheld',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
@@ -186,7 +185,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
@@ -195,7 +194,7 @@ export class FundsUpdateComponent implements OnInit {
           field: 'released',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
-          suppressSorting: true,
+          suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },

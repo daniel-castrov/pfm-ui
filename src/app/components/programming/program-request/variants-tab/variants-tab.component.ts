@@ -1,18 +1,15 @@
-import { Component, OnInit, Input, ViewChild, OnChanges } from '@angular/core';
-import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, 
-  Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
-import { GlobalsService } from '../../../../services/globals.service';
+import { Component, Input, ViewChild} from '@angular/core';
+import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
+import { UserUtils } from '../../../../services/user.utils.service';
 
 import { FeedbackComponent } from '../../../feedback/feedback.component';
-import { ElementInstructionMap } from '@angular/animations/browser/src/dsl/element_instruction_map';
-import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'variants-tab',
   templateUrl: './variants-tab.component.html',
   styleUrls: ['./variants-tab.component.scss']
 })
-export class VariantsTabComponent implements OnInit {
+export class VariantsTabComponent {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() current: ProgrammaticRequest;
@@ -37,10 +34,7 @@ export class VariantsTabComponent implements OnInit {
   constructor(private pomService: POMService, 
     private pbService: PBService,
     private prService: PRService,
-    private globalsService: GlobalsService ) { }
-
-  ngOnInit() {
-  }
+    private globalsService: UserUtils ) { }
 
   ngOnChanges(){
     if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()    

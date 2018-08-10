@@ -1,8 +1,5 @@
 import { Directive, ElementRef, Input, AfterViewInit  } from '@angular/core';
-import { GlobalsService } from '../services/globals.service'
 import { RolesPermissionsService } from '../generated'
-
-
 
 @Directive({
   selector: '[apppermission]'
@@ -23,9 +20,11 @@ export class RbacPermissionDirective {
 
   async determinVisibility(){
     let data = await this.rpsvc.hasPermission(this.permission).toPromise();
-    let hide = data.result;  
-    if (hide==="false"){
-      this.el.nativeElement.style.display = "none";
+    let show = data.result;
+    if (show === "false"){
+      //this.el.nativeElement.style.display = "none";
+      //this.el.nativeElement.innerHTML = "";
+      this.el.nativeElement.remove();
     }
   }
 

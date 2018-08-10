@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { Response, ResponseContentType } from '@angular/http';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 
 // Generated
 import { User } from '../../../generated/model/user';

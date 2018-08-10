@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
@@ -10,11 +10,10 @@ import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
-import { ExecutionLine, ProgramsService } from '../../../generated';
+import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-
-declare const $: any;
-declare const jQuery: any;
+import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
+import { ExecutionLineFilter } from '../model/execution-line-filter';
 
 @Component({
   selector: 'update-program-execution',
@@ -23,125 +22,105 @@ declare const jQuery: any;
 })
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
-  private current: ExecutionLine;
+  private current: ExecutionLineWrapper = { line: {} };
   private phase: Execution;
-  private allexelines: ExecutionLine[] = [];
-  private updateexelines: ExecutionLine[] = [];
+  private updatelines: ExecutionLineWrapper[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
-  private etype: string;
-  private ttype: string;
-  private longname: string;
+  private types: Map<string, string> = new Map<string, string>();
+  private allsubtypes: ExecutionDropDown[];
+  private subtypes: ExecutionDropDown[];
+  private etype: ExecutionDropDown;
+  private type: string;
+  private fromIsSource: boolean = true;
+  private linefilter: ExecutionLineFilter;
+
   private reason: string;
 
-  constructor(private exesvc: ExecutionService, private progsvc:ProgramsService,
+  constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-
-    //jQuery for editing table
-    var $TABLE = $('#update-program-execution');
-    var $BTN = $('#export-btn');
-    var $EXPORT = $('#export');
-
-    $('.table-add').click(function () {
-      var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-      $TABLE.find('table').append($clone);
-    });
-
-    $('.table-remove').click(function () {
-      $(this).parents('tr').detach();
-    });
-
-    $('.table-up').click(function () {
-      var $row = $(this).parents('tr');
-      if ($row.index() === 1) return; // Don't go above the header
-      $row.prev().before($row.get(0));
-    });
-
-    $('.table-down').click(function () {
-      var $row = $(this).parents('tr');
-      $row.next().after($row.get(0));
-    });
-
-    // A few jQuery helpers for exporting only
-    jQuery.fn.pop = [].pop;
-    jQuery.fn.shift = [].shift;
-
-    $BTN.click(function () {
-      var $rows = $TABLE.find('tr:not(:hidden)');
-      var headers = [];
-      var data = [];
-
-      // Get the headers (add special header logic here)
-      $($rows.shift()).find('th:not(:empty)').each(function () {
-        headers.push($(this).text().toLowerCase());
-      });
-
-      // Turn all existing rows into a loopable array
-      $rows.each(function () {
-        var $td = $(this).find('td');
-        var h = {};
-
-        // Use the headers from earlier to name our hash keys
-        headers.forEach(function (header, i) {
-          h[header] = $td.eq(i).text();
-        });
-
-        data.push(h);
-      });
-
-      // Output the result
-      $EXPORT.text(JSON.stringify(data));
-    });
-
     var my: UpdateProgramExecutionComponent = this;
     this.route.url.subscribe((segments: UrlSegment[]) => {
       var exelineid = segments[segments.length - 1].path;
 
       forkJoin([
         my.exesvc.getExecutionLineById(exelineid),
-        my.progsvc.getIdNameMap()
-      ]).subscribe(data => { 
-        my.current = data[0].result;
+        my.progsvc.getIdNameMap(),
+        my.exesvc.getExecutionDropdowns()
+      ]).subscribe(data => {
+        my.current = {
+          line: data[0].result
+        };
 
-        my.exesvc.getExecutionLinesByPhase(my.current.phaseId).subscribe(d2 => {
-          my.allexelines = d2.result;
-        });
-        my.exesvc.getById(my.current.phaseId).subscribe(d2 => {
+        my.exesvc.getById(my.current.line.phaseId).subscribe(d2 => {
           my.phase = d2.result;
         });
 
         Object.getOwnPropertyNames(data[1].result).forEach(id => {
           my.programIdNameLkp.set(id, data[1].result[id]);
         });
+
+        this.types.set('EXE_BTR', 'BTR');
+        this.types.set('EXE_REALIGNMENT', 'Realignment');
+        this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
+        this.allsubtypes = data[2].result.filter(x => this.types.has(x.type));
+
+        this.type = 'EXE_BTR';
+        this.updatedropdowns();
       });
     });
   }
 
   submit() {
     var et: ExecutionTransfer = {
+      fromId: this.current.line.id,
+      fromIsSource: this.fromIsSource,
       toIdAmtLkp: {},
-      fromId: this.current.id,
-      eventType: this.etype,
-      transType: this.ttype,
+      type: this.etype.subtype,
       reason: this.reason,
-      longname: this.longname
     };
-    this.updateexelines.forEach(l => { 
-      et.toIdAmtLkp[l.id] = l.released; // FIXME: this is just a placeholder
+    this.updatelines.forEach(l => {
+      et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
-    this.exesvc.createTransfer(this.phase.id, new Blob(["stuff"]),
+    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
       new Blob([JSON.stringify(et)])).subscribe();
   }
 
   fullname(exeline: ExecutionLine): string {
-    if( this.programIdNameLkp && exeline ){
+    if (this.programIdNameLkp && exeline) {
       return this.programIdNameLkp.get(exeline.mrId);
     }
     else {
       return '';
     }
+  }
+
+  updatedropdowns() {
+    this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
+    this.etype = this.subtypes[0];
+    var my: UpdateProgramExecutionComponent = this;
+    if ('EXE_BTR' === this.type) {
+      // BTR-- only between same PE
+      this.linefilter = function (x: ExecutionLine): boolean {
+        return (x.programElement === my.current.line.programElement);
+      };
+    }
+    else if ('EXE_REALIGNMENT' === this.type) {
+      // realignment-- only between same blin as current
+      this.linefilter = function (x: ExecutionLine): boolean {
+        return (x.blin === my.current.line.blin);
+      };
+    }
+    else if ('EXE_REDISTRIBUTION' === this.type) {
+      // redistributions can do whatever
+      this.linefilter = function (x: ExecutionLine): boolean {
+        return true;
+      };
+    }
+
+    this.updatelines = this.updatelines.filter( elw=> my.linefilter(elw.line));
   }
 }

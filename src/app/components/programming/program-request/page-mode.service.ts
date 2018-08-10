@@ -1,6 +1,7 @@
 import { CreationTimeType } from './../../../generated/model/creationTimeType';
 import { Injectable } from '@angular/core';
 import { ProgramRequestWithFullName, ProgramWithFullName } from '../../../services/with-full-name.service';
+import {ProgramType} from "../../../generated/model/programType";
 
 @Injectable()
 export class ProgramRequestPageModeService {
@@ -10,6 +11,7 @@ export class ProgramRequestPageModeService {
   public type: CreationTimeType;                                          // applicable only when this._prId is not defined
   public reference: ProgramWithFullName | ProgramRequestWithFullName;     // applicable only when this._prId is not defined
   public phaseId: string;                                                 // applicable only when this._prId is not defined
+  public programType: ProgramType;
 
   // edit mode
   set prId(id:string) {
@@ -18,10 +20,12 @@ export class ProgramRequestPageModeService {
   }
 
   // create mode
-  set(type: CreationTimeType, phaseId: string) {
+  set(type: CreationTimeType, phaseId: string, reference: ProgramWithFullName, programType: ProgramType) {
     this.init();
     this.type = type;
     this.phaseId = phaseId;
+    this.reference = reference;
+    this.programType = programType;
   }
 
   private init() {

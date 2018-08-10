@@ -1,4 +1,4 @@
-import { ProgramRequestWithFullName } from './../../../services/with-full-name.service';
+import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
 import { FundingLine } from '../../../generated/model/fundingLine';
 import { ProgramType } from '../../../generated';
 

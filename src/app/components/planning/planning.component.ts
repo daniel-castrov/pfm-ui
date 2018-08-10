@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import * as $ from 'jquery';
 
 // Other Components
-import { HeaderComponent } from '../../components/header/header.component';
+import { HeaderComponent } from '../header/header.component';
 
 declare const $: any;
 declare const jQuery: any;

@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, AfterViewInit  } from '@angular/core';
-import { GlobalsService } from '../services/globals.service'
 import { RolesPermissionsService } from '../generated'
 
 @Directive({
