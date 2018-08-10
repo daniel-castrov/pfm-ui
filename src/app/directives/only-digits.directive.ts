@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
   selector: '[digits]'
 })
 export class OnlyDigitsDirective {
-  private regex: RegExp = new RegExp(/^-?[0-9,]+$/g);
+  private regex: RegExp = new RegExp(/^-?[0-9,]*$/g);
   private specialKeys: string[] = ['Backspace', 'Delete', 'ArrowRight', 'ArrowLeft',
     'Tab', 'End', 'Home'];
 

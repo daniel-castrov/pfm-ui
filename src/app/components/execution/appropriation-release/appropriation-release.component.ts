@@ -75,7 +75,7 @@ export class AppropriationReleaseComponent implements OnInit {
         data.result.forEach(x => { 
           this.updatelines.push({
             line: x,
-            amt: x.toa - x.released
+            amt: x.toa - x.withheld - x.released
           });
         });
       });
