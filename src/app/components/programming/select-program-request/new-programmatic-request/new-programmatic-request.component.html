@@ -18,7 +18,7 @@
       <div class="col-6" *ngIf="addNewPrFor && (addNewPrFor=='An Existing Program of Record' || addNewPrFor.indexOf('Subprogram') > -1)">
         <div class="dropdown-label">
           <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
-            <option value="Select a Program">Select a Program</option>
+            <option value="null" disabled selected>Select a {{selectLabel}}</option>
             <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.fullname}}</option>
           </select>
         </div>
