@@ -30,6 +30,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   autoGroupColumnDef = {
     headerName: "Program",
     cellStyle: { backgroundColor: "#eae9e9" },
+    menuTabs: this.menuTabs,
+    filter: 'agTextColumnFilter',
     cellRendererParams: { suppressCount: true, innerRenderer: 'summaryProgramCellRenderer' }
   };
 
