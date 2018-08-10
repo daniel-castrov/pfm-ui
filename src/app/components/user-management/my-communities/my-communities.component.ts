@@ -1,8 +1,8 @@
-import { JoinCommunityRequestService } from './../../../generated/api/joinCommunityRequest.service';
-import { LeaveCommunityRequestService } from './../../../generated/api/leaveCommunityRequest.service';
+import { JoinCommunityRequestService } from '../../../generated/api/joinCommunityRequest.service';
+import { LeaveCommunityRequestService } from '../../../generated/api/leaveCommunityRequest.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 
 // Generated
 import { CommunityService } from '../../../generated';

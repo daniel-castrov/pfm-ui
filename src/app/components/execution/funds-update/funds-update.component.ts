@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
-import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
@@ -117,6 +116,14 @@ export class FundsUpdateComponent implements OnInit {
           width: 92,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','text-center']
+        },
+        {
+          headerName: 'PE',
+          filter: 'agTextColumnFilter',
+          field: 'programElement',
+          width: 92,
+          menuTabs: this.menuTabs,
+          cellClass: ['ag-cell-light-grey', 'text-center']
         },
         {
           headerName: 'Initial Funds',

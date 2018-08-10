@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
 import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
-import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
+import { Router, ActivatedRoute, UrlSegment, Route } from '@angular/router'
 import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
@@ -32,7 +32,8 @@ export class ChargesComponent implements OnInit {
   private etype: ExecutionDropDown;
   private type: string;
   
-  constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
+  constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
+    private router: Router ) { }
 
   ngOnInit() {
     this.route.params.subscribe(data => {
@@ -65,7 +66,9 @@ export class ChargesComponent implements OnInit {
     });
 
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+      new Blob([JSON.stringify(et)])).subscribe(d => {
+        this.router.navigate(['/funds-update']);
+      });
   }
 
   updatedropdowns() {

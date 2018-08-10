@@ -38,7 +38,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private reason: string;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     var my: UpdateProgramExecutionComponent = this;
@@ -85,8 +85,11 @@ export class UpdateProgramExecutionComponent implements OnInit {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
+
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+      new Blob([JSON.stringify(et)])).subscribe(d => {
+        this.router.navigate(['/funds-update']);
+      });
   }
 
   fullname(exeline: ExecutionLine): string {
