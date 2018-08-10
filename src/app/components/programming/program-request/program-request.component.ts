@@ -1,6 +1,6 @@
 import { ProgramTabComponent } from './program-tab/program-tab.component';
-import { PRUtils } from './../../../services/pr.utils.service';
-import { ProgramRequestWithFullName, ProgramWithFullName } from './../../../services/with-full-name.service';
+import { PRUtils } from '../../../services/pr.utils.service';
+import { ProgramRequestWithFullName, ProgramWithFullName } from '../../../services/with-full-name.service';
 import { ProgrammaticRequestState } from '../../../generated/model/programmaticRequestState';
 import { CreationTimeType } from '../../../generated/model/creationTimeType';
 import { ProgramType } from '../../../generated/model/programType';
@@ -59,23 +59,23 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       case CreationTimeType.PROGRAM_OF_MRDB:
         this.pr.originalMrId = this.programRequestPageMode.reference.id;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
-        this.pr.type = this.programRequestPageMode.reference.type;
+        this.pr.type = this.programRequestPageMode.programType;
         this.pr.longName = this.programRequestPageMode.reference.longName;
         this.pr.shortName = this.programRequestPageMode.reference.shortName;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
       case CreationTimeType.SUBPROGRAM_OF_MRDB:
         this.initPrWith(this.programRequestPageMode.reference);
-        this.pr.type = ProgramType.GENERIC;
+        this.pr.type = this.programRequestPageMode.programType;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         break;
       case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
-        this.pr.type = ProgramType.GENERIC;
+        this.pr.type = this.programRequestPageMode.programType;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
       case CreationTimeType.NEW_PROGRAM:
-        this.pr.type = ProgramType.PROGRAM;
+        this.pr.type = this.programRequestPageMode.programType;
         break;
       default:
         console.log('Wrong programRequestPageMode.type');

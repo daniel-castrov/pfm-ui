@@ -1,16 +1,16 @@
-import { ProgrammaticRequest } from './../../../../generated/model/programmaticRequest';
-import { ProgramType } from './../../../../generated/model/programType';
-import { PRUtils } from './../../../../services/pr.utils.service';
+import { TagsService } from '../../../../services/tags.service';
+import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
+import { ProgramType } from '../../../../generated/model/programType';
+import { PRUtils } from '../../../../services/pr.utils.service';
 import { AutoValuesService } from './AutoValues.service';
-import { FeedbackComponent } from './../../../feedback/feedback.component';
-import { User } from './../../../../generated/model/user';
-import { GlobalsService } from './../../../../services/globals.service';
-import { PB } from './../../../../generated/model/pB';
-import { Component, Input, OnChanges, ViewChild, OnInit, ViewEncapsulation } from '@angular/core'
-import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType, IntMap } from '../../../../generated'
-import { PhaseType } from "../../select-program-request/UiProgrammaticRequest";
-import { DataRow } from "./DataRow";
-import { AgGridNg2 } from "ag-grid-angular";
+import { FeedbackComponent } from '../../../feedback/feedback.component';
+import { User } from '../../../../generated/model/user';
+import { UserUtils } from '../../../../services/user.utils.service';
+import { PB } from '../../../../generated/model/pB';
+import { Component, Input, OnChanges, ViewChild, OnInit } from '@angular/core'
+import { FundingLine, POMService, Pom, PRService, PBService, CreationTimeType } from '../../../../generated'
+import { Row } from './Row';
+import { Key } from './Key';
 
 @Component({
   selector: 'funds-tab',
@@ -42,7 +42,8 @@ export class FundsTabComponent implements OnChanges {
   constructor(private pomService: POMService,
               private pbService: PBService,
               private prService: PRService,
-              private globalsService: GlobalsService,
+              private globalsService: UserUtils,
+              private tagsService: TagsService,
               private autoValuesService: AutoValuesService ) {}
 
   async ngOnChanges() {

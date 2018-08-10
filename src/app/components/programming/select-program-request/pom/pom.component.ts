@@ -1,5 +1,5 @@
-import { ProgramRequestWithFullName } from './../../../../services/with-full-name.service';
-import { UiProgrammaticRequest } from './../UiProgrammaticRequest';
+import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
+import { UiProgrammaticRequest } from '../UiProgrammaticRequest';
 import { Component, Input, OnChanges } from '@angular/core';
 import { Pom } from '../../../../generated/model/pom';
 
