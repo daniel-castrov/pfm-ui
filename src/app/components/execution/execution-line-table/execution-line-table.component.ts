@@ -111,7 +111,7 @@ export class ExecutionLineTableComponent implements OnInit {
 
   fullname(exeline: ExecutionLine): string {
     if (this.programIdNameLkp && exeline) {
-      console.log(exeline);
+      //console.log(exeline);
       return this.programIdNameLkp.get(exeline.mrId);
     }
     else {
