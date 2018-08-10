@@ -238,6 +238,7 @@ export class FundsUpdateComponent implements OnInit {
 
         my.exephases = data[1].result;
         my.selectedexe = my.exephases[0];
+        this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
         this.agGrid.api.sizeColumnsToFit();
       });
@@ -248,6 +249,12 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.exelines = data.result;
+      if (0 == my.exelines.length) {
+        my.agOptions.api.showNoRowsOverlay();
+      }
+      else {
+        my.agOptions.api.hideOverlay();
+      }
       this.refreshFilterDropdowns();
     });
   }
