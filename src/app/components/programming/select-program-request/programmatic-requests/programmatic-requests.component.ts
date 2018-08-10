@@ -26,6 +26,11 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   private idToDelete: string;
   private nameToDelete: string;
   private menuTabs = ['filterMenuTab'];
+  autoGroupColumnDef = {
+    headerName: "Program",
+    cellStyle: { backgroundColor: "#eae9e9" },
+    cellRendererParams: { suppressCount: true, innerRenderer: 'summaryProgramCellRenderer' }
+  };
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   data = [];
@@ -48,8 +53,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       this.pomProgrammaticRequests.forEach(pr => {
         let programmaticRequest = new UiProgrammaticRequest(pr);
         programmaticRequest.phaseType = PhaseType.POM;
-        if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_MRDB) {
-          let prfn = this.pomProgrammaticRequests.filter((prfn: ProgramRequestWithFullName) => pr.creationTimeReferenceId === prfn.originalMrId)[0];
+        if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+          let prfn = this.pomProgrammaticRequests.filter((prfn: ProgramRequestWithFullName) => pr.creationTimeReferenceId === prfn.id)[0];
           programmaticRequest.dataPath = [prfn.shortName, pr.shortName]
         } else {
           programmaticRequest.dataPath = [pr.shortName];
@@ -59,11 +64,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       this.pbProgrammaticRequests.forEach(pr => {
         let programmaticRequest = new UiProgrammaticRequest(pr);
         programmaticRequest.phaseType = PhaseType.PB;
-        // if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_MRDB) {
-        //   programmaticRequest.dataPath = [pr.creationTimeReferenceId, pr.id]
-        // } else {
-          programmaticRequest.dataPath = [pr.shortName];
-        // }
+        programmaticRequest.dataPath = [pr.shortName, 'PB' + (this.pbFy - 2000)]
         data.push(programmaticRequest);
       });
       this.sortObjects(data, ['fullname', 'phaseType']);
@@ -91,21 +92,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   defineColumns(programRequests){
     this.columnDefs = [
       {
-        headerName: 'Program',
-        menuTabs: this.menuTabs,
-        filter: 'agTextColumnFilter',
-        field: 'fullname',
-        cellClass: ['ag-cell-light-grey','ag-clickable', 'row-span'],
-        cellRenderer: 'summaryProgramCellRenderer',
-        rowSpan: function(params) {
-          if (params.data.phaseType == PhaseType.PB) {
-            return 2;
-          } else {
-            return 1;
-          }
-        }
-      },
-      {
         headerName: 'Status',
         menuTabs: this.menuTabs,
         filter: 'agTextColumnFilter',
@@ -114,29 +100,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellClass: params => this.getStatusClass(params),
         cellStyle: { backgroundColor: "#eae9e9" },
         cellRenderer: 'summaryProgramCellRenderer',
-        width: 60,
-        rowSpan: function(params) {
-          if (params.data.phaseType == PhaseType.PB) {
-            return 2;
-          } else {
-            return 1;
-          }
-        }
-      },
-      {
-        headerName: 'Cycle',
-        menuTabs: this.menuTabs,
-        filter: 'agTextColumnFilter',
-        width: 50,
-        suppressSorting: true,
-        cellClass: ['ag-cell-white'],
-        valueGetter: params => {
-          if (params.data.phaseType == PhaseType.PB) {
-            return 'PB' + (this.pbFy - 2000);
-          } else {
-            return 'POM' + (this.pomFy - 2000);
-          }
-        }
+        width: 60
       }
     ];
     let columnKeys= [];
@@ -248,35 +212,28 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.deleted.emit();
   }
 
-  editPR(index: number) {
-    let displayModel = this.agGrid.api.getModel();
-    let node = displayModel.getRow(index + 1);
-    this.programRequestPageMode.prId = node.data.pr.id;
+  editPR(prId: string) {
+    this.programRequestPageMode.prId = prId;
     this.router.navigate(['/program-request']);
   }
 
   getStatus(params) {
-    if(params.node.rowIndex !== (this.data.length - 1)){
-      let node = this.data[params.node.rowIndex + 1];
-      if (node.phaseType == PhaseType.POM) {
-        if(!node.bulkOrigin && node.state == 'SAVED'){
-          return 'DRAFT';
-        }
-        return node.state;
-      } else {
-        return '';
+    console.log(params);
+    if (params.data.phaseType == PhaseType.POM) {
+      if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
+        return 'DRAFT';
       }
+      return params.data.state;
+    } else {
+      return '';
     }
   }
 
   getStatusClass(params) {
-    if(params.node.rowIndex !== (this.data.length - 1)) {
-      let node = this.data[params.node.rowIndex + 1];
-      if(node.state === 'OUTSTANDING') {
-        return 'text-danger row-span';
-      }
-      return 'text-primary row-span';
+    if(params.data.state === 'OUTSTANDING') {
+      return 'text-danger';
     }
+    return 'text-primary';
   }
 
   currencyFormatter(value) {

@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import {PhaseType} from "../../programming/select-program-request/UiProgrammaticRequest";
 
 @Component({
   selector: 'summary-program-cell-renderer',
   templateUrl: './summary-program-cell-renderer.component.html',
-  styleUrls: ['./summary-program-cell-renderer.component.scss']
-
+  styleUrls: ['./summary-program-cell-renderer.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SummaryProgramCellRenderer implements ICellRendererAngularComp {
   params;
+  PhaseType = PhaseType;
 
   constructor() {
   }
@@ -18,7 +20,7 @@ export class SummaryProgramCellRenderer implements ICellRendererAngularComp {
   }
 
   public editPR() {
-    this.params.context.componentParent.editPR(this.params.rowIndex);
+    this.params.context.componentParent.editPR(this.params.data.id);
   }
 
   saveDeletionValues() {
