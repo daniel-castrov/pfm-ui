@@ -5,6 +5,7 @@ import { ProgramType } from '../../../generated';
 export class UiProgrammaticRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
   phaseType: PhaseType
+  //This variable is used for the tree functionality in the summary of program request page
   dataPath: string[];
   get id():string {return this.pr.id}
   get state():string {return this.pr.state}
