@@ -59,7 +59,11 @@
         <div class="col-4">
           <ng-container *ngIf="!pomIsCreated">
             <span class="pull-right">
-              <input type="checkbox" id="eppToggle" class="mr-1" [(ngModel)]="useEpp" (change)="useEppData()"> Use EPP Data
+              <!-- <input type="checkbox" id="eppToggle" class="mr-1" [(ngModel)]="useEpp" (change)="useEppData()">  -->
+              Use EPP Data:
+              <button type="button" id="eppToggle" class="btn btn-sm btn-toggle" [(ngModel)]="useEpp" (change)="useEppData()" data-toggle="button" aria-pressed="false" autocomplete="off">
+                 <div class="handle"></div>
+              </button>
             </span>
           </ng-container>
         </div>
