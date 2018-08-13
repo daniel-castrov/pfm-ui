@@ -324,9 +324,6 @@ export class CreatePomSessionComponent implements OnInit {
 
   private useEppData() {
 
-
-    console.log("Click");
-
     this.useEpp = !this.useEpp;
 
     // This only effects FY + 4 Data
