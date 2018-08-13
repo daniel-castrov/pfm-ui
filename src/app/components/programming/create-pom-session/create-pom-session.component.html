@@ -24,11 +24,9 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-3 col-md-6">
-          <span class="font-weight-bold toa-table-title">Set TOA for {{community.abbreviation}} Community ($K)</span>
-        </div>
-        <div class="col-4">
-          <span class="pull-right">
+        <div class="col-12">
+          <span class="font-weight-bold toa-table-title-1">Set TOA for {{community.abbreviation}} Community ($K)</span>
+          <span class="toa-reload-widget">
             <button class="btn-sm btn-secondary" (click)="reload()">
               <i class="fa fa-refresh" aria-hidden="true"></i>
               Reload
@@ -53,16 +51,16 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-3 col-md-6">
-          <span class="font-weight-bold toa-table-title">Set Organization's sub-TOA ($K)</span>
-        </div>
-        <div class="col-4">
+        <div class="col-12">
+          <span class="font-weight-bold toa-table-title-2">Set Organization's sub-TOA ($K)</span>
           <ng-container *ngIf="!pomIsCreated">
-            <span class="pull-right">
-              Use EPP Data:
+            <span class="toa-epp-widget">
+              <span>
+                <label>Use EPP Data:</label>
+              </span>
               <button type="button" class="btn btn-sm btn-toggle" (click)="useEppData()" data-toggle="button" aria-pressed="false" autocomplete="off">
-                 <div class="handle"></div>
-              </button>
+               <div class="handle"></div>
+             </button>
             </span>
           </ng-container>
         </div>
@@ -95,7 +93,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-12 col-lg-7">
+        <div class="col-12">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
             <div *ngIf="editsOk">

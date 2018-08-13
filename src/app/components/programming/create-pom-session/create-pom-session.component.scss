@@ -12,6 +12,12 @@ $dark-grey: #848282;
 fieldset {
   padding: 20px;
   min-height: 70px;
+  width: 800px;
+}
+
+label {
+  color: #6b757c;
+  margin: 0;
 }
 
 .row {
@@ -67,6 +73,28 @@ fieldset {
       }
     }
   }
+}
+
+.toa-table-title-1 {
+  width: 700px;
+  display: inline-block;
+}
+
+.toa-reload-widget {
+  width: 100px;
+  margin-left: 17px;
+  display: inline-block;
+}
+
+.toa-table-title-2 {
+  width: 600px;
+  display: inline-block;
+}
+
+.toa-epp-widget  {
+  width: 200px;
+  display: inline-block;
+  margin-left: 25px;
 }
 
 .btn-toggle {
