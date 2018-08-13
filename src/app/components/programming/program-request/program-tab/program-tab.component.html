@@ -7,13 +7,13 @@
             <span class="col form-group inline-name">
               <label class="mb-1">*Lead Component</label>
               <select [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let lc of dropdownValues.get('Lead Component')" [ngValue]="lc.abbr">{{lc.name}}</option>
+                <option *ngFor="let lc of mapTypeToTags.get('Lead Component')" [ngValue]="lc.abbr">{{lc.name}}</option>
               </select>
             </span>
             <span class="col form-group inline-name">
               <label class="mb-1">*Manager</label>
               <select [(ngModel)]="pr.manager" name="manager" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let m of dropdownValues.get('Manager')" [ngValue]="m.abbr">{{m.name}}</option>
+                <option *ngFor="let m of mapTypeToTags.get('Manager')" [ngValue]="m.abbr">{{m.name}}</option>
               </select>
             </span>
           </div>
@@ -39,19 +39,19 @@
             <span class="form-group inline-name">
               <label class="mb-1">*Primary</label>
               <select [(ngModel)]="pr.primaryCapability" name="primaryCapability" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let pc of dropdownValues.get('Primary Capability')" [ngValue]="pc.abbr">{{pc.name}}</option>
+                <option *ngFor="let pc of mapTypeToTags.get('Primary Capability')" [ngValue]="pc.abbr">{{pc.name}}</option>
               </select>
              </span>
              <span class="form-group inline-name">
                 <label class="mb-1">*Core</label>
                 <select [(ngModel)]="pr.coreCapability" name="coreCapability" class="form-control-sm dropdown-width mb-2">
-                  <option *ngFor="let cc of dropdownValues.get('Core Capability Area')" [ngValue]="cc.abbr">{{cc.name}}</option>
+                  <option *ngFor="let cc of mapTypeToTags.get('Core Capability Area')" [ngValue]="cc.abbr">{{cc.name}}</option>
                 </select>
               </span>
               <span class="form-group inline-name">
                 <label class="mb-1">Secondary</label>
                 <select [(ngModel)]="pr.secondaryCapability" name="secondaryCapability" class="form-control-sm dropdown-width mb-2">
-                  <option *ngFor="let sc of dropdownValues.get('Secondary Capability')" [ngValue]="sc.abbr">{{sc.name}}</option>
+                  <option *ngFor="let sc of mapTypeToTags.get('Secondary Capability')" [ngValue]="sc.abbr">{{sc.name}}</option>
                 </select>
               </span>
           </fieldset>
@@ -64,19 +64,19 @@
             <span class="form-group inline-name mr-4">
               <label class="mb-1">*Functional</label>
               <select [(ngModel)]="pr.functionalArea" name="functionalArea" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let fa of dropdownValues.get('Functional Area')" [ngValue]="fa.abbr">{{fa.name}}</option>
+                <option *ngFor="let fa of mapTypeToTags.get('Functional Area')" [ngValue]="fa.abbr">{{fa.name}}</option>
               </select>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1"> Medical &amp; Non-Medical</label>
               <select [(ngModel)]="pr.medicalArea" name="medicalCategory" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let mc of dropdownValues.get('Medical Category')" [ngValue]="mc.abbr">{{mc.name}}</option>
+                <option *ngFor="let mc of mapTypeToTags.get('Medical Category')" [ngValue]="mc.abbr">{{mc.name}}</option>
               </select>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Emphasis</label>
               <select name="emphasis" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let e of dropdownValues.get('Emphasis Areas')" [ngValue]="e.abbr">{{e.name}}</option>
+                <option *ngFor="let e of mapTypeToTags.get('Emphasis Areas')" [ngValue]="e.abbr">{{e.name}}</option>
               </select>
             </span>
           </fieldset>
@@ -85,7 +85,7 @@
           <span class="form-group inline-name">
               <label class="mb-1">DASD Taxonomy</label>
               <select name="medicalCategory" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let dasd of dropdownValues.get('DASD CBD')" [ngValue]="dasd.abbr">{{dasd.name}}</option>
+                <option *ngFor="let dasd of mapTypeToTags.get('DASD CBD')" [ngValue]="dasd.abbr">{{dasd.name}}</option>
               </select>
             </span>
         </div>

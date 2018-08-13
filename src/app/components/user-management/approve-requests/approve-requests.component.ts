@@ -2,8 +2,8 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Request } from '../../../services/request';
 
 // Other Components
-import { FeedbackComponent } from './../../feedback/feedback.component';
-import { HeaderComponent } from '../../../components/header/header.component';
+import { FeedbackComponent } from '../../feedback/feedback.component';
+import { HeaderComponent } from '../../header/header.component';
 import { Injectables } from '../../../services/injectables';
 import { RequestsService } from '../../../services/requests.service';
 

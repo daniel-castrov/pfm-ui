@@ -1,4 +1,4 @@
-import { FundingLine } from './../../../../generated/model/fundingLine';
+import { FundingLine } from '../../../../generated/model/fundingLine';
 
 export class Row {
 

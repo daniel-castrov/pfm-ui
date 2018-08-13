@@ -3,10 +3,10 @@ import { ViewEncapsulation } from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EppService } from '../../../generated/api/epp.service';
-import { GlobalsService } from '../../../services/globals.service';
+import { UserUtils } from '../../../services/user.utils.service';
 
 declare const $: any;
 
@@ -33,7 +33,7 @@ export class SetEppComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private eppService: EppService,
-              private globalsSvc:GlobalsService) {
+              private globalsSvc:UserUtils) {
     this.createForm();
   }
 

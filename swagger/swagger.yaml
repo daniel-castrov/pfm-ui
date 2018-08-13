@@ -1371,6 +1371,24 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /getroles:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns array of rolenames for the current user"
+      description: "Returns array of rolenames for the current user"
+      operationId: "getRoles"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "rolenames"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
   /ispermitted/{permission}:
     get:
       tags:
@@ -2273,6 +2291,43 @@ paths:
       description: "Returns the execution lines"
       produces:
       - "application/json"
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates an execution event"
+      description: "creates an execution event"
+      operationId: "createExecutionEvent"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: "string"
+                  format: "binary"
+                transfer:
+                  type: "string"
+                  format: "binary"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase containing the transfer"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "formData"
+        name: "transfer"
+        description: "The transfer object as Blob (sorry)"
+        required: true
+        type: "file"
+      produces:
+      - "application/json"
   /executiontransfer/phase/{phaseId}:
     get:
       operationId: "getExecutionTransfersByPhase"
@@ -2293,150 +2348,15 @@ paths:
       description: "Returns the execution transfers"
       produces:
       - "application/json"
-  /executionlines/phase/{phaseId}/transfer:
-    post:
+  /executiontransfer/dropdowns:
+    get:
+      operationId: "getExecutionDropdowns"
       tags:
       - "Execution"
-      summary: "Creates a transfer between Execution Lines"
-      description: "creates a transfer between Execution Lines"
-      operationId: "createTransfer"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}/release:
-    post:
-      tags:
-      - "Execution"
-      summary: "Releases money to Execution Lines"
-      description: "releases money to Execution Lines"
-      operationId: "createRelease"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}/charge:
-    post:
-      tags:
-      - "Execution"
-      summary: "Releases money to Execution Lines"
-      description: "releases money to Execution Lines"
-      operationId: "createCharge"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}/withhold:
-    post:
-      tags:
-      - "Execution"
-      summary: "Releases money to Execution Lines"
-      description: "releases money to Execution Lines"
-      operationId: "createWithhold"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
+      summary: "Gets all the subtypes for the execution pages"
+      description: "Returns the execution transfer subtypes"
+      produces:
+      - "application/json"
   /executionlines/{lineId}:
     get:
       operationId: "getExecutionLineById"
@@ -2523,10 +2443,6 @@ definitions:
         type: "string"
       admin:
         type: "boolean"
-      rolenames:
-        type: "array"
-        items:
-          type: "string"
       currentCommunity:
         type: "object"
   Communication:
@@ -3187,6 +3103,8 @@ definitions:
         type: "string"
       item:
         type: "string"
+      programElement:
+        type: "string"
       mrId:
         type: "string"
       toa:
@@ -3251,21 +3169,30 @@ definitions:
         type: "array"
         items:
           type: "number"
+  ExecutionDropDown:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      type:
+        type: "string"
+      subtype:
+        type: "string"
   ExecutionTransfer:
     type: "object"
     properties:
       fromId:
         type: "string"
+      fromIsSource:
+        type: "boolean"
       toIdAmtLkp:
         type: "object"
         $ref: "#/definitions/IntMap"
-      transType:
-        type: "string"
-      eventType:
+      type:
         type: "string"
       reason:
-        type: "string"
-      longname:
         type: "string"
       other:
         type: "string"

@@ -36,7 +36,11 @@ export class ActualsTabComponent implements OnInit {
               headerName: 'Actuals',
               field: 'actuals',
               filter: 'agTextColumnFilter',
-              cellClass: ['ag-cell-white']
+              cellClass: ['ag-cell-white', 'ag-link'],
+              cellRenderer: function(params){
+                return "<a data-toggle='modal' + href='#myModal"
+                + "'> "+params.value+"</a>";
+              }
             },
             {
               headerName: 'Oct',
@@ -115,7 +119,10 @@ export class ActualsTabComponent implements OnInit {
       ];
 
     this.rowData = [
-        { actuals: 'Funds', mar: 'item 1', jun: 35000 },
+        { actuals: 'Funds',
+          mar: 'item 1',
+          jun: 35000
+        },
         { actuals: 'Released', sept: 'item 1', aug: 500 },
         { actuals: 'Committed (Monthly)', dec: 'item 1', oct: 5550 },
         { actuals: 'Cummulative Committed', may: 'item 1', jul: 45000 },

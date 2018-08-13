@@ -4,7 +4,7 @@ import { ViewEncapsulation } from '@angular/core';
 import * as $ from 'jquery';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 import { Router, ActivatedRoute, ParamMap, Params, UrlSegment } from '@angular/router';
 
 import { Status } from '../status.enum';

@@ -5,10 +5,10 @@ import { ElevationService } from '../../../../services/elevation.component';
 @Component({
   selector: 'j-elevation',
   templateUrl: './elevation.component.html',
-  styleUrls: ['./elevation.component.css']
+  styleUrls: ['./elevation.component.scss']
 })
 export class ElevationComponent {
-  
+
   @Input() header: HeaderComponent;
 
   constructor(private elevationService: ElevationService) {}
