@@ -1,10 +1,10 @@
-<ng-container *ngIf="params.context.componentParent.reviewOnly">
+<ng-container *ngIf="params.context.componentParent.reviewOnly || params.data.phaseType === PhaseType.PB">
   <span class="row-lt-gray text-center largest-column">{{params.value}}</span>
   <span *ngIf="!params.data.bulkOrigin && params.colDef.headerName === 'Program'" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues()">
     <i class="fa fa-trash"></i>
   </span>
 </ng-container>
-<ng-container *ngIf="!params.context.componentParent.reviewOnly">
+<ng-container *ngIf="!params.context.componentParent.reviewOnly && params.data.phaseType === PhaseType.POM">
   <span class="clickable" (click)="editPR()">{{params.value}}</span>
   <span *ngIf="!params.data.bulkOrigin && params.colDef.headerName === 'Program'" class="remove-pr" data-toggle="modal" data-target="#modal" (click)="saveDeletionValues()">
     <i class="fa fa-trash"></i>
