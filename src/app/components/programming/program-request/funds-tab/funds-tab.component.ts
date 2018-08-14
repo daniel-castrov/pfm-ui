@@ -436,7 +436,6 @@ export class FundsTabComponent implements OnChanges {
   }
 
   onCellEditingStarted(params) {
-    console.log(params);
     switch(params.colDef.headerName){
       case 'BA/BLIN':
         this.filterBlins(params.data.fundingLine.appropriation);
