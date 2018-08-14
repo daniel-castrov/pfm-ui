@@ -1,7 +1,22 @@
-<button class="btn btn-primary mb-3" (click)="addRow()">
-  <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-  Add Funding Line
-</button>
+<div class="row">
+  <div class="col-auto">
+    <button class="btn btn-primary mb-3" (click)="addRow()">
+      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+      New Funding Line
+    </button>
+  </div>
+  <div class="col-auto">
+    <select class="form-control">
+      <option>Select an existing Funding Line</option>
+      <option>FL-1</option>
+      <option>FL-2</option>
+      <option>FL-3</option>
+      <option>FL-4</option>
+      <option>FL-5</option>
+    </select>
+  </div>
+</div>
+
 <ag-grid-angular #agGrid
                  class="ag-theme-balham pr-funds-tab group-header-white "
                  [gridAutoHeight]="true"
@@ -13,5 +28,6 @@
                  [enableFilter]="true"
                  [rowData]="data"
                  [singleClickEdit]="true"
-                 [pinnedBottomRowData]="pinnedBottomData">
+                 [pinnedBottomRowData]="pinnedBottomData"
+                 (cellEditingStarted)="onCellEditingStarted($event)">
 </ag-grid-angular>

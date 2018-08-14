@@ -154,7 +154,9 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'Appropriation',
         field: 'fundingLine.appropriation',
-        editable: true,
+        editable: params => {
+          return this.isEditable(params)
+        },
         onCellValueChanged: params => this.onFundingLineValueChanged(params),
         cellClassRules: {
           'font-weight-bold': params => {return this.colSpanCount(params) > 1},
@@ -173,9 +175,14 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'BA/BLIN',
         field: 'fundingLine.baOrBlin',
-        editable: true,
+        editable: params => {
+          return this.isEditable(params)
+        },
         onCellValueChanged: params => this.onFundingLineValueChanged(params),
         cellEditorSelector: params => {
+          if (params.data.fundingLine.appropriation) {
+            this.filterBlins(params.data.fundingLine.appropriation);
+          }
           return {
             component: 'agSelectCellEditor',
             params: {values: this.filteredBlins}
@@ -190,17 +197,9 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'Item',
         field: 'fundingLine.item',
-        editable: true,
-        cellClass: 'funding-line-default',
-        cellClassRules: {
-          'row-span': params => {return this.rowSpanCount(params) > 1}
+        editable: params => {
+          return this.isEditable(params)
         },
-        rowSpan: params => {return this.rowSpanCount(params)}
-      },
-      {
-        headerName: 'OpAgency',
-        field: 'fundingLine.opAgency',
-        editable: true,
         cellClass: 'funding-line-default',
         cellClassRules: {
           'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -282,7 +281,7 @@ export class FundsTabComponent implements OnChanges {
             suppressMenu: true,
             cellClassRules: {
               'ag-cell-edit': params => {
-                return this.isEditable(params, key)
+                return this.isAmountEditable(params, key)
               },
               'font-weight-bold': params => {
                 return this.colSpanCount(params) > 1
@@ -294,7 +293,7 @@ export class FundsTabComponent implements OnChanges {
               };
             },
             editable: params => {
-              return this.isEditable(params, key)
+              return this.isAmountEditable(params, key)
             },
             onCellValueChanged: params => this.onBudgetYearValueChanged(params),
             valueFormatter: params => {
@@ -339,7 +338,11 @@ export class FundsTabComponent implements OnChanges {
     this.agGrid.api.startEditingCell({rowIndex: this.data.length - 1, colKey: 'fundingLine.appropriation'});
   }
 
-  isEditable(params, key): boolean{
+  isEditable(params): boolean{
+    return params.data.fundingLine.appropriation !== 'Total Funds Request'
+  }
+
+  isAmountEditable(params, key): boolean{
     return key >= this.pomFy &&
       params.data.phaseType == PhaseType.POM &&
       params.data.fundingLine.appropriation !== 'Total Funds Request'
@@ -432,15 +435,28 @@ export class FundsTabComponent implements OnChanges {
     this.isValid = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
   }
 
+  onCellEditingStarted(params) {
+    console.log(params);
+    switch(params.colDef.headerName){
+      case 'BA/BLIN':
+        this.filterBlins(params.data.fundingLine.appropriation);
+        this.agGrid.api.refreshCells();
+        break;
+    }
+  }
+
   onFundingLineValueChanged(params) {
     if (params.colDef.headerName === 'Appropriation') {
       this.filterBlins(params.data.fundingLine.appropriation);
     }
     if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-      params.data.fundingLine.opAgency = this.pr.leadComponent
+      this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
+        params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.pr.leadComponent) !== -1).abbr
+        this.agGrid.api.refreshCells();
+      });
+
       switch(params.data.fundingLine.appropriation){
         case 'RDTE':
-        case 'RDT&E':
           params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
           break;
         case 'PROC':
