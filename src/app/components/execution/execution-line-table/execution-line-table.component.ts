@@ -21,7 +21,7 @@ declare const jQuery: any;
 export class ExecutionLineTableComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @Input() private phase: Execution;
-  @Input() private sourceOrTarget: string = 'target';
+  @Input() private sourceOrTarget: string = 'to select target programs';
   @Input() private updatelines: ExecutionLineWrapper[] = [];
   @Input() private exelinefilter: ExecutionLineFilter;
   private allexelines: ExecutionLine[] = [];
