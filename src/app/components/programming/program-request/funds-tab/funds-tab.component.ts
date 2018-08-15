@@ -74,18 +74,20 @@ export class FundsTabComponent implements OnChanges {
   }
 
   loadExistingFundingLines() {
-    this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
-      program.result.fundingLines.forEach(fundingLine => {
-        let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
-          fl.baOrBlin === fundingLine.baOrBlin &&
-          fl.item === fl.item &&
-          fl.opAgency === fl.opAgency);
-        if (!isDuplicate) {
-          this.existingFundingLines.push(fundingLine);
-        }
+    if(this.pr.originalMrId) {
+      this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
+        program.result.fundingLines.forEach(fundingLine => {
+          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+            fl.baOrBlin === fundingLine.baOrBlin &&
+            fl.item === fl.item &&
+            fl.opAgency === fl.opAgency);
+          if (!isDuplicate) {
+            this.existingFundingLines.push(fundingLine);
+          }
+        });
+        this.existingFundingLines = Util.removeDuplicates(this.existingFundingLines)
       });
-      this.existingFundingLines = Util.removeDuplicates(this.existingFundingLines)
-    });
+    }
   }
 
   initDataRows(){
@@ -119,8 +121,8 @@ export class FundsTabComponent implements OnChanges {
       });
       this.generateColumns();
       this.data = data;
-      this.initPinnedBottomRows();
       this.loadDropdownOptions();
+      this.initPinnedBottomRows();
     });
   }
 

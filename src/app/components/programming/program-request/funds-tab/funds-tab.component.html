@@ -6,7 +6,7 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
-        <a class="dropdown-item" (click)="selectFundingLineType('Add an existing Funding Line')">Add an existing Funding Line</a>
+        <a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">Add an existing Funding Line</a>
       </div>
     </div>
   </div>
