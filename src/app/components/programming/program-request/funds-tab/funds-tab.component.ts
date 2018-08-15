@@ -7,11 +7,21 @@ import { FeedbackComponent } from '../../../feedback/feedback.component';
 import { User } from '../../../../generated/model/user';
 import { UserUtils } from '../../../../services/user.utils.service';
 import { PB } from '../../../../generated/model/pB';
-import {Component, Input, OnChanges, ViewChild, OnInit, ViewEncapsulation} from '@angular/core'
-import {FundingLine, POMService, Pom, PRService, PBService, CreationTimeType, IntMap} from '../../../../generated'
+import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
+import {
+  FundingLine,
+  POMService,
+  Pom,
+  PRService,
+  PBService,
+  CreationTimeType,
+  IntMap,
+  ProgramsService
+} from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
+import {Util} from "../../../../utils/util";
 
 @Component({
   selector: 'funds-tab',
@@ -30,27 +40,32 @@ export class FundsTabComponent implements OnChanges {
 
   private pomFy: number;
   private pbFy: number;
+  private pbPr: ProgrammaticRequest;
 
-  // for the add FL section
   private appropriations: string[] = [];
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
-  public columnDefs = [];
-  public data;
-  public pinnedBottomData;
+  newFLType;
+  columnDefs = [];
+  data;
+  pinnedBottomData;
+  existingFundingLines: FundingLine[] = [];
+  selectedFundingLine: FundingLine = null;
 
   constructor(private pomService: POMService,
               private pbService: PBService,
               private prService: PRService,
               private globalsService: UserUtils,
               private tagsService: TagsService,
-              private autoValuesService: AutoValuesService ) {}
+              private autoValuesService: AutoValuesService,
+              private programsService: ProgramsService) {}
 
   async ngOnChanges() {
     if(!this.pr.phaseId) {
       return;
     }
+    this.loadExistingFundingLines();
     this.setPomFiscalYear();
     this.initDataRows();
     if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
@@ -58,51 +73,95 @@ export class FundsTabComponent implements OnChanges {
     }
   }
 
+  loadExistingFundingLines() {
+    this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
+      program.result.fundingLines.forEach(fundingLine => {
+        let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+          fl.baOrBlin === fundingLine.baOrBlin &&
+          fl.item === fl.item &&
+          fl.opAgency === fl.opAgency);
+        if (!isDuplicate) {
+          this.existingFundingLines.push(fundingLine);
+        }
+      });
+      this.existingFundingLines = Util.removeDuplicates(this.existingFundingLines)
+    });
+  }
+
   initDataRows(){
     let data: Array<DataRow> = [];
     this.getPBData().then(value => {
-      let pbPr = value;
+      this.pbPr = value;
       this.pr.fundingLines.forEach(fundingLine => {
         let pomRow: DataRow = {fundingLine: fundingLine, phaseType: PhaseType.POM}
         let pbRow: DataRow = new DataRow();
+        pbRow.phaseType = PhaseType.PB;
 
-        if(pbPr !== undefined) {
-          pbRow.fundingLine = pbPr.fundingLines.filter(fl =>
+        if(this.pbPr !== undefined) {
+          pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
             fundingLine.appropriation === fl.appropriation &&
             fundingLine.opAgency === fl.opAgency &&
             fundingLine.baOrBlin === fl.baOrBlin &&
             fundingLine.item === fl.item
           )[0];
-          pbRow.phaseType = PhaseType.PB;
         }
 
-        if (pbRow.fundingLine !== undefined && this.isPbFunded(pbRow.fundingLine.funds)) {
-          let deltaRow: DataRow = new DataRow();
-          deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
-          deltaRow.phaseType = PhaseType.DELTA;
-          data.push(pbRow);
-          data.push(pomRow);
-          data.push(deltaRow);
-        } else {
-          data.push(pomRow);
+        if(pbRow.fundingLine === undefined){
+          pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
         }
+
+        let deltaRow: DataRow = new DataRow();
+        deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
+        deltaRow.phaseType = PhaseType.DELTA;
+        data.push(pbRow);
+        data.push(pomRow);
+        data.push(deltaRow);
       });
-      this.generateColumns(this.pr.fundingLines);
+      this.generateColumns();
       this.data = data;
       this.initPinnedBottomRows();
       this.loadDropdownOptions();
     });
   }
 
-  isPbFunded(funds): boolean {
-    let isFunded = false
-    Object.keys(funds).forEach(year => {
-      if(Number(year) >= this.pomFy && Number(funds[year]) !== 0) {
-        isFunded = true;
-        return false;
-      }
-    });
-    return isFunded;
+  selectFundingLineType(flType: string){
+    this.newFLType = flType;
+  }
+
+  next(){
+    switch(this.newFLType){
+      case 'Add a new Funding Line':
+        this.addRow();
+        break;
+      case 'Add an existing Funding Line':
+        this.pr.fundingLines.push(this.selectedFundingLine);
+        let pomRow: DataRow = {fundingLine: this.selectedFundingLine, phaseType: PhaseType.POM}
+        let pbRow: DataRow = new DataRow();
+        pbRow.phaseType = PhaseType.PB;
+
+        if(this.pbPr !== undefined) {
+          pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
+            this.selectedFundingLine.appropriation === fl.appropriation &&
+            this.selectedFundingLine.opAgency === fl.opAgency &&
+            this.selectedFundingLine.baOrBlin === fl.baOrBlin &&
+            this.selectedFundingLine.item === fl.item
+          )[0];
+        }
+
+        if(pbRow.fundingLine === undefined){
+          pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
+
+        }
+
+        let deltaRow: DataRow = new DataRow();
+        deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
+        deltaRow.phaseType = PhaseType.DELTA;
+        this.data.push(pbRow);
+        this.data.push(pomRow);
+        this.data.push(deltaRow);
+        this.agGrid.api.setRowData(this.data);
+        break;
+    }
   }
 
   initPinnedBottomRows(){
@@ -149,14 +208,15 @@ export class FundsTabComponent implements OnChanges {
     this.pinnedBottomData = pinnedData;
   }
 
-  generateColumns(data) {
+  generateColumns() {
+    //TODO: add new field to funding lines to allow system to identify new funding lines.
     this.columnDefs = [
       {
         headerName: 'Appropriation',
         field: 'fundingLine.appropriation',
-        editable: params => {
-          return this.isEditable(params)
-        },
+        // editable: params => {
+        //   return this.isEditable(params)
+        // },
         onCellValueChanged: params => this.onFundingLineValueChanged(params),
         cellClassRules: {
           'font-weight-bold': params => {return this.colSpanCount(params) > 1},
@@ -175,9 +235,9 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'BA/BLIN',
         field: 'fundingLine.baOrBlin',
-        editable: params => {
-          return this.isEditable(params)
-        },
+        // editable: params => {
+        //   return this.isEditable(params)
+        // },
         onCellValueChanged: params => this.onFundingLineValueChanged(params),
         cellEditorSelector: params => {
           if (params.data.fundingLine.appropriation) {
@@ -197,9 +257,9 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'Item',
         field: 'fundingLine.item',
-        editable: params => {
-          return this.isEditable(params)
-        },
+        // editable: params => {
+        //   return this.isEditable(params)
+        // },
         cellClass: 'funding-line-default',
         cellClassRules: {
           'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -222,15 +282,6 @@ export class FundsTabComponent implements OnChanges {
               return params.data.phaseType;
           }
         }}];
-    this.columnKeys = [
-      this.pomFy - 3,
-      this.pomFy -2,
-      this.pomFy - 1,
-      this.pomFy,
-      this.pomFy + 1,
-      this.pomFy + 2,
-      this.pomFy + 3,
-      this.pomFy + 4];
 
     this.columnKeys.forEach(key => {
 
@@ -309,7 +360,7 @@ export class FundsTabComponent implements OnChanges {
 
   }
 
-  addRow(){
+  generateEmptyFundingLine(pomFundingLine?: FundingLine): FundingLine{
     let funds = {};;
     this.columnKeys.forEach(key => {
       funds[key] = 0;
@@ -326,12 +377,30 @@ export class FundsTabComponent implements OnChanges {
       programElement: null,
       variants: []
     };
+    if(pomFundingLine){
+      emptyFundingLine.appropriation = pomFundingLine.appropriation
+      emptyFundingLine.item = pomFundingLine.item
+      emptyFundingLine.baOrBlin = pomFundingLine.baOrBlin
+    }
+    return emptyFundingLine;
+  }
+
+  addRow(){
+    let newPbRow: DataRow = new DataRow();
+    newPbRow.phaseType = PhaseType.PB;
+    newPbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
 
     let newPomRow: DataRow = new DataRow();
     newPomRow.phaseType = PhaseType.POM;
-    newPomRow.fundingLine = JSON.parse(JSON.stringify(emptyFundingLine));
+    newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
 
+    let newDeltaRow: DataRow = new DataRow();
+    newDeltaRow.fundingLine= this.generateDelta(newPomRow.fundingLine, newPbRow.fundingLine);
+    newDeltaRow.phaseType = PhaseType.DELTA;
+
+    this.data.push(newPbRow);
     this.data.push(newPomRow);
+    this.data.push(newDeltaRow);
     this.pr.fundingLines.push(newPomRow.fundingLine);
     this.agGrid.api.setRowData(this.data);
     this.agGrid.api.setFocusedCell(this.data.length - 1, 'fundingLine.appropriation');
@@ -388,6 +457,15 @@ export class FundsTabComponent implements OnChanges {
   private async setPomFiscalYear() {
     const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.pomFy = pom.fy;
+    this.columnKeys = [
+      this.pomFy - 3,
+      this.pomFy -2,
+      this.pomFy - 1,
+      this.pomFy,
+      this.pomFy + 1,
+      this.pomFy + 2,
+      this.pomFy + 3,
+      this.pomFy + 4];
   }
 
   private async loadDropdownOptions() {
