@@ -40,7 +40,7 @@ export class AutoValuesService {
     }
 
     baOrBlins(appropriation: string): Promise<string[]> {
-        if(appropriation === 'RDT&E') return this.tagsService.tagAbbreviationsForBa();
+        if(appropriation === 'RDTE') return this.tagsService.tagAbbreviationsForBa();
         if(appropriation === 'PROC') return this.tagsService.tagAbbreviationsForBlin();
         return of([]).toPromise();
     }

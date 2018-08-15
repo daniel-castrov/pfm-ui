@@ -34,7 +34,7 @@ export class SpendPlansTabComponent implements OnInit {
 
     this.columnDefs = [
         {
-          headerName: 'RDT&E',
+          headerName: 'RDTE',
           field: 'rdte',
           cellClass: ['ag-cell-white'],
           maxWidth: 220,
