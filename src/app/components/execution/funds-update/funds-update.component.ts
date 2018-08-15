@@ -127,7 +127,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Initial Funds',
-          headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )};
+          headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )},
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
