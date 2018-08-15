@@ -44,7 +44,7 @@ export class HeaderUserComponent implements OnInit {
         this.requests = [];
       }
 
-      if ( this.roles.includes('POM_Manager') ){
+      if ( this.roles.includes('POM_Manager') || this.roles.includes('Funds_Requestor') ){
         this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
           this.pomStatusIsCreated = false;
           this.pomStatusIsOpen = false;
@@ -58,6 +58,9 @@ export class HeaderUserComponent implements OnInit {
               this.pomStatusIsOpen = true;
               this.pomId = p.id;
             }
+
+            console.log( this.pomStatusIsCreated + " <-> " + this.pomStatusIsOpen );
+
           });
         });
       }
