@@ -107,9 +107,12 @@ export class CreatePomSessionComponent implements OnInit {
           cellClassRules: {
           'ag-cell-edit': params => {
             return params.data.orgid !== 'Delta' && params.data.orgid !== 'CBDP Baseline'
+          },
+          'ag-cell-footer-sum': params => {
+            return params.data.orgid == 'Delta'
           }
         }
-        });
+      });
     }
     colDefs.push(
       { headerName: "FY" + (fy-2000) + "-"+ "FY" + (fy+4-2000),
