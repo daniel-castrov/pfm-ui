@@ -132,9 +132,9 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         cellClass: ['ag-cell-white'],
         valueGetter: params => {
           if (params.data.phaseType == PhaseType.PB) {
-            return 'PB' + (this.pbFy - 2000);;
+            return params.data.phaseType + (this.pbFy - 2000);
           } else {
-            return 'POM' + (this.pomFy - 2000);
+            return params.data.phaseType + (this.pomFy - 2000);
           }
         }
       }
@@ -226,10 +226,12 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   getTotal(pr, columnKeys): number {
     let result = 0;
     columnKeys.forEach(year => {
-      let amount = pr.fundingLines
-        .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
-        .reduce((a,b)=>a+b, 0);
-      result += amount;
+      if(year >= this.pomFy) {
+        let amount = pr.fundingLines
+          .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
+          .reduce((a,b)=>a+b, 0);
+        result += amount;
+      }
     });
     return result;
   }
