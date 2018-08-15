@@ -58,9 +58,6 @@ export class HeaderUserComponent implements OnInit {
               this.pomStatusIsOpen = true;
               this.pomId = p.id;
             }
-
-            console.log( this.pomStatusIsCreated + " <-> " + this.pomStatusIsOpen );
-
           });
         });
       }
