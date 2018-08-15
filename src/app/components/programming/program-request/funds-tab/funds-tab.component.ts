@@ -559,11 +559,11 @@ export class FundsTabComponent implements OnChanges {
   }
 
   isValidBaWithRespectToParent(ba: string, year: number): boolean {
-    return PRUtils.isParentBaSumGreaterThanChildren(ba, year, this.parentPr, this.prs);
+    return PRUtils.isParentBaSumGreater(ba, year, this.parentPr, this.pr, this.prs);
   }
 
   isValidBaWithRespectToChildren(ba: string, year: number): boolean {
-    return PRUtils.isParentBaSumGreaterThanChildren(ba, year, this.pr, this.prs);
+    return PRUtils.isChildrenBaSumSmaller(ba, year, this.pr, this.prs);
   }
 
   filterBlins(appropriation) {

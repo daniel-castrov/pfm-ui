@@ -74,7 +74,7 @@
             Planning
           </a>
           <div apppermission="POM:edit" class="dropdown-menu" aria-labelledby="dropdown08">
-              <a class="dropdown-item" href="#" routerLink="/set-epp">Set EPP</a>
+              <a class="dropdown-item" href="#" routerLink="/set-epp">Import EPP Data</a>
           </div>
         </li>
       </div>
@@ -95,42 +95,39 @@
               <a class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
               <a class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
             </ng-container>
-
             <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">  
               <a class="dropdown-item" disabled>Program Request</a>
               <a class="dropdown-item" disabled>UFR Request</a>
             </ng-container>
               
+            <hr/>
             <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
             <hr/>
 
-            <div apppermission="!POM:edit">
-              <div class="dropdown-header">POM Management</div>
-            </div>
             <div apppermission="POM:edit">
               <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
-                <div class="dropdown-header">POM Management</div>
                 <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-                <a class="dropdown-item" disabled>Update TOAs</a>
                 <a class="dropdown-item" disabled>Open POM Session</a>
+                <hr/>
+                <a class="dropdown-item" disabled>Update TOAs</a>
                 <a class="dropdown-item" disabled>Update POM Session</a>
                 <a class="dropdown-item" disabled>Worksheet Mgmt</a>
               </ng-container>
 
               <ng-container *ngIf="pomStatusIsCreated">
-                <div class="dropdown-header">POM Management</div>
                 <a class="dropdown-item" disabled>Create POM Session</a>
-                <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
                 <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+                <hr/>
+                <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
                 <a class="dropdown-item" disabled>Update POM Session</a>
                 <a class="dropdown-item" disabled>Worksheet Mgmt</a>
               </ng-container>
 
               <ng-container *ngIf="pomStatusIsOpen">
-                <div class="dropdown-header">POM Management</div>
                 <a class="dropdown-item" disabled>Create POM Session</a>
-                <a class="dropdown-item" disabled>Update TOAs</a>
                 <a class="dropdown-item" disabled>Open POM Session</a>
+                <hr/>
+                <a class="dropdown-item" disabled>Update TOAs</a>
                 <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
                 <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
               </ng-container>
@@ -181,10 +178,9 @@
         <li class="nav-item dropdown"> 
           <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
           <div class="dropdown-menu" aria-labelledby="dropdown02">
-            <div class="dropdown-header">R-Forms</div>
             <a class="dropdown-item" disabled>R1</a>
             <a class="dropdown-item" disabled>R2</a>
-            <div class="dropdown-header">P-Forms</div>
+            <hr/>
             <a class="dropdown-item" disabled>P1</a>
             <a class="dropdown-item" disabled>P2</a>
           </div>
@@ -202,7 +198,6 @@
           <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown" 
             aria-haspopup="true" aria-expanded="false">Manage</a>
           <div class="dropdown-menu" aria-labelledby="dropdown06">
-            <div class="dropdown-header">Programs</div>
             <a class="dropdown-item" disabled>Edit Program</a>
             <a class="dropdown-item" disabled>Create Program</a>
           </div>
@@ -221,11 +216,10 @@
           <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
           <div class="dropdown-menu" aria-labelledby="dropdown03">
             <a *ngIf="roles?.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/approve-requests">Approve Requests</a>
-            <div class="dropdown-header">Administrative</div>
+            <hr/>
             <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/manage-communities">Manage Communities</a>
             <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/user-list">Manage Users</a>
             <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/roles">Manage Roles</a>
-            <a *ngIf="roles?.includes('User_Approver')" class="dropdown-item" href="#" routerLink="/not-implemented">Manage Roles</a>
           </div>
         </li>
       </div>
