@@ -3,7 +3,11 @@
 </ng-template>
 
 <div class="table-editable">
-  <table class="execution-table table-striped">
+  <div class="execution-table table-striped" *ngIf="sortedProgramFullnames().length===0">
+    There are no programs available to select
+  </div>
+
+  <table class="execution-table table-striped" *ngIf="sortedProgramFullnames().length>0">
     <tr class="execution-title font-weight-bold text-center">
       <th class="large-column text-left">
         <span>
