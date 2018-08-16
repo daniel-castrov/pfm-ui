@@ -596,6 +596,10 @@ tab {
   color: $primary-color;
 }
 
+.ag-cell-footer-sum {
+  border-top: 3px solid $dark-grey !important;
+}
+
 .ag-link {
   color: $primary-color;
   text-decoration: underline;
