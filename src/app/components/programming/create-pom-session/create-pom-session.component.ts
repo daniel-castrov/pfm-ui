@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions }  from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
-import { GlobalsService } from '../../../services/globals.service';
+import { UserUtils } from '../../../services/user.utils.service';
 import { NumericCellEditor } from './numeric-celleditior.component';
 import { CommunityService, OrganizationService, PBService, POMService, EppService, ProgramsService} from '../../../generated';
 import { Community, Organization, TOA, Pom, PB, Program} from '../../../generated';
@@ -45,7 +45,7 @@ export class CreatePomSessionComponent implements OnInit {
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    private programsvc: ProgramsService, private router: Router, private globalsvc: GlobalsService ) {
+    private programsvc: ProgramsService, private router: Router, private globalsvc: UserUtils ) {
   }
 
   ngOnInit() {
@@ -323,6 +323,8 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   private useEppData() {
+
+    this.useEpp = !this.useEpp;
 
     // This only effects FY + 4 Data
     if (this.useEpp == true) {

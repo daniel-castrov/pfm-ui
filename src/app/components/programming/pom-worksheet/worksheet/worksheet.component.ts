@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
 
 // Other Components
-import { HeaderComponent } from '../../../../components/header/header.component';
-import { GlobalsService } from '../../../../services/globals.service';
+import { HeaderComponent } from '../../../header/header.component';
+import { UserUtils } from '../../../../services/user.utils.service';
 
 import { PomWorksheetService, POMService } from '../../../../generated';
 import { Pom, PomWorksheet, PomWorksheetRow } from '../../../../generated';
@@ -29,7 +28,7 @@ export class WorksheetComponent implements OnInit {
   constructor( 
     private pomSvc:POMService,
     private pomWSSvc:PomWorksheetService,
-    private globalsService: GlobalsService,
+    private globalsService: UserUtils,
     private withFullNameService:WithFullNameService
   ) { }
 

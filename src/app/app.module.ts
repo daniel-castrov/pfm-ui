@@ -1,4 +1,5 @@
-import { GlobalsService } from './services/globals.service';
+import { TagsService } from './services/tags.service';
+import { UserUtils } from './services/user.utils.service';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
@@ -99,7 +100,6 @@ import { RequestsService } from './services/requests.service';
 import { RoleService } from './generated/api/role.service';
 import { RolesPermissionsService } from './generated/api/rolesPermissions.service';
 import { StrangerService } from './generated/api/stranger.service';
-import { UserService } from './generated/api/user.service';
 import { UserRoleResourceService } from './generated/api/userRoleResource.service';
 import { Injectables } from './services/injectables';
 import { NoCurrentCommunityMessageComponent } from './components/user-management/my-communities/no-current-community-message/no-current-community-message.component';
@@ -127,7 +127,7 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService, LibraryService} from './generated';
+import { EppService, LibraryService, UserService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
@@ -327,7 +327,8 @@ const appRoutes: Routes = [
     CreateUserRequestService,
     DropRoleRequestService,
     ElevationService,
-    GlobalsService,
+    UserService,
+    TagsService,
     Injectables,
     JoinCommunityRequestService,
     AutoValuesService,
@@ -341,7 +342,7 @@ const appRoutes: Routes = [
     StrangerService,
     UserRoleResourceService,
     ProgramsService,
-    UserService,
+    UserUtils,
     RequestsService,
     POMService,
     PomWorksheetService,

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 
 // Generated
-import { HeaderComponent } from '../../../../components/header/header.component';
+import { HeaderComponent } from '../../../header/header.component';
 import { Community } from '../../../../generated';
 import { User } from '../../../../generated';
 import { MyDetailsService } from '../../../../generated/api/myDetails.service';

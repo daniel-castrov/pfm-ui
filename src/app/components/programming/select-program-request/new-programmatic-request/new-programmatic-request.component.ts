@@ -18,7 +18,8 @@ export class NewProgrammaticRequestComponent implements OnInit {
   @Input() pomId: string;
   allPrograms: ProgramWithFullName[];
   selectableProgramsOrPrs: ProgramWithFullName[];
-  selectedProgramOrPr: ProgramWithFullName;
+  selectedProgramOrPr: ProgramWithFullName = null;
+  selectLabel: string;
 
   constructor(
     private router: Router,
@@ -35,16 +36,16 @@ export class NewProgrammaticRequestComponent implements OnInit {
     switch(this.addNewPrFor) {
       case 'An Existing Program of Record':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
-        this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
+        this.selectLabel = 'Program';
         break;
       case 'A New FOS Subprogram':
       case 'A New Increment Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
-        this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
+        this.selectLabel = 'Program';
         break;
       case 'A New Generic Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-        this.selectedProgramOrPr = this.selectableProgramsOrPrs[0];
+        this.selectLabel = 'Program Request';
         break;
     }
   }
@@ -110,6 +111,6 @@ export class NewProgrammaticRequestComponent implements OnInit {
   }
 
   private isProgram(programOrPr): boolean {
-    return (typeof programOrPr.fundingLines) === 'undefined';
+    return (typeof programOrPr.creationTimeType) === 'undefined';
   }
 }

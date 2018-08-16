@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
-import { GlobalsService} from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
@@ -131,6 +130,14 @@ export class FundsUpdateComponent implements OnInit {
           cellClass: ['ag-cell-light-grey','text-center']
         },
         {
+          headerName: 'PE',
+          filter: 'agTextColumnFilter',
+          field: 'programElement',
+          width: 92,
+          menuTabs: this.menuTabs,
+          cellClass: ['ag-cell-light-grey', 'text-center']
+        },
+        {
           headerName: 'Initial Funds',
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
@@ -243,6 +250,7 @@ export class FundsUpdateComponent implements OnInit {
 
         my.exephases = data[1].result;
         my.selectedexe = my.exephases[0];
+        this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
         this.agGrid.api.sizeColumnsToFit();
       });
@@ -253,6 +261,12 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.exelines = data.result;
+      if (0 == my.exelines.length) {
+        my.agOptions.api.showNoRowsOverlay();
+      }
+      else {
+        my.agOptions.api.hideOverlay();
+      }
       this.refreshFilterDropdowns();
     });
   }

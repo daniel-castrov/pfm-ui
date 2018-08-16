@@ -1,4 +1,5 @@
-import { GlobalsService } from './../../../../services/globals.service';
+import { TagsService } from '../../../../services/tags.service';
+import { UserUtils } from '../../../../services/user.utils.service';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 
@@ -6,7 +7,8 @@ import { of } from 'rxjs/observable/of';
 @Injectable()
 export class AutoValuesService {
 
-    constructor(private globalsService: GlobalsService) {}
+    constructor(private globalsService: UserUtils,
+                private tagsService: TagsService) {}
 
     async programElement(ba: string, item: string): Promise<string> {
         const currentCommunity = await this.globalsService.currentCommunity();
@@ -38,8 +40,8 @@ export class AutoValuesService {
     }
 
     baOrBlins(appropriation: string): Promise<string[]> {
-        if(appropriation === 'RDT&E') return this.globalsService.tagAbbreviationsForBa();
-        if(appropriation === 'PROC') return this.globalsService.tagAbbreviationsForBlin();
+        if(appropriation === 'RDTE') return this.tagsService.tagAbbreviationsForBa();
+        if(appropriation === 'PROC') return this.tagsService.tagAbbreviationsForBlin();
         return of([]).toPromise();
     }
 }

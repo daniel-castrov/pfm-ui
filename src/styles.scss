@@ -81,6 +81,10 @@ fieldset {
 
 /* misc styling */
 
+.summary-table {
+  font-size: 12px;
+}
+
 hr {
   margin: 5px 0;
 }
@@ -187,16 +191,27 @@ label {
   border-bottom-left-radius: 4px;
 }
 
+// disabled buttons and curso behavior
+
+.btn-primary,
+.btn-secondary,
+.btn-success {
+  &:disabled {
+    opacity: .5;
+   cursor: not-allowed;
+  }
+  &:disabled:hover {
+    opacity: .5;
+  }
+}
+
+// button primary custom colors
 .btn-primary {
   &:hover {
-    &:disabled {
-      opacity: 0.65;
-      cursor: auto;
-    }
     opacity: 1;
   }
-  color: #fff;
-  background-color: #23527c !important;
+  color: $white;
+  background-color: $primary-color !important;
   border-color: #23527c !important;
   opacity: .9;
   border-radius: 0.25rem;
@@ -592,7 +607,11 @@ tab {
 
 // hack for top header of PR table
 
-.pr-table {
+.by{
+  background-color: #ccc !important;
+}
+
+.group-header-white {
 
   .ag-header-group-cell-no-group,
   .ag-header-group-cell {

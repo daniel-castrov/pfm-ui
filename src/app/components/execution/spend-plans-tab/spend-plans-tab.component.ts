@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component'
+import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
@@ -34,7 +34,7 @@ export class SpendPlansTabComponent implements OnInit {
 
     this.columnDefs = [
         {
-          headerName: 'RDT&E',
+          headerName: 'RDTE',
           field: 'rdte',
           cellClass: ['ag-cell-white'],
           maxWidth: 220,

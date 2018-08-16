@@ -5,10 +5,8 @@ import * as $ from 'jquery'
 import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
-import { GlobalsService } from '../../../services/globals.service'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
-import { ExcelTable } from 'ag-grid/dist/lib/interfaces/iExcelCreator';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
 import { ExecutionLineFilter } from '../model/execution-line-filter'
 
@@ -113,7 +111,7 @@ export class ExecutionLineTableComponent implements OnInit {
 
   fullname(exeline: ExecutionLine): string {
     if (this.programIdNameLkp && exeline) {
-      console.log(exeline);
+      //console.log(exeline);
       return this.programIdNameLkp.get(exeline.mrId);
     }
     else {

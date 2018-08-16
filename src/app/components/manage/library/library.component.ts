@@ -3,7 +3,7 @@ import { ViewEncapsulation } from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import { HeaderComponent } from '../../header/header.component';
 import {FileMetadata, FileResponse, LibraryService} from "../../../generated";
 import {DatePipe} from "@angular/common";
 import {LibraryViewCellRenderer} from "../../renderers/library-view-cell-renderer/library-view-cell-renderer.component";

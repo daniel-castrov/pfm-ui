@@ -1,6 +1,4 @@
 import { CommunityService } from '../generated/api/community.service';
-import { Community } from '../generated/model/community';
-import { User } from '../generated/model/user';
 import { Observable } from 'rxjs/Observable';
 import { RestResult } from '../generated/model/restResult';
 import { MyDetailsService } from '../generated/api/myDetails.service';
@@ -10,36 +8,25 @@ import { ProgramsService } from '../generated/api/programs.service';
 import { Tag } from '../generated/model/tag';
 
 /**
- * This service is not caching now but it should/will in the future. At some poiont we should figure out
+ * This service is not caching now but it should/will in the future. At some point we should figure out
  * how to make it cache. The callers can assume all calls to this service are very fast and call it as often 
  * as they want without attempting to cache by themselves.
- * 
- * At or after the time we make it cache we might also consider how to invalidate the cache, e.g. when the 
- * user changes the current community.
  */
 @Injectable()
-export class GlobalsService {
+export class TagsService {
 
-  constructor(private myDetailsService: MyDetailsService,
-              private programsService: ProgramsService,
-              private communityService: CommunityService) {}
+  constructor(private programsService: ProgramsService) {}
 
-  user(): Observable<User> {
-    return this.myDetailsService.getCurrentUser().map( (response: RestResult) => response.result );
+  tags(tagType: string): Observable<Tag[]> {
+    return this.programsService.getTagsByType(tagType)
+            .map((result: RestResult) => result.result);
   }
 
-  async currentCommunity(): Promise<Community> {
-    const user: User = await this.user().toPromise();
-    const community: Community = (await this.communityService.getById(user.currentCommunityId).toPromise()).result;
-    return community;
-  }
-
-  private tagAbbreviations(type: string): Promise<string[]> {
-    return this.programsService.getTagsByType(type)
-            .map((result: RestResult) => result.result)
+  private tagAbbreviations(tagType: string): Promise<string[]> {
+    return this.tags(tagType)
             .map((tags: Tag[]) => tags.map((tag:Tag)=>tag.abbr))
             .map((tags: string[]) => tags.sort())
-            .toPromise()
+            .toPromise();
   }
 
   tagAbbreviationsForOpAgency(): Promise<string[]> {
@@ -61,7 +48,5 @@ export class GlobalsService {
   tagAbbreviationsForAcquisitionType(): Promise<string[]> {
     return this.tagAbbreviations('Acquisition Type');
   }
-
-  
 
 }

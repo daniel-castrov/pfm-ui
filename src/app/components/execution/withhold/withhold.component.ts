@@ -13,6 +13,7 @@ import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
 import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
+import { ExecutionLineFilter } from '../model/execution-line-filter';
 
 declare const $: any;
 declare const jQuery: any;
@@ -32,8 +33,12 @@ export class WithholdComponent implements OnInit {
   private other: string;
   private longname: string;
   private subtypes: ExecutionDropDown[];
+  private linefilter: ExecutionLineFilter = function (x: ExecutionLine): boolean {
+    return ( x.released > 0 );
+  };
 
-  constructor(private exesvc: ExecutionService, private route: ActivatedRoute) { }
+  constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
+    private router: Router ) { }
 
   ngOnInit() {
     this.route.params.subscribe(data => {
@@ -61,6 +66,8 @@ export class WithholdComponent implements OnInit {
     });
 
     this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe();
+      new Blob([JSON.stringify(et)])).subscribe(d => { 
+        this.router.navigate(['/funds-update']);
+      });
   }
 }
