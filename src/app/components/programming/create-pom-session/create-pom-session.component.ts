@@ -200,7 +200,7 @@ export class CreatePomSessionComponent implements OnInit {
         this.pb = data[3].result;
         var samplepom: Pom = data[4].result;
         this.fy = this.pb.fy + 1;
-        this.orgs.forEach( org =>  this.orgMap.set( org.id, org.abbreviation ) );
+        this.orgs.forEach( org =>  this.orgMap.set( org.id, org.name ) );
 
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
