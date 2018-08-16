@@ -92,8 +92,13 @@ export class CreatePomSessionComponent implements OnInit {
         width: 178,
         editable: false,
         valueGetter: params => this.orgName( params.data.orgid ),
-        cellRenderer: params => '<b>'+params.value+'</b>'
-      });
+        cellRenderer: params => '<b>'+params.value+'</b>',
+        cellClassRules: {
+        'ag-cell-footer-sum': params => {
+          return params.data.orgid == 'Delta'
+        }
+      }
+    });
 
     for (var i = 0; i < 5; i++) {
       colDefs.push(
@@ -107,9 +112,12 @@ export class CreatePomSessionComponent implements OnInit {
           cellClassRules: {
           'ag-cell-edit': params => {
             return params.data.orgid !== 'Delta' && params.data.orgid !== 'CBDP Baseline'
+          },
+          'ag-cell-footer-sum': params => {
+            return params.data.orgid == 'Delta'
           }
         }
-        });
+      });
     }
     colDefs.push(
       { headerName: "FY" + (fy-2000) + "-"+ "FY" + (fy+4-2000),
@@ -118,8 +126,13 @@ export class CreatePomSessionComponent implements OnInit {
         width: 120,
         editable: false,
         valueGetter: params => this.rowTotal( params.data, fy ),
-        cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>'
-      });
+        cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>',
+        cellClassRules: {
+        'ag-cell-footer-sum': params => {
+          return params.data.orgid == 'Delta'
+        }
+      }
+    });
 
     return colDefs;
   }
@@ -197,7 +210,7 @@ export class CreatePomSessionComponent implements OnInit {
         this.pb = data[3].result;
         var samplepom: Pom = data[4].result;
         this.fy = this.pb.fy + 1;
-        this.orgs.forEach( org =>  this.orgMap.set( org.id, org.abbreviation ) );
+        this.orgs.forEach( org =>  this.orgMap.set( org.id, org.name ) );
 
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
