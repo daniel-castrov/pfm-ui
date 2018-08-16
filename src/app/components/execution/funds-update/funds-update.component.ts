@@ -259,6 +259,12 @@ export class FundsUpdateComponent implements OnInit {
 
   fetchLines() {
     var my: FundsUpdateComponent = this;
+
+    if (!my.selectedexe) {
+      my.agOptions.api.showNoRowsOverlay();
+      return;
+    }
+
     my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.exelines = data.result;
       if (0 == my.exelines.length) {
