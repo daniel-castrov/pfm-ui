@@ -92,8 +92,13 @@ export class CreatePomSessionComponent implements OnInit {
         width: 178,
         editable: false,
         valueGetter: params => this.orgName( params.data.orgid ),
-        cellRenderer: params => '<b>'+params.value+'</b>'
-      });
+        cellRenderer: params => '<b>'+params.value+'</b>',
+        cellClassRules: {
+        'ag-cell-footer-sum': params => {
+          return params.data.orgid == 'Delta'
+        }
+      }
+    });
 
     for (var i = 0; i < 5; i++) {
       colDefs.push(
@@ -121,8 +126,13 @@ export class CreatePomSessionComponent implements OnInit {
         width: 120,
         editable: false,
         valueGetter: params => this.rowTotal( params.data, fy ),
-        cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>'
-      });
+        cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>',
+        cellClassRules: {
+        'ag-cell-footer-sum': params => {
+          return params.data.orgid == 'Delta'
+        }
+      }
+    });
 
     return colDefs;
   }
