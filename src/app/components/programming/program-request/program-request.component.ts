@@ -19,7 +19,6 @@ import { ProgramRequestPageModeService} from './page-mode.service';
 })
 export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
-  private isValid: boolean = true;
   private pr: ProgrammaticRequest = {};
   private prs: ProgrammaticRequest[];
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
@@ -99,7 +98,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   async save(state: ProgrammaticRequestState) {
-    if(this.pr.id && this.isValid) {
+    if(this.pr.id) {
       this.pr.state = state;
       this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
     } else {

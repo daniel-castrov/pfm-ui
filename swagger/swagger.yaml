@@ -2701,6 +2701,8 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Variant"
+      userCreated:
+        type: "boolean"
   Milestone:
     type: "object"
     properties:

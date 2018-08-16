@@ -139,6 +139,7 @@ import { IdAndNameComponent } from './components/programming/program-request/id-
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-pagination/ag-grid-pagination.component";
 import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
+import {FundsTabDeleteRenderer} from "./components/renderers/funds-tab-delete-renderer/funds-tab-delete-renderer.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -287,12 +288,14 @@ const appRoutes: Routes = [
     AgGridPaginationComponent,
     LibraryComponent,
     ProgramCellRendererComponent,
-    LibraryViewCellRenderer
+    LibraryViewCellRenderer,
+    FundsTabDeleteRenderer
   ],
   entryComponents: [
     ProgramCellRendererComponent,
     SummaryProgramCellRenderer,
-    LibraryViewCellRenderer
+    LibraryViewCellRenderer,
+    FundsTabDeleteRenderer
   ],
   imports: [
     AccordionModule.forRoot(),
