@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ExecutionService, ProgramsService, ExecutionEvent, ExecutionLine, ExecutionDropDown, Execution } from '../../../generated';
+import { ExecutionService, ProgramsService, ExecutionEvent, ExecutionLine, ExecutionDropDown, Execution, ExecutionEventData } from '../../../generated';
 import { ActivatedRoute, UrlSegment } from '../../../../../node_modules/@angular/router';
 import { forkJoin } from '../../../../../node_modules/rxjs/observable/forkJoin';
 
@@ -8,6 +8,8 @@ import { HeaderComponent } from '../../header/header.component'
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
+
+import { TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component'
 
 @Component({
   selector: 'app-execution-line-details',
@@ -30,6 +32,13 @@ export class ExecutionLineDetailsComponent implements OnInit {
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute) {
+    
+    var agcomps: any = {
+      fromto: TransferFromToDetailsCellRendererComponent
+    };
+    
+    var my: ExecutionLineDetailsComponent = this;
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -37,6 +46,8 @@ export class ExecutionLineDetailsComponent implements OnInit {
       pagination: true,
       paginationPageSize: 30,
       suppressPaginationPanel: true,
+      frameworkComponents: agcomps,
+      context: {},
       columnDefs: [
         {
           headerName: "Date",
@@ -55,6 +66,12 @@ export class ExecutionLineDetailsComponent implements OnInit {
           filter: 'agDateColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'type'
+        },
+        {
+          headerName: "Transfer To/From",
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'event',
+          cellRenderer: 'fromto'
         },
         {
           headerName: "Amount",
@@ -88,8 +105,14 @@ export class ExecutionLineDetailsComponent implements OnInit {
           line: data[0].result
         }
 
-        my.exesvc.getById(my.current.line.phaseId).subscribe(data => { 
-          my.phase = data.result;
+        my.exesvc.getById(my.current.line.phaseId).subscribe(data2 => { 
+          my.phase = data2.result;
+          my.agOptions.context = {
+            line: my.current.line,
+            phase: my.phase,
+            programIdNameLkp: my.programIdNameLkp
+          };
+          my.agOptions.api.redrawRows();
         });
 
         my.dropdowns = data[1].result;
@@ -116,9 +139,10 @@ export class ExecutionLineDetailsComponent implements OnInit {
           evarr.push({
             date: new Date(x.timestamp),
             category: x.eventType,
-            type: my.dropdowns.filter(dd=>dd.subtype ===x.value.type )[0].name,
+            type: my.dropdowns.filter(dd => dd.subtype === x.value.type)[0].name,
             amt: amt,
-            user: x.userCN
+            user: x.userCN,
+            event: x
           });
         });
 
@@ -157,5 +181,6 @@ interface EventItem {
   category: string,
   type: string,
   amt: number,
-  user: string
+  user: string,
+  event: ExecutionEvent
 }

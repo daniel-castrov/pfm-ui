@@ -141,6 +141,7 @@ import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-paginati
 import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
 import { ExecutionLineDetailsComponent } from './components/execution/execution-line-details/execution-line-details.component';
 import { EventDetailsCellRendererComponent } from './components/renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
 
 
 // ROUTES
@@ -293,13 +294,15 @@ const appRoutes: Routes = [
     ProgramCellRendererComponent,
     LibraryViewCellRenderer,
     ExecutionLineDetailsComponent,
-    EventDetailsCellRendererComponent
+    EventDetailsCellRendererComponent,
+    TransferFromToDetailsCellRendererComponent
   ],
   entryComponents: [
     ProgramCellRendererComponent,
     EventDetailsCellRendererComponent,
     SummaryProgramCellRenderer,
-    LibraryViewCellRenderer
+    LibraryViewCellRenderer,
+    TransferFromToDetailsCellRendererComponent
   ],
   imports: [
     AccordionModule.forRoot(),
