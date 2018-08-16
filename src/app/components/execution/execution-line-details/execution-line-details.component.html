@@ -36,9 +36,8 @@
     </div>
 
     <div class="row">
-     <div class="row mb-3">
-        <div class="col-12">
-          <ag-grid-angular #agGrid class="ag-theme-balham" style="width:800px"
+      <div class="col-12">
+        <ag-grid-angular #agGrid class="ag-theme-balham"
             [gridOptions]="agOptions"
             [rowData]="eventlist"
             [enableColResize]='true'
@@ -46,7 +45,6 @@
             (gridReady)="onGridReady($event)">
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-        </div>
       </div>
     </div>
 </div>
