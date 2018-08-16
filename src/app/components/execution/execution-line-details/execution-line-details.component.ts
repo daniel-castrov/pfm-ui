@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ExecutionService, ProgramsService, ExecutionEvent, ExecutionLine, ExecutionDropDown, Execution } from '../../../generated';
 import { ActivatedRoute, UrlSegment } from '../../../../../node_modules/@angular/router';
 import { forkJoin } from '../../../../../node_modules/rxjs/observable/forkJoin';
@@ -12,7 +12,8 @@ import { AgGridNg2 } from 'ag-grid-angular';
 @Component({
   selector: 'app-execution-line-details',
   templateUrl: './execution-line-details.component.html',
-  styleUrls: ['./execution-line-details.component.scss']
+  styleUrls: ['./execution-line-details.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ExecutionLineDetailsComponent implements OnInit {
 
@@ -21,12 +22,11 @@ export class ExecutionLineDetailsComponent implements OnInit {
 
   private current: ExecutionLineWrapper;
   private phase: Execution;
-  private events: EventItem[] = [];
+  private eventlist: EventItem[];
   private dropdowns: ExecutionDropDown[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
   
   private agOptions: GridOptions;
-  private menuTabs = ['filterMenuTab'];
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute) {
@@ -38,9 +38,37 @@ export class ExecutionLineDetailsComponent implements OnInit {
       paginationPageSize: 30,
       suppressPaginationPanel: true,
       columnDefs: [
-        { headerName: 'Date', field: 'date' },
-        { headerName: 'Category', field: 'category' },
-        { headerName: 'Type', field: 'type' }
+        {
+          headerName: "Date",
+          filter: 'agDateColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'date'
+        },
+        {
+          headerName: "Category",
+          filter: 'agDateColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'category'
+        },
+        {
+          headerName: "Type",
+          filter: 'agDateColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'type'
+        },
+        {
+          headerName: "Amount",
+          filter: 'agNumberColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          type: 'numericColumn',
+          field: 'amt'
+        },
+        {
+          filter: 'agDateColumnFilter',
+          headerName: "User",
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'user'
+        },
       ]
     };
   }
@@ -94,11 +122,7 @@ export class ExecutionLineDetailsComponent implements OnInit {
           });
         });
 
-        my.events = evarr;
-        console.log(my.events);
-        setTimeout(() => {
-          my.agGrid.api.sizeColumnsToFit();
-        }, 500);
+        my.eventlist = evarr;
 
         Object.getOwnPropertyNames(data[3].result).forEach(id => {
           my.programIdNameLkp.set(id, data[3].result[id]);
@@ -117,6 +141,9 @@ export class ExecutionLineDetailsComponent implements OnInit {
   }
 
   onGridReady(params) {
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
     window.addEventListener("resize", function () {
       setTimeout(() => {
         params.api.sizeColumnsToFit();

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
@@ -15,7 +15,8 @@ import { EventDetailsCellRendererComponent } from '../../renderers/event-details
 @Component({
   selector: 'funds-update',
   templateUrl: './funds-update.component.html',
-  styleUrls: ['./funds-update.component.scss']
+  styleUrls: ['./funds-update.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class FundsUpdateComponent implements OnInit {

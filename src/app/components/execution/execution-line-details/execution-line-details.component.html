@@ -36,15 +36,17 @@
     </div>
 
     <div class="row">
-        <ag-grid-angular #agGrid class="ag-theme-balham" 
-          [gridOptions]="agOptions" 
-          [rowData]="events" 
-          [enableColResize]="true"
-          [toolPanelSuppressSideButtons]="true"
-          [suppressDragLeaveHidesColumns]="true"
-          (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-          (gridReady)="onGridReady($event)">
-        </ag-grid-angular>
-        <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+     <div class="row mb-3">
+        <div class="col-12">
+          <ag-grid-angular #agGrid class="ag-theme-balham" style="width:800px"
+            [gridOptions]="agOptions"
+            [rowData]="eventlist"
+            [enableColResize]='true'
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        </div>
+      </div>
     </div>
 </div>
