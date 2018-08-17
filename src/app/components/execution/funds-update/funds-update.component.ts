@@ -140,6 +140,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Initial Funds',
+          headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )},
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
@@ -193,15 +194,6 @@ export class FundsUpdateComponent implements OnInit {
           cellClass: ['ag-cell-white','text-right']
         },
         {
-          headerName: 'Withheld',
-          field: 'withheld',
-          valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
-          suppressSorting: false,
-          suppressMenu: true,
-          cellClass: ['ag-cell-dark-green','text-right']
-        },
-        {
           headerName: 'TOA',
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
@@ -219,6 +211,15 @@ export class FundsUpdateComponent implements OnInit {
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
+        {
+          headerName: 'Withheld',
+          field: 'withheld',
+          valueFormatter: params => { return this.currencyFormatter(params) },
+          width: 92,
+          suppressSorting: false,
+          suppressMenu: true,
+          cellClass: ['ag-cell-dark-green', 'text-right']
+        }
       ]
     };
   }
@@ -254,6 +255,7 @@ export class FundsUpdateComponent implements OnInit {
         this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
         this.agGrid.api.sizeColumnsToFit();
+        this.agGrid.api.refreshHeader();
       });
     });
   }
