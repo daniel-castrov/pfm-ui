@@ -36,8 +36,8 @@ export class FundsTabComponent implements OnChanges {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() private pr: ProgrammaticRequest;
   private parentPr: ProgrammaticRequest;
+  private isFundsTabValid: any[] = [];
   @Input() private prs: ProgrammaticRequest[];
-  @Input() private isValid: boolean;
 
   private pomFy: number;
   private pbFy: number;
@@ -542,7 +542,7 @@ export class FundsTabComponent implements OnChanges {
     }
     this.agGrid.api.refreshCells();
     this.initPinnedBottomRows();
-    this.isValid = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
+    this.isFundsTabValid[year] = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
   }
 
   deleteFundingLine(index) {
@@ -616,5 +616,9 @@ export class FundsTabComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-4]/)));
     }
+  }
+
+  get invalid(): boolean {
+    return this.isFundsTabValid.some(valid => valid === false);
   }
 }

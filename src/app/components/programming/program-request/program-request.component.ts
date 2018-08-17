@@ -11,6 +11,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '
 
 // Other Components
 import { ProgramRequestPageModeService} from './page-mode.service';
+import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 
 @Component({
   selector: 'program-request',
@@ -23,6 +24,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   private prs: ProgrammaticRequest[];
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
   @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
+  @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
+
 
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService,
@@ -107,7 +110,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private isNotSavable(): boolean {
-    if(!this.idAndNameComponent) return true // not fully initilized yet
+    if(!this.idAndNameComponent) return true; // not fully initilized yet
+    if(this.fundsTabComponent.invalid) return true;
     return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
