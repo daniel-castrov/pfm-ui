@@ -36,11 +36,6 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
       var current: ExecutionLine = param.context.line;
 
       if (this.istransfer) {
-        //console.log('This is a transfer event');
-        //console.log(current.id);
-        //console.log(eventdata.fromIsSource + ' ' + eventdata.fromId);
-        //console.log(eventdata.toIdAmtLkp);
-
         if (eventdata.fromIsSource && eventdata.fromId === current.id) {
           this.issrc = true;
           if (Object.getOwnPropertyNames(eventdata.toIdAmtLkp).length > 1) {
@@ -90,7 +85,6 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
     var my: TransferFromToDetailsCellRendererComponent = this;
     this.exesvc.getExecutionLineById(otherElId).subscribe(d => {
       var line: ExecutionLine = d.result;
-      console.log(d.result);
       my.otherel = my.programIdNameLkp.get(line.mrId) + ': ' + line.appropriation
         + '/' + line.blin + '/' + line.item + '/' + line.opAgency;
     });
