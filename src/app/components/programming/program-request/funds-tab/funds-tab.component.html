@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="col-auto">
-    <button [disabled]="!newFLType" class="btn btn-primary mb-3" (click)="next()">
+    <button [disabled]="!newFLType || isDisabledAddFundingLines" class="btn btn-primary mb-3" (click)="next()">
       <span class="icon-pad">Next</span>
       <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
     </button>

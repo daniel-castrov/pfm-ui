@@ -55,6 +55,7 @@ export class FundsTabComponent implements OnChanges {
   selectedFundingLine: FundingLine = null;
   frameworkComponents = {deleteRenderer: FundsTabDeleteRenderer};
   context = {parentComponent: this};
+  isDisabledAddFundingLines;
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -380,9 +381,30 @@ export class FundsTabComponent implements OnChanges {
         this.columnDefs.push(colDef);
       }
       });
+
+    let totalColDef = {
+      headerName: 'CTC',
+      suppressMenu: true,
+      maxWidth: 92,
+      type: "numericColumn",
+      valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
+      valueFormatter: params => {return this.currencyFormatter(params)}
+    };
+    this.columnDefs.push(totalColDef);
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
 
+  }
+
+  getTotal(pr, columnKeys): number {
+    let result = 0;
+    columnKeys.forEach(year => {
+      if(year >= this.pomFy) {
+        let amount = pr.fundingLine.funds[year];
+        result += isNaN(amount)? 0 : amount;
+      }
+    });
+    return result;
   }
 
   generateEmptyFundingLine(pomFundingLine?: FundingLine): FundingLine{
@@ -508,6 +530,7 @@ export class FundsTabComponent implements OnChanges {
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
+    this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
   private async getPBData(): Promise<ProgrammaticRequest>{
@@ -540,6 +563,7 @@ export class FundsTabComponent implements OnChanges {
       deltaNode.data.fundingLine = this.generateDelta(pomNode.fundingLine, pbNode.data.fundingLine);
     }
     this.agGrid.api.refreshCells();
+    this.loadDropdownOptions();
     this.initPinnedBottomRows();
     this.isFundsTabValid[year] = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
   }
@@ -548,6 +572,9 @@ export class FundsTabComponent implements OnChanges {
     this.pr.fundingLines.splice(this.pr.fundingLines.indexOf(this.data[index + 1].fundingLine), 1);
     this.data.splice(index, 3);
     this.agGrid.api.setRowData(this.data);
+
+    this.loadDropdownOptions();
+
     this.initPinnedBottomRows();
     if (!this.data.some(row => row.fundingLine.userCreated === true)) {
       this.agGrid.columnApi.setColumnVisible('delete', false);
@@ -556,12 +583,8 @@ export class FundsTabComponent implements OnChanges {
   }
 
   onCellEditingStarted(params) {
-    switch(params.colDef.headerName){
-      case 'BA/BLIN':
-        this.filterBlins(params.data.fundingLine.appropriation);
-        this.agGrid.api.refreshCells();
-        break;
-    }
+    this.filterBlins(params.data.fundingLine.appropriation);
+    this.agGrid.api.refreshCells();
   }
 
   onFundingLineValueChanged(params) {
@@ -615,6 +638,22 @@ export class FundsTabComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-4]/)));
     }
+    this.removeExistingBlins();
+    this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
+  }
+
+  removeExistingBlins() {
+    this.filteredBlins = this.filteredBlins.filter(blin => {
+      let fl = this.pr.fundingLines.find(fl => fl.baOrBlin === blin);
+      return  fl === undefined && (blin.match(/00/) || blin.match(/BA[1-4]/));
+    });
+  }
+
+  canAddMoreFundingLines(): boolean {
+    return this.baOrBlins.filter(blin => {
+      let fl = this.pr.fundingLines.find(fl => fl.baOrBlin === blin);
+      return  fl === undefined && ( (blin.match(/00/) && !this.pr.fundingLines.some(fl => fl.appropriation === 'PROC')) || blin.match(/BA[1-4]/)) ;
+    }).length > 0;
   }
 
   get invalid(): boolean {
