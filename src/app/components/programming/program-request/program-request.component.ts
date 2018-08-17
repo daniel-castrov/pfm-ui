@@ -26,7 +26,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
   @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
 
-
   constructor( private prService: PRService,
                private programRequestPageMode: ProgramRequestPageModeService,
                private cd: ChangeDetectorRef ) {

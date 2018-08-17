@@ -218,7 +218,6 @@ export class FundsTabComponent implements OnChanges {
   }
 
   generateColumns() {
-    //TODO: add new field to funding lines to allow system to identify new funding lines.
     this.columnDefs = [
       {
         headerName: '',
