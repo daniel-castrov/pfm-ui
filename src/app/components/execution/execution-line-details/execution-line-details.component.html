@@ -1,0 +1,50 @@
+<j-header></j-header>
+<ng-template #updateidline let-line="line">
+  {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
+</ng-template>
+
+<div class="row main-content" *ngIf="current">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-md-7 col-sm-12 mb-4">
+        <span class="h5 mr-2">{{phase?.fy|FY}}</span>
+        <span class="form-group">
+          <label class="execution-titles">{{fullname(current.line)}}</label>
+          <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container>
+        </span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6 col-lg-2">
+        <span class="form-group">
+          <label class="mr-2">Toa:</label>
+          <label class="primary-label">{{current.line.toa}}</label>
+        </span>
+      </div>
+      <div class="col-md-6 col-lg-2">
+        <span class="form-group">
+          <label class="mr-2">Released:</label>
+          <label class="primary-label">{{current.line.released}}</label>
+        </span>
+      </div>
+      <div class="col-md-6 col-lg-2">
+        <span class="form-group">
+          <label class="mr-2">Withheld:</label>
+          <label class="primary-label">{{current.line.withheld}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <ag-grid-angular #agGrid class="ag-theme-balham"
+            [gridOptions]="agOptions"
+            [rowData]="eventlist"
+            [enableColResize]='true'
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+      </div>
+    </div>
+</div>

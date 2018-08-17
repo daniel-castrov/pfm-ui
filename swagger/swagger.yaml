@@ -2328,9 +2328,9 @@ paths:
         type: "file"
       produces:
       - "application/json"
-  /executiontransfer/phase/{phaseId}:
+  /executionevent/phase/{phaseId}:
     get:
-      operationId: "getExecutionTransfersByPhase"
+      operationId: "getExecutionEventsByPhase"
       parameters:
       - name: "phaseId"
         in: "path"
@@ -2344,17 +2344,31 @@ paths:
           type: "string"
       tags:
       - "Execution"
-      summary: "Gets all the execution transfers for this execution phase"
-      description: "Returns the execution transfers"
+      summary: "Gets all the execution events for this execution phase"
+      description: "Returns the execution events"
       produces:
       - "application/json"
-  /executiontransfer/dropdowns:
+  /executionevent/exeline/{lineId}:
+    get:
+      operationId: "getExecutionEventsByExecutionLine"
+      parameters:
+      - name: "lineId"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution events for this execution line"
+      description: "Returns the execution events"
+      produces:
+      - "application/json"
+  /executionevent/dropdowns:
     get:
       operationId: "getExecutionDropdowns"
       tags:
       - "Execution"
       summary: "Gets all the subtypes for the execution pages"
-      description: "Returns the execution transfer subtypes"
+      description: "Returns the execution event subtypes"
       produces:
       - "application/json"
   /executionlines/{lineId}:
@@ -3182,7 +3196,21 @@ definitions:
         type: "string"
       subtype:
         type: "string"
-  ExecutionTransfer:
+  ExecutionEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      phaseId:
+        type: "string"
+      value:
+        type: "object"
+        $ref: "#/definitions/ExecutionEventData"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "number"
+  ExecutionEventData:
     type: "object"
     properties:
       fromId:
