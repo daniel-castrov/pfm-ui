@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
@@ -9,11 +9,14 @@ import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+
 
 @Component({
   selector: 'funds-update',
   templateUrl: './funds-update.component.html',
-  styleUrls: ['./funds-update.component.scss']
+  styleUrls: ['./funds-update.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class FundsUpdateComponent implements OnInit {
@@ -44,7 +47,8 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
 
     var agcomps:any = {
-      programCellRendererComponent: ProgramCellRendererComponent
+      programCellRendererComponent: ProgramCellRendererComponent,
+      eventDetailsCellRendererComponent : EventDetailsCellRendererComponent
     };
 
     my.progsvc.getIdNameMap().subscribe(data => {
@@ -76,6 +80,15 @@ export class FundsUpdateComponent implements OnInit {
         route: '/update-program-execution'
       },
       columnDefs: [
+        {
+          width: 50,
+          headerName: "View",
+          filter: 'agTextColumnFilter',
+          cellRenderer: 'eventDetailsCellRendererComponent',
+          menuTabs: this.menuTabs,
+          cellClass: ['ag-cell-light-grey','ag-clickable'],
+          valueGetter: params => { return params.data.mrId; }
+        },
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',
@@ -127,6 +140,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Initial Funds',
+          headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )},
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 92,
@@ -180,15 +194,6 @@ export class FundsUpdateComponent implements OnInit {
           cellClass: ['ag-cell-white','text-right']
         },
         {
-          headerName: 'Withheld',
-          field: 'withheld',
-          valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
-          suppressSorting: false,
-          suppressMenu: true,
-          cellClass: ['ag-cell-dark-green','text-right']
-        },
-        {
           headerName: 'TOA',
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
@@ -206,6 +211,15 @@ export class FundsUpdateComponent implements OnInit {
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
         },
+        {
+          headerName: 'Withheld',
+          field: 'withheld',
+          valueFormatter: params => { return this.currencyFormatter(params) },
+          width: 92,
+          suppressSorting: false,
+          suppressMenu: true,
+          cellClass: ['ag-cell-dark-green', 'text-right']
+        }
       ]
     };
   }
@@ -241,12 +255,19 @@ export class FundsUpdateComponent implements OnInit {
         this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
         this.agGrid.api.sizeColumnsToFit();
+        this.agGrid.api.refreshHeader();
       });
     });
   }
 
   fetchLines() {
     var my: FundsUpdateComponent = this;
+
+    if (!my.selectedexe) {
+      my.agOptions.api.showNoRowsOverlay();
+      return;
+    }
+
     my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
       my.exelines = data.result;
       if (0 == my.exelines.length) {

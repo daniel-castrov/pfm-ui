@@ -3,13 +3,17 @@
 </ng-template>
 
 <div class="table-editable">
-  <table class="execution-table table-striped">
+  <div class="execution-table table-striped" *ngIf="sortedProgramFullnames().length===0">
+    There are no programs available to select
+  </div>
+
+  <table class="execution-table table-striped" *ngIf="sortedProgramFullnames().length>0">
     <tr class="execution-title font-weight-bold text-center">
       <th class="large-column text-left">
         <span>
           <button class="btn btn-light" (click)="addrow()">
             <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            to select {{sourceOrTarget}} programs
+            {{sourceOrTarget}}
           </button>
         </span>
       </th>
@@ -21,6 +25,9 @@
       </th>
       <th>
         Released
+      </th>
+      <th>
+        Withheld
       </th>
       <th>
         Amount
@@ -56,6 +63,7 @@
 
       <td>{{wrap.line.toa}}</td>
       <td>{{wrap.line.released}}</td>
+      <td>{{wrap.line.withheld}}</td>
       <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, idx)">{{wrap.amt}}</td>
       <td class="text-center">
         <span class="remove-pom-line" title="Remove" (click)="removerow(idx)">
@@ -65,6 +73,7 @@
     </tr>
     <tr class="total-row">
       <td colspan="2" class="text-right">Total:</td>
+      <td></td>
       <td></td>
       <td></td>
       <td class="text-right">{{total()}} </td>

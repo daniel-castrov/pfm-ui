@@ -1,3 +1,4 @@
+<div class="text-danger mb-3" *ngIf="invalid">Funds exceed the total amount of the program request</div>
 <div class="row">
   <div class="col-auto">
     <div class="dropdown">
@@ -19,7 +20,7 @@
     </div>
   </div>
   <div class="col-auto">
-    <button [disabled]="!newFLType" class="btn btn-primary mb-3" (click)="next()">
+    <button [disabled]="!newFLType || isDisabledAddFundingLines" class="btn btn-primary mb-3" (click)="next()">
       <span class="icon-pad">Next</span>
       <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
     </button>
@@ -38,5 +39,8 @@
                  [rowData]="data"
                  [singleClickEdit]="true"
                  [pinnedBottomRowData]="pinnedBottomData"
+                 [frameworkComponents]="frameworkComponents"
+                 [context]="context"
+                 [stopEditingWhenGridLosesFocus]="true"
                  (cellEditingStarted)="onCellEditingStarted($event)">
 </ag-grid-angular>

@@ -139,6 +139,10 @@ import { IdAndNameComponent } from './components/programming/program-request/id-
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import { AgGridPaginationComponent } from "./components/ag-grid/ag-grid-pagination/ag-grid-pagination.component";
 import { SummaryProgramCellRenderer } from "./components/renderers/event-column/summary-program-cell-renderer.component";
+import { ExecutionLineDetailsComponent } from './components/execution/execution-line-details/execution-line-details.component';
+import { EventDetailsCellRendererComponent } from './components/renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
+import {FundsTabDeleteRenderer} from "./components/renderers/funds-tab-delete-renderer/funds-tab-delete-renderer.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -149,6 +153,7 @@ const appRoutes: Routes = [
   {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'appropriation-release/:phaseId', component:AppropriationReleaseComponent},
   {path:'charges/:phaseId', component:ChargesComponent},
+  {path:'exedetails/:lineId', component: ExecutionLineDetailsComponent },
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
   {path:'community-join/:requestId', component:CommunityJoinComponent},
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
@@ -287,12 +292,19 @@ const appRoutes: Routes = [
     AgGridPaginationComponent,
     LibraryComponent,
     ProgramCellRendererComponent,
-    LibraryViewCellRenderer
+    LibraryViewCellRenderer,
+    FundsTabDeleteRenderer,
+    ExecutionLineDetailsComponent,
+    EventDetailsCellRendererComponent,
+    TransferFromToDetailsCellRendererComponent
   ],
   entryComponents: [
     ProgramCellRendererComponent,
+    EventDetailsCellRendererComponent,
     SummaryProgramCellRenderer,
-    LibraryViewCellRenderer
+    LibraryViewCellRenderer,
+    TransferFromToDetailsCellRendererComponent,
+    FundsTabDeleteRenderer
   ],
   imports: [
     AccordionModule.forRoot(),

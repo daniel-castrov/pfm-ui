@@ -53,21 +53,26 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   ngOnChanges() {
     if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
       let data = []
-      this.pomProgrammaticRequests.forEach(pr => {
-        let programmaticRequest = new UiProgrammaticRequest(pr);
+      this.pomProgrammaticRequests.forEach(prOne => {
+        let programmaticRequest = new UiProgrammaticRequest(prOne);
         programmaticRequest.phaseType = PhaseType.POM;
-        if (pr.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
-          let prfn = this.pomProgrammaticRequests.filter((prfn: ProgramRequestWithFullName) => pr.creationTimeReferenceId === prfn.id)[0];
+        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+          let prTwo = this.pomProgrammaticRequests.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
 
-          if(prfn.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
-            let subPrfn = this.pomProgrammaticRequests.filter((subPrfn: ProgramRequestWithFullName) => prfn.creationTimeReferenceId === subPrfn.id)[0];
+          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+            let prThree = this.pomProgrammaticRequests.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
 
-            programmaticRequest.dataPath = [subPrfn.fullname, prfn.shortName, pr.shortName];
+            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+              let prFour = this.pomProgrammaticRequests.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
+              programmaticRequest.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
+            } else {
+              programmaticRequest.dataPath = [prThree.fullname, prTwo.shortName, prOne.shortName];
+            }
           } else {
-            programmaticRequest.dataPath = [prfn.fullname, pr.shortName];
+            programmaticRequest.dataPath = [prTwo.fullname, prOne.shortName];
           }
         } else {
-          programmaticRequest.dataPath = [pr.fullname];
+          programmaticRequest.dataPath = [prOne.fullname];
         }
         data.push(programmaticRequest);
       });
@@ -211,7 +216,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     });
 
     let totalColDef = {
-      headerName: 'Total',
+      headerName: 'CTC',
       menuTabs: this.menuTabs,
       filter: "agNumberColumnFilter",
       maxWidth: 92,
@@ -260,9 +265,6 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   getStatus(params) {
     if (params.data.phaseType == PhaseType.POM) {
-      if(!params.data.bulkOrigin && params.data.state == 'SAVED'){
-        return 'DRAFT';
-      }
       return params.data.state;
     } else {
       return '';

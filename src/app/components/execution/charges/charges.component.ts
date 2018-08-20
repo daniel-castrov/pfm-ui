@@ -6,11 +6,11 @@ import { HeaderComponent } from '../../header/header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
-import { ExecutionTransfer } from '../../../generated/model/executionTransfer'
+import { ExecutionEvent } from '../../../generated/model/executionEvent'
 import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution'
+import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData } from '../../../generated';
 import { Router, ActivatedRoute, UrlSegment, Route } from '@angular/router'
-import { ExecutionLine, ProgramsService, ExecutionDropDown } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 
@@ -55,7 +55,7 @@ export class ChargesComponent implements OnInit {
   }
 
   submit() {
-    var et: ExecutionTransfer = {
+    var et: ExecutionEventData = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
       other: this.other,

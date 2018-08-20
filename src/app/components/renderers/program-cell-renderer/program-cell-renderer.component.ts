@@ -8,8 +8,6 @@ import { AgRendererComponent, ICellRendererAngularComp } from 'ag-grid-angular';
 })
 export class ProgramCellRendererComponent implements ICellRendererAngularComp {
   private params;
-  private progname;
-  private _id;
 
   constructor() {
   }
