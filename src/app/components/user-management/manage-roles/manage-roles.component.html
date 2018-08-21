@@ -1,19 +1,18 @@
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
-    <div class="col-md-10">
+    <div class="col-12">
       <div class="row mb-4">
-        <div class="col-md-12">
+        <div class="col-12">
           <span class="h5 mr-3">Manage Roles</span>
         </div>
       </div>
       <div class="row mb-4">
-
         <!-- Get the selectedCommunity -->
-        <div class="col-lg-2 col-md-6 mb-2 role-controls">
+        <div class="col-3 mb-2 role-controls">
           <label>Select Community</label>
           <span class="form-group">
-            <select name="communitySelector" class="form-control-sm dropdown-width" 
+            <select name="communitySelector" class="form-control-sm dropdown-width"
               [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
               <option value=""></option>
               <option *ngFor="let comm of communities" [ngValue]="comm" [(selected)]="comm.id === paramCommunityId">
@@ -22,12 +21,11 @@
             </select>
           </span>
         </div>
-
         <!-- Get the selectedRole -->
-        <div class="col-lg-2 col-md-6 mb-2 role-controls">
+        <div class="col-3 mb-2 role-controls">
           <label>Select Role</label>
           <span class="form-group">
-            <select name="roleSelector" class="form-control-sm dropdown-width" 
+            <select name="roleSelector" class="form-control-sm dropdown-width"
               [(ngModel)]="selectedRole" (change)="clear()">
               <option value=""></option>
               <option *ngFor="let r of roles" [ngValue]="r">
@@ -36,9 +34,8 @@
             </select>
           </span>
         </div>
-
         <!-- Get the selectedUser -->
-        <div class="col-lg-2 col-md-6 role-controls">
+        <div class="col-3 role-controls">
           <label>Select User</label>
           <span class="form-group">
             <select name="userSelector" class="form-control-sm dropdown-width"
@@ -50,20 +47,17 @@
             </select>
           </span>
         </div>
-
         <!-- Get the selectedUserRoleResource -->
-        <div class="col-lg-2 col-md-6">
+        <div class="col-2">
           <div class="controls mt-4">
             <button class="btn btn-primary" [disabled]="!okNext()" (click)="getURR()">Next</button>
           </div>
         </div>
-
       </div>
-
       <div *ngIf="isURRVisible">
 
         <!-- Message -->
-        <p class="role-controls" *ngIf="isNewUserRole"> 
+        <p class="role-controls" *ngIf="isNewUserRole">
           Assign a new role of
           <b>{{selectedRole.name}}</b> to
           <b>{{selectedUserName}}</b>.
@@ -97,10 +91,8 @@
             </div>
           </fieldset>
         </div>
-
         <ng-container *ngIf="isURRModifyable; then Modifyable; else NotModifyable">
         </ng-container>
-
         <!-- Some UserRoleResources can be modified -->
         <ng-template #Modifyable>
           <fieldset>
@@ -122,7 +114,6 @@
             </div>
           </fieldset>
         </ng-template>
-
         <!-- Some UserRoleResources CANNOT be modified -->
         <ng-template #NotModifyable>
           <fieldset *ngIf="isNewUserRole===true">
@@ -138,7 +129,6 @@
             </div>
           </fieldset>
         </ng-template>
-
       </div>
       <div class="message">
         <j-feedback></j-feedback>
