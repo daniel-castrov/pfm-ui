@@ -30,9 +30,15 @@
 <ag-grid-angular #agGrid
                  class="ag-theme-balham pr-funds-tab group-header-white "
                  [gridAutoHeight]="true"
-                 [toolPanelSuppressSideButtons]="true"
+                 [toolPanelSuppressPivotMode]="true"
+                 [toolPanelSuppressRowGroups]="true"
+                 [toolPanelSuppressValues]="true"
+                 [toolPanelSuppressPivots]="true"
+                 [toolPanelSuppressColumnFilter]="true"
+                 [toolPanelSuppressColumnSelectAll]="true"
                  [suppressMovableColumns]="true"
                  [suppressRowTransform]="true"
+                 [overlayNoRowsTemplate]="overlayNoRowsTemplate"
                  [showToolPanel]="false"
                  [enableSorting]="true"
                  [enableFilter]="true"
@@ -42,5 +48,7 @@
                  [frameworkComponents]="frameworkComponents"
                  [context]="context"
                  [stopEditingWhenGridLosesFocus]="true"
+                 (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
+                 (columnVisible)="onColumnVisible($event)"
                  (cellEditingStarted)="onCellEditingStarted($event)">
 </ag-grid-angular>
