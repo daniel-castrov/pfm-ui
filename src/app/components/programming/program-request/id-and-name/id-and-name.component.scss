@@ -1,14 +1,28 @@
+.form-group {
+  display: inline;
+}
+
 .forminput {
-    // width: 300px;
-    padding: 6px 4px;
-    clear: both;
-    display: inline;
-  }
-  
-  .shortname {
-    width: 100px;
-  }
-  
-  .longname {
-    width: 300px;
-  }
+  width: 300px;
+  padding: 6px 4px;
+  clear: both;
+  display: inline-block;
+}
+
+.shortname {
+  display: inline-block;
+  max-width: 100px;
+}
+
+.longname {
+  display: inline-block;
+  min-width: 180px;
+  max-width: 360px;
+  vertical-align: top;
+  cursor: default;
+  // word-break: break-all; // use if there are set number of characters in the longname string
+}
+
+.type {
+  display: inline-block;
+}

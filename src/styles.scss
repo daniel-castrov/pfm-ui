@@ -378,16 +378,6 @@ tab {
   margin-right: 100px;
 }
 
-// Dropdowns
-.dropdown-header {
-  background-color: #f7f7f7;
-  color: #22252a;
-  padding: 10px;
-  font-weight: 500;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-}
-
 // table pagination
 
 .mat-paginator-page-size {
@@ -597,7 +587,8 @@ tab {
 }
 
 .ag-cell-footer-sum {
-  border-top: 3px solid $dark-grey !important;
+  border-top: 2px solid $dark-grey !important;
+  background-color: #ecf0f1 !important;
 }
 
 .ag-link {
