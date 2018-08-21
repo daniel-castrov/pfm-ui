@@ -34,16 +34,16 @@ export class NewProgrammaticRequestComponent implements OnInit {
   async addNewPrRadio(selection: string) {
     this.addNewPrFor = selection;
     switch(this.addNewPrFor) {
-      case 'An Existing Program of Record':
+      case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
         this.selectLabel = 'Program';
         break;
-      case 'A New FOS Subprogram':
-      case 'A New Increment Subprogram':
+      case 'A New FoS':
+      case 'A New Increment':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
         this.selectLabel = 'Program';
         break;
-      case 'A New Generic Subprogram':
+      case 'A New Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
         this.selectLabel = 'Program Request';
         break;
@@ -52,13 +52,13 @@ export class NewProgrammaticRequestComponent implements OnInit {
 
   async next() {
     switch(this.addNewPrFor) {
-      case 'An Existing Program of Record':
+      case 'An MRDB Program':
         this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB,
           this.pomId,
           this.selectedProgramOrPr,
           ProgramType.PROGRAM);
         break;
-      case 'A New FOS Subprogram':
+      case 'A New FoS':
         this.programRequestPageMode.programType = ProgramType.FOS;
         if(this.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
@@ -72,7 +72,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
             ProgramType.FOS);
         }
         break;
-      case 'A New Increment Subprogram':
+      case 'A New Increment':
         if(this.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
@@ -85,7 +85,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
             ProgramType.INCREMENT);
         }
         break;
-      case 'A New Generic Subprogram':
+      case 'A New Subprogram':
         this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
           this.pomId,
           this.selectedProgramOrPr,
