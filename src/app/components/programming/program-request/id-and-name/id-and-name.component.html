@@ -15,7 +15,9 @@
 </div>
 <div id="create-new-subprogram"
         *ngIf="!programRequestPageMode.prId && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
-  <div class="h5 mb-4">Create Program Request for a New Increment:</div>
+  <div *ngIf="pr.type==='INCREMENT'"   class="h5 mb-4">Create Program Request for a New Increment:</div>
+  <div *ngIf="pr.type==='FOS'" class="h5 mb-4">Create Program Request for a New FoS:</div>
+  <div *ngIf="pr.type==='GENERIC'" class="h5 mb-4">Create Program Request for a New Subprogram:</div>
   <span class="form-group mr-3">
     <label class="mr-1" for="id">Id: </label>
     <span class="mr-1">{{parentFullName}}</span>
