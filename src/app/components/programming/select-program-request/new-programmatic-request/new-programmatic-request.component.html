@@ -15,7 +15,11 @@
           </div>
         </div>
       </div>
-      <div class="col-6" *ngIf="addNewPrFor && (addNewPrFor=='An MRDB Program' || addNewPrFor.indexOf('A New') > -1)">
+      <div class="col-6" *ngIf="addNewPrFor &&
+       (addNewPrFor=='An MRDB Program' ||
+       addNewPrFor === 'A New Increment' ||
+       addNewPrFor === 'A New FoS' ||
+       addNewPrFor === 'A New Subprogram')">
         <div class="dropdown-label">
           <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
             <option value="null" disabled selected>Select a {{selectLabel}}</option>
