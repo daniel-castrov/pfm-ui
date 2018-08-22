@@ -21,7 +21,7 @@ import {
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
-import {Util} from "../../../../utils/util";
+import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {FundsTabDeleteRenderer} from "../../../renderers/funds-tab-delete-renderer/funds-tab-delete-renderer.component";
 
 @Component({
@@ -90,7 +90,7 @@ export class FundsTabComponent implements OnChanges {
             this.existingFundingLines.push(fundingLine);
           }
         });
-        this.existingFundingLines = Util.removeDuplicates(this.existingFundingLines)
+        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
       });
     }
   }
@@ -400,7 +400,7 @@ export class FundsTabComponent implements OnChanges {
             },
             onCellValueChanged: params => this.onBudgetYearValueChanged(params),
             valueFormatter: params => {
-              return Util.currencyFormatter(params)
+              return FormatterUtil.currencyFormatter(params)
             }
           }]
         };
@@ -415,7 +415,7 @@ export class FundsTabComponent implements OnChanges {
       maxWidth: 92,
       type: "numericColumn",
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
-      valueFormatter: params => {return Util.currencyFormatter(params)}
+      valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
     this.columnDefs.push(totalColDef);
     this.agGrid.api.setColumnDefs(this.columnDefs);

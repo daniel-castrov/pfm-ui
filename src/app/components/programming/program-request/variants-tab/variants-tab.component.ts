@@ -6,7 +6,7 @@ import { FeedbackComponent } from '../../../feedback/feedback.component';
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
-import {Util} from "../../../../utils/util";
+import {FormatterUtil} from "../../../../utils/formatterUtil";
 
 @Component({
   selector: 'variants-tab',
@@ -163,7 +163,7 @@ export class VariantsTabComponent {
           headerName: 'Unit Costs',
           field: 'unitCost',
           valueFormatter: params => {
-            return Util.currencyFormatter(params)
+            return FormatterUtil.currencyFormatter(params)
           },
           rowSpan: params => {return this.rowSpanCount(params)},
           cellClassRules: {
@@ -207,7 +207,7 @@ export class VariantsTabComponent {
             }
           },
           valueFormatter: params => {
-            return Util.numberFormatter(params)
+            return FormatterUtil.numberFormatter(params)
           },
           onCellValueChanged: params => this.onBudgetYearValueChanged(params),
           editable: params => {return this.isAmountEditable(params)}
@@ -221,7 +221,7 @@ export class VariantsTabComponent {
         maxWidth: 92,
         type: "numericColumn",
         valueGetter: params => {return this.getTotal(params.data.quantities, this.years)},
-        valueFormatter: params => {return Util.numberFormatter(params)}
+        valueFormatter: params => {return FormatterUtil.numberFormatter(params)}
       };
       this.columnDefs.push(totalColDef);
     });
