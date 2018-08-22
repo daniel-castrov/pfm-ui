@@ -310,7 +310,13 @@ export class FundsTabComponent implements OnChanges {
         maxWidth: 92,
         suppressMenu: true,
         suppressToolPanel: true,
-        cellClassRules: {'font-weight-bold ag-medium-gray-cell': params => {return this.colSpanCount(params) > 1}},
+        cellClassRules: {
+          'font-weight-bold ag-medium-gray-cell': params => {
+            return this.colSpanCount(params) > 1
+          },
+          'delta-row': params => {
+            return params.data.phaseType === PhaseType.DELTA;
+          }},
         valueGetter: params => {
           switch(params.data.phaseType) {
             case PhaseType.POM:
@@ -377,6 +383,9 @@ export class FundsTabComponent implements OnChanges {
               },
               'font-weight-bold': params => {
                 return this.colSpanCount(params) > 1
+              },
+              'delta-row': params => {
+                return params.data.phaseType === PhaseType.DELTA;
               }
             },
             cellStyle: params => {
@@ -391,7 +400,7 @@ export class FundsTabComponent implements OnChanges {
             },
             onCellValueChanged: params => this.onBudgetYearValueChanged(params),
             valueFormatter: params => {
-              return this.currencyFormatter(params)
+              return Util.currencyFormatter(params)
             }
           }]
         };
@@ -406,12 +415,11 @@ export class FundsTabComponent implements OnChanges {
       maxWidth: 92,
       type: "numericColumn",
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
-      valueFormatter: params => {return this.currencyFormatter(params)}
+      valueFormatter: params => {return Util.currencyFormatter(params)}
     };
     this.columnDefs.push(totalColDef);
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
-
   }
 
   getTotal(pr, columnKeys): number {
@@ -426,7 +434,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   generateEmptyFundingLine(pomFundingLine?: FundingLine): FundingLine{
-    let funds = {};;
+    let funds = {};
     this.columnKeys.forEach(key => {
       funds[key] = 0;
     });
@@ -506,18 +514,6 @@ export class FundsTabComponent implements OnChanges {
     } else {
       return 1;
     }
-  }
-
-  currencyFormatter(value) {
-    if(isNaN(value.value)) {
-      value.value = 0;
-    }
-    var usdFormate = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
-    });
-    return usdFormate.format(value.value);
   }
 
   generateDelta(pomFundinLine, pbFundinLine): FundingLine{
