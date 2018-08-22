@@ -33,7 +33,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
 
   async addNewPrRadio(selection: string) {
     this.addNewPrFor = selection;
-    switch(this.addNewPrFor) {
+    switch(this.addNewPrFor) { 
       case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
         this.selectLabel = 'Program';
