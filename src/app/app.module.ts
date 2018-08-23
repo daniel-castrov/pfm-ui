@@ -1,3 +1,4 @@
+import { FilterUfrsComponent } from './components/ufr/ufr-search/filter-ufrs/filter-ufrs.component';
 import { TagsService } from './services/tags.service';
 import { UserUtils } from './services/user.utils.service';
 import { WithFullNameService } from './services/with-full-name.service';
@@ -222,6 +223,7 @@ const appRoutes: Routes = [
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
+    FilterUfrsComponent,
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,

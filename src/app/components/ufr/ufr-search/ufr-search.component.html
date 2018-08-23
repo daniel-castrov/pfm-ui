@@ -10,117 +10,9 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <fieldset>
-            <legend>
-              <i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filter By</legend>
-            <div class="row fieldset-padding">
-              <table class="ufr-search-table">
-                <tr>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" id="defaultCheck1" [(ngModel)]="useOrganization" (change)="search()">
-                      <label class="form-check-label primary-label" for="defaultCheck1">Organization</label>
-                    </div>
-                  </td>
-                  <td colspan="2">
-                    <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.orgId" name="org" [disabled]="!useOrganization"
-                        (change)="search()">
-                        <option *ngFor="let organization of organizations" [ngValue]="organization.id" [selected]="">{{organization.name}}</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" id="defaultCheck5" [(ngModel)]="useStatus" (change)="search()">
-                      <label class="form-check-label primary-label" for="defaultCheck5">Status</label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.status" name="status" [disabled]="!useStatus" (change)="search()">
-                        <option *ngFor="let d of statuses">{{d}}</option>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" [(ngModel)]="useFunctionalArea" (change)="search()">
-                      <label class="form-check-label primary-label " for="defaultCheck2">Func. Area</label>
-                    </div>
-                  </td>
-                  <td colspan="2">
-                    <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.fa" name="area" [disabled]="!useFunctionalArea" (change)="search()">
-                        <option *ngFor="let functionalArea of functionalAreas" [ngValue]="functionalArea.abbr" title="{{functionalArea.name}}">{{functionalArea.abbr}}</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck6" [(ngModel)]="useDisposition" (change)="search()">
-                      <label class="form-check-label primary-label" for="defaultCheck6">Disposition</label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.disposition" name="disposition" [disabled]="!useDisposition" (change)="search()">
-                        <option *ngFor="let disposition of dispositions">{{disposition}}</option>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" [(ngModel)]="useDates" (change)="search()">
-                      <label class="form-check-label primary-label" for="defaultCheck3">Date Issued</label>
-                    </div>
-                  </td>
-                  <td colspan="2">
-                    <span class="form-group inline-name">
-                      <div class="mr-sm-2">
-                        <label class="primary-label">From</label>
-                      </div>
-                      <div class="mr-sm-2">
-                        <select class="form-control-sm dropdown-width mb-2 mr-3" [(ngModel)]="ufrFilter.from" name="from" [disabled]="!useDates" (change)="search()">
-                          <option>from</option>
-                        </select>
-                      </div>
-                    </span>
-                    <span class="form-group inline-name">
-                      <div class="mr-sm-2">
-                        <label class="primary-label">To</label>
-                      </div>
-                      <div class="mr-sm-2">
-                        <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.to" name="to" [disabled]="!useDates" (change)="search()">
-                          <option>to</option>
-                        </select>
-                      </div>
-                    </span>
-                  </td>
-                  <td>
-                    <div class="form-check mb-4">
-                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck7" [(ngModel)]="useCycle" (change)="search()">
-                      <label class="form-check-label primary-label " for="defaultCheck7">Cycle</label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.cycle" name="cycle" [disabled]="!useCycle"
-                        (change)="search()">
-                        <option *ngFor="let cycle of cycles" [value]="cycle">{{cycle}}</option>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </fieldset>
+          <filter-ufrs [ufrFilter]="ufrFilter" [cycles]="cycles" [cyclelkp]="cyclelkp" (change)="search()"></filter-ufrs>
           <div class="h6">Select UFR of Interest</div>
-          <mat-table [dataSource]="datasource" matSort matSortActive="number" matSortDirection="asc">
+          <mat-table [dataSource]="matTableDataSource" matSort matSortActive="number" matSortDirection="asc">
             <ng-container matColumnDef="number">
               <mat-header-cell *matHeaderCellDef mat-sort-header>UFR#</mat-header-cell>
               <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.requestNumber}}</mat-cell>
@@ -131,10 +23,6 @@
             </ng-container>
             <ng-container matColumnDef="progid">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Prog ID</mat-header-cell>
-              <!--mat-cell class="ufr-view-link" *matCellDef="let p">{{getProgId( p )}}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="parent">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Parent</mat-header-cell-->
               <mat-cell class="ufr-view-link" *matCellDef="let p">{{getFullProgramName( p )}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="yoe">
