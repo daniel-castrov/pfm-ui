@@ -2,11 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 
-import { UFRsService, POMService, ProgramsService, Program, UFR, MyDetailsService, Community, Pom } from '../../../generated';
-import { ProgramTreeUtils } from '../../../utils/program-tree-utils'
+import { UFRsService, POMService, ProgramsService, Program, UFR, MyDetailsService, Community, Pom } from '../../../../generated';
+import { ProgramTreeUtils } from '../../../../utils/program-tree-utils'
 
 @Component({
-  selector: 'app-new-ufr',
+  selector: 'new-ufr',
   templateUrl: './new-ufr.component.html',
   styleUrls: ['./new-ufr.component.scss']
 })
