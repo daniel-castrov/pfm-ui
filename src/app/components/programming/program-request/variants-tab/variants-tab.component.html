@@ -37,47 +37,7 @@
         <!-- Variants Tables -->
         <div class="table-editable">
           <table class="variants-table">
-            <thead>
-              <tr>
-                <th>Service</th>
-                <th>Contractor</th>
-                <th>Unit Costs</th>
-                <th>Cycle</th>
-                <th *ngFor="let year of years">{{year}}</th>
-                <th>Total</th>
-              </tr>
-            </thead>
             <tbody>
-
-              <!-- Show each ServiceLine -->
-              <ng-container *ngFor="let serviceLine of variant.serviceLines">
-                <tr class="row-border-top">
-                  <td class="text-center" rowspan="3">
-                    {{serviceLine.branch}}
-                    <span *ngIf="!serviceLine?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal" (click)="deleteServiceLine(variant, serviceLine)">
-                      <i class="fa fa-trash"></i>
-                    </span>
-                  </td>
-                  <td class="text-center" rowspan="3">{{serviceLine.contractor}}</td>
-                  <td class="text-center" rowspan="3">{{serviceLine.unitCost}}</td>
-                  <td>PB{{pomFy-1}}</td>
-                  <td *ngFor="let year of years" class="text-right">{{serviceLine.pbQty[year] | dashForZero}}</td>
-                  <td class="text-right">{{serviceLine.pbQty['sum'] | dashForZero }}</td>
-                </tr>
-                <tr>
-                  <td>POM{{pomFy}}</td>
-                  <td *ngFor="let year of years" contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, variant, serviceLine, year)">
-                    {{serviceLine.prQty[year] | dashForZero}}
-                  </td>
-                  <td class="text-right">{{serviceLine.prQty['sum']}}</td>
-                </tr>
-                <tr class="row-lt-green">
-                  <td>Delta</td>
-                  <td *ngFor="let year of years" class="text-right">{{serviceLine.deltaQty[year]}}</td>
-                  <td class="text-right">{{serviceLine.deltaQty['sum']}}</td>
-                </tr>
-              </ng-container>
-
               <!-- Last Row for adding a new -->
               <tr *ngIf="showAddServiceLine[variantIndex]">
                 <td class="notdborder">
@@ -104,14 +64,29 @@
                   <j-feedback></j-feedback>
                 </td>
               </tr>
-              <tr class="row-border-top">
-                <td colspan="4" class="totals-line text-right font-weight-bold">Totals:</td>
-                <td *ngFor="let year of years" class="text-right">{{variant.totalQty[year] | dashForZero }}</td>
-                <td class="text-right">{{variant.totalQty['sum'] | dashForZero }}</td>
-              </tr>
             </tbody>
           </table>
         </div>
+        <ag-grid-angular #agGrid
+                         class="ag-theme-balham group-header-white "
+                         [gridAutoHeight]="true"
+                         [toolPanelSuppressSideButtons]="true"
+                         [suppressMovableColumns]="true"
+                         [suppressRowTransform]="true"
+                         [showToolPanel]="false"
+                         [enableSorting]="true"
+                         [enableFilter]="true"
+                         [rowData]="data"
+                         [pinnedBottomRowData]="pinnedBottomData"
+                         [columnDefs]="columnDefs"
+                         [singleClickEdit]="true"
+                         [stopEditingWhenGridLosesFocus]="true"
+                         (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
+                         (columnVisible)="onColumnVisible($event)"
+                         (cellEditingStarted)="onCellEditingStarted($event)">
+        </ag-grid-angular>
+
+
         <fieldset>
           <legend>Add Variant</legend>
           <div class="row">

@@ -1,5 +1,5 @@
 <fieldset class="custom-pr">
-  <legend>Add New Program Request for:</legend>
+  <legend>Create New Program Request for:</legend>
     <div class="row">
       <div class="col-5">
         <div class="dropdown">
@@ -7,15 +7,19 @@
               {{addNewPrFor ? addNewPrFor : 'Select an option'}}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" (click)="addNewPrRadio('An Existing Program of Record')">An Existing Program of Record</a>
-              <a class="dropdown-item" (click)="addNewPrRadio('A New Increment Subprogram')">A New Increment Subprogram</a>
-              <a class="dropdown-item" (click)="addNewPrRadio('A New FOS Subprogram')">A New FOS Subprogram</a>
-              <a class="dropdown-item" (click)="addNewPrRadio('A New Generic Subprogram')">A New Generic Subprogram</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('An MRDB Program')">An MRDB Program</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New Increment')">A New Increment</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New FoS')">A New FoS</a>
+              <a class="dropdown-item" (click)="addNewPrRadio('A New Subprogram')">A New Subprogram</a>
               <a class="dropdown-item" (click)="addNewPrRadio('A New Program')">A New Program</a>
-          </div>
+          </div> 
         </div>
       </div>
-      <div class="col-6" *ngIf="addNewPrFor && (addNewPrFor=='An Existing Program of Record' || addNewPrFor.indexOf('Subprogram') > -1)">
+      <div class="col-6" *ngIf="addNewPrFor &&
+       (addNewPrFor=='An MRDB Program' ||
+       addNewPrFor === 'A New Increment' ||
+       addNewPrFor === 'A New FoS' ||
+       addNewPrFor === 'A New Subprogram')">
         <div class="dropdown-label">
           <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
             <option value="null" disabled selected>Select a {{selectLabel}}</option>

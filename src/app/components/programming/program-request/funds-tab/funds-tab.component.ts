@@ -21,7 +21,7 @@ import {
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
-import {Util} from "../../../../utils/util";
+import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {FundsTabDeleteRenderer} from "../../../renderers/funds-tab-delete-renderer/funds-tab-delete-renderer.component";
 
 @Component({
@@ -56,6 +56,7 @@ export class FundsTabComponent implements OnChanges {
   frameworkComponents = {deleteRenderer: FundsTabDeleteRenderer};
   context = {parentComponent: this};
   isDisabledAddFundingLines;
+  overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>'
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -89,7 +90,7 @@ export class FundsTabComponent implements OnChanges {
             this.existingFundingLines.push(fundingLine);
           }
         });
-        this.existingFundingLines = Util.removeDuplicates(this.existingFundingLines)
+        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
       });
     }
   }
@@ -223,6 +224,7 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: '',
         colId: 'delete',
+        suppressToolPanel: true,
         hide: true,
         cellRenderer: 'deleteRenderer',
         rowSpan: params => {return this.rowSpanCount(params)},
@@ -237,6 +239,7 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'Appropriation',
         field: 'fundingLine.appropriation',
+        suppressToolPanel: true,
         editable: params => {
           return this.isEditable(params)
         },
@@ -258,6 +261,7 @@ export class FundsTabComponent implements OnChanges {
       {
         headerName: 'BA/BLIN',
         field: 'fundingLine.baOrBlin',
+        suppressToolPanel: true,
         editable: params => {
           return this.isEditable(params)
         },
@@ -291,11 +295,28 @@ export class FundsTabComponent implements OnChanges {
         rowSpan: params => {return this.rowSpanCount(params)}
       },
       {
+        headerName: 'OpAgency',
+        field: 'fundingLine.opAgency',
+        hide: true,
+        cellClass: 'funding-line-default',
+        cellClassRules: {
+          'row-span': params => {return this.rowSpanCount(params) > 1}
+        },
+        rowSpan: params => {return this.rowSpanCount(params)}
+      },
+      {
         headerName: 'Cycle',
         field: 'phaseType',
         maxWidth: 92,
         suppressMenu: true,
-        cellClassRules: {'font-weight-bold ag-medium-gray-cell': params => {return this.colSpanCount(params) > 1}},
+        suppressToolPanel: true,
+        cellClassRules: {
+          'font-weight-bold ag-medium-gray-cell': params => {
+            return this.colSpanCount(params) > 1
+          },
+          'delta-row': params => {
+            return params.data.phaseType === PhaseType.DELTA;
+          }},
         valueGetter: params => {
           switch(params.data.phaseType) {
             case PhaseType.POM:
@@ -349,17 +370,22 @@ export class FundsTabComponent implements OnChanges {
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
+          suppressToolPanel: true,
           children: [{
             headerName: key,
             field: 'fundingLine.funds.' + key,
             maxWidth: 92,
             suppressMenu: true,
+            suppressToolPanel: true,
             cellClassRules: {
               'ag-cell-edit': params => {
                 return this.isAmountEditable(params, key)
               },
               'font-weight-bold': params => {
                 return this.colSpanCount(params) > 1
+              },
+              'delta-row': params => {
+                return params.data.phaseType === PhaseType.DELTA;
               }
             },
             cellStyle: params => {
@@ -374,7 +400,7 @@ export class FundsTabComponent implements OnChanges {
             },
             onCellValueChanged: params => this.onBudgetYearValueChanged(params),
             valueFormatter: params => {
-              return this.currencyFormatter(params)
+              return FormatterUtil.currencyFormatter(params)
             }
           }]
         };
@@ -385,15 +411,15 @@ export class FundsTabComponent implements OnChanges {
     let totalColDef = {
       headerName: 'CTC',
       suppressMenu: true,
+      suppressToolPanel: true,
       maxWidth: 92,
       type: "numericColumn",
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
-      valueFormatter: params => {return this.currencyFormatter(params)}
+      valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
     this.columnDefs.push(totalColDef);
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
-
   }
 
   getTotal(pr, columnKeys): number {
@@ -408,7 +434,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   generateEmptyFundingLine(pomFundingLine?: FundingLine): FundingLine{
-    let funds = {};;
+    let funds = {};
     this.columnKeys.forEach(key => {
       funds[key] = 0;
     });
@@ -480,22 +506,14 @@ export class FundsTabComponent implements OnChanges {
 
   colSpanCount(params): number {
     if (params.data.fundingLine.appropriation === 'Total Funds Request') {
-      return 3;
+      if (this.agGrid.columnApi.getColumn('fundingLine.opAgency').isVisible()) {
+        return 4;
+      } else {
+        return 3;
+      }
     } else {
       return 1;
     }
-  }
-
-  currencyFormatter(value) {
-    if(isNaN(value.value)) {
-      value.value = 0;
-    }
-    var usdFormate = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
-    });
-    return usdFormate.format(value.value);
   }
 
   generateDelta(pomFundinLine, pbFundinLine): FundingLine{
@@ -582,6 +600,14 @@ export class FundsTabComponent implements OnChanges {
     }
   }
 
+  onToolPanelVisibleChanged(params) {
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+  onColumnVisible(params) {
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
   onCellEditingStarted(params) {
     this.filterBlins(params.data.fundingLine.appropriation);
     this.agGrid.api.refreshCells();
@@ -636,23 +662,50 @@ export class FundsTabComponent implements OnChanges {
     if ('PROC' === appropriation) {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/00/)));
     } else {
-      this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-4]/)));
+      this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
     this.removeExistingBlins();
+    this.limitBaForOrganizations()
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
   removeExistingBlins() {
     this.filteredBlins = this.filteredBlins.filter(blin => {
       let fl = this.pr.fundingLines.find(fl => fl.baOrBlin === blin);
-      return  fl === undefined && (blin.match(/00/) || blin.match(/BA[1-4]/));
+      let efl = this.existingFundingLines.find(fl => fl.baOrBlin === blin);
+      return  fl === undefined && efl === undefined && (blin.match(/00/) || blin.match(/BA[1-9]/));
     });
+  }
+
+  limitBaForOrganizations() {
+    switch(this.pr.leadComponent) {
+      case 'DUSA TE':
+      case 'JRO':
+      case 'OSD':
+      case 'PAIO':
+        this.filteredBlins = this.filteredBlins.filter(blin => {
+          return blin === 'BA6';
+        });
+        this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+        break;
+      case 'JSTO':
+        this.filteredBlins = this.filteredBlins.filter(blin => {
+          return blin.match(/BA[1-3]/);
+        });
+        this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+        break;
+      case 'JPEO':
+        this.filteredBlins = this.filteredBlins.filter(blin => {
+          return blin.match(/BA[4-5]/) || blin === 'BA7' || blin.match(/00/);
+        });
+        break;
+    }
   }
 
   canAddMoreFundingLines(): boolean {
     return this.baOrBlins.filter(blin => {
       let fl = this.pr.fundingLines.find(fl => fl.baOrBlin === blin);
-      return  fl === undefined && ( (blin.match(/00/) && !this.pr.fundingLines.some(fl => fl.appropriation === 'PROC')) || blin.match(/BA[1-4]/)) ;
+      return  fl === undefined && ( (blin.match(/00/) && !this.pr.fundingLines.some(fl => fl.appropriation === 'PROC')) || blin.match(/BA[1-9]/)) ;
     }).length > 0;
   }
 

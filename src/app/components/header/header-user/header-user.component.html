@@ -68,7 +68,7 @@
     <ul class="navbar-nav mr-auto">
 
       <!-- Planning Menu -->
-      <div *ngIf="roles?.includes('POM_Manager'); else disabledPlanningMenu">
+      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu">
         <li  class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Planning
@@ -85,7 +85,7 @@
       </ng-template>
 
       <!-- Programming Menu -->
-      <div *ngIf="(roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor')); else disabledProgrammingMenu">
+      <div *ngIf=" !elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown01"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
@@ -101,36 +101,35 @@
               <div class="dropdown-divider"></div>
             </ng-container>
 
-
-            <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#" routerLink="/exporter">POM Import/Export</a>
             <div class="dropdown-divider"></div>
 
             <div apppermission="POM:edit">
               <ng-container *ngIf="!(pomStatusIsCreated||pomStatusIsOpen)">
                 <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
                 <a class="dropdown-item" disabled>Open POM Session</a>
+                <a class="dropdown-item" disabled>Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" disabled>Update TOAs</a>
-                <a class="dropdown-item" disabled>Update POM Session</a>
                 <a class="dropdown-item" disabled>Worksheet Mgmt</a>
               </ng-container>
 
               <ng-container *ngIf="pomStatusIsCreated">
                 <a class="dropdown-item" disabled>Create POM Session</a>
                 <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+                <a class="dropdown-item" disabled>Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <!-- <div class="dropdown-header">Dropdown header 1</div> -->
                 <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
-                <a class="dropdown-item" disabled>Update POM Session</a>
+
                 <a class="dropdown-item" disabled>Worksheet Mgmt</a>
               </ng-container>
 
               <ng-container *ngIf="pomStatusIsOpen">
                 <a class="dropdown-item" disabled>Create POM Session</a>
                 <a class="dropdown-item" disabled>Open POM Session</a>
+                <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" disabled>Update TOAs</a>
-                <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
                 <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
               </ng-container>
             </div>
@@ -145,7 +144,7 @@
       </ng-template>
 
       <!-- Budget Menu -->
-      <div *ngIf="roles?.includes('BES_Manager'); else disabledBudgetMenu">
+      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('BES_Manager') ) ; else disabledBudgetMenu">
         <li class="nav-item">
             <a class="nav-link" href="#" routerLink="/home">Budget</a>
         </li>
@@ -157,7 +156,7 @@
       </ng-template>
 
       <!-- Execution Menu -->
-      <div *ngIf="(roles?.includes('Program_Manager') || roles?.includes('Program_Admin')); else disabledExecutionMenu">
+      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Program_Manager') || roles?.includes('Program_Admin') ); else disabledExecutionMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Execution</a>
           <div class="dropdown-menu" aria-labelledby="dropdown12">
@@ -176,7 +175,7 @@
       </ng-template>
 
       <!-- Reports Menu -->
-      <div *ngIf="roles?.includes('Program_Manager'); else disabledReportsMenu">
+      <div *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
           <div class="dropdown-menu" aria-labelledby="dropdown02">
@@ -195,7 +194,7 @@
       </ng-template>
 
       <!-- Manage Menu -->
-      <div *ngIf="(roles?.includes('Program_Manager') || roles?.includes('Program_Admin')); else disableManageMenu">
+      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Program_Manager') || roles?.includes('Program_Admin') ); else disableManageMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">Manage</a>
@@ -213,7 +212,7 @@
 
 
       <!-- Admin Menu -->
-      <div *ngIf="authUser.admin || roles?.includes('User_Approver'); else disableAdminMenu">
+      <div *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
           <div class="dropdown-menu" aria-labelledby="dropdown03">

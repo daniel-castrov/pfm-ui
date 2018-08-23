@@ -8,19 +8,19 @@ fieldset {
 
 .role-controls {
    color: $primary-color;
-   font-weight: 500;
 
   > label {
-    color: $primary-color;
     margin: 0 0 5px 0;
     width: 233px;
     display: block;
   }
+  
+  .dropdown-width {
+    width: 280px;
+  }
 }
 
-.dropdown-width {
-  width: 200px;
-}
+
 
 .controls {
   clear: both;
