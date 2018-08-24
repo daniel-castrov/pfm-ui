@@ -1,7 +1,7 @@
 <fieldset class="custom-pr">
   <legend>Create New Program Request for:</legend>
     <div class="row">
-      <div class="col-5">
+      <div class="col-4">
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {{addNewPrFor ? addNewPrFor : 'Select an option'}}
@@ -12,10 +12,10 @@
               <a class="dropdown-item" (click)="addNewPrRadio('A New FoS')">A New FoS</a>
               <a class="dropdown-item" (click)="addNewPrRadio('A New Subprogram')">A New Subprogram</a>
               <a class="dropdown-item" (click)="addNewPrRadio('A New Program')">A New Program</a>
-          </div> 
+          </div>
         </div>
       </div>
-      <div class="col-6" *ngIf="addNewPrFor &&
+      <div class="col-4 mr-2" *ngIf="addNewPrFor &&
        (addNewPrFor=='An MRDB Program' ||
        addNewPrFor === 'A New Increment' ||
        addNewPrFor === 'A New FoS' ||
@@ -27,7 +27,7 @@
           </select>
         </div>
       </div>
-      <div class="col-1">
+      <div class="col-2">
           <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!addNewPrFor || addNewPrFor=='Select an option'">
           <span class="icon-pad">Next</span>
           <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
