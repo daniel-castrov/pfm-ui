@@ -132,14 +132,12 @@ export class WithFullNameService {
   }
 
   private programFullName(program: Program, mapIdToProgram: Map<string, Program>): string {
-    if ( program ){
-      let parentName = '';
-      if (program.parentMrId) {
-        parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
-      }
-      return parentName + program.shortName;
+
+    let parentName = '';
+    if (program.parentMrId) {
+      parentName = this.programFullName(mapIdToProgram.get(program.parentMrId), mapIdToProgram) + '/';
     }
-    return "";
+    return parentName + program.shortName;
   }
 
 }
