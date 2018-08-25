@@ -1,7 +1,7 @@
 import { UserUtils } from './../../../../services/user.utils.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { OrganizationService, Organization, ProgramsService, Tag, User, RestResult, UFRFilter } from '../../../../generated';
+import { OrganizationService, Organization, ProgramsService, Tag, User, RestResult } from '../../../../generated';
 import { Disposition } from '../../disposition.enum';
 import { Status } from '../../status.enum';
 
@@ -11,27 +11,34 @@ import { Status } from '../../status.enum';
   styleUrls: ['./filter-ufrs.component.scss']
 })
 export class FilterUfrsComponent implements OnInit {
-  @Input() private ufrFilter: UFRFilter;
   @Output() private change: EventEmitter<any> = new EventEmitter();
   
   private user: User;
   
-  public useOrganization: boolean = false;
   private organizations: Organization[] = [];
+  public useOrganization: boolean = false;
+  public selectedOrganizationId: string;
   
-  public useFunctionalArea: boolean = false;
   private functionalAreas: Tag[] = [];
+  public useFunctionalArea: boolean = false;
+  public selectedFunctionalArea: string;
   
   public useDates: boolean = false;
+  public fromDate: number;
+  public toDate: number;
   
-  public useStatus: boolean = false;
   private statuses: string[] = [];
+  public useStatus: boolean = false;
+  public selectedStatus: string;
   
-  public useDisposition: boolean = false;
   private dispositions: string[]=[];
+  public useDisposition: boolean = false;
+  public selectedDisposition: string;
   
   public useCycle: boolean = false;
   @Input() private cycles: string[];
+  public selectedCycle: string;
+
   @Input() private cyclelkp: Map<string, string>;
   
   constructor(private userUtils: UserUtils,
@@ -59,20 +66,17 @@ export class FilterUfrsComponent implements OnInit {
       return (tag1.abbr < tag2.abbr ? -1 : 1);
     });
     
-    this.initUfrFilter();
-
+    this.initSelections();
   }
 
-  private initUfrFilter() {
-    this.ufrFilter.orgId = this.organizations[0].id;
-    this.ufrFilter.from = new Date().getTime();
-    this.ufrFilter.to = new Date().getTime();
-    this.ufrFilter.status = Status[0];
-    this.ufrFilter.disposition = Disposition[0];
-    this.ufrFilter.cycle = this.cycles[0];
-    this.ufrFilter.fa = this.functionalAreas[0].abbr;
-    this.ufrFilter.yoe = true;
-    this.ufrFilter.active = true;
+  private initSelections() {
+    this.selectedOrganizationId = this.organizations[0].id;
+    this.fromDate = new Date().getTime();
+    this.toDate = new Date().getTime();
+    this.selectedStatus = Status[0];
+    this.selectedDisposition = Disposition[0];
+    this.selectedCycle = this.cycles[0];
+    this.selectedFunctionalArea = this.functionalAreas[0].abbr;
   }
 
 }

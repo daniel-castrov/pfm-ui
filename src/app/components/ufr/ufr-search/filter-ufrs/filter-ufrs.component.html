@@ -12,8 +12,7 @@
         </td>
         <td colspan="2">
           <div class="form-group">
-            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.orgId" name="org" [disabled]="!useOrganization"
-              (change)="change.emit()">
+            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selectedOrganizationId" name="org" [disabled]="!useOrganization" (change)="change.emit()">
               <option *ngFor="let organization of organizations" [ngValue]="organization.id" [selected]="">{{organization.name}}</option>
             </select>
           </div>
@@ -26,7 +25,7 @@
         </td>
         <td>
           <div class="form-group">
-            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.status" name="status" [disabled]="!useStatus" (change)="change.emit()">
+            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selectedStatus" name="status" [disabled]="!useStatus" (change)="change.emit()">
               <option *ngFor="let d of statuses">{{d}}</option>
             </select>
           </div>
@@ -41,7 +40,7 @@
         </td>
         <td colspan="2">
           <div class="form-group">
-            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.fa" name="area" [disabled]="!useFunctionalArea" (change)="change.emit()">
+            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selectedFunctionalArea" name="area" [disabled]="!useFunctionalArea" (change)="change.emit()">
               <option *ngFor="let functionalArea of functionalAreas" [ngValue]="functionalArea.abbr" title="{{functionalArea.name}}">{{functionalArea.abbr}}</option>
             </select>
           </div>
@@ -54,7 +53,7 @@
         </td>
         <td>
           <div class="form-group">
-            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.disposition" name="disposition" [disabled]="!useDisposition" (change)="change.emit()">
+            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selectedDisposition" name="disposition" [disabled]="!useDisposition" (change)="change.emit()">
               <option *ngFor="let disposition of dispositions">{{disposition}}</option>
             </select>
           </div>
@@ -73,7 +72,7 @@
               <label class="primary-label">From</label>
             </div>
             <div class="mr-sm-2">
-              <select class="form-control-sm dropdown-width mb-2 mr-3" [(ngModel)]="ufrFilter.from" name="from" [disabled]="!useDates" (change)="change.emit()">
+              <select class="form-control-sm dropdown-width mb-2 mr-3" [(ngModel)]="fromDate" name="from" [disabled]="!useDates" (change)="change.emit()">
                 <option>from</option>
               </select>
             </div>
@@ -83,7 +82,7 @@
               <label class="primary-label">To</label>
             </div>
             <div class="mr-sm-2">
-              <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.to" name="to" [disabled]="!useDates" (change)="change.emit()">
+              <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="toDate" name="to" [disabled]="!useDates" (change)="change.emit()">
                 <option>to</option>
               </select>
             </div>
@@ -97,8 +96,7 @@
         </td>
         <td>
           <div class="form-group">
-            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufrFilter.cycle" name="cycle" [disabled]="!useCycle"
-              (change)="change.emit()">
+            <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="selectedCycle" name="cycle" [disabled]="!useCycle" (change)="change.emit()">
               <option *ngFor="let cycle of cycles" [value]="cycle">{{cycle}}</option>
             </select>
           </div>
