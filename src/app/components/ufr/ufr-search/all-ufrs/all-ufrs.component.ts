@@ -17,7 +17,7 @@ export class AllUfrsComponent implements OnInit {
   private matTableDataSource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
 
   @Input() private filterUfrsComponent: FilterUfrsComponent;
-  @Input() private cyclelkp: Map<string, string>;
+  @Input() private mapCycleIdToFy: Map<string, string>;
   
   private mapProgramIdToName: Map<string, string> = new Map<string, string>();// mrid, fullname
 
@@ -84,5 +84,12 @@ export class AllUfrsComponent implements OnInit {
     }
 
     return parentName + (!ufr.shortName ? '??' : ufr.shortName);
+  }
+
+  ufrNumber(ufr: UFR): string {
+    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); // the value stored in this.mapCycleIdToFy look like this: 'POM 2017'
+    const shortFy = fullFy - 2000;
+    const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
+    return shortFy + sequentialNumber;
   }
 }

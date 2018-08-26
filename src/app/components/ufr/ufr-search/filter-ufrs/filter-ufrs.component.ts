@@ -40,7 +40,7 @@ export class FilterUfrsComponent implements OnInit {
   @Input() private cycles: string[];
   public selectedCycle: string;
 
-  @Input() private cyclelkp: Map<string, string>;
+  @Input() private mapCycleIdToFy: Map<string, string>;
   
   constructor(private userUtils: UserUtils,
               private organizationService: OrganizationService,

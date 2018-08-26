@@ -1,7 +1,7 @@
 <mat-table [dataSource]="matTableDataSource" matSort matSortActive="number" matSortDirection="asc">
   <ng-container matColumnDef="number">
     <mat-header-cell *matHeaderCellDef mat-sort-header>UFR#</mat-header-cell>
-    <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.requestNumber}}</mat-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{ufrNumber(p)}}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header>UFR Name</mat-header-cell>
@@ -25,7 +25,7 @@
   </ng-container>
   <ng-container matColumnDef="cycle">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Cycle</mat-header-cell>
-    <mat-cell class="ufr-view-link" *matCellDef="let p">{{cyclelkp.get(p.pomId)}}</mat-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{mapCycleIdToFy.get(p.pomId)}}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="funding">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Funding Request</mat-header-cell>

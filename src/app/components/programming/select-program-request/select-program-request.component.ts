@@ -66,7 +66,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
   onDeletePr() {
     this.reloadPrs();
-    this.newProgrammaticRequestComponent.addNewPrFor = null;
+    this.newProgrammaticRequestComponent.addNewPrForMode = null;
   }
 
   async submit() {

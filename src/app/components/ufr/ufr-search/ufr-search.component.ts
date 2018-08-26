@@ -20,7 +20,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
   private user: User;
 
   private cycles: string[] = [];
-  private cyclelkp: Map<string, string> = new Map<string, string>();
+  private mapCycleIdToFy = new Map<string, string>();
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService, 
@@ -46,7 +46,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
 
     poms.forEach((pom: Pom) => {
       phases.push({ fy: pom.fy, phase: 'POM' });
-      this.cyclelkp.set(pom.id, 'POM ' + pom.fy);
+      this.mapCycleIdToFy.set(pom.id, 'POM ' + pom.fy);
     });
 
     pbs.forEach((pb: PB) => {
