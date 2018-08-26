@@ -30,10 +30,8 @@ export class AllUfrsComponent implements OnInit {
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
-
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     this.initProgramIdToName(programs);
-
     this.search();
   }
 

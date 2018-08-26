@@ -1,3 +1,4 @@
+import { join } from './../../../../utils/join';
 import { UserUtils } from './../../../../services/user.utils.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { forkJoin } from "rxjs/observable/forkJoin";
@@ -51,13 +52,11 @@ export class FilterUfrsComponent implements OnInit {
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
 
-    const forkJoinResult: RestResult[] = await forkJoin([
-      this.organizationService.getByCommunityId(this.user.currentCommunityId),
-      this.programsService.getTagsByType("Functional Area"),
-    ]).toPromise();
-      
-    this.organizations = forkJoinResult[0].result;
-    this.functionalAreas = forkJoinResult[1].result || [];
+    const [organizations, functionalAreas] = (await join( this.organizationService.getByCommunityId(this.user.currentCommunityId),
+                                                          this.programsService.getTagsByType("Functional Area") )) as [Organization[], Tag[]];
+  
+    this.organizations = organizations;
+    this.functionalAreas = functionalAreas || [];
 
     this.functionalAreas.sort((tag1: Tag, tag2: Tag) => { 
       if (tag1.abbr === tag2.abbr) {

@@ -1,9 +1,21 @@
+import { ProgramRequestPageModeService } from './../../../programming/program-request/page-mode.service';
+import { ProgramType } from './../../../../generated/model/programType';
+import { CreationTimeType } from './../../../../generated/model/creationTimeType';
+import { ProgramWithFullName, ProgramRequestWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
+import { join } from '../../../../utils/join';
+import { UserUtils } from './../../../../services/user.utils.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin } from "rxjs/observable/forkJoin";
-
-import { UFRsService, POMService, ProgramsService, Program, UFR, MyDetailsService, Community, Pom } from '../../../../generated';
+import { UFRsService, POMService, ProgramsService, Program, UFR, Pom, User } from '../../../../generated';
 import { ProgramTreeUtils } from '../../../../utils/program-tree-utils'
+
+enum CreateNewUfrMode {
+  FOR_A_PROGRAM_OF_RECORD        = 'For a Program of Record',
+  FOR_A_NEW_PROGRAMMATIC_REQUEST = 'For a Programmatic Request',
+  FOR_A_NEW_INCREMENT            = 'For a new Increment',
+  FOR_A_NEW_FOS                  = 'For a new FoS',
+  FOR_A_NEW_PROGRAM              = 'For a new Program'
+}
 
 @Component({
   selector: 'new-ufr',
@@ -11,106 +23,104 @@ import { ProgramTreeUtils } from '../../../../utils/program-tree-utils'
   styleUrls: ['./new-ufr.component.scss']
 })
 export class NewUfrComponent implements OnInit {
-  @Input() editable: boolean = false;
 
-  private needProgramSelector:boolean = false;
-  private programSelectorTitle: string = '';
-  private programs: ProgramWrapper[] = [];
-  private selected: Program;
-  private mode: string;
-  private pom: Pom;
+  createNewUfrMode: CreateNewUfrMode;
+  @Input() pomId: string;
+  allPrograms: ProgramWithFullName[];
+  selectableProgramsOrPrs: ProgramWithFullName[];
+  selectedProgramOrPr: ProgramWithFullName = null;
+  initialSelectOption: string;
 
-  constructor(private usvc: UFRsService, private pomsvc: POMService, private psvc: ProgramsService,
-  private router:Router, private deetsvc:MyDetailsService ) { }
+  constructor(
+    private router: Router,
+    private programRequestPageMode: ProgramRequestPageModeService,
+    private withFullNameService: WithFullNameService
+  ) {}
 
-  ngOnInit() {
-    var my: NewUfrComponent = this;
+  async ngOnInit() {
+    this.allPrograms = await this.withFullNameService.programs()
+  }
 
-    my.deetsvc.getCurrentUser().subscribe((person) => {
-      forkJoin([
-        my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-        my.psvc.getAll()
-      ]).subscribe(data => {
-        // get the open/created pom
-        for (var i = 0; i < data[0].result.length; i++){
-          var p: Pom = data[0].result[i];
-          console.log(p);
-          if ('CREATED' === p.status || 'OPEN' === p.status) {
-            my.pom = p;
-            break;
-          }
+  async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {
+    this.createNewUfrMode = createNewUfrMode;
+    switch(this.createNewUfrMode) { 
+      case 'For a Program of Record':
+        this.selectableProgramsOrPrs = await this.programsMunisPrs();
+        this.initialSelectOption = 'Program';
+        break;
+      case 'For a Programmatic Request': // was subprogram
+        this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
+        this.initialSelectOption = 'Program Request';
+        break;
+      case 'For a new FoS':
+      case 'For a new Increment':
+        this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
+        this.initialSelectOption = 'Program';
+        break;
+    }
+  }
+
+  async next() {
+    switch(this.createNewUfrMode) {
+      case 'For a Program of Record':
+        this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB,
+          this.pomId,
+          this.selectedProgramOrPr,
+          ProgramType.PROGRAM);
+        break;
+      case 'For a new FoS':
+        this.programRequestPageMode.programType = ProgramType.FOS;
+        if(this.isProgram(this.selectedProgramOrPr)) {
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.FOS);
+        } else { // a PR has been selected
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.FOS);
         }
-
-        ProgramTreeUtils.fullnames(data[1].result).forEach((fullname, program) => { 
-          my.programs.push({ program: program, fullname: fullname });
-        });
-
-        my.programs.sort(function (a, b) {
-          if (a.fullname === b.fullname) {
-            return 0;
-          }
-          return (a.fullname < b.fullname ? -1 : 1);
-        });
-
-        //console.log(my.programs);
-        my.selected = my.programs[0].program;
-      });
-    });
+        break;
+      case 'For a new Increment':
+        if(this.isProgram(this.selectedProgramOrPr)) {
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.INCREMENT);
+        } else { // a PR has been selected
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+            this.pomId,
+            this.selectedProgramOrPr,
+            ProgramType.INCREMENT);
+        }
+        break;
+      case 'For a Programmatic Request': // was subprogram
+        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+          this.pomId,
+          this.selectedProgramOrPr,
+          ProgramType.GENERIC);
+        break;
+      case 'For a new Program':
+        this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM,
+          this.pomId,
+          null,
+          ProgramType.PROGRAM);
+        break;
+    }
+    this.router.navigate(['/program-request']);
   }
 
-  setMode(mode) {
-    if ('FL' === mode) { // funding lines only
-      this.needProgramSelector = true;
-      this.programSelectorTitle = 'Select Program ID';
-    }
-    else if ('SP' === mode) { // subprogram
-      this.needProgramSelector = true;
-      this.programSelectorTitle = 'Select Parent Program ID';
-    }
-    else if ('P' === mode) { // new program
-      this.needProgramSelector = false;
-    }
-    this.mode = mode;
+  private async programsMunisPrs(): Promise<ProgramWithFullName[]> {
+    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
+
+    const referenceIds: Set<string> = new Set();
+    prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
+
+    return this.allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
   }
 
-  create() {
-    var my: NewUfrComponent = this;
-    console.log('create ' + this.mode + ' UFR');
-
-    if ('FL' === this.mode ) {
-      this.usvc.addFundingLine(this.pom.id, this.selected.id).subscribe(data => {
-        var ufrid = data.result;
-        my.router.navigate(['/ufr-view', ufrid]);
-      });
-    }
-    else {
-      var title = ('SP' === this.mode ? ' sub ' + this.selected.shortName : '');
-      
-      var ufr: UFR = {
-        phaseId: this.pom.id,
-        organization: this.selected.organization,
-        name: 'UFR new' + title + ' POM ' + my.pom.fy
-      };
-
-      if ('SP' === this.mode) {
-        ufr.parentMrId = this.selected.id;
-        ufr.type = 'INCREMENT';
-      }
-      else {
-        ufr.type = 'PROGRAM';
-      }
-
-      this.usvc.create(ufr).subscribe(data => {
-        var ufrid = data.result;
-        my.router.navigate(['/ufr-view', ufrid]);
-      });      
-    }
-
-    this.mode = null;
+  private isProgram(programOrPr): boolean {
+    return (typeof programOrPr.creationTimeType) === 'undefined';
   }
-}
-
-interface ProgramWrapper {
-  program: Program,
-  fullname: string
 }

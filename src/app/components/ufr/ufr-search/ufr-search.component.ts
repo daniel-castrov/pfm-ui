@@ -21,7 +21,6 @@ export class UfrSearchComponent implements OnInit, DoCheck {
 
   private cycles: string[] = [];
   private cyclelkp: Map<string, string> = new Map<string, string>();
-  private editable: boolean = false;
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService, 
@@ -31,13 +30,11 @@ export class UfrSearchComponent implements OnInit, DoCheck {
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
     
-    const forkJoinResult: RestResult[] = await forkJoin([
-      this.pomService.getByCommunityId(this.user.currentCommunityId),
-      this.pbService.getByCommunityId(this.user.currentCommunityId)
-    ]).toPromise();
+    const [poms, pbs] = (await forkJoin([ this.pomService.getByCommunityId(this.user.currentCommunityId),
+                                          this.pbService.getByCommunityId(this.user.currentCommunityId) ]).toPromise())
+                    .map( (restResult: RestResult) => restResult.result);
     
-    this.editable = false; // this.initCycles() changes it
-    this.initCyclesAndEditable(forkJoinResult[0].result, forkJoinResult[1].result);
+    this.initCyclesAndEditable(poms, pbs);
   }
   
   ngDoCheck() {
@@ -50,9 +47,6 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     poms.forEach((pom: Pom) => {
       phases.push({ fy: pom.fy, phase: 'POM' });
       this.cyclelkp.set(pom.id, 'POM ' + pom.fy);
-      if ('CREATED' === pom.status || 'OPEN' === pom.status) {
-        this.editable = true;
-      }
     });
 
     pbs.forEach((pb: PB) => {

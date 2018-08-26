@@ -1,11 +1,17 @@
 import { CreationTimeType } from './../../../../generated/model/creationTimeType';
-import { WithFullNameService, ProgramWithFullName, ProgramRequestWithFullName, WithFullName } from '../../../../services/with-full-name.service';
+import { WithFullNameService, ProgramWithFullName, ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
-
-// Other Components
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
 import {ProgramType} from "../../../../generated";
+
+enum AddNewPrForMode {
+  AN_MRDB_PROGRAM = 'An MRDB Program',
+  A_NEW_INCREMENT = 'A New Increment',
+  A_NEW_FOS = 'A New FoS',
+  A_NEW_SUBPROGRAM = 'A New Subprogram',
+  A_NEW_PROGRAM = 'A New Program'
+}
 
 @Component({
   selector: 'new-programmatic-request',
@@ -14,12 +20,12 @@ import {ProgramType} from "../../../../generated";
 })
 export class NewProgrammaticRequestComponent implements OnInit {
 
-  addNewPrFor: string;
+  addNewPrForMode: AddNewPrForMode;
   @Input() pomId: string;
   allPrograms: ProgramWithFullName[];
   selectableProgramsOrPrs: ProgramWithFullName[];
   selectedProgramOrPr: ProgramWithFullName = null;
-  selectLabel: string;
+  initilaSelectOption: string;
 
   constructor(
     private router: Router,
@@ -31,27 +37,27 @@ export class NewProgrammaticRequestComponent implements OnInit {
     this.allPrograms = await this.withFullNameService.programs()
   }
 
-  async addNewPrRadio(selection: string) {
-    this.addNewPrFor = selection;
-    switch(this.addNewPrFor) { 
+  async setAddNewPrRadioMode(selection: AddNewPrForMode) {
+    this.addNewPrForMode = selection;
+    switch(this.addNewPrForMode) { 
       case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
-        this.selectLabel = 'Program';
+        this.initilaSelectOption = 'Program';
         break;
       case 'A New FoS':
       case 'A New Increment':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
-        this.selectLabel = 'Program';
+        this.initilaSelectOption = 'Program';
         break;
       case 'A New Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-        this.selectLabel = 'Program Request';
+        this.initilaSelectOption = 'Program Request';
         break;
     }
   }
 
   async next() {
-    switch(this.addNewPrFor) {
+    switch(this.addNewPrForMode) {
       case 'An MRDB Program':
         this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB,
           this.pomId,
