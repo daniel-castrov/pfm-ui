@@ -3153,6 +3153,8 @@ definitions:
         type: "boolean"
       phaseId:
         type: "string"
+      appropriated:
+        type: "boolean"
       spendPlans:
         type: "array"
         items:

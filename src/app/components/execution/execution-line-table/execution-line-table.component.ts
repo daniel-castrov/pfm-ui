@@ -24,6 +24,7 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() private sourceOrTarget: string = 'to select target programs';
   @Input() private updatelines: ExecutionLineWrapper[] = [];
   @Input() private exelinefilter: ExecutionLineFilter;
+  @Input() private exeprogramfilter: ExecutionLineFilter;
   private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
@@ -93,7 +94,7 @@ export class ExecutionLineTableComponent implements OnInit {
     ]).subscribe(data => {
       //console.log(my.phase);
       my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
-        my.allexelines = d2.result;
+        my.allexelines = d2.result.filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released>0));
       });
 
       Object.getOwnPropertyNames(data[0].result).forEach(id => {

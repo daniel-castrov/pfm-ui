@@ -33,4 +33,8 @@ export class ProgramCellRendererComponent implements ICellRendererAngularComp {
   refresh(): boolean {
     return true;
   }
+
+  makelink(): boolean {
+    return (this.params ? this.params.context.enabled(this.params) : false);
+  }
 }

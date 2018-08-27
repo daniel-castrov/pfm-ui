@@ -1,1 +1,2 @@
-<a routerLink="{{route()}}/{{id()}}">{{fullname()}}</a> 
+<a *ngIf="makelink()" routerLink="{{route()}}/{{id()}}">{{fullname()}}</a> 
+<ng-container *ngIf="!makelink()">{{fullname()}}</ng-container>
