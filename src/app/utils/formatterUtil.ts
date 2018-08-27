@@ -5,14 +5,17 @@ export class FormatterUtil {
     return unique;
   }
 
-  public static currencyFormatter(value) {
+  public static currencyFormatter(value, decimalDigits?) {
+    if(!decimalDigits){
+      decimalDigits = 0;
+    }
     if(isNaN(value.value)) {
       value.value = 0;
     }
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 0
+      minimumFractionDigits: decimalDigits
     });
     return usdFormate.format(value.value);
   }

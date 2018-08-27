@@ -620,7 +620,6 @@ tab {
       .ag-header-group-text {
           color: $black !important;
           text-align: center !important;
-          width: 92px;
       }
     }
 
@@ -640,6 +639,10 @@ tab {
      text-align: center;
      width: 100%;
   }
+}
+
+.ag-header-group-cell-label{
+  display: grid;
 }
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table

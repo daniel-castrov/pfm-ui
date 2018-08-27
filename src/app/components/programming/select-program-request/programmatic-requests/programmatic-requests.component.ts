@@ -118,31 +118,34 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   defineColumns(programRequests){
     this.columnDefs = [
       {
-        headerName: 'Status',
-        menuTabs: this.menuTabs,
-        filter: 'agTextColumnFilter',
-        suppressSorting: true,
-        valueGetter: params => this.getStatus(params),
-        cellClass: params => this.getStatusClass(params),
-        cellStyle: { backgroundColor: "#eae9e9" },
-        cellRenderer: 'summaryProgramCellRenderer',
-        width: 60
-      },
-      {
-        headerName: 'Cycle',
-        menuTabs: this.menuTabs,
-        filter: 'agTextColumnFilter',
-        width: 50,
-        suppressSorting: true,
-        cellClass: ['ag-cell-white'],
-        valueGetter: params => {
-          if (params.data.phaseType == PhaseType.PB) {
-            return params.data.phaseType + (this.pbFy - 2000);
-          } else {
-            return params.data.phaseType + (this.pomFy - 2000);
-          }
-        }
-      }
+        headerName: 'funds values are expressed in ($K)',
+        children: [
+          {
+          headerName: 'Status',
+          menuTabs: this.menuTabs,
+          filter: 'agTextColumnFilter',
+          suppressSorting: true,
+          valueGetter: params => this.getStatus(params),
+          cellClass: params => this.getStatusClass(params),
+          cellStyle: { backgroundColor: "#eae9e9" },
+          cellRenderer: 'summaryProgramCellRenderer',
+          width: 60
+          },
+          {
+            headerName: 'Cycle',
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+            width: 50,
+            suppressSorting: true,
+            cellClass: ['ag-cell-white'],
+            valueGetter: params => {
+              if (params.data.phaseType == PhaseType.PB) {
+                return params.data.phaseType + (this.pbFy - 2000);
+              } else {
+                return params.data.phaseType + (this.pomFy - 2000);
+              }
+            }
+          }]}
     ];
     let columnKeys= [];
     programRequests.forEach(pr => {
