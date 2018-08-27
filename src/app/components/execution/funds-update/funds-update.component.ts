@@ -77,7 +77,10 @@ export class FundsUpdateComponent implements OnInit {
       frameworkComponents: agcomps,
       context: {
         programlkp: my.programs,
-        route: '/update-program-execution'
+        route: '/update-program-execution',
+        enabled: function (params): boolean {
+          return (0 !== params.data.released);
+        }
       },
       columnDefs: [
         {

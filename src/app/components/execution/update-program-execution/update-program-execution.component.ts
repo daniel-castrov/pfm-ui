@@ -34,6 +34,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private type: string;
   private fromIsSource: boolean = true;
   private linefilter: ExecutionLineFilter;
+  private programfilter: ExecutionLineFilter;
 
   private reason: string;
 
@@ -52,6 +53,10 @@ export class UpdateProgramExecutionComponent implements OnInit {
       ]).subscribe(data => {
         my.current = {
           line: data[0].result
+        };
+
+        my.programfilter = function (el: ExecutionLine) {
+          return !(my.current.line.id === el.id);
         };
 
         my.exesvc.getById(my.current.line.phaseId).subscribe(d2 => {
