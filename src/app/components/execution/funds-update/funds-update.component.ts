@@ -79,7 +79,7 @@ export class FundsUpdateComponent implements OnInit {
         programlkp: my.programs,
         route: '/update-program-execution',
         enabled: function (params): boolean {
-          return (0 !== params.data.released);
+          return !( 0 === params.data.released || params.data.appropriated);
         }
       },
       columnDefs: [
