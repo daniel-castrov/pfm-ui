@@ -156,7 +156,7 @@
       </ng-template>
 
       <!-- Execution Menu -->
-      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Program_Manager') || roles?.includes('Program_Admin') ); else disabledExecutionMenu">
+      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Program_Manager') ); else disabledExecutionMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Execution</a>
           <div class="dropdown-menu" aria-labelledby="dropdown12">
@@ -194,7 +194,7 @@
       </ng-template>
 
       <!-- Manage Menu -->
-      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Program_Manager') || roles?.includes('Program_Admin') ); else disableManageMenu">
+      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Program_Manager') ); else disableManageMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">Manage</a>
