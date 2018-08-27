@@ -94,7 +94,7 @@ export class ExecutionLineTableComponent implements OnInit {
     ]).subscribe(data => {
       //console.log(my.phase);
       my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
-        my.allexelines = d2.result.filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : true));
+        my.allexelines = d2.result.filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released>0));
       });
 
       Object.getOwnPropertyNames(data[0].result).forEach(id => {

@@ -3153,7 +3153,7 @@ definitions:
         type: "boolean"
       phaseId:
         type: "string"
-      isAppropriated:
+      appropriated:
         type: "boolean"
       spendPlans:
         type: "array"
