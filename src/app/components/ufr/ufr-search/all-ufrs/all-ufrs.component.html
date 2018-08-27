@@ -11,27 +11,27 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>Prog ID</mat-header-cell>
     <mat-cell class="ufr-view-link" *matCellDef="let p">{{getFullProgramName( p )}}</mat-cell>
   </ng-container>
-  <ng-container matColumnDef="yoe">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>YoE?</mat-header-cell>
-    <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.yoE}}</mat-cell>
-  </ng-container>
   <ng-container matColumnDef="status">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
-    <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.status}} </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="disp">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Disp</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+      <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.status}} </mat-cell>
+    </ng-container>
+  <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Priority</mat-header-cell>
+      <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
+    </ng-container>
+  <ng-container matColumnDef="disposition">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Disposition</mat-header-cell>
     <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.disposition}} </mat-cell>
   </ng-container>
-  <ng-container matColumnDef="cycle">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Cycle</mat-header-cell>
-    <mat-cell class="ufr-view-link" *matCellDef="let p">{{mapCycleIdToFy.get(p.pomId)}}</mat-cell>
+  <ng-container matColumnDef="lastUpdated">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.lastMod | date : format}}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="funding">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Funding Request</mat-header-cell>
-    <mat-cell class="ufr-view-link" *matCellDef="let p">&lt;no data?&gt;</mat-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
   </ng-container>
-  <mat-header-row *matHeaderRowDef="['number', 'name', 'progid', 'yoe', 'status', 'disp', 'cycle', 'funding']"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: ['number', 'name', 'progid', 'yoe', 'status', 'disp', 'cycle','funding']" (click)="navigate( row )"></mat-row>
+  <mat-header-row *matHeaderRowDef="['number', 'name', 'progid', 'status', 'priority', 'disposition', 'lastUpdated', 'funding']"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: ['number', 'name', 'progid', 'status', 'priority', 'disposition', 'lastUpdated','funding']" (click)="navigate( row )"></mat-row>
 </mat-table>
 <mat-paginator [pageSize]="10"></mat-paginator>

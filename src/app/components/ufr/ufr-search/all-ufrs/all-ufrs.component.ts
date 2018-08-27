@@ -92,4 +92,5 @@ export class AllUfrsComponent implements OnInit {
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;
   }
+
 }
