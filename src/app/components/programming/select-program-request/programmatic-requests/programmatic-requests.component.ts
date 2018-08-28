@@ -6,7 +6,7 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgrammaticRequest} from "../UiProgrammaticRequest";
-import {CreationTimeType} from "../../../../generated";
+import {CreationTimeType, ProgramType} from "../../../../generated";
 
 @Component({
   selector: 'programmatic-requests',
@@ -56,13 +56,13 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       this.pomProgrammaticRequests.forEach(prOne => {
         let programmaticRequest = new UiProgrammaticRequest(prOne);
         programmaticRequest.phaseType = PhaseType.POM;
-        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR && prOne.type === ProgramType.GENERIC) {
           let prTwo = this.pomProgrammaticRequests.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
 
-          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR  && prTwo.type === ProgramType.GENERIC) {
             let prThree = this.pomProgrammaticRequests.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
 
-            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR  && prThree.type === ProgramType.GENERIC) {
               let prFour = this.pomProgrammaticRequests.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
               programmaticRequest.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {
