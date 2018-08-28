@@ -1,0 +1,9 @@
+<span>
+  <label class="mt-3">{{offText}}</label>
+</span>
+<button id="toggle-button" type="button" [ngClass]="{'handle-text': includeHandleStatus}" class="btn btn-sm btn-toggle" (click)="onChange()" data-toggle="button" aria-pressed="false" autocomplete="off">
+  <div class="handle"></div>
+</button>
+<span>
+  <label class="mt-3">{{onText}}</label>
+</span>

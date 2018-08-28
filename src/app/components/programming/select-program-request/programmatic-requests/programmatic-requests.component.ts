@@ -11,7 +11,7 @@ import {CreationTimeType} from "../../../../generated";
 @Component({
   selector: 'programmatic-requests',
   templateUrl: './programmatic-requests.component.html',
-  styleUrls: ['./programmatic-requests.component.scss', '../../../user-management/manage-self/elevation/elevation.component.scss']
+  styleUrls: ['./programmatic-requests.component.scss']
 })
 export class ProgrammaticRequestsComponent implements OnChanges {
 
