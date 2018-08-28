@@ -10,17 +10,20 @@ import { HeaderComponent } from '../../header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
 
 // Generated
-import { RestResult } from '../../../generated/model/restResult';
-import { Community } from '../../../generated/model/community';
-import { CommunityService } from '../../../generated/api/community.service';
-import { Role } from '../../../generated/model/role'
-import { RoleService } from '../../../generated/api/role.service';
-import { UserRoleResource } from '../../../generated/model/userRoleResource'
-import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
-import { User } from '../../../generated/model/user';
-import { UserService } from '../../../generated/api/user.service';
-import { Program } from '../../../generated/model/program';
-import { ProgramsService } from '../../../generated/api/programs.service';
+import { RestResult,
+  Community,
+  Role,
+  UserRoleResource,
+  User,
+  Program,
+  Organization,
+  CommunityService,
+  RoleService,
+  UserRoleResourceService,
+  UserService,
+  ProgramsService,
+  OrganizationService,
+} from '../../../generated';
 
 declare const $: any;
 declare const jQuery: any;
@@ -39,6 +42,7 @@ export class ManageRolesComponent {
   resultError: string[] = [];
 
   communities: Community[] = [];
+  organizations: Organization[] = [];
   roles: Role[] = [];
   users: User[] = [];
   
@@ -47,6 +51,8 @@ export class ManageRolesComponent {
   paramUserId: string="";
 
   selectedCommunity: Community;
+  selectedOrganization: Community;
+  
   selectedRole: Role;
   selectedUser: User;
   selectedURR: UserRoleResource;
@@ -56,7 +62,7 @@ export class ManageRolesComponent {
   isNewUserRole: boolean;
   isURRVisible: boolean = false;
 
-  unmodifiableRoles = ["User_Approver", "POM_Manager"];
+  unmodifiableRoles = ["User_Approver", "POM_Manager", "Program_Manager"];
 
   selectedUserName: string;
   submittedMessage = "no message";
@@ -64,6 +70,7 @@ export class ManageRolesComponent {
 
   // For the angular-dual-listbox
   availablePrograms: Array<Program> = [];
+  filteredAvailablePrograms: Array<Program> = [];
   assignedPrograms: Array<any> = [];
   key: string = "id";
   display: string = "shortName";
@@ -83,7 +90,8 @@ export class ManageRolesComponent {
     private roleService: RoleService,
     private userService: UserService,
     private userRoleResourceService: UserRoleResourceService,
-    private programsService: ProgramsService
+    private programsService: ProgramsService,
+    private orgService: OrganizationService
   ) { 
 
     this.route.params.subscribe((params: Params) => {
@@ -171,7 +179,8 @@ export class ManageRolesComponent {
     
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
-      my.programsService.getProgramsByCommunity(my.selectedCommunity.id)
+      my.programsService.getProgramsByCommunity(my.selectedCommunity.id),
+      my.orgService.getByCommunityId((my.selectedCommunity.id))
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);
@@ -180,6 +189,9 @@ export class ManageRolesComponent {
       my.resultError.push(data[1].error);
       my.availablePrograms = data[1].result;
       my.allcount=my.availablePrograms.length;
+
+      my.resultError.push(data[2].error);
+      my.organizations = data[2].result;
 
       my.isURRVisible = true;
       my.isURRModifyable = true;
@@ -268,6 +280,25 @@ export class ManageRolesComponent {
     ];
     my.submitted = true;
     return  message[messageNumber];
+  }
+
+  filterByOrg(){
+    console.log(this.selectedOrganization.abbreviation);
+
+    this.filteredAvailablePrograms = [];
+    if ( !this.selectedOrganization ){
+      this.filteredAvailablePrograms = JSON.parse(JSON.stringify(this.availablePrograms));
+    } else {
+      this.availablePrograms.forEach ( prog =>  {
+
+        if ( prog.organization == this.selectedOrganization.id ){
+          this.filteredAvailablePrograms.push(prog);
+        }
+      }); 
+    }
+
+    console.log(this.filteredAvailablePrograms);
+
   }
 
 
