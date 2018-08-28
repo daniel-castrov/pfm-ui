@@ -34,8 +34,8 @@ export class NewUfrComponent implements OnInit {
   constructor(
     private router: Router,
     private programRequestPageMode: ProgramRequestPageModeService,
-    private withFullNameService: WithFullNameService
-  ) {}
+    private withFullNameService: WithFullNameService,
+    private ufrService: UFRsService ) {}
 
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs()
@@ -61,12 +61,20 @@ export class NewUfrComponent implements OnInit {
   }
 
   async next() {
+    let ufr: UFR = {phaseId: this.pomId};
     switch(this.createNewUfrMode) {
       case 'For a Program of Record':
-        this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB,
-          this.pomId,
-          this.selectedProgramOrPr,
-          ProgramType.PROGRAM);
+        ufr.originalMrId = this.selectedProgramOrPr.id;
+        ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
+        ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
+        ufr.type = ProgramType.PROGRAM;
+        ufr.longName = this.selectedProgramOrPr.longName;
+        break;
+      case 'For a Programmatic Request': // was subprogram
+        ufr.creationTimeType = CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR;
+        ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
+        ufr.type = ProgramType.GENERIC; // is this right? I guess GENERIC for a UFR means 'For a PR'. Reusing the value with PRs for a completely different purpose
+        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'For a new FoS':
         this.programRequestPageMode.programType = ProgramType.FOS;
@@ -95,20 +103,13 @@ export class NewUfrComponent implements OnInit {
             ProgramType.INCREMENT);
         }
         break;
-      case 'For a Programmatic Request': // was subprogram
-        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
-          this.pomId,
-          this.selectedProgramOrPr,
-          ProgramType.GENERIC);
-        break;
       case 'For a new Program':
-        this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM,
-          this.pomId,
-          null,
-          ProgramType.PROGRAM);
-        break;
+        ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
+        ufr.type = ProgramType.PROGRAM;
+      break;
     }
-    this.router.navigate(['/program-request']);
+    ufr = (await this.ufrService.update(ufr).toPromise()).result;
+    this.router.navigate(['/ufr-view', ufr.id]);
   }
 
   private async programsMunisPrs(): Promise<ProgramWithFullName[]> {

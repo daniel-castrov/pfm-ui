@@ -1990,32 +1990,6 @@ paths:
       - "UFRs"
       summary: "Create a UFR"
       description: "Create a UFR"
-      operationId: "create"
-      parameters:
-      - in: "body"
-        name: "ufr"
-        description: "a UFR"
-        required: true
-        schema:
-          $ref: "#/definitions/UFR"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        204:
-          description: "Successfully created UFR"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
-        500:
-          description: "An unexpected error occured."
-    post:
-      tags:
-      - "UFRs"
-      summary: "Updates a UFR"
-      description: "Updates a UFR"
       operationId: "update"
       parameters:
       - in: "body"
@@ -2029,14 +2003,23 @@ paths:
       produces:
       - "application/json"
       responses:
-        204:
-          description: "Successfully created UFR"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
-        500:
-          description: "An unexpected error occured."
+    post:
+      tags:
+      - "UFRs"
+      summary: "Updates a UFR"
+      description: "Updates a UFR"
+      operationId: "create"
+      parameters:
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
   /ufr/pom/{pomId}/program/{mrdbId}:
     put:
       tags:
