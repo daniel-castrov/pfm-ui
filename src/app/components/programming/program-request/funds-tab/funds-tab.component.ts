@@ -34,7 +34,7 @@ export class FundsTabComponent implements OnChanges {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  @Input() private pr: ProgrammaticRequest;
+  @Input() pr: ProgrammaticRequest;
   private parentPr: ProgrammaticRequest;
   private isFundsTabValid: any[] = [];
   @Input() private prs: ProgrammaticRequest[];
@@ -47,6 +47,7 @@ export class FundsTabComponent implements OnChanges {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
+  CreationTimeType = CreationTimeType;
   newFLType;
   columnDefs = [];
   data;
@@ -79,7 +80,21 @@ export class FundsTabComponent implements OnChanges {
   }
 
   loadExistingFundingLines() {
-    if(this.pr.originalMrId) {
+    if(this.pr.creationTimeReferenceId && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+      this.prService.getById(this.pr.creationTimeReferenceId).subscribe(pr => {
+        pr.result.fundingLines.forEach(fundingLine => {
+          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+            fl.baOrBlin === fundingLine.baOrBlin &&
+            fl.item === fl.item &&
+            fl.opAgency === fl.opAgency);
+          if (!isDuplicate) {
+            this.existingFundingLines.push(fundingLine);
+          }
+        });
+        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
+      });
+    }
+    if (this.pr.originalMrId) {
       this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
         program.result.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
