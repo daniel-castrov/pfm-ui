@@ -415,10 +415,6 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
 
-    console.log(this.community.abbreviation);
-    console.log(this.useEpp);
-    console.log(transfer);
-
     this.pomsvc.updateCurrentPom( this.community.id, transfer, this.useEpp ).subscribe(
       (data) => {
         if (data.result) {
