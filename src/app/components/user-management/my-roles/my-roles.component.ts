@@ -45,7 +45,7 @@ export class MyRolesComponent implements OnInit {
 
   currentRolesWithResources:RoleNameWithResources[] = [];
   allcount=0;
-  unmodifiableRoles = ["User_Approver", "POM_Manager"];
+  unmodifiableRoles = ["User_Approver", "POM_Manager", "Program_Manager"];
   pogramsMap:any[]=[];
   
   selectedAddRole:Role;
@@ -222,7 +222,7 @@ export class MyRolesComponent implements OnInit {
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedAddRole.name),
       my.orgService.getByCommunityId((my.currentUser.currentCommunityId)),
-      my.withFullNameService.programsByComm(my.currentUser.currentCommunityId),
+      my.withFullNameService.programsByCommunity(my.currentUser.currentCommunityId),
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);

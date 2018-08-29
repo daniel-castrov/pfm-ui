@@ -31,8 +31,8 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
-  async programsByComm(commid:string): Promise<ProgramWithFullName[]> {
-    const programs: Program[] = (await this.programsService.getProgramsByCommunity(commid).toPromise()).result;
+  async programsByCommunity(communityId:string): Promise<ProgramWithFullName[]> {
+    const programs: Program[] = (await this.programsService.getProgramsByCommunity(communityId).toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
     
     const result: ProgramWithFullName[] = programs.map( (program: Program) => 

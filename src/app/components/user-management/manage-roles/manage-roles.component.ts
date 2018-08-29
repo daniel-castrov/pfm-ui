@@ -179,7 +179,7 @@ export class ManageRolesComponent {
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
       my.orgService.getByCommunityId((my.selectedCommunity.id)),
-      my.withFullNameService.programsByComm(my.selectedCommunity.id),
+      my.withFullNameService.programsByCommunity(my.selectedCommunity.id),
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);
