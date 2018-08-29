@@ -26,7 +26,6 @@ export class CreatePomSessionComponent implements OnInit {
   private orgMap: Map<string, string>;
   private originalFyplus4;
 
-  private editsOk: boolean;
   private pomIsCreated: boolean;
   private pomIsOpen: boolean;
   private tooMuchToa: boolean;
@@ -110,9 +109,7 @@ export class CreatePomSessionComponent implements OnInit {
           cellRenderer: params => this.negativeNumberRenderer(params),
           cellEditor: "numericCellEditor",
           cellClassRules: {
-          'ag-cell-edit': params => {
-            return params.data.orgid !== 'Delta' && params.data.orgid !== 'CBDP Baseline'
-          },
+          'ag-cell-edit': params =>this.shouldEdit(params),
           'ag-cell-footer-sum': params => {
             return params.data.orgid == 'Delta'
           }
@@ -167,8 +164,10 @@ export class CreatePomSessionComponent implements OnInit {
 
   // a callback for determining if a ROW is editable
   private shouldEdit ( params ){
-    // Cannot edit pinned rows
-    return params.node.rowPinned ? false : true;
+    if ( this.pomIsOpen ) {
+      if ( params.data.orgid === this.community.abbreviation+' TOA' )  return true; 
+      else return false;
+    } else return params.node.rowPinned ? false : true;  
   }
 
   // helper for currency formatting
@@ -197,7 +196,6 @@ export class CreatePomSessionComponent implements OnInit {
         this.pinnedRowOrgsDelta = [];
         this.orgMap = new Map<string, string>();
         this.originalFyplus4 ={};
-        this.editsOk = false;
         this.pomIsCreated = false;
         this.pomIsOpen = false;
         this.tooMuchToa = false;
@@ -222,7 +220,6 @@ export class CreatePomSessionComponent implements OnInit {
 
   private setInitialGridValues(fy:number, poms: Pom[], samplepom: Pom) {
 
-    this.editsOk=false;
     let i:number;
 
     // Is this a new POM?
@@ -241,66 +238,58 @@ export class CreatePomSessionComponent implements OnInit {
     }
 
     let pomData;
+
     if ( null == currentPom ){
-      // 3a use the values from the samplepom ( the previous pb )
-      this.editsOk=true;
+      // Use the values from the samplepom ( the previous pb )
       pomData= samplepom;
-    }
-    else if (this.pomIsCreated){
-      this.editsOk=true;
-      pomData= currentPom;
     } else {
-      this.editsOk=false;
       pomData= currentPom;
     }
 
+    // BaseLine
+    let row = {}
+    row["orgid"] = this.community.abbreviation+" Baseline";
 
-    if ( this.editsOk ) {
-
-      // BaseLine
-      let row = {}
-      row["orgid"] = this.community.abbreviation+" Baseline";
-
-      samplepom.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;
-      });
-      for (i = 0; i < 5; i++) {
-        if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
-      }
-      this.pinnedRowCommunityBaseline = [row];
-
-      // Community Toas
-      row = {}
-      row["orgid"] = this.community.abbreviation+" TOA";
-      pomData.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;
-      });
-      for (i = 0; i < 5; i++) {
-        if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
-      }
-      this.rowsCommunity = [row];
-
-      // Org TOAs
-      Object.keys(pomData.orgToas).forEach(key => {
-        var toamap: Map<number, number> = new Map<number, number>();
-
-        row = {};
-        let total = 0;
-        row["orgid"] = key ;
-          pomData.orgToas[key].forEach( (toa:TOA) => {
-            row[toa.year] = toa.amount;
-          });
-        this.rowsOrgs.push(row);
-        });
-        this.rowsOrgs.forEach( roww => {
-        for (i = 0; i < 5; i++) {
-          if ( roww[ fy+i ] == undefined ) {
-            roww[ fy+i ] = 0;
-          }
-
-        }
-      });
+    samplepom.communityToas.forEach((toa: TOA) => {
+      row[toa.year] = toa.amount;
+    });
+    for (i = 0; i < 5; i++) {
+      if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
     }
+    this.pinnedRowCommunityBaseline = [row];
+
+    // Community Toas
+    row = {}
+    row["orgid"] = this.community.abbreviation+" TOA";
+    pomData.communityToas.forEach((toa: TOA) => {
+      row[toa.year] = toa.amount;
+    });
+    for (i = 0; i < 5; i++) {
+      if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
+    }
+    this.rowsCommunity = [row];
+
+    // Org TOAs
+    Object.keys(pomData.orgToas).forEach(key => {
+      var toamap: Map<number, number> = new Map<number, number>();
+
+      row = {};
+      let total = 0;
+      row["orgid"] = key ;
+        pomData.orgToas[key].forEach( (toa:TOA) => {
+          row[toa.year] = toa.amount;
+        });
+      this.rowsOrgs.push(row);
+      });
+      this.rowsOrgs.forEach( roww => {
+      for (i = 0; i < 5; i++) {
+        if ( roww[ fy+i ] == undefined ) {
+          roww[ fy+i ] = 0;
+        }
+
+      }
+    });
+  
 
     this.originalFyplus4[this.community.id]  =   this.rowsCommunity[0][this.fy+4];
     this.rowsOrgs.forEach( rowww => {
@@ -315,7 +304,6 @@ export class CreatePomSessionComponent implements OnInit {
     this.tooMuchToa = false;
 
     let i:number;
-
     let deltaRow = {};
     for (i = 0; i < 5; i++) {
       deltaRow[fy+i] =  this.rowsCommunity[0][fy+ i];
@@ -417,7 +405,6 @@ export class CreatePomSessionComponent implements OnInit {
         }
       });
   }
-
 
   private reload(){
     this.myinit();
