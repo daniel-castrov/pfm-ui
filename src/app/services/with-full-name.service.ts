@@ -94,7 +94,7 @@ export class WithFullNameService {
     return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);
   }
 
-  async programsPlusPrs(phaseId: string): Promise<WithFullName[]> {
+  async programPlusPrsMinusPrsForGenericSubprograms(phaseId: string): Promise<WithFullName[]> {
     const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
     const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) =>
       pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB &&
