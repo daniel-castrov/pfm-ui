@@ -46,7 +46,7 @@ export class NewUfrComponent implements OnInit {
 
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {
     this.createNewUfrMode = createNewUfrMode;
-    switch(this.createNewUfrMode) { 
+    switch(this.createNewUfrMode) {
       case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
         this.initialSelectOption = 'Program';
@@ -57,7 +57,7 @@ export class NewUfrComponent implements OnInit {
         break;
       case 'A New FoS':
       case 'A New Increment':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
+        this.selectableProgramsOrPrs = await this.withFullNameService.programPlusPrsMinusPrsForGenericSubprograms(this.pomId);
         this.initialSelectOption = 'Program';
         break;
     }

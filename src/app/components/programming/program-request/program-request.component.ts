@@ -121,6 +121,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     if( !this.prs || !this.idAndNameComponent || !this.programTabComponent ) return true // not fully initilized yet
     if( this.pr.type == ProgramType.GENERIC ) return true;
     if( this.thereAreOutstandingGenericSubprogramsAmongTheChildren() ) return true;
+    if(this.fundsTabComponent.invalid) return true;
+    if(this.variantsTabComponent.invalid) return true;
     return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 

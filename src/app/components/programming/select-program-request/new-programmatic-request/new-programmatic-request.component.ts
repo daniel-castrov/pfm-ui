@@ -39,14 +39,14 @@ export class NewProgrammaticRequestComponent implements OnInit {
 
   async setAddNewPrRadioMode(selection: AddNewPrForMode) {
     this.addNewPrForMode = selection;
-    switch(this.addNewPrForMode) { 
+    switch(this.addNewPrForMode) {
       case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
         this.initialSelectOption = 'Program';
         break;
       case 'A New FoS':
       case 'A New Increment':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
+        this.selectableProgramsOrPrs = await this.withFullNameService.programPlusPrsMinusPrsForGenericSubprograms(this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'A New Subprogram':
