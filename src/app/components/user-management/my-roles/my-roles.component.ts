@@ -5,11 +5,22 @@ import { AngularDualListBoxModule, DualListComponent} from 'angular-dual-listbox
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
+import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
 
 // Generated
-import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest, DropRoleRequest } from '../../../generated';
-import { MyDetailsService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
-
+import { Community, 
+  Organization,
+  User, 
+  Role, 
+  UserRoleResource, 
+  AssignRoleRequest, 
+  DropRoleRequest,
+  MyDetailsService, 
+  RoleService, 
+  UserRoleResourceService, 
+  OrganizationService, 
+  AssignRoleRequestService, 
+  DropRoleRequestService } from '../../../generated';
 
 @Component({
   selector: 'app-my-roles',
@@ -25,6 +36,7 @@ export class MyRolesComponent implements OnInit {
   currentUser:User;
 
   allRoles:Role[] = [];
+  organizations: Organization[] = [];
   currentRoles:Role[] = [];
   assignRequests:AssignRoleRequest[]=[];
   assignableRoles:Role[] = [];
@@ -39,16 +51,19 @@ export class MyRolesComponent implements OnInit {
   selectedAddRole:Role;
   selectedDropRole:Role;
   selectedURR:UserRoleResource;
+  selectedOrganization: Organization;
 
   isURRModifyable: boolean;
   isNewUserRole: boolean;
   isURRVisible: boolean = false;
 
   // For the angular-dual-listbox
-  availablePrograms: Array<Program> = [];
-  assignedPrograms: Array<Program> = [];
+  availablePrograms: Array<ProgramWithFullName> = [];
+  filteredAvailablePrograms: Array<ProgramWithFullName> = [];
+  assignedPrograms: Array<ProgramWithFullName> = [];
+  
   key: string = "id";
-  display: string = "shortName";
+  display: string = "fullname";
   keepSorted = true;
   filter = false;
   format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
@@ -58,9 +73,10 @@ export class MyRolesComponent implements OnInit {
     private myDetailsService:MyDetailsService,  
     private roleService: RoleService,
     private userRoleResourceService: UserRoleResourceService,
-    private programsService: ProgramsService,
     private assignRoleRequestService: AssignRoleRequestService,
-    private dropRoleRequestService:DropRoleRequestService
+    private dropRoleRequestService:DropRoleRequestService,
+    private orgService: OrganizationService,
+    private withFullNameService: WithFullNameService,
   ) { }
 
   ngOnInit() {
@@ -143,7 +159,7 @@ export class MyRolesComponent implements OnInit {
       my.feedback.exception(e.message);
     }
   }
-
+ 
   private getUserAndRoles():void {
     var my: MyRolesComponent = this;
 
@@ -153,22 +169,16 @@ export class MyRolesComponent implements OnInit {
       my.currentUser=u.result;
 
       Observable.forkJoin([
-        my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId),
+        //my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId),
         my.roleService.getByUserIdAndCommunityId(my.currentUser.id, my.currentUser.currentCommunityId),
         my.roleService.getByCommunityId(my.currentUser.currentCommunityId),
         my.assignRoleRequestService.getByUser(my.currentUser.id),
         my.dropRoleRequestService.getByUser(my.currentUser.id)
       ]).subscribe(r => {
 
-        // Get all the programs and put them in a map
-        my.resultError.push(r[0].error);
-        my.availablePrograms = r[0].result;
-        my.allcount=my.availablePrograms.length;
-        my.availablePrograms.forEach ( p => my.pogramsMap[p.id] = p );
-
         // Get the current user's roles and match them with the program names
-        my.resultError.push(r[1].error);
-        my.currentRoles =r[1].result;
+        my.resultError.push(r[0].error);
+        my.currentRoles =r[0].result;
         my.currentRoles.forEach( role => {
           my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
             my.currentUser.id, my.currentUser.currentCommunityId,role.name
@@ -189,16 +199,16 @@ export class MyRolesComponent implements OnInit {
         });
 
         // Get all the roles
-        my.resultError.push(r[2].error);
-        my.allRoles=r[2].result;
+        my.resultError.push(r[1].error);
+        my.allRoles=r[1].result;
 
         // get any existing add requests
-        my.resultError.push(r[3].error);
-        my.assignRequests=r[3].result;
+        my.resultError.push(r[2].error);
+        my.assignRequests=r[2].result;
 
         // get any existing drop requests
-        my.resultError.push(r[4].error);
-        my.dropRequests=r[4].result;
+        my.resultError.push(r[3].error);
+        my.dropRequests=r[3].result;
 
         my.buildSelectables();
 
@@ -210,11 +220,22 @@ export class MyRolesComponent implements OnInit {
     var my: MyRolesComponent = this;
 
     Observable.forkJoin([
-      my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedAddRole.name)
+      my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.currentUser.id, my.currentUser.currentCommunityId, my.selectedAddRole.name),
+      my.orgService.getByCommunityId((my.currentUser.currentCommunityId)),
+      my.withFullNameService.programsByComm(my.currentUser.currentCommunityId),
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);
       let urr: UserRoleResource = data[0].result;
+
+      my.resultError.push(data[1].error);
+      my.organizations = data[1].result;
+
+      // Get all the programs and put them in a map
+      my.availablePrograms = data[2];
+
+      my.allcount=my.availablePrograms.length;
+      my.availablePrograms.forEach ( p => my.pogramsMap[p.id] = p );
 
       my.isURRModifyable = true;
       my.isNewUserRole = true;
@@ -235,7 +256,7 @@ export class MyRolesComponent implements OnInit {
           });
         } else {
           // some are granted
-          let newAvail:Program[]=[];
+          let newAvail:ProgramWithFullName[]=[];
           my.selectedURR.resourceIds.forEach(function ( progId ) {
             my.availablePrograms.forEach(function (prog) {
               if ( prog.id == progId ){
@@ -253,6 +274,7 @@ export class MyRolesComponent implements OnInit {
         my.selectedURR.roleId = my.selectedAddRole.id;
         my.selectedURR.resourceIds = [];
       }
+      this.filteredAvailablePrograms = JSON.parse(JSON.stringify(this.availablePrograms));
     });
   }
 
@@ -302,6 +324,23 @@ export class MyRolesComponent implements OnInit {
     });
     my.assignableRoles = aRoles;
   }
+
+  filterByOrg(){
+
+    this.filteredAvailablePrograms = [];
+    if ( !this.selectedOrganization ){
+      this.filteredAvailablePrograms = JSON.parse(JSON.stringify(this.availablePrograms));
+    } else {
+      this.availablePrograms.forEach ( prog =>  {
+
+        if ( prog.organization == this.selectedOrganization.id ){
+          this.filteredAvailablePrograms.push(prog);
+        }
+      }); 
+    }
+  }
+
+
 }
 
 // a class for viewing the current roles with the associated resources (program names)

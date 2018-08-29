@@ -16,13 +16,11 @@ import { RestResult,
   Role,
   UserRoleResource,
   User,
-  Program,
   Organization,
   CommunityService,
   RoleService,
   UserRoleResourceService,
   UserService,
-  ProgramsService,
   OrganizationService,
 } from '../../../generated';
 
@@ -52,7 +50,7 @@ export class ManageRolesComponent {
   paramUserId: string="";
 
   selectedCommunity: Community;
-  selectedOrganization: Community;
+  selectedOrganization: Organization;
   
   selectedRole: Role;
   selectedUser: User;
@@ -91,7 +89,6 @@ export class ManageRolesComponent {
     private roleService: RoleService,
     private userService: UserService,
     private userRoleResourceService: UserRoleResourceService,
-    private programsService: ProgramsService,
     private orgService: OrganizationService,
     private withFullNameService: WithFullNameService,
   ) { 
