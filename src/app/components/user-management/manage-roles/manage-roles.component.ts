@@ -8,6 +8,7 @@ import { DualListComponent } from 'angular-dual-listbox';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
+import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
 
 // Generated
 import { RestResult,
@@ -69,11 +70,11 @@ export class ManageRolesComponent {
 
 
   // For the angular-dual-listbox
-  availablePrograms: Array<Program> = [];
-  filteredAvailablePrograms: Array<Program> = [];
+  availablePrograms: Array<ProgramWithFullName> = [];
+  filteredAvailablePrograms: Array<ProgramWithFullName> = [];
   assignedPrograms: Array<any> = [];
   key: string = "id";
-  display: string = "shortName";
+  display: string = "fullname";
   keepSorted = true;
   filter = false;
   format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
@@ -91,7 +92,8 @@ export class ManageRolesComponent {
     private userService: UserService,
     private userRoleResourceService: UserRoleResourceService,
     private programsService: ProgramsService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private withFullNameService: WithFullNameService,
   ) { 
 
     this.route.params.subscribe((params: Params) => {
@@ -179,27 +181,25 @@ export class ManageRolesComponent {
     
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
-      my.programsService.getProgramsByCommunity(my.selectedCommunity.id),
-      my.orgService.getByCommunityId((my.selectedCommunity.id))
+      my.orgService.getByCommunityId((my.selectedCommunity.id)),
+      my.withFullNameService.programsByComm(my.selectedCommunity.id),
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);
       let urr: UserRoleResource = data[0].result;
 
       my.resultError.push(data[1].error);
-      my.availablePrograms = data[1].result;
-      my.allcount=my.availablePrograms.length;
+      my.organizations = data[1].result;
 
-      my.resultError.push(data[2].error);
-      my.organizations = data[2].result;
+      my.availablePrograms = data[2];
 
       my.isURRVisible = true;
-      my.isURRModifyable = true;
+      my.isURRModifyable = false;
       my.isNewUserRole = true;
 
-      if (my.unmodifiableRoles.includes(my.selectedRole.name)) {
-        my.isURRModifyable = false;
-      }
+      if ( !my.unmodifiableRoles.includes(my.selectedRole.name) ) {
+        my.isURRModifyable = true;
+      } 
       if (urr) {
         my.isNewUserRole = false;
         my.selectedURR = urr;
@@ -211,7 +211,7 @@ export class ManageRolesComponent {
           my.assignedPrograms = [ ...my.availablePrograms ];
         } else {
           // some are granted
-          let newAvail:Program[]=[];
+          let newAvail:ProgramWithFullName[]=[];
           my.selectedURR.resourceIds.forEach(function ( progId ) {
             my.availablePrograms.forEach(function (prog) {
               if ( prog.id == progId ){
@@ -229,6 +229,10 @@ export class ManageRolesComponent {
         my.selectedURR.roleId = my.selectedRole.id;
         my.selectedURR.resourceIds = [];
       }
+
+      my.filteredAvailablePrograms = [];
+      my.filteredAvailablePrograms = JSON.parse(JSON.stringify(my.availablePrograms));
+
     });
   }
 
@@ -283,7 +287,6 @@ export class ManageRolesComponent {
   }
 
   filterByOrg(){
-    console.log(this.selectedOrganization.abbreviation);
 
     this.filteredAvailablePrograms = [];
     if ( !this.selectedOrganization ){
@@ -296,9 +299,6 @@ export class ManageRolesComponent {
         }
       }); 
     }
-
-    console.log(this.filteredAvailablePrograms);
-
   }
 
 

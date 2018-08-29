@@ -31,6 +31,17 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
+  async programsByComm(commid:string): Promise<ProgramWithFullName[]> {
+    const programs: Program[] = (await this.programsService.getProgramsByCommunity(commid).toPromise()).result;
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
+    
+    const result: ProgramWithFullName[] = programs.map( (program: Program) => 
+      ({ ...program, fullname: this.programFullName(program, mapIdToProgram) })
+    );
+
+    return this.sort(result);
+  }
+
 /**
  * The PRs can form a hierarchy in two different ways:
  * 

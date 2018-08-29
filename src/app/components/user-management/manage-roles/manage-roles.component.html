@@ -113,7 +113,7 @@
             </div>  
 
             <div style="max-width:800px;">
-              <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
+              <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
               </dual-list>
             </div>
