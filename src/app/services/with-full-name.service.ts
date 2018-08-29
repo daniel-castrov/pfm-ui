@@ -5,6 +5,7 @@ import { ProgrammaticRequest } from './../generated/model/programmaticRequest';
 import { ProgramsService } from './../generated/api/programs.service';
 import { Program } from './../generated/model/program';
 import { Injectable } from '@angular/core';
+import {ProgramType} from "../generated";
 
 export interface WithFullName {
   fullname: string;
@@ -34,8 +35,8 @@ export class WithFullNameService {
   async programsByCommunity(communityId:string): Promise<ProgramWithFullName[]> {
     const programs: Program[] = (await this.programsService.getProgramsByCommunity(communityId).toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
-    
-    const result: ProgramWithFullName[] = programs.map( (program: Program) => 
+
+    const result: ProgramWithFullName[] = programs.map( (program: Program) =>
       ({ ...program, fullname: this.programFullName(program, mapIdToProgram) })
     );
 
@@ -95,7 +96,9 @@ export class WithFullNameService {
 
   async programsPlusPrs(phaseId: string): Promise<WithFullName[]> {
     const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
-    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB);
+    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) =>
+      pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB &&
+      pr.type !== ProgramType.GENERIC);
 
     const programs: ProgramWithFullName[] = (await this.programs());
     return this.sort((<WithFullName[]>programs).concat(prsWithoutPrograms));
