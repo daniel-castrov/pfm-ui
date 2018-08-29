@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions }  from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
-import { UserUtils } from '../../../services/user.utils.service';
+import { UserUtils } from '../../../services/user.utils';
 import { NumericCellEditor } from './numeric-celleditior.component';
 import { CommunityService, OrganizationService, PBService, POMService, EppService, ProgramsService} from '../../../generated';
 import { Community, Organization, TOA, Pom, PB, Program} from '../../../generated';

@@ -1,14 +1,10 @@
+import { CycleUtils } from './../../../services/cycle.utils';
 import { NewProgrammaticRequestComponent } from './new-programmatic-request/new-programmatic-request.component';
 import { ProgramRequestWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
-import { UserUtils } from '../../../services/user.utils.service';
+import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-
-// Other Components
-import { Pom } from '../../../generated/model/pom';
-import { PRService } from '../../../generated/api/pR.service';
-import { PB } from '../../../generated/model/pB';
-import { PBService } from '../../../generated/api/pB.service';
+import { Pom ,PRService, PB, PBService } from '../../../generated';
 
 @Component({
   selector: 'app-select-program-request',
@@ -29,10 +25,11 @@ export class SelectProgramRequestComponent implements OnInit {
               private pbService: PBService,
               private prService: PRService,
               private withFullNameService: WithFullNameService,
-              private globalsService: UserUtils) {}
+              private userUtils: UserUtils,
+              private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
-    this.currentCommunityId = (await this.globalsService.user().toPromise()).currentCommunityId;
+    this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
     this.initPbPrs();
     this.reloadPrs();
   }
@@ -44,18 +41,9 @@ export class SelectProgramRequestComponent implements OnInit {
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      // can't use getOpen here, because we need to handle open *or* created pom
-      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => { 
-        for (var i = 0; i < poms.result.length; i++) {
-          var pom: Pom = poms.result[i];
-          if ('CREATED' === pom.status || 'OPEN' === pom.status) {
-            this.pom = pom;
-            this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
-            resolve();
-            break;
-          }
-        }
-      });
+      this.pom = await this.cycleUtils.currentPom().toPromise();
+      this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+      resolve();
     });
   }
 

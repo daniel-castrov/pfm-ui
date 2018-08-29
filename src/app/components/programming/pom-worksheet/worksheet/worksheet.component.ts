@@ -2,11 +2,10 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 // Other Components
 import { HeaderComponent } from '../../../header/header.component';
-import { UserUtils } from '../../../../services/user.utils.service';
+import { UserUtils } from '../../../../services/user.utils';
 
 import { PomWorksheetService, POMService } from '../../../../generated';
 import { Pom, PomWorksheet, PomWorksheetRow } from '../../../../generated';
-
 import { WithFullNameService } from '../../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 

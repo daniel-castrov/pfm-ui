@@ -5,7 +5,7 @@ import { PRUtils } from '../../../../services/pr.utils.service';
 import { AutoValuesService } from './AutoValues.service';
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 import { User } from '../../../../generated/model/user';
-import { UserUtils } from '../../../../services/user.utils.service';
+import { UserUtils } from '../../../../services/user.utils';
 import { PB } from '../../../../generated/model/pB';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
 import {

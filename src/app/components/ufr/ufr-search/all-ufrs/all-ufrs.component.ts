@@ -1,5 +1,5 @@
 import { ProgramTreeUtils } from './../../../../utils/program-tree-utils';
-import { UserUtils } from './../../../../services/user.utils.service';
+import { UserUtils } from '../../../../services/user.utils';
 import { FilterUfrsComponent } from './../filter-ufrs/filter-ufrs.component';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';

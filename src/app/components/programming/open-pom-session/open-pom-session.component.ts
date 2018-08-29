@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {  HeaderComponent } from '../../header/header.component'
-import { UserUtils } from '../../../services/user.utils.service';
+import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
 import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated';

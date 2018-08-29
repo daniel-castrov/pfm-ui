@@ -1,9 +1,10 @@
+import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramRequestPageModeService } from './../../../programming/program-request/page-mode.service';
 import { ProgramType } from './../../../../generated/model/programType';
 import { CreationTimeType } from './../../../../generated/model/creationTimeType';
 import { ProgramWithFullName, ProgramRequestWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { join } from '../../../../utils/join';
-import { UserUtils } from './../../../../services/user.utils.service';
+import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { UFRsService, POMService, ProgramsService, Program, UFR, Pom, User } from '../../../../generated';
@@ -25,7 +26,7 @@ enum CreateNewUfrMode {
 export class NewUfrComponent implements OnInit {
 
   createNewUfrMode: CreateNewUfrMode;
-  @Input() pomId: string;
+  pomId: string;
   allPrograms: ProgramWithFullName[];
   selectableProgramsOrPrs: ProgramWithFullName[];
   selectedProgramOrPr: ProgramWithFullName = null;
@@ -35,10 +36,12 @@ export class NewUfrComponent implements OnInit {
     private router: Router,
     private programRequestPageMode: ProgramRequestPageModeService,
     private withFullNameService: WithFullNameService,
-    private ufrService: UFRsService ) {}
+    private ufrService: UFRsService,
+    private cycleUtils: CycleUtils ) {}
 
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs()
+    this.pomId = (await this.cycleUtils.currentPom().toPromise()).id;
   }
 
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {

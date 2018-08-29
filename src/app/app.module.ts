@@ -1,7 +1,8 @@
+import { CycleUtils } from './services/cycle.utils';
 import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
 import { FilterUfrsComponent } from './components/ufr/ufr-search/filter-ufrs/filter-ufrs.component';
 import { TagsService } from './services/tags.service';
-import { UserUtils } from './services/user.utils.service';
+import { UserUtils } from './services/user.utils';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
@@ -352,6 +353,7 @@ const appRoutes: Routes = [
     UserRoleResourceService,
     ProgramsService,
     UserUtils,
+    CycleUtils,
     RequestsService,
     POMService,
     PomWorksheetService,

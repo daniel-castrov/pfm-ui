@@ -1,6 +1,6 @@
 import { AllUfrsComponent } from './all-ufrs/all-ufrs.component';
 import { FilterUfrsComponent } from './filter-ufrs/filter-ufrs.component';
-import { UserUtils } from './../../../services/user.utils.service';
+import { UserUtils } from '../../../services/user.utils';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { HeaderComponent } from '../../header/header.component';
