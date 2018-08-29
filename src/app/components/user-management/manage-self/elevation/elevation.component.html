@@ -3,15 +3,12 @@
 </div>
 <div *ngIf="header.authUser.admin" class="card-container">
   <div class="card-body">
-      <span>
-        <label class="mt-3">Admin Off </label>
-      </span>
-      <button type="button" class="btn btn-sm btn-toggle" (click)="elevationService.flip()" data-toggle="button" aria-pressed="false" autocomplete="off">
-         <div class="handle">{{elevationService.elevatedString}} </div>
-      </button>
-      <span>
-        <label class="mt-3">Admin On</label>
-      </span>
+    <toggle-button
+      offText="Admin Off"
+      onText="Admin On"
+      [includeHandleStatus]="false"
+      [value]="elevationService.elevatedBoolean"
+      (onChangeEvent)="elevationService.flip()">
+    </toggle-button>
   </div>
-  <!-- <input type="radio" (click)="elevationService.flip()" [checked]="elevationService.elevatedBoolean"> {{elevationService.elevatedString}} -->
 </div>

@@ -143,6 +143,7 @@ import { ExecutionLineDetailsComponent } from './components/execution/execution-
 import { EventDetailsCellRendererComponent } from './components/renderers/event-details-cell-renderer/event-details-cell-renderer.component';
 import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
 import {DeleteRenderer} from "./components/renderers/delete-renderer/delete-renderer.component";
+import { ToggleComponent } from './components/toggle/toggle.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -296,7 +297,8 @@ const appRoutes: Routes = [
     DeleteRenderer,
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
-    TransferFromToDetailsCellRendererComponent
+    TransferFromToDetailsCellRendererComponent,
+    ToggleComponent
   ],
   entryComponents: [
     ProgramCellRendererComponent,

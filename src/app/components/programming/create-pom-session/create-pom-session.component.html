@@ -58,9 +58,7 @@
               <span>
                 <label>Use EPP Data:</label>
               </span>
-              <button type="button" class="btn btn-sm btn-toggle" (click)="useEppData()" data-toggle="button" aria-pressed="false" autocomplete="off">
-               <div class="handle"></div>
-             </button>
+              <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
             </span>
           </ng-container>
         </div>
