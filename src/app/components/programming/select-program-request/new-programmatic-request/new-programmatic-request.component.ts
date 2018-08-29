@@ -25,7 +25,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
   allPrograms: ProgramWithFullName[];
   selectableProgramsOrPrs: ProgramWithFullName[];
   selectedProgramOrPr: ProgramWithFullName = null;
-  initilaSelectOption: string;
+  initialSelectOption: string;
 
   constructor(
     private router: Router,
@@ -42,16 +42,16 @@ export class NewProgrammaticRequestComponent implements OnInit {
     switch(this.addNewPrForMode) { 
       case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
-        this.initilaSelectOption = 'Program';
+        this.initialSelectOption = 'Program';
         break;
       case 'A New FoS':
       case 'A New Increment':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
-        this.initilaSelectOption = 'Program';
+        this.initialSelectOption = 'Program';
         break;
       case 'A New Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-        this.initilaSelectOption = 'Program Request';
+        this.initialSelectOption = 'Program Request';
         break;
     }
   }
