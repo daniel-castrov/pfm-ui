@@ -145,7 +145,8 @@ import { SummaryProgramCellRenderer } from "./components/renderers/event-column/
 import { ExecutionLineDetailsComponent } from './components/execution/execution-line-details/execution-line-details.component';
 import { EventDetailsCellRendererComponent } from './components/renderers/event-details-cell-renderer/event-details-cell-renderer.component';
 import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
-import {FundsTabDeleteRenderer} from "./components/renderers/funds-tab-delete-renderer/funds-tab-delete-renderer.component";
+import {DeleteRenderer} from "./components/renderers/delete-renderer/delete-renderer.component";
+import { ToggleComponent } from './components/toggle/toggle.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -298,10 +299,11 @@ const appRoutes: Routes = [
     LibraryComponent,
     ProgramCellRendererComponent,
     LibraryViewCellRenderer,
-    FundsTabDeleteRenderer,
+    DeleteRenderer,
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
-    TransferFromToDetailsCellRendererComponent
+    TransferFromToDetailsCellRendererComponent,
+    ToggleComponent
   ],
   entryComponents: [
     ProgramCellRendererComponent,
@@ -309,7 +311,7 @@ const appRoutes: Routes = [
     SummaryProgramCellRenderer,
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
-    FundsTabDeleteRenderer
+    DeleteRenderer
   ],
   imports: [
     AccordionModule.forRoot(),

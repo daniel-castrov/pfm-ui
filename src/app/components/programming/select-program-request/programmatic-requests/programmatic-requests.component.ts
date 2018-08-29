@@ -6,12 +6,12 @@ import { ProgramRequestPageModeService } from '../../program-request/page-mode.s
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgrammaticRequest} from "../UiProgrammaticRequest";
-import {CreationTimeType} from "../../../../generated";
+import {CreationTimeType, ProgramType} from "../../../../generated";
 
 @Component({
   selector: 'programmatic-requests',
   templateUrl: './programmatic-requests.component.html',
-  styleUrls: ['./programmatic-requests.component.scss', '../../../user-management/manage-self/elevation/elevation.component.scss']
+  styleUrls: ['./programmatic-requests.component.scss']
 })
 export class ProgrammaticRequestsComponent implements OnChanges {
 
@@ -56,13 +56,13 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       this.pomProgrammaticRequests.forEach(prOne => {
         let programmaticRequest = new UiProgrammaticRequest(prOne);
         programmaticRequest.phaseType = PhaseType.POM;
-        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR && prOne.type === ProgramType.GENERIC) {
           let prTwo = this.pomProgrammaticRequests.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
 
-          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR  && prTwo.type === ProgramType.GENERIC) {
             let prThree = this.pomProgrammaticRequests.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
 
-            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR  && prThree.type === ProgramType.GENERIC) {
               let prFour = this.pomProgrammaticRequests.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
               programmaticRequest.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {
@@ -118,31 +118,34 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   defineColumns(programRequests){
     this.columnDefs = [
       {
-        headerName: 'Status',
-        menuTabs: this.menuTabs,
-        filter: 'agTextColumnFilter',
-        suppressSorting: true,
-        valueGetter: params => this.getStatus(params),
-        cellClass: params => this.getStatusClass(params),
-        cellStyle: { backgroundColor: "#eae9e9" },
-        cellRenderer: 'summaryProgramCellRenderer',
-        width: 60
-      },
-      {
-        headerName: 'Cycle',
-        menuTabs: this.menuTabs,
-        filter: 'agTextColumnFilter',
-        width: 50,
-        suppressSorting: true,
-        cellClass: ['ag-cell-white'],
-        valueGetter: params => {
-          if (params.data.phaseType == PhaseType.PB) {
-            return params.data.phaseType + (this.pbFy - 2000);
-          } else {
-            return params.data.phaseType + (this.pomFy - 2000);
-          }
-        }
-      }
+        headerName: 'funds values are expressed in ($K)',
+        children: [
+          {
+          headerName: 'Status',
+          menuTabs: this.menuTabs,
+          filter: 'agTextColumnFilter',
+          suppressSorting: true,
+          valueGetter: params => this.getStatus(params),
+          cellClass: params => this.getStatusClass(params),
+          cellStyle: { backgroundColor: "#eae9e9" },
+          cellRenderer: 'summaryProgramCellRenderer',
+          width: 60
+          },
+          {
+            headerName: 'Cycle',
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+            width: 50,
+            suppressSorting: true,
+            cellClass: ['ag-cell-white'],
+            valueGetter: params => {
+              if (params.data.phaseType == PhaseType.PB) {
+                return params.data.phaseType + (this.pbFy - 2000);
+              } else {
+                return params.data.phaseType + (this.pomFy - 2000);
+              }
+            }
+          }]}
     ];
     let columnKeys= [];
     programRequests.forEach(pr => {

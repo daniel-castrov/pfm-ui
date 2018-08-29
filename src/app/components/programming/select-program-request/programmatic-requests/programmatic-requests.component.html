@@ -12,15 +12,7 @@
     </div>
   </div>
   <div class="col-auto">
-    <span>
-      <label class="mt-3">Expand</label>
-    </span>
-    <button type="button" class="btn btn-sm btn-toggle" (click)="toggleExpand()" data-toggle="button" aria-pressed="false" autocomplete="off">
-      <div class="handle"></div>
-    </button>
-    <span>
-      <label class="mt-3">Collapse</label>
-    </span>
+    <toggle-button offText="Expand" onText="Collapse" (onChangeEvent)="toggleExpand()"></toggle-button>
   </div>
 </div>
 <ag-grid-angular #agGrid

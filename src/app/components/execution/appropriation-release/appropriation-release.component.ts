@@ -3,15 +3,13 @@ import * as $ from 'jquery';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { PBService } from '../../../generated/api/pB.service'
-import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
-import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ExecutionLine, ExecutionEventData, ExecutionDropDown } from '../../../generated';
+import { ExecutionEventData, ExecutionDropDown, ExecutionLine } from '../../../generated';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
+import { ExecutionLineFilter } from '../model/execution-line-filter';
 
 declare const $: any;
 declare const jQuery: any;
@@ -30,12 +28,19 @@ export class AppropriationReleaseComponent implements OnInit {
   private etype: ExecutionDropDown;
   private other: string;
   private subtypes: ExecutionDropDown[];
+  private progfilter: ExecutionLineFilter;
+  private line: ExecutionLineFilter = function (el: ExecutionLine): boolean {
+    return true;
+  };
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
     private router: Router) {}
 
   ngOnInit() {
-    
+    this.progfilter = function (exeline: ExecutionLine): boolean {
+      return !(exeline.appropriated);
+    };
+
     this.route.params.subscribe(data => {
       forkJoin([
         this.exesvc.getById(data.phaseId),
@@ -72,7 +77,7 @@ export class AppropriationReleaseComponent implements OnInit {
     else {
       this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(data => {
         this.updatelines = [];
-        data.result.forEach(x => { 
+        data.result.filter(z => this.progfilter(z) ).forEach(x => { 
           this.updatelines.push({
             line: x,
             amt: x.toa - x.withheld - x.released

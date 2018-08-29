@@ -22,7 +22,7 @@ import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {FundsTabDeleteRenderer} from "../../../renderers/funds-tab-delete-renderer/funds-tab-delete-renderer.component";
+import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 
 @Component({
   selector: 'funds-tab',
@@ -34,7 +34,7 @@ export class FundsTabComponent implements OnChanges {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  @Input() private pr: ProgrammaticRequest;
+  @Input() pr: ProgrammaticRequest;
   private parentPr: ProgrammaticRequest;
   private isFundsTabValid: any[] = [];
   @Input() private prs: ProgrammaticRequest[];
@@ -47,13 +47,14 @@ export class FundsTabComponent implements OnChanges {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
+  CreationTimeType = CreationTimeType;
   newFLType;
   columnDefs = [];
   data;
   pinnedBottomData;
   existingFundingLines: FundingLine[] = [];
   selectedFundingLine: FundingLine = null;
-  frameworkComponents = {deleteRenderer: FundsTabDeleteRenderer};
+  frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
   isDisabledAddFundingLines;
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>'
@@ -79,7 +80,21 @@ export class FundsTabComponent implements OnChanges {
   }
 
   loadExistingFundingLines() {
-    if(this.pr.originalMrId) {
+    if(this.pr.creationTimeReferenceId && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+      this.prService.getById(this.pr.creationTimeReferenceId).subscribe(pr => {
+        pr.result.fundingLines.forEach(fundingLine => {
+          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+            fl.baOrBlin === fundingLine.baOrBlin &&
+            fl.item === fl.item &&
+            fl.opAgency === fl.opAgency);
+          if (!isDuplicate) {
+            this.existingFundingLines.push(fundingLine);
+          }
+        });
+        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
+      });
+    }
+    if (this.pr.originalMrId) {
       this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
         program.result.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -222,111 +237,114 @@ export class FundsTabComponent implements OnChanges {
   generateColumns() {
     this.columnDefs = [
       {
-        headerName: '',
-        colId: 'delete',
-        suppressToolPanel: true,
-        hide: true,
-        cellRenderer: 'deleteRenderer',
-        rowSpan: params => {return this.rowSpanCount(params)},
-        cellClassRules: {
-          'font-weight-bold': params => {return this.colSpanCount(params) > 1},
-          'row-span': params => {return this.rowSpanCount(params) > 1}
-        },
-        cellClass: 'funding-line-default',
-        cellStyle: {'text-align': 'center'},
-        width: 50
-      },
-      {
-        headerName: 'Appropriation',
-        field: 'fundingLine.appropriation',
-        suppressToolPanel: true,
-        editable: params => {
-          return this.isEditable(params)
-        },
-        onCellValueChanged: params => this.onFundingLineValueChanged(params),
-        cellClassRules: {
-          'font-weight-bold': params => {return this.colSpanCount(params) > 1},
-          'row-span': params => {return this.rowSpanCount(params) > 1}
+        headerName: 'funds values are expressed in ($K)',
+        children: [{
+          headerName: '',
+          colId: 'delete',
+          suppressToolPanel: true,
+          hide: true,
+          cellRenderer: 'deleteRenderer',
+          rowSpan: params => {return this.rowSpanCount(params)},
+          cellClassRules: {
+            'font-weight-bold': params => {return this.colSpanCount(params) > 1},
+            'row-span': params => {return this.rowSpanCount(params) > 1}
           },
-        cellClass: 'funding-line-default',
-        rowSpan: params => {return this.rowSpanCount(params)},
-        colSpan: params => {return this.colSpanCount(params)},
-        cellEditorSelector: params => {
-          return {
-            component: 'agSelectCellEditor',
-            params: {values: this.appropriations}
-          };
-        }
-      },
-      {
-        headerName: 'BA/BLIN',
-        field: 'fundingLine.baOrBlin',
-        suppressToolPanel: true,
-        editable: params => {
-          return this.isEditable(params)
+          cellClass: 'funding-line-default',
+          cellStyle: {'text-align': 'center'},
+          width: 50
         },
-        onCellValueChanged: params => this.onFundingLineValueChanged(params),
-        cellEditorSelector: params => {
-          if (params.data.fundingLine.appropriation) {
-            this.filterBlins(params.data.fundingLine.appropriation);
-          }
-          return {
-            component: 'agSelectCellEditor',
-            params: {values: this.filteredBlins}
-          };
-        },
-        cellClass: 'funding-line-default',
-        cellClassRules: {
-          'row-span': params => {return this.rowSpanCount(params) > 1}
-        },
-        rowSpan: params => {return this.rowSpanCount(params)}
-       },
-      {
-        headerName: 'Item',
-        field: 'fundingLine.item',
-        editable: params => {
-          return this.isEditable(params)
-        },
-        cellClass: 'funding-line-default',
-        onCellValueChanged: params => this.onFundingLineValueChanged(params),
-        cellClassRules: {
-          'row-span': params => {return this.rowSpanCount(params) > 1}
-        },
-        rowSpan: params => {return this.rowSpanCount(params)}
-      },
-      {
-        headerName: 'OpAgency',
-        field: 'fundingLine.opAgency',
-        hide: true,
-        cellClass: 'funding-line-default',
-        cellClassRules: {
-          'row-span': params => {return this.rowSpanCount(params) > 1}
-        },
-        rowSpan: params => {return this.rowSpanCount(params)}
-      },
-      {
-        headerName: 'Cycle',
-        field: 'phaseType',
-        maxWidth: 92,
-        suppressMenu: true,
-        suppressToolPanel: true,
-        cellClassRules: {
-          'font-weight-bold ag-medium-gray-cell': params => {
-            return this.colSpanCount(params) > 1
+        {
+          headerName: 'Appropriation',
+          field: 'fundingLine.appropriation',
+          suppressToolPanel: true,
+          editable: params => {
+            return this.isEditable(params)
           },
-          'delta-row': params => {
-            return params.data.phaseType === PhaseType.DELTA;
-          }},
-        valueGetter: params => {
-          switch(params.data.phaseType) {
-            case PhaseType.POM:
-              return params.data.phaseType + (this.pomFy - 2000);
-            case PhaseType.PB:
-              return params.data.phaseType + (this.pbFy - 2000);
-            case PhaseType.DELTA:
-              return params.data.phaseType;
+          onCellValueChanged: params => this.onFundingLineValueChanged(params),
+          cellClassRules: {
+            'font-weight-bold': params => {return this.colSpanCount(params) > 1},
+            'row-span': params => {return this.rowSpanCount(params) > 1}
+          },
+          cellClass: 'funding-line-default',
+          rowSpan: params => {return this.rowSpanCount(params)},
+          colSpan: params => {return this.colSpanCount(params)},
+          cellEditorSelector: params => {
+            return {
+              component: 'agSelectCellEditor',
+              params: {values: this.appropriations}
+            };
           }
-        }}];
+        },
+        {
+          headerName: 'BA/BLIN',
+          field: 'fundingLine.baOrBlin',
+          suppressToolPanel: true,
+          editable: params => {
+            return this.isEditable(params)
+          },
+          onCellValueChanged: params => this.onFundingLineValueChanged(params),
+          cellEditorSelector: params => {
+            if (params.data.fundingLine.appropriation) {
+              this.filterBlins(params.data.fundingLine.appropriation);
+            }
+            return {
+              component: 'agSelectCellEditor',
+              params: {values: this.filteredBlins}
+            };
+          },
+          cellClass: 'funding-line-default',
+          cellClassRules: {
+            'row-span': params => {return this.rowSpanCount(params) > 1}
+          },
+          rowSpan: params => {return this.rowSpanCount(params)}
+        },
+        {
+          headerName: 'Item',
+          field: 'fundingLine.item',
+          editable: params => {
+            return this.isEditable(params)
+          },
+          cellClass: 'funding-line-default',
+          onCellValueChanged: params => this.onFundingLineValueChanged(params),
+          cellClassRules: {
+            'row-span': params => {return this.rowSpanCount(params) > 1}
+          },
+          rowSpan: params => {return this.rowSpanCount(params)}
+        },
+        {
+          headerName: 'OpAgency',
+          field: 'fundingLine.opAgency',
+          hide: true,
+          cellClass: 'funding-line-default',
+          cellClassRules: {
+            'row-span': params => {return this.rowSpanCount(params) > 1}
+          },
+          rowSpan: params => {return this.rowSpanCount(params)}
+        },
+        {
+          headerName: 'Cycle',
+          field: 'phaseType',
+          maxWidth: 92,
+          suppressMenu: true,
+          suppressToolPanel: true,
+          cellClassRules: {
+            'font-weight-bold ag-medium-gray-cell': params => {
+              return this.colSpanCount(params) > 1
+            },
+            'delta-row': params => {
+              return params.data.phaseType === PhaseType.DELTA;
+            }},
+          valueGetter: params => {
+            switch(params.data.phaseType) {
+              case PhaseType.POM:
+                return params.data.phaseType + (this.pomFy - 2000);
+              case PhaseType.PB:
+                return params.data.phaseType + (this.pbFy - 2000);
+              case PhaseType.DELTA:
+                return params.data.phaseType;
+            }
+          }}]}
+      ];
 
     this.columnKeys.forEach(key => {
 
@@ -452,6 +470,7 @@ export class FundsTabComponent implements OnChanges {
     if(pomFundingLine){
       emptyFundingLine.appropriation = pomFundingLine.appropriation
       emptyFundingLine.item = pomFundingLine.item
+      emptyFundingLine.opAgency = pomFundingLine.opAgency
       emptyFundingLine.baOrBlin = pomFundingLine.baOrBlin
       emptyFundingLine.userCreated = pomFundingLine.userCreated;
     } else {
@@ -554,13 +573,20 @@ export class FundsTabComponent implements OnChanges {
   private async getPBData(): Promise<ProgrammaticRequest>{
     const user: User = await this.globalsService.user().toPromise();
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
+    let originalMrId;
+    if(this.pr.type === ProgramType.GENERIC){
+      const parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
+      originalMrId = parentPr.originalMrId;
+    } else {
+      originalMrId = this.pr.originalMrId;
+    }
     this.pbFy = pb.fy;
 
-    if(!this.pr.originalMrId) {
+    if(!originalMrId) {
       return;
     }
 
-    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, this.pr.originalMrId).toPromise()).result;
+    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, originalMrId).toPromise()).result;
 
     if(!pbPr){
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
@@ -586,7 +612,18 @@ export class FundsTabComponent implements OnChanges {
     this.isFundsTabValid[year] = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
   }
 
-  deleteFundingLine(index) {
+  onGridReady(params) {
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
+    window.addEventListener("resize", function() {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
+  }
+
+  delete(index) {
     this.pr.fundingLines.splice(this.pr.fundingLines.indexOf(this.data[index + 1].fundingLine), 1);
     this.data.splice(index, 3);
     this.agGrid.api.setRowData(this.data);

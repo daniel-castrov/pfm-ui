@@ -10,13 +10,13 @@
       <div class="row">
         <div class="col-12">
           <div class="h5 mb-2">
-            <ng-container *ngIf="editsOk && !pomIsCreated">
+            <ng-container *ngIf="!(pomIsCreated || pomIsOpen) ">
               <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy| FY}}</span>
             </ng-container>
-            <ng-container *ngIf="editsOk && pomIsCreated" >
+            <ng-container *ngIf="pomIsCreated" >
                 <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs for {{fy| FY}}</span>
             </ng-container>
-            <ng-container *ngIf="!editsOk">
+            <ng-container *ngIf="pomIsOpen">
               <span class="h5 mr-sm-2 mb-2">POM Session for {{fy| FY}}</span>
             </ng-container>
           </div>
@@ -52,15 +52,15 @@
 
       <div class="row">
         <div class="col-12">
-          <span class="font-weight-bold toa-table-title-2">Set Organization's sub-TOA ($K)</span>
-          <ng-container *ngIf="!pomIsCreated">
+          <span class="font-weight-bold toa-table-title-2">
+            <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
+          </span>
+          <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
             <span class="toa-epp-widget">
               <span>
                 <label>Use EPP Data:</label>
               </span>
-              <button type="button" class="btn btn-sm btn-toggle" (click)="useEppData()" data-toggle="button" aria-pressed="false" autocomplete="off">
-               <div class="handle"></div>
-             </button>
+              <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
             </span>
           </ng-container>
         </div>
@@ -89,6 +89,9 @@
           <ng-container *ngIf="pomIsCreated">
             <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Update TOAs</button>
           </ng-container>
+          <ng-container *ngIf="pomIsOpen">
+              <button class="btn btn-primary" (click)="updatePom()">Update Community TOA</button>
+          </ng-container>
         </div>
       </div>
 
@@ -96,10 +99,8 @@
         <div class="col-12">
           <div class="h6">Progress Report:</div>
           <fieldset class="mb-3">
-            <div *ngIf="editsOk">
               <span *ngIf="tooMuchToa" class="toa-alert" role="alert">Organizational TOA(s) exceeds Community TOA</span>
               <div *ngIf="submitted" class="loader"></div>
-            </div>
           </fieldset>
         </div>
       </div>

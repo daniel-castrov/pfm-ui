@@ -8,19 +8,21 @@ import { DualListComponent } from 'angular-dual-listbox';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
 import { FeedbackComponent } from '../../feedback/feedback.component';
+import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
 
 // Generated
-import { RestResult } from '../../../generated/model/restResult';
-import { Community } from '../../../generated/model/community';
-import { CommunityService } from '../../../generated/api/community.service';
-import { Role } from '../../../generated/model/role'
-import { RoleService } from '../../../generated/api/role.service';
-import { UserRoleResource } from '../../../generated/model/userRoleResource'
-import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
-import { User } from '../../../generated/model/user';
-import { UserService } from '../../../generated/api/user.service';
-import { Program } from '../../../generated/model/program';
-import { ProgramsService } from '../../../generated/api/programs.service';
+import { RestResult,
+  Community,
+  Role,
+  UserRoleResource,
+  User,
+  Organization,
+  CommunityService,
+  RoleService,
+  UserRoleResourceService,
+  UserService,
+  OrganizationService,
+} from '../../../generated';
 
 declare const $: any;
 declare const jQuery: any;
@@ -39,6 +41,7 @@ export class ManageRolesComponent {
   resultError: string[] = [];
 
   communities: Community[] = [];
+  organizations: Organization[] = [];
   roles: Role[] = [];
   users: User[] = [];
   
@@ -47,6 +50,8 @@ export class ManageRolesComponent {
   paramUserId: string="";
 
   selectedCommunity: Community;
+  selectedOrganization: Organization;
+  
   selectedRole: Role;
   selectedUser: User;
   selectedURR: UserRoleResource;
@@ -56,17 +61,18 @@ export class ManageRolesComponent {
   isNewUserRole: boolean;
   isURRVisible: boolean = false;
 
-  unmodifiableRoles = ["User_Approver", "POM_Manager"];
+  unmodifiableRoles = ["User_Approver", "POM_Manager", "Program_Manager"];
 
   selectedUserName: string;
   submittedMessage = "no message";
 
 
   // For the angular-dual-listbox
-  availablePrograms: Array<Program> = [];
+  availablePrograms: Array<ProgramWithFullName> = [];
+  filteredAvailablePrograms: Array<ProgramWithFullName> = [];
   assignedPrograms: Array<any> = [];
   key: string = "id";
-  display: string = "shortName";
+  display: string = "fullname";
   keepSorted = true;
   filter = false;
   format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
@@ -83,7 +89,8 @@ export class ManageRolesComponent {
     private roleService: RoleService,
     private userService: UserService,
     private userRoleResourceService: UserRoleResourceService,
-    private programsService: ProgramsService
+    private orgService: OrganizationService,
+    private withFullNameService: WithFullNameService,
   ) { 
 
     this.route.params.subscribe((params: Params) => {
@@ -171,23 +178,25 @@ export class ManageRolesComponent {
     
     Observable.forkJoin([
       my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(my.selectedUser.id, my.selectedCommunity.id, my.selectedRole.name),
-      my.programsService.getProgramsByCommunity(my.selectedCommunity.id)
+      my.orgService.getByCommunityId((my.selectedCommunity.id)),
+      my.withFullNameService.programsByCommunity(my.selectedCommunity.id),
     ]).subscribe(data => {
 
       my.resultError.push(data[0].error);
       let urr: UserRoleResource = data[0].result;
 
       my.resultError.push(data[1].error);
-      my.availablePrograms = data[1].result;
-      my.allcount=my.availablePrograms.length;
+      my.organizations = data[1].result;
+
+      my.availablePrograms = data[2];
 
       my.isURRVisible = true;
-      my.isURRModifyable = true;
+      my.isURRModifyable = false;
       my.isNewUserRole = true;
 
-      if (my.unmodifiableRoles.includes(my.selectedRole.name)) {
-        my.isURRModifyable = false;
-      }
+      if ( !my.unmodifiableRoles.includes(my.selectedRole.name) ) {
+        my.isURRModifyable = true;
+      } 
       if (urr) {
         my.isNewUserRole = false;
         my.selectedURR = urr;
@@ -199,7 +208,7 @@ export class ManageRolesComponent {
           my.assignedPrograms = [ ...my.availablePrograms ];
         } else {
           // some are granted
-          let newAvail:Program[]=[];
+          let newAvail:ProgramWithFullName[]=[];
           my.selectedURR.resourceIds.forEach(function ( progId ) {
             my.availablePrograms.forEach(function (prog) {
               if ( prog.id == progId ){
@@ -217,6 +226,10 @@ export class ManageRolesComponent {
         my.selectedURR.roleId = my.selectedRole.id;
         my.selectedURR.resourceIds = [];
       }
+
+      my.filteredAvailablePrograms = [];
+      my.filteredAvailablePrograms = JSON.parse(JSON.stringify(my.availablePrograms));
+
     });
   }
 
@@ -268,6 +281,21 @@ export class ManageRolesComponent {
     ];
     my.submitted = true;
     return  message[messageNumber];
+  }
+
+  filterByOrg(){
+
+    this.filteredAvailablePrograms = [];
+    if ( !this.selectedOrganization ){
+      this.filteredAvailablePrograms = JSON.parse(JSON.stringify(this.availablePrograms));
+    } else {
+      this.availablePrograms.forEach ( prog =>  {
+
+        if ( prog.organization == this.selectedOrganization.id ){
+          this.filteredAvailablePrograms.push(prog);
+        }
+      }); 
+    }
   }
 
 

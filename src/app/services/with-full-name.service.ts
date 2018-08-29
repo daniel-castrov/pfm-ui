@@ -23,6 +23,17 @@ export class WithFullNameService {
   async programs(): Promise<ProgramWithFullName[]> {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
+
+    const result: ProgramWithFullName[] = programs.map( (program: Program) =>
+      ({ ...program, fullname: this.programFullName(program, mapIdToProgram) })
+    );
+
+    return this.sort(result);
+  }
+
+  async programsByCommunity(communityId:string): Promise<ProgramWithFullName[]> {
+    const programs: Program[] = (await this.programsService.getProgramsByCommunity(communityId).toPromise()).result;
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
     
     const result: ProgramWithFullName[] = programs.map( (program: Program) => 
       ({ ...program, fullname: this.programFullName(program, mapIdToProgram) })
@@ -33,15 +44,15 @@ export class WithFullNameService {
 
 /**
  * The PRs can form a hierarchy in two different ways:
- * 
+ *
  *  - using the creation time data (creationTimeReferenceId) where a PR w/o a program can have a parent be another PR and so on until a PR
  * in the chain has a parent in the MRDB Programs collection via its parentMrId field. From there on parenting is established via the Programs collection.
  * This is applicable to the POM PRs while they are being modified/worked on.
  * Example full name resulting from such a hierarchy: /ROOT_PROGRAM/SUBPROGRAM_1/pr_1/pr_2,  where upper case is a Program name and lower case is a PR name.
- * 
+ *
  *  - using the archival data (parentMrId). In this case the PR does have a Program in MRDB. Example: /ROOT_PROGRAM/SUBPROGRAM_1, i.e. the Program of the PR.
  * This is applicable to PB PRs while the POM PRs are being worked on.
- * 
+ *
  * NB: Capitatalization illustrates how the full name is constructed and not how it is represented to the user in the UI.
  */
 
@@ -51,8 +62,8 @@ export class WithFullNameService {
 
     const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
     const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
-    
-    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
+
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
       ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
     );
 
@@ -65,7 +76,7 @@ export class WithFullNameService {
 
     const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
 
-    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) => 
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
       ({ ...pr, fullname: this.prFullNameDerivedFromArchivalData(pr, mapIdToProgram) })
     );
 
@@ -87,7 +98,7 @@ export class WithFullNameService {
     const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) => pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB);
 
     const programs: ProgramWithFullName[] = (await this.programs());
-    return (<WithFullName[]>programs).concat(prsWithoutPrograms);
+    return this.sort((<WithFullName[]>programs).concat(prsWithoutPrograms));
   }
 
   private sort(withFullName: WithFullName[]): WithFullName[] {
