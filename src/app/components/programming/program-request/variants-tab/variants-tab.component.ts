@@ -447,6 +447,7 @@ export class VariantsTabComponent {
 
   isServiceLineValid(year): boolean{
     let newAmount = 0;
+    let flAmount = isNaN(this.fund.funds[year])? 0 : this.fund.funds[year];
     this.fund.variants.forEach(variant => {
       variant.serviceLines.forEach(serviceLine => {
         if (serviceLine.quantity && serviceLine.quantity[year] !== undefined && !isNaN(serviceLine.quantity[year])){
@@ -454,7 +455,7 @@ export class VariantsTabComponent {
         }
       })
     });
-    return newAmount <= (this.fund.funds[year] * 1000);
+    return newAmount <= (flAmount * 1000);
   }
 
   generateEmptyQuantities(): IntMap {
