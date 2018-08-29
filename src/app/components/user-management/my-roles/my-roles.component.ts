@@ -169,7 +169,6 @@ export class MyRolesComponent implements OnInit {
       my.currentUser=u.result;
 
       Observable.forkJoin([
-        //my.programsService.getProgramsByCommunity(my.currentUser.currentCommunityId),
         my.roleService.getByUserIdAndCommunityId(my.currentUser.id, my.currentUser.currentCommunityId),
         my.roleService.getByCommunityId(my.currentUser.currentCommunityId),
         my.assignRoleRequestService.getByUser(my.currentUser.id),
