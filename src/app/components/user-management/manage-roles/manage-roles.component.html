@@ -100,8 +100,20 @@
               <span *ngIf="isNewUserRole===true">Assign</span>
               <span *ngIf="isNewUserRole===false">Modify</span>
               access to one or more Programs for this User/Role</legend>
+
+            <div style="width:800px;text-align: right; margin-bottom: 10px;">
+              Filter Available Programs
+              <select name="orgSelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
+                <option value=""></option>
+                <option *ngFor="let org of organizations" [ngValue]="org">
+                    {{ org.abbreviation }}
+                </option>
+              </select>
+            </div>  
+
             <div style="max-width:800px;">
-              <dual-list [source]="availablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
+              <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
               </dual-list>
             </div>
