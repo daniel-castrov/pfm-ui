@@ -1,5 +1,5 @@
 <fieldset class="custom-pr">
-  <legend>Create New UFR:</legend>
+  <legend>Create New UFR For:</legend>
   <div class="row">
     <div class="col-6">
       <div class="dropdown">
@@ -7,11 +7,11 @@
             {{createNewUfrMode ? createNewUfrMode : 'Select an option'}}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a Program of Record')">For a Program of Record</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a Programmatic Request')">For a new Programmatic Request</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a new Increment')">For a new Increment</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a new FoS')">For a new FoS</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a new Program')">For a new Program</a>
+            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a Program of Record')">An MRDB Program</a>
+            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a Programmatic Request')">A Programmatic Request</a>
+            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a new Increment')">A New Increment</a>
+            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a new FoS')">A New FoS</a>
+            <a class="dropdown-item" (click)="setCreateNewUfrMode('For a new Program')">A New Program</a>
         </div>
       </div>
     </div>

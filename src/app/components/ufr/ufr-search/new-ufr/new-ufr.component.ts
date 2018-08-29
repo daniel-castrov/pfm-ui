@@ -10,11 +10,11 @@ import { UFRsService, POMService, ProgramsService, Program, UFR, Pom, User } fro
 import { ProgramTreeUtils } from '../../../../utils/program-tree-utils'
 
 enum CreateNewUfrMode {
-  FOR_A_PROGRAM_OF_RECORD        = 'For a Program of Record',
-  FOR_A_NEW_PROGRAMMATIC_REQUEST = 'For a Programmatic Request',
-  FOR_A_NEW_INCREMENT            = 'For a new Increment',
-  FOR_A_NEW_FOS                  = 'For a new FoS',
-  FOR_A_NEW_PROGRAM              = 'For a new Program'
+  AN_MRDB_PROGRAM        = 'An MRDB Program',
+  A_PROGRAMMATIC_REQUEST = 'A Programmatic Request',
+  A_NEW_INCREMENT        = 'A New Increment',
+  A_NEW_FOS              = 'A New FoS',
+  A_NEW_PROGRAM          = 'A New Program'
 }
 
 @Component({
@@ -44,16 +44,16 @@ export class NewUfrComponent implements OnInit {
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {
     this.createNewUfrMode = createNewUfrMode;
     switch(this.createNewUfrMode) { 
-      case 'For a Program of Record':
+      case 'An MRDB Program':
         this.selectableProgramsOrPrs = await this.programsMunisPrs();
         this.initialSelectOption = 'Program';
         break;
-      case 'For a Programmatic Request': // was subprogram
+      case 'A Programmatic Request': // was subprogram
         this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
         this.initialSelectOption = 'Program Request';
         break;
-      case 'For a new FoS':
-      case 'For a new Increment':
+      case 'A New FoS':
+      case 'A New Increment':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrs(this.pomId);
         this.initialSelectOption = 'Program';
         break;
@@ -63,20 +63,20 @@ export class NewUfrComponent implements OnInit {
   async next() {
     let ufr: UFR = {phaseId: this.pomId};
     switch(this.createNewUfrMode) {
-      case 'For a Program of Record':
+      case 'An MRDB Program':
         ufr.originalMrId = this.selectedProgramOrPr.id;
         ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
         ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
         ufr.type = ProgramType.PROGRAM;
         ufr.longName = this.selectedProgramOrPr.longName;
         break;
-      case 'For a Programmatic Request': // was subprogram
+      case 'A Programmatic Request': // was subprogram
         ufr.creationTimeType = CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR;
         ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
         ufr.type = ProgramType.GENERIC; // is this right? I guess GENERIC for a UFR means 'For a PR'. Reusing the value with PRs for a completely different purpose
         ufr.longName = this.selectedProgramOrPr.longName;
         break;
-      case 'For a new FoS':
+      case 'A New FoS':
         this.programRequestPageMode.programType = ProgramType.FOS;
         if(this.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
@@ -90,7 +90,7 @@ export class NewUfrComponent implements OnInit {
             ProgramType.FOS);
         }
         break;
-      case 'For a new Increment':
+      case 'A New Increment':
         if(this.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
@@ -103,7 +103,7 @@ export class NewUfrComponent implements OnInit {
             ProgramType.INCREMENT);
         }
         break;
-      case 'For a new Program':
+      case 'A New Program':
         ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
         ufr.type = ProgramType.PROGRAM;
       break;
