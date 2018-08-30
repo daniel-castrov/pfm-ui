@@ -1,5 +1,5 @@
 import { TagsService } from '../../../../services/tags.service';
-import { UserUtils } from '../../../../services/user.utils.service';
+import { UserUtils } from '../../../../services/user.utils';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 
@@ -11,7 +11,7 @@ export class AutoValuesService {
                 private tagsService: TagsService) {}
 
     async programElement(ba: string, item: string): Promise<string> {
-        const currentCommunity = await this.globalsService.currentCommunity();
+        const currentCommunity = await this.globalsService.currentCommunity().toPromise();
         if(currentCommunity.abbreviation === 'CBDP') {
             if(ba === 'BA1') return '0601384BP';
             if(ba === 'BA2') return '0602384BP';

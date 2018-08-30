@@ -46,7 +46,6 @@ export class MyRolesComponent implements OnInit {
   currentRolesWithResources:RoleNameWithResources[] = [];
   allcount=0;
   unmodifiableRoles = ["User_Approver", "POM_Manager", "Program_Manager"];
-  pogramsMap:any[]=[];
   
   selectedAddRole:Role;
   selectedDropRole:Role;
@@ -172,12 +171,19 @@ export class MyRolesComponent implements OnInit {
         my.roleService.getByUserIdAndCommunityId(my.currentUser.id, my.currentUser.currentCommunityId),
         my.roleService.getByCommunityId(my.currentUser.currentCommunityId),
         my.assignRoleRequestService.getByUser(my.currentUser.id),
-        my.dropRoleRequestService.getByUser(my.currentUser.id)
-      ]).subscribe(r => {
+        my.dropRoleRequestService.getByUser(my.currentUser.id),
+        my.withFullNameService.programsByCommunity(my.currentUser.currentCommunityId),
+      ]).subscribe(data => {
 
+        let pogramsMap:any[]=[];
         // Get the current user's roles and match them with the program names
-        my.resultError.push(r[0].error);
-        my.currentRoles =r[0].result;
+        let programs:ProgramWithFullName[] = data[4];
+        programs.forEach( prog => {
+          pogramsMap[prog.id] = prog.fullname;
+        });
+
+        my.resultError.push(data[0].error);
+        my.currentRoles =data[0].result;
         my.currentRoles.forEach( role => {
           my.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
             my.currentUser.id, my.currentUser.currentCommunityId,role.name
@@ -187,7 +193,7 @@ export class MyRolesComponent implements OnInit {
             let progNames:string[]=[];
             urr.resourceIds.forEach( r => {
               try {
-                progNames.push(my.pogramsMap[r].shortName );
+                progNames.push(pogramsMap[r]);
               } catch (any){
                 if ( r==="x" ) r="none";
                 progNames.push(r);
@@ -198,16 +204,16 @@ export class MyRolesComponent implements OnInit {
         });
 
         // Get all the roles
-        my.resultError.push(r[1].error);
-        my.allRoles=r[1].result;
+        my.resultError.push(data[1].error);
+        my.allRoles=data[1].result;
 
         // get any existing add requests
-        my.resultError.push(r[2].error);
-        my.assignRequests=r[2].result;
+        my.resultError.push(data[2].error);
+        my.assignRequests=data[2].result;
 
         // get any existing drop requests
-        my.resultError.push(r[3].error);
-        my.dropRequests=r[3].result;
+        my.resultError.push(data[3].error);
+        my.dropRequests=data[3].result;
 
         my.buildSelectables();
 
@@ -234,7 +240,6 @@ export class MyRolesComponent implements OnInit {
       my.availablePrograms = data[2];
 
       my.allcount=my.availablePrograms.length;
-      my.availablePrograms.forEach ( p => my.pogramsMap[p.id] = p );
 
       my.isURRModifyable = true;
       my.isNewUserRole = true;

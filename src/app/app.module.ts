@@ -1,5 +1,8 @@
+import { CycleUtils } from './services/cycle.utils';
+import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
+import { FilterUfrsComponent } from './components/ufr/ufr-search/filter-ufrs/filter-ufrs.component';
 import { TagsService } from './services/tags.service';
-import { UserUtils } from './services/user.utils.service';
+import { UserUtils } from './services/user.utils';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
@@ -120,7 +123,7 @@ import { UfrTabComponent } from './components/ufr/ufr-tab/ufr-tab.component';
 import { UfrJustificationComponent } from './components/ufr/ufr-justification/ufr-justification.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
-import { NewUfrComponent } from './components/ufr/new-ufr/new-ufr.component';
+import { NewUfrComponent } from './components/ufr/ufr-search/new-ufr/new-ufr.component';
 import { OnlyDigitsDirective } from './directives/only-digits.directive';
 import { RbacRoleDirective } from './directives/rbac.role.directive';
 import { RbacPermissionDirective } from './directives/rbac.permission.directive';
@@ -204,6 +207,7 @@ const appRoutes: Routes = [
     AccessChangeApprovalComponent,
     ActualsTabComponent,
     AddSpendPlanComponent,
+    AllUfrsComponent,
     AppComponent,
     ApplyComponent,
     AppropriationReleaseComponent,
@@ -223,6 +227,7 @@ const appRoutes: Routes = [
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
+    FilterUfrsComponent,
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
@@ -350,6 +355,7 @@ const appRoutes: Routes = [
     UserRoleResourceService,
     ProgramsService,
     UserUtils,
+    CycleUtils,
     RequestsService,
     POMService,
     PomWorksheetService,

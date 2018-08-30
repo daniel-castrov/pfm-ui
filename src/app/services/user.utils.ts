@@ -25,10 +25,10 @@ export class UserUtils {
     return this.myDetailsService.getCurrentUser().map( (response: RestResult) => response.result );
   }
 
-  async currentCommunity(): Promise<Community> {
-    const user: User = await this.user().toPromise();
-    const community: Community = (await this.communityService.getById(user.currentCommunityId).toPromise()).result;
-    return community;
+  currentCommunity(): Observable<Community> {
+    return this.user()
+      .switchMap( (user: User) => this.communityService.getById(user.currentCommunityId) )
+      .map( (response: RestResult) => response.result );
   }
 
 }

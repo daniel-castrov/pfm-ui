@@ -1,6 +1,6 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
-import { UserUtils } from '../../../../services/user.utils.service';
+import { UserUtils } from '../../../../services/user.utils';
 
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 import {DataRow} from "./DataRow";

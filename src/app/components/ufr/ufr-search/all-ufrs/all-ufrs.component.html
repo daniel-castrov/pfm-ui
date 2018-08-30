@@ -1,0 +1,37 @@
+<mat-table [dataSource]="matTableDataSource" matSort matSortActive="number" matSortDirection="asc">
+  <ng-container matColumnDef="number">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>UFR#</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{ufrNumber(p)}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>UFR Name</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.name}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="progid">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Prog ID</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{getFullProgramName( p )}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+      <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.status}} </mat-cell>
+    </ng-container>
+  <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Priority</mat-header-cell>
+      <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
+    </ng-container>
+  <ng-container matColumnDef="disposition">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Disposition</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p"> {{p.disposition}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="lastUpdated">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Updated</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p">{{p.lastMod | date : format}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="funding">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Funding Request</mat-header-cell>
+    <mat-cell class="ufr-view-link" *matCellDef="let p"></mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="['number', 'name', 'progid', 'status', 'priority', 'disposition', 'lastUpdated', 'funding']"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: ['number', 'name', 'progid', 'status', 'priority', 'disposition', 'lastUpdated','funding']" (click)="navigate( row )"></mat-row>
+</mat-table>
+<mat-paginator [pageSize]="10"></mat-paginator>

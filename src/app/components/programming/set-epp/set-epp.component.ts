@@ -6,7 +6,7 @@ import {AgGridNg2} from 'ag-grid-angular';
 import { HeaderComponent } from '../../header/header.component';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EppService } from '../../../generated/api/epp.service';
-import { UserUtils } from '../../../services/user.utils.service';
+import { UserUtils } from '../../../services/user.utils';
 
 declare const $: any;
 
