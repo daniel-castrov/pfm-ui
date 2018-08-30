@@ -5,21 +5,19 @@ import { GridOptions }  from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
 import { NumericCellEditor } from './numeric-celleditior.component';
-import { ProgramRequestWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
-
-
-import { Community, 
+import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
+import { 
+  Community, 
   Organization, 
   TOA, 
   Pom, 
   PB, 
-  Program, 
   CommunityService, 
   OrganizationService, 
   PBService, 
   POMService, 
-  EppService, 
-  ProgramsService} from '../../../generated';
+  EppService
+} from '../../../generated';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -57,7 +55,8 @@ export class CreatePomSessionComponent implements OnInit {
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    private programsvc: ProgramsService, private router: Router, private globalsvc: UserUtils,
+    //private programsvc: ProgramsService, 
+    private router: Router, private globalsvc: UserUtils,
     private withFullNameService: WithFullNameService ) {
   }
 
@@ -365,27 +364,26 @@ export class CreatePomSessionComponent implements OnInit {
 
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
-      this.programsvc.getProgramsByCommunity(this.community.id),
+      this.withFullNameService.programsByCommunity(this.community.id),
       this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id),
     ]).subscribe(data => {
 
       let alleppData:any[] = data[0].result;
-      let programs: Program[] = data[1].result;
-
-      let eppData:any[] = []
-
+      let programs: ProgramWithFullName[] = data[1];
       let prs:ProgramRequestWithFullName[] = data[2];
       
       let fls:string[] = [];
       prs.forEach( pr => {
         pr.fundingLines.forEach( fl => {
-          fls.push( pr.fullname + ":" + fl.appropriation + ":" + fl.baOrBlin + ":" + fl.item + ":" + fl.opAgency );
+          let flId:string = pr.fullname + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
+          fls.push( flId );
         });
       });
       
+      let eppData:any[] = []
       alleppData.forEach( epp => {
-        let s:string = epp.shortName + ":" + epp.appropriation + ":" + epp.blin + ":" + epp.item + ":" + epp.opAgency
-        if ( fls.includes(s) ){
+        let eppId:string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
+        if ( epp.fySums[eppYear] > 0 && fls.includes(eppId) ){
           eppData.push(epp);
         }
       });
@@ -395,14 +393,14 @@ export class CreatePomSessionComponent implements OnInit {
         eppOrgToa[org.id] = 0;
       });
 
-      eppData.forEach( eppDataRow => {
+      eppData.forEach( epp => {
         let amount = 0;
-        if (eppDataRow.fySums[eppYear]) {
-          amount = eppDataRow.fySums[eppYear];
+        if (epp.fySums[eppYear]) {
+          amount = epp.fySums[eppYear];
         }
-        let index = programs.findIndex(program => program.shortName === eppDataRow.shortName);
+        let index = programs.findIndex(program => program.fullname === epp.shortName);
         if (index > 0) {
-          eppOrgToa[programs[index].organization] += amount;
+          eppOrgToa[ programs[index].organization ] += amount;
         }
       });
 
