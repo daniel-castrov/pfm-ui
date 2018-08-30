@@ -213,11 +213,6 @@ paths:
         description: "the PB to use as a model"
         required: false
         type: "string"
-      - in: "query"
-        name: "useepp"
-        description: "set to 'true' to use epp data for 5th year"
-        required: false
-        type: "boolean"
       - in: "body"
         name: "body"
         description: "a POM object"
@@ -278,11 +273,6 @@ paths:
         description: "The community id"
         required: true
         type: "string"
-      - in: "query"
-        name: "useepp"
-        description: "set to 'true' to use epp data for 5th year"
-        required: false
-        type: "boolean"
       - in: "body"
         name: "body"
         description: "a POM object"
