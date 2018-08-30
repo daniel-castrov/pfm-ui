@@ -2184,6 +2184,20 @@ paths:
       description: "Returns an execution"
       produces:
       - "application/json"
+  /execution/{id}/hasAppropriation:
+    get:
+      operationId: "hasAppropriation"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Does this Execution have an appropriation?"
+      description: "Returns a boolean"
+      produces:
+      - "application/json"
   /execution/community/{communityId}/year/{year}:
     post:
       tags:

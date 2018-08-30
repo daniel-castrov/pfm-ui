@@ -132,10 +132,9 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   setline(updateidx: number, lineidx: number) {
-    var my: ExecutionLineTableComponent = this;
-    var toupdate: ExecutionLineWrapper = my.updatelines[updateidx];
-
-    var l: ExecutionLine = my.getLineChoices(toupdate.line.mrId)[lineidx - 1];
+    var toupdate: ExecutionLineWrapper = this.updatelines[updateidx];
+    var l: ExecutionLine = this.getLineChoices(toupdate.line.mrId)[lineidx - 1];
+    
     toupdate.line.appropriation = l.appropriation;
     toupdate.line.blin = l.blin;
     toupdate.line.item = l.item;
@@ -143,12 +142,20 @@ export class ExecutionLineTableComponent implements OnInit {
     toupdate.line.toa = l.toa;
     toupdate.line.released = l.released;
     toupdate.line.id = l.id;
+    toupdate.line.withheld = l.withheld;
   }
 
   getLineChoices(mrid): ExecutionLine[] {
+    var existingeEls: Set<string> = new Set<string>();
+    this.updatelines.forEach(x => { 
+      existingeEls.add(x.line.id);
+    });
+
     return this.allexelines
       .filter(x => x.mrId === mrid)
-      .filter(y => (this.exelinefilter ? this.exelinefilter(y) : true));
+      .filter(y => (this.exelinefilter ? this.exelinefilter(y) : true))
+      .filter(z => !existingeEls.has(z.id) // we can't add the same EL twice
+      );
   }
 
   onedit(amtstr, updateidx) {

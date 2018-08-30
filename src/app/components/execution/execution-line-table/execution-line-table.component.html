@@ -2,15 +2,17 @@
   {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
 
-<div class="table-editable">
+<ng-template #notable>
   <div class="execution-table table-striped" *ngIf="sortedProgramFullnames().length===0">
     There are no programs available to select
   </div>
+</ng-template>
 
-  <table class="execution-table table-striped" *ngIf="sortedProgramFullnames().length>0">
+<div class="table-editable">
+  <table class="execution-table table-striped" *ngIf="sortedProgramFullnames().length>0 || updatelines.length>0; else notable">
     <tr class="execution-title font-weight-bold text-center">
       <th class="large-column text-left">
-        <span>
+        <span *ngIf="sortedProgramFullnames().length>0; else notable">
           <button class="btn btn-light" (click)="addrow()">
             <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
             {{sourceOrTarget}}
