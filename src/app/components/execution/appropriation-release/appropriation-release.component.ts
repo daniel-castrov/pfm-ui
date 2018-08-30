@@ -50,7 +50,7 @@ export class AppropriationReleaseComponent implements OnInit {
         this.phase = d2[0].result;
         this.subtypes = d2[1].result
           .filter(x => 'EXE_RELEASE' === x.type)
-          .filter(x => ( d2[2] ? 'RELEASE_CRA' !== x.subtype : true ) );
+          .filter(x => ( d2[2].result ? 'RELEASE_CRA' !== x.subtype : true ) );
         this.etype = this.subtypes[0];
       });
     });
