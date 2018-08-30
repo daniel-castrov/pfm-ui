@@ -1,10 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-
 import { forkJoin } from "rxjs/observable/forkJoin";
-
-import { UFR, POMService, Pom, MyDetailsService, CommunityService, ProgramsService, Tag } from '../../../generated';
-import { Status } from '../status.enum';
-import { Disposition } from '../disposition.enum';
+import { UFR, POMService, Pom, MyDetailsService, CommunityService, ProgramsService, Tag } from '../../../../generated';
+import { Status } from '../../status.enum';
+import { Disposition } from '../../disposition.enum';
 
 @Component({
   selector: 'ufr-tab',

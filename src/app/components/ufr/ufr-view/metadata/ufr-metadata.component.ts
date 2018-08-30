@@ -1,8 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Program, ProgramsService, Tag } from '../../../generated';
+import { ProgramsService, Tag, UFR} from '../../../../generated';
 import { forkJoin } from "rxjs/observable/forkJoin";
-
-import { UFR } from '../../../generated/model/uFR'
 
 @Component({
   selector: 'ufr-metadata',

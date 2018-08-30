@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ProgramsService, Program, ProgramFilter, UFR, UFRsService, POMService, MyDetailsService, Pom } from '../../../generated';
 import { ViewEncapsulation } from '@angular/core';
-import * as $ from 'jquery';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';

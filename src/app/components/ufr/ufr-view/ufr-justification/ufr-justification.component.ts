@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UFR } from '../../../generated';
+import { UFR } from '../../../../generated';
 
 @Component({
   selector: 'ufr-justification',
