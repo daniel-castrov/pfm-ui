@@ -142,27 +142,13 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line',
           valueFormatter: params => (params.data.line.appropriation
             ? params.data.line.appropriation + '/' + params.data.line.blin + '/' + params.data.line.item + '/' + params.data.line.opAgency
-            : 'Select a Program first'),
-          cellEditorParams: params => { 
-            console.log(params);
-            console.log(my.getLineChoices(params.data.line.mrId));
-            return {
-              values: my.getLineChoices(params.data.line.mrId),
-              formatValue: el => {
-                console.log(el);
-                return (el.appropriation
-                  ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
-                  : '');
-              }
-            };
-          },
-          //cellEditorParams: params => ({
-          //  values: my.getLineChoices(params.data.line.mrId),
-          //  formatValue: el => (el.appropriation
-          //    ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
-          //    : '')
-          //} ),
-//          valueSetter: elSetter,
+            : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
+          cellEditorParams: params => ({
+            values: my.getLineChoices(params.data.line.mrId),
+            formatValue: el => (el.appropriation
+              ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
+              : '')
+          } ),
           cellEditor: 'agRichSelectCellEditor',
           cellClass: ['ag-cell-light-grey']
         },
@@ -331,6 +317,10 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   getLineChoices(mrid): ExecutionLine[] {
+    console.log(this.agGrid.rowData);
+
+
+    // FIXME: have to look through ag-grid to figure this out
     var existingeEls: Set<string> = new Set<string>();
     this._updatelines.forEach(x => { 
       existingeEls.add(x.line.id);
