@@ -5,9 +5,9 @@ import { Status } from '../../status.enum';
 import { Disposition } from '../../disposition.enum';
 
 @Component({
-  selector: 'ufr-tab',
-  templateUrl: './ufr-tab.component.html',
-  styleUrls: ['./ufr-tab.component.scss']
+  selector: 'ufr-ufr-tab',
+  templateUrl: './ufr-ufr-tab.component.html',
+  styleUrls: ['./ufr-ufr-tab.component.scss']
 })
 export class UfrTabComponent implements OnInit {
   @Input() current: UFR;

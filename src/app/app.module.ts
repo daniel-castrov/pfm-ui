@@ -1,3 +1,4 @@
+import { UfrTabComponent } from './components/ufr/ufr-view/ufr-ufr-tab/ufr-ufr-tab.component';
 import { CycleUtils } from './services/cycle.utils';
 import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
 import { FilterUfrsComponent } from './components/ufr/ufr-search/filter-ufrs/filter-ufrs.component';
@@ -117,10 +118,9 @@ import { ProgrammaticRequestsComponent } from './components/programming/select-p
 import { TransferTabComponent } from './components/programming/update-pom-session/transfer-tab/transfer-tab.component';
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
 import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
-import { UfrMetadataComponent } from './components/ufr/ufr-view/metadata/ufr-metadata.component';
-import { UfrFundsComponent } from './components/ufr/ufr-view/ufr-funds/ufr-funds.component';
-import { UfrTabComponent } from './components/ufr/ufr-view/ufr-tab/ufr-tab.component';
-import { UfrJustificationComponent } from './components/ufr/ufr-view/ufr-justification/ufr-justification.component';
+import { UfrMetadataComponent } from './components/ufr/ufr-view/ufr-program-tab/ufr-program-tab.component';
+import { UfrFundsComponent } from './components/ufr/ufr-view/ufr-funds-tab/ufr-funds-tab.component';
+import { UfrJustificationComponent } from './components/ufr/ufr-view/ufr-justification-tab/ufr-justification-tab.component';
 import { ValuesPipe } from './pipes/values/values.pipe';
 import { DashForZeroPipe } from './pipes/dash-for-zero.pipe';
 import { NewUfrComponent } from './components/ufr/ufr-search/new-ufr/new-ufr.component';

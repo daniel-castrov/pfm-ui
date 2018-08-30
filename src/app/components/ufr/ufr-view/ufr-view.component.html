@@ -34,19 +34,19 @@
       <div class="col-12">
         <tabset class="ufr-tab-style" role="tablist">
           <tab heading="UFR" id="tab1">
-            <ufr-tab [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-tab>
+            <ufr-ufr-tab [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-ufr-tab>
           </tab>
           <tab heading="Program" id="tab2">
-            <ufr-metadata [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-metadata>
+            <ufr-program-tab [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-program-tab>
           </tab>
           <tab heading="Funds" id="tab3">
-            <ufr-funds [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-funds>
+            <ufr-funds-tab [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-funds-tab>
           </tab>
           <tab heading="Variants" id="tab4">
              <variants-tab [(current)]="current" [editable]="canedit" role="tabpanel"></variants-tab>
           </tab>
           <tab heading="Justification" id="tab5">
-            <ufr-justification [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-justification>
+            <ufr-justification-tab [(current)]="current" [editable]="canedit" role="tabpanel"></ufr-justification-tab>
           </tab>
         </tabset>
       </div>

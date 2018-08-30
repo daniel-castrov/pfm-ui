@@ -3,9 +3,9 @@ import { Component, OnInit, Input } from '@angular/core'
 import {FundingLine, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest} from '../../../../generated'
 
 @Component({
-  selector: 'ufr-funds',
-  templateUrl: './ufr-funds.component.html',
-  styleUrls: ['./ufr-funds.component.scss']
+  selector: 'ufr-funds-tab',
+  templateUrl: './ufr-funds-tab.component.html',
+  styleUrls: ['./ufr-funds-tab.component.scss']
 })
 export class UfrFundsComponent implements OnInit {
   @Input() current: UFR;

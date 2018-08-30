@@ -3,9 +3,9 @@ import { ProgramsService, Tag, UFR} from '../../../../generated';
 import { forkJoin } from "rxjs/observable/forkJoin";
 
 @Component({
-  selector: 'ufr-metadata',
-  templateUrl: './ufr-metadata.component.html',
-  styleUrls: ['./ufr-metadata.component.scss']
+  selector: 'ufr-program-tab',
+  templateUrl: './ufr-program-tab.component.html',
+  styleUrls: ['./ufr-program-tab.component.scss']
 })
 export class UfrMetadataComponent implements OnInit {
   @Input() current: UFR;
