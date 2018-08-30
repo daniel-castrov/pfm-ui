@@ -9,6 +9,11 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
 import { ExecutionLineFilter } from '../model/execution-line-filter'
+import { GridOptions } from 'ag-grid';
+import { AgGridNg2 } from 'ag-grid-angular';
+import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.component";
 
 declare const $: any;
 declare const jQuery: any;
@@ -20,16 +25,187 @@ declare const jQuery: any;
 })
 export class ExecutionLineTableComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() private phase: Execution;
   @Input() private sourceOrTarget: string = 'to select target programs';
-  @Input() private updatelines: ExecutionLineWrapper[] = [];
   @Input() private exelinefilter: ExecutionLineFilter;
   @Input() private exeprogramfilter: ExecutionLineFilter;
+  private _updatelines: ExecutionLineWrapper[] = [];
   private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
+  private agOptions: GridOptions;
+
+  @Input() set updatelines(newdata: ExecutionLineWrapper[] ) {
+    this._updatelines = newdata;
+    if (this.agOptions && this.agOptions.api) {
+      this.agOptions.api.refreshCells();
+    }
+  }
+
+  get updatelines() {
+    return this._updatelines;
+  }
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService, private router: Router) { }
+    private progsvc: ProgramsService, private router: Router) { 
+    
+    var agcomps: any = {
+      programCellRendererComponent: ProgramCellRendererComponent,
+      eventDetailsCellRendererComponent: EventDetailsCellRendererComponent,
+      deleter: DeleteRenderer
+    };
+    
+    var my: ExecutionLineTableComponent = this;
+    var namesorter = function (mrId1, mrId2) {
+      var name1 = my.programIdNameLkp.get(mrId1);
+      var name2 = my.programIdNameLkp.get(mrId2);
+      if (name1 === name2) {
+        return 0;
+      }
+
+      return (name1 < name2 ? -1 : 1);
+    }
+
+    var programSetter = function (params): boolean {
+      var mrid: string = params.newValue.key;
+      var elChoices = my.getLineChoices(mrid);
+      if (1 == elChoices.length ) {
+        params.data.line = elChoices[0];
+        params.data.amt = 0;
+      }
+      else {
+        params.data.line = { mrId: mrid };
+        params.data.amt = 0;
+      }
+
+      return true;
+    }
+
+    var elSetter = function (params): boolean {
+      console.log('setting the EL!');
+      console.log(params);
+      
+      //toupdate.line.appropriation = l.appropriation;
+      //toupdate.line.blin = l.blin;
+      //toupdate.line.item = l.item;
+      //toupdate.line.opAgency = l.opAgency;
+      //toupdate.line.toa = l.toa;
+      //toupdate.line.released = l.released;
+      //toupdate.line.id = l.id;
+      //toupdate.line.withheld = l.withheld;
+      //this.agOptions.api.setRowData(this._updatelines);
+
+      return true;
+    }
+    var my: ExecutionLineTableComponent = this;
+
+    this.agOptions = <GridOptions>{
+      enableSorting: true,
+      enableFilter: true,
+      gridAutoHeight: true,
+      pagination: true,
+      paginationPageSize: 30,
+      suppressPaginationPanel: true,
+      frameworkComponents: agcomps,
+      context: {
+        programlkp: my.programIdNameLkp,
+        enabled: false,
+        parentComponent: this
+      },
+      columnDefs: [
+        {
+          headerName: "Program",
+          filter: 'agTextColumnFilter',
+          editable: true,
+          comparator: namesorter,
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          valueFormatter: params => ( my.programIdNameLkp.has( params.data.line.mrId ) 
+            ? my.programIdNameLkp.get(params.data.line.mrId)
+            : 'Please choose a Program'),
+          field: 'line.mrId',
+          cellEditorParams: function(){
+            var progs:{}[] = my.programList();
+            console.log(progs);
+            return {
+              values: progs,
+              formatValue: params => (null == params ? 'Please choose a Program' : params.value)
+            };
+          },
+          valueSetter: programSetter,
+          cellEditor: 'agRichSelectCellEditor'
+        },
+        {
+          headerName: 'Execution Line',
+          filter: 'agTextColumnFilter',
+          editable: true,
+          onCellValueChanged: elSetter,
+          field: 'line',
+          valueFormatter: params => (params.data.line.appropriation
+            ? params.data.line.appropriation + '/' + params.data.line.blin + '/' + params.data.line.item + '/' + params.data.line.opAgency
+            : 'Select a Program first'),
+          cellEditorParams: params => { 
+            console.log(params);
+            console.log(my.getLineChoices(params.data.line.mrId));
+            return {
+              values: my.getLineChoices(params.data.line.mrId),
+              formatValue: el => {
+                console.log(el);
+                return (el.appropriation
+                  ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
+                  : '');
+              }
+            };
+          },
+          //cellEditorParams: params => ({
+          //  values: my.getLineChoices(params.data.line.mrId),
+          //  formatValue: el => (el.appropriation
+          //    ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
+          //    : '')
+          //} ),
+//          valueSetter: elSetter,
+          cellEditor: 'agRichSelectCellEditor',
+          cellClass: ['ag-cell-light-grey']
+        },
+        {
+          headerName: 'TOA',
+          filter: 'agNumberColumnFilter',
+          field: 'line.toa',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
+        },
+        {
+          headerName: 'Released',
+          filter: 'agNumberColumnFilter',
+          field: 'line.released',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
+        },
+        {
+          headerName: 'Withheld',
+          filter: 'agNumberColumnFilter',
+          field: 'line.withheld',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
+        },
+        {
+          headerName: 'Amount',
+          editable: true,
+          filter: 'agNumberColumnFilter',
+          field: 'amt',
+          width: 92,
+          cellClass: ['ag-cell-light-grey']
+        },
+        {
+          headerName: 'Remove',
+          filter: 'agNumberColumnFilter',
+          field: 'amt',
+          width: 92,
+          cellRenderer: 'deleter',
+          cellClass: ['ag-cell-light-grey']
+        }
+      ]
+    };
+  }
 
   ngOnInit() {
     //jQuery for editing table
@@ -94,7 +270,8 @@ export class ExecutionLineTableComponent implements OnInit {
     ]).subscribe(data => {
       //console.log(my.phase);
       my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
-        my.allexelines = d2.result.filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released>0));
+        my.allexelines = d2.result
+          .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0));
       });
 
       Object.getOwnPropertyNames(data[0].result).forEach(id => {
@@ -121,20 +298,27 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   addrow() {
-    this.updatelines.push({
+    this._updatelines.push({
       line: {},
       amt: 0
+    });
+
+    this.agOptions.api.updateRowData({
+      add: [{
+        line: {}, amt: 0
+      }]
     });
   }
 
   removerow(i) {
-    this.updatelines.splice(i, 1);
+    this._updatelines.splice(i, 1);
+    this.agOptions.api.setRowData(this._updatelines);
   }
 
   setline(updateidx: number, lineidx: number) {
-    var toupdate: ExecutionLineWrapper = this.updatelines[updateidx];
+    var toupdate: ExecutionLineWrapper = this._updatelines[updateidx];
     var l: ExecutionLine = this.getLineChoices(toupdate.line.mrId)[lineidx - 1];
-    
+
     toupdate.line.appropriation = l.appropriation;
     toupdate.line.blin = l.blin;
     toupdate.line.item = l.item;
@@ -143,11 +327,12 @@ export class ExecutionLineTableComponent implements OnInit {
     toupdate.line.released = l.released;
     toupdate.line.id = l.id;
     toupdate.line.withheld = l.withheld;
+    this.agOptions.api.setRowData(this._updatelines);
   }
 
   getLineChoices(mrid): ExecutionLine[] {
     var existingeEls: Set<string> = new Set<string>();
-    this.updatelines.forEach(x => { 
+    this._updatelines.forEach(x => { 
       existingeEls.add(x.line.id);
     });
 
@@ -160,7 +345,7 @@ export class ExecutionLineTableComponent implements OnInit {
 
   onedit(amtstr, updateidx) {
     var my: ExecutionLineTableComponent = this;
-    var toupdate: ExecutionLineWrapper = my.updatelines[updateidx];
+    var toupdate: ExecutionLineWrapper = my._updatelines[updateidx];
     toupdate.amt = Number.parseInt(amtstr);
   }
 
@@ -168,9 +353,9 @@ export class ExecutionLineTableComponent implements OnInit {
     var my: ExecutionLineTableComponent = this;
 
     var tot: number = 0;
-    for (var i = 0; i < my.updatelines.length; i++) {
-      if (my.updatelines[i].amt ) {
-        tot += my.updatelines[i].amt;
+    for (var i = 0; i < my._updatelines.length; i++) {
+      if (my._updatelines[i].amt ) {
+        tot += my._updatelines[i].amt;
       }
     }
 
@@ -178,15 +363,15 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   updateapprs(idx) {
-    if (1 == this.getLineChoices(this.updatelines[idx].line.mrId).length) {
-      this.updatelines[idx] = {
-        line: this.getLineChoices(this.updatelines[idx].line.mrId)[0],
+    if (1 == this.getLineChoices(this._updatelines[idx].line.mrId).length) {
+      this._updatelines[idx] = {
+        line: this.getLineChoices(this._updatelines[idx].line.mrId)[0],
         amt: 0
       } 
     }
   }
 
-  sortedProgramFullnames(): {}[] {
+  programList(): {}[] {
     var list: {}[] = [];
     this.programIdNameLkp.forEach((v, k) => { 
       if (this.getLineChoices(k).length > 0) {
@@ -197,14 +382,17 @@ export class ExecutionLineTableComponent implements OnInit {
       }
     });
 
-    list.sort((a:any, b:any) => {
-      if (a.value === b.value) {
-        return 0;
-      }
-
-      return (a.value < b.value ? -1 : 1);
-    });
-
     return list;
+  }
+
+  onGridReady(params) {
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
+    window.addEventListener("resize", function() {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
   }
 }

@@ -3,16 +3,16 @@
 </ng-template>
 
 <ng-template #notable>
-  <div class="execution-table table-striped" *ngIf="sortedProgramFullnames().length===0">
+  <div class="execution-table table-striped">
     There are no programs available to select
   </div>
 </ng-template>
 
 <div class="table-editable">
-  <table class="execution-table table-striped" *ngIf="sortedProgramFullnames().length>0 || updatelines.length>0; else notable">
+  <table class="execution-table table-striped" *ngIf="programList().length>0 || updatelines.length>0; else notable">
     <tr class="execution-title font-weight-bold text-center">
       <th class="large-column text-left">
-        <span *ngIf="sortedProgramFullnames().length>0; else notable">
+        <span *ngIf="programList().length>0; else notable">
           <button class="btn btn-light" (click)="addrow()">
             <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
             {{sourceOrTarget}}
@@ -44,7 +44,7 @@
       <td *ngIf="!wrap.line.mrId" class="large-column">
         <select class="form-control-sm dropdown-width mb-2" name="progdd" [(ngModel)]="wrap.line.mrId" (change)="updateapprs(idx)">
           <option value="">Select Program</option>
-          <option *ngFor="let en of sortedProgramFullnames()" [value]="en.key">{{en.value}}</option>
+          <option *ngFor="let en of programList()" [value]="en.key">{{en.value}}</option>
         </select>
       </td>
 
@@ -83,3 +83,15 @@
     </tr>
   </table>
 </div>
+
+<ag-grid-angular #agGrid class="ag-theme-balham" 
+  [gridOptions]="agOptions" 
+  [rowData]="updatelines" 
+  [enableColResize]="true" 
+  [toolPanelSuppressSideButtons]="true" 
+  [suppressDragLeaveHidesColumns]="true"
+  [suppressMovableColumns]="true" 
+  (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+  (gridReady)="onGridReady($event)">
+</ag-grid-angular>
+<ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
