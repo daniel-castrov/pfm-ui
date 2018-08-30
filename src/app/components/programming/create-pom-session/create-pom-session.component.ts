@@ -7,15 +7,15 @@ import { UserUtils } from '../../../services/user.utils';
 import { NumericCellEditor } from './numeric-celleditior.component';
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
 import { 
-  Community, 
-  Organization, 
-  TOA, 
-  Pom, 
-  PB, 
-  CommunityService, 
-  OrganizationService, 
-  PBService, 
-  POMService, 
+  Community,
+  Organization,
+  TOA,
+  Pom,
+  PB,
+  CommunityService,
+  OrganizationService,
+  PBService,
+  POMService,
   EppService
 } from '../../../generated';
 
@@ -55,7 +55,6 @@ export class CreatePomSessionComponent implements OnInit {
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    //private programsvc: ProgramsService, 
     private router: Router, private globalsvc: UserUtils,
     private withFullNameService: WithFullNameService ) {
   }
