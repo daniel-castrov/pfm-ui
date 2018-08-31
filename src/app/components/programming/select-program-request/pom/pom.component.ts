@@ -1,9 +1,8 @@
+import { Component, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AgGridNg2 } from "ag-grid-angular";
 import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 import { UiProgrammaticRequest } from '../UiProgrammaticRequest';
-import { Component, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Pom } from '../../../../generated/model/pom';
-import { GridOptions } from 'ag-grid';
-import {AgGridNg2} from "ag-grid-angular";
 
 @Component({
   selector: 'j-pom',
@@ -19,7 +18,6 @@ export class PomComponent implements OnChanges {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private rowsData: any[];
-  private gridOptions:GridOptions;
   private colDefs;
 
   ngOnChanges() {
@@ -27,99 +25,38 @@ export class PomComponent implements OnChanges {
     if (this.pbProgrammaticRequests && this.pomProgrammaticRequests && this.pom) {
       this.initGrid( this.pom.fy ); 
       this.populateRowData();
+      setTimeout(() => {
+        this.agGrid.api.sizeColumnsToFit()
+      });
     }
-      
   }
 
   private initGrid(by: number) {
 
-    this.gridOptions = {
+    this.agGrid.gridOptions = {
       columnDefs: this.setAgGridColDefs(by),
-      gridAutoHeight: true,
-      suppressDragLeaveHidesColumns: true,
-      suppressMovableColumns: true,
     }
-  }
-
-  populateRowData() {
-
-    let rowdata:any[] = [];
-
-    let by = this.pom.fy;
-    let arow = new Object();
-    let sum;
-
-    arow["id"] = "Baseline"; 
-    sum = 0;
-    for (let year: number = by; year < by + 5; year++) {
-      arow[year] = this.aggregateToas(this.pbProgrammaticRequests, year);
-      sum += arow[year];
-    }
-    arow["total"] = sum;
-    rowdata.push( arow );
-
-    arow = new Object();
-    arow["id"] = "Allocated TOA"; 
-    sum = 0;
-    let allocatedToas: { [year: number]: number } = {};
-    this.pom.communityToas.forEach((toa) => {
-      allocatedToas[toa.year] = toa.amount;
-      arow[toa.year] = toa.amount;
-      sum += arow[toa.year];
-    });
-    arow["total"] = sum;
-    rowdata.push( arow );
-
-    arow= new Object();
-    arow["id"] = "POM 18 Requests"; 
-    sum = 0;
-    let pomRequests: { [year: number]: number } = {};
-          for (let year: number = by; year < by + 5; year++) {
-      pomRequests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
-      arow[year]  = this.aggregateToas(this.pomProgrammaticRequests, year);
-      sum += arow[year];
-    }
-    arow["total"] = sum;
-    rowdata.push( arow );
-
-    arow= new Object();
-    arow["id"] = "TOA Difference"; 
-    sum = 0;
-    for (let year: number = by; year < by + 5; year++) {
-      
-      arow[year] = allocatedToas[year] - pomRequests[year];
-      sum += arow[year];
-    }
-    arow["total"] = sum;
-    rowdata.push( arow );
-
-    this.rowsData = rowdata;
-
-    setTimeout(() => {
-      this.agGrid.api.sizeColumnsToFit()
-    });
-
-  }
-
-  aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
-    return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 
   private setAgGridColDefs(by: number): any {
 
+    // First column - id
     this.colDefs =
       [{
         headerName: "",
         suppressMenu: true,
         field: 'id',
-        width: 92,
+        width: 102,
         editable: false,
+        cellClass: "font-weight-bold"
       }];
 
+    // Columns for FYs
     for (var i = 0; i < 5; i++) {
       this.colDefs.push(
         {
           headerName: "FY" + (by + i - 2000),
+          type: "numericColumn",
           suppressMenu: true,
           field: (by + i).toString(),
           width: 92,
@@ -129,12 +66,14 @@ export class PomComponent implements OnChanges {
              'font-weight-bold': params => { return params.data.id == 'Allocated TOA'  } ,
              'font-red' : params => { return params.value < 0 }, 
            },
-           cellStyle: {'text-align': 'right'},
         });
     }
+
+    // Last column - total
     this.colDefs.push(
       {
         headerName: "Total",
+        type: "numericColumn",
         suppressMenu: true,
         field: 'total',
         width: 92,
@@ -143,7 +82,6 @@ export class PomComponent implements OnChanges {
         cellClassRules: {
           'font-red' : params => { return params.value < 0 },
         },
-        cellStyle: {'text-align': 'right'},
       });
   }
 
@@ -154,15 +92,6 @@ export class PomComponent implements OnChanges {
         params.api.sizeColumnsToFit();
       });
     });
-  }
-
-  private negativeNumberRenderer(params) {
-
-    if (params.value < 0) {
-      return '<span style="color: red;">' + this.currencyFormatter(params) + '</span>';
-    } else {
-      return this.currencyFormatter(params);
-    }
   }
 
   private currencyFormatter(value): string {
@@ -177,6 +106,61 @@ export class PomComponent implements OnChanges {
     return usdFormate.format(value.value);
   }
 
+  private populateRowData() {
+
+    let rowdata:any[] = [];
+    let by = this.pom.fy;
+    let row = new Object();
+    let sum;
+
+    row["id"] = "Baseline"; 
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      row[year] = this.aggregateToas(this.pbProgrammaticRequests, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row = new Object();
+    row["id"] = "Allocated TOA"; 
+    sum = 0;
+    let allocatedToas: { [year: number]: number } = {};
+    this.pom.communityToas.forEach((toa) => {
+      allocatedToas[toa.year] = toa.amount;
+      row[toa.year] = toa.amount;
+      sum += row[toa.year];
+    });
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row= new Object();
+    row["id"] = "POM 18 Requests"; 
+    sum = 0;
+    let pomRequests: { [year: number]: number } = {};
+          for (let year: number = by; year < by + 5; year++) {
+      pomRequests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
+      row[year]  = this.aggregateToas(this.pomProgrammaticRequests, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row= new Object();
+    row["id"] = "TOA Difference"; 
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      
+      row[year] = allocatedToas[year] - pomRequests[year];
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    this.rowsData = rowdata;
+  }
+
+  private aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
+    return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
+  }
 }
-
-
