@@ -48,7 +48,22 @@ export class ExecutionLineTableComponent implements OnInit {
     this.agOptions.api.forEachNode(rownode => {
       this._updatelines.push(rownode.data);
     });
+    this.refreshpins();
   }
+
+  refreshpins() {
+    if (this._updatelines.length > 0) {
+      this.agOptions.api.setPinnedBottomRowData([{
+        line: {},
+        amt: this.total()
+      }]);
+    }
+    else {
+      this.agOptions.api.setPinnedBottomRowData([]);
+    }
+  }
+
+
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private router: Router) { 
@@ -89,17 +104,6 @@ export class ExecutionLineTableComponent implements OnInit {
     var amtSetter = function (params): boolean {
       params.data.amt = Number.parseFloat(params.newValue);
       my.refreshlines();
-
-      if (my._updatelines.length > 0) {
-        my.agOptions.api.setPinnedBottomRowData([{
-          line: {},
-          amt: my.total()
-        }]);
-      }
-      else {
-        my.agOptions.api.setPinnedBottomRowData([]);
-      }
-
       return true;
     }
 
@@ -114,7 +118,8 @@ export class ExecutionLineTableComponent implements OnInit {
       context: {
         programlkp: my.programIdNameLkp,
         enabled: false,
-        parentComponent: this
+        parentComponent: this,
+        deleteHidden: false
       },
       columnDefs: [
         {
@@ -181,7 +186,7 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Amount',
           editable: true,
           filter: 'agNumberColumnFilter',
-          valueGetter: params => (params.data.amt),
+          field: 'amt',
           valueSetter: amtSetter,
           width: 92,
           cellClass: ['ag-cell-light-grey']
@@ -224,8 +229,12 @@ export class ExecutionLineTableComponent implements OnInit {
     });
   }
 
-  removerow(i) {
-    this.agOptions.api.setRowData(this._updatelines);
+  delete(rowIndex, data) {
+    console.log('into delete!')
+    this.agOptions.api.updateRowData({remove: [data]});
+    // FIXME: need to remove data from the grid
+  //    this.agOptions.api.setRowData(this._updatelines);
+    this.refreshlines();
   }
 
   getLineChoices(mrid): ExecutionLine[] {
