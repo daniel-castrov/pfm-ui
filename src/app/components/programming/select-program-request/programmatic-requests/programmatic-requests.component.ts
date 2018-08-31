@@ -121,15 +121,15 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         headerName: 'funds values are expressed in ($K)',
         children: [
           {
-          headerName: 'Status',
-          menuTabs: this.menuTabs,
-          filter: 'agTextColumnFilter',
-          suppressSorting: true,
-          valueGetter: params => this.getStatus(params),
-          cellClass: params => this.getStatusClass(params),
-          cellStyle: { backgroundColor: "#eae9e9" },
-          cellRenderer: 'summaryProgramCellRenderer',
-          width: 60
+            headerName: 'Status',
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+            suppressSorting: true,
+            valueGetter: params => this.getStatus(params),
+            cellClass: params => this.getStatusClass(params),
+            cellStyle: { backgroundColor: "#eae9e9" },
+            cellRenderer: 'summaryProgramCellRenderer',
+            width: 60
           },
           {
             headerName: 'Cycle',
