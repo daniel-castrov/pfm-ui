@@ -8,53 +8,24 @@
   </div>
 </ng-template>
 
-<div class="table-editable">
-  <table class="execution-table table-striped" *ngIf="programList().length>0 || updatelines.length>0; else notable">
-    <tr class="execution-title font-weight-bold text-center">
-      <th class="large-column text-left">
-        <span *ngIf="programList().length>0; else notable">
-          <button class="btn btn-light" (click)="addrow()">
-            <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-            {{sourceOrTarget}}
-          </button>
-        </span>
-      </th>
-      <th class="large-column">
-        Execution Line
-      </th>
-      <th>
-        TOA
-      </th>
-      <th>
-        Released
-      </th>
-      <th>
-        Withheld
-      </th>
-      <th>
-        Amount
-      </th>
-      <th>
-        Remove
-      </th>
-    </tr>
+<div *ngIf="programList().length>0 || updatelines.length>0; else notable">
+  <span *ngIf="programList().length>0; else notable">
+    <button class="btn btn-light" (click)="addrow()">
+      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+      {{sourceOrTarget}}
+    </button>
+  </span>
 
-  </table>
-</div>
-
-<ag-grid-angular #agGrid class="ag-theme-balham" 
-  [gridOptions]="agOptions" 
-  [rowData]="updatelines" 
-  [enableColResize]="true" 
-  [toolPanelSuppressSideButtons]="true" 
-  [suppressDragLeaveHidesColumns]="true"
-  [suppressMovableColumns]="true"
-  [singleClickEdit]="true"
-  (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-  (gridReady)="onGridReady($event)">
-</ag-grid-angular>
-<ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-
-<div *ngFor="let x of _updatelines">
-  {{x|json}}
+  <ag-grid-angular #agGrid class="ag-theme-balham" 
+    [gridOptions]="agOptions" 
+    [rowData]="updatelines" 
+    [enableColResize]="true"
+    [toolPanelSuppressSideButtons]="true" 
+    [suppressDragLeaveHidesColumns]="true"
+    [suppressMovableColumns]="true" 
+    [singleClickEdit]="true"
+    (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+    (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+  <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
 </div>

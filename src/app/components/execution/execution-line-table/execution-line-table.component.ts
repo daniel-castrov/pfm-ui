@@ -87,8 +87,19 @@ export class ExecutionLineTableComponent implements OnInit {
 
     var my: ExecutionLineTableComponent = this;
     var amtSetter = function (params): boolean {
-      params.data.amt = params.newValue;
+      params.data.amt = Number.parseFloat(params.newValue);
       my.refreshlines();
+
+      if (my._updatelines.length > 0) {
+        my.agOptions.api.setPinnedBottomRowData([{
+          line: {},
+          amt: my.total()
+        }]);
+      }
+      else {
+        my.agOptions.api.setPinnedBottomRowData([]);
+      }
+
       return true;
     }
 
@@ -123,7 +134,8 @@ export class ExecutionLineTableComponent implements OnInit {
             };
           },
           valueSetter: programSetter,
-          cellEditor: 'agRichSelectCellEditor'
+          cellEditor: 'agRichSelectCellEditor',
+          pinnedRowCellRenderer: params=>''
         },
         {
           headerName: 'Execution Line',
@@ -140,7 +152,8 @@ export class ExecutionLineTableComponent implements OnInit {
               : '')
           } ),
           cellEditor: 'agRichSelectCellEditor',
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey'],
+          pinnedRowCellRenderer: params => ''
         },
         {
           headerName: 'TOA',
@@ -161,13 +174,14 @@ export class ExecutionLineTableComponent implements OnInit {
           filter: 'agNumberColumnFilter',
           field: 'line.withheld',
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey'],
+          pinnedRowCellRenderer: params => 'Total'
         },
         {
           headerName: 'Amount',
           editable: true,
           filter: 'agNumberColumnFilter',
-          field: 'amt',
+          valueGetter: params => (params.data.amt),
           valueSetter: amtSetter,
           width: 92,
           cellClass: ['ag-cell-light-grey']
@@ -216,11 +230,13 @@ export class ExecutionLineTableComponent implements OnInit {
 
   getLineChoices(mrid): ExecutionLine[] {
     var existingeEls: Set<string> = new Set<string>();
-    this.agOptions.api.forEachNode(rownode => {
-      if (rownode.data.line.id) {
-        existingeEls.add(rownode.data.line.id);
-      }
-    });
+    if (this.agOptions && this.agOptions.api) {
+      this.agOptions.api.forEachNode(rownode => {
+        if (rownode.data.line.id) {
+          existingeEls.add(rownode.data.line.id);
+        }
+      });
+    }
 
     return this.allexelines
       .filter(x => x.mrId === mrid)
