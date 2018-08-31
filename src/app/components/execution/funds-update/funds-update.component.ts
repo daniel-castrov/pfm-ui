@@ -68,6 +68,10 @@ export class FundsUpdateComponent implements OnInit {
       return (name1 < name2 ? -1 : 1);
     }
 
+    var programLinkEnabled = function (params): boolean {
+      return my.hasAppropriation && !(0 === params.data.released || params.data.appropriated);
+    };
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -79,9 +83,7 @@ export class FundsUpdateComponent implements OnInit {
       context: {
         programlkp: my.programs,
         route: '/update-program-execution',
-        enabled: function (params): boolean {
-          return !( 0 === params.data.released || params.data.appropriated);
-        }
+        enabled: programLinkEnabled
       },
       columnDefs: [
         {
