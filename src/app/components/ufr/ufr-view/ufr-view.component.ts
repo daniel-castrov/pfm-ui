@@ -1,78 +1,40 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ProgramsService, Program, ProgramFilter, UFR, UFRsService, POMService, MyDetailsService, Pom } from '../../../generated';
-import { ViewEncapsulation } from '@angular/core';
-
-// Other Components
+import { CycleUtils } from './../../../services/cycle.utils';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { UFR, UFRsService } from '../../../generated';
 import { HeaderComponent } from '../../header/header.component';
-import { Router, ActivatedRoute, ParamMap, Params, UrlSegment } from '@angular/router';
-
-import { Status } from '../status.enum';
-import { Disposition } from '../disposition.enum';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 
 @Component({
   selector: 'app-ufr-view',
   templateUrl: './ufr-view.component.html',
-  styleUrls: ['./ufr-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./ufr-view.component.scss']
 })
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
-  private current: UFR;
-  private qtyok: boolean = false;
+  private ufr: UFR;
   private canedit: boolean = false;
 
-  constructor(private usvc: UFRsService, private pomsvc: POMService,
-    private usersvc:MyDetailsService, private router: Router, private route: ActivatedRoute) {
+  constructor( private ufrService: UFRsService,
+               private cycleUtils: CycleUtils,
+               private route: ActivatedRoute ) {
   }
 
-  ngOnInit() {
-    var my: UfrViewComponent = this;
-    this.route.url.subscribe((segments: UrlSegment[]) => {
-      var ufrid = segments[segments.length - 1].path;
-      console.log('ufrid: ' + ufrid);
-
-      my.usvc.getUfrById(ufrid).subscribe(data => { 
-        my.current = data.result;
-        my.setQtyOk();
-      });
-
-      my.usersvc.getCurrentUser().subscribe(data => {
-        my.canedit = false;
-        my.pomsvc.getByCommunityId(data.result.currentCommunityId).subscribe(d2 => {
-          d2.result.forEach( (pommy:Pom) => { 
-            if ('CREATED' === pommy.status || 'OPEN' === pommy.status) {
-              my.canedit = true;
-            }
-          });
-        });
-      });
+  async ngOnInit() {
+    this.route.url.subscribe(async(urlSegments: UrlSegment[]) => {
+      const ufrId = urlSegments[urlSegments.length - 1].path;
+      this.initUfr(ufrId);
+      this.canedit = !!await this.cycleUtils.currentPom().toPromise();
     });
+  }
+
+  private async initUfr(ufrId: string) {
+    this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
   }
 
   save() {
-    var my: UfrViewComponent = this;
-    if (my.current) {
-      console.log(my.current);
-      my.setQtyOk();
-      my.usvc.update(my.current).subscribe();
-    }
-  }
-
-  setQtyOk() {
-    var my: UfrViewComponent = this;
-    var ok: boolean = false;
-    my.current.fundingLines.forEach(fl => {
-      //console.log(fl);
-      if ('PROC' === fl.appropriation) {
-        ok = true;
-      }
-    });
-
-    my.qtyok = ok;
-    //console.log(my.qtyok);
+    this.ufrService.update(this.ufr).subscribe();
   }
 
   submit() {
-    console.log('submittal is not yet implemented');
   }
 }

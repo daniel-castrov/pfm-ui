@@ -1,54 +1,41 @@
+import { TagsService } from './../../../../services/tags.service';
+import { CycleUtils } from './../../../../services/cycle.utils';
 import { Component, OnInit, Input } from '@angular/core';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { UFR, POMService, Pom, MyDetailsService, CommunityService, ProgramsService, Tag } from '../../../../generated';
+import { UFR, Tag } from '../../../../generated';
 import { Status } from '../../status.enum';
 import { Disposition } from '../../disposition.enum';
+
 
 @Component({
   selector: 'ufr-ufr-tab',
   templateUrl: './ufr-ufr-tab.component.html',
   styleUrls: ['./ufr-ufr-tab.component.scss']
 })
-export class UfrTabComponent implements OnInit {
-  @Input() current: UFR;
+export class UfrUfrTabComponent implements OnInit {
+  @Input() ufr: UFR;
   @Input() editable: boolean = false;
 
-  private cycles: {}[] = [];
-  private statuses: string[] = [];
-  private dispositions: string[] = [];
-  private capabilities: Tag[] = [];
+  private statuses = Object.keys(Status).filter(k => typeof Status[k] === "number") as string[];
+  private dispositions = Object.keys(Disposition).filter(k => typeof Disposition[k] === "number") as string[];
+  private cycles: {}[];
+  private capabilities: Tag[];
 
-  constructor(private pomsvc: POMService, private communityService: CommunityService,
-    private userDetailsService: MyDetailsService, private progsvc:ProgramsService) { 
-
-    this.dispositions = Object.keys(Disposition)
-      .filter(k => typeof Disposition[k] === "number") as string[];
-    this.statuses = Object.keys(Status)
-      .filter(k => typeof Status[k] === "number") as string[];
-  }
+  constructor( private cycleUtils: CycleUtils, 
+               private tagsService: TagsService ) {}
 
   ngOnInit() {
-    var my: UfrTabComponent = this;
-    this.userDetailsService.getCurrentUser().subscribe((person) => {
-      forkJoin([
-        //my.communityService.getById(person.result.currentCommunityId),
-        my.pomsvc.getByCommunityId(person.result.currentCommunityId),
-        my.progsvc.getTagsByType( 'Core Capability Area')
-        ]).subscribe(data => {
-          data[0].result.forEach(function (pom: Pom) { 
-            my.cycles.push({
-              display: 'POM ' + ( pom.fy-2000 ),
-              pomid: pom.id
-            });
-          });
-
-          my.capabilities = data[1].result.sort((a, b) => { 
-            if (a.abbr === b.abbr) {
-              return 0;
-            }
-            return (a.abbr < b.abbr ? -1 : 1);
-          });
-        });
-    });
+    this.initCycles();
+    this.initCapabilities();
   }
+
+  private async initCycles() {
+    this.cycles = (await this.cycleUtils.poms().toPromise())
+                      .map( pom => ({ display: 'POM ' + (pom.fy-2000),
+                                      pomid: pom.id }) );
+  }
+
+  private async initCapabilities() {
+    this.capabilities = await this.tagsService.tags('Core Capability Area').toPromise();
+  }
+
 }

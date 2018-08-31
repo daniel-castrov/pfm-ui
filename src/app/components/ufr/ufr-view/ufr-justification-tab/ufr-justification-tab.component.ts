@@ -7,7 +7,7 @@ import { UFR } from '../../../../generated';
   styleUrls: ['./ufr-justification-tab.component.scss']
 })
 export class UfrJustificationComponent implements OnInit {
-  @Input() current: UFR;
+  @Input() ufr: UFR;
   @Input() editable: boolean = false;
   
   constructor() { }

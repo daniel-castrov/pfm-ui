@@ -1,7 +1,5 @@
-import { CommunityService } from '../generated/api/community.service';
 import { Observable } from 'rxjs/Observable';
 import { RestResult } from '../generated/model/restResult';
-import { MyDetailsService } from '../generated/api/myDetails.service';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map'
 import { ProgramsService } from '../generated/api/programs.service';
@@ -19,7 +17,13 @@ export class TagsService {
 
   tags(tagType: string): Observable<Tag[]> {
     return this.programsService.getTagsByType(tagType)
-            .map((result: RestResult) => result.result);
+            .map((result: RestResult) => result.result)
+            .map( (tags: Tag[]) => tags.sort((a: Tag, b: Tag) => {
+              if (a.abbr === b.abbr) {
+                return 0;
+              }
+              return (a.abbr < b.abbr ? -1 : 1);
+            }));
   }
 
   private tagAbbreviations(tagType: string): Promise<string[]> {

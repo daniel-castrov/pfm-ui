@@ -5,26 +5,26 @@
 </ng-template>
 
 <ng-template #value let-tagname="tagname" let-property="property">
-  <select [(ngModel)]="current[property]" class="form-control-sm dropdown-width" name="{{tagname}}">
-    <ng-container *ngIf="current[property]">
+  <select [(ngModel)]="ufr[property]" class="form-control-sm dropdown-width" name="{{tagname}}">
+    <ng-container *ngIf="ufr[property]">
       <!-- we have an tagname set, but check that we have a recognized value -->
-      <option *ngIf="!tagnames.has(tagname) || (tagnames.has(tagname) && !tagnames.get(tagname).has(current[property]))"
-          [ngValue]="current[property] ">{{current[property]}} (Unknown value)</option>
+      <option *ngIf="!tagNames.has(tagname) || (tagNames.has(tagname) && !tagNames.get(tagname).has(ufr[property]))"
+          [ngValue]="ufr[property] ">{{ufr[property]}} (Unknown value)</option>
     </ng-container>
 
-    <option *ngFor="let t of tagnames.get(tagname) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
+    <option *ngFor="let t of tagNames.get(tagname) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
   </select>
 
-  <!--span class="program-values" *ngIf="current?.tags[area] && tagnames.has( area ); else novalue">
-    <ng-container *ngIf="tagnames.get( area ).has( current.tags[area] )">
-      {{tagnames.get( area ).get( current.tags[area] )}}
+  <!--span class="program-values" *ngIf="ufr?.tags[area] && tagNames.has( area ); else novalue">
+    <ng-container *ngIf="tagNames.get( area ).has( ufr.tags[area] )">
+      {{tagNames.get( area ).get( ufr.tags[area] )}}
     </ng-container>
-    <ng-container *ngIf="!tagnames.get( area ).has( current.tags[area] )">
-      {{current.tags[area]}} (Unknown value)
+    <ng-container *ngIf="!tagNames.get( area ).has( ufr.tags[area] )">
+      {{ufr.tags[area]}} (Unknown value)
     </ng-container>
   </span-->
 </ng-template>
-<form *ngIf="current && tagnames">
+<form *ngIf="ufr && tagNames">
   <div class="row">
     <div class="col-9">
       <div class="row">
@@ -33,13 +33,13 @@
             <div class="col-3">
               <div class="form-group inline-name mr-2">
                 <label>Program ID</label>
-                <input [(ngModel)]="current.shortName" class="program-values forminput" name="program-id">
+                <input [(ngModel)]="ufr.shortName" class="program-values forminput" name="program-id">
               </div>
             </div>
             <div class="col-3">
               <div class="form-group inline-name">
                 <label>Program Name</label>
-                <input [(ngModel)]="current.longName" class="program-values forminput" name="program-name">
+                <input [(ngModel)]="ufr.longName" class="program-values forminput" name="program-name">
               </div>
             </div>
           </div>
@@ -49,17 +49,17 @@
         <div class="col-3">
           <div class="form-group inline-name">
             <label>Parent Program for Subprogram</label>
-            <span class="program-values" *ngIf="parentname; else novalue">{{parentname}}</span>
+            <span class="program-values" *ngIf="parentName; else novalue">{{parentName}}</span>
           </div>
         </div>
         <div class="col-3">
           <span class="form-group inline-name">
             <label class="mb-1">Type of Subprogram</label>
-            <select [(ngModel)]="current.type" name="typeselect">
+            <select [(ngModel)]="ufr.type" name="typeselect">
               <option [ngValue]="'PROGRAM'">Program</option>
-              <option *ngIf="parentname" [ngValue]="'INCREMENT'">Increment</option>
-              <option *ngIf="parentname" [ngValue]="'FOS'">Family of Systems</option>
-              <option *ngIf="parentname" [ngValue]="'VARIANT'">Variant</option>
+              <option *ngIf="parentName" [ngValue]="'INCREMENT'">Increment</option>
+              <option *ngIf="parentName" [ngValue]="'FOS'">Family of Systems</option>
+              <option *ngIf="parentName" [ngValue]="'VARIANT'">Variant</option>
             </select>
           </span>
         </div>
@@ -90,7 +90,7 @@
               <label>Secondary</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Secondary Capability', property:'secondaryCapability'}"></ng-container>
             </span>
-            <!-- RPB: As far as I can tell, Tertiary Capability is a historical tag, not current -->
+            <!-- RPB: As far as I can tell, Tertiary Capability is a historical tag, not ufr -->
             <!--span class="form-group inline-name">
               <label>Tertiary</label>
               <ng-container *ngTemplateOutlet="value;context:{area:'Tertiary Capability'}"></ng-container>
@@ -121,8 +121,8 @@
         <div class="col-md-12">
           <span class="form-group inline-name">
             <label>Emphasis</label>
-            <ng-container *ngIf="current?.emphases && current?.emphases.length>0; else novalue">
-              <span class="program-values" *ngFor="let e of current.emphases">{{e}}</span>
+            <ng-container *ngIf="ufr?.emphases && ufr?.emphases.length>0; else novalue">
+              <span class="program-values" *ngFor="let e of ufr.emphases">{{e}}</span>
             </ng-container>
           </span>
           <span class="form-group inline-name">
@@ -147,7 +147,7 @@
           </span>
           <!--span class="form-group inline-name">
             <label class="mb-1">Branch</label>
-            <select [(ngModel)]="current.branch" name="branch">
+            <select [(ngModel)]="ufr.branch" name="branch">
               <option [ngValue]="USA">Army</option>
               <option [ngValue]="USN">Navy</option>
               <option [ngValue]="USAF">Air Force</option>
@@ -166,8 +166,8 @@
     <div class="col-3">
       <div class="card border-light mb-3 text-center">
         <div class="img-placeholder">
-          <img *ngIf="current?.imgLink" src="current.imgLink" />
-          <i *ngIf="!current?.imgLink" class="fa fa-picture-o" aria-hidden="true"></i>
+          <img *ngIf="ufr?.imgLink" src="ufr.imgLink" />
+          <i *ngIf="!ufr?.imgLink" class="fa fa-picture-o" aria-hidden="true"></i>
         </div>
       </div>
     </div>

@@ -15,11 +15,16 @@ export class CycleUtils {
               private pomService: POMService) {}
 
   currentPom(): Observable<Pom> {
-    return this.userUtils.user()
-      .switchMap( (user: User) => this.pomService.getByCommunityId(user.currentCommunityId) )
-      .map( (response: RestResult) => response.result )
-      .switchMap( (poms: Pom[]) => from(poms) )
+    return this.poms()
+      .switchMap((poms: Pom[]) => from(poms))
       .filter( (pom: Pom) => 'CREATED' === pom.status || 'OPEN' === pom.status);
+      // toPromise() returns the last emitted Observable
   }
 
+
+  poms(): Observable<Pom[]> {
+    return this.userUtils.user()
+      .switchMap((user: User) => this.pomService.getByCommunityId(user.currentCommunityId))
+      .map((response: RestResult) => response.result)
+  }
 }

@@ -8,7 +8,7 @@ import {FundingLine, UFR, POMService, Pom, PRService, PBService, ProgrammaticReq
   styleUrls: ['./ufr-funds-tab.component.scss']
 })
 export class UfrFundsComponent implements OnInit {
-  @Input() current: UFR;
+  @Input() ufr: UFR;
   @Input() editable: boolean = false;
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
@@ -35,16 +35,13 @@ export class UfrFundsComponent implements OnInit {
               private tagsService: TagsService) { }
   
   ngOnInit() {
-    var my: UfrFundsComponent = this;
 
-    this.pomsvc.getById(my.current.phaseId).subscribe(async data => {
-      my.pom = data.result;
-      my.fy = my.pom.fy;
+    this.pomsvc.getById(this.ufr.phaseId).subscribe(async data => {
+      this.pom = data.result;
+      this.fy = this.pom.fy;
 
-      console.log('into ufr-funds init!' + my.fy );
-      
       // get the data from the UFR into our tabledata structure
-      my.current.fundingLines.forEach(fund => { 
+      this.ufr.fundingLines.forEach(fund => { 
         var key = fund.appropriation + fund.baOrBlin + fund.item + fund.opAgency;
         var cfunds: Map<number, number> = new Map<number, number>();
         var tfunds: Map<number, number> = new Map<number, number>();
@@ -57,7 +54,7 @@ export class UfrFundsComponent implements OnInit {
           mfunds.set(year, 0);
         });
 
-        my.rows.set(key, {
+        this.rows.set(key, {
           baOrBlin: fund.baOrBlin,
           appropriation: fund.appropriation,
           opagency: fund.opAgency,
@@ -70,18 +67,16 @@ export class UfrFundsComponent implements OnInit {
 
       // ...now merge/add the original funding lines from the POM
       // (new programs/subprograms won't necessarily have a shortname yet)
-      if (my.current.originalMrId) {
-        my.prService.getByPhaseAndMrId(my.pom.id, my.current.originalMrId).subscribe(model => {
+      if (this.ufr.originalMrId) {
+        this.prService.getByPhaseAndMrId(this.pom.id, this.ufr.originalMrId).subscribe(model => {
           // get the current values for this program
-          my.model = model.result;
-          //console.log(my.model);
-          //console.log('model check?');
-          my.model.fundingLines.forEach(fund => {
+          this.model = model.result;
+          this.model.fundingLines.forEach(fund => {
             var key = fund.appropriation + fund.baOrBlin;
 
             var newdata = false;
-            if (!my.rows.has(key)) {
-              my.rows.set(key, {
+            if (!this.rows.has(key)) {
+              this.rows.set(key, {
                 appropriation: fund.appropriation,
                 baOrBlin: fund.baOrBlin,
                 opagency: fund.opAgency,
@@ -92,7 +87,7 @@ export class UfrFundsComponent implements OnInit {
               });
               newdata = true;
             }
-            var thisrow: tabledata = my.rows.get(key);
+            var thisrow: tabledata = this.rows.get(key);
 
             Object.keys(fund.funds).forEach(function (yearstr) {
               var year: number = Number.parseInt(yearstr);
@@ -127,7 +122,6 @@ export class UfrFundsComponent implements OnInit {
   }
 
   addfl() {
-    var my: UfrFundsComponent = this;
     var key: string = this.appr + this.baOrBlin;
     if (this.rows.has(key)) {
       var tabledata = this.rows.get(this.appr + this.baOrBlin);
@@ -135,7 +129,7 @@ export class UfrFundsComponent implements OnInit {
       Object.keys(this.flfunds).forEach(yearstr => {
         var year: number = Number.parseInt(yearstr);
         var oldval: number = (ufunds.has(year) ? ufunds.get(year) : 0);
-        ufunds.set(year, oldval + my.flfunds[year]);
+        ufunds.set(year, oldval + this.flfunds[year]);
       });
     }
     else {
@@ -143,15 +137,15 @@ export class UfrFundsComponent implements OnInit {
       var ufunds: Map<number, number> = new Map<number, number>();
       Object.keys(this.flfunds).forEach(yearstr => {
         var year: number = Number.parseInt(yearstr);
-        tfunds.set(year, my.flfunds[year]);
-        ufunds.set(year, my.flfunds[year]);
+        tfunds.set(year, this.flfunds[year]);
+        ufunds.set(year, this.flfunds[year]);
       });
 
       this.rows.set(key, {
-        appropriation: my.appr,
-        baOrBlin: my.baOrBlin,
-        opagency: my.opagency,
-        item: my.item,
+        appropriation: this.appr,
+        baOrBlin: this.baOrBlin,
+        opagency: this.opagency,
+        item: this.item,
         ufrfunds: ufunds,
         totalfunds: tfunds,
         modelfunds: new Map<number, number>()
@@ -159,19 +153,18 @@ export class UfrFundsComponent implements OnInit {
 
       // now set this same data in the current data (for saves)
       var fl: FundingLine = {
-        appropriation: my.appr,
-        baOrBlin: my.baOrBlin,
-        opAgency: my.opagency,
-        funds: my.flfunds,
+        appropriation: this.appr,
+        baOrBlin: this.baOrBlin,
+        opAgency: this.opagency,
+        funds: this.flfunds,
         variants: []
       };
-      this.current.fundingLines.push(fl);
+      this.ufr.fundingLines.push(fl);
     }
   }
 
 
   onedit(newval, appr, baOrBlin, year) {
-    var my: UfrFundsComponent = this;
     var thisyear:number = Number.parseInt(year);
     
     var thisvalue = Number.parseInt(newval.replace(/[^0-9]/g, ''));
@@ -190,7 +183,7 @@ export class UfrFundsComponent implements OnInit {
     // finally, we need to update our actual funding lines...
     // BUT: we don't know if we have a funding line for this APPR+BLIN in this UFR
     var found = false;
-    this.current.fundingLines.forEach(fl => { 
+    this.ufr.fundingLines.forEach(fl => { 
       if (appr === fl.appropriation && baOrBlin === fl.baOrBlin) {
         fl.funds[year] = thisvalue;
         found = true;
@@ -201,11 +194,11 @@ export class UfrFundsComponent implements OnInit {
       var funds = {};
       funds[year] = thisvalue;
 
-      this.current.fundingLines.push({
+      this.ufr.fundingLines.push({
         appropriation: appr,
         baOrBlin: baOrBlin,
         funds: funds,
-        item: my.item,
+        item: this.item,
         variants: []
       });
     }

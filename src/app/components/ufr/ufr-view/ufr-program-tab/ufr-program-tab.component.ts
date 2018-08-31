@@ -1,51 +1,45 @@
+import { RestResult } from './../../../../generated/model/restResult';
+import { join } from './../../../../utils/join';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Input } from '@angular/core';
-import { ProgramsService, Tag, UFR} from '../../../../generated';
-import { forkJoin } from "rxjs/observable/forkJoin";
+import { ProgramsService, Tag, UFR } from '../../../../generated';
 
 @Component({
   selector: 'ufr-program-tab',
   templateUrl: './ufr-program-tab.component.html',
   styleUrls: ['./ufr-program-tab.component.scss']
 })
-export class UfrMetadataComponent implements OnInit {
-  @Input() current: UFR;
+export class UfrProgramComponent implements OnInit {
+  @Input() ufr: UFR;
   @Input() editable: boolean = false;
-  private tagnames: Map<string, Map<string, string>>;
-  private parentname: string;
+  private tagNames = new Map<string, Map<string, string>>();
+  private parentName: string;
 
-  constructor(private progsvc: ProgramsService) { }
+  constructor( private programService: ProgramsService ) {}
 
   ngOnInit() {
-    var my: UfrMetadataComponent = this;
-    this.progsvc.getTagtypes().subscribe(tagtypes => { 
-      var calls: any[] = [];
-      tagtypes.result.forEach(tagtype => { 
-        calls.push(my.progsvc.getTagsByType(tagtype));
+    this.initTagNames();
+    this.initParentName();
+  }
+
+  private async initTagNames() {
+    const tagNames = (await this.programService.getTagtypes().toPromise()).result as string[];
+    const observables: Observable<RestResult>[] = tagNames.map( (tagType: string) => this.programService.getTagsByType(tagType) );
+    const tags = await join(...observables) as Tag[][]
+    tagNames.forEach((tagName, idx) => {
+      this.tagNames.set(tagName, new Map<string, string>());
+      tags[idx].forEach((tag: Tag) => {
+        this.tagNames.get(tagName).set(tag.abbr, tag.name);
       });
-
-      forkJoin(calls).subscribe(data => {
-        var tagmap = new Map<string, Map<string, string>>();
-
-        tagtypes.result.forEach((tagtype, idx) => {
-          tagmap.set(tagtype, new Map<string, string>());
-          data[idx]['result'].forEach( (x: Tag) => { 
-            tagmap.get(tagtype).set(x.abbr, x.name);
-          });
-        });
-
-        console.log(tagmap);
-        my.tagnames = tagmap;
-        console.log(my.tagnames);
-      });
-
-      //console.log(my.current);
     });
+  }
 
-    if (this.current.parentMrId) {
-      console.log('calling for fullname of ' + this.current.parentMrId);
-      this.progsvc.getFullName(this.current.parentMrId).subscribe(data => {
-        my.parentname = data.result;
+  private initParentName() {
+    if (this.ufr.parentMrId) {
+      this.programService.getFullName(this.ufr.parentMrId).subscribe(data => {
+        this.parentName = data.result;
       });
     }
   }
+
 }
