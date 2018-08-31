@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core'
-import * as $ from 'jquery'
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
@@ -9,14 +8,11 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
 import { ExecutionLineFilter } from '../model/execution-line-filter'
-import { GridOptions } from 'ag-grid';
+import { GridOptions, RowNode } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
 import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.component";
-
-declare const $: any;
-declare const jQuery: any;
 
 @Component({
   selector: 'app-execution-line-table',
@@ -38,12 +34,20 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() set updatelines(newdata: ExecutionLineWrapper[] ) {
     this._updatelines = newdata;
     if (this.agOptions && this.agOptions.api) {
+      this.agOptions.api.setRowData(newdata);
       this.agOptions.api.refreshCells();
     }
   }
 
   get updatelines() {
     return this._updatelines;
+  }
+
+  refreshlines() {
+    this._updatelines.splice(0, this._updatelines.length);
+    this.agOptions.api.forEachNode(rownode => {
+      this._updatelines.push(rownode.data);
+    });
   }
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
@@ -81,23 +85,12 @@ export class ExecutionLineTableComponent implements OnInit {
       return true;
     }
 
-    var elSetter = function (params): boolean {
-      console.log('setting the EL!');
-      console.log(params);
-      
-      //toupdate.line.appropriation = l.appropriation;
-      //toupdate.line.blin = l.blin;
-      //toupdate.line.item = l.item;
-      //toupdate.line.opAgency = l.opAgency;
-      //toupdate.line.toa = l.toa;
-      //toupdate.line.released = l.released;
-      //toupdate.line.id = l.id;
-      //toupdate.line.withheld = l.withheld;
-      //this.agOptions.api.setRowData(this._updatelines);
-
+    var my: ExecutionLineTableComponent = this;
+    var amtSetter = function (params): boolean {
+      params.data.amt = params.newValue;
+      my.refreshlines();
       return true;
     }
-    var my: ExecutionLineTableComponent = this;
 
     this.agOptions = <GridOptions>{
       enableSorting: true,
@@ -124,10 +117,8 @@ export class ExecutionLineTableComponent implements OnInit {
             : 'Please choose a Program'),
           field: 'line.mrId',
           cellEditorParams: function(){
-            var progs:{}[] = my.programList();
-            console.log(progs);
             return {
-              values: progs,
+              values: my.programList(),
               formatValue: params => (null == params ? 'Please choose a Program' : params.value)
             };
           },
@@ -138,7 +129,6 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Execution Line',
           filter: 'agTextColumnFilter',
           editable: true,
-          onCellValueChanged: elSetter,
           field: 'line',
           valueFormatter: params => (params.data.line.appropriation
             ? params.data.line.appropriation + '/' + params.data.line.blin + '/' + params.data.line.item + '/' + params.data.line.opAgency
@@ -178,6 +168,7 @@ export class ExecutionLineTableComponent implements OnInit {
           editable: true,
           filter: 'agNumberColumnFilter',
           field: 'amt',
+          valueSetter: amtSetter,
           width: 92,
           cellClass: ['ag-cell-light-grey']
         },
@@ -194,62 +185,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    //jQuery for editing table
-    var $TABLE = $('.execution-line-table');
-    var $BTN = $('#export-btn');
-    var $EXPORT = $('#export');
-
-    $('.table-add').click(function () {
-      var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-      $TABLE.find('table').append($clone);
-    });
-
-    $('.table-remove').click(function () {
-      $(this).parents('tr').detach();
-    });
-
-    $('.table-up').click(function () {
-      var $row = $(this).parents('tr');
-      if ($row.index() === 1) return; // Don't go above the header
-      $row.prev().before($row.get(0));
-    });
-
-    $('.table-down').click(function () {
-      var $row = $(this).parents('tr');
-      $row.next().after($row.get(0));
-    });
-
-    // A few jQuery helpers for exporting only
-    jQuery.fn.pop = [].pop;
-    jQuery.fn.shift = [].shift;
-
-    $BTN.click(function () {
-      var $rows = $TABLE.find('tr:not(:hidden)');
-      var headers = [];
-      var data = [];
-
-      // Get the headers (add special header logic here)
-      $($rows.shift()).find('th:not(:empty)').each(function () {
-        headers.push($(this).text().toLowerCase());
-      });
-
-      // Turn all existing rows into a loopable array
-      $rows.each(function () {
-        var $td = $(this).find('td');
-        var h = {};
-
-        // Use the headers from earlier to name our hash keys
-        headers.forEach(function (header, i) {
-          h[header] = $td.eq(i).text();
-        });
-
-        data.push(h);
-      });
-
-      // Output the result
-      $EXPORT.text(JSON.stringify(data));
-    });
-
     var my: ExecutionLineTableComponent = this;
     forkJoin([
       my.progsvc.getIdNameMap()
@@ -263,67 +198,28 @@ export class ExecutionLineTableComponent implements OnInit {
       Object.getOwnPropertyNames(data[0].result).forEach(id => {
         my.programIdNameLkp.set(id, data[0].result[id]);
       });
-
-      my.allexelines.sort((a, b) => {
-        if (my.fullname(a) === my.fullname(b)) {
-          return 0;
-        }
-        return (my.fullname(a) < my.fullname(b) ? -1 : 1);
-      });
     });
-  }
-
-  fullname(exeline: ExecutionLine): string {
-    if (this.programIdNameLkp && exeline) {
-      //console.log(exeline);
-      return this.programIdNameLkp.get(exeline.mrId);
-    }
-    else {
-      return '';
-    }
   }
 
   addrow() {
-    this._updatelines.push({
-      line: {},
-      amt: 0
-    });
-
     this.agOptions.api.updateRowData({
       add: [{
-        line: {}, amt: 0
+        line: {},
+        amt: 0
       }]
     });
   }
 
   removerow(i) {
-    this._updatelines.splice(i, 1);
-    this.agOptions.api.setRowData(this._updatelines);
-  }
-
-  setline(updateidx: number, lineidx: number) {
-    var toupdate: ExecutionLineWrapper = this._updatelines[updateidx];
-    var l: ExecutionLine = this.getLineChoices(toupdate.line.mrId)[lineidx - 1];
-
-    toupdate.line.appropriation = l.appropriation;
-    toupdate.line.blin = l.blin;
-    toupdate.line.item = l.item;
-    toupdate.line.opAgency = l.opAgency;
-    toupdate.line.toa = l.toa;
-    toupdate.line.released = l.released;
-    toupdate.line.id = l.id;
-    toupdate.line.withheld = l.withheld;
     this.agOptions.api.setRowData(this._updatelines);
   }
 
   getLineChoices(mrid): ExecutionLine[] {
-    console.log(this.agGrid.rowData);
-
-
-    // FIXME: have to look through ag-grid to figure this out
     var existingeEls: Set<string> = new Set<string>();
-    this._updatelines.forEach(x => { 
-      existingeEls.add(x.line.id);
+    this.agOptions.api.forEachNode(rownode => {
+      if (rownode.data.line.id) {
+        existingeEls.add(rownode.data.line.id);
+      }
     });
 
     return this.allexelines
@@ -331,12 +227,6 @@ export class ExecutionLineTableComponent implements OnInit {
       .filter(y => (this.exelinefilter ? this.exelinefilter(y) : true))
       .filter(z => !existingeEls.has(z.id) // we can't add the same EL twice
       );
-  }
-
-  onedit(amtstr, updateidx) {
-    var my: ExecutionLineTableComponent = this;
-    var toupdate: ExecutionLineWrapper = my._updatelines[updateidx];
-    toupdate.amt = Number.parseInt(amtstr);
   }
 
   total(): number {
@@ -350,15 +240,6 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     return tot;
-  }
-
-  updateapprs(idx) {
-    if (1 == this.getLineChoices(this._updatelines[idx].line.mrId).length) {
-      this._updatelines[idx] = {
-        line: this.getLineChoices(this._updatelines[idx].line.mrId)[0],
-        amt: 0
-      } 
-    }
   }
 
   programList(): {}[] {

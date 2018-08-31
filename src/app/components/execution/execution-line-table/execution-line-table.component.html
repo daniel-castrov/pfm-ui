@@ -39,48 +39,6 @@
       </th>
     </tr>
 
-    <tr class="table-bordered" *ngFor="let wrap of updatelines; let idx=index">
-      <td *ngIf="wrap.line.mrId" class="large-column">{{fullname(wrap.line)}}</td>
-      <td *ngIf="!wrap.line.mrId" class="large-column">
-        <select class="form-control-sm dropdown-width mb-2" name="progdd" [(ngModel)]="wrap.line.mrId" (change)="updateapprs(idx)">
-          <option value="">Select Program</option>
-          <option *ngFor="let en of programList()" [value]="en.key">{{en.value}}</option>
-        </select>
-      </td>
-
-      <td *ngIf="wrap.line.mrId && wrap.line.appropriation">
-        <ng-container *ngTemplateOutlet="idline;context:{line:wrap.line}"></ng-container>
-      </td>
-      <td *ngIf="wrap.line.mrId && !wrap.line.appropriation">
-        <select class="form-control-sm dropdown-width mb-2" name="linedd" (change)="setline(idx, $event.target.selectedIndex)">
-          <option value="">Select Execution Line</option>
-          <option *ngFor="let l of getLineChoices(wrap.line.mrId)" [ngValue]="l.id">
-            <ng-container *ngTemplateOutlet="idline;context:{line:l}"></ng-container>
-          </option>
-        </select>
-      </td>
-      <td *ngIf="!wrap.line.mrId">
-        Select a Program first
-      </td>
-
-      <td>{{wrap.line.toa}}</td>
-      <td>{{wrap.line.released}}</td>
-      <td>{{wrap.line.withheld}}</td>
-      <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, idx)">{{wrap.amt}}</td>
-      <td class="text-center">
-        <span class="remove-pom-line" title="Remove" (click)="removerow(idx)">
-          <i class="fa fa-trash"></i>
-        </span>
-      </td>
-    </tr>
-    <tr class="total-row">
-      <td colspan="2" class="text-right">Total:</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td class="text-right">{{total()}} </td>
-      <td></td>
-    </tr>
   </table>
 </div>
 
@@ -96,3 +54,7 @@
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+
+<div *ngFor="let x of _updatelines">
+  {{x|json}}
+</div>
