@@ -31,6 +31,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     cellStyle: { backgroundColor: "#eae9e9" },
     menuTabs: this.menuTabs,
     filter: 'agTextColumnFilter',
+    filterValueGetter: params => {return params.data.fullname},
     cellRendererParams: { suppressCount: true, innerRenderer: 'summaryProgramCellRenderer' }
   };
 

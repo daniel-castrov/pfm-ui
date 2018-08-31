@@ -44,10 +44,13 @@ export class AppropriationReleaseComponent implements OnInit {
     this.route.params.subscribe(data => {
       forkJoin([
         this.exesvc.getById(data.phaseId),
-        this.exesvc.getExecutionDropdowns()
+        this.exesvc.getExecutionDropdowns(),
+        this.exesvc.hasAppropriation(data.phaseId)
       ]).subscribe(d2 => {
         this.phase = d2[0].result;
-        this.subtypes = d2[1].result.filter(x => ('EXE_RELEASE' === x.type));
+        this.subtypes = d2[1].result
+          .filter(x => 'EXE_RELEASE' === x.type)
+          .filter(x => ( d2[2].result ? 'RELEASE_CRA' !== x.subtype : true ) );
         this.etype = this.subtypes[0];
       });
     });
