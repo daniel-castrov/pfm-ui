@@ -39,6 +39,7 @@ export class FundsUpdateComponent implements OnInit {
   private opAgency: string;
   private funds: number;
   private menuTabs = ['filterMenuTab'];
+  private hasAppropriation: boolean = false;
 
   private agOptions: GridOptions;
 
@@ -67,6 +68,10 @@ export class FundsUpdateComponent implements OnInit {
       return (name1 < name2 ? -1 : 1);
     }
 
+    var programLinkEnabled = function (params): boolean {
+      return my.hasAppropriation && !(0 === params.data.released || params.data.appropriated);
+    };
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -78,9 +83,7 @@ export class FundsUpdateComponent implements OnInit {
       context: {
         programlkp: my.programs,
         route: '/update-program-execution',
-        enabled: function (params): boolean {
-          return !( 0 === params.data.released || params.data.appropriated);
-        }
+        enabled: programLinkEnabled
       },
       columnDefs: [
         {
@@ -264,22 +267,26 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   fetchLines() {
-    var my: FundsUpdateComponent = this;
 
-    if (!my.selectedexe) {
-      my.agOptions.api.showNoRowsOverlay();
+    if (!this.selectedexe) {
+      this.agOptions.api.showNoRowsOverlay();
       return;
     }
 
-    my.exesvc.getExecutionLinesByPhase(my.selectedexe.id).subscribe(data => {
-      my.exelines = data.result;
-      if (0 == my.exelines.length) {
-        my.agOptions.api.showNoRowsOverlay();
+    forkJoin([
+      this.exesvc.getExecutionLinesByPhase(this.selectedexe.id),
+      this.exesvc.hasAppropriation(this.selectedexe.id)
+    ]).subscribe(data => {
+      this.exelines = data[0].result;
+      if (0 == this.exelines.length) {
+        this.agOptions.api.showNoRowsOverlay();
       }
       else {
-        my.agOptions.api.hideOverlay();
+        this.agOptions.api.hideOverlay();
       }
       this.refreshFilterDropdowns();
+
+      this.hasAppropriation = data[1].result;
     });
   }
 

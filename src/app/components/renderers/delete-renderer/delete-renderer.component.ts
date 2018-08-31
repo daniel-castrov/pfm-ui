@@ -14,11 +14,16 @@ export class DeleteRenderer implements ICellRendererAngularComp {
 
   agInit(param) {
     this.params = param;
-    if(this.params.data.fundingLine && this.params.data.fundingLine.userCreated){
-      this.hidden = false;
+    if (typeof this.params.context.deleteHidden !=='undefined') {
+      this.hidden = this.params.context.deleteHidden;
     }
-    if(this.params.data.serviceLine && !this.params.data.serviceLine.bulkOrigin && this.params.data.serviceLine.branch !== 'Totals') {
-      this.hidden = false;
+    else {
+      if (this.params.data.fundingLine && this.params.data.fundingLine.userCreated) {
+        this.hidden = false;
+      }
+      if (this.params.data.serviceLine && !this.params.data.serviceLine.bulkOrigin && this.params.data.serviceLine.branch !== 'Totals') {
+        this.hidden = false;
+      }
     }
   }
 

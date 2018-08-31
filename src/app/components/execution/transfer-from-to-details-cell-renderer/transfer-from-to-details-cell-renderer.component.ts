@@ -21,7 +21,6 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
 
   agInit(param) {
     this.params = param;
-    var my: TransferFromToDetailsCellRendererComponent = this;
 
     var event: ExecutionEvent = param.data.event;
     var eventdata: ExecutionEventData = event.value;
@@ -36,43 +35,17 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
       var current: ExecutionLine = param.context.line;
 
       if (this.istransfer) {
-        if (eventdata.fromIsSource && eventdata.fromId === current.id) {
-          this.issrc = true;
-          if (Object.getOwnPropertyNames(eventdata.toIdAmtLkp).length > 1) {
-            this.otherel = 'multiple';
-          }
-          else {
-            my.fetchOneOther(Object.getOwnPropertyNames(eventdata.toIdAmtLkp)[0]);
-          }
-        }
-        else if (!eventdata.fromIsSource && eventdata.toIdAmtLkp[current.id]) {
-          this.issrc = true;
-          my.fetchOneOther(eventdata.fromId);
+        if (eventdata.fromId === current.id) {
+          this.issrc = eventdata.fromIsSource;
+          this.setOtherEl(Object.getOwnPropertyNames(eventdata.toIdAmtLkp)[0]);
         }
         else {
-          this.issrc = false;
-
-          if (eventdata.fromId === current.id) {
-            if (Object.getOwnPropertyNames(eventdata.toIdAmtLkp).length > 1) {
-              this.otherel = 'multiple';
-            }
-            else {
-              my.fetchOneOther(Object.getOwnPropertyNames(eventdata.toIdAmtLkp)[0]);
-            }
-          }
-          else {
-            if (Object.getOwnPropertyNames(eventdata.toIdAmtLkp).length > 1) {
-              this.otherel = 'multiple';
-            }
-            else {
-              my.fetchOneOther(Object.getOwnPropertyNames(eventdata.toIdAmtLkp)[0]);
-            }            
-          }
+          this.issrc = !eventdata.fromIsSource;
+          this.setOtherEl(eventdata.fromId );
         }
       }
     }
     else {
-      this.istransfer = false;
       this.issrc = false;
     }
   }
@@ -81,7 +54,7 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
     return true;
   }
 
-  fetchOneOther(otherElId) {
+  setOtherEl(otherElId) {
     var my: TransferFromToDetailsCellRendererComponent = this;
     this.exesvc.getExecutionLineById(otherElId).subscribe(d => {
       var line: ExecutionLine = d.result;
