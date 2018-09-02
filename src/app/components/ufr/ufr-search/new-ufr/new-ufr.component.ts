@@ -67,16 +67,16 @@ export class NewUfrComponent implements OnInit {
     let ufr: UFR = {phaseId: this.pomId};
     switch(this.createNewUfrMode) {
       case 'An MRDB Program':
-        ufr.originalMrId = this.selectedProgramOrPr.id;
-        ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
-        ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
-        ufr.type = ProgramType.PROGRAM;
+        // ufr.originalMrId = this.selectedProgramOrPr.id;
+        // ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
+        // ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
+        // ufr.type = ProgramType.PROGRAM;
         ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A Programmatic Request': // was subprogram
-        ufr.creationTimeType = CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR;
-        ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
-        ufr.type = ProgramType.GENERIC; // is this right? I guess GENERIC for a UFR means 'For a PR'. Reusing the value with PRs for a completely different purpose
+        // ufr.creationTimeType = CreationTimeType.SUBPROGRAM_OF_PR;
+        // ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
+        // ufr.type = ProgramType.GENERIC; // is this right? I guess GENERIC for a UFR means 'For a PR'. Reusing the value with PRs for a completely different purpose
         ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New FoS':
@@ -87,7 +87,7 @@ export class NewUfrComponent implements OnInit {
             this.selectedProgramOrPr,
             ProgramType.FOS);
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
             this.pomId,
             this.selectedProgramOrPr,
             ProgramType.FOS);
@@ -100,15 +100,15 @@ export class NewUfrComponent implements OnInit {
             this.selectedProgramOrPr,
             ProgramType.INCREMENT);
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
             this.pomId,
             this.selectedProgramOrPr,
             ProgramType.INCREMENT);
         }
         break;
       case 'A New Program':
-        ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
-        ufr.type = ProgramType.PROGRAM;
+        // ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
+        // ufr.type = ProgramType.PROGRAM;
       break;
     }
     ufr = (await this.ufrService.update(ufr).toPromise()).result;

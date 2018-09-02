@@ -72,7 +72,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         this.pr.type = this.programRequestPageMode.programType;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         break;
-      case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
+      case CreationTimeType.SUBPROGRAM_OF_PR:
         this.pr.type = this.programRequestPageMode.programType;
         this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.initPrWith(this.programRequestPageMode.reference);

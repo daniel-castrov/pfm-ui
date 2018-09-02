@@ -57,13 +57,13 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       this.pomProgrammaticRequests.forEach(prOne => {
         let programmaticRequest = new UiProgrammaticRequest(prOne);
         programmaticRequest.phaseType = PhaseType.POM;
-        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR && prOne.type === ProgramType.GENERIC) {
+        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR && prOne.type === ProgramType.GENERIC) {
           let prTwo = this.pomProgrammaticRequests.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
 
-          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR  && prTwo.type === ProgramType.GENERIC) {
+          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR  && prTwo.type === ProgramType.GENERIC) {
             let prThree = this.pomProgrammaticRequests.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
 
-            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR  && prThree.type === ProgramType.GENERIC) {
+            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR  && prThree.type === ProgramType.GENERIC) {
               let prFour = this.pomProgrammaticRequests.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
               programmaticRequest.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {

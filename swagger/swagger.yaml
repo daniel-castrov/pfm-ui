@@ -2869,16 +2869,8 @@ definitions:
         $ref: "#/definitions/StringMap"
       description:
         type: "string"
-      parentMrId:
-        type: "string"
       phaseId:
         type: "string"
-      originalMrId:
-        type: "string"
-      creationTimeReferenceId:
-        type: "string"
-      creationTimeType:
-        $ref: "#/definitions/CreationTimeType"
       infolink:
         type: "string"
       imgLink:
@@ -2888,8 +2880,6 @@ definitions:
       shortName:
         type: "string"
       longName:
-        type: "string"
-      type:
         type: "string"
       yoE:
         type: "boolean"
@@ -3077,7 +3067,7 @@ definitions:
   ProgramType:
     enum: [PROGRAM, GENERIC, INCREMENT, FOS]
   CreationTimeType:
-    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR_OR_UFR, NEW_PROGRAM]
+    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR, NEW_PROGRAM]
   ProgrammaticRequestState:
     enum: [OUTSTANDING, SAVED, SUBMITTED]
   PB:

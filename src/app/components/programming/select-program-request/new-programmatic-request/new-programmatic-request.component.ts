@@ -72,7 +72,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
             this.selectedProgramOrPr,
             ProgramType.FOS);
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
             this.pomId,
             this.selectedProgramOrPr,
             ProgramType.FOS);
@@ -85,14 +85,14 @@ export class NewProgrammaticRequestComponent implements OnInit {
             this.selectedProgramOrPr,
             ProgramType.INCREMENT);
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
             this.pomId,
             this.selectedProgramOrPr,
             ProgramType.INCREMENT);
         }
         break;
       case 'A New Subprogram':
-        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR,
+        this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
           this.pomId,
           this.selectedProgramOrPr,
           ProgramType.GENERIC);

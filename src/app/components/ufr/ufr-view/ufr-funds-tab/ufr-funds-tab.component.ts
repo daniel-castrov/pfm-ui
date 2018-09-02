@@ -67,40 +67,41 @@ export class UfrFundsComponent implements OnInit {
 
       // ...now merge/add the original funding lines from the POM
       // (new programs/subprograms won't necessarily have a shortname yet)
-      if (this.ufr.originalMrId) {
-        this.prService.getByPhaseAndMrId(this.pom.id, this.ufr.originalMrId).subscribe(model => {
-          // get the current values for this program
-          this.model = model.result;
-          this.model.fundingLines.forEach(fund => {
-            var key = fund.appropriation + fund.baOrBlin;
 
-            var newdata = false;
-            if (!this.rows.has(key)) {
-              this.rows.set(key, {
-                appropriation: fund.appropriation,
-                baOrBlin: fund.baOrBlin,
-                opagency: fund.opAgency,
-                item: fund.item,
-                modelfunds: new Map<number, number>(),
-                ufrfunds: new Map<number, number>(),
-                totalfunds: new Map<number, number>()
-              });
-              newdata = true;
-            }
-            var thisrow: tabledata = this.rows.get(key);
+      // if (this.ufr.originalMrId) {
+      //   this.prService.getByPhaseAndMrId(this.pom.id, this.ufr.originalMrId).subscribe(model => {
+      //     // get the current values for this program
+      //     this.model = model.result;
+      //     this.model.fundingLines.forEach(fund => {
+      //       var key = fund.appropriation + fund.baOrBlin;
 
-            Object.keys(fund.funds).forEach(function (yearstr) {
-              var year: number = Number.parseInt(yearstr);
-              var amt: number = fund.funds[yearstr];
-              thisrow.modelfunds.set(year, amt);
-              if (!thisrow.ufrfunds.has(year)) {
-                thisrow.ufrfunds.set(year, 0);
-              }
-              thisrow.totalfunds.set(year, thisrow.ufrfunds.get(year) + amt);
-            });
-          });
-        });
-      }  
+      //       var newdata = false;
+      //       if (!this.rows.has(key)) {
+      //         this.rows.set(key, {
+      //           appropriation: fund.appropriation,
+      //           baOrBlin: fund.baOrBlin,
+      //           opagency: fund.opAgency,
+      //           item: fund.item,
+      //           modelfunds: new Map<number, number>(),
+      //           ufrfunds: new Map<number, number>(),
+      //           totalfunds: new Map<number, number>()
+      //         });
+      //         newdata = true;
+      //       }
+      //       var thisrow: tabledata = this.rows.get(key);
+
+      //       Object.keys(fund.funds).forEach(function (yearstr) {
+      //         var year: number = Number.parseInt(yearstr);
+      //         var amt: number = fund.funds[yearstr];
+      //         thisrow.modelfunds.set(year, amt);
+      //         if (!thisrow.ufrfunds.has(year)) {
+      //           thisrow.ufrfunds.set(year, 0);
+      //         }
+      //         thisrow.totalfunds.set(year, thisrow.ufrfunds.get(year) + amt);
+      //       });
+      //     });
+      //   });
+      // }  
 
       {
         this.agencies = await this.tagsService.tagAbbreviationsForOpAgency();

@@ -42,7 +42,7 @@ export class IdAndNameComponent {
         case CreationTimeType.PROGRAM_OF_MRDB:
           return false;
         case CreationTimeType.SUBPROGRAM_OF_MRDB:
-        case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
+        case CreationTimeType.SUBPROGRAM_OF_PR:
         case CreationTimeType.NEW_PROGRAM:
           return this.shortname.invalid || this.longname.invalid;
         default:

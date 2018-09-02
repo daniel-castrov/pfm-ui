@@ -50,7 +50,7 @@ export class ProgramRequestPageModeService {
   }
 
   get subprogramOfPrOrUfr(): boolean {
-    return this.type === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR;
+    return this.type === CreationTimeType.SUBPROGRAM_OF_PR;
   }
 
   get newProgram(): boolean {

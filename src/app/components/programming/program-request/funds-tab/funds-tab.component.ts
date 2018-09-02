@@ -74,13 +74,13 @@ export class FundsTabComponent implements OnChanges {
     this.loadExistingFundingLines();
     this.setPomFiscalYear();
     this.initDataRows();
-    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
       this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result
     }
   }
 
   loadExistingFundingLines() {
-    if(this.pr.creationTimeReferenceId && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR) {
+    if(this.pr.creationTimeReferenceId && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
       this.prService.getById(this.pr.creationTimeReferenceId).subscribe(pr => {
         pr.result.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -680,7 +680,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   isValidBa(ba: string, year: number, value: number): boolean {
-    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR)  {
+    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR)  {
       return this.isValidBaWithRespectToParent(ba, year) && this.isValidBaWithRespectToChildren(ba, year);
     } else {
       return true;

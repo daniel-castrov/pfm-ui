@@ -120,7 +120,7 @@ export class WithFullNameService {
   private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
     var parentName = '';
     switch(pr.creationTimeType) {
-      case CreationTimeType.SUBPROGRAM_OF_PR_OR_UFR:
+      case CreationTimeType.SUBPROGRAM_OF_PR:
         parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';
         break;
       case CreationTimeType.SUBPROGRAM_OF_MRDB:

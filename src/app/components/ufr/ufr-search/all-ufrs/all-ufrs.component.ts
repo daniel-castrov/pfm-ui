@@ -65,25 +65,10 @@ export class AllUfrsComponent implements OnInit {
     this.router.navigate(['/ufr-view', row.id]);
   }
 
-  getProgramName(ufr: UFR): string {
-    return this.mapProgramIdToName.get( ufr.originalMrId );
-  }
-
-  getParentProgramName(ufr: UFR): string {
-    return (ufr.parentMrId ? this.mapProgramIdToName.get(ufr.parentMrId) : '');
-  }
-
   // Only considers the immediate parent, i.e. cannot consider three levels in the hierarchy, i.e. AAA/BBB/CCC
   getFullProgramName(ufr: UFR): string {
-    var parentName = this.getParentProgramName(ufr);
-    if (parentName) parentName += '/';
-
-    // this UFR might be a new program, and if so, just use the shortname
-    if (ufr.originalMrId) {
-      return parentName + this.getProgramName(ufr);
-    }
-
-    return parentName + (!ufr.shortName ? '??' : ufr.shortName);
+    return '';
+    // todo: return the program name if the shorty is a Program. '' otherwise.
   }
 
   ufrNumber(ufr: UFR): string {

@@ -35,11 +35,11 @@ export class UfrProgramComponent implements OnInit {
   }
 
   private initParentName() {
-    if (this.ufr.parentMrId) {
-      this.programService.getFullName(this.ufr.parentMrId).subscribe(data => {
-        this.parentName = data.result;
-      });
-    }
+    // if (this.ufr.parentMrId) {
+    //   this.programService.getFullName(this.ufr.parentMrId).subscribe(data => {
+    //     this.parentName = data.result;
+    //   });
+    // }
   }
 
 }
