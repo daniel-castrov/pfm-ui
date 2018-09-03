@@ -1,8 +1,7 @@
 import { join } from './../../../../utils/join';
 import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { OrganizationService, Organization, ProgramsService, Tag, User, RestResult } from '../../../../generated';
+import { OrganizationService, Organization, ProgramsService, Tag, User } from '../../../../generated';
 import { Disposition } from '../../disposition.enum';
 import { Status } from '../../status.enum';
 
@@ -54,7 +53,7 @@ export class FilterUfrsComponent implements OnInit {
 
     const [organizations, functionalAreas] = (await join( this.organizationService.getByCommunityId(this.user.currentCommunityId),
                                                           this.programsService.getTagsByType("Functional Area") )) as [Organization[], Tag[]];
-  
+
     this.organizations = organizations;
     this.functionalAreas = functionalAreas || [];
 

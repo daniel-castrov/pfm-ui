@@ -42,7 +42,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   async search() {
-    var ufrFilter: UFRFilter = {};
+    const ufrFilter: UFRFilter = {};
     if (this.filterUfrsComponent.useCycle) ufrFilter.cycle = this.filterUfrsComponent.selectedCycle.replace(/([0-9]+)/, "20$1");
     if (this.filterUfrsComponent.useDates) {
       ufrFilter.from = this.filterUfrsComponent.fromDate;

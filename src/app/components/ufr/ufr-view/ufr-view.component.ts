@@ -16,11 +16,10 @@ export class UfrViewComponent implements OnInit {
 
   constructor( private ufrService: UFRsService,
                private cycleUtils: CycleUtils,
-               private route: ActivatedRoute ) {
-  }
+               private route: ActivatedRoute ) {}
 
   async ngOnInit() {
-    this.route.url.subscribe(async(urlSegments: UrlSegment[]) => {
+    this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
       const ufrId = urlSegments[urlSegments.length - 1].path;
       this.initUfr(ufrId);
       this.canedit = !!await this.cycleUtils.currentPom().toPromise();
@@ -36,5 +35,7 @@ export class UfrViewComponent implements OnInit {
   }
 
   submit() {
+    this.ufr.status = 'SUBMITTED';
+    this.save();
   }
 }

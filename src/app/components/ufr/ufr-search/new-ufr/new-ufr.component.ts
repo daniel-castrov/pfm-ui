@@ -35,7 +35,7 @@ export class NewUfrComponent implements OnInit {
     private cycleUtils: CycleUtils ) {}
 
   async ngOnInit() {
-    this.allPrograms = await this.withFullNameService.programs()
+    this.allPrograms = await this.withFullNameService.programs();
     this.pomId = (await this.cycleUtils.currentPom().toPromise()).id;
   }
 
@@ -97,7 +97,7 @@ export class NewUfrComponent implements OnInit {
         ufr.shortyType = ShortyType.NEW_PROGRAM;
       break;
     }
-    ufr = (await this.ufrService.update(ufr).toPromise()).result;
+    ufr = (await this.ufrService.create(ufr).toPromise()).result;
     this.router.navigate(['/ufr-view', ufr.id]);
   }
 
