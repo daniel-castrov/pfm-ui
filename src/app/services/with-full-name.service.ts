@@ -104,6 +104,19 @@ export class WithFullNameService {
     return this.sort((<WithFullName[]>programs).concat(prsWithoutPrograms));
   }
 
+  async programsMunisPrs(allPrograms: ProgramWithFullName[], pomId: string): Promise<ProgramWithFullName[]> {
+    const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(pomId);
+
+    const referenceIds: Set<string> = new Set();
+    prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
+
+    return allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
+  }
+
+  isProgram(programOrPr): boolean {
+    return (typeof programOrPr.creationTimeType) === 'undefined';
+  }
+
   private sort(withFullName: WithFullName[]): WithFullName[] {
     return withFullName.sort((a: WithFullName, b: WithFullName) => {
       if (a.fullname === b.fullname) return 0;
@@ -118,7 +131,7 @@ export class WithFullNameService {
   }
 
   private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
-    var parentName = '';
+    let parentName = '';
     switch(pr.creationTimeType) {
       case CreationTimeType.SUBPROGRAM_OF_PR:
         parentName = this.prFullNameDerivedFromCreationTimeData(mapIdToPr.get(pr.creationTimeReferenceId), mapIdToProgram, mapIdToPr) + '/';

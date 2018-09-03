@@ -1,14 +1,9 @@
 import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramRequestPageModeService } from './../../../programming/program-request/page-mode.service';
-import { ProgramType } from './../../../../generated/model/programType';
-import { CreationTimeType } from './../../../../generated/model/creationTimeType';
-import { ProgramWithFullName, ProgramRequestWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
-import { join } from '../../../../utils/join';
-import { UserUtils } from '../../../../services/user.utils';
-import { Component, OnInit, Input } from '@angular/core';
+import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, POMService, ProgramsService, Program, UFR, Pom, User } from '../../../../generated';
-import { ProgramTreeUtils } from '../../../../utils/program-tree-utils'
+import {UFRsService, Program, UFR, ShortyType} from '../../../../generated';
 
 enum CreateNewUfrMode {
   AN_MRDB_PROGRAM        = 'An MRDB Program',
@@ -48,7 +43,7 @@ export class NewUfrComponent implements OnInit {
     this.createNewUfrMode = createNewUfrMode;
     switch(this.createNewUfrMode) {
       case 'An MRDB Program':
-        this.selectableProgramsOrPrs = await this.programsMunisPrs();
+        this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'A Programmatic Request': // was subprogram
@@ -67,64 +62,43 @@ export class NewUfrComponent implements OnInit {
     let ufr: UFR = {phaseId: this.pomId};
     switch(this.createNewUfrMode) {
       case 'An MRDB Program':
-        // ufr.originalMrId = this.selectedProgramOrPr.id;
-        // ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
-        // ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
-        // ufr.type = ProgramType.PROGRAM;
+        ufr.shortyType = ShortyType.MRDB_PROGRAM;
+        ufr.shortyId = this.selectedProgramOrPr.id;
+        ufr.shortName = this.selectedProgramOrPr.shortName;
         ufr.longName = this.selectedProgramOrPr.longName;
         break;
-      case 'A Programmatic Request': // was subprogram
-        // ufr.creationTimeType = CreationTimeType.SUBPROGRAM_OF_PR;
-        // ufr.creationTimeReferenceId = this.selectedProgramOrPr.id;
-        // ufr.type = ProgramType.GENERIC; // is this right? I guess GENERIC for a UFR means 'For a PR'. Reusing the value with PRs for a completely different purpose
+      case 'A Programmatic Request':
+        ufr.shortyType = ShortyType.PR;
+        ufr.shortyId = this.selectedProgramOrPr.id;
+        ufr.shortName = this.selectedProgramOrPr.shortName;
         ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New FoS':
-        this.programRequestPageMode.programType = ProgramType.FOS;
-        if(this.isProgram(this.selectedProgramOrPr)) {
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
-            this.pomId,
-            this.selectedProgramOrPr,
-            ProgramType.FOS);
+        if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
+          ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
-            this.pomId,
-            this.selectedProgramOrPr,
-            ProgramType.FOS);
+          ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
         }
+        ufr.shortyId = this.selectedProgramOrPr.id;
+        ufr.shortName = this.selectedProgramOrPr.shortName;
+        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New Increment':
-        if(this.isProgram(this.selectedProgramOrPr)) {
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
-            this.pomId,
-            this.selectedProgramOrPr,
-            ProgramType.INCREMENT);
+        if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
+          ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
         } else { // a PR has been selected
-          this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
-            this.pomId,
-            this.selectedProgramOrPr,
-            ProgramType.INCREMENT);
+          ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
         }
+        ufr.shortyId = this.selectedProgramOrPr.id;
+        ufr.shortName = this.selectedProgramOrPr.shortName;
+        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New Program':
-        // ufr.creationTimeType = CreationTimeType.PROGRAM_OF_MRDB;
-        // ufr.type = ProgramType.PROGRAM;
+        ufr.shortyType = ShortyType.NEW_PROGRAM;
       break;
     }
     ufr = (await this.ufrService.update(ufr).toPromise()).result;
     this.router.navigate(['/ufr-view', ufr.id]);
   }
 
-  private async programsMunisPrs(): Promise<ProgramWithFullName[]> {
-    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-
-    const referenceIds: Set<string> = new Set();
-    prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
-
-    return this.allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
-  }
-
-  private isProgram(programOrPr): boolean {
-    return (typeof programOrPr.creationTimeType) === 'undefined';
-  }
 }

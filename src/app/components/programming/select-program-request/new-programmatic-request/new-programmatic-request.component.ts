@@ -1,5 +1,5 @@
 import { CreationTimeType } from './../../../../generated/model/creationTimeType';
-import { WithFullNameService, ProgramWithFullName, ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
+import { WithFullNameService, ProgramWithFullName } from '../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
@@ -41,7 +41,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
     this.addNewPrForMode = selection;
     switch(this.addNewPrForMode) {
       case 'An MRDB Program':
-        this.selectableProgramsOrPrs = await this.programsMunisPrs();
+        this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'A New FoS':
@@ -66,7 +66,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
         break;
       case 'A New FoS':
         this.programRequestPageMode.programType = ProgramType.FOS;
-        if(this.isProgram(this.selectedProgramOrPr)) {
+        if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
             this.selectedProgramOrPr,
@@ -79,7 +79,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
         }
         break;
       case 'A New Increment':
-        if(this.isProgram(this.selectedProgramOrPr)) {
+        if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
             this.selectedProgramOrPr,
@@ -107,16 +107,4 @@ export class NewProgrammaticRequestComponent implements OnInit {
     this.router.navigate(['/program-request']);
   }
 
-  private async programsMunisPrs(): Promise<ProgramWithFullName[]> {
-    const prs: ProgramRequestWithFullName[] = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-
-    const referenceIds: Set<string> = new Set();
-    prs.forEach( (pr: ProgramRequestWithFullName) => referenceIds.add(pr.creationTimeReferenceId));
-
-    return this.allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
-  }
-
-  private isProgram(programOrPr): boolean {
-    return (typeof programOrPr.creationTimeType) === 'undefined';
-  }
 }

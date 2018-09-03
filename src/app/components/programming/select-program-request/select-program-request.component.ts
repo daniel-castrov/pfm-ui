@@ -40,7 +40,7 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   initPomPrs(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       this.pom = await this.cycleUtils.currentPom().toPromise();
       this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
       resolve();
