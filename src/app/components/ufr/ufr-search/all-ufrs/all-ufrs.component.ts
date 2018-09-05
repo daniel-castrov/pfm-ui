@@ -88,6 +88,18 @@ export class AllUfrsComponent implements OnInit {
             filter: 'agDateColumnFilter',
           }
           break;
+        case ("Func Area"):
+        case ("Organization"):
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            width: 102,
+            hide: true,
+            editable: false,
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+          }
+          break;  
         default:
           coldef = {
             headerName: colKey,
@@ -160,5 +172,11 @@ export class AllUfrsComponent implements OnInit {
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;
   }
+
+  onFilterTextBoxChanged() {    
+    let filterText = document.getElementById('filtertestbox').value);
+    console.log( filterText );
+    this.agGrid.gridOptions.api.setQuickFilter( filterText );
+}
 
 }
