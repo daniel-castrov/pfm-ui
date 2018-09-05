@@ -1,9 +1,22 @@
-<ag-grid-angular #agGrid class="ag-theme-balham"
+<ag-grid-angular #agGrid 
+  class="ag-theme-balham"
   [columnDefs]="colDefs"
   [rowData]="rowData"
   [gridAutoHeight]="true"
+  [enableSorting]="true"
+  [enableFilter]="true"
+  [showToolPanel]="false"
+  [pivotMode]="false"
+  [pagination]="true"
+  [paginationPageSize]="20"
+  (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+  [suppressRowTransform]="true"
+  [suppressPaginationPanel]="true"
   [toolPanelSuppressSideButtons]="true"
-  [suppressDragLeaveHidesColumns]="true"
   [suppressMovableColumns]="true"
+  [frameworkComponents]="frameworkComponents"
+  [context]="context"
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
+<ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+

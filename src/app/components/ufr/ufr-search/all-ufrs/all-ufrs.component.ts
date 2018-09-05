@@ -5,9 +5,8 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { ProgramsService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
-import { OrganizationService } from '../../../../generated/api/organization.service';
-
+import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: 'all-ufrs',
@@ -21,84 +20,87 @@ export class AllUfrsComponent implements OnInit {
   @Input() private filterUfrsComponent: FilterUfrsComponent;
   @Input() private mapCycleIdToFy: Map<string, string>;
 
-  private matTableDataSource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
   private mapProgramIdToName: Map<string, string> = new Map<string, string>();// mrid, fullname
   private user: User;
-  private orgMap:any[] = []
+  private orgMap: any[] = []
+  datePipe: DatePipe = new DatePipe('en-US')
 
   // agGrid   
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private rowData: any[];
   private colDefs;
-
+  private menuTabs = ['filterMenuTab'];
 
   constructor(private ufrsService: UFRsService,
-              private userUtils: UserUtils,
-              private programsService: ProgramsService,
-              private orgSvc: OrganizationService,
-              private router: Router) {}
+    private userUtils: UserUtils,
+    private programsService: ProgramsService,
+    private orgSvc: OrganizationService,
+    private router: Router) { }
 
   async ngOnInit() {
+
     this.user = await this.userUtils.user().toPromise();
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     this.initProgramIdToName(programs);
-    let organizations:Organization[] = (await this.orgSvc.getByCommunityId( this.user.currentCommunityId ).toPromise()).result;
-    organizations.forEach( org => { 
+
+    let organizations: Organization[] = (await this.orgSvc.getByCommunityId(this.user.currentCommunityId).toPromise()).result;
+    organizations.forEach(org => {
       this.orgMap[org.id] = org.abbreviation;
     });
-    
 
-    this.initGrid( 12 ); 
+    this.setAgGridColDefs();
     this.populateRowData();
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()
     });
   }
 
-  private initGrid(by: number) {
+  private setAgGridColDefs(): any {
 
-    this.agGrid.gridOptions = {
-      columnDefs: this.setAgGridColDefs(by),
-    }
-  }
-
-  private setAgGridColDefs(by: number): any {
-
-    let colKeys:string[] = ["UDR#","UFR Name","Prog Id","Status","Priority","Disposition",
-                            "Last Updated","Funding Request","Func Area","Organization"];
+    let colKeys: string[] = ["UFR #", "UFR Name", "Prog Id", "Status", "Priority", "Disposition",
+      "Last Updated", "Funding Request", "Func Area", "Organization"];
 
     this.colDefs = [];
-    
-    colKeys.forEach( colKey =>
-      {
 
-        if ( colKey == "UDR#" ){
-          let coldef = {
+    colKeys.forEach(colKey => {
+      let coldef;
+
+      switch (colKey) {
+        case ("UFR #"):
+          coldef = {
             headerName: colKey,
-            suppressMenu: true,
             field: colKey,
             width: 102,
             editable: false,
-            cellRenderer: params => this.linkCellRenderer(params)
+            cellRenderer: params => this.linkCellRenderer(params),
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
           }
-          this.colDefs.push(coldef);
-
-        } else {
-          let coldef = {
+          break;
+        case ("Last Updated"):
+          coldef = {
             headerName: colKey,
-            suppressMenu: true,
             field: colKey,
             width: 102,
-            editable: false
+            editable: false,
+            cellRenderer: params => this.dateFormatter(params.value),
+            menuTabs: this.menuTabs,
+            filter: 'agDateColumnFilter',
           }
-          this.colDefs.push(coldef);
-        }
+          break;
+        default:
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            width: 102,
+            editable: false,
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+          }
+          break;
+      }
+      this.colDefs.push(coldef);
     });
-  }
-
-  linkCellRenderer(params){
-    let link = `<a href="/ufr-view/${params.value.id}">${this.ufrNumber(params.value)}</a>`
-    return link;
   }
 
   private onGridReady(params) {
@@ -110,29 +112,41 @@ export class AllUfrsComponent implements OnInit {
     });
   }
 
-  async populateRowData(){
-  
+  async populateRowData() {
+
     const ufrFilter: UFRFilter = {};
-    let ufrs:UFR[] =   (await this.ufrsService.search( this.user.currentCommunityId, ufrFilter ).toPromise()).result;
+    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
-    let alldata:any[] = [];
-    ufrs.forEach( ufr =>{
+    let alldata: any[] = [];
+    ufrs.forEach(ufr => {
 
-      let row:any = new Object();
-      row["UDR#"] = ufr;
-      row["UFR Name"] = ufr.description;
-      row["Prog Id"] = this.mapProgramIdToName.get(ufr.shortyId);
-      row["Status"] = ufr.status;
-      row["Priority"] = ufr.requestNumber;
-      row["Disposition"] = ufr.disposition;
-      row["Last Updated"] = ufr.lastMod;
-      row["Funding Request"] = "";
-      row["Func Area"] = ufr.functionalArea;
-      row["Organization"] = this.orgMap[ufr.organization];
+      let row = {
+        "UFR #": ufr,
+        "UFR Name": ufr.description,
+        "Prog Id": this.mapProgramIdToName.get(ufr.shortyId),
+        "Status": ufr.status,
+        "Priority": ufr.priority,
+        "Disposition": ufr.disposition,
+        "Last Updated": ufr.lastMod,
+        "Funding Request": "",
+        "Func Area": ufr.functionalArea,
+        "Organization": this.orgMap[ufr.organization]
+      }
       alldata.push(row);
     });
     this.rowData = alldata;
-}
+  }
+
+  // TODO - I don't think this is the right way 
+  linkCellRenderer(params) {
+    let link = `<a href="/ufr-view/${params.value.id}">${this.ufrNumber(params.value)}</a>`
+    return link;
+  }
+
+  dateFormatter(longdate) {
+    let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
+    return this.datePipe.transform(new Date(longdate), dateFormat);
+  }
 
   private initProgramIdToName(programs: Program[]) {
     ProgramTreeUtils.fullnames(programs).forEach((fullname, program) => {
