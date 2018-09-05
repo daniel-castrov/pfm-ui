@@ -8,6 +8,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
 import { ExecutionLineFilter } from '../model/execution-line-filter'
+import { ExecutionTableCalculator } from '../model/execution-table-calculator'
 import { GridOptions, RowNode } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
@@ -26,6 +27,16 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() private sourceOrTarget: string = 'to select target programs';
   @Input() private exelinefilter: ExecutionLineFilter;
   @Input() private exeprogramfilter: ExecutionLineFilter;
+  @Input() private calculator: ExecutionTableCalculator = function (x: ExecutionLineWrapper[]): boolean[] {
+    var okays: boolean[] = [];
+    console.log('into calculator ');
+    x.forEach((el: ExecutionLineWrapper) => {
+      console.log('into calculator '+JSON.stringify(el));
+      okays.push((el.line.toa ? el.line.toa - el.line.withheld - el.line.released >= el.amt : true));
+    });
+    console.log(okays);
+    return okays;
+  };
   private _updatelines: ExecutionLineWrapper[] = [];
   private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
@@ -164,6 +175,7 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'TOA',
           filter: 'agNumberColumnFilter',
           field: 'line.toa',
+          type: 'numericColumn',
           width: 92,
           cellClass: ['ag-cell-light-grey']
         },
@@ -171,12 +183,14 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Released',
           filter: 'agNumberColumnFilter',
           field: 'line.released',
+          type: 'numericColumn',
           width: 92,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Withheld',
           filter: 'agNumberColumnFilter',
+          type: 'numericColumn',
           field: 'line.withheld',
           width: 92,
           cellClass: ['ag-cell-light-grey'],
@@ -186,10 +200,14 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Amount',
           editable: true,
           filter: 'agNumberColumnFilter',
+          type: 'numericColumn',
           field: 'amt',
           valueSetter: amtSetter,
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClassRules: {
+            'ag-cell-light-grey': params => (my.calculator([params.data])[0]),
+            'ag-cell-red': params => (!my.calculator([params.data])[0])
+          }
         },
         {
           headerName: 'Remove',
