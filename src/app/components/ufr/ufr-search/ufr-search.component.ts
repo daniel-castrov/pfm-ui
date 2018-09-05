@@ -13,7 +13,7 @@ import { Cycle } from '../cycle';
   styleUrls: ['./ufr-search.component.scss']
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header; 
   @ViewChild(FilterUfrsComponent) filterUfrsComponent: FilterUfrsComponent;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   
@@ -52,7 +52,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     pbs.forEach((pb: PB) => {
       phases.push({ fy: pb.fy, phase: 'PB' });
     });
-
+  
     phases.sort((cycle1: Cycle, cycle2: Cycle) => {
       if (cycle1.fy === cycle2.fy) {
         if (cycle1.phase === cycle2.phase) {
