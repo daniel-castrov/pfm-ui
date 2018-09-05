@@ -5,7 +5,9 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { ProgramsService, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import { ProgramsService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import { OrganizationService } from '../../../../generated/api/organization.service';
+
 
 @Component({
   selector: 'all-ufrs',
@@ -22,6 +24,7 @@ export class AllUfrsComponent implements OnInit {
   private matTableDataSource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
   private mapProgramIdToName: Map<string, string> = new Map<string, string>();// mrid, fullname
   private user: User;
+  private orgMap:any[] = []
 
   // agGrid   
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -32,21 +35,26 @@ export class AllUfrsComponent implements OnInit {
   constructor(private ufrsService: UFRsService,
               private userUtils: UserUtils,
               private programsService: ProgramsService,
+              private orgSvc: OrganizationService,
               private router: Router) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     this.initProgramIdToName(programs);
+    let organizations:Organization[] = (await this.orgSvc.getByCommunityId( this.user.currentCommunityId ).toPromise()).result;
+    organizations.forEach( org => { 
+      this.orgMap[org.id] = org.abbreviation;
+    });
+    
     //this.search();
-    this.loadTableData();
+    //this.loadTableData();
 
     this.initGrid( 12 ); 
     this.populateRowData();
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()
     });
-
   }
 
   // ngOnChanges() {
@@ -76,14 +84,30 @@ export class AllUfrsComponent implements OnInit {
     
     colKeys.forEach( colKey =>
       {
-        let coldef = {
-          headerName: colKey,
-          suppressMenu: true,
-          field: colKey,
-          width: 102,
-          editable: false
+
+        if ( colKey == "UDR#" ){
+          let coldef = {
+            headerName: colKey,
+            suppressMenu: true,
+            field: colKey,
+            width: 102,
+            editable: false,
+            cellRenderer: params => this.linkCellRenderer(params)
+          }
+          this.colDefs.push(coldef);
+
+        } else {
+          let coldef = {
+            headerName: colKey,
+            suppressMenu: true,
+            field: colKey,
+            width: 102,
+            editable: false
+          }
+          this.colDefs.push(coldef);
         }
-      this.colDefs.push(coldef);
+
+      
     });
 
     // // First column - id
@@ -131,6 +155,15 @@ export class AllUfrsComponent implements OnInit {
     //   });
   }
 
+
+  linkCellRenderer(params){
+
+    let link = `<a href="/ufr-view/${params.value.id}">${this.ufrNumber(params.value)}</a>`
+    console.log(link);
+    return link;
+
+  }
+
   private onGridReady(params) {
     params.api.sizeColumnsToFit();
     window.addEventListener("resize", function () {
@@ -146,46 +179,22 @@ export class AllUfrsComponent implements OnInit {
     const ufrFilter: UFRFilter = {};
     let ufrs:UFR[] =   (await this.ufrsService.search( this.user.currentCommunityId, ufrFilter ).toPromise()).result;
 
-    console.log(ufrs);
-
-    let rows:any[] = [];
-    ufrs.forEach( ufr =>{
-      let row:any = new Object();
-      row["UDR#"] = ufr.
-      row["UFR Name"] = i+"B"
-      row["Prog Id"] = i+"C"
-      row["Status"] = i+"D"
-      row["Priority"] = i+"E"
-      row["Disposition"] = i+"F"
-      row["Last Updated"] = i+"G"
-      row["Funding Request"] = i+"H"
-      row["Func Area"] = i+"I"
-      row["Organization"] = i+"J"
-      alldata.push(data);
-
-
-    });
-
-
     let alldata:any[] = [];
-    let data:any = new Object();
-    for ( let i =0; i<10; i++ ){
-      let data:any = new Object();
-      data["UDR#"] = i+"A"
-      data["UFR Name"] = i+"B"
-      data["Prog Id"] = i+"C"
-      data["Status"] = i+"D"
-      data["Priority"] = i+"E"
-      data["Disposition"] = i+"F"
-      data["Last Updated"] = i+"G"
-      data["Funding Request"] = i+"H"
-      data["Func Area"] = i+"I"
-      data["Organization"] = i+"J"
-      alldata.push(data);
-    }
+    ufrs.forEach( ufr =>{
 
-    
-
+      let row:any = new Object();
+      row["UDR#"] = ufr;
+      row["UFR Name"] = ufr.description;
+      row["Prog Id"] = this.mapProgramIdToName.get(ufr.shortyId);
+      row["Status"] = ufr.status;
+      row["Priority"] = ufr.requestNumber;
+      row["Disposition"] = ufr.disposition;
+      row["Last Updated"] = ufr.lastMod;
+      row["Funding Request"] = "";
+      row["Func Area"] = ufr.functionalArea;
+      row["Organization"] = this.orgMap[ufr.organization];
+      alldata.push(row);
+    });
     this.rowData = alldata;
 }
 
@@ -193,37 +202,6 @@ export class AllUfrsComponent implements OnInit {
     ProgramTreeUtils.fullnames(programs).forEach((fullname, program) => {
       this.mapProgramIdToName.set(program.id, fullname);
     });
-  }
-
-  // async search() {
-  //   const ufrFilter: UFRFilter = {};
-  //   if (this.filterUfrsComponent.useCycle) ufrFilter.cycle = this.filterUfrsComponent.selectedCycle.replace(/([0-9]+)/, "20$1");
-  //   if (this.filterUfrsComponent.useDates) {
-  //     ufrFilter.from = this.filterUfrsComponent.fromDate;
-  //     ufrFilter.to = this.filterUfrsComponent.toDate;
-  //   }
-  //   if (this.filterUfrsComponent.useDisposition) ufrFilter.disposition = this.filterUfrsComponent.selectedDisposition.toUpperCase().replace( ' ', '_' );
-  //   if (this.filterUfrsComponent.useFunctionalArea) ufrFilter.fa = this.filterUfrsComponent.selectedFunctionalArea;
-  //   if (this.filterUfrsComponent.useOrganization) ufrFilter.orgId = this.filterUfrsComponent.selectedOrganizationId;
-  //   if (this.filterUfrsComponent.useStatus) ufrFilter.status = this.filterUfrsComponent.selectedStatus;
-
-  //   this.matTableDataSource.data = (await this.ufrsService.search( this.user.currentCommunityId, ufrFilter ).toPromise()).result;
-  //   // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
-  //   // it to work there. The sorter and paginator aren't set there (?)
-  //   // so this is a not-too-ugly workaround.
-  //   this.matTableDataSource.sort = this.sorter;
-  //   this.matTableDataSource.paginator = this.paginator;
-  // }
-
-  async loadTableData(){
-
-    const ufrFilter: UFRFilter = {};
-    this.matTableDataSource.data = (await this.ufrsService.  search( this.user.currentCommunityId, ufrFilter ).toPromise()).result;
-    // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
-    // it to work there. The sorter and paginator aren't set there (?)
-    // so this is a not-too-ugly workaround.
-    this.matTableDataSource.sort = this.sorter;
-    this.matTableDataSource.paginator = this.paginator;
   }
 
   navigate(row) {
