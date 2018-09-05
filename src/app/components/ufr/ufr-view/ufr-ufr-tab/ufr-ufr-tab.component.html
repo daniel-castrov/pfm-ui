@@ -1,36 +1,38 @@
 <div class="row">
   <div class="col-md-12">
+
+
     <div class="row">
       <div class="col-3">
         <span class="form-group inline-name">
-           <label>Label</label>
+           <label>Name</label>
            <input type="text" [(ngModel)]="ufr.shortName" class="form-control forminput mr-5">
          </span>
       </div>
       <div class="col-3">
-        <span class="form-group inline-name">
-          <label class="mb-1">POM</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.pomId">
-            <option *ngFor="let p of cycles" [ngValue]="p.pomid">{{p.display}}</option>
-          </select>
-        </span>
       </div>
       <div class="col-3">
         <span class="form-group inline-name">
-          <label>Description</label>
-          <input type="text" [(ngModel)]="ufr.description" class="form-control forminput mr-5">
-        </span>
+           <label>Cost to Complete</label>
+           <input type="text" placeholder="$" [(ngModel)]="ufr.costLeft" class="form-control forminput mr-5">
+         </span>
       </div>
     </div>
+
+
     <div class="row">
-      <div class="col-3">
+      <div class="col-6">
         <span class="form-group inline-name">
-          <label class="mb-1">Core Capability</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.coreCapability2">
-            <option *ngFor="let c of capabilities" [ngValue]="c.abbr" [title]="c.name">{{c.name}}</option>
-          </select>
+          <label>Description</label>
+          <input type="text" [(ngModel)]="ufr.description" class="form-control description mr-5">
         </span>
       </div>
+      <div class="col-3">
+      </div>
+    </div>
+
+
+    <div class="row">
       <div class="col-3">
         <span class="form-group inline-name">
           <label class="mb-1">Status</label>
@@ -41,13 +43,11 @@
       </div>
       <div class="col-3">
         <span class="form-group inline-name">
-           <label>Cost to Complete</label>
-           <input type="text" placeholder="$" [(ngModel)]="ufr.costLeft" class="form-control forminput mr-5">
-         </span>
+          <label class="mb-1">Priority</label>
+          <input type="text" [(ngModel)]="ufr.priority" class="form-control forminput mr-5">
+        </span>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
+      <div class="col-3">
         <span class="form-group inline-name">
           <label>Disposition</label>
           <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.disposition">
@@ -56,6 +56,7 @@
         </span>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-12">
         <div class="title mb-2">Notes:</div>
@@ -64,5 +65,6 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>

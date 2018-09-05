@@ -2943,6 +2943,8 @@ definitions:
         type: "string"
       acquisitionType:
         type: "string"
+      priority:
+        type: "number"
   ShortyType:
     enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
   UfrStatus:
