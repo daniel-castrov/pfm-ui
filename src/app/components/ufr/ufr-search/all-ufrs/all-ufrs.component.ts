@@ -47,8 +47,6 @@ export class AllUfrsComponent implements OnInit {
       this.orgMap[org.id] = org.abbreviation;
     });
     
-    //this.search();
-    //this.loadTableData();
 
     this.initGrid( 12 ); 
     this.populateRowData();
@@ -56,17 +54,6 @@ export class AllUfrsComponent implements OnInit {
       this.agGrid.api.sizeColumnsToFit()
     });
   }
-
-  // ngOnChanges() {
-
-  //   if ( true ) {
-  //     this.initGrid( 12 ); 
-  //     this.populateRowData();
-  //     setTimeout(() => {
-  //       this.agGrid.api.sizeColumnsToFit()
-  //     });
-  //   }
-  // }
 
   private initGrid(by: number) {
 
@@ -106,62 +93,12 @@ export class AllUfrsComponent implements OnInit {
           }
           this.colDefs.push(coldef);
         }
-
-      
     });
-
-    // // First column - id
-    // this.colDefs =
-    //   [{
-    //     headerName: "",
-    //     suppressMenu: true,
-    //     field: 'id',
-    //     width: 102,
-    //     editable: false,
-    //     cellClass: "font-weight-bold"
-    //   }];
-
-    // Columns for FYs
-    // for (var i = 0; i < 5; i++) {
-    //   this.colDefs.push(
-    //     {
-    //       headerName: "FY" + (by + i - 2000),
-    //       type: "numericColumn",
-    //       suppressMenu: true,
-    //       field: (by + i).toString(),
-    //       width: 92,
-    //       editable: false,
-    //       //valueFormatter: params => { return this.currencyFormatter(params) },
-    //       cellClassRules: {
-    //          'font-weight-bold': params => { return params.data.id == 'Allocated TOA'  } ,
-    //          'font-red' : params => { return params.value < 0 }, 
-    //        },
-    //     });
-    // }
-
-    // Last column - total
-    // this.colDefs.push(
-    //   {
-    //     headerName: "Total",
-    //     type: "numericColumn",
-    //     suppressMenu: true,
-    //     field: 'total',
-    //     width: 92,
-    //     editable: false,
-    //     //valueFormatter: params => { return this.currencyFormatter(params) },
-    //     cellClassRules: {
-    //       'font-red' : params => { return params.value < 0 },
-    //     },
-    //   });
   }
 
-
   linkCellRenderer(params){
-
     let link = `<a href="/ufr-view/${params.value.id}">${this.ufrNumber(params.value)}</a>`
-    console.log(link);
     return link;
-
   }
 
   private onGridReady(params) {
@@ -172,7 +109,6 @@ export class AllUfrsComponent implements OnInit {
       });
     });
   }
-
 
   async populateRowData(){
   
@@ -202,16 +138,6 @@ export class AllUfrsComponent implements OnInit {
     ProgramTreeUtils.fullnames(programs).forEach((fullname, program) => {
       this.mapProgramIdToName.set(program.id, fullname);
     });
-  }
-
-  navigate(row) {
-    this.router.navigate(['/ufr-view', row.id]);
-  }
-
-  // Only considers the immediate parent, i.e. cannot consider three levels in the hierarchy, i.e. AAA/BBB/CCC
-  getFullProgramName(ufr: UFR): string {
-    return '';
-    // todo: return the program name if the shorty is a Program. '' otherwise.
   }
 
   ufrNumber(ufr: UFR): string {

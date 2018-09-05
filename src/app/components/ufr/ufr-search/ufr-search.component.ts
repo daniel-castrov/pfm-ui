@@ -48,13 +48,11 @@ export class UfrSearchComponent implements OnInit, DoCheck {
       phases.push({ fy: pom.fy, phase: 'POM' });
       this.mapCycleIdToFy.set(pom.id, 'POM ' + pom.fy);
     });
-    //console.log(this.mapCycleIdToFy);
 
     pbs.forEach((pb: PB) => {
       phases.push({ fy: pb.fy, phase: 'PB' });
     });
-    //console.log(phases);
-
+  
     phases.sort((cycle1: Cycle, cycle2: Cycle) => {
       if (cycle1.fy === cycle2.fy) {
         if (cycle1.phase === cycle2.phase) {
