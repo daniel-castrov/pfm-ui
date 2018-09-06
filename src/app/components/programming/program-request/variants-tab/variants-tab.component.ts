@@ -322,7 +322,7 @@ export class VariantsTabComponent {
       branch: '',
       contractor: '',
       unitCost: 0,
-      quantity: JSON.parse(JSON.stringify(this.generateEmptyQuantities()))
+      quantity: this.generateEmptyQuantities()
     };
     newPbRow.variantName = shortName;
 
@@ -332,7 +332,7 @@ export class VariantsTabComponent {
       branch: '',
       contractor: '',
       unitCost: 0,
-      quantity: JSON.parse(JSON.stringify(this.generateEmptyQuantities()))
+      quantity: this.generateEmptyQuantities()
     };
     newPomRow.variantName = shortName;
 
@@ -418,7 +418,6 @@ export class VariantsTabComponent {
     pomNode.serviceLine.branch = params.data.serviceLine.branch;
     pomNode.serviceLine.contractor = params.data.serviceLine.contractor;
     pomNode.serviceLine.unitCost = params.data.serviceLine.unitCost;
-    pomNode.serviceLine.quantity = params.data.serviceLine.quantity;
     pomNode.serviceLine.bulkOrigin = false;
     this.gridApi.get(params.data.variantName).refreshCells();
   }
@@ -464,7 +463,7 @@ export class VariantsTabComponent {
     this.years.forEach( year => {
       quantities[year] = 0;
     });
-    return quantities;
+    return JSON.parse(JSON.stringify(quantities));
   }
 
   addVariant(){

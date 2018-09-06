@@ -278,7 +278,6 @@ export class FundsTabComponent implements OnChanges {
         {
           headerName: 'BA/BLIN',
           field: 'fundingLine.baOrBlin',
-          suppressToolPanel: true,
           editable: params => {
             return this.isEditable(params)
           },
@@ -326,7 +325,6 @@ export class FundsTabComponent implements OnChanges {
           field: 'phaseType',
           maxWidth: 92,
           suppressMenu: true,
-          suppressToolPanel: true,
           cellClassRules: {
             'font-weight-bold ag-medium-gray-cell': params => {
               return this.colSpanCount(params) > 1
@@ -388,13 +386,11 @@ export class FundsTabComponent implements OnChanges {
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
-          suppressToolPanel: true,
           children: [{
             headerName: key,
             field: 'fundingLine.funds.' + key,
             maxWidth: 92,
             suppressMenu: true,
-            suppressToolPanel: true,
             cellClassRules: {
               'ag-cell-edit': params => {
                 return this.isAmountEditable(params, key)
@@ -429,7 +425,6 @@ export class FundsTabComponent implements OnChanges {
     let totalColDef = {
       headerName: 'CTC',
       suppressMenu: true,
-      suppressToolPanel: true,
       maxWidth: 92,
       type: "numericColumn",
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
@@ -662,7 +657,7 @@ export class FundsTabComponent implements OnChanges {
       });
 
       if (params.data.fundingLine.appropriation === 'RDTE'){
-          params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
+        params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
       }
 
       if (params.data.fundingLine.item) {
