@@ -13,7 +13,7 @@
     <div class="row mb-3">
       <div class="col-10">
         <span class="form-group mr-2">
-          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown" [(ngModel)]="fromIsSource">
+          <select class="form-control-sm dropdown-year-width mb-2" name="fromtodropdown" [ngModel]="fromIsSource" (change)="changeFromIsSource($event)">
             <option [ngValue]="true">From</option>
             <option [ngValue]="false">To</option>
           </select>

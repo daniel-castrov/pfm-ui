@@ -41,7 +41,7 @@ export class ExecutionLineTableComponent implements OnInit {
   private agOptions: GridOptions;
   private availablePrograms: {}[] = [];
 
-  @Input() set updatelines(newdata: ExecutionLineWrapper[] ) {
+  @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
     this._updatelines = newdata;
     if (this.agOptions && this.agOptions.api) {
       this.agOptions.api.setRowData(newdata);
@@ -294,6 +294,7 @@ export class ExecutionLineTableComponent implements OnInit {
     });
 
     this.tableok = !failure;
+    this.agGrid.api.refreshCells();
   }
 
   setAvailablePrograms() {

@@ -38,19 +38,73 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private fromIsSource: boolean = true;
   private linefilter: ExecutionLineFilter;
   private programfilter: ExecutionLineFilter;
-  private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-    console.log('change validator');
-    var okays: boolean[] = [];
-    x.forEach(elw => {
-      okays.push(elw.amt != 0 ? elw.amt <= elw.line.released : true);
-    });
-    return okays;
-  };
-
+  private validator: ExecutionTableValidator;
   private reason: string;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
-    private route: ActivatedRoute, private router: Router) { }
+    private route: ActivatedRoute, private router: Router) {
+    var my: UpdateProgramExecutionComponent = this; 
+    my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
+      console.log('change validator');
+      var freleased: number = my.current.line.released;
+      var total: number = 0;
+
+      x.forEach(elw => {
+        total += (elw.amt ? elw.amt : 0);
+      });
+
+      var okays: boolean[] = [];
+
+      if (totalamt) {
+        // check the total against all the rows
+        x.forEach(elw => {
+          if (my.fromIsSource) {
+            okays.push(total <= freleased);
+          }
+          else {
+            // our values are the source, so make sure they have enough money
+            //console.log('from ain\'t source');
+            //console.log(elw);
+
+            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released ) {
+              okays.push( elw.line.released!==0 ? elw.amt <= elw.line.released : false );
+            }
+            else {
+              okays.push(true);
+            }
+          }
+        });
+      }
+      else {
+        // checking individual lines
+
+        // check to make sure we have enough money to spread around
+        x.forEach(elw => {
+          if (my.fromIsSource) {
+            // if fromIsSource, there's nothing to check
+            okays.push(elw.amt <= freleased);
+          }
+          else {
+            // if we're the source, make sure we have enough money 
+            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released) {
+              okays.push(elw.line.released !== 0 ? elw.amt <= elw.line.released : false);
+            }
+            else {
+              okays.push(true);
+            }
+          }
+        });
+      }
+
+      console.log(okays);
+      return okays;
+    };
+  }
+
+  changeFromIsSource( event) {
+    this.fromIsSource = ( '0: true'===event.target.value);
+    this.table.recheckValidity();
+  }
 
   ngOnInit() {
     var my: UpdateProgramExecutionComponent = this;
