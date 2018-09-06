@@ -1,9 +1,7 @@
 import { join } from './../../../../utils/join';
 import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { OrganizationService, Organization, ProgramsService, Tag, User } from '../../../../generated';
-import { Disposition } from '../../disposition.enum';
-import { Status } from '../../status.enum';
+import { OrganizationService, Organization, ProgramsService, Tag, User, UfrStatus, Disposition} from '../../../../generated';
 
 @Component({
   selector: 'filter-ufrs',
@@ -27,11 +25,11 @@ export class FilterUfrsComponent implements OnInit {
   public fromDate: number;
   public toDate: number;
   
-  private statuses: string[] = [];
+  private statuses: string[] = Object.keys(UfrStatus);
   public useStatus: boolean = false;
   public selectedStatus: string;
   
-  private dispositions: string[]=[];
+  private dispositions: string[] = Object.keys(Disposition);
   public useDisposition: boolean = false;
   public selectedDisposition: string;
   
@@ -43,10 +41,7 @@ export class FilterUfrsComponent implements OnInit {
   
   constructor(private userUtils: UserUtils,
               private organizationService: OrganizationService,
-              private programsService: ProgramsService) {
-    this.dispositions = Object.keys(Disposition).filter(k => typeof Disposition[k] === "number") as string[];
-    this.statuses = Object.keys(Status).filter(k => typeof Status[k] === "number") as string[];
-  }
+              private programsService: ProgramsService) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
@@ -71,7 +66,7 @@ export class FilterUfrsComponent implements OnInit {
     this.selectedOrganizationId = this.organizations[0].id;
     this.fromDate = new Date().getTime();
     this.toDate = new Date().getTime();
-    this.selectedStatus = Status[0];
+    this.selectedStatus = this.statuses[0];
     this.selectedDisposition = Disposition[0];
     this.selectedCycle = this.cycles[0];
     this.selectedFunctionalArea = this.functionalAreas[0].abbr;

@@ -2892,7 +2892,7 @@ definitions:
       status:
         $ref: "#/definitions/UfrStatus"
       disposition:
-        type: "string"
+        $ref: "#/definitions/Disposition"
       lastMod:
         type: "integer"
       notes:
@@ -2949,6 +2949,8 @@ definitions:
     enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
   UfrStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
+  Disposition:
+    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, DEFERRED, OGI]
   Pom:
     type: "object"
     properties:
