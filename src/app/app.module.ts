@@ -1,7 +1,6 @@
 import { UfrUfrTabComponent } from './components/ufr/ufr-view/ufr-ufr-tab/ufr-ufr-tab.component';
 import { CycleUtils } from './services/cycle.utils';
 import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
-import { FilterUfrsComponent } from './components/ufr/ufr-search/filter-ufrs/filter-ufrs.component';
 import { TagsService } from './services/tags.service';
 import { UserUtils } from './services/user.utils';
 import { WithFullNameService } from './services/with-full-name.service';
@@ -227,7 +226,6 @@ const appRoutes: Routes = [
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
-    FilterUfrsComponent,
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
