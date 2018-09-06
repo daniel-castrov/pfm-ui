@@ -13,6 +13,8 @@ import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData }
 import { Router, ActivatedRoute, UrlSegment, Route } from '@angular/router'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
+import { ExecutionTableValidator } from '../model/execution-table-validator';
+import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
 
 @Component({
   selector: 'charges',
@@ -20,8 +22,9 @@ import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
   styleUrls: ['./charges.component.scss']
 })
 export class ChargesComponent implements OnInit {
-
   @ViewChild(HeaderComponent) header;
+  @ViewChild(ExecutionLineTableComponent) table;
+
   private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;
   private reason: string;
@@ -31,6 +34,15 @@ export class ChargesComponent implements OnInit {
   private subtypes: ExecutionDropDown[];
   private etype: ExecutionDropDown;
   private type: string;
+  private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
+    var okays: boolean[] = [];
+    x.forEach(elw => {
+      okays.push(elw.amt != 0 && elw.line && elw.line.released
+        ? elw.amt <= elw.line.released
+        : true);
+    });
+    return okays;
+  };
   
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
     private router: Router ) { }

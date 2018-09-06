@@ -14,6 +14,8 @@ import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData }
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 import { ExecutionLineFilter } from '../model/execution-line-filter';
+import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
+import { ExecutionTableValidator } from '../model/execution-table-validator';
 
 @Component({
   selector: 'update-program-execution',
@@ -22,6 +24,7 @@ import { ExecutionLineFilter } from '../model/execution-line-filter';
 })
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(ExecutionLineTableComponent) table;
   private current: ExecutionLineWrapper = { line: {} };
   private phase: Execution;
   private updatelines: ExecutionLineWrapper[] = [];
@@ -35,6 +38,14 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private fromIsSource: boolean = true;
   private linefilter: ExecutionLineFilter;
   private programfilter: ExecutionLineFilter;
+  private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
+    console.log('change validator');
+    var okays: boolean[] = [];
+    x.forEach(elw => {
+      okays.push(elw.amt != 0 ? elw.amt <= elw.line.released : true);
+    });
+    return okays;
+  };
 
   private reason: string;
 
