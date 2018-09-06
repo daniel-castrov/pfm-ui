@@ -647,8 +647,12 @@ tab {
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table
 
-  .set-toa {
-   .ag-root-wrapper-body {
-      height: 89px;
-    }
+.set-toa {
+ .ag-root-wrapper-body {
+    height: 89px;
   }
+}
+
+.ag-body-container {
+  min-height: 0px !important;
+}

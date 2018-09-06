@@ -9,6 +9,7 @@ import {ProgramType} from "../generated";
 
 export interface WithFullName {
   fullname: string;
+  fundingLines: any[];
 }
 
 export interface ProgramWithFullName extends Program, WithFullName {};
