@@ -1,26 +1,30 @@
-import { RestResult } from './../../../../generated/model/restResult';
-import { join } from './../../../../utils/join';
-import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Input } from '@angular/core';
-import { ProgramsService, Tag, UFR } from '../../../../generated';
-import {WithFullName} from "../../../../services/with-full-name.service";
+import {RestResult} from './../../../../generated/model/restResult';
+import {join} from './../../../../utils/join';
+import {Observable} from 'rxjs/Observable';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {POMService, ProgramsService, Tag, UFR} from '../../../../generated';
+import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 
 @Component({
   selector: 'ufr-program-tab',
   templateUrl: './ufr-program-tab.component.html',
   styleUrls: ['./ufr-program-tab.component.scss']
 })
-export class UfrProgramComponent implements OnInit {
-  @Input() ufr: UFR;
+export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() editable: boolean = false;
-  @Input() shorty: WithFullName;
+  @Input() shorty: ProgramOrPrWithFullName;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
 
-  constructor( private programService: ProgramsService ) {}
+  constructor( private programService: ProgramsService,
+               private pomService: POMService,
+               private withFullNameService: WithFullNameService ) {}
 
   ngOnInit() {
     this.initTagNames();
+  }
+
+  ngOnChanges() {
     this.initParentName();
   }
 
@@ -36,12 +40,17 @@ export class UfrProgramComponent implements OnInit {
     });
   }
 
-  private initParentName() {
-    // if (this.ufr.parentMrId) {
-    //   this.programService.getFullName(this.ufr.parentMrId).subscribe(data => {
-    //     this.parentName = data.result;
-    //   });
-    // }
+  private async initParentName() {
+    if (this.shorty) {
+      if (this.withFullNameService.isProgram(this.shorty)) {
+        if(this.shorty.parentMrId) {
+          this.parentName = (await this.programService.getFullName(this.shorty.parentMrId).toPromise()).result;
+        }
+      } else { // PR
+        // not implemented
+        this.parentName = "";
+      }
+    }
   }
 
 }
