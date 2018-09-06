@@ -179,7 +179,6 @@ export class AllUfrsComponent implements OnInit {
   }
 
   private onFilterTextBoxChanged() {    
-    console.log(this.filtertext);
     this.agGrid.gridOptions.api.setQuickFilter( this.filtertext );
   }
 
