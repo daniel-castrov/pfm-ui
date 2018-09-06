@@ -1,5 +1,12 @@
 
-<input id="filtertestbox" [(ngModel)] = "filtertext" placeholder="Filter..." (input)="onFilterTextBoxChanged()" />
+ <!-- <div class="row">
+  <div class="col-9"></div>
+
+  <fieldset>
+    <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filter All Columns</legend>
+    <input id="filtertestbox" [(ngModel)] = "filtertext" placeholder="Filter..." (input)="onFilterTextBoxChanged()" />
+  </fieldset>  
+</div> -->
 
 <ag-grid-angular #agGrid 
   class="ag-theme-balham"
@@ -8,22 +15,22 @@
   [gridAutoHeight]="true"
   [enableSorting]="true"
   [enableFilter]="true"
-  [showToolPanel]="true"
-  [toolPanelSuppressPivots]="true"
+  [showToolPanel]="false"
   [toolPanelSuppressPivotMode]="true"
-  [toolPanelSuppressRowGroups]="true" 
+  [toolPanelSuppressRowGroups]="true"
   [toolPanelSuppressValues]="true"
+  [toolPanelSuppressPivots]="true"
   [toolPanelSuppressColumnFilter]="true"
+  [toolPanelSuppressColumnSelectAll]="true"
+  [suppressMovableColumns]="true"
+  [suppressRowTransform]="true"
+  (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
+  (columnVisible)="onColumnVisible($event)"
   [pivotMode]="false"
   [pagination]="true"
   [paginationPageSize]="20"
   (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-  [suppressRowTransform]="true"
   [suppressPaginationPanel]="true"
-  [toolPanelSuppressSideButtons]="true"
-  [suppressMovableColumns]="false"
-  [frameworkComponents]="frameworkComponents"
-  [context]="context"
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

@@ -71,6 +71,10 @@ export class AllUfrsComponent implements OnInit {
             cellRenderer: params => this.linkCellRenderer(params),
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
+            getQuickFilterText: params =>  {
+              return this.ufrNumber(params.value);
+            },
+            comparator: this.ufrCompare
           }
           break;
         case ("Last Updated"):
@@ -118,6 +122,11 @@ export class AllUfrsComponent implements OnInit {
         params.api.sizeColumnsToFit();
       });
     });
+  }
+
+  private ufrCompare(param1, param2){
+     //return this.ufrNumber(param1.value).localeCompare( this.ufrNumber(param2.value) ) ;
+    return (param1.phaseId+param1.requestNumber).localeCompare( param2.phaseId+param2.requestNumber );
   }
 
   private async populateRowData() {
@@ -170,7 +179,16 @@ export class AllUfrsComponent implements OnInit {
   }
 
   private onFilterTextBoxChanged() {    
+    console.log(this.filtertext);
     this.agGrid.gridOptions.api.setQuickFilter( this.filtertext );
+  }
+
+  onToolPanelVisibleChanged(params) {
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+  onColumnVisible(params) {
+    this.agGrid.api.sizeColumnsToFit();
   }
 
 }
