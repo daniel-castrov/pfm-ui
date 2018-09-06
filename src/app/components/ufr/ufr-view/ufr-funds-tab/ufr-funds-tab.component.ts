@@ -92,16 +92,16 @@ export class UfrFundsComponent implements OnInit {
 
   calculateRevisedChanges() {
     let data: Array<DataRow> = [];
-    this.processedChange.forEach(data => {
+    this.processedChange.forEach(pc => {
       let cf = this.currentFunding.filter(cf => {
-        return cf.fundingLine.appropriation === data.fundingLine.appropriated &&
-          cf.fundingLine.blin === data.fundingLine.blin &&
-          cf.fundingLine.opAgency === data.fundingLine.opAgency &&
-          cf.fundingLine.item === data.fundingLine.item
+        return cf.fundingLine.appropriation === pc.fundingLine.appropriated &&
+          cf.fundingLine.blin === pc.fundingLine.blin &&
+          cf.fundingLine.opAgency === pc.fundingLine.opAgency &&
+          cf.fundingLine.item === pc.fundingLine.item
       });
-      let row: DataRow = JSON.parse(JSON.stringify(data));
+      let row: DataRow = JSON.parse(JSON.stringify(pc));
       Object.keys(row.fundingLine.funds).forEach(year =>{
-        row.fundingLine.funds[year] = (cf.fundingLine? cf.fundingLine.funds[year] : 0) + data.fundingLine.funds[year];
+        row.fundingLine.funds[year] = (cf.fundingLine? cf.fundingLine.funds[year] : 0) + pc.fundingLine.funds[year];
       });
       data.push(row);
     });
@@ -383,7 +383,7 @@ export class UfrFundsComponent implements OnInit {
   onGridReady(params) {
     setTimeout(() => {
       params.api.sizeColumnsToFit();
-    }, 1500);
+    }, 2500);
     window.addEventListener("resize", function() {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
@@ -394,13 +394,13 @@ export class UfrFundsComponent implements OnInit {
   onRowDataChanged(params){
     setTimeout(() => {
       params.api.sizeColumnsToFit();
-    }, 1500);
+    }, 2500);
   }
 
   onColumnValueChanged(params){
     setTimeout(() => {
       params.api.sizeColumnsToFit();
-    }, 1500);
+    }, 2500);
   }
 
   delete(index) {
