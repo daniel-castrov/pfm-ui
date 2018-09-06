@@ -1,10 +1,8 @@
 import { ProgramTreeUtils } from './../../../../utils/program-tree-utils';
 import { UserUtils } from '../../../../services/user.utils';
-import { FilterUfrsComponent } from './../filter-ufrs/filter-ufrs.component';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
 import { DatePipe } from "@angular/common";
 
@@ -14,17 +12,15 @@ import { DatePipe } from "@angular/common";
   styleUrls: ['./all-ufrs.component.scss']
 })
 export class AllUfrsComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sorter: MatSort;
 
-  @Input() private filterUfrsComponent: FilterUfrsComponent;
   @Input() private mapCycleIdToFy: Map<string, string>;
 
   private mapProgramIdToName: Map<string, string> = new Map<string, string>();// mrid, fullname
   private user: User;
   private orgMap: any[] = []
   datePipe: DatePipe = new DatePipe('en-US')
-
+  private filtertext;
+ 
   // agGrid   
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private rowData: any[];
@@ -124,7 +120,7 @@ export class AllUfrsComponent implements OnInit {
     });
   }
 
-  async populateRowData() {
+  private async populateRowData() {
 
     const ufrFilter: UFRFilter = {};
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
@@ -150,12 +146,12 @@ export class AllUfrsComponent implements OnInit {
   }
 
   // TODO - I don't think this is the right way 
-  linkCellRenderer(params) {
+  private linkCellRenderer(params) {
     let link = `<a href="/ufr-view/${params.value.id}">${this.ufrNumber(params.value)}</a>`
     return link;
   }
 
-  dateFormatter(longdate) {
+  private dateFormatter(longdate) {
     let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
     return this.datePipe.transform(new Date(longdate), dateFormat);
   }
@@ -166,17 +162,15 @@ export class AllUfrsComponent implements OnInit {
     });
   }
 
-  ufrNumber(ufr: UFR): string {
+  private ufrNumber(ufr: UFR): string {
     const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); // the value stored in this.mapCycleIdToFy look like this: 'POM 2017'
     const shortFy = fullFy - 2000;
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;
   }
 
-  onFilterTextBoxChanged() {    
-    let filterText = document.getElementById('filtertestbox').innerText;
-    console.log( filterText );
-    this.agGrid.gridOptions.api.setQuickFilter( filterText );
-}
+  private onFilterTextBoxChanged() {    
+    this.agGrid.gridOptions.api.setQuickFilter( this.filtertext );
+  }
 
 }

@@ -1,5 +1,5 @@
 
-<input id="filtertestbox" placeholder="Filter..." (input)="onFilterTextBoxChanged()" />
+<input id="filtertestbox" [(ngModel)] = "filtertext" placeholder="Filter..." (input)="onFilterTextBoxChanged()" />
 
 <ag-grid-angular #agGrid 
   class="ag-theme-balham"
@@ -8,7 +8,12 @@
   [gridAutoHeight]="true"
   [enableSorting]="true"
   [enableFilter]="true"
-  [showToolPanel]="false"
+  [showToolPanel]="true"
+  [toolPanelSuppressPivots]="true"
+  [toolPanelSuppressPivotMode]="true"
+  [toolPanelSuppressRowGroups]="true" 
+  [toolPanelSuppressValues]="true"
+  [toolPanelSuppressColumnFilter]="true"
   [pivotMode]="false"
   [pagination]="true"
   [paginationPageSize]="20"
@@ -16,7 +21,7 @@
   [suppressRowTransform]="true"
   [suppressPaginationPanel]="true"
   [toolPanelSuppressSideButtons]="true"
-  [suppressMovableColumns]="true"
+  [suppressMovableColumns]="false"
   [frameworkComponents]="frameworkComponents"
   [context]="context"
   (gridReady)="onGridReady($event)">

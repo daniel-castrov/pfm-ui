@@ -1,5 +1,4 @@
 import { AllUfrsComponent } from './all-ufrs/all-ufrs.component';
-import { FilterUfrsComponent } from './filter-ufrs/filter-ufrs.component';
 import { UserUtils } from '../../../services/user.utils';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { forkJoin } from "rxjs/observable/forkJoin";
@@ -14,7 +13,6 @@ import { Cycle } from '../cycle';
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
   @ViewChild(HeaderComponent) header; 
-  @ViewChild(FilterUfrsComponent) filterUfrsComponent: FilterUfrsComponent;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   
   private user: User;
@@ -68,5 +66,4 @@ export class UfrSearchComponent implements OnInit, DoCheck {
       this.cycles.push(cycle.phase + ' ' + (cycle.fy - 2000));
     });
   }
-
 }
