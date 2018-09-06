@@ -1,8 +1,9 @@
 import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {POMService, UFR, UFRsService} from '../../../generated';
+import {POMService, ProgramsService, PRService, ShortyType, UFR, UFRsService} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {WithFullName} from "../../../services/with-full-name.service";
 
 @Component({
   selector: 'app-ufr-view',
@@ -14,11 +15,14 @@ export class UfrViewComponent implements OnInit {
   private ufr: UFR;
   private canedit: boolean = false;
   private pomFy: number;
+  private shorty: WithFullName;
 
   constructor( private ufrService: UFRsService,
                private cycleUtils: CycleUtils,
                private route: ActivatedRoute,
-               private pomService: POMService) {}
+               private pomService: POMService,
+               private programsService: ProgramsService,
+               private prService: PRService ) {}
 
   async ngOnInit() {
     this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
@@ -31,6 +35,22 @@ export class UfrViewComponent implements OnInit {
   private async init(ufrId: string) {
     this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
     this.pomFy = (await this.pomService.getById(this.ufr.phaseId).toPromise()).result.fy  - 2000;
+    this.initShorty();
+  }
+
+  async initShorty() {
+    if( this.ufr.shortyType == ShortyType.MRDB_PROGRAM ||
+        this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+        this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ) {
+      this.shorty = (await this.programsService.getProgramById(this.ufr.shortyId).toPromise()).result;
+    } else if( this.ufr.shortyType == ShortyType.PR ||
+               this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
+               this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
+      this.shorty = (await this.prService.getById(this.ufr.id).toPromise()).result;
+    } else {
+      // this.ufr.shortyType == ShortyType.NEW_PROGRAM:
+      // leave this.shorty null
+    }
   }
 
   save() {

@@ -1,6 +1,7 @@
 import { TagsService } from '../../../../services/tags.service';
 import { Component, OnInit, Input } from '@angular/core'
 import {FundingLine, UFR, POMService, Pom, PRService, PBService, ProgrammaticRequest} from '../../../../generated'
+import {WithFullName} from "../../../../services/with-full-name.service";
 
 @Component({
   selector: 'ufr-funds-tab',
@@ -10,6 +11,8 @@ import {FundingLine, UFR, POMService, Pom, PRService, PBService, ProgrammaticReq
 export class UfrFundsComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
+  @Input() shorty: WithFullName;
+
   private pom: Pom;
   private fy: number = new Date().getFullYear() + 2;
   private uvals: Map<number, number> = new Map<number, number>();

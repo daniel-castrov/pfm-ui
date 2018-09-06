@@ -3,6 +3,7 @@ import { join } from './../../../../utils/join';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Input } from '@angular/core';
 import { ProgramsService, Tag, UFR } from '../../../../generated';
+import {WithFullName} from "../../../../services/with-full-name.service";
 
 @Component({
   selector: 'ufr-program-tab',
@@ -12,6 +13,7 @@ import { ProgramsService, Tag, UFR } from '../../../../generated';
 export class UfrProgramComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
+  @Input() shorty: WithFullName;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
 
