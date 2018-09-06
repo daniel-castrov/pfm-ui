@@ -69,8 +69,4 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     });
   }
 
-  search() {
-    this.allUfrsComponent.search();
-  }
-
 }

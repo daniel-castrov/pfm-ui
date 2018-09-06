@@ -174,7 +174,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   onFilterTextBoxChanged() {    
-    let filterText = document.getElementById('filtertestbox').value);
+    let filterText = document.getElementById('filtertestbox').innerText;
     console.log( filterText );
     this.agGrid.gridOptions.api.setQuickFilter( filterText );
 }
