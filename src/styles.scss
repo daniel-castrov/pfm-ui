@@ -158,6 +158,131 @@ label {
   border-radius: 6px;
 }
 
+.alert {
+  color: $black !important;
+  min-width: 450px !important;
+  background-color: $white !important;
+  border-radius: 0 !important;
+  margin-left: -260px !important;
+
+  p {
+     padding-left: 40px;
+     padding-right: 10px;
+  }
+
+  &.alert-success  {
+   border: 1px solid #49a635 !important;
+
+   > .fa {
+       font-size: 24px;
+       color: $white;
+       background-color: #49a635 !important;
+       position: absolute;
+       top: 0;
+       left: 0;
+       display: inline-flex;
+       height: 100%;
+       padding: 10px;
+       min-width: 50px;
+     }
+
+     > .btn {
+       background-color: #237d10 !important;
+     }
+  }
+
+  &.alert-info {
+   border: 1px solid #de8001 !important;
+
+   > .fa {
+       font-size: 24px;
+       color: $white;
+       background-color: #de8001 !important;
+       position: absolute;
+       top: 0;
+       left: 0;
+       display: inline-flex;
+       display: inline-flex;
+       height: 100%;
+       padding: 10px;
+       text-align: center;
+       min-width: 50px;
+     }
+
+    > .btn {
+        background-color: #a86101 !important;
+      }
+    }
+
+    &.alert-primary {
+     border: 1px solid #2574cd !important;
+
+     > .fa {
+         font-size: 24px;
+         color: $white;
+         background-color: #2574cd !important;
+         position: absolute;
+         top: 0;
+         left: 0;
+         display: inline-flex;
+         display: inline-flex;
+         height: 100%;
+         padding: 10px;
+         min-width: 50px;
+         text-align: center;
+       }
+
+      > .btn {
+          background-color: #a86101 !important;
+      }
+    }
+
+    &.alert-secondary {
+     border: 1px solid #665b5b !important;
+
+     > .fa {
+         font-size: 24px;
+         color: $white;
+         background-color: #665b5b !important;
+         position: absolute;
+         top: 0;
+         left: 0;
+         display: inline-flex;
+         display: inline-flex;
+         height: 100%;
+         padding: 10px;
+         min-width: 50px;
+         text-align: center;
+       }
+
+      > .btn {
+          background-color: #a86101 !important;
+      }
+    }
+
+  &.alert-danger {
+   border: 1px solid #ff0000 !important;
+
+   > .fa {
+       font-size: 25px;
+       color: $white;
+       background-color: #ff0000 !important;
+       position: absolute;
+       top: 0;
+       left: 0;
+       display: inline-flex;
+       height: 100%;
+       padding: 10px;
+       min-width: 50px;
+       text-align: center;
+     }
+
+    > .btn {
+      background-color: #b60707 s!important;
+    }
+  }
+}
+
 /* icons */
 
 .icon-pad {

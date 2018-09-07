@@ -133,23 +133,20 @@
           <span [hidden]="!createUserRequestSponsorEmail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
           <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Must be a valid email: joe@abc.com</span>
         </span>
-        <!-- <span [hidden]="!formsubmitted" class="clearfix">
+        <span [hidden]="!formsubmitted" class="clearfix">
           <div class="alert-success-group">
             <div class="alert-success alert-dismissable">
               <strong>Your application to join JSCBIS has been submitted. Please check your email for the status of your request.</strong>
               <button class="btn btn-success" (click)="done()">OK</button>
             </div>
           </div>
-        </span> -->
+        </span>
 
         <div class="controls" [hidden]="formsubmitted">
-          <button class="btn btn-primary basic" [disabled]="!applyForm.form.valid || !ndaSatisfied">
+          <button class="btn btn-primary" [disabled]="!applyForm.form.valid || !ndaSatisfied">
             Submit
           </button>
         </div>
-        <!-- <span>
-          <button class="btn btn-success basic">Basic Usage</button>
-        </span> -->
         <!-- Value of whole form -->
         <!--
         <pre>{{ applyForm.form.value | json }}</pre>

@@ -41,58 +41,22 @@ export class ApplyComponent implements OnInit {
     this.ndaSatisfied = true;
     this.getStranger();
 
-    $( ".basic" ).click(function() {
-      $.notify({
-        // options
-        title: "",
-        message: "<strong>Your application to join JSCBIS has been submitted. Please check your email for the status of your request.</strong>",
-        icon: 'fa fa-check',
-        url: "./about",
-        target: "_self",
-        // settings
-      	element: 'div.aplly-form',
-      	position: null,
-      	type: 'success',
-      	allow_dismiss: true,
-      	newest_on_top: false,
-      	showProgressbar: true,
-      	placement: {
-      		from: "bottom",
-      		align: "left"
-      	},
-        offset: {
-      		x: 50,
-      		y: 100
-      	},
-      	spacing: 10,
-      	z_index: 1031,
-      	delay: 5000,
-      	timer: 0,
-      	url_target: '_self',
-      	mouse_over: null,
-      	animate: {
-      		enter: 'animated fadeInDown',
-      		exit: 'animated fadeOutUp'
-      	},
-      	onShow: null,
-      	onShown: null,
-      	onClose: null,
-      	onClosed: null,
-      	icon_type: 'class',
-
-        // custom template
-        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-      		'<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-      		'<span data-notify="icon"></span> ' +
-      		'<span data-notify="title">{1}</span> ' +
-      		'<span data-notify="message">{2}</span>' +
-      		'<div class="progress" data-notify="progressbar">' +
-      			'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-      		'</div>' +
-      		'<a href="{3}" target="{4}" data-notify="url"></a>' +
-          '<button class="btn btn-success" (click)="done()">OK</button>' +
-      	'</div>'
-      });
+    $.notify({
+    	// options
+      icon: 'fa fa-check',
+      // icon: 'fa fa-exclamation-triangle',
+      // icon: 'fa fa-info-circle',
+      // icon: 'fa fa-exclamation',
+      // icon: 'fa fa-comment',
+    	message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
+    },{
+    	// settings
+    	type: 'success',
+      timer: 0,
+      animate: {
+    		enter: 'animated fadeInRight',
+    		exit: 'animated fadeOutRight'
+    	}
     });
   }
 
