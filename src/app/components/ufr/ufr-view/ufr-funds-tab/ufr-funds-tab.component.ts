@@ -19,26 +19,17 @@ import {DataRow} from "./DataRow";
 export class UfrFundsComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
-
-  private fy: number = new Date().getFullYear() + 2;
-  private uvals: Map<number, number> = new Map<number, number>();
-  private cvals: Map<number, number> = new Map<number, number>();
-  private diffs: {} = {};
-  private model: ProgrammaticRequest;
-  // key is appropriation+blin
-  private rows: Map<string, tabledata> = new Map<string, tabledata>();
-  
-  // for the add FL section
-
   @ViewChild("agGridProcessedChanges") private agGridProcessedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
+
   private pomFy: number;
   private appropriations: string[] = [];
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
   private prParent: ProgrammaticRequest;
+
   newFLType;
   defaultColumnDefs = [];
   currentFundingColumnDefs = [];
