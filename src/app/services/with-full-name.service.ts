@@ -84,6 +84,20 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
+  async allProgramRequestsWithFullNamesDerivedFromCreationTimeData(): Promise<ProgramRequestWithFullName[]> {
+    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
+
+    const prs: ProgrammaticRequest[] = (await this.prService.getAll().toPromise()).result;
+    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
+
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
+      ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
+    );
+
+    return this.sort(result);
+  }
+
   async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest): Promise<string> {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);

@@ -440,6 +440,12 @@ paths:
         required: true
         type: "string"
   /pr:
+    get:
+      tags:
+      - "PR"
+      operationId: "getAll"
+      produces:
+      - "application/json"
     post:
       tags:
       - "PR"

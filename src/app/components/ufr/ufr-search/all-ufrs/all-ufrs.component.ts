@@ -1,10 +1,10 @@
-import { ProgramTreeUtils } from './../../../../utils/program-tree-utils';
 import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
 import { DatePipe } from "@angular/common";
+import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 
 @Component({
   selector: 'all-ufrs',
@@ -15,7 +15,7 @@ export class AllUfrsComponent implements OnInit {
 
   @Input() private mapCycleIdToFy: Map<string, string>;
 
-  private mapProgramIdToName: Map<string, string> = new Map<string, string>();// mrid, fullname
+  private mapProgrammyIdToFullName: Map<string, string>;// mrid, fullname
   private user: User;
   private orgMap: any[] = []
   datePipe: DatePipe = new DatePipe('en-US')
@@ -27,17 +27,18 @@ export class AllUfrsComponent implements OnInit {
   private colDefs;
   private menuTabs = ['filterMenuTab'];
 
-  constructor(private ufrsService: UFRsService,
-    private userUtils: UserUtils,
-    private programsService: ProgramsService,
-    private orgSvc: OrganizationService,
-    private router: Router) { }
+  constructor( private ufrsService: UFRsService,
+               private userUtils: UserUtils,
+               private programsService: ProgramsService,
+               private orgSvc: OrganizationService,
+               private router: Router,
+               private withFullNameService: WithFullNameService) {}
 
   async ngOnInit() {
 
     this.user = await this.userUtils.user().toPromise();
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-    this.initProgramIdToName(programs);
+    await this.initProgrammyIdToFullName(programs);
 
     let organizations: Organization[] = (await this.orgSvc.getByCommunityId(this.user.currentCommunityId).toPromise()).result;
     organizations.forEach(org => {
@@ -139,8 +140,8 @@ export class AllUfrsComponent implements OnInit {
 
       let row = {
         "UFR #": ufr,
-        "UFR Name": ufr.description,
-        "Prog Id": this.mapProgramIdToName.get(ufr.shortyId),
+        "UFR Name": ufr.shortName,
+        "Prog Id": this.mapProgrammyIdToFullName.get(ufr.shortyId),
         "Status": ufr.status,
         "Priority": ufr.priority,
         "Disposition": ufr.disposition,
@@ -165,9 +166,17 @@ export class AllUfrsComponent implements OnInit {
     return this.datePipe.transform(new Date(longdate), dateFormat);
   }
 
-  private initProgramIdToName(programs: Program[]) {
-    ProgramTreeUtils.fullnames(programs).forEach((fullname, program) => {
-      this.mapProgramIdToName.set(program.id, fullname);
+  private async initProgrammyIdToFullName(programs: Program[]): Promise<any> {
+    return new Promise( async (resolve) => {
+      // TODO: make the following two calls in parallel
+      this.mapProgrammyIdToFullName = new Map<string, string>();
+      (await this.withFullNameService.programs()).forEach((program: ProgramWithFullName) => {
+        this.mapProgrammyIdToFullName.set(program.id, program.fullname);
+      });
+      (await this.withFullNameService.allProgramRequestsWithFullNamesDerivedFromCreationTimeData()).forEach((pr: ProgramRequestWithFullName) => {
+        this.mapProgrammyIdToFullName.set(pr.id, pr.fullname);
+      });
+      resolve();
     });
   }
 
