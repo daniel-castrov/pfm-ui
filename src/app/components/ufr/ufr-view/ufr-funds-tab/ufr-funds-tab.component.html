@@ -31,24 +31,27 @@
   #agGridCurrentFunding
   class="ag-theme-balham pr-funds-tab group-header-white"
   [rowData]="currentFunding"
+  [suppressRowTransform]="true"
   [toolPanelSuppressSideButtons]="true"
+  [suppressMovableColumns]="true"
   [columnDefs]="currentFundingColumnDefs"
-  (rowDataChanged)="onRowDataChanged($event)"
+  [frameworkComponents]="frameworkComponents"
+  [context]="context"
   (gridReady)="onGridReady($event)"
   (columnValueChanged)="onColumnValueChanged($event)"
   [gridAutoHeight]="true">
 </ag-grid-angular>
 
 <ag-grid-angular #agGridProcessedChanges
-                 class="ag-theme-balham"
+                 class="ag-theme-balham pr-funds-tab group-header-white"
                  [gridAutoHeight]="true"
                  [toolPanelSuppressSideButtons]="true"
                  [suppressMovableColumns]="true"
                  [suppressRowTransform]="true"
                  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
                  [showToolPanel]="false"
-                 [enableSorting]="true"
-                 [enableFilter]="true"
+                 [enableSorting]="false"
+                 [enableFilter]="false"
                  [rowData]="processedChange"
                  [singleClickEdit]="true"
                  [frameworkComponents]="frameworkComponents"
@@ -57,7 +60,6 @@
                  (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
                  (columnVisible)="onColumnVisible($event)"
                  (gridReady)="onGridReady($event)"
-                 (rowDataChanged)="onRowDataChanged($event)"
                  (columnValueChanged)="onColumnValueChanged($event)"
                  (cellEditingStarted)="onCellEditingStarted($event)"
                  headerHeight="0">
@@ -65,12 +67,16 @@
 
 <ag-grid-angular
   #agGridRevisedPrograms
-  class="ag-theme-balham"
-  [toolPanelSuppressSideButtons]="true"
+  class="ag-theme-balham pr-funds-tab group-header-white"
   [rowData]="revisedPrograms"
+  [suppressRowTransform]="true"
+  [suppressMovableColumns]="true"
+  [toolPanelSuppressSideButtons]="true"
   [columnDefs]="revisedProgramsColumnDefs"
-  (columnValueChanged)="onColumnValueChanged($event)"
-  (rowDataChanged)="onRowDataChanged($event)"
+  [frameworkComponents]="frameworkComponents"
+  [context]="context"
   (gridReady)="onGridReady($event)"
+  (columnValueChanged)="onColumnValueChanged($event)"
+  [gridAutoHeight]="true"
   headerHeight="0">
 </ag-grid-angular>
