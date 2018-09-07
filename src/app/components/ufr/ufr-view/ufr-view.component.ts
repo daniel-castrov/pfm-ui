@@ -46,7 +46,7 @@ export class UfrViewComponent implements OnInit {
     } else if( this.ufr.shortyType == ShortyType.PR ||
                this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
                this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
-      this.shorty = (await this.prService.getById(this.ufr.id).toPromise()).result;
+      this.shorty = (await this.prService.getById(this.ufr.shortyId).toPromise()).result;
     } else { // this.ufr.shortyType == ShortyType.NEW_PROGRAM
       // leave this.shorty null
     }
