@@ -1,5 +1,4 @@
 import { AllUfrsComponent } from './all-ufrs/all-ufrs.component';
-import { FilterUfrsComponent } from './filter-ufrs/filter-ufrs.component';
 import { UserUtils } from '../../../services/user.utils';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { forkJoin } from "rxjs/observable/forkJoin";
@@ -13,8 +12,7 @@ import { Cycle } from '../cycle';
   styleUrls: ['./ufr-search.component.scss']
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
-  @ViewChild(HeaderComponent) header;
-  @ViewChild(FilterUfrsComponent) filterUfrsComponent: FilterUfrsComponent;
+  @ViewChild(HeaderComponent) header; 
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   
   private user: User;
@@ -52,7 +50,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     pbs.forEach((pb: PB) => {
       phases.push({ fy: pb.fy, phase: 'PB' });
     });
-
+  
     phases.sort((cycle1: Cycle, cycle2: Cycle) => {
       if (cycle1.fy === cycle2.fy) {
         if (cycle1.phase === cycle2.phase) {
@@ -68,9 +66,4 @@ export class UfrSearchComponent implements OnInit, DoCheck {
       this.cycles.push(cycle.phase + ' ' + (cycle.fy - 2000));
     });
   }
-
-  search() {
-    this.allUfrsComponent.search();
-  }
-
 }

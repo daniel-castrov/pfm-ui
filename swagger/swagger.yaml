@@ -440,6 +440,12 @@ paths:
         required: true
         type: "string"
   /pr:
+    get:
+      tags:
+      - "PR"
+      operationId: "getAll"
+      produces:
+      - "application/json"
     post:
       tags:
       - "PR"
@@ -2892,7 +2898,7 @@ definitions:
       status:
         $ref: "#/definitions/UfrStatus"
       disposition:
-        type: "string"
+        $ref: "#/definitions/Disposition"
       lastMod:
         type: "integer"
       notes:
@@ -2919,8 +2925,6 @@ definitions:
         type: "array"
         items:
           type: "string"
-      name:
-        type: "string"
       organization:
         type: "string"
       primaryCapability:
@@ -2945,10 +2949,14 @@ definitions:
         type: "string"
       acquisitionType:
         type: "string"
+      priority:
+        type: "number"
   ShortyType:
     enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
   UfrStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
+  Disposition:
+    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, DEFERRED, OGI]
   Pom:
     type: "object"
     properties:

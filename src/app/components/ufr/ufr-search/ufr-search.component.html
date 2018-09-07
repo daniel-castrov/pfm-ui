@@ -11,11 +11,15 @@
       <div class="row">
         <new-ufr class="col-5"></new-ufr>
         <div class="col-2"></div>
-        <filter-ufrs class="col-5" [cycles]="cycles" [mapCycleIdToFy]="mapCycleIdToFy" (change)="search()"></filter-ufrs>
+        <fieldset>
+          <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filter All Columns</legend>
+          <input id="filtertestbox" [(ngModel)] = "allufrs.filtertext" placeholder="Filter..." (input)="allufrs.onFilterTextBoxChanged()" />
+        </fieldset>  
       </div>
+      <br/>
       <div class="row">
         <div class="col-12">
-          <all-ufrs [mapCycleIdToFy]="mapCycleIdToFy" [filterUfrsComponent]="filterUfrsComponent"></all-ufrs>
+          <all-ufrs #allufrs [mapCycleIdToFy]="mapCycleIdToFy"></all-ufrs>
         </div>
       </div>
     </div>
