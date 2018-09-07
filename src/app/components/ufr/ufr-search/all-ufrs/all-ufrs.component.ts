@@ -32,10 +32,6 @@ export class AllUfrsComponent implements OnInit {
     simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
   };
 
-  // private context: any = {
-  //   route: '/ufr-view'
-  // } 
-
   constructor( private ufrsService: UFRsService,
                private userUtils: UserUtils,
                private programsService: ProgramsService,
