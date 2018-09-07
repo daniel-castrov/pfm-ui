@@ -59,7 +59,6 @@ export class NewUfrComponent implements OnInit {
   }
 
   generateEmptyFundingLine(fundingLines: FundingLine[]): FundingLine[]{
-    console.log(fundingLines);
     if(fundingLines) {
       let emptyFundingLines = JSON.parse(JSON.stringify(fundingLines));
       emptyFundingLines.forEach(fl => {
@@ -73,7 +72,9 @@ export class NewUfrComponent implements OnInit {
 
   async next() {
     let ufr: UFR = {phaseId: this.pomId};
-    ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
+    if (this.selectedProgramOrPr) {
+      ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
+    }
     switch(this.createNewUfrMode) {
       case 'An MRDB Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;

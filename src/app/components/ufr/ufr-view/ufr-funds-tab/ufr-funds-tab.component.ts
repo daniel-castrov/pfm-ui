@@ -43,7 +43,7 @@ export class UfrFundsComponent implements OnInit {
   frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
   isDisabledAddFundingLines;
-  overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>'
+  overlayNoRowsTemplate = '<div style="margin-top: 30px;">No Rows To Show</div>'
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -70,64 +70,52 @@ export class UfrFundsComponent implements OnInit {
   }
 
   initCurrentFunding() {
-    let data: Array<DataRow> = [];
-    if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
-      this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
-        this.prParent = pr.result;
-        pr.result.fundingLines.forEach(fundingLine => {
-          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
-          data.push(pomRow);
+    if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0 && this.ufr.shortyId) {
+      let data: Array<DataRow> = [];
+      if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
+        this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+        this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
+        this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
+          this.prParent = pr.result;
+          pr.result.fundingLines.forEach(fundingLine => {
+            let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+            data.push(pomRow);
+          });
+          this.currentFunding = data;
         });
-        this.currentFunding = data;
-
-        let tempColumnDefs =Object.assign({}, this.defaultColumnDefs);
-        this.currentFundingColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
-        this.currentFundingColumnDefs.unshift({
-          colId: 'flType',
-          valueGetter: () => {return 'Current Funding'},
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1}
-          },
-          cellClass: 'funding-line-default'
+      } else {
+        this.prService.getById(this.ufr.shortyId).subscribe(pr => {
+          this.prParent = pr.result;
+          pr.result.fundingLines.forEach(fundingLine => {
+            let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+            data.push(pomRow);
+          });
+          this.currentFunding = data;
         });
-        this.agGridCurrentFunding.api.setColumnDefs(this.currentFundingColumnDefs);
-        this.agGridCurrentFunding.api.sizeColumnsToFit();
-        this.initRevisedChanges();
-      });
+      }
+      if (this.processedChange.some(row => row.fundingLine.userCreated === true)) {
+        this.agGridProcessedChanges.columnApi.setColumnVisible('delete', true);
+        setTimeout(() => {
+          this.agGridProcessedChanges.api.sizeColumnsToFit();
+        }, 500)
+      }
     } else {
-      this.prService.getById(this.ufr.shortyId).subscribe(pr => {
-        this.prParent = pr.result;
-        pr.result.fundingLines.forEach(fundingLine => {
-          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
-          data.push(pomRow);
-        });
-        this.currentFunding = data;
-
-        let tempColumnDefs =Object.assign({}, this.defaultColumnDefs);
-        this.currentFundingColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
-        this.currentFundingColumnDefs.unshift({
-          colId: 'flType',
-          valueGetter: () => {return 'Current Funding'},
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1}
-          },
-          cellClass: 'funding-line-default'
-        });
-        this.agGridCurrentFunding.api.setColumnDefs(this.currentFundingColumnDefs);
-        this.agGridCurrentFunding.api.sizeColumnsToFit();
-        this.initRevisedChanges();
-      });
+      this.currentFunding = [];
     }
-    if (this.processedChange.some(row => row.fundingLine.userCreated === true)) {
-      this.agGridProcessedChanges.columnApi.setColumnVisible('delete', true);
-      setTimeout(() => {
-        this.agGridProcessedChanges.api.sizeColumnsToFit();
-      }, 500)
-    }
+    let tempColumnDefs =Object.assign({}, this.defaultColumnDefs);
+    this.currentFundingColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
+    this.currentFundingColumnDefs.unshift({
+      colId: 'flType',
+      valueGetter: () => {return 'Current Funding'},
+      rowSpan: params => {return this.rowSpanCount(params)},
+      cellClassRules: {
+        'row-span': params => {return this.rowSpanCount(params) > 1}
+      },
+      cellClass: 'funding-line-default'
+    });
+    this.agGridCurrentFunding.api.setColumnDefs(this.currentFundingColumnDefs);
+    this.agGridCurrentFunding.api.sizeColumnsToFit();
+    this.initRevisedChanges();
   }
 
   rowSpanCount(params){
@@ -156,22 +144,27 @@ export class UfrFundsComponent implements OnInit {
   }
 
   calculateRevisedChanges() {
-    let data: Array<DataRow> = [];
-    this.processedChange.forEach(pc => {
-      let cf = this.currentFunding.find(cf => {
-        return cf.fundingLine.appropriation === pc.fundingLine.appropriation &&
-          cf.fundingLine.baOrBlin === pc.fundingLine.baOrBlin &&
-          cf.fundingLine.opAgency === pc.fundingLine.opAgency &&
-          cf.fundingLine.item === pc.fundingLine.item
+    if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0) {
+      let data: Array<DataRow> = [];
+      this.processedChange.forEach(pc => {
+        let cf = this.currentFunding.find(cf => {
+          return cf.fundingLine.appropriation === pc.fundingLine.appropriation &&
+            cf.fundingLine.baOrBlin === pc.fundingLine.baOrBlin &&
+            cf.fundingLine.opAgency === pc.fundingLine.opAgency &&
+            cf.fundingLine.item === pc.fundingLine.item
+        });
+        let row: DataRow = JSON.parse(JSON.stringify(pc));
+        row.editable = false;
+        row.fundingLine.userCreated = false;
+        Object.keys(row.fundingLine.funds).forEach(year =>{
+          row.fundingLine.funds[year] = (cf? cf.fundingLine.funds[year] : 0) + pc.fundingLine.funds[year];
+        });
+        data.push(row);
       });
-      let row: DataRow = JSON.parse(JSON.stringify(pc));
-      row.editable = false;
-      Object.keys(row.fundingLine.funds).forEach(year =>{
-        row.fundingLine.funds[year] = (cf? cf.fundingLine.funds[year] : 0) + pc.fundingLine.funds[year];
-      });
-      data.push(row);
-    });
-    this.revisedPrograms = data;
+      this.revisedPrograms = data;
+    } else {
+      this.revisedPrograms = [];
+    }
   }
 
   initDataRows(){
@@ -462,12 +455,6 @@ export class UfrFundsComponent implements OnInit {
       });
     });
   }
-
-  // onRowDataChanged(params){
-  //   setTimeout(() => {
-  //     params.api.sizeColumnsToFit();
-  //   }, 500);
-  // }
 
   onColumnValueChanged(params){
     setTimeout(() => {
