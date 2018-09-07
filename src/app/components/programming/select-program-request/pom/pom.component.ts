@@ -59,7 +59,7 @@ export class PomComponent implements OnChanges {
           type: "numericColumn",
           suppressMenu: true,
           field: (by + i).toString(),
-          width: 92,
+          maxWidth: 98,
           editable: false,
           valueFormatter: params => { return this.currencyFormatter(params) },
           cellClassRules: {
@@ -76,7 +76,7 @@ export class PomComponent implements OnChanges {
         type: "numericColumn",
         suppressMenu: true,
         field: 'total',
-        width: 92,
+        maxWidth: 98,
         editable: false,
         valueFormatter: params => { return this.currencyFormatter(params) },
         cellClassRules: {

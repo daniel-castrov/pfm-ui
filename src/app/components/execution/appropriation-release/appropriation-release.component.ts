@@ -10,6 +10,7 @@ import { ExecutionEventData, ExecutionDropDown, ExecutionLine } from '../../../g
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 import { ExecutionLineFilter } from '../model/execution-line-filter';
+import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
 
 declare const $: any;
 declare const jQuery: any;
@@ -22,6 +23,7 @@ declare const jQuery: any;
 
 export class AppropriationReleaseComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(ExecutionLineTableComponent) table;
   private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;
   private reason: string;

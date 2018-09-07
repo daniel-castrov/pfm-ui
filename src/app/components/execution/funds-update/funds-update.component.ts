@@ -69,7 +69,7 @@ export class FundsUpdateComponent implements OnInit {
     }
 
     var programLinkEnabled = function (params): boolean {
-      return my.hasAppropriation && !(0 === params.data.released || params.data.appropriated);
+      return (!(0 === params.data.released || params.data.appropriated || my.hasAppropriation ));
     };
 
     this.agOptions = <GridOptions>{

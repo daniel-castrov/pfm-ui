@@ -10,7 +10,7 @@
       <div class="col-8">
       </div>
       <div class="col-4">
-        <button class="btn btn-primary pull-right" (click)="submit()">Release</button>
+        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!table.tableok">Release</button>
       </div>
     </div>
     <div class="row mb-3">
@@ -25,7 +25,7 @@
       <div class="col-md-6 col-lg-2">
         <div class="form-group">
           <label>Select:</label>
-          <select class="form-control-sm dropdown-width"  [(ngModel)]="other">
+          <select class="form-control-sm dropdown-width" [(ngModel)]="other">
             <option value=""></option>
             <option [ngValue]="'1'">1</option>
             <option [ngValue]="'2'">2</option>

@@ -8,8 +8,8 @@
   </div>
 </ng-template>
 
-<div *ngIf="programList().length>0 || updatelines.length>0; else notable">
-  <span *ngIf="programList().length>0; else notable">
+<div *ngIf="availablePrograms.length>0 || (agGrid && agGrid.api && agGrid.api.getDisplayedRowCount()>0); else notable">
+  <span *ngIf="availablePrograms.length>0; else notable">
     <button class="btn btn-light" (click)="addrow()">
       <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
       {{sourceOrTarget}}

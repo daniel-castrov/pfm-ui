@@ -8,6 +8,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
 import { ExecutionLineFilter } from '../model/execution-line-filter'
+import { ExecutionTableValidator } from '../model/execution-table-validator'
 import { GridOptions, RowNode } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
@@ -26,16 +27,26 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() private sourceOrTarget: string = 'to select target programs';
   @Input() private exelinefilter: ExecutionLineFilter;
   @Input() private exeprogramfilter: ExecutionLineFilter;
+  @Input() exevalidator: ExecutionTableValidator = function (x: ExecutionLineWrapper[]): boolean[] {
+    var okays: boolean[] = [];
+    x.forEach((el: ExecutionLineWrapper) => {
+      okays.push((el.line.toa ? el.line.toa - el.line.withheld - el.line.released >= el.amt : true));
+    });
+    return okays;
+  };
+  tableok: boolean = false;
   private _updatelines: ExecutionLineWrapper[] = [];
   private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
   private agOptions: GridOptions;
+  private availablePrograms: {}[] = [];
 
-  @Input() set updatelines(newdata: ExecutionLineWrapper[] ) {
+  @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
     this._updatelines = newdata;
     if (this.agOptions && this.agOptions.api) {
       this.agOptions.api.setRowData(newdata);
       this.agOptions.api.refreshCells();
+      this.recheckValidity();
     }
   }
 
@@ -62,8 +73,6 @@ export class ExecutionLineTableComponent implements OnInit {
       this.agOptions.api.setPinnedBottomRowData([]);
     }
   }
-
-
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private router: Router) { 
@@ -97,6 +106,8 @@ export class ExecutionLineTableComponent implements OnInit {
         params.data.amt = 0;
       }
 
+      my.setAvailablePrograms();
+
       return true;
     }
 
@@ -104,6 +115,7 @@ export class ExecutionLineTableComponent implements OnInit {
     var amtSetter = function (params): boolean {
       params.data.amt = Number.parseFloat(params.newValue);
       my.refreshlines();
+      my.recheckValidity();
       return true;
     }
 
@@ -134,7 +146,7 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line.mrId',
           cellEditorParams: function(){
             return {
-              values: my.programList(),
+              values: my.availablePrograms,
               formatValue: params => (null == params ? 'Please choose a Program' : params.value)
             };
           },
@@ -164,6 +176,7 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'TOA',
           filter: 'agNumberColumnFilter',
           field: 'line.toa',
+          type: 'numericColumn',
           width: 92,
           cellClass: ['ag-cell-light-grey']
         },
@@ -171,12 +184,14 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Released',
           filter: 'agNumberColumnFilter',
           field: 'line.released',
+          type: 'numericColumn',
           width: 92,
           cellClass: ['ag-cell-light-grey']
         },
         {
           headerName: 'Withheld',
           filter: 'agNumberColumnFilter',
+          type: 'numericColumn',
           field: 'line.withheld',
           width: 92,
           cellClass: ['ag-cell-light-grey'],
@@ -186,10 +201,14 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Amount',
           editable: true,
           filter: 'agNumberColumnFilter',
+          type: 'numericColumn',
           field: 'amt',
           valueSetter: amtSetter,
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClassRules: {
+            'ag-cell-light-grey': params => my.validateOneRow( params.data ),
+            'ag-cell-red': params => !my.validateOneRow(params.data)
+          }
         },
         {
           headerName: 'Remove',
@@ -203,19 +222,23 @@ export class ExecutionLineTableComponent implements OnInit {
     };
   }
 
+  validateOneRow(row): boolean {
+    return this.exevalidator([row], false)[0];
+  }
+
   ngOnInit() {
     var my: ExecutionLineTableComponent = this;
     forkJoin([
       my.progsvc.getIdNameMap()
     ]).subscribe(data => {
-      //console.log(my.phase);
+      Object.getOwnPropertyNames(data[0].result).forEach(id => {
+        my.programIdNameLkp.set(id, data[0].result[id]);
+      });
+
       my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
         my.allexelines = d2.result
           .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0));
-      });
-
-      Object.getOwnPropertyNames(data[0].result).forEach(id => {
-        my.programIdNameLkp.set(id, data[0].result[id]);
+        this.setAvailablePrograms();
       });
     });
   }
@@ -230,11 +253,9 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   delete(rowIndex, data) {
-    console.log('into delete!')
     this.agOptions.api.updateRowData({remove: [data]});
-    // FIXME: need to remove data from the grid
-  //    this.agOptions.api.setRowData(this._updatelines);
     this.refreshlines();
+    this.recheckValidity();
   }
 
   getLineChoices(mrid): ExecutionLine[] {
@@ -255,30 +276,37 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   total(): number {
-    var my: ExecutionLineTableComponent = this;
-
     var tot: number = 0;
-    for (var i = 0; i < my._updatelines.length; i++) {
-      if (my._updatelines[i].amt ) {
-        tot += my._updatelines[i].amt;
+    for (var i = 0; i < this._updatelines.length; i++) {
+      if (this._updatelines[i].amt ) {
+        tot += this._updatelines[i].amt;
       }
     }
-
     return tot;
   }
 
-  programList(): {}[] {
-    var list: {}[] = [];
-    this.programIdNameLkp.forEach((v, k) => { 
+  recheckValidity() {
+    var failure: boolean = false;
+    this.exevalidator(this._updatelines, true).forEach(x => {
+      if (!x) {
+        failure = true;
+      }
+    });
+
+    this.tableok = !failure;
+    this.agGrid.api.refreshCells();
+  }
+
+  setAvailablePrograms() {
+    this.availablePrograms.splice(0, this.availablePrograms.length);
+    this.programIdNameLkp.forEach((v, k) => {
       if (this.getLineChoices(k).length > 0) {
-        list.push({
+        this.availablePrograms.push({
           key: k,
           value: v
         });
       }
     });
-
-    return list;
   }
 
   onGridReady(params) {
