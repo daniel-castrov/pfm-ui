@@ -6,9 +6,11 @@ import { ProgramsService } from './../generated/api/programs.service';
 import { Program } from './../generated/model/program';
 import { Injectable } from '@angular/core';
 import {ProgramType} from "../generated";
+import {FundingLine} from "../generated/model/fundingLine";
 
 export interface WithFullName {
   fullname: string;
+  fundingLines?: Array<FundingLine>;
 }
 
 export interface ProgramWithFullName extends Program, WithFullName {};
@@ -46,12 +48,12 @@ export class WithFullNameService {
 /**
  * The PRs can form a hierarchy in two different ways:
  *
- *  - using the creation time data (creationTimeReferenceId) where a PR w/o a program can have a parent be another PR and so on until a PR
+ *  - using the creation time processedChange (creationTimeReferenceId) where a PR w/o a program can have a parent be another PR and so on until a PR
  * in the chain has a parent in the MRDB Programs collection via its parentMrId field. From there on parenting is established via the Programs collection.
  * This is applicable to the POM PRs while they are being modified/worked on.
  * Example full name resulting from such a hierarchy: /ROOT_PROGRAM/SUBPROGRAM_1/pr_1/pr_2,  where upper case is a Program name and lower case is a PR name.
  *
- *  - using the archival data (parentMrId). In this case the PR does have a Program in MRDB. Example: /ROOT_PROGRAM/SUBPROGRAM_1, i.e. the Program of the PR.
+ *  - using the archival processedChange (parentMrId). In this case the PR does have a Program in MRDB. Example: /ROOT_PROGRAM/SUBPROGRAM_1, i.e. the Program of the PR.
  * This is applicable to PB PRs while the POM PRs are being worked on.
  *
  * NB: Capitatalization illustrates how the full name is constructed and not how it is represented to the user in the UI.
