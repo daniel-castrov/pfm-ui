@@ -5,6 +5,7 @@ import { AgGridNg2 } from "ag-grid-angular";
 import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
 import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
+import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 
 @Component({
   selector: 'all-ufrs',
@@ -26,6 +27,14 @@ export class AllUfrsComponent implements OnInit {
   private rowData: any[];
   private colDefs;
   private menuTabs = ['filterMenuTab'];
+
+  private frameworkComponents:any = {
+    simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
+  };
+
+  // private context: any = {
+  //   route: '/ufr-view'
+  // } 
 
   constructor( private ufrsService: UFRsService,
                private userUtils: UserUtils,
@@ -69,11 +78,11 @@ export class AllUfrsComponent implements OnInit {
             field: colKey,
             width: 102,
             editable: false,
-            cellRenderer: params => this.linkCellRenderer(params),
+            cellRenderer: 'simpleLinkCellRendererComponent',
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
             getQuickFilterText: params =>  {
-              return this.ufrNumber(params.value);
+              return params.value.linktext;
             },
             comparator: this.ufrCompare
           }
@@ -126,8 +135,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   private ufrCompare(param1, param2){
-     //return this.ufrNumber(param1.value).localeCompare( this.ufrNumber(param2.value) ) ;
-    return (param1.phaseId+param1.requestNumber).localeCompare( param2.phaseId+param2.requestNumber );
+    return param1.linktext.localeCompare( param2.linktext );
   }
 
   private async populateRowData() {
@@ -139,7 +147,7 @@ export class AllUfrsComponent implements OnInit {
     ufrs.forEach(ufr => {
 
       let row = {
-        "UFR #": ufr,
+        "UFR #": new SimpleLink( "/ufr-view/"+ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.shortName,
         "Prog Id": this.mapProgrammyIdToFullName.get(ufr.shortyId),
         "Status": ufr.status,
@@ -153,12 +161,6 @@ export class AllUfrsComponent implements OnInit {
       alldata.push(row);
     });
     this.rowData = alldata;
-  }
-
-  // TODO - I don't think this is the right way 
-  private linkCellRenderer(params) {
-    let link = `<a href="/ufr-view/${params.value.id}">${this.ufrNumber(params.value)}</a>`
-    return link;
   }
 
   private dateFormatter(longdate) {

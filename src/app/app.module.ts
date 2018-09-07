@@ -136,6 +136,7 @@ import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { LibraryComponent } from "./components/manage/library/library.component";
+import { SimpleLinkCellRendererComponent } from './components/renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
 import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
@@ -295,6 +296,7 @@ const appRoutes: Routes = [
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
+    SimpleLinkCellRendererComponent,
     ProgramCellRendererComponent,
     LibraryViewCellRenderer,
     DeleteRenderer,
@@ -304,6 +306,7 @@ const appRoutes: Routes = [
     ToggleComponent
   ],
   entryComponents: [
+    SimpleLinkCellRendererComponent,
     ProgramCellRendererComponent,
     EventDetailsCellRendererComponent,
     SummaryProgramCellRenderer,

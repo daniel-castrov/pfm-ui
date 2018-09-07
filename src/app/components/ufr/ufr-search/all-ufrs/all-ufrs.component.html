@@ -31,6 +31,7 @@
   [paginationPageSize]="20"
   (paginationChanged)="agGridPagination.onPaginationChanged($event)"
   [suppressPaginationPanel]="true"
+  [frameworkComponents]="frameworkComponents"
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
