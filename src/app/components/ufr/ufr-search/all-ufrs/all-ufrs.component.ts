@@ -2,7 +2,7 @@ import { UserUtils } from '../../../../services/user.utils';
 import {Component, OnInit, ViewChild, Input, OnChanges} from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
-import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR } from '../../../../generated';
 import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -157,7 +157,7 @@ export class AllUfrsComponent implements OnInit, OnChanges {
 
   private populateRowData() {
     // proceed only if all asynchronously initialized members the function needs have been initialized
-    if(!this.ufrs || !this.mapProgrammyIdToFullName || !this.fy || !this.orgMap) return;
+    if(!this.ufrs || !this.mapProgrammyIdToFullName || !this.fy || !this.orgMap || !this.mapCycleIdToFy) return;
 
     let alldata: any[] = [];
     this.ufrs.forEach(ufr => {
