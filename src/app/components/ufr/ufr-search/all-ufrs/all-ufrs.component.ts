@@ -1,8 +1,8 @@
 import { UserUtils } from '../../../../services/user.utils';
-import {Component, OnInit, ViewChild, Input, OnChanges} from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
-import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR } from '../../../../generated';
+import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
 import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -13,7 +13,7 @@ import {CycleUtils} from "../../../../services/cycle.utils";
   templateUrl: './all-ufrs.component.html',
   styleUrls: ['./all-ufrs.component.scss']
 })
-export class AllUfrsComponent implements OnInit, OnChanges {
+export class AllUfrsComponent implements OnInit {
 
   @Input() private mapCycleIdToFy: Map<string, string>;
 
@@ -23,10 +23,8 @@ export class AllUfrsComponent implements OnInit, OnChanges {
   datePipe: DatePipe = new DatePipe('en-US')
   private filtertext;
   private fy: number;
-  private ufrs: UFR[];
-
-
-// agGrid
+ 
+  // agGrid   
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private rowData: any[];
   private colDefs;
@@ -56,18 +54,8 @@ export class AllUfrsComponent implements OnInit, OnChanges {
     });
 
     this.fy = (await this.cycleUtils.currentPom().toPromise()).fy;
-    this.ufrs = (await this.ufrsService.search(this.user.currentCommunityId, {}).toPromise()).result;
-
-
 
     this.setAgGridColDefs();
-    this.populateRowData();
-    setTimeout(() => {
-      this.agGrid.api.sizeColumnsToFit()
-    });
-  }
-
-  ngOnChanges() {
     this.populateRowData();
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()
@@ -151,12 +139,13 @@ export class AllUfrsComponent implements OnInit, OnChanges {
     return param1.linktext.localeCompare( param2.linktext );
   }
 
-  private populateRowData() {
-    // proceed only if all asynchronously initialized members the function needs have been initialized
-    if(!this.ufrs || !this.mapProgrammyIdToFullName || !this.fy || !this.orgMap || !this.mapCycleIdToFy) return;
+  private async populateRowData() {
+
+    const ufrFilter: UFRFilter = {};
+    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
     let alldata: any[] = [];
-    this.ufrs.forEach(ufr => {
+    ufrs.forEach(ufr => {
 
       let row = {
         "UFR #": new SimpleLink( "/ufr-view/"+ufr.id, this.ufrNumber(ufr) ),
