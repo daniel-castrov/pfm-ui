@@ -1,3 +1,11 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$dark-grey: #848282;
+$light-green: #ebf2de;
 
 label {
   color: #6b757c;
@@ -105,8 +113,6 @@ option {
   }
 }
 
-
-
 .alert-secondary {
   color: #464a4e;
   background-color: #e7e8ea;
@@ -131,19 +137,25 @@ option {
   clear: both;
 }
 
-.alert-success  {
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-
-  hr {
-    border-top-color: #b1dfbb;
-  }
-
-  .alert-link {
-    color: #0b2e13;
+.alert {
+  &.alert-success  {
+     width: 600px !important;
+     background-color: $white !important;
+     border: 1px solid #49a635 !important;
   }
 }
+
+// .alert-success  {
+//  width: 600px;
+//  background-color: $white;
+//   hr {
+//     border-top-color: #b1dfbb;
+//   }
+//
+//   .alert-link {
+//     color: #0b2e13;
+//   }
+// }
 
 .modal {
 

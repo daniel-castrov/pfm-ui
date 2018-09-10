@@ -11,6 +11,9 @@ import { RestResult } from '../../generated/model/restResult';
 import { Stranger } from '../../generated/model/stranger';
 import { StrangerService } from '../../generated/api/stranger.service';
 
+declare var jquery: any;
+declare var $: any;
+
 @Component({
   selector: 'app-apply',
   templateUrl: './apply.component.html',
@@ -37,6 +40,19 @@ export class ApplyComponent implements OnInit {
     this.formsubmitted = false;
     this.ndaSatisfied = true;
     this.getStranger();
+
+    // For testing Notify Library uncomment and go to /apply page.
+    // $.notify({
+    //     // options
+    //     icon: 'fa fa-check',
+    //     // icon: 'fa fa-exclamation-triangle',
+    //     // icon: 'fa fa-info-circle',
+    //     // icon: 'fa fa-exclamation',
+    //     message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
+    // },{
+    //     // settings
+    //     type: 'success',
+    // });
   }
 
   getStranger(): void {
