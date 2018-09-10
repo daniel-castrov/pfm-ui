@@ -44,7 +44,9 @@
       <div class="col-3">
         <span class="form-group inline-name">
           <label class="mb-1">Priority</label>
-          <input type="text" [(ngModel)]="ufr.priority" class="form-control forminput mr-5">
+          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.priority">
+            <option *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]" [value]="p">{{p}}</option>
+          </select>
         </span>
       </div>
       <div class="col-3">

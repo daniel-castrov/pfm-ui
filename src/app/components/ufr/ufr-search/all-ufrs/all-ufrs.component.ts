@@ -6,6 +6,7 @@ import { ProgramsService, OrganizationService, Organization, User, Program, UFRs
 import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
+import {CycleUtils} from "../../../../services/cycle.utils";
 
 @Component({
   selector: 'all-ufrs',
@@ -21,6 +22,7 @@ export class AllUfrsComponent implements OnInit {
   private orgMap: any[] = []
   datePipe: DatePipe = new DatePipe('en-US')
   private filtertext;
+  private fy: number;
  
   // agGrid   
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -37,7 +39,8 @@ export class AllUfrsComponent implements OnInit {
                private programsService: ProgramsService,
                private orgSvc: OrganizationService,
                private router: Router,
-               private withFullNameService: WithFullNameService) {}
+               private withFullNameService: WithFullNameService,
+               private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
 
@@ -49,6 +52,8 @@ export class AllUfrsComponent implements OnInit {
     organizations.forEach(org => {
       this.orgMap[org.id] = org.abbreviation;
     });
+
+    this.fy = (await this.cycleUtils.currentPom().toPromise()).fy;
 
     this.setAgGridColDefs();
     this.populateRowData();
@@ -150,13 +155,20 @@ export class AllUfrsComponent implements OnInit {
         "Priority": ufr.priority,
         "Disposition": ufr.disposition,
         "Last Updated": ufr.lastMod,
-        "Funding Request": "",
+        "Funding Request": '$' + this.sum(ufr),
         "Func Area": ufr.functionalArea,
         "Organization": this.orgMap[ufr.organization]
       }
       alldata.push(row);
     });
     this.rowData = alldata;
+  }
+
+  sum(ufr: UFR): number {
+    return ufr.fundingLines
+        .map(fl => fl.funds[this.fy])
+        .map( (a) => a || 0)
+        .reduce( (a,b) => a+b, 0 );
   }
 
   private dateFormatter(longdate) {
