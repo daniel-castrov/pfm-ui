@@ -35,26 +35,17 @@
     <div class="row">
       <div class="col-3">
         <span class="form-group inline-name">
-          <label class="mb-1">Status</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.status">
-            <option *ngFor="let p of statuses" [value]="p">{{p}}</option>
-          </select>
+          Status: {{ufr.status}}
         </span>
       </div>
       <div class="col-3">
         <span class="form-group inline-name">
-          <label class="mb-1">Priority</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.priority">
-            <option *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]" [value]="p">{{p}}</option>
-          </select>
+          Priority: {{ufr.priority}}
         </span>
       </div>
       <div class="col-3">
         <span class="form-group inline-name">
-          <label>Disposition</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.disposition">
-            <option *ngFor="let p of dispositions" [value]="p">{{p}}</option>
-          </select>
+          Disposition: {{ufr.disposition}}
         </span>
       </div>
     </div>
