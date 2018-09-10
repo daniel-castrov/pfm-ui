@@ -172,7 +172,7 @@ label {
   }
 
   &.alert-success  {
-   border: 1px solid #49a635 !important;
+   border: 2px solid #49a635 !important;
 
    > .fa {
        font-size: 24px;
@@ -185,6 +185,7 @@ label {
        height: 100%;
        padding: 10px;
        min-width: 50px;
+       vertical-align: middle;
      }
 
      > .btn {
@@ -193,7 +194,7 @@ label {
   }
 
   &.alert-info {
-   border: 1px solid #de8001 !important;
+   border: 2px solid #de8001 !important;
 
    > .fa {
        font-size: 24px;
@@ -216,7 +217,7 @@ label {
     }
 
     &.alert-primary {
-     border: 1px solid #2574cd !important;
+     border: 2px solid #2574cd !important;
 
      > .fa {
          font-size: 24px;
@@ -239,7 +240,7 @@ label {
     }
 
     &.alert-secondary {
-     border: 1px solid #665b5b !important;
+     border: 2px solid #665b5b !important;
 
      > .fa {
          font-size: 24px;
@@ -262,7 +263,7 @@ label {
     }
 
   &.alert-danger {
-   border: 1px solid #ff0000 !important;
+   border: 2px solid #ff0000 !important;
 
    > .fa {
        font-size: 25px;
