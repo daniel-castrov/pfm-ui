@@ -42,17 +42,17 @@ export class ApplyComponent implements OnInit {
     this.getStranger();
 
     // For testing Notify Library uncomment and go to /apply page.
-    $.notify({
-        // options
-        icon: 'fa fa-check',
-        // icon: 'fa fa-exclamation-triangle',
-        // icon: 'fa fa-info-circle',
-        // icon: 'fa fa-exclamation',
-        message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
-    },{
-        // settings
-        type: 'success',
-    });
+    // $.notify({
+    //     // options
+    //     icon: 'fa fa-check',
+    //     // icon: 'fa fa-exclamation-triangle',
+    //     // icon: 'fa fa-info-circle',
+    //     // icon: 'fa fa-exclamation',
+    //     message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
+    // },{
+    //     // settings
+    //     type: 'success',
+    // });
   }
 
   getStranger(): void {
