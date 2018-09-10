@@ -30,6 +30,7 @@ tags:
 - name: "Epp"
 - name: "Execution"
 - name: "Library"
+- name: "OandE"
 
 #
 ##############################################################################
@@ -2435,6 +2436,68 @@ paths:
         type: "string"
       produces:
       - "application/json"
+# END LIBRARY
+##############################################################################
+# START O&E
+  /oande/phase/{exeId}:
+    get:
+      tags:
+      - "OandE"
+      operationId: "getByPhaseId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "exeId"
+        required: true
+        type: "string"
+  /oande/execution/{elid}:
+    get:
+      tags:
+      - "OandE"
+      operationId: "getByExecutionLineId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "elid"
+        required: true
+        type: "string"
+    put:
+      tags:
+      - "OandE"
+      operationId: "createMonthlyInput"
+      parameters:
+      - in: "path"
+        name: "elid"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "an OandEMonthly"
+        required: true
+        schema:
+          $ref: "#/definitions/OandEMonthly"
+    post:
+      tags:
+      - "OandE"
+      operationId: "createAdminMonthlyInput"
+      parameters:
+      - in: "path"
+        name: "elid"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a full list of OandEMonthlies"
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: "#/definitions/OandEMonthly"
+# STOP O&E
+#################################################################
+
 # END PATHS
 #################################################################
 #
@@ -3240,5 +3303,28 @@ definitions:
         properties:
           area:
             type: "string"
+  OandEMonthly:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      executionLineId: 
+        type: "string"
+      month:
+        type: "integer"
+      committed: 
+        type: "number"
+      obligated: 
+        type: "number"
+      outlayed: 
+        type: "number"
+      accruals: 
+        type: "number"
+      explanation:
+        type: "string"
+      remediation:
+        type: "string"
+      lastUpdated:
+        type: "number"
 ##############################################################################
 # ENDFILE
