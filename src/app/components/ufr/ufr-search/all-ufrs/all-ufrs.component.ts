@@ -17,10 +17,12 @@ export class AllUfrsComponent implements OnInit {
 
   @Input() private mapCycleIdToFy: Map<string, string>;
 
-  private mapProgrammyIdToFullName: Map<string, string>;// mrid, fullname
+  // Map <id of Program or PR, ProgramWithFullName or ProgramRequestWithFullName>
+  private mapPrIdToObj: Map<string, any>;
+  
   private user: User;
   private orgMap: any[] = []
-  datePipe: DatePipe = new DatePipe('en-US')
+  private datePipe: DatePipe = new DatePipe('en-US')
   private filtertext;
   private fy: number;
  
@@ -145,19 +147,37 @@ export class AllUfrsComponent implements OnInit {
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
     let alldata: any[] = [];
+    let progId:string, funcArea:string , orgid:string; 
     ufrs.forEach(ufr => {
+
+      if ( ufr.shortyId ){
+        let progOrPr = this.mapPrIdToObj.get(ufr.shortyId);
+        if ( progOrPr ){
+          progId = progOrPr.fullname;
+          funcArea = progOrPr.functionalArea;
+          orgid = progOrPr.organization;
+        } else {
+          progId = "";
+          funcArea = "";
+          orgid = "-1";  
+        }
+      } else {
+        progId = "(new)"
+        funcArea = ufr.functionalArea;
+        orgid = ufr.organization;
+      }
 
       let row = {
         "UFR #": new SimpleLink( "/ufr-view/"+ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.shortName,
-        "Prog Id": this.mapProgrammyIdToFullName.get(ufr.shortyId),
+        "Prog Id": progId,
         "Status": ufr.status,
         "Priority": ufr.priority,
         "Disposition": ufr.disposition,
         "Last Updated": ufr.lastMod,
         "Funding Request": '$' + this.sum(ufr),
-        "Func Area": ufr.functionalArea,
-        "Organization": this.orgMap[ufr.organization]
+        "Func Area": funcArea,
+        "Organization": this.orgMap[orgid]
       }
       alldata.push(row);
     });
@@ -179,19 +199,21 @@ export class AllUfrsComponent implements OnInit {
   private async initProgrammyIdToFullName(programs: Program[]): Promise<any> {
     return new Promise( async (resolve) => {
       // TODO: make the following two calls in parallel
-      this.mapProgrammyIdToFullName = new Map<string, string>();
+      this.mapPrIdToObj = new Map<string, any>();
       (await this.withFullNameService.programs()).forEach((program: ProgramWithFullName) => {
-        this.mapProgrammyIdToFullName.set(program.id, program.fullname);
+        this.mapPrIdToObj.set(program.id, program);
       });
-      (await this.withFullNameService.allProgramRequestsWithFullNamesDerivedFromCreationTimeData()).forEach((pr: ProgramRequestWithFullName) => {
-        this.mapProgrammyIdToFullName.set(pr.id, pr.fullname);
+      (await this.withFullNameService.allProgramRequestsWithFullNamesDerivedFromCreationTimeData())
+        .forEach((pr: ProgramRequestWithFullName) => {
+        this.mapPrIdToObj.set(pr.id, pr);
       });
       resolve();
     });
   }
 
   private ufrNumber(ufr: UFR): string {
-    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); // the value stored in this.mapCycleIdToFy look like this: 'POM 2017'
+    // the value stored in this.mapCycleIdToFy looks like this: 'POM 2017'
+    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); 
     const shortFy = fullFy - 2000;
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;

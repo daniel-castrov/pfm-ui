@@ -33,7 +33,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
                     .map( (restResult: RestResult) => restResult.result);
     
     this.initCyclesAndEditable(poms, pbs);
-  }
+  } 
   
   ngDoCheck() {
     this.changeDetectorRef.detectChanges();
