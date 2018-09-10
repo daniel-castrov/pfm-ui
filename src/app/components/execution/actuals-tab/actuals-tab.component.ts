@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild, Input } from '@angular/core'
 
 // Other Components
 import { Router } from '@angular/router'
@@ -6,6 +6,7 @@ import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import { OandEMonthly, ExecutionLine, Execution } from '../../../generated';
 
 @Component({
   selector: 'actuals-tab',
@@ -18,128 +19,155 @@ export class ActualsTabComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private actuals: Map<string, string> = new Map<string, string>();
-  private agOptions: GridOptions;
+  private rows: {}[];
   private selectedRow: number = -1;
   private columnDefs: any[];
-  private rowData: any[];
-
-  ngOnInit() {}
-
+  private firstMonth = 0;
+  @Input() private oandes: OandEMonthly[];
+  @Input() private exeline: ExecutionLine;
+  @Input() private exe: Execution;
 
   constructor() {
+    var my: ActualsTabComponent = this;
+
+    this.rows = [
+      { actuals: 'TOA' },
+      { actuals: 'Released' },
+      { actuals: 'Committed (Monthly)' },
+      { actuals: 'Cumulative Committed' },
+      { actuals: 'Obligated (Monthly)' },
+      { actuals: 'Cumulative Obligated' },
+      { actuals: 'OSD Goal' },
+      { actuals: 'Delta' },
+      { actuals: 'Outlayed (Monthly)' },
+      { actuals: 'Cumulative Outlayed' },
+      { actuals: 'OSD Goal' },
+      { actuals: 'Delta' },
+      { actuals: 'Accruals (Monthly)' },
+      { actuals: 'Cumulative Accruals' },    
+    ];
+
+    var valueGetter = function (params) {
+      if (!my.oandes) {
+        return '';
+      }
+      // first, figure out which column we're in so we know which month to get
+      // then, figure out which row we're in so we can calculate the amount
+      
+      // col will be from 0-11, representing the months of the FY
+      var col: number = Number.parseInt(params.column.colId) - 1;
+
+      var oande: OandEMonthly;
+      my.oandes.filter(oe => (oe.month === (col + my.firstMonth))).forEach(oe => { 
+        // at most one of these
+        oande = oe;
+      });
+      
+      if (oande) {
+        
+      }
+      else {
+        // no monthly value yet
+        return '';
+      }
+
+      var row :number = Number.parseInt( params.node.id );
+
+      return row + '-' + col;
+    };
 
     this.columnDefs = [
       {
-        headerName: 'First Year',
+        headerName: 'Fiscal Year',//x => ('FY ' + (this.exe.fy + (this.firstMonth / 12) - 2000)),
           children: [
             {
               headerName: 'Actuals',
               field: 'actuals',
               filter: 'agTextColumnFilter',
               cellClass: ['ag-cell-white', 'ag-link'],
-              cellRenderer: function(params){
-                return "<a data-toggle='modal' + href='#myModal"
-                + "'> "+params.value+"</a>";
-              }
+              //cellRenderer: function(params){
+              //  return "<a data-toggle='modal' + href='#myModal"
+              //  + "'> "+params.value+"</a>";
+              //}
             },
             {
               headerName: 'Oct',
-              field: 'oct',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Nov',
-              field: 'nov',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Dec',
-              field: 'dec',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Jan',
-              field: 'jan',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Feb',
-              field: 'feb',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Mar',
-              field: 'mar',
+              valueGetter: valueGetter,
               maxWidth: 80,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Apr',
-              field: 'apr',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'May',
-              field: 'may',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Jun',
-              field: 'jun',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Jul',
-              field: 'jul',
+              valueGetter: valueGetter,
               maxWidth: 80,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Aug',
-              field: 'aug',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             },
             {
               headerName: 'Sep',
-              field: 'sep',
+              valueGetter: valueGetter,
               maxWidth: 88,
               cellClass: ['ag-cell-white', 'text-right']
             }
           ]
         }
-      ];
-
-    this.rowData = [
-        { actuals: 'Funds',
-          mar: 'item 1',
-          jun: 35000
-        },
-        { actuals: 'Released', sept: 'item 1', aug: 500 },
-        { actuals: 'Committed (Monthly)', dec: 'item 1', oct: 5550 },
-        { actuals: 'Cummulative Committed', may: 'item 1', jul: 45000 },
-        { actuals: 'Obligated (Monthly)', oct: 'item 1', feb: 50000 },
-        { actuals: 'Cummulative Obligated', jan: 'item 1', nov: 70000 },
-        { actuals: 'OSD Goal', aug: 'item 1', dec: 745000 },
-        { actuals: 'Delta', apr: 'item 1', aug: 590000 },
-        { actuals: 'Outlayed (Monthly)', oct: 'item 1', feb: 50000 },
-        { actuals: 'Cummulative Outlayed', jan: 'item 1', nov: 70000 },
-        { actuals: 'OSD Goal', aug: 'item 1', dec: 745000 },
-        { actuals: 'Delta', apr: 'item 1', aug: 590000 },
-        { actuals: 'Actuals (Monthly)', mar: 'item 1', sep: 69050 },
-        { actuals: 'Cummulative Actuals', mar: 'item 1', jun: 35000 },
     ];
-
   }
 
+  ngOnInit() { }
 
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);
