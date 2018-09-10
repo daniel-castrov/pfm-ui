@@ -41,23 +41,18 @@ export class ApplyComponent implements OnInit {
     this.ndaSatisfied = true;
     this.getStranger();
 
-    $.notify({
-    	// options
-      icon: 'fa fa-check',
-      // icon: 'fa fa-exclamation-triangle',
-      // icon: 'fa fa-info-circle',
-      // icon: 'fa fa-exclamation',
-      // icon: 'fa fa-comment',
-    	message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
-    },{
-    	// settings
-    	type: 'success',
-      timer: 0,
-      animate: {
-    		enter: 'animated fadeInRight',
-    		exit: 'animated fadeOutRight'
-    	}
-    });
+    // For testing Notify Library uncomment and go to /apply page.
+    // $.notify({
+    //     // options
+    //     icon: 'fa fa-check',
+    //     // icon: 'fa fa-exclamation-triangle',
+    //     // icon: 'fa fa-info-circle',
+    //     // icon: 'fa fa-exclamation',
+    //     message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
+    // },{
+    //     // settings
+    //     type: 'success',
+    // });
   }
 
   getStranger(): void {
