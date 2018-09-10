@@ -79,14 +79,10 @@ export class NewUfrComponent implements OnInit {
       case 'An MRDB Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A Programmatic Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New FoS':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
@@ -95,8 +91,6 @@ export class NewUfrComponent implements OnInit {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
         }
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New Increment':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
@@ -105,8 +99,6 @@ export class NewUfrComponent implements OnInit {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
         }
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New Program':
         ufr.shortyType = ShortyType.NEW_PROGRAM;
