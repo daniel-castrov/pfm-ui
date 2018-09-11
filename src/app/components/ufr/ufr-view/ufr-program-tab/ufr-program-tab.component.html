@@ -33,15 +33,22 @@
             <div class="col-3">
               <div class="form-group inline-name mr-2">
                 <label>Program ID</label>
-                <input [(ngModel)]="shorty.shortName" class="program-values forminput" name="program-id">
+                <input [(ngModel)]="shorty.shortName" class="form-control" name="program-id" disabled />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group inline-name">
+                <label>Program Name</label>
+                <input [(ngModel)]="shorty.longName" class="form-control forminput" name="program-name" disabled />
               </div>
             </div>
             <div class="col-3">
-              <div class="form-group inline-name">
-                <label>Program Name</label>
-                <input [(ngModel)]="shorty.longName" class="program-values forminput" name="program-name">
-              </div>
+              <span class="form-group inline-name">
+                <label class="mb-1">Type</label>
+                <input value="{{shortyType()}}" class="form-control forminput" name="typeselect" disabled />
+              </span>
             </div>
+
           </div>
         </div>
       </div>
@@ -51,17 +58,6 @@
             <label>Parent Program for Subprogram</label>
             <span class="program-values" *ngIf="parentName; else novalue">{{parentName}}</span>
           </div>
-        </div>
-        <div class="col-3">
-          <span class="form-group inline-name">
-            <label class="mb-1">Type of Subprogram</label>
-            <select [(ngModel)]="shorty.type" name="typeselect">
-              <option [ngValue]="'PROGRAM'">Program</option>
-              <option *ngIf="parentName" [ngValue]="'INCREMENT'">Increment</option>
-              <option *ngIf="parentName" [ngValue]="'FOS'">Family of Systems</option>
-              <option *ngIf="parentName" [ngValue]="'VARIANT'">Variant</option>
-            </select>
-          </span>
         </div>
       </div>
       <div class="row">
