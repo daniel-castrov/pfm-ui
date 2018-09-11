@@ -28,6 +28,12 @@
         </span>
       </div>
       <div class="col-3">
+        <span class="form-group inline-name">
+          <label>Core Capability</label>
+          <select [(ngModel)]="ufr.coreCapability" class="form-control-sm dropdown-width" name="dummy">
+            <option *ngFor="let c of capabilities" [ngValue]="c.abbr" >{{c.name}}</option>
+          </select>
+        </span>
       </div>
     </div>
 
@@ -35,26 +41,20 @@
     <div class="row">
       <div class="col-3">
         <span class="form-group inline-name">
-          <label class="mb-1">Status</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.status">
-            <option *ngFor="let p of statuses" [value]="p">{{p}}</option>
-          </select>
+          <label>Status</label>
+          <input type="text" class="form-control mr-5" value="{{ufr.status}}" disabled />
         </span>
       </div>
       <div class="col-3">
         <span class="form-group inline-name">
-          <label class="mb-1">Priority</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.priority">
-            <option *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]" [value]="p">{{p}}</option>
-          </select>
+          <label>Priority</label>
+          <input type="text" class="form-control mr-5" value="{{ufr.priority}}" disabled />
         </span>
       </div>
       <div class="col-3">
         <span class="form-group inline-name">
           <label>Disposition</label>
-          <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="ufr.disposition">
-            <option *ngFor="let p of dispositions" [value]="p">{{p}}</option>
-          </select>
+          <input type="text" class="form-control mr-5" value="{{ufr.disposition}}" disabled />
         </span>
       </div>
     </div>
