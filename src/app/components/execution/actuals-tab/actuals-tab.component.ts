@@ -61,20 +61,58 @@ export class ActualsTabComponent implements OnInit {
     var my: ActualsTabComponent = this;
 
     var rows = [
-      { actuals: 'TOA' },
-      { actuals: 'Released' },
-      { actuals: 'Committed (Monthly)' },
-      { actuals: 'Cumulative Committed' },
-      { actuals: 'Obligated (Monthly)' },
-      { actuals: 'Cumulative Obligated' },
-      { actuals: 'OSD Goal' },
-      { actuals: 'Delta' },
-      { actuals: 'Outlayed (Monthly)' },
-      { actuals: 'Cumulative Outlayed' },
-      { actuals: 'OSD Goal' },
-      { actuals: 'Delta' },
-      { actuals: 'Accruals (Monthly)' },
-      { actuals: 'Cumulative Accruals' },    
+      {
+        actuals: 'TOA',
+        cellClass: ['font-weight-bold']
+      },
+      {
+        actuals: 'Released',
+        cellClass: ['font-weight-bold']
+      },
+      {
+        actuals: 'Committed (Monthly)'
+      },
+      {
+        actuals: 'Cumulative Committed',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'Obligated (Monthly)'
+      },
+      {
+        actuals: 'Cumulative Obligated',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'OSD Goal',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'Delta',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'Outlayed (Monthly)'
+      },
+      {
+        actuals: 'Cumulative Outlayed',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'OSD Goal',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'Delta',
+        cellClass: ['font-weight-bold', 'text-right']
+      },
+      {
+        actuals: 'Actuals (Monthly)'
+      },
+      {
+        actuals: 'Cumulative Actuals',
+        cellClass: ['font-weight-bold', 'text-right']
+      }, 
     ];
 
     var editrows: Set<number> = new Set<number>([2, 4, 8, 12]);
@@ -84,11 +122,11 @@ export class ActualsTabComponent implements OnInit {
         ? true
         : (my.firstMonth + params.colDef.colId) === my.editMonth);
       var rowOk: boolean = editrows.has(params.node.rowIndex);
-      
+
       //console.log(params)
       //console.log(my.firstMonth + params.colDef.colId);
       //console.log('editsok: ' + colOk + ' ' + rowOk);
-      
+
       return (rowOk && colOk);
     }
 
@@ -98,18 +136,18 @@ export class ActualsTabComponent implements OnInit {
       }
       // first, figure out which column we're in so we know which month to get
       // then, figure out which row we're in so we can calculate the amount
-      
+
       // col will be from 0-11, representing the months of the FY
       var col: number = Number.parseInt(params.column.colId) - 1;
 
       var oande: OandEMonthly;
-      my.oandes.filter(oe => (oe.month === (col + my.firstMonth))).forEach(oe => { 
+      my.oandes.filter(oe => (oe.month === (col + my.firstMonth))).forEach(oe => {
         // at most one of these
         oande = oe;
       });
-      
+
       if (oande) {
-        
+
       }
       else {
         // no monthly value yet
@@ -132,7 +170,7 @@ export class ActualsTabComponent implements OnInit {
 
 
       if (my.oandes.length < col) {
-        
+
       } else {
         my.oandes.push({});
       }
