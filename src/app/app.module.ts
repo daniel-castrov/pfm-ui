@@ -153,7 +153,6 @@ import { ActualsCellRendererComponent } from './components/execution/actuals-cel
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
   {path:'about', component:AboutComponent},
-  {path:'actuals', component:ActualsTabComponent},
   {path:'about-private', component:AboutPrivateComponent},
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
