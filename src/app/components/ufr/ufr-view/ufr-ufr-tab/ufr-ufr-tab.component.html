@@ -28,6 +28,12 @@
         </span>
       </div>
       <div class="col-3">
+        <span class="form-group inline-name">
+          <label>Core Capability</label>
+          <select [(ngModel)]="ufr.coreCapability" class="form-control-sm dropdown-width" name="dummy">
+            <option *ngFor="let c of capabilities" [ngValue]="c.abbr" >{{c.name}}</option>
+          </select>
+        </span>
       </div>
     </div>
 
