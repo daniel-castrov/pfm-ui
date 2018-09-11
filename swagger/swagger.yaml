@@ -2907,6 +2907,8 @@ definitions:
         type: "string"
       requestNumber:
         type: "integer"
+      ufrName:
+        type: "string"
       creationTime:
         type: "integer"
       coreCapability2:
