@@ -61,59 +61,21 @@ export class ActualsTabComponent implements OnInit {
     var my: ActualsTabComponent = this;
 
     var rows = [
-      {
-        actuals: 'TOA',
-        cellClass: ['font-weight-bold']
-      },
-      {
-        actuals: 'Released',
-        cellClass: ['font-weight-bold']
-      },
-      {
-        actuals: 'Committed (Monthly)'
-      },
-      {
-        actuals: 'Cumulative Committed',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'Obligated (Monthly)'
-      },
-      {
-        actuals: 'Cumulative Obligated',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'OSD Goal',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'Delta',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'Outlayed (Monthly)'
-      },
-      {
-        actuals: 'Cumulative Outlayed',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'OSD Goal',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'Delta',
-        cellClass: ['font-weight-bold', 'text-right']
-      },
-      {
-        actuals: 'Actuals (Monthly)'
-      },
-      {
-        actuals: 'Cumulative Actuals',
-        cellClass: ['font-weight-bold', 'text-right']
-      }, 
-    ];
+       { actuals: 'TOA' },
+       { actuals: 'Released' },
+       { actuals: 'Committed (Monthly)' },
+       { actuals: 'Cumulative Committed' },
+       { actuals: 'Obligated (Monthly)' },
+       { actuals: 'Cumulative Obligated' },
+       { actuals: 'OSD Goal' },
+       { actuals: 'Delta' },
+       { actuals: 'Outlayed (Monthly)' },
+       { actuals: 'Cumulative Outlayed' },
+       { actuals: 'OSD Goal' },
+       { actuals: 'Delta' },
+       { actuals: 'Actuals (Monthly)' },
+       { actuals: 'Cumulative Actuals' },
+     ];
 
     var editrows: Set<number> = new Set<number>([2, 4, 8, 12]);
 
