@@ -147,6 +147,7 @@ import { EventDetailsCellRendererComponent } from './components/renderers/event-
 import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
 import {DeleteRenderer} from "./components/renderers/delete-renderer/delete-renderer.component";
 import { ToggleComponent } from './components/toggle/toggle.component';
+import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -303,7 +304,8 @@ const appRoutes: Routes = [
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
-    ToggleComponent
+    ToggleComponent,
+    ActualsCellRendererComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -312,7 +314,8 @@ const appRoutes: Routes = [
     SummaryProgramCellRenderer,
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
-    DeleteRenderer
+    DeleteRenderer,
+    ActualsCellRendererComponent
   ],
   imports: [
     AccordionModule.forRoot(),

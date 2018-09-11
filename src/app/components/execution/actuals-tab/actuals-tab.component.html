@@ -16,20 +16,17 @@
 </div>
 <div class="row">
   <div class="col-12">
-      <ag-grid-angular #agGrid class="ag-theme-balham actuals-table"
-        id="myGrid"
+      <ag-grid-angular #agGrid class="ag-theme-balham"
         [enableSorting]="true"
         [enableFilter]="false"
         [gridAutoHeight]="true"
-        [rowData]="rows"
-        [columnDefs]="columnDefs"
         [toolPanelSuppressSideButtons]="true"
         [enableColResize]="true"
         [suppressDragLeaveHidesColumns]="true"
         [suppressMovableColumns]="true"
         [suppressPaginationPanel]="true"
-        (gridReady)="onGridReady($event)"
-        >
+        [gridOptions]="agOptions"
+        (gridReady) = "onGridReady($event)">
       </ag-grid-angular>
   </div>
 </div>
