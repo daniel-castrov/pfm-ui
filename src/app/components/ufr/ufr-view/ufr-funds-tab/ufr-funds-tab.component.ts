@@ -19,7 +19,7 @@ import {DataRow} from "./DataRow";
 export class UfrFundsComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
-  @ViewChild("agGridProcessedChanges") private agGridProcessedChanges: AgGridNg2;
+  @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
 
@@ -33,9 +33,9 @@ export class UfrFundsComponent implements OnInit {
   newFLType;
   defaultColumnDefs = [];
   currentFundingColumnDefs = [];
-  processedChangesColumnDefs = [];
+  proposedChangesColumnDefs = [];
   revisedProgramsColumnDefs = [];
-  processedChange;
+  proposedChange;
   revisedPrograms;
   currentFunding;
   existingFundingLines: FundingLine[] = [];
@@ -70,8 +70,8 @@ export class UfrFundsComponent implements OnInit {
   }
 
   initCurrentFunding() {
+    let data: Array<DataRow> = [];
     if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0 && this.ufr.shortyId) {
-      let data: Array<DataRow> = [];
       if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
         this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
         this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
@@ -82,6 +82,7 @@ export class UfrFundsComponent implements OnInit {
             data.push(pomRow);
           });
           this.currentFunding = data;
+          this.initRevisedChanges();
         });
       } else {
         this.prService.getById(this.ufr.shortyId).subscribe(pr => {
@@ -91,16 +92,20 @@ export class UfrFundsComponent implements OnInit {
             data.push(pomRow);
           });
           this.currentFunding = data;
+          this.initRevisedChanges();
         });
       }
-      if (this.processedChange.some(row => row.fundingLine.userCreated === true)) {
-        this.agGridProcessedChanges.columnApi.setColumnVisible('delete', true);
+      if (this.proposedChange.some(row => row.fundingLine.userCreated === true)) {
+        this.agGridProposedChanges.columnApi.setColumnVisible('delete', true);
         setTimeout(() => {
-          this.agGridProcessedChanges.api.sizeColumnsToFit();
+          this.agGridProposedChanges.api.sizeColumnsToFit();
         }, 500)
       }
     } else {
-      this.currentFunding = [];
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
+      data.push(pomRow);
+      this.currentFunding = data;
+      this.initRevisedChanges();
     }
     let tempColumnDefs =Object.assign({}, this.defaultColumnDefs);
     this.currentFundingColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
@@ -115,7 +120,6 @@ export class UfrFundsComponent implements OnInit {
     });
     this.agGridCurrentFunding.api.setColumnDefs(this.currentFundingColumnDefs);
     this.agGridCurrentFunding.api.sizeColumnsToFit();
-    this.initRevisedChanges();
   }
 
   rowSpanCount(params){
@@ -139,14 +143,17 @@ export class UfrFundsComponent implements OnInit {
       },
       cellClass: 'funding-line-default'
     });
-    this.agGridRevisedPrograms.api.setColumnDefs(this.revisedProgramsColumnDefs);
-    this.agGridRevisedPrograms.api.sizeColumnsToFit();
+    setTimeout(() => {
+      this.agGridRevisedPrograms.api.setColumnDefs(this.revisedProgramsColumnDefs);
+      this.agGridRevisedPrograms.api.sizeColumnsToFit();
+    });
+
   }
 
   calculateRevisedChanges() {
+    let data: Array<DataRow> = [];
     if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0) {
-      let data: Array<DataRow> = [];
-      this.processedChange.forEach(pc => {
+      this.proposedChange.forEach(pc => {
         let cf = this.currentFunding.find(cf => {
           return cf.fundingLine.appropriation === pc.fundingLine.appropriation &&
             cf.fundingLine.baOrBlin === pc.fundingLine.baOrBlin &&
@@ -163,7 +170,9 @@ export class UfrFundsComponent implements OnInit {
       });
       this.revisedPrograms = data;
     } else {
-      this.revisedPrograms = [];
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
+      data.push(pomRow);
+      this.revisedPrograms = data;
     }
   }
 
@@ -173,32 +182,32 @@ export class UfrFundsComponent implements OnInit {
       let pomRow: DataRow = {fundingLine: fundingLine, editable: true}
       data.push(pomRow);
     });
-    this.processedChange = data;
+    this.proposedChange = data;
     this.loadDropdownOptions();
-    this.agGridProcessedChanges.gridOptions.alignedGrids = [];
-    this.agGridProcessedChanges.gridOptions.alignedGrids.push(this.agGridCurrentFunding.gridOptions);
-    this.agGridProcessedChanges.gridOptions.alignedGrids.push(this.agGridRevisedPrograms.gridOptions);
+    this.agGridProposedChanges.gridOptions.alignedGrids = [];
+    this.agGridProposedChanges.gridOptions.alignedGrids.push(this.agGridCurrentFunding.gridOptions);
+    this.agGridProposedChanges.gridOptions.alignedGrids.push(this.agGridRevisedPrograms.gridOptions);
 
     this.agGridCurrentFunding.gridOptions.alignedGrids = [];
-    this.agGridCurrentFunding.gridOptions.alignedGrids.push(this.agGridProcessedChanges.gridOptions);
+    this.agGridCurrentFunding.gridOptions.alignedGrids.push(this.agGridProposedChanges.gridOptions);
     this.agGridCurrentFunding.gridOptions.alignedGrids.push(this.agGridRevisedPrograms.gridOptions);
 
     this.agGridRevisedPrograms.gridOptions.alignedGrids = [];
-    this.agGridRevisedPrograms.gridOptions.alignedGrids.push(this.agGridProcessedChanges.gridOptions);
+    this.agGridRevisedPrograms.gridOptions.alignedGrids.push(this.agGridProposedChanges.gridOptions);
     this.agGridRevisedPrograms.gridOptions.alignedGrids.push(this.agGridCurrentFunding.gridOptions);
     let tempColumnDefs =Object.assign({}, this.defaultColumnDefs);
-    this.processedChangesColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
-    this.processedChangesColumnDefs.unshift({
+    this.proposedChangesColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
+    this.proposedChangesColumnDefs.unshift({
       colId: 'flType',
-      valueGetter: params => {return 'Processed Change'},
+      valueGetter: params => {return 'Proposed Change'},
       rowSpan: params => {return this.rowSpanCount(params)},
       cellClassRules: {
         'row-span': params => {return this.rowSpanCount(params) > 1}
         },
       cellClass: 'funding-line-default'
     });
-    this.agGridProcessedChanges.api.setColumnDefs(this.processedChangesColumnDefs);
-    this.agGridProcessedChanges.api.sizeColumnsToFit();
+    this.agGridProposedChanges.api.setColumnDefs(this.proposedChangesColumnDefs);
+    this.agGridProposedChanges.api.sizeColumnsToFit();
     this.initCurrentFunding();
   }
 
@@ -214,8 +223,8 @@ export class UfrFundsComponent implements OnInit {
       case 'Add an existing Funding Line':
         this.ufr.fundingLines.push(this.selectedFundingLine);
         let pomRow: DataRow = {fundingLine: this.selectedFundingLine, editable: true}
-        this.processedChange.push(pomRow);
-        this.agGridProcessedChanges.api.setRowData(this.processedChange);
+        this.proposedChange.push(pomRow);
+        this.agGridProposedChanges.api.setRowData(this.proposedChange);
         break;
     }
   }
@@ -408,12 +417,12 @@ export class UfrFundsComponent implements OnInit {
     newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
     newPomRow.editable = true;
     this.ufr.fundingLines.push(newPomRow.fundingLine);
-    this.processedChange.push(newPomRow);
-    this.agGridProcessedChanges.columnApi.setColumnVisible('delete', true);
-    this.agGridProcessedChanges.api.sizeColumnsToFit();
-    this.agGridProcessedChanges.api.setRowData(this.processedChange);
-    this.agGridProcessedChanges.api.setFocusedCell(this.processedChange.length - 1, 'fundingLine.appropriation');
-    this.agGridProcessedChanges.api.startEditingCell({rowIndex: this.processedChange.length - 1, colKey: 'fundingLine.appropriation'});
+    this.proposedChange.push(newPomRow);
+    this.agGridProposedChanges.columnApi.setColumnVisible('delete', true);
+    this.agGridProposedChanges.api.sizeColumnsToFit();
+    this.agGridProposedChanges.api.setRowData(this.proposedChange);
+    this.agGridProposedChanges.api.setFocusedCell(this.proposedChange.length - 1, 'fundingLine.appropriation');
+    this.agGridProposedChanges.api.startEditingCell({rowIndex: this.proposedChange.length - 1, colKey: 'fundingLine.appropriation'});
   }
 
   isEditable(params): boolean{
@@ -426,7 +435,7 @@ export class UfrFundsComponent implements OnInit {
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-    if(this.processedChange.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
+    if(this.proposedChange.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
       this.appropriations.splice(this.appropriations.indexOf('PROC'), 1);
     }
 
@@ -440,7 +449,7 @@ export class UfrFundsComponent implements OnInit {
     let year = params.colDef.headerName;
     let pomNode = params.data;
     pomNode.fundingLine.funds[year] = Number(params.newValue);
-    this.agGridProcessedChanges.api.refreshCells();
+    this.agGridProposedChanges.api.refreshCells();
     this.loadDropdownOptions();
     this.calculateRevisedChanges();
   }
@@ -463,31 +472,31 @@ export class UfrFundsComponent implements OnInit {
   }
 
   delete(index, data) {
-    this.ufr.fundingLines.splice(this.ufr.fundingLines.indexOf(this.processedChange[index].fundingLine), 1);
-    this.processedChange.splice(index, 1);
-    this.agGridProcessedChanges.api.setRowData(this.processedChange);
+    this.ufr.fundingLines.splice(this.ufr.fundingLines.indexOf(this.proposedChange[index].fundingLine), 1);
+    this.proposedChange.splice(index, 1);
+    this.agGridProposedChanges.api.setRowData(this.proposedChange);
 
     this.loadDropdownOptions();
 
-    if (!this.processedChange.some(row => row.fundingLine.userCreated === true)) {
-      this.agGridProcessedChanges.columnApi.setColumnVisible('delete', false);
+    if (!this.proposedChange.some(row => row.fundingLine.userCreated === true)) {
+      this.agGridProposedChanges.columnApi.setColumnVisible('delete', false);
       this.agGridCurrentFunding.api.sizeColumnsToFit();
-      this.agGridProcessedChanges.api.sizeColumnsToFit();
+      this.agGridProposedChanges.api.sizeColumnsToFit();
       this.agGridRevisedPrograms.api.sizeColumnsToFit();
     }
   }
 
   onToolPanelVisibleChanged(params) {
-    this.agGridProcessedChanges.api.sizeColumnsToFit();
+    this.agGridProposedChanges.api.sizeColumnsToFit();
   }
 
   onColumnVisible(params) {
-    this.agGridProcessedChanges.api.sizeColumnsToFit();
+    this.agGridProposedChanges.api.sizeColumnsToFit();
   }
 
   onCellEditingStarted(params) {
     this.filterBlins(params.data.fundingLine.appropriation);
-    this.agGridProcessedChanges.api.refreshCells();
+    this.agGridProposedChanges.api.refreshCells();
   }
 
   onFundingLineValueChanged(params) {
@@ -498,7 +507,7 @@ export class UfrFundsComponent implements OnInit {
     if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
       this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
         params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.prParent.leadComponent) !== -1).abbr
-        this.agGridProcessedChanges.api.refreshCells();
+        this.agGridProposedChanges.api.refreshCells();
       });
 
       if (params.data.fundingLine.appropriation === 'RDTE'){
@@ -516,7 +525,7 @@ export class UfrFundsComponent implements OnInit {
       pomNode.fundingLine.item = params.data.fundingLine.item;
       pomNode.fundingLine.programElement = params.data.fundingLine.programElement;
     }
-    this.agGridProcessedChanges.api.refreshCells();
+    this.agGridProposedChanges.api.refreshCells();
   }
 
   filterBlins(appropriation) {
