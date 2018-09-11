@@ -169,7 +169,7 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 250,
               cellClassRules: {
                 'text-right': params => cssright.has(params.node.rowIndex),
-                'bold': params => cssbold.has(params.node.rowIndex)
+                'font-weight-bold': params => cssbold.has(params.node.rowIndex)
               }
             },
             {
