@@ -10,11 +10,13 @@
       </div>
       <div class="row">
         <new-ufr class="col-5"></new-ufr>
-        <div class="col-2"></div>
-        <fieldset>
-          <legend><i class="fa fa-filter icon-pad" aria-hidden="true"></i>Filter All Columns</legend>
-          <input id="filtertestbox" [(ngModel)] = "allufrs.filtertext" placeholder="Filter..." (input)="allufrs.onFilterTextBoxChanged()" />
-        </fieldset>  
+        <div class="col-4"></div>
+        <div class="col-2">
+          <div class="bottom-text">
+            <input id="filtertestbox" type="text" placeholder="Filter all columns ..." 
+              [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+          </div>
+        </div>
       </div>
       <br/>
       <div class="row">

@@ -3107,6 +3107,8 @@ definitions:
         $ref: "#/definitions/CreationTimeType"
       type:
           $ref: "#/definitions/ProgramType"
+      organization:
+        type: "string"
       phaseId:
         type: "string"
       primaryCapability:

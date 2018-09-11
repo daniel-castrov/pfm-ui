@@ -2,7 +2,7 @@ import {RestResult} from './../../../../generated/model/restResult';
 import {join} from './../../../../utils/join';
 import {Observable} from 'rxjs/Observable';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {POMService, ProgramsService, Tag, UFR} from '../../../../generated';
+import {POMService, ProgramsService, Tag} from '../../../../generated';
 import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 
 @Component({
@@ -53,4 +53,7 @@ export class UfrProgramComponent implements OnInit, OnChanges {
     }
   }
 
+  private shortyType(): string {
+    return this.withFullNameService.isProgram(this.shorty) ? 'PROGRAM' : 'PROGRAM REQUEST';
+  }
 }
