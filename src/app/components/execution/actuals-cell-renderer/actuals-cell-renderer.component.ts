@@ -14,15 +14,12 @@ export class ActualsCellRendererComponent implements ICellRendererAngularComp {
 
   agInit(param) {
     this.params = param;
-    console.log(param);
-    console.log('rendering at (' + param.rowIndex + ',' + param.colDef.colId + '): ' + JSON.stringify(this.params.data));
-
-    this.printable = ((param.context.firstMonth + param.colDef.colId) <= param.context.editMonth);
+    //console.log(param);
+    //console.log('rendering at (' + param.rowIndex + ',' + param.colDef.colId + '): ' + JSON.stringify(this.params.data));
+    this.printable = (param.context.parent.isadmin || (param.context.parent.firstMonth + param.colDef.colId) <= param.context.parent.editMonth);
   }
 
   refresh(): boolean {
     return true;
   }
-
-
 }
