@@ -1,1 +1,2 @@
-{{params.data.value}}
+<ng-container *ngIf="printable">{{params.value}}</ng-container>
+<ng-container *ngIf="!printable">nop</ng-container>

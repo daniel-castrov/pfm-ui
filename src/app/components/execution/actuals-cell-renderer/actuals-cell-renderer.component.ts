@@ -8,14 +8,21 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 })
 export class ActualsCellRendererComponent implements ICellRendererAngularComp {
   private params;
+  private printable: boolean = true;
 
   constructor() { }
 
   agInit(param) {
     this.params = param;
+    console.log(param);
+    console.log('rendering at (' + param.rowIndex + ',' + param.colDef.colId + '): ' + JSON.stringify(this.params.data));
+
+    this.printable = ((param.context.firstMonth + param.colDef.colId) <= param.context.editMonth);
   }
 
   refresh(): boolean {
     return true;
   }
+
+
 }

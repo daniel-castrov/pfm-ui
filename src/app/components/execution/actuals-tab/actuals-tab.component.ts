@@ -17,7 +17,7 @@ export class ActualsTabComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private firstMonth = 0;
-  @Input() private oandes: OandEMonthly[];
+  private _oandes: OandEMonthly[];
   @Input() private exeline: ExecutionLine;
   private _exe: Execution;
   private agOptions: GridOptions;
@@ -49,12 +49,24 @@ export class ActualsTabComponent implements OnInit {
       month -= 9;
     }
 
-    this.editMonth = month;
+    this.editMonth = this.firstMonth + month;
     console.log(' edit month is: ' + this.editMonth);
   }
 
   get exe(): Execution {
     return this._exe;
+  }
+
+  @Input() set oandes(o: OandEMonthly[]) {
+    this._oandes = o;
+    console.log('setting oandes '+JSON.stringify(o));
+    if (this.agOptions.api) {
+      this.agOptions.api.refreshCells();
+    }
+  }
+
+  get oandes() {
+    return this._oandes;
   }
 
   constructor() {
@@ -93,14 +105,29 @@ export class ActualsTabComponent implements OnInit {
     }
 
     var valueGetter = function (params) {
-      if (!my.oandes) {
-        return '';
-      }
       // first, figure out which column we're in so we know which month to get
       // then, figure out which row we're in so we can calculate the amount
-      
+
       // col will be from 0-11, representing the months of the FY
-      var col: number = Number.parseInt(params.column.colId) - 1;
+      var col: number = params.colDef.colId;
+      var row: number = params.node.childIndex;
+
+      console.log('value getter for (' + row + ',' + col + ')');
+
+
+      if (!my.oandes) {
+        console.log( 'no oandes at all')
+        return -2000;
+      }
+
+      // don't fill in the table for future months
+      if (col + my.firstMonth > my.editMonth) {
+        console.log('col+my.firstMonth>my.editMonth ' + (col + my.firstMonth) + ' ' + my.editMonth);
+        return -1000;
+      }
+      else {
+        console.log(col + '+' + my.firstMonth + '=' + (col + my.firstMonth) + ' em: ' + my.editMonth);
+      }
 
       var oande: OandEMonthly;
       my.oandes.filter(oe => (oe.month === (col + my.firstMonth))).forEach(oe => { 
@@ -109,16 +136,13 @@ export class ActualsTabComponent implements OnInit {
       });
       
       if (oande) {
-        
-      }
-      else {
+        console.log('we have an oande! ' + (row * 13 + col));
+        return row * 13 + col;
+      } else {
         // no monthly value yet
-        return '';
+        console.log('no oande now ' + (row * 13 + col));
+        return -(row * 13 + col);
       }
-
-      var row: number = params.rowIndex;
-
-      return row + '-' + col;
     };
 
     var valueSetter = function (params) {
@@ -127,9 +151,8 @@ export class ActualsTabComponent implements OnInit {
       }
 
       // col will be from 0-11, representing the months of the FY
-      var col: number = Number.parseInt(params.column.colId) - 1;
+      var col: number = Number.parseInt(params.colDef.colId);
       var row: number = params.rowIndex;
-
 
       if (my.oandes.length < col) {
         
@@ -152,11 +175,13 @@ export class ActualsTabComponent implements OnInit {
     this.agOptions = <GridOptions>{
       rowData: rows,
       frameworkComponents: agcomps,
-      context: {
+      context: params=>({
         exe: my.exe,
         exeline: my.exeline,
-        oandes: my.oandes
-      },
+        oandes: my.oandes,
+        firstMonth: my.firstMonth,
+        editMonth: my.editMonth
+      }),
       columnDefs: [
         {
           headerValueGetter: getHeaderValue,
