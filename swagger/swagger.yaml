@@ -2917,8 +2917,6 @@ definitions:
         type: "string"
       impactN:
         type: "string"
-      costToComplete:
-        type: "number"
       fundingLines:
         type: "array"
         items:
