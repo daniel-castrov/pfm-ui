@@ -2,7 +2,7 @@ import {RestResult} from './../../../../generated/model/restResult';
 import {join} from './../../../../utils/join';
 import {Observable} from 'rxjs/Observable';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {POMService, ProgramsService, Tag} from '../../../../generated';
+import {POMService, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
 import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 
 @Component({
@@ -13,6 +13,7 @@ import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services
 export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() editable: boolean = false;
   @Input() shorty: ProgramOrPrWithFullName;
+  @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
 
@@ -55,5 +56,9 @@ export class UfrProgramComponent implements OnInit, OnChanges {
 
   private shortyType(): string {
     return this.withFullNameService.isProgram(this.shorty) ? 'PROGRAM' : 'PROGRAM REQUEST';
+  }
+
+  private get disabled(): boolean {
+    return this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR;
   }
 }

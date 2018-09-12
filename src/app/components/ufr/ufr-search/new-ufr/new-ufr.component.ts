@@ -1,9 +1,8 @@
 import { CycleUtils } from './../../../../services/cycle.utils';
-import { ProgramRequestPageModeService } from './../../../programming/program-request/page-mode.service';
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {UFRsService, Program, UFR, ShortyType, FundingLine} from '../../../../generated';
+import {UFRsService, Program, UFR, ShortyType, FundingLine, ProgramsService, PRService} from '../../../../generated';
 
 enum CreateNewUfrMode {
   AN_MRDB_PROGRAM        = 'An MRDB Program',
@@ -27,12 +26,12 @@ export class NewUfrComponent implements OnInit {
   selectedProgramOrPr: ProgramWithFullName = null;
   initialSelectOption: string;
 
-  constructor(
-    private router: Router,
-    private programRequestPageMode: ProgramRequestPageModeService,
-    private withFullNameService: WithFullNameService,
-    private ufrService: UFRsService,
-    private cycleUtils: CycleUtils ) {}
+  constructor( private router: Router,
+               private withFullNameService: WithFullNameService,
+               private ufrService: UFRsService,
+               private cycleUtils: CycleUtils,
+               private programsService: ProgramsService,
+               private prService: PRService ) {}
 
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs();
@@ -79,26 +78,34 @@ export class NewUfrComponent implements OnInit {
       case 'An MRDB Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
         ufr.shortyId = this.selectedProgramOrPr.id;
+        this.initFromShortyProgram(ufr);
         break;
       case 'A Programmatic Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
+        this.initFromShortyPR(ufr);
         break;
       case 'A New FoS':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
+          ufr.shortyId = this.selectedProgramOrPr.id;
+          this.initFromShortyProgram(ufr);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
+          ufr.shortyId = this.selectedProgramOrPr.id;
+          this.initFromShortyPR(ufr);
         }
-        ufr.shortyId = this.selectedProgramOrPr.id;
         break;
       case 'A New Increment':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
+          ufr.shortyId = this.selectedProgramOrPr.id;
+          this.initFromShortyProgram(ufr);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
+          ufr.shortyId = this.selectedProgramOrPr.id;
+          this.initFromShortyPR(ufr);
         }
-        ufr.shortyId = this.selectedProgramOrPr.id;
         break;
       case 'A New Program':
         ufr.shortyType = ShortyType.NEW_PROGRAM;
@@ -106,6 +113,30 @@ export class NewUfrComponent implements OnInit {
     }
     ufr = (await this.ufrService.create(ufr).toPromise()).result;
     this.router.navigate(['/ufr-view', ufr.id]);
+  }
+
+  private async initFromShortyProgram(ufr: UFR) {
+    const shorty = (await this.programsService.getProgramById(ufr.shortyId).toPromise()).result;
+    this.initFromShorty(ufr, shorty);
+  }
+
+  private async initFromShortyPR(ufr: UFR) {
+    const shorty = (await this.prService.getById(ufr.shortyId).toPromise()).result;
+    this.initFromShorty(ufr, shorty);
+  }
+
+  private initFromShorty(ufr: UFR, shorty) {
+    ufr.primaryCapability = shorty.primaryCapability;
+    ufr.coreCapability = shorty.coreCapability;
+    ufr.secondaryCapability = shorty.secondaryCapability;
+
+    ufr.functionalArea = shorty.functionalArea;
+    ufr.medicalArea = shorty.medicalArea;
+    ufr.nbcCategory = shorty.nbcCategory;
+
+    ufr.bsvStrategy = shorty.bsvStrategy;
+    ufr.organization = shorty.organization;
+    ufr.manager = shorty.manager;
   }
 
 }

@@ -5,11 +5,10 @@
 </ng-template>
 
 <ng-template #value let-tagname="tagname" let-property="property">
-  <select [(ngModel)]="shorty[property]" class="form-control-sm dropdown-width" name="{{tagname}}">
+  <select [(ngModel)]="shorty[property]" class="form-control-sm dropdown-width" name="{{tagname}}" [disabled]="disabled">
     <ng-container *ngIf="shorty[property]">
       <!-- we have an tagname set, but check that we have a recognized value -->
-      <option *ngIf="!tagNames.has(tagname) || (tagNames.has(tagname) && !tagNames.get(tagname).has(shorty[property]))"
-          [ngValue]="shorty[property] ">{{shorty[property]}} (Unknown value)</option>
+      <option *ngIf="!tagNames.has(tagname) || (tagNames.has(tagname) && !tagNames.get(tagname).has(shorty[property]))" [ngValue]="shorty[property] ">{{shorty[property]}} (Unknown value)</option>
     </ng-container>
 
     <option *ngFor="let t of tagNames.get(tagname) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
@@ -63,7 +62,7 @@
       <div class="row">
         <div class="col-md-5">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Browse Picture" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder="Select Picture" aria-label="Browse Picture" aria-describedby="basic-addon1" disabled>
             <div class="input-group-append">
               <span class="input-group-text">Browse</span>
             </div>
@@ -123,7 +122,7 @@
           </span>
           <span class="form-group inline-name">
             <label>BSV Nat. Strat.</label>
-            <ng-container *ngTemplateOutlet="value;context:{tagname:'BSV National Strategy', property:'bsvStrategy'}"></ng-container>
+            <ng-container *ngTemplateOutlet="value;context:{tagname:'BSV National Strategy', property:'bsvStrategy'}" ></ng-container>
           </span>
           <span class="form-group inline-name">
             <label>DASD POM</label>
