@@ -2,7 +2,10 @@ import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, Program, UFR, ShortyType, FundingLine, ProgramsService, PRService, ProgrammaticRequest } from '../../../../generated';
+import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest } from '../../../../generated';
+import { UFR } from '../../../../generated/model/uFR';
+import { FundingLine } from '../../../../generated/model/fundingLine';
+
 
 enum CreateNewUfrMode {
   AN_MRDB_PROGRAM = 'An MRDB Program',
@@ -158,6 +161,10 @@ export class NewUfrComponent implements OnInit {
     ufr.bsvStrategy = shorty.bsvStrategy;
     ufr.organization = shorty.organization;
     ufr.manager = shorty.manager;
+
+    // For a UFR variants always start empty
+    ufr.fundingLines.forEach( fl => fl.variants=[] );
+
   }
 
 }

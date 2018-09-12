@@ -70,6 +70,7 @@ import { OeUpdateComponent } from './components/execution/oe-update/oe-update.co
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramExecutionLineComponent } from './components/execution/program-execution-line/program-execution-line.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
+import { UfrVariantsTabComponent } from './components/ufr/ufr-view/ufr-variants-tab/ufr-variants-tab.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
@@ -259,6 +260,7 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
+    UfrVariantsTabComponent,
     ProgramExecutionLineComponent,
     ProgramRequestComponent,
     ProgramTabComponent,
