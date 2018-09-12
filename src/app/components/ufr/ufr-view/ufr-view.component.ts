@@ -1,9 +1,19 @@
 import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {POMService, ProgramsService, PRService, ShortyType, UFR, UFRsService} from '../../../generated';
+import {
+  POMService,
+  ProgrammaticRequestState,
+  ProgramsService, ProgramType,
+  PRService,
+  ShortyType,
+  UFR,
+  UFRsService, UfrStatus
+} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
 import {WithFullName} from "../../../services/with-full-name.service";
+import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
+import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 
 @Component({
   selector: 'app-ufr-view',
@@ -12,6 +22,8 @@ import {WithFullName} from "../../../services/with-full-name.service";
 })
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
+  @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
   private ufr: UFR;
   private canedit: boolean = false;
   private pomFy: number;
@@ -65,4 +77,15 @@ export class UfrViewComponent implements OnInit {
     const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);
     return this.pomFy + sequentialNumber;
   }
-}
+
+  private isNotSavable(): boolean {
+    if(this.ufrUfrTabComponent.invalid()) return true;
+    if(this.ufrProgramComponent.invalid()) return true;
+    return this.ufr.status == UfrStatus.SUBMITTED;
+  }
+
+  private isNotSubmittable(): boolean {
+    if(this.ufrUfrTabComponent.invalid()) return true;
+    if(this.ufrProgramComponent.invalid()) return true;
+    return this.ufr.status == UfrStatus.SUBMITTED;
+  }}
