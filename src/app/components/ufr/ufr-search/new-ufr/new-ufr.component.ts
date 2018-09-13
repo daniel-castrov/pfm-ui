@@ -131,8 +131,7 @@ export class NewUfrComponent implements OnInit {
         ufr.shortyType = ShortyType.NEW_PROGRAM;
         break;
     }
-    ufr = (await this.ufrService.create(ufr).toPromise()).result;
-    this.router.navigate(['/ufr-view', ufr.id]);
+    this.router.navigate(['/ufr-view/create/', JSON.stringify(ufr)]);
   }
 
   private async initFromShortyProgram(ufr: UFR) {

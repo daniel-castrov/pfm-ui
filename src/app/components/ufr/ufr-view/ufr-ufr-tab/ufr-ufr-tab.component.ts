@@ -37,6 +37,6 @@ export class UfrUfrTabComponent implements OnInit {
   }
 
   invalid(): boolean {
-    return !this.ufr.ufrName || !this.ufr.description || this.ufr.costLeft == 0;
+    return !this.ufr.ufrName || !this.ufr.description || !this.ufr.costLeft;
   }
 }
