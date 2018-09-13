@@ -121,6 +121,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
         };
 
         my.programfilter = function (el: ExecutionLine) {
+          console.log('into programfilter ' + JSON.stringify(my.current));
           return !(my.current.line.id === el.id);
         };
 
