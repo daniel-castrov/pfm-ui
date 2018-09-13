@@ -6,8 +6,8 @@
         {{newFLType? newFLType: 'Select an option'}}
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" *ngIf="!pr.creationTimeReferenceId || pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
-        <a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">Add an existing Funding Line</a>
+          <a class="dropdown-item" *ngIf="!pr.creationTimeReferenceId || pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
+          <a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">{{pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR? 'Add a parent Funding Line' : 'Add an existing Funding Line'}}</a>
       </div>
     </div>
   </div>
