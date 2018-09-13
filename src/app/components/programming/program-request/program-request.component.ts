@@ -14,6 +14,8 @@ import { ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
 
+declare var $: any;
+
 @Component({
   selector: 'program-request',
   templateUrl: './program-request.component.html',
@@ -102,17 +104,21 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   async save(state: ProgrammaticRequestState) {
-    if(this.pr.id) {
-      this.pr.state = state;
-      this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
+    let fundsTabValidation = this.fundsTabComponent.validate;
+    if(!fundsTabValidation.isValid){
+      this.notifyError(fundsTabValidation.message);
     } else {
-      this.pr = (await this.prService.create(this.pr).toPromise()).result;
+      if(this.pr.id) {
+        this.pr.state = state;
+        this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
+      } else {
+        this.pr = (await this.prService.create(this.pr).toPromise()).result;
+      }
     }
   }
 
   private isNotSavable(): boolean {
     if(!this.idAndNameComponent) return true; // not fully initilized yet
-    if(this.fundsTabComponent.invalid) return true;
     if(this.variantsTabComponent.invalid) return true;
     return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
@@ -121,12 +127,20 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     if( !this.prs || !this.idAndNameComponent || !this.programTabComponent ) return true // not fully initilized yet
     if( this.pr.type == ProgramType.GENERIC ) return true;
     if( this.thereAreOutstandingGenericSubprogramsAmongTheChildren() ) return true;
-    if(this.fundsTabComponent.invalid) return true;
     if(this.variantsTabComponent.invalid) return true;
     return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
     return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.state === 'OUTSTANDING');
+  }
+
+  notifyError(message){
+    $.notify({
+        icon: 'fa fa-exclamation',
+        message: message
+    },{
+        type: 'danger',
+    });
   }
 }

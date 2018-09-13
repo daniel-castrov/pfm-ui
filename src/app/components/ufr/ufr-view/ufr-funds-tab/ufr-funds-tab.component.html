@@ -1,27 +1,7 @@
 <div class="row">
   <div class="col-auto">
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{newFLType? newFLType: 'Select an option'}}
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
-        <!--<a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">Add an existing Funding Line</a>-->
-      </div>
-    </div>
-  </div>
-  <div *ngIf="newFLType === 'Add an existing Funding Line'" class="col-auto">
-    <div class="dropdown-label">
-      <select [(ngModel)]="selectedFundingLine" class="form-control-sm" name="dummy">
-        <option value="null" disabled selected>Select a Funding Line</option>
-        <option *ngFor="let fl of existingFundingLines" [ngValue]="fl">{{fl.appropriation + '/' + fl.baOrBlin + '/' + fl.item + '/' + fl.opAgency}}</option>
-      </select>
-    </div>
-  </div>
-  <div class="col-auto">
-    <button [disabled]="!newFLType || isDisabledAddFundingLines" class="btn btn-primary mb-3" (click)="next()">
-      <span class="icon-pad">Next</span>
-      <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+    <button [disabled]="isDisabledAddFundingLines"  class="btn btn-primary mb-3"  (click)="addFundLine()">
+      <span class="icon-pad">Add Funding Line</span>
     </button>
   </div>
 </div>
@@ -43,31 +23,32 @@
   [gridAutoHeight]="true">
 </ag-grid-angular>
 
-<ag-grid-angular #agGridProcessedChanges
-                 class="ag-theme-balham pr-funds-tab group-header-white"
-                 [gridAutoHeight]="true"
-                 [toolPanelSuppressSideButtons]="true"
-                 [suppressMovableColumns]="true"
-                 [suppressRowTransform]="true"
-                 [showToolPanel]="false"
-                 [enableSorting]="false"
-                 [enableFilter]="false"
-                 [rowData]="processedChange"
-                 [singleClickEdit]="true"
-                 [frameworkComponents]="frameworkComponents"
-                 [context]="context"
-                 [stopEditingWhenGridLosesFocus]="true"
-                 (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
-                 (columnVisible)="onColumnVisible($event)"
-                 (gridReady)="onGridReady($event)"
-                 (columnValueChanged)="onColumnValueChanged($event)"
-                 (cellEditingStarted)="onCellEditingStarted($event)"
-                 headerHeight="0">
+<ag-grid-angular #agGridProposedChanges
+  class="ag-theme-balham pr-funds-tab group-header-white separator"
+  [gridAutoHeight]="true"
+  [toolPanelSuppressSideButtons]="true"
+  [suppressMovableColumns]="true"
+  [suppressRowTransform]="true"
+  [showToolPanel]="false"
+  [enableSorting]="false"
+  [enableFilter]="false"
+  [rowData]="proposedChange"
+  [singleClickEdit]="true"
+  [frameworkComponents]="frameworkComponents"
+  [components]="components"
+  [context]="context"
+  [stopEditingWhenGridLosesFocus]="true"
+  (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
+  (columnVisible)="onColumnVisible($event)"
+  (gridReady)="onGridReady($event)"
+  (columnValueChanged)="onColumnValueChanged($event)"
+  (cellEditingStarted)="onCellEditingStarted($event)"
+  headerHeight="0">
 </ag-grid-angular>
 
 <ag-grid-angular
   #agGridRevisedPrograms
-  class="ag-theme-balham pr-funds-tab group-header-white"
+  class="ag-theme-balham pr-funds-tab group-header-white separator"
   [rowData]="revisedPrograms"
   [suppressRowTransform]="true"
   [suppressMovableColumns]="true"
