@@ -194,6 +194,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
+  {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent},
   {path:'worksheet', component: WorksheetComponent},
