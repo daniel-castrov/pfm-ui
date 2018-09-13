@@ -9,7 +9,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 export class ActualsCellRendererComponent implements ICellRendererAngularComp {
   private printable: boolean = true;
   private value;
-
+  
   constructor() { }
 
   agInit(param) {
@@ -18,20 +18,9 @@ export class ActualsCellRendererComponent implements ICellRendererAngularComp {
     var pct = param.context.parent.showPercentages;
 
     var row: number = param.rowIndex;
-    var col: number = param.colDef.colId;
 
     if (pct && row > 1) {
-      //console.log(param.data);
-      //console.log(param.value);
-//      if (6 == col) {
-//        this.value = param.data.oblgoal_pct[col] * 100;
-//      }
-//      else if (10 == col) {
-//        this.value = param.data.expgoal_pct[col] * 100;
-//      }
-//      else {
         this.value = param.value / param.data.toa * 100;
-//      }
     }
     else {
       this.value = param.value;

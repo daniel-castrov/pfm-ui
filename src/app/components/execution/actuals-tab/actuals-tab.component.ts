@@ -113,6 +113,11 @@ export class ActualsTabComponent implements OnInit {
 
       var oldval: number = Number.parseFloat(params.oldValue);
       var newval: number = Number.parseFloat(params.newValue);
+
+      if (my.showPercentages) {
+        newval = newval * my.exeline.toa / 100;
+      }
+
       my.rows[row].values[col] = newval;
 
       for (var i = col; col < my.rows.values.length; i++) {
@@ -122,6 +127,27 @@ export class ActualsTabComponent implements OnInit {
       my.recalculateTableData();
       return true;
     }
+
+    var isyellow = function (params): boolean {
+      if (7 == params.rowIndex || 11 == params.rowIndex) {
+        var pct = params.value / params.data.toa;
+        return (pct >= 0.1 && pct < 0.15);
+      }
+      return false;
+    }
+    var isred = function (params): boolean {
+      if (7 == params.rowIndex || 11 == params.rowIndex) {
+        return (params.value / params.data.toa >= 0.15);
+      }
+      return false;
+    }
+    var isgreen = function (params): boolean {
+      if (7 == params.rowIndex || 11 == params.rowIndex) {
+        return (params.value / params.data.toa < 0.1 );
+      }
+      return false;
+    }
+
 
     var getHeaderValue = function (params) {
       return (my.exe ? 'FY' + my.exe.fy : 'First Year')
@@ -152,7 +178,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 250,
               cellClassRules: {
                 'text-right': params => cssright.has(params.node.rowIndex),
-                'font-weight-bold': params => cssbold.has(params.node.rowIndex)
+                'font-weight-bold': params => cssbold.has(params.node.rowIndex),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -166,7 +195,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules : {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -180,7 +212,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -194,7 +229,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -208,7 +246,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -222,7 +263,10 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -236,7 +280,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 80,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -250,7 +297,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -264,7 +314,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -278,7 +331,10 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -292,7 +348,10 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -306,7 +365,10 @@ export class ActualsTabComponent implements OnInit {
               valueSetter: valueSetter,
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
@@ -320,7 +382,10 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               cellClassRules: {
                 'ag-cell-editable': editsok,
-                'ag-cell-light-green': p => (!editsok(p))
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             }
           ]
@@ -410,6 +475,7 @@ export class ActualsTabComponent implements OnInit {
   }
 
   recalculateTableData() {
+    console.log('recalculating table data');
     // get our goals information
     var progtype: string = this.exeline.appropriation;
     var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
@@ -488,7 +554,7 @@ export class ActualsTabComponent implements OnInit {
     });
   }
 
-  onTogglePct( ev ) {
+  onTogglePct() {
     this.showPercentages = !this.showPercentages;
     this.agOptions.api.redrawRows();
   }
