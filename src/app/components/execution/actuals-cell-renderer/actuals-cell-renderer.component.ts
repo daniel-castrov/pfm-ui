@@ -20,10 +20,10 @@ export class ActualsCellRendererComponent implements ICellRendererAngularComp {
     var row: number = param.rowIndex;
 
     if (pct && row > 1) {
-        this.value = param.value / param.data.toa * 100;
+      this.value = (param.value / param.data.toa * 100).toFixed(2);
     }
     else {
-      this.value = param.value;
+      this.value = (param.value ? param.value : 0).toFixed(2);
     }
   }
 

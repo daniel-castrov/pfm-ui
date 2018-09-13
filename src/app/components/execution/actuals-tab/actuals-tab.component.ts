@@ -148,7 +148,6 @@ export class ActualsTabComponent implements OnInit {
       return false;
     }
 
-
     var getHeaderValue = function (params) {
       return (my.exe ? 'FY' + my.exe.fy : 'First Year')
     }
