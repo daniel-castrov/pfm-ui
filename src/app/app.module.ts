@@ -130,7 +130,7 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService, LibraryService, UserService} from './generated';
+import { EppService, LibraryService, UserService, OandEService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
@@ -148,6 +148,7 @@ import { EventDetailsCellRendererComponent } from './components/renderers/event-
 import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
 import {DeleteRenderer} from "./components/renderers/delete-renderer/delete-renderer.component";
 import { ToggleComponent } from './components/toggle/toggle.component';
+import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -178,7 +179,7 @@ const appRoutes: Routes = [
   {path:'oe-update', component:OeUpdateComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
-  {path:'program-execution-line', component:ProgramExecutionLineComponent},
+  {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
@@ -306,7 +307,8 @@ const appRoutes: Routes = [
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
-    ToggleComponent
+    ToggleComponent,
+    ActualsCellRendererComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -315,7 +317,8 @@ const appRoutes: Routes = [
     SummaryProgramCellRenderer,
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
-    DeleteRenderer
+    DeleteRenderer,
+    ActualsCellRendererComponent
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -368,6 +371,7 @@ const appRoutes: Routes = [
     UFRsService,
     EppService,
     ExecutionService,
+    OandEService,
     LibraryService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },

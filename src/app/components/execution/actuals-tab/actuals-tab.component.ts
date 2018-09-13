@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild, Input } from '@angular/core'
 
 // Other Components
-import { Router } from '@angular/router'
-import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan } from '../../../generated';
+import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 
 @Component({
   selector: 'actuals-tab',
@@ -13,133 +12,529 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
   styleUrls: ['./actuals-tab.component.scss']
 })
 
+// WARNING: This class relied HEAVILY on the order of rows.
+//          Do not change the order willy-nilly
+//
+//          ROWS 0 and 1 come from the ExecutionLine
+//          ROWS 2, 4, 8, and 12 come from the O&Es
+//          The other rows are calculated values
 export class ActualsTabComponent implements OnInit {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  private actuals: Map<string, string> = new Map<string, string>();
+  private _oandes: OandEMonthly[];
+  private _exeline: ExecutionLine;
+  private _exe: Execution;
   private agOptions: GridOptions;
-  private selectedRow: number = -1;
-  private columnDefs: any[];
-  private rowData: any[];
+  rows: ActualsRow[];
+  firstMonth = 0;
+  editMonth: number = -1;
+  isadmin: boolean = false;
+  showPercentages: boolean = true;
 
-  ngOnInit() {}
+  @Input() set exeline(e: ExecutionLine) {
+    //console.log('setting exeline')
+    this._exeline = e;
+    this.refreshTableData();
+  }
 
+  get exeline() : ExecutionLine {
+    return this._exeline;
+  }
+
+  @Input() set exe(e: Execution) {
+    //console.log('setting exe');
+    this._exe = e;
+    this.firstMonth = 0;
+    if (this.agOptions.api) {
+      this.agOptions.api.refreshHeader();
+    }
+
+    var date = new Date();
+    var day = date.getDay();
+    var month = date.getMonth();
+
+    // set a few values for testing
+    month = 3;
+    day = 7;
+
+    // after the 14th, we're on to the next month
+    if (day >= 15) {
+      month += 1;
+    }
+
+    if (month - 9 < 0) {
+      month += 3;
+    } else {
+      month -= 9;
+    }
+
+    this.editMonth = this.firstMonth + month;
+    //console.log(' edit month is: ' + this.editMonth);
+    this.refreshTableData();
+  }
+
+  get exe(): Execution {
+    return this._exe;
+  }
+
+  @Input() set oandes(o: OandEMonthly[]) {
+    //console.log('setting oandes ' + JSON.stringify(o));
+    this._oandes = o;
+    this.refreshTableData();
+  }
+
+  get oandes() {
+    return this._oandes;
+  }
 
   constructor() {
+    var my: ActualsTabComponent = this;
 
-    this.columnDefs = [
-      {
-        headerName: 'First Year',
+    var editrows: Set<number> = new Set<number>([2, 4, 8, 12]);
+
+    var editsok = function (params) {
+      var colOk: boolean = (my.isadmin
+        ? true
+        : (my.firstMonth + params.colDef.colId) === my.editMonth);
+      var rowOk: boolean = editrows.has(params.node.rowIndex);
+
+      //console.log(params)
+      //console.log(my.firstMonth + params.colDef.colId);
+      //console.log('editsok: ' + colOk + ' ' + rowOk);
+
+      return (rowOk && colOk);
+    }
+
+    var valueSetter = function (params) {
+      // col is the index of the values array of the data (e.g., 0-36 for a 3-year cycle)
+      var col: number = Number.parseInt(params.colDef.colId) + my.firstMonth;
+      var row: number = params.node.childIndex;
+
+      var oldval: number = Number.parseFloat(params.oldValue);
+      var newval: number = Number.parseFloat(params.newValue);
+
+      if (my.showPercentages) {
+        newval = newval * my.exeline.toa / 100;
+      }
+
+      my.rows[row].values[col] = newval;
+
+      for (var i = col; col < my.rows.values.length; i++) {
+        my.rows[row + 1].values[i] = my.rows[row + 1].values[i] - oldval + newval;
+      }
+
+      my.recalculateTableData();
+      return true;
+    }
+
+    var isyellow = function (params): boolean {
+      if (7 == params.rowIndex || 11 == params.rowIndex) {
+        var pct = params.value / params.data.toa;
+        return (pct >= 0.1 && pct < 0.15);
+      }
+      return false;
+    }
+    var isred = function (params): boolean {
+      if (7 == params.rowIndex || 11 == params.rowIndex) {
+        return (params.value / params.data.toa >= 0.15);
+      }
+      return false;
+    }
+    var isgreen = function (params): boolean {
+      if (7 == params.rowIndex || 11 == params.rowIndex) {
+        return (params.value / params.data.toa < 0.1 );
+      }
+      return false;
+    }
+
+    var getHeaderValue = function (params) {
+      return (my.exe ? 'FY' + my.exe.fy : 'First Year')
+    }
+
+    var agcomps: any = {
+      actualsRenderer: ActualsCellRendererComponent
+    };
+
+    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 6, 7, 9, 10, 11, 13]);
+    var cssright: Set<number> = new Set<number>([3, 5, 6, 7, 9, 10, 11, 13]);
+
+    this.agOptions = <GridOptions>{
+      rowData: this.rows,
+      frameworkComponents: agcomps,
+      context: {
+        parent: my
+      },
+      columnDefs: [
+        {
+          headerValueGetter: getHeaderValue,
           children: [
             {
               headerName: 'Actuals',
-              field: 'actuals',
+              field: 'label',
               filter: 'agTextColumnFilter',
-              cellClass: ['ag-cell-white', 'ag-link'],
-              cellRenderer: function(params){
-                return "<a data-toggle='modal' + href='#myModal"
-                + "'> "+params.value+"</a>";
+              cellClass: ['ag-cell-white'],
+              maxWidth: 250,
+              cellClassRules: {
+                'text-right': params => cssright.has(params.node.rowIndex),
+                'font-weight-bold': params => cssbold.has(params.node.rowIndex),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
               }
             },
             {
               headerName: 'Oct',
-              field: 'oct',
+              colId: 0,
+              valueGetter: params => my.valueGetter(params),
+              editable: editsok,
+              valueSetter: valueSetter,
+              type: 'numericColumn',
+              cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules : {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Nov',
-              field: 'nov',
+              colId: 1,
+              type: 'numericColumn',
+              editable: editsok,
+              valueSetter: valueSetter,
+              valueGetter: params => my.valueGetter(params),
+              cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Dec',
-              field: 'dec',
+              colId: 2,
+              editable: editsok,
+              valueGetter: params => my.valueGetter(params),
+              type: 'numericColumn',
+              valueSetter: valueSetter,
+              cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Jan',
-              field: 'jan',
+              colId: 3,
+              valueSetter: valueSetter,
+              editable: editsok,
+              valueGetter: params => my.valueGetter(params),
+              cellRenderer: 'actualsRenderer',
+              type: 'numericColumn',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Feb',
-              field: 'feb',
+              colId: 4,
+              valueSetter: valueSetter,
+              editable: editsok,
+              valueGetter: params => my.valueGetter(params),
+              cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              type: 'numericColumn',
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Mar',
-              field: 'mar',
+              colId: 5,
+              editable: editsok,
+              valueSetter: valueSetter,
+              cellRenderer: 'actualsRenderer',
+              valueGetter: params => my.valueGetter(params),
+              type: 'numericColumn',
               maxWidth: 80,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
+              editable: editsok,
               headerName: 'Apr',
-              field: 'apr',
+              colId: 6,
+              valueSetter: valueSetter,
+              cellRenderer: 'actualsRenderer',
+              type: 'numericColumn',
+              valueGetter: params => my.valueGetter(params),
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
+              editable: editsok,
               headerName: 'May',
-              field: 'may',
+              colId: 7,
+              valueGetter: params => my.valueGetter(params),
+              valueSetter: valueSetter,
+              cellRenderer: 'actualsRenderer',
+              type: 'numericColumn',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Jun',
-              field: 'jun',
+              colId: 8,
+              editable: editsok,
+              valueGetter: params => my.valueGetter(params),
+              type: 'numericColumn',
+              valueSetter: valueSetter,
+              cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Jul',
-              field: 'jul',
+              colId: 9,
+              editable: editsok,
+              valueGetter: params => my.valueGetter(params),
+              cellRenderer: 'actualsRenderer',
+              valueSetter: valueSetter,
               maxWidth: 80,
-              cellClass: ['ag-cell-white', 'text-right']
+              type: 'numericColumn',
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Aug',
-              field: 'aug',
+              colId: 10,
+              editable: editsok,
+              valueGetter: params => my.valueGetter(params),
+              cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              type: 'numericColumn',
+              valueSetter: valueSetter,
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             },
             {
               headerName: 'Sep',
-              field: 'sep',
+              colId: 11,
+              editable: editsok,
+              cellRenderer: 'actualsRenderer',
+              valueGetter: params => my.valueGetter(params),
               maxWidth: 88,
-              cellClass: ['ag-cell-white', 'text-right']
+              valueSetter: valueSetter,
+              type: 'numericColumn',
+              cellClassRules: {
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p)),
+                'ag-cell-yellow': isyellow,
+                'ag-cell-red': isred,
+                'ag-cell-dark-green': isgreen
+              }
             }
           ]
         }
-      ];
-
-    this.rowData = [
-        { actuals: 'Funds',
-          mar: 'item 1',
-          jun: 35000
-        },
-        { actuals: 'Released', sept: 'item 1', aug: 500 },
-        { actuals: 'Committed (Monthly)', dec: 'item 1', oct: 5550 },
-        { actuals: 'Cummulative Committed', may: 'item 1', jul: 45000 },
-        { actuals: 'Obligated (Monthly)', oct: 'item 1', feb: 50000 },
-        { actuals: 'Cummulative Obligated', jan: 'item 1', nov: 70000 },
-        { actuals: 'OSD Goal', aug: 'item 1', dec: 745000 },
-        { actuals: 'Delta', apr: 'item 1', aug: 590000 },
-        { actuals: 'Outlayed (Monthly)', oct: 'item 1', feb: 50000 },
-        { actuals: 'Cummulative Outlayed', jan: 'item 1', nov: 70000 },
-        { actuals: 'OSD Goal', aug: 'item 1', dec: 745000 },
-        { actuals: 'Delta', apr: 'item 1', aug: 590000 },
-        { actuals: 'Actuals (Monthly)', mar: 'item 1', sep: 69050 },
-        { actuals: 'Cummulative Actuals', mar: 'item 1', jun: 35000 },
-    ];
-
+      ]
+    };
   }
 
+  ngOnInit() {
+  }
+
+  /**
+   * Refreshes the table data when a new exe, exeline, or oandes is loaded.
+   * Use recalculateTableData() if you just want to respond to user inputs
+   */
+  refreshTableData() {
+    this.rows = [
+      { label: 'TOA', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Released', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Committed (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Committed', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Obligated (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Obligated', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'OSD Goal', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Delta', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Outlayed (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Outlayed', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'OSD Goal', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Delta', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Accruals (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Actuals', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+    ];
+
+    if (this._exeline && this._exe && this._oandes) {
+      // get our goals information
+      var progtype: string = this.exeline.appropriation;
+      var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
+      var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
+
+      var max = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      // get our O&E values in order of month, so we can
+      // run right through them
+      var myoandes: OandEMonthly[] = new Array(max);
+      this.oandes.forEach(oande => { 
+        myoandes[oande.month] = oande;
+      });
+
+      this.rows.forEach(ar => {
+        ar.toa = this.exeline.toa;
+        ar.released = this.exeline.released;
+
+        for (var i = 0; i < max; i++) {
+          ar.expgoal_pct.push(egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+          ar.oblgoal_pct.push(ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+        }
+      });
+
+      for (var i = 0; i < max; i++) {
+        this.rows[0].values.push(this.exeline.toa);
+        this.rows[1].values.push(this.exeline.released);
+        this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
+        
+        this.rows[3].values.push(0);
+
+        this.rows[4].values.push(myoandes[i] ? myoandes[i].obligated : 0);
+        
+        this.rows[5].values.push(0);
+        this.rows[6].values.push(0);
+        this.rows[7].values.push(0);
+
+        this.rows[8].values.push(myoandes[i] ? myoandes[i].outlayed : 0);
+
+        this.rows[9].values.push(0);
+        this.rows[10].values.push(0);
+        this.rows[11].values.push(0);
+
+        this.rows[12].values.push(myoandes[i] ? myoandes[i].accruals : 0);
+
+        this.rows[13].values.push(0);
+      }
+
+      this.recalculateTableData(); // this handles the call to setRowData(), too
+
+    } else if (this.agOptions.api) {
+      this.agOptions.api.setRowData(this.rows);
+    }
+  }
+
+  recalculateTableData() {
+    console.log('recalculating table data');
+    // get our goals information
+    var progtype: string = this.exeline.appropriation;
+    var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
+    var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
+
+    var committed: number = 0;
+    var obligated: number = 0;
+    var outlayed: number = 0;
+    var accruals: number = 0;
+
+    for (var i = 0; i < this.rows[0].values.length; i++) {
+      committed += this.rows[2].values[i];
+      this.rows[3].values[i] = committed;
+
+      obligated += this.rows[4].values[i];
+      this.rows[5].values[i] = obligated;
+
+      if (i < ogoals.monthlies.length) {
+        this.rows[6].values[i] = this.exeline.toa * ogoals.monthlies[i];
+        this.rows[7].values[i] = this.rows[6].values[i] - obligated;
+      }
+
+      outlayed += this.rows[8].values[i];
+      this.rows[9].values[i] = outlayed;
+
+      if (i < egoals.monthlies.length) {
+        this.rows[10].values[i] = this.exeline.toa * egoals.monthlies[i];
+        this.rows[11].values[i] = this.rows[10].values[i] - outlayed;
+      }
+
+      accruals += this.rows[12].values[i];
+      this.rows[13].values[i] = accruals;
+    }
+
+    if(this.agOptions.api) {
+      this.agOptions.api.setRowData(this.rows);
+    }
+  }
+
+  valueGetter(params) {
+    var my: ActualsTabComponent = this;
+
+    // first, figure out which column we're in so we know which month to get
+    // col will be from 0-11, representing the months of the FY
+    // (remember: 0=October, not January)
+    var col: number = params.colDef.colId;
+    var row: number = params.node.childIndex;
+
+    var index: number = my.firstMonth + col;
+    //console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
+    if (params.data.values.length >= index) {
+      //console.log(params.data.values);
+      //console.log('  returning ' + params.data.values[index]);
+      return params.data.values[index];
+    }
+    else {
+      // just a fallback value
+      return 0;
+    }
+  }
 
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);
@@ -157,4 +552,23 @@ export class ActualsTabComponent implements OnInit {
       });
     });
   }
+
+  onTogglePct() {
+    this.showPercentages = !this.showPercentages;
+    this.agOptions.api.redrawRows();
+  }
+
+  onToggleAdmin() {
+    this.isadmin = !this.isadmin;
+    this.agOptions.api.redrawRows();
+  }
+}
+
+interface ActualsRow {
+  label: string,
+  toa: number,
+  released: number,
+  oblgoal_pct: number[],
+  expgoal_pct: number[],
+  values: number[] // should have as many indicies as there are execution months
 }

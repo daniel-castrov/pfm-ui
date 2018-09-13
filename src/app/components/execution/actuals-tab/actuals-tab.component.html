@@ -6,7 +6,7 @@
       </span>
       <span>
         %
-        <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onTogglePct()">
           <div class="handle"></div>
         </button>
         $
@@ -16,23 +16,17 @@
 </div>
 <div class="row">
   <div class="col-12">
-      <ag-grid-angular #agGrid class="ag-theme-balham actuals-table"
-        id="myGrid"
+      <ag-grid-angular #agGrid class="ag-theme-balham"
         [enableSorting]="true"
         [enableFilter]="false"
         [gridAutoHeight]="true"
-        [gridOptions]="agOptions"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        [columnTypes]="columnTypes"
         [toolPanelSuppressSideButtons]="true"
         [enableColResize]="true"
         [suppressDragLeaveHidesColumns]="true"
         [suppressMovableColumns]="true"
         [suppressPaginationPanel]="true"
-        (gridReady)="onGridReady($event)"
-        >
+        [gridOptions]="agOptions"
+        (gridReady) = "onGridReady($event)">
       </ag-grid-angular>
   </div>
 </div>
@@ -43,7 +37,7 @@
     </span>
     <span>
        Lock
-       <button type="button" class="btn btn-sm btn-toggle btn-secondary" data-toggle="button" aria-pressed="false" autocomplete="off">
+       <button type="button" class="btn btn-sm btn-toggle btn-secondary" (click)="onToggleAdmin()" data-toggle="button" aria-pressed="false" autocomplete="off">
         <div class="handle"></div>
       </button>
       Unlock

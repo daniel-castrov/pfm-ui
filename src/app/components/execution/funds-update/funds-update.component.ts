@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
-import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
+import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
@@ -238,23 +238,11 @@ export class FundsUpdateComponent implements OnInit {
         //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
         my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
       ]).subscribe(data => {
-        var lookup: {id:string, name:string}[] = [];
-        Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
-          lookup.push( {id:mrid, name: data[0].result[mrid]})
-        });
-
-
-        lookup.sort((a, b) => {
-          if (a.name === b.name) {
-            return 0;
-          }
-          return (a.name < b.name ? -1 : 1);
-        });
 
         my.programs = new Map<string, string>();
-        for (var i = 0; i < lookup.length; i++ ){
-          my.programs.set(lookup[i].id, lookup[i].name);
-        }
+        Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
+          my.programs.set(mrid, data[0].result[mrid]);
+        });
 
         my.exephases = data[1].result;
         my.selectedexe = my.exephases[0];
@@ -267,7 +255,6 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   fetchLines() {
-
     if (!this.selectedexe) {
       this.agOptions.api.showNoRowsOverlay();
       return;
