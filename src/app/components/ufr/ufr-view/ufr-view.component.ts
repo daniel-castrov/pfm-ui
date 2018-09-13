@@ -100,5 +100,17 @@ export class UfrViewComponent implements OnInit {
       type: 'danger',
     });
   }
+
+  private isNotSavable(): boolean {
+    if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
+    if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
+    return this.ufr.status == UfrStatus.SUBMITTED;
+  }
+
+  private isNotSubmittable(): boolean {
+    if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
+    if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
+    return this.ufr.status == UfrStatus.SUBMITTED;
+  }
 }
 
