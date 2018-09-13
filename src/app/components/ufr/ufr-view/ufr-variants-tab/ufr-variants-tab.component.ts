@@ -386,7 +386,7 @@ export class UfrVariantsTabComponent {
   }
 
   procFundingLines(): FundingLine[] {
-    return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
+      return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
   }
 
   addVariant(){
