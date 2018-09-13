@@ -12,6 +12,12 @@ import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-c
   styleUrls: ['./actuals-tab.component.scss']
 })
 
+// WARNING: This class relied HEAVILY on the order of rows.
+//          Do not change the order willy-nilly
+//
+//          ROWS 0 and 1 come from the ExecutionLine
+//          ROWS 2, 4, 8, and 12 come from the O&Es
+//          The other rows are calculated values
 export class ActualsTabComponent implements OnInit {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -26,7 +32,7 @@ export class ActualsTabComponent implements OnInit {
   isadmin: boolean = false;
 
   @Input() set exeline(e: ExecutionLine) {
-    console.log('setting exeline')
+    //console.log('setting exeline')
     this._exeline = e;
     this.refreshTableData();
   }
@@ -36,7 +42,7 @@ export class ActualsTabComponent implements OnInit {
   }
 
   @Input() set exe(e: Execution) {
-    console.log('setting exe');
+    //console.log('setting exe');
     this._exe = e;
     this.firstMonth = 0;
     if (this.agOptions.api) {
@@ -63,7 +69,7 @@ export class ActualsTabComponent implements OnInit {
     }
 
     this.editMonth = this.firstMonth + month;
-    console.log(' edit month is: ' + this.editMonth);
+    //console.log(' edit month is: ' + this.editMonth);
     this.refreshTableData();
   }
 
@@ -72,7 +78,7 @@ export class ActualsTabComponent implements OnInit {
   }
 
   @Input() set oandes(o: OandEMonthly[]) {
-    console.log('setting oandes ' + JSON.stringify(o));
+    //console.log('setting oandes ' + JSON.stringify(o));
     this._oandes = o;
     this.refreshTableData();
   }
@@ -100,31 +106,19 @@ export class ActualsTabComponent implements OnInit {
     }
 
     var valueSetter = function (params) {
-      // col will be from 0-11, representing the months of the FY
+      // col is the index of the values array of the data (e.g., 0-36 for a 3-year cycle)
       var col: number = Number.parseInt(params.colDef.colId) + my.firstMonth;
       var row: number = params.node.childIndex;
 
       var oldval: number = Number.parseFloat(params.oldValue);
       var newval: number = Number.parseFloat(params.newValue);
-      params.data.values[col] = newval;
-      params.node.data.values[col] = newval;
+      my.rows[row].values[col] = newval;
 
-      // get the cummulative row for this entry cell
-      my.agOptions.api.forEachNode(rn => {
-        if (rn.childIndex === (row + 1)) {
-          console.log(rn);
+      for (var i = col; col < my.rows.values.length; i++) {
+        my.rows[row + 1].values[i] = my.rows[row + 1].values[i] - oldval + newval;
+      }
 
-          for (var i = col; i < rn.data.values.length; i++) {
-            rn.data.values[i] = rn.data.values[i] - oldval + newval;
-            my.rows[row + 1].values[i] = rn.data.values[i];
-          }
-
-          console.log(rn.data);
-          my.agOptions.api.updateRowData({ update: [rn.data] });
-          my.agOptions.api.refreshCells({ rowNodes: [rn] });
-        }
-      });
-
+      my.recalculateTableData();
       return true;
     }
 
@@ -385,6 +379,10 @@ export class ActualsTabComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Refreshes the table data when a new exe, exeline, or oandes is loaded.
+   * Use recalculateTableData() if you just want to respond to user inputs
+   */
   refreshTableData() {
     this.rows = [
       { label: 'TOA', values: [] },
@@ -417,48 +415,78 @@ export class ActualsTabComponent implements OnInit {
         myoandes[oande.month] = oande;
       });
 
-      var committed: number = 0;
-      var obligated: number = 0;
-      var outlayed: number = 0;
-      var accruals: number = 0;
-
       for (var i = 0; i < max; i++) {
         this.rows[0].values.push(this.exeline.toa);
-        this.rows[1].values.push(this.exeline.released);
-        
+        this.rows[1].values.push(this.exeline.released);       
         this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
-        committed += this.rows[2].values[i];
-        this.rows[3].values.push(committed);
+        
+        this.rows[3].values.push(0);
 
         this.rows[4].values.push(myoandes[i] ? myoandes[i].obligated : 0);
-        obligated += this.rows[4].values[i];
-        this.rows[5].values.push(obligated);
         
-        if (i < ogoals.monthlies.length) {
-          this.rows[6].values.push( this.exeline.toa * ogoals.monthlies[i]);
-          this.rows[7].values.push(this.rows[6].values[i] - obligated);
-        }
+        this.rows[5].values.push(0);
+        this.rows[6].values.push(0);
+        this.rows[7].values.push(0);
 
         this.rows[8].values.push(myoandes[i] ? myoandes[i].outlayed : 0);
-        outlayed += this.rows[8].values[i];
-        this.rows[9].values.push(outlayed);
 
-        if (i < egoals.monthlies.length) {
-          this.rows[10].values.push(this.exeline.toa * egoals.monthlies[i]);
-          this.rows[11].values.push(this.rows[10].values[i] - outlayed);
-        }
+        this.rows[9].values.push(0);
+        this.rows[10].values.push(0);
+        this.rows[11].values.push(0);
 
         this.rows[12].values.push(myoandes[i] ? myoandes[i].accruals : 0);
-        accruals += this.rows[12].values[i];
-        this.rows[13].values.push(accruals);
-      }
-    }
 
-    if (this.agOptions.api) {
+        this.rows[13].values.push(0);
+      }
+
+      this.recalculateTableData(); // this handles the call to setRowData(), too
+
+    } else if (this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
   }
 
+  recalculateTableData() {
+    // get our goals information
+    var progtype: string = this.exeline.appropriation;
+    var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
+    var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
+
+    var committed: number = 0;
+    var obligated: number = 0;
+    var outlayed: number = 0;
+    var accruals: number = 0;
+
+    for (var i = 0; i < this.rows[0].values.length; i++) {
+      committed += this.rows[2].values[i];
+      this.rows[3].values[i] = committed;
+
+      obligated += this.rows[4].values[i];
+      this.rows[5].values[i] = obligated;
+
+      if (i < ogoals.monthlies.length) {
+        this.rows[6].values[i] = this.exeline.toa * ogoals.monthlies[i];
+        this.rows[7].values[i] = this.rows[6].values[i] - obligated;
+      }
+
+      outlayed += this.rows[8].values[i];
+      this.rows[9].values[i] = outlayed;
+
+      if (i < egoals.monthlies.length) {
+        this.rows[10].values[i] = this.exeline.toa * egoals.monthlies[i];
+        this.rows[11].values[i] = this.rows[10].values[i] - outlayed;
+      }
+
+      accruals += this.rows[12].values[i];
+      this.rows[13].values[i] = accruals;
+    }
+
+    console.log(this.rows);
+
+    if(this.agOptions.api) {
+      this.agOptions.api.setRowData(this.rows);
+    }
+  }
 
   valueGetter(params) {
     var my: ActualsTabComponent = this;
@@ -477,7 +505,8 @@ export class ActualsTabComponent implements OnInit {
       return params.data.values[index];
     }
     else {
-      return -2000;
+      // just a fallback value
+      return 0;
     }
   }
 
