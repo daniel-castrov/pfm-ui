@@ -1,12 +1,10 @@
 <div class="row">
-  <div class="col-md-12">
-
-
+  <div class="col-12">
     <div class="row">
       <div class="col-3">
         <span class="form-group inline-name">
            <label>Name</label>
-           <input type="text" [(ngModel)]="ufr.shortName" class="form-control forminput mr-5">
+           <input type="text" [(ngModel)]="ufr.ufrName" class="form-control forminput mr-5">
          </span>
       </div>
       <div class="col-3">
@@ -14,20 +12,20 @@
       <div class="col-3">
         <span class="form-group inline-name">
            <label>Cost to Complete</label>
-           <input type="text" placeholder="$" [(ngModel)]="ufr.costLeft" class="form-control forminput mr-5">
+           <input type="number" placeholder="" [(ngModel)]="ufr.costLeft" class="form-control forminput mr-5">
          </span>
       </div>
+      <div class="col-3">
+      </div>
     </div>
-
-
     <div class="row">
       <div class="col-6">
-        <span class="form-group inline-name">
+        <span class="form-group">
           <label>Description</label>
-          <input type="text" [(ngModel)]="ufr.description" class="form-control description mr-5">
+          <input type="text" [(ngModel)]="ufr.description" class="form-control description">
         </span>
       </div>
-      <div class="col-3">
+      <div class="col-4">
         <span class="form-group inline-name">
           <label>Core Capability</label>
           <select [(ngModel)]="ufr.coreCapability" class="form-control-sm dropdown-width" name="dummy">
@@ -36,8 +34,6 @@
         </span>
       </div>
     </div>
-
-
     <div class="row">
       <div class="col-3">
         <span class="form-group inline-name">
@@ -58,7 +54,6 @@
         </span>
       </div>
     </div>
-
     <div class="row">
       <div class="col-md-12">
         <div class="title mb-2">Notes:</div>

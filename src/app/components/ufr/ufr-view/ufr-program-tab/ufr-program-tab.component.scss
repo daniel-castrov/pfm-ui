@@ -39,3 +39,12 @@ label {
     font-size: 200px;
   }
 }
+
+.program-name {
+  display: inline-block;
+  min-width: 300px;
+  max-width: 450px;
+  vertical-align: top;
+  cursor: default;
+  // word-break: break-all; // use if there are set number of characters in the longname string
+  }

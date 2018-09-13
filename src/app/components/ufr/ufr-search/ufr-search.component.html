@@ -1,5 +1,4 @@
 <j-header></j-header>
-
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="col-md-12">
@@ -9,11 +8,13 @@
         </div>
       </div>
       <div class="row">
-        <new-ufr class="col-5"></new-ufr>
+        <div class="col-6">
+          <new-ufr></new-ufr>
+        </div>
         <div class="col-4"></div>
         <div class="col-2">
           <div class="bottom-text">
-            <input id="filtertestbox" type="text" placeholder="Filter all columns ..." 
+            <input id="filtertestbox" type="text" placeholder="Filter all columns ..."
               [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
           </div>
         </div>

@@ -5,8 +5,8 @@
         {{newFLType? newFLType: 'Select an option'}}
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" *ngIf="!pr.creationTimeReferenceId || pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
-        <a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">Add an existing Funding Line</a>
+          <a class="dropdown-item" *ngIf="!pr.creationTimeReferenceId || pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
+          <a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">{{pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR? 'Add a parent Funding Line' : 'Add an existing Funding Line'}}</a>
       </div>
     </div>
   </div>
@@ -29,12 +29,7 @@
 <ag-grid-angular #agGrid
                  class="ag-theme-balham pr-funds-tab group-header-white"
                  [gridAutoHeight]="true"
-                 [toolPanelSuppressPivotMode]="true"
-                 [toolPanelSuppressRowGroups]="true"
-                 [toolPanelSuppressValues]="true"
-                 [toolPanelSuppressPivots]="true"
-                 [toolPanelSuppressColumnFilter]="true"
-                 [toolPanelSuppressColumnSelectAll]="true"
+                 [toolPanelSuppressSideButtons]="true"
                  [suppressMovableColumns]="true"
                  [suppressRowTransform]="true"
                  [overlayNoRowsTemplate]="overlayNoRowsTemplate"

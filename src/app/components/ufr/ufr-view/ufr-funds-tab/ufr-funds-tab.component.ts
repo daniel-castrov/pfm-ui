@@ -226,7 +226,6 @@ export class UfrFundsComponent implements OnInit {
         children: [{
           colId: 'delete',
           maxWidth: 40,
-          suppressToolPanel: true,
           cellRenderer: 'deleteRenderer',
           cellClass: 'funding-line-default',
           cellStyle: {'text-align': 'center'},
@@ -235,7 +234,6 @@ export class UfrFundsComponent implements OnInit {
             headerName: 'Appropriation',
             field: 'fundingLine.appropriation',
             maxWidth: 92,
-            suppressToolPanel: true,
             editable: params => {
               return this.isEditable(params)
             },
@@ -415,6 +413,11 @@ export class UfrFundsComponent implements OnInit {
     this.agGridProposedChanges.api.setRowData(this.proposedChange);
     this.agGridProposedChanges.api.setFocusedCell(this.proposedChange.length - 1, 'fundingLine.appropriation');
     this.agGridProposedChanges.api.startEditingCell({rowIndex: this.proposedChange.length - 1, colKey: 'fundingLine.appropriation'});
+    this.proposedChange.push(newPomRow);
+
+    this.agGridProposedChanges.api.setRowData(this.proposedChange);
+    this.agGridProposedChanges.api.setFocusedCell(this.proposedChange.length - 1, 'fundingLine.appropriation');
+    this.agGridProposedChanges.api.startEditingCell({rowIndex: this.proposedChange.length - 1, colKey: 'fundingLine.appropriation'});
   }
 
   isEditable(params): boolean{
@@ -427,6 +430,9 @@ export class UfrFundsComponent implements OnInit {
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
+    if(this.proposedChange.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
+      this.appropriations.splice(this.appropriations.indexOf('PROC'), 1);
+    }
 
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
@@ -466,7 +472,7 @@ export class UfrFundsComponent implements OnInit {
     this.agGridProposedChanges.api.setRowData(this.proposedChange);
 
     this.loadDropdownOptions();
-  }
+    }
 
   onToolPanelVisibleChanged(params) {
     this.agGridProposedChanges.api.sizeColumnsToFit();
