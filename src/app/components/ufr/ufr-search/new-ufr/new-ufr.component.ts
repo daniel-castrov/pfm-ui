@@ -129,6 +129,7 @@ export class NewUfrComponent implements OnInit {
         break;
       case 'A New Program':
         ufr.shortyType = ShortyType.NEW_PROGRAM;
+        ufr.fundingLines=[];
         break;
     }
     this.router.navigate(['/ufr-view/create/', JSON.stringify(ufr)]);
