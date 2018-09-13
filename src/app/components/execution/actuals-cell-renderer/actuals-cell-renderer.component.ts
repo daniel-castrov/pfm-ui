@@ -7,16 +7,35 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
   styleUrls: ['./actuals-cell-renderer.component.scss']
 })
 export class ActualsCellRendererComponent implements ICellRendererAngularComp {
-  private params;
   private printable: boolean = true;
+  private value;
 
   constructor() { }
 
   agInit(param) {
-    this.params = param;
-    //console.log(param);
     //console.log('rendering at (' + param.rowIndex + ',' + param.colDef.colId + '): ' + JSON.stringify(this.params.data));
     this.printable = (param.context.parent.isadmin || (param.context.parent.firstMonth + param.colDef.colId) <= param.context.parent.editMonth);
+    var pct = param.context.parent.showPercentages;
+
+    var row: number = param.rowIndex;
+    var col: number = param.colDef.colId;
+
+    if (pct && row > 1) {
+      //console.log(param.data);
+      //console.log(param.value);
+//      if (6 == col) {
+//        this.value = param.data.oblgoal_pct[col] * 100;
+//      }
+//      else if (10 == col) {
+//        this.value = param.data.expgoal_pct[col] * 100;
+//      }
+//      else {
+        this.value = param.value / param.data.toa * 100;
+//      }
+    }
+    else {
+      this.value = param.value;
+    }
   }
 
   refresh(): boolean {

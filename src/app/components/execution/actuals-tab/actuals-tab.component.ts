@@ -26,10 +26,11 @@ export class ActualsTabComponent implements OnInit {
   private _exeline: ExecutionLine;
   private _exe: Execution;
   private agOptions: GridOptions;
-  private rows: any[];
+  rows: ActualsRow[];
   firstMonth = 0;
   editMonth: number = -1;
   isadmin: boolean = false;
+  showPercentages: boolean = true;
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -164,12 +165,8 @@ export class ActualsTabComponent implements OnInit {
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
               cellClassRules : {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -182,12 +179,8 @@ export class ActualsTabComponent implements OnInit {
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -200,12 +193,8 @@ export class ActualsTabComponent implements OnInit {
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -218,12 +207,8 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               maxWidth: 88,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -236,12 +221,8 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 88,
               type: 'numericColumn',
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -254,12 +235,8 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               maxWidth: 80,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -272,12 +249,8 @@ export class ActualsTabComponent implements OnInit {
               valueGetter: params => my.valueGetter(params),
               maxWidth: 88,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -290,12 +263,8 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               maxWidth: 88,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -308,12 +277,8 @@ export class ActualsTabComponent implements OnInit {
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -326,12 +291,8 @@ export class ActualsTabComponent implements OnInit {
               maxWidth: 80,
               type: 'numericColumn',
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -344,12 +305,8 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               valueSetter: valueSetter,
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             },
             {
@@ -362,12 +319,8 @@ export class ActualsTabComponent implements OnInit {
               valueSetter: valueSetter,
               type: 'numericColumn',
               cellClassRules: {
-                'ag-cell-editable': p => (
-                  (my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)
-                ),
-                'ag-cell-light-green': p => (!((my.firstMonth + p.colDef.colId) === my.editMonth &&
-                  editrows.has(p.rowIndex)))
+                'ag-cell-editable': editsok,
+                'ag-cell-light-green': p => (!editsok(p))
               }
             }
           ]
@@ -385,20 +338,20 @@ export class ActualsTabComponent implements OnInit {
    */
   refreshTableData() {
     this.rows = [
-      { label: 'TOA', values: [] },
-      { label: 'Released', values: [] },
-      { label: 'Committed (Monthly)', values: [] },
-      { label: 'Cumulative Committed', values: [] },
-      { label: 'Obligated (Monthly)', values: [] },
-      { label: 'Cumulative Obligated', values: [] },
-      { label: 'OSD Goal', values: [] },
-      { label: 'Delta', values: [] },
-      { label: 'Outlayed (Monthly)', values: [] },
-      { label: 'Cumulative Outlayed', values: [] },
-      { label: 'OSD Goal', values: [] },
-      { label: 'Delta', values: [] },
-      { label: 'Accruals (Monthly)', values: [] },
-      { label: 'Cumulative Actuals', values: [] },
+      { label: 'TOA', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Released', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Committed (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Committed', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Obligated (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Obligated', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'OSD Goal', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Delta', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Outlayed (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Outlayed', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'OSD Goal', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Delta', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Accruals (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'Cumulative Actuals', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
     ];
 
     if (this._exeline && this._exe && this._oandes) {
@@ -415,9 +368,19 @@ export class ActualsTabComponent implements OnInit {
         myoandes[oande.month] = oande;
       });
 
+      this.rows.forEach(ar => {
+        ar.toa = this.exeline.toa;
+        ar.released = this.exeline.released;
+
+        for (var i = 0; i < max; i++) {
+          ar.expgoal_pct.push(egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+          ar.oblgoal_pct.push(ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+        }
+      });
+
       for (var i = 0; i < max; i++) {
         this.rows[0].values.push(this.exeline.toa);
-        this.rows[1].values.push(this.exeline.released);       
+        this.rows[1].values.push(this.exeline.released);
         this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
         
         this.rows[3].values.push(0);
@@ -481,8 +444,6 @@ export class ActualsTabComponent implements OnInit {
       this.rows[13].values[i] = accruals;
     }
 
-    console.log(this.rows);
-
     if(this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
@@ -526,9 +487,23 @@ export class ActualsTabComponent implements OnInit {
       });
     });
   }
+
+  onTogglePct( ev ) {
+    this.showPercentages = !this.showPercentages;
+    this.agOptions.api.redrawRows();
+  }
+
+  onToggleAdmin() {
+    this.isadmin = !this.isadmin;
+    this.agOptions.api.redrawRows();
+  }
 }
 
 interface ActualsRow {
   label: string,
+  toa: number,
+  released: number,
+  oblgoal_pct: number[],
+  expgoal_pct: number[],
   values: number[] // should have as many indicies as there are execution months
 }
