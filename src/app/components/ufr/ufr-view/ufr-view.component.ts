@@ -1,9 +1,11 @@
 import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {POMService, ProgramsService, PRService, ShortyType, UFR, UFRsService} from '../../../generated';
+import {POMService, ProgramsService, PRService, ShortyType, UFR, UFRsService, UfrStatus} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
 import {WithFullName} from "../../../services/with-full-name.service";
+import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
+import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 
 @Component({
   selector: 'app-ufr-view',
@@ -12,6 +14,8 @@ import {WithFullName} from "../../../services/with-full-name.service";
 })
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
+  @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
   private ufr: UFR;
   private canedit: boolean = false;
   private pomFy: number;
@@ -26,14 +30,19 @@ export class UfrViewComponent implements OnInit {
 
   async ngOnInit() {
     this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
-      const ufrId = urlSegments[urlSegments.length - 1].path;
-      this.init(ufrId);
+      if(urlSegments[urlSegments.length - 2].path == 'create') {
+        const serializedUfr = urlSegments[urlSegments.length - 1].path;
+        this.ufr = JSON.parse(serializedUfr);
+      } else {
+        const ufrId = urlSegments[urlSegments.length - 1].path;
+        this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
+      }
+      this.init();
       this.canedit = !!await this.cycleUtils.currentPom().toPromise();
     });
   }
 
-  private async init(ufrId: string) {
-    this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
+  private async init() {
     this.pomFy = (await this.pomService.getById(this.ufr.phaseId).toPromise()).result.fy  - 2000;
     this.initShorty();
   }
@@ -52,8 +61,12 @@ export class UfrViewComponent implements OnInit {
     }
   }
 
-  save() {
-    this.ufrService.update(this.ufr).subscribe();
+  async save() {
+    if(this.ufr.id) {
+      this.ufrService.update(this.ufr).subscribe();
+    } else {
+      this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+    }
   }
 
   submit() {
@@ -62,7 +75,24 @@ export class UfrViewComponent implements OnInit {
   }
 
   get ufrNumber(): string {
-    const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);
-    return this.pomFy + sequentialNumber;
+    if(this.ufr.requestNumber) {
+      const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);
+      return 'number ' + this.pomFy + sequentialNumber;
+    } else {
+      return '';
+    }
+  }
+
+  private isNotSavable(): boolean {
+    if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
+    if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
+    return this.ufr.status == UfrStatus.SUBMITTED;
+  }
+
+  private isNotSubmittable(): boolean {
+    if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
+    if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
+    return this.ufr.status == UfrStatus.SUBMITTED;
   }
 }
+

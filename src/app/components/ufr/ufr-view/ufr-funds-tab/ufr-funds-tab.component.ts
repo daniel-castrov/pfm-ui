@@ -94,7 +94,7 @@ export class UfrFundsComponent implements OnInit {
           this.initRevisedChanges();
         });
       }
-      
+
     } else {
       let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
       data.push(pomRow);
@@ -118,7 +118,7 @@ export class UfrFundsComponent implements OnInit {
     this.proposedChangesColumnDefs[1].children[0].cellRenderer='';
 
     this.agGridCurrentFunding.api.setColumnDefs(this.currentFundingColumnDefs);
-    
+
   }
 
   rowSpanCount(params){
@@ -158,7 +158,7 @@ export class UfrFundsComponent implements OnInit {
     //   this.agGridCurrentFunding.columnApi.setColumnVisible('delete', true);
     //   this.agGridProposedChanges.columnApi.setColumnVisible('delete', true);
     //   this.agGridRevisedPrograms.columnApi.setColumnVisible('delete', true);
-     
+
     // } else {
     //   console.log("NO");
     //   this.agGridCurrentFunding.columnApi.setColumnVisible('delete', false);
@@ -390,7 +390,7 @@ export class UfrFundsComponent implements OnInit {
     });
 
     let totalColDef = {
-      headerName: 'CTC',
+      headerName: 'BY Total',
       suppressMenu: true,
       suppressToolPanel: true,
       maxWidth: 92,

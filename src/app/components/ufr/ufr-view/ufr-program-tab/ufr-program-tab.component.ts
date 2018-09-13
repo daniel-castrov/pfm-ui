@@ -2,8 +2,8 @@ import {RestResult} from './../../../../generated/model/restResult';
 import {join} from './../../../../utils/join';
 import {Observable} from 'rxjs/Observable';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {POMService, ProgramsService, Tag} from '../../../../generated';
-import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
+import {POMService, Program, ProgrammaticRequest, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
+import {WithFullNameService} from "../../../../services/with-full-name.service";
 
 @Component({
   selector: 'ufr-program-tab',
@@ -12,7 +12,8 @@ import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services
 })
 export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() editable: boolean = false;
-  @Input() shorty: ProgramOrPrWithFullName;
+  @Input() shorty: Program | ProgrammaticRequest;
+  @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
 
@@ -54,6 +55,23 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   }
 
   private shortyType(): string {
-    return this.withFullNameService.isProgram(this.shorty) ? 'PROGRAM' : 'PROGRAM REQUEST';
+    if (this.ufr.shortyType == ShortyType.NEW_PROGRAM) {
+      return 'PROGRAM';
+    } else {
+      if (this.shorty) { // ag-grid somehow calls shortType() when the mouse hovers on the Funds tab, sometimes before shorty is initialized. Bad.
+                         // More investigation is needed and a better fix is preferable
+        return this.withFullNameService.isProgram(this.shorty) ? 'PROGRAM' : 'PROGRAM REQUEST';
+      }
+    }
   }
+
+  private get disabled(): boolean {
+    return this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR;
+  }
+
+  invalid(): boolean {
+    if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR) return false;
+    return !this.ufr.shortName || !this.ufr.longName;
+  }
+
 }

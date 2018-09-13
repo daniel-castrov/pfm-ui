@@ -169,7 +169,7 @@ export class AllUfrsComponent implements OnInit {
 
       let row = {
         "UFR #": new SimpleLink( "/ufr-view/"+ufr.id, this.ufrNumber(ufr) ),
-        "UFR Name": ufr.shortName,
+        "UFR Name": ufr.ufrName,
         "Prog Id": progId,
         "Status": ufr.status,
         "Priority": ufr.priority,

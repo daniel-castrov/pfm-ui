@@ -2970,6 +2970,8 @@ definitions:
         type: "string"
       requestNumber:
         type: "integer"
+      ufrName:
+        type: "string"
       creationTime:
         type: "integer"
       coreCapability2:
@@ -2978,8 +2980,6 @@ definitions:
         type: "string"
       impactN:
         type: "string"
-      costToComplete:
-        type: "number"
       fundingLines:
         type: "array"
         items:

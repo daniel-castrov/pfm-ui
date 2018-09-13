@@ -1,6 +1,6 @@
 import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnChanges, Output, EventEmitter, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 import { AgGridNg2 } from "ag-grid-angular";
