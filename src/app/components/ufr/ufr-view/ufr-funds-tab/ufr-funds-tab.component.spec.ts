@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UfrFundsComponent } from './ufr-funds.component';
+import { UfrFundsComponent } from './ufr-funds-tab.component';
 
 describe('UfrFundsComponent', () => {
   let component: UfrFundsComponent;

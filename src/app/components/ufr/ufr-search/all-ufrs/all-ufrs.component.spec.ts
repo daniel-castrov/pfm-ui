@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UfrSearchComponent } from './ufr-search.component';
+import { UfrSearchComponent } from './../ufr-search.component';
 
 describe('UfrSearchComponent', () => {
   let component: UfrSearchComponent;

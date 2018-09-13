@@ -1,165 +1,57 @@
-<div class="row" *ngIf="ufr && pom">
-  <div class="col-12 mb-3">
-    <div id="pr-funds" class="table-editable">
-      <table class="pr-funds-table">
-        <thead>
-          <tr class="white-top-table-header font-italic">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>PY-1</td>
-            <td>PY</td>
-            <td>CY</td>
-            <td>BY</td>
-            <td>BY+1</td>
-            <td>BY+2</td>
-            <td>BY+3</td>
-            <td>BY+4</td>
-            <td>CTC</td>
-          </tr>
-          <tr>
-            <th class="header-column-width">Appropriation</th>
-            <th class="header-column-width">Budget</th>
-            <td>Item</td>
-            <td>OpAgency</td>
-            <th>Cycle</th>
-            <th>{{fy-3}}</th>
-            <th>{{fy-2}}</th>
-            <th>{{fy-1}}</th>
-            <th>{{fy}}</th>
-            <th>{{fy+1}}</th>
-            <th>{{fy+2}}</th>
-            <th>{{fy+3}}</th>
-            <th>{{fy+4}}</th>
-            <th>&gt;&gt;FY&lt;??&gt;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let row of rows | mapAsList : 'values'">
-            <tr>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.appropriation}}</td>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.baOrBlin}}</td>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.item}}</td>
-              <td class="row-lt-gray text-center" rowspan="3">{{row.opagency}}</td>
-              <td>{{fy|FY:'POM'}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy-3) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy-2) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy-1) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy+1) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy+2) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy+3) | dashForZero}}</td>
-              <td class="text-right">{{row.modelfunds.get(fy+4) | dashForZero}}</td>
-              <td class="text-right">-</td>
-            </tr>
-            <tr>
-              <td>UFR</td>
-              <td class="text-right">{{row.ufrfunds.get(fy-3) | dashForZero}}</td>
-              <td class="text-right">{{row.ufrfunds.get(fy-2) | dashForZero}}</td>
-              <td class="text-right">{{row.ufrfunds.get(fy-1) | dashForZero}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy)">{{row.ufrfunds.get(fy)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+1)">{{row.ufrfunds.get(fy+1)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+2)">{{row.ufrfunds.get(fy+2)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+3)">{{row.ufrfunds.get(fy+3)}}</td>
-              <td contenteditable="true" class="editable-field" digits (blur)="onedit($event.target.textContent, row.appropriation, row.baOrBlin, fy+4)">{{row.ufrfunds.get(fy+4)}}</td>
-              <td>??</td>
-            </tr>
-            <tr class="row-light">
-              <td>Total</td>
-              <td class="text-right">{{row.totalfunds.get(fy-3) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy-2) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy-1) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy+1) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy+2) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy+3) | dashForZero}}</td>
-              <td class="text-right">{{row.totalfunds.get(fy+4) | dashForZero}}</td>
-              <td class="text-right">-</td>
-            </tr>
-          </ng-container>
-
-          <tr class="row-lt-gray font-weight-bold">
-            <td class="text-center medium-grey-cell" colspan="4" rowspan="3">Total Funds Request</td>
-            <td>{{fy|FY:'POM'}}</td>
-            <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-              {{totals( fy+year, 'POM' ) | dashForZero}}
-            </td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr class="row-lt-gray font-weight-bold">
-            <td>UFR</td>
-            <td class="text-right" *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-              {{totals( fy+year, 'UFR' ) | dashForZero}}
-            </td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr class="row-lt-gray font-weight-bold">
-            <td>Total</td>
-            <ng-container *ngFor="let year of [-3, -2, -1, 0, 1, 2, 3, 4]">
-              <td [ngClass]="{'text-right':true, 'text-danger': totals(fy+year)<0 }">{{totals( fy+year, 'TOTAL') | dashForZero}}</td>
-            </ng-container>
-            <td class="text-right text-danger">-</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 <div class="row">
-  <div class="col-12 mb-3">
-    <fieldset>
-      <legend>Add Funding Line</legend>
-      <div class="row mb-3">
-        <div class="col-2">
-          <span class="form-group">
-            <div class="mb-2 primary-label">Appropriation</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="appr">
-              <option *ngFor="let a of appropriations" [ngValue]="a">{{a}}</option>
-            </select>
-          </span>
-        </div>
-        <div class="col-2">
-          <span class="form-group">
-            <div class="mb-2 primary-label">BA/BLIN</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
-              <option *ngFor="let baOrBlin of getBaOrBlins();first as first" [selected]="first">{{baOrBlin}}</option>
-            </select>
-          </span>
-        </div>
-        <div class="col-2">
-          <span class="form-group">
-            <div class="mb-2 primary-label">Item</div>
-            <span class="form-group">
-              <input class="mb-2 form-control forminput" [(ngModel)]="item">
-            </span>
-          </span>
-        </div>
-        <div class="col-2">
-          <span class="form-group">
-            <div class="mb-2 primary-label">OpAgency</div>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="opagency">
-              <option *ngFor="let c of agencies">{{c}}</option>
-            </select>
-          </span>
-        </div>
-        <div class="col-2">
-          <span class="form-group">
-            <div class="mb-2 primary-label">Program Element</div>
-            <span class="form-group">
-              <input class="mb-2 form-control forminput">
-            </span>
-          </span>
-        </div>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-primary" (click)="addfl()" [disabled]="!(item && appr && blin)">
-          <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-          Add Funding Line
-        </button>
-      </div>
-    </fieldset>
+  <div class="col-auto">
+    <button [disabled]="isDisabledAddFundingLines"  class="btn btn-primary mb-3"  (click)="addFundLine()">
+      <span class="icon-pad">Add Funding Line</span>
+    </button>
   </div>
 </div>
+
+<ag-grid-angular #agGridCurrentFunding
+  class="ag-theme-balham pr-funds-tab group-header-white"
+  [rowData]="currentFunding"
+  [suppressRowTransform]="true"
+  [toolPanelSuppressSideButtons]="true"
+  [suppressMovableColumns]="true"
+  [columnDefs]="currentFundingColumnDefs"
+  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+  (gridReady)="onGridReady($event)"
+  (columnValueChanged)="onColumnValueChanged($event)"
+  [gridAutoHeight]="true">
+</ag-grid-angular>
+
+<ag-grid-angular #agGridProposedChanges
+  class="ag-theme-balham pr-funds-tab group-header-white separator"
+  [gridAutoHeight]="true"
+  [toolPanelSuppressSideButtons]="true"
+  [suppressMovableColumns]="true"
+  [suppressRowTransform]="true"
+  [showToolPanel]="false"
+  [enableSorting]="false"
+  [enableFilter]="false"
+  [rowData]="proposedChange"
+  [singleClickEdit]="true"
+  [frameworkComponents]="frameworkComponents"
+  [context]="context"
+  [stopEditingWhenGridLosesFocus]="true"
+  (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
+  (columnVisible)="onColumnVisible($event)"
+  (gridReady)="onGridReady($event)"
+  (columnValueChanged)="onColumnValueChanged($event)"
+  (cellEditingStarted)="onCellEditingStarted($event)"
+  headerHeight="0">
+</ag-grid-angular>
+
+<ag-grid-angular
+  #agGridRevisedPrograms
+  class="ag-theme-balham pr-funds-tab group-header-white separator"
+  [rowData]="revisedPrograms"
+  [suppressRowTransform]="true"
+  [suppressMovableColumns]="true"
+  [toolPanelSuppressSideButtons]="true"
+  [columnDefs]="revisedProgramsColumnDefs"
+  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+  (gridReady)="onGridReady($event)"
+  (columnValueChanged)="onColumnValueChanged($event)"
+  [gridAutoHeight]="true"
+  headerHeight="0">
+</ag-grid-angular>

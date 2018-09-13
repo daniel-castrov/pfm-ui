@@ -14,6 +14,8 @@ import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData }
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 import { ExecutionLineFilter } from '../model/execution-line-filter';
+import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
+import { ExecutionTableValidator } from '../model/execution-table-validator';
 
 declare const $: any;
 declare const jQuery: any;
@@ -26,6 +28,7 @@ declare const jQuery: any;
 export class WithholdComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
+  @ViewChild(ExecutionLineTableComponent) table;
   private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;
   private reason: string;
@@ -35,6 +38,15 @@ export class WithholdComponent implements OnInit {
   private subtypes: ExecutionDropDown[];
   private linefilter: ExecutionLineFilter = function (x: ExecutionLine): boolean {
     return ( x.released > 0 );
+  };
+  private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] { 
+    var okays: boolean[] = [];
+    x.forEach(elw => {
+      okays.push(elw.amt != 0 && elw.line && elw.line.released
+        ? elw.amt <= elw.line.released
+        : true);
+    });
+    return okays;
   };
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
@@ -49,7 +61,6 @@ export class WithholdComponent implements OnInit {
         this.phase = d2[0].result;
         this.subtypes = d2[1].result.filter(x => ('EXE_WITHHOLD' === x.type));
         this.etype = this.subtypes[0];
-
       });
     });
   }

@@ -1,7 +1,6 @@
 import { UfrUfrTabComponent } from './components/ufr/ufr-view/ufr-ufr-tab/ufr-ufr-tab.component';
 import { CycleUtils } from './services/cycle.utils';
 import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
-import { FilterUfrsComponent } from './components/ufr/ufr-search/filter-ufrs/filter-ufrs.component';
 import { TagsService } from './services/tags.service';
 import { UserUtils } from './services/user.utils';
 import { WithFullNameService } from './services/with-full-name.service';
@@ -137,6 +136,7 @@ import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { LibraryComponent } from "./components/manage/library/library.component";
+import { SimpleLinkCellRendererComponent } from './components/renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import { ProgramCellRendererComponent } from './components/renderers/program-cell-renderer/program-cell-renderer.component';
 import { IdAndNameComponent } from './components/programming/program-request/id-and-name/id-and-name.component';
 import { LibraryViewCellRenderer} from "./components/renderers/library-view-cell-renderer/library-view-cell-renderer.component";
@@ -227,7 +227,6 @@ const appRoutes: Routes = [
     ElevationComponent,
     FeedbackComponent,
     FilterComponent,
-    FilterUfrsComponent,
     FundsTabComponent,
     FundsUpdateComponent,
     FyPipe,
@@ -297,6 +296,7 @@ const appRoutes: Routes = [
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
+    SimpleLinkCellRendererComponent,
     ProgramCellRendererComponent,
     LibraryViewCellRenderer,
     DeleteRenderer,
@@ -306,6 +306,7 @@ const appRoutes: Routes = [
     ToggleComponent
   ],
   entryComponents: [
+    SimpleLinkCellRendererComponent,
     ProgramCellRendererComponent,
     EventDetailsCellRendererComponent,
     SummaryProgramCellRenderer,

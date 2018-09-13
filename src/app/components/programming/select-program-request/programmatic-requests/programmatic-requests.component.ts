@@ -1,12 +1,12 @@
 import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 import { Router } from '@angular/router';
-import {Component, Input, OnChanges, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, ViewChild, ViewEncapsulation } from '@angular/core';
 import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
-import {AgGridNg2} from "ag-grid-angular";
-import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
-import {PhaseType, UiProgrammaticRequest} from "../UiProgrammaticRequest";
-import {CreationTimeType, ProgramType} from "../../../../generated";
+import { AgGridNg2 } from "ag-grid-angular";
+import { SummaryProgramCellRenderer } from "../../../renderers/event-column/summary-program-cell-renderer.component";
+import { PhaseType, UiProgrammaticRequest } from "../UiProgrammaticRequest";
+import { CreationTimeType, ProgramType } from "../../../../generated";
 
 @Component({
   selector: 'programmatic-requests',
@@ -31,7 +31,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     cellStyle: { backgroundColor: "#eae9e9" },
     menuTabs: this.menuTabs,
     filter: 'agTextColumnFilter',
-    filterValueGetter: params => {return params.data.fullname},
+    filterValueGetter: params => { return params.data.fullname },
     cellRendererParams: { suppressCount: true, innerRenderer: 'summaryProgramCellRenderer' }
   };
 
@@ -45,14 +45,14 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     summaryProgramCellRenderer: SummaryProgramCellRenderer,
   };
 
-  constructor( private prService: PRService,
-               private router: Router,
-               private programRequestPageMode: ProgramRequestPageModeService) {
+  constructor(private prService: PRService,
+    private router: Router,
+    private programRequestPageMode: ProgramRequestPageModeService) {
     this.context = { componentParent: this };
   }
 
   ngOnChanges() {
-    if(this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
+    if (this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
       let data = []
       this.pomProgrammaticRequests.forEach(prOne => {
         let programmaticRequest = new UiProgrammaticRequest(prOne);
@@ -60,10 +60,10 @@ export class ProgrammaticRequestsComponent implements OnChanges {
         if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR && prOne.type === ProgramType.GENERIC) {
           let prTwo = this.pomProgrammaticRequests.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
 
-          if(prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR  && prTwo.type === ProgramType.GENERIC) {
+          if (prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prTwo.type === ProgramType.GENERIC) {
             let prThree = this.pomProgrammaticRequests.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
 
-            if(prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR  && prThree.type === ProgramType.GENERIC) {
+            if (prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prThree.type === ProgramType.GENERIC) {
               let prFour = this.pomProgrammaticRequests.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
               programmaticRequest.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {
@@ -98,15 +98,15 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   onGridReady(params) {
     params.api.sizeColumnsToFit();
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", function () {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
       });
     });
   }
 
-  toggleExpand(){
-    if(this.groupDefaultExpanded == -1){
+  toggleExpand() {
+    if (this.groupDefaultExpanded == -1) {
       this.groupDefaultExpanded = 0;
       this.agGrid.api.collapseAll();
     } else {
@@ -116,7 +116,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     this.agGrid.api.onGroupExpandedOrCollapsed();
   }
 
-  defineColumns(programRequests){
+  defineColumns(programRequests) {
     this.columnDefs = [
       {
         headerName: 'funds values are expressed in ($K)',
@@ -146,22 +146,25 @@ export class ProgrammaticRequestsComponent implements OnChanges {
                 return params.data.phaseType + (this.pomFy - 2000);
               }
             }
-          }]}
+          }]
+      }
     ];
-    let columnKeys= [];
-    programRequests.forEach(pr => {
-      pr.fundingLines.forEach(fundingLines => {
-        Object.keys(fundingLines.funds).forEach(year => {
-          columnKeys.push(year);
-        })
-      });
-    });
-    columnKeys.sort();
+
+    let columnKeys =  [
+      this.pomFy - 3,
+      this.pomFy -2,
+      this.pomFy - 1,
+      this.pomFy,
+      this.pomFy + 1,
+      this.pomFy + 2,
+      this.pomFy + 3,
+      this.pomFy + 4];
+
     columnKeys = Array.from(new Set(columnKeys));
     Array.from(columnKeys).forEach((year, index) => {
       let subHeader;
       let cellClass = [];
-      switch(Number(year)) {
+      switch (Number(year)) {
         case (this.pomFy + 4):
           subHeader = 'BY+4';
           cellClass = ['text-right'];
@@ -190,7 +193,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
           subHeader = 'PY';
           cellClass = ['ag-cell-white', 'text-right'];
           break;
-        case this.pomFy -3:
+        case this.pomFy - 3:
           subHeader = 'PY-1';
           cellClass = ['ag-cell-white', 'text-right'];
           break;
@@ -203,14 +206,14 @@ export class ProgrammaticRequestsComponent implements OnChanges {
             headerName: year,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            maxWidth: 92,
+            maxWidth: 98,
             cellClass: cellClass,
             cellClassRules: {
-              'by': params => {return year >= this.pomFy && params.data.phaseType === PhaseType.POM}
+              'by': params => { return year >= this.pomFy && params.data.phaseType === PhaseType.POM }
             },
             type: "numericColumn",
-            valueGetter: params => {return this.getToa(params.data, year)},
-            valueFormatter: params => {return this.currencyFormatter(params)}
+            valueGetter: params => { return this.getToa(params.data, year) },
+            valueFormatter: params => { return this.currencyFormatter(params) }
           }]
         };
         this.columnDefs.push(colDef);
@@ -223,10 +226,10 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       headerName: 'CTC',
       menuTabs: this.menuTabs,
       filter: "agNumberColumnFilter",
-      maxWidth: 92,
+      maxWidth: 98,
       type: "numericColumn",
-      valueGetter: params => {return this.getTotal(params.data, columnKeys)},
-      valueFormatter: params => {return this.currencyFormatter(params)}
+      valueGetter: params => { return this.getTotal(params.data, columnKeys) },
+      valueFormatter: params => { return this.currencyFormatter(params) }
     };
     this.columnDefs.push(totalColDef);
     this.agGrid.api.setColumnDefs(this.columnDefs);
@@ -235,10 +238,10 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   getTotal(pr, columnKeys): number {
     let result = 0;
     columnKeys.forEach(year => {
-      if(year >= this.pomFy) {
+      if (year >= this.pomFy) {
         let amount = pr.fundingLines
-          .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
-          .reduce((a,b)=>a+b, 0);
+          .map(fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0)
+          .reduce((a, b) => a + b, 0);
         result += amount;
       }
     });
@@ -247,8 +250,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
   getToa(pr, year): number {
     let amount = pr.fundingLines
-      .map( fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0 )
-      .reduce((a,b)=>a+b, 0);
+      .map(fundingLine => fundingLine.funds[year] ? fundingLine.funds[year] : 0)
+      .reduce((a, b) => a + b, 0);
     return amount;
   }
 
@@ -276,14 +279,14 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   getStatusClass(params) {
-    if(params.data.state === 'OUTSTANDING') {
+    if (params.data.state === 'OUTSTANDING') {
       return 'text-danger';
     }
     return 'text-primary';
   }
 
   currencyFormatter(value) {
-    if(isNaN(value.value)) {
+    if (isNaN(value.value)) {
       value.value = 0;
     }
     var usdFormate = new Intl.NumberFormat('en-US', {
@@ -303,11 +306,11 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   sortObjects(objArray, properties) {
     var primers = arguments[2] || {};
 
-    properties = properties.map(function(prop) {
-      if( !(prop instanceof Array) ) {
+    properties = properties.map(function (prop) {
+      if (!(prop instanceof Array)) {
         prop = [prop, 'asc']
       }
-      if( prop[1].toLowerCase() == 'desc' ) {
+      if (prop[1].toLowerCase() == 'desc') {
         prop[1] = -1;
       } else {
         prop[1] = 1;
@@ -321,20 +324,20 @@ export class ProgrammaticRequestsComponent implements OnChanges {
 
     function arrayCmp(a, b) {
       var arr1 = [], arr2 = [];
-      properties.forEach(function(prop) {
+      properties.forEach(function (prop) {
         var aValue = a[prop[0]],
           bValue = b[prop[0]];
-        if( typeof primers[prop[0]] != 'undefined' ) {
+        if (typeof primers[prop[0]] != 'undefined') {
           aValue = primers[prop[0]](aValue);
           bValue = primers[prop[0]](bValue);
         }
-        arr1.push( prop[1] * valueCmp(aValue, bValue) );
-        arr2.push( prop[1] * valueCmp(bValue, aValue) );
+        arr1.push(prop[1] * valueCmp(aValue, bValue));
+        arr2.push(prop[1] * valueCmp(bValue, aValue));
       });
       return arr1 < arr2 ? -1 : 1;
     }
 
-    objArray.sort(function(a, b) {
+    objArray.sort(function (a, b) {
       return arrayCmp(a, b);
     });
   }

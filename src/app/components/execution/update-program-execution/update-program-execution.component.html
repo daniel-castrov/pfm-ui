@@ -13,7 +13,7 @@
     <div class="row mb-3">
       <div class="col-10">
         <span class="form-group mr-2">
-          <select class="form-control-sm dropdown-year-width mb-2" name="yeardropdown" [(ngModel)]="fromIsSource">
+          <select class="form-control-sm dropdown-year-width mb-2" name="fromtodropdown" [ngModel]="fromIsSource" (change)="changeFromIsSource($event)">
             <option [ngValue]="true">From</option>
             <option [ngValue]="false">To</option>
           </select>
@@ -24,7 +24,7 @@
         </span>
       </div>
       <div class="col-2">
-        <button class="btn btn-primary pull-right" (click)="submit()">Submit</button>
+        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]='!table.tableok'>Submit</button>
       </div>
     </div>
     <div class="row mb-3">
@@ -80,6 +80,7 @@
           [sourceOrTarget]="fromIsSource ? 'to select target programs' : 'from select source programs'"
           [phase]="phase"
           [exelinefilter]="linefilter"
+          [exevalidator]="validator"
           [exeprogramfilter]="programfilter"
           [updatelines]="updatelines"></app-execution-line-table>
         </div>

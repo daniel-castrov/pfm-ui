@@ -3,7 +3,7 @@ import { ProgramRequestPageModeService } from './../../../programming/program-re
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import {UFRsService, Program, UFR, ShortyType} from '../../../../generated';
+import {UFRsService, Program, UFR, ShortyType, FundingLine} from '../../../../generated';
 
 enum CreateNewUfrMode {
   AN_MRDB_PROGRAM        = 'An MRDB Program',
@@ -58,20 +58,31 @@ export class NewUfrComponent implements OnInit {
     }
   }
 
+  generateEmptyFundingLine(fundingLines: FundingLine[]): FundingLine[]{
+    if(fundingLines) {
+      let emptyFundingLines = JSON.parse(JSON.stringify(fundingLines));
+      emptyFundingLines.forEach(fl => {
+        Object.keys(fl.funds).forEach(year => {
+          fl.funds[year] = 0;
+        })
+      });
+      return emptyFundingLines;
+    }
+  }
+
   async next() {
     let ufr: UFR = {phaseId: this.pomId};
+    if (this.selectedProgramOrPr) {
+      ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
+    }
     switch(this.createNewUfrMode) {
       case 'An MRDB Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A Programmatic Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New FoS':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
@@ -80,8 +91,6 @@ export class NewUfrComponent implements OnInit {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
         }
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New Increment':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
@@ -90,8 +99,6 @@ export class NewUfrComponent implements OnInit {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
         }
         ufr.shortyId = this.selectedProgramOrPr.id;
-        ufr.shortName = this.selectedProgramOrPr.shortName;
-        ufr.longName = this.selectedProgramOrPr.longName;
         break;
       case 'A New Program':
         ufr.shortyType = ShortyType.NEW_PROGRAM;

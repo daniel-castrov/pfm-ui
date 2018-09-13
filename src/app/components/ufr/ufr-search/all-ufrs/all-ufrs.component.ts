@@ -1,10 +1,12 @@
-import { ProgramTreeUtils } from './../../../../utils/program-tree-utils';
 import { UserUtils } from '../../../../services/user.utils';
-import { FilterUfrsComponent } from './../filter-ufrs/filter-ufrs.component';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { ProgramsService, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import { AgGridNg2 } from "ag-grid-angular";
+import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import { DatePipe } from "@angular/common";
+import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
+import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
+import {CycleUtils} from "../../../../services/cycle.utils";
 
 @Component({
   selector: 'all-ufrs',
@@ -12,70 +14,221 @@ import { ProgramsService, User, Program, UFRsService, UFR, UFRFilter } from '../
   styleUrls: ['./all-ufrs.component.scss']
 })
 export class AllUfrsComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sorter: MatSort;
-  private matTableDataSource: MatTableDataSource<UFR> = new MatTableDataSource<UFR>();
 
-  @Input() private filterUfrsComponent: FilterUfrsComponent;
   @Input() private mapCycleIdToFy: Map<string, string>;
+
+  // Map <id of Program or PR, ProgramWithFullName or ProgramRequestWithFullName>
+  private mapPrIdToObj: Map<string, any>;
   
-  private mapProgramIdToName: Map<string, string> = new Map<string, string>();// mrid, fullname
-
   private user: User;
+  private orgMap: any[] = []
+  private datePipe: DatePipe = new DatePipe('en-US')
+  private filtertext;
+  private fy: number;
+ 
+  // agGrid   
+  @ViewChild("agGrid") private agGrid: AgGridNg2;
+  private rowData: any[];
+  private colDefs;
+  private menuTabs = ['filterMenuTab'];
 
-  constructor(private ufrsService: UFRsService,
-              private userUtils: UserUtils,
-              private programsService: ProgramsService,
-              private router: Router) {}
+  private frameworkComponents:any = {
+    simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
+  };
+
+  constructor( private ufrsService: UFRsService,
+               private userUtils: UserUtils,
+               private programsService: ProgramsService,
+               private orgSvc: OrganizationService,
+               private router: Router,
+               private withFullNameService: WithFullNameService,
+               private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
+
     this.user = await this.userUtils.user().toPromise();
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-    this.initProgramIdToName(programs);
-    this.search();
-  }
+    await this.initProgrammyIdToFullName(programs);
 
-  private initProgramIdToName(programs: Program[]) {
-    ProgramTreeUtils.fullnames(programs).forEach((fullname, program) => {
-      this.mapProgramIdToName.set(program.id, fullname);
+    let organizations: Organization[] = (await this.orgSvc.getByCommunityId(this.user.currentCommunityId).toPromise()).result;
+    organizations.forEach(org => {
+      this.orgMap[org.id] = org.abbreviation;
+    });
+
+    this.fy = (await this.cycleUtils.currentPom().toPromise()).fy;
+
+    this.setAgGridColDefs();
+    this.populateRowData();
+    setTimeout(() => {
+      this.agGrid.api.sizeColumnsToFit()
     });
   }
 
-  async search() {
+  private setAgGridColDefs(): any {
+
+    let colKeys: string[] = ["UFR #", "UFR Name", "Prog Id", "Status", "Priority", "Disposition",
+      "Last Updated", "Funding Request", "Func Area", "Organization"];
+
+    this.colDefs = [];
+
+    colKeys.forEach(colKey => {
+      let coldef;
+
+      switch (colKey) {
+        case ("UFR #"):
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            width: 102,
+            editable: false,
+            cellRenderer: 'simpleLinkCellRendererComponent',
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+            getQuickFilterText: params =>  {
+              return params.value.linktext;
+            },
+            comparator: this.ufrCompare
+          }
+          break;
+        case ("Last Updated"):
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            width: 102,
+            editable: false,
+            cellRenderer: params => this.dateFormatter(params.value),
+            menuTabs: this.menuTabs,
+            filter: 'agDateColumnFilter',
+          }
+          break;
+        case ("Func Area"):
+        case ("Organization"):
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            width: 102,
+            hide: true,
+            editable: false,
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+          }
+          break;  
+        default:
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            width: 102,
+            editable: false,
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+          }
+          break;
+      }
+      this.colDefs.push(coldef);
+    });
+  }
+
+  private onGridReady(params) {
+    params.api.sizeColumnsToFit();
+    window.addEventListener("resize", function () {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
+  }
+
+  private ufrCompare(param1, param2){
+    return param1.linktext.localeCompare( param2.linktext );
+  }
+
+  private async populateRowData() {
+
     const ufrFilter: UFRFilter = {};
-    if (this.filterUfrsComponent.useCycle) ufrFilter.cycle = this.filterUfrsComponent.selectedCycle.replace(/([0-9]+)/, "20$1");
-    if (this.filterUfrsComponent.useDates) {
-      ufrFilter.from = this.filterUfrsComponent.fromDate;
-      ufrFilter.to = this.filterUfrsComponent.toDate;
-    }
-    if (this.filterUfrsComponent.useDisposition) ufrFilter.disposition = this.filterUfrsComponent.selectedDisposition.toUpperCase().replace( ' ', '_' );
-    if (this.filterUfrsComponent.useFunctionalArea) ufrFilter.fa = this.filterUfrsComponent.selectedFunctionalArea;
-    if (this.filterUfrsComponent.useOrganization) ufrFilter.orgId = this.filterUfrsComponent.selectedOrganizationId;
-    if (this.filterUfrsComponent.useStatus) ufrFilter.status = this.filterUfrsComponent.selectedStatus;
+    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
-    this.matTableDataSource.data = (await this.ufrsService.search( this.user.currentCommunityId, ufrFilter ).toPromise()).result;
-    // FIXME: I think these lines belong in ngAfterViewInit, but I can't get
-    // it to work there. The sorter and paginator aren't set there (?)
-    // so this is a not-too-ugly workaround.
-    this.matTableDataSource.sort = this.sorter;
-    this.matTableDataSource.paginator = this.paginator;
+    let alldata: any[] = [];
+    let progId:string, funcArea:string , orgid:string; 
+    ufrs.forEach(ufr => {
+
+      if ( ufr.shortyId ){
+        let progOrPr = this.mapPrIdToObj.get(ufr.shortyId);
+        if ( progOrPr ){
+          progId = progOrPr.fullname;
+          funcArea = progOrPr.functionalArea;
+          orgid = progOrPr.organization;
+        } else {
+          progId = "";
+          funcArea = "";
+          orgid = "-1";  
+        }
+      } else {
+        progId = "(new)"
+        funcArea = ufr.functionalArea;
+        orgid = ufr.organization;
+      }
+
+      let row = {
+        "UFR #": new SimpleLink( "/ufr-view/"+ufr.id, this.ufrNumber(ufr) ),
+        "UFR Name": ufr.shortName,
+        "Prog Id": progId,
+        "Status": ufr.status,
+        "Priority": ufr.priority,
+        "Disposition": ufr.disposition,
+        "Last Updated": ufr.lastMod,
+        "Funding Request": '$' + this.sum(ufr),
+        "Func Area": funcArea,
+        "Organization": this.orgMap[orgid]
+      }
+      alldata.push(row);
+    });
+    this.rowData = alldata;
   }
 
-  navigate(row) {
-    this.router.navigate(['/ufr-view', row.id]);
+  sum(ufr: UFR): number {
+    return ufr.fundingLines
+        .map(fl => fl.funds[this.fy])
+        .map( (a) => a || 0)
+        .reduce( (a,b) => a+b, 0 );
   }
 
-  // Only considers the immediate parent, i.e. cannot consider three levels in the hierarchy, i.e. AAA/BBB/CCC
-  getFullProgramName(ufr: UFR): string {
-    return '';
-    // todo: return the program name if the shorty is a Program. '' otherwise.
+  private dateFormatter(longdate) {
+    let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
+    return this.datePipe.transform(new Date(longdate), dateFormat);
   }
 
-  ufrNumber(ufr: UFR): string {
-    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); // the value stored in this.mapCycleIdToFy look like this: 'POM 2017'
+  private async initProgrammyIdToFullName(programs: Program[]): Promise<any> {
+    return new Promise( async (resolve) => {
+      // TODO: make the following two calls in parallel
+      this.mapPrIdToObj = new Map<string, any>();
+      (await this.withFullNameService.programs()).forEach((program: ProgramWithFullName) => {
+        this.mapPrIdToObj.set(program.id, program);
+      });
+      (await this.withFullNameService.allProgramRequestsWithFullNamesDerivedFromCreationTimeData())
+        .forEach((pr: ProgramRequestWithFullName) => {
+        this.mapPrIdToObj.set(pr.id, pr);
+      });
+      resolve();
+    });
+  }
+
+  private ufrNumber(ufr: UFR): string {
+    // the value stored in this.mapCycleIdToFy looks like this: 'POM 2017'
+    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); 
     const shortFy = fullFy - 2000;
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;
+  }
+
+  private onFilterTextBoxChanged() {    
+    this.agGrid.gridOptions.api.setQuickFilter( this.filtertext );
+  }
+
+  onToolPanelVisibleChanged(params) {
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+  onColumnVisible(params) {
+    this.agGrid.api.sizeColumnsToFit();
   }
 
 }

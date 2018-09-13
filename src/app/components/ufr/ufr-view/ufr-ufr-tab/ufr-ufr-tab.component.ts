@@ -1,9 +1,7 @@
-import { TagsService } from './../../../../services/tags.service';
-import { CycleUtils } from './../../../../services/cycle.utils';
-import { Component, OnInit, Input } from '@angular/core';
-import { UFR, Tag } from '../../../../generated';
-import { Status } from '../../status.enum';
-import { Disposition } from '../../disposition.enum';
+import {TagsService} from './../../../../services/tags.service';
+import {CycleUtils} from './../../../../services/cycle.utils';
+import {Component, Input, OnInit} from '@angular/core';
+import {Tag, UFR, UfrStatus, Disposition} from '../../../../generated';
 
 
 @Component({
@@ -15,8 +13,8 @@ export class UfrUfrTabComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
 
-  private statuses = Object.keys(Status).filter(k => typeof Status[k] === "number") as string[];
-  private dispositions = Object.keys(Disposition).filter(k => typeof Disposition[k] === "number") as string[];
+  private statuses = Object.keys(UfrStatus) as string[];
+  private dispositions = Object.keys(Disposition) as string[];
   private cycles: {}[];
   private capabilities: Tag[];
 

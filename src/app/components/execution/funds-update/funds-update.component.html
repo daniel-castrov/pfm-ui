@@ -34,7 +34,7 @@
         <div class="pull-right program-controls">
           <span>
             <button [routerLink]="['/charges', selectedexe?.id]"
-              [class]="hasAppropriation? 'btn btn-primary' :'btn btn-primary disabled'">Action</button>
+              class="btn btn-primary" [disabled]="!hasAppropriation">Action</button>
           </span>
           <span>
             <button class="btn btn-secondary" [routerLink]="['/appropriation-release', selectedexe?.id]">Release</button>
