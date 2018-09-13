@@ -39,12 +39,12 @@
             <div class="col-6">
               <div class="form-group inline-name">
                 <label>Program Name</label>
-                <input [(ngModel)]="shorty.longName" class="form-control forminput" name="program-name" disabled />
+                <input [(ngModel)]="shorty.longName" class="form-control forminput program-name text-truncate" name="program-name" title="{{shorty.longName}}" disabled />
               </div>
             </div>
             <div class="col-3">
               <span class="form-group inline-name">
-                <label class="mb-1">Type</label>
+                <label>Type</label>
                 <input value="{{shortyType()}}" class="form-control forminput" name="typeselect" disabled />
               </span>
             </div>
@@ -62,7 +62,7 @@
       </div>
       <div class="row">
         <div class="col-md-5">
-          <div class="input-group mb-3">
+          <div class="input-group mb-2">
             <input type="text" class="form-control" placeholder="Select Picture" aria-label="Browse Picture" aria-describedby="basic-addon1">
             <div class="input-group-append">
               <span class="input-group-text">Browse</span>
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-10">
           <fieldset>
             <legend>Capability</legend>
             <span class="form-group inline-name">
@@ -94,7 +94,7 @@
           </fieldset>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-4">
         <div class="col-md-10">
           <fieldset>
           <legend>Area</legend>
