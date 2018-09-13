@@ -9,7 +9,7 @@ import { FundingLine } from '../../../../generated/model/fundingLine';
 
 enum CreateNewUfrMode {
   AN_MRDB_PROGRAM = 'An MRDB Program',
-  A_PROGRAMMATIC_REQUEST = 'A Programmatic Request',
+  A_PROGRAM_REQUEST = 'A Program Request',
   A_NEW_INCREMENT = 'A New Increment',
   A_NEW_FOS = 'A New FoS',
   A_NEW_PROGRAM = 'A New Program'
@@ -48,7 +48,7 @@ export class NewUfrComponent implements OnInit {
         this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
-      case 'A Programmatic Request': // was subprogram
+      case 'A Program Request': // was subprogram
         let prs:any = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
         this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(prs);
         this.initialSelectOption = 'Program Request';
@@ -100,7 +100,7 @@ export class NewUfrComponent implements OnInit {
         ufr.shortyId = this.selectedProgramOrPr.id;
         await this.initFromShortyProgram(ufr);
         break;
-      case 'A Programmatic Request':
+      case 'A Program Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
         await this.initFromShortyPR(ufr);
