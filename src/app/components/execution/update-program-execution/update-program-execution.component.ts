@@ -45,7 +45,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
     private route: ActivatedRoute, private router: Router) {
     var my: UpdateProgramExecutionComponent = this; 
     my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-      console.log('change validator');
+      //console.log('change validator');
       var freleased: number = my.current.line.released;
       var total: number = 0;
 
@@ -121,6 +121,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
         };
 
         my.programfilter = function (el: ExecutionLine) {
+          console.log('into programfilter ' + JSON.stringify(my.current));
           return !(my.current.line.id === el.id);
         };
 
