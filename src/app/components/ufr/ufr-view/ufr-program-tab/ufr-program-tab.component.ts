@@ -16,6 +16,7 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
+  private dummyEmphasis: string;
 
   constructor( private programService: ProgramsService,
                private pomService: POMService,

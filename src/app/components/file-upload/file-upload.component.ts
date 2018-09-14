@@ -15,6 +15,7 @@ export class FileUploadComponent implements OnInit {
 
   @Output() fileUploadEvent: EventEmitter<FileResponse >=new EventEmitter();
   @Input() area: string;
+  @Input() disabled: boolean;
 
   fileName: string;
 

@@ -1,4 +1,4 @@
 <div class="form-group">
-  <input type="file" class="custom-file-input" id="input-file" (change)="onFileChange($event)">
-  <label class="custom-file-label" for="input-file">{{fileName}}</label>
+  <input type="file" class="custom-file-input" id="input-file" (change)="onFileChange($event)" [disabled]="disabled" >
+  <label class="custom-file-label" for="input-file" >{{fileName}}</label>
 </div>
