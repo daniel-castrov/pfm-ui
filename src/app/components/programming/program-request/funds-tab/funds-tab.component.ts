@@ -426,7 +426,7 @@ export class FundsTabComponent implements OnChanges {
       });
 
     let totalColDef = {
-      headerName: 'CTC',
+      headerName: 'BY Total',
       suppressMenu: true,
       maxWidth: 92,
       type: "numericColumn",
@@ -701,27 +701,29 @@ export class FundsTabComponent implements OnChanges {
   }
 
   limitBaForOrganizations() {
-    switch(this.pr.leadComponent) {
-      case 'DUSA TE':
-      case 'JRO':
-      case 'OSD':
-      case 'PAIO':
-        this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin === 'BA6';
-        });
-        this.appropriations = this.appropriations.filter(a => a === 'RDTE');
-        break;
-      case 'JSTO':
-        this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin.match(/BA[1-3]/);
-        });
-        this.appropriations = this.appropriations.filter(a => a === 'RDTE');
-        break;
-      case 'JPEO':
-        this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin.match(/BA[4-5]/) || blin === 'BA7' || blin.match(/00/);
-        });
-        break;
+    if(this.pr.leadComponent){
+      switch(this.pr.leadComponent) {
+        case 'DUSA TE':
+        case 'JRO':
+        case 'OSD':
+        case 'PAIO':
+          this.filteredBlins = this.filteredBlins.filter(blin => {
+            return blin === 'BA6';
+          });
+          this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+          break;
+        case 'JSTO':
+          this.filteredBlins = this.filteredBlins.filter(blin => {
+            return blin.match(/BA[1-3]/);
+          });
+          this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+          break;
+        case 'JPEO':
+          this.filteredBlins = this.filteredBlins.filter(blin => {
+            return blin.match(/BA[4-5]/) || blin === 'BA7' || blin.match(/00/);
+          });
+          break;
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 import { TagsService } from '../../../../services/tags.service';
-import {Component, OnInit, Input, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Component, Input, ViewChild, ViewEncapsulation, OnChanges} from '@angular/core'
 import {
-  FundingLine, UFR, POMService, PRService, PBService, ProgrammaticRequest,
+  FundingLine, UFR, POMService, PRService, PBService,
   ShortyType, ProgramsService
 } from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
@@ -11,13 +11,15 @@ import {AutoValuesService} from "../../../programming/program-request/funds-tab/
 import {DataRow} from "./DataRow";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 
+declare var $: any;
+
 @Component({
   selector: 'ufr-funds-tab',
   templateUrl: './ufr-funds-tab.component.html',
   styleUrls: ['./ufr-funds-tab.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class UfrFundsComponent implements OnInit {
+export class UfrFundsComponent implements OnChanges {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
@@ -29,7 +31,7 @@ export class UfrFundsComponent implements OnInit {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
-  private prParent: ProgrammaticRequest;
+  private shorty: any;
 
   defaultColumnDefs = [];
   currentFundingColumnDefs = [];
@@ -53,7 +55,8 @@ export class UfrFundsComponent implements OnInit {
               private autoValuesService: AutoValuesService,
               private tagsService: TagsService) { }
 
-  ngOnInit() {
+  ngOnChanges() {
+    console.log('testest')
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy =  pom.result.fy;
       this.columnKeys = [
@@ -70,34 +73,36 @@ export class UfrFundsComponent implements OnInit {
     });
   }
 
+
   initCurrentFunding() {
     let data: Array<DataRow> = [];
-    if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0 && this.ufr.shortyId) {
-      if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
-        this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
-        this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
-        this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
-          this.prParent = pr.result;
-          pr.result.fundingLines.forEach(fundingLine => {
-            let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
-            data.push(pomRow);
-          });
-          this.currentFunding = data;
-          this.initRevisedChanges();
+    if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
+      this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
+        this.shorty = pr.result;
+        pr.result.fundingLines.forEach(fundingLine => {
+          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+          data.push(pomRow);
         });
-      } else {
-        this.prService.getById(this.ufr.shortyId).subscribe(pr => {
-          this.prParent = pr.result;
-          pr.result.fundingLines.forEach(fundingLine => {
-            let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
-            data.push(pomRow);
-          });
-          this.currentFunding = data;
-          this.initRevisedChanges();
-        });
-      }
+        this.currentFunding = data;
+        this.initRevisedChanges();
+      });
+    } else if (this.ufr.shortyType === ShortyType.PR ||
+      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
+      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR) {
+      this.prService.getById(this.ufr.shortyId).subscribe(pr => {
+        this.shorty = pr.result;
 
+        pr.result.fundingLines.forEach(fundingLine => {
+          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+          data.push(pomRow);
+        });
+        this.currentFunding = data;
+        this.initRevisedChanges();
+      });
     } else {
+      this.shorty = this.ufr
       let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
       data.push(pomRow);
       this.currentFunding = data;
@@ -212,11 +217,6 @@ export class UfrFundsComponent implements OnInit {
     this.agGridProposedChanges.api.setColumnDefs(this.proposedChangesColumnDefs);
     this.agGridProposedChanges.api.sizeColumnsToFit();
     this.initCurrentFunding();
-  }
-
-
-  addFundLine(){
-    this.addRow();
   }
 
   generateColumns() {
@@ -404,20 +404,19 @@ export class UfrFundsComponent implements OnInit {
   }
 
   addRow(){
-    let newPomRow: DataRow = new DataRow();
-    newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
-    newPomRow.editable = true;
-    this.ufr.fundingLines.push(newPomRow.fundingLine);
-    this.proposedChange.push(newPomRow);
+    if (!this.shorty.leadComponent && !this.shorty.functionalArea) {
+      this.notifyError('You must select the lead component and the functional area in the program tab before creating a funding line')
+    } else {
+      let newPomRow: DataRow = new DataRow();
+      newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
+      newPomRow.editable = true;
+      this.ufr.fundingLines.push(newPomRow.fundingLine);
+      this.proposedChange.push(newPomRow);
 
-    this.agGridProposedChanges.api.setRowData(this.proposedChange);
-    this.agGridProposedChanges.api.setFocusedCell(this.proposedChange.length - 1, 'fundingLine.appropriation');
-    this.agGridProposedChanges.api.startEditingCell({rowIndex: this.proposedChange.length - 1, colKey: 'fundingLine.appropriation'});
-    this.proposedChange.push(newPomRow);
-
-    this.agGridProposedChanges.api.setRowData(this.proposedChange);
-    this.agGridProposedChanges.api.setFocusedCell(this.proposedChange.length - 1, 'fundingLine.appropriation');
-    this.agGridProposedChanges.api.startEditingCell({rowIndex: this.proposedChange.length - 1, colKey: 'fundingLine.appropriation'});
+      this.agGridProposedChanges.api.setRowData(this.proposedChange);
+      this.agGridProposedChanges.api.setFocusedCell(this.proposedChange.length - 1, 'fundingLine.appropriation');
+      this.agGridProposedChanges.api.startEditingCell({rowIndex: this.proposedChange.length - 1, colKey: 'fundingLine.appropriation'});
+    }
   }
 
   isEditable(params): boolean{
@@ -430,9 +429,6 @@ export class UfrFundsComponent implements OnInit {
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-    if(this.proposedChange.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
-      this.appropriations.splice(this.appropriations.indexOf('PROC'), 1);
-    }
 
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
@@ -494,12 +490,12 @@ export class UfrFundsComponent implements OnInit {
     }
     if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
       this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
-        params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.prParent.leadComponent) !== -1).abbr
+        params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
         this.agGridProposedChanges.api.refreshCells();
       });
 
       if (params.data.fundingLine.appropriation === 'RDTE'){
-        params.data.fundingLine.item = this.prParent.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
+        params.data.fundingLine.item = this.shorty.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
       }
 
       if (params.data.fundingLine.item) {
@@ -527,7 +523,7 @@ export class UfrFundsComponent implements OnInit {
   }
 
   limitBaForOrganizations() {
-    switch(this.prParent.leadComponent) {
+    switch(this.shorty.leadComponent) {
       case 'DUSA TE':
       case 'JRO':
       case 'OSD':
@@ -589,6 +585,15 @@ export class UfrFundsComponent implements OnInit {
       }
     });
     return duplicatesExist;
+  }
+
+  notifyError(message){
+    $.notify({
+      icon: 'fa fa-exclamation',
+      message: message
+    },{
+      type: 'danger',
+    });
   }
 
   getNumericCellEditor() {
