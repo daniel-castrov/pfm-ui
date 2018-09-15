@@ -99,8 +99,8 @@ export class UfrViewComponent implements OnInit {
   }
 
   private ufrType(): string {
-    if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return " a new MRDB program";
-    if(this.ufr.shortyType == ShortyType.PR) return " a new program request";
+    if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return " an MRDB program";
+    if(this.ufr.shortyType == ShortyType.PR) return " a program request";
     if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return " a new increment";
     if(this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR) return " a new FoS";
     if(this.ufr.shortyType == ShortyType.NEW_PROGRAM) return " a new program";

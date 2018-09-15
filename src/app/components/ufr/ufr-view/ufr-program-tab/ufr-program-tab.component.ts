@@ -55,15 +55,12 @@ export class UfrProgramComponent implements OnInit, OnChanges {
     }
   }
 
-  private shortyType(): string {
-    if (this.ufr.shortyType == ShortyType.NEW_PROGRAM) {
-      return 'PROGRAM';
-    } else {
-      if (this.shorty) { // ag-grid somehow calls shortType() when the mouse hovers on the Funds tab, sometimes before shorty is initialized. Bad.
-                         // More investigation is needed and a better fix is preferable
-        return this.withFullNameService.isProgram(this.shorty) ? 'PROGRAM' : 'PROGRAM REQUEST';
-      }
-    }
+  private ufrType(): string {
+    if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return "MRDB program";
+    if(this.ufr.shortyType == ShortyType.PR) return "Program Request";
+    if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return "New Increment";
+    if(this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR) return "New FoS";
+    if(this.ufr.shortyType == ShortyType.NEW_PROGRAM) return " New Program";
   }
 
   private get disabled(): boolean {
