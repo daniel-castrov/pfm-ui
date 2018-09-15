@@ -77,7 +77,7 @@ export class FundsUpdateComponent implements OnInit {
       enableFilter: true,
       gridAutoHeight: true,
       pagination: true,
-      paginationPageSize: 30,
+      paginationPageSize: 20,
       suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
@@ -371,5 +371,11 @@ export class FundsUpdateComponent implements OnInit {
     this.agOptions.api.getSelectedRows().forEach(row => {
       this.selectedRow = row;
     });
+  }
+
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
   }
 }

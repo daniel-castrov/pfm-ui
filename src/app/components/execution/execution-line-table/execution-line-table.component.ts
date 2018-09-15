@@ -245,13 +245,11 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    var my: ExecutionLineTableComponent = this;
-    forkJoin([
-      my.progsvc.getIdNameMap()
-    ]).subscribe(data => {
-      Object.getOwnPropertyNames(data[0].result).forEach(id => {
-        my.programIdNameLkp.set(id, data[0].result[id]);
+    this.progsvc.getIdNameMap().subscribe(data => {
+      Object.getOwnPropertyNames(data.result).forEach(id => {
+        this.programIdNameLkp.set(id, data.result[id]);
       });
+      this.setAvailablePrograms();
     });
   }
 
@@ -315,6 +313,7 @@ export class ExecutionLineTableComponent implements OnInit {
 
   setAvailablePrograms() {
     this.availablePrograms.splice(0, this.availablePrograms.length);
+
     this.programIdNameLkp.forEach((v, k) => {
       if (this.getLineChoices(k).length > 0) {
         this.availablePrograms.push({
