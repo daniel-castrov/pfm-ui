@@ -96,7 +96,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
         });
       }
 
-      console.log(okays);
+      //console.log(okays);
       return okays;
     };
   }
