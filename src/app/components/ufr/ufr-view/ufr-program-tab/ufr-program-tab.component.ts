@@ -2,8 +2,8 @@ import {RestResult} from './../../../../generated/model/restResult';
 import {join} from './../../../../utils/join';
 import {Observable} from 'rxjs/Observable';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {POMService, Program, ProgrammaticRequest, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
-import {WithFullNameService} from "../../../../services/with-full-name.service";
+import {POMService, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
+import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 
 @Component({
   selector: 'ufr-program-tab',
@@ -12,7 +12,7 @@ import {WithFullNameService} from "../../../../services/with-full-name.service";
 })
 export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() editable: boolean = false;
-  @Input() shorty: Program | ProgrammaticRequest;
+  @Input() shorty: ProgramOrPrWithFullName;
   @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;

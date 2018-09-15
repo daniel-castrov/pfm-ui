@@ -1,9 +1,9 @@
 import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {POMService, ProgramsService, PRService, ShortyType, UFR, UFRsService, UfrStatus} from '../../../generated';
+import {Pom, POMService, ShortyType, UFR, UFRsService, UfrStatus} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
-import {WithFullName} from "../../../services/with-full-name.service";
+import {WithFullName, WithFullNameService} from "../../../services/with-full-name.service";
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
@@ -22,6 +22,7 @@ export class UfrViewComponent implements OnInit {
   @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
   private ufr: UFR;
   private canedit: boolean = false;
+  private pom: Pom;
   private pomFy: number;
   private shorty: WithFullName;
 
@@ -29,8 +30,7 @@ export class UfrViewComponent implements OnInit {
                private cycleUtils: CycleUtils,
                private route: ActivatedRoute,
                private pomService: POMService,
-               private programsService: ProgramsService,
-               private prService: PRService ) {}
+               private withFullNameService : WithFullNameService ) {}
 
   async ngOnInit() {
     this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
@@ -47,7 +47,8 @@ export class UfrViewComponent implements OnInit {
   }
 
   private async init() {
-    this.pomFy = (await this.pomService.getById(this.ufr.phaseId).toPromise()).result.fy  - 2000;
+    this.pom = (await this.pomService.getById(this.ufr.phaseId).toPromise()).result;
+    this.pomFy = this.pom.fy - 2000;
     this.initShorty();
   }
 
@@ -55,11 +56,11 @@ export class UfrViewComponent implements OnInit {
     if( this.ufr.shortyType == ShortyType.MRDB_PROGRAM ||
         this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
         this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ) {
-      this.shorty = (await this.programsService.getProgramById(this.ufr.shortyId).toPromise()).result;
+      this.shorty = await this.withFullNameService.program(this.ufr.shortyId);
     } else if( this.ufr.shortyType == ShortyType.PR ||
                this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
                this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
-      this.shorty = (await this.prService.getById(this.ufr.shortyId).toPromise()).result;
+      this.shorty = await this.withFullNameService.programRequest(this.pom.id, this.ufr.shortyId);
     } else { // this.ufr.shortyType == ShortyType.NEW_PROGRAM
       // leave this.shorty null
     }

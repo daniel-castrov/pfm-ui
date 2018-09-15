@@ -24,7 +24,20 @@
             <div class="col-3">
               <div class="form-group inline-name mr-2">
                 <label>Program ID</label>
-                <input [(ngModel)]="ufr.shortName" class="form-control" name="program-id" [disabled]="disabled" />
+                <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
+                  <input value="{{shorty?.fullname}}" class="form-control" name="program-id" [disabled]="disabled" />
+                </ng-container>
+
+                <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
+                                     ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR'">
+                  {{shorty?.fullname}}:
+                  <input [(ngModel)]="ufr.shortName" class="form-control inc_fos" name="program-id" [disabled]="disabled" />
+                </ng-container>
+
+                <ng-container *ngIf="ufr.shortyType=='NEW_PROGRAM'">
+                  <input [(ngModel)]="ufr.shortName" class="form-control" name="program-id" [disabled]="disabled" />
+                </ng-container>
+
               </div>
             </div>
             <div class="col-6">
