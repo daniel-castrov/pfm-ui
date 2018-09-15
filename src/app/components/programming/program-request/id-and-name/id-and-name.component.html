@@ -1,20 +1,26 @@
 <div id="program-request" *ngIf="programRequestPageMode.prId || programRequestPageMode.programOfMrDb">
-    <div *ngIf="programRequestPageMode.type" class="h5 mb-4">Create Program Request for an MRDB Program:</div>
-    <div class="form-group mr-3">
-      <label class="mr-1">Program ID:</label>
-      <span class="shortname text-truncate" title="{{pr.shortName}}">{{parentFullName}}{{pr.shortName}}</span>
-    </div>
-    <div class="form-group mr-3">
-      <label class="mr-1">Name:</label>
-      <div class="longname text-truncate" title="{{pr.longName}}">{{pr.longName}}</div>
-    </div>
-    <div class="form-group">
-      <label class="mr-1">Program Type:</label>
-      <div class="type">{{pr.type}}</div>
-    </div>
+  <div class="mb-4">
+    <span class="h5" *ngIf="!programRequestPageMode.prId">Create </span>
+    <span *ngIf="pr.type==='PROGRAM'" class="h5">Program Request for an MRDB Program:</span>
+    <span *ngIf="pr.type==='INCREMENT'" class="h5">Program Request for a New Increment:</span>
+    <span *ngIf="pr.type==='FOS'" class="h5">Program Request for a New FoS:</span>
+    <span *ngIf="pr.type==='GENERIC'" class="h5">Program Request for a New Subprogram:</span>
+  </div>
+  <div class="form-group mr-3">
+    <label class="mr-1">Program ID:</label>
+    <span class="shortname text-truncate" title="{{pr.shortName}}">{{parentFullName}}{{pr.shortName}}</span>
+  </div>
+  <div class="form-group mr-3">
+    <label class="mr-1">Name:</label>
+    <div class="longname text-truncate" title="{{pr.longName}}">{{pr.longName}}</div>
+  </div>
+  <div class="form-group">
+    <label class="mr-1">Program Type:</label>
+    <div class="type">{{pr.type}}</div>
+  </div>
 </div>
 <div id="create-new-subprogram"
-        *ngIf="!programRequestPageMode.prId && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr)">
+        *ngIf="!programRequestPageMode.prId && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr || pr.type === 'GENERIC')">
   <ng-container *ngIf="programRequestPageMode.type">
     <div *ngIf="pr.type==='INCREMENT'"   class="h5 mb-4">Create Program Request for a New Increment:</div>
     <div *ngIf="pr.type==='FOS'" class="h5 mb-4">Create Program Request for a New FoS:</div>

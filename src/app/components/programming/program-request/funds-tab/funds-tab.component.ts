@@ -23,6 +23,7 @@ import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
+import {Validation} from "./Validation";
 
 @Component({
   selector: 'funds-tab',
@@ -57,7 +58,8 @@ export class FundsTabComponent implements OnChanges {
   frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
   isDisabledAddFundingLines;
-  overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>'
+  overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
+  components = { numericCellEditor: this.getNumericCellEditor() };
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -391,6 +393,7 @@ export class FundsTabComponent implements OnChanges {
             field: 'fundingLine.funds.' + key,
             maxWidth: 92,
             suppressMenu: true,
+            cellEditor: 'numericCellEditor',
             cellClassRules: {
               'ag-cell-edit': params => {
                 return this.isAmountEditable(params, key)
@@ -423,7 +426,7 @@ export class FundsTabComponent implements OnChanges {
       });
 
     let totalColDef = {
-      headerName: 'CTC',
+      headerName: 'BY Total',
       suppressMenu: true,
       maxWidth: 92,
       type: "numericColumn",
@@ -555,9 +558,6 @@ export class FundsTabComponent implements OnChanges {
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-    if(this.data.filter(d => d.fundingLine.appropriation === 'PROC').length > 0) {
-      this.appropriations.splice(this.appropriations.indexOf('PROC'), 1);
-    }
 
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
@@ -696,41 +696,34 @@ export class FundsTabComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
-    this.removeExistingBlins();
     this.limitBaForOrganizations()
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
-  removeExistingBlins() {
-    this.filteredBlins = this.filteredBlins.filter(blin => {
-      let fl = this.pr.fundingLines.find(fl => fl.baOrBlin === blin);
-      let efl = this.existingFundingLines.find(fl => fl.baOrBlin === blin);
-      return  fl === undefined && efl === undefined && (blin.match(/00/) || blin.match(/BA[1-9]/));
-    });
-  }
-
   limitBaForOrganizations() {
-    switch(this.pr.leadComponent) {
-      case 'DUSA TE':
-      case 'JRO':
-      case 'OSD':
-      case 'PAIO':
-        this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin === 'BA6';
-        });
-        this.appropriations = this.appropriations.filter(a => a === 'RDTE');
-        break;
-      case 'JSTO':
-        this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin.match(/BA[1-3]/);
-        });
-        this.appropriations = this.appropriations.filter(a => a === 'RDTE');
-        break;
-      case 'JPEO':
-        this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin.match(/BA[4-5]/) || blin === 'BA7' || blin.match(/00/);
-        });
-        break;
+    if(this.pr.leadComponent){
+      switch(this.pr.leadComponent) {
+        case 'DUSA TE':
+        case 'JRO':
+        case 'OSD':
+        case 'PAIO':
+          this.filteredBlins = this.filteredBlins.filter(blin => {
+            return blin === 'BA6';
+          });
+          this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+          break;
+        case 'JSTO':
+          this.filteredBlins = this.filteredBlins.filter(blin => {
+            return blin.match(/BA[1-3]/);
+          });
+          this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+          break;
+        case 'JPEO':
+          this.filteredBlins = this.filteredBlins.filter(blin => {
+            return blin.match(/BA[4-5]/) || blin === 'BA7' || blin.match(/00/);
+          });
+          break;
+      }
     }
   }
 
@@ -741,7 +734,94 @@ export class FundsTabComponent implements OnChanges {
     }).length > 0;
   }
 
-  get invalid(): boolean {
-    return this.isFundsTabValid.some(valid => valid === false);
+  get validate(): Validation {
+    if(this.isFundsTabValid.some(valid => valid === false)){
+      return new Validation(false, 'Funds exceed the total amount of the program request')
+    } else if(this.flHaveIncorrectBa()){
+      return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');
+    } else if (this.flHaveIncorrectAppropriation()){
+      return new Validation(false, 'You can only have one funding line with the PROC appropriation. Changes were not saved');
+    } else {
+      return new Validation(true);
+    }
+  }
+
+  flHaveIncorrectAppropriation() : Boolean {
+    let count = 0;
+    this.pr.fundingLines.forEach(function(fl) {
+      if(fl.appropriation === 'PROC'){
+        count++;
+      }
+    });
+    return count > 1;
+  }
+
+  flHaveIncorrectBa(): Boolean{
+    let duplicatesExist = false;
+    let result = [];
+    this.pr.fundingLines.forEach(function(fl, index) {
+      if (!result[fl.baOrBlin]) {
+        result[fl.baOrBlin] = index;
+      } else {
+        duplicatesExist = true;
+      }
+    });
+    return duplicatesExist;
+  }
+
+  getNumericCellEditor() {
+    function isCharNumeric(charStr) {
+      return !!/\d/.test(charStr);
+    }
+    function isKeyPressedNumeric(event) {
+      var charCode = getCharCodeFromEvent(event);
+      var charStr = String.fromCharCode(charCode);
+      return isCharNumeric(charStr);
+    }
+    function getCharCodeFromEvent(event) {
+      event = event || window.event;
+      return typeof event.which === "undefined" ? event.keyCode : event.which;
+    }
+    function NumericCellEditor() {}
+    NumericCellEditor.prototype.init = function(params) {
+      this.focusAfterAttached = params.cellStartedEdit;
+      this.eInput = document.createElement("input");
+      this.eInput.style.width = "100%";
+      this.eInput.style.height = "100%";
+      this.eInput.value = isCharNumeric(params.charPress) ? params.charPress : params.value;
+      var that = this;
+      this.eInput.addEventListener("keypress", function(event) {
+        if (!isKeyPressedNumeric(event)) {
+          that.eInput.focus();
+          if (event.preventDefault) event.preventDefault();
+        }
+      });
+    };
+    NumericCellEditor.prototype.getGui = function() {
+      return this.eInput;
+    };
+    NumericCellEditor.prototype.afterGuiAttached = function() {
+      if (this.focusAfterAttached) {
+        this.eInput.focus();
+        this.eInput.select();
+      }
+    };
+    NumericCellEditor.prototype.isCancelBeforeStart = function() {
+      return this.cancelBeforeStart;
+    };
+    NumericCellEditor.prototype.isCancelAfterEnd = function() {};
+    NumericCellEditor.prototype.getValue = function() {
+      return this.eInput.value;
+    };
+    NumericCellEditor.prototype.focusIn = function() {
+      var eInput = this.getGui();
+      eInput.focus();
+      eInput.select();
+      console.log("NumericCellEditor.focusIn()");
+    };
+    NumericCellEditor.prototype.focusOut = function() {
+      console.log("NumericCellEditor.focusOut()");
+    };
+    return NumericCellEditor;
   }
 }

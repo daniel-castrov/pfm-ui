@@ -8,6 +8,8 @@ import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 
+declare var $: any;
+
 @Component({
   selector: 'app-ufr-view',
   templateUrl: './ufr-view.component.html',
@@ -16,6 +18,7 @@ import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
+  @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
   @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   private ufr: UFR;
@@ -64,10 +67,15 @@ export class UfrViewComponent implements OnInit {
   }
 
   async save() {
-    if(this.ufr.id) {
-      this.ufrService.update(this.ufr).subscribe();
+    let fundsTabValidation = this.ufrFundsComponent.validate;
+    if(!fundsTabValidation.isValid){
+      this.notifyError(fundsTabValidation.message);
     } else {
-      this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+      if(this.ufr.id) {
+        this.ufrService.update(this.ufr).subscribe();
+      } else {
+        this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+      }
     }
   }
 
@@ -83,6 +91,15 @@ export class UfrViewComponent implements OnInit {
     } else {
       return '';
     }
+  }
+
+  notifyError(message){
+    $.notify({
+      icon: 'fa fa-exclamation',
+      message: message
+    },{
+      type: 'danger',
+    });
   }
 
   private isNotSavable(): boolean {
