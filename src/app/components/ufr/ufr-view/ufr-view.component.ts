@@ -28,6 +28,13 @@ export class UfrViewComponent implements OnInit {
     this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
       const ufrId = urlSegments[urlSegments.length - 1].path;
       this.init(ufrId);
+      if(urlSegments[urlSegments.length - 2].path == 'create') {
+        const serializedUfr = urlSegments[urlSegments.length - 1].path;
+        this.ufr = JSON.parse(serializedUfr);
+      } else {
+        const ufrId = urlSegments[urlSegments.length - 1].path;
+        this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
+      }
       this.canedit = !!await this.cycleUtils.currentPom().toPromise();
     });
   }
