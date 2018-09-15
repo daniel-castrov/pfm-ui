@@ -45,7 +45,7 @@
   <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program name already exists</div>
 </div>
 <div id="create-new-toplevel" *ngIf="!programRequestPageMode.prId && programRequestPageMode.newProgram">
-  <div class="h5 mb-4">Create Program Request for a New Program:</div>
+  <div *ngIf="programRequestPageMode.type" class="h5 mb-4">Create Program Request for a New Program:</div>
   <span class="form-group mr-3">
     <label class="mr-1" for="id">Id:</label>
     <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput" [(ngModel)]="pr.shortName" aria-label="short name">

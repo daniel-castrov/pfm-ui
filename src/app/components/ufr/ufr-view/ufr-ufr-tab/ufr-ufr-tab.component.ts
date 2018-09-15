@@ -36,4 +36,7 @@ export class UfrUfrTabComponent implements OnInit {
     this.capabilities = await this.tagsService.tags('Core Capability Area').toPromise();
   }
 
+  invalid(): boolean {
+    return !this.ufr.ufrName || !this.ufr.description || !this.ufr.costLeft;
+  }
 }

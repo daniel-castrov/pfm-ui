@@ -70,6 +70,7 @@ import { OeUpdateComponent } from './components/execution/oe-update/oe-update.co
 import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramExecutionLineComponent } from './components/execution/program-execution-line/program-execution-line.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
+import { UfrVariantsTabComponent } from './components/ufr/ufr-view/ufr-variants-tab/ufr-variants-tab.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
@@ -129,7 +130,7 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService, LibraryService, UserService} from './generated';
+import { EppService, LibraryService, UserService, OandEService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { PomWorksheetService } from './generated/api/pomWorksheet.service';
@@ -147,6 +148,7 @@ import { EventDetailsCellRendererComponent } from './components/renderers/event-
 import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
 import {DeleteRenderer} from "./components/renderers/delete-renderer/delete-renderer.component";
 import { ToggleComponent } from './components/toggle/toggle.component';
+import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -177,7 +179,7 @@ const appRoutes: Routes = [
   {path:'oe-update', component:OeUpdateComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
-  {path:'program-execution-line', component:ProgramExecutionLineComponent},
+  {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
@@ -193,6 +195,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
+  {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent},
   {path:'worksheet', component: WorksheetComponent},
@@ -259,6 +262,7 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
+    UfrVariantsTabComponent,
     ProgramExecutionLineComponent,
     ProgramRequestComponent,
     ProgramTabComponent,
@@ -303,7 +307,8 @@ const appRoutes: Routes = [
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
-    ToggleComponent
+    ToggleComponent,
+    ActualsCellRendererComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -312,7 +317,8 @@ const appRoutes: Routes = [
     SummaryProgramCellRenderer,
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
-    DeleteRenderer
+    DeleteRenderer,
+    ActualsCellRendererComponent
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -365,6 +371,7 @@ const appRoutes: Routes = [
     UFRsService,
     EppService,
     ExecutionService,
+    OandEService,
     LibraryService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },

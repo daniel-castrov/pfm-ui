@@ -1,21 +1,21 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
+import { ProgrammaticRequest, FundingLine, POMService, IntMap, Variant, User} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
 
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 import {DataRow} from "./DataRow";
-import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
+import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 
 @Component({
-  selector: 'variants-tab',
-  templateUrl: './variants-tab.component.html',
-  styleUrls: ['./variants-tab.component.scss'],
+  selector: 'ufr-variants-tab',
+  templateUrl: './ufr-variants-tab.component.html',
+  styleUrls: ['./ufr-variants-tab.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class VariantsTabComponent {
+export class UfrVariantsTabComponent {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() current: ProgrammaticRequest;
@@ -40,10 +40,7 @@ export class VariantsTabComponent {
   frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
 
-  constructor(private pomService: POMService,
-    private pbService: PBService,
-    private prService: PRService,
-    private globalsService: UserUtils ) { }
+  constructor(private pomService: POMService, private globalsService: UserUtils ) { }
 
   ngOnChanges(){
     if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
@@ -64,39 +61,7 @@ export class VariantsTabComponent {
     this.fund.variants.forEach(variant => {
       let data: Array<DataRow> = [];
       variant.serviceLines.forEach( sl => {
-        let pbRow = new DataRow();
-        pbRow.phaseType = PhaseType.PB;
-        pbRow.serviceLine = {
-          contractor: sl.contractor,
-          branch: sl.branch,
-          unitCost: sl.unitCost,
-          bulkOrigin: sl.bulkOrigin
-        };
-        pbRow.variantName = variant.shortName;
 
-        this.pbService.getLatest(this.user.currentCommunityId).subscribe(pb => {
-          if(this.current.originalMrId){
-            this.prService.getByPhaseAndMrId(pb.result.id, this.current.originalMrId).subscribe(pbPr => {
-              pbPr.result.fundingLines.forEach(fl => {
-                if (fl.result && fl.result.appropriation === this.fund.appropriation && fl.result.baOrBlin === this.fund.baOrBlin
-                  && fl.result.item === this.fund.item && fl.result.opAgency === this.fund.opAgency){
-                  fl.result.variants.forEach( pbVariant => {
-                    pbVariant.result.serviceLines.forEach( pbSl => {
-                      pbRow.serviceLine.quantity = pbSl.result.quantity;
-                    });
-                  });
-                }
-              })
-            });
-          }
-        });
-
-        if(!pbRow.serviceLine.quantity) {
-          pbRow.serviceLine.quantity = {};
-          this.years.forEach(key => {
-            pbRow.serviceLine.quantity[key] = 0;
-          });
-        }
         let pomRow = new DataRow();
         pomRow.phaseType = PhaseType.POM;
         pomRow.serviceLine = {
@@ -108,20 +73,7 @@ export class VariantsTabComponent {
         };
         pomRow.variantName = variant.shortName;
 
-        let deltaRow = new DataRow();
-        deltaRow.phaseType = PhaseType.DELTA;
-        deltaRow.serviceLine = {
-          contractor: sl.contractor,
-          branch: sl.branch,
-          unitCost: sl.unitCost,
-          bulkOrigin: sl.bulkOrigin
-        };
-        deltaRow.serviceLine.quantity = this.generateDelta(pomRow.serviceLine.quantity, pbRow.serviceLine.quantity);
-        deltaRow.variantName = variant.shortName;
-
-        data.push(pbRow);
         data.push(pomRow);
-        data.push(deltaRow);
       });
       this.data.set(variant.shortName, data);
     });
@@ -161,7 +113,7 @@ export class VariantsTabComponent {
           headerName: '',
           colId: 'delete',
           suppressToolPanel: true,
-          hide: true,
+          hide: false,
           cellRenderer: 'deleteRenderer',
           rowSpan: params => {return this.rowSpanCount(params)},
           cellClassRules: {
@@ -296,17 +248,22 @@ export class VariantsTabComponent {
   }
 
   isEditable(params): boolean{
-    return params.data.serviceLine.branch !== 'Totals' && params.data.serviceLine.bulkOrigin === undefined && params.data.phaseType === PhaseType.PB
+    return params.data.serviceLine.branch !== 'Totals';
   }
 
   delete(index, data) {
+
     let variant = this.fund.variants.find(variant => variant.shortName === data.variantName);
-    variant.serviceLines.splice(variant.serviceLines.findIndex(sl =>
-      sl.branch === this.data.get(variant.shortName)[index + 1].serviceLine.branch &&
-      sl.contractor === this.data.get(variant.shortName)[index + 1].serviceLine.contractor &&
-      sl.unitCost === this.data.get(variant.shortName)[index + 1].serviceLine.unitCost), 1)
-    this.data.get(variant.shortName).splice(index, 3);
-    this.gridApi.get(variant.shortName).setRowData(this.data.get(variant.shortName));
+     
+      variant.serviceLines.splice(
+        variant.serviceLines.findIndex(sl => 
+        sl.branch === this.data.get(variant.shortName)[index].serviceLine.branch &&
+        sl.contractor === this.data.get(variant.shortName)[index].serviceLine.contractor &&
+        sl.unitCost === this.data.get(variant.shortName)[index].serviceLine.unitCost)
+      ,1);
+      this.data.get(variant.shortName).splice(index, 1);
+
+      this.gridApi.get(variant.shortName).setRowData(this.data.get(variant.shortName));
 
     this.initPinnedBottomRows();
     if (!this.data.get(variant.shortName).some(row => row.serviceLine.bulkOrigin !== true)) {
@@ -316,57 +273,23 @@ export class VariantsTabComponent {
   }
 
   addRow(shortName){
-    let newPbRow: DataRow = new DataRow();
-    newPbRow.phaseType = PhaseType.PB;
-    newPbRow.serviceLine = {
-      branch: '',
-      contractor: '',
-      unitCost: 0,
-      quantity: this.generateEmptyQuantities()
-    };
-    newPbRow.variantName = shortName;
-
+  
     let newPomRow: DataRow = new DataRow();
     newPomRow.phaseType = PhaseType.POM;
     newPomRow.serviceLine = {
       branch: '',
       contractor: '',
       unitCost: 0,
-      quantity: this.generateEmptyQuantities()
+      quantity: JSON.parse(JSON.stringify(this.generateEmptyQuantities()))
     };
     newPomRow.variantName = shortName;
-
-
-    let newDeltaRow: DataRow = new DataRow();
-    newDeltaRow.serviceLine = {
-      branch: '',
-      contractor: '',
-      unitCost: 0,
-      quantity: this.generateDelta(newPomRow.serviceLine.quantity, newPbRow.serviceLine.quantity)
-    };
-    newDeltaRow.phaseType = PhaseType.DELTA;
-    newDeltaRow.variantName = shortName;
-
     this.fund.variants.find(variant => variant.shortName === shortName).serviceLines.push(newPomRow.serviceLine);
-    this.data.get(shortName).push(newPbRow);
     this.data.get(shortName).push(newPomRow);
-    this.data.get(shortName).push(newDeltaRow);
     this.columnApi.get(shortName).setColumnVisible('delete', true);
     this.gridApi.get(shortName).sizeColumnsToFit();
     this.gridApi.get(shortName).setRowData(this.data.get(shortName));
     this.gridApi.get(shortName).setFocusedCell(this.data.get(shortName).length - 3, 'serviceLine.branch');
     this.gridApi.get(shortName).startEditingCell({rowIndex: this.data.get(shortName).length - 3, colKey: 'serviceLine.branch'});
-  }
-
-  generateDelta(pomQuantities, pbQuantities): IntMap{
-    let deltaQuantities = {};
-    this.years.forEach(year => {
-      let pomAmount = isNaN(pomQuantities[year])? 0 : pomQuantities[year];
-      let pbAmount = isNaN(pbQuantities[year])? 0 : pbQuantities[year];
-      let total =  pomAmount - pbAmount;
-      deltaQuantities[year]= total;
-    });
-    return deltaQuantities;
   }
 
   rowSpanCount(params): number {
@@ -403,21 +326,17 @@ export class VariantsTabComponent {
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
     let displayModel = this.gridApi.get(params.data.variantName).getModel();
-    let pbNode = displayModel.getRow(params.node.rowIndex - 1);
-    if (pbNode !== undefined && pbNode.data.phaseType === PhaseType.PB) {
-      let deltaNode = displayModel.getRow(params.node.rowIndex + 1);
-      deltaNode.data.serviceLine.quantity = this.generateDelta(pomNode.serviceLine.quantity, pbNode.data.serviceLine.quantity);
-    }
     this.gridApi.get(params.data.variantName).refreshCells();
     this.initPinnedBottomRows();
     this.isVariantsTabValid[year] = this.isServiceLineValid(year);
   }
 
   onServiceLineValueChanged(params) {
-    let pomNode = this.data.get(params.data.variantName)[params.node.rowIndex + 1];
+    let pomNode = this.data.get(params.data.variantName)[params.node.rowIndex];
     pomNode.serviceLine.branch = params.data.serviceLine.branch;
     pomNode.serviceLine.contractor = params.data.serviceLine.contractor;
     pomNode.serviceLine.unitCost = params.data.serviceLine.unitCost;
+    pomNode.serviceLine.quantity = params.data.serviceLine.quantity;
     pomNode.serviceLine.bulkOrigin = false;
     this.gridApi.get(params.data.variantName).refreshCells();
   }
@@ -463,7 +382,11 @@ export class VariantsTabComponent {
     this.years.forEach( year => {
       quantities[year] = 0;
     });
-    return JSON.parse(JSON.stringify(quantities));
+    return quantities;
+  }
+
+  procFundingLines(): FundingLine[] {
+      return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
   }
 
   addVariant(){

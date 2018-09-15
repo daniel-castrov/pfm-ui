@@ -23,7 +23,7 @@ import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.
 export class ExecutionLineTableComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  @Input() private phase: Execution;
+  private _phase: Execution;
   @Input() private sourceOrTarget: string = 'to select target programs';
   @Input() private exelinefilter: ExecutionLineFilter;
   @Input() private exeprogramfilter: ExecutionLineFilter;
@@ -40,6 +40,24 @@ export class ExecutionLineTableComponent implements OnInit {
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
   private agOptions: GridOptions;
   private availablePrograms: {}[] = [];
+
+  @Input() set phase(p: Execution) {
+    this._phase = p;
+    if (p) {
+      var my: ExecutionLineTableComponent = this;
+      my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
+        my.allexelines = d2.result
+          .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0));
+        my.setAvailablePrograms();
+      });
+
+    }
+  }
+
+  get phase(): Execution {
+    return this._phase;
+  }
+
 
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
     this._updatelines = newdata;
@@ -234,12 +252,6 @@ export class ExecutionLineTableComponent implements OnInit {
       Object.getOwnPropertyNames(data[0].result).forEach(id => {
         my.programIdNameLkp.set(id, data[0].result[id]);
       });
-
-      my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
-        my.allexelines = d2.result
-          .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0));
-        this.setAvailablePrograms();
-      });
     });
   }
 
@@ -292,6 +304,10 @@ export class ExecutionLineTableComponent implements OnInit {
         failure = true;
       }
     });
+
+    if (0 === this._updatelines.length) {
+      failure = true;
+    }
 
     this.tableok = !failure;
     this.agGrid.api.refreshCells();

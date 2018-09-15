@@ -1,0 +1,79 @@
+<div class="text-danger mb-3" *ngIf="invalid">Variants exceed the total amount of the Funding Line</div>
+<div class="row">
+  <div class="col-12">
+    <!-- Select a FundingLine -->
+    <div class="row mb-4">
+      <div class="col-3">
+        <span class="form-group">
+          <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false" (change)="initData()">
+            <option value="null" disabled selected>Select a Funding Line</option>
+            <option *ngFor="let fl of procFundingLines()" [ngValue]="fl">
+              {{fl.appropriation}} / {{fl.baOrBlin}} / {{fl.item}} / {{fl.opAgency}}
+            </option>
+          </select>
+        </span>
+      </div>
+    </div>
+    <!-- Show each variant for the selected FundingLine-->
+    <div *ngIf="fund" class="row mb-4">
+      <div *ngFor="let variant of fund.variants index as variantIndex" class="col-md-12 mb-4" id="variant">
+        <div class="row">
+          <div class="col-auto mt-1">
+            <label class="variant-titles mr-sm-3"><span>{{variant.number}}.</span> <span>{{variant.shortName}}</span></label>
+            <span *ngIf="!variant?.bulkOrigin" class="remove-variant" data-toggle="modal" data-target="#modal" (click)="deleteVariant(variantIndex)">
+              <i class="fa fa-trash"></i>
+            </span>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-light" (click)="addRow(variant.shortName)">
+              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+              New Service Line
+            </button>
+          </div>
+        </div>
+        <ag-grid-angular class="ag-theme-balham group-header-white "
+                         [gridAutoHeight]="true"
+                         [toolPanelSuppressSideButtons]="true"
+                         [suppressMovableColumns]="true"
+                         [suppressRowTransform]="true"
+                         [showToolPanel]="false"
+                         [enableSorting]="true"
+                         [enableFilter]="true"
+                         [columnDefs]="columnDefs"
+                         [singleClickEdit]="true"
+                         [stopEditingWhenGridLosesFocus]="true"
+                         [frameworkComponents]="frameworkComponents"
+                         [context]="context"
+                         (gridReady)="onGridReady($event, variant)">
+        </ag-grid-angular>
+      </div>
+      <fieldset>
+        <legend>Add Variant</legend>
+        <div class="row">
+          <div class="col-3">
+            <button class="btn btn-primary" (click)="toggleShowAddVariance()">
+              <i *ngIf="!showAddVariant" class="fa fa-plus-circle" aria-hidden="true"></i>
+              <i *ngIf="showAddVariant" class="fa fa-minus-circle" aria-hidden="true"></i>
+              <span class="mr-1">New Variant</span>
+            </button>
+          </div>
+          <ng-container *ngIf="showAddVariant">
+            <div class="col-1">
+              <label>Name</label>
+            </div>
+            <div class="col-4">
+              <input class="mb-2 form-control forminput" [(ngModel)]="newVariantName">
+            </div>
+            <div class="col-2 form-group">
+              <button class="btn btn-primary" (click)="addVariant()" [disabled]="!(newVariantName)">
+                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                <span class="mr-1">Add</span>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </fieldset>
+    </div>
+    <j-feedback></j-feedback>
+  </div>
+</div>
