@@ -2,8 +2,9 @@ import {RestResult} from './../../../../generated/model/restResult';
 import {join} from './../../../../utils/join';
 import {Observable} from 'rxjs/Observable';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {POMService, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
+import {FileResponse, LibraryService, POMService, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
 import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'ufr-program-tab',
@@ -17,10 +18,14 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
   private dummyEmphasis: string;
+  readonly fileArea = 'ufr';
+  imagePath: string;
 
   constructor( private programService: ProgramsService,
                private pomService: POMService,
-               private withFullNameService: WithFullNameService ) {}
+               private withFullNameService: WithFullNameService,
+               private libraryService: LibraryService,
+               private sanitization: DomSanitizer ) {}
 
   ngOnInit() {
     this.initTagNames();
@@ -28,6 +33,16 @@ export class UfrProgramComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.initParentName();
+
+    if (this.ufr.imageName) {
+      this.libraryService.downloadFile(this.ufr.imageName, this.fileArea).subscribe(response => {
+        if (response.result) {
+          let fileResponse = response.result as FileResponse;
+          let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
+          this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
+        }
+      });
+    }
   }
 
   private async initTagNames() {
@@ -72,4 +87,10 @@ export class UfrProgramComponent implements OnInit, OnChanges {
     return !this.ufr.shortName || !this.ufr.longName;
   }
 
+  onFileUploaded(fileResponse: FileResponse){
+    let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
+    this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
+    this.ufr.imageName = fileResponse.id;
+    this.ufr.imageArea = this.fileArea;
+  }
 }

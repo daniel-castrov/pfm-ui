@@ -3014,6 +3014,10 @@ definitions:
         type: "string"
       priority:
         type: "number"
+      imageName:
+        type: "string"
+      imageArea:
+        type: "string"
   ShortyType:
     enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
   UfrStatus:
