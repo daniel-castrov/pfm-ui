@@ -58,7 +58,6 @@ export class UfrFundsComponent implements OnChanges {
               private tagsService: TagsService) { }
 
   ngOnChanges() {
-    console.log('testest')
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy =  pom.result.fy;
       this.columnKeys = [

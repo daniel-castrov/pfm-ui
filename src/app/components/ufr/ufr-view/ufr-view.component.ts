@@ -20,7 +20,6 @@ export class UfrViewComponent implements OnInit {
   @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
   @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
-  @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   private ufr: UFR;
   private canedit: boolean = false;
   private pomFy: number;
