@@ -6,6 +6,7 @@ import {ActivatedRoute, UrlSegment} from '@angular/router';
 import {WithFullName} from "../../../services/with-full-name.service";
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
+import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 
 @Component({
   selector: 'app-ufr-view',
@@ -16,6 +17,7 @@ export class UfrViewComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
   @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
+  @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   private ufr: UFR;
   private canedit: boolean = false;
   private pomFy: number;
@@ -92,6 +94,7 @@ export class UfrViewComponent implements OnInit {
   private isNotSubmittable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
+    if(this.ufrFundsComponent && this.ufrFundsComponent.invalid()) return true;
     return this.ufr.status == UfrStatus.SUBMITTED;
   }
 }

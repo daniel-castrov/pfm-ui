@@ -9,6 +9,7 @@ import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {AutoValuesService} from "../../../programming/program-request/funds-tab/AutoValues.service";
 import {DataRow} from "./DataRow";
+import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 
 @Component({
   selector: 'ufr-funds-tab',
@@ -18,6 +19,7 @@ import {DataRow} from "./DataRow";
 })
 export class UfrFundsComponent implements OnInit {
   @Input() ufr: UFR;
+  @Input() fy: number
   @Input() editable: boolean = false;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
@@ -604,6 +606,9 @@ export class UfrFundsComponent implements OnInit {
     }).length > 0;
   }
 
+  invalid(): boolean {
+    return FundingLinesUtils.totalForAndAfterYear(this.ufr.fundingLines, this.fy) == 0;
+  }
 
 }
 
