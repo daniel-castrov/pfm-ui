@@ -7,6 +7,7 @@ import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import {CycleUtils} from "../../../../services/cycle.utils";
+import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 
 @Component({
   selector: 'all-ufrs',
@@ -185,10 +186,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   sum(ufr: UFR): number {
-    return ufr.fundingLines
-        .map(fl => fl.funds[this.fy])
-        .map( (a) => a || 0)
-        .reduce( (a,b) => a+b, 0 );
+    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.fy );
   }
 
   private dateFormatter(longdate) {

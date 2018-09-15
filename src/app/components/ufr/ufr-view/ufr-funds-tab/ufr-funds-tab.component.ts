@@ -9,6 +9,7 @@ import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {AutoValuesService} from "../../../programming/program-request/funds-tab/AutoValues.service";
 import {DataRow} from "./DataRow";
+import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 
 declare var $: any;
@@ -21,6 +22,7 @@ declare var $: any;
 })
 export class UfrFundsComponent implements OnChanges {
   @Input() ufr: UFR;
+  @Input() fy: number
   @Input() editable: boolean = false;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
@@ -56,7 +58,6 @@ export class UfrFundsComponent implements OnChanges {
               private tagsService: TagsService) { }
 
   ngOnChanges() {
-    console.log('testest')
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy =  pom.result.fy;
       this.columnKeys = [
@@ -554,6 +555,9 @@ export class UfrFundsComponent implements OnChanges {
     }).length > 0;
   }
 
+  invalid(): boolean {
+    return FundingLinesUtils.totalForAndAfterYear(this.ufr.fundingLines, this.fy) == 0;
+  }
   get validate(): Validation {
     if(this.flHaveIncorrectBa()){
       return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');

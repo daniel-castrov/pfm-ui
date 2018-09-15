@@ -34,6 +34,11 @@ export class WithFullNameService {
     return this.sort(result);
   }
 
+  async program(id: string): Promise<ProgramWithFullName> {
+    const programs: ProgramWithFullName[] = await this.programs();
+    return programs.find( program => program.id == id);
+  }
+
   async programsByCommunity(communityId:string): Promise<ProgramWithFullName[]> {
     const programs: Program[] = (await this.programsService.getProgramsByCommunity(communityId).toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
@@ -71,6 +76,11 @@ export class WithFullNameService {
     );
 
     return this.sort(result);
+  }
+
+  async programRequest(phaseId: string, prId: string): Promise<ProgramRequestWithFullName> {
+    const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
+    return prs.find( pr => pr.id == prId);
   }
 
   async programRequestsWithFullNamesDerivedFromArchivalData(phaseId: string): Promise<ProgramRequestWithFullName[]> {
