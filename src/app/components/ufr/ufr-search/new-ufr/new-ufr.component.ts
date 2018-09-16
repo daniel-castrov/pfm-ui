@@ -105,10 +105,10 @@ export class NewUfrComponent implements OnInit {
         await this.initFromShortyPR(ufr, true);
         break;
       case 'A New FoS':
+        ufr.fundingLines=[];
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
-          ufr.fundingLines=[];
           await this.initFromShortyProgram(ufr, false);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
@@ -117,10 +117,10 @@ export class NewUfrComponent implements OnInit {
         }
         break;
       case 'A New Increment':
+        ufr.fundingLines=[];
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
-          ufr.fundingLines=[];
           await this.initFromShortyProgram(ufr, false);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
