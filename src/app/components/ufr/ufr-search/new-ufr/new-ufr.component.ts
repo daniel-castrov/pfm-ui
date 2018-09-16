@@ -65,11 +65,11 @@ export class NewUfrComponent implements OnInit {
   removeOnlyPrsInOutandingState(progsOrPrs?: any[]) {
     let newPRs:any[] = [];
     progsOrPrs.forEach((item, index) => {
-      // programs don't have a state 
+      // programs don't have a state
       if ( !item.state ) {
         newPRs.push(item);
       }
-      // prs in OUTSTNADING are not valid for creating a UFR 
+      // prs in OUTSTNADING are not valid for creating a UFR
       else if ( item.state != "OUTSTANDING" ) {
         newPRs.push(item);
       }
@@ -91,24 +91,24 @@ export class NewUfrComponent implements OnInit {
 
   async next() {
     let ufr: UFR = { phaseId: this.pomId };
-    if (this.selectedProgramOrPr) {
-      ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
-    }
     switch (this.createNewUfrMode) {
       case 'An MRDB Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
         ufr.shortyId = this.selectedProgramOrPr.id;
+        ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
         await this.initFromShortyProgram(ufr, true);
         break;
       case 'A Program Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
+        ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
         await this.initFromShortyPR(ufr, true);
         break;
       case 'A New FoS':
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
+          ufr.fundingLines=[];
           await this.initFromShortyProgram(ufr, false);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
@@ -120,6 +120,7 @@ export class NewUfrComponent implements OnInit {
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
+          ufr.fundingLines=[];
           await this.initFromShortyProgram(ufr, false);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
