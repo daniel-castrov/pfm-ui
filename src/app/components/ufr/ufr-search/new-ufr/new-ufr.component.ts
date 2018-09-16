@@ -98,33 +98,33 @@ export class NewUfrComponent implements OnInit {
       case 'An MRDB Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
         ufr.shortyId = this.selectedProgramOrPr.id;
-        await this.initFromShortyProgram(ufr);
+        await this.initFromShortyProgram(ufr, true);
         break;
       case 'A Program Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
-        await this.initFromShortyPR(ufr);
+        await this.initFromShortyPR(ufr, true);
         break;
       case 'A New FoS':
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
-          await this.initFromShortyProgram(ufr);
+          await this.initFromShortyProgram(ufr, false);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_FOS_FOR_PR;
           ufr.shortyId = this.selectedProgramOrPr.id;
-          await this.initFromShortyPR(ufr);
+          await this.initFromShortyPR(ufr, false);
         }
         break;
       case 'A New Increment':
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
-          await this.initFromShortyProgram(ufr);
+          await this.initFromShortyProgram(ufr, false);
         } else { // a PR has been selected
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_PR;
           ufr.shortyId = this.selectedProgramOrPr.id;
-          await this.initFromShortyPR(ufr);
+          await this.initFromShortyPR(ufr, false);
         }
         break;
       case 'A New Program':
@@ -135,19 +135,22 @@ export class NewUfrComponent implements OnInit {
     this.router.navigate(['/ufr-view/create/', JSON.stringify(ufr)]);
   }
 
-  private async initFromShortyProgram(ufr: UFR) {
+  private async initFromShortyProgram(ufr: UFR, includeNames: boolean) {
     const shorty = (await this.programsService.getProgramById(ufr.shortyId).toPromise()).result as Program;
-    this.initFromShorty(ufr, shorty);
+    this.initFromShorty(ufr, shorty, includeNames);
   }
 
-  private async initFromShortyPR(ufr: UFR) {
+  private async initFromShortyPR(ufr: UFR, includeNames: boolean) {
     const shorty = (await this.prService.getById(ufr.shortyId).toPromise()).result as ProgrammaticRequest;
-    this.initFromShorty(ufr, shorty);
+    this.initFromShorty(ufr, shorty, includeNames);
   }
 
-  private initFromShorty(ufr: UFR, shorty: Program | ProgrammaticRequest) {
-    ufr.shortName = shorty.shortName;
-    ufr.longName = shorty.longName;
+  private initFromShorty(ufr: UFR, shorty: Program | ProgrammaticRequest, includeNames: boolean) {
+    if(includeNames) {
+      ufr.shortName = shorty.shortName;
+      ufr.longName = shorty.longName;
+    }
+
     ufr.description = shorty.description;
 
     ufr.primaryCapability = shorty.primaryCapability;

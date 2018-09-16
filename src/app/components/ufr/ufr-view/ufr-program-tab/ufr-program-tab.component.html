@@ -30,7 +30,7 @@
 
                 <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
                                      ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR'">
-                  {{shorty?.fullname}}:
+                  {{shorty?.fullname}}/
                   <input [(ngModel)]="ufr.shortName" class="form-control inc_fos" name="program-id" [disabled]="disabled" />
                 </ng-container>
 
@@ -119,7 +119,7 @@
             </span>
             <span class="form-group inline-name">
               <label class="mb-1">Emphasis</label>
-              <select name="emphasis" class="form-control-sm dropdown-width mb-2">
+              <select name="emphasis" class="form-control-sm dropdown-width mb-2" [disabled]="disabled">
                 <option *ngFor="let e of tagNames.get('Emphasis Areas') | mapAsList" [ngValue]="e.abbr">{{e.value}}</option>
               </select>
             </span>

@@ -73,9 +73,9 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   private ufrType(): string {
     if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return "MRDB program";
     if(this.ufr.shortyType == ShortyType.PR) return "Program Request";
-    if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return "New Increment";
-    if(this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR) return "New FoS";
-    if(this.ufr.shortyType == ShortyType.NEW_PROGRAM) return " New Program";
+    if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return "Increment";
+    if(this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR) return "FoS";
+    if(this.ufr.shortyType == ShortyType.NEW_PROGRAM) return "Program";
   }
 
   private get disabled(): boolean {
