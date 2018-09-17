@@ -2712,6 +2712,8 @@ definitions:
         $ref: "#/definitions/Communication"
       currentCommunityId:
         type: "string"
+      organizationId:
+        type: "string"
       preferences:
         type: "object"
         additionalProperties:
