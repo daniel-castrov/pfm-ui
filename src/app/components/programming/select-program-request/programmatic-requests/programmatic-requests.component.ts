@@ -199,11 +199,12 @@ export class ProgrammaticRequestsComponent implements OnChanges {
           break;
       }
       if (subHeader) {
+        let columnKey = year.toString().replace('20', 'FY')
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
           children: [{
-            headerName: year,
+            headerName: columnKey,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
             maxWidth: 98,
