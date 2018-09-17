@@ -24,6 +24,7 @@ export class ExecutionLineTableComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private _phase: Execution;
+  @Input() private showAddProgramButton: boolean = true;
   @Input() private sourceOrTarget: string = 'to select target programs';
   @Input() private exelinefilter: ExecutionLineFilter;
   @Input() private exeprogramfilter: ExecutionLineFilter;
@@ -327,6 +328,7 @@ export class ExecutionLineTableComponent implements OnInit {
   onGridReady(params) {
     setTimeout(() => {
       params.api.sizeColumnsToFit();
+      this.recheckValidity();
     }, 500);
     window.addEventListener("resize", function() {
       setTimeout(() => {

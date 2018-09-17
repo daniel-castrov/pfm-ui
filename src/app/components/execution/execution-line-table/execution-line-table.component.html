@@ -9,12 +9,14 @@
 </ng-template>
 
 <div *ngIf="availablePrograms.length>0 || (agGrid && agGrid.api && agGrid.api.getDisplayedRowCount()>0); else notable">
-  <span *ngIf="availablePrograms.length>0; else notable">
-    <button class="btn btn-light" (click)="addrow()">
-      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-      {{sourceOrTarget}}
-    </button>
-  </span>
+  <ng-container *ngIf="showAddProgramButton">
+    <span *ngIf="availablePrograms.length>0; else notable">
+      <button class="btn btn-light" (click)="addrow()">
+        <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+        {{sourceOrTarget}}
+      </button>
+    </span>
+  </ng-container>
 
   <ag-grid-angular #agGrid class="ag-theme-balham" 
     [gridOptions]="agOptions" 

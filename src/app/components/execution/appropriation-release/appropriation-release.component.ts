@@ -31,6 +31,7 @@ export class AppropriationReleaseComponent implements OnInit {
   private other: string;
   private subtypes: ExecutionDropDown[];
   private progfilter: ExecutionLineFilter;
+  private showAddProgramButton: boolean = false;
   private line: ExecutionLineFilter = function (el: ExecutionLine): boolean {
     return true;
   };
@@ -47,13 +48,14 @@ export class AppropriationReleaseComponent implements OnInit {
       forkJoin([
         this.exesvc.getById(data.phaseId),
         this.exesvc.getExecutionDropdowns(),
-        this.exesvc.hasAppropriation(data.phaseId)
+        this.exesvc.hasAppropriation(data.phaseId)        
       ]).subscribe(d2 => {
         this.phase = d2[0].result;
         this.subtypes = d2[1].result
           .filter(x => 'EXE_RELEASE' === x.type)
           .filter(x => ( d2[2].result ? 'RELEASE_CRA' !== x.subtype : true ) );
         this.etype = this.subtypes[0];
+        this.updatetable();
       });
     });
   }
@@ -76,19 +78,14 @@ export class AppropriationReleaseComponent implements OnInit {
   }
 
   updatetable() {
-    if ('RELEASE_CRA' === this.etype.subtype) {
+    this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(data => {
       this.updatelines = [];
-    }
-    else {
-      this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(data => {
-        this.updatelines = [];
-        data.result.filter(z => this.progfilter(z) ).forEach(x => { 
-          this.updatelines.push({
-            line: x,
-            amt: x.toa - x.withheld - x.released
-          });
+      data.result.filter(z => this.progfilter(z) ).forEach(x => { 
+        this.updatelines.push({
+          line: x,
+          amt: x.toa - x.withheld - x.released
         });
       });
-    }
+    });
   }
 }
