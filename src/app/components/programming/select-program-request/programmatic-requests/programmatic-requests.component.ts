@@ -130,13 +130,13 @@ export class ProgrammaticRequestsComponent implements OnChanges {
             cellClass: params => this.getStatusClass(params),
             cellStyle: { backgroundColor: "#eae9e9" },
             cellRenderer: 'summaryProgramCellRenderer',
-            width: 60
+            width: 120
           },
           {
             headerName: 'Cycle',
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            width: 50,
+            width: 100,
             suppressSorting: true,
             cellClass: ['ag-cell-white'],
             valueGetter: params => {
