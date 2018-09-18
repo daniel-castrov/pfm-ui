@@ -2560,7 +2560,7 @@ definitions:
         type: "string"
       zipCode:
         type: "string"
-      organization:
+      organizationId:
         type: "string"
       communityId:
         type: "string"
@@ -2692,6 +2692,10 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Community"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
   User:
     type: "object"
     properties:
