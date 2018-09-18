@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core'
+import { Component, OnInit, ViewChild, Input, ViewEncapsulation } from '@angular/core'
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
@@ -18,7 +18,8 @@ import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.
 @Component({
   selector: 'app-execution-line-table',
   templateUrl: './execution-line-table.component.html',
-  styleUrls: ['./execution-line-table.component.scss']
+  styleUrls: ['./execution-line-table.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ExecutionLineTableComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
@@ -75,7 +76,8 @@ export class ExecutionLineTableComponent implements OnInit {
 
   refreshlines() {
     this._updatelines.splice(0, this._updatelines.length);
-    this.agOptions.api.forEachNode(rownode => {
+    // don't include filtered-out rows
+    this.agOptions.api.forEachNodeAfterFilter(rownode => {
       this._updatelines.push(rownode.data);
     });
     this.refreshpins();
@@ -138,6 +140,37 @@ export class ExecutionLineTableComponent implements OnInit {
       return true;
     }
 
+    var programcellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
+      var progname: string = my.programIdNameLkp.get(cellval).toLocaleLowerCase();
+      switch (filter) {
+        case 'equals':
+          return progname === filtertext;
+        case 'notEqual':
+          return progname !== filtertext;
+        case 'startsWith':
+          return progname.startsWith(filtertext);
+        case 'endsWith':
+          return progname.endsWith(filtertext);
+        case 'contains':
+          return progname.indexOf(filtertext) > -1;
+        case 'notContains':
+          return progname.indexOf(filtertext) < 0;
+        default:
+          console.warn('some new filter? ' + filter);
+      }
+
+      return true;
+    }
+
+    var linecellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
+      console.log(cellval);
+      return true;
+       //p.data.line.appropriation
+       // ? p.data.line.appropriation + '/' + p.data.line.blin + '/' + p.data.line.item + '/' + p.data.line.opAgency
+       // : '')
+    }
+
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -156,6 +189,9 @@ export class ExecutionLineTableComponent implements OnInit {
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',
+          filterParams: { 
+            textCustomComparator: programcellfilter,
+          },
           editable: true,
           comparator: namesorter,
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
@@ -177,7 +213,10 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Execution Line',
           filter: 'agTextColumnFilter',
           editable: true,
-          field: 'line',
+          //field: 'line',
+          filterParams: {
+            textCustomComparator: linecellfilter
+          },
           valueFormatter: params => (params.data.line.appropriation
             ? params.data.line.appropriation + '/' + params.data.line.blin + '/' + params.data.line.item + '/' + params.data.line.opAgency
             : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
@@ -186,7 +225,8 @@ export class ExecutionLineTableComponent implements OnInit {
             formatValue: el => (el.appropriation
               ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
               : '')
-          } ),
+          }),
+          valueGetter: p=>p.data.line.mrId,
           cellEditor: 'agRichSelectCellEditor',
           cellClass: ['ag-cell-light-grey'],
           pinnedRowCellRenderer: params => ''
