@@ -1,7 +1,7 @@
 <div id="program-request" *ngIf="programRequestPageMode.prId || programRequestPageMode.programOfMrDb">
   <div class="mb-4">
     <span class="h5" *ngIf="!programRequestPageMode.prId">Create </span>
-    <span *ngIf="pr.type==='PROGRAM'" class="h5">Program Request for a Previously Funded Program:</span>
+    <span *ngIf="pr.type==='PROGRAM'" class="h5">Program Request:</span>
     <span *ngIf="pr.type==='INCREMENT'" class="h5">Program Request for a New Increment:</span>
     <span *ngIf="pr.type==='FOS'" class="h5">Program Request for a New FoS:</span>
     <span *ngIf="pr.type==='GENERIC'" class="h5">Program Request for a New Subprogram:</span>
