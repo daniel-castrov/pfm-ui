@@ -207,7 +207,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
             headerName: columnKey,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            maxWidth: 98,
+            maxWidth: 104,
             cellClass: cellClass,
             cellClassRules: {
               'by': params => { return year >= this.pomFy && params.data.phaseType === PhaseType.POM }
@@ -227,7 +227,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       headerName: 'CTC',
       menuTabs: this.menuTabs,
       filter: "agNumberColumnFilter",
-      maxWidth: 98,
+      maxWidth: 104,
       type: "numericColumn",
       valueGetter: params => { return this.getTotal(params.data, columnKeys) },
       valueFormatter: params => { return this.currencyFormatter(params) }

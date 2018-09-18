@@ -23,7 +23,7 @@ export class PomComponent implements OnChanges {
   ngOnChanges() {
 
     if (this.pbProgrammaticRequests && this.pomProgrammaticRequests && this.pom) {
-      this.initGrid( this.pom.fy ); 
+      this.initGrid( this.pom.fy );
       this.populateRowData();
       setTimeout(() => {
         this.agGrid.api.sizeColumnsToFit()
@@ -59,12 +59,12 @@ export class PomComponent implements OnChanges {
           type: "numericColumn",
           suppressMenu: true,
           field: (by + i).toString(),
-          maxWidth: 98,
+          maxWidth: 104,
           editable: false,
           valueFormatter: params => { return this.currencyFormatter(params) },
           cellClassRules: {
              'font-weight-bold': params => { return params.data.id == 'Allocated TOA'  } ,
-             'font-red' : params => { return params.value < 0 }, 
+             'font-red' : params => { return params.value < 0 },
            },
         });
     }
@@ -76,7 +76,7 @@ export class PomComponent implements OnChanges {
         type: "numericColumn",
         suppressMenu: true,
         field: 'total',
-        maxWidth: 98,
+        maxWidth: 104,
         editable: false,
         valueFormatter: params => { return this.currencyFormatter(params) },
         cellClassRules: {
@@ -113,7 +113,7 @@ export class PomComponent implements OnChanges {
     let row = new Object();
     let sum;
 
-    row["id"] = "Baseline"; 
+    row["id"] = "Baseline";
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year] = this.aggregateToas(this.pbProgrammaticRequests, year);
@@ -123,7 +123,7 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row = new Object();
-    row["id"] = "Allocated TOA"; 
+    row["id"] = "Allocated TOA";
     sum = 0;
     let allocatedToas: { [year: number]: number } = {};
     this.pom.communityToas.forEach((toa) => {
@@ -135,7 +135,7 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "POM 18 Requests"; 
+    row["id"] = "POM 18 Requests";
     sum = 0;
     let pomRequests: { [year: number]: number } = {};
           for (let year: number = by; year < by + 5; year++) {
@@ -147,10 +147,10 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "TOA Difference"; 
+    row["id"] = "TOA Difference";
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
-      
+
       row[year] = allocatedToas[year] - pomRequests[year];
       sum += row[year];
     }
