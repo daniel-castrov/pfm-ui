@@ -1,16 +1,10 @@
 <div class="row">
-  <div class="col-auto">
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{newFLType? newFLType: 'Select an option'}}
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" *ngIf="!pr.creationTimeReferenceId || pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" (click)="selectFundingLineType('Add a new Funding Line')">Add a new Funding Line</a>
-          <a class="dropdown-item" *ngIf="existingFundingLines?.length > 0" (click)="selectFundingLineType('Add an existing Funding Line')">{{pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR? 'Add a parent Funding Line' : 'Add an existing Funding Line'}}</a>
-      </div>
-    </div>
+  <div *ngIf="pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
+    <button class="btn btn-primary mb-3" (click)="addRow()">
+      <span class="icon-pad">Add a new funding line</span>
+    </button>
   </div>
-  <div *ngIf="newFLType === 'Add an existing Funding Line'" class="col-auto">
+  <div *ngIf="pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
     <div class="dropdown-label">
       <select [(ngModel)]="selectedFundingLine" class="form-control-sm" name="dummy">
         <option value="null" disabled selected>Select a Funding Line</option>
@@ -18,10 +12,9 @@
       </select>
     </div>
   </div>
-  <div class="col-auto">
-    <button [disabled]="!newFLType || isDisabledAddFundingLines" class="btn btn-primary mb-3" (click)="next()">
-      <span class="icon-pad">Next</span>
-      <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+  <div *ngIf="pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
+    <button [disabled]="existingFundingLines?.length === 0" class="btn btn-primary mb-3" (click)="addParentFundingLine()">
+      <span class="icon-pad">Add parent funding line</span>
     </button>
   </div>
 </div>

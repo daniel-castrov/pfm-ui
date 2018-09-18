@@ -25,6 +25,8 @@ import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {Validation} from "./Validation";
 
+declare var $: any;
+
 @Component({
   selector: 'funds-tab',
   templateUrl: './funds-tab.component.html',
@@ -49,7 +51,6 @@ export class FundsTabComponent implements OnChanges {
   private filteredBlins: string[] = [];
   private columnKeys;
   CreationTimeType = CreationTimeType;
-  newFLType;
   columnDefs = [];
   data;
   pinnedBottomData;
@@ -57,7 +58,6 @@ export class FundsTabComponent implements OnChanges {
   selectedFundingLine: FundingLine = null;
   frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
-  isDisabledAddFundingLines;
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: this.getNumericCellEditor() };
 
@@ -87,8 +87,8 @@ export class FundsTabComponent implements OnChanges {
         pr.result.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
             fl.baOrBlin === fundingLine.baOrBlin &&
-            fl.item === fl.item &&
-            fl.opAgency === fl.opAgency);
+            fl.item === fundingLine.item &&
+            fl.opAgency === fundingLine.opAgency);
           if (!isDuplicate) {
             this.existingFundingLines.push(fundingLine);
           }
@@ -101,8 +101,8 @@ export class FundsTabComponent implements OnChanges {
         program.result.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
             fl.baOrBlin === fundingLine.baOrBlin &&
-            fl.item === fl.item &&
-            fl.opAgency === fl.opAgency);
+            fl.item === fundingLine.item &&
+            fl.opAgency === fundingLine.opAgency);
           if (!isDuplicate) {
             this.existingFundingLines.push(fundingLine);
           }
@@ -152,43 +152,39 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  selectFundingLineType(flType: string){
-    this.newFLType = flType;
-  }
+  addParentFundingLine(){
+    this.pr.fundingLines.push(this.selectedFundingLine);
+    let pomRow: DataRow = {fundingLine: this.selectedFundingLine, phaseType: PhaseType.POM};
+    pomRow.fundingLine.userCreated = true;
+    let pbRow: DataRow = new DataRow();
+    pbRow.phaseType = PhaseType.PB;
 
-  next(){
-    switch(this.newFLType){
-      case 'Add a new Funding Line':
-        this.addRow();
-        break;
-      case 'Add an existing Funding Line':
-        this.pr.fundingLines.push(this.selectedFundingLine);
-        let pomRow: DataRow = {fundingLine: this.selectedFundingLine, phaseType: PhaseType.POM}
-        let pbRow: DataRow = new DataRow();
-        pbRow.phaseType = PhaseType.PB;
+    if(this.pbPr !== undefined) {
+      pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
+        this.selectedFundingLine.appropriation === fl.appropriation &&
+        this.selectedFundingLine.opAgency === fl.opAgency &&
+        this.selectedFundingLine.baOrBlin === fl.baOrBlin &&
+        this.selectedFundingLine.item === fl.item
+      )[0];
+    }
 
-        if(this.pbPr !== undefined) {
-          pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
-            this.selectedFundingLine.appropriation === fl.appropriation &&
-            this.selectedFundingLine.opAgency === fl.opAgency &&
-            this.selectedFundingLine.baOrBlin === fl.baOrBlin &&
-            this.selectedFundingLine.item === fl.item
-          )[0];
-        }
+    if(pbRow.fundingLine === undefined){
+      pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
 
-        if(pbRow.fundingLine === undefined){
-          pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
+    }
 
-        }
-
-        let deltaRow: DataRow = new DataRow();
-        deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
-        deltaRow.phaseType = PhaseType.DELTA;
-        this.data.push(pbRow);
-        this.data.push(pomRow);
-        this.data.push(deltaRow);
-        this.agGrid.api.setRowData(this.data);
-        break;
+    let deltaRow: DataRow = new DataRow();
+    deltaRow.fundingLine= this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
+    deltaRow.phaseType = PhaseType.DELTA;
+    this.data.push(pbRow);
+    this.data.push(pomRow);
+    this.data.push(deltaRow);
+    this.agGrid.columnApi.setColumnVisible('delete', true);
+    this.agGrid.api.sizeColumnsToFit();
+    this.agGrid.api.setRowData(this.data);
+    this.existingFundingLines.splice(this.existingFundingLines.indexOf(this.selectedFundingLine, 1));
+    if(this.existingFundingLines.length === 0){
+      this.selectedFundingLine = null;
     }
   }
 
@@ -408,7 +404,7 @@ export class FundsTabComponent implements OnChanges {
             cellStyle: params => {
               if (this.prs &&
                 params.data.phaseType === PhaseType.POM &&
-                !this.isValidBa(params.data.fundingLine.baOrBlin, key, params.data.fundingLine.funds[key])) {
+                !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
                 return {color: 'red', 'font-weigh': 'bold'};
               };
             },
@@ -562,7 +558,6 @@ export class FundsTabComponent implements OnChanges {
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
-    this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
   private async getPBData(): Promise<ProgrammaticRequest>{
@@ -604,7 +599,11 @@ export class FundsTabComponent implements OnChanges {
     this.agGrid.api.refreshCells();
     this.loadDropdownOptions();
     this.initPinnedBottomRows();
-    this.isFundsTabValid[year] = this.isValidBa(params.data.fundingLine.baOrBlin, year, params.newValue);
+    this.isFundsTabValid[year] = {
+      isValid: this.isValidBa(params.data.fundingLine.baOrBlin, year),
+      baOrBlin: params.data.fundingLine.baOrBlin,
+      year: year
+    };
   }
 
   onGridReady(params) {
@@ -619,17 +618,31 @@ export class FundsTabComponent implements OnChanges {
   }
 
   delete(index) {
-    this.pr.fundingLines.splice(this.pr.fundingLines.indexOf(this.data[index + 1].fundingLine), 1);
-    this.data.splice(index, 3);
-    this.agGrid.api.setRowData(this.data);
+    let selectedFundingLine = this.data[index + 1].fundingLine;
+    let isDeletable = true;
+    this.prService.getSubProgramsById(this.pr.id).subscribe(data => {
+      let subPrograms: ProgrammaticRequest[] = data.result;
+      isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
+        fl.baOrBlin === selectedFundingLine.baOrBlin &&
+        fl.item === selectedFundingLine.item &&
+        fl.opAgency === selectedFundingLine.opAgency));
+      if (isDeletable) {
+        this.pr.fundingLines.splice(this.pr.fundingLines.indexOf(selectedFundingLine), 1);
+        this.data.splice(index, 3);
+        this.agGrid.api.setRowData(this.data);
 
-    this.loadDropdownOptions();
+        this.loadDropdownOptions();
+        this.loadExistingFundingLines();
 
-    this.initPinnedBottomRows();
-    if (!this.data.some(row => row.fundingLine.userCreated === true)) {
-      this.agGrid.columnApi.setColumnVisible('delete', false);
-      this.agGrid.api.sizeColumnsToFit();
-    }
+        this.initPinnedBottomRows();
+        if (!this.data.some(row => row.fundingLine.userCreated === true)) {
+          this.agGrid.columnApi.setColumnVisible('delete', false);
+          this.agGrid.api.sizeColumnsToFit();
+        }
+      } else {
+        this.notifyError('Can\'t delete this funding line because is being used by one of the subprograms');
+      }
+    });
   }
 
   onToolPanelVisibleChanged(params) {
@@ -674,16 +687,24 @@ export class FundsTabComponent implements OnChanges {
     this.agGrid.api.refreshCells();
   }
 
-  isValidBa(ba: string, year: number, value: number): boolean {
-    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR)  {
-      return this.isValidBaWithRespectToParent(ba, year) && this.isValidBaWithRespectToChildren(ba, year);
-    } else {
-      return true;
+  isValidBa(ba: string, year: number): boolean {
+    return this.isValidBaWithRespectToParent(ba, year) && this.isValidBaWithRespectToChildren(ba, year);
+  }
+
+  getValidationMessage(ba: string, year: number): string {
+    if (!this.isValidBaWithRespectToChildren(ba, year)) {
+      return 'The funding line amount can\'t be lower than the child subprograms';
+    } else if (!this.isValidBaWithRespectToParent(ba, year)) {
+      return 'The funding line amount can\'t be higher than the parent program';
     }
   }
 
   isValidBaWithRespectToParent(ba: string, year: number): boolean {
-    return PRUtils.isParentBaSumGreater(ba, year, this.parentPr, this.pr, this.prs);
+    if(this.parentPr) {
+      return PRUtils.isParentBaSumGreater(ba, year, this.parentPr, this.pr, this.prs);
+    } else {
+      return true;
+    }
   }
 
   isValidBaWithRespectToChildren(ba: string, year: number): boolean {
@@ -697,7 +718,6 @@ export class FundsTabComponent implements OnChanges {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
     this.limitBaForOrganizations()
-    this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
   limitBaForOrganizations() {
@@ -727,16 +747,10 @@ export class FundsTabComponent implements OnChanges {
     }
   }
 
-  canAddMoreFundingLines(): boolean {
-    return this.baOrBlins.filter(blin => {
-      let fl = this.pr.fundingLines.find(fl => fl.baOrBlin === blin);
-      return  fl === undefined && ( (blin.match(/00/) && !this.pr.fundingLines.some(fl => fl.appropriation === 'PROC')) || blin.match(/BA[1-9]/)) ;
-    }).length > 0;
-  }
-
   get validate(): Validation {
-    if(this.isFundsTabValid.some(valid => valid === false)){
-      return new Validation(false, 'Funds exceed the total amount of the program request')
+    let fundingLineAmount = this.isFundsTabValid.filter(value => value.isValid === false)[0];
+    if(fundingLineAmount && !fundingLineAmount.isValid){
+      return new Validation(false, this.getValidationMessage(fundingLineAmount.baOrBlin, fundingLineAmount.year))
     } else if(this.flHaveIncorrectBa()){
       return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');
     } else if (this.flHaveIncorrectAppropriation()){
@@ -767,6 +781,15 @@ export class FundsTabComponent implements OnChanges {
       }
     });
     return duplicatesExist;
+  }
+
+  notifyError(message){
+    $.notify({
+      icon: 'fa fa-exclamation',
+      message: message
+    },{
+      type: 'danger',
+    });
   }
 
   getNumericCellEditor() {
