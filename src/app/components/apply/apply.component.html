@@ -86,53 +86,47 @@
           <input type="text" class="form-control applyinput" [(ngModel)]="createUserRequest.city" #createUserRequestCity="ngModel"
             name="city" placeholder="Street, City, State, Zipcode">
         </div>
-        <div class="form-group dropdown-select">
-          <div>
-            <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" required #communityId="ngModel">
-              <option value="">*Community Access Request</option>
-              <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
-            </select>
-            <div [hidden]="communityId.valid || communityId.pristine" class="alert alert-danger">*Community required</div>
-          </div>
-        </div>
+
         <div class="form-group">
-          <input type="text" [(ngModel)]="createUserRequest.organization" #createUserRequestOrganization="ngModel" [ngClass]="{'is-invalid':createUserRequestOrganization.errors && createUserRequestOrganization.touched}"
-            class="form-control applyinput" name="organization" placeholder="*Organization Name" minlength="2" required>
-          <span [hidden]="!createUserRequestOrganization.errors?.required" class="invalid-feedback">*Organization is required</span>
-          <span [hidden]="!createUserRequestOrganization.errors?.minlength" class="invalid-feedback">*Organization must be at least 2 characters</span>
+
+          <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" required #communityId="ngModel" 
+          (change)="filterOrgs(communityId.viewModel)">
+            <option value="">*Community Access Request</option>
+            <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
+          </select>
+          <span [hidden]="communityId.valid || communityId.pristine" class="alert-danger">*Community required</span>
+
+          <select class="form-control-sm mb-2 mr-sm-2" ngModel name="organizationId" required #organizationId="ngModel">
+            <option value="">*Organization Member Request</option>
+            <option *ngFor="let organization of organizations" [value]="organization.id">{{ organization.abbreviation }}</option>
+          </select>
+          <span [hidden]="organizationId.valid || organizationId.pristine" class="alert-danger">*Organization required</span>
         </div>
-        <!-- <div class="form-group">
-          <label for="branches">*Select Branch</label>
-          <div>
-            <select class="form-control-sm mb-2 mr-sm-2" ngModel name="service" required #service="ngModel">
-              <option value=""></option>
-              <option *ngFor="let service of services" [value]="service.name">{{ service.name }}</option>
-            </select>
-            <span *ngIf="service.required" class="invalid-feedback">Service required</span>
-            <span *ngIf="service.invalid" class="invalid-feedback">Service required</span>
-          </div>
-        </div> -->
-        <span class="form-group inline-name">
-          <input type="text" [(ngModel)]="createUserRequest.sponsorName" #createUserRequestSponsorName="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorName.errors && createUserRequestSponsorName.touched}"
-            class="form-control applyinput sponsor" name="sponsorName" minlength="2" placeholder="*Sponsor Name" required>
-          <span [hidden]="!createUserRequestSponsorName.errors?.required" class="invalid-feedback">*Sponsor Name is required</span>
-          <span [hidden]="!createUserRequestSponsorName.errors?.minlength" class="invalid-feedback">*Sponsor Name must be at least 2 characters</span>
-        </span>
-        <span class="form-group inline-name">
-          <input type="text" [(ngModel)]="createUserRequest.sponsorPhone" #createUserRequestSponsorPhone="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorPhone.errors && createUserRequestSponsorPhone.touched}"
-            class="form-control applyinput sponsor" name="sponsorPhone" placeholder="*Sponsor Phone" pattern="\d{3}[\-]\d{3}[\-]\d{4}" required>
-          <span class="form-formatting">US based in the format of: 123-456-7890</span>
-          <span [hidden]="!createUserRequestSponsorPhone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
-          <span [hidden]="!createUserRequestSponsorPhone.errors?.pattern" class="invalid-feedback">*Must be US based in the format of: 123-456-7890</span>
-        </span>
-        <span class="form-group inline-name">
-          <input type="email" [(ngModel)]="createUserRequest.sponsorEmail" #createUserRequestSponsorEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorEmail.errors && createUserRequestSponsorEmail.touched}"
-            class="form-control applyinput sponsor" name="sponsorEmail" placeholder="*Sponsor Email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
-            required>
-          <span class="form-formatting">Must be a valid email: joe@abc.com</span>
-          <span [hidden]="!createUserRequestSponsorEmail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
-          <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Must be a valid email: joe@abc.com</span>
-        </span>
+           
+        <div class="form-group">
+          <span class="form-group inline-name">
+            <input type="text" [(ngModel)]="createUserRequest.sponsorName" #createUserRequestSponsorName="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorName.errors && createUserRequestSponsorName.touched}"
+              class="form-control applyinput sponsor" name="sponsorName" minlength="2" placeholder="*Sponsor Name" required>
+            <span [hidden]="!createUserRequestSponsorName.errors?.required" class="invalid-feedback">*Sponsor Name is required</span>
+            <span [hidden]="!createUserRequestSponsorName.errors?.minlength" class="invalid-feedback">*Sponsor Name must be at least 2 characters</span>
+          </span>
+          <span class="form-group inline-name">
+            <input type="text" [(ngModel)]="createUserRequest.sponsorPhone" #createUserRequestSponsorPhone="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorPhone.errors && createUserRequestSponsorPhone.touched}"
+              class="form-control applyinput sponsor" name="sponsorPhone" placeholder="*Sponsor Phone" pattern="\d{3}[\-]\d{3}[\-]\d{4}" required>
+            <span class="form-formatting">US based in the format of: 123-456-7890</span>
+            <span [hidden]="!createUserRequestSponsorPhone.errors?.required" class="invalid-feedback">*Sponsor Phone is required</span>
+            <span [hidden]="!createUserRequestSponsorPhone.errors?.pattern" class="invalid-feedback">*Must be US based in the format of: 123-456-7890</span>
+          </span>
+          <span class="form-group inline-name">
+            <input type="email" [(ngModel)]="createUserRequest.sponsorEmail" #createUserRequestSponsorEmail="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorEmail.errors && createUserRequestSponsorEmail.touched}"
+              class="form-control applyinput sponsor" name="sponsorEmail" placeholder="*Sponsor Email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+              required>
+            <span class="form-formatting">Must be a valid email: joe@abc.com</span>
+            <span [hidden]="!createUserRequestSponsorEmail.errors?.required" class="invalid-feedback">*Sponsor Email is required</span>
+            <span [hidden]="!createUserRequestSponsorEmail.errors?.pattern" class="invalid-feedback">*Must be a valid email: joe@abc.com</span>
+          </span>
+        </div>
+
         <span [hidden]="!formsubmitted" class="clearfix">
           <div data-notify="container" class="col-xs-11 col-sm-4 alert alert-success animated fadeInDown" role="alert" data-notify-position="top-right" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1031; top: 20px; right: 20px; animation-iteration-count: 1;">
             <span data-notify="icon" class="fa fa-check"></span>
