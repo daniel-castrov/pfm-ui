@@ -120,14 +120,18 @@ export class WithFullNameService {
     return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);
   }
 
-  async programPlusPrsMinusPrsForGenericSubprograms(phaseId: string): Promise<WithFullName[]> {
+  // in the case where there is a Program and a PR with same name, only the Program is returned
+  async programsPlusPrs(phaseId: string): Promise<ProgramOrPrWithFullName[]> {
     const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
-    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( (pr: ProgramRequestWithFullName) =>
-      pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB &&
-      pr.type !== ProgramType.GENERIC);
+    const prsWithoutPrograms: ProgramRequestWithFullName[] = prs.filter( pr => pr.creationTimeType !== CreationTimeType.PROGRAM_OF_MRDB);
 
     const programs: ProgramWithFullName[] = (await this.programs());
     return this.sort((<WithFullName[]>programs).concat(prsWithoutPrograms));
+  }
+
+  async programsPlusPrsMinusSubprograms(phaseId: string): Promise<ProgramOrPrWithFullName[]> {
+    const progOrPrs = await this.programsPlusPrs(phaseId);
+    return progOrPrs.filter( progOrPr => progOrPr.type == ProgramType.PROGRAM );
   }
 
   async programsMunisPrs(allPrograms: ProgramWithFullName[], pomId: string): Promise<ProgramWithFullName[]> {

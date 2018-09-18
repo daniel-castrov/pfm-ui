@@ -46,7 +46,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
         break;
       case 'New FoS':
       case 'New Increment':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programPlusPrsMinusPrsForGenericSubprograms(this.pomId);
+        this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'New Subprogram':
