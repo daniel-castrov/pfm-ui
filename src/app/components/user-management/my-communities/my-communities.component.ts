@@ -13,7 +13,7 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 @Component({
   selector: 'app-request-community',
   templateUrl: './my-communities.component.html',
-  styleUrls: ['./my-communities.component.css']
+  styleUrls: ['./my-communities.component.scss']
 })
 export class MyCommunitiesComponent implements OnInit {
 
