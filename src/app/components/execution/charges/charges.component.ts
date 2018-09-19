@@ -73,7 +73,7 @@ export class ChargesComponent implements OnInit {
       other: this.other,
       reason: this.reason
     };
-    this.updatelines.forEach(l => {
+    this.table.updatelines.forEach(l => {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 

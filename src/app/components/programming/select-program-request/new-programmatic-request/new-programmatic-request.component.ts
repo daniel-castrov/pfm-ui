@@ -6,11 +6,11 @@ import {ProgramRequestPageModeService} from '../../program-request/page-mode.ser
 import {ProgramType} from "../../../../generated";
 
 enum AddNewPrForMode {
-  AN_MRDB_PROGRAM = 'An MRDB Program',
-  A_NEW_INCREMENT = 'A New Increment',
-  A_NEW_FOS = 'A New FoS',
-  A_NEW_SUBPROGRAM = 'A New Subprogram',
-  A_NEW_PROGRAM = 'A New Program'
+  AN_MRDB_PROGRAM = 'Previously Funded Program',
+  A_NEW_INCREMENT = 'New Increment',
+  A_NEW_FOS = 'New FoS',
+  A_NEW_SUBPROGRAM = 'New Subprogram',
+  A_NEW_PROGRAM = 'New Program'
 }
 
 @Component({
@@ -40,16 +40,16 @@ export class NewProgrammaticRequestComponent implements OnInit {
   async setAddNewPrRadioMode(selection: AddNewPrForMode) {
     this.addNewPrForMode = selection;
     switch(this.addNewPrForMode) {
-      case 'An MRDB Program':
+      case 'Previously Funded Program':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
-      case 'A New FoS':
-      case 'A New Increment':
+      case 'New FoS':
+      case 'New Increment':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
         this.initialSelectOption = 'Program';
         break;
-      case 'A New Subprogram':
+      case 'New Subprogram':
         this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
         this.initialSelectOption = 'Program Request';
         break;
@@ -58,13 +58,13 @@ export class NewProgrammaticRequestComponent implements OnInit {
 
   async next() {
     switch(this.addNewPrForMode) {
-      case 'An MRDB Program':
+      case 'Previously Funded Program':
         this.programRequestPageMode.set(CreationTimeType.PROGRAM_OF_MRDB,
           this.pomId,
           this.selectedProgramOrPr,
           ProgramType.PROGRAM);
         break;
-      case 'A New FoS':
+      case 'New FoS':
         this.programRequestPageMode.programType = ProgramType.FOS;
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
@@ -78,7 +78,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
             ProgramType.FOS);
         }
         break;
-      case 'A New Increment':
+      case 'New Increment':
         if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
@@ -91,13 +91,13 @@ export class NewProgrammaticRequestComponent implements OnInit {
             ProgramType.INCREMENT);
         }
         break;
-      case 'A New Subprogram':
+      case 'New Subprogram':
         this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_PR,
           this.pomId,
           this.selectedProgramOrPr,
           ProgramType.GENERIC);
         break;
-      case 'A New Program':
+      case 'New Program':
         this.programRequestPageMode.set(CreationTimeType.NEW_PROGRAM,
           this.pomId,
           null,
