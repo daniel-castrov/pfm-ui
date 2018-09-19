@@ -3,16 +3,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { Router } from '@angular/router';
 
 // Generated
-import { Community } from '../../generated';
-import { CommunityService } from '../../generated';
-import { CreateUserRequest } from '../../generated/model/createUserRequest';
-import { CreateUserRequestService } from '../../generated/api/createUserRequest.service';
-import { RestResult } from '../../generated/model/restResult';
-import { Stranger } from '../../generated/model/stranger';
-import { StrangerService } from '../../generated/api/stranger.service';
-
-declare var jquery: any;
-declare var $: any;
+import { Stranger, Community, Organization, CreateUserRequest, RestResult } from '../../generated';
+import { StrangerService, CreateUserRequestService  } from '../../generated';
 
 @Component({
   selector: 'app-apply',
@@ -21,18 +13,19 @@ declare var $: any;
 })
 export class ApplyComponent implements OnInit {
 
-  resultError: string[] = [];
-  stranger: Stranger;
-  communities: Community[] = [];
-  ndaSatisfied: boolean;
-  ndaText:string;
-  createUserRequest: CreateUserRequest = new Object();
-  formsubmitted: boolean;
+  private resultError: string[] = [];
+  private stranger: Stranger;
+  private communities: Community[] = [];
+  private organizations: Organization[] = [];
+  private allOrganizations:  Organization[] = [];
+  private ndaSatisfied: boolean;
+  private ndaText:string;
+  private createUserRequest: CreateUserRequest = new Object();
+  private formsubmitted: boolean;
 
   constructor(
-    public communityService: CommunityService,
-    public createUserRequestService: CreateUserRequestService,
-    public strangerService: StrangerService,
+    private createUserRequestService: CreateUserRequestService,
+    private strangerService: StrangerService,
     private router: Router,
   ) { }
 
@@ -55,30 +48,32 @@ export class ApplyComponent implements OnInit {
     // });
   }
 
-  getStranger(): void {
+  private getStranger(): void {
     let resultStranger: RestResult;
 
-    let s = this.strangerService.get();
-    s.subscribe(c => {
-      resultStranger = c;
+    this.strangerService.get().subscribe(data => {
+      resultStranger = data;
       this.resultError.push(resultStranger.error);
       this.stranger = resultStranger.result;
-
-
       if ( this.stranger.contractor ){
         this.ndaSatisfied = false;
       }
       this.communities = this.stranger.communities;
+      this.allOrganizations = this.stranger.organizations;
       this.ndaText = this.stranger.nda;
     });
   }
 
-  onSubmit({ value, valid }) {
+  private filterOrgs( commId:string ){  
+    this.organizations =  this.allOrganizations.filter(org => org.communityId == commId);
+  }
+
+  private onSubmit({ value, valid }) {
     if (valid) {
 
       this.createUserRequest = value;
       this.createUserRequest.status = "UNDECIDED";
-      this.createUserRequest.cn = this.stranger.cn;
+      this.createUserRequest.cn = this.stranger.cn;      
 
       if ( this.stranger.contractor ){
         this.createUserRequest.nda = this.ndaText.substring(0,this.ndaText.indexOf("\n"));
@@ -86,13 +81,11 @@ export class ApplyComponent implements OnInit {
         this.createUserRequest.nda="NA"
       }
 
-      console.log(this.createUserRequest);
-
       let resultReq: RestResult;
-      let s = this.createUserRequestService.create(this.createUserRequest);
-      s.subscribe(c => {
-        resultReq = c;
-      });
+      this.createUserRequestService.create(this.createUserRequest)
+        .subscribe(c => {
+          resultReq = c;
+        });
 
       this.formsubmitted = true;
 
@@ -102,18 +95,8 @@ export class ApplyComponent implements OnInit {
     }
   }
 
-  done(){
+  private done(){
     this.router.navigate(['./about']);
   }
-
-  services = [
-    { id: 1, name: 'Army (USA)' },
-    { id: 2, name: 'USAF (Air Force)' },
-    { id: 3, name: 'USN (Navy)' },
-    { id: 4, name: 'USMC (Marine Corps)' },
-    { id: 5, name: 'USCG (Coast Guard)' },
-    { id: 6, name: 'Other' },
-    { id: 7, name: 'None' }
-  ];
 
 }

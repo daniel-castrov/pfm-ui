@@ -19,7 +19,7 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 @Component({
   selector: 'app-manage-self',
   templateUrl: './manage-self.component.html',
-  styleUrls: ['./manage-self.component.css']
+  styleUrls: ['./manage-self.component.scss']
 })
 export class ManageSelfComponent implements OnInit {
 
@@ -88,7 +88,7 @@ export class ManageSelfComponent implements OnInit {
 
     newCom = new Object;
     newCom.primaryEmail
-    
+
   }
 
 }
