@@ -114,14 +114,14 @@ export class UpdateProgramExecutionComponent implements OnInit {
       forkJoin([
         my.exesvc.getExecutionLineById(exelineid),
         my.progsvc.getIdNameMap(),
-        my.exesvc.getExecutionDropdowns()
+        my.exesvc.getExecutionDropdowns(),
       ]).subscribe(data => {
         my.current = {
           line: data[0].result
         };
 
         my.programfilter = function (el: ExecutionLine) {
-          console.log('into programfilter ' + JSON.stringify(my.current));
+          //console.log('into programfilter ' + JSON.stringify(my.current));
           return !(my.current.line.id === el.id);
         };
 
@@ -133,13 +133,25 @@ export class UpdateProgramExecutionComponent implements OnInit {
           my.programIdNameLkp.set(id, data[1].result[id]);
         });
 
-        this.types.set('EXE_BTR', 'BTR');
-        this.types.set('EXE_REALIGNMENT', 'Realignment');
-        this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
-        this.allsubtypes = data[2].result.filter(x => this.types.has(x.type));
-
-        this.type = 'EXE_BTR';
-        this.updatedropdowns();
+        my.exesvc.hasAppropriation(my.current.line.phaseId).subscribe(d => { 
+          if (d.result) {
+            // has appropriation, so only BTR and REALIGNMENTS are possible
+            this.types.set('EXE_BTR', 'BTR');
+            this.types.set('EXE_REALIGNMENT', 'Realignment');
+          }
+          else {
+            this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
+          }
+          this.allsubtypes = data[2].result.filter(x => this.types.has(x.type));
+          var first = true;
+          this.types.forEach((val, key) => { 
+            if (first) {
+              this.type = key;
+              this.updatedropdowns();
+            }
+            first = false;
+          });
+        });
       });
     });
   }
@@ -152,7 +164,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
       type: this.etype.subtype,
       reason: this.reason,
     };
-    this.updatelines.forEach(l => {
+    this.table.updatelines.forEach(l => {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 

@@ -27,32 +27,58 @@ export class ExecutionLineTableComponent implements OnInit {
   private _phase: Execution;
   @Input() private showAddProgramButton: boolean = true;
   @Input() private sourceOrTarget: string = 'to select target programs';
-  @Input() private exelinefilter: ExecutionLineFilter;
-  @Input() private exeprogramfilter: ExecutionLineFilter;
+  private _exelinefilter: ExecutionLineFilter;
+  private _exeprogramfilter: ExecutionLineFilter;
   @Input() exevalidator: ExecutionTableValidator = function (x: ExecutionLineWrapper[]): boolean[] {
     var okays: boolean[] = [];
     x.forEach((el: ExecutionLineWrapper) => {
+      //console.log(el.line.toa + '-' + el.line.withheld + '-' + el.line.released + '>=' + el.amt + '? ' + (el.line.toa - el.line.withheld - el.line.released >= el.amt));
       okays.push((el.line.toa ? el.line.toa - el.line.withheld - el.line.released >= el.amt : true));
     });
     return okays;
   };
   tableok: boolean = false;
-  private _updatelines: ExecutionLineWrapper[] = [];
-  private allexelines: ExecutionLine[] = [];
   private programIdNameLkp: Map<string, string> = new Map<string, string>();
+  private elIdNameLkp: Map<string, ELDisplay> = new Map<string, ELDisplay>();
   private agOptions: GridOptions;
   private availablePrograms: {}[] = [];
+
+  private tmpdata: ExecutionLineWrapper[];
+
+  @Input() set exelinefilter(x: ExecutionLineFilter) {
+    this._exelinefilter = x;
+    this.setAvailablePrograms();
+  }
+
+  get exelinefilter(): ExecutionLineFilter {
+    return this._exelinefilter;
+  }
+
+  @Input() set exeprogramfilter(x: ExecutionLineFilter) {
+    this._exeprogramfilter = x;
+    this.setAvailablePrograms();
+  }
+
+  get exeprogramfilter(): ExecutionLineFilter {
+    return this._exeprogramfilter;
+  }
 
   @Input() set phase(p: Execution) {
     this._phase = p;
     if (p) {
       var my: ExecutionLineTableComponent = this;
       my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
-        my.allexelines = d2.result
-          .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0));
+        d2.result
+          .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0))
+          .forEach(el => {
+            my.elIdNameLkp.set(el.id, {
+              line: el,
+              display: el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
+            });
+          });
+        
         my.setAvailablePrograms();
       });
-
     }
   }
 
@@ -60,31 +86,42 @@ export class ExecutionLineTableComponent implements OnInit {
     return this._phase;
   }
 
-
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
-    this._updatelines = newdata;
+    console.log( 'into updatelines')
     if (this.agOptions && this.agOptions.api) {
+      console.log( 'agOptions has been initted')
       this.agOptions.api.setRowData(newdata);
       this.agOptions.api.refreshCells();
+      this.refreshpins();
       this.recheckValidity();
+    }
+    else {
+      console.log('agOptions has NOT been initted...storing data for later')
+      this.tmpdata = newdata;
     }
   }
 
-  get updatelines() {
-    return this._updatelines;
-  }
-
-  refreshlines() {
-    this._updatelines.splice(0, this._updatelines.length);
-    // don't include filtered-out rows
-    this.agOptions.api.forEachNodeAfterFilter(rownode => {
-      this._updatelines.push(rownode.data);
+  get updatelines(): ExecutionLineWrapper[] {
+    var lines: ExecutionLineWrapper[] = [];
+    this.agOptions.api.forEachNodeAfterFilter(rn => {
+      if (rn.data.amt) {
+        lines.push(rn.data);
+      }
     });
-    this.refreshpins();
+
+    return lines;
   }
 
   refreshpins() {
-    if (this._updatelines.length > 0) {
+    console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
+    var dopinned: boolean = false;
+    this.agOptions.api.forEachNodeAfterFilter(rn => { 
+      if (rn.data.amt && rn.data.amt > 0) {
+        dopinned = true;
+      }
+    });
+
+    if( dopinned ){
       this.agOptions.api.setPinnedBottomRowData([{
         line: {},
         amt: this.total()
@@ -116,28 +153,39 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     var programSetter = function (params): boolean {
-      var mrid: string = params.newValue.key;
-      var elChoices = my.getLineChoices(mrid);
-      if (1 == elChoices.length ) {
-        params.data.line = elChoices[0];
-        params.data.amt = 0;
-      }
-      else {
-        params.data.line = { mrId: mrid };
-        params.data.amt = 0;
+      if (params.newValue) {
+        var mrid: string = params.newValue.key;
+        var elChoices = my.getLineChoices(mrid);
+        if (1 == elChoices.length) {
+          params.data.line = my.elIdNameLkp.get( elChoices[0] ).line;
+          params.data.amt = 0;
+        }
+        else {
+          params.data.line = { mrId: mrid };
+          params.data.amt = 0;
+        }
+
+        my.setAvailablePrograms();
+        return true;
       }
 
-      my.setAvailablePrograms();
-
-      return true;
+      return false;
     }
 
     var my: ExecutionLineTableComponent = this;
     var amtSetter = function (params): boolean {
       params.data.amt = Number.parseFloat(params.newValue);
-      my.refreshlines();
+      my.refreshpins();
       my.recheckValidity();
       return true;
+    }
+
+    var linesetter = function (params): boolean {
+      if (params.newValue && my.elIdNameLkp.has( params.newValue )) {
+        params.data.line = my.elIdNameLkp.get(params.newValue).line;
+        return true;
+      }
+      return false;
     }
 
     var programcellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
@@ -163,13 +211,35 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     var linecellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
-      console.log(cellval);
-      return true;
-       //p.data.line.appropriation
-       // ? p.data.line.appropriation + '/' + p.data.line.blin + '/' + p.data.line.item + '/' + p.data.line.opAgency
-       // : '')
-    }
+      console.log('into linecellfilter: '+cellval);
+      var elname: string = '';
+      my.agOptions.api.forEachNode(rn => { 
+        if (rn.data.line.id === cellval) {
+          elname = rn.data.line.appropriation + '/' + rn.data.line.blin + '/' + rn.data.line.item + '/' + rn.data.line.opAgency;
+        }
+      });
 
+      elname = elname.toLocaleLowerCase();
+      //console.log(elname + ' ' + filter + ' ' + filtertext + '?');
+      switch (filter) {
+        case 'equals':
+          return elname === filtertext;
+        case 'notEqual':
+          return elname !== filtertext;
+        case 'startsWith':
+          return elname.startsWith(filtertext);
+        case 'endsWith':
+          return elname.endsWith(filtertext);
+        case 'contains':
+          return elname.indexOf(filtertext) > -1;
+        case 'notContains':
+          return elname.indexOf(filtertext) < 0;
+        default:
+          console.warn('some new filter? ' + filter);
+      };
+
+      return false;
+    }
 
     this.agOptions = <GridOptions>{
       enableSorting: true,
@@ -179,6 +249,10 @@ export class ExecutionLineTableComponent implements OnInit {
       paginationPageSize: 30,
       suppressPaginationPanel: true,
       frameworkComponents: agcomps,
+      onFilterModified: ev => {
+        my.refreshpins();
+        my.recheckValidity();
+      },
       context: {
         programlkp: my.programIdNameLkp,
         enabled: false,
@@ -212,21 +286,26 @@ export class ExecutionLineTableComponent implements OnInit {
         {
           headerName: 'Execution Line',
           filter: 'agTextColumnFilter',
-          editable: true,
-          //field: 'line',
           filterParams: {
             textCustomComparator: linecellfilter
           },
-          valueFormatter: params => (params.data.line.appropriation
-            ? params.data.line.appropriation + '/' + params.data.line.blin + '/' + params.data.line.item + '/' + params.data.line.opAgency
+          editable: true,
+          field: 'line.id',
+          valueFormatter: params => ( params.data.line.appropriation
+            ? my.elIdNameLkp.get( params.data.line.id ).display
             : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
-          cellEditorParams: params => ({
-            values: my.getLineChoices(params.data.line.mrId),
-            formatValue: el => (el.appropriation
-              ? el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
-              : '')
-          }),
-          valueGetter: p=>p.data.line.mrId,
+          cellEditorParams: params => {
+            var choices: string[] = my.getLineChoices(params.data.line.mrId);
+            //console.log(choices);
+            return {
+              values: choices,
+              formatValue: el => {
+                //console.log('formatting value for editor: '+JSON.stringify(el));
+                return (my.elIdNameLkp.has(el) ? my.elIdNameLkp.get(el).display : '');
+              }
+            };
+          },
+          valueSetter: linesetter,
           cellEditor: 'agRichSelectCellEditor',
           cellClass: ['ag-cell-light-grey'],
           pinnedRowCellRenderer: params => ''
@@ -273,9 +352,10 @@ export class ExecutionLineTableComponent implements OnInit {
           headerName: 'Remove',
           filter: 'agNumberColumnFilter',
           field: 'amt',
-          width: 92,
+          width: 35,
           cellRenderer: 'deleter',
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey'],
+          pinnedRowCellRenderer: p => ''
         }
       ]
     };
@@ -301,71 +381,97 @@ export class ExecutionLineTableComponent implements OnInit {
         amt: 0
       }]
     });
+
+    this.refreshpins();
   }
 
   delete(rowIndex, data) {
-    this.agOptions.api.updateRowData({remove: [data]});
-    this.refreshlines();
+    this.agOptions.api.updateRowData({ remove: [data] });
+    this.refreshpins();
     this.recheckValidity();
   }
 
-  getLineChoices(mrid): ExecutionLine[] {
-    var existingeEls: Set<string> = new Set<string>();
+  getLineChoices(mrid): string[] {
+    //console.log('getting line choices for ' + mrid);
+    var existingEls: Set<string> = new Set<string>();
     if (this.agOptions && this.agOptions.api) {
       this.agOptions.api.forEachNode(rownode => {
         if (rownode.data.line.id) {
-          existingeEls.add(rownode.data.line.id);
+          existingEls.add(rownode.data.line.id);
         }
       });
     }
 
-    return this.allexelines
-      .filter(x => x.mrId === mrid)
-      .filter(y => (this.exelinefilter ? this.exelinefilter(y) : true))
-      .filter(z => !existingeEls.has(z.id) // we can't add the same EL twice
-      );
+    //console.log('all exelines: ' + this.elIdNameLkp.size);
+    var rets: string[] = [];
+    this.elIdNameLkp.forEach((eld, elid) => {
+      if (eld.line.mrId === mrid &&
+        (this.exelinefilter ? this.exelinefilter(eld.line) : true) &&
+        !existingEls.has(elid)) {
+        rets.push(elid);
+      }
+    });
+
+    return rets;
   }
 
   total(): number {
     var tot: number = 0;
-    for (var i = 0; i < this._updatelines.length; i++) {
-      if (this._updatelines[i].amt ) {
-        tot += this._updatelines[i].amt;
+    this.agOptions.api.forEachNodeAfterFilter(rn => {
+      if (rn.data.amt) {
+        tot += rn.data.amt;
       }
-    }
+    });
     return tot;
   }
 
   recheckValidity() {
+    //console.log('checking validity');
+
+    var lines: ExecutionLineWrapper[] = [];
+    this.agOptions.api.forEachNodeAfterFilter(rn => { 
+      lines.push(rn.data);
+    });
+
     var failure: boolean = false;
-    this.exevalidator(this._updatelines, true).forEach(x => {
+    this.exevalidator( lines, true).forEach(x => {
       if (!x) {
         failure = true;
       }
     });
 
-    if (0 === this._updatelines.length) {
+    if (0 === lines.length) {
       failure = true;
     }
 
     this.tableok = !failure;
-    this.agGrid.api.refreshCells();
+    this.agGrid.api.refreshCells(); // need to update CSS classes
   }
 
   setAvailablePrograms() {
     this.availablePrograms.splice(0, this.availablePrograms.length);
 
-    this.programIdNameLkp.forEach((v, k) => {
-      if (this.getLineChoices(k).length > 0) {
-        this.availablePrograms.push({
-          key: k,
-          value: v
-        });
-      }
-    });
+    if (this.programIdNameLkp.size > 0) {
+      this.programIdNameLkp.forEach((v, k) => {
+        if (this.getLineChoices(k).length > 0) {
+          this.availablePrograms.push({
+            key: k,
+            value: v
+          });
+        }
+      });
+    } else {
+      console.warn( 'skipping available program determination (no names in map)')
+    }
   }
 
   onGridReady(params) {
+    if (this.tmpdata) {
+      console.log( 'setting row data from stored data')
+      params.api.setRowData(this.tmpdata);
+      delete this.tmpdata;
+    }
+
     setTimeout(() => {
       params.api.sizeColumnsToFit();
       this.recheckValidity();
@@ -376,4 +482,9 @@ export class ExecutionLineTableComponent implements OnInit {
       });
     });
   }
+}
+
+interface ELDisplay {
+  line: ExecutionLine;
+  display: string
 }

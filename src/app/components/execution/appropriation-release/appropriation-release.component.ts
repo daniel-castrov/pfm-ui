@@ -48,7 +48,7 @@ export class AppropriationReleaseComponent implements OnInit {
       forkJoin([
         this.exesvc.getById(data.phaseId),
         this.exesvc.getExecutionDropdowns(),
-        this.exesvc.hasAppropriation(data.phaseId)        
+        this.exesvc.hasAppropriation(data.phaseId)
       ]).subscribe(d2 => {
         this.phase = d2[0].result;
         this.subtypes = d2[1].result
@@ -67,7 +67,8 @@ export class AppropriationReleaseComponent implements OnInit {
       other: this.other,
       reason: this.reason,
     };
-    this.updatelines.forEach(l => {
+    
+    this.table.updatelines.forEach(l => {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
