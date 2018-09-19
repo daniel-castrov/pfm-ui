@@ -113,7 +113,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   refreshpins() {
-    console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
+    //console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
     var dopinned: boolean = false;
     this.agOptions.api.forEachNodeAfterFilter(rn => { 
       if (rn.data.amt && rn.data.amt > 0) {
@@ -469,6 +469,7 @@ export class ExecutionLineTableComponent implements OnInit {
     if (this.tmpdata) {
       console.log( 'setting row data from stored data')
       params.api.setRowData(this.tmpdata);
+      this.refreshpins();
       delete this.tmpdata;
     }
 

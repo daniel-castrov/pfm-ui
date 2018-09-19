@@ -16,7 +16,7 @@ export class DeleteRenderer implements ICellRendererAngularComp {
     this.params = param;
     if (typeof this.params.context.deleteHidden !== 'undefined') {
       this.hidden = (typeof this.params.context.deleteHidden === 'function'
-        ? this.params.context.deleteHidden()
+        ? this.params.context.deleteHidden( param )
         : this.params.context.deleteHidden
       );
     }
