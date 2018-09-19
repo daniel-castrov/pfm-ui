@@ -239,7 +239,7 @@ export class FundsTabComponent implements OnChanges {
   generateColumns() {
     this.columnDefs = [
       {
-        headerName: 'funds values are expressed in ($K)',
+        headerName: 'funds values in $K',
         children: [{
           headerName: '',
           colId: 'delete',

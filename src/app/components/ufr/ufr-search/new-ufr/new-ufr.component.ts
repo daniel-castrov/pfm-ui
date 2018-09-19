@@ -49,13 +49,13 @@ export class NewUfrComponent implements OnInit {
         this.initialSelectOption = 'Program';
         break;
       case 'A Program Request': // was subprogram
-        let prs:any = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
+        const prs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
         this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(prs);
         this.initialSelectOption = 'Program Request';
         break;
       case 'A New FoS':
       case 'A New Increment':
-        let progsOrPrs:any = await this.withFullNameService.programPlusPrsMinusPrsForGenericSubprograms(this.pomId);
+        const progsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
         this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(progsOrPrs);
         this.initialSelectOption = 'Program';
         break;

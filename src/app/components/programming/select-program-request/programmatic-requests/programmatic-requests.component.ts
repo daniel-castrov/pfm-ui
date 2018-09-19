@@ -119,7 +119,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   defineColumns(programRequests) {
     this.columnDefs = [
       {
-        headerName: 'funds values are expressed in ($K)',
+        headerName: 'funds values in $K',
         children: [
           {
             headerName: 'Status',
@@ -130,13 +130,13 @@ export class ProgrammaticRequestsComponent implements OnChanges {
             cellClass: params => this.getStatusClass(params),
             cellStyle: { backgroundColor: "#eae9e9" },
             cellRenderer: 'summaryProgramCellRenderer',
-            width: 60
+            width: 120
           },
           {
             headerName: 'Cycle',
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            width: 50,
+            width: 100,
             suppressSorting: true,
             cellClass: ['ag-cell-white'],
             valueGetter: params => {
@@ -199,14 +199,15 @@ export class ProgrammaticRequestsComponent implements OnChanges {
           break;
       }
       if (subHeader) {
+        let columnKey = year.toString().replace('20', 'FY')
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
           children: [{
-            headerName: year,
+            headerName: columnKey,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            maxWidth: 98,
+            maxWidth: 104,
             cellClass: cellClass,
             cellClassRules: {
               'by': params => { return year >= this.pomFy && params.data.phaseType === PhaseType.POM }
@@ -226,7 +227,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
       headerName: 'CTC',
       menuTabs: this.menuTabs,
       filter: "agNumberColumnFilter",
-      maxWidth: 98,
+      maxWidth: 104,
       type: "numericColumn",
       valueGetter: params => { return this.getTotal(params.data, columnKeys) },
       valueFormatter: params => { return this.currencyFormatter(params) }

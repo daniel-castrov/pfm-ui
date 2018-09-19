@@ -27,9 +27,9 @@ export class IdAndNameComponent {
                private withFullNameService: WithFullNameService ) {
   }
 
-  async init(pr: ProgrammaticRequest) { // do not be tempted to save the parameter 'pr'; it should be used for initilization only
+  async init(pr: ProgrammaticRequest) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
     this.parentFullName = await this.getParentFullName(pr);
-    const programsPlusPrs: WithFullName[] = await this.withFullNameService.programPlusPrsMinusPrsForGenericSubprograms(pr.phaseId);
+    const programsPlusPrs: WithFullName[] = await this.withFullNameService.programsPlusPrs(pr.phaseId);
     this.invalidShortNames = this.getInvalidShortNames(programsPlusPrs);
     this.invalidLongNames = this.getInvalidLongNames(programsPlusPrs);
   }

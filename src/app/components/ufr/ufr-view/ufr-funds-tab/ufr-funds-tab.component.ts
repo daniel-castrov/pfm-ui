@@ -223,7 +223,7 @@ export class UfrFundsComponent implements OnChanges {
   generateColumns() {
     this.defaultColumnDefs = [
       {
-        headerName: 'funds values are expressed in ($K)',
+        headerName: 'funds values in $K',
         children: [{
           colId: 'delete',
           maxWidth: 40,
