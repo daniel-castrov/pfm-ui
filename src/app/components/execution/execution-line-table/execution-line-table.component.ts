@@ -362,7 +362,7 @@ export class ExecutionLineTableComponent implements OnInit {
           width: 92,
           cellClassRules: {
             'ag-cell-light-grey': params => my.validateOneRow( params.data ),
-            'ag-cell-red': params => !my.validateOneRow(params.data)
+            'ag-cell-red': params => !my.validateOneRow(params.data),
             'text-right': true,
           },
           valueFormatter: my.currencyFormatter
