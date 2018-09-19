@@ -69,7 +69,7 @@ export class FundsUpdateComponent implements OnInit {
     }
 
     var programLinkEnabled = function (params): boolean {
-      return (!(0 === params.data.released || params.data.appropriated || my.hasAppropriation ));
+      return (0 !== params.data.released);
     };
 
     this.agOptions = <GridOptions>{
@@ -105,7 +105,7 @@ export class FundsUpdateComponent implements OnInit {
           valueGetter: params => { return params.data.mrId; }
         },
         {
-          headerName: 'Appr.',
+          headerName: 'Appn.',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
           width: 92,
@@ -113,7 +113,7 @@ export class FundsUpdateComponent implements OnInit {
           cellClass: ['ag-cell-light-grey']
         },
         {
-          headerName: 'Budget',
+          headerName: 'BA/BLIN',
           filter: 'agTextColumnFilter',
           field: 'blin',
           width: 92,
