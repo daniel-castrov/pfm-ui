@@ -59,15 +59,15 @@
             </li>
             <li>
               Last Name:
-              <input type="text" [(ngModel)]="targetUser.lastName">
+              <input class="form-control form-input" type="text" [(ngModel)]="targetUser.lastName">
             </li>
             <li>
               Email:
-              <input [(ngModel)]="targetUser?.communication.primaryEmail" placeholder="value">
+              <input class="form-control form-input" [(ngModel)]="targetUser?.communication.primaryEmail" placeholder="value">
             </li>
             <li>
               Phone:
-              <input [(ngModel)]="targetUser?.communication.primaryPhone" placeholder="value1">
+              <input class="form-control form-input" [(ngModel)]="targetUser?.communication.primaryPhone" placeholder="value1">
             </li>
           </ul>
           <br>
@@ -106,13 +106,13 @@
         <div class="card-container">
           <ul>
             <li>Default Color:
-              <input type="text" [(ngModel)]="targetUser.preferences.defaultColor">
+              <input class="form-control form-input" type="text" [(ngModel)]="targetUser.preferences.defaultColor">
             </li>
             <li>Clock:
-              <input type="text" [(ngModel)]="targetUser.preferences.clock">
+              <input class="form-control form-input" type="text" [(ngModel)]="targetUser.preferences.clock">
             </li>
             <li>Landing Page:
-              <input type="text" [(ngModel)]="targetUser.preferences.landingPage">
+              <input class="form-control form-input" type="text" [(ngModel)]="targetUser.preferences.landingPage">
             </li>
           </ul>
           <br>
@@ -145,27 +145,40 @@
           </button>
         </div>
         <div class="card-container">
-          <table>
+          <table class="table">
             <tr *ngFor="let cwr of communityWithUserRoles">
               <td>{{ cwr.community.name }}</td>
-              <td><button class="btn-card-header" title="Leave">
-                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Leave Community
-              </button></td>
-              <td> Roles:
-              <button *ngFor="let role of cwr.userRoles" (click)="editRoles(cwr.community.id,role.id,targetUser.id )">
-                {{role.name}}
-              </button> 
+              <td>
+                <button class="btn-card-header" title="Leave">
+                  <i class="fa fa-times icon-pad" aria-hidden="true"></i>Leave Community
+                </button>
+              </td>
+              <td>
+                Roles:
+                <button class="btn-card-header" *ngFor="let role of cwr.userRoles" (click)="editRoles(cwr.community.id,role.id,targetUser.id )">
+                    {{role.name}}
+                </button>
               </td>
             </tr>
             <tr>
-              <td><select name="addCommunitySelector" [(ngModel)]="addedcommunity">
-                <option value=""></option>
-                <option *ngFor="let all_community of avail_Communities" [value]="all_community.id">{{ all_community.name }}</option>
-              </select></td>
-              <td><button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
-                <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Join Community
-              </button></td>
-              <td></td>
+              <td>
+                <select class="form-control"  name="addCommunitySelector" [(ngModel)]="addedcommunity">
+                  <option value="">Select Community</option>
+                  <option *ngFor="let all_community of avail_Communities" [value]="all_community.id">{{ all_community.name }}</option>
+                </select>
+              </td>
+              <td>
+                <select class="form-control"  name="" [(ngModel)]="addedcommunity">
+                  <option value="">Select Organization</option>
+                  <option>blah</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
+                  <i class="fa fa-plus icon-pad" aria-hidden="true"></i>Join Community
+                </button>
+              </td>
+              <td><span>&nbsp;</span></td>
             </tr>
           </table>
         </div>

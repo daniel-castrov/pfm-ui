@@ -24,7 +24,7 @@ import { UserRoleResourceService } from '../../../generated/api/userRoleResource
 @Component({
   selector: 'app-manage-users',
   templateUrl: './manage-users.component.html',
-  styleUrls: ['./manage-users.component.css']
+  styleUrls: ['./manage-users.component.scss']
 })
 export class ManageUsersComponent implements OnInit {
 
@@ -87,7 +87,7 @@ export class ManageUsersComponent implements OnInit {
         this.targetUser = resultUser.result;
         console.log("TargetUser: " + this.targetUser.cn);
 
-        // 2. get all communities 
+        // 2. get all communities
         let allCommunities: Community[] = [];
         let resultComm: RestResult;
 
@@ -105,8 +105,8 @@ export class ManageUsersComponent implements OnInit {
               resultUserRoleResources = c;
               this.resultError.push(resultUserRoleResources.error);
 
-              // push the community if at least one role and take it out of avail 
-              if ( resultUserRoleResources.result.length>0 ){ 
+              // push the community if at least one role and take it out of avail
+              if ( resultUserRoleResources.result.length>0 ){
                 this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result));
                 for (var i =0; i < allCommunities.length; i++){
                   if ( allCommunities[i].id === comm.id ){
@@ -154,7 +154,7 @@ export class ManageUsersComponent implements OnInit {
   }
 
   addCommunity(): void {
-    
+
     let resultRole: RestResult;
     this.roleService.getByNameAndCommunityId(this.addedcommunity,"User")
     .subscribe(r => {
@@ -166,7 +166,7 @@ export class ManageUsersComponent implements OnInit {
       let userRoleRes:UserRoleResource=new Object();
       userRoleRes.roleId=userRole.id;
       userRoleRes.userId=this.id;
-      
+
       let resultUserRoleResource: RestResult;
       this.userRoleResourceService.create(userRoleRes)
       .subscribe(r => {
@@ -175,7 +175,7 @@ export class ManageUsersComponent implements OnInit {
       });
     });
   }
- 
+
   editRoles( commid, roleid, userid ){
     this.router.navigate(['/roles', commid, roleid, userid]);
   }
@@ -192,7 +192,3 @@ class CommWithRoles {
     this.userRoles = ur;
   }
 }
-
-
-
-
