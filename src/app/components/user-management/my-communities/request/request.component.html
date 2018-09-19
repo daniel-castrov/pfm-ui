@@ -1,30 +1,48 @@
-<div class="wrapper">
-  <div class="communities">
-    <div class="label">Community</div>
-    <select size="3" class="form-control-sm mb-2 mr-sm-2 manage-community-list" [(ngModel)]="selectedCommunityId">
+<table class="my-community-table">
+  <tr>
+    <td>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Select a Community
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item">Community 1</a>
+          <a class="dropdown-item">Community 2</a>
+        </div>
+      </div>
+    </td>
+      <td>
+        <div class="dropdown-label">
+          <select class="form-control-sm" name="dummy">
+            <option value="null" disabled selected>Select a Organization</option>
+            <option>Org 1</option>
+            <option>Org 2</option>
+          </select>
+        </div>
+      </td>
+      <td>
+        <button class="btn btn-primary btn" (click)="createRequest()" [disabled]="!selectedCommunityId">Create Request</button>
+      </td>
+      <td>
+        <div class="my-label">Requests</div>
+        <select size="3" class="form-control-sm mb-2 mr-sm-2 manage-community-list">
+          <option class="community-list-message" *ngIf="!requestedCommunities?.length">There are no requests</option>
+          <option *ngFor="let community of requestedCommunities"
+                  [class.current-community]="community.id==user.currentCommunityId"
+                  [disabled]="true">
+            {{community.name}}
+        </option>
+      </select>
+    </td>
+  </tr>
+</table>
+    <!-- <select size="3" class="form-control-sm mb-2 mr-sm-2 manage-community-list" [(ngModel)]="selectedCommunityId">
       <option class="community-list-message" *ngIf="!availableCommunities?.length">No communities are available</option>
       <option *ngFor="let community of availableCommunities"
               [class.current-community]="community.id==user.currentCommunityId"
               [value]="community.id">
         {{community.name}}
       </option>
-    </select>
-  </div>
-  <div>
-    <button class="btn btn-primary btn" (click)="createRequest()" [disabled]="!selectedCommunityId">Create Request</button>
-  </div>
-  <div class="requests">
-    <div class="label">Requests</div>
-    <select size="3" class="form-control-sm mb-2 mr-sm-2 manage-community-list">
-      <option class="community-list-message" *ngIf="!requestedCommunities?.length">There are no requests</option>
-      <option *ngFor="let community of requestedCommunities"
-              [class.current-community]="community.id==user.currentCommunityId"
-              [disabled]="true">
-        {{community.name}}
-      </option>
-    </select>
-  </div>
-  <div class="message">
-    <j-feedback></j-feedback>
-  </div>
-</div>
+    </select> -->
+
+<j-feedback></j-feedback>

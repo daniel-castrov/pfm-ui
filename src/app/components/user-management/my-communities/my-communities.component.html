@@ -1,11 +1,9 @@
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content">
-    <div class="col-10">
-
+    <div class="col-12">
       <j-no-current-community-message [authUser]="header.authUser"></j-no-current-community-message>
-
-      <p class="h5">Manage My Communities</p>
+      <div class="h5">Manage My Communities</div>
       <fieldset>
         <legend>My Communities</legend>
         <j-current [memberOfCommunities]="memberOfCommunities" [user]="user" [header]="header"></j-current>
