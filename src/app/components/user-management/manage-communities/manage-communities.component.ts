@@ -89,17 +89,12 @@ export class ManageCommunitiesComponent implements OnInit {
       this.resultError.push(errorString);
     } else {
 
-      console.log(this.newapprover);
-      console.log(this.newCommunity);
-
       let resultCom: RestResult;
       this.communityService.create(this.newCommunity)
         .subscribe(r => {
           resultCom = r;
           this.resultError.push(resultCom.error);
           this.newCommunity = resultCom.result;
-
-          console.log(this.newCommunity);
 
           // Get the User_Approver Role
           this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User_Approver")
@@ -111,7 +106,6 @@ export class ManageCommunitiesComponent implements OnInit {
             let appUserRoleResource: UserRoleResource = new Object();
             appUserRoleResource.roleId = approverRole.id;
             appUserRoleResource.userId = this.newapprover;
-            console.log(appUserRoleResource);
             this.userRoleResourceService.create(appUserRoleResource)
               .subscribe(data2 => {
                 this.communities.push(this.newCommunity);

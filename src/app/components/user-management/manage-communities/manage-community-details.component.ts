@@ -1,7 +1,6 @@
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
@@ -29,7 +28,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   // This is the id of the community we are interested in 
-  id: string;
+  communityid: string;
 
   approvers: User[]=[];
   addedapprover:string;
@@ -37,12 +36,12 @@ export class MamageCommunityDetailsComponent implements OnInit {
   community: Community;
   users:User[]=[];
   organizations:Organization[]=[];
+  newOrg:Organization = new Object();
 
   programs: string[]=[];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private userService: UserService,
     private communityService: CommunityService,
     private roleService:RoleService,
@@ -51,7 +50,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
+      this.communityid = params.id;
     });
 
   }
@@ -68,9 +67,9 @@ export class MamageCommunityDetailsComponent implements OnInit {
     let result: RestResult;
 
     Observable.forkJoin([
-      this.communityService.getById(this.id),
-      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver"),
-      this.organizationService.getByCommunityId(this.id)
+      this.communityService.getById(this.communityid),
+      this.userService.getByCommunityIdAndRoleName(this.communityid,"User_Approver"),
+      this.organizationService.getByCommunityId(this.communityid)
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
@@ -82,10 +81,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
         this.resultError.push("The requested Community does not exist");
         return;
       }
-      console.log(this.community );
-
       this.approvers = data[1].result;
-
       this.organizations = data[2].result;
 
     });
@@ -93,7 +89,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   getUsers(): void{
     let result:RestResult;
-    this.userService.getAll()
+    this.userService.getByCommId(this.communityid)
     .subscribe(c => {
       result = c;
       this.resultError.push(result.error);
@@ -105,7 +101,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
     let approverRole:Role;
     let resultRole: RestResult;
-    this.roleService.getByNameAndCommunityId(this.id,"User_Approver")
+    this.roleService.getByNameAndCommunityId(this.communityid,"User_Approver")
     .subscribe(r => {
       resultRole = r;
       this.resultError.push(resultRole.error);
@@ -122,5 +118,34 @@ export class MamageCommunityDetailsComponent implements OnInit {
       });
     });
   }
+
+  private addOrganization():void {
+
+    if (!this.isNewOrgValid()) {
+      let errorString = "The new organization name or identifier is not unique";
+      console.log(errorString);
+      this.resultError.push(errorString);
+    } else {
+      this.newOrg.communityId = this.communityid;
+      this.organizationService.create(this.newOrg)
+      .subscribe(r => {    
+          this.resultError.push(r.error);
+          this.newOrg = r.result;
+        });
+      this.organizations.push(this.newOrg);
+    }
+  }
+
+  private isNewOrgValid(){
+    let org: Organization;
+    for (org of this.organizations) {
+      if (org.name === this.newOrg.name ||
+        org.abbreviation === this.newOrg.abbreviation) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 
 }
