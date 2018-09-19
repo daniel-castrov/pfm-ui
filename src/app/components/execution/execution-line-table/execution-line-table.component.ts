@@ -112,6 +112,20 @@ export class ExecutionLineTableComponent implements OnInit {
     return lines;
   }
 
+
+  currencyFormatter(value) {
+    if (isNaN(value.value)) {
+      value.value = 0;
+    }
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return usdFormate.format(value.value);
+  }
+
   refreshpins() {
     //console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
     var dopinned: boolean = false;
@@ -316,7 +330,8 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line.toa',
           type: 'numericColumn',
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey', 'text-right'],
+          valueFormatter: my.currencyFormatter
         },
         {
           headerName: 'Released',
@@ -324,7 +339,8 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line.released',
           type: 'numericColumn',
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey', 'text-right'],
+          valueFormatter: my.currencyFormatter
         },
         {
           headerName: 'Withheld',
@@ -332,7 +348,8 @@ export class ExecutionLineTableComponent implements OnInit {
           type: 'numericColumn',
           field: 'line.withheld',
           width: 92,
-          cellClass: ['ag-cell-light-grey'],
+          cellClass: ['ag-cell-light-grey', 'text-right'],
+          valueFormatter: my.currencyFormatter,
           pinnedRowCellRenderer: params => 'Total'
         },
         {
@@ -346,7 +363,10 @@ export class ExecutionLineTableComponent implements OnInit {
           cellClassRules: {
             'ag-cell-light-grey': params => my.validateOneRow( params.data ),
             'ag-cell-red': params => !my.validateOneRow(params.data)
-          }
+            'text-right': true,
+          },
+          valueFormatter: my.currencyFormatter
+
         },
         {
           headerName: 'Remove',

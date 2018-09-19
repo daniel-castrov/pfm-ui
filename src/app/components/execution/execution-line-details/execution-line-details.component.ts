@@ -82,9 +82,10 @@ export class ExecutionLineDetailsComponent implements OnInit {
         {
           headerName: "Amount",
           filter: 'agNumberColumnFilter',
-          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          cellClass: ['ag-cell-light-grey', 'ag-clickable', 'text-right'],
           type: 'numericColumn',
-          field: 'amt'
+          field: 'amt',
+          valueFormatter: my.currencyFormatter
         },
         {
           headerName: "Notes",
@@ -102,6 +103,20 @@ export class ExecutionLineDetailsComponent implements OnInit {
       ]
     };
   }
+
+  currencyFormatter(value) {
+    if (isNaN(value.value)) {
+      value.value = 0;
+    }
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return usdFormate.format(value.value);
+  }
+
 
   ngOnInit() {
     var my: ExecutionLineDetailsComponent = this;

@@ -284,7 +284,8 @@ export class FundsUpdateComponent implements OnInit {
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
     return usdFormate.format(value.value);
   }
