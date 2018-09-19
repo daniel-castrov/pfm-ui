@@ -68,6 +68,12 @@ export class ExecutionLineDetailsComponent implements OnInit {
           field: 'type'
         },
         {
+          headerName: "Tag",
+          filter: 'agTextColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'tag'
+        },
+        {
           headerName: "Transfer To/From",
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'event',
@@ -79,6 +85,13 @@ export class ExecutionLineDetailsComponent implements OnInit {
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           type: 'numericColumn',
           field: 'amt'
+        },
+        {
+          headerName: "Notes",
+          filter: 'agTextColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'reason',
+          hide: true
         },
         {
           filter: 'agDateColumnFilter',
@@ -142,7 +155,9 @@ export class ExecutionLineDetailsComponent implements OnInit {
             type: my.dropdowns.filter(dd => dd.subtype === x.value.type)[0].name,
             amt: amt,
             user: x.userCN,
-            event: x
+            event: x,
+            reason: x.value.reason,
+            tag: x.value.other
           });
         });
 
@@ -182,5 +197,7 @@ interface EventItem {
   type: string,
   amt: number,
   user: string,
-  event: ExecutionEvent
+  event: ExecutionEvent,
+  reason: string,
+  tag:string
 }
