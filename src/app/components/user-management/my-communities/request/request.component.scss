@@ -1,34 +1,9 @@
-.wrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-  justify-items: center;
-  align-items: center;
+.my-community-table {
+  width: 100%;
 }
 
-.comunities {
-  grid-column: 1;
-}
-
-button {
-  grid-column: 2;
-}
-
-.requests {
-  grid-column: 3;
-  option {
-    color: #868e9b;
-    cursor: default
-  }
-}
-
-.message {
-  grid-column: 1/4;
-}
-
-.label {
-  padding-right: 40px;
+.my-label {
+  width: 450px;
   text-align: center;
 }
 
