@@ -13,7 +13,7 @@
     </div>
   </div>
   <div *ngIf="pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
-    <button [disabled]="existingFundingLines?.length === 0" class="btn btn-primary mb-3" (click)="addParentFundingLine()">
+    <button [disabled]="existingFundingLines?.length === 0 || selectedFundingLine === null" class="btn btn-primary mb-3" (click)="addParentFundingLine()">
       <span class="icon-pad">Add parent funding line</span>
     </button>
   </div>
@@ -36,8 +36,7 @@
                  [components]="components"
                  [context]="context"
                  [stopEditingWhenGridLosesFocus]="true"
-                 (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
-                 (columnVisible)="onColumnVisible($event)"
+                 (columnVisible)="sizeColumnsToFit($event)"
                  (gridReady)="onGridReady($event)"
                  (cellEditingStarted)="onCellEditingStarted($event)">
 </ag-grid-angular>

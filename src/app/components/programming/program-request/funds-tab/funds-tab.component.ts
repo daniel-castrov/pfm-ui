@@ -73,11 +73,13 @@ export class FundsTabComponent implements OnChanges {
     if(!this.pr.phaseId) {
       return;
     }
-    this.loadExistingFundingLines();
-    this.setPomFiscalYear();
-    this.initDataRows();
-    if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
-      this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result
+    if(this.agGrid.api.getDisplayedRowCount() === 0) {
+      this.loadExistingFundingLines();
+      this.setPomFiscalYear();
+      this.initDataRows();
+      if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
+        this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result
+      }
     }
   }
 
@@ -147,8 +149,8 @@ export class FundsTabComponent implements OnChanges {
       this.initPinnedBottomRows();
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
         this.agGrid.columnApi.setColumnVisible('delete', true);
-        this.agGrid.api.sizeColumnsToFit();
       }
+      this.agGrid.api.sizeColumnsToFit();
     });
   }
 
@@ -645,11 +647,7 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  onToolPanelVisibleChanged(params) {
-    this.agGrid.api.sizeColumnsToFit();
-  }
-
-  onColumnVisible(params) {
+  sizeColumnsToFit(params) {
     this.agGrid.api.sizeColumnsToFit();
   }
 
@@ -755,6 +753,8 @@ export class FundsTabComponent implements OnChanges {
       return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');
     } else if (this.flHaveIncorrectAppropriation()){
       return new Validation(false, 'You can only have one funding line with the PROC appropriation. Changes were not saved');
+    } else if (this.flHaveEmptyFields()) {
+      return new Validation(false, 'You must fill all the fields for a funding line');
     } else {
       return new Validation(true);
     }
@@ -768,6 +768,16 @@ export class FundsTabComponent implements OnChanges {
       }
     });
     return count > 1;
+  }
+
+  flHaveEmptyFields(): Boolean{
+    let hasEmptyFields = false;
+    this.pr.fundingLines.forEach(function(fl, index) {
+      if (!fl.baOrBlin || !fl.appropriation || !fl.item) {
+        hasEmptyFields = true;
+      }
+    });
+    return hasEmptyFields;
   }
 
   flHaveIncorrectBa(): Boolean{
