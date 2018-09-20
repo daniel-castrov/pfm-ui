@@ -67,9 +67,9 @@
             <div class="col-2">
               <span class="form-group">
                 <div class="mb-1 primary-label">Program</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="mrid">
+                <select class="form-control-sm dropdown-width" [(ngModel)]="programName">
                   <option></option>
-                  <option *ngFor="let program of programs|mapAsList" [ngValue]="program.key">{{program.value}}</option>
+                  <option *ngFor="let program of programs|mapAsList" [ngValue]="program.value">{{program.value}}</option>
                 </select>
               </span>
             </div>

@@ -175,15 +175,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
       });
   }
 
-  fullname(exeline: ExecutionLine): string {
-    if (this.programIdNameLkp && exeline) {
-      return this.programIdNameLkp.get(exeline.mrId);
-    }
-    else {
-      return '';
-    }
-  }
-
   updatedropdowns() {
     this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
     this.etype = this.subtypes[0];

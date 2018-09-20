@@ -26,13 +26,13 @@ export class FundsUpdateComponent implements OnInit {
   private exephases: Execution[];
   private selectedexe: Execution;
   private exelines: ExecutionLine[] = [];
-  private programs: Map<string, string> = new Map<string, string>();
+  private programs: string[] = [];
   private appropriations: string[] = [];
   private blins: string[] = [];
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-  private mrid: string;
+  private programName: string;
   private appropriation: string;
   private blin: string;
   private item: string;
@@ -52,22 +52,6 @@ export class FundsUpdateComponent implements OnInit {
       eventDetailsCellRendererComponent : EventDetailsCellRendererComponent
     };
 
-    my.progsvc.getIdNameMap().subscribe(data => {
-      Object.getOwnPropertyNames(data.result).forEach(mrId => {
-        my.programs.set(mrId, data.result[mrId]);
-      });
-    });
-
-    var namesorter = function (mrId1, mrId2) {
-      var name1 = my.programs.get(mrId1);
-      var name2 = my.programs.get(mrId2);
-      if (name1 === name2){
-        return 0;
-      }
-
-      return (name1 < name2 ? -1 : 1);
-    }
-
     var programLinkEnabled = function (params): boolean {
       return (0 !== params.data.released);
     };
@@ -81,7 +65,6 @@ export class FundsUpdateComponent implements OnInit {
       suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
-        programlkp: my.programs,
         route: '/update-program-execution',
         enabled: programLinkEnabled
       },
@@ -93,16 +76,15 @@ export class FundsUpdateComponent implements OnInit {
           cellRenderer: 'eventDetailsCellRendererComponent',
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
-          valueGetter: params => { return params.data.mrId; }
+          field: 'programName'
         },
         {
           headerName: "Program",
+          field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
-          comparator: namesorter,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
-          valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appn.',
@@ -234,17 +216,10 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
-        my.progsvc.getIdNameMap(),
         //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
         my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
       ]).subscribe(data => {
-
-        my.programs = new Map<string, string>();
-        Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
-          my.programs.set(mrid, data[0].result[mrid]);
-        });
-
-        my.exephases = data[1].result;
+        my.exephases = data[0].result;
         my.selectedexe = my.exephases[0];
         this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
@@ -344,7 +319,7 @@ export class FundsUpdateComponent implements OnInit {
       blin: this.blin,
       item: this.item,
       opAgency: this.opAgency,
-      mrId: this.mrid,
+      programName: this.programName,
       toa: this.funds,
       initial: this.funds
     };

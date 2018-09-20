@@ -38,10 +38,9 @@ export class ExecutionLineTableComponent implements OnInit {
     return okays;
   };
   tableok: boolean = false;
-  private programIdNameLkp: Map<string, string> = new Map<string, string>();
   private elIdNameLkp: Map<string, ELDisplay> = new Map<string, ELDisplay>();
   private agOptions: GridOptions;
-  private availablePrograms: {}[] = [];
+  private availablePrograms: string[] = [];
 
   private tmpdata: ExecutionLineWrapper[];
 
@@ -94,6 +93,7 @@ export class ExecutionLineTableComponent implements OnInit {
       this.agOptions.api.refreshCells();
       this.refreshpins();
       this.recheckValidity();
+      this.setAvailablePrograms();
     }
     else {
       console.log('agOptions has NOT been initted...storing data for later')
@@ -156,30 +156,20 @@ export class ExecutionLineTableComponent implements OnInit {
     };
     
     var my: ExecutionLineTableComponent = this;
-    var namesorter = function (mrId1, mrId2) {
-      var name1 = my.programIdNameLkp.get(mrId1);
-      var name2 = my.programIdNameLkp.get(mrId2);
-      if (name1 === name2) {
-        return 0;
-      }
-
-      return (name1 < name2 ? -1 : 1);
-    }
 
     var programSetter = function (params): boolean {
       if (params.newValue) {
-        var mrid: string = params.newValue.key;
-        var elChoices = my.getLineChoices(mrid);
+        var programName: string = params.newValue;
+        var elChoices = my.getLineChoices(programName);
         if (1 == elChoices.length) {
           params.data.line = my.elIdNameLkp.get( elChoices[0] ).line;
           params.data.amt = 0;
         }
         else {
-          params.data.line = { mrId: mrid };
+          params.data.line = { programName: programName };
           params.data.amt = 0;
         }
 
-        my.setAvailablePrograms();
         return true;
       }
 
@@ -200,28 +190,6 @@ export class ExecutionLineTableComponent implements OnInit {
         return true;
       }
       return false;
-    }
-
-    var programcellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
-      var progname: string = my.programIdNameLkp.get(cellval).toLocaleLowerCase();
-      switch (filter) {
-        case 'equals':
-          return progname === filtertext;
-        case 'notEqual':
-          return progname !== filtertext;
-        case 'startsWith':
-          return progname.startsWith(filtertext);
-        case 'endsWith':
-          return progname.endsWith(filtertext);
-        case 'contains':
-          return progname.indexOf(filtertext) > -1;
-        case 'notContains':
-          return progname.indexOf(filtertext) < 0;
-        default:
-          console.warn('some new filter? ' + filter);
-      }
-
-      return true;
     }
 
     var linecellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
@@ -268,8 +236,6 @@ export class ExecutionLineTableComponent implements OnInit {
         my.recheckValidity();
       },
       context: {
-        programlkp: my.programIdNameLkp,
-        enabled: false,
         parentComponent: this,
         deleteHidden: false
       },
@@ -277,16 +243,12 @@ export class ExecutionLineTableComponent implements OnInit {
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',
-          filterParams: { 
-            textCustomComparator: programcellfilter,
-          },
           editable: true,
-          comparator: namesorter,
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
-          valueFormatter: params => ( my.programIdNameLkp.has( params.data.line.mrId ) 
-            ? my.programIdNameLkp.get(params.data.line.mrId)
+          valueFormatter: params => ( params.data.line.programName
+            ? params.data.line.programName
             : 'Please choose a Program'),
-          field: 'line.mrId',
+          field: 'line.programName',
           cellEditorParams: function(){
             return {
               values: my.availablePrograms,
@@ -309,7 +271,7 @@ export class ExecutionLineTableComponent implements OnInit {
             ? my.elIdNameLkp.get( params.data.line.id ).display
             : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
           cellEditorParams: params => {
-            var choices: string[] = my.getLineChoices(params.data.line.mrId);
+            var choices: string[] = my.getLineChoices(params.data.line.programName);
             //console.log(choices);
             return {
               values: choices,
@@ -386,12 +348,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progsvc.getIdNameMap().subscribe(data => {
-      Object.getOwnPropertyNames(data.result).forEach(id => {
-        this.programIdNameLkp.set(id, data.result[id]);
-      });
-      this.setAvailablePrograms();
-    });
   }
 
   addrow() {
@@ -411,8 +367,8 @@ export class ExecutionLineTableComponent implements OnInit {
     this.recheckValidity();
   }
 
-  getLineChoices(mrid): string[] {
-    //console.log('getting line choices for ' + mrid);
+  getLineChoices(programname): string[] {
+    console.log('getting line choices for ' + programname);
     var existingEls: Set<string> = new Set<string>();
     if (this.agOptions && this.agOptions.api) {
       this.agOptions.api.forEachNode(rownode => {
@@ -425,7 +381,7 @@ export class ExecutionLineTableComponent implements OnInit {
     //console.log('all exelines: ' + this.elIdNameLkp.size);
     var rets: string[] = [];
     this.elIdNameLkp.forEach((eld, elid) => {
-      if (eld.line.mrId === mrid &&
+      if (eld.line.programName === programname &&
         (this.exelinefilter ? this.exelinefilter(eld.line) : true) &&
         !existingEls.has(elid)) {
         rets.push(elid);
@@ -470,18 +426,19 @@ export class ExecutionLineTableComponent implements OnInit {
 
   setAvailablePrograms() {
     this.availablePrograms.splice(0, this.availablePrograms.length);
+    var avails: Set<string> = new Set<string>();
+    this.elIdNameLkp.forEach(el => {
+      avails.add(el.line.programName);
+     });
 
-    if (this.programIdNameLkp.size > 0) {
-      this.programIdNameLkp.forEach((v, k) => {
-        if (this.getLineChoices(k).length > 0) {
-          this.availablePrograms.push({
-            key: k,
-            value: v
-          });
+    if (avails.size > 0) {
+      avails.forEach( pname => {
+        if (this.getLineChoices(pname).length > 0) {
+          this.availablePrograms.push(pname);
         }
       });
     } else {
-      console.warn( 'skipping available program determination (no names in map)')
+      console.warn( 'skipping available program determination (no names to check)')
     }
   }
 
@@ -489,6 +446,7 @@ export class ExecutionLineTableComponent implements OnInit {
     if (this.tmpdata) {
       console.log( 'setting row data from stored data')
       params.api.setRowData(this.tmpdata);
+      this.setAvailablePrograms();
       this.refreshpins();
       delete this.tmpdata;
     }

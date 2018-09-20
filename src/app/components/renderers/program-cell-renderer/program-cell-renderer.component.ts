@@ -17,9 +17,14 @@ export class ProgramCellRendererComponent implements ICellRendererAngularComp {
   }
 
   fullname(): string {
-    return (this.params.context.programlkp.has(this.params.data.mrId)
-      ? this.params.context.programlkp.get(this.params.data.mrId)
-      : this.params.data.mrId);
+    if (this.params.context.programlkp) {
+      return (this.params.context.programlkp.has(this.params.data.mrId)
+        ? this.params.context.programlkp.get(this.params.data.mrId)
+        : this.params.data.mrId);
+    }
+    else {
+      return this.params.value;
+    }
   }
 
   id(): string {

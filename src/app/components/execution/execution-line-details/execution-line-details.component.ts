@@ -185,15 +185,6 @@ export class ExecutionLineDetailsComponent implements OnInit {
     });
   }
 
-  fullname(exeline: ExecutionLine): string {
-    if (this.programIdNameLkp && exeline) {
-      return this.programIdNameLkp.get(exeline.mrId);
-    }
-    else {
-      return '';
-    }
-  }
-
   onGridReady(params) {
     setTimeout(() => {
       params.api.sizeColumnsToFit();

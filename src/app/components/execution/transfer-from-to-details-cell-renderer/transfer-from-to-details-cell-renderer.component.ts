@@ -58,7 +58,7 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
     var my: TransferFromToDetailsCellRendererComponent = this;
     this.exesvc.getExecutionLineById(otherElId).subscribe(d => {
       var line: ExecutionLine = d.result;
-      my.otherel = my.programIdNameLkp.get(line.mrId) + ': ' + line.appropriation
+      my.otherel = line.programName + ': ' + line.appropriation
         + '/' + line.blin + '/' + line.item + '/' + line.opAgency;
     });
   }
