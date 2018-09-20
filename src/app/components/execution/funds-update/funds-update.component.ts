@@ -10,7 +10,7 @@ import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
-
+import { AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
 
 @Component({
   selector: 'funds-update',
@@ -44,7 +44,8 @@ export class FundsUpdateComponent implements OnInit {
   private agOptions: GridOptions;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService, private router: Router) {
+    private progsvc: ProgramsService, private autovalues: AutoValuesService,
+    private router: Router) {
     var my: FundsUpdateComponent = this;
 
     var agcomps:any = {
@@ -107,7 +108,14 @@ export class FundsUpdateComponent implements OnInit {
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.blin),
           cellEditor: 'agRichSelectCellEditor',
-          cellEditorParams: params => ({ values: my.blins })
+          cellEditorParams: params => ({ values: my.blins }),
+          valueSetter: p => { 
+            p.data.blin = p.newValue;
+            autovalues.programElement(p.newValue, p.data.item ? p.data.item : '').then(val => {
+              p.data.programElement = val;
+            });
+            return true;
+          }
         },
         {
           headerName: 'Item',
@@ -116,7 +124,7 @@ export class FundsUpdateComponent implements OnInit {
           width: 92,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
-          editable: p => (!p.data.item)
+          editable: p => (!p.data.item),
         },
         {
           headerName: 'opAgency',
