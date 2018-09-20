@@ -61,67 +61,15 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <fieldset>
-          <legend>Add Execution Line</legend>
-          <div class="row">
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Program</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="programName">
-                  <option></option>
-                  <option *ngFor="let program of programs|mapAsList" [ngValue]="program.value">{{program.value}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Appropriation</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="appropriation">
-                  <option *ngFor="let appropriation of appropriations" [ngValue]="appropriation">{{appropriation}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-md-2 col-lg-1">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Budget</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="blin">
-                  <option *ngFor="let blin of blins" [ngValue]="blin">{{blin}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Item</div>
-                  <input class="mb-2 form-control forminput" [(ngModel)]="item">
-              </span>
-            </div>
-            <div class="col-md-2 col-lg-1">
-              <span class="form-group">
-                <div class="mb-1 primary-label">OpAgency</div>
-                <select class="form-control-sm dropdown-width" [(ngModel)]="opAgency">
-                  <option *ngFor="let opAgency of opAgencies">{{opAgency}}</option>
-                </select>
-              </span>
-            </div>
-            <div class="col-2">
-              <span class="form-group">
-                <div class="mb-1 primary-label">Funds</div>
-                <span class="form-group">
-                  <input class="mb-2 form-control forminput" [(ngModel)]="funds" digits>
-                </span>
-              </span>
-            </div>
-            <div class="col-md-12 col-lg-2">
-              <span class="form-group">
-                  <div class="primary-label"> </div>
-                  <button class="btn btn-primary mt-4" (click)="addline()">
-                    <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                   Add Execution Line
-                 </button>
-               </span>
-             </div>
-           </div>
-        </fieldset>
+        <div class="col-md-12 col-lg-2">
+          <span class="form-group">
+            <div class="primary-label"> </div>
+            <button class="btn btn-primary mt-4" (click)="addline()">
+              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+              Add Execution Line
+            </button>
+          </span>
+        </div>
         <j-feedback></j-feedback>
       </div>
     </div>
