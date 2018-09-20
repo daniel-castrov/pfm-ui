@@ -29,17 +29,15 @@ export class MamageCommunityDetailsComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   // This is the id of the community we are interested in 
-  communityid: string;
+  private communityid: string;
 
-  approvers: User[]=[];
-  addedapprover:string;
-  resultError:string[]=[];
-  community: Community;
-  users:User[]=[];
-  organizations:Organization[]=[];
-  newOrg:Organization = new Object();
-
-  programs: string[]=[];
+  private approvers: User[]=[];
+  private addedapprover:string;
+  private resultError:string[]=[];
+  private community: Community;
+  private users:User[]=[];
+  private organizations:Organization[]=[];
+  private newOrg:Organization = new Object();
 
   private orgname = new FormControl('', [Validators.required, this.validName.bind(this)]);
   private orgidentifier  = new FormControl('', [Validators.required, this.validIdentifier .bind(this)]);
@@ -59,7 +57,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  private ngOnInit() {
     this.resultError;
     this.getCommunity();
     this.getUsers();
@@ -91,7 +89,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
     });
   }
 
-  getUsers(): void{
+  private getUsers(): void{
     let result:RestResult;
     this.userService.getByCommId(this.communityid)
     .subscribe(c => {
@@ -135,20 +133,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
           this.resetFormControlValidation( this.orgidentifier );
           this.newOrg = new Object();
         });
-      
-      } 
-
-    }
-
-  private isNewOrgValid(){
-    let org: Organization;
-    for (org of this.organizations) {
-      if (org.name === this.newOrg.name ||
-        org.abbreviation === this.newOrg.abbreviation) {
-        return false;
-      }
-    }
-    return true;
+    } 
   }
 
   private validName(control: AbstractControl): ValidationErrors | null {
@@ -170,6 +155,4 @@ export class MamageCommunityDetailsComponent implements OnInit {
     control.markAsUntouched();
     control.updateValueAndValidity();
   }
-
-
 }
