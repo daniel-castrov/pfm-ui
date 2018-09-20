@@ -41,6 +41,7 @@ export class ExecutionLineTableComponent implements OnInit {
   private elIdNameLkp: Map<string, ELDisplay> = new Map<string, ELDisplay>();
   private agOptions: GridOptions;
   private availablePrograms: string[] = [];
+  private totalsrow: ExecutionLineWrapper;
 
   private tmpdata: ExecutionLineWrapper[];
 
@@ -54,6 +55,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   @Input() set exeprogramfilter(x: ExecutionLineFilter) {
+    console.log('setting new exe filter');
     this._exeprogramfilter = x;
     this.setAvailablePrograms();
   }
@@ -92,7 +94,6 @@ export class ExecutionLineTableComponent implements OnInit {
       this.agOptions.api.setRowData(newdata);
       this.agOptions.api.refreshCells();
       this.refreshpins();
-      this.recheckValidity();
       this.setAvailablePrograms();
     }
     else {
@@ -135,15 +136,19 @@ export class ExecutionLineTableComponent implements OnInit {
       }
     });
 
-    if( dopinned ){
-      this.agOptions.api.setPinnedBottomRowData([{
-        line: {},
+    if (dopinned) {
+      this.totalsrow = {
+        line: { programName: 'totals-row' },
         amt: this.total()
-      }]);
+      };
+      this.agOptions.api.setPinnedBottomRowData([this.totalsrow]);
     }
     else {
       this.agOptions.api.setPinnedBottomRowData([]);
+      delete this.totalsrow;
     }
+
+    this.recheckValidity();    
   }
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
@@ -180,7 +185,6 @@ export class ExecutionLineTableComponent implements OnInit {
     var amtSetter = function (params): boolean {
       params.data.amt = Number.parseFloat(params.newValue);
       my.refreshpins();
-      my.recheckValidity();
       return true;
     }
 
@@ -233,7 +237,6 @@ export class ExecutionLineTableComponent implements OnInit {
       frameworkComponents: agcomps,
       onFilterModified: ev => {
         my.refreshpins();
-        my.recheckValidity();
       },
       context: {
         parentComponent: this,
@@ -293,7 +296,8 @@ export class ExecutionLineTableComponent implements OnInit {
           type: 'numericColumn',
           width: 92,
           cellClass: ['ag-cell-light-grey', 'text-right'],
-          valueFormatter: my.currencyFormatter
+          valueFormatter: my.currencyFormatter,
+          pinnedRowCellRenderer: p => ''
         },
         {
           headerName: 'Released',
@@ -302,7 +306,8 @@ export class ExecutionLineTableComponent implements OnInit {
           type: 'numericColumn',
           width: 92,
           cellClass: ['ag-cell-light-grey', 'text-right'],
-          valueFormatter: my.currencyFormatter
+          valueFormatter: my.currencyFormatter,
+          pinnedRowCellRenderer: p => ''
         },
         {
           headerName: 'Withheld',
@@ -310,25 +315,29 @@ export class ExecutionLineTableComponent implements OnInit {
           type: 'numericColumn',
           field: 'line.withheld',
           width: 92,
-          cellClass: ['ag-cell-light-grey', 'text-right'],
+          cellClassRules: {
+            'ag-cell-light-grey': p=>true,
+            'text-right': p=>true,
+            'ag-cell-footer-sum': p => (p.data===this.totalsrow)
+          },
           valueFormatter: my.currencyFormatter,
           pinnedRowCellRenderer: params => 'Total'
         },
         {
           headerName: 'Amount',
-          editable: true,
+          editable: p => (p.data.line.programName !== 'TotalCOLxxyy'),
           filter: 'agNumberColumnFilter',
           type: 'numericColumn',
           field: 'amt',
           valueSetter: amtSetter,
           width: 92,
           cellClassRules: {
-            'ag-cell-light-grey': params => my.validateOneRow( params.data ),
+            'ag-cell-light-grey': params => my.validateOneRow(params.data),
             'ag-cell-red': params => !my.validateOneRow(params.data),
             'text-right': true,
+            'ag-cell-footer-sum': p => (p.data === this.totalsrow)
           },
           valueFormatter: my.currencyFormatter
-
         },
         {
           headerName: 'Remove',
@@ -344,7 +353,10 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   validateOneRow(row): boolean {
-    return this.exevalidator([row], false)[0];
+    //console.log('validating one row: ' + JSON.stringify(row));
+    var ok = this.exevalidator([row], false)[0];
+    //console.log('result: ' + ok);
+    return ok;
   }
 
   ngOnInit() {
@@ -364,11 +376,9 @@ export class ExecutionLineTableComponent implements OnInit {
   delete(rowIndex, data) {
     this.agOptions.api.updateRowData({ remove: [data] });
     this.refreshpins();
-    this.recheckValidity();
   }
 
   getLineChoices(programname): string[] {
-    console.log('getting line choices for ' + programname);
     var existingEls: Set<string> = new Set<string>();
     if (this.agOptions && this.agOptions.api) {
       this.agOptions.api.forEachNode(rownode => {
@@ -378,7 +388,6 @@ export class ExecutionLineTableComponent implements OnInit {
       });
     }
 
-    //console.log('all exelines: ' + this.elIdNameLkp.size);
     var rets: string[] = [];
     this.elIdNameLkp.forEach((eld, elid) => {
       if (eld.line.programName === programname &&
@@ -402,7 +411,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   recheckValidity() {
-    //console.log('checking validity');
+    console.log('checking validity');
 
     var lines: ExecutionLineWrapper[] = [];
     this.agOptions.api.forEachNodeAfterFilter(rn => { 
@@ -410,17 +419,20 @@ export class ExecutionLineTableComponent implements OnInit {
     });
 
     var failure: boolean = false;
-    this.exevalidator( lines, true).forEach(x => {
-      if (!x) {
-        failure = true;
-      }
-    });
-
     if (0 === lines.length) {
+      console.log('no lines to check, failed');
       failure = true;
+    }
+    else {
+      this.exevalidator(lines, true).forEach(x => {
+        if (!x) {
+          failure = true;
+        }
+      });
     }
 
     this.tableok = !failure;
+    console.log('table ok ? ' + this.tableok);
     this.agGrid.api.refreshCells(); // need to update CSS classes
   }
 

@@ -28,7 +28,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private current: ExecutionLineWrapper = { line: {} };
   private phase: Execution;
   private updatelines: ExecutionLineWrapper[] = [];
-  private programIdNameLkp: Map<string, string> = new Map<string, string>();
 
   private types: Map<string, string> = new Map<string, string>();
   private allsubtypes: ExecutionDropDown[];
@@ -45,7 +44,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
     private route: ActivatedRoute, private router: Router) {
     var my: UpdateProgramExecutionComponent = this; 
     my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-      //console.log('change validator');
+      // console.log('change validator');
       var freleased: number = my.current.line.released;
       var total: number = 0;
 
@@ -77,7 +76,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
       }
       else {
         // checking individual lines
-
         // check to make sure we have enough money to spread around
         x.forEach(elw => {
           if (my.fromIsSource) {
@@ -102,7 +100,10 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   changeFromIsSource( event) {
-    this.fromIsSource = ( '0: true'===event.target.value);
+    this.fromIsSource = ('0: true' === event.target.value);
+    var my: UpdateProgramExecutionComponent = this;
+
+    this.table.setAvailablePrograms();
     this.table.recheckValidity();
   }
 
@@ -113,7 +114,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
       forkJoin([
         my.exesvc.getExecutionLineById(exelineid),
-        my.progsvc.getIdNameMap(),
         my.exesvc.getExecutionDropdowns(),
       ]).subscribe(data => {
         my.current = {
@@ -122,15 +122,15 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
         my.programfilter = function (el: ExecutionLine) {
           //console.log('into programfilter ' + JSON.stringify(my.current));
-          return !(my.current.line.id === el.id);
+          if (my.current.line.id !== el.id) {
+            //console.log(el);
+            return (my.fromIsSource ? true : el.released > 0);
+          }
+          return false;
         };
 
         my.exesvc.getById(my.current.line.phaseId).subscribe(d2 => {
           my.phase = d2.result;
-        });
-
-        Object.getOwnPropertyNames(data[1].result).forEach(id => {
-          my.programIdNameLkp.set(id, data[1].result[id]);
         });
 
         my.exesvc.hasAppropriation(my.current.line.phaseId).subscribe(d => { 
@@ -142,7 +142,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
           else {
             this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
           }
-          this.allsubtypes = data[2].result.filter(x => this.types.has(x.type));
+          this.allsubtypes = data[1].result.filter(x => this.types.has(x.type));
           var first = true;
           this.types.forEach((val, key) => { 
             if (first) {
@@ -182,19 +182,28 @@ export class UpdateProgramExecutionComponent implements OnInit {
     if ('EXE_BTR' === this.type) {
       // BTR-- only between same PE
       this.linefilter = function (x: ExecutionLine): boolean {
-        return (x.programElement === my.current.line.programElement);
+        if (x.programElement === my.current.line.programElement) {
+          return true;
+          //return (my.fromIsSource ? true : (x.released > 0));
+        }
+        return false;
       };
     }
     else if ('EXE_REALIGNMENT' === this.type) {
       // realignment-- only between same blin as current
       this.linefilter = function (x: ExecutionLine): boolean {
-        return (x.blin === my.current.line.blin);
+        if (x.blin === my.current.line.blin){
+          return true;
+          //return (my.fromIsSource ? true : (x.released > 0));
+        }
+        return false;
       };
     }
     else if ('EXE_REDISTRIBUTION' === this.type) {
       // redistributions can do whatever
       this.linefilter = function (x: ExecutionLine): boolean {
         return true;
+        //return (my.fromIsSource ? true : ( x.released > 0 ) );
       };
     }
 
