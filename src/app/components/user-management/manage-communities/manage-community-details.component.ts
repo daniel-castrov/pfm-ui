@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Params } from '@angular/router';
+import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
@@ -39,6 +40,9 @@ export class MamageCommunityDetailsComponent implements OnInit {
   newOrg:Organization = new Object();
 
   programs: string[]=[];
+
+  private orgname = new FormControl('', [Validators.required, this.validName.bind(this)]);
+  private orgidentifier  = new FormControl('', [Validators.required, this.validIdentifier .bind(this)]);
 
   constructor(
     private route: ActivatedRoute,
@@ -120,21 +124,21 @@ export class MamageCommunityDetailsComponent implements OnInit {
   }
 
   private addOrganization():void {
-
-    if (!this.isNewOrgValid()) {
-      let errorString = "The new organization name or identifier is not unique";
-      console.log(errorString);
-      this.resultError.push(errorString);
-    } else {
+    if ( this.newOrg.name &&  this.newOrg.abbreviation  ) {
       this.newOrg.communityId = this.communityid;
       this.organizationService.create(this.newOrg)
-      .subscribe(r => {    
-          this.resultError.push(r.error);
-          this.newOrg = r.result;
+      .subscribe(data => {    
+          this.resultError.push(data.error);
+          this.newOrg = data.result;
+          this.organizations.push(this.newOrg);
+          this.resetFormControlValidation( this.orgname );
+          this.resetFormControlValidation( this.orgidentifier );
+          this.newOrg = new Object();
         });
-      this.organizations.push(this.newOrg);
+      
+      } 
+
     }
-  }
 
   private isNewOrgValid(){
     let org: Organization;
@@ -145,6 +149,26 @@ export class MamageCommunityDetailsComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  private validName(control: AbstractControl): ValidationErrors | null {
+    if(!this.organizations) return null;
+    if( this.organizations.find( com =>  com.name == this.newOrg.name   ) ){
+      return {alreadyExists:true};
+    } 
+    return null;
+  }
+
+  private validIdentifier(control: AbstractControl): ValidationErrors | null {
+    if(!this.organizations) return null;
+    if( this.organizations.find( com =>  com.abbreviation == this.newOrg.abbreviation   ) ) return {alreadyExists:true};
+    return null;
+  }
+
+  private resetFormControlValidation(control: AbstractControl) {
+    control.markAsPristine();
+    control.markAsUntouched();
+    control.updateValueAndValidity();
   }
 
 

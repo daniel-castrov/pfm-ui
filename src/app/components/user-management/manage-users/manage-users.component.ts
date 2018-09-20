@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { Response, ResponseContentType } from '@angular/http';
+// import {
+//   HttpClient, HttpHeaders, HttpParams,
+//   HttpResponse, HttpEvent
+// } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+// import { Response, ResponseContentType } from '@angular/http';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
@@ -14,6 +15,8 @@ import { HeaderComponent } from '../../header/header.component';
 import { User } from '../../../generated/model/user';
 import { RestResult } from '../../../generated/model/restResult';
 import { CommunityService } from '../../../generated/api/community.service';
+import { OrganizationService } from '../../../generated/api/organization.service';
+import { Organization } from '../../../generated/model/organization';
 import { Community } from '../../../generated/model/community';
 import { UserService } from '../../../generated/api/user.service';
 import { Role } from '../../../generated/model/role';
@@ -31,7 +34,7 @@ export class ManageUsersComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   // This is the id of the user we are interested in ... the targetUser
-  id: string;
+  userid: string;
 
   // The user we are interested in.
   targetUser: User;
@@ -43,10 +46,16 @@ export class ManageUsersComponent implements OnInit {
   addedroleId: string;
 
   // The name of the community we are assigning the targetUser to
-  addedcommunity: string;
+  selectedAddCommunity: Community;
 
   // All the communities the user does not belong to
   avail_Communities: Community[] = [];
+
+  // all organizations of a selected community
+  organizations: Organization[] = [];
+
+  // an organization that was selected
+  selectedOrganization: Organization;
 
   // an original copy of the targted user so we can roll back.
   reftargetUser: User;
@@ -64,10 +73,11 @@ export class ManageUsersComponent implements OnInit {
     private roleService: RoleService,
     private communityService: CommunityService,
     private userRoleResourceService: UserRoleResourceService,
+    private organizationService: OrganizationService
 
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
+      this.userid = params.id;
     });
   }
 
@@ -76,11 +86,53 @@ export class ManageUsersComponent implements OnInit {
     this.resetEditMode();
   }
 
+
   getTargetUser(): void {
+    Observable.forkJoin([
+      this.userService.getById(this.userid),
+      this.communityService.getAll(),
+    ]).subscribe(data => {
+
+
+      this.resultError.push(data[0].error);
+      this.targetUser = data[0].result;
+
+      let allCommunities: Community[] = [];
+      let resultComm: RestResult;
+
+      this.resultError.push(data[1].error);
+      allCommunities = data[1].result;
+
+      for (let comm of allCommunities) {
+        let resultUserRoleResources: RestResult;
+        let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
+        s.subscribe(c => {
+          resultUserRoleResources = c;
+          this.resultError.push(resultUserRoleResources.error);
+
+          // push the community if at least one role and take it out of avail
+          if ( resultUserRoleResources.result.length>0 ){
+            this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result));
+            for (var i =0; i < allCommunities.length; i++){
+              if ( allCommunities[i].id === comm.id ){
+                allCommunities.splice(i,1);
+              }
+            }
+          }
+          this.avail_Communities=allCommunities;
+        });
+      }
+      this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
+
+    });
+  }
+
+
+  getTargetUser2(): void {
     this.communityWithUserRoles=[];
     // 1. get the user
     let resultUser: RestResult;
-    this.userService.getById(this.id)
+    this.userService.getById(this.userid)
       .subscribe(c => {
         resultUser = c;
         this.resultError.push(resultUser.error);
@@ -155,29 +207,47 @@ export class ManageUsersComponent implements OnInit {
 
   addCommunity(): void {
 
-    let resultRole: RestResult;
-    this.roleService.getByNameAndCommunityId(this.addedcommunity,"User")
-    .subscribe(r => {
-      resultRole = r;
-      this.resultError.push(resultRole.error);
 
-      let userRole:Role;
-      userRole = resultRole.result;
-      let userRoleRes:UserRoleResource=new Object();
-      userRoleRes.roleId=userRole.id;
-      userRoleRes.userId=this.id;
+    console.log( this.selectedAddCommunity );
+    console.log( this.selectedOrganization );
+    console.log( this.targetUser );
+    
 
-      let resultUserRoleResource: RestResult;
-      this.userRoleResourceService.create(userRoleRes)
-      .subscribe(r => {
-        resultUserRoleResource = r;
-        this.getTargetUser();
-      });
-    });
+    // let resultRole: RestResult;
+    // this.roleService.getByNameAndCommunityId(this.selectedAddCommunity,"User")
+    // .subscribe(r => {
+    //   resultRole = r;
+    //   this.resultError.push(resultRole.error);
+
+    //   let userRole:Role;
+    //   userRole = resultRole.result;
+    //   let userRoleRes:UserRoleResource=new Object();
+    //   userRoleRes.roleId=userRole.id;
+    //   userRoleRes.userId=this.userid;
+
+    //   let resultUserRoleResource: RestResult;
+    //   this.userRoleResourceService.create(userRoleRes)
+    //   .subscribe(r => {
+    //     resultUserRoleResource = r;
+    //     this.getTargetUser();
+    //   });
+    // });
   }
 
   editRoles( commid, roleid, userid ){
     this.router.navigate(['/roles', commid, roleid, userid]);
+  }
+
+
+  getOrgs(): void {
+
+    this.organizationService.getByCommunityId(this.selectedAddCommunity)
+    .subscribe( data => {
+
+      this.organizations= data.result;
+
+    });
+
   }
 
 }

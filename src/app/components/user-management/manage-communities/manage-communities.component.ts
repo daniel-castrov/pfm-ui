@@ -1,23 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { NgForOf } from '@angular/common/src/directives';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
+import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 
 // Generated
-import { CommunityService } from '../../../generated';
 import { RestResult } from '../../../generated';
 import { Community } from '../../../generated';
-import { Role } from '../../../generated/model/role'
-import { RoleService } from '../../../generated/api/role.service';
-import { UserRoleResource } from '../../../generated/model/userRoleResource'
-import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
-
-import { UserService } from '../../../generated/api/user.service';
-import { User } from '../../../generated/model/user';
-
+import { CommunityService } from '../../../generated';
 
 @Component({
   selector: 'app-manage-communities',
@@ -28,34 +18,26 @@ export class ManageCommunitiesComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  status: any = {
-    isFirstOpen: true,
-    isFirstDisabled: false
-  };
+  private commname = new FormControl('', [Validators.required, this.validName.bind(this)]);
+  private commidentifier  = new FormControl('', [Validators.required, this.validIdentifier .bind(this)]);
 
-  communities: Community[] = [];
-  users: User[] = [];
-  newCommunity: Community;
-  newapprover: string;
-  resultError: string[] = [];
+  private communities: Community[] = [];
+  private newCommunity: Community;
+  private resultError: string[] = [];
+
+  private createDisabled: boolean = true;
 
   constructor(
-    private router: Router,
     public communityService: CommunityService,
-    public userService: UserService,
-    private roleService: RoleService,
-    private userRoleResourceService: UserRoleResourceService,
   ) {
-
   }
 
-  ngOnInit() {
+  private ngOnInit() {
     this.getCommunities();
-    this.getUsers();
     this.newCommunity = new Object();
   }
 
-  getCommunities(): void {
+  private getCommunities(): void {
     let result: RestResult;
     this.communityService.getAll()
       .subscribe(c => {
@@ -71,59 +53,40 @@ export class ManageCommunitiesComponent implements OnInit {
       });
   }
 
-  getUsers(): void {
-    let result: RestResult;
-    this.userService.getAll()
-      .subscribe(c => {
-        result = c;
-        this.resultError.push(result.error);
-        this.users = result.result;
+  private addCommunity():void {
+
+    if ( this.newCommunity.name &&  this.newCommunity.abbreviation  ) {
+    this.communityService.create(this.newCommunity)
+      .subscribe(data => {
+        this.resultError.push(data.error);
+        this.newCommunity = data.result;
+        this.communities.push(this.newCommunity);
+        this.resetFormControlValidation( this.commname );
+        this.resetFormControlValidation( this.commidentifier );
+        this.newCommunity = new Object();
       });
+    } 
   }
 
-  addCommunity():void {
-
-    if (!this.isValid()) {
-      let errorString = "The new community name or identifier is not unique";
-      console.log(errorString);
-      this.resultError.push(errorString);
-    } else {
-
-      let resultCom: RestResult;
-      this.communityService.create(this.newCommunity)
-        .subscribe(r => {
-          resultCom = r;
-          this.resultError.push(resultCom.error);
-          this.newCommunity = resultCom.result;
-
-          // Get the User_Approver Role
-          this.roleService.getByNameAndCommunityId(this.newCommunity.id, "User_Approver")
-          .subscribe(data => {
-
-            // create and save the approverUserRole
-            let approverRole: Role;
-            approverRole = data.result;
-            let appUserRoleResource: UserRoleResource = new Object();
-            appUserRoleResource.roleId = approverRole.id;
-            appUserRoleResource.userId = this.newapprover;
-            this.userRoleResourceService.create(appUserRoleResource)
-              .subscribe(data2 => {
-                this.communities.push(this.newCommunity);
-                this.router.navigate(['/manage-communities']);
-            });
-          });
-        });
-    }
+  private validName(control: AbstractControl): ValidationErrors | null {
+    if(!this.communities) return null;
+    if( this.communities.find( com =>  com.name == this.newCommunity.name   ) ){
+      return {alreadyExists:true};
+    } 
+    return null;
   }
 
-  isValid() {
-    let com: Community;
-    for (com of this.communities) {
-      if (com.name === this.newCommunity.name ||
-        com.abbreviation === this.newCommunity.abbreviation) {
-        return false;
-      }
-    }
-    return true;
+  private validIdentifier(control: AbstractControl): ValidationErrors | null {
+    if(!this.communities) return null;
+    if( this.communities.find( com =>  com.abbreviation == this.newCommunity.abbreviation   ) ) return {alreadyExists:true};
+    return null;
   }
+
+  private resetFormControlValidation(control: AbstractControl) {
+    control.markAsPristine();
+    control.markAsUntouched();
+    control.updateValueAndValidity();
+  }
+
+
 }

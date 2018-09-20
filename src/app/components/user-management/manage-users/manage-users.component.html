@@ -162,15 +162,15 @@
             </tr>
             <tr>
               <td>
-                <select class="form-control"  name="addCommunitySelector" [(ngModel)]="addedcommunity">
-                  <option value="">Select Community</option>
-                  <option *ngFor="let all_community of avail_Communities" [value]="all_community.id">{{ all_community.name }}</option>
+                <select class="form-control-sm"  name="addCommunitySelector" [(ngModel)]="selectedAddCommunity" (change)="getOrgs()">
+                  <option value="null" disabled selected>Select Community</option>               
+                  <option *ngFor="let community of avail_Communities" [ngValue]="community">{{ community.name }}</option>
                 </select>
               </td>
               <td>
-                <select class="form-control"  name="" [(ngModel)]="addedcommunity">
-                  <option value="">Select Organization</option>
-                  <option>blah</option>
+                <select class="form-control-sm"  name="orgMemberSelector" [(ngModel)]="selectedOrganization">
+                  <option value="null" disabled selected>Select Organization</option>
+                  <option *ngFor="let org of organizations" [ngValue]="org">{{ org.abbreviation }}</option>
                 </select>
               </td>
               <td>

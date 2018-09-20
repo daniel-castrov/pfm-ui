@@ -5,57 +5,59 @@
     <div class="col-12">
       <div class="h5">{{ community?.name }}</div>
       <div class="row">
-        <div class="col-5">
+
+        <div class="col-6">
 
           <fieldset>
-            <legend>Organizations</legend>
-            <p>Organizations within this Community</p>
+            <legend>Organizations within this Community</legend>
             <ul class="community-list">
               <li *ngFor="let organization of organizations">
                 {{ organization.abbreviation }}
               </li>
             </ul>
-          </fieldset>
-          
+          </fieldset>  
           <fieldset>
             <legend>Create an Organization</legend>
               <span class="form-group">
-                <input class="form-control organization" name="orgName" [(ngModel)]="newOrg.name"
+                <input [formControl]="orgname" class="form-control organization" name="orgName" [(ngModel)]="newOrg.name"
                   minlength="2" placeholder="Orgnization Name" required/>
               </span>
               <span class="form-group">
-                <input class="form-control organization" name="orgIdentifier" [(ngModel)]="newOrg.abbreviation"
+                <input [formControl]="orgidentifier" class="form-control organization" name="orgIdentifier" [(ngModel)]="newOrg.abbreviation"
                 minlength="2" placeholder="Identifier" required/>
               </span>
-              <button class="btn btn-primary" (click)="addOrganization()">Submit</button>
-          </fieldset>
+              <button class="btn btn-primary" (click)="addOrganization()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Create</button>
+              <div class="text-danger" *ngIf="orgname.invalid && orgname.errors.alreadyExists">Community name already exists</div>
+              <div class="text-danger" *ngIf="orgname.touched && orgname.invalid && orgname.errors.required">Community name is required</div>
+              <div class="text-danger" *ngIf="orgidentifier.invalid && orgidentifier.errors.alreadyExists">Community identifier already exists</div>
+              <div class="text-danger" *ngIf="orgidentifier.touched && orgidentifier.invalid && orgidentifier.errors.required">Community identifier is required</div>
+       
+            </fieldset>
 
         </div>
-        <div class="col-5">
 
+        <div class="col-5">
           <fieldset>
-            <legend>List of Approvers</legend>
+            <legend>List of User Approvers within this Community</legend>
             <ul class="community-list">
+              <li *ngIf ="approvers.length == 0">(none)</li>
               <li *ngFor="let user of approvers">
                 {{ user?.firstName }} {{ user?.lastName }}
               </li>
             </ul>
           </fieldset>
-          
           <fieldset>
-            <legend>Add Approvers</legend>
-            <div class="form-group clearfix">
-              <select class="form-control-sm dropdown-width mr-sm-2" name="communityApprover" [(ngModel)]="addedapprover" required>
-                <option *ngFor="let user of users"
-                  [value]="user.id">
-                  {{user.firstName}} {{user.lastName}}
-                </option>
-              </select>
-              <button class="btn btn-primary" (click)="addApprover()">Add Approver</button>
-            </div>
+            <legend>Add User Approver</legend>
+            <select class="form-control-sm dropdown-width mr-sm-2" name="communityApprover" [(ngModel)]="addedapprover" required>
+              <option *ngFor="let user of users"
+                [value]="user.id">
+                {{user.firstName}} {{user.lastName}}
+              </option>
+            </select>
+            <button class="btn btn-primary" (click)="addApprover()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Add</button>
           </fieldset>
-        
         </div>
+
       </div>
     </div>
   </div>
