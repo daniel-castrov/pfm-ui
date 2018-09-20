@@ -147,11 +147,13 @@
         <div class="card-container">
           <table class="table">
             <tr *ngFor="let cwr of communityWithUserRoles">
-              <td>{{ cwr.community.name }}</td>
-              <td>
-                <button class="btn-card-header" title="Leave">
-                  <i class="fa fa-times icon-pad" aria-hidden="true"></i>Leave Community
-                </button>
+              <td colspan="2">
+                <span class="mr-2">{{ cwr.community.name }}</span>
+                <span>
+                  <button class="btn-card-header mt-1" title="Leave">
+                    <i class="fa fa-times icon-pad" aria-hidden="true"></i>Leave Community
+                  </button>
+                </span>
               </td>
               <td>
                 Roles:
@@ -161,24 +163,22 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td colspan="3">
                 <select class="form-control-sm"  name="addCommunitySelector" [(ngModel)]="selectedAddCommunity" (change)="getOrgs()">
-                  <option value="null" disabled selected>Select Community</option>               
+                  <option value="null" disabled selected>Select Community</option>
                   <option *ngFor="let community of avail_Communities" [ngValue]="community">{{ community.name }}</option>
                 </select>
-              </td>
-              <td>
+
                 <select class="form-control-sm"  name="orgMemberSelector" [(ngModel)]="selectedOrganization">
                   <option value="null" disabled selected>Select Organization</option>
                   <option *ngFor="let org of organizations" [ngValue]="org">{{ org.abbreviation }}</option>
                 </select>
-              </td>
-              <td>
-                <button class="btn-card-header" title="AddCommunity" (click)="addCommunity()">
+                <span class="ml-2">
+                  <button class="btn-card-header mt-1" title="AddCommunity" (click)="addCommunity()">
                   <i class="fa fa-plus icon-pad" aria-hidden="true"></i>Join Community
-                </button>
+                  </button>
+                </span>
               </td>
-              <td><span>&nbsp;</span></td>
             </tr>
           </table>
         </div>
