@@ -1,91 +1,9 @@
-.form-label {
-  font-size: 16px;
-  color: #23527c;
-  font-weight: 500;
-}
-
-.controls {
-  clear: both;
-}
-
-.apply-box {
-  background-color: #23527c !important;
-  padding: 10px;
-  color: #fff;
-  font-size: 12px;
-  margin-bottom: 12px;
-}
-
-.apply-box a {
-  color: #fff;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.apply a:hover {
-  color: #fff;
-  text-decoration: none;
-}
-
-.nda {
-  color: red;
-  font-size: .8rem;
-}
-
 select {
+  margin: 0px 5px 4px 0 !important;
+  padding: 2px 6px;
+  line-height: 1.8rem;
+  width: 240px;
   color: #868e9b;
-}
-
-.firstname,
-.lastname {
-  display: inline;
-  width: 230px;
-  margin-bottom: 10px;
-  padding: 6px 4px;
-}
-
-.applyinput {
-  width: 300px;
-  padding: 5px;
-}
-
-.middle {
-  display: inline;
-  width: 60px;
-  padding: 6px 4px;
-}
-
-.name-error {
-  display: block;
-  position: absolute;
-  margin-top: -8px;
-  width: 230px !important;
-}
-
-.alert-danger {
-  color: #721c24;
-  width: 300px;
-}
-
-.alert {
-  margin-top: -8px;
-  padding: 0 5px;
-  margin-bottom: 2px;
-}
-
-.form-group {
-  margin-bottom: 10px;
-}
-
-.community-data {
-  width: 100%;
-  margin-top: 20px;
-  font-size: 14px;
-}
-
-
-select {
-    margin-bottom: 14px;
 }
 
 input {
@@ -95,54 +13,8 @@ input {
   width: 355px;
 }
 
-.card-container ul {
-  margin-top: 10px;
-  margin: 0;
-}
-
-.card-container ul li {
-  list-style: none;
-  line-height: 1.5rem;
-  padding: 4px 0 0 4px;
-  margin-left: -30px;
-}
-
-.card-container {
-  width: 100%;
+.form-group {
   margin-bottom: 10px;
-  border: 1px #ccc solid;
-  border-radius: 5px;
-  color: #000;
-  padding: 10px;
-}
-
-.card-container > ul > li > span i.fa {
-  color: #24527b;
-  cursor: pointer;
-  font-size: 25px;
-  margin-right: 5px;
-}
-
-.card-container > ul > li > span i.fa:hover {
-  color: #ccc;
-}
-
-.card-container label {
-  display: inline-block;
-  margin-bottom: .5rem;
-  color: #25527a;
-  font-size: 15px;
-  font-weight: 500;
-  margin: 4px 0;
-  padding: 0 10px;
-}
-
-.controls {
-  clear: both;
-}
-
-label {
-  color: #868e9b;
 }
 
 .form-control {
@@ -152,67 +24,10 @@ label {
   width: 240px;
 }
 
-select {
-  margin: 0px 5px 4px 0 !important;
-  padding: 2px 6px;
-  line-height: 1.8rem;
-  width: 240px;
-}
-
-
-.firstname, .lastname {
-  display: inline;
-  width: 240px;
-  margin: 5px 5px 12px 0;
-  padding: 2px 6px;
-  border-radius: 5px;
-}
-
-input.middle {
-  display: inline;
-  width: 40px !important;
-  padding: 2px 6px;
-  margin: 5px 5px 12px 0;
-}
-
-.assign {
-  display: inline;
-}
-
-.sponsor,
 .community {
   display: inline;
   width: 240px;
   margin: 5px 5px 12px 0;
   padding: 2px 6px;
   border-radius: 5px;
-}
-
-.name-error {
-  display: block;
-  position: absolute;
-  margin-top: -8px;
-  width: 230px !important;
-}
-
-.alert-danger {
-  color: #721c24;
-  width: 300px;
-}
-
-.alert {
-  margin-top: -8px;
-  padding: 0 5px;
-  margin-bottom: 2px;
-}
-
-.badge {
-  font-size: 14px;
-  background-color: #3a6489;
-  color: #fff;
-  margin-bottom: 5px;
-}
-
-label {
-  color: #3a6489;
 }

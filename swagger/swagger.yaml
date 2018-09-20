@@ -937,6 +937,58 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+    post:
+      tags:
+      - "Organization"
+      summary: "Creates an Organization"
+      description: "Adds an Organization."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        200:
+          description: "The newly created organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "Community couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "Organization"
+      summary: "Update an Organization"
+      description: "Update an Organization"
+      operationId: "update"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        204:
+          description: "Successfully updated Organization"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Organization does not exist."
+        500:
+          description: "An unexpected error occured."
   /organizations/{orgId}:
     get:
       tags:

@@ -1,7 +1,7 @@
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
@@ -24,25 +24,26 @@ import { OrganizationService } from '../../../generated/api/organization.service
   templateUrl: './manage-community-details.component.html',
   styleUrls: ['./manage-community-details.component.scss']
 })
-export class MamageCommunityDetailsComponent implements OnInit {
+export class MamageCommunityDetailsComponent {
 
   @ViewChild(HeaderComponent) header;
 
   // This is the id of the community we are interested in 
-  id: string;
+  private communityid: string;
 
-  approvers: User[]=[];
-  addedapprover:string;
-  resultError:string[]=[];
-  community: Community;
-  users:User[]=[];
-  organizations:Organization[]=[];
+  private approvers: User[]=[];
+  private addedapprover:string;
+  private resultError:string[]=[];
+  private community: Community;
+  private users:User[]=[];
+  private organizations:Organization[]=[];
+  private newOrg:Organization = new Object();
 
-  programs: string[]=[];
+  private orgname = new FormControl('', [Validators.required, this.validName.bind(this)]);
+  private orgidentifier  = new FormControl('', [Validators.required, this.validIdentifier .bind(this)]);
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private userService: UserService,
     private communityService: CommunityService,
     private roleService:RoleService,
@@ -51,12 +52,12 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
+      this.communityid = params.id;
     });
 
   }
 
-  ngOnInit() {
+  private ngOnInit() {
     this.resultError;
     this.getCommunity();
     this.getUsers();
@@ -68,9 +69,9 @@ export class MamageCommunityDetailsComponent implements OnInit {
     let result: RestResult;
 
     Observable.forkJoin([
-      this.communityService.getById(this.id),
-      this.userService.getByCommunityIdAndRoleName(this.id,"User_Approver"),
-      this.organizationService.getByCommunityId(this.id)
+      this.communityService.getById(this.communityid),
+      this.userService.getByCommunityIdAndRoleName(this.communityid,"User_Approver"),
+      this.organizationService.getByCommunityId(this.communityid)
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
@@ -82,18 +83,15 @@ export class MamageCommunityDetailsComponent implements OnInit {
         this.resultError.push("The requested Community does not exist");
         return;
       }
-      console.log(this.community );
-
       this.approvers = data[1].result;
-
       this.organizations = data[2].result;
 
     });
   }
 
-  getUsers(): void{
+  private getUsers(): void{
     let result:RestResult;
-    this.userService.getAll()
+    this.userService.getByCommId(this.communityid)
     .subscribe(c => {
       result = c;
       this.resultError.push(result.error);
@@ -105,7 +103,7 @@ export class MamageCommunityDetailsComponent implements OnInit {
 
     let approverRole:Role;
     let resultRole: RestResult;
-    this.roleService.getByNameAndCommunityId(this.id,"User_Approver")
+    this.roleService.getByNameAndCommunityId(this.communityid,"User_Approver")
     .subscribe(r => {
       resultRole = r;
       this.resultError.push(resultRole.error);
@@ -123,4 +121,38 @@ export class MamageCommunityDetailsComponent implements OnInit {
     });
   }
 
+  private addOrganization():void {
+    if ( this.newOrg.name &&  this.newOrg.abbreviation  ) {
+      this.newOrg.communityId = this.communityid;
+      this.organizationService.create(this.newOrg)
+      .subscribe(data => {    
+          this.resultError.push(data.error);
+          this.newOrg = data.result;
+          this.organizations.push(this.newOrg);
+          this.resetFormControlValidation( this.orgname );
+          this.resetFormControlValidation( this.orgidentifier );
+          this.newOrg = new Object();
+        });
+    } 
+  }
+
+  private validName(control: AbstractControl): ValidationErrors | null {
+    if(!this.organizations) return null;
+    if( this.organizations.find( com =>  com.name == this.newOrg.name   ) ){
+      return {alreadyExists:true};
+    } 
+    return null;
+  }
+
+  private validIdentifier(control: AbstractControl): ValidationErrors | null {
+    if(!this.organizations) return null;
+    if( this.organizations.find( com =>  com.abbreviation == this.newOrg.abbreviation   ) ) return {alreadyExists:true};
+    return null;
+  }
+
+  private resetFormControlValidation(control: AbstractControl) {
+    control.markAsPristine();
+    control.markAsUntouched();
+    control.updateValueAndValidity();
+  }
 }
