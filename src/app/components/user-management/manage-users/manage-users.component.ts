@@ -241,7 +241,7 @@ export class ManageUsersComponent implements OnInit {
 
   getOrgs(): void {
 
-    this.organizationService.getByCommunityId(this.selectedAddCommunity)
+    this.organizationService.getByCommunityId(this.selectedAddCommunity.id)
     .subscribe( data => {
 
       this.organizations= data.result;

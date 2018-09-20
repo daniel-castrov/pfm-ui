@@ -24,7 +24,7 @@ import { OrganizationService } from '../../../generated/api/organization.service
   templateUrl: './manage-community-details.component.html',
   styleUrls: ['./manage-community-details.component.scss']
 })
-export class MamageCommunityDetailsComponent implements OnInit {
+export class MamageCommunityDetailsComponent {
 
   @ViewChild(HeaderComponent) header;
 

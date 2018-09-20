@@ -14,7 +14,7 @@ import { CommunityService } from '../../../generated';
   templateUrl: './manage-communities.component.html',
   styleUrls: ['./manage-communities.component.scss']
 })
-export class ManageCommunitiesComponent implements OnInit {
+export class ManageCommunitiesComponent {
 
   @ViewChild(HeaderComponent) header;
 
