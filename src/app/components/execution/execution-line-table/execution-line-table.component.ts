@@ -411,7 +411,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   recheckValidity() {
-    console.log('checking validity');
+    //console.log('checking validity');
 
     var lines: ExecutionLineWrapper[] = [];
     this.agOptions.api.forEachNodeAfterFilter(rn => { 
@@ -420,7 +420,7 @@ export class ExecutionLineTableComponent implements OnInit {
 
     var failure: boolean = false;
     if (0 === lines.length) {
-      console.log('no lines to check, failed');
+      //console.log('no lines to check, failed');
       failure = true;
     }
     else {
@@ -432,7 +432,7 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     this.tableok = !failure;
-    console.log('table ok ? ' + this.tableok);
+    //console.log('table ok ? ' + this.tableok);
     this.agGrid.api.refreshCells(); // need to update CSS classes
   }
 
