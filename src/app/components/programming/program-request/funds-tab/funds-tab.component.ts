@@ -184,10 +184,8 @@ export class FundsTabComponent implements OnChanges {
     this.agGrid.columnApi.setColumnVisible('delete', true);
     this.agGrid.api.sizeColumnsToFit();
     this.agGrid.api.setRowData(this.data);
-    this.existingFundingLines.splice(this.existingFundingLines.indexOf(this.selectedFundingLine, 1));
-    if(this.existingFundingLines.length === 0){
-      this.selectedFundingLine = null;
-    }
+    this.existingFundingLines.splice(this.existingFundingLines.indexOf(this.selectedFundingLine), 1);
+    this.selectedFundingLine = null;
   }
 
   initPinnedBottomRows(){
