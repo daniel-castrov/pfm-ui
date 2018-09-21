@@ -1616,7 +1616,7 @@ paths:
           description: "Forbidden/not authorized"
 # STOP USERS
 ##############################################################################
-# START USERROLES
+# START USERROLERESOURCE
   /userRoles:
     post:
       tags:
@@ -1745,8 +1745,39 @@ paths:
           description: "User does not exist."
         500:
           description: "An unexpected error occurred."
-
-# STOP USERROLES
+  /userRoles/joinCommunity/user/{userId}:
+    post:
+      tags:
+      - "UserRoleResource"
+      summary: "Join a community"
+      description: "A user joins a community"
+      operationId: "joinCommunity"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "userId"
+        description: "a User Id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"    
+      responses:
+        201:
+          description: "User successfully joined a community."
+        400:
+          description: "User didnot join the community."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+# STOP USERROLERESOURCE
 ##############################################################################
 # START PROGRAMS
   /programs/{mrId}:

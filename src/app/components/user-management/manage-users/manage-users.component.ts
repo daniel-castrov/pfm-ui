@@ -1,12 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-// import {
-//   HttpClient, HttpHeaders, HttpParams,
-//   HttpResponse, HttpEvent
-// } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-// import { Response, ResponseContentType } from '@angular/http';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
@@ -29,42 +23,42 @@ import { UserRoleResourceService } from '../../../generated/api/userRoleResource
   templateUrl: './manage-users.component.html',
   styleUrls: ['./manage-users.component.scss']
 })
-export class ManageUsersComponent implements OnInit {
+export class ManageUsersComponent {
 
   @ViewChild(HeaderComponent) header;
 
   // This is the id of the user we are interested in ... the targetUser
-  userid: string;
+  private userid: string;
 
   // The user we are interested in.
-  targetUser: User;
+  private targetUser: User;
 
   // this user's roles and all roles in a community
   private communityWithUserRoles: CommWithRoles[] = [];
 
   // The name of the role we are assigning the targetUser to
-  addedroleId: string;
+  private addedroleId: string;
 
   // The name of the community we are assigning the targetUser to
-  selectedJoinCommunity: Community;
+  private selectedJoinCommunity: Community;
 
   // All the communities the user does not belong to
-  availCommunities: Community[] = [];
+  private availCommunities: Community[] = [];
 
   // all organizations of a selected community
-  organizations: Organization[] = [];
+  private organizations: Organization[] = [];
 
   // an organization that was selected
-  selectedOrganization: Organization;
+  private selectedOrganization: Organization;
 
   // an original copy of the targted user so we can roll back.
-  reftargetUser: User;
+  private reftargetUser: User;
 
   // Have we hit the edit button or are we just viewing?
-  isdEditMode: boolean[] = [];
+  private isdEditMode: boolean[] = [];
 
   // Any error from a rest service
-  resultError: string[]=[];
+  private resultError: string[]=[];
 
   constructor(
     private route: ActivatedRoute,
@@ -81,13 +75,12 @@ export class ManageUsersComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.getTargetUser();
+  private ngOnInit() {
+    this.initTargetUserData();
     this.resetEditMode();
   }
 
-
-  getTargetUser(): void {
+  private initTargetUserData(): void {
     Observable.forkJoin([
       this.userService.getById(this.userid),
       this.communityService.getAll(),
@@ -97,7 +90,6 @@ export class ManageUsersComponent implements OnInit {
       this.targetUser = data[0].result;
 
       let allCommunities: Community[] = [];
-      let resultComm: RestResult;
 
       this.resultError.push(data[1].error);
       allCommunities = data[1].result;
@@ -125,7 +117,7 @@ export class ManageUsersComponent implements OnInit {
     });
   }
 
-  saveTargetUser(): void {
+  private saveTargetUser(): void {
     let result: RestResult;
     this.userService.updateUser(this.targetUser)
       .subscribe(r => {
@@ -135,84 +127,60 @@ export class ManageUsersComponent implements OnInit {
   }
 
   // set a section to edit mode
-  editMode(sectionnumber): void {
+  private editMode(sectionnumber): void {
+    this.selectedJoinCommunity=null;
+    this.selectedOrganization=null;
     this.resetEditMode();
     this.isdEditMode[sectionnumber] = true;
   }
 
-  cancelEdit(): void {
+  private cancelEdit(): void {
     // revert changes
     this.targetUser = JSON.parse(JSON.stringify(this.reftargetUser));
     this.resetEditMode();
   }
 
-  resetEditMode(): void {
+  private resetEditMode(): void {
     for (var i = 0; i < 3; i++) {
       this.isdEditMode[i] = false;
     }
   }
 
-  joinCommunity(): void {
-
-    console.log( this.selectedJoinCommunity );
-    console.log( this.selectedOrganization );
-    console.log( this.targetUser );
-    
-
-    Observable.forkJoin([
-      this.roleService.getByNameAndCommunityId(this.selectedJoinCommunity.id,"User"),
-      this.roleService.getByNameAndCommunityId(this.selectedJoinCommunity.id,"Organization_Member"),
-    ]).subscribe(data => {
-
-      let userRole:Role = data[0].result;
-      let orgMemberRole = data[1].result;
-
-      let urrUser:UserRoleResource=new Object();
-      let urrOrgMember:UserRoleResource=new Object();
-
-      urrUser.roleId=userRole.id;
-      urrUser.userId=this.targetUser.id;
-      urrUser.resourceIds=[ this.selectedJoinCommunity.id ];
-
-      urrOrgMember.roleId=orgMemberRole.id;
-      urrOrgMember.userId=this.targetUser.id;
-      urrOrgMember.resourceIds=[ this.selectedOrganization.id ];
-
-      console.log( urrUser );
-      console.log( urrOrgMember );
-
-
-      Observable.forkJoin([
-        this.userRoleResourceService.create(urrUser),
-        this.userRoleResourceService.create(urrOrgMember)
-      ]).subscribe(dataa => {
-
-        console.log();
-
-        let result0 = dataa[0];
-        let result1 = dataa[1];
-        
-        this.getTargetUser();
-
+  private joinCommunity(): void {
+   
+    this.userRoleResourceService.joinCommunity(this.targetUser.id, this.selectedOrganization)
+      .subscribe( data => {
+        this.refresh();
       });
+  }
 
+  private leaveCommunity(cwr:CommWithRoles): void {
+
+    let userRole:Role = cwr.userRoles.find( role => role.name == "User" );
+    this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
+      this.targetUser.id, userRole.communityId, "User"
+    ).subscribe( data => {
+      let urr:UserRoleResource = data.result;  
+      this.userRoleResourceService.deleteById(urr.id).subscribe( data=> {
+      this.refresh();
+      });
     });
   }
 
-  editRoles( commid, roleid, userid ){
+  private editRoles( commid, roleid, userid ){
     this.router.navigate(['/roles', commid, roleid, userid]);
   }
 
-
-  getOrganizations(): void {
-
+  private getOrganizations(): void {
     this.organizationService.getByCommunityId(this.selectedJoinCommunity.id)
-    .subscribe( data => {
+    .subscribe( data => this.organizations= data.result );
+  }
 
-      this.organizations= data.result;
-
-    });
-
+  private refresh(){
+    this.communityWithUserRoles=[];
+    this.selectedJoinCommunity=null;
+    this.selectedOrganization=null;
+    this.initTargetUserData();
   }
 
 }
