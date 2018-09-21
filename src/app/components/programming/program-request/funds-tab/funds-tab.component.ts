@@ -24,8 +24,7 @@ import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {Validation} from "./Validation";
-
-declare var $: any;
+import {NotifyUtil} from "../../../../utils/NotifyUtil";
 
 @Component({
   selector: 'funds-tab',
@@ -640,7 +639,7 @@ export class FundsTabComponent implements OnChanges {
           this.agGrid.api.sizeColumnsToFit();
         }
       } else {
-        this.notifyError('Can\'t delete this funding line because is being used by one of the subprograms');
+        NotifyUtil.notifyError('Can\'t delete this funding line because is being used by one of the subprograms');
       }
     });
   }
@@ -789,15 +788,6 @@ export class FundsTabComponent implements OnChanges {
       }
     });
     return duplicatesExist;
-  }
-
-  notifyError(message){
-    $.notify({
-      icon: 'fa fa-exclamation',
-      message: message
-    },{
-      type: 'danger',
-    });
   }
 
   getNumericCellEditor() {
