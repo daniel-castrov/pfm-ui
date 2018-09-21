@@ -82,7 +82,7 @@ export class FundsTabComponent implements OnChanges {
     if(!this.pr.phaseId) {
       return;
     }
-    if(this.agGrid.api.getDisplayedRowCount() === 0) {
+    if(this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       this.loadExistingFundingLines();
       this.setPomFiscalYear();
       this.initDataRows();
@@ -373,23 +373,13 @@ export class FundsTabComponent implements OnChanges {
             colId: 'programId',
             field: 'programId',
             suppressToolPanel: true,
-            editable: params => {
-              return this.isEditable(params)
-            },
-            onCellValueChanged: params => this.onFundingLineValueChanged(params),
             cellClassRules: {
               'font-weight-bold': params => {return this.colSpanCount(params) > 1},
               'row-span': params => {return this.rowSpanCount(params) > 1}
             },
             cellClass: 'funding-line-default',
             rowSpan: params => {return this.rowSpanCount(params)},
-            colSpan: params => {return this.colSpanCount(params)},
-            cellEditorSelector: params => {
-              return {
-                component: 'agSelectCellEditor',
-                params: {values: this.appropriations}
-              };
-            }
+            colSpan: params => {return this.colSpanCount(params)}
           },
         {
           headerName: 'Appropriation',
@@ -536,6 +526,7 @@ export class FundsTabComponent implements OnChanges {
             cellStyle: params => {
               if (this.prs &&
                 params.data.phaseType === PhaseType.POM &&
+                params.data.gridType === GridType.CURRENT_PR &&
                 !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
                 return {color: 'red', 'font-weigh': 'bold'};
               };
@@ -785,7 +776,7 @@ export class FundsTabComponent implements OnChanges {
 
   onGridReady(params) {
     setTimeout(() => {
-      this.agGrid.api.sizeColumnsToFit();
+      params.api.sizeColumnsToFit();
     }, 500);
     window.addEventListener("resize", () => {
       setTimeout(() => {
@@ -841,11 +832,15 @@ export class FundsTabComponent implements OnChanges {
         this.initPinnedBottomRows();
         if (!this.data.some(row => row.fundingLine.userCreated === true)) {
           this.agGrid.columnApi.setColumnVisible('delete', false);
-          this.agGridSiblings.columnApi.setColumnVisible('delete', false);
-          this.agGridParent.columnApi.setColumnVisible('delete', false);
+          if(this.agGridSiblings){
+            this.agGridSiblings.columnApi.setColumnVisible('delete', false);
+            this.agGridSiblings.api.sizeColumnsToFit();
+          }
+          if(this.agGridParent){
+            this.agGridParent.columnApi.setColumnVisible('delete', false);
+            this.agGridParent.api.sizeColumnsToFit();
+          }
           this.agGrid.api.sizeColumnsToFit();
-          this.agGridSiblings.api.sizeColumnsToFit();
-          this.agGridParent.api.sizeColumnsToFit();
         }
       } else {
         NotifyUtil.notifyError('Can\'t delete this funding line because is being used by one of the subprograms');
