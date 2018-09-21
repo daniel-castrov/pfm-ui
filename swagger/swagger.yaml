@@ -477,6 +477,18 @@ paths:
         name: "mrId"
         required: true
         type: "string"
+  /pr/subprograms/{id}:
+    get:
+      tags:
+      - "PR"
+      operationId: "getSubProgramsById"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
 # STOP PR
 ##############################################################################
 # START PB
@@ -3372,17 +3384,17 @@ definitions:
     properties:
       id:
         type: "string"
-      executionLineId: 
+      executionLineId:
         type: "string"
       month:
         type: "integer"
-      committed: 
+      committed:
         type: "number"
-      obligated: 
+      obligated:
         type: "number"
-      outlayed: 
+      outlayed:
         type: "number"
-      accruals: 
+      accruals:
         type: "number"
       explanation:
         type: "string"
