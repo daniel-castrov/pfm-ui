@@ -197,7 +197,7 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     var linecellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
-      console.log('into linecellfilter: '+cellval);
+      //console.log('into linecellfilter: '+cellval);
       var elname: string = '';
       my.agOptions.api.forEachNode(rn => { 
         if (rn.data.line.id === cellval) {
@@ -318,14 +318,15 @@ export class ExecutionLineTableComponent implements OnInit {
           cellClassRules: {
             'ag-cell-light-grey': p=>true,
             'text-right': p=>true,
-            'ag-cell-footer-sum': p => (p.data===this.totalsrow)
+            'ag-cell-footer-sum': p => (p.data === this.totalsrow),
+            'font-weight-bold': p => (p.data === this.totalsrow)
           },
           valueFormatter: my.currencyFormatter,
           pinnedRowCellRenderer: params => 'Total'
         },
         {
           headerName: 'Amount',
-          editable: p => (p.data.line.programName !== 'TotalCOLxxyy'),
+          editable: p => (p.data !== my.totalsrow),
           filter: 'agNumberColumnFilter',
           type: 'numericColumn',
           field: 'amt',
@@ -333,9 +334,17 @@ export class ExecutionLineTableComponent implements OnInit {
           width: 92,
           cellClassRules: {
             'ag-cell-light-grey': params => my.validateOneRow(params.data),
-            'ag-cell-red': params => !my.validateOneRow(params.data),
             'text-right': true,
-            'ag-cell-footer-sum': p => (p.data === this.totalsrow)
+            'ag-cell-footer-sum': p => (p.data === this.totalsrow),
+            'ag-cell-red': params => !my.validateOneRow(params.data),
+            'font-weight-bold': p => (p.data === this.totalsrow),
+          },
+          pinnedRowCellRenderer: p => {
+            var val = my.currencyFormatter(p);
+            if (!my.tableok) {
+              return '<span style="color: red;">' + val + '</span>';
+            }
+            return val;
           },
           valueFormatter: my.currencyFormatter
         },
@@ -412,7 +421,6 @@ export class ExecutionLineTableComponent implements OnInit {
 
   recheckValidity() {
     //console.log('checking validity');
-
     var lines: ExecutionLineWrapper[] = [];
     this.agOptions.api.forEachNodeAfterFilter(rn => { 
       lines.push(rn.data);
@@ -432,6 +440,12 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     this.tableok = !failure;
+    if (this.totalsrow) {
+      var newtots: ExecutionLineWrapper = Object.assign({}, this.totalsrow);
+      this.totalsrow = newtots;
+      this.agOptions.api.setPinnedBottomRowData([this.totalsrow]);
+    }
+
     //console.log('table ok ? ' + this.tableok);
     this.agGrid.api.refreshCells(); // need to update CSS classes
   }
