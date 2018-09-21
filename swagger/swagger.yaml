@@ -477,6 +477,18 @@ paths:
         name: "mrId"
         required: true
         type: "string"
+  /pr/subprograms/{id}:
+    get:
+      tags:
+      - "PR"
+      operationId: "getSubProgramsById"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
 # STOP PR
 ##############################################################################
 # START PB
@@ -935,6 +947,58 @@ paths:
             $ref: "#/definitions/RestResult"
         403:
           description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+    post:
+      tags:
+      - "Organization"
+      summary: "Creates an Organization"
+      description: "Adds an Organization."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        200:
+          description: "The newly created organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "Community couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "Organization"
+      summary: "Update an Organization"
+      description: "Update an Organization"
+      operationId: "update"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        204:
+          description: "Successfully updated Organization"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Organization does not exist."
         500:
           description: "An unexpected error occured."
   /organizations/{orgId}:
@@ -3320,17 +3384,17 @@ definitions:
     properties:
       id:
         type: "string"
-      executionLineId: 
+      executionLineId:
         type: "string"
       month:
         type: "integer"
-      committed: 
+      committed:
         type: "number"
-      obligated: 
+      obligated:
         type: "number"
-      outlayed: 
+      outlayed:
         type: "number"
-      accruals: 
+      accruals:
         type: "number"
       explanation:
         type: "string"

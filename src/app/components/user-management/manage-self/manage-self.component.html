@@ -66,19 +66,19 @@
           <ul>
             <li>
               First Name:
-              <input type="text" [(ngModel)]="currentUser.firstName">
+              <input class="form-control form-input" type="text" [(ngModel)]="currentUser.firstName">
             </li>
             <li>
               Last Name:
-              <input type="text" [(ngModel)]="currentUser.lastName">
+              <input class="form-control form-input" type="text" [(ngModel)]="currentUser.lastName">
             </li>
             <li>
               Email:
-              <input [(ngModel)]="currentUser?.communication.primaryEmail" placeholder="value">
+              <input class="form-control form-input" [(ngModel)]="currentUser?.communication.primaryEmail" placeholder="value">
             </li>
             <li>
               Phone:
-              <input [(ngModel)]="currentUser?.communication.primaryPhone" placeholder="value1">
+              <input class="form-control form-input" [(ngModel)]="currentUser?.communication.primaryPhone" placeholder="value1">
             </li>
           </ul>
         </div>
@@ -88,13 +88,13 @@
         <div class="card-container">
           <ul>
             <li>Default Color:
-              <input type="text" [(ngModel)]="currentUser.preferences.defaultColor">
+              <input class="form-control form-input" type="text" [(ngModel)]="currentUser.preferences.defaultColor">
             </li>
             <li>Clock:
-              <input type="text" [(ngModel)]="currentUser.preferences.clock">
+              <input class="form-control form-input" type="text" [(ngModel)]="currentUser.preferences.clock">
             </li>
             <li>Landing Page:
-              <input type="text" [(ngModel)]="currentUser.preferences.landingPage">
+              <input class="form-control form-input" type="text" [(ngModel)]="currentUser.preferences.landingPage">
             </li>
           </ul>
         </div>
