@@ -13,8 +13,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '
 import { ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-
-declare var $: any;
+import {NotifyUtil} from "../../../utils/NotifyUtil";
 
 @Component({
   selector: 'program-request',
@@ -106,7 +105,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   async save(state: ProgrammaticRequestState) {
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
-      this.notifyError(fundsTabValidation.message);
+      NotifyUtil.notifyError(fundsTabValidation.message);
     } else {
       if(this.pr.id) {
         this.pr.state = state;
@@ -133,14 +132,5 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
     return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.state === 'OUTSTANDING');
-  }
-
-  notifyError(message){
-    $.notify({
-        icon: 'fa fa-exclamation',
-        message: message
-    },{
-        type: 'danger',
-    });
   }
 }
