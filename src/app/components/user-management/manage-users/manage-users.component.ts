@@ -46,10 +46,10 @@ export class ManageUsersComponent implements OnInit {
   addedroleId: string;
 
   // The name of the community we are assigning the targetUser to
-  selectedAddCommunity: Community;
+  selectedJoinCommunity: Community;
 
   // All the communities the user does not belong to
-  avail_Communities: Community[] = [];
+  availCommunities: Community[] = [];
 
   // all organizations of a selected community
   organizations: Organization[] = [];
@@ -93,7 +93,6 @@ export class ManageUsersComponent implements OnInit {
       this.communityService.getAll(),
     ]).subscribe(data => {
 
-
       this.resultError.push(data[0].error);
       this.targetUser = data[0].result;
 
@@ -119,63 +118,11 @@ export class ManageUsersComponent implements OnInit {
               }
             }
           }
-          this.avail_Communities=allCommunities;
+          this.availCommunities=allCommunities;
         });
       }
       this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
-
     });
-  }
-
-
-  getTargetUser2(): void {
-    this.communityWithUserRoles=[];
-    // 1. get the user
-    let resultUser: RestResult;
-    this.userService.getById(this.userid)
-      .subscribe(c => {
-        resultUser = c;
-        this.resultError.push(resultUser.error);
-        this.targetUser = resultUser.result;
-        console.log("TargetUser: " + this.targetUser.cn);
-
-        // 2. get all communities
-        let allCommunities: Community[] = [];
-        let resultComm: RestResult;
-
-        let s = this.communityService.getAll();
-        s.subscribe(c => {
-          resultComm = c;
-          this.resultError.push(resultComm.error);
-          allCommunities = resultComm.result;
-
-          // 3. Get this user's roles in each community
-          for (let comm of allCommunities) {
-            let resultUserRoleResources: RestResult;
-            let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
-            s.subscribe(c => {
-              resultUserRoleResources = c;
-              this.resultError.push(resultUserRoleResources.error);
-
-              // push the community if at least one role and take it out of avail
-              if ( resultUserRoleResources.result.length>0 ){
-                this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result));
-                for (var i =0; i < allCommunities.length; i++){
-                  if ( allCommunities[i].id === comm.id ){
-                    allCommunities.splice(i,1);
-                  }
-                }
-              }
-              this.avail_Communities=allCommunities;
-            });
-          }
-          // end 3
-        });
-        // end 2
-        // Make a copy of the current user so we can revert changes
-        this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
-      });
-      // end 1
   }
 
   saveTargetUser(): void {
@@ -205,33 +152,51 @@ export class ManageUsersComponent implements OnInit {
     }
   }
 
-  addCommunity(): void {
+  joinCommunity(): void {
 
-
-    console.log( this.selectedAddCommunity );
+    console.log( this.selectedJoinCommunity );
     console.log( this.selectedOrganization );
     console.log( this.targetUser );
     
 
-    // let resultRole: RestResult;
-    // this.roleService.getByNameAndCommunityId(this.selectedAddCommunity,"User")
-    // .subscribe(r => {
-    //   resultRole = r;
-    //   this.resultError.push(resultRole.error);
+    Observable.forkJoin([
+      this.roleService.getByNameAndCommunityId(this.selectedJoinCommunity.id,"User"),
+      this.roleService.getByNameAndCommunityId(this.selectedJoinCommunity.id,"Organization_Member"),
+    ]).subscribe(data => {
 
-    //   let userRole:Role;
-    //   userRole = resultRole.result;
-    //   let userRoleRes:UserRoleResource=new Object();
-    //   userRoleRes.roleId=userRole.id;
-    //   userRoleRes.userId=this.userid;
+      let userRole:Role = data[0].result;
+      let orgMemberRole = data[1].result;
 
-    //   let resultUserRoleResource: RestResult;
-    //   this.userRoleResourceService.create(userRoleRes)
-    //   .subscribe(r => {
-    //     resultUserRoleResource = r;
-    //     this.getTargetUser();
-    //   });
-    // });
+      let urrUser:UserRoleResource=new Object();
+      let urrOrgMember:UserRoleResource=new Object();
+
+      urrUser.roleId=userRole.id;
+      urrUser.userId=this.targetUser.id;
+      urrUser.resourceIds=[ this.selectedJoinCommunity.id ];
+
+      urrOrgMember.roleId=orgMemberRole.id;
+      urrOrgMember.userId=this.targetUser.id;
+      urrOrgMember.resourceIds=[ this.selectedOrganization.id ];
+
+      console.log( urrUser );
+      console.log( urrOrgMember );
+
+
+      Observable.forkJoin([
+        this.userRoleResourceService.create(urrUser),
+        this.userRoleResourceService.create(urrOrgMember)
+      ]).subscribe(dataa => {
+
+        console.log();
+
+        let result0 = dataa[0];
+        let result1 = dataa[1];
+        
+        this.getTargetUser();
+
+      });
+
+    });
   }
 
   editRoles( commid, roleid, userid ){
@@ -239,9 +204,9 @@ export class ManageUsersComponent implements OnInit {
   }
 
 
-  getOrgs(): void {
+  getOrganizations(): void {
 
-    this.organizationService.getByCommunityId(this.selectedAddCommunity.id)
+    this.organizationService.getByCommunityId(this.selectedJoinCommunity.id)
     .subscribe( data => {
 
       this.organizations= data.result;

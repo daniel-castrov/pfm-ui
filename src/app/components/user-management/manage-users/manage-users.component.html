@@ -163,18 +163,18 @@
               </td>
             </tr>
             <tr>
+
               <td colspan="3">
-                <select class="form-control-sm"  name="addCommunitySelector" [(ngModel)]="selectedAddCommunity" (change)="getOrgs()">
-                  <option value="null" disabled selected>Select Community</option>
-                  <option *ngFor="let community of avail_Communities" [ngValue]="community">{{ community.name }}</option>
-                </select>
+                <select class="form-control-sm"  name="joinCommunitySelector" [(ngModel)]="selectedJoinCommunity" (change)="getOrganizations()">
+                  <option value="null" disabled selected>Select Community</option>               
+                  <option *ngFor="let community of availCommunities" [ngValue]="community">{{ community.name }}</option>                </select>
 
                 <select class="form-control-sm"  name="orgMemberSelector" [(ngModel)]="selectedOrganization">
                   <option value="null" disabled selected>Select Organization</option>
                   <option *ngFor="let org of organizations" [ngValue]="org">{{ org.abbreviation }}</option>
                 </select>
                 <span class="ml-2">
-                  <button class="btn-card-header mt-1" title="AddCommunity" (click)="addCommunity()">
+                  <button class="btn-card-header mt-1" title="joinCommunityButton" (click)="joinCommunity()">
                   <i class="fa fa-plus icon-pad" aria-hidden="true"></i>Join Community
                   </button>
                 </span>
