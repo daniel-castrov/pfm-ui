@@ -3,9 +3,6 @@ label, select {
 }
 
 .current-community {
-  &::after {
-    content: " (Current Community)";
-  }
   background: #df960e;
   border-radius: 5px;
   padding: 4px 6px;
