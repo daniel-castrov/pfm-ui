@@ -7,9 +7,7 @@ import {WithFullName, WithFullNameService} from "../../../services/with-full-nam
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
-
-declare var $: any;
-
+import {NotifyUtil} from "../../../utils/NotifyUtil";
 @Component({
   selector: 'app-ufr-view',
   templateUrl: './ufr-view.component.html',
@@ -69,7 +67,7 @@ export class UfrViewComponent implements OnInit {
   async save() {
     let fundsTabValidation = this.ufrFundsComponent.validate;
     if(!fundsTabValidation.isValid){
-      this.notifyError(fundsTabValidation.message);
+      NotifyUtil.notifyError(fundsTabValidation.message);
     } else {
       if(this.ufr.id) {
         this.ufrService.update(this.ufr).subscribe();
@@ -91,15 +89,6 @@ export class UfrViewComponent implements OnInit {
     } else {
       return '';
     }
-  }
-
-  notifyError(message){
-    $.notify({
-      icon: 'fa fa-exclamation',
-      message: message
-    },{
-      type: 'danger',
-    });
   }
 
   private isNotSavable(): boolean {
