@@ -94,4 +94,9 @@ export class IdAndNameComponent {
       return prFullName.substring(0, prFullName.lastIndexOf('/') + 1);
     }
   }
+
+  private type() {
+    if(this.pr.type == ProgramType.GENERIC) return 'SUBPROGRAM';
+    return this.pr.type;
+  }
 }
