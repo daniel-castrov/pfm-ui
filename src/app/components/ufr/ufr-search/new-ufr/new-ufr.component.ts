@@ -8,11 +8,11 @@ import { FundingLine } from '../../../../generated/model/fundingLine';
 
 
 enum CreateNewUfrMode {
-  AN_MRDB_PROGRAM = 'An MRDB Program',
-  A_PROGRAM_REQUEST = 'A Program Request',
-  A_NEW_INCREMENT = 'A New Increment',
-  A_NEW_FOS = 'A New FoS',
-  A_NEW_PROGRAM = 'A New Program'
+  AN_MRDB_PROGRAM = 'Previously Funded Program',
+  A_PROGRAM_REQUEST = 'Program Request',
+  A_NEW_INCREMENT = 'New Increment',
+  A_NEW_FOS = 'New FoS',
+  A_NEW_PROGRAM = 'New Program'
 }
 
 @Component({
@@ -44,17 +44,17 @@ export class NewUfrComponent implements OnInit {
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {
     this.createNewUfrMode = createNewUfrMode;
     switch (this.createNewUfrMode) {
-      case 'An MRDB Program':
+      case 'Previously Funded Program':
         this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
-      case 'A Program Request': // was subprogram
+      case 'Program Request': // was subprogram
         const prs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
         this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(prs);
         this.initialSelectOption = 'Program Request';
         break;
-      case 'A New FoS':
-      case 'A New Increment':
+      case 'New FoS':
+      case 'New Increment':
         const progsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
         this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(progsOrPrs);
         this.initialSelectOption = 'Program';
@@ -93,19 +93,19 @@ export class NewUfrComponent implements OnInit {
   async next() {
     let ufr: UFR = { phaseId: this.pomId };
     switch (this.createNewUfrMode) {
-      case 'An MRDB Program':
+      case 'Previously Funded Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
         ufr.shortyId = this.selectedProgramOrPr.id;
         ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
         await this.initFromShortyProgram(ufr, true);
         break;
-      case 'A Program Request':
+      case 'Program Request':
         ufr.shortyType = ShortyType.PR;
         ufr.shortyId = this.selectedProgramOrPr.id;
         ufr.fundingLines = this.generateEmptyFundingLine(this.selectedProgramOrPr.fundingLines);
         await this.initFromShortyPR(ufr, true);
         break;
-      case 'A New FoS':
+      case 'New FoS':
         ufr.fundingLines=[];
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
@@ -117,7 +117,7 @@ export class NewUfrComponent implements OnInit {
           await this.initFromShortyPR(ufr, false);
         }
         break;
-      case 'A New Increment':
+      case 'New Increment':
         ufr.fundingLines=[];
         if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
@@ -129,7 +129,7 @@ export class NewUfrComponent implements OnInit {
           await this.initFromShortyPR(ufr, false);
         }
         break;
-      case 'A New Program':
+      case 'New Program':
         ufr.shortyType = ShortyType.NEW_PROGRAM;
         ufr.fundingLines=[];
         break;
