@@ -10,8 +10,7 @@
       <!-- we have an tagname set, but check that we have a recognized value -->
       <option *ngIf="!tagNames.has(tagname) || (tagNames.has(tagname) && !tagNames.get(tagname).has(ufr[property]))" [ngValue]="ufr[property] ">{{ufr[property]}} (Unknown value)</option>
     </ng-container>
-
-    <option *ngFor="let t of tagNames.get(tagname) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
+    <option *ngFor="let t of tagsService.tags(tagname) | async" [ngValue]="t.abbr" >{{t.name}}</option>
   </select>
 </ng-template>
 
@@ -118,9 +117,9 @@
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Medical Category', property:'medicalArea'}"></ng-container>
             </span>
             <span class="form-group inline-name">
-              <label class="mb-1">Emphasis</label>
-              <select name="emphasis" class="form-control-sm dropdown-width mb-2" [disabled]="disabled">
-                <option *ngFor="let e of tagNames.get('Emphasis Areas') | mapAsList" [ngValue]="e.abbr">{{e.value}}</option>
+              <label class="mb-1">Emphasis Areas</label>
+              <select multiple [(ngModel)]="ufr.emphases" name="emphasis" class="form-control-sm emphases mb-2" [disabled]="disabled">
+                <option *ngFor="let e of tagsService.tags('Emphasis Areas') | async" [ngValue]="e.abbr">{{e.name}}</option>
               </select>
             </span>
           </fieldset>

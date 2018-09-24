@@ -1,7 +1,6 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import { ProgrammaticRequest, FundingLine, POMService, IntMap, Variant, User} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
-
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 import {DataRow} from "./DataRow";
 import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
@@ -40,7 +39,8 @@ export class UfrVariantsTabComponent {
   frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
 
-  constructor(private pomService: POMService, private globalsService: UserUtils ) { }
+  constructor( private pomService: POMService,
+               private globalsService: UserUtils ) { }
 
   ngOnChanges(){
     if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
