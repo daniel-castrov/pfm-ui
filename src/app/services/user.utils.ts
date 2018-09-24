@@ -8,14 +8,6 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map'
 import {Caching, TemporaryCaching} from "./caching";
 
-/**
- * This service is not caching now but it should/will in the future. At some point we should figure out
- * how to make it cache. The callers can assume all calls to this service are very fast and call it as often 
- * as they want without attempting to cache by themselves.
- * 
- * At or after the time we make it cache we might also consider how to invalidate the cache, e.g. when the 
- * user changes the current community.
- */
 @Injectable()
 export class UserUtils {
 

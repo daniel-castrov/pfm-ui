@@ -29,6 +29,12 @@ export class CacheService {
   }
 }
 
+/**
+ * Permanently caches return value of the function decorated. Permanently means the cache does expire and is available for reuse
+ * until the user reloads the app with F5 or by typing a URL.
+ * @param key the caller must provide a key uniquely identifying the cached value. The burden of uniqueness is on the caller. I know,
+ * ideally we wouldn't be burdening the caller with this. May be in the future someone will figure out a way to avoid it.
+ */
 export function Caching(key: string ) : MethodDecorator {
   return function (target: Function, methodName: string, descriptor: any) {
 
@@ -42,6 +48,12 @@ export function Caching(key: string ) : MethodDecorator {
   }
 }
 
+/**
+ * Temporarily caches return value of the function decorated. Temporary means for 10 seconds and is intended to be enough
+ * to reuse cached values during a single page load but not to reuse between page loads.
+ * @param key the caller must provide a key uniquely identifying the cached value. The burden of uniqueness is on the caller. I know,
+ * ideally we wouldn't be burdening the caller with this. May be in the future someone will figure out a way to avoid it.
+ */
 export function TemporaryCaching(key: string ) : MethodDecorator {
   return function (target: Function, methodName: string, descriptor: any) {
 
