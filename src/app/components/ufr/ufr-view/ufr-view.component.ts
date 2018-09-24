@@ -8,6 +8,7 @@ import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 import {NotifyUtil} from "../../../utils/NotifyUtil";
+
 @Component({
   selector: 'app-ufr-view',
   templateUrl: './ufr-view.component.html',

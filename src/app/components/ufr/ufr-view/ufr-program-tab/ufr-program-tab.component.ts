@@ -1,10 +1,10 @@
-import {RestResult} from './../../../../generated/model/restResult';
-import {join} from './../../../../utils/join';
-import {Observable} from 'rxjs/Observable';
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {FileResponse, LibraryService, POMService, ProgramsService, ShortyType, Tag, UFR} from '../../../../generated';
+import {FileResponse, LibraryService, POMService, ProgramsService, ShortyType, Tag, UFR } from '../../../../generated';
 import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {TagsService} from "../../../../services/tags.service";
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'ufr-program-tab',
@@ -17,7 +17,6 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
   private parentName: string;
-  private dummyEmphasis: string;
   readonly fileArea = 'ufr';
   imagePath: string;
 
@@ -25,7 +24,8 @@ export class UfrProgramComponent implements OnInit, OnChanges {
                private pomService: POMService,
                private withFullNameService: WithFullNameService,
                private libraryService: LibraryService,
-               private sanitization: DomSanitizer ) {}
+               private sanitization: DomSanitizer,
+               private tagsService: TagsService ) {}
 
   ngOnInit() {
     this.initTagNames();
@@ -47,8 +47,8 @@ export class UfrProgramComponent implements OnInit, OnChanges {
 
   private async initTagNames() {
     const tagNames = (await this.programService.getTagtypes().toPromise()).result as string[];
-    const observables: Observable<RestResult>[] = tagNames.map( (tagType: string) => this.programService.getTagsByType(tagType) );
-    const tags = await join(...observables) as Tag[][]
+    const observables: Observable<Tag[]>[] = tagNames.map( (tagType: string) => this.tagsService.tags(tagType) );
+    const tags = await forkJoin(...observables).toPromise() as Tag[][];
     tagNames.forEach((tagName, idx) => {
       this.tagNames.set(tagName, new Map<string, string>());
       tags[idx].forEach((tag: Tag) => {
