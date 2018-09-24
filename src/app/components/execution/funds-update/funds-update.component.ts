@@ -71,7 +71,7 @@ export class FundsUpdateComponent implements OnInit {
       },
       columnDefs: [
         {
-          width: 50,
+          width: 40,
           headerName: "View",
           filter: 'agTextColumnFilter',
           cellRenderer: 'eventDetailsCellRendererComponent',
@@ -81,6 +81,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: "Program",
+          width: 115,
           field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
@@ -92,7 +93,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Appn.',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
-          width: 92,
+          width: 70,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.appropriation),
@@ -103,13 +104,13 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'BA/BLIN',
           filter: 'agTextColumnFilter',
           field: 'blin',
-          width: 92,
+          width: 90,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.blin),
           cellEditor: 'agRichSelectCellEditor',
           cellEditorParams: params => ({ values: my.blins }),
-          valueSetter: p => { 
+          valueSetter: p => {
             p.data.blin = p.newValue;
             autovalues.programElement(p.newValue, p.data.item ? p.data.item : '').then(val => {
               p.data.programElement = val;
@@ -121,7 +122,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Item',
           filter: 'agTextColumnFilter',
           field: 'item',
-          width: 92,
+          width: 90,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.item),
@@ -130,7 +131,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'opAgency',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
-          width: 92,
+          width: 60,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center'],
           editable: p => (!p.data.opAgency),
@@ -141,7 +142,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'PE',
           filter: 'agTextColumnFilter',
           field: 'programElement',
-          width: 92,
+          width: 120,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center']
         },
@@ -150,12 +151,12 @@ export class FundsUpdateComponent implements OnInit {
           headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )},
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-light-green', 'text-right'],
           editable: p => (!p.data.initial),
-          valueSetter: p => { 
+          valueSetter: p => {
             p.data.toa = Number.parseFloat(p.newValue);
             p.data.initial = Number.parseFloat(p.newValue);
 
@@ -174,7 +175,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'CRA',
           field: 'craTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -183,7 +184,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Realigned',
           field: 'realignedTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -192,7 +193,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Appr. Actions',
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -201,7 +202,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'OUSD(C) Actions',
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -210,7 +211,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'BTR',
           field: 'btrTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -219,7 +220,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'TOA',
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
@@ -228,7 +229,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Released',
           field: 'released',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
@@ -237,7 +238,7 @@ export class FundsUpdateComponent implements OnInit {
           headerName: 'Withheld',
           field: 'withheld',
           valueFormatter: params => { return this.currencyFormatter(params) },
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green', 'text-right']
