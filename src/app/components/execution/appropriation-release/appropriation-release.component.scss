@@ -108,5 +108,9 @@ input[readonly]{
     padding: 6px;
     border-radius: 4px;
     border: $light-grey-border;
+    cursor: pointer;
+    &:hover {
+      background-color: $light-grey;
+    }
   }
 }
