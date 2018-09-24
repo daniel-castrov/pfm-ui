@@ -76,16 +76,18 @@ input[readonly]{
   font-size: 12px;
   width: 100px;
 
-  > .tag-text {
+ .tag-text {
     background: $light-grey;
     padding: 3px;
     margin: 2px;
   }
-  > .tag-number {
+
+ .tag-number {
     background: $light-grey;
     padding: 3px;
     margin: 2px;
   }
+  
   .tag-red {
     color: red;
   }
