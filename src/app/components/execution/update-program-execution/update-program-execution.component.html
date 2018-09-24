@@ -19,7 +19,7 @@
           </select>
         </span>
         <span class="form-group">
-          <label class="execution-titles">{{fullname(current.line)}}</label>
+          <label class="execution-titles">{{current.line.programName}}</label>
           <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container>
         </span>
       </div>

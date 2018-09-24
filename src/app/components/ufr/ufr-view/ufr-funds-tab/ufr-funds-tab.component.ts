@@ -9,6 +9,7 @@ import {DataRow} from "./DataRow";
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 import {NotifyUtil} from "../../../../utils/NotifyUtil";
+import {PhaseType} from "../../../programming/select-program-request/UiProgrammaticRequest";
 
 @Component({
   selector: 'ufr-funds-tab',
@@ -26,6 +27,7 @@ export class UfrFundsComponent implements OnChanges {
 
   private pomFy: number;
   private appropriations: string[] = [];
+  private functionalAreas: string[] = [];
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
@@ -228,7 +230,8 @@ export class UfrFundsComponent implements OnChanges {
           cellStyle: {'text-align': 'center'},
         },
           {
-            headerName: 'Appropriation',
+            headerName: 'Appn',
+            headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             maxWidth: 92,
             editable: params => {
@@ -271,6 +274,16 @@ export class UfrFundsComponent implements OnChanges {
               return this.isEditable(params)
             },
             cellClass: 'funding-line-default',
+            cellEditorSelector: params => {
+              let component = 'agSelectCellEditor';
+              if(params.data.fundingLine.appropriation === 'PROC'){
+                component = 'agTextCellEditor';
+              }
+              return {
+                component: component,
+                params: {values: this.functionalAreas}
+              };
+            },
             onCellValueChanged: params => this.onFundingLineValueChanged(params)
           },
           {
@@ -320,11 +333,14 @@ export class UfrFundsComponent implements OnChanges {
           break;
       }
       if (subHeader) {
+        let columnKey = key.toString().replace('20', 'FY')
         let colDef = {
           headerName: subHeader,
           suppressToolPanel: true,
           children: [{
-            headerName: key,
+            headerName: columnKey,
+            colId: key,
+            headerTooltip: 'Fiscal Year ' + key,
             field: 'fundingLine.funds.' + key,
             maxWidth: 92,
             suppressMenu: true,
@@ -350,7 +366,8 @@ export class UfrFundsComponent implements OnChanges {
     });
 
     let totalColDef = {
-      headerName: 'BY Total',
+      headerName: 'FYDP Total',
+      headerTooltip: 'Future Years Defense Program Total',
       suppressMenu: true,
       suppressToolPanel: true,
       maxWidth: 92,
@@ -359,6 +376,28 @@ export class UfrFundsComponent implements OnChanges {
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
     this.defaultColumnDefs.push(totalColDef);
+
+    let ctcColDef = {
+      headerName: 'CTC',
+      headerTooltip: 'Cost to Complete',
+      suppressMenu: true,
+      maxWidth: 92,
+      field: 'fundingLine.ctc',
+      type: "numericColumn",
+      cellClassRules: {
+        'ag-cell-edit': params => {
+          return this.isAmountEditable(params, this.pomFy)
+        },
+        'delta-row': params => {
+          return params.data.phaseType === PhaseType.DELTA;
+        }
+      },
+      editable: params => {
+        return this.isAmountEditable(params, this.pomFy)
+      },
+      valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
+    };
+    this.defaultColumnDefs.push(ctcColDef);
   }
 
   getTotal(pr, columnKeys): number {
@@ -426,7 +465,7 @@ export class UfrFundsComponent implements OnChanges {
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-
+    this.functionalAreas = await this.tagsService.tagAbbreviationsForFunctionalArea()
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
@@ -434,7 +473,7 @@ export class UfrFundsComponent implements OnChanges {
   }
 
   onBudgetYearValueChanged(params){
-    let year = params.colDef.headerName;
+    let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.fundingLine.funds[year] = Number(params.newValue);
     this.agGridProposedChanges.api.refreshCells();
@@ -459,6 +498,7 @@ export class UfrFundsComponent implements OnChanges {
     }, 500);
   }
 
+
   delete(index, data) {
     this.ufr.fundingLines.splice(this.ufr.fundingLines.indexOf(this.proposedChange[index].fundingLine), 1);
     this.proposedChange.splice(index, 1);
@@ -482,30 +522,35 @@ export class UfrFundsComponent implements OnChanges {
 
   onFundingLineValueChanged(params) {
     let pomNode = params.node.data;
-    if (params.colDef.headerName === 'Appropriation') {
+    if (params.colDef.headerName === 'Appn') {
       this.filterBlins(params.data.fundingLine.appropriation);
     }
-    if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-      this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
-        params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
-        this.agGridProposedChanges.api.refreshCells();
-      });
-
-      if (params.data.fundingLine.appropriation === 'RDTE'){
-        params.data.fundingLine.item = this.shorty.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
-      }
-
-      if (params.data.fundingLine.item) {
-        this.autoValuesService.programElement(params.data.fundingLine.baOrBlin, params.data.fundingLine.item).then( pe => {
-          params.data.fundingLine.programElement = pe;
+    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
+      params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
+    } else {
+      if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
+        this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
+          params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
+          this.agGridProposedChanges.api.refreshCells();
         });
+
+        if (params.data.fundingLine.appropriation === 'RDTE'){
+          params.data.fundingLine.item = this.shorty.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
+        }
+
+        if (params.data.fundingLine.item) {
+          this.autoValuesService.programElement(params.data.fundingLine.baOrBlin, params.data.fundingLine.item).then( pe => {
+            params.data.fundingLine.programElement = pe;
+          });
+        }
+        pomNode.fundingLine.appropriation = params.data.fundingLine.appropriation;
+        pomNode.fundingLine.baOrBlin = params.data.fundingLine.baOrBlin;
+        pomNode.fundingLine.opAgency = params.data.fundingLine.opAgency;
+        pomNode.fundingLine.item = params.data.fundingLine.item;
+        pomNode.fundingLine.programElement = params.data.fundingLine.programElement;
       }
-      pomNode.fundingLine.appropriation = params.data.fundingLine.appropriation;
-      pomNode.fundingLine.baOrBlin = params.data.fundingLine.baOrBlin;
-      pomNode.fundingLine.opAgency = params.data.fundingLine.opAgency;
-      pomNode.fundingLine.item = params.data.fundingLine.item;
-      pomNode.fundingLine.programElement = params.data.fundingLine.programElement;
     }
+
     this.agGridProposedChanges.api.refreshCells();
   }
 
@@ -532,7 +577,7 @@ export class UfrFundsComponent implements OnChanges {
         break;
       case 'JSTO':
         this.filteredBlins = this.filteredBlins.filter(blin => {
-          return blin.match(/BA[1-3]/);
+          return blin.match(/BA[1-4]/);
         });
         this.appropriations = this.appropriations.filter(a => a === 'RDTE');
         break;

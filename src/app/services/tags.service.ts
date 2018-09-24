@@ -55,4 +55,8 @@ export class TagsService {
     return this.tagAbbreviations('Acquisition Type');
   }
 
+  tagAbbreviationsForFunctionalArea(): Promise<string[]> {
+    return this.tagAbbreviations('Functional Area');
+  }
+
 }

@@ -81,6 +81,7 @@ export class NewUfrComponent implements OnInit {
     if (fundingLines) {
       let emptyFundingLines = JSON.parse(JSON.stringify(fundingLines));
       emptyFundingLines.forEach(fl => {
+        fl.ctc = 0;
         Object.keys(fl.funds).forEach(year => {
           fl.funds[year] = 0;
         })

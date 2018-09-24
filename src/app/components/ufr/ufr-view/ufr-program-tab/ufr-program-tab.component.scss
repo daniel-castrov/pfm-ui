@@ -2,6 +2,12 @@ fieldset {
   padding: 10px 20px;
 }
 
+.ufr-program-table {
+  td {
+    padding: 5px;
+  }
+}
+
 .inline-name {
   display: inline-block;
   float: left;
@@ -47,8 +53,9 @@ label {
 
 .program-name {
   display: inline-block;
-  min-width: 300px;
-  max-width: 450px;
+  width: 410px;
+  min-width: 410px;
+  max-width: 410px;
   vertical-align: top;
   cursor: default;
   // word-break: break-all; // use if there are set number of characters in the longname string

@@ -2305,7 +2305,7 @@ paths:
         in: "path"
         required: true
         type: "string"
-      - name: "mrId"
+      - name: "programName"
         in: "query"
         required: false
         type: "string"
@@ -2837,6 +2837,8 @@ definitions:
         type: "string"
       funds:
         $ref: "#/definitions/IntMap"
+      ctc:
+        type: "number"
       variants:
         type: "array"
         items:
@@ -3253,7 +3255,7 @@ definitions:
         type: "string"
       programElement:
         type: "string"
-      mrId:
+      programName:
         type: "string"
       toa:
         type: "integer"

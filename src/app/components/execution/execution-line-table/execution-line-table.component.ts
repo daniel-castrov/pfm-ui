@@ -38,10 +38,10 @@ export class ExecutionLineTableComponent implements OnInit {
     return okays;
   };
   tableok: boolean = false;
-  private programIdNameLkp: Map<string, string> = new Map<string, string>();
   private elIdNameLkp: Map<string, ELDisplay> = new Map<string, ELDisplay>();
   private agOptions: GridOptions;
-  private availablePrograms: {}[] = [];
+  private availablePrograms: string[] = [];
+  private totalsrow: ExecutionLineWrapper;
 
   private tmpdata: ExecutionLineWrapper[];
 
@@ -55,6 +55,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   @Input() set exeprogramfilter(x: ExecutionLineFilter) {
+    console.log('setting new exe filter');
     this._exeprogramfilter = x;
     this.setAvailablePrograms();
   }
@@ -93,7 +94,7 @@ export class ExecutionLineTableComponent implements OnInit {
       this.agOptions.api.setRowData(newdata);
       this.agOptions.api.refreshCells();
       this.refreshpins();
-      this.recheckValidity();
+      this.setAvailablePrograms();
     }
     else {
       console.log('agOptions has NOT been initted...storing data for later')
@@ -112,6 +113,20 @@ export class ExecutionLineTableComponent implements OnInit {
     return lines;
   }
 
+
+  currencyFormatter(value) {
+    if (isNaN(value.value)) {
+      value.value = 0;
+    }
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return usdFormate.format(value.value);
+  }
+
   refreshpins() {
     //console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
     var dopinned: boolean = false;
@@ -121,15 +136,19 @@ export class ExecutionLineTableComponent implements OnInit {
       }
     });
 
-    if( dopinned ){
-      this.agOptions.api.setPinnedBottomRowData([{
-        line: {},
+    if (dopinned) {
+      this.totalsrow = {
+        line: { programName: 'totals-row' },
         amt: this.total()
-      }]);
+      };
+      this.agOptions.api.setPinnedBottomRowData([this.totalsrow]);
     }
     else {
       this.agOptions.api.setPinnedBottomRowData([]);
+      delete this.totalsrow;
     }
+
+    this.recheckValidity();    
   }
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
@@ -142,30 +161,20 @@ export class ExecutionLineTableComponent implements OnInit {
     };
     
     var my: ExecutionLineTableComponent = this;
-    var namesorter = function (mrId1, mrId2) {
-      var name1 = my.programIdNameLkp.get(mrId1);
-      var name2 = my.programIdNameLkp.get(mrId2);
-      if (name1 === name2) {
-        return 0;
-      }
-
-      return (name1 < name2 ? -1 : 1);
-    }
 
     var programSetter = function (params): boolean {
       if (params.newValue) {
-        var mrid: string = params.newValue.key;
-        var elChoices = my.getLineChoices(mrid);
+        var programName: string = params.newValue;
+        var elChoices = my.getLineChoices(programName);
         if (1 == elChoices.length) {
           params.data.line = my.elIdNameLkp.get( elChoices[0] ).line;
           params.data.amt = 0;
         }
         else {
-          params.data.line = { mrId: mrid };
+          params.data.line = { programName: programName };
           params.data.amt = 0;
         }
 
-        my.setAvailablePrograms();
         return true;
       }
 
@@ -176,7 +185,6 @@ export class ExecutionLineTableComponent implements OnInit {
     var amtSetter = function (params): boolean {
       params.data.amt = Number.parseFloat(params.newValue);
       my.refreshpins();
-      my.recheckValidity();
       return true;
     }
 
@@ -188,30 +196,8 @@ export class ExecutionLineTableComponent implements OnInit {
       return false;
     }
 
-    var programcellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
-      var progname: string = my.programIdNameLkp.get(cellval).toLocaleLowerCase();
-      switch (filter) {
-        case 'equals':
-          return progname === filtertext;
-        case 'notEqual':
-          return progname !== filtertext;
-        case 'startsWith':
-          return progname.startsWith(filtertext);
-        case 'endsWith':
-          return progname.endsWith(filtertext);
-        case 'contains':
-          return progname.indexOf(filtertext) > -1;
-        case 'notContains':
-          return progname.indexOf(filtertext) < 0;
-        default:
-          console.warn('some new filter? ' + filter);
-      }
-
-      return true;
-    }
-
     var linecellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
-      console.log('into linecellfilter: '+cellval);
+      //console.log('into linecellfilter: '+cellval);
       var elname: string = '';
       my.agOptions.api.forEachNode(rn => { 
         if (rn.data.line.id === cellval) {
@@ -251,11 +237,8 @@ export class ExecutionLineTableComponent implements OnInit {
       frameworkComponents: agcomps,
       onFilterModified: ev => {
         my.refreshpins();
-        my.recheckValidity();
       },
       context: {
-        programlkp: my.programIdNameLkp,
-        enabled: false,
         parentComponent: this,
         deleteHidden: false
       },
@@ -263,16 +246,12 @@ export class ExecutionLineTableComponent implements OnInit {
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',
-          filterParams: { 
-            textCustomComparator: programcellfilter,
-          },
           editable: true,
-          comparator: namesorter,
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
-          valueFormatter: params => ( my.programIdNameLkp.has( params.data.line.mrId ) 
-            ? my.programIdNameLkp.get(params.data.line.mrId)
+          valueFormatter: params => ( params.data.line.programName
+            ? params.data.line.programName
             : 'Please choose a Program'),
-          field: 'line.mrId',
+          field: 'line.programName',
           cellEditorParams: function(){
             return {
               values: my.availablePrograms,
@@ -295,7 +274,7 @@ export class ExecutionLineTableComponent implements OnInit {
             ? my.elIdNameLkp.get( params.data.line.id ).display
             : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
           cellEditorParams: params => {
-            var choices: string[] = my.getLineChoices(params.data.line.mrId);
+            var choices: string[] = my.getLineChoices(params.data.line.programName);
             //console.log(choices);
             return {
               values: choices,
@@ -316,7 +295,9 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line.toa',
           type: 'numericColumn',
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey', 'text-right'],
+          valueFormatter: my.currencyFormatter,
+          pinnedRowCellRenderer: p => ''
         },
         {
           headerName: 'Released',
@@ -324,7 +305,9 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line.released',
           type: 'numericColumn',
           width: 92,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey', 'text-right'],
+          valueFormatter: my.currencyFormatter,
+          pinnedRowCellRenderer: p => ''
         },
         {
           headerName: 'Withheld',
@@ -332,21 +315,38 @@ export class ExecutionLineTableComponent implements OnInit {
           type: 'numericColumn',
           field: 'line.withheld',
           width: 92,
-          cellClass: ['ag-cell-light-grey'],
+          cellClassRules: {
+            'ag-cell-light-grey': p=>true,
+            'text-right': p=>true,
+            'ag-cell-footer-sum': p => (p.data === this.totalsrow),
+            'font-weight-bold': p => (p.data === this.totalsrow)
+          },
+          valueFormatter: my.currencyFormatter,
           pinnedRowCellRenderer: params => 'Total'
         },
         {
           headerName: 'Amount',
-          editable: true,
+          editable: p => (p.data !== my.totalsrow),
           filter: 'agNumberColumnFilter',
           type: 'numericColumn',
           field: 'amt',
           valueSetter: amtSetter,
           width: 92,
           cellClassRules: {
-            'ag-cell-light-grey': params => my.validateOneRow( params.data ),
-            'ag-cell-red': params => !my.validateOneRow(params.data)
-          }
+            'ag-cell-light-grey': params => my.validateOneRow(params.data),
+            'text-right': true,
+            'ag-cell-footer-sum': p => (p.data === this.totalsrow),
+            'ag-cell-red': params => !my.validateOneRow(params.data),
+            'font-weight-bold': p => (p.data === this.totalsrow),
+          },
+          pinnedRowCellRenderer: p => {
+            var val = my.currencyFormatter(p);
+            if (!my.tableok) {
+              return '<span style="color: red;">' + val + '</span>';
+            }
+            return val;
+          },
+          valueFormatter: my.currencyFormatter
         },
         {
           headerName: 'Remove',
@@ -362,16 +362,13 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   validateOneRow(row): boolean {
-    return this.exevalidator([row], false)[0];
+    //console.log('validating one row: ' + JSON.stringify(row));
+    var ok = this.exevalidator([row], false)[0];
+    //console.log('result: ' + ok);
+    return ok;
   }
 
   ngOnInit() {
-    this.progsvc.getIdNameMap().subscribe(data => {
-      Object.getOwnPropertyNames(data.result).forEach(id => {
-        this.programIdNameLkp.set(id, data.result[id]);
-      });
-      this.setAvailablePrograms();
-    });
   }
 
   addrow() {
@@ -388,11 +385,9 @@ export class ExecutionLineTableComponent implements OnInit {
   delete(rowIndex, data) {
     this.agOptions.api.updateRowData({ remove: [data] });
     this.refreshpins();
-    this.recheckValidity();
   }
 
-  getLineChoices(mrid): string[] {
-    //console.log('getting line choices for ' + mrid);
+  getLineChoices(programname): string[] {
     var existingEls: Set<string> = new Set<string>();
     if (this.agOptions && this.agOptions.api) {
       this.agOptions.api.forEachNode(rownode => {
@@ -402,10 +397,9 @@ export class ExecutionLineTableComponent implements OnInit {
       });
     }
 
-    //console.log('all exelines: ' + this.elIdNameLkp.size);
     var rets: string[] = [];
     this.elIdNameLkp.forEach((eld, elid) => {
-      if (eld.line.mrId === mrid &&
+      if (eld.line.programName === programname &&
         (this.exelinefilter ? this.exelinefilter(eld.line) : true) &&
         !existingEls.has(elid)) {
         rets.push(elid);
@@ -427,41 +421,50 @@ export class ExecutionLineTableComponent implements OnInit {
 
   recheckValidity() {
     //console.log('checking validity');
-
     var lines: ExecutionLineWrapper[] = [];
     this.agOptions.api.forEachNodeAfterFilter(rn => { 
       lines.push(rn.data);
     });
 
     var failure: boolean = false;
-    this.exevalidator( lines, true).forEach(x => {
-      if (!x) {
-        failure = true;
-      }
-    });
-
     if (0 === lines.length) {
+      //console.log('no lines to check, failed');
       failure = true;
+    }
+    else {
+      this.exevalidator(lines, true).forEach(x => {
+        if (!x) {
+          failure = true;
+        }
+      });
     }
 
     this.tableok = !failure;
+    if (this.totalsrow) {
+      var newtots: ExecutionLineWrapper = Object.assign({}, this.totalsrow);
+      this.totalsrow = newtots;
+      this.agOptions.api.setPinnedBottomRowData([this.totalsrow]);
+    }
+
+    //console.log('table ok ? ' + this.tableok);
     this.agGrid.api.refreshCells(); // need to update CSS classes
   }
 
   setAvailablePrograms() {
     this.availablePrograms.splice(0, this.availablePrograms.length);
+    var avails: Set<string> = new Set<string>();
+    this.elIdNameLkp.forEach(el => {
+      avails.add(el.line.programName);
+     });
 
-    if (this.programIdNameLkp.size > 0) {
-      this.programIdNameLkp.forEach((v, k) => {
-        if (this.getLineChoices(k).length > 0) {
-          this.availablePrograms.push({
-            key: k,
-            value: v
-          });
+    if (avails.size > 0) {
+      avails.forEach( pname => {
+        if (this.getLineChoices(pname).length > 0) {
+          this.availablePrograms.push(pname);
         }
       });
     } else {
-      console.warn( 'skipping available program determination (no names in map)')
+      console.warn( 'skipping available program determination (no names to check)')
     }
   }
 
@@ -469,6 +472,7 @@ export class ExecutionLineTableComponent implements OnInit {
     if (this.tmpdata) {
       console.log( 'setting row data from stored data')
       params.api.setRowData(this.tmpdata);
+      this.setAvailablePrograms();
       this.refreshpins();
       delete this.tmpdata;
     }

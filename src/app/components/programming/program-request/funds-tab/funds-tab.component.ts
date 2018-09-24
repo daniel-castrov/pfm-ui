@@ -25,6 +25,8 @@ import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {Validation} from "./Validation";
 import {NotifyUtil} from "../../../../utils/NotifyUtil";
+import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
+import {GridType} from "./GridType";
 
 @Component({
   selector: 'funds-tab',
@@ -36,6 +38,8 @@ export class FundsTabComponent implements OnChanges {
 
   @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
+  @ViewChild("agGridParent") private agGridParent: AgGridNg2;
+  @ViewChild("agGridSiblings") private agGridSiblings: AgGridNg2;
   @Input() pr: ProgrammaticRequest;
   private parentPr: ProgrammaticRequest;
   private isFundsTabValid: any[] = [];
@@ -46,16 +50,23 @@ export class FundsTabComponent implements OnChanges {
   private pbPr: ProgrammaticRequest;
 
   private appropriations: string[] = [];
+  private functionalAreas: string[] = [];
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
   CreationTimeType = CreationTimeType;
+  ProgramType = ProgramType;
   columnDefs = [];
+  defaultColumnDefs = {editable: false};
   data;
+  parentData;
+  siblingsData;
+  showSiblingsInformation: Boolean = false;
   pinnedBottomData;
+  pinnedSiblingsBottomData;
   existingFundingLines: FundingLine[] = [];
   selectedFundingLine: FundingLine = null;
-  frameworkComponents = {deleteRenderer: DeleteRenderer};
+  frameworkComponents = {deleteRenderer: DeleteRenderer, viewSiblingsRenderer: ViewSiblingsRenderer};
   context = {parentComponent: this};
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: this.getNumericCellEditor() };
@@ -72,12 +83,12 @@ export class FundsTabComponent implements OnChanges {
     if(!this.pr.phaseId) {
       return;
     }
-    if(this.agGrid.api.getDisplayedRowCount() === 0) {
+    if(this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       this.loadExistingFundingLines();
       this.setPomFiscalYear();
       this.initDataRows();
       if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
-        this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result
+        this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
       }
     }
   }
@@ -113,15 +124,93 @@ export class FundsTabComponent implements OnChanges {
     }
   }
 
+  initParentDataRows(selectedFundingLine: FundingLine){
+    let data: Array<DataRow> = [];
+    this.parentPr.fundingLines.forEach(fundingLine => {
+      if(selectedFundingLine.appropriation === fundingLine.appropriation &&
+        selectedFundingLine.opAgency === fundingLine.opAgency &&
+        selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
+        selectedFundingLine.item === fundingLine.item) {
+        let pomRow: DataRow = {programId: this.parentPr.shortName,
+          gridType: GridType.PARENT,
+          fundingLine: fundingLine,
+          phaseType: PhaseType.POM};
+        data.push(pomRow);
+      }
+
+    });
+    this.parentData = data;
+  }
+
+  initSiblingsDataRows(selectedFundingLine: FundingLine){
+    let data: Array<DataRow> = [];
+    this.prService.getSubProgramsById(this.pr.creationTimeReferenceId).subscribe(response => {
+      response.result.forEach(subprogram => {
+        if(this.pr.id !== subprogram.id) {
+            subprogram.fundingLines.forEach(fundingLine => {
+              if(selectedFundingLine.appropriation === fundingLine.appropriation &&
+                selectedFundingLine.opAgency === fundingLine.opAgency &&
+                selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
+                selectedFundingLine.item === fundingLine.item) {
+                let pomRow: DataRow = {programId: subprogram.shortName,
+                  gridType: GridType.SIBLINGS,
+                  fundingLine: fundingLine,
+                  phaseType: PhaseType.POM}
+                data.push(pomRow);
+              }
+            });
+        }
+      });
+      this.siblingsData = data;
+      this.initSiblingsPinnedBottomRows();
+    });
+  }
+
+  initSiblingsPinnedBottomRows(){
+    let pinnedData = [];
+    let subtotal: IntMap = {};
+    this.siblingsData.forEach(row => {
+      Object.keys(row.fundingLine.funds).forEach(key => {
+        subtotal[key] = (subtotal[key] || 0) + row.fundingLine.funds[key];
+      });
+    });
+
+    let subtotalRow: DataRow = new DataRow();
+    subtotalRow.fundingLine = {funds: subtotal};
+    subtotalRow.gridType = GridType.SIBLINGS;
+    subtotalRow.phaseType = PhaseType.POM;
+    subtotalRow.programId = 'Subtotal';
+    pinnedData.push(subtotalRow);
+
+    let remaining: IntMap = {};
+
+    Object.keys(subtotalRow.fundingLine.funds).forEach(key => {
+      remaining[key] = this.parentData[0].fundingLine.funds[key] - (subtotalRow.fundingLine.funds[key] || 0) ;
+    });
+
+    let remainingRow: DataRow = new DataRow();
+    remainingRow.fundingLine = {funds: remaining};
+    remainingRow.gridType = GridType.SIBLINGS;
+    remainingRow.phaseType = PhaseType.POM;
+    remainingRow.programId = 'Remaining';
+    pinnedData.push(remainingRow);
+
+    this.pinnedSiblingsBottomData = pinnedData;
+  }
+
   initDataRows(){
     let data: Array<DataRow> = [];
     this.getPBData().then(value => {
       this.pbPr = value;
       this.pr.fundingLines.forEach(fundingLine => {
-        let pomRow: DataRow = {fundingLine: fundingLine, phaseType: PhaseType.POM}
+        let pomRow: DataRow = {programId: this.pr.shortName,
+          gridType: GridType.CURRENT_PR,
+          fundingLine: fundingLine,
+          phaseType: PhaseType.POM}
         let pbRow: DataRow = new DataRow();
         pbRow.phaseType = PhaseType.PB;
-
+        pbRow.gridType = GridType.CURRENT_PR;
+        pbRow.programId = this.pr.shortName;
         if(this.pbPr !== undefined) {
           pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
             fundingLine.appropriation === fl.appropriation &&
@@ -154,11 +243,16 @@ export class FundsTabComponent implements OnChanges {
   }
 
   addParentFundingLine(){
+    this.removePYValues(this.selectedFundingLine);
     this.pr.fundingLines.push(this.selectedFundingLine);
-    let pomRow: DataRow = {fundingLine: this.selectedFundingLine, phaseType: PhaseType.POM};
+    let pomRow: DataRow = {programId: this.pr.shortName,
+      gridType: GridType.CURRENT_PR,
+      fundingLine: this.selectedFundingLine,
+      phaseType: PhaseType.POM};
     pomRow.fundingLine.userCreated = true;
     let pbRow: DataRow = new DataRow();
     pbRow.phaseType = PhaseType.PB;
+    pbRow.programId = this.pr.shortName;
 
     if(this.pbPr !== undefined) {
       pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
@@ -182,9 +276,31 @@ export class FundsTabComponent implements OnChanges {
     this.data.push(deltaRow);
     this.agGrid.columnApi.setColumnVisible('delete', true);
     this.agGrid.api.sizeColumnsToFit();
+    if (this.agGridSiblings && this.agGridParent) {
+      this.agGridParent.columnApi.setColumnVisible('delete', true);
+      this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+      this.agGridParent.api.sizeColumnsToFit();
+      this.agGridSiblings.api.sizeColumnsToFit();
+    }
     this.agGrid.api.setRowData(this.data);
     this.existingFundingLines.splice(this.existingFundingLines.indexOf(this.selectedFundingLine), 1);
     this.selectedFundingLine = null;
+
+    this.columnKeys.forEach(year => {
+      this.isFundsTabValid[year] = {
+        isValid: this.isValidBa(pomRow.fundingLine.baOrBlin, year),
+        baOrBlin: pomRow.fundingLine.baOrBlin,
+        year: year
+      };
+    });
+  }
+
+  removePYValues(fundingLine){
+    Object.keys(fundingLine.funds).forEach(year => {
+      if(Number(year) < this.pomFy){
+        fundingLine.funds[year] = 0;
+      }
+    });
   }
 
   initPinnedBottomRows(){
@@ -214,17 +330,20 @@ export class FundsTabComponent implements OnChanges {
 
     let pbRow: DataRow = new DataRow();
 
-    pbRow.fundingLine = {appropriation: 'Total Funds Request', funds: pbTotal};
+    pbRow.fundingLine = {funds: pbTotal};
+    pbRow.programId = 'Total Funds Request';
     pbRow.phaseType = PhaseType.PB;
     pinnedData.push(pbRow);
 
     let pomRow: DataRow = new DataRow();
-    pomRow.fundingLine = {appropriation: 'Total Funds Request', funds: pomTotal};
+    pomRow.fundingLine = {funds: pomTotal};
+    pomRow.programId = 'Total Funds Request';
     pomRow.phaseType = PhaseType.POM;
     pinnedData.push(pomRow);
 
     let deltaRow: DataRow = new DataRow();
-    deltaRow.fundingLine = {appropriation: 'Total Funds Request', funds: deltaTotal};
+    deltaRow.fundingLine = {funds: deltaTotal};
+    deltaRow.programId = 'Total Funds Request';
     deltaRow.phaseType = PhaseType.DELTA;
     pinnedData.push(deltaRow);
 
@@ -247,11 +366,25 @@ export class FundsTabComponent implements OnChanges {
             'row-span': params => {return this.rowSpanCount(params) > 1}
           },
           cellClass: 'funding-line-default',
-          cellStyle: {'text-align': 'center'},
-          width: 50
+          cellStyle: {'text-align': 'center', 'padding': '0px'},
+          width: 40
         },
+          {
+            headerName: 'Program ID',
+            colId: 'programId',
+            field: 'programId',
+            suppressToolPanel: true,
+            cellClassRules: {
+              'font-weight-bold': params => {return this.colSpanCount(params) > 1},
+              'row-span': params => {return this.rowSpanCount(params) > 1}
+            },
+            cellClass: 'funding-line-default',
+            rowSpan: params => {return this.rowSpanCount(params)},
+            colSpan: params => {return this.colSpanCount(params)}
+          },
         {
-          headerName: 'Appropriation',
+          headerName: 'Appn',
+          headerTooltip: 'Appropriation',
           field: 'fundingLine.appropriation',
           suppressToolPanel: true,
           editable: params => {
@@ -301,6 +434,16 @@ export class FundsTabComponent implements OnChanges {
             return this.isEditable(params)
           },
           cellClass: 'funding-line-default',
+          cellEditorSelector: params => {
+            let component = 'agSelectCellEditor';
+            if(params.data.fundingLine.appropriation === 'PROC'){
+              component = 'agTextCellEditor';
+            }
+            return {
+              component: component,
+              params: {values: this.functionalAreas}
+            };
+          },
           onCellValueChanged: params => this.onFundingLineValueChanged(params),
           cellClassRules: {
             'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -329,16 +472,8 @@ export class FundsTabComponent implements OnChanges {
             'delta-row': params => {
               return params.data.phaseType === PhaseType.DELTA;
             }},
-          valueGetter: params => {
-            switch(params.data.phaseType) {
-              case PhaseType.POM:
-                return params.data.phaseType + (this.pomFy - 2000);
-              case PhaseType.PB:
-                return params.data.phaseType + (this.pbFy - 2000);
-              case PhaseType.DELTA:
-                return params.data.phaseType;
-            }
-          }}]}
+          cellRenderer: 'viewSiblingsRenderer'
+        }]}
       ];
 
     this.columnKeys.forEach(key => {
@@ -380,11 +515,14 @@ export class FundsTabComponent implements OnChanges {
           break;
       }
       if (subHeader) {
+        let columnKey = key.toString().replace('20', 'FY')
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
           children: [{
-            headerName: key,
+            headerName: columnKey,
+            colId: key,
+            headerTooltip: 'Fiscal Year ' + key,
             field: 'fundingLine.funds.' + key,
             maxWidth: 92,
             suppressMenu: true,
@@ -403,6 +541,7 @@ export class FundsTabComponent implements OnChanges {
             cellStyle: params => {
               if (this.prs &&
                 params.data.phaseType === PhaseType.POM &&
+                params.data.gridType === GridType.CURRENT_PR &&
                 !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
                 return {color: 'red', 'font-weigh': 'bold'};
               };
@@ -421,7 +560,8 @@ export class FundsTabComponent implements OnChanges {
       });
 
     let totalColDef = {
-      headerName: 'BY Total',
+      headerName: 'FYDP Total',
+      headerTooltip: 'Future Years Defense Program Total',
       suppressMenu: true,
       maxWidth: 92,
       type: "numericColumn",
@@ -429,6 +569,32 @@ export class FundsTabComponent implements OnChanges {
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
     this.columnDefs.push(totalColDef);
+
+    let ctcColDef = {
+      headerName: 'CTC',
+      headerTooltip: 'Cost to Complete',
+      suppressMenu: true,
+      maxWidth: 92,
+      field: 'fundingLine.ctc',
+      type: "numericColumn",
+      cellClassRules: {
+        'ag-cell-edit': params => {
+          return this.isAmountEditable(params, this.pomFy)
+        },
+        'font-weight-bold': params => {
+          return this.colSpanCount(params) > 1
+        },
+        'delta-row': params => {
+          return params.data.phaseType === PhaseType.DELTA;
+        }
+      },
+      editable: params => {
+        return this.isAmountEditable(params, this.pomFy)
+      },
+      valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
+    };
+    this.columnDefs.push(ctcColDef);
+
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
   }
@@ -474,16 +640,24 @@ export class FundsTabComponent implements OnChanges {
 
   addRow(){
     let newPbRow: DataRow = new DataRow();
+
+    newPbRow.programId = this.pr.shortName;
     newPbRow.phaseType = PhaseType.PB;
+    newPbRow.gridType = GridType.CURRENT_PR;
     newPbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
 
     let newPomRow: DataRow = new DataRow();
+    newPomRow.programId = this.pr.shortName;
     newPomRow.phaseType = PhaseType.POM;
+    newPomRow.gridType = GridType.CURRENT_PR;
     newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
 
     let newDeltaRow: DataRow = new DataRow();
     newDeltaRow.fundingLine= this.generateDelta(newPomRow.fundingLine, newPbRow.fundingLine);
     newDeltaRow.phaseType = PhaseType.DELTA;
+    newDeltaRow.gridType = GridType.CURRENT_PR;
+    newDeltaRow.programId = this.pr.shortName;
+
 
     this.pr.fundingLines.push(newPomRow.fundingLine);
     this.data.push(newPbRow);
@@ -491,21 +665,31 @@ export class FundsTabComponent implements OnChanges {
     this.data.push(newDeltaRow);
     this.agGrid.columnApi.setColumnVisible('delete', true);
     this.agGrid.api.sizeColumnsToFit();
+
+    if(this.agGridParent && this.agGridSiblings){
+      this.agGridParent.columnApi.setColumnVisible('delete', true);
+      this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+      this.agGridParent.api.sizeColumnsToFit();
+      this.agGridSiblings.api.sizeColumnsToFit();
+    }
+
     this.agGrid.api.setRowData(this.data);
     this.agGrid.api.setFocusedCell(this.data.length - 3, 'fundingLine.appropriation');
     this.agGrid.api.startEditingCell({rowIndex: this.data.length - 3, colKey: 'fundingLine.appropriation'});
   }
 
   isEditable(params): boolean{
-    return params.data.fundingLine.appropriation !== 'Total Funds Request' &&
+    return params.data.programId !== 'Total Funds Request' &&
       params.data.fundingLine.userCreated === true &&
-      params.data.phaseType === PhaseType.PB
+      params.data.phaseType === PhaseType.PB &&
+      params.data.gridType === GridType.CURRENT_PR
   }
 
   isAmountEditable(params, key): boolean{
     return key >= this.pomFy &&
       params.data.phaseType == PhaseType.POM &&
-      params.data.fundingLine.appropriation !== 'Total Funds Request'
+      params.data.programId !== 'Total Funds Request' &&
+      params.data.gridType === GridType.CURRENT_PR
   }
 
   rowSpanCount(params): number {
@@ -517,12 +701,10 @@ export class FundsTabComponent implements OnChanges {
   }
 
   colSpanCount(params): number {
-    if (params.data.fundingLine.appropriation === 'Total Funds Request') {
-      if (this.agGrid.columnApi.getColumn('fundingLine.opAgency').isVisible()) {
-        return 4;
-      } else {
-        return 3;
-      }
+    if (params.data.programId === 'Total Funds Request' ||
+      params.data.programId === 'Subtotal' ||
+      params.data.programId === 'Remaining') {
+      return 5;
     } else {
       return 1;
     }
@@ -553,7 +735,7 @@ export class FundsTabComponent implements OnChanges {
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-
+    this.functionalAreas = await this.tagsService.tagAbbreviationsForFunctionalArea()
     let blins = await this.tagsService.tagAbbreviationsForBlin();
     let bas = await this.tagsService.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
@@ -564,8 +746,7 @@ export class FundsTabComponent implements OnChanges {
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
     let originalMrId;
     if(this.pr.type === ProgramType.GENERIC){
-      const parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
-      originalMrId = parentPr.originalMrId;
+      originalMrId = this.parentPr.originalMrId;
     } else {
       originalMrId = this.pr.originalMrId;
     }
@@ -584,7 +765,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   onBudgetYearValueChanged(params){
-    let year = params.colDef.headerName;
+    let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.fundingLine.funds[year] = Number(params.newValue);
 
@@ -605,15 +786,72 @@ export class FundsTabComponent implements OnChanges {
     };
   }
 
-  onGridReady(params) {
+  onParentGridReady(params) {
     setTimeout(() => {
-      params.api.sizeColumnsToFit();
+      this.agGridParent.api.setColumnDefs(this.columnDefs);
+      this.agGridParent.api.getColumnDef('programId').headerName = 'Parent';
+      this.agGridParent.api.refreshHeader();
+      this.agGridParent.api.setRowData(this.parentData);
+      this.agGridParent.api.sizeColumnsToFit();
     }, 500);
     window.addEventListener("resize", function() {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
       });
     });
+  }
+
+  onSiblingsGridReady(params) {
+    setTimeout(() => {
+      this.agGridSiblings.api.setColumnDefs(this.columnDefs);
+      this.agGridSiblings.api.getColumnDef('programId').headerName = 'Sibling';
+      this.agGridSiblings.api.refreshHeader();
+      this.agGridSiblings.api.setRowData(this.siblingsData);
+      this.agGridSiblings.api.sizeColumnsToFit();
+    }, 500);
+    window.addEventListener("resize", function() {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
+  }
+
+  onGridReady(params) {
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
+    window.addEventListener("resize", () => {
+      setTimeout(() => {
+        this.agGrid.api.sizeColumnsToFit();
+      });
+    });
+  }
+
+  viewSiblings(fundingLine){
+    this.showSiblingsInformation = true;
+    this.initParentDataRows(fundingLine);
+    this.initSiblingsDataRows(fundingLine);
+    setTimeout(() => {
+      if (this.data.some(row => row.fundingLine.userCreated === true)) {
+        this.agGridParent.columnApi.setColumnVisible('delete', true);
+        if(this.agGridSiblings){
+          this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+        }
+      }
+      if(this.agGridSiblings){
+        this.agGridSiblings.api.sizeColumnsToFit();
+      }
+      this.agGridParent.api.sizeColumnsToFit();
+      this.agGrid.api.sizeColumnsToFit();
+    }, 700);
+
+  }
+
+  closeSiblingsInformation() {
+    this.showSiblingsInformation = false;
+    setTimeout(() => {
+      this.agGrid.api.sizeColumnsToFit();
+    }, 500)
   }
 
   delete(index) {
@@ -636,6 +874,14 @@ export class FundsTabComponent implements OnChanges {
         this.initPinnedBottomRows();
         if (!this.data.some(row => row.fundingLine.userCreated === true)) {
           this.agGrid.columnApi.setColumnVisible('delete', false);
+          if(this.agGridSiblings){
+            this.agGridSiblings.columnApi.setColumnVisible('delete', false);
+            this.agGridSiblings.api.sizeColumnsToFit();
+          }
+          if(this.agGridParent){
+            this.agGridParent.columnApi.setColumnVisible('delete', false);
+            this.agGridParent.api.sizeColumnsToFit();
+          }
           this.agGrid.api.sizeColumnsToFit();
         }
       } else {
@@ -655,29 +901,33 @@ export class FundsTabComponent implements OnChanges {
 
   onFundingLineValueChanged(params) {
     let pomNode = this.data[params.node.rowIndex + 1];
-    if (params.colDef.headerName === 'Appropriation') {
+    if (params.colDef.headerName === 'Appn') {
       this.filterBlins(params.data.fundingLine.appropriation);
     }
-    if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-      this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
-        params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.pr.leadComponent) !== -1).abbr
-        this.agGrid.api.refreshCells();
-      });
-
-      if (params.data.fundingLine.appropriation === 'RDTE'){
-        params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
-      }
-
-      if (params.data.fundingLine.item) {
-        this.autoValuesService.programElement(params.data.fundingLine.baOrBlin, params.data.fundingLine.item).then( pe => {
-          params.data.fundingLine.programElement = pe;
+    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
+      params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
+    } else {
+      if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
+        this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
+          params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.pr.leadComponent) !== -1).abbr
+          this.agGrid.api.refreshCells();
         });
+
+        if (params.data.fundingLine.appropriation === 'RDTE'){
+          params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');;
+        }
+
+        if (params.data.fundingLine.item) {
+          this.autoValuesService.programElement(params.data.fundingLine.baOrBlin, params.data.fundingLine.item).then( pe => {
+            params.data.fundingLine.programElement = pe;
+          });
+        }
+        pomNode.fundingLine.appropriation = params.data.fundingLine.appropriation;
+        pomNode.fundingLine.baOrBlin = params.data.fundingLine.baOrBlin;
+        pomNode.fundingLine.opAgency = params.data.fundingLine.opAgency;
+        pomNode.fundingLine.item = params.data.fundingLine.item;
+        pomNode.fundingLine.programElement = params.data.fundingLine.programElement;
       }
-      pomNode.fundingLine.appropriation = params.data.fundingLine.appropriation;
-      pomNode.fundingLine.baOrBlin = params.data.fundingLine.baOrBlin;
-      pomNode.fundingLine.opAgency = params.data.fundingLine.opAgency;
-      pomNode.fundingLine.item = params.data.fundingLine.item;
-      pomNode.fundingLine.programElement = params.data.fundingLine.programElement;
     }
     this.agGrid.api.refreshCells();
   }
@@ -729,7 +979,7 @@ export class FundsTabComponent implements OnChanges {
           break;
         case 'JSTO':
           this.filteredBlins = this.filteredBlins.filter(blin => {
-            return blin.match(/BA[1-3]/);
+            return blin.match(/BA[1-4]/);
           });
           this.appropriations = this.appropriations.filter(a => a === 'RDTE');
           break;

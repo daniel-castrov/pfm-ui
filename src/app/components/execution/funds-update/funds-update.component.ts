@@ -10,7 +10,7 @@ import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
-
+import { AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
 
 @Component({
   selector: 'funds-update',
@@ -26,13 +26,13 @@ export class FundsUpdateComponent implements OnInit {
   private exephases: Execution[];
   private selectedexe: Execution;
   private exelines: ExecutionLine[] = [];
-  private programs: Map<string, string> = new Map<string, string>();
+  private programs: string[] = [];
   private appropriations: string[] = [];
   private blins: string[] = [];
   private items: string[] = [];
   private opAgencies: string[] = [];
   private selectedRow: number = -1;
-  private mrid: string;
+  private programName: string;
   private appropriation: string;
   private blin: string;
   private item: string;
@@ -44,29 +44,14 @@ export class FundsUpdateComponent implements OnInit {
   private agOptions: GridOptions;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService, private router: Router) {
+    private progsvc: ProgramsService, private autovalues: AutoValuesService,
+    private router: Router) {
     var my: FundsUpdateComponent = this;
 
     var agcomps:any = {
       programCellRendererComponent: ProgramCellRendererComponent,
       eventDetailsCellRendererComponent : EventDetailsCellRendererComponent
     };
-
-    my.progsvc.getIdNameMap().subscribe(data => {
-      Object.getOwnPropertyNames(data.result).forEach(mrId => {
-        my.programs.set(mrId, data.result[mrId]);
-      });
-    });
-
-    var namesorter = function (mrId1, mrId2) {
-      var name1 = my.programs.get(mrId1);
-      var name2 = my.programs.get(mrId2);
-      if (name1 === name2){
-        return 0;
-      }
-
-      return (name1 < name2 ? -1 : 1);
-    }
 
     var programLinkEnabled = function (params): boolean {
       return (0 !== params.data.released);
@@ -81,7 +66,6 @@ export class FundsUpdateComponent implements OnInit {
       suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
-        programlkp: my.programs,
         route: '/update-program-execution',
         enabled: programLinkEnabled
       },
@@ -93,16 +77,16 @@ export class FundsUpdateComponent implements OnInit {
           cellRenderer: 'eventDetailsCellRendererComponent',
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
-          valueGetter: params => { return params.data.mrId; }
+          field: 'programName',
         },
         {
           headerName: "Program",
+          field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
-          comparator: namesorter,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
-          valueGetter: params => { return params.data.mrId; }
+          editable: p => (!p.data.programName)
         },
         {
           headerName: 'Appn.',
@@ -110,7 +94,10 @@ export class FundsUpdateComponent implements OnInit {
           field: 'appropriation',
           width: 92,
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey'],
+          editable: p => (!p.data.appropriation),
+          cellEditor: 'agRichSelectCellEditor',
+          cellEditorParams: params => ({ values: my.appropriations })
         },
         {
           headerName: 'BA/BLIN',
@@ -118,7 +105,17 @@ export class FundsUpdateComponent implements OnInit {
           field: 'blin',
           width: 92,
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey'],
+          editable: p => (!p.data.blin),
+          cellEditor: 'agRichSelectCellEditor',
+          cellEditorParams: params => ({ values: my.blins }),
+          valueSetter: p => { 
+            p.data.blin = p.newValue;
+            autovalues.programElement(p.newValue, p.data.item ? p.data.item : '').then(val => {
+              p.data.programElement = val;
+            });
+            return true;
+          }
         },
         {
           headerName: 'Item',
@@ -126,7 +123,8 @@ export class FundsUpdateComponent implements OnInit {
           field: 'item',
           width: 92,
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey']
+          cellClass: ['ag-cell-light-grey'],
+          editable: p => (!p.data.item),
         },
         {
           headerName: 'opAgency',
@@ -134,7 +132,10 @@ export class FundsUpdateComponent implements OnInit {
           field: 'opAgency',
           width: 92,
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey','text-center']
+          cellClass: ['ag-cell-light-grey', 'text-center'],
+          editable: p => (!p.data.opAgency),
+          cellEditor: 'agRichSelectCellEditor',
+          cellEditorParams: params => ({ values: my.opAgencies })
         },
         {
           headerName: 'PE',
@@ -152,7 +153,22 @@ export class FundsUpdateComponent implements OnInit {
           width: 92,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-light-green','text-right']
+          cellClass: ['ag-cell-light-green', 'text-right'],
+          editable: p => (!p.data.initial),
+          valueSetter: p => { 
+            p.data.toa = Number.parseFloat(p.newValue);
+            p.data.initial = Number.parseFloat(p.newValue);
+
+            this.exesvc.createExecutionLine(this.selectedexe.id, p.data).subscribe(data => {
+              console.log('created new EL');
+              console.log(data.result);
+
+              p.data.id = data.result;
+              this.refreshFilterDropdowns();
+            });
+
+            return true;
+          }
         },
         {
           headerName: 'CRA',
@@ -234,17 +250,10 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
-        my.progsvc.getIdNameMap(),
         //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
         my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
       ]).subscribe(data => {
-
-        my.programs = new Map<string, string>();
-        Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
-          my.programs.set(mrid, data[0].result[mrid]);
-        });
-
-        my.exephases = data[1].result;
+        my.exephases = data[0].result;
         my.selectedexe = my.exephases[0];
         this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
@@ -284,7 +293,8 @@ export class FundsUpdateComponent implements OnInit {
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
     return usdFormate.format(value.value);
   }
@@ -338,21 +348,11 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   addline() {
-    var newline: ExecutionLine = {
-      appropriation: this.appropriation,
-      blin: this.blin,
-      item: this.item,
-      opAgency: this.opAgency,
-      mrId: this.mrid,
-      toa: this.funds,
-      initial: this.funds
-    };
-
-    this.exesvc.createExecutionLine(this.selectedexe.id, newline).subscribe(data => {
-      newline.id = data.result;
-      this.agOptions.api.paginationGoToLastPage();
-      this.agOptions.api.addItems([newline]);
-      this.refreshFilterDropdowns();
+    this.agOptions.api.updateRowData({ add: [{}] });
+    this.agOptions.api.paginationGoToLastPage();
+    this.agOptions.api.startEditingCell({
+      rowIndex: this.agOptions.api.getLastDisplayedRow(),
+      colKey: 'programName'
     });
   }
 

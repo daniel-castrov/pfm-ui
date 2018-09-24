@@ -4,7 +4,7 @@
 
 <ng-template #notable>
   <div class="execution-table table-striped">
-    There are no programs available to select
+    <span class="font-weight-bold">There are no programs available to select</span>
   </div>
 </ng-template>
 
@@ -18,12 +18,12 @@
     </span>
   </ng-container>
 
-  <ag-grid-angular #agGrid class="ag-theme-balham" 
-    [gridOptions]="agOptions" 
+  <ag-grid-angular #agGrid class="ag-theme-balham"
+    [gridOptions]="agOptions"
     [enableColResize]="true"
-    [toolPanelSuppressSideButtons]="true" 
+    [toolPanelSuppressSideButtons]="true"
     [suppressDragLeaveHidesColumns]="true"
-    [suppressMovableColumns]="true" 
+    [suppressMovableColumns]="true"
     [singleClickEdit]="true"
     (paginationChanged)="agGridPagination.onPaginationChanged($event)"
     (gridReady)="onGridReady($event)">

@@ -68,6 +68,12 @@ export class ExecutionLineDetailsComponent implements OnInit {
           field: 'type'
         },
         {
+          headerName: "Tag",
+          filter: 'agTextColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'tag'
+        },
+        {
           headerName: "Transfer To/From",
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'event',
@@ -76,9 +82,17 @@ export class ExecutionLineDetailsComponent implements OnInit {
         {
           headerName: "Amount",
           filter: 'agNumberColumnFilter',
-          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          cellClass: ['ag-cell-light-grey', 'ag-clickable', 'text-right'],
           type: 'numericColumn',
-          field: 'amt'
+          field: 'amt',
+          valueFormatter: my.currencyFormatter
+        },
+        {
+          headerName: "Notes",
+          filter: 'agTextColumnFilter',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          field: 'reason',
+          hide: true
         },
         {
           filter: 'agDateColumnFilter',
@@ -89,6 +103,20 @@ export class ExecutionLineDetailsComponent implements OnInit {
       ]
     };
   }
+
+  currencyFormatter(value) {
+    if (isNaN(value.value)) {
+      value.value = 0;
+    }
+    var usdFormate = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return usdFormate.format(value.value);
+  }
+
 
   ngOnInit() {
     var my: ExecutionLineDetailsComponent = this;
@@ -142,7 +170,9 @@ export class ExecutionLineDetailsComponent implements OnInit {
             type: my.dropdowns.filter(dd => dd.subtype === x.value.type)[0].name,
             amt: amt,
             user: x.userCN,
-            event: x
+            event: x,
+            reason: x.value.reason,
+            tag: x.value.other
           });
         });
 
@@ -153,15 +183,6 @@ export class ExecutionLineDetailsComponent implements OnInit {
         });
       });
     });
-  }
-
-  fullname(exeline: ExecutionLine): string {
-    if (this.programIdNameLkp && exeline) {
-      return this.programIdNameLkp.get(exeline.mrId);
-    }
-    else {
-      return '';
-    }
   }
 
   onGridReady(params) {
@@ -182,5 +203,7 @@ interface EventItem {
   type: string,
   amt: number,
   user: string,
-  event: ExecutionEvent
+  event: ExecutionEvent,
+  reason: string,
+  tag:string
 }
