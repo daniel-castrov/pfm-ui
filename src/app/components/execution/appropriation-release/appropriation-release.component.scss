@@ -73,13 +73,22 @@ input[readonly]{
 }
 
 .transaction-tags {
-  font-size: 12px;
-  width: 100px;
+  display: inline;
+  font-size: 18px;
+  width: 80px;
 
  .tag-text {
     padding: 3px;
     margin: 2px;
   }
+
+.fa {
+  color: $primary-color;
+  padding: 3px;
+  &:hover {
+    opacity: .6;
+  }
+}
 
  .tag-number {
     padding: 3px;
@@ -88,5 +97,16 @@ input[readonly]{
 
   .tag-red {
     color: red;
+  }
+
+  .tag-bar {
+    font-size: 12px;
+    display: inline;
+  }
+
+   .tag {
+    padding: 6px;
+    border-radius: 4px;
+    border: $light-grey-border;
   }
 }
