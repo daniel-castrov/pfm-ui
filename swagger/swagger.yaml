@@ -2837,6 +2837,8 @@ definitions:
         type: "string"
       funds:
         $ref: "#/definitions/IntMap"
+      ctc:
+        type: "number"
       variants:
         type: "array"
         items:

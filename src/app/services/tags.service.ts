@@ -7,7 +7,7 @@ import { Tag } from '../generated/model/tag';
 
 /**
  * This service is not caching now but it should/will in the future. At some point we should figure out
- * how to make it cache. The callers can assume all calls to this service are very fast and call it as often 
+ * how to make it cache. The callers can assume all calls to this service are very fast and call it as often
  * as they want without attempting to cache by themselves.
  */
 @Injectable()
@@ -51,6 +51,10 @@ export class TagsService {
 
   tagAbbreviationsForAcquisitionType(): Promise<string[]> {
     return this.tagAbbreviations('Acquisition Type');
+  }
+
+  tagAbbreviationsForFunctionalArea(): Promise<string[]> {
+    return this.tagAbbreviations('Functional Area');
   }
 
 }
