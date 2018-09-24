@@ -18,8 +18,8 @@
     </button>
   </div>
 </div>
-
 <ag-grid-angular #agGrid
+                 *ngIf="pr.type !== ProgramType.GENERIC"
                  class="ag-theme-balham pr-funds-tab group-header-white"
                  [gridAutoHeight]="true"
                  [toolPanelSuppressSideButtons]="true"
@@ -40,3 +40,75 @@
                  (gridReady)="onGridReady($event)"
                  (cellEditingStarted)="onCellEditingStarted($event)">
 </ag-grid-angular>
+<fieldset *ngIf="pr.type === ProgramType.GENERIC">
+  <legend>{{pr.shortName}} funding lines</legend>
+  <ag-grid-angular #agGrid
+                   class="ag-theme-balham pr-funds-tab group-header-white"
+                   [gridAutoHeight]="true"
+                   [toolPanelSuppressSideButtons]="true"
+                   [suppressMovableColumns]="true"
+                   [suppressRowTransform]="true"
+                   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+                   [showToolPanel]="false"
+                   [enableSorting]="true"
+                   [enableFilter]="true"
+                   [rowData]="data"
+                   [singleClickEdit]="true"
+                   [pinnedBottomRowData]="pinnedBottomData"
+                   [frameworkComponents]="frameworkComponents"
+                   [components]="components"
+                   [context]="context"
+                   [stopEditingWhenGridLosesFocus]="true"
+                   (columnVisible)="sizeColumnsToFit($event)"
+                   (gridReady)="onGridReady($event)"
+                   (cellEditingStarted)="onCellEditingStarted($event)">
+  </ag-grid-angular>
+</fieldset>
+
+<fieldset *ngIf="showSiblingsInformation" style="position:relative; margin-top:30px">
+  <legend>Siblings Information</legend>
+  <button class="close-button" (click)="closeSiblingsInformation()">
+    <i class="fa fa-close"></i>
+  </button>
+  <ag-grid-angular #agGridParent
+                   *ngIf="parentData"
+                   class="ag-theme-balham pr-funds-tab group-header-white"
+                   [gridAutoHeight]="true"
+                   [toolPanelSuppressSideButtons]="true"
+                   [suppressMovableColumns]="true"
+                   [suppressRowTransform]="true"
+                   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+                   [showToolPanel]="false"
+                   [enableSorting]="false"
+                   [enableFilter]="false"
+                   [defaultColDef]="defaultColumnDefs"
+                   [rowData]="parentData"
+                   [singleClickEdit]="true"
+                   [frameworkComponents]="frameworkComponents"
+                   [components]="components"
+                   [context]="context"
+                   (columnVisible)="sizeColumnsToFit($event)"
+                   (gridReady)="onParentGridReady($event)">
+  </ag-grid-angular>
+  <ag-grid-angular #agGridSiblings
+                   *ngIf="siblingsData?.length > 0"
+                   class="ag-theme-balham pr-funds-tab group-header-white"
+                   [gridAutoHeight]="true"
+                   [toolPanelSuppressSideButtons]="true"
+                   [suppressMovableColumns]="true"
+                   [suppressRowTransform]="true"
+                   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+                   [showToolPanel]="false"
+                   [enableSorting]="false"
+                   [enableFilter]="false"
+                   [defaultColDef]="defaultColumnDefs"
+                   [rowData]="siblingsData"
+                   [pinnedBottomRowData]="pinnedSiblingsBottomData"
+                   [singleClickEdit]="true"
+                   [frameworkComponents]="frameworkComponents"
+                   [components]="components"
+                   [context]="context"
+                   (columnVisible)="sizeColumnsToFit($event)"
+                   (gridReady)="onSiblingsGridReady($event)">
+  </ag-grid-angular>
+</fieldset>

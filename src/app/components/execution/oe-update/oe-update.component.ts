@@ -37,21 +37,12 @@ export class OeUpdateComponent implements OnInit {
       programCellRendererComponent: ProgramCellRendererComponent
     };
 
+    console.error( 'FIXME: we used to deal with MRIDs, now we have straight PROGRAMNAMEs')
     my.progsvc.getIdNameMap().subscribe(data => {
       Object.getOwnPropertyNames(data.result).forEach(mrId => {
         my.programs.set(mrId, data.result[mrId]);
       });
     });
-
-    var namesorter = function (mrId1, mrId2) {
-      var name1 = my.programs.get(mrId1);
-      var name2 = my.programs.get(mrId2);
-      if (name1 === name2) {
-        return 0;
-      }
-
-      return (name1 < name2 ? -1 : 1);
-    }
 
     this.agOptions = <GridOptions>{
       enableSorting: true,
@@ -69,12 +60,9 @@ export class OeUpdateComponent implements OnInit {
       columnDefs: [
         {
           headerName: 'Program',
-          field: 'mrId',
+          field: 'programName',
           filter: 'agTextColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-link'],
-          cellRenderer: 'programCellRendererComponent',
-          comparator: namesorter,
-          valueGetter: params => { return params.data.mrId; }
         },
         {
           headerName: 'Appr',
@@ -197,7 +185,7 @@ export class OeUpdateComponent implements OnInit {
         data[1].result.forEach((el: ExecutionLine) => {
           var wrap: OandEExecutionRow = {
             id: el.id,
-            mrId: el.mrId,
+            programName: el.programName,
             exe: this.selectedexe,
             el: el,
             lastupd: new Date(0),
@@ -249,7 +237,7 @@ export class OeUpdateComponent implements OnInit {
 }
 
 interface OandEExecutionRow {
-  mrId: string,
+  programName: string,
   id: string,
   exe: Execution,
   el: ExecutionLine,

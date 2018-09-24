@@ -33,11 +33,10 @@ export class ProgramExecutionLineComponent implements OnInit {
         forkJoin([
           this.exesvc.getById(this.exeline.phaseId),
           this.oandesvc.getByExecutionLineId(this.exeline.id),
-          this.progsvc.getFullName(this.exeline.mrId)
         ]).subscribe(d2 => {
           this.exe = d2[0].result;
           this.oandes = d2[1].result;
-          this.program = d2[2].result;
+          this.program = this.exeline.programName;
 
           this.oandes.push({});
           this.oandes.push({});

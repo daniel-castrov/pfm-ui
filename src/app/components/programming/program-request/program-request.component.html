@@ -19,10 +19,7 @@
           </div>
           <div class="pull-right program-controls">
             <span>
-              <button class="btn btn-primary">Validate</button>
-            </span>
-            <span>
-              <button class="btn btn-secondary" (click)="save('SAVED')" [disabled]="isNotSavable()">Save</button>
+              <button class="btn btn-primary" (click)="save('SAVED')" [disabled]="isNotSavable()">Save</button>
             </span>
             <span>
               <button class="btn btn-success" (click)="save('SUBMITTED')" [disabled]="isNotSubmittable()">Submit</button>

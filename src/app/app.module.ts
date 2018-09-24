@@ -146,7 +146,8 @@ import { SummaryProgramCellRenderer } from "./components/renderers/event-column/
 import { ExecutionLineDetailsComponent } from './components/execution/execution-line-details/execution-line-details.component';
 import { EventDetailsCellRendererComponent } from './components/renderers/event-details-cell-renderer/event-details-cell-renderer.component';
 import { TransferFromToDetailsCellRendererComponent } from './components/execution/transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
-import {DeleteRenderer} from "./components/renderers/delete-renderer/delete-renderer.component";
+import { DeleteRenderer } from "./components/renderers/delete-renderer/delete-renderer.component";
+import { ViewSiblingsRenderer } from "./components/renderers/view-siblings-renderer/view-siblings-renderer.component";
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 
@@ -304,6 +305,7 @@ const appRoutes: Routes = [
     ProgramCellRendererComponent,
     LibraryViewCellRenderer,
     DeleteRenderer,
+    ViewSiblingsRenderer,
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
@@ -318,6 +320,7 @@ const appRoutes: Routes = [
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
     DeleteRenderer,
+    ViewSiblingsRenderer,
     ActualsCellRendererComponent
   ],
   imports: [

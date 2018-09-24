@@ -1,0 +1,4 @@
+<span *ngIf="!showButton">{{value}}</span>
+<button *ngIf="showButton" class="view-button" (click)="viewSiblings()">
+  {{value}} <i class="fa fa-eye"></i>
+</button>

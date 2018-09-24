@@ -1,36 +1,42 @@
-<fieldset class="custom-pr">
+<fieldset class="custom-ufr">
   <legend>Create New UFR For:</legend>
-  <div class="row">
-    <div class="col-5">
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{createNewUfrMode ? createNewUfrMode : 'Select an option'}}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('An MRDB Program')">An MRDB Program</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('A Program Request')">A Program Request</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('A New Increment')">A New Increment</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('A New FoS')">A New FoS</a>
-            <a class="dropdown-item" (click)="setCreateNewUfrMode('A New Program')">A New Program</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-4" *ngIf="createNewUfrMode === 'An MRDB Program'        ||
-                                   createNewUfrMode === 'A Program Request' ||
-                                   createNewUfrMode === 'A New FoS'              ||
-                                   createNewUfrMode === 'A New Increment'        ">
-      <div class="dropdown-label">
-        <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
-          <option value="null" disabled selected>Select a {{initialSelectOption}}</option>
-          <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.fullname}}</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-2 ml-3">
-        <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!createNewUfrMode || createNewUfrMode=='Select an option'">
-        <span class="icon-pad">Next</span>
-        <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </div>
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{createNewUfrMode ? createNewUfrMode : 'Select an option'}}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" (click)="setCreateNewUfrMode('Previously Funded Program')">Previously Funded Program</a>
+                  <a class="dropdown-item" (click)="setCreateNewUfrMode('Program Request')">Program Request</a>
+                  <a class="dropdown-item" (click)="setCreateNewUfrMode('New Increment')">New Increment</a>
+                  <a class="dropdown-item" (click)="setCreateNewUfrMode('New FoS')">New FoS</a>
+                  <a class="dropdown-item" (click)="setCreateNewUfrMode('New Program')">New Program</a>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="createNewUfrMode === 'Previously Funded Program' ||
+                         createNewUfrMode === 'Program Request'          ||
+                         createNewUfrMode === 'New FoS'                  ||
+                         createNewUfrMode === 'New Increment'            ">
+              <div class="dropdown-label">
+                <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
+                  <option value="null" disabled selected>Select a {{initialSelectOption}}</option>
+                  <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.fullname}}</option>
+                </select>
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!createNewUfrMode || createNewUfrMode=='Select an option'">
+              <span class="icon-pad">Next</span>
+              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 </fieldset>

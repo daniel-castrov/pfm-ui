@@ -9,7 +9,7 @@
       <div class="col-md-7 col-sm-12 mb-4">
         <span class="h5 mr-2">{{phase?.fy|FY}}</span>
         <span class="form-group">
-          <label class="execution-titles">{{fullname(current.line)}}</label>
+          <label class="execution-titles">{{current.line.programName}}</label>
           <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container>
         </span>
       </div>

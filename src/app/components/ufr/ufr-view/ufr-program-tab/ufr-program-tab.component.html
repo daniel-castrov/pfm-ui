@@ -3,60 +3,59 @@
     <i>None</i>
   </span>
 </ng-template>
-
 <ng-template #value let-tagname="tagname" let-property="property">
   <select [(ngModel)]="ufr[property]" class="form-control-sm dropdown-width" name="{{tagname}}" [disabled]="disabled">
     <ng-container *ngIf="ufr[property]">
       <!-- we have an tagname set, but check that we have a recognized value -->
       <option *ngIf="!tagNames.has(tagname) || (tagNames.has(tagname) && !tagNames.get(tagname).has(ufr[property]))" [ngValue]="ufr[property] ">{{ufr[property]}} (Unknown value)</option>
     </ng-container>
-
-    <option *ngFor="let t of tagNames.get(tagname) | mapAsList" [ngValue]="t.key" [attr.title]="t.value">{{t.value}}</option>
+    <option *ngFor="let t of tagsService.tags(tagname) | async" [ngValue]="t.abbr" >{{t.name}}</option>
   </select>
 </ng-template>
-
 <form>
   <div class="row">
     <div class="col-10">
       <div class="row">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-3">
-              <div class="form-group inline-name mr-2">
-                <label>Program ID</label>
-                <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
-                  <input value="{{shorty?.fullname}}" class="form-control" name="program-id" [disabled]="disabled" />
-                </ng-container>
+        <div class="col-12">
+          <table class="ufr-program-table">
+            <tbody>
+              <tr>
+                <td>
+                  <div class="form-group inline-name">
+                    <label>Program ID</label>
+                    <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
+                      <input value="{{shorty?.fullname}}" class="form-control" name="program-id" [disabled]="disabled" />
+                    </ng-container>
 
-                <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
-                                     ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR'">
-                  {{shorty?.fullname}}/
-                  <input [(ngModel)]="ufr.shortName" class="form-control inc_fos" name="program-id" [disabled]="disabled" />
-                </ng-container>
+                    <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
+                                         ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR'">
+                      {{shorty?.fullname}}/
+                      <input [(ngModel)]="ufr.shortName" class="form-control inc_fos" name="program-id" [disabled]="disabled" />
+                    </ng-container>
 
-                <ng-container *ngIf="ufr.shortyType=='NEW_PROGRAM'">
-                  <input [(ngModel)]="ufr.shortName" class="form-control" name="program-id" [disabled]="disabled" />
-                </ng-container>
+                    <ng-container *ngIf="ufr.shortyType=='NEW_PROGRAM'">
+                      <input [(ngModel)]="ufr.shortName" class="form-control" name="program-id" [disabled]="disabled" />
+                    </ng-container>
 
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="form-group inline-name">
-                <label>Program Name</label>
-                <input [(ngModel)]="ufr.longName" class="form-control forminput" name="program-name" [disabled]="disabled" />
-              </div>
-            </div>
-            <div class="col-3">
-              <span class="form-group inline-name">
-                <label>Type</label>
-                <input value="{{ufrType()}}" class="form-control forminput" name="typeselect" disabled />
-              </span>
-            </div>
-
-          </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group inline-name">
+                    <label>Program Name</label>
+                    <input [(ngModel)]="ufr.longName" class="form-control forminput program-name text-truncate" title="{{ufr.longName}}" name="program-name" [disabled]="disabled" />
+                  </div>
+                </td>
+                <td>
+                  <span class="form-group inline-name">
+                    <label>Type</label>
+                    <input value="{{ufrType()}}" class="form-control forminput" name="typeselect" disabled />
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
       <div class="row">
         <div class="col-md-6">
           <div class="row">
@@ -84,7 +83,6 @@
           <img *ngIf="imagePath" [src]="imagePath" class="img-thumbnail">
         </div>
       </div>
-
       <div class="row">
         <div class="col-md-9">
           <fieldset>
@@ -118,9 +116,9 @@
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Medical Category', property:'medicalArea'}"></ng-container>
             </span>
             <span class="form-group inline-name">
-              <label class="mb-1">Emphasis</label>
-              <select name="emphasis" class="form-control-sm dropdown-width mb-2" [disabled]="disabled">
-                <option *ngFor="let e of tagNames.get('Emphasis Areas') | mapAsList" [ngValue]="e.abbr">{{e.value}}</option>
+              <label class="mb-1">Emphasis Areas</label>
+              <select multiple [(ngModel)]="ufr.emphases" name="emphasis" class="form-control-sm emphases mb-2" [disabled]="disabled">
+                <option *ngFor="let e of tagsService.tags('Emphasis Areas') | async" [ngValue]="e.abbr">{{e.name}}</option>
               </select>
             </span>
           </fieldset>
@@ -132,8 +130,6 @@
           </span>
         </div>
       </div>
-
     </div>
-
   </div>
 </form>

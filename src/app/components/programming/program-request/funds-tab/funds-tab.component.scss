@@ -7,8 +7,6 @@ $light-grey: #eae9e9;
 $medium-grey: #dddddd;
 $dark-grey: #848282;
 
-fieldset { padding: 20px;}
-
 .pr-funds-table {
   width: 100%;
   background-color: $white;
@@ -128,6 +126,19 @@ input {
   border-top: 1px solid #7b8389 !important;
 }
 
+.close-button{
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  background-color: white;
+  border: 2px solid #7b8389;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+fieldset {
+  padding: 10px 10px !important;
+}
 
 // PR Funds table
 
