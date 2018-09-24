@@ -35,18 +35,23 @@
         </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-12 col-lg-6">
         <div class="form-group">
           <label>Event Long Name:</label>
           <label class="primary-label">{{etype?.description}}</label>
         </div>
+        <div class="transaction-tags form-group">
+            <input type="number" class="form-control-sm tag-number" placeholder="Tag N">
+            <input type="text" class=" form-control-sm tag-text" placeholder="Tag T">
+        </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-12">
         <div id="update-program-execution" class="table-editable">
-          <app-execution-line-table 
+          <app-execution-line-table
             [phase]="phase"
             [updatelines]="updatelines"
             [exelinefilter]="linefilter"
