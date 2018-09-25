@@ -1,13 +1,18 @@
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
-    <div class="col-lg-10 col-md-12 col-sm-12">
-      <div class="h5">My Roles</div>
+    <div class="col-12">
+      <div class="row mb-4">
+        <div class="col-12">
+          <span class="h5 mr-3">My Roles</span>
+        </div>
+      </div>
+
       <fieldset>
-        <legend>My Granted Roles</legend>
+        <legend>My Assigned Roles</legend>
         <table class="my-roles-list">
           <thead>
-            <tr><th>Roles</th><th>Programs</th></tr>
+            <tr><th>Roles</th><th>Resources</th></tr>
           </thead>
           <tbody>
             <tr *ngFor="let roleWres of currentRolesWithResources">
@@ -17,119 +22,182 @@
           </tbody>
         </table>
       </fieldset>
-      <div class="message mt-2 mb-2">
+
+      <fieldset>
+        <legend>My Pending Role Requests.</legend>
+        <div class="row">
+          <div class="col-3">
+            <div class="my-role-label">Add/Change Role Requests</div>
+            <select size="3" class="form-control-sm pending-role">
+              <option *ngIf="!assignRequests?.length">There are no requests</option>
+              <option *ngFor="let req of assignRequests"
+                      [disabled]="true">
+                      <span *ngIf="req.isNew">(new) - </span>
+                      <span *ngIf="!req.isNew">(modify) - </span>
+                        {{req.roleName}}
+              </option>
+            </select>
+          </div>
+          <div class="col-3">
+            <div class="my-role-label">Drop Role Requests</div>
+            <select size="3" class="form-control-sm pending-role">
+              <option *ngIf="!dropRequests?.length">There are no requests</option>
+              <option *ngFor="let dreq of dropRequests"
+                      [disabled]="true">
+                      <span>(drop) - </span>{{dreq.roleName}}
+              </option>
+            </select>        
+          </div>
+        </div>   
+      </fieldset>
+
+      <fieldset>
+        <legend>Request Role Change</legend>
+
+        <div class="row mb-4">
+          <div class="col-3 mb-2 role-controls">
+            <label>Select Role</label>
+            <span class="form-group">
+              <select name="roleSelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedRole" (change)="requestExists=false">
+                <option value=""></option>
+                <option *ngFor="let r of roles" [ngValue]="r">
+                  {{ r.name }}
+                </option>
+              </select>
+            </span>
+          </div>
+          <!-- NEXT BUTTON -->
+          <div class="col-2">
+            <div class="controls mt-4">
+              <button class="btn btn-primary" [disabled]="!selectedRole" (click)="checkRequestsForExisting()">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="requestExists">
+            <p class="role-controls" >A request is pending for the role selected.</p>
+        </div>
+
+        <div *ngIf="isVisible">
+
+          <!-- Info -->
+          <div>
+            <p class="role-controls" >
+              <span *ngIf="canUnassign && isNewUserRole">
+                Request a new role of <b>{{selectedRole.name}}</b>.
+              </span>
+              <span *ngIf="canUnassign && !isNewUserRole">
+                The <b>{{selectedRole.name}}</b> role has already been assiged.
+              </span>
+              <span *ngIf="!canUnassign">
+                  The <b>{{selectedRole.name}}</b> role cannot be dropped.
+              </span>
+            </p>
+              
+        </div>
+
+          <!-- Delete existing -->
+          <div *ngIf="canUnassign && !isNewUserRole">
+              <p class="role-controls">
+                Request to drop the <b>{{selectedRole.name}}</b> role.
+              </p>
+              <div class="controls pull-right">
+                <button class="btn btn-primary" (click)="createDropRequest()">
+                  <span>Submit Request</span>
+                </button>
+              </div>
+          </div>
+
+          <!-- Some UserRoleResources can be modified -->
+          <div *ngIf="canChangeResources && !isOrgBased">
+            <div>
+                <p class="role-controls">
+                Request to   
+                <span *ngIf="isNewUserRole===true">assign</span>
+                <span *ngIf="isNewUserRole===false">modify</span>
+                access to Programs for the <b>{{selectedRole.name}}</b> role
+              </p>
+            </div>
+            <div style="width:800px;text-align: right; margin-bottom: 10px;">
+              <span>Filter Available Programs</span>
+              <select name="orgSelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
+                <option value=""></option>
+                <option *ngFor="let org of organizations" [ngValue]="org">
+                  {{ org.abbreviation }}
+                </option>
+              </select>
+            </div>  
+            <div style="max-width:800px;">
+              <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
+                [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
+              </dual-list>
+            </div>
+            <br/>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="createAssignRequest()">
+                <span>Submit Request</span>
+              </button>
+            </div>
+          </div>
+          <!-- Some UserRoleResources CANNOT be modified -->
+          <div *ngIf="!canChangeResources && isNewUserRole && !isOrgBased">
+            <p class="role-controls" *ngIf="!canChangeResources">
+              Resource access for the <b>{{selectedRole.name}}</b> role is predeifined and cannot be modified.
+            </p>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="createAssignRequest()">
+                <span>Submit Request</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Some UserRoleResources are based only on an Organizations -->
+          <div *ngIf="isOrgBased" >
+
+            <div  *ngIf="selectedRole.name != 'Organization_Member' && canChangeResources">
+
+              <p class="role-controls">
+                <span *ngIf="isNewUserRole===true">Assign</span>
+                <span *ngIf="isNewUserRole===false">Modify</span>
+                access to Programs based on the {{myOrganization.abbreviation}} Organization for the <b>{{selectedRole.name}}</b>
+              </p>
+              <div class="controls pull-right">
+                <button class="btn btn-primary" (click)="createAssignRequest()">
+                  <span>Submit Request</span>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="selectedRole.name == 'Organization_Member'">
+              <p class="role-controls">
+                Change my Organization within this community ( {{myCommunity.abbreviation}} )    
+              </p>
+              <label>Select New Organization</label>
+              <select name="orgSelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedOrganization">
+                <option value=""></option>
+                <option *ngFor="let org of organizations" [ngValue]="org">
+                    {{ org.abbreviation }}
+                </option>
+              </select>
+              <div class="controls pull-right">
+                <button class="btn btn-primary" (click)="createAssignRequest()">
+                  <span>Submit Request</span>
+                </button>
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+
+      </fieldset>
+
+      <div class="message">
         <j-feedback></j-feedback>
       </div>
-      <fieldset>
-        <legend>Request a New Role or Modify Resource Access to a Granted Role</legend>
-            <table class="my-roles-table">
-              <tbody>
-                <tr class="mb-3">
-                  <td class="column-1">
-                    <label class="mb-1 mr-3">Roles</label>
-                    <select name="addRoleSelector" class="form-control-sm dropdown-width"
-                     [(ngModel)]="selectedAddRole" (change)="onChangeAddRoleSelector()">
-                      <option value=""></option>
-                      <option *ngFor="let r of assignableRoles" [ngValue]="r">
-                        {{ r.name }}
-                      </option>
-                    </select>
-
-                  </td>
-                  <td rowspan="2" class="column-2">
-                    <button class="btn btn-primary mb-3" (click)="createAssignRequest()">Create Request</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="column-1">
-                    <ng-container *ngIf="isURRModifyable; then Modifyable; else NotModifyable"></ng-container>
-                    <ng-template #Modifyable>
-                      <div style="width:800px;text-align: right; margin-bottom: 10px;">
-                        Filter Available Programs
-                        <select name="orgSelector" class="form-control-sm dropdown-width"
-                          [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
-                          <option value=""></option>
-                          <option *ngFor="let org of organizations" [ngValue]="org">
-                              {{ org.abbreviation }}
-                          </option>
-                        </select>
-                      </div>  
-                      <div>
-                        <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
-                          [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
-                        </dual-list>
-                      </div>
-                    </ng-template>
-                    <ng-template #NotModifyable>
-                      <div  *ngIf="selectedAddRole">
-                        Resource access for the <b>{{selectedAddRole.name}}</b> role cannot be modified. <br/>
-                        To request this role simply click "Create Request".
-                      </div>
-                    </ng-template>
-                  </td>
-                  <td class="column-2">
-                    <div class="my-role-label">Pending Requests</div>
-                    <select size="3" class="form-control-sm pending-role">
-                      <option *ngIf="!assignRequests?.length">There are no requests</option>
-                      <option *ngFor="let req of assignRequests"
-                              [disabled]="true">
-                              <span *ngIf="req.isNew">(new) - </span>
-                              <span *ngIf="!req.isNew">(modify) - </span>
-                               {{req.roleName}}
-                      </option>
-                    </select>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-      <fieldset>
-        <legend>Request to Drop a Role</legend>
-        <table class="my-roles-table">
-          <tbody>
-            <tr>
-              <td class="column-1">
-                <label class="mb-1 mr-2">Roles</label>
-                <select name="dropRoleSelector" class="form-control-sm dropdown-width"
-                 [(ngModel)]="selectedDropRole" (change)="onChangeDropRoleSelector()">
-                  <option value=""></option>
-                  <option *ngFor="let dr of dropableRoles" [ngValue]="dr">
-                    {{ dr.name }}
-                  </option>
-                </select>
-              </td>
-              <td></td>
-              <td rowspan="2" class="column-2">
-                <button class="btn btn-primary mb-3" (click)="createDropRequest()">Create Request</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-              </td>
-            </tr>
-            <tr>
-              <td class="column-1">
-              </td>
-              <td>
-              </td>
-              <td class="column-2">
-                <div class="my-role-label">Pending Requests</div>
-                <select size="3" class="form-control-sm pending-role">
-                  <option *ngIf="!dropRequests?.length">There are no requests</option>
-                  <option *ngFor="let dreq of dropRequests"
-                          [disabled]="true">
-                          <span>(drop) - </span>{{dreq.roleName}}
-                  </option>
-                </select>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </fieldset>
     </div>
   </div>
 </div>
