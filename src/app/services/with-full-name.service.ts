@@ -134,6 +134,11 @@ export class WithFullNameService {
     return progOrPrs.filter( progOrPr => progOrPr.type == ProgramType.PROGRAM );
   }
 
+  async prsMinusGenericSubprograms(phaseId: string): Promise<ProgramOrPrWithFullName[]> {
+    const prs = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(phaseId);
+    return prs.filter( progOrPr => progOrPr.type != ProgramType.GENERIC );
+  }
+
   async programsMunisPrs(allPrograms: ProgramWithFullName[], pomId: string): Promise<ProgramWithFullName[]> {
     const prs: ProgramRequestWithFullName[] = await this.programRequestsWithFullNamesDerivedFromCreationTimeData(pomId);
 

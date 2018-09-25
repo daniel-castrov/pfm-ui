@@ -71,7 +71,7 @@ export class FundsUpdateComponent implements OnInit {
       },
       columnDefs: [
         {
-          width: 50,
+          width: 40,
           headerName: "View",
           headerTooltip: 'View',
           filter: 'agTextColumnFilter',
@@ -82,6 +82,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: "Program",
+          width: 115,
           headerTooltip: 'Program',
           field: 'programName',
           filter: 'agTextColumnFilter',
@@ -95,7 +96,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'Appropriation',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
-          width: 92,
+          width: 70,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.appropriation),
@@ -107,7 +108,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'BA/BLIN',
           filter: 'agTextColumnFilter',
           field: 'blin',
-          width: 92,
+          width: 90,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.blin),
@@ -126,7 +127,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'Item',
           filter: 'agTextColumnFilter',
           field: 'item',
-          width: 92,
+          width: 90,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
           editable: p => (!p.data.item),
@@ -136,7 +137,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'opAgency',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
-          width: 92,
+          width: 60,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center'],
           editable: p => (!p.data.opAgency),
@@ -148,7 +149,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'PE',
           filter: 'agTextColumnFilter',
           field: 'programElement',
-          width: 92,
+          width: 120,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center']
         },
@@ -158,7 +159,7 @@ export class FundsUpdateComponent implements OnInit {
           headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )},
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-light-green', 'text-right'],
@@ -183,7 +184,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'CRA',
           field: 'craTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -193,7 +194,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'Realigned',
           field: 'realignedTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -203,7 +204,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'Appr. Actions',
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -213,7 +214,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'OUSD(C) Actions',
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -223,7 +224,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'BTR',
           field: 'btrTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-white','text-right']
@@ -233,7 +234,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'TOA',
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
@@ -243,7 +244,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'Released',
           field: 'released',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green','text-right']
@@ -253,7 +254,7 @@ export class FundsUpdateComponent implements OnInit {
           headerTooltip: 'Withheld',
           field: 'withheld',
           valueFormatter: params => { return this.currencyFormatter(params) },
-          width: 92,
+          width: 104,
           suppressSorting: false,
           suppressMenu: true,
           cellClass: ['ag-cell-dark-green', 'text-right']

@@ -39,6 +39,8 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private programfilter: ExecutionLineFilter;
   private validator: ExecutionTableValidator;
   private reason: string;
+  private showtaginput: boolean = false;
+  private other: string;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute, private router: Router) {
@@ -164,6 +166,15 @@ export class UpdateProgramExecutionComponent implements OnInit {
       type: this.etype.subtype,
       reason: this.reason,
     };
+
+    if ('BTR_UFR' === this.etype.subtype
+      || 'BTR_OTHER' === this.etype.subtype
+      || 'REALIGNMENT_UFR' === this.etype.subtype
+      || 'REALIGNMENT_OTHER' === this.etype.subtype) {
+      et.other = this.other;
+    }
+
+
     this.table.updatelines.forEach(l => {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
@@ -207,6 +218,14 @@ export class UpdateProgramExecutionComponent implements OnInit {
       };
     }
 
-    this.updatelines = this.updatelines.filter( elw=> my.linefilter(elw.line));
+    this.updatelines = this.updatelines.filter(elw => my.linefilter(elw.line));
+    this.updatedropdowns2();
+  }
+
+  updatedropdowns2() {
+    this.showtaginput = ('BTR_UFR' === this.etype.subtype
+      || 'BTR_OTHER' === this.etype.subtype
+      || 'REALIGNMENT_UFR' === this.etype.subtype
+      || 'REALIGNMENT_OTHER' === this.etype.subtype);
   }
 }
