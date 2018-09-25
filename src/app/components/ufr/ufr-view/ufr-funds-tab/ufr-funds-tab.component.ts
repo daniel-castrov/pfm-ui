@@ -248,6 +248,7 @@ export class UfrFundsComponent implements OnChanges {
           },
           {
             headerName: 'BA/BLIN',
+            headerTooltip: 'BA/BLIN',
             field: 'fundingLine.baOrBlin',
             maxWidth: 92,
             suppressToolPanel: true,
@@ -268,6 +269,7 @@ export class UfrFundsComponent implements OnChanges {
           },
           {
             headerName: 'Item',
+            headerTooltip: 'Item',
             field: 'fundingLine.item',
             maxWidth: 92,
             editable: params => {
@@ -288,6 +290,7 @@ export class UfrFundsComponent implements OnChanges {
           },
           {
             headerName: 'OpAgency',
+            headerTooltip: 'OpAgency',
             field: 'fundingLine.opAgency',
             hide: true,
             cellClass: 'funding-line-default'

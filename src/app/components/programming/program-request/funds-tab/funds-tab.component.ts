@@ -371,6 +371,7 @@ export class FundsTabComponent implements OnChanges {
         },
           {
             headerName: 'Program ID',
+            headerTooltip: 'Program ID',
             colId: 'programId',
             field: 'programId',
             suppressToolPanel: true,
@@ -407,6 +408,7 @@ export class FundsTabComponent implements OnChanges {
         },
         {
           headerName: 'BA/BLIN',
+          headerTooltip: 'BA/BLIN',
           field: 'fundingLine.baOrBlin',
           editable: params => {
             return this.isEditable(params)
@@ -429,6 +431,7 @@ export class FundsTabComponent implements OnChanges {
         },
         {
           headerName: 'Item',
+          headerTooltip: 'Item',
           field: 'fundingLine.item',
           editable: params => {
             return this.isEditable(params)
@@ -452,6 +455,7 @@ export class FundsTabComponent implements OnChanges {
         },
         {
           headerName: 'OpAgency',
+          headerTooltip: 'OpAgency',
           field: 'fundingLine.opAgency',
           hide: true,
           cellClass: 'funding-line-default',
@@ -462,6 +466,7 @@ export class FundsTabComponent implements OnChanges {
         },
         {
           headerName: 'Cycle',
+          headerTooltip: 'Cycle',
           field: 'phaseType',
           maxWidth: 92,
           suppressMenu: true,
