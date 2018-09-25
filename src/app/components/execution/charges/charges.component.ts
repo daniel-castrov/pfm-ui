@@ -34,6 +34,8 @@ export class ChargesComponent implements OnInit {
   private subtypes: ExecutionDropDown[];
   private etype: ExecutionDropDown;
   private type: string;
+  private showotherN: boolean = true;
+  private showotherT: boolean = true;
   private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
     var okays: boolean[] = [];
     x.forEach(elw => {
@@ -70,9 +72,13 @@ export class ChargesComponent implements OnInit {
     var et: ExecutionEventData = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
-      other: this.other,
       reason: this.reason
     };
+
+    if ('EXE_CONGRESSIONAL_ACTION' !== this.etype.type) {
+      et.other = this.other;
+    }
+
     this.table.updatelines.forEach(l => {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
@@ -86,5 +92,26 @@ export class ChargesComponent implements OnInit {
   updatedropdowns() {
     this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
     this.etype = this.subtypes[0];
+    this.updatedropdowns2();
+  }
+
+  updatedropdowns2() {
+    if ('EXE_CONGRESSIONAL_ACTION' === this.etype.type) {
+      this.showotherN = false;
+      this.showotherT = false;
+    }
+    else if ('EXE_OUSDC_ACTION' === this.etype.type) {
+      this.showotherN = false;
+      this.showotherT = true;
+    }
+    else { // EXE_APPROPRIATION_ACTION
+      // appropriation action is sometimes an N and sometimes a T
+      this.showotherN = (this.etype.subtype === 'APPR_SECTION' || this.etype.subtype === 'APPR_FFRDC');
+      this.showotherT = !this.showotherN;
+
+      if (!this.other) {
+        this.other = '1';
+      }
+    }
   }
 }
