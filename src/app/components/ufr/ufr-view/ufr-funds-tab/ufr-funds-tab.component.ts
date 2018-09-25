@@ -1,9 +1,6 @@
 import { TagsService } from '../../../../services/tags.service';
 import {Component, Input, ViewChild, ViewEncapsulation, OnChanges} from '@angular/core'
-import {
-  FundingLine, UFR, POMService, PRService, PBService,
-  ShortyType, ProgramsService
-} from '../../../../generated'
+import {FundingLine, UFR, POMService, PRService, PBService, ShortyType, ProgramsService} from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -56,7 +53,7 @@ export class UfrFundsComponent implements OnChanges {
               private prService: PRService,
               private programService: ProgramsService,
               private autoValuesService: AutoValuesService,
-              private tagsService: TagsService) { }
+              private tagsService: TagsService) {}
 
   ngOnChanges() {
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
@@ -251,6 +248,7 @@ export class UfrFundsComponent implements OnChanges {
           },
           {
             headerName: 'BA/BLIN',
+            headerTooltip: 'BA/BLIN',
             field: 'fundingLine.baOrBlin',
             maxWidth: 92,
             suppressToolPanel: true,
@@ -271,6 +269,7 @@ export class UfrFundsComponent implements OnChanges {
           },
           {
             headerName: 'Item',
+            headerTooltip: 'Item',
             field: 'fundingLine.item',
             maxWidth: 92,
             editable: params => {
@@ -291,6 +290,7 @@ export class UfrFundsComponent implements OnChanges {
           },
           {
             headerName: 'OpAgency',
+            headerTooltip: 'OpAgency',
             field: 'fundingLine.opAgency',
             hide: true,
             cellClass: 'funding-line-default'

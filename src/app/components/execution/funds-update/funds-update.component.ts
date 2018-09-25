@@ -73,6 +73,7 @@ export class FundsUpdateComponent implements OnInit {
         {
           width: 40,
           headerName: "View",
+          headerTooltip: 'View',
           filter: 'agTextColumnFilter',
           cellRenderer: 'eventDetailsCellRendererComponent',
           menuTabs: this.menuTabs,
@@ -82,6 +83,7 @@ export class FundsUpdateComponent implements OnInit {
         {
           headerName: "Program",
           width: 115,
+          headerTooltip: 'Program',
           field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
@@ -91,6 +93,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Appn.',
+          headerTooltip: 'Appropriation',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
           width: 70,
@@ -102,6 +105,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'BA/BLIN',
+          headerTooltip: 'BA/BLIN',
           filter: 'agTextColumnFilter',
           field: 'blin',
           width: 90,
@@ -120,6 +124,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Item',
+          headerTooltip: 'Item',
           filter: 'agTextColumnFilter',
           field: 'item',
           width: 90,
@@ -129,6 +134,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'opAgency',
+          headerTooltip: 'opAgency',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
           width: 60,
@@ -140,6 +146,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'PE',
+          headerTooltip: 'PE',
           filter: 'agTextColumnFilter',
           field: 'programElement',
           width: 120,
@@ -148,6 +155,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Initial Funds',
+          headerTooltip: 'Initial Funds',
           headerValueGetter: params => { return( my.selectedexe ? 'PB'+(my.selectedexe.fy-2000 ) : 'Initial Funds' )},
           field: 'initial',
           valueFormatter: params => {return this.currencyFormatter(params)},
@@ -173,6 +181,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'CRA',
+          headerTooltip: 'CRA',
           field: 'craTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -182,6 +191,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Realigned',
+          headerTooltip: 'Realigned',
           field: 'realignedTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -191,6 +201,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Appr. Actions',
+          headerTooltip: 'Appr. Actions',
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -200,6 +211,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'OUSD(C) Actions',
+          headerTooltip: 'OUSD(C) Actions',
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -209,6 +221,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'BTR',
+          headerTooltip: 'BTR',
           field: 'btrTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -218,6 +231,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'TOA',
+          headerTooltip: 'TOA',
           field: 'toa',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -227,6 +241,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Released',
+          headerTooltip: 'Released',
           field: 'released',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -236,6 +251,7 @@ export class FundsUpdateComponent implements OnInit {
         },
         {
           headerName: 'Withheld',
+          headerTooltip: 'Withheld',
           field: 'withheld',
           valueFormatter: params => { return this.currencyFormatter(params) },
           width: 104,

@@ -32,6 +32,11 @@ label {
   width: 200px;
 }
 
+.emphases {
+  height: 110px;
+  overflow: auto;
+}
+
 @media (min-width: 768px) {
   .img-placeholder > i.fa {
     font-size: 160px;
