@@ -59,11 +59,18 @@
       <div class="col-md-6 col-lg-2">
         <div class="form-group">
           <label>Select Event Subtype:</label>
-          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
+          <select class="form-control-sm dropdown-width" [(ngModel)]="etype" (change)="updatedropdowns2()">
             <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
           </select>
         </div>
       </div>
+      <div class="col-md-6 col-lg-2" *ngIf="showtaginput">
+        <div class="form-group">
+          <label>Transaction Tag</label>
+          <input class="form-control form-input-medium" [(ngModel)]="other">
+        </div>
+      </div>
+
     </div>
     <div class="row">
       <div class="col-md-12 col-lg-6">

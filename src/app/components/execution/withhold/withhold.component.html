@@ -7,6 +7,8 @@
       </div>
     </div>
     <div class="row mb-3">
+      <div class="col-8">
+      </div>
       <div class="col-4">
         <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!table.tableok">Withhold</button>
       </div>
@@ -32,8 +34,8 @@
     <div class="row mb-3">
       <div class="col-12">
         <div id="charges-execution-lines" class="table-editable">
-          <app-execution-line-table 
-            [phase]="phase" 
+          <app-execution-line-table
+            [phase]="phase"
             [updatelines]="updatelines"
             [exevalidator]="validator"
             [exelinefilter]="linefilter">

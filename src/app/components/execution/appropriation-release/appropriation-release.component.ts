@@ -64,10 +64,13 @@ export class AppropriationReleaseComponent implements OnInit {
     var et: ExecutionEventData = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
-      other: this.other,
       reason: this.reason,
     };
-    
+
+    if ('CRA' === this.etype.name) {
+      et.other = this.other;
+    }
+
     this.table.updatelines.forEach(l => {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
@@ -79,6 +82,11 @@ export class AppropriationReleaseComponent implements OnInit {
   }
 
   updatetable() {
+    
+    if ('CRA' === this.etype.name && !this.other ) {
+      this.other = '1';
+    }
+
     this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(data => {
       this.updatelines = [];
       data.result.filter(z => this.progfilter(z) ).forEach(x => { 
