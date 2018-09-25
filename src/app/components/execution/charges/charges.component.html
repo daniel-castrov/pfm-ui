@@ -25,14 +25,22 @@
       </div>
       <div class="col-md-6 col-lg-2">
         <label>Select Event Subtype:</label>
-        <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
+        <select class="form-control-sm dropdown-width" [(ngModel)]="etype" (change)="updatedropdowns2()">
           <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
         </select>
       </div>
-      <div class="col-md-6 col-lg-2">
+      <div class="col-md-6 col-lg-2" *ngIf="showotherN || showotherT">
         <div class="form-group">
-         <label>Additional ID&apos;s</label>
-         <input class="form-control form-input-medium" [(ngModel)]="other">
+         <label>Transaction Tag</label>
+         <input class="form-control form-input-medium" [(ngModel)]="other" *ngIf="showotherT">
+         <select class="form-control-sm dropdown-width" [(ngModel)]="other" *ngIf="showotherN">
+            <option [ngValue]="'1'">1</option>
+            <option [ngValue]="'2'">2</option>
+            <option [ngValue]="'3'">3</option>
+            <option [ngValue]="'4'">4</option>
+            <option [ngValue]="'5'">5</option>
+          </select>
+
         </div>
       </div>
     </div>

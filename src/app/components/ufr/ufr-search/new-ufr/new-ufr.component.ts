@@ -48,21 +48,21 @@ export class NewUfrComponent implements OnInit {
         this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
-      case 'Program Request': // was subprogram
-        const prs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
-        this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(prs);
+      case 'Program Request':
+        const prs = await this.withFullNameService.prsMinusGenericSubprograms(this.pomId);
+        this.selectableProgramsOrPrs = this.removePrsInOutstandingState(prs);
         this.initialSelectOption = 'Program Request';
         break;
       case 'New FoS':
       case 'New Increment':
         const progsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
-        this.selectableProgramsOrPrs = this.removeOnlyPrsInOutandingState(progsOrPrs);
+        this.selectableProgramsOrPrs = this.removePrsInOutstandingState(progsOrPrs);
         this.initialSelectOption = 'Program';
         break;
     }
   }
 
-  removeOnlyPrsInOutandingState(progsOrPrs?: any[]) {
+  removePrsInOutstandingState(progsOrPrs?: any[]) {
     let newPRs:any[] = [];
     progsOrPrs.forEach((item, index) => {
       // programs don't have a state
