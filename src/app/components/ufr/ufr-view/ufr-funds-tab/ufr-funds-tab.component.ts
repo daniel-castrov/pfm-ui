@@ -226,6 +226,7 @@ export class UfrFundsComponent implements OnChanges {
           colId: 'delete',
           maxWidth: 40,
           cellRenderer: 'deleteRenderer',
+          suppressToolPanel: true,
           cellClass: 'funding-line-default',
           cellStyle: {'text-align': 'center'},
         },
@@ -233,6 +234,7 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'Appn',
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
+            suppressToolPanel: true,
             maxWidth: 92,
             editable: params => {
               return this.isEditable(params)
@@ -374,7 +376,7 @@ export class UfrFundsComponent implements OnChanges {
       suppressMenu: true,
       suppressToolPanel: true,
       maxWidth: 92,
-      type: "numericColumn",
+      cellEditor: 'numericCellEditor',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
@@ -384,9 +386,9 @@ export class UfrFundsComponent implements OnChanges {
       headerName: 'CTC',
       headerTooltip: 'Cost to Complete',
       suppressMenu: true,
+      suppressToolPanel: true,
       maxWidth: 92,
       field: 'fundingLine.ctc',
-      type: "numericColumn",
       cellClassRules: {
         'ag-cell-edit': params => {
           return this.isAmountEditable(params, this.pomFy)
