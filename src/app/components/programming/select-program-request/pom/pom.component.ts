@@ -180,6 +180,6 @@ export class PomComponent implements OnChanges {
   }
 
   private aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
-    return  prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
+    return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 }
