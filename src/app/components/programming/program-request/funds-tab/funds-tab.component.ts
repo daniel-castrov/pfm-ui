@@ -238,6 +238,9 @@ export class FundsTabComponent implements OnChanges {
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
         this.agGrid.columnApi.setColumnVisible('delete', true);
       }
+      if (this.pr.type === ProgramType.GENERIC) {
+        this.agGrid.columnApi.setColumnVisible('programId', true);
+      }
       this.agGrid.api.sizeColumnsToFit();
     });
   }
@@ -332,18 +335,22 @@ export class FundsTabComponent implements OnChanges {
 
     pbRow.fundingLine = {funds: pbTotal};
     pbRow.programId = 'Total Funds Request';
+    pbRow.fundingLine.appropriation = 'Total Funds Request';
     pbRow.phaseType = PhaseType.PB;
     pinnedData.push(pbRow);
 
     let pomRow: DataRow = new DataRow();
     pomRow.fundingLine = {funds: pomTotal};
     pomRow.programId = 'Total Funds Request';
+    pomRow.fundingLine.appropriation = 'Total Funds Request';
     pomRow.phaseType = PhaseType.POM;
     pinnedData.push(pomRow);
 
     let deltaRow: DataRow = new DataRow();
     deltaRow.fundingLine = {funds: deltaTotal};
     deltaRow.programId = 'Total Funds Request';
+    deltaRow.fundingLine.appropriation = 'Total Funds Request';
+
     deltaRow.phaseType = PhaseType.DELTA;
     pinnedData.push(deltaRow);
 
@@ -374,6 +381,7 @@ export class FundsTabComponent implements OnChanges {
             headerTooltip: 'Program ID',
             colId: 'programId',
             field: 'programId',
+            hide: true,
             suppressToolPanel: true,
             cellClassRules: {
               'font-weight-bold': params => {return this.colSpanCount(params) > 1},
@@ -715,11 +723,14 @@ export class FundsTabComponent implements OnChanges {
     if (params.data.programId === 'Total Funds Request' ||
       params.data.programId === 'Subtotal' ||
       params.data.programId === 'Remaining') {
-      if (this.agGrid.columnApi.getColumn('fundingLine.opAgency').isVisible()) {
-        return 6;
-      } else {
-        return 5;
+      let columnsCount = 6;
+      if (this.pr.type !== ProgramType.GENERIC) {
+        columnsCount--;
       }
+      if (!this.agGrid.columnApi.getColumn('fundingLine.opAgency').isVisible()) {
+        columnsCount--;
+      }
+      return columnsCount;
     } else {
       return 1;
     }
@@ -906,7 +917,6 @@ export class FundsTabComponent implements OnChanges {
   }
 
   sizeColumnsToFit(params) {
-    console.log('hello')
     this.agGrid.api.sizeColumnsToFit();
   }
 
