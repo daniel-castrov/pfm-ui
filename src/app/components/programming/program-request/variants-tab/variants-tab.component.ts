@@ -23,6 +23,7 @@ export class VariantsTabComponent {
 
   pomFy:number;
   fund:FundingLine = null;
+  fundsAvailable:string = null;
 
   showAddVariant=false;
   newVariantName:string;
@@ -53,11 +54,37 @@ export class VariantsTabComponent {
     if(!this.columnDefs) {
       this.generateColumns();
     }
+    this.calculateProcfundsAvailable();
+  }
+
+  calculateProcfundsAvailable(){
+    let procTotal:number = 0;
+    let varTotal:number = 0;
+    this.procFundingLines().forEach(fl => {
+      Object.keys(fl.funds).forEach(key => { procTotal += fl.funds[key] })
+      Object.keys(fl.variants).forEach(key => {
+        fl.variants[key].serviceLines.forEach( sl => {
+          Object.keys(sl.quantity).forEach(keyy => {
+            varTotal += sl.quantity[keyy] * sl.unitCost;
+          });
+        })
+      });
+    });
+    let tot = procTotal*1000-varTotal
+    if ( tot > 0 ) {
+      let param:any = {value:tot }
+      this.fundsAvailable = FormatterUtil.currencyFormatter( param, 2 );
+    }
   }
 
   initData(){
+    this.fundsAvailable=null;
     this.initDataRows();
     this.initPinnedBottomRows();
+  }
+
+  procFundingLines(): FundingLine[] {
+    return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
   }
 
   initDataRows(){
@@ -207,7 +234,7 @@ export class VariantsTabComponent {
           cellClass: 'funding-line-default'
         },
         {
-          headerName: 'Unit Costs',
+          headerName: 'Unit Costs ($)',
           field: 'serviceLine.unitCost',
           valueFormatter: params => {
             return FormatterUtil.currencyFormatter(params, 2)

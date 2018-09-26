@@ -13,6 +13,7 @@
           </select>
         </span>
       </div>
+      <div *ngIf="fundsAvailable" class="col-3 font-red"> There are {{fundsAvailable}} unaccounted for Procurment funds. </div>
     </div>
     <!-- Show each variant for the selected FundingLine-->
     <div *ngIf="fund" class="row mb-4">

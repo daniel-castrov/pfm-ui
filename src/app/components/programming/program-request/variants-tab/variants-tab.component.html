@@ -7,12 +7,13 @@
         <span class="form-group">
           <select class="form-control-sm dropdown-width" [(ngModel)]="fund" name="fl" [disabled]="false" (change)="initData()">
             <option value="null" disabled selected>Select a Funding Line</option>
-            <option *ngFor="let fl of current.fundingLines" [ngValue]="fl">
+            <option *ngFor="let fl of procFundingLines()" [ngValue]="fl">
               {{fl.appropriation}} / {{fl.baOrBlin}} / {{fl.item}} / {{fl.opAgency}}
             </option>
           </select>
         </span>
       </div>
+      <div *ngIf="fundsAvailable" class="col-3 font-red"> There are {{fundsAvailable}} unaccounted for Procurment funds. </div>
     </div>
     <!-- Show each variant for the selected FundingLine-->
     <div *ngIf="fund" class="row mb-4">
