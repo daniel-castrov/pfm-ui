@@ -54,6 +54,7 @@ export class UfrVariantsTabComponent {
   }
 
   initData(){
+    this.fundsAvailable;
     this.initDataRows();
     this.initPinnedBottomRows();
   }
