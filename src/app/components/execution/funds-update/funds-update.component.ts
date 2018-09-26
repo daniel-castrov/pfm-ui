@@ -40,7 +40,6 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
   private menuTabs = ['filterMenuTab'];
   private hasAppropriation: boolean = false;
-
   private agOptions: GridOptions;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
@@ -54,16 +53,8 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     var programLinkEnabled = function (params): boolean {
-      return (0 !== params.data.released);
+      return (params.data.id && 0 !== params.data.released );
     };
-
-    var programsetter = function (params): boolean {
-      if ('Other' === params.newValue) {
-        alert('here I am!');
-      }
-      params.node.data.programName = params.newValue;
-      return true;
-    }
 
     this.agOptions = <GridOptions>{
       enableSorting: true,
@@ -85,22 +76,28 @@ export class FundsUpdateComponent implements OnInit {
           filter: 'agTextColumnFilter',
           cellRenderer: 'eventDetailsCellRendererComponent',
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey','ag-clickable'],
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'programName',
         },
         {
           headerName: "Program",
           width: 115,
+          colId: 'programName',
           headerTooltip: 'Program',
           field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey','ag-clickable'],
-          editable: p => (!p.data.programName),
-          cellEditor: 'agRichSelectCellEditor',
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          editable: p => (!p.data.programName || 'Other' === p.data.programName),
           cellEditorParams: params => ({ values: my.programs }),
-          valueSetter: programsetter
+          cellEditorSelector: p => {
+            var editor: string = 'agRichSelectCellEditor';
+            if (p.data.programName && 'Other' === p.data.programName) {
+              editor = 'agTextCellEditor';
+            }
+            return { component: editor };
+          }
         },
         {
           headerName: 'Appn.',
