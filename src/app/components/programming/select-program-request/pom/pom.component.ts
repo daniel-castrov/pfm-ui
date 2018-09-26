@@ -24,7 +24,7 @@ export class PomComponent implements OnChanges {
 
     if (this.pbProgrammaticRequests && this.pomProgrammaticRequests && this.pom) {
       this.initGrid( this.pom.fy );
-      this.populateRowData();
+      this.populateRowData(this.pom.fy);
       setTimeout(() => {
         this.agGrid.api.sizeColumnsToFit()
       });
@@ -32,7 +32,6 @@ export class PomComponent implements OnChanges {
   }
 
   private initGrid(by: number) {
-
     this.agGrid.gridOptions = {
       columnDefs: this.setAgGridColDefs(by),
     }
@@ -63,7 +62,7 @@ export class PomComponent implements OnChanges {
           editable: false,
           valueFormatter: params => { return this.currencyFormatter(params) },
           cellClassRules: {
-             'font-weight-bold': params => { return params.data.id == 'Allocated TOA'  } ,
+             'font-weight-bold': params => { return params.data.id == "POM " + (by-2000) + " Allocated TOA"  } ,
              'font-red' : params => { return params.value < 0 },
            },
         });
@@ -106,14 +105,13 @@ export class PomComponent implements OnChanges {
     return usdFormate.format(value.value);
   }
 
-  private populateRowData() {
+  private populateRowData(by: number) {
 
     let rowdata:any[] = [];
-    let by = this.pom.fy;
     let row = new Object();
     let sum;
 
-    row["id"] = "Baseline";
+    row["id"] = "PB " + (by-2000-1);
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year] = this.aggregateToas(this.pbProgrammaticRequests, year);
@@ -123,35 +121,56 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row = new Object();
-    row["id"] = "Allocated TOA";
+    row["id"] = "POM " + (by-2000) + " Allocated TOA";
     sum = 0;
+    let toas:any[] = []
+
+    if ( this.pom.communityToas.length>0 ){
+      toas = this.pom.communityToas;
+    }
+    else {
+      Object.keys(this.pom.orgToas).forEach(key => {
+        this.pom.orgToas[key].forEach( (toa) => toas.push(toa));
+      });
+    }
     let allocatedToas: { [year: number]: number } = {};
-    this.pom.communityToas.forEach((toa) => {
+    toas.forEach((toa) => {
       allocatedToas[toa.year] = toa.amount;
       row[toa.year] = toa.amount;
       sum += row[toa.year];
     });
+
     row["total"] = sum;
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "POM 18 Requests";
+    row["id"] = "POM " + (by-2000) + " Submitted Requests";
+    let submittedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state=="SUBMITTED" );
     sum = 0;
-    let pomRequests: { [year: number]: number } = {};
-          for (let year: number = by; year < by + 5; year++) {
-      pomRequests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
-      row[year]  = this.aggregateToas(this.pomProgrammaticRequests, year);
+    for (let year: number = by; year < by + 5; year++) {
+      row[year]  = this.aggregateToas(submittedPRs, year);
       sum += row[year];
     }
     row["total"] = sum;
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "TOA Difference";
+    row["id"] = "POM " + (by-2000) + " Planned Requests";
+    let plannedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state!="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
-
-      row[year] = allocatedToas[year] - pomRequests[year];
+      row[year]  = this.aggregateToas(plannedPRs, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+    row= new Object();
+    row["id"] = "TOA Difference";
+    sum = 0;
+    let requests: { [year: number]: number } = {};
+    for (let year: number = by; year < by + 5; year++) {
+      requests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
+      row[year] = allocatedToas[year] - requests[year];
       sum += row[year];
     }
     row["total"] = sum;
@@ -161,6 +180,6 @@ export class PomComponent implements OnChanges {
   }
 
   private aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
-    return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
+    return  prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 }
