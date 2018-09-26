@@ -40,7 +40,6 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
   private menuTabs = ['filterMenuTab'];
   private hasAppropriation: boolean = false;
-
   private agOptions: GridOptions;
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
@@ -54,7 +53,7 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     var programLinkEnabled = function (params): boolean {
-      return (0 !== params.data.released);
+      return (params.data.id && 0 !== params.data.released );
     };
 
     this.agOptions = <GridOptions>{
@@ -77,19 +76,28 @@ export class FundsUpdateComponent implements OnInit {
           filter: 'agTextColumnFilter',
           cellRenderer: 'eventDetailsCellRendererComponent',
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey','ag-clickable'],
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'programName',
         },
         {
           headerName: "Program",
           width: 115,
+          colId: 'programName',
           headerTooltip: 'Program',
           field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey','ag-clickable'],
-          editable: p => (!p.data.programName)
+          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          editable: p => (!p.data.programName || 'Other' === p.data.programName),
+          cellEditorParams: params => ({ values: my.programs }),
+          cellEditorSelector: p => {
+            var editor: string = 'agRichSelectCellEditor';
+            if (p.data.programName && 'Other' === p.data.programName) {
+              editor = 'agTextCellEditor';
+            }
+            return { component: editor };
+          }
         },
         {
           headerName: 'Appn.',
@@ -317,13 +325,17 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   refreshFilterDropdowns() {
-    var my: FundsUpdateComponent = this;
     var apprset: Set<string> = new Set<string>();
     var itemset: Set<string> = new Set<string>();
     var blinset: Set<string> = new Set<string>();
     var agencyset: Set<string> = new Set<string>();
+    var programset: Set<string> = new Set<string>();
 
-    my.exelines.forEach((x: ExecutionLine) => {
+    this.exelines.forEach((x: ExecutionLine) => {
+      if (x.programName) {
+        programset.add(x.programName);
+      }
+
       if (x.appropriation) {
         apprset.add(x.appropriation.trim());
       }
@@ -338,30 +350,45 @@ export class FundsUpdateComponent implements OnInit {
       }
     });
 
-    my.appropriations = [];
+    this.appropriations = [];
     apprset.forEach(s => {
-      my.appropriations.push(s);
+      this.appropriations.push(s);
     });
 
-    my.items = [];
+    this.items = [];
     itemset.forEach(s => {
-      my.items.push(s);
+      this.items.push(s);
     });
 
-    my.blins = [];
+    this.blins = [];
     blinset.forEach(s => {
-      my.blins.push(s);
+      this.blins.push(s);
     });
 
-    my.opAgencies = [];
+    this.opAgencies = [];
     agencyset.forEach(s => {
-      my.opAgencies.push(s);
+      this.opAgencies.push(s);
     });
 
-    my.appropriations.sort();
-    my.items.sort();
-    my.blins.sort();
-    my.opAgencies.sort();
+    this.programs = [];
+    programset.forEach(s => { 
+      this.programs.push(s);
+    });
+    this.programs.push( 'Other');
+
+    this.appropriations.sort();
+    this.items.sort();
+    this.blins.sort();
+    this.opAgencies.sort();
+    this.programs.sort((a, b) => { 
+      if ('Other' === a) {
+        return -1;
+      } else if ('Other' === b) {
+        return 1;
+      }
+
+      return (a === b ? 0 : a < b ? -1 : 1);
+    });
   }
 
   addline() {

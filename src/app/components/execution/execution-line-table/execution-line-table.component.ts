@@ -246,7 +246,7 @@ export class ExecutionLineTableComponent implements OnInit {
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',
-          editable: true,
+          editable: p=>(my.availablePrograms.length>0),
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           valueFormatter: params => ( params.data.line.programName
             ? params.data.line.programName
