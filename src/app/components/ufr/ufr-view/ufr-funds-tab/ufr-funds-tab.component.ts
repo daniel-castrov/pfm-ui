@@ -221,7 +221,7 @@ export class UfrFundsComponent implements OnChanges {
   generateColumns() {
     this.defaultColumnDefs = [
       {
-        headerName: 'funds in $K',
+        headerName: 'Funds in $K',
         children: [{
           colId: 'delete',
           maxWidth: 40,

@@ -119,7 +119,7 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   defineColumns(programRequests) {
     this.columnDefs = [
       {
-        headerName: 'funds in $K',
+        headerName: 'Funds in $K',
         children: [
           {
             headerName: 'Status',

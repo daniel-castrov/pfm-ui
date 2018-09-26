@@ -353,7 +353,7 @@ export class FundsTabComponent implements OnChanges {
   generateColumns() {
     this.columnDefs = [
       {
-        headerName: 'funds in $K',
+        headerName: 'Funds in $K',
         children: [{
           headerName: '',
           colId: 'delete',
@@ -367,7 +367,7 @@ export class FundsTabComponent implements OnChanges {
           },
           cellClass: 'funding-line-default',
           cellStyle: {'text-align': 'center', 'padding': '0px'},
-          width: 40
+          maxWidth: 40
         },
           {
             headerName: 'Program ID',
@@ -459,6 +459,7 @@ export class FundsTabComponent implements OnChanges {
           headerTooltip: 'OpAgency',
           field: 'fundingLine.opAgency',
           hide: true,
+          maxWidth: 65,
           cellClass: 'funding-line-default',
           cellClassRules: {
             'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -905,6 +906,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   sizeColumnsToFit(params) {
+    console.log('hello')
     this.agGrid.api.sizeColumnsToFit();
   }
 
