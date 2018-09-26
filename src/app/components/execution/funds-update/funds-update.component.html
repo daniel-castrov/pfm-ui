@@ -25,6 +25,19 @@
             <option value="500">500</option>
           </select>
         </span>
+
+        <div class="col-12">
+          <div class="col-md-12 col-lg-2">
+            <span class="form-group">
+              <div class="primary-label"> </div>
+              <button class="btn btn-primary mt-4" (click)="addline()">
+                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                Add Execution Line
+              </button>
+            </span>
+          </div>
+          <j-feedback></j-feedback>
+        </div>
       </div>
 
       <div class="col-12">
@@ -59,25 +72,11 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="col-md-12 col-lg-2">
-          <span class="form-group">
-            <div class="primary-label"> </div>
-            <button class="btn btn-primary mt-4" (click)="addline()">
-              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-              Add Execution Line
-            </button>
-          </span>
-        </div>
-        <j-feedback></j-feedback>
-      </div>
-    </div>
-    <div class="row">
+    <!--div class="row">
       <div class="col-12">
         <button class="btn btn-primary btn" data-toggle="modal" href="#name-modal">Enter Name</button>
       </div>
-    </div>
+    </div-->
   </div>
 </div>
 
