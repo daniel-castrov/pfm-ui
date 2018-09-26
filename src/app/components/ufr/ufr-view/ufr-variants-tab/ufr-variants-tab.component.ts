@@ -51,6 +51,7 @@ export class UfrVariantsTabComponent {
     if(!this.columnDefs) {
       this.generateColumns();
     }
+    this.calculateProcfundsAvailable();
   }
 
   initData(){
