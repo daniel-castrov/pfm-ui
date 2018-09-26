@@ -57,6 +57,14 @@ export class FundsUpdateComponent implements OnInit {
       return (0 !== params.data.released);
     };
 
+    var programsetter = function (params): boolean {
+      if ('Other' === params.newValue) {
+        alert('here I am!');
+      }
+      params.node.data.programName = params.newValue;
+      return true;
+    }
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -89,7 +97,10 @@ export class FundsUpdateComponent implements OnInit {
           cellRenderer: 'programCellRendererComponent',
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey','ag-clickable'],
-          editable: p => (!p.data.programName)
+          editable: p => (!p.data.programName),
+          cellEditor: 'agRichSelectCellEditor',
+          cellEditorParams: params => ({ values: my.programs }),
+          valueSetter: programsetter
         },
         {
           headerName: 'Appn.',
@@ -317,13 +328,17 @@ export class FundsUpdateComponent implements OnInit {
   }
 
   refreshFilterDropdowns() {
-    var my: FundsUpdateComponent = this;
     var apprset: Set<string> = new Set<string>();
     var itemset: Set<string> = new Set<string>();
     var blinset: Set<string> = new Set<string>();
     var agencyset: Set<string> = new Set<string>();
+    var programset: Set<string> = new Set<string>();
 
-    my.exelines.forEach((x: ExecutionLine) => {
+    this.exelines.forEach((x: ExecutionLine) => {
+      if (x.programName) {
+        programset.add(x.programName);
+      }
+
       if (x.appropriation) {
         apprset.add(x.appropriation.trim());
       }
@@ -338,30 +353,45 @@ export class FundsUpdateComponent implements OnInit {
       }
     });
 
-    my.appropriations = [];
+    this.appropriations = [];
     apprset.forEach(s => {
-      my.appropriations.push(s);
+      this.appropriations.push(s);
     });
 
-    my.items = [];
+    this.items = [];
     itemset.forEach(s => {
-      my.items.push(s);
+      this.items.push(s);
     });
 
-    my.blins = [];
+    this.blins = [];
     blinset.forEach(s => {
-      my.blins.push(s);
+      this.blins.push(s);
     });
 
-    my.opAgencies = [];
+    this.opAgencies = [];
     agencyset.forEach(s => {
-      my.opAgencies.push(s);
+      this.opAgencies.push(s);
     });
 
-    my.appropriations.sort();
-    my.items.sort();
-    my.blins.sort();
-    my.opAgencies.sort();
+    this.programs = [];
+    programset.forEach(s => { 
+      this.programs.push(s);
+    });
+    this.programs.push( 'Other');
+
+    this.appropriations.sort();
+    this.items.sort();
+    this.blins.sort();
+    this.opAgencies.sort();
+    this.programs.sort((a, b) => { 
+      if ('Other' === a) {
+        return -1;
+      } else if ('Other' === b) {
+        return 1;
+      }
+
+      return (a === b ? 0 : a < b ? -1 : 1);
+    });
   }
 
   addline() {
