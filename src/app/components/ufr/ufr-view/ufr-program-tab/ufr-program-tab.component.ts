@@ -16,7 +16,6 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() shorty: ProgramOrPrWithFullName;
   @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
-  private parentName: string;
   readonly fileArea = 'ufr';
   imagePath: string;
 
@@ -32,8 +31,6 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.initParentName();
-
     if (this.ufr.imageName) {
       this.libraryService.downloadFile(this.ufr.imageName, this.fileArea).subscribe(response => {
         if (response.result) {
@@ -55,19 +52,6 @@ export class UfrProgramComponent implements OnInit, OnChanges {
         this.tagNames.get(tagName).set(tag.abbr, tag.name);
       });
     });
-  }
-
-  private async initParentName() {
-    if (this.shorty) {
-      if (this.withFullNameService.isProgram(this.shorty)) {
-        if(this.shorty.parentMrId) {
-          this.parentName = (await this.programService.getFullName(this.shorty.parentMrId).toPromise()).result;
-        }
-      } else { // PR
-        // not implemented
-        this.parentName = "";
-      }
-    }
   }
 
   private ufrType(): string {
