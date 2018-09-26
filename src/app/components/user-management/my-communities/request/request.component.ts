@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
 // Generated
-import { Community, RestResult, User } from '../../../../generated';
+import { Community, RestResult, User, Organization, OrganizationService } from '../../../../generated';
 import { HeaderComponent } from '../../../header/header.component';
 import { FeedbackComponent } from '../../../feedback/feedback.component';
 
@@ -13,14 +13,36 @@ import { FeedbackComponent } from '../../../feedback/feedback.component';
 })
 export class RequestComponent implements OnChanges {
 
+  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() allCommunities: Community[];
   @Input() user: User;
   @Input() service: any;
+  @Input() useOrgs: boolean;
   @Input() header: HeaderComponent;
+  
   availableCommunities: Community[];
   requestedCommunities: Community[];
-  selectedCommunityId: string;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
+  selectedCommunity: Community = null;
+  organizations: Organization[] = [];
+  selectedOrg:Organization = null;
+
+  constructor( private orgService: OrganizationService){
+    this.organizations=[];
+  }
+
+  getOrganizations(){
+    this.orgService.getByCommunityId(this.selectedCommunity.id)
+    .subscribe( data => {
+      this.organizations = data.result;
+    } );
+  }
+
+  ready(){
+    if (this.useOrgs){
+      return !( this.selectedCommunity && this.selectedOrg );
+    } 
+    else return !( this.selectedCommunity );
+  }
 
   ngOnChanges() {
     if(this.user) {
@@ -31,7 +53,8 @@ export class RequestComponent implements OnChanges {
   private async createRequest() {
     const request: any = {};
     request.userId = this.user.id;
-    request.communityId = this.selectedCommunityId;
+    request.communityId = this.selectedCommunity.id;
+    if (this.useOrgs){ request.organizationId=this.selectedOrg.id; }
     try {
       await this.service.create(request).toPromise();
       this.feedback.success("You will receive an email once your request is processed.");
@@ -40,14 +63,17 @@ export class RequestComponent implements OnChanges {
     } catch(e) {
       this.feedback.exception(e.message);
     }
-    delete this.selectedCommunityId;
+    this.selectedCommunity=null;
+    this.selectedOrg=null;
   }
 
   private updateRequestedCommuntyIds() {
     this.service.getByUser(this.user.id).subscribe( (response: RestResult) => {
+      let requests:any = response.result;
       this.availableCommunities = [...this.allCommunities];
       this.requestedCommunities = [];
-      response.result.forEach( (request:{id:string, communityId:string}) => {
+
+      requests.forEach( (request:{id:string, communityId:string}) => {
         // remove the community of the current request from this.availableCommunities
         this.availableCommunities = this.availableCommunities.filter((community) => community.id != request.communityId);
 

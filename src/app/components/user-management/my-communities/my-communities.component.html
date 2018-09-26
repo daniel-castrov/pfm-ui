@@ -10,11 +10,11 @@
       </fieldset>
       <fieldset>
         <legend>Join Community</legend>
-        <j-request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user" [header]="header"></j-request>
+        <j-request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user" [useOrgs]=true [header]="header"></j-request>
       </fieldset>
       <fieldset>
         <legend>Leave Community</legend>
-        <j-request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user" [header]="header"></j-request>
+        <j-request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user" [useOrgs]=false [header]="header"></j-request>
       </fieldset>
     </div>
   </div>
