@@ -37,7 +37,7 @@
   </span>
   <span class="form-group mr-3">
     <label class="mr-1">Program Type:</label>
-    <span class="type">{{pr.type}}</span>
+    <span class="type">{{type()}}</span>
   </span>
   <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
   <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>
@@ -56,7 +56,7 @@
   </span>
   <span class="form-group">
     <label class="smr-1">Program Type:</label>
-    <span class="type">{{pr.type}}</span>
+    <span class="type">{{type()}}</span>
   </span>
     <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
     <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>
