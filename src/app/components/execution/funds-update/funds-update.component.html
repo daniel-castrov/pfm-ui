@@ -1,6 +1,6 @@
 <j-header></j-header>
 <div class="row main-content">
-  <div class="col-md-12">
+  <div class="col-12">
     <div class="row">
       <div class="col-lg-7 col-md-12 mb-4">
         <span class="h5 mr-2">Funds Update for Fiscal Year </span>
@@ -12,9 +12,8 @@
          </span>
       </div>
     </div>
-    <div class="row mb-3">
-
-      <div class="col-2">
+    <div class="row">
+      <div class="col-10">
         <span>Page Size:</span>
         <span class="dropdown-inline">
           <select class="form-control-sm mb-2" (change)="onPageSizeChanged($event)" id="page-size">
@@ -22,25 +21,35 @@
             <option value="50">50</option>
             <option value="100">100</option>
             <option value="250">250</option>
-            <option value="500">500</option>
-          </select>
-        </span>
+              <option value="500">500</option>
+            </select>
+          </span>
+        </div>
+        <div class="col-2">
+          <span class="form-group pull-right">
+            <button class="btn btn-primary" (click)="addline()">
+              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+              Add Execution Line
+            </button>
+          </span>
+          <j-feedback></j-feedback>
+        </div>
       </div>
-
-      <div class="col-12">
-        <ag-grid-angular #agGrid class="ag-theme-balham"
-            [gridOptions]="agOptions"
-            [rowData]="exelines"
-            [rowSelection]="'single'"
-            (selectionChanged)="onSelectionChanged($event)"
-            [enableColResize]="true"
-            [toolPanelSuppressSideButtons]="true"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
-            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            (gridReady) = "onGridReady($event)">
-        </ag-grid-angular>
-        <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+      <div class="row mb-2">
+        <div class="col-12">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+              [gridOptions]="agOptions"
+              [rowData]="exelines"
+              [rowSelection]="'single'"
+              (selectionChanged)="onSelectionChanged($event)"
+              [enableColResize]="true"
+              [toolPanelSuppressSideButtons]="true"
+              [suppressDragLeaveHidesColumns]="true"
+              [suppressMovableColumns]="true"
+              (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+              (gridReady) = "onGridReady($event)">
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
       </div>
     </div>
     <div class="row">
@@ -59,18 +68,37 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <!--div class="row">
       <div class="col-12">
-        <div class="col-md-12 col-lg-2">
-          <span class="form-group">
-            <div class="primary-label"> </div>
-            <button class="btn btn-primary mt-4" (click)="addline()">
-              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-              Add Execution Line
-            </button>
-          </span>
+        <button class="btn btn-primary btn" data-toggle="modal" href="#name-modal">Enter Name</button>
+      </div>
+    </div-->
+  </div>
+</div>
+
+<!-- Modal Dialog -->
+<div id="name-modal" class="modal fade in">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-2">Enter New Name:</div>
+            <div class="form-group">
+              <span>
+                <input type="text" class="form-control">
+              </span>
+              <span>
+                <span>
+                  <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </span>
+              </span>
+            </div>
+          </div>
         </div>
-        <j-feedback></j-feedback>
       </div>
     </div>
   </div>

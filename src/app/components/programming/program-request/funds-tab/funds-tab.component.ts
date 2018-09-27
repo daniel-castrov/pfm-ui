@@ -238,6 +238,9 @@ export class FundsTabComponent implements OnChanges {
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
         this.agGrid.columnApi.setColumnVisible('delete', true);
       }
+      if (this.pr.type === ProgramType.GENERIC) {
+        this.agGrid.columnApi.setColumnVisible('programId', true);
+      }
       this.agGrid.api.sizeColumnsToFit();
     });
   }
@@ -332,18 +335,22 @@ export class FundsTabComponent implements OnChanges {
 
     pbRow.fundingLine = {funds: pbTotal};
     pbRow.programId = 'Total Funds Request';
+    pbRow.fundingLine.appropriation = 'Total Funds Request';
     pbRow.phaseType = PhaseType.PB;
     pinnedData.push(pbRow);
 
     let pomRow: DataRow = new DataRow();
     pomRow.fundingLine = {funds: pomTotal};
     pomRow.programId = 'Total Funds Request';
+    pomRow.fundingLine.appropriation = 'Total Funds Request';
     pomRow.phaseType = PhaseType.POM;
     pinnedData.push(pomRow);
 
     let deltaRow: DataRow = new DataRow();
     deltaRow.fundingLine = {funds: deltaTotal};
     deltaRow.programId = 'Total Funds Request';
+    deltaRow.fundingLine.appropriation = 'Total Funds Request';
+
     deltaRow.phaseType = PhaseType.DELTA;
     pinnedData.push(deltaRow);
 
@@ -353,7 +360,7 @@ export class FundsTabComponent implements OnChanges {
   generateColumns() {
     this.columnDefs = [
       {
-        headerName: 'funds values in $K',
+        headerName: 'Funds in $K',
         children: [{
           headerName: '',
           colId: 'delete',
@@ -367,13 +374,14 @@ export class FundsTabComponent implements OnChanges {
           },
           cellClass: 'funding-line-default',
           cellStyle: {'text-align': 'center', 'padding': '0px'},
-          width: 40
+          maxWidth: 40
         },
           {
             headerName: 'Program ID',
             headerTooltip: 'Program ID',
             colId: 'programId',
             field: 'programId',
+            hide: true,
             suppressToolPanel: true,
             cellClassRules: {
               'font-weight-bold': params => {return this.colSpanCount(params) > 1},
@@ -410,6 +418,7 @@ export class FundsTabComponent implements OnChanges {
           headerName: 'BA/BLIN',
           headerTooltip: 'BA/BLIN',
           field: 'fundingLine.baOrBlin',
+          suppressToolPanel: true,
           editable: params => {
             return this.isEditable(params)
           },
@@ -458,6 +467,7 @@ export class FundsTabComponent implements OnChanges {
           headerTooltip: 'OpAgency',
           field: 'fundingLine.opAgency',
           hide: true,
+          maxWidth: 65,
           cellClass: 'funding-line-default',
           cellClassRules: {
             'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -470,6 +480,7 @@ export class FundsTabComponent implements OnChanges {
           field: 'phaseType',
           maxWidth: 92,
           suppressMenu: true,
+          suppressToolPanel: true,
           cellClassRules: {
             'font-weight-bold ag-medium-gray-cell': params => {
               return this.colSpanCount(params) > 1
@@ -524,6 +535,7 @@ export class FundsTabComponent implements OnChanges {
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
+          suppressToolPanel: true,
           children: [{
             headerName: columnKey,
             colId: key,
@@ -531,6 +543,7 @@ export class FundsTabComponent implements OnChanges {
             field: 'fundingLine.funds.' + key,
             maxWidth: 92,
             suppressMenu: true,
+            suppressToolPanel: true,
             cellEditor: 'numericCellEditor',
             cellClassRules: {
               'ag-cell-edit': params => {
@@ -568,8 +581,8 @@ export class FundsTabComponent implements OnChanges {
       headerName: 'FYDP Total',
       headerTooltip: 'Future Years Defense Program Total',
       suppressMenu: true,
+      suppressToolPanel: true,
       maxWidth: 92,
-      type: "numericColumn",
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
@@ -579,9 +592,10 @@ export class FundsTabComponent implements OnChanges {
       headerName: 'CTC',
       headerTooltip: 'Cost to Complete',
       suppressMenu: true,
+      suppressToolPanel: true,
       maxWidth: 92,
       field: 'fundingLine.ctc',
-      type: "numericColumn",
+      cellEditor: 'numericCellEditor',
       cellClassRules: {
         'ag-cell-edit': params => {
           return this.isAmountEditable(params, this.pomFy)
@@ -709,7 +723,14 @@ export class FundsTabComponent implements OnChanges {
     if (params.data.programId === 'Total Funds Request' ||
       params.data.programId === 'Subtotal' ||
       params.data.programId === 'Remaining') {
-      return 5;
+      let columnsCount = 6;
+      if (this.pr.type !== ProgramType.GENERIC) {
+        columnsCount--;
+      }
+      if (!this.agGrid.columnApi.getColumn('fundingLine.opAgency').isVisible()) {
+        columnsCount--;
+      }
+      return columnsCount;
     } else {
       return 1;
     }

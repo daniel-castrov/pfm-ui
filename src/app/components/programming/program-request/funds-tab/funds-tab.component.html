@@ -22,7 +22,12 @@
                  *ngIf="pr.type !== ProgramType.GENERIC"
                  class="ag-theme-balham pr-funds-tab group-header-white"
                  [gridAutoHeight]="true"
-                 [toolPanelSuppressSideButtons]="true"
+                 [toolPanelSuppressPivotMode]="true"
+                 [toolPanelSuppressRowGroups]="true"
+                 [toolPanelSuppressValues]="true"
+                 [toolPanelSuppressPivots]="true"
+                 [toolPanelSuppressColumnFilter]="true"
+                 [toolPanelSuppressColumnSelectAll]="true"
                  [suppressMovableColumns]="true"
                  [suppressRowTransform]="true"
                  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
@@ -37,6 +42,7 @@
                  [context]="context"
                  [stopEditingWhenGridLosesFocus]="true"
                  (columnVisible)="sizeColumnsToFit($event)"
+                 (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
                  (gridReady)="onGridReady($event)"
                  (cellEditingStarted)="onCellEditingStarted($event)">
 </ag-grid-angular>
