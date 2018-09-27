@@ -167,6 +167,8 @@ export class NewUfrComponent implements OnInit {
     ufr.organization = shorty.organization;
     ufr.manager = shorty.manager;
 
+    ufr.emphases = [...shorty.emphases];
+
     // For a UFR variants always start empty
     ufr.fundingLines.forEach( fl => fl.variants=[] );
 

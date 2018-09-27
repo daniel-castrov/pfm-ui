@@ -1,0 +1,5 @@
+<label class="mb-1">Emphasis Areas</label>
+<select multiple [(ngModel)]="ufrOrPr.emphases" name="emphasis" class="form-control-sm emphases mb-2" [disabled]="disabled">
+  <option *ngFor="let e of tagsWithPercent" [ngValue]="e.abbr+','+e.percent" (click)="clickOnOption(e.abbr)" [disabled]="disabled">{{nameWithPercent(e)}}</option>
+</select>
+<div class="usage">Click on the items above to change the Emphasis Areas and their percentages</div>

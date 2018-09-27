@@ -116,10 +116,7 @@
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Medical Category', property:'medicalArea'}"></ng-container>
             </span>
             <span class="form-group inline-name">
-              <label class="mb-1">Emphasis Areas</label>
-              <select multiple [(ngModel)]="ufr.emphases" name="emphasis" class="form-control-sm emphases mb-2" [disabled]="disabled">
-                <option *ngFor="let e of tagsService.tags('Emphasis Areas') | async" [ngValue]="e.abbr">{{e.name}}</option>
-              </select>
+              <emphasisAreas [ufrOrPr]="ufr" [disabled]="disabled"></emphasisAreas>
             </span>
           </fieldset>
         </div>

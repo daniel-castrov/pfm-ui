@@ -74,10 +74,7 @@
               </select>
             </span>
             <span class="form-group inline-name">
-              <label class="mb-1">Emphasis Areas</label>
-              <select multiple [(ngModel)]="pr.emphases" name="emphasis" class="form-control-sm emphases">
-                <option *ngFor="let e of mapTypeToTags.get('Emphasis Areas')" [ngValue]="e.abbr">{{e.name}}</option>
-              </select>
+              <emphasisAreas [ufrOrPr]="pr"></emphasisAreas>
             </span>
           </fieldset>
         </div>

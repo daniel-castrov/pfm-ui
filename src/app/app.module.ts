@@ -150,6 +150,7 @@ import { DeleteRenderer } from "./components/renderers/delete-renderer/delete-re
 import { ViewSiblingsRenderer } from "./components/renderers/view-siblings-renderer/view-siblings-renderer.component";
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
+import {EmphasisAreasComponent} from "./components/ufr/ufr-view/ufr-program-tab/empasisAreas/emphasisAreas.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -229,6 +230,7 @@ const appRoutes: Routes = [
     CurrentComponent,
     DashForZeroPipe,
     ElevationComponent,
+    EmphasisAreasComponent,
     FeedbackComponent,
     FilterComponent,
     FundsTabComponent,

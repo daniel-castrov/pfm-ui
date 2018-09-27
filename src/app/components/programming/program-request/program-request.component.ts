@@ -86,20 +86,21 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     }
   }
 
-  initPrWith(program: ProgramWithFullName | ProgramRequestWithFullName) {
-    this.pr.acquisitionType = program.acquisitionType;
-    this.pr.bsvStrategy = program.bsvStrategy;
-    this.pr.commodityArea = program.commodityArea;
-    this.pr.coreCapability = program.coreCapability;
-    this.pr.description = program.description;
-    this.pr.emphases = program.emphases.slice();
-    this.pr.functionalArea = program.functionalArea;
-    this.pr.leadComponent = program.leadComponent;
-    this.pr.manager = program.manager;
-    this.pr.medicalArea = program.medicalArea;
-    this.pr.nbcCategory = program.nbcCategory;
-    this.pr.primaryCapability = program.primaryCapability;
-    this.pr.secondaryCapability = program.secondaryCapability;
+  initPrWith(programOrPR: ProgramWithFullName | ProgramRequestWithFullName) {
+    this.pr.acquisitionType = programOrPR.acquisitionType;
+    this.pr.bsvStrategy = programOrPR.bsvStrategy;
+    this.pr.commodityArea = programOrPR.commodityArea;
+    this.pr.coreCapability = programOrPR.coreCapability;
+    this.pr.description = programOrPR.description;
+    this.pr.emphases = programOrPR.emphases.slice();
+    this.pr.functionalArea = programOrPR.functionalArea;
+    this.pr.leadComponent = programOrPR.leadComponent;
+    this.pr.manager = programOrPR.manager;
+    this.pr.medicalArea = programOrPR.medicalArea;
+    this.pr.nbcCategory = programOrPR.nbcCategory;
+    this.pr.primaryCapability = programOrPR.primaryCapability;
+    this.pr.secondaryCapability = programOrPR.secondaryCapability;
+    this.pr.emphases = [...programOrPR.emphases];
   }
 
   async save(state: ProgrammaticRequestState) {
