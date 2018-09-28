@@ -225,7 +225,7 @@ export class UfrVariantsTabComponent {
       let childrens = [];
       this.years.forEach(year => {
         let colDef = {
-          headerName: year,
+          headerName: "FY" + (year-2000),
           field: 'serviceLine.quantity.' + year,
           maxWidth: 92,
           suppressMenu: true,

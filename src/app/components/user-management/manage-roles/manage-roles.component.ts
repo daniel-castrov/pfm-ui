@@ -194,10 +194,8 @@ export class ManageRolesComponent {
       this.organizations = data[1].result;
 
       this.availablePrograms = data[2];
-
-
+      
       let refreshedUser:User = data[3].result;
-
       this.selectedUser.organizationId = refreshedUser.organizationId;
       
       if (urr) {
