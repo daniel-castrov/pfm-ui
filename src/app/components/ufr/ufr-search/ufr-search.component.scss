@@ -1,11 +1,9 @@
 .filter-columns {
+  bottom: 20px;
+  right: 20px;
+  position: absolute;
 
-    position: absolute;
-    bottom: 0px;
-    right: 20px;
-
-    .forminput {
-
+  .forminput {
       &.filter {
         width: 400px;
       }
