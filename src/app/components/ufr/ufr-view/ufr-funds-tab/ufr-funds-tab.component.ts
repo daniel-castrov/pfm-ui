@@ -235,7 +235,7 @@ export class UfrFundsComponent implements OnChanges {
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             suppressToolPanel: true,
-            maxWidth: 92,
+            maxWidth: 60,
             editable: params => {
               return this.isEditable(params)
             },
@@ -252,7 +252,7 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'BA/BLIN',
             headerTooltip: 'BA/BLIN',
             field: 'fundingLine.baOrBlin',
-            maxWidth: 92,
+            maxWidth: 80,
             suppressToolPanel: true,
             editable: params => {
               return this.isEditable(params)
@@ -273,7 +273,7 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'Item',
             headerTooltip: 'Item',
             field: 'fundingLine.item',
-            maxWidth: 92,
+            maxWidth: 70,
             editable: params => {
               return this.isEditable(params)
             },
@@ -347,7 +347,7 @@ export class UfrFundsComponent implements OnChanges {
             colId: key,
             headerTooltip: 'Fiscal Year ' + key,
             field: 'fundingLine.funds.' + key,
-            maxWidth: 92,
+            maxWidth: 90,
             suppressMenu: true,
             suppressToolPanel: true,
             type: "numericColumn",
@@ -375,7 +375,8 @@ export class UfrFundsComponent implements OnChanges {
       headerTooltip: 'Future Years Defense Program Total',
       suppressMenu: true,
       suppressToolPanel: true,
-      maxWidth: 92,
+      maxWidth: 90,
+      cellClass:['text-right'],
       cellEditor: 'numericCellEditor',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
@@ -387,10 +388,14 @@ export class UfrFundsComponent implements OnChanges {
       headerTooltip: 'Cost to Complete',
       suppressMenu: true,
       suppressToolPanel: true,
-      maxWidth: 92,
+      maxWidth: 90,
       field: 'fundingLine.ctc',
+      cellClass:['text-right'],
       cellClassRules: {
         'ag-cell-edit': params => {
+          return this.isAmountEditable(params, this.pomFy)
+        },
+        'text-right': params => {
           return this.isAmountEditable(params, this.pomFy)
         },
         'delta-row': params => {
