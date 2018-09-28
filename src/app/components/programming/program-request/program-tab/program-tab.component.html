@@ -7,7 +7,7 @@
             <span class="col form-group inline-name">
               <label class="mb-1">*Lead Component</label>
               <select [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
-                <option *ngFor="let lc of mapTypeToTags.get('Lead Component')" [ngValue]="lc.abbr">{{lc.name}}</option>
+                <option *ngFor="let lc of mapTypeToTags.get('Lead Component')" [ngValue]="lc.abbr">{{lc.abbr}}</option>
               </select>
             </span>
             <span class="col form-group inline-name">

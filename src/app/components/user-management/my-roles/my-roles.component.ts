@@ -106,7 +106,7 @@ export class MyRolesComponent {
 
       Observable.forkJoin([
         this.communityService.getById( this.currentUser.currentCommunityId ),
-        this.orgService.get(this.currentUser.organizationId),
+        this.orgService.getById(this.currentUser.organizationId),
         this.withFullNameService.programsByCommunity(this.currentUser.currentCommunityId),
         this.roleService.getByUserIdAndCommunityId(this.currentUser.id, this.currentUser.currentCommunityId),
         this.roleService.getByCommunityId(this.currentUser.currentCommunityId),

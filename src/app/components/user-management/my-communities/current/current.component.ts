@@ -36,14 +36,14 @@ export class CurrentComponent {
   @Input() set user( u:User ){
     this._user = u;
     if (u) {
-      this.orgService.get(u.organizationId).subscribe( org => {
+      this.orgService.getById(u.organizationId).subscribe( org => {
         this.currentOrg = org.result;
       });
     }
   }
 
   getCurrentOrg(u:User){
-    this.orgService.get(u.organizationId).subscribe( org => {
+    this.orgService.getById(u.organizationId).subscribe( org => {
       this.currentOrg = org.result;
     });
   }
@@ -56,15 +56,11 @@ export class CurrentComponent {
         this.updateCommunitiesToSelectFrom();
         this.header.refreshActions();
         delete this.selectedCommunityId;
-        this.orgService.get(this._user.organizationId).subscribe( org => {
+        this.orgService.getById(this._user.organizationId).subscribe( org => {
           this.currentOrg = org.result;
         });
       });
-
-
       this._user.currentCommunityId = this.selectedCommunityId;
-      
-      
     });
   }
 
