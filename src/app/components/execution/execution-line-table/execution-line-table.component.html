@@ -17,16 +17,17 @@
       </button>
     </span>
   </ng-container>
-
-  <ag-grid-angular #agGrid class="ag-theme-balham"
-    [gridOptions]="agOptions"
-    [enableColResize]="true"
-    [toolPanelSuppressSideButtons]="true"
-    [suppressDragLeaveHidesColumns]="true"
-    [suppressMovableColumns]="true"
-    [singleClickEdit]="true"
-    (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-    (gridReady)="onGridReady($event)">
-  </ag-grid-angular>
-  <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
 </div>
+
+<ag-grid-angular #agGrid class="ag-theme-balham"
+  [gridOptions]="agOptions"
+  [enableColResize]="true"
+  [toolPanelSuppressSideButtons]="true"
+  [suppressDragLeaveHidesColumns]="true"
+  [suppressMovableColumns]="true"
+  [singleClickEdit]="true"
+  (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+  (gridReady)="onGridReady($event)">
+</ag-grid-angular>
+<ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+
