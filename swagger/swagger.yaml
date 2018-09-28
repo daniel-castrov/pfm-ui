@@ -1007,7 +1007,7 @@ paths:
       - "Organization"
       summary: "Get an organization by its id"
       description: "Get an organization by its id"
-      operationId: "get"
+      operationId: "getById"
       parameters:
       - name: "orgId"
         in: "path"

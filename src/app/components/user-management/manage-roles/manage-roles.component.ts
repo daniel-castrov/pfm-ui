@@ -47,7 +47,7 @@ export class ManageRolesComponent {
   private isNewUserRole: boolean;
   private isVisible: boolean;
 
-  private cannotChangeResources:string [] = ["User_Approver", "POM_Manager" ];
+  private cannotChangeResources:string [] = ["User_Approver", "POM_Manager", "Funds_Requestor", "Program_Manager" ];
   private canChangeResources: boolean;
 
   private orgBasedRoles: string [] = ["Organization_Member", "Funds_Requestor", "Program_Manager" ];
@@ -184,6 +184,7 @@ export class ManageRolesComponent {
       this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(this.selectedUser.id, this.selectedCommunity.id, this.selectedRole.name),
       this.orgService.getByCommunityId((this.selectedCommunity.id)),
       this.withFullNameService.programsByCommunity(this.selectedCommunity.id),
+      this.userService.getById(this.selectedUser.id)
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
@@ -193,6 +194,11 @@ export class ManageRolesComponent {
       this.organizations = data[1].result;
 
       this.availablePrograms = data[2];
+
+
+      let refreshedUser:User = data[3].result;
+
+      this.selectedUser.organizationId = refreshedUser.organizationId;
       
       if (urr) {
         this.isNewUserRole = false;
@@ -222,6 +228,7 @@ export class ManageRolesComponent {
           this.availablePrograms=newAvail;
         }
       } else {
+        this.selectedOrganization = this.organizations.find( org => org.id == this.selectedUser.organizationId );
         this.selectedURR = new Object();
         this.selectedURR.userId = this.selectedUser.id;
         this.selectedURR.roleId = this.selectedRole.id;
@@ -258,6 +265,8 @@ export class ManageRolesComponent {
         this.assignedPrograms.forEach( (value) => this.selectedURR.resourceIds.push(value.id));
       }
     }
+
+    console.log( this.selectedURR );
 
     if (this.isNewUserRole){
       this.userRoleResourceService.create(this.selectedURR).subscribe(() => {
