@@ -252,7 +252,7 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'BA/BLIN',
             headerTooltip: 'BA/BLIN',
             field: 'fundingLine.baOrBlin',
-            maxWidth: 80,
+            maxWidth: 60,
             suppressToolPanel: true,
             editable: params => {
               return this.isEditable(params)

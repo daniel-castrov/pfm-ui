@@ -594,6 +594,14 @@ tab {
 
 //ag-grid customization starts here
 
+.ag-theme-balham {
+ &.ag-header-cell-label {
+   &.ag-header-cell-text {
+      text-align: center !important;
+    }
+  }
+}
+
 .ag-header-container {
   background: #24527b;
   color: white;

@@ -20,14 +20,14 @@ export class AllUfrsComponent implements OnInit {
 
   // Map <id of Program or PR, ProgramWithFullName or ProgramRequestWithFullName>
   private mapPrIdToObj: Map<string, any>;
-  
+
   private user: User;
   private orgMap: any[] = []
   private datePipe: DatePipe = new DatePipe('en-US')
   private filtertext;
   private fy: number;
- 
-  // agGrid   
+
+  // agGrid
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private rowData: any[];
   private colDefs;
@@ -80,7 +80,8 @@ export class AllUfrsComponent implements OnInit {
           coldef = {
             headerName: colKey,
             field: colKey,
-            width: 102,
+            headerTooltip: 'UFR #',
+            width: 50,
             editable: false,
             cellRenderer: 'simpleLinkCellRendererComponent',
             menuTabs: this.menuTabs,
@@ -91,10 +92,66 @@ export class AllUfrsComponent implements OnInit {
             comparator: this.ufrCompare
           }
           break;
+        case ("UFR Name"):
+            coldef = {
+              headerName: colKey,
+              field: colKey,
+              headerTooltip: 'UFR Name',
+              width: 140,
+              editable: false,
+              menuTabs: this.menuTabs,
+              filter: 'agTextColumnFilter',
+            }
+          break;
+        case ("Prog ID"):
+            coldef = {
+              headerName: colKey,
+              field: colKey,
+              headerTooltip: 'Prog ID',
+              width: 60,
+              editable: false,
+              menuTabs: this.menuTabs,
+              filter: 'agTextColumnFilter',
+            }
+          break;
+        case ("Priority"):
+            coldef = {
+              headerName: colKey,
+              field: colKey,
+              headerTooltip: 'Priority',
+              width: 60,
+              editable: false,
+              menuTabs: this.menuTabs,
+              filter: 'agTextColumnFilter',
+            }
+          break;
+        case ("Disposition"):
+            coldef = {
+              headerName: colKey,
+              field: colKey,
+              headerTooltip: 'Disposition',
+              width: 200,
+              editable: false,
+              menuTabs: this.menuTabs,
+              filter: 'agTextColumnFilter',
+            }
+          break;
+        case ("Funding Request"):
+            coldef = {
+              headerName: colKey,
+              field: colKey,
+              headerTooltip: 'Funding Request',
+              width: 80,
+              editable: false,
+              menuTabs: this.menuTabs,
+              filter: 'agTextColumnFilter',
+            }
+          break;
         case ("Last Updated"):
           coldef = {
             headerName: colKey,
             field: colKey,
+            headerTooltip: 'Last Updated',
             width: 102,
             editable: false,
             cellRenderer: params => this.dateFormatter(params.value),
@@ -103,22 +160,34 @@ export class AllUfrsComponent implements OnInit {
           }
           break;
         case ("Func Area"):
+          coldef = {
+            headerName: colKey,
+            field: colKey,
+            headerTooltip: 'Func Area',
+            width: 60,
+            hide: true,
+            editable: false,
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+          }
+          break;
         case ("Organization"):
           coldef = {
             headerName: colKey,
             field: colKey,
+            headerTooltip: 'Organization',
             width: 102,
             hide: true,
             editable: false,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
           }
-          break;  
+          break;
         default:
           coldef = {
             headerName: colKey,
             field: colKey,
-            width: 102,
+            width: 60,
             editable: false,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
@@ -148,7 +217,7 @@ export class AllUfrsComponent implements OnInit {
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
     let alldata: any[] = [];
-    let progId:string, funcArea:string , orgid:string; 
+    let progId:string, funcArea:string , orgid:string;
     ufrs.forEach(ufr => {
 
       if ( ufr.shortyId ){
@@ -160,7 +229,7 @@ export class AllUfrsComponent implements OnInit {
         } else {
           progId = "";
           funcArea = "";
-          orgid = "-1";  
+          orgid = "-1";
         }
       } else {
         progId = "(new)"
@@ -211,13 +280,13 @@ export class AllUfrsComponent implements OnInit {
 
   private ufrNumber(ufr: UFR): string {
     // the value stored in this.mapCycleIdToFy looks like this: 'POM 2017'
-    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4); 
+    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4);
     const shortFy = fullFy - 2000;
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;
   }
 
-  private onFilterTextBoxChanged() {    
+  private onFilterTextBoxChanged() {
     this.agGrid.gridOptions.api.setQuickFilter( this.filtertext );
   }
 
