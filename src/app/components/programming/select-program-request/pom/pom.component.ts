@@ -62,7 +62,7 @@ export class PomComponent implements OnChanges {
           editable: false,
           valueFormatter: params => { return this.currencyFormatter(params) },
           cellClassRules: {
-             'font-weight-bold': params => { return params.data.id == "POM " + (by-2000) + " Allocated TOA"  } ,
+             'font-weight-bold': params => { return params.data.id == "POM " + (by-2000) + " TOA"  } ,
              'font-red' : params => { return params.value < 0 },
            },
         });
@@ -121,7 +121,7 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row = new Object();
-    row["id"] = "POM " + (by-2000) + " Allocated TOA";
+    row["id"] = "POM " + (by-2000) + " TOA";
     sum = 0;
     let toas:any[] = []
 
@@ -144,7 +144,7 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "POM " + (by-2000) + " Submitted Requests";
+    row["id"] = "PRs Submitted";
     let submittedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state=="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
@@ -155,7 +155,7 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "POM " + (by-2000) + " Planned Requests";
+    row["id"] = "Prs Planned";
     let plannedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state!="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
@@ -170,7 +170,7 @@ export class PomComponent implements OnChanges {
     let requests: { [year: number]: number } = {};
     for (let year: number = by; year < by + 5; year++) {
       requests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
-      row[year] = allocatedToas[year] - requests[year];
+      row[year] = requests[year] - allocatedToas[year]; 
       sum += row[year];
     }
     row["total"] = sum;

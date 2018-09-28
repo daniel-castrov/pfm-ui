@@ -56,6 +56,25 @@ export class FundsUpdateComponent implements OnInit {
       return (params.data.id && 0 !== params.data.released );
     };
 
+    var saveIfPossible = function(p){
+      if (p.data.programName && 'Other' !== p.data.programName
+        && p.data.appropriation
+        && p.data.opAgency
+        && p.data.blin
+        && p.data.item) {
+        p.data.toa = 0;
+        p.data.initial = 0;
+        p.data.released = 0;
+        p.data.withheld = 0;
+        my.exesvc.createExecutionLine(my.selectedexe.id, p.data).subscribe(data => {
+          console.log('created new EL');
+          //console.log(data.result);
+          p.data.id = data.result;
+          my.refreshFilterDropdowns();
+        });
+      }
+    }
+
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -89,7 +108,7 @@ export class FundsUpdateComponent implements OnInit {
           cellRenderer: 'programCellRendererComponent',
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
-          editable: p => (!p.data.programName || 'Other' === p.data.programName),
+          editable: p => (!p.data.id),
           cellEditorParams: params => ({ values: my.programs }),
           cellEditorSelector: p => {
             var editor: string = 'agRichSelectCellEditor';
@@ -97,6 +116,11 @@ export class FundsUpdateComponent implements OnInit {
               editor = 'agTextCellEditor';
             }
             return { component: editor };
+          },
+          valueSetter: p => { 
+            p.data.programName = p.newValue;
+            saveIfPossible(p);
+            return true;
           }
         },
         {
@@ -107,9 +131,15 @@ export class FundsUpdateComponent implements OnInit {
           width: 70,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
-          editable: p => (!p.data.appropriation),
+          editable: p => (!p.data.id),
           cellEditor: 'agRichSelectCellEditor',
-          cellEditorParams: params => ({ values: my.appropriations })
+          cellEditorParams: params => ({ values: my.appropriations }),
+          valueSetter: p => {
+            p.data.appropriation = p.newValue;
+            delete p.data.blin;
+            delete p.data.programElement;
+            return true;
+          }
         },
         {
           headerName: 'BA/BLIN',
@@ -119,13 +149,23 @@ export class FundsUpdateComponent implements OnInit {
           width: 90,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
-          editable: p => (!p.data.blin),
+          editable: p => (!p.data.id),
           cellEditor: 'agRichSelectCellEditor',
-          cellEditorParams: params => ({ values: my.blins }),
+          cellEditorParams: p => (
+            {
+              values: my.blins.filter(blin => 'PROC' === p.data.appropriation
+                ? blin.match(/00/)
+                : blin.match(/BA[1-9]/) )
+            }
+          )
+          ,
           valueSetter: p => {
             p.data.blin = p.newValue;
+
             autovalues.programElement(p.newValue, p.data.item ? p.data.item : '').then(val => {
               p.data.programElement = val;
+              p.node.setDataValue('programElement', p.data.programElement);
+              saveIfPossible(p);
             });
             return true;
           }
@@ -138,7 +178,20 @@ export class FundsUpdateComponent implements OnInit {
           width: 90,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey'],
-          editable: p => (!p.data.item),
+          editable: p => (!p.data.id),
+          valueSetter: p => {
+            p.data.item = p.newValue;
+            p.data.initial = 0;
+
+            // setting the item number could change our programElement
+            if (p.data.blin) {
+              autovalues.programElement(p.data.blin, p.data.item ? p.data.item : '').then(val => {
+                p.data.programElement = val;
+                saveIfPossible(p);
+              });
+            }
+            return true;
+          }
         },
         {
           headerName: 'opAgency',
@@ -148,9 +201,14 @@ export class FundsUpdateComponent implements OnInit {
           width: 60,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center'],
-          editable: p => (!p.data.opAgency),
+          editable: p => (!p.data.id),
           cellEditor: 'agRichSelectCellEditor',
-          cellEditorParams: params => ({ values: my.opAgencies })
+          cellEditorParams: params => ({ values: my.opAgencies }),
+          valueSetter: p => {
+            p.data.opAgency = p.newValue;
+            saveIfPossible(p);
+            return true;
+          }
         },
         {
           headerName: 'PE',
@@ -170,22 +228,7 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-light-green', 'text-right'],
-          editable: p => (!p.data.initial),
-          valueSetter: p => {
-            p.data.toa = Number.parseFloat(p.newValue);
-            p.data.initial = Number.parseFloat(p.newValue);
-
-            this.exesvc.createExecutionLine(this.selectedexe.id, p.data).subscribe(data => {
-              console.log('created new EL');
-              console.log(data.result);
-
-              p.data.id = data.result;
-              this.refreshFilterDropdowns();
-            });
-
-            return true;
-          }
+          cellClass: ['ag-cell-light-green', 'text-right']
         },
         {
           headerName: 'CRA',
