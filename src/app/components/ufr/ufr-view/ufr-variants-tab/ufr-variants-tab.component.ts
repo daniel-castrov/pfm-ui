@@ -23,7 +23,7 @@ export class UfrVariantsTabComponent {
   pomFy:number;
   fund:FundingLine = null;
   fundsAvailable:string = null;
-  
+
   showAddVariant=false;
   newVariantName:string;
 
@@ -230,6 +230,7 @@ export class UfrVariantsTabComponent {
           maxWidth: 92,
           suppressMenu: true,
           suppressToolPanel: true,
+          cellClass: 'text-right',
           cellClassRules: {
             'ag-cell-edit': params => {
               return this.isAmountEditable(params)
@@ -282,9 +283,9 @@ export class UfrVariantsTabComponent {
   delete(index, data) {
 
     let variant = this.fund.variants.find(variant => variant.shortName === data.variantName);
-     
+
       variant.serviceLines.splice(
-        variant.serviceLines.findIndex(sl => 
+        variant.serviceLines.findIndex(sl =>
         sl.branch === this.data.get(variant.shortName)[index].serviceLine.branch &&
         sl.contractor === this.data.get(variant.shortName)[index].serviceLine.contractor &&
         sl.unitCost === this.data.get(variant.shortName)[index].serviceLine.unitCost)
@@ -301,7 +302,7 @@ export class UfrVariantsTabComponent {
   }
 
   addRow(shortName){
-  
+
     let newPomRow: DataRow = new DataRow();
     newPomRow.phaseType = PhaseType.POM;
     newPomRow.serviceLine = {
