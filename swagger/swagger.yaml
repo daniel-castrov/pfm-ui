@@ -440,19 +440,18 @@ paths:
         name: "id"
         required: true
         type: "string"
-  /pr:
+  /pr/poms:
     get:
       tags:
       - "PR"
-      operationId: "getAll"
+      operationId: "getPrsForAllPoms"
       produces:
       - "application/json"
+  /pr:
     post:
       tags:
       - "PR"
       operationId: "create"
-      parameters:
-      - "application/json"
       produces:
       - "application/json"
       parameters:

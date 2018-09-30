@@ -100,7 +100,7 @@ export class WithFullNameService {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getAll().toPromise()).result;
+    const prs: ProgrammaticRequest[] = (await this.prService.getPrsForAllPoms().toPromise()).result;
     const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
 
     const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
@@ -184,6 +184,7 @@ export class WithFullNameService {
         // do nothing
         break;
       default:
+        debugger;
         console.log('Error!!! Programmatic Request creation time type not set.');
     }
     return parentName + pr.shortName;
