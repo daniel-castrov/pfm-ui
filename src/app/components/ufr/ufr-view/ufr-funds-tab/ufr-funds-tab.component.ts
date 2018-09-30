@@ -227,15 +227,14 @@ export class UfrFundsComponent implements OnChanges {
           maxWidth: 40,
           cellRenderer: 'deleteRenderer',
           suppressToolPanel: true,
-          cellClass: 'funding-line-default',
-          cellStyle: {'text-align': 'center'},
+          cellClass: 'funding-line-default'
         },
           {
             headerName: 'Appn',
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             suppressToolPanel: true,
-            maxWidth: 60,
+            maxWidth: 64,
             editable: params => {
               return this.isEditable(params)
             },
@@ -252,7 +251,7 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'BA/BLIN',
             headerTooltip: 'BA/BLIN',
             field: 'fundingLine.baOrBlin',
-            maxWidth: 60,
+            maxWidth: 70,
             suppressToolPanel: true,
             editable: params => {
               return this.isEditable(params)

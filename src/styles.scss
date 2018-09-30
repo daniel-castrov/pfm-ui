@@ -594,13 +594,10 @@ tab {
 
 //ag-grid customization starts here
 
-.ag-theme-balham {
- &.ag-header-cell-label {
-   &.ag-header-cell-text {
-      text-align: center !important;
-    }
-  }
-}
+.ag-header-cell-label {
+   text-align: center !important;
+   flex-direction: row !important;
+ }
 
 .ag-header-container {
   background: #24527b;
@@ -776,15 +773,20 @@ tab {
   }
 }
 
-.ag-theme-balham .ag-header-cell,
-.ag-theme-balham .ag-header-group-cell {
+
+.ag-theme-balham .ag-header-cell-label .ag-header-cell-text,
+.ag-header-cell,
+.ag-header-group-cell,
+.ag-header-cell-text,
+.ag-header-cell-number {
   // padding-left: 2px !important;
   // padding-right: 2px !important;
-  text-align: center;
+  text-align: center !important;
 }
 
 .ag-header-group-cell-label {
   display: grid;
+  text-align: center;
 }
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table
