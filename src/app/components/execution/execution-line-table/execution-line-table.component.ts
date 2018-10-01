@@ -88,7 +88,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
-    console.log( 'into updatelines')
+    console.log( 'into updatelines. '+newdata.length+' lines to update')
     if (this.agOptions && this.agOptions.api) {
       console.log( 'agOptions has been initted')
       this.agOptions.api.setRowData(newdata);
@@ -270,7 +270,7 @@ export class ExecutionLineTableComponent implements OnInit {
           },
           editable: true,
           field: 'line.id',
-          valueFormatter: params => ( params.data.line.appropriation
+          valueFormatter: params => ( params.data.line.appropriation && my.elIdNameLkp.has( params.data.line.id )
             ? my.elIdNameLkp.get( params.data.line.id ).display
             : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
           cellEditorParams: params => {

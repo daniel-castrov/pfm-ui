@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-md-6 col-lg-2">
+      <div class="col-md-6 col-lg-2" *ngIf="subtypes">
         <div class="form-group">
           <label>Select Event Type:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="etype" (change)="updatetable()">
@@ -22,7 +22,7 @@
           </select>
         </div>
       </div>
-      <div class="col-md-6 col-lg-2" *ngIf="'CRA' === etype.name">
+      <div class="col-md-6 col-lg-2" *ngIf="etype && 'CRA' === etype.name">
         <div class="form-group">
           <label>Select:</label>
           <select class="form-control-sm dropdown-width" [(ngModel)]="other">
