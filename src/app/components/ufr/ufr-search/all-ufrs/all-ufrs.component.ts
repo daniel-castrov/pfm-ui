@@ -48,8 +48,7 @@ export class AllUfrsComponent implements OnInit {
   async ngOnInit() {
 
     this.user = await this.userUtils.user().toPromise();
-    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
-    await this.initProgrammyIdToFullName(programs);
+    await this.initProgrammyIdToFullName();
 
     let organizations: Organization[] = (await this.orgSvc.getByCommunityId(this.user.currentCommunityId).toPromise()).result;
     organizations.forEach(org => {
@@ -263,7 +262,7 @@ export class AllUfrsComponent implements OnInit {
     return this.datePipe.transform(new Date(longdate), dateFormat);
   }
 
-  private async initProgrammyIdToFullName(programs: Program[]): Promise<any> {
+  private async initProgrammyIdToFullName(): Promise<any> {
     return new Promise( async (resolve) => {
       // TODO: make the following two calls in parallel
       this.mapPrIdToObj = new Map<string, any>();
