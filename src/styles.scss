@@ -594,17 +594,16 @@ tab {
 
 //ag-grid customization starts here
 
-.ag-header-cell-label {
-   text-align: center !important;
-   flex-direction: row !important;
- }
-
 .ag-header-container {
   background: #24527b;
   color: white;
   text-align: center !important;
 }
 
+.ag-header-cell-label {
+   text-align: center !important;
+   flex-direction: row !important;
+ }
 .ag-row-odd {
   background: #ccc !important;
 }
@@ -799,4 +798,9 @@ tab {
 
 .ag-body-container {
   min-height: 0px !important;
+}
+
+.funding-line-default {
+  background-color: #eae9e9;
+  text-align: center;
 }

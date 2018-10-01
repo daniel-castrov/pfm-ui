@@ -562,7 +562,7 @@ export class FundsTabComponent implements OnChanges {
                 params.data.phaseType === PhaseType.POM &&
                 params.data.gridType === GridType.CURRENT_PR &&
                 !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
-                return {color: 'red', 'font-weigh': 'bold'};
+                return {color: 'red', 'font-weight': 'bold'};
               };
             },
             editable: params => {
