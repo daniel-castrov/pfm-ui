@@ -51,9 +51,10 @@ export class AppropriationReleaseComponent implements OnInit {
         this.exesvc.hasAppropriation(data.phaseId)
       ]).subscribe(d2 => {
         this.phase = d2[0].result;
-        this.subtypes = d2[1].result
+        var tmptypes = d2[1].result
           .filter(x => 'EXE_RELEASE' === x.type)
-          .filter(x => ( d2[2].result ? 'RELEASE_CRA' !== x.subtype : true ) );
+          .filter(x => (d2[2].result ? 'RELEASE_CRA' !== x.subtype : true));
+        this.subtypes = tmptypes;
         this.etype = this.subtypes[0];
         this.updatetable();
       });
@@ -82,7 +83,6 @@ export class AppropriationReleaseComponent implements OnInit {
   }
 
   updatetable() {
-    
     if ('CRA' === this.etype.name && !this.other ) {
       this.other = '1';
     }
