@@ -59,19 +59,13 @@
             <label>Select Role</label>
             <span class="form-group">
               <select name="roleSelector" class="form-control-sm dropdown-width"
-                [(ngModel)]="selectedRole" (change)="requestExists=false">
+                [(ngModel)]="selectedRole" (change)="checkRequestsForExisting()">
                 <option value=""></option>
                 <option *ngFor="let r of roles" [ngValue]="r">
                   {{ r.name }}
                 </option>
               </select>
             </span>
-          </div>
-          <!-- NEXT BUTTON -->
-          <div class="col-2">
-            <div class="controls mt-4">
-              <button class="btn btn-primary" [disabled]="!selectedRole" (click)="checkRequestsForExisting()">Next</button>
-            </div>
           </div>
         </div>
 
@@ -84,21 +78,17 @@
           <!-- Info -->
           <div>
             <p class="role-controls" >
-              <span *ngIf="canUnassign && isNewUserRole">
-                Request a new role of <b>{{selectedRole.name}}</b>.
+              <span *ngIf="isNewUserRole">
+                  New request for the <b>{{selectedRole.name}}</b> role.
               </span>
-              <span *ngIf="canUnassign && !isNewUserRole">
-                The <b>{{selectedRole.name}}</b> role has already been assiged.
-              </span>
-              <span *ngIf="!canUnassign">
-                  The <b>{{selectedRole.name}}</b> role cannot be dropped.
+              <span *ngIf="!isNewUserRole">
+                You are currently a <b>{{selectedRole.name}}</b>.
               </span>
             </p>
-              
           </div>
 
           <!-- Delete existing -->
-          <div *ngIf="canUnassign && !isNewUserRole">
+          <div *ngIf="!isNewUserRole">
               <p class="role-controls">
                 Request to drop the <b>{{selectedRole.name}}</b> role.
               </p>
@@ -113,10 +103,7 @@
           <div *ngIf="canChangeResources && !isOrgBased">
             <div>
                 <p class="role-controls">
-                Request to   
-                <span *ngIf="isNewUserRole===true">assign</span>
-                <span *ngIf="isNewUserRole===false">modify</span>
-                access to Programs for the <b>{{selectedRole.name}}</b> role
+                Request access to selected Programs for the <b>{{selectedRole.name}}</b> role
               </p>
             </div>
             <div style="width:800px;text-align: right; margin-bottom: 10px;">
@@ -141,10 +128,11 @@
               </button>
             </div>
           </div>
+
           <!-- Some UserRoleResources CANNOT be modified -->
-          <div *ngIf="!canChangeResources && isNewUserRole && !isOrgBased">
+          <div *ngIf="isNewUserRole && !canChangeResources && !isOrgBased">
             <p class="role-controls" *ngIf="!canChangeResources">
-              Resource access for the <b>{{selectedRole.name}}</b> role is predeifined and cannot be modified.
+              Resources for the <b>{{selectedRole.name}}</b> role are predeifined and cannot be modified.
             </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="createAssignRequest()">
@@ -154,43 +142,17 @@
           </div>
 
           <!-- Some UserRoleResources are based only on an Organizations -->
-          <div *ngIf="isOrgBased" >
-
-            <div  *ngIf="selectedRole.name != 'Organization_Member' && canChangeResources">
-
-              <p class="role-controls">
-                <span *ngIf="isNewUserRole===true">Assign</span>
-                <span *ngIf="isNewUserRole===false">Modify</span>
-                access to Programs based on the {{myOrganization.abbreviation}} Organization for the <b>{{selectedRole.name}}</b>
-              </p>
-              <div class="controls pull-right">
-                <button class="btn btn-primary" (click)="createAssignRequest()">
-                  <span>Submit Request</span>
-                </button>
-              </div>
+          <div  *ngIf="isNewUserRole && isOrgBased">
+            <p class="role-controls">
+              Request access to all Programs in the <b>{{myOrganization.abbreviation}}</b> Organization for the <b>{{selectedRole.name}}</b> role.
+            </p>
+            <div class="controls pull-right">
+              <button class="btn btn-primary" (click)="createAssignRequest()">
+                <span>Submit Request</span>
+              </button>
             </div>
-
-            <div *ngIf="selectedRole.name == 'Organization_Member'">
-              <p class="role-controls">
-                Change my Organization within this community ( {{myCommunity.abbreviation}} )    
-              </p>
-              <label>Select New Organization</label>
-              <select name="orgSelector" class="form-control-sm dropdown-width"
-                [(ngModel)]="selectedOrganization">
-                <option value=""></option>
-                <option *ngFor="let org of organizations" [ngValue]="org">
-                    {{ org.abbreviation }}
-                </option>
-              </select>
-              <div class="controls pull-right">
-                <button class="btn btn-primary" (click)="createAssignRequest()">
-                  <span>Submit Request</span>
-                </button>
-              </div>
-            </div>
-
-            
           </div>
+
         </div>
 
       </fieldset>
