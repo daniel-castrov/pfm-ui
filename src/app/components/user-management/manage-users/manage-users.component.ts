@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
+import { CommunityWithRolesAndOrgs } from './CommunityWithRolesAndOrgs';
+
 
 // Generated
 import { User } from '../../../generated/model/user';
@@ -34,7 +36,7 @@ export class ManageUsersComponent {
   private targetUser: User;
 
   // this user's roles and all roles in a community
-  private communityWithUserRoles: CommWithRoles[] = [];
+  private communityWithUserRoles: CommunityWithRolesAndOrgs[] = [];
 
   // The name of the role we are assigning the targetUser to
   private addedroleId: string;
@@ -98,7 +100,7 @@ export class ManageUsersComponent {
         this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id),
         this.organizationService.getByCommunityId(comm.id)
         ]).subscribe(data => {
-          
+
           this.resultError.push(data[0].error);
           let roles = data[0].result;
 
@@ -113,7 +115,7 @@ export class ManageUsersComponent {
                 let commOrgId = data.result.resourceIds[0];
                 let commOrgs = allOrganizations.filter(org => org.communityId == comm.id);
                 this.communityWithUserRoles.push(
-                  new CommWithRoles(comm, roles, commOrgs, commOrgs.find( org => org.id == commOrgId))
+                  new CommunityWithRolesAndOrgs(comm, roles, commOrgs, commOrgs.find( org => org.id == commOrgId))
                 );
                 for (var i = 0; i < allCommunities.length; i++) {
                   if (allCommunities[i].id === comm.id) {
@@ -169,7 +171,7 @@ export class ManageUsersComponent {
     });
   }
 
-  private leaveCommunity(cwr: CommWithRoles): void {
+  private leaveCommunity(cwr: CommunityWithRolesAndOrgs): void {
 
     let userRole: Role = cwr.userRoles.find(role => role.name == "User");
     this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
@@ -182,7 +184,7 @@ export class ManageUsersComponent {
     });
   }
 
-  private changeOrg(cwr: CommWithRoles): void {
+  private changeOrg(cwr: CommunityWithRolesAndOrgs): void {
 
     if (cwr.org.id != this.targetUser.organizationId) {
       
@@ -216,17 +218,3 @@ export class ManageUsersComponent {
 
 }
 
-class CommWithRoles {
-
-  community: Community;       // The Community of interest
-  userRoles: Role[] = [];     // The tagerUser's roles in this Community
-  orgs: Organization[] = [];  // All the Organizations in thls Community
-  org: Organization;          // The targetUer's Organization in this Community
-
-  constructor(c: Community, urs: Role[], ogs: Organization[], og: Organization) {
-    this.community = c;
-    this.userRoles = urs.filter(role => role.name != "User" && role.name != "Organization_Member");
-    this.orgs = ogs;
-    this.org = og;
-  }
-}
