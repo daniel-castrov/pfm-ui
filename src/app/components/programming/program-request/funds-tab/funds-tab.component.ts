@@ -545,6 +545,7 @@ export class FundsTabComponent implements OnChanges {
             suppressMenu: true,
             suppressToolPanel: true,
             cellEditor: 'numericCellEditor',
+            cellClass: 'text-right',
             cellClassRules: {
               'ag-cell-edit': params => {
                 return this.isAmountEditable(params, key)
@@ -561,7 +562,7 @@ export class FundsTabComponent implements OnChanges {
                 params.data.phaseType === PhaseType.POM &&
                 params.data.gridType === GridType.CURRENT_PR &&
                 !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
-                return {color: 'red', 'font-weigh': 'bold'};
+                return {color: 'red', 'font-weight': 'bold'};
               };
             },
             editable: params => {
@@ -583,6 +584,7 @@ export class FundsTabComponent implements OnChanges {
       suppressMenu: true,
       suppressToolPanel: true,
       maxWidth: 92,
+      cellClass: 'text-right',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
@@ -596,6 +598,7 @@ export class FundsTabComponent implements OnChanges {
       maxWidth: 92,
       field: 'fundingLine.ctc',
       cellEditor: 'numericCellEditor',
+      cellClass: 'text-right',
       cellClassRules: {
         'ag-cell-edit': params => {
           return this.isAmountEditable(params, this.pomFy)

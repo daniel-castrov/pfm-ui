@@ -92,7 +92,7 @@ export class AppropriationReleaseComponent implements OnInit {
       data.result.filter(z => this.progfilter(z) ).forEach(x => { 
         this.updatelines.push({
           line: x,
-          amt: x.toa - x.withheld - x.released
+          amt: ( 'CRA' === this.etype.name ? 0 : x.toa - x.withheld - x.released )
         });
       });
     });

@@ -272,6 +272,7 @@ export class VariantsTabComponent {
           maxWidth: 92,
           suppressMenu: true,
           suppressToolPanel: true,
+          cellClass: 'text-right',
           cellClassRules: {
             'ag-cell-edit': params => {
               return this.isAmountEditable(params)

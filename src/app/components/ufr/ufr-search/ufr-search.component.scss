@@ -1,3 +1,11 @@
-.bottom-text {
-  position: absolute;bottom: 0px;
-}
+.filter-columns {
+  bottom: 20px;
+  right: 20px;
+  position: absolute;
+
+  .forminput {
+      &.filter {
+        width: 400px;
+      }
+    }
+  }

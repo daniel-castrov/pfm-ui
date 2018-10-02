@@ -597,8 +597,13 @@ tab {
 .ag-header-container {
   background: #24527b;
   color: white;
+  text-align: center !important;
 }
 
+.ag-header-cell-label {
+   text-align: center !important;
+   flex-direction: row !important;
+ }
 .ag-row-odd {
   background: #ccc !important;
 }
@@ -767,13 +772,20 @@ tab {
   }
 }
 
-.ag-theme-balham .ag-header-cell, .ag-theme-balham .ag-header-group-cell {
-  padding-left: 2px !important;
-  padding-right: 2px !important;
+
+.ag-theme-balham .ag-header-cell-label .ag-header-cell-text,
+.ag-header-cell,
+.ag-header-group-cell,
+.ag-header-cell-text,
+.ag-header-cell-number {
+  // padding-left: 2px !important;
+  // padding-right: 2px !important;
+  text-align: center !important;
 }
 
-.ag-header-group-cell-label{
+.ag-header-group-cell-label {
   display: grid;
+  text-align: center;
 }
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table
@@ -786,4 +798,9 @@ tab {
 
 .ag-body-container {
   min-height: 0px !important;
+}
+
+.funding-line-default {
+  background-color: #eae9e9;
+  text-align: center;
 }

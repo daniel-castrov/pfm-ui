@@ -224,7 +224,8 @@ export class ProgrammaticRequestsComponent implements OnChanges {
     });
 
     let totalColDef = {
-      headerName: 'CTC',
+      headerName: 'FYDP Total',
+      headerTooltip: 'Future Years Defense Program Total',
       menuTabs: this.menuTabs,
       filter: "agNumberColumnFilter",
       maxWidth: 104,

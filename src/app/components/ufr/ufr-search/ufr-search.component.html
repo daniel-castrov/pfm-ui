@@ -11,13 +11,13 @@
         <div class="col-6">
           <new-ufr></new-ufr>
         </div>
-        <div class="col-4"></div>
-        <div class="col-2">
-          <div class="bottom-text">
-            <input id="filtertestbox" type="text" placeholder="Filter all columns ..."
+        <div class="col-6">
+          <div class="filter-columns pull-right">
+            <input id="filtertestbox" type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
               [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
           </div>
         </div>
+
       </div>
       <br/>
       <div class="row">

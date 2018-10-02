@@ -33,8 +33,8 @@ export class UfrViewComponent implements OnInit {
 
   async ngOnInit() {
     this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
-      if(urlSegments[urlSegments.length - 2].path == 'create') {
-        const serializedUfr = urlSegments[urlSegments.length - 1].path;
+      if(urlSegments[urlSegments.length - 1].path == 'create') {
+        const serializedUfr = sessionStorage.getItem('ufr');
         this.ufr = JSON.parse(serializedUfr);
       } else {
         const ufrId = urlSegments[urlSegments.length - 1].path;
@@ -72,8 +72,14 @@ export class UfrViewComponent implements OnInit {
     } else {
       if(this.ufr.id) {
         this.ufrService.update(this.ufr).subscribe();
+        if (this.ufr.status === UfrStatus.SUBMITTED) {
+          NotifyUtil.notifySuccess('UFR submitted successfully');
+        } else {
+          NotifyUtil.notifySuccess('UFR saved successfully');
+        }
       } else {
         this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+        NotifyUtil.notifySuccess('UFR created successfully')
       }
     }
   }

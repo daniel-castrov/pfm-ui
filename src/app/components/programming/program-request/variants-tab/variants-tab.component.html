@@ -48,33 +48,39 @@
                          (gridReady)="onGridReady($event, variant)">
         </ag-grid-angular>
       </div>
-      <fieldset>
-        <legend>Add Variant</legend>
-        <div class="row">
-          <div class="col-3">
-            <button class="btn btn-primary" (click)="toggleShowAddVariance()">
-              <i *ngIf="!showAddVariant" class="fa fa-plus-circle" aria-hidden="true"></i>
-              <i *ngIf="showAddVariant" class="fa fa-minus-circle" aria-hidden="true"></i>
-              <span class="mr-1">New Variant</span>
-            </button>
-          </div>
-          <ng-container *ngIf="showAddVariant">
-            <div class="col-1">
-              <label>Name</label>
-            </div>
-            <div class="col-4">
-              <input class="mb-2 form-control forminput" [(ngModel)]="newVariantName">
-            </div>
-            <div class="col-2 form-group">
-              <button class="btn btn-primary" (click)="addVariant()" [disabled]="!(newVariantName)">
-                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                <span class="mr-1">Add</span>
-              </button>
-            </div>
-          </ng-container>
-        </div>
-      </fieldset>
+        <fieldset class="ml-3 mt-2">
+          <legend>Add Variant</legend>
+          <table class="add-variant-table">
+            <tbody>
+              <tr>
+                  <td>
+                    <button class="btn btn-primary" (click)="toggleShowAddVariance()">
+                      <i *ngIf="!showAddVariant" class="fa fa-plus-circle" aria-hidden="true"></i>
+                      <i *ngIf="showAddVariant" class="fa fa-minus-circle" aria-hidden="true"></i>
+                      <span class="mr-1">New Variant</span>
+                    </button>
+                  </td>
+                  <ng-container *ngIf="showAddVariant">
+                    <td>
+                    <span class="form-group variant-name">
+                      <label>*Name</label>
+                    </span>
+                  </td>
+                  <td>
+                    <input class="mb-2 form-control forminput" [(ngModel)]="newVariantName">
+                  </td>
+                  <td>
+                    <button class="btn btn-primary" (click)="addVariant()" [disabled]="!(newVariantName)">
+                      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
+                      <span class="mr-1">Add</span>
+                    </button>
+                  </td>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      <j-feedback></j-feedback>
     </div>
-    <j-feedback></j-feedback>
   </div>
 </div>
