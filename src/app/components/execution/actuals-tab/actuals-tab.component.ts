@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 // Other Components
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 
 @Component({
@@ -25,6 +25,7 @@ export class ActualsTabComponent implements OnInit {
   private _oandes: OandEMonthly[];
   private _exeline: ExecutionLine;
   private _exe: Execution;
+  private _events: ExecutionEvent[];
   private agOptions: GridOptions;
   rows: ActualsRow[];
   firstMonth = 0;
@@ -40,6 +41,15 @@ export class ActualsTabComponent implements OnInit {
 
   get exeline() : ExecutionLine {
     return this._exeline;
+  }
+
+  @Input() set events(evs: ExecutionEvent[]) {
+    this._events = evs;
+    this.refreshTableData();
+  }
+
+  get events(): ExecutionEvent[] {
+    return this._events;
   }
 
   @Input() set exe(e: Execution) {
@@ -184,7 +194,8 @@ export class ActualsTabComponent implements OnInit {
               }
             },
             {
-              headerName: 'Oct',
+              //headerName: 'Oct',
+              headerValueGetter: p => ('Oct' + (my._exe ? my.exe.fy - 2000 : '')),
               colId: 0,
               valueGetter: params => my.valueGetter(params),
               editable: editsok,
@@ -235,7 +246,8 @@ export class ActualsTabComponent implements OnInit {
               }
             },
             {
-              headerName: 'Jan',
+              //headerName: 'Jan',
+              headerValueGetter: p => ('Jan' + (my._exe ? my.exe.fy - 1999 : '')),
               colId: 3,
               valueSetter: valueSetter,
               editable: editsok,
@@ -418,7 +430,13 @@ export class ActualsTabComponent implements OnInit {
       { label: 'Cumulative Actuals', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
     ];
 
-    if (this._exeline && this._exe && this._oandes) {
+    if (this._exeline && this._exe && this._oandes && this._events ) {
+      console.log('here we go!');
+      console.log(this._exe);
+      console.log(this._exeline);
+      console.log(this._oandes);
+      console.log(this._events);
+
       // get our goals information
       var progtype: string = this.exeline.appropriation;
       var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];

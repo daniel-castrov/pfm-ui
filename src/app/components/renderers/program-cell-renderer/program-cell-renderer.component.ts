@@ -40,6 +40,12 @@ export class ProgramCellRendererComponent implements ICellRendererAngularComp {
   }
 
   makelink(): boolean {
-    return (this.params ? this.params.context.enabled(this.params) : false);
+    if (this.params.context.enabled) {
+      return (typeof this.params.context.enabled === 'function'
+        ? this.params.context.enabled(this.params)
+        : this.params.context.enabled);
+    }
+
+    return false;
   }
 }
