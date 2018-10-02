@@ -155,7 +155,7 @@ export class PomComponent implements OnChanges {
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "Prs Planned";
+    row["id"] = "PRs Planned";
     let plannedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state!="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
@@ -170,7 +170,7 @@ export class PomComponent implements OnChanges {
     let requests: { [year: number]: number } = {};
     for (let year: number = by; year < by + 5; year++) {
       requests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
-      row[year] = requests[year] - allocatedToas[year]; 
+      row[year] = requests[year] - allocatedToas[year];
       sum += row[year];
     }
     row["total"] = sum;

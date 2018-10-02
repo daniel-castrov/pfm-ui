@@ -11,7 +11,7 @@
         <!-- placeholder -->
       </div>
       <div class="col-4">
-        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!table.tableok">Charge</button>
+        <button class="btn btn-success pull-right" (click)="submit()" [disabled]="!table.tableok">Charge</button>
       </div>
     </div>
     <div class="row mb-2">
@@ -56,7 +56,7 @@
       <div class="col-12">
         <div id="charges-execution-lines" class="table-editable">
           <app-execution-line-table
-            [phase]="phase" 
+            [phase]="phase"
             [updatelines]="updatelines"
             [exevalidator]="validator">
           </app-execution-line-table>
