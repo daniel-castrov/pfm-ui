@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
+import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
 import { HeaderComponent } from '../../../header/header.component';
@@ -7,8 +8,6 @@ import { UserUtils } from '../../../../services/user.utils';
 
 import { PomWorksheetService, POMService } from '../../../../generated';
 import { Pom, PomWorksheet, PomWorksheetRow } from '../../../../generated';
-
-
 
 @Component({
   selector: 'worksheet-management',
@@ -23,7 +22,57 @@ export class WorksheetManagementComponent implements OnInit {
   private pomWorksheet:PomWorksheet[]=[];
   private fy:number;
 
-  constructor( 
+   columnDefs = [
+     {
+       headerName: '',
+       field: 'checkbox',
+       width: 40
+     },
+     {
+       headerName: 'Worksheet Name',
+       field: 'worksheetName',
+       width: 400
+     },
+     {
+       headerName: 'Version',
+       field: 'version',
+       width: 100,
+
+     },
+     {
+       headerName: 'Created',
+       field: 'created',
+       width: 140
+     },
+     {
+       headerName: 'Last Updated',
+       field: 'lastUpdated',
+       width: 140
+     }
+   ];
+
+   rowData = [
+       {
+         worksheetName: 'Worksheet POM 1',
+         version: '1',
+         created: '1/11/2017',
+         lastUpdated: '1/12/2017'
+       },
+       {
+        worksheetName: 'Worksheet POM 2',
+         version: '2',
+         created: '1/14/2017',
+         lastUpdated: '1/15/2017'
+       },
+       {
+        worksheetName: 'Worksheet POM 3',
+         version: '3',
+         created: '1/1/2018',
+         lastUpdated: '1/1/2018'
+       }
+   ];
+
+  constructor(
     private pomSvc:POMService,
     private pomWSSvc:PomWorksheetService,
     private globalsService: UserUtils,
@@ -35,7 +84,7 @@ export class WorksheetManagementComponent implements OnInit {
   ngOnInit() {
 
     this.globalsService.user().subscribe( user => {
-      
+
       this.pomSvc.getOpen(user.currentCommunityId).subscribe( data => {
         let pom:Pom = data.result;
         this.fy = pom.fy;
