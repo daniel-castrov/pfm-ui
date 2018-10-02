@@ -84,12 +84,23 @@ export class FundsTabComponent implements OnChanges {
       return;
     }
     if(this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
-      this.loadExistingFundingLines();
-      this.setPomFiscalYear();
-      this.initDataRows();
       if(this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
         this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
       }
+      this.pomService.getById(this.pr.phaseId).subscribe(data => {
+        this.pomFy = data.result.fy;
+        this.columnKeys = [
+          this.pomFy - 3,
+          this.pomFy -2,
+          this.pomFy - 1,
+          this.pomFy,
+          this.pomFy + 1,
+          this.pomFy + 2,
+          this.pomFy + 3,
+          this.pomFy + 4];
+        this.loadExistingFundingLines();
+        this.initDataRows();
+      });
     }
   }
 
@@ -163,6 +174,18 @@ export class FundsTabComponent implements OnChanges {
       });
       this.siblingsData = data;
       this.initSiblingsPinnedBottomRows();
+
+      setTimeout(() => {
+        if (this.data.some(row => row.fundingLine.userCreated === true)) {
+          this.agGridParent.columnApi.setColumnVisible('delete', true);
+          this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+        }
+        if(this.agGridSiblings){
+          this.agGridSiblings.api.sizeColumnsToFit();
+        }
+        this.agGridParent.api.sizeColumnsToFit();
+        this.agGrid.api.sizeColumnsToFit();
+      }, 700);
     });
   }
 
@@ -246,7 +269,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   addParentFundingLine(){
-    this.removePYValues(this.selectedFundingLine);
+    this.removeValues(this.selectedFundingLine);
     this.pr.fundingLines.push(this.selectedFundingLine);
     let pomRow: DataRow = {programId: this.pr.shortName,
       gridType: GridType.CURRENT_PR,
@@ -298,11 +321,9 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  removePYValues(fundingLine){
+  removeValues(fundingLine){
     Object.keys(fundingLine.funds).forEach(year => {
-      if(Number(year) < this.pomFy){
-        fundingLine.funds[year] = 0;
-      }
+      fundingLine.funds[year] = 0;
     });
   }
 
@@ -726,7 +747,7 @@ export class FundsTabComponent implements OnChanges {
     if (params.data.programId === 'Total Funds Request' ||
       params.data.programId === 'Subtotal' ||
       params.data.programId === 'Remaining') {
-      let columnsCount = 6;
+      let columnsCount = 5;
       if (this.pr.type !== ProgramType.GENERIC) {
         columnsCount--;
       }
@@ -748,19 +769,6 @@ export class FundsTabComponent implements OnChanges {
     return deltaFundingLine;
   }
 
-  private async setPomFiscalYear() {
-    const pom: Pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
-    this.pomFy = pom.fy;
-    this.columnKeys = [
-      this.pomFy - 3,
-      this.pomFy -2,
-      this.pomFy - 1,
-      this.pomFy,
-      this.pomFy + 1,
-      this.pomFy + 2,
-      this.pomFy + 3,
-      this.pomFy + 4];
-  }
 
   private async loadDropdownOptions() {
     this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
@@ -818,6 +826,7 @@ export class FundsTabComponent implements OnChanges {
   onParentGridReady(params) {
     setTimeout(() => {
       this.agGridParent.api.setColumnDefs(this.columnDefs);
+      this.agGridParent.columnApi.setColumnVisible('programId', true);
       this.agGridParent.api.getColumnDef('programId').headerName = 'Parent';
       this.agGridParent.api.refreshHeader();
       this.agGridParent.api.setRowData(this.parentData);
@@ -833,6 +842,7 @@ export class FundsTabComponent implements OnChanges {
   onSiblingsGridReady(params) {
     setTimeout(() => {
       this.agGridSiblings.api.setColumnDefs(this.columnDefs);
+      this.agGridSiblings.columnApi.setColumnVisible('programId', true);
       this.agGridSiblings.api.getColumnDef('programId').headerName = 'Sibling';
       this.agGridSiblings.api.refreshHeader();
       this.agGridSiblings.api.setRowData(this.siblingsData);
@@ -860,19 +870,6 @@ export class FundsTabComponent implements OnChanges {
     this.showSiblingsInformation = true;
     this.initParentDataRows(fundingLine);
     this.initSiblingsDataRows(fundingLine);
-    setTimeout(() => {
-      if (this.data.some(row => row.fundingLine.userCreated === true)) {
-        this.agGridParent.columnApi.setColumnVisible('delete', true);
-        if(this.agGridSiblings){
-          this.agGridSiblings.columnApi.setColumnVisible('delete', true);
-        }
-      }
-      if(this.agGridSiblings){
-        this.agGridSiblings.api.sizeColumnsToFit();
-      }
-      this.agGridParent.api.sizeColumnsToFit();
-      this.agGrid.api.sizeColumnsToFit();
-    }, 700);
 
   }
 
