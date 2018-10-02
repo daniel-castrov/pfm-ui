@@ -18,6 +18,7 @@ import {
   POMService,
   EppService
 } from '../../../generated';
+import {NotifyUtil} from "../../../utils/NotifyUtil";
 
 @Component({
   selector: 'app-create-pom-session',
@@ -332,6 +333,9 @@ export class CreatePomSessionComponent implements OnInit {
         }
       }
      });
+    if (this.tooMuchToa) {
+      NotifyUtil.notifyError('Organizational TOA(s) exceeds Community TOA');
+    }
     this.pinnedRowOrgsDelta = [];
     deltaRow["orgid"] = "Delta";
     this.pinnedRowOrgsDelta = [deltaRow];

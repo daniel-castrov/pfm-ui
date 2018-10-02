@@ -72,8 +72,14 @@ export class UfrViewComponent implements OnInit {
     } else {
       if(this.ufr.id) {
         this.ufrService.update(this.ufr).subscribe();
+        if (this.ufr.status === UfrStatus.SUBMITTED) {
+          NotifyUtil.notifySuccess('UFR submitted successfully');
+        } else {
+          NotifyUtil.notifySuccess('UFR saved successfully');
+        }
       } else {
         this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+        NotifyUtil.notifySuccess('UFR created successfully')
       }
     }
   }

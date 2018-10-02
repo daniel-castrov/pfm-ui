@@ -111,8 +111,14 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       if(this.pr.id) {
         this.pr.state = state;
         this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
+        if (this.pr.state === ProgrammaticRequestState.SAVED) {
+          NotifyUtil.notifySuccess('Program request saved successfully')
+        } else {
+          NotifyUtil.notifySuccess('Program request submitted successfully')
+        }
       } else {
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
+        NotifyUtil.notifySuccess('Program request created successfully')
       }
     }
   }
