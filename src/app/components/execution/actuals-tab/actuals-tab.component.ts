@@ -5,6 +5,7 @@ import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
+import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
 @Component({
   selector: 'actuals-tab',
@@ -56,15 +57,13 @@ export class ActualsTabComponent implements OnInit {
     var date = new Date();
     var day = date.getDay();
 
-    this.editMonth = this.convertDateToFyMonth((e ? e.fy : 0), date);
+    this.editMonth = OandETools.convertDateToFyMonth((e ? e.fy : 0), date);
 
     // after the 14th, we're on to the next month
     if (day >= 15) {
       this.editMonth += 1;
     }
 
-    console.log('edit month is: ' + this.editMonth);
-    //console.log(' edit month is: ' + this.editMonth);
     this.refreshTableData();
   }
 
@@ -434,12 +433,6 @@ export class ActualsTabComponent implements OnInit {
     ];
 
     if (this._exeline && this._exe && this._oandes && this._snapshots) {
-      console.log('here we go!');
-      console.log(this._exe);
-      console.log(this._exeline);
-      console.log(this._oandes);
-      console.log(this._snapshots);
-
       // get our goals information
       var progtype: string = this.exeline.appropriation;
       var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
@@ -506,15 +499,19 @@ export class ActualsTabComponent implements OnInit {
     var outlayed: number = 0;
     var accruals: number = 0;
 
-    for (var i = 0; i < this.rows[0].values.length; i++) {
-      // FIXME: calculate toa, released numbers here
-      var toa: number = (i + 1) * 5000;
-      var released: number = toa / 2;
+    // go through all our snapshots and calculate toas and released
+    var toasAndReleaseds: ToaAndReleased[]
+      = OandETools.calculateToasAndReleaseds(this.exeline, this.snapshots,
+        this.rows[0].values.length, this.exe.fy);
 
+    for (var i = 0; i < this.rows[0].values.length; i++) {
       for (var j = 0; j < this.rows.length; j++) {
-        this.rows[j].toa[i] = toa;
-        this.rows[j].released[i] = released;
+        this.rows[j].toa[i] = toasAndReleaseds[i].toa;
+        this.rows[j].released[i] = toasAndReleaseds[i].released;
       }
+
+      var toa: number = toasAndReleaseds[i].toa;
+      var released: number = toasAndReleaseds[i].released;
 
       this.rows[0].values[i] = toa;
       this.rows[1].values[i] = released;
@@ -557,10 +554,10 @@ export class ActualsTabComponent implements OnInit {
     var row: number = params.node.childIndex;
 
     var index: number = my.firstMonth + col;
-    if(6===row && 1===col) console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
+    //if(6===row && 1===col) console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
     if (params.data.values.length >= index) {
       //console.log(params.data.values);
-      if( 6===row && 1 === col ) console.log('  returning ' + params.data.values[index]);
+      //if( 6===row && 1 === col ) console.log('  returning ' + params.data.values[index]);
       return params.data.values[index];
     }
     else {
@@ -594,17 +591,6 @@ export class ActualsTabComponent implements OnInit {
   onToggleAdmin() {
     this.isadmin = !this.isadmin;
     this.agOptions.api.redrawRows();
-  }
-
-  convertDateToFyMonth(fy: number, timestamp: Date | number): number {
-    if (typeof timestamp === 'number') {
-      timestamp = new Date(timestamp);
-    }
-
-    var yeardiff: number = timestamp.getFullYear() - fy;
-
-    // -9 because the FY starts in October
-    return (yeardiff * 12) + timestamp.getMonth() - 9;
   }
 
   prevFy() {
