@@ -50,9 +50,6 @@ export class ActualsTabComponent implements OnInit {
     //console.log('setting exe');
     this._exe = e;
     this.firstMonth = 0;
-    if (this.agOptions.api) {
-      this.agOptions.api.refreshHeader();
-    }
 
     var date = new Date();
     var day = date.getDay();
@@ -62,6 +59,13 @@ export class ActualsTabComponent implements OnInit {
     // after the 14th, we're on to the next month
     if (day >= 15) {
       this.editMonth += 1;
+    }
+
+    // skip to the FY that contains the current month
+    this.firstMonth = (this.editMonth / 12) * 12;
+
+    if (this.agOptions.api) {
+      this.agOptions.api.refreshHeader();
     }
 
     this.refreshTableData();
@@ -485,6 +489,8 @@ export class ActualsTabComponent implements OnInit {
     } else if (this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
+
+    this.enableNextPrevButtons();
   }
 
   recalculateTableData() {
@@ -505,6 +511,8 @@ export class ActualsTabComponent implements OnInit {
         this.rows[0].values.length, this.exe.fy);
 
     for (var i = 0; i < this.rows[0].values.length; i++) {
+      // all rows need to know about toa and released values
+      // so the renderer can calculate *either* % or $
       for (var j = 0; j < this.rows.length; j++) {
         this.rows[j].toa[i] = toasAndReleaseds[i].toa;
         this.rows[j].released[i] = toasAndReleaseds[i].released;
@@ -599,8 +607,8 @@ export class ActualsTabComponent implements OnInit {
       this.agOptions.api.refreshHeader();
       this.agOptions.api.redrawRows();
     }
-    this.prevok = (this.firstMonth - 12 >= 0);
-    this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
+
+    this.enableNextPrevButtons();
   }
 
   nextFy() {
@@ -609,6 +617,10 @@ export class ActualsTabComponent implements OnInit {
       this.agOptions.api.refreshHeader();
       this.agOptions.api.redrawRows();
     }
+    this.enableNextPrevButtons();
+  }
+
+  enableNextPrevButtons() {
     this.prevok = (this.firstMonth - 12 >= 0);
     this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
   }
