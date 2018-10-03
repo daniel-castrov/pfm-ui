@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
-import {AgGridNg2} from 'ag-grid-angular';
+import { GridOptions } from 'ag-grid';
+import { AgGridNg2 } from 'ag-grid-angular';
 
 // Other Components
 import { HeaderComponent } from '../../../header/header.component';
@@ -20,68 +21,11 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  constructor(
-    private pomSvc:POMService,
-    private pomWSSvc:PomWorksheetService,
-    private globalsService: UserUtils,
-
-  ) { }
-
-
   private pomWorksheet:PomWorksheet[]=[];
   private fy:number;
-
-   columnDefs = [
-     {
-       headerName: '',
-       field: 'checkbox',
-       width: 40
-     },
-     {
-       headerName: 'Worksheet Name',
-       field: 'worksheetName',
-       width: 400
-     },
-     {
-       headerName: 'Version',
-       field: 'version',
-       width: 100,
-
-     },
-     {
-       headerName: 'Created',
-       field: 'created',
-       width: 140
-     },
-     {
-       headerName: 'Last Updated',
-       field: 'lastUpdated',
-       width: 140
-     }
-   ];
-
-   rowData = [
-       {
-         worksheetName: 'Worksheet POM 1',
-         version: '1',
-         created: '1/11/2017',
-         lastUpdated: '1/12/2017'
-       },
-       {
-        worksheetName: 'Worksheet POM 2',
-         version: '2',
-         created: '1/14/2017',
-         lastUpdated: '1/15/2017'
-       },
-       {
-        worksheetName: 'Worksheet POM 3',
-         version: '3',
-         created: '1/1/2018',
-         lastUpdated: '1/1/2018'
-       }
-   ];
-
-
+  private agOptions: GridOptions;
+  private columnDefs: any[];
+  private rowData: any[];
 
   ngOnInit() {
 
@@ -97,8 +41,70 @@ export class WorksheetManagementComponent implements OnInit {
 
       });
     });
-
-
   }
 
+  constructor(
+    private pomSvc:POMService,
+    private pomWSSvc:PomWorksheetService,
+    private globalsService: UserUtils,
+
+  ) {
+
+    this.agOptions = <GridOptions>{
+      enableColResize: true,
+    }
+    this.columnDefs = [
+       {
+         headerName: 'checkbox',
+         field: 'checkbox',
+         width: 40
+       },
+       {
+         headerName: 'Worksheet Name',
+         field: 'worksheetName',
+         width: 400
+       },
+       {
+         headerName: 'Version',
+         field: 'version',
+         width: 100,
+
+       },
+       {
+         headerName: 'Created',
+         field: 'createdOn',
+         width: 140
+       },
+       {
+         headerName: 'Last Updated',
+         field: 'lastUpdatedOn',
+         width: 140
+       }
+     ];
+
+    this.rowData = [
+      { checkbox: '*', worksheetName: 'POM 18 Worksheet 1', version: '1', createdOn: 1100, lastUpdatedOn: 1100 },
+      { checkbox: '*', worksheetName: 'POM 18 Worksheet 2', version: '1', createdOn: 500, lastUpdatedOn: 1100 },
+      { checkbox: '*', worksheetName: 'POM 18 Worksheet 3', version: '1', createdOn: 5550, lastUpdatedOn: 1100 },
+      { checkbox: '*', worksheetName: 'POM 17 Worksheet 3', version: '1', createdOn: 45000, lastUpdatedOn: 1100 },
+      { checkbox: '*', worksheetName: 'POM 18 Worksheet 2', version: '1', createdOn: 50000, lastUpdatedOn: 110 }
+    ];
+  }
+
+  onPageSizeChanged(event) {
+    var selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+   onGridReady(params) {
+     setTimeout(() => {
+       params.api.sizeColumnsToFit();
+     }, 500);
+     window.addEventListener("resize", function() {
+       setTimeout(() => {
+         params.api.sizeColumnsToFit();
+       });
+     });
+   }
 }
