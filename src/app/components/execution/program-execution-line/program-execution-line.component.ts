@@ -17,7 +17,7 @@ export class ProgramExecutionLineComponent implements OnInit {
   private exeline: ExecutionLine;
   private exe: Execution;
   private oandes: OandEMonthly[];
-  private events: ExecutionEvent[];
+  private snapshotMap: Map<Date, ExecutionLine>;
   private program: string;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
@@ -28,18 +28,21 @@ export class ProgramExecutionLineComponent implements OnInit {
     this.route.url.subscribe((segments: UrlSegment[]) => {
       var exelineid = segments[segments.length - 1].path;
 
-      this.exesvc.getExecutionLineById(exelineid).subscribe(d => {
-        this.exeline = d.result;
+      forkJoin([
+        this.exesvc.getExecutionLineById(exelineid),
+        this.oandesvc.getByExecutionLineId(exelineid),
+        this.exesvc.getExecutionLineMonthlySnapshots(exelineid)
+      ]).subscribe(d => {        
+        this.exeline = d[0].result;
+        this.oandes = d[1].result;
+        this.program = this.exeline.programName;
+        this.snapshotMap = new Map<Date, ExecutionLine>();
+        Object.getOwnPropertyNames(d[2].result).forEach(key => { 
+          this.snapshotMap.set(new Date( key ), d[2].result[key]);
+        });
 
-        forkJoin([
-          this.exesvc.getById(this.exeline.phaseId),
-          this.oandesvc.getByExecutionLineId(this.exeline.id),
-          this.exesvc.getExecutionEventsByExecutionLine(exelineid)
-        ]).subscribe(d2 => {
-          this.exe = d2[0].result;
-          this.oandes = d2[1].result;
-          this.events = d2[2].result;
-          this.program = this.exeline.programName;
+        this.exesvc.getById(this.exeline.phaseId).subscribe(d2 => {
+          this.exe = d2.result;
         });
       });
     });

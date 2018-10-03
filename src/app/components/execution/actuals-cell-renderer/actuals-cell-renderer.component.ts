@@ -18,9 +18,13 @@ export class ActualsCellRendererComponent implements ICellRendererAngularComp {
     var pct = param.context.parent.showPercentages;
 
     var row: number = param.rowIndex;
+    var col: number = Number.parseInt( param.colDef.colId );
+
+    //console.log(param.data);
+    //console.log(row + ', ' + col);
 
     if (pct && row > 1) {
-      this.value = (param.value / param.data.toa * 100).toFixed(2);
+      this.value = (param.value / param.data.toa[col] * 100).toFixed(2);
     }
     else {
       this.value = (param.value ? param.value : 0).toFixed(2);
