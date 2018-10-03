@@ -9,75 +9,59 @@ $dark-grey: #848282;
 
 fieldset { padding: 20px;}
 
+.worksheet-table {
+
+  margin: 0;
+
+  td {
+    padding: 0 8px 10px 10px;
+  }
+
+  .copy-input,
+  .copy-select {
+    width: 450px;
+  }
+
+  .version-input {
+    width: 100px;
+  }
+}
+
 .worksheet-controls {
+
+  margin: 0;
+  margin-left: -44px;
+
+  ul { margin: 0; }
+
+  li:first-child {
+    margin-left: 0;
+  }
+
+  li {
+    list-style: none;
+    width: 140px;
+    margin: 0 30px;
+    margin-left: 0;
+    display: inline-block;
+  }
+
+  .btn {
+    width: 150px;
+  }
+}
+
+.button-controls {
+
+  margin: 15px 0 0 0;
+
+  ul { margin: 0; }
+
   li {
     list-style: none;
     margin-left: 0;
-    padding: 4px 0;
-    width: 180px;
+    display: inline-block;
   }
-
-  button {
-    width: 100%;
-  }
-}
-
-.mat-table {
-
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-  color: #fff;
-
-    >  .mat-sort-header-button {
-        color: #fff;
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    > .mat-header-row, > .mat-row {
-        display: table-row;
-        min-height: 20px;
-
-    > .mat-header-cell {
-        display: table-cell;
-        width: 241px;
-        height: 38px;
-        padding: 0 10px;
-        color: #ffffff;
-        vertical-align: middle;
-    }
-
-    > .mat-header-cell, > .mat-cell {
-        display: table-cell;
-        height: 38px;
-        border: 1px solid #7b8389;
-        font-size: 14px;
-        padding: 0 10px;
-        vertical-align: middle;
-    }
-
-    > .mat-header-cell {
-        font-size: 16px;
-    }
-
-    .checkbox {
-      width: 45px;
-    }
-  }
-}
-
-mat-header-row {
-  background-color: #24527b;
-  color: #ffffff;
-}
-
-mat-row:nth-child(even) {
-  background: #ccc;
-}
-
-mat-row:nth-child(odd){
-  background: #fff;
 }
 
 .input-file {
@@ -86,6 +70,16 @@ mat-row:nth-child(odd){
   clear: both;
 }
 
-.forminput-width {
-  width: 80%;
+.worksheet-lock {
+  i {
+    &.fa {
+      color: $black;
+      opacity: .9;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    &.fa:hover {
+      opacity: .5;
+    }
+  }
 }

@@ -1,81 +1,210 @@
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
-    <div class="col-10">
+    <div class="col-12">
       <div class="row">
         <div class="col-6" id="update-pom-session">
-          <div class="h5 mb-4">Worksheet Managment POM {{fy}}</div>
+          <div class="h5 mb-4">POM {{fy}} - Worksheet Managment </div>
         </div>
       </div>
       <div class="row">
         <div class="col-9">
-          <p>Table for data verification only</p>
-          <table cellpadding="20px" border="1px">
-            <tr>
-              <th>Worksheet Name</th><th>Version</th><th>Created</th><th>Last Updated</th>
-            </tr>
-            <tr *ngFor="let ws of pomWorksheet">
-              <td><a  href="#" routerLink="/worksheet">{{ws.name}}</a></td>
-              <td>{{ws.version}}</td>
-              <td>{{ws.createDate | date:'MM/dd/yyyy' }}</td>
-              <td>{{ws.lastUpdateDate | date:'MM/dd/yyyy h:mma' }}</td>
-            </tr>
-          </table>
-        </div>
-        <div class="col-3">
-          <div class="pull-right">
-            <ul class="worksheet-controls">
-              <li><button class="btn btn-danger">Delete</button></li>
-              <li><button class="btn btn-secondary">Duplicate</button></li>
-              <li><button class="btn btn-success">Export</button></li>
-              <li><button class="btn btn-primary">Import</button></li>
-              <li><button class="btn btn-secondary">Rename</button></li>
-            </ul>
-          </div>
+          <ul class="worksheet-controls mb-3">
+            <li><button class="btn btn-primary">Duplicate</button></li>
+            <li><button class="btn btn-primary">Rename</button></li>
+            <li><button class="btn btn-primary">Export</button></li>
+            <li><button class="btn btn-primary">Import</button></li>
+          </ul>
         </div>
       </div>
-
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+            id="myGrid"
+            [enableSorting]="true"
+            [enableColResize]="true"
+            [enableFilter]="false"
+            [gridAutoHeight]="true"
+            [gridOptions]="agOptions"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [columnTypes]="columnTypes"
+            [toolPanelSuppressSideButtons]="true"
+            [pagination]="true"
+            [paginationPageSize]="20"
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
+            [suppressPaginationPanel]="true"
+            (gridReady)="onGridReady($event)"
+            >
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        </div>
+      </div>
+      <span class="worksheet-lock">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+      </span>
+      <span class="worksheet-lock">
+        <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+      </span>
+      <div class="row">
+        <div class="col-12">
           <fieldset>
-            <legend>Progress Report</legend>
-            <p>Baseline 2 has been created...</p>
+            <legend>Duplicate</legend>
+              <table class="worksheet-table">
+                <tr>
+                  <td>
+                    <label class="">Create a copy of:</label>
+                  </td>
+                  <td>
+                    <span class="form-group">
+                      <input type="text" class="form-control copy-input mr-2" minlength="2" required>
+                    </span>
+                  </td>
+                  <td>
+                    <label>Version:</label>
+                  </td>
+                  <td>
+                    <span class="form-group">
+                      <input type="number" class="form-control version-input" minlength="2" required>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <div class="button-controls pull-right">
+                      <button class="btn btn-primary pull-right">Save</button>
+                      <button class="btn btn-secondary pull-right">Cancel</button>
+                    </div>
+                  </td>
+                </tr>
+              </table>
           </fieldset>
           <fieldset>
-            <legend>Enter Name of Export File</legend>
-            <div class="form-group forminput-width">
-              <input type="text" class="form-control inputfile">
-            </div>
-            <button class="btn btn-primary pull-right">
-              <span class="icon-pad">Next</span>
-              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-            </button>
+            <legend>Rename</legend>
+            <table class="worksheet-table">
+              <tr>
+                <td>
+                  <label class="">Create a copy of:</label>
+                </td>
+                <td>
+                  <span class="form-group">
+                    <input type="text" class="form-control copy-input mr-2" minlength="2" required>
+                  </span>
+                </td>
+                <td>
+                  <label>Version:</label>
+                </td>
+                <td>
+                  <span class="form-group">
+                    <input type="number" class="form-control version-input" minlength="2" required>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <label class="pull-right">To:</label>
+                </td>
+                <td>
+                  <span class="form-group">
+                    <input type="text" class="form-control copy-input mr-2" minlength="2" required>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                  <div class="button-controls pull-right">
+                    <button class="btn btn-primary pull-right">Save</button>
+                    <button class="btn btn-secondary pull-right">Cancel</button>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </fieldset>
           <fieldset>
-            <legend>Select Location for Import File and name</legend>
-            <div class="input-group forminput-width mb-3">
-              <input type="text" class="form-control" placeholder="Enter File Location" aria-label="Enter File Location" aria-describedby="basic-addon1">
-              <div class="input-group-append">
-                <span class="input-group-text">Browse</span>
-              </div>
-            </div>
-            <div class="form-group forminput-width">
-              <input type="text" placeholder="Enter Name" class="form-control inputfile">
-            </div>
-            <button class="btn btn-primary pull-right">
-              <span class="icon-pad">Next</span>
-              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-            </button>
+            <legend>Export</legend>
+            <table class="worksheet-table">
+              <tr>
+                <td>
+                  <label>Worksheet Selected:</label>
+                </td>
+                <td>
+                  <span class="form-group">
+                    <input type="text" class="form-control copy-input" minlength="2" required>
+                  </span>
+                </td>
+                <td>
+                  <label>Version:</label>
+                </td>
+                <td>
+                  <span class="form-group">
+                    <input type="number" class="form-control version-input" minlength="2" required>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="pull-right">To Folder:</label>
+                </td>
+                <td colspan="2">
+                  <div class="input-group forminput-width">
+                    <input type="text" class="form-control copy-input" aria-label="Enter File Location" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                      <span class="input-group-text">Browse</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                  <div class="button-controls pull-right">
+                    <button class="btn btn-primary pull-right">Save</button>
+                    <button class="btn btn-secondary pull-right">Cancel</button>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </fieldset>
           <fieldset>
-            <legend>Specify Desired Name</legend>
-            <div class="form-group forminput-width">
-              <input type="text" placeholder="Enter Name" class="form-control inputfile">
-            </div>
-            <button class="btn btn-primary pull-right">
-              <span class="icon-pad">Next</span>
-              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-            </button>
+            <legend>Import</legend>
+            <table class="worksheet-table">
+              <tr>
+                <td>
+                  <label class="pull-right">Select Source:</label>
+                </td>
+                <td>
+                  <div class="input-group forminput-width">
+                    <input type="text" class="form-control copy-input" aria-label="Enter File Location" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                      <span class="input-group-text">Browse</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <label class="pull-right">Select Target Worksheet:</label>
+                </td>
+                <td>
+                  <div class="form-group">
+                    <select class="form-control copy-select">
+                      <option value="">*POM Worksheet - Version</option>
+                      <option>POM 2018 Worksheet v2</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                  <div class="button-controls pull-right">
+                    <button class="btn btn-primary pull-right">Save</button>
+                    <button class="btn btn-secondary pull-right">Cancel</button>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </fieldset>
         </div>
       </div>
