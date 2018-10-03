@@ -19,25 +19,33 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <ag-grid-angular #agGrid
-                           class="ag-theme-balham"
-                           [enableSorting]="true"
-                           [enableFilter]="true"
-                           [gridAutoHeight]="true"
-                           [rowData]="data"
-                           [columnDefs]="columnDefs"
-                           [toolPanelSuppressSideButtons]="true"
-                           [suppressDragLeaveHidesColumns]="true"
-                           [pagination]="true"
-                           [paginationPageSize]="15"
-                           [suppressMovableColumns]="true"
-                           (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-                           [suppressPaginationPanel]="true">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+            id="myGrid"
+            [enableSorting]="true"
+            [enableColResize]="true"
+            [enableFilter]="false"
+            [gridAutoHeight]="true"
+            [gridOptions]="agOptions"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [columnTypes]="columnTypes"
+            [toolPanelSuppressSideButtons]="true"
+            [pagination]="true"
+            [paginationPageSize]="20"
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
+            [suppressPaginationPanel]="true"
+            (gridReady)="onGridReady($event)"
+            >
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>
       </div>
-
+      <span class="worksheet-lock">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+      </span>
       <div class="row">
         <div class="col-12">
           <fieldset>

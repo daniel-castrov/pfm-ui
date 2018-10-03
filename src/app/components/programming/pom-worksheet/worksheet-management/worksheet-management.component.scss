@@ -69,3 +69,17 @@ fieldset { padding: 20px;}
   padding: 6px 4px;
   clear: both;
 }
+
+.worksheet-lock {
+  i {
+    &.fa {
+      color: $black;
+      opacity: .9;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    &.fa:hover {
+      opacity: .5;
+    }
+  }
+}

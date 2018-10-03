@@ -23,6 +23,7 @@ export class WorksheetManagementComponent implements OnInit {
 
   private pomWorksheet:PomWorksheet[]=[];
   private fy:number;
+  private worksheet: Map<string, string> = new Map<string, string>();
   private agOptions: GridOptions;
   private columnDefs: any[];
   private rowData: any[];
@@ -55,39 +56,40 @@ export class WorksheetManagementComponent implements OnInit {
     }
     this.columnDefs = [
        {
-         headerName: 'checkbox',
+         headerName: '',
          field: 'checkbox',
-         width: 40
+         maxWidth: 35
        },
        {
          headerName: 'Worksheet Name',
-         field: 'worksheetName',
-         width: 400
+         field: 'worksheet',
+         minWidth: 450
        },
        {
          headerName: 'Version',
          field: 'version',
-         width: 100,
-
+         maxWidth: 90
        },
        {
          headerName: 'Created',
          field: 'createdOn',
-         width: 140
+         width: 140,
+         filter: "agDateColumnFilter",
        },
        {
          headerName: 'Last Updated',
          field: 'lastUpdatedOn',
-         width: 140
+         width: 140,
+         filter: "agDateColumnFilter",
        }
      ];
 
     this.rowData = [
-      { checkbox: '*', worksheetName: 'POM 18 Worksheet 1', version: '1', createdOn: 1100, lastUpdatedOn: 1100 },
-      { checkbox: '*', worksheetName: 'POM 18 Worksheet 2', version: '1', createdOn: 500, lastUpdatedOn: 1100 },
-      { checkbox: '*', worksheetName: 'POM 18 Worksheet 3', version: '1', createdOn: 5550, lastUpdatedOn: 1100 },
-      { checkbox: '*', worksheetName: 'POM 17 Worksheet 3', version: '1', createdOn: 45000, lastUpdatedOn: 1100 },
-      { checkbox: '*', worksheetName: 'POM 18 Worksheet 2', version: '1', createdOn: 50000, lastUpdatedOn: 110 }
+      { checkbox: '*', worksheet: 'POM 18 Worksheet 1', version: '1', createdOn: 'January 1, 2018', lastUpdatedOn: 'January 2, 2018' },
+      { checkbox: '*', worksheet: 'POM 18 Worksheet 2', version: '1', createdOn: 'January 2, 2018', lastUpdatedOn: 'January 5, 2018' },
+      { checkbox: '*', worksheet: 'POM 18 Worksheet 3', version: '1', createdOn: 'January 3, 2018', lastUpdatedOn: 'January 6, 2018' },
+      { checkbox: '*', worksheet: 'POM 17 Worksheet 3', version: '1', createdOn: 'January 4, 2018', lastUpdatedOn: 'January 8, 2018' },
+      { checkbox: '*', worksheet: 'POM 18 Worksheet 2', version: '1', createdOn: 'January 5, 2018', lastUpdatedOn: 'January 9, 2018' }
     ];
   }
 
