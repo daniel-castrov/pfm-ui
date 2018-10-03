@@ -18,6 +18,15 @@ import { Pom, PomWorksheet, PomWorksheetRow } from '../../../../generated';
 export class WorksheetManagementComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
+  @ViewChild("agGrid") private agGrid: AgGridNg2;
+
+  constructor(
+    private pomSvc:POMService,
+    private pomWSSvc:PomWorksheetService,
+    private globalsService: UserUtils,
+
+  ) { }
+
 
   private pomWorksheet:PomWorksheet[]=[];
   private fy:number;
@@ -71,13 +80,6 @@ export class WorksheetManagementComponent implements OnInit {
          lastUpdated: '1/1/2018'
        }
    ];
-
-  constructor(
-    private pomSvc:POMService,
-    private pomWSSvc:PomWorksheetService,
-    private globalsService: UserUtils,
-
-  ) { }
 
 
 
