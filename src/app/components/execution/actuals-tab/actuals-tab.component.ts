@@ -105,10 +105,6 @@ export class ActualsTabComponent implements OnInit {
         : (my.firstMonth + params.colDef.colId) === my.editMonth);
       var rowOk: boolean = editrows.has(params.node.rowIndex);
 
-      //console.log(params)
-      //console.log(my.firstMonth + params.colDef.colId);
-      //console.log('editsok: ' + colOk + ' ' + rowOk);
-
       return (rowOk && colOk);
     }
 
@@ -623,6 +619,35 @@ export class ActualsTabComponent implements OnInit {
   enableNextPrevButtons() {
     this.prevok = (this.firstMonth - 12 >= 0);
     this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
+  }
+
+  monthlies() : OandEMonthly[] {
+    var data: OandEMonthly[] = [];
+    // FIXME: if admin, do everything
+    if (this.isadmin) {
+      for (var i = 0; i < this.rows[0].values.length; i++) {
+        data.push({
+          executionLineId: this.exeline.id,
+          month: i,
+          committed: this.rows[2].values[i],
+          obligated: this.rows[4].values[i],
+          outlayed: this.rows[8].values[i],
+          accruals: this.rows[12].values[i]
+        });
+      }
+    }
+    else {
+      data.push({
+        executionLineId: this.exeline.id,
+        month: this.editMonth,
+        committed: this.rows[2].values[this.editMonth],
+        obligated: this.rows[4].values[this.editMonth],
+        outlayed: this.rows[8].values[this.editMonth],
+        accruals: this.rows[12].values[this.editMonth]
+      });
+    }
+
+    return data;
   }
 }
 

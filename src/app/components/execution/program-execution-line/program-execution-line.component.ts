@@ -6,6 +6,7 @@ import { Router, UrlSegment, ActivatedRoute } from '@angular/router'
 import { ExecutionService, ProgramsService, ExecutionLine, OandEService, Execution, OandEMonthly, ExecutionEvent } from '../../../generated';
 
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { ActualsTabComponent } from '../actuals-tab/actuals-tab.component';
 
 @Component({
   selector: 'program-execution-line',
@@ -14,6 +15,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 })
 export class ProgramExecutionLineComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
+  @ViewChild(ActualsTabComponent) actualstab;
   private exeline: ExecutionLine;
   private exe: Execution;
   private oandes: OandEMonthly[];
@@ -46,5 +48,29 @@ export class ProgramExecutionLineComponent implements OnInit {
         });
       });
     });
+  }
+
+  save(tag) {
+    var data: OandEMonthly[] = this.actualstab.monthlies();
+    if (this.actualstab.isadmin) {
+      this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(data => {
+        if (data.error) {
+          console.log('something went wrong');
+        }
+        else {
+          console.log('data saved');
+        }
+      });      
+    }
+    else {
+      this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
+        if (data.error) {
+          console.log('something went wrong');
+        }
+        else {
+          console.log('data saved');
+        }
+      });
+    }
   }
 }
