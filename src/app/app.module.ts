@@ -65,7 +65,6 @@ import { MyCommunitiesComponent } from './components/user-management/my-communit
 import { MyRolesComponent } from './components/user-management/my-roles/my-roles.component';
 import { NoAccessComponent } from './components/error/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
-import { RestResultInterceptor } from './components/interceptors/restResultInterceptor.componenet';
 import { NotFoundComponent } from './components/error/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
@@ -386,7 +385,6 @@ const appRoutes: Routes = [
     LibraryService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: RestResultInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
