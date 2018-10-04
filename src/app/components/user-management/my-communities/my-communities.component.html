@@ -13,6 +13,10 @@
         <j-request [allCommunities]="communitiesToJoin" [service]="joinCommunityRequestsService" [user]="user" [useOrgs]=true [header]="header"></j-request>
       </fieldset>
       <fieldset>
+        <legend>Change Organization</legend>
+        <j-request [allCommunities]="memberOfCommunities" [service]="joinCommunityRequestsService" [user]="user" [useOrgs]=true [header]="header"></j-request>
+      </fieldset>  
+      <fieldset>
         <legend>Leave Community</legend>
         <j-request [allCommunities]="communitiesToLeave" [service]="leaveCommunityRequestsService" [user]="user" [useOrgs]=false [header]="header"></j-request>
       </fieldset>

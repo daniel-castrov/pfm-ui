@@ -131,7 +131,7 @@
         <div class="card-container">
           <ul>
             <li *ngFor="let cwr of communityWithUserRoles">
-              {{ cwr.community.name }}
+              {{ cwr.community.abbreviation }}
             </li>
           </ul>
         </div>
@@ -147,7 +147,7 @@
         <div class="card-container">
           <table class="table">
             <tr *ngFor="let cwr of communityWithUserRoles">
-              <td><span class="mr-2">{{ cwr.community.name }}</span></td>
+              <td><span class="mr-2">{{ cwr.community.abbreviation }}</span></td>
               <td>
                 <label>Roles</label>
                 <div *ngIf="cwr.userRoles.length==0">(none)</div>
