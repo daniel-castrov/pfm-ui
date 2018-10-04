@@ -40,9 +40,9 @@ export class ActualsTabComponent implements OnInit {
   showPercentages: boolean = true;
   prevok: boolean = false;
   nextok: boolean = true;
-  remediation: string='1';
-  explanation: string='2';
-  fixtime: number=1;
+  remediation: string;
+  explanation: string;
+  fixtime: number = 1;
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -670,6 +670,8 @@ export class ActualsTabComponent implements OnInit {
         outlayed: this.rows[8].values[this.editMonth],
         accruals: this.rows[12].values[this.editMonth]
       };
+
+      console.log(oande);
 
       if (opct >= 0.15 || epct >= 0.15) {
         var my: ActualsTabComponent = this;

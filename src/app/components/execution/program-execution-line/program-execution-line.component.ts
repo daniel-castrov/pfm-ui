@@ -55,6 +55,9 @@ export class ProgramExecutionLineComponent implements OnInit {
     // the actuals tab might have to get more info from the user, so 
     // this function doesn't return immediately.
     this.actualstab.monthlies().subscribe(data => {
+      console.log(data);
+
+
       if (this.actualstab.isadmin) {
         this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(data => {
           if (data.error) {

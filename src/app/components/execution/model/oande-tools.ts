@@ -6,7 +6,7 @@ export class OandETools{
 
         var rets: ToaAndReleased[] = [];
         rets.push({
-            toa: exeline.toa,
+            toa: exeline.initial,
             released: 0
         });
         for (var i = 1; i < maxidx; i++) {
@@ -27,7 +27,7 @@ export class OandETools{
             var idx: number = this.convertDateToFyMonth(fy, date);
             for (var i = idx; i < maxidx; i++) {
                 rets[i].toa = el.toa;
-                // snapshots show totals for that month, no cumulative, so aggregate!
+                // snapshots show totals for that month (not cumulative) so aggregate!
                 rets[i].released += el.released;
             }
         });
