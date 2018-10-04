@@ -135,7 +135,8 @@ export class NewUfrComponent implements OnInit {
         ufr.emphases=[];
         break;
     }
-    this.router.navigate(['/ufr-view/create/', JSON.stringify(ufr)]);
+    sessionStorage.setItem('ufr', JSON.stringify(ufr));
+    this.router.navigate(['/ufr-view/create/']);
   }
 
   private async initFromShortyProgram(ufr: UFR, includeNames: boolean) {

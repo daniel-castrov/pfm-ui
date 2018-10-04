@@ -90,21 +90,13 @@
             <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Update TOAs</button>
           </ng-container>
           <ng-container *ngIf="pomIsOpen">
-              <button class="btn btn-primary" (click)="updatePom()">Update Community TOA</button>
+            <button class="btn btn-primary" (click)="updatePom()">Update Community TOA</button>
           </ng-container>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="h6">Progress Report:</div>
-          <fieldset class="mb-3">
-              <span *ngIf="tooMuchToa" class="toa-alert" role="alert">Organizational TOA(s) exceeds Community TOA</span>
-              <div *ngIf="submitted" class="loader"></div>
-          </fieldset>
+        <div class="col-auto">
+          <div *ngIf="submitted" class="loader"></div>
         </div>
       </div>
-
       <!-- Modal Dialog -->
       <div id="myModal" class="modal fade in">
         <div class="modal-dialog">
