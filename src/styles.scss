@@ -361,6 +361,11 @@ label {
   margin: 0 5px 4px 0;
 }
 
+.vertical-align {
+  display: flex;
+  align-items: center;
+}
+
 .btn-card-header:hover{
     opacity: .7;
 }
