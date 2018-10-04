@@ -5,7 +5,7 @@ export class NotifyUtil {
   public static notifyError(message){
 
     if(message.includes(" 409 ")) {
-      message = "Action failed due to conflict" + message;
+      message = "Action failed due to conflict. " + message;
     }
     $.notify({ 
       icon: 'fa fa-exclamation',
