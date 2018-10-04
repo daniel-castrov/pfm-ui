@@ -26,6 +26,7 @@ export class UpdatePomSessionComponent implements OnInit {
   columnDefs;
   columnKeys;
   rowData;
+  filterText;
   worksheets: Array<PomWorksheet>;
   selectedWorksheet: PomWorksheet = null;
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
@@ -59,6 +60,10 @@ export class UpdatePomSessionComponent implements OnInit {
       this.initDataRows();
       this.generateColumns();
     });
+  }
+
+  onFilterTextBoxChanged() {
+    this.agGrid.gridOptions.api.setQuickFilter( this.filterText );
   }
 
   initDataRows(){
