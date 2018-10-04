@@ -7,6 +7,11 @@ import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, Exec
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+
+declare const $: any;
+
 @Component({
   selector: 'actuals-tab',
   templateUrl: './actuals-tab.component.html',
@@ -35,6 +40,9 @@ export class ActualsTabComponent implements OnInit {
   showPercentages: boolean = true;
   prevok: boolean = false;
   nextok: boolean = true;
+  remediation: string='1';
+  explanation: string='2';
+  fixtime: number=1;
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -621,10 +629,20 @@ export class ActualsTabComponent implements OnInit {
     this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
   }
 
-  monthlies() : OandEMonthly[] {
-    var data: OandEMonthly[] = [];
-    // FIXME: if admin, do everything
+  checkForFix() {
+    // check if we need to get remediation information
+    var toa: number = this.rows[5].toa[this.editMonth];
+
+    var opct: number = (toa - this.rows[5].values[this.editMonth]) / toa;
+    var epct: number = (toa - this.rows[9].values[this.editMonth]) / toa;
+
+  }
+
+  monthlies() : Observable<OandEMonthly[]> {
+    var subject: Subject<OandEMonthly[]> = new Subject<OandEMonthly[]>();
+
     if (this.isadmin) {
+      var data: OandEMonthly[] = [];
       for (var i = 0; i < this.rows[0].values.length; i++) {
         data.push({
           executionLineId: this.exeline.id,
@@ -635,19 +653,37 @@ export class ActualsTabComponent implements OnInit {
           accruals: this.rows[12].values[i]
         });
       }
+
+      subject.next(data);
     }
     else {
-      data.push({
+      var toa: number = this.rows[5].toa[this.editMonth];
+
+      var opct: number = (toa - this.rows[5].values[this.editMonth]) / toa;
+      var epct: number = (toa - this.rows[9].values[this.editMonth]) / toa;
+
+      var oande: OandEMonthly = {
         executionLineId: this.exeline.id,
         month: this.editMonth,
         committed: this.rows[2].values[this.editMonth],
         obligated: this.rows[4].values[this.editMonth],
         outlayed: this.rows[8].values[this.editMonth],
         accruals: this.rows[12].values[this.editMonth]
-      });
+      };
+
+      if (opct >= 0.15 || epct >= 0.15) {
+        var my: ActualsTabComponent = this;
+        $('#explanation-modal').on('hidden.bs.modal', function (event) {
+          oande.monthsToFix = my.fixtime;
+          oande.explanation = my.explanation;
+          oande.remediation = my.remediation;
+
+          subject.next([oande]);
+        }).modal('show');
+      }
     }
 
-    return data;
+    return subject;
   }
 }
 

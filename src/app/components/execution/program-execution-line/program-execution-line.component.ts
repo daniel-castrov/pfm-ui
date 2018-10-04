@@ -7,6 +7,7 @@ import { ExecutionService, ProgramsService, ExecutionLine, OandEService, Executi
 
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ActualsTabComponent } from '../actuals-tab/actuals-tab.component';
+import { ToaAndReleased, OandETools } from '../model/oande-tools';
 
 @Component({
   selector: 'program-execution-line',
@@ -51,26 +52,27 @@ export class ProgramExecutionLineComponent implements OnInit {
   }
 
   save(tag) {
-    var data: OandEMonthly[] = this.actualstab.monthlies();
-    if (this.actualstab.isadmin) {
-      this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(data => {
-        if (data.error) {
-          console.log('something went wrong');
-        }
-        else {
-          console.log('data saved');
-        }
-      });      
-    }
-    else {
-      this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
-        if (data.error) {
-          console.log('something went wrong');
-        }
-        else {
-          console.log('data saved');
-        }
-      });
-    }
+    this.actualstab.monthlies().subscribe(data => {
+      if (this.actualstab.isadmin) {
+        this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(data => {
+          if (data.error) {
+            console.log('something went wrong');
+          }
+          else {
+            console.log('data saved');
+          }
+        });
+      }
+      else {
+        this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
+          if (data.error) {
+            console.log('something went wrong');
+          }
+          else {
+            console.log('data saved');
+          }
+        });
+      }
+    });
   }
 }
