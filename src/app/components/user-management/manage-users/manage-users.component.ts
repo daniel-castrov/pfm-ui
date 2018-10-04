@@ -161,10 +161,6 @@ export class ManageUsersComponent {
   }
 
   private joinCommunity(): void {
-
-
-    console.log(this.selectedOrganization);
-
     this.userRoleResourceService.joinCommunity(this.targetUser.id, this.selectedOrganization)
       .subscribe(data => {
         this.refresh();

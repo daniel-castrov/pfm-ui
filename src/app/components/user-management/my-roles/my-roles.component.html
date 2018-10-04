@@ -132,7 +132,7 @@
           <!-- Some UserRoleResources CANNOT be modified -->
           <div *ngIf="isNewUserRole && !canChangeResources && !isOrgBased">
             <p class="role-controls" *ngIf="!canChangeResources">
-              Resources for the <b>{{selectedRole.name}}</b> role are predeifined and cannot be modified.
+              Resources for the <b>{{selectedRole.name}}</b> role are predefined and cannot be modified.
             </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="createAssignRequest()">
