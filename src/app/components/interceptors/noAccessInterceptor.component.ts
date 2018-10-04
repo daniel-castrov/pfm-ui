@@ -19,6 +19,10 @@ export class NoAccessInterceptor implements HttpInterceptor {
         if ( err.status == 403) {
           this.router.navigate(['/no-access']);
         }
+        // handle 404 errors      
+        if ( err.status == 404) {
+          this.router.navigate(['/not-found']);
+        }
         // handle 500 errors      
         if ( err.status == 500) {
           this.router.navigate(['/no-access']);
