@@ -6,8 +6,8 @@ import { DualListComponent } from 'angular-dual-listbox';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { FeedbackComponent } from '../../feedback/feedback.component';
 import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 // Generated
 import { RestResult, Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
@@ -22,7 +22,6 @@ import { CommunityService, RoleService, UserRoleResourceService, UserService, Or
 export class ManageRolesComponent {
 
   @ViewChild(HeaderComponent) header;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   private resultError: string[] = [];
 
@@ -237,7 +236,8 @@ export class ManageRolesComponent {
 
     this.userRoleResourceService.deleteById(this.selectedURR.id).subscribe(() => { 
       this.clear(); 
-      this.feedback.success(this.getMessage(0));
+      this.submitted = true;
+      NotifyUtil.notifySuccess(this.getMessage(0));
     });
   }
 
@@ -259,17 +259,17 @@ export class ManageRolesComponent {
       }
     }
 
-    console.log( this.selectedURR );
-
     if (this.isNewUserRole){
       this.userRoleResourceService.create(this.selectedURR).subscribe(() => {
         this.clear(); 
-        this.feedback.success(this.getMessage(1));
+        this.submitted = true;
+        NotifyUtil.notifySuccess(this.getMessage(1));
       });
     } else {
       this.userRoleResourceService.update(this.selectedURR).subscribe(() => {
         this.clear(); 
-        this.feedback.success(this.getMessage(2));
+        this.submitted = true;
+        NotifyUtil.notifySuccess(this.getMessage(2));
       });
     }
   }
@@ -280,10 +280,9 @@ export class ManageRolesComponent {
     let message: string[] = [
       this.selectedUserName + " no longer has the role of " + community_role_name,
       this.selectedUserName + " has been assigned the role of " + community_role_name,
-      this.selectedUserName + "'s resource access for "+community_role_name+" has been modified"
+      this.selectedUserName + "'s resource access for " + community_role_name + " has been modified"
     ];
-    this.submitted = true;
-    return  message[messageNumber];
+    return message[messageNumber];
   }
 
   private filterByOrg(){

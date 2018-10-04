@@ -43,6 +43,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { CreateExecutionPhaseComponent } from './components/execution/create-execution-phase/create-execution-phase.component';
 import { CreatePomSessionComponent } from './components/programming/create-pom-session/create-pom-session.component';
 import { ElevationComponent } from './components/user-management/manage-self/elevation/elevation.component';
+import { ErrorDataService } from './components/error/errorData.service';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
@@ -62,9 +63,10 @@ import { ManageSelfComponent } from './components/user-management/manage-self/ma
 import { ManageUsersComponent } from './components/user-management/manage-users/manage-users.component';
 import { MyCommunitiesComponent } from './components/user-management/my-communities/my-communities.component';
 import { MyRolesComponent } from './components/user-management/my-roles/my-roles.component';
-import { NoAccessComponent } from './components/no-access/no-access.component';
+import { NoAccessComponent } from './components/error/no-access/no-access.component';
 import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
+import { RestResultInterceptor } from './components/interceptors/restResultInterceptor.componenet';
+import { NotFoundComponent } from './components/error/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
 import { PlanningComponent } from './components/planning/planning.component';
@@ -74,6 +76,7 @@ import { UfrVariantsTabComponent } from './components/ufr/ufr-view/ufr-variants-
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
+import { RestResultErrorComponent } from './components/error/restresult-error/restresult-error.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SpendPlansTabComponent } from './components/execution/spend-plans-tab/spend-plans-tab.component';
 import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
@@ -183,6 +186,7 @@ const appRoutes: Routes = [
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
+  {path:'restresult-error', component:RestResultErrorComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
@@ -271,6 +275,7 @@ const appRoutes: Routes = [
     ProgramTabComponent,
     ProgrammaticRequestsComponent,
     RequestComponent,
+    RestResultErrorComponent,
     SelectProgramRequestComponent,
     SetEppComponent,
     SpendPlansTabComponent,
@@ -351,6 +356,7 @@ const appRoutes: Routes = [
     CreateUserRequestService,
     DropRoleRequestService,
     ElevationService,
+    ErrorDataService,
     UserService,
     TagsService,
     Injectables,
@@ -379,7 +385,8 @@ const appRoutes: Routes = [
     OandEService,
     LibraryService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
-    { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true, },
+    { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: RestResultInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
