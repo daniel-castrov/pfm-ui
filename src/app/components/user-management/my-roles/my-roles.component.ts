@@ -61,12 +61,11 @@ export class MyRolesComponent {
   private cannotChangeResources:string [] = ["User_Approver", "POM_Manager","Funds_Requestor", "Program_Manager" ];
   private canChangeResources: boolean;
 
-  private orgBasedRoles: string [] = ["Organization_Member", "Funds_Requestor", "Program_Manager" ];
+  private orgBasedRoles: string [] = ["Funds_Requestor", "Program_Manager" ];
   private isOrgBased: boolean;
 
-  private cannotUnassign: string [] = ["Organization_Member", "User" ];
-  private canUnassign: boolean;
-
+  private hiddenRoles: string [] = ["Organization_Member", "User" ];
+  
   // For the angular-dual-listbox
   private availablePrograms: Array<ProgramWithFullName> = [];
   private filteredAvailablePrograms: Array<ProgramWithFullName> = [];
@@ -133,8 +132,9 @@ export class MyRolesComponent {
 
         this.resultError.push(data[3].error);
         this.currentRoles =data[3].result;
+        this.currentRoles = this.currentRoles.filter( role => !this.hiddenRoles.includes( role.name ) );
+
         this.currentRoles.forEach( role => {
-          
           this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
             this.currentUser.id, this.currentUser.currentCommunityId, role.name
           ).subscribe( ( ur ) => { 
@@ -157,7 +157,8 @@ export class MyRolesComponent {
 
         // Get all the roles
         this.resultError.push(data[4].error);
-        this.roles=data[4].result;
+        this.roles=data[4].result;  
+        this.roles = this.roles.filter( role => !this.hiddenRoles.includes( role.name ) );
 
         // get any existing add requests
         this.resultError.push(data[5].error);
@@ -185,7 +186,6 @@ export class MyRolesComponent {
     } else {
       this.requestExists = false;
       this.getURR();
-
     }
   }
 
@@ -201,11 +201,6 @@ export class MyRolesComponent {
     this.isOrgBased = false;
     if ( this.orgBasedRoles.includes( this.selectedRole.name ) ){
       this.isOrgBased = true;
-    }
-
-    this.canUnassign = true;
-    if ( this.cannotUnassign.includes( this.selectedRole.name ) ){
-      this.canUnassign = false;
     }
 
     this.isVisible = true;

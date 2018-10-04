@@ -50,11 +50,10 @@ export class ManageRolesComponent {
   private cannotChangeResources:string [] = ["User_Approver", "POM_Manager", "Funds_Requestor", "Program_Manager" ];
   private canChangeResources: boolean;
 
-  private orgBasedRoles: string [] = ["Organization_Member", "Funds_Requestor", "Program_Manager" ];
+  private orgBasedRoles: string [] = ["Funds_Requestor", "Program_Manager" ];
   private isOrgBased: boolean;
 
-  private cannotUnassign: string [] = ["Organization_Member", "User" ];
-  private canUnassign: boolean;
+  private hiddenRoles: string [] = ["Organization_Member", "User" ];
 
   private selectedUserName: string;
   private submittedMessage = "no message";
@@ -136,6 +135,7 @@ export class ManageRolesComponent {
       this.roles = data[0].result;
       this.resultError.push(data[1].error);
       this.users = data[1].result;
+      this.roles = this.roles.filter( role => !this.hiddenRoles.includes( role.name ) );
 
       // See if the role and and user are already in the params. 
       this.roles.forEach( role => { 
@@ -170,11 +170,6 @@ export class ManageRolesComponent {
     this.isOrgBased = false;
     if ( this.orgBasedRoles.includes( this.selectedRole.name ) ){
       this.isOrgBased = true;
-    }
-
-    this.canUnassign = true;
-    if ( this.cannotUnassign.includes( this.selectedRole.name ) ){
-      this.canUnassign = false;
     }
 
     this.isVisible = true;
