@@ -3,7 +3,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { FeedbackComponent } from '../../feedback/feedback.component';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
+
 // Generated
 import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest, DropRoleRequest } from '../../../generated';
 import { UserService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
@@ -16,7 +17,6 @@ import { UserService, RoleService, UserRoleResourceService, ProgramsService, Ass
 export class AccessChangeApprovalComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   resultError: string[] = [];
   requestId: string;
@@ -133,7 +133,7 @@ export class AccessChangeApprovalComponent implements OnInit {
       await this.requestService.status(status, this.request.id).toPromise();
       this.router.navigate(['./home']);
     } catch (e) {
-      this.feedback.exception(e.message);
+      NotifyUtil.notifyError(e.message);
     }
   }
 }

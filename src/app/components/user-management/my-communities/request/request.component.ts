@@ -1,10 +1,9 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { NotifyUtil } from '../../../../utils/NotifyUtil';
 
 // Generated
 import { Community, RestResult, User, Organization, OrganizationService } from '../../../../generated';
 import { HeaderComponent } from '../../../header/header.component';
-import { FeedbackComponent } from '../../../feedback/feedback.component';
 
 @Component({
   selector: 'j-request',
@@ -13,7 +12,7 @@ import { FeedbackComponent } from '../../../feedback/feedback.component';
 })
 export class RequestComponent implements OnChanges {
 
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
+
   @Input() allCommunities: Community[];
   @Input() user: User;
   @Input() service: any;
@@ -57,11 +56,11 @@ export class RequestComponent implements OnChanges {
     if (this.useOrgs){ request.organizationId=this.selectedOrg.id; }
     try {
       await this.service.create(request).toPromise();
-      this.feedback.success("You will receive an email once your request is processed.");
+      NotifyUtil.notifySuccess("You will receive an email once your request is processed.");
       this.updateRequestedCommuntyIds();
       this.header.refreshActions();
     } catch(e) {
-      this.feedback.exception(e.message);
+      NotifyUtil.notifyError(e.message);
     }
     this.selectedCommunity=null;
     this.selectedOrg=null;
