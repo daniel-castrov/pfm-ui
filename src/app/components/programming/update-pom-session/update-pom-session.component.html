@@ -4,27 +4,38 @@
     <div class="col-12">
       <div class="row">
         <div class="col-6" id="update-pom-session">
-          <div class="h5 mb-4">POM 2019 Session Update</div>
+          <div class="h5 mb-4">POM {{fy}} Session Update</div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-3">
-          <span class="form-group inline-name">
-            <label class="mb-1">Worksheets</label>
-            <select class="form-control-sm worksheet-width">
-               <option value=""></option>
-               <option value="">Worksheet v1</option>
-             </select>
-           </span>
-           <div class="timestamp mt-2">Last Update on 3/12/2108</div>
-         </div>
-         <div class="col-5">
-           <span class="form-group">
-             <label class="mb-1">Area to enter more specific notes</label>
-             <textarea cols="30" rows="1" wrap="physical" class="form-control"></textarea>
-           </span>
+          <div class="row">
+            <div class="col-auto">
+              <span class="form-group inline-name">
+                <select [(ngModel)]="selectedWorksheet" (change)="onWorksheetSelected()" class="form-control-sm worksheet-width">
+                  <option value="null" disabled selected>Select Worksheet</option>
+                  <option *ngFor="let w of worksheets" [ngValue]="w">{{w.name}}</option>
+                </select>
+              </span>
+            </div>
+            <div *ngIf="selectedWorksheet" class="col-auto timestamp">
+              Last Update on {{selectedWorksheet.lastUpdateDate | date:'MM/dd/yyyy'}}
+            </div>
+          </div>
         </div>
-        <div class="col-2">
+        <div *ngIf="selectedWorksheet" class="col-auto">
+          <span class="form-group inline-name">
+            <label for="reasonCode" style="float: left;margin-top: 3px !important;">Reason Code:</label>
+            <select id="reasonCode" style="float: right" class="form-control-sm worksheet-width">
+              <option value="null" disabled selected>Select a reason code</option>
+              <option>Worksheet code 1</option>
+              <option>Worksheet code 2</option>
+              <option>Worksheet code 3</option>
+              <option>Worksheet code 4</option>
+            </select>
+          </span>
+        </div>
+        <div *ngIf="selectedWorksheet" class="col-auto">
           <div class="pull-right pom-controls">
             <span>
               <button class="btn btn-primary">Update</button>
@@ -32,272 +43,95 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row main-content">
-      <div class="col-lg-10 col-md-12">
-        <tabset class="pom-tab-style" role="tablist">
-          <tab heading="Bulk" id="tab1" role="tablist">
-            <bulk-tab role="tabpanel"></bulk-tab>
-          </tab>
-          <tab heading="Transfer" id="tab2">
-            <transfer-tab role="tabpanel"></transfer-tab>
-          </tab>
-          <tab heading="Calculate" id="tab3">
-            <calculate-tab role="tabpanel"></calculate-tab>
-          </tab>
-        </tabset>
+      <div *ngIf="selectedWorksheet" class="row">
+        <div class="col-md-6">
+          <fieldset>
+            <legend>Bulk changes</legend>
+            <div class="row">
+              <div class="col-auto">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bulkType" id="percentage" value="percentage" checked>
+                  <label class="form-check-label" for="percentage">
+                    % change
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="bulkType" id="fixed" value="option2">
+                  <label class="form-check-label" for="fixed">
+                    fixed $
+                  </label>
+                </div>
+              </div>
+              <div class="col-auto vertical-align">
+                <input type="number"/>
+              </div>
+              <div class="col-auto vertical-align">
+                <button class="btn btn-primary">Apply to visible cells</button>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div *ngIf="selectedWorksheet" class="col-md-6 pt-3 pb-3">
+          <span class="form-group">
+            <textarea placeholder="Area to enter more specific notes" wrap="physical" class="h-100 form-control"></textarea>
+          </span>
+        </div>
+      </div>
+      <div *ngIf="selectedWorksheet" class="row mb-3">
+        <div class="col-12">
+          <table class="summary-table row-light pull-right mb-2">
+            <tbody>
+            <tr class="font-weight-bold">
+              <td class="text-right large-column">Allocated TOA</td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right">-</td>
+            </tr>
+            <tr>
+              <td class="text-right large-column">Total Resourced</td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right">-</td>
+            </tr>
+            <tr>
+              <td class="text-right large-column">Delta</td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right"></td>
+              <td class="text-right exceed-sum">1,707</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div *ngIf="selectedWorksheet" class="row">
+        <div class="col-12">
+          <div>
+            <ag-grid-angular #agGrid
+                             class="ag-theme-balham group-header-white"
+                             [gridAutoHeight]="true"
+                             [toolPanelSuppressSideButtons]="true"
+                             [suppressMovableColumns]="true"
+                             [suppressRowTransform]="true"
+                             [showToolPanel]="false"
+                             [enableSorting]="true"
+                             [enableFilter]="true"
+                             [rowData]="rowData"
+                             [singleClickEdit]="true"
+                             [stopEditingWhenGridLosesFocus]="true"
+                             (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row mb-3">
-    <div class="col-md-10 col-sm-12">
-      <table class="summary-table row-light pull-right mb-2">
-        <tbody>
-          <tr class="font-weight-bold">
-            <td class="text-right large-column">Allocated TOA</td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr>
-            <td class="text-right large-column">Total Resourced</td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right">-</td>
-          </tr>
-          <tr>
-            <td class="text-right large-column">Delta</td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-            <td class="text-right exceed-sum">1,707</td>
-          </tr>
-        </tbody>
-      </table>
-    <div id="" class="table-editable">
-      <table class="update-pom-table dark-table-border pull-right">
-        <thead>
-          <tr>
-            <th class="large-column">Core Capability</th>
-            <th class="header-column-width">Parent Prog</th>
-            <th class="header-column-width">BA</th>
-            <th class="header-column-width">Item</th>
-            <th class="header-column-width">Op Agency</th>
-            <th class="header-column-width">FY19</th>
-            <th class="header-column-width">FY20</th>
-            <th class="header-column-width">FY21</th>
-            <th class="header-column-width">FY22</th>
-            <th class="header-column-width">FY23</th>
-            <th class="header-column-width">FY19 - FY23</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-          <tr>
-            <td class="large-column">-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-            <td contenteditable="true" class="editable-field"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
 </div>
