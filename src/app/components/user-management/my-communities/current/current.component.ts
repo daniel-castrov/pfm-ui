@@ -55,7 +55,8 @@ export class CurrentComponent {
         this._user = data2.result;
         this.updateCommunitiesToSelectFrom();
         this.header.refreshActions();
-        delete this.selectedCommunityId;
+        //delete this.selectedCommunityId;
+        this.selectedCommunityId=null;
         this.orgService.getById(this._user.organizationId).subscribe( org => {
           this.currentOrg = org.result;
         });
@@ -65,6 +66,7 @@ export class CurrentComponent {
   }
 
   private updateCommunitiesToSelectFrom(): void {
+    this.selectedCommunityId=null;
     this.communitiesToSelectFrom = this.memberOfCommunities.filter(community => community.id != this._user.currentCommunityId);
   }
 }

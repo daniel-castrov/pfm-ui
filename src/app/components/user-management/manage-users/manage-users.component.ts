@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
+import { CommunityWithRolesAndOrgs } from './CommunityWithRolesAndOrgs';
+
 
 // Generated
 import { User } from '../../../generated/model/user';
@@ -34,7 +36,7 @@ export class ManageUsersComponent {
   private targetUser: User;
 
   // this user's roles and all roles in a community
-  private communityWithUserRoles: CommWithRoles[] = [];
+  private communityWithUserRoles: CommunityWithRolesAndOrgs[] = [];
 
   // The name of the role we are assigning the targetUser to
   private addedroleId: string;
@@ -58,7 +60,7 @@ export class ManageUsersComponent {
   private isdEditMode: boolean[] = [];
 
   // Any error from a rest service
-  private resultError: string[]=[];
+  private resultError: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -89,28 +91,40 @@ export class ManageUsersComponent {
       this.resultError.push(data[0].error);
       this.targetUser = data[0].result;
 
-      let allCommunities: Community[] = [];
-
       this.resultError.push(data[1].error);
-      allCommunities = data[1].result;
-
+      let allCommunities = data[1].result;
+      
       for (let comm of allCommunities) {
-        let resultUserRoleResources: RestResult;
-        let s = this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id);
-        s.subscribe(c => {
-          resultUserRoleResources = c;
-          this.resultError.push(resultUserRoleResources.error);
 
-          // push the community if at least one role and take it out of avail
-          if ( resultUserRoleResources.result.length>0 ){
-            this.communityWithUserRoles.push(new CommWithRoles(comm, resultUserRoleResources.result));
-            for (var i =0; i < allCommunities.length; i++){
-              if ( allCommunities[i].id === comm.id ){
-                allCommunities.splice(i,1);
-              }
-            }
+        Observable.forkJoin([
+        this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id),
+        this.organizationService.getByCommunityId(comm.id)
+        ]).subscribe(data => {
+
+          this.resultError.push(data[0].error);
+          let roles = data[0].result;
+
+          this.resultError.push(data[1].error);
+          let allOrganizations = data[1].result;
+
+          if (roles.length > 0) {
+
+            this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
+              this.targetUser.id, comm.id, "Organization_Member")
+              .subscribe( data =>{
+                let commOrgId = data.result.resourceIds[0];
+                let commOrgs = allOrganizations.filter(org => org.communityId == comm.id);
+                this.communityWithUserRoles.push(
+                  new CommunityWithRolesAndOrgs(comm, roles, commOrgs, commOrgs.find( org => org.id == commOrgId))
+                );
+                for (var i = 0; i < allCommunities.length; i++) {
+                  if (allCommunities[i].id === comm.id) {
+                    allCommunities.splice(i, 1);
+                  }
+                }
+            });
           }
-          this.availCommunities=allCommunities;
+          this.availCommunities = allCommunities;
         });
       }
       this.reftargetUser = JSON.parse(JSON.stringify(this.targetUser));
@@ -128,8 +142,8 @@ export class ManageUsersComponent {
 
   // set a section to edit mode
   private editMode(sectionnumber): void {
-    this.selectedJoinCommunity=null;
-    this.selectedOrganization=null;
+    this.selectedJoinCommunity = null;
+    this.selectedOrganization = null;
     this.resetEditMode();
     this.isdEditMode[sectionnumber] = true;
   }
@@ -147,51 +161,56 @@ export class ManageUsersComponent {
   }
 
   private joinCommunity(): void {
-   
     this.userRoleResourceService.joinCommunity(this.targetUser.id, this.selectedOrganization)
-      .subscribe( data => {
+      .subscribe(data => {
         this.refresh();
-      });
+    });
   }
 
-  private leaveCommunity(cwr:CommWithRoles): void {
+  private leaveCommunity(cwr: CommunityWithRolesAndOrgs): void {
 
-    let userRole:Role = cwr.userRoles.find( role => role.name == "User" );
+    let userRole: Role = cwr.userRoles.find(role => role.name == "User");
     this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
-      this.targetUser.id, userRole.communityId, "User"
-    ).subscribe( data => {
-      let urr:UserRoleResource = data.result;  
-      this.userRoleResourceService.deleteById(urr.id).subscribe( data=> {
-      this.refresh();
+      this.targetUser.id, cwr.community.id, "User"
+    ).subscribe(data => {
+      let urr: UserRoleResource = data.result;
+      this.userRoleResourceService.deleteById(urr.id).subscribe(data => {
+        this.refresh();
       });
     });
   }
 
-  private editRoles( commid, roleid, userid ){
+  private changeOrg(cwr: CommunityWithRolesAndOrgs): void {
+
+    if (cwr.org.id != this.targetUser.organizationId) {
+      
+      this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
+        this.targetUser.id, cwr.community.id, "Organization_Member")
+        .subscribe(data => {
+          let urr: UserRoleResource = data.result;
+          urr.resourceIds = [cwr.org.id];
+          this.userRoleResourceService.update(urr).subscribe(data => {
+            this.refresh();
+          })
+        });
+    }
+  }
+
+  private editRoles(commid, roleid, userid) {
     this.router.navigate(['/roles', commid, roleid, userid]);
   }
 
   private getOrganizations(): void {
     this.organizationService.getByCommunityId(this.selectedJoinCommunity.id)
-    .subscribe( data => this.organizations= data.result );
+      .subscribe(data => this.organizations = data.result);
   }
 
-  private refresh(){
-    this.communityWithUserRoles=[];
-    this.selectedJoinCommunity=null;
-    this.selectedOrganization=null;
+  private refresh() {
+    this.communityWithUserRoles = [];
+    this.selectedJoinCommunity = null;
+    this.selectedOrganization = null;
     this.initTargetUserData();
   }
 
 }
 
-class CommWithRoles {
-
-  community: Community;
-  userRoles: Role[] = [];
-
-  constructor(c: Community, ur: Role[]) {
-    this.community = c;
-    this.userRoles = ur;
-  }
-}

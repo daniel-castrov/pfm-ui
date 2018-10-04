@@ -3,7 +3,6 @@ import { ProgrammaticRequest } from '../../../../generated/model/programmaticReq
 import { ProgramType } from '../../../../generated/model/programType';
 import { PRUtils } from '../../../../services/pr.utils.service';
 import { AutoValuesService } from './AutoValues.service';
-import { FeedbackComponent } from '../../../feedback/feedback.component';
 import { User } from '../../../../generated/model/user';
 import { UserUtils } from '../../../../services/user.utils';
 import { PB } from '../../../../generated/model/pB';
@@ -37,7 +36,6 @@ import {CellEditor} from "../../../../utils/CellEditor";
 })
 export class FundsTabComponent implements OnChanges {
 
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @ViewChild("agGridParent") private agGridParent: AgGridNg2;
   @ViewChild("agGridSiblings") private agGridSiblings: AgGridNg2;
