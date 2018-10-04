@@ -3,15 +3,13 @@ import { ViewEncapsulation } from '@angular/core';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
-import {Pom, POMService, PomWorksheetService} from "../../../generated";
+import {POMService, PomWorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 import {PomWorksheet} from "../../../generated/model/pomWorksheet";
 import {FormatterUtil} from "../../../utils/formatterUtil";
-import {GridType} from "../program-request/funds-tab/GridType";
-import {PhaseType} from "../select-program-request/UiProgrammaticRequest";
 import {AgGridNg2} from "ag-grid-angular";
-import {DataRow} from "../program-request/funds-tab/DataRow";
 import {PomWorksheetRow} from "../../../generated/model/pomWorksheetRow";
+import {CellEditor} from "../../../utils/CellEditor";
 
 @Component({
   selector: 'update-pom-session',
@@ -30,6 +28,7 @@ export class UpdatePomSessionComponent implements OnInit {
   rowData;
   worksheets: Array<PomWorksheet>;
   selectedWorksheet: PomWorksheet = null;
+  components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
@@ -56,8 +55,10 @@ export class UpdatePomSessionComponent implements OnInit {
   }
 
   onWorksheetSelected(){
-    this.initDataRows();
-    this.generateColumns();
+    setTimeout(() => {
+      this.initDataRows();
+      this.generateColumns();
+    });
   }
 
   initDataRows(){
@@ -65,7 +66,7 @@ export class UpdatePomSessionComponent implements OnInit {
     this.selectedWorksheet.rows.forEach((value: PomWorksheetRow) => {
       let row = {
         coreCapability: value.coreCapability,
-        programId: value.programRequestId,
+        programId: value.programRequestFullname,
         fundingLine: value.fund
       };
       data.push(row);
@@ -183,7 +184,7 @@ export class UpdatePomSessionComponent implements OnInit {
       headerTooltip: 'Future Years Defense Program Total',
       suppressMenu: true,
       suppressToolPanel: true,
-      maxWidth: 92,
+      maxWidth: 100,
       cellClass: 'text-right',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
@@ -194,12 +195,12 @@ export class UpdatePomSessionComponent implements OnInit {
     this.agGrid.api.sizeColumnsToFit();
   }
 
-  getTotal(pr, columnKeys): number {
+  getTotal(row, columnKeys): number {
     let result = 0;
     columnKeys.forEach(year => {
       if(year >= this.fy) {
-        let amount = pr.fundingLine.funds[year];
-        result += isNaN(amount)? 0 : amount;
+        let amount = row.fundingLine.funds[year];
+        result += isNaN(amount)? 0 : Number(amount);
       }
     });
     return result;
