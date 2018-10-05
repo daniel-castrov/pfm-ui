@@ -55,14 +55,15 @@ export class ProgramExecutionLineComponent implements OnInit {
   save(tag) {
     // the actuals tab might have to get more info from the user, so 
     // this function doesn't return immediately.
-    this.actualstab.monthlies().subscribe(data => {
+    var obs = this.actualstab.monthlies().subscribe(data => {
       if (this.actualstab.isadmin) {
-        this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(data => {
-          if (data.error) {
-            NotifyUtil.notifyError(data.error);
+        console.log(data);
+        this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(d2 => {
+          if (d2.error) {
+            NotifyUtil.notifyError(d2.error);
           }
           else {
-            console.log('data saved');
+            NotifyUtil.notifySuccess('Data saved');
           }
         });
       }
@@ -72,7 +73,7 @@ export class ProgramExecutionLineComponent implements OnInit {
             NotifyUtil.notifyError(data.error);
           }
           else {
-            console.log('data saved');
+            NotifyUtil.notifySuccess('Data saved');
           }
         });
       }
