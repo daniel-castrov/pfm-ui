@@ -5,7 +5,7 @@
         <select class="form-control-sm" name="communityJoinSelector" [(ngModel)]="selectedCommunity" (change)="getOrganizations()">
             <option value="null" disabled selected>Select Community</option>
             <option *ngFor="let community of availableCommunities" [ngValue]="community">
-            {{community.name}}
+            {{community.abbreviation}}
           </option>
         </select>
       </div>
@@ -28,7 +28,7 @@
         <option *ngFor="let community of requestedCommunities"
                 [class.current-community]="community.id==user.currentCommunityId"
                 [disabled]="true">
-          {{community.name}}
+          {{community.abbreviation}}
         </option>
       </select>
     </td>
