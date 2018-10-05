@@ -1,7 +1,5 @@
 .line {
     fill: none;
-    stroke: #ffab00;
-    stroke-width: 3;
 }
 
 .overlay {
@@ -15,7 +13,27 @@
     stroke: #fff;
 }
 
-  .focus circle {
+.line-expplan {
+  fill: none;
+  stroke: orange;
+  stroke-width: 3;
+}
+
+.dot-expplan {
+  fill: orange;
+}
+
+.line-objplan {
+  fill: none;
+  stroke: blue;
+  stroke-width: 3;
+}
+
+:host( .dot-objplan ) {
+  fill: blue;
+}
+
+.focus circle {
   fill: none;
   stroke: steelblue;
 }

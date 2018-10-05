@@ -512,7 +512,7 @@ export class ActualsTabComponent implements OnInit {
 
     // go through all our deltas and calculate toas and released
     var toasAndReleaseds: ToaAndReleased[]
-      = OandETools.calculateToasAndReleaseds(this.exeline, this._deltas,
+      = OandETools.calculateToasAndReleaseds(this.exeline, this.deltas,
         this.rows[0].values.length, this.exe.fy);
 
     for (var i = 0; i < this.rows[0].values.length; i++) {
