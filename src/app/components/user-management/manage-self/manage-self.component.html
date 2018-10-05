@@ -29,10 +29,22 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>First Name: {{ currentUser?.firstName }}</li>
-            <li>Last Name: {{ currentUser?.lastName }}</li>
-            <li>Email: {{currentUser?.communication.primaryEmail}}</li>
-            <li>Phone: {{currentUser?.communication.primaryPhone}}</li>
+            <li>
+              <label>First Name:</label>
+                {{ currentUser?.firstName }}
+            </li>
+            <li>
+              <label>Last Name:</label>
+            {{ currentUser?.lastName }}
+          </li>
+            <li>
+              <label>Email:</label>
+              {{currentUser?.communication.primaryEmail}}
+            </li>
+            <li>
+              <label>Phone:</label>
+              {{currentUser?.communication.primaryPhone}}
+            </li>
           </ul>
         </div>
 
@@ -41,9 +53,18 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>Default Color: {{ currentUser?.preferences.defaultColor }} </li>
-            <li>Clock: {{ currentUser?.preferences.clock }} </li>
-            <li>Landing Page: {{ currentUser?.preferences.landingPage }} </li>
+            <li>
+              <label>Default Color:</label>
+              {{ currentUser?.preferences.defaultColor }}
+            </li>
+            <li>
+              <label>Clock:</label>
+              {{ currentUser?.preferences.clock }}
+            </li>
+            <li>
+              <label>Landing Page:</label>
+              {{ currentUser?.preferences.landingPage }}
+            </li>
           </ul>
         </div>
         <j-elevation [header]="header"></j-elevation>
@@ -63,19 +84,19 @@
         <div class="card-container">
           <ul>
             <li>
-              First Name:
+              <label>*First Name:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="currentUser.firstName">
             </li>
             <li>
-              Last Name:
+              <label>*Last Name:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="currentUser.lastName">
             </li>
             <li>
-              Email:
+              <label>*Email:</label>
               <input class="form-control form-input" [(ngModel)]="currentUser?.communication.primaryEmail" placeholder="value">
             </li>
             <li>
-              Phone:
+            <label>*Phone:</label>
               <input class="form-control form-input" [(ngModel)]="currentUser?.communication.primaryPhone" placeholder="value1">
             </li>
           </ul>
@@ -85,13 +106,16 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>Default Color:
+            <li>
+              <label>Default Color:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="currentUser.preferences.defaultColor">
             </li>
-            <li>Clock:
+            <li>
+              <label>Clock:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="currentUser.preferences.clock">
             </li>
-            <li>Landing Page:
+            <li>
+              <label>Landing Page:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="currentUser.preferences.landingPage">
             </li>
           </ul>

@@ -30,10 +30,10 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>First Name: {{ targetUser?.firstName }}</li>
-            <li>Last Name: {{ targetUser?.lastName }}</li>
-            <li>Email: {{targetUser?.communication.primaryEmail}}</li>
-            <li>Phone: {{targetUser?.communication.primaryPhone}}</li>
+            <li><label>First Name:</label> {{ targetUser?.firstName }}</li>
+            <li><label>Last Name:</label> {{ targetUser?.lastName }}</li>
+            <li><label>Email:</label> {{targetUser?.communication.primaryEmail}}</li>
+            <li><label>Phone:</label> {{targetUser?.communication.primaryPhone}}</li>
           </ul>
         </div>
       </div>
@@ -52,21 +52,21 @@
         <div class="card-container">
           <ul>
             <li>
-              <span>First Name:</span>
+              <label>*First Name:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="targetUser.firstName">
               <span>
                 <input type="checkbox" class="status-checkbox" name="isactive" [(ngModel)]="targetUser.suspended" />Suspended</span>
             </li>
             <li>
-              Last Name:
+              <label>*Last Name:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="targetUser.lastName">
             </li>
             <li>
-              Email:
+              <label>*Email:</label>
               <input class="form-control form-input" [(ngModel)]="targetUser?.communication.primaryEmail" placeholder="value">
             </li>
             <li>
-              Phone:
+              <label>*Phone:</label>
               <input class="form-control form-input" [(ngModel)]="targetUser?.communication.primaryPhone" placeholder="value1">
             </li>
           </ul>
@@ -77,7 +77,7 @@
       <!-- PREF SECTION 1 - VIEW-->
       <div *ngIf="!isdEditMode[1]">
         <div class="card-header">
-          Preferences:
+          <label>Preferences:</label>
           <button class="btn-card-header" title="Edit" (click)="editMode(1)">
             <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
             Edit
@@ -85,9 +85,18 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>Default Color: {{ targetUser?.preferences.defaultColor }} </li>
-            <li>Clock: {{ targetUser?.preferences.clock }} </li>
-            <li>Landing Page: {{ targetUser?.preferences.landingPage }} </li>
+            <li>
+              <label>Default Color:</label>
+              {{ targetUser?.preferences.defaultColor }}
+            </li>
+            <li>
+              <label>Clock:</label>
+              {{ targetUser?.preferences.clock }}
+            </li>
+            <li>
+              <label>Landing Page:</label>
+              {{ targetUser?.preferences.landingPage }}
+            </li>
           </ul>
           <br>
         </div>
@@ -95,7 +104,7 @@
       <!-- PREF SECTION 1 - EDIT-->
       <div *ngIf="isdEditMode[1]">
         <div class="card-header">
-          Preferences:
+          <label>Preferences:</label>
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
           </button>
@@ -105,13 +114,18 @@
         </div>
         <div class="card-container">
           <ul>
-            <li>Default Color:
+            <li>
+              <label>Default Color:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="targetUser.preferences.defaultColor">
             </li>
-            <li>Clock:
+            <li>
+              <label>Clock:</label>
               <input class="form-control form-input" type="text" [(ngModel)]="targetUser.preferences.clock">
             </li>
-            <li>Landing Page:
+            <li>
+              <label>
+                Landing Page:
+              </label>
               <input class="form-control form-input" type="text" [(ngModel)]="targetUser.preferences.landingPage">
             </li>
           </ul>
@@ -122,7 +136,7 @@
       <!-- Community SECTION 2 - VIEW-->
       <div *ngIf="!isdEditMode[2]">
         <div class="card-header">
-          Communities:
+          <label>Communities:</label>
           <button class="btn-card-header" title="Edit" (click)="editMode(2)">
             <i class="fa fa-pencil icon-pad" aria-hidden="true"></i>
             Edit
@@ -139,7 +153,7 @@
       <!-- Community SECTION 3 - EDIT-->
       <div *ngIf="isdEditMode[2]">
         <div class="card-header">
-          Communities:
+          <label>Communities:</label>
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Close
           </button>
@@ -156,7 +170,7 @@
                       {{role.name}}
                   </button>
                 </div>
-              </td>  
+              </td>
               <td>
                 <label>Organization</label>
                 <div>
@@ -169,21 +183,19 @@
               <td>
                 <button class="btn-card-header" title="changeOrgButton" (click)="changeOrg(cwr)">
                   Change Organization
-                </button>  
-                <br/>            
+                </button>
+                <br/>
                 <button class="btn-card-header" title="leaveCommunityButton" (click)="leaveCommunity(cwr)">
                   Leave Community
                 </button>
               </td>
             </tr>
             <tr>
-
               <td colspan="3">
                 <select class="form-control-sm"  name="joinCommunitySelector" [(ngModel)]="selectedJoinCommunity" (change)="getOrganizations()">
-                  <option value="null" disabled selected>Select Community</option>               
+                  <option value="null" disabled selected>Select Community</option>
                   <option *ngFor="let community of availCommunities" [ngValue]="community">{{ community.name }}</option>
                 </select>
-
                 <select class="form-control-sm"  name="orgMemberSelector" [(ngModel)]="selectedOrganization">
                   <option value="null" disabled selected>Select Organization</option>
                   <option *ngFor="let org of organizations" [ngValue]="org">{{ org.abbreviation }}</option>
