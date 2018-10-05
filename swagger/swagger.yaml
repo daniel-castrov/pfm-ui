@@ -2473,9 +2473,9 @@ paths:
       description: "Returns an execution line"
       produces:
       - "application/json"
-  /executionlines/{lineId}/monthlysnapshots:
+  /executionlines/{lineId}/monthlydeltas:
     get:
-      operationId: "getExecutionLineMonthlySnapshots"
+      operationId: "getExecutionLineMonthlyDeltas"
       parameters:
       - name: "lineId"
         in: "path"

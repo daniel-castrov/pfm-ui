@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { HeaderComponent } from '../../header/header.component'
 import { Router, UrlSegment, ActivatedRoute } from '@angular/router'
 import { ExecutionService, ProgramsService, ExecutionLine, OandEService, Execution, OandEMonthly, ExecutionEvent } from '../../../generated';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ActualsTabComponent } from '../actuals-tab/actuals-tab.component';
@@ -20,7 +21,7 @@ export class ProgramExecutionLineComponent implements OnInit {
   private exeline: ExecutionLine;
   private exe: Execution;
   private oandes: OandEMonthly[];
-  private snapshotMap: Map<Date, ExecutionLine>;
+  private deltaMap: Map<Date, ExecutionLine>;
   private program: string;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
@@ -34,14 +35,14 @@ export class ProgramExecutionLineComponent implements OnInit {
       forkJoin([
         this.exesvc.getExecutionLineById(exelineid),
         this.oandesvc.getByExecutionLineId(exelineid),
-        this.exesvc.getExecutionLineMonthlySnapshots(exelineid)
+        this.exesvc.getExecutionLineMonthlyDeltas(exelineid)
       ]).subscribe(d => {        
         this.exeline = d[0].result;
         this.oandes = d[1].result;
         this.program = this.exeline.programName;
-        this.snapshotMap = new Map<Date, ExecutionLine>();
+        this.deltaMap = new Map<Date, ExecutionLine>();
         Object.getOwnPropertyNames(d[2].result).forEach(key => { 
-          this.snapshotMap.set(new Date( key ), d[2].result[key]);
+          this.deltaMap.set(new Date( key ), d[2].result[key]);
         });
 
         this.exesvc.getById(this.exeline.phaseId).subscribe(d2 => {
@@ -58,7 +59,7 @@ export class ProgramExecutionLineComponent implements OnInit {
       if (this.actualstab.isadmin) {
         this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(data => {
           if (data.error) {
-            console.log('something went wrong');
+            NotifyUtil.notifyError(data.error);
           }
           else {
             console.log('data saved');
@@ -68,7 +69,7 @@ export class ProgramExecutionLineComponent implements OnInit {
       else {
         this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
           if (data.error) {
-            console.log('something went wrong');
+            NotifyUtil.notifyError(data.error);
           }
           else {
             console.log('data saved');

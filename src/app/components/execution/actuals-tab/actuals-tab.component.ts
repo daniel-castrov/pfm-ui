@@ -31,7 +31,7 @@ export class ActualsTabComponent implements OnInit {
   private _oandes: OandEMonthly[];
   private _exeline: ExecutionLine;
   private _exe: Execution;
-  private _snapshots: Map<Date, ExecutionEvent>;
+  private _deltas: Map<Date, ExecutionEvent>;
   private agOptions: GridOptions;
   rows: ActualsRow[];
   firstMonth = 0;
@@ -93,13 +93,13 @@ export class ActualsTabComponent implements OnInit {
     return this._oandes;
   }
 
-  @Input() set snapshots(evs: Map<Date, ExecutionLine>) {
-    this._snapshots = evs;
+  @Input() set deltas(evs: Map<Date, ExecutionLine>) {
+    this._deltas = evs;
     this.refreshTableData();
   }
 
-  get snapshots(): Map<Date, ExecutionLine> {
-    return this._snapshots;
+  get deltas(): Map<Date, ExecutionLine> {
+    return this._deltas;
   }
 
   constructor() {
@@ -440,7 +440,7 @@ export class ActualsTabComponent implements OnInit {
       { label: 'Cumulative Actuals', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
     ];
 
-    if (this._exeline && this._exe && this._oandes && this._snapshots) {
+    if (this._exeline && this._exe && this._oandes && this._deltas) {
       // get our goals information
       var progtype: string = this.exeline.appropriation;
       var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
@@ -509,9 +509,9 @@ export class ActualsTabComponent implements OnInit {
     var outlayed: number = 0;
     var accruals: number = 0;
 
-    // go through all our snapshots and calculate toas and released
+    // go through all our deltas and calculate toas and released
     var toasAndReleaseds: ToaAndReleased[]
-      = OandETools.calculateToasAndReleaseds(this.exeline, this.snapshots,
+      = OandETools.calculateToasAndReleaseds(this.exeline, this._deltas,
         this.rows[0].values.length, this.exe.fy);
 
     for (var i = 0; i < this.rows[0].values.length; i++) {
