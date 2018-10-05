@@ -466,7 +466,7 @@ export class ActualsTabComponent implements OnInit {
 
       for (var i = 0; i < max; i++) {
         this.rows[0].values.push(0);
-        this.rows[0].values.push(1);
+        this.rows[1].values.push(0);
         
         this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
         this.rows[3].values.push(0);
@@ -629,15 +629,6 @@ export class ActualsTabComponent implements OnInit {
     this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
   }
 
-  checkForFix() {
-    // check if we need to get remediation information
-    var toa: number = this.rows[5].toa[this.editMonth];
-
-    var opct: number = (toa - this.rows[5].values[this.editMonth]) / toa;
-    var epct: number = (toa - this.rows[9].values[this.editMonth]) / toa;
-
-  }
-
   monthlies() : Observable<OandEMonthly[]> {
     var subject: Subject<OandEMonthly[]> = new Subject<OandEMonthly[]>();
 
@@ -671,8 +662,6 @@ export class ActualsTabComponent implements OnInit {
         accruals: this.rows[12].values[this.editMonth]
       };
 
-      console.log(oande);
-
       if (opct >= 0.15 || epct >= 0.15) {
         var my: ActualsTabComponent = this;
         $('#explanation-modal').on('hidden.bs.modal', function (event) {
@@ -681,6 +670,7 @@ export class ActualsTabComponent implements OnInit {
           oande.remediation = my.remediation;
 
           subject.next([oande]);
+          $('#explanation-modal').unbind('hidden.bs.modal');
         }).modal('show');
       }
     }

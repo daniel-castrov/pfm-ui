@@ -21,7 +21,7 @@ export class OandETools{
         snapshots.forEach((el, date) => {
             keys.push(date)
         });
-        keys.sort();
+        keys.sort((a, b) => (a.getTime() == b.getTime() ? 0 : a.getTime() - b.getTime()));
         keys.forEach(date => {
             var el: ExecutionLine = snapshots.get(date);
             var idx: number = this.convertDateToFyMonth(fy, date);
