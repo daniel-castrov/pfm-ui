@@ -26,10 +26,6 @@
             [enableFilter]="false"
             [gridAutoHeight]="true"
             [gridOptions]="agOptions"
-            [rowData]="rowData"
-            [columnDefs]="columnDefs"
-            [defaultColDef]="defaultColDef"
-            [columnTypes]="columnTypes"
             [toolPanelSuppressSideButtons]="true"
             [pagination]="true"
             [paginationPageSize]="20"
@@ -37,8 +33,7 @@
             [suppressDragLeaveHidesColumns]="true"
             [suppressMovableColumns]="true"
             [suppressPaginationPanel]="true"
-            (gridReady)="onGridReady($event)"
-            >
+            (gridReady)="onGridReady($event)" >
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>

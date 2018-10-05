@@ -151,6 +151,7 @@ import { ViewSiblingsRenderer } from "./components/renderers/view-siblings-rende
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 import {EmphasisAreasComponent} from "./components/ufr/ufr-view/ufr-program-tab/empasisAreas/emphasisAreas.component";
+import {CheckboxRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/checkbox-renderer.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -300,6 +301,7 @@ const appRoutes: Routes = [
     ExecutionLineTableComponent,
     WorksheetComponent,
     FileUploadComponent,
+    CheckboxRendererComponent,
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
@@ -312,7 +314,7 @@ const appRoutes: Routes = [
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
     ToggleComponent,
-    ActualsCellRendererComponent
+    ActualsCellRendererComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -322,6 +324,7 @@ const appRoutes: Routes = [
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
     DeleteRenderer,
+    CheckboxRendererComponent,
     ViewSiblingsRenderer,
     ActualsCellRendererComponent
   ],
