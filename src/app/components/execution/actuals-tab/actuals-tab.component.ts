@@ -3,8 +3,15 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 // Other Components
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
+import { OandETools, ToaAndReleased } from '../model/oande-tools';
+
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import { async } from 'q';
+
+declare const $: any;
 
 @Component({
   selector: 'actuals-tab',
@@ -25,12 +32,18 @@ export class ActualsTabComponent implements OnInit {
   private _oandes: OandEMonthly[];
   private _exeline: ExecutionLine;
   private _exe: Execution;
+  private _deltas: Map<Date, ExecutionEvent>;
   private agOptions: GridOptions;
   rows: ActualsRow[];
   firstMonth = 0;
   editMonth: number = -1;
   isadmin: boolean = false;
   showPercentages: boolean = true;
+  prevok: boolean = false;
+  nextok: boolean = true;
+  remediation: string;
+  explanation: string;
+  fixtime: number = 1;
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -38,7 +51,7 @@ export class ActualsTabComponent implements OnInit {
     this.refreshTableData();
   }
 
-  get exeline() : ExecutionLine {
+  get exeline(): ExecutionLine {
     return this._exeline;
   }
 
@@ -46,31 +59,24 @@ export class ActualsTabComponent implements OnInit {
     //console.log('setting exe');
     this._exe = e;
     this.firstMonth = 0;
+
+    var date = new Date();
+    var day = date.getDay();
+
+    this.editMonth = OandETools.convertDateToFyMonth((e ? e.fy : 0), date);
+
+    // after the 14th, we're on to the next month
+    if (day >= 15) {
+      this.editMonth += 1;
+    }
+
+    // skip to the FY that contains the current month
+    this.firstMonth = (this.editMonth / 12) * 12;
+
     if (this.agOptions.api) {
       this.agOptions.api.refreshHeader();
     }
 
-    var date = new Date();
-    var day = date.getDay();
-    var month = date.getMonth();
-
-    // set a few values for testing
-    month = 3;
-    day = 7;
-
-    // after the 14th, we're on to the next month
-    if (day >= 15) {
-      month += 1;
-    }
-
-    if (month - 9 < 0) {
-      month += 3;
-    } else {
-      month -= 9;
-    }
-
-    this.editMonth = this.firstMonth + month;
-    //console.log(' edit month is: ' + this.editMonth);
     this.refreshTableData();
   }
 
@@ -88,6 +94,15 @@ export class ActualsTabComponent implements OnInit {
     return this._oandes;
   }
 
+  @Input() set deltas(evs: Map<Date, ExecutionLine>) {
+    this._deltas = evs;
+    this.refreshTableData();
+  }
+
+  get deltas(): Map<Date, ExecutionLine> {
+    return this._deltas;
+  }
+
   constructor() {
     var my: ActualsTabComponent = this;
 
@@ -98,10 +113,6 @@ export class ActualsTabComponent implements OnInit {
         ? true
         : (my.firstMonth + params.colDef.colId) === my.editMonth);
       var rowOk: boolean = editrows.has(params.node.rowIndex);
-
-      //console.log(params)
-      //console.log(my.firstMonth + params.colDef.colId);
-      //console.log('editsok: ' + colOk + ' ' + rowOk);
 
       return (rowOk && colOk);
     }
@@ -115,7 +126,7 @@ export class ActualsTabComponent implements OnInit {
       var newval: number = Number.parseFloat(params.newValue);
 
       if (my.showPercentages) {
-        newval = newval * my.exeline.toa / 100;
+        newval = newval * my.rows[row].toa[col] / 100;
       }
 
       my.rows[row].values[col] = newval;
@@ -130,26 +141,38 @@ export class ActualsTabComponent implements OnInit {
 
     var isyellow = function (params): boolean {
       if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var pct = params.value / params.data.toa;
-        return (pct >= 0.1 && pct < 0.15);
+        var fymonth: number = my.firstMonth + params.colDef.colId;
+        if (my.isadmin || fymonth <= my.editMonth) {
+          var pct = params.value / params.data.toa[fymonth];
+          return (pct >= 0.1 && pct < 0.15);
+        }
       }
       return false;
     }
     var isred = function (params): boolean {
       if (7 == params.rowIndex || 11 == params.rowIndex) {
-        return (params.value / params.data.toa >= 0.15);
+        var fymonth: number = my.firstMonth + params.colDef.colId;
+        if (my.isadmin || fymonth <= my.editMonth) {
+          var pct = params.value / params.data.toa[fymonth];
+          return pct >= 0.15;
+        }
       }
       return false;
     }
     var isgreen = function (params): boolean {
       if (7 == params.rowIndex || 11 == params.rowIndex) {
-        return (params.value / params.data.toa < 0.1 );
+        var fymonth: number = my.firstMonth + params.colDef.colId;
+        if (my.isadmin || fymonth <= my.editMonth) {
+          var pct = params.value / params.data.toa[fymonth];
+          return pct < 0.1;
+        }
       }
       return false;
     }
 
     var getHeaderValue = function (params) {
-      return (my.exe ? 'FY' + my.exe.fy : 'First Year')
+      var inty: number = my.firstMonth / 12;
+      return (my.exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
     }
 
     var agcomps: any = {
@@ -192,7 +215,7 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
-              cellClassRules : {
+              cellClassRules: {
                 'ag-cell-editable': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
@@ -402,23 +425,23 @@ export class ActualsTabComponent implements OnInit {
    */
   refreshTableData() {
     this.rows = [
-      { label: 'TOA', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Released', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Committed (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Cumulative Committed', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Obligated (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Cumulative Obligated', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'OSD Goal', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Delta', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Outlayed (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Cumulative Outlayed', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'OSD Goal', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Delta', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Accruals (Monthly)', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
-      { label: 'Cumulative Actuals', values: [], toa: 0, released: 0, oblgoal_pct:[], expgoal_pct:[]},
+      { label: 'TOA', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Released', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Committed (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Committed', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Obligated (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Obligated', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'OSD Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Delta', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Outlayed (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Outlayed', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'OSD Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Delta', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Accruals (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Actuals', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
     ];
 
-    if (this._exeline && this._exe && this._oandes) {
+    if (this._exeline && this._exe && this._oandes && this._deltas) {
       // get our goals information
       var progtype: string = this.exeline.appropriation;
       var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
@@ -428,29 +451,29 @@ export class ActualsTabComponent implements OnInit {
       // get our O&E values in order of month, so we can
       // run right through them
       var myoandes: OandEMonthly[] = new Array(max);
-      this.oandes.forEach(oande => { 
+      this.oandes.forEach(oande => {
         myoandes[oande.month] = oande;
       });
 
       this.rows.forEach(ar => {
-        ar.toa = this.exeline.toa;
-        ar.released = this.exeline.released;
-
         for (var i = 0; i < max; i++) {
+          ar.toa.push(0);
+          ar.released.push(0);
+
           ar.expgoal_pct.push(egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
           ar.oblgoal_pct.push(ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
         }
       });
 
       for (var i = 0; i < max; i++) {
-        this.rows[0].values.push(this.exeline.toa);
-        this.rows[1].values.push(this.exeline.released);
-        this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
+        this.rows[0].values.push(0);
+        this.rows[1].values.push(0);
         
+        this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
         this.rows[3].values.push(0);
 
         this.rows[4].values.push(myoandes[i] ? myoandes[i].obligated : 0);
-        
+
         this.rows[5].values.push(0);
         this.rows[6].values.push(0);
         this.rows[7].values.push(0);
@@ -471,6 +494,8 @@ export class ActualsTabComponent implements OnInit {
     } else if (this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
+
+    this.enableNextPrevButtons();
   }
 
   recalculateTableData() {
@@ -485,7 +510,25 @@ export class ActualsTabComponent implements OnInit {
     var outlayed: number = 0;
     var accruals: number = 0;
 
+    // go through all our deltas and calculate toas and released
+    var toasAndReleaseds: ToaAndReleased[]
+      = OandETools.calculateToasAndReleaseds(this.exeline, this._deltas,
+        this.rows[0].values.length, this.exe.fy);
+
     for (var i = 0; i < this.rows[0].values.length; i++) {
+      // all rows need to know about toa and released values
+      // so the renderer can calculate *either* % or $
+      for (var j = 0; j < this.rows.length; j++) {
+        this.rows[j].toa[i] = toasAndReleaseds[i].toa;
+        this.rows[j].released[i] = toasAndReleaseds[i].released;
+      }
+
+      var toa: number = toasAndReleaseds[i].toa;
+      var released: number = toasAndReleaseds[i].released;
+
+      this.rows[0].values[i] = toa;
+      this.rows[1].values[i] = released;
+
       committed += this.rows[2].values[i];
       this.rows[3].values[i] = committed;
 
@@ -493,7 +536,7 @@ export class ActualsTabComponent implements OnInit {
       this.rows[5].values[i] = obligated;
 
       if (i < ogoals.monthlies.length) {
-        this.rows[6].values[i] = this.exeline.toa * ogoals.monthlies[i];
+        this.rows[6].values[i] = toa * ogoals.monthlies[i];
         this.rows[7].values[i] = this.rows[6].values[i] - obligated;
       }
 
@@ -501,7 +544,7 @@ export class ActualsTabComponent implements OnInit {
       this.rows[9].values[i] = outlayed;
 
       if (i < egoals.monthlies.length) {
-        this.rows[10].values[i] = this.exeline.toa * egoals.monthlies[i];
+        this.rows[10].values[i] = toa * egoals.monthlies[i];
         this.rows[11].values[i] = this.rows[10].values[i] - outlayed;
       }
 
@@ -509,7 +552,7 @@ export class ActualsTabComponent implements OnInit {
       this.rows[13].values[i] = accruals;
     }
 
-    if(this.agOptions.api) {
+    if (this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
   }
@@ -524,10 +567,10 @@ export class ActualsTabComponent implements OnInit {
     var row: number = params.node.childIndex;
 
     var index: number = my.firstMonth + col;
-    //console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
+    //if(6===row && 1===col) console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
     if (params.data.values.length >= index) {
       //console.log(params.data.values);
-      //console.log('  returning ' + params.data.values[index]);
+      //if( 6===row && 1 === col ) console.log('  returning ' + params.data.values[index]);
       return params.data.values[index];
     }
     else {
@@ -546,7 +589,7 @@ export class ActualsTabComponent implements OnInit {
     setTimeout(() => {
       params.api.sizeColumnsToFit();
     }, 500);
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", function () {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
       });
@@ -562,13 +605,89 @@ export class ActualsTabComponent implements OnInit {
     this.isadmin = !this.isadmin;
     this.agOptions.api.redrawRows();
   }
+
+  prevFy() {
+    if (this.firstMonth - 12 >= 0) {
+      this.firstMonth -= 12;
+      this.agOptions.api.refreshHeader();
+      this.agOptions.api.redrawRows();
+    }
+
+    this.enableNextPrevButtons();
+  }
+
+  nextFy() {
+    if (this.firstMonth + 12 < this.rows[0].values.length) {
+      this.firstMonth += 12;
+      this.agOptions.api.refreshHeader();
+      this.agOptions.api.redrawRows();
+    }
+    this.enableNextPrevButtons();
+  }
+
+  enableNextPrevButtons() {
+    this.prevok = (this.firstMonth - 12 >= 0);
+    this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
+  }
+
+  monthlies() : Observable<OandEMonthly[]> {
+    var my: ActualsTabComponent = this;
+    return new Observable<OandEMonthly[]>(obs => { 
+      if (this.isadmin) {
+        var data: OandEMonthly[] = [];
+
+        for (var i = 0; i < this.rows[0].values.length; i++) {
+          data.push({
+            executionLineId: this.exeline.id,
+            month: i,
+            committed: my.rows[2].values[i],
+            obligated: my.rows[4].values[i],
+            outlayed: my.rows[8].values[i],
+            accruals: my.rows[12].values[i]
+          });
+        }
+        obs.next(data);
+        obs.complete();
+      }
+      else {
+        var opct: number = 1 - (this.rows[5].values[this.editMonth] / this.rows[6].values[this.editMonth]);
+        var epct: number = 1 - (this.rows[9].values[this.editMonth] / this.rows[10].values[this.editMonth]);
+
+        var oande: OandEMonthly = {
+          executionLineId: this.exeline.id,
+          month: this.editMonth,
+          committed: this.rows[2].values[this.editMonth],
+          obligated: this.rows[4].values[this.editMonth],
+          outlayed: this.rows[8].values[this.editMonth],
+          accruals: this.rows[12].values[this.editMonth]
+        };
+
+        if (opct >= 0.15 || epct >= 0.15) {
+          $('#explanation-modal').on('hidden.bs.modal', function (event) {
+            oande.monthsToFix = my.fixtime;
+            oande.explanation = my.explanation;
+            oande.remediation = my.remediation;
+
+            obs.next([oande]);
+            obs.complete();
+            $('#explanation-modal').unbind('hidden.bs.modal');
+          }).modal('show');
+        }
+        else {
+          obs.next([oande]);
+          obs.complete();
+        }
+      }
+    });
+  }
 }
 
 interface ActualsRow {
   label: string,
-  toa: number,
-  released: number,
+  // all these arrays should have as many indicies as there are execution months
+  toa: number[],
+  released: number[],
   oblgoal_pct: number[],
   expgoal_pct: number[],
-  values: number[] // should have as many indicies as there are execution months
+  values: number[]
 }

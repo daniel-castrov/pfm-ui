@@ -489,7 +489,6 @@ label {
 
 }
 
-
 .modal {
 
   margin-left: -280px;
@@ -532,6 +531,25 @@ label {
        > i {
          font-size: 26px;
        }
+     }
+   }
+ }
+
+ // Scroll Arrows for First year feature in Actuals table for O & E Actuals tabs
+
+ .actuals-slider-buttons {
+
+  background-color: $white;
+  padding: 2px;
+  border: none;
+
+   .fa {
+     color: $primary-color;
+     font-size: 22px;
+     font-weight: bold;
+     cursor: pointer;
+     &:hover {
+       opacity: .6;
      }
    }
  }

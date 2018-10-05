@@ -13,14 +13,19 @@ export class ActualsCellRendererComponent implements ICellRendererAngularComp {
   constructor() { }
 
   agInit(param) {
+    var row: number = param.rowIndex;
+    var col: number = Number.parseInt(param.colDef.colId);
+    var monthidx: number = param.context.parent.firstMonth + col;
+
     //console.log('rendering at (' + param.rowIndex + ',' + param.colDef.colId + '): ' + JSON.stringify(this.params.data));
-    this.printable = (param.context.parent.isadmin || (param.context.parent.firstMonth + param.colDef.colId) <= param.context.parent.editMonth);
+    this.printable = (param.context.parent.isadmin || monthidx <= param.context.parent.editMonth);
     var pct = param.context.parent.showPercentages;
 
-    var row: number = param.rowIndex;
+    //console.log(param.data);
+    //console.log(row + ', ' + col);
 
     if (pct && row > 1) {
-      this.value = (param.value / param.data.toa * 100).toFixed(2);
+      this.value = (param.value / param.data.toa[monthidx] * 100).toFixed(2);
     }
     else {
       this.value = (param.value ? param.value : 0).toFixed(2);

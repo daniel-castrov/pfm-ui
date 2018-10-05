@@ -6,8 +6,8 @@ import { DualListComponent } from 'angular-dual-listbox';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { FeedbackComponent } from '../../feedback/feedback.component';
 import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 // Generated
 import { RestResult, Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
@@ -22,7 +22,6 @@ import { CommunityService, RoleService, UserRoleResourceService, UserService, Or
 export class ManageRolesComponent {
 
   @ViewChild(HeaderComponent) header;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   private resultError: string[] = [];
 
@@ -50,11 +49,10 @@ export class ManageRolesComponent {
   private cannotChangeResources:string [] = ["User_Approver", "POM_Manager", "Funds_Requestor", "Program_Manager" ];
   private canChangeResources: boolean;
 
-  private orgBasedRoles: string [] = ["Organization_Member", "Funds_Requestor", "Program_Manager" ];
+  private orgBasedRoles: string [] = ["Funds_Requestor", "Program_Manager" ];
   private isOrgBased: boolean;
 
-  private cannotUnassign: string [] = ["Organization_Member", "User" ];
-  private canUnassign: boolean;
+  private hiddenRoles: string [] = ["Organization_Member", "User" ];
 
   private selectedUserName: string;
   private submittedMessage = "no message";
@@ -136,6 +134,7 @@ export class ManageRolesComponent {
       this.roles = data[0].result;
       this.resultError.push(data[1].error);
       this.users = data[1].result;
+      this.roles = this.roles.filter( role => !this.hiddenRoles.includes( role.name ) );
 
       // See if the role and and user are already in the params. 
       this.roles.forEach( role => { 
@@ -170,11 +169,6 @@ export class ManageRolesComponent {
     this.isOrgBased = false;
     if ( this.orgBasedRoles.includes( this.selectedRole.name ) ){
       this.isOrgBased = true;
-    }
-
-    this.canUnassign = true;
-    if ( this.cannotUnassign.includes( this.selectedRole.name ) ){
-      this.canUnassign = false;
     }
 
     this.isVisible = true;
@@ -242,7 +236,8 @@ export class ManageRolesComponent {
 
     this.userRoleResourceService.deleteById(this.selectedURR.id).subscribe(() => { 
       this.clear(); 
-      this.feedback.success(this.getMessage(0));
+      this.submitted = true;
+      NotifyUtil.notifySuccess(this.getMessage(0));
     });
   }
 
@@ -264,17 +259,17 @@ export class ManageRolesComponent {
       }
     }
 
-    console.log( this.selectedURR );
-
     if (this.isNewUserRole){
       this.userRoleResourceService.create(this.selectedURR).subscribe(() => {
         this.clear(); 
-        this.feedback.success(this.getMessage(1));
+        this.submitted = true;
+        NotifyUtil.notifySuccess(this.getMessage(1));
       });
     } else {
       this.userRoleResourceService.update(this.selectedURR).subscribe(() => {
         this.clear(); 
-        this.feedback.success(this.getMessage(2));
+        this.submitted = true;
+        NotifyUtil.notifySuccess(this.getMessage(2));
       });
     }
   }
@@ -285,10 +280,9 @@ export class ManageRolesComponent {
     let message: string[] = [
       this.selectedUserName + " no longer has the role of " + community_role_name,
       this.selectedUserName + " has been assigned the role of " + community_role_name,
-      this.selectedUserName + "'s resource access for "+community_role_name+" has been modified"
+      this.selectedUserName + "'s resource access for " + community_role_name + " has been modified"
     ];
-    this.submitted = true;
-    return  message[messageNumber];
+    return message[messageNumber];
   }
 
   private filterByOrg(){

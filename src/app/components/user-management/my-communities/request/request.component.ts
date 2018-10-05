@@ -34,7 +34,7 @@ export class RequestComponent implements OnChanges {
     this.orgService.getByCommunityId(this.selectedCommunity.id)
     .subscribe( data => {
       this.organizations = data.result;
-    } );
+    });
   }
 
   ready(){

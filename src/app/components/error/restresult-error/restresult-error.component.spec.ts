@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FeedbackComponent } from './feedback.component';
+import { RestResultErrorComponent } from './restresult-error.component';
 
-describe('FeedbackComponent', () => {
-  let component: FeedbackComponent;
-  let fixture: ComponentFixture<FeedbackComponent>;
+describe('RestResultErrorComponent', () => {
+  let component: RestResultErrorComponent;
+  let fixture: ComponentFixture<RestResultErrorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FeedbackComponent ]
+      declarations: [ RestResultErrorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FeedbackComponent);
+    fixture = TestBed.createComponent(RestResultErrorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

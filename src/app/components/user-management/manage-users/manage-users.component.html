@@ -131,7 +131,7 @@
         <div class="card-container">
           <ul>
             <li *ngFor="let cwr of communityWithUserRoles">
-              {{ cwr.community.name }}
+              {{ cwr.community.abbreviation }}
             </li>
           </ul>
         </div>
@@ -147,18 +147,32 @@
         <div class="card-container">
           <table class="table">
             <tr *ngFor="let cwr of communityWithUserRoles">
-              <td colspan="2">
-                <span class="mr-2">{{ cwr.community.name }}</span>
-                <span>
-                  <button class="btn-card-header mt-1" title="leaveCommunityButton" (click)="leaveCommunity(cwr)">
-                    <i class="fa fa-times icon-pad" aria-hidden="true"></i>Leave Community
+              <td><span class="mr-2">{{ cwr.community.abbreviation }}</span></td>
+              <td>
+                <label>Roles</label>
+                <div *ngIf="cwr.userRoles.length==0">(none)</div>
+                <div>
+                  <button class="btn-card-header" *ngFor="let role of cwr.userRoles" (click)="editRoles(cwr.community.id,role.id,targetUser.id )">
+                      {{role.name}}
                   </button>
-                </span>
+                </div>
+              </td>  
+              <td>
+                <label>Organization</label>
+                <div>
+                  <select class="form-control-sm"  name="orgMemberSelector1" [(ngModel)]="cwr.org">
+                      <option value="null" disabled selected>Select Organization</option>
+                      <option *ngFor="let org of cwr.orgs" [ngValue]="org">{{ org.abbreviation }}</option>
+                  </select>
+                </div>
               </td>
               <td>
-                Roles:
-                <button class="btn-card-header" *ngFor="let role of cwr.userRoles" (click)="editRoles(cwr.community.id,role.id,targetUser.id )">
-                    {{role.name}}
+                <button class="btn-card-header" title="changeOrgButton" (click)="changeOrg(cwr)">
+                  Change Organization
+                </button>  
+                <br/>            
+                <button class="btn-card-header" title="leaveCommunityButton" (click)="leaveCommunity(cwr)">
+                  Leave Community
                 </button>
               </td>
             </tr>
@@ -167,7 +181,8 @@
               <td colspan="3">
                 <select class="form-control-sm"  name="joinCommunitySelector" [(ngModel)]="selectedJoinCommunity" (change)="getOrganizations()">
                   <option value="null" disabled selected>Select Community</option>               
-                  <option *ngFor="let community of availCommunities" [ngValue]="community">{{ community.name }}</option>                </select>
+                  <option *ngFor="let community of availCommunities" [ngValue]="community">{{ community.name }}</option>
+                </select>
 
                 <select class="form-control-sm"  name="orgMemberSelector" [(ngModel)]="selectedOrganization">
                   <option value="null" disabled selected>Select Organization</option>

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 // Generated
 import { Stranger, Community, Organization, CreateUserRequest, RestResult } from '../../generated';
 import { StrangerService, CreateUserRequestService  } from '../../generated';
+import { NotifyUtil } from '../../utils/NotifyUtil';
 
 @Component({
   selector: 'app-apply',
@@ -33,19 +34,6 @@ export class ApplyComponent implements OnInit {
     this.formsubmitted = false;
     this.ndaSatisfied = true;
     this.getStranger();
-
-    // For testing Notify Library uncomment and go to /apply page.
-    // $.notify({
-    //     // options
-    //     icon: 'fa fa-check',
-    //     // icon: 'fa fa-exclamation-triangle',
-    //     // icon: 'fa fa-info-circle',
-    //     // icon: 'fa fa-exclamation',
-    //     message: 'Your application to join JSCBIS has been submitted. Please check your email for the status of your request. '
-    // },{
-    //     // settings
-    //     type: 'success',
-    // });
   }
 
   private getStranger(): void {
@@ -89,14 +77,10 @@ export class ApplyComponent implements OnInit {
 
       this.formsubmitted = true;
 
+      NotifyUtil.notifySuccess("Your application to join JSCBIS has been submitted. Please check your email for the status of your request.");
     } else {
-      this.resultError.push("Unable to submit New User Request Form");
-      console.log("Unable to submit New User Request Form");
+      NotifyUtil.notifyError("An error occured. Unable to submit New User Request Form");
     }
-  }
-
-  private done(){
-    this.router.navigate(['./about']);
   }
 
 }
