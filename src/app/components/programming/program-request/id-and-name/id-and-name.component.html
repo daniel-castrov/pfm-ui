@@ -27,12 +27,12 @@
     <div *ngIf="pr.type==='GENERIC'" class="h5 mb-4">Create Program Request for a New Subprogram:</div>
   </ng-container>
   <span class="form-group mr-3">
-    <label class="mr-1" for="id">Id: </label>
+    <label class="mr-1" for="id">*Id: </label>
     <span class="mr-1">{{parentFullName}}</span>
     <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput" [(ngModel)]="pr.shortName" aria-label="short name">
  </span>
  <span class="form-group mr-3">
-   <label class="mr-1" for="name">Name:</label>
+   <label class="mr-1" for="name">*Name:</label>
    <input id="name" [formControl]="longname" type="text" class="form-control forminput" [(ngModel)]="pr.longName" aria-label="short name">
   </span>
   <span class="form-group mr-3">
@@ -47,11 +47,11 @@
 <div id="create-new-toplevel" *ngIf="!programRequestPageMode.prId && programRequestPageMode.newProgram">
   <div *ngIf="programRequestPageMode.type" class="h5 mb-4">Create Program Request for a New Program:</div>
   <span class="form-group mr-3">
-    <label class="mr-1" for="id">Id:</label>
+    <label class="mr-1" for="id">*Id:</label>
     <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput" [(ngModel)]="pr.shortName" aria-label="short name">
   </span>
   <span class="form-group mr-3">
-    <label class="mr-1" for="name">Name:</label>
+    <label class="mr-1" for="name">*Name:</label>
     <input id="name"  [formControl]="longname" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
   </span>
   <span class="form-group">
