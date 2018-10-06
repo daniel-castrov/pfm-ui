@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'duplicate',
@@ -6,5 +6,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./duplicate.component.scss']
 })
 export class DuplicateComponent {
+  @Output() emitter = new EventEmitter();
 
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'import',
@@ -6,5 +6,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./import.component.scss']
 })
 export class ImportComponent {
+  @Output() emitter = new EventEmitter();
 
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'rename',
@@ -6,5 +6,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./rename.component.scss']
 })
 export class RenameComponent {
+  @Output() emitter = new EventEmitter();
 
 }

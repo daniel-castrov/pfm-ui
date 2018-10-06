@@ -5,14 +5,8 @@ import { HeaderComponent } from '../../../header/header.component';
 import { UserUtils } from '../../../../services/user.utils';
 import { PomWorksheetService, POMService, Pom, PomWorksheet, User } from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
-import {SelectedRowService} from "./selected-row.service";
+import {Operation, StateService} from "./state.service";
 
-enum Mode {
-  DUPLICATE='DUPLICATE',
-  RENAME='RENAME',
-  EXPORT='EXPORT',
-  IMPORT='IMPORT'
-}
 
 @Component({
   selector: 'worksheet-management',
@@ -25,15 +19,15 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  private mode: Mode;
   private pomWorksheets: PomWorksheet[];
   private fy: number;
   private agOptions: GridOptions;
+  Mode = Operation;
 
   constructor( private pomService: POMService,
                private pomWorksheetService: PomWorksheetService,
                private userUtils: UserUtils,
-               private selectedRowService: SelectedRowService ) {
+               private stateService: StateService ) {
     this.agOptions = <GridOptions>{
       enableColResize: true,
 
@@ -73,10 +67,14 @@ export class WorksheetManagementComponent implements OnInit {
          params.api.sizeColumnsToFit();
        });
      });
-   }
+  }
 
-   isRowNotSelected(): boolean {
-    return isNaN(this.selectedRowService.index);
-   }
+  isRowNotSelected(): boolean {
+    return isNaN(this.stateService.selectedRowIndex);
+  }
+
+  setMode(mode: Operation) {
+    this.stateService.operation = mode;
+  }
 
 }
