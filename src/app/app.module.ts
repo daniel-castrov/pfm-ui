@@ -158,7 +158,6 @@ import {DuplicateComponent} from "./components/programming/pom-worksheet/workshe
 import {RenameComponent} from "app/components/programming/pom-worksheet/worksheet-management/rename/rename.component";
 import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
-import {StateService} from "app/components/programming/pom-worksheet/worksheet-management/state.service";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -371,7 +370,6 @@ const appRoutes: Routes = [
     UserService,
     TagsService,
     Injectables,
-    StateService,
     JoinCommunityRequestService,
     AutoValuesService,
     LeaveCommunityRequestService,

@@ -6,13 +6,11 @@ import {StateService} from "./state.service";
 @Component({
   template: `<input type="checkbox"
                     (click)="checkboxClicked($event)"
-                    [checked]="stateService.selectedRowIndex == params.rowIndex"
-                    [disabled]="!!stateService.operation"/>`
+                    [checked]="selectedRowIndex == params.rowIndex"
+                    [disabled]="!!operation"/>`
 })
-export class CheckboxRendererComponent implements ICellRendererAngularComp {
+export class CheckboxRendererComponent extends StateService implements ICellRendererAngularComp {
   params: ICellRendererParams;
-  constructor( public stateService: StateService ) {}
-
 
   agInit(param: ICellRendererParams) {
     this.params = param;
@@ -23,10 +21,10 @@ export class CheckboxRendererComponent implements ICellRendererAngularComp {
   }
 
   checkboxClicked() {
-    if(this.stateService.selectedRowIndex == this.params.rowIndex) {
-      this.stateService.selectedRowIndex = NaN;
+    if(this.selectedRowIndex == this.params.rowIndex) {
+      this.selectedRowIndex = NaN;
     } else {
-      this.stateService.selectedRowIndex = this.params.rowIndex;
+      this.selectedRowIndex = this.params.rowIndex;
     }
   }
 }

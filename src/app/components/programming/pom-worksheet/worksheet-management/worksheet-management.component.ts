@@ -4,8 +4,8 @@ import { AgGridNg2 } from 'ag-grid-angular';
 import { HeaderComponent } from '../../../header/header.component';
 import { UserUtils } from '../../../../services/user.utils';
 import { PomWorksheetService, POMService, Pom, PomWorksheet, User } from '../../../../generated';
-import {CheckboxRendererComponent} from "./checkbox-renderer.component";
-import {Operation, StateService} from "./state.service";
+import { CheckboxRendererComponent } from "./checkbox-renderer.component";
+import { StateService } from "./state.service";
 
 
 @Component({
@@ -14,7 +14,7 @@ import {Operation, StateService} from "./state.service";
   styleUrls: ['./worksheet-management.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class WorksheetManagementComponent implements OnInit {
+export class WorksheetManagementComponent extends StateService implements OnInit {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -22,12 +22,11 @@ export class WorksheetManagementComponent implements OnInit {
   private pomWorksheets: PomWorksheet[];
   private fy: number;
   private agOptions: GridOptions;
-  Mode = Operation;
 
   constructor( private pomService: POMService,
                private pomWorksheetService: PomWorksheetService,
-               private userUtils: UserUtils,
-               private stateService: StateService ) {
+               private userUtils: UserUtils) {
+    super();
     this.agOptions = <GridOptions>{
       enableColResize: true,
 
@@ -70,11 +69,7 @@ export class WorksheetManagementComponent implements OnInit {
   }
 
   isRowNotSelected(): boolean {
-    return isNaN(this.stateService.selectedRowIndex);
-  }
-
-  setMode(mode: Operation) {
-    this.stateService.operation = mode;
+    return isNaN(this.selectedRowIndex);
   }
 
 }

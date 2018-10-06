@@ -6,6 +6,6 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./rename.component.scss']
 })
 export class RenameComponent {
-  @Output() emitter = new EventEmitter();
+  @Output() operationOver = new EventEmitter();
 
 }

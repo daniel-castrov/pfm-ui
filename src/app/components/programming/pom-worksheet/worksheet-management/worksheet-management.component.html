@@ -10,10 +10,10 @@
       <div class="row">
         <div class="col-9">
           <ul class="worksheet-controls mb-3">
-            <li><button class="btn btn-primary" (click)="setMode(Mode.DUPLICATE)" [disabled]="isRowNotSelected()">Duplicate</button></li>
-            <li><button class="btn btn-primary" (click)="setMode(Mode.RENAME)" [disabled]="isRowNotSelected()">Rename</button></li>
-            <li><button class="btn btn-primary" (click)="setMode(Mode.EXPORT)" [disabled]="isRowNotSelected()">Export</button></li>
-            <li><button class="btn btn-primary" (click)="setMode(Mode.IMPORT)">Import</button></li>
+            <li><button class="btn btn-primary" (click)="operation=Operation.DUPLICATE" [disabled]="isRowNotSelected()" >Duplicate</button></li>
+            <li><button class="btn btn-primary" (click)="operation=Operation.RENAME"    [disabled]="isRowNotSelected()" >Rename</button></li>
+            <li><button class="btn btn-primary" (click)="operation=Operation.EXPORT"    [disabled]="isRowNotSelected()" >Export</button></li>
+            <li><button class="btn btn-primary" (click)="operation=Operation.IMPORT"                                    >Import</button></li>
           </ul>
         </div>
       </div>
@@ -49,10 +49,10 @@
       <div class="row">
         <div class="col-12">
 
-          <duplicate [hidden]="stateService.operation!=Mode.DUPLICATE" (emitter)="setMode(null)" ></duplicate>
-          <rename [hidden]="stateService.operation!=Mode.RENAME" (emitter)="setMode(null)" ></rename>
-          <export [hidden]="stateService.operation!=Mode.EXPORT" (emitter)="setMode(null)" ></export>
-          <import [hidden]="stateService.operation!=Mode.IMPORT" (emitter)="setMode(null)" ></import>
+          <duplicate [hidden]="operation!=Operation.DUPLICATE" (operationOver)="operation=null" ></duplicate>
+          <rename    [hidden]="operation!=Operation.RENAME"    (operationOver)="operation=null" ></rename>
+          <export    [hidden]="operation!=Operation.EXPORT"    (operationOver)="operation=null" ></export>
+          <import    [hidden]="operation!=Operation.IMPORT"    (operationOver)="operation=null" ></import>
 
         </div>
       </div>

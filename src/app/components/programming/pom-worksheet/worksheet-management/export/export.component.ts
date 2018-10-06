@@ -6,6 +6,6 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./export.component.scss']
 })
 export class ExportComponent {
-  @Output() emitter = new EventEmitter();
+  @Output() operationOver = new EventEmitter();
 
 }
