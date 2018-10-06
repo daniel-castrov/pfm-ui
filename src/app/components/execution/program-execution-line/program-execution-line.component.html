@@ -25,7 +25,12 @@
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
           <tab heading="Actuals" id="tab1" active="true">
-            <actuals-tab role="tabpanel" [oandes]="oandes" [exeline]="exeline" [exe]="exe"></actuals-tab>
+            <actuals-tab role="tabpanel" 
+              [oandes]="oandes" 
+              [exeline]="exeline" 
+              [exe]="exe" 
+              [deltas]="deltaMap">
+            </actuals-tab>
           </tab>
           <tab heading="Graph" id="tab2">
             <graphs-tab role="tabpanel"></graphs-tab>

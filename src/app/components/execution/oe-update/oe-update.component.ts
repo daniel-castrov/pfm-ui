@@ -37,13 +37,6 @@ export class OeUpdateComponent implements OnInit {
       programCellRendererComponent: ProgramCellRendererComponent
     };
 
-    console.error( 'FIXME: we used to deal with MRIDs, now we have straight PROGRAMNAMEs')
-    my.progsvc.getIdNameMap().subscribe(data => {
-      Object.getOwnPropertyNames(data.result).forEach(mrId => {
-        my.programs.set(mrId, data.result[mrId]);
-      });
-    });
-
     this.agOptions = <GridOptions>{
       enableSorting: true,
       enableFilter: true,
@@ -53,25 +46,25 @@ export class OeUpdateComponent implements OnInit {
       suppressPaginationPanel: true,
       frameworkComponents: agcomps,
       context: {
-        programlkp: my.programs,
         route: '/program-execution-line',
-        enabled: x=>true
+        enabled: true
       },
       columnDefs: [
         {
           headerName: 'Program',
           field: 'programName',
           filter: 'agTextColumnFilter',
+          cellRenderer: 'programCellRendererComponent',
           cellClass: ['ag-cell-light-grey', 'ag-link'],
         },
         {
-          headerName: 'Appr',
+          headerName: 'Appn.',
           field: 'el.appropriation',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
         },
         {
-          headerName: 'Budget',
+          headerName: 'BA/BLIN',
           field: 'el.blin',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92

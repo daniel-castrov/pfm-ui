@@ -272,7 +272,7 @@ export class ExecutionLineTableComponent implements OnInit {
           field: 'line.id',
           valueFormatter: params => ( params.data.line.appropriation && my.elIdNameLkp.has( params.data.line.id )
             ? my.elIdNameLkp.get( params.data.line.id ).display
-            : params.data.line.mrId ? 'Select an Execution Line' : 'Select a Program first' ),
+            : params.data.line.programName ? 'Select an Execution Line' : 'Select a Program first' ),
           cellEditorParams: params => {
             var choices: string[] = my.getLineChoices(params.data.line.programName);
             //console.log(choices);

@@ -14,6 +14,22 @@
     </div>
   </div>
 </div>
+<div class="row mb-2">
+  <div class="col-6">
+    <button [disabled]="!prevok" (click)="prevFy()" class="actuals-slider-buttons">
+      <span>
+        <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+      </span>
+    </button>
+  </div>
+  <div class="col-6">
+    <button [disabled]="!nextok" (click)="nextFy()" class="actuals-slider-buttons pull-right">
+      <span>
+        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+      </span>
+    </button>
+  </div>
+</div>
 <div class="row">
   <div class="col-12">
       <ag-grid-angular #agGrid class="ag-theme-balham"
@@ -46,7 +62,7 @@
 </div>
 
 <!-- Modal Dialog -->
-<div id="myModal" class="modal fade in">
+<div id="explanation-modal" class="modal fade in">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -57,19 +73,16 @@
           <div class="col-9">
             <div class="mb-2">Why is the program behind?</div>
             <div class="form-group">
-              <textarea cols="50" rows="4" wrap="physical" class="form-control"></textarea>
+              <textarea cols="50" rows="4" wrap="physical" class="form-control" [(ngModel)]='explanation'></textarea>
             </div>
             <div class="mb-2">What is the get well plan?</div>
             <div class="form-group">
-              <textarea cols="50" rows="4" wrap="physical" class="form-control"></textarea>
+              <textarea cols="50" rows="4" wrap="physical" class="form-control" [(ngModel)]='remediation'></textarea>
             </div>
           </div>
           <div class="col-3">
             <div class="mt-4 mb-2">
               <button class="btn btn-primary" data-dismiss="modal">Save</button>
-            </div>
-            <div>
-              <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
           </div>
         </div>
@@ -79,7 +92,7 @@
               Expected # of months to be on track:
             </span>
             <span>
-              <input type="number" class="form-control number-months" name="months" minlength="2" maxlength="2">
+              <input type="number" [ngModel]='fixtime' (change)='fixtime=$event.target.value' class="form-control number-months" name="months" minlength="2" maxlength="2">
             </span>
           </div>
         </div>
