@@ -1,15 +1,16 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from "ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer";
-import {SelectedRow} from "./selected-row";
+import {SelectedRowService} from "./selected-row.service";
 
 @Component({
   template: `<input type="checkbox" 
                     (click)="checkboxClicked($event)" 
-                    [checked]="selectedRow == params.rowIndex" />`
+                    [checked]="selectedRowService.index == params.rowIndex" />`
 })
 export class CheckboxRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
+  constructor( private selectedRowService: SelectedRowService ) {}
 
 
   agInit(param: ICellRendererParams) {
@@ -20,16 +21,11 @@ export class CheckboxRendererComponent implements ICellRendererAngularComp {
     return true;
   }
 
-  get selectedRow(): number {
-    return SelectedRow.index;
-  }
-
   checkboxClicked() {
-    if(SelectedRow.index == this.params.rowIndex) {
-      SelectedRow.index = NaN;
+    if(this.selectedRowService.index == this.params.rowIndex) {
+      this.selectedRowService.index = NaN;
     } else {
-      SelectedRow.index = this.params.rowIndex;
+      this.selectedRowService.index = this.params.rowIndex;
     }
-    console.log(this.selectedRow)
   }
 }

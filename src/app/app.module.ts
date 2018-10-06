@@ -152,6 +152,11 @@ import { ToggleComponent } from './components/toggle/toggle.component';
 import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 import {EmphasisAreasComponent} from "./components/ufr/ufr-view/ufr-program-tab/empasisAreas/emphasisAreas.component";
 import {CheckboxRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/checkbox-renderer.component";
+import {DuplicateComponent} from "./components/programming/pom-worksheet/worksheet-management/duplicate/duplicate.component";
+import {RenameComponent} from "app/components/programming/pom-worksheet/worksheet-management/rename/rename.component";
+import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
+import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
+import {SelectedRowService} from "app/components/programming/pom-worksheet/worksheet-management/selected-row.service";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -314,6 +319,10 @@ const appRoutes: Routes = [
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
     ToggleComponent,
+    DuplicateComponent,
+    RenameComponent,
+    ExportComponent,
+    ImportComponent,
     ActualsCellRendererComponent,
   ],
   entryComponents: [
@@ -357,6 +366,7 @@ const appRoutes: Routes = [
     UserService,
     TagsService,
     Injectables,
+    SelectedRowService,
     JoinCommunityRequestService,
     AutoValuesService,
     LeaveCommunityRequestService,

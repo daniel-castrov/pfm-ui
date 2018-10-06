@@ -5,6 +5,14 @@ import { HeaderComponent } from '../../../header/header.component';
 import { UserUtils } from '../../../../services/user.utils';
 import { PomWorksheetService, POMService, Pom, PomWorksheet, User } from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
+import {SelectedRowService} from "./selected-row.service";
+
+enum Mode {
+  DUPLICATE='DUPLICATE',
+  RENAME='RENAME',
+  EXPORT='EXPORT',
+  IMPORT='IMPORT'
+}
 
 @Component({
   selector: 'worksheet-management',
@@ -17,13 +25,15 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
+  private mode: Mode;
   private pomWorksheets: PomWorksheet[];
   private fy: number;
   private agOptions: GridOptions;
 
   constructor( private pomService: POMService,
                private pomWorksheetService: PomWorksheetService,
-               private userUtils: UserUtils ) {
+               private userUtils: UserUtils,
+               private selectedRowService: SelectedRowService ) {
     this.agOptions = <GridOptions>{
       enableColResize: true,
 
@@ -64,4 +74,9 @@ export class WorksheetManagementComponent implements OnInit {
        });
      });
    }
+
+   isRowNotSelected(): boolean {
+    return isNaN(this.selectedRowService.index);
+   }
+
 }
