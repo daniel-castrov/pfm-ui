@@ -158,6 +158,8 @@ import {DuplicateComponent} from "./components/programming/pom-worksheet/workshe
 import {RenameComponent} from "app/components/programming/pom-worksheet/worksheet-management/rename/rename.component";
 import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
+import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
+
 
 // ROUTES
 const appRoutes: Routes = [
@@ -208,7 +210,7 @@ const appRoutes: Routes = [
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent},
-  {path:'worksheet', component: WorksheetComponent},
+  {path:'worksheet/:id', component: WorksheetComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent },
   {path:'library', component: LibraryComponent}
 ];
@@ -310,6 +312,7 @@ const appRoutes: Routes = [
     WorksheetComponent,
     FileUploadComponent,
     CheckboxRendererComponent,
+    NameRendererComponent,
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
@@ -337,6 +340,8 @@ const appRoutes: Routes = [
     TransferFromToDetailsCellRendererComponent,
     DeleteRenderer,
     CheckboxRendererComponent,
+    NameRendererComponent,
+    ViewSiblingsRenderer,
     ViewSiblingsRenderer,
     ActualsCellRendererComponent
   ],
