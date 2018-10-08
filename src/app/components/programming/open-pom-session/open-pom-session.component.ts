@@ -4,7 +4,7 @@ import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
 import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated';
-import { FeedbackComponent } from '../../feedback/feedback.component';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 @Component({
   selector: 'app-open-pom-session',
@@ -15,7 +15,6 @@ import { FeedbackComponent } from '../../feedback/feedback.component';
 export class OpenPomSessionComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   private pom:Pom;
   private pomProgrammaticRequests:ProgramRequestWithFullName[];
@@ -43,7 +42,7 @@ export class OpenPomSessionComponent implements OnInit {
 
       if ( !this.pom || null==this.pom ){
         this.pomStatusIsCreated = false;
-        this.feedback.failure('No POM Session in the "CREATED" state was found');
+        NotifyUtil.notifyError('No POM Session in the "CREATED" state was found');
       } else {
 
         await this.initPbPrs();
@@ -87,7 +86,7 @@ export class OpenPomSessionComponent implements OnInit {
     if (this.allPrsSubmitted) {
       this.pomService.open(this.pom.id).subscribe(data => {
         this.pomStatusIsCreated = false;
-        this.feedback.success('The POM Session is now OPEN');
+        NotifyUtil.notifySuccess('The POM Session is now OPEN');
         this.header.refreshActions();
       });
     }
