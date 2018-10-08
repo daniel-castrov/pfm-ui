@@ -15,36 +15,36 @@
 }
 
 .line-expplan {
-  stroke: orange;
+  stroke: #f67d03;
   stroke-width: 3;
 }
 
 .dot-expplan {
-  fill: orange;
+  fill: #f67d03;
   display:none;
 }
 
 .line-obgplan {
-  stroke: blue;
+  stroke: #1158ab;
   stroke-width: 3;
 }
 
 .line-realobg {
-  stroke: red;
+  stroke: #f12b25;
   stroke-width: 3;
 }
 
 .dot-realobg {
-  fill: red;
+  fill: #f12b25;
 }
 
 .line-realexp {
-  stroke: green;
+  stroke: #008d45;
   stroke-width: 3;
 }
 
 .dot-realexp {
-  fill: green;
+  fill: #008d45;
 }
 
 .focus circle {
@@ -53,7 +53,7 @@
 }
 
 .dot-obgplan {
-  fill: blue;
+  fill: #1158ab;
   display:none;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .legend-item-expplan {
-  color: orange;
+  color: #f67d03;
 
   span.legend-text {
     color: #000;
@@ -72,7 +72,7 @@
 }
 
 .legend-item-obgplan {
-  color: blue;
+  color: #1158ab;
 
   span.legend-text {
     color: #000;
@@ -80,7 +80,7 @@
 }
 
 .legend-item-realobg {
-  color: red;
+  color: #f12b25;
 
   span.legend-text {
     color: #000;
@@ -88,7 +88,7 @@
 }
 
 .legend-item-realexp {
-  color: green;
+  color: #008d45;
 
   span.legend-text {
     color: #000;
