@@ -3,7 +3,6 @@ import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular
 import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
-
 import * as d3 from 'd3';
 import 'rxjs/add/operator/takeUntil';
 import { max } from 'rxjs/operators';
@@ -196,7 +195,7 @@ export class GraphsTabComponent implements OnInit {
             .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
             .y(function (d) { return yScale(d); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX) // apply smoothing to the line
-        
+
         this.datasets.forEach(ds => {
                 // 8. (skipped)
 
@@ -221,10 +220,6 @@ export class GraphsTabComponent implements OnInit {
                 })
                 .on("mouseout", function () { })
         });
-
-        //var legend = svg.append("g")
-        //    .attr("class", "legend")
-        //    .call(d3.legend)
 
         //       .on("mousemove", mousemove);
 

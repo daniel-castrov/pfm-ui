@@ -20,6 +20,11 @@
 
 .dot-expplan {
   fill: orange;
+  display:none;
+}
+
+.legend-item-expplan {
+  color: orange;
 }
 
 .line-obgplan {
@@ -29,12 +34,22 @@
 
 .dot-obgplan {
   fill: blue;
+  display:none;
+}
+
+.legend-item-obgplan {
+  color: blue;
 }
 
 .line-realobg {
   stroke: red;
   stroke-width: 3;
 }
+
+.legend-item-realobg {
+  color: red;
+}
+
 
 .dot-realobg {
   fill: red;
@@ -48,6 +63,11 @@
 .dot-realexp {
   fill: green;
 }
+
+.legend-item-realexp {
+  color: green;
+}
+
 
 .focus circle {
   fill: none;
