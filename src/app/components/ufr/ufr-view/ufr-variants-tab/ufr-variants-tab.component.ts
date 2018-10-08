@@ -1,12 +1,12 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import { ProgrammaticRequest, FundingLine, POMService, IntMap, Variant, User} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
-import { FeedbackComponent } from '../../../feedback/feedback.component';
 import {DataRow} from "./DataRow";
 import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
+import { NotifyUtil } from '../../../../utils/NotifyUtil';
 
 @Component({
   selector: 'ufr-variants-tab',
@@ -16,7 +16,6 @@ import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer
 })
 export class UfrVariantsTabComponent {
 
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() current: ProgrammaticRequest;
   @Input() editable:boolean;
 
@@ -416,7 +415,7 @@ export class UfrVariantsTabComponent {
 
   addVariant(){
     if (this.fund.variants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
-      this.feedback.failure('A Variant named "' + this.newVariantName + '" already exists');
+      NotifyUtil.notifyError('A Variant named "' + this.newVariantName + '" already exists');
       return;
     }
 
