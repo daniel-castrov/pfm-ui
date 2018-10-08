@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 // Other Components
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData, RolesPermissionsService } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
@@ -44,6 +44,7 @@ export class ActualsTabComponent implements OnInit {
   remediation: string;
   explanation: string;
   fixtime: number = 1;
+  private roles: string[];
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -103,7 +104,7 @@ export class ActualsTabComponent implements OnInit {
     return this._deltas;
   }
 
-  constructor() {
+  constructor( private rolespermsvc: RolesPermissionsService ) {
     var my: ActualsTabComponent = this;
 
     var editrows: Set<number> = new Set<number>([2, 4, 8, 12]);
@@ -417,6 +418,14 @@ export class ActualsTabComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.rolespermsvc.getRoles().subscribe(d => { 
+      if (d.error) {
+        
+      }
+      else {
+        this.roles = d.result;
+      }
+    });
   }
 
   /**

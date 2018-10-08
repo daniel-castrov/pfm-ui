@@ -46,7 +46,7 @@
       </ag-grid-angular>
   </div>
 </div>
-<div class="row mt-3">
+<div class="row mt-3" *ngIf="roles?.includes( 'Execution_Manager' )">
   <div class="col-4">
     <span>
       <label class="mr-1">Previous Months: </label>
