@@ -11,7 +11,7 @@
     <span class="shortname text-truncate" title="{{pr.shortName}}">{{parentFullName}}{{pr.shortName}}</span>
   </div>
   <div class="form-group mr-3">
-    <label class="mr-1">Name:</label>
+    <label class="mr-1">Program Name:</label>
     <div class="longname text-truncate" title="{{pr.longName}}">{{pr.longName}}</div>
   </div>
   <div class="form-group">
@@ -27,39 +27,39 @@
     <div *ngIf="pr.type==='GENERIC'" class="h5 mb-4">Create Program Request for a New Subprogram:</div>
   </ng-container>
   <span class="form-group mr-3">
-    <label class="mr-1" for="id">*Id: </label>
-    <span class="mr-1">{{parentFullName}}</span>
-    <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput" [(ngModel)]="pr.shortName" aria-label="short name">
+    <label class="mr-1" for="id">*Program ID: </label>
+    <span class="mr-1 text-truncate shortname" title="{{parentFullName}}">{{parentFullName}}</span>
+    <input id="id" [formControl]="shortname" type="text" class="form-control forminput shortname" [(ngModel)]="pr.shortName" aria-label="short name">
  </span>
  <span class="form-group mr-3">
-   <label class="mr-1" for="name">*Name:</label>
-   <input id="name" [formControl]="longname" type="text" class="form-control forminput" [(ngModel)]="pr.longName" aria-label="short name">
+   <label class="mr-1" for="name">*Program Name:</label>
+   <input id="name" [formControl]="longname" type="text" class="form-control forminput longname" [(ngModel)]="pr.longName" aria-label="short name">
   </span>
   <span class="form-group mr-3">
     <label class="mr-1">Program Type:</label>
     <span class="type">{{type()}}</span>
   </span>
-  <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
-  <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>
-  <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program name is required</div>
-  <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program name already exists</div>
+  <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program ID is required</div>
+  <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program ID already exists</div>
+  <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program Name is required</div>
+  <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program Name already exists</div>
 </div>
 <div id="create-new-toplevel" *ngIf="!programRequestPageMode.prId && programRequestPageMode.newProgram">
   <div *ngIf="programRequestPageMode.type" class="h5 mb-4">Create Program Request for a New Program:</div>
   <span class="form-group mr-3">
-    <label class="mr-1" for="id">*Id:</label>
-    <input id="id" [formControl]="shortname" type="text" class="shortname form-control forminput" [(ngModel)]="pr.shortName" aria-label="short name">
+    <label class="mr-1" for="id">*Program ID:</label>
+    <input id="id" [formControl]="shortname" type="text" class="form-control forminput shortname" [(ngModel)]="pr.shortName" aria-label="short name">
   </span>
   <span class="form-group mr-3">
-    <label class="mr-1" for="name">*Name:</label>
-    <input id="name"  [formControl]="longname" type="text" class="longname form-control forminput mr-2" [(ngModel)]="pr.longName" aria-label="short name">
+    <label class="mr-1" for="name">*Program Name:</label>
+    <input id="name"  [formControl]="longname" type="text" class="form-control forminput longname mr-2" [(ngModel)]="pr.longName" aria-label="short name">
   </span>
   <span class="form-group">
     <label class="smr-1">Program Type:</label>
     <span class="type">{{type()}}</span>
   </span>
-    <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program id is required</div>
-    <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program id already exists</div>
-    <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program name is required</div>
-    <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program name already exists</div>
+    <div class="text-danger" *ngIf="shortname.touched && shortname.invalid && shortname.errors.required">Program ID is required</div>
+    <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program ID already exists</div>
+    <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program Name is required</div>
+    <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program Name already exists</div>
 </div>
