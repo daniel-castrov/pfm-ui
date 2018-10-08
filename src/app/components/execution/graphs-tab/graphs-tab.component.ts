@@ -100,25 +100,47 @@ export class GraphsTabComponent implements OnInit {
                 this.maxmonths, this.exe.fy);
 
         var obgDataset: DataSet = {
-            label: 'Obligation',
-            csskey: 'objplan',
+            label: 'Obligation Goal',
+            csskey: 'obgplan',
             data: []
 
         };
         var expDataset: DataSet = {
-            label: 'Expenditure',
+            label: 'Expenditure Goal',
             data: [],
             csskey: 'expplan'
         };
 
+        var realexpDataset: DataSet = {
+            label: 'Actual Expenditures',
+            data: [],
+            csskey: 'realexp'
+        };
+
+        var realobgDataset: DataSet = {
+            label: 'Actual Obligations',
+            data: [],
+            csskey: 'realobg'
+        };
+
         for (var i = 0; i < this.maxmonths; i++) {
             var toa = toasAndReleaseds[i].toa;
-            
             obgDataset.data.push(toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1));
             expDataset.data.push(toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1));
+
+            if (myoandes[i]) {
+                // we want cumulatives, so add last month's totals
+                var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
+                var lastobg: number = (i > 0 ? realobgDataset.data[i - 1] : 0);
+
+                realexpDataset.data.push(myoandes[i].outlayed + lastexp);
+                realobgDataset.data.push(myoandes[i].obligated + lastobg);
+            }
+
         }
 
-        this.datasets = [obgDataset, expDataset];
+
+        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset ];
     }
 
     private regraph() {
@@ -174,15 +196,15 @@ export class GraphsTabComponent implements OnInit {
             .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
             .y(function (d) { return yScale(d); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX) // apply smoothing to the line
-
-        this.datasets.forEach(ds => { 
-            // 8. (skipped)
+        
+        this.datasets.forEach(ds => {
+                // 8. (skipped)
 
             // 9. Append the path, bind the data, and call the line generator
             svg.append("path")
                 .datum(ds.data) // 10. Binds data to the line
                 .attr("class", "line line-" + ds.csskey) // Assign a class for styling
-                .attr('fill', 'none')
+                .attr("data-legend", function (d) { return ds.label })
                 .attr("d", line); // 11. Calls the line generator
 
             // 12. Appends a circle for each datapoint
@@ -199,6 +221,10 @@ export class GraphsTabComponent implements OnInit {
                 })
                 .on("mouseout", function () { })
         });
+
+        //var legend = svg.append("g")
+        //    .attr("class", "legend")
+        //    .call(d3.legend)
 
         //       .on("mousemove", mousemove);
 

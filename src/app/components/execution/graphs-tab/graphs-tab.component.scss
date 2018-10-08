@@ -9,12 +9,11 @@
 
 /* Style the dots by assigning a fill and stroke */
 .dot {
-    fill: #ffab00;
+    fill: rgb(4, 35, 53);
     stroke: #fff;
 }
 
 .line-expplan {
-  fill: none;
   stroke: orange;
   stroke-width: 3;
 }
@@ -23,14 +22,31 @@
   fill: orange;
 }
 
-.line-objplan {
-  fill: none;
+.line-obgplan {
   stroke: blue;
   stroke-width: 3;
 }
 
-.dot-objplan {
+.dot-obgplan {
   fill: blue;
+}
+
+.line-realobg {
+  stroke: red;
+  stroke-width: 3;
+}
+
+.dot-realobg {
+  fill: red;
+}
+
+.line-realexp {
+  stroke: green;
+  stroke-width: 3;
+}
+
+.dot-realexp {
+  fill: green;
 }
 
 .focus circle {
