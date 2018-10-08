@@ -7,10 +7,11 @@
   pointer-events: all;
 }
 
+
 /* Style the dots by assigning a fill and stroke */
 .dot {
-    fill: rgb(4, 35, 53);
-    stroke: #fff;
+  fill: rgb(4, 35, 53);
+  stroke: #fff;
 }
 
 .line-expplan {
@@ -23,33 +24,15 @@
   display:none;
 }
 
-.legend-item-expplan {
-  color: orange;
-}
-
 .line-obgplan {
   stroke: blue;
   stroke-width: 3;
-}
-
-.dot-obgplan {
-  fill: blue;
-  display:none;
-}
-
-.legend-item-obgplan {
-  color: blue;
 }
 
 .line-realobg {
   stroke: red;
   stroke-width: 3;
 }
-
-.legend-item-realobg {
-  color: red;
-}
-
 
 .dot-realobg {
   fill: red;
@@ -64,12 +47,50 @@
   fill: green;
 }
 
-.legend-item-realexp {
-  color: green;
-}
-
-
 .focus circle {
   fill: none;
   stroke: steelblue;
+}
+
+.dot-obgplan {
+  fill: blue;
+  display:none;
+}
+
+.legend-item {
+
+  list-style: none;
+  margin-left: -40px;
+}
+
+.legend-item-expplan {
+  color: orange;
+
+  span.legend-text {
+    color: #000;
+  }
+}
+
+.legend-item-obgplan {
+  color: blue;
+
+  span.legend-text {
+    color: #000;
+  }
+}
+
+.legend-item-realobg {
+  color: red;
+
+  span.legend-text {
+    color: #000;
+  }
+}
+
+.legend-item-realexp {
+  color: green;
+
+  span.legend-text {
+    color: #000;
+  }
 }

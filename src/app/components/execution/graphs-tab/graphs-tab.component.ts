@@ -132,7 +132,7 @@ export class GraphsTabComponent implements OnInit {
                 + '\nActuals: ' + actual
                 + '\nExplanation: ' + oande.explanation
                 + '\nRemediation: ' + oande.remediation
-                + '\nMonths to Fix: ' + oande.monthsToFix;            
+                + '\nMonths to Fix: ' + oande.monthsToFix;
         }
 
         for (var i = 0; i < this.maxmonths; i++) {
@@ -172,8 +172,8 @@ export class GraphsTabComponent implements OnInit {
         var margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
         var chartdiv = d3.select('#line-chart');
-        var width = window.innerWidth - margin.left - margin.right; // Use the window's width
-        var height = window.innerHeight - margin.top - margin.bottom - 400; // Use the window's height
+        var width = window.innerWidth - margin.left - margin.right - 90; // Use the window's width
+        var height = window.innerHeight - margin.top - margin.bottom - 300; // Use the window's height
 
         //console.log(width + 'x' + height);
 
@@ -188,7 +188,7 @@ export class GraphsTabComponent implements OnInit {
         // 6. Y scale will use the randomly generate number
         // figure out our max number
         var maxval: number = 0;
-        this.datasets.forEach(ds => { 
+        this.datasets.forEach(ds => {
             maxval = Math.max(maxval, Math.max(...ds.data));
         });
 
