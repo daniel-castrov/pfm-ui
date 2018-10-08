@@ -46,7 +46,6 @@ import { ElevationComponent } from './components/user-management/manage-self/ele
 import { ErrorDataService } from './components/error/errorData.service';
 import { CurrentComponent } from './components/user-management/my-communities/current/current.component';
 import { FilterComponent } from './components/filter/filter.component';
-import { FeedbackComponent } from './components/feedback/feedback.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { GraphsTabComponent } from './components/execution/graphs-tab/graphs-tab.component';
@@ -234,7 +233,6 @@ const appRoutes: Routes = [
     DashForZeroPipe,
     ElevationComponent,
     EmphasisAreasComponent,
-    FeedbackComponent,
     FilterComponent,
     FundsTabComponent,
     FundsUpdateComponent,

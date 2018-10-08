@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 import { Community } from '../../../generated/model/community';
 import { CommunityService } from '../../../generated/api/community.service';
@@ -12,7 +13,7 @@ import { LeaveCommunityRequest } from '../../../generated/model/leaveCommunityRe
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
-import { FeedbackComponent } from '../../feedback/feedback.component';
+
 
 @Component({
   selector: 'app-community-leave',
@@ -22,7 +23,6 @@ import { FeedbackComponent } from '../../feedback/feedback.component';
 export class CommunityLeaveComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   requestId: string;
   leaveCommunityRequest: LeaveCommunityRequest;
@@ -61,7 +61,7 @@ export class CommunityLeaveComponent implements OnInit {
         this.resultError.push(result.error);
         this.leaveCommunityRequest = result.result;
         if (null == this.leaveCommunityRequest) {
-          this.resultError.push("The requested Leave-Community-Request does not exist");
+          NotifyUtil.notifyInfo("The requested Leave-Community-Request does not exist");
           return;
         }
 
@@ -99,7 +99,7 @@ export class CommunityLeaveComponent implements OnInit {
       await this.leaveCommunityRequestService.status(status, this.leaveCommunityRequest.id).toPromise();
       this.router.navigate(['./home']);
     } catch(e) {
-      this.feedback.exception(e.message);
+      NotifyUtil.notifyError(e.message);
     }
   }
 
