@@ -135,7 +135,6 @@ import { SetEppComponent } from './components/programming/set-epp/set-epp.compon
 import { EppService, LibraryService, UserService, OandEService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
-import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { LibraryComponent } from "./components/manage/library/library.component";
@@ -159,6 +158,7 @@ import {RenameComponent} from "app/components/programming/pom-worksheet/workshee
 import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
 import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
+import {WorksheetService} from "app/generated/api/worksheet.service";
 
 
 // ROUTES
@@ -391,7 +391,7 @@ const appRoutes: Routes = [
     CycleUtils,
     RequestsService,
     POMService,
-    PomWorksheetService,
+    WorksheetService,
     PRService,
     PBService,
     UFRsService,

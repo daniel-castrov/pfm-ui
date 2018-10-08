@@ -17,7 +17,7 @@ tags:
 - name: "PB"
 - name: "Permission"
 - name: "POM"
-- name: "PomWorksheet"
+- name: "Worksheet"
 - name: "PR"
 - name: "Programs"
 - name: "Role"
@@ -377,11 +377,11 @@ paths:
         type: "string"
 # STOP POM
 ##############################################################################
-# START POMWORKSHEET
-  /pomworksheets/pom/{pomId}:
+# START WORKSHEET
+  /worksheets/pom/{pomId}:
     get:
       tags:
-      - "PomWorksheet"
+      - "Worksheet"
       operationId: "getByPomId"
       produces:
       - "application/json"
@@ -390,7 +390,7 @@ paths:
         name: "pomId"
         required: true
         type: "string"
-# STOP POMWORKSHEET
+# STOP WORKSHEET
 ##############################################################################
 # START PR
   /pr/phase/{phaseId}:
@@ -3165,7 +3165,7 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
-  PomWorksheet:
+  Worksheet:
     type: "object"
     properties:
       id:
@@ -3185,8 +3185,8 @@ definitions:
       rows:
         type: "array"
         items:
-          $ref: "#/definitions/PomWorksheetRow"
-  PomWorksheetRow:
+          $ref: "#/definitions/WorksheetRow"
+  WorksheetRow:
     type: "object"
     properties:
       programRequestId:

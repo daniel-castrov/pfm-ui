@@ -1,32 +1,31 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-import { HeaderComponent } from '../../../header/header.component';
-import { UserUtils } from '../../../../services/user.utils';
-import { PomWorksheetService, POMService, Pom, PomWorksheet, User } from '../../../../generated';
-import { CheckboxRendererComponent } from "./checkbox-renderer.component";
-import { StateService } from "./state.service";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {HeaderComponent} from '../../../header/header.component';
+import {UserUtils} from '../../../../services/user.utils';
+import {Pom, POMService, User, Worksheet, WorksheetService} from '../../../../generated';
+import {CheckboxRendererComponent} from "./checkbox-renderer.component";
+import {StateService} from "./state.service";
 import {NameRendererComponent} from "./name-renderer.component";
 
 
 @Component({
   selector: 'worksheet-management',
   templateUrl: './worksheet-management.component.html',
-  styleUrls: ['./worksheet-management.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./worksheet-management.component.scss']
 })
 export class WorksheetManagementComponent extends StateService implements OnInit {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  private pomWorksheets: PomWorksheet[];
+  private worksheets: Worksheet[];
   private fy: number;
   private agOptions: GridOptions;
 
   constructor( private pomService: POMService,
-               private pomWorksheetService: PomWorksheetService,
-               private userUtils: UserUtils) {
+               private worksheetService: WorksheetService,
+               private userUtils: UserUtils ) {
     super();
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -43,8 +42,8 @@ export class WorksheetManagementComponent extends StateService implements OnInit
     const user: User = await this.userUtils.user().toPromise();
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
     this.fy = pom.fy;
-    this.pomWorksheets = (await this.pomWorksheetService.getByPomId(pom.id).toPromise()).result;
-    const rowData = this.pomWorksheets.map(worksheet => { return {
+    this.worksheets = (await this.worksheetService.getByPomId(pom.id).toPromise()).result;
+    const rowData = this.worksheets.map(worksheet => { return {
       checkbox: '', // custom renderer
       worksheet: {"name":worksheet.name,"id":worksheet.id},
       number: worksheet.version,
