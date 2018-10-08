@@ -82,7 +82,9 @@ export class GraphsTabComponent implements OnInit {
         var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
         var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
 
-        var fymonth = OandETools.convertDateToFyMonth(this.exe.fy, new Date());
+        var cutoff = new Date();
+        cutoff.setMonth(cutoff.getMonth() + 1);
+        var fymonth = OandETools.convertDateToFyMonth(this.exe.fy, cutoff);
         // we can only graph up to the current month
         this.maxmonths = Math.min(ogoals.monthlies.length, egoals.monthlies.length, fymonth);
 
@@ -101,31 +103,46 @@ export class GraphsTabComponent implements OnInit {
         var obgDataset: DataSet = {
             label: 'Obligation Goal',
             csskey: 'obgplan',
-            data: []
-
+            data: [],
+            notes: []
         };
         var expDataset: DataSet = {
             label: 'Expenditure Goal',
             data: [],
-            csskey: 'expplan'
+            csskey: 'expplan',
+            notes: []
         };
 
         var realexpDataset: DataSet = {
             label: 'Actual Expenditures',
             data: [],
-            csskey: 'realexp'
+            csskey: 'realexp',
+            notes: []
         };
 
         var realobgDataset: DataSet = {
             label: 'Actual Obligations',
             data: [],
-            csskey: 'realobg'
+            csskey: 'realobg',
+            notes: []
         };
+
+        var makeNote = function (oande: OandEMonthly, title: string, goal: number, actual: number ){
+            return title + ' Goal: ' + goal
+                + '\nActuals: ' + actual
+                + '\nExplanation: ' + oande.explanation
+                + '\nRemediation: ' + oande.remediation
+                + '\nMonths to Fix: ' + oande.monthsToFix;            
+        }
 
         for (var i = 0; i < this.maxmonths; i++) {
             var toa = toasAndReleaseds[i].toa;
-            obgDataset.data.push(toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1));
-            expDataset.data.push(toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1));
+            var ogoal: number = toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+            var egoal: number = toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            obgDataset.data.push(ogoal);
+            obgDataset.notes.push('target: ' + ogoal);
+            expDataset.data.push(egoal);
+            expDataset.notes.push('target: ' + egoal);
 
             if (myoandes[i]) {
                 // we want cumulatives, so add last month's totals
@@ -133,9 +150,17 @@ export class GraphsTabComponent implements OnInit {
                 var lastobg: number = (i > 0 ? realobgDataset.data[i - 1] : 0);
 
                 realexpDataset.data.push(myoandes[i].outlayed + lastexp);
-                realobgDataset.data.push(myoandes[i].obligated + lastobg);
-            }
+                var notes: string = (myoandes[i] && myoandes[i].explanation
+                    ? makeNote(myoandes[i], 'Expenditure', egoal, myoandes[i].outlayed + lastexp)
+                    : '');
+                realexpDataset.notes.push(notes);
 
+                realobgDataset.data.push(myoandes[i].obligated + lastobg);
+                var notes: string = (myoandes[i] && myoandes[i].explanation
+                    ? makeNote(myoandes[i], 'Obligation', ogoal, myoandes[i].obligated + lastobg)
+                    : '');
+                realobgDataset.notes.push(notes);
+            }
         }
 
 
@@ -214,9 +239,13 @@ export class GraphsTabComponent implements OnInit {
                 .attr("cx", function (d, i) { return xScale(i) })
                 .attr("cy", function (d) { return yScale(d) })
                 .attr("r", 5)
-                .on("mouseover", function (a, b, c) {
-                    console.log(a)
-                    this.attr('class', 'focus')
+                .on("mouseover", function (value, month, z) {
+                    console.log('mouseover!');
+                    console.log(value)
+                    console.log(month)
+                    console.log(ds.notes[month])
+                    console.log( 'done with mo')
+                    //this.attr('class', 'focus')
                 })
                 .on("mouseout", function () { })
         });
@@ -257,5 +286,6 @@ export class GraphsTabComponent implements OnInit {
 interface DataSet {
     label: string,
     data: number[];
+    notes: string[],
     csskey: string
 }
