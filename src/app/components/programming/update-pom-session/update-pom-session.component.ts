@@ -1,14 +1,10 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 // Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
-import {POMService, PomWorksheetService} from "../../../generated";
+import {HeaderComponent} from '../../../components/header/header.component';
+import {POMService, Worksheet, WorksheetRow, WorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
-import {PomWorksheet} from "../../../generated/model/pomWorksheet";
 import {FormatterUtil} from "../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
-import {PomWorksheetRow} from "../../../generated/model/pomWorksheetRow";
 import {CellEditor} from "../../../utils/CellEditor";
 
 @Component({
@@ -27,13 +23,13 @@ export class UpdatePomSessionComponent implements OnInit {
   columnKeys;
   rowData;
   filterText;
-  worksheets: Array<PomWorksheet>;
-  selectedWorksheet: PomWorksheet = null;
+  worksheets: Array<Worksheet>;
+  selectedWorksheet: Worksheet = null;
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
-              private pomWorksheetService: PomWorksheetService) { }
+              private worksheetService: WorksheetService) { }
 
   ngOnInit() {
     this.userUtils.user().subscribe( user => {
@@ -48,7 +44,7 @@ export class UpdatePomSessionComponent implements OnInit {
           this.fy + 2,
           this.fy + 3,
           this.fy + 4];
-        this.pomWorksheetService.getByPomId(pom.result.id).subscribe( worksheets => {
+        this.worksheetService.getByPomId(pom.result.id).subscribe( worksheets => {
           this.worksheets = worksheets.result;
         });
       });
@@ -68,7 +64,7 @@ export class UpdatePomSessionComponent implements OnInit {
 
   initDataRows(){
     let data: Array<any> = [];
-    this.selectedWorksheet.rows.forEach((value: PomWorksheetRow) => {
+    this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
       let row = {
         coreCapability: value.coreCapability,
         programId: value.programRequestFullname,

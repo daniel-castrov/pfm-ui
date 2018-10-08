@@ -1,53 +1,78 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-
-// Other Components
-import { HeaderComponent } from '../../../header/header.component';
-import { UserUtils } from '../../../../services/user.utils';
-
-import { PomWorksheetService, POMService } from '../../../../generated';
-import { Pom, PomWorksheet, PomWorksheetRow } from '../../../../generated';
-
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {HeaderComponent} from '../../../header/header.component';
+import {UserUtils} from '../../../../services/user.utils';
+import {Pom, POMService, User, Worksheet, WorksheetService} from '../../../../generated';
+import {CheckboxRendererComponent} from "./checkbox-renderer.component";
+import {StateService} from "./state.service";
+import {NameRendererComponent} from "./name-renderer.component";
 
 
 @Component({
   selector: 'worksheet-management',
   templateUrl: './worksheet-management.component.html',
-  styleUrls: ['./worksheet-management.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./worksheet-management.component.scss']
 })
-export class WorksheetManagementComponent implements OnInit {
+export class WorksheetManagementComponent extends StateService implements OnInit {
 
   @ViewChild(HeaderComponent) header;
+  @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  private pomWorksheet:PomWorksheet[]=[];
-  private fy:number;
+  private worksheets: Worksheet[];
+  private fy: number;
+  private agOptions: GridOptions;
 
-  constructor( 
-    private pomSvc:POMService,
-    private pomWSSvc:PomWorksheetService,
-    private globalsService: UserUtils,
+  constructor( private pomService: POMService,
+               private worksheetService: WorksheetService,
+               private userUtils: UserUtils ) {
+    super();
+    this.agOptions = <GridOptions>{
+      enableColResize: true,
 
-  ) { }
+      columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
+                   {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameRendererComponent},
+                   {headerName: 'Number', field: 'number', maxWidth: 90},
+                   {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
+                   {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]
+    };
+  }
 
+  async ngOnInit() {
+    const user: User = await this.userUtils.user().toPromise();
+    const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
+    this.fy = pom.fy;
+    this.worksheets = (await this.worksheetService.getByPomId(pom.id).toPromise()).result;
+    const rowData = this.worksheets.map(worksheet => { return {
+      checkbox: '', // custom renderer
+      worksheet: {"name":worksheet.name,"id":worksheet.id},
+      number: worksheet.version,
+      createdOn: new Date(worksheet.createDate).toLocaleString(),
+      lastUpdatedOn: new Date(worksheet.lastUpdateDate).toLocaleString()}});
 
+    this.agGrid.api.setRowData(rowData);
+  }
 
-  ngOnInit() {
+  onPageSizeChanged(event) {
+    const selectedValue = Number(event.target.value);
+    this.agGrid.api.paginationSetPageSize(selectedValue);
+    this.agGrid.api.sizeColumnsToFit();
+  }
 
-    this.globalsService.user().subscribe( user => {
-      
-      this.pomSvc.getOpen(user.currentCommunityId).subscribe( data => {
-        let pom:Pom = data.result;
-        this.fy = pom.fy;
-        this.pomWSSvc.getByPomId(pom.id).subscribe( data2 => {
-          this.pomWorksheet = data2.result;
-          console.log(this.pomWorksheet);
-        });
+  onGridReady(params) {
+     setTimeout(() => {
+       params.api.sizeColumnsToFit();
+     }, 500);
 
-      });
-    });
+     window.addEventListener("resize", () => {
+       setTimeout(() => {
+         params.api.sizeColumnsToFit();
+       });
+     });
+  }
 
-
+  isRowNotSelected(): boolean {
+    return isNaN(this.selectedRowIndex);
   }
 
 }
