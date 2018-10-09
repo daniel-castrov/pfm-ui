@@ -39,20 +39,14 @@
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>
       </div>
-      <span class="worksheet-lock">
-        <i class="fa fa-lock" aria-hidden="true"></i>
-      </span>
-      <span class="worksheet-lock">
-        <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-      </span>
 
       <div class="row">
         <div class="col-12">
 
-          <duplicate [hidden]="operation!=Operation.DUPLICATE" (operationOver)="operation=null" ></duplicate>
-          <rename    [hidden]="operation!=Operation.RENAME"    (operationOver)="operation=null" ></rename>
-          <export    [hidden]="operation!=Operation.EXPORT"    (operationOver)="operation=null" ></export>
-          <import    [hidden]="operation!=Operation.IMPORT"    (operationOver)="operation=null" ></import>
+          <duplicate [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.DUPLICATE" (operationOver)="operation=null" ></duplicate>
+          <rename    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.RENAME"    (operationOver)="operation=null" ></rename>
+          <export    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.EXPORT"    (operationOver)="operation=null" ></export>
+          <import                                            [hidden]="operation!=Operation.IMPORT"    (operationOver)="operation=null" ></import>
 
         </div>
       </div>

@@ -19,7 +19,6 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  private worksheets: Worksheet[];
   private fy: number;
   private agOptions: GridOptions;
 
@@ -42,10 +41,10 @@ export class WorksheetManagementComponent extends StateService implements OnInit
     const user: User = await this.userUtils.user().toPromise();
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
     this.fy = pom.fy;
-    this.worksheets = (await this.worksheetService.getByPomId(pom.id).toPromise()).result;
-    const rowData = this.worksheets.map(worksheet => { return {
+    StateService.worksheets = (await this.worksheetService.getByPomId(pom.id).toPromise()).result;
+    const rowData = StateService.worksheets.map(worksheet => { return {
       checkbox: '', // custom renderer
-      worksheet: {"name":worksheet.name,"id":worksheet.id},
+      worksheet: worksheet,
       number: worksheet.version,
       createdOn: new Date(worksheet.createDate).toLocaleString(),
       lastUpdatedOn: new Date(worksheet.lastUpdateDate).toLocaleString()}});

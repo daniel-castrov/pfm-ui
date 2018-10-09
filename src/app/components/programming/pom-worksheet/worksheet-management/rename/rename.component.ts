@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Worksheet} from "../../../../../generated";
 
 @Component({
   selector: 'rename',
@@ -6,6 +7,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./rename.component.scss']
 })
 export class RenameComponent {
+  @Input() selectedWorksheet: Worksheet;
   @Output() operationOver = new EventEmitter();
 
 }

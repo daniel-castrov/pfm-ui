@@ -390,6 +390,31 @@ paths:
         name: "pomId"
         required: true
         type: "string"
+  /worksheets:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "create"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pomId"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
+    put:
+      tags:
+      - "Worksheet"
+      operationId: "create"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pomId"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
 # STOP WORKSHEET
 ##############################################################################
 # START PR

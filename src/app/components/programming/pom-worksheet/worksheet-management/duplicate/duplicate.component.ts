@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Worksheet} from "../../../../../generated";
 
 @Component({
   selector: 'duplicate',
@@ -6,6 +7,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./duplicate.component.scss']
 })
 export class DuplicateComponent {
+  @Input() selectedWorksheet: Worksheet;
   @Output() operationOver = new EventEmitter();
 
 }
