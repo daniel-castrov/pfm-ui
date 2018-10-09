@@ -6,6 +6,7 @@ import { OandETools, ToaAndReleased } from '../model/oande-tools';
 import * as d3 from 'd3';
 import 'rxjs/add/operator/takeUntil';
 import { max } from 'rxjs/operators';
+import { enterView } from '@angular/core/src/render3/instructions';
 
 @Component({
     selector: 'graphs-tab',
@@ -72,7 +73,6 @@ export class GraphsTabComponent implements OnInit {
 
     refreshGraph() {
         if (this._deltas && this._exe && this._exeline && this._oandes) {
-            console.log('got all our data!')
             this.createDatasets();
             this.regraph();
         }
@@ -91,7 +91,7 @@ export class GraphsTabComponent implements OnInit {
 
         // get our O&E values in order of month, so we can
         // run right through them
-        var myoandes: OandEMonthly[] = new Array(this.maxmonths);
+        var myoandes: OandEMonthly[] = [];
         this.oandes.forEach(oande => {
             myoandes[oande.month] = oande;
         });
@@ -128,12 +128,19 @@ export class GraphsTabComponent implements OnInit {
             notes: []
         };
 
-        var makeNote = function (oande: OandEMonthly, title: string, goal: number, actual: number ){
-            return title + ' Goal: ' + goal
-                + '\nActuals: ' + actual
-                + '\nExplanation: ' + oande.explanation
-                + '\nRemediation: ' + oande.remediation
-                + '\nMonths to Fix: ' + oande.monthsToFix;
+        var makeHtmlNote = function (oande: OandEMonthly, title: string, goal: number, actual: number ){
+            var pct: number = actual / goal * 100;
+            var notes: string =
+                title + ' Goal: ' + goal.toFixed(2)
+                + '<br/>Actual: ' + actual.toFixed(2)
+                + ' (' + pct.toFixed(2) + '%)';
+            if (oande && oande.explanation) {
+                notes += '<br/>Explanation: ' + oande.explanation
+                    + '<br/>Remediation: ' + oande.remediation
+                    + '<br/>Months to Fix: ' + oande.monthsToFix;
+            }
+
+            return notes;
         }
 
         for (var i = 0; i < this.maxmonths; i++) {
@@ -145,25 +152,24 @@ export class GraphsTabComponent implements OnInit {
             expDataset.data.push(egoal);
             expDataset.notes.push('target: ' + egoal);
 
+            // we want cumulatives, so add last month's totals
+            var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
+            var lastobg: number = (i > 0 ? realobgDataset.data[i - 1] : 0);
             if (myoandes[i]) {
-                // we want cumulatives, so add last month's totals
-                var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
-                var lastobg: number = (i > 0 ? realobgDataset.data[i - 1] : 0);
-
                 realexpDataset.data.push(myoandes[i].outlayed + lastexp);
-                var notes: string = (myoandes[i] && myoandes[i].explanation
-                    ? makeNote(myoandes[i], 'Expenditure', egoal, myoandes[i].outlayed + lastexp)
-                    : '');
-                realexpDataset.notes.push(notes);
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, myoandes[i].outlayed + lastexp));
 
                 realobgDataset.data.push(myoandes[i].obligated + lastobg);
-                var notes: string = (myoandes[i] && myoandes[i].explanation
-                    ? makeNote(myoandes[i], 'Obligation', ogoal, myoandes[i].obligated + lastobg)
-                    : '');
-                realobgDataset.notes.push(notes);
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, myoandes[i].obligated + lastobg));
+            }
+            else {
+                realexpDataset.data.push(lastexp);
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, lastexp));
+
+                realobgDataset.data.push(lastobg);
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, lastobg));
             }
         }
-
 
         this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset ];
     }
@@ -181,8 +187,6 @@ export class GraphsTabComponent implements OnInit {
             .append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-
-        //console.log(width + 'x' + height);
 
         // The number of datapoints
         var n = this.maxmonths;
@@ -222,31 +226,14 @@ export class GraphsTabComponent implements OnInit {
             .attr("class", "y axis")
             .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
 
-        svg.focus.append("line")
-               .attr("class", "x-hover-line hover-line")
-               .attr("y1", 0)
-               .attr("y2", height);
-
-       svg.focus.append("line")
-           .attr("class", "y-hover-line hover-line")
-           .attr("x1", width)
-           .attr("x2", width);
-
         // 7. d3's line generator
         var line = d3.line()
             .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
             .y(function (d) { return yScale(d); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX) // apply smoothing to the line
 
-        // create tooltips
-        function createTooltip(i){
-          div.transition()
-             .duration(200)
-             .style("opacity", .9);
-          } // end createTooltip
-
         this.datasets.forEach(ds => {
-                // 8. (skipped)
+            // 8. (skipped)
 
             // 9. Append the path, bind the data, and call the line generator
             svg.append("path")
@@ -264,19 +251,20 @@ export class GraphsTabComponent implements OnInit {
                 .attr("cy", function (d) { return yScale(d) })
                 .attr("r", 5)
                 .on("mouseover", function (value, month, z) {
-                  console.log('mouseover!');
-                  console.log(value)
-                  console.log(month)
-                  console.log(ds.notes[month])
-                  console.log( 'done with mo')
-                  //this.attr('class', 'focus')
-              })
-                .on("mouseover",(d,i) => createTooltip(i))
-                .on("mouseout",function(d){
-                 div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-               })
+                    div.html(ds.notes[month])
+                        .style("left", xScale(month) + 70 + "px")
+                        .style("top", yScale(value) + 60 + "px");
+                    div.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    // d3.select(this).attr('class', 'focus');
+                })
+                .on("mouseout", function (d) {
+                    div.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                    // d3.select(this).attr('')
+                })
         });
 
         //       .on("mousemove", mousemove);
