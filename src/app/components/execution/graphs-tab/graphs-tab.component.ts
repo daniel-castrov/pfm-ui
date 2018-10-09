@@ -1,12 +1,10 @@
-import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
 import * as d3 from 'd3';
 import 'rxjs/add/operator/takeUntil';
-import { max } from 'rxjs/operators';
-import { enterView } from '@angular/core/src/render3/instructions';
 
 @Component({
     selector: 'graphs-tab',
@@ -24,7 +22,6 @@ export class GraphsTabComponent implements OnInit {
     private _deltas: Map<Date, ExecutionEvent>;
     private datasets: DataSet[];
     private maxmonths: number;
-    private focus: any;
 
     @Input() set exeline(e: ExecutionLine) {
         this._exeline = e;
@@ -105,11 +102,15 @@ export class GraphsTabComponent implements OnInit {
             label: 'Obligation Goal',
             csskey: 'obgplan',
             data: [],
+            toas:[],
+            status: [],
             notes: []
         };
         var expDataset: DataSet = {
             label: 'Expenditure Goal',
             data: [],
+            toas: [],
+            status: [],
             csskey: 'expplan',
             notes: []
         };
@@ -117,6 +118,8 @@ export class GraphsTabComponent implements OnInit {
         var realexpDataset: DataSet = {
             label: 'Actual Expenditures',
             data: [],
+            toas: [],
+            status: [],
             csskey: 'realexp',
             notes: []
         };
@@ -124,16 +127,17 @@ export class GraphsTabComponent implements OnInit {
         var realobgDataset: DataSet = {
             label: 'Actual Obligations',
             data: [],
+            toas: [],
+            status: [],
             csskey: 'realobg',
             notes: []
         };
 
-        var makeHtmlNote = function (oande: OandEMonthly, title: string, goal: number, actual: number ){
-            var pct: number = actual / goal * 100;
+        var makeHtmlNote = function (oande: OandEMonthly, title: string,
+            goal: number, actual: number, toa: number) {
             var notes: string =
-                title + ' Goal: ' + goal.toFixed(2)
-                + '<br/>Actual: ' + actual.toFixed(2)
-                + ' (' + pct.toFixed(2) + '%)';
+                title + ' Goal: ' + goal.toFixed(2) + ' (' + (goal / toa * 100).toFixed(2) + '%)'
+                + '<br/>Actual: ' + actual.toFixed(2) + ' (' + (actual / toa * 100).toFixed(2) + '%)';
             if (oande && oande.explanation) {
                 notes += '<br/>Explanation: ' + oande.explanation
                     + '<br/>Remediation: ' + oande.remediation
@@ -143,35 +147,60 @@ export class GraphsTabComponent implements OnInit {
             return notes;
         }
 
+        var getStatus = function (actual: number, goal: number, toa: number) :number {
+            var diff: number = (goal - actual) / toa;
+            if (diff >= 0.15) {
+                return 2;
+            }
+            if (diff > 0.10) {
+                return 1;
+            }
+            return 0;
+        }
+
         for (var i = 0; i < this.maxmonths; i++) {
             var toa = toasAndReleaseds[i].toa;
             var ogoal: number = toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
             var egoal: number = toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            obgDataset.toas.push(toa);
             obgDataset.data.push(ogoal);
-            obgDataset.notes.push('target: ' + ogoal);
+            obgDataset.notes.push('Obligation Goal: ' + ogoal.toFixed(2) + ' (' + (ogoal / toa * 100).toFixed(2) + '%)');
+            obgDataset.status.push(0);
+
+            expDataset.toas.push(toa);
             expDataset.data.push(egoal);
-            expDataset.notes.push('target: ' + egoal);
+            expDataset.notes.push('Expenditure Goal: ' + egoal.toFixed(2) + ' (' + (egoal / toa * 100).toFixed(2) + '%)');
+            expDataset.status.push(0);
 
             // we want cumulatives, so add last month's totals
             var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
             var lastobg: number = (i > 0 ? realobgDataset.data[i - 1] : 0);
+            realexpDataset.toas.push(toa);
+            realobgDataset.toas.push(toa);
             if (myoandes[i]) {
-                realexpDataset.data.push(myoandes[i].outlayed + lastexp);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, myoandes[i].outlayed + lastexp));
+                var eactual: number = myoandes[i].outlayed + lastexp;
+                realexpDataset.data.push(eactual);
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, eactual, toa));
+                realexpDataset.status.push(getStatus(eactual, egoal, toa));
 
-                realobgDataset.data.push(myoandes[i].obligated + lastobg);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, myoandes[i].obligated + lastobg));
+                var oactual: number = myoandes[i].obligated + lastobg;
+                realobgDataset.data.push(oactual);
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, oactual, toa));
+                realobgDataset.status.push(getStatus(oactual, ogoal, toa));
             }
             else {
                 realexpDataset.data.push(lastexp);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, lastexp));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, lastexp, toa));
+                realexpDataset.status.push(getStatus(lastexp, egoal, toa));
 
                 realobgDataset.data.push(lastobg);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, lastobg));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, lastobg, toa));
+                realobgDataset.status.push(getStatus(lastobg, ogoal, toa));
             }
         }
 
-        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset ];
+        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset];
+        console.log(this.datasets);
     }
 
     private regraph() {
@@ -245,11 +274,23 @@ export class GraphsTabComponent implements OnInit {
             // 12. Appends a circle for each datapoint
             svg.selectAll(".dot-" + ds.csskey)
                 .data(ds.data)
-                .enter().append("circle") // Uses the enter().append() method
-                .attr("class", "dot dot-" + ds.csskey) // Assign a class for styling
+                .enter().append('circle')
+                .attr("class", function (value, month) {
+                    var klass : string = 'dot dot-' + ds.csskey;
+                    if (2 === ds.status[month]) {
+                        klass += ' dot-red';
+                    }
+                    else if (1 === ds.status[month]) {
+                        klass += ' dot-yellow';
+                    }
+
+                    return klass;
+                })
                 .attr("cx", function (d, i) { return xScale(i) })
                 .attr("cy", function (d) { return yScale(d) })
-                .attr("r", 5)
+                .attr("r", function (value, month) {
+                    return 5 + 2 * ds.status[month];
+                })
                 .on("mouseover", function (value, month, z) {
                     div.html(ds.notes[month])
                         .style("left", xScale(month) + 70 + "px")
@@ -302,7 +343,9 @@ export class GraphsTabComponent implements OnInit {
 
 interface DataSet {
     label: string,
-    data: number[];
+    data: number[],
+    toas:number[],
     notes: string[],
-    csskey: string
+    csskey: string,
+    status: number[] // 0:green, 1:yellow, 2: red
 }

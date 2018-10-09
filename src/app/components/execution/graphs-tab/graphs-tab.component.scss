@@ -24,11 +24,24 @@ div.tooltip {
   pointer-events: none;
 }
 
+#legend {
+  position: absolute;
+  top: 60px;
+  left: 100px;
+}
 
 /* Style the dots by assigning a fill and stroke */
 .dot {
   fill: rgb(4, 35, 53);
   stroke: #fff;
+}
+
+.dot-red {
+  fill: red!important;
+}
+
+.dot-yellow {
+  fill: yellow!important;
 }
 
 .line-expplan {
@@ -38,7 +51,7 @@ div.tooltip {
 
 .dot-expplan {
   fill: #f67d03;
-  display:none;
+  //display:none;
 }
 
 .line-obgplan {
@@ -47,21 +60,21 @@ div.tooltip {
 }
 
 .line-realobg {
-  stroke: #f12b25;
+  stroke: #25f1e7;
   stroke-width: 3;
 }
 
 .dot-realobg {
-  fill: #f12b25;
+  fill: #25f1e7;
 }
 
 .line-realexp {
-  stroke: #008d45;
+  stroke: #f1cf0b;
   stroke-width: 3;
 }
 
 .dot-realexp {
-  fill: #008d45;
+  fill: #f1cf0b;
 }
 
 .focus circle {
@@ -71,7 +84,7 @@ div.tooltip {
 
 .dot-obgplan {
   fill: #1158ab;
-  display:none;
+  //display:none;
 }
 
 .legend-item {
@@ -96,7 +109,7 @@ div.tooltip {
 }
 
 .legend-item-realobg {
-  color: #f12b25;
+  color: #25f1e7;
 
   span.legend-text {
     color: #000;
@@ -104,7 +117,7 @@ div.tooltip {
 }
 
 .legend-item-realexp {
-  color: #008d45;
+  color: #f1cf0b;
 
   span.legend-text {
     color: #000;
