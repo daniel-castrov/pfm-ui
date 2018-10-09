@@ -3,7 +3,6 @@ import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom
 import { UserUtils } from '../../../../services/user.utils';
 import { NotifyUtil } from '../../../../utils/NotifyUtil';
 
-import { FeedbackComponent } from '../../../feedback/feedback.component';
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
@@ -18,7 +17,6 @@ import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer
 })
 export class VariantsTabComponent {
 
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
   @Input() current: ProgrammaticRequest;
   @Input() editable:boolean;
 
@@ -491,7 +489,7 @@ export class VariantsTabComponent {
 
   addVariant(){
     if (this.fund.variants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
-      this.feedback.failure('A Variant named "' + this.newVariantName + '" already exists');
+      NotifyUtil.notifyError('A Variant named "' + this.newVariantName + '" already exists');
       return;
     }
 

@@ -2,10 +2,10 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Request } from '../../../services/request';
 
 // Other Components
-import { FeedbackComponent } from '../../feedback/feedback.component';
 import { HeaderComponent } from '../../header/header.component';
 import { Injectables } from '../../../services/injectables';
 import { RequestsService } from '../../../services/requests.service';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 @Component({
   selector: 'approve-requests',
@@ -15,7 +15,7 @@ import { RequestsService } from '../../../services/requests.service';
 export class ApproveRequestsComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
+
   requests: Request[];
 
   constructor( injectables: Injectables, // initilizes the static members on the class Injectables
@@ -40,11 +40,11 @@ export class ApproveRequestsComponent implements OnInit {
   async submit(action: any, message: string) {
     try {
       await action();
-      this.feedback.success("The request has been " + message);
+      NotifyUtil.notifySuccess("The request has been " + message);
       this.ngOnInit();
       this.header.refreshActions();
     } catch(e) {
-      this.feedback.exception(e.message);
+      NotifyUtil.notifyError(e.message);
     }
   }
 

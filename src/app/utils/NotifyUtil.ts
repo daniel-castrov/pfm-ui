@@ -3,7 +3,11 @@ declare var $: any;
 export class NotifyUtil {
 
   public static notifyError(message){
-    $.notify({
+
+    if(message.includes(" 409 ")) {
+      message = "Action failed due to conflict. " + message;
+    }
+    $.notify({ 
       icon: 'fa fa-exclamation',
       message: message
     },{

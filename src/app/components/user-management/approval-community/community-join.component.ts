@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 import { Community } from '../../../generated/model/community';
 import { CommunityService } from '../../../generated/api/community.service';
@@ -12,7 +13,7 @@ import { JoinCommunityRequest } from '../../../generated/model/joinCommunityRequ
 import { RestResult } from '../../../generated/model/restResult';
 import { User } from '../../../generated/model/user';
 import { UserService } from '../../../generated/api/user.service';
-import { FeedbackComponent } from '../../feedback/feedback.component';
+
 
 @Component({
   selector: 'app-community-join',
@@ -23,7 +24,6 @@ import { FeedbackComponent } from '../../feedback/feedback.component';
 export class CommunityJoinComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
-  @ViewChild(FeedbackComponent) feedback: FeedbackComponent;
 
   requestId: string;
   joinCommunityRequest: JoinCommunityRequest;
@@ -37,7 +37,7 @@ export class CommunityJoinComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public communityService: CommunityService,
-    public userService: UserService
+    public userService: UserService,
   ) {
 
     this.route.params.subscribe((params: Params) => {
@@ -63,7 +63,7 @@ export class CommunityJoinComponent implements OnInit {
         this.joinCommunityRequest = result.result;
 
         if (null == this.joinCommunityRequest) {
-          this.resultError.push("The requested Join-Community-Request does not exist");
+          NotifyUtil.notifyInfo("The requested Join-Community-Request does not exist");
           return;
         }
 
@@ -101,7 +101,7 @@ export class CommunityJoinComponent implements OnInit {
       await this.joinCommunityRequestService.status(status, this.joinCommunityRequest.id).toPromise();
       this.router.navigate(['./home']);
     } catch(e) {
-      this.feedback.exception(e.message);
+      NotifyUtil.notifyError(e.message);
     }
   }
 
