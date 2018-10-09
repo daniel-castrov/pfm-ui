@@ -809,3 +809,8 @@ tab {
   background-color: #eae9e9;
   text-align: center;
 }
+
+.align-column {
+  display: flex;
+  align-items: flex-end;
+}
