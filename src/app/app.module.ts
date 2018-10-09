@@ -134,7 +134,6 @@ import { SetEppComponent } from './components/programming/set-epp/set-epp.compon
 import { EppService, LibraryService, UserService, OandEService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
-import { PomWorksheetService } from './generated/api/pomWorksheet.service';
 import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { LibraryComponent } from "./components/manage/library/library.component";
@@ -152,6 +151,14 @@ import { ViewSiblingsRenderer } from "./components/renderers/view-siblings-rende
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { ActualsCellRendererComponent } from './components/execution/actuals-cell-renderer/actuals-cell-renderer.component';
 import {EmphasisAreasComponent} from "./components/ufr/ufr-view/ufr-program-tab/empasisAreas/emphasisAreas.component";
+import {CheckboxRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/checkbox-renderer.component";
+import {DuplicateComponent} from "./components/programming/pom-worksheet/worksheet-management/duplicate/duplicate.component";
+import {RenameComponent} from "app/components/programming/pom-worksheet/worksheet-management/rename/rename.component";
+import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
+import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
+import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
+import {WorksheetService} from "app/generated/api/worksheet.service";
+
 
 // ROUTES
 const appRoutes: Routes = [
@@ -202,7 +209,7 @@ const appRoutes: Routes = [
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent},
-  {path:'worksheet', component: WorksheetComponent},
+  {path:'worksheet/:id', component: WorksheetComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent },
   {path:'library', component: LibraryComponent}
 ];
@@ -302,6 +309,8 @@ const appRoutes: Routes = [
     ExecutionLineTableComponent,
     WorksheetComponent,
     FileUploadComponent,
+    CheckboxRendererComponent,
+    NameRendererComponent,
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
@@ -314,7 +323,11 @@ const appRoutes: Routes = [
     EventDetailsCellRendererComponent,
     TransferFromToDetailsCellRendererComponent,
     ToggleComponent,
-    ActualsCellRendererComponent
+    DuplicateComponent,
+    RenameComponent,
+    ExportComponent,
+    ImportComponent,
+    ActualsCellRendererComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -324,6 +337,9 @@ const appRoutes: Routes = [
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
     DeleteRenderer,
+    CheckboxRendererComponent,
+    NameRendererComponent,
+    ViewSiblingsRenderer,
     ViewSiblingsRenderer,
     ActualsCellRendererComponent
   ],
@@ -373,7 +389,7 @@ const appRoutes: Routes = [
     CycleUtils,
     RequestsService,
     POMService,
-    PomWorksheetService,
+    WorksheetService,
     PRService,
     PBService,
     UFRsService,

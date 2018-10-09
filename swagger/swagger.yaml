@@ -17,7 +17,7 @@ tags:
 - name: "PB"
 - name: "Permission"
 - name: "POM"
-- name: "PomWorksheet"
+- name: "Worksheet"
 - name: "PR"
 - name: "Programs"
 - name: "Role"
@@ -377,11 +377,11 @@ paths:
         type: "string"
 # STOP POM
 ##############################################################################
-# START POMWORKSHEET
-  /pomworksheets/pom/{pomId}:
+# START WORKSHEET
+  /worksheets/pom/{pomId}:
     get:
       tags:
-      - "PomWorksheet"
+      - "Worksheet"
       operationId: "getByPomId"
       produces:
       - "application/json"
@@ -390,7 +390,21 @@ paths:
         name: "pomId"
         required: true
         type: "string"
-# STOP POMWORKSHEET
+  /worksheets/updateRows:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "updateRows"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Worksheet object"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
+# STOP WORKSHEET
 ##############################################################################
 # START PR
   /pr/phase/{phaseId}:
@@ -1766,7 +1780,7 @@ paths:
         description: "an Organization"
         required: true
         schema:
-          $ref: "#/definitions/Organization"    
+          $ref: "#/definitions/Organization"
       responses:
         201:
           description: "User successfully joined a community."
@@ -3165,7 +3179,7 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
-  PomWorksheet:
+  Worksheet:
     type: "object"
     properties:
       id:
@@ -3182,11 +3196,13 @@ definitions:
         type: "integer"
       lastUpdateDate:
         type: "integer"
+      locked:
+        type: "boolean"
       rows:
         type: "array"
         items:
-          $ref: "#/definitions/PomWorksheetRow"
-  PomWorksheetRow:
+          $ref: "#/definitions/WorksheetRow"
+  WorksheetRow:
     type: "object"
     properties:
       programRequestId:
@@ -3195,7 +3211,7 @@ definitions:
         type: "string"
       coreCapability:
         type: "string"
-      fund:
+      fundingLine:
         type: "object"
         $ref: "#/definitions/FundingLine"
   ProgrammaticRequest:

@@ -1,13 +1,8 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-
-// Other Components
-import { HeaderComponent } from '../../../header/header.component';
-import { UserUtils } from '../../../../services/user.utils';
-
-import { PomWorksheetService, POMService } from '../../../../generated';
-import { Pom, PomWorksheet, PomWorksheetRow } from '../../../../generated';
-import { WithFullNameService } from '../../../../services/with-full-name.service';
-import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {HeaderComponent} from '../../../header/header.component';
+import {UserUtils} from '../../../../services/user.utils';
+import {Pom, POMService, Worksheet, WorksheetRow, WorksheetService} from '../../../../generated';
+import {ProgramRequestWithFullName, WithFullNameService} from '../../../../services/with-full-name.service';
 
 @Component({
   selector: 'app-worksheet',
@@ -18,7 +13,7 @@ export class WorksheetComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
 
-  private pomWorksheet:PomWorksheet[]=[];
+  private worksheets:Worksheet[]=[];
   private pom:Pom;
   private fy;
   private rows;
@@ -26,7 +21,7 @@ export class WorksheetComponent implements OnInit {
 
   constructor( 
     private pomSvc:POMService,
-    private pomWSSvc:PomWorksheetService,
+    private pomWSSvc:WorksheetService,
     private globalsService: UserUtils,
     private withFullNameService:WithFullNameService
   ) { }
@@ -37,13 +32,13 @@ export class WorksheetComponent implements OnInit {
         this.pom = data.result;
         this.fy = this.pom.fy;
         this.pomWSSvc.getByPomId(this.pom.id).subscribe( data2 => {
-          this.pomWorksheet = data2.result;
-          this.rows = this.pomWorksheet[0].rows;
+          this.worksheets = data2.result;
+          this.rows = this.worksheets[0].rows;
           //console.log(this.rows);
           this.initPbPrs();
         });
       });
-    });
+    });``
   }
 
   async initPbPrs() {
@@ -55,7 +50,7 @@ export class WorksheetComponent implements OnInit {
        });
   }
 
-  getFullName(row:PomWorksheetRow){
+  getFullName(row:WorksheetRow){
     try{
       return this.fullnameMap[row.programRequestId];
     }catch (ex) {
