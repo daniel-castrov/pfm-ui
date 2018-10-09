@@ -1,3 +1,12 @@
+$graph-blue:     #1158ab;
+$graph-green:    #008d45;
+$graph-red:      #f12b25;
+$graph-orange:   #f67d03;
+$graph-black:    #000000;
+$graph-purple:   #672793;
+$graph-dark-red: #a41b1b;
+$graph-pink:     #b63395;
+
 .line {
     fill: none;
 }
@@ -37,7 +46,7 @@ div.tooltip {
 }
 
 .dot-red {
-  fill: red!important;
+  fill: $graph-red !important;
 }
 
 .dot-yellow {
@@ -45,36 +54,36 @@ div.tooltip {
 }
 
 .line-expplan {
-  stroke: #f67d03;
+  stroke: $graph-orange;
   stroke-width: 3;
 }
 
 .dot-expplan {
-  fill: #f67d03;
+  fill: $graph-orange;
   //display:none;
 }
 
 .line-obgplan {
-  stroke: #1158ab;
+  stroke: $graph-blue;
   stroke-width: 3;
 }
 
 .line-realobg {
-  stroke: #25f1e7;
+  stroke: $graph-purple;
   stroke-width: 3;
 }
 
 .dot-realobg {
-  fill: #25f1e7;
+  fill: $graph-purple;
 }
 
 .line-realexp {
-  stroke: #f1cf0b;
+  stroke: $graph-pink;
   stroke-width: 3;
 }
 
 .dot-realexp {
-  fill: #f1cf0b;
+  fill: $graph-pink;
 }
 
 .line-planred {
@@ -106,7 +115,7 @@ div.tooltip {
 }
 
 .dot-obgplan {
-  fill: #1158ab;
+  fill: $graph-blue;
   //display:none;
 }
 
@@ -116,33 +125,33 @@ div.tooltip {
 }
 
 .legend-item-expplan {
-  color: #f67d03;
+  color: $graph-orange;
 
   span.legend-text {
-    color: #000;
+    color: $graph-black;
   }
 }
 
 .legend-item-obgplan {
-  color: #1158ab;
+  color: $graph-blue;
 
   span.legend-text {
-    color: #000;
+    color: $graph-black;
   }
 }
 
 .legend-item-realobg {
-  color: #25f1e7;
+  color: $graph-purple;
 
   span.legend-text {
-    color: #000;
+    color: $graph-black;
   }
 }
 
 .legend-item-realexp {
-  color: #f1cf0b;
+  color: $graph-pink;
 
   span.legend-text {
-    color: #000;
+    color: $graph-black;
   }
 }
