@@ -17,7 +17,13 @@ export class FormatterUtil {
       currency: 'USD',
       minimumFractionDigits: decimalDigits
     });
-    return usdFormate.format(value.value);
+    return this.transformNegative(usdFormate.format(value.value));
+  }
+
+  public static transformNegative(value: any){
+    return value.charAt(0) === '-' ?
+      '(' + value.substring(1, value.length) + ')' :
+      value;
   }
 
   public static numberFormatter(value) {
