@@ -7,6 +7,23 @@
   pointer-events: all;
 }
 
+.hover-line {
+  stroke: #6F257F;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
 
 /* Style the dots by assigning a fill and stroke */
 .dot {
@@ -58,7 +75,6 @@
 }
 
 .legend-item {
-
   list-style: none;
   margin-left: -40px;
 }

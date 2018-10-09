@@ -23,6 +23,7 @@ export class GraphsTabComponent implements OnInit {
     private _deltas: Map<Date, ExecutionEvent>;
     private datasets: DataSet[];
     private maxmonths: number;
+    private focus: any;
 
     @Input() set exeline(e: ExecutionLine) {
         this._exeline = e;
@@ -175,6 +176,12 @@ export class GraphsTabComponent implements OnInit {
         var width = window.innerWidth - margin.left - margin.right - 90; // Use the window's width
         var height = window.innerHeight - margin.top - margin.bottom - 300; // Use the window's height
 
+        //create a tooltip
+        var div = d3.select("#line-chart")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
         //console.log(width + 'x' + height);
 
         // The number of datapoints
@@ -215,11 +222,28 @@ export class GraphsTabComponent implements OnInit {
             .attr("class", "y axis")
             .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
 
+        svg.focus.append("line")
+               .attr("class", "x-hover-line hover-line")
+               .attr("y1", 0)
+               .attr("y2", height);
+
+       svg.focus.append("line")
+           .attr("class", "y-hover-line hover-line")
+           .attr("x1", width)
+           .attr("x2", width);
+
         // 7. d3's line generator
         var line = d3.line()
             .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
             .y(function (d) { return yScale(d); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX) // apply smoothing to the line
+
+        // create tooltips
+        function createTooltip(i){
+          div.transition()
+             .duration(200)
+             .style("opacity", .9);
+          } // end createTooltip
 
         this.datasets.forEach(ds => {
                 // 8. (skipped)
@@ -240,14 +264,19 @@ export class GraphsTabComponent implements OnInit {
                 .attr("cy", function (d) { return yScale(d) })
                 .attr("r", 5)
                 .on("mouseover", function (value, month, z) {
-                    console.log('mouseover!');
-                    console.log(value)
-                    console.log(month)
-                    console.log(ds.notes[month])
-                    console.log( 'done with mo')
-                    //this.attr('class', 'focus')
-                })
-                .on("mouseout", function () { })
+                  console.log('mouseover!');
+                  console.log(value)
+                  console.log(month)
+                  console.log(ds.notes[month])
+                  console.log( 'done with mo')
+                  //this.attr('class', 'focus')
+              })
+                .on("mouseover",(d,i) => createTooltip(i))
+                .on("mouseout",function(d){
+                 div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+               })
         });
 
         //       .on("mousemove", mousemove);
