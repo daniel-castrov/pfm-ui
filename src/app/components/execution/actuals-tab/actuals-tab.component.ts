@@ -648,8 +648,10 @@ export class ActualsTabComponent implements OnInit {
         obs.complete();
       }
       else {
-        var opct: number = 1 - (this.rows[5].values[this.editMonth] / this.rows[6].values[this.editMonth]);
-        var epct: number = 1 - (this.rows[9].values[this.editMonth] / this.rows[10].values[this.editMonth]);
+
+        var toa: number = this.rows[0].values[this.editMonth];
+        var opct: number = (this.rows[6].values[this.editMonth] - this.rows[5].values[this.editMonth])/toa;
+        var epct: number = (this.rows[10].values[this.editMonth] - this.rows[9].values[this.editMonth])/toa;
 
         var oande: OandEMonthly = {
           executionLineId: this.exeline.id,
