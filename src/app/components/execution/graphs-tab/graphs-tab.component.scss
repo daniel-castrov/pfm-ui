@@ -77,6 +77,29 @@ div.tooltip {
   fill: #f1cf0b;
 }
 
+.line-planred {
+  stroke: red;
+  stroke-dasharray: 3 2;
+  stroke-width: 3;
+  opacity: 0.25;
+}
+
+.dot-planred {
+  display: none;
+}
+
+.line-planyellow {
+  stroke: yellow;
+  stroke-dasharray: 3 2;
+  stroke-width: 3;
+  opacity: 0.5;
+}
+
+.dot-planyellow {
+  display: none;
+}
+
+
 .focus circle {
   fill: none;
   stroke: steelblue;

@@ -31,23 +31,26 @@ export class ProgramExecutionLineComponent implements OnInit {
     var my: ProgramExecutionLineComponent = this;
     this.route.url.subscribe((segments: UrlSegment[]) => {
       var exelineid = segments[segments.length - 1].path;
+      this.refresh( exelineid);
+    });
+  }
 
-      forkJoin([
-        this.exesvc.getExecutionLineById(exelineid),
-        this.oandesvc.getByExecutionLineId(exelineid),
-        this.exesvc.getExecutionLineMonthlyDeltas(exelineid)
-      ]).subscribe(d => {        
-        this.exeline = d[0].result;
-        this.oandes = d[1].result;
-        this.program = this.exeline.programName;
-        this.deltaMap = new Map<Date, ExecutionLine>();
-        Object.getOwnPropertyNames(d[2].result).forEach(key => { 
-          this.deltaMap.set(new Date( key ), d[2].result[key]);
-        });
+  refresh( exelineid ) {
+    forkJoin([
+      this.exesvc.getExecutionLineById(exelineid),
+      this.oandesvc.getByExecutionLineId(exelineid),
+      this.exesvc.getExecutionLineMonthlyDeltas(exelineid)
+    ]).subscribe(d => {
+      this.exeline = d[0].result;
+      this.oandes = d[1].result;
+      this.program = this.exeline.programName;
+      this.deltaMap = new Map<Date, ExecutionLine>();
+      Object.getOwnPropertyNames(d[2].result).forEach(key => {
+        this.deltaMap.set(new Date(key), d[2].result[key]);
+      });
 
-        this.exesvc.getById(this.exeline.phaseId).subscribe(d2 => {
-          this.exe = d2.result;
-        });
+      this.exesvc.getById(this.exeline.phaseId).subscribe(d2 => {
+        this.exe = d2.result;
       });
     });
   }
@@ -64,6 +67,7 @@ export class ProgramExecutionLineComponent implements OnInit {
           }
           else {
             NotifyUtil.notifySuccess('Data saved');
+            this.refresh( this.exeline.id);
           }
         });
       }
@@ -74,6 +78,7 @@ export class ProgramExecutionLineComponent implements OnInit {
           }
           else {
             NotifyUtil.notifySuccess('Data saved');
+            this.refresh( this.exeline.id);
           }
         });
       }

@@ -106,6 +106,7 @@ export class GraphsTabComponent implements OnInit {
             status: [],
             notes: []
         };
+
         var expDataset: DataSet = {
             label: 'Expenditure Goal',
             data: [],
@@ -130,6 +131,38 @@ export class GraphsTabComponent implements OnInit {
             toas: [],
             status: [],
             csskey: 'realobg',
+            notes: []
+        };
+
+        var obgplanRed: DataSet = {
+            csskey: 'planred',
+            data: [],
+            toas: [],
+            status: [],
+            notes: []
+        };
+
+        var expplanRed: DataSet = {
+            csskey: 'planred',
+            data: [],
+            toas: [],
+            status: [],
+            notes: []
+        };
+
+        var obgplanYellow: DataSet = {
+            csskey: 'planyellow',
+            data: [],
+            toas: [],
+            status: [],
+            notes: []
+        };
+
+        var expplanYellow: DataSet = {
+            csskey: 'planyellow',
+            data: [],
+            toas: [],
+            status: [],
             notes: []
         };
 
@@ -167,10 +200,30 @@ export class GraphsTabComponent implements OnInit {
             obgDataset.notes.push('Obligation Goal: ' + ogoal.toFixed(2) + ' (' + (ogoal / toa * 100).toFixed(2) + '%)');
             obgDataset.status.push(0);
 
+            obgplanRed.toas.push(toa);
+            obgplanRed.data.push(ogoal - (toa * 0.15));
+            obgplanRed.notes.push('Obligation "Red Zone"');
+            obgplanRed.status.push(0);
+
+            obgplanYellow.toas.push(toa);
+            obgplanYellow.data.push(ogoal - (toa * 0.10));
+            obgplanYellow.notes.push('Obligation "Yellow Zone"');
+            obgplanYellow.status.push(0);
+
             expDataset.toas.push(toa);
-            expDataset.data.push(egoal);
+            expDataset.data.push(egoal);            
             expDataset.notes.push('Expenditure Goal: ' + egoal.toFixed(2) + ' (' + (egoal / toa * 100).toFixed(2) + '%)');
             expDataset.status.push(0);
+
+            expplanRed.toas.push(toa);
+            expplanRed.data.push(egoal - (toa * 0.15));
+            expplanRed.notes.push('Expenditure "Red Zone"');
+            expplanRed.status.push(0);
+
+            expplanYellow.toas.push(toa);
+            expplanYellow.data.push(egoal - (toa * 0.10));
+            expplanYellow.notes.push('Expenditure "Yellow Zone"');
+            expplanYellow.status.push(0);
 
             // we want cumulatives, so add last month's totals
             var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
@@ -199,8 +252,8 @@ export class GraphsTabComponent implements OnInit {
             }
         }
 
-        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset];
-        console.log(this.datasets);
+        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset,
+            obgplanRed, obgplanYellow, expplanRed, expplanYellow];
     }
 
     private regraph() {
@@ -339,10 +392,16 @@ export class GraphsTabComponent implements OnInit {
         //     focus.select("text").text(d);
         //   }
     }
+
+    getLegendDatasets(): DataSet[] {
+        return (this.datasets
+            ? this.datasets.filter(ds => (!(ds.csskey.endsWith('red') || ds.csskey.endsWith('yellow'))))
+            : []);
+    }
 }
 
 interface DataSet {
-    label: string,
+    label?: string,
     data: number[],
     toas:number[],
     notes: string[],
