@@ -38,7 +38,7 @@
         <div *ngIf="selectedWorksheet" class="col-auto">
           <div class="pull-right pom-controls">
             <span>
-              <button class="btn btn-primary">Update</button>
+              <button (click)="update()" class="btn btn-primary">Update</button>
             </span>
           </div>
         </div>
@@ -76,9 +76,6 @@
             <textarea placeholder="Area to enter more specific notes" wrap="physical" class="h-100 form-control"></textarea>
           </span>
         </div>
-      </div>
-      <div *ngIf="selectedWorksheet" class="row">
-
       </div>
       <div *ngIf="selectedWorksheet" class="row mb-3">
         <div class="col-5 align-column">
