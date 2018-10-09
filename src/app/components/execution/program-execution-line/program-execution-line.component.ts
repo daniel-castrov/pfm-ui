@@ -60,7 +60,6 @@ export class ProgramExecutionLineComponent implements OnInit {
     // this function doesn't return immediately.
     var obs = this.actualstab.monthlies().subscribe(data => {
       if (this.actualstab.isadmin) {
-        console.log(data);
         this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(d2 => {
           if (d2.error) {
             NotifyUtil.notifyError(d2.error);
