@@ -1791,7 +1791,7 @@ paths:
         description: "an Organization"
         required: true
         schema:
-          $ref: "#/definitions/Organization"    
+          $ref: "#/definitions/Organization"
       responses:
         201:
           description: "User successfully joined a community."
@@ -3222,7 +3222,7 @@ definitions:
         type: "string"
       coreCapability:
         type: "string"
-      fund:
+      fundingLine:
         type: "object"
         $ref: "#/definitions/FundingLine"
   ProgrammaticRequest:
