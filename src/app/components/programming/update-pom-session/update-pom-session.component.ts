@@ -9,6 +9,7 @@ import {FormatterUtil} from "../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {CellEditor} from "../../../utils/CellEditor";
 import {NotifyUtil} from "../../../utils/NotifyUtil";
+import {RowNode} from "ag-grid";
 
 @Component({
   selector: 'update-pom-session',
@@ -29,6 +30,8 @@ export class UpdatePomSessionComponent implements OnInit {
   rowData;
   toaRowData;
   filterText;
+  bulkType: string;
+  bulkAmount: number;
   worksheets: Array<Worksheet>;
   selectedWorksheet: Worksheet = null;
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
@@ -66,6 +69,24 @@ export class UpdatePomSessionComponent implements OnInit {
         console.log(response.error);
       }
     });
+  }
+
+  applyBulkChange(){
+    this.agGrid.api.forEachNodeAfterFilterAndSort((rowNode: RowNode) => {
+      if (rowNode.rowIndex <= this.agGrid.api.getLastDisplayedRow()) {
+        Object.keys(rowNode.data.fundingLine.funds).forEach(year => {
+          let additionalAmount = 0;
+          if (this.bulkType === 'percentage') {
+            additionalAmount = rowNode.data.fundingLine.funds[year] * (this.bulkAmount / 100);
+          } else {
+            additionalAmount = this.bulkAmount;
+          }
+          rowNode.data.fundingLine.funds[year] += additionalAmount;
+        });
+      }
+    });
+    this.agGrid.api.refreshCells();
+    this.initToaDataRows();
   }
 
   onWorksheetSelected(){
