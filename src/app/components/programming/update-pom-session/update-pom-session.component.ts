@@ -85,6 +85,7 @@ export class UpdatePomSessionComponent implements OnInit {
         });
       }
     });
+    this.bulkAmount = null;
     this.agGrid.api.refreshCells();
     this.initToaDataRows();
   }

@@ -73,7 +73,7 @@
         </div>
         <div *ngIf="selectedWorksheet" class="col-md-7 pt-3 pb-3">
           <span class="form-group">
-            <textarea placeholder="Area to enter more specific notes" wrap="physical" class="h-100 form-control"></textarea>
+            <textarea [(ngModel)]="selectedWorksheet.notes" placeholder="Area to enter more specific notes" wrap="physical" class="h-100 form-control"></textarea>
           </span>
         </div>
       </div>
