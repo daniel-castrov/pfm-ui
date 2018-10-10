@@ -90,8 +90,6 @@ import { WorksheetManagementComponent } from './components/programming/pom-works
 import { AssignRoleRequestService } from './generated/api/assignRoleRequest.service';
 import { BASE_PATH } from './generated/variables';
 import { BlankService } from './generated/api/blank.service';
-import { BulkTabComponent } from './components/programming/update-pom-session/bulk-tab/bulk-tab.component';
-import { CalculateTabComponent } from './components/programming/update-pom-session/calculate-tab/calculate-tab.component';
 import { CommunityService } from './generated/api/community.service';
 import { CreateUserRequestService } from './generated/api/createUserRequest.service';
 import { DropRoleRequestService } from './generated/api/dropRoleRequest.service';
@@ -116,7 +114,6 @@ import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
 import { ExecutionService } from './generated/api/execution.service';
 import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
-import { TransferTabComponent } from './components/programming/update-pom-session/transfer-tab/transfer-tab.component';
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
 import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
 import { UfrProgramComponent } from './components/ufr/ufr-view/ufr-program-tab/ufr-program-tab.component';
@@ -226,9 +223,7 @@ const appRoutes: Routes = [
     ApplyComponent,
     AppropriationReleaseComponent,
     ApproveRequestsComponent,
-    BulkTabComponent,
     HeaderUserComponent,
-    CalculateTabComponent,
     NumericCellEditor,
     ChargesComponent,
     CommunityJoinComponent,
@@ -286,7 +281,6 @@ const appRoutes: Routes = [
     SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
-    TransferTabComponent,
     UfrSearchComponent,
     UfrViewComponent,
     UfrProgramComponent,

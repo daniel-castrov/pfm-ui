@@ -22,7 +22,7 @@
               <tr>
                 <td>
                   <div class="form-group inline-name">
-                    <label>Program ID</label>
+                    <label class="mb-1">*Program ID</label>
                     <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
                       <input value="{{shorty?.fullname}}" class="form-control" name="program-id" [disabled]="disabled" />
                     </ng-container>
@@ -41,13 +41,13 @@
                 </td>
                 <td>
                   <div class="form-group inline-name">
-                    <label>Program Name</label>
+                    <label class="mb-1">*Program Name</label>
                     <input [(ngModel)]="ufr.longName" class="form-control forminput program-name text-truncate" title="{{ufr.longName}}" name="program-name" [disabled]="disabled" />
                   </div>
                 </td>
                 <td>
                   <span class="form-group inline-name">
-                    <label>Type</label>
+                    <label class="mb-1">Type</label>
                     <input value="{{ufrType()}}" class="form-control forminput" name="typeselect" disabled />
                   </span>
                 </td>
@@ -60,11 +60,11 @@
         <div class="col-md-6">
           <div class="row">
             <span class="col form-group inline-name">
-              <label class="mb-1">Lead Component</label>
+              <label class="mb-1">*Lead Component</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Lead Component', property:'leadComponent'}"></ng-container>
             </span>
             <span class="col form-group inline-name">
-              <label class="mb-1">Manager</label>
+              <label class="mb-1">*Manager</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Manager', property:'manager'}"></ng-container>
             </span>
           </div>
@@ -88,15 +88,15 @@
           <fieldset>
             <legend>Capability</legend>
             <span class="form-group inline-name">
-              <label class="mb-1">Primary Cap.</label>
+              <label class="mb-1">*Primary</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Primary Capability', property:'primaryCapability'}"></ng-container>
              </span>
             <span class="form-group inline-name">
-              <label>Core</label>
+              <label class="mb-1">*Core</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Core Capability Area', property:'coreCapability'}"></ng-container>
             </span>
             <span class="form-group inline-name">
-              <label>Secondary</label>
+              <label class="mb-1">Secondary</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Secondary Capability', property:'secondaryCapability'}"></ng-container>
             </span>
           </fieldset>
@@ -108,7 +108,7 @@
           <fieldset>
           <legend>Area</legend>
             <span class="form-group inline-name">
-              <label class="mb-1">Functional</label>
+              <label class="mb-1">*Functional</label>
               <ng-container *ngTemplateOutlet="value;context:{tagname:'Functional Area', property:'functionalArea'}"></ng-container>
             </span>
             <span class="form-group inline-name">
@@ -122,7 +122,7 @@
         </div>
         <div class="col-md-3">
           <span class="form-group inline-name">
-            <label>DASD Taxonomy</label>
+            <label class="mb-1">DASD Taxonomy</label>
             <ng-container *ngTemplateOutlet="value;context:{tagname:'DASD CBD', property:'dasdCbd'}"></ng-container>
           </span>
         </div>

@@ -415,6 +415,20 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/Worksheet"
+  /worksheets/updateRows:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "updateRows"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Worksheet object"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"          
 # STOP WORKSHEET
 ##############################################################################
 # START PR

@@ -26,7 +26,7 @@ export class UfrVariantsTabComponent {
   showAddVariant=false;
   newVariantName:string;
 
-  branches:string[]=["USA","USN","USAF","USMC","USCG","USCG"];
+  branches:string[]=["USA","USN","USAF","USMC","SOCOM","NGB"];
 
   years:number[];
   columnDefs;
