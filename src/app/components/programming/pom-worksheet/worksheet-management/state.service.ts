@@ -24,6 +24,9 @@ export class StateService {
   set operation(operation: Operation) { StateService.operation_ = operation; }
 
   static worksheets: Worksheet[];
+  get worksheets() {
+    return StateService.worksheets;
+  }
 
   private static selectedWorksheet_: Worksheet;
   get selectedWorksheet() {

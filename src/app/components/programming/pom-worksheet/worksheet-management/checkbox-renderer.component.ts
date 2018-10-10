@@ -7,7 +7,7 @@ import {StateService} from "./state.service";
   template: `<input type="checkbox"
                     (click)="checkboxClicked($event)"
                     [checked]="selectedRowIndex == params.rowIndex"
-                    [disabled]="!!operation"/>`
+                    [disabled]="!!operation || params.value.locked"/>`
 })
 export class CheckboxRendererComponent extends StateService implements ICellRendererAngularComp {
   params: ICellRendererParams;

@@ -21,6 +21,7 @@ export class WorksheetManagementComponent extends StateService implements OnInit
 
   private fy: number;
   private agOptions: GridOptions;
+  private pomId: string;
 
   constructor( private pomService: POMService,
                private worksheetService: WorksheetService,
@@ -40,14 +41,22 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   async ngOnInit() {
     const user: User = await this.userUtils.user().toPromise();
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
+    this.pomId = pom.id;
     this.fy = pom.fy;
-    StateService.worksheets = (await this.worksheetService.getByPomId(pom.id).toPromise()).result;
-    const rowData = StateService.worksheets.map(worksheet => { return {
-      checkbox: '', // custom renderer
-      worksheet: worksheet,
-      number: worksheet.version,
-      createdOn: new Date(worksheet.createDate).toLocaleString(),
-      lastUpdatedOn: new Date(worksheet.lastUpdateDate).toLocaleString()}});
+    await this.updateWorksheets();
+  }
+
+  private async updateWorksheets() {
+    StateService.worksheets = (await this.worksheetService.getByPomId(this.pomId).toPromise()).result;
+    const rowData = StateService.worksheets.map(worksheet => {
+      return {
+        checkbox: worksheet,  // custom renderer
+        worksheet: worksheet, // custom renderer
+        number: worksheet.version,
+        createdOn: new Date(worksheet.createDate).toLocaleString(),
+        lastUpdatedOn: new Date(worksheet.lastUpdateDate).toLocaleString()
+      }
+    });
 
     this.agGrid.api.setRowData(rowData);
   }
@@ -74,4 +83,10 @@ export class WorksheetManagementComponent extends StateService implements OnInit
     return isNaN(this.selectedRowIndex);
   }
 
+  onOperationOver() {
+    console.log('operation is over');
+    this.updateWorksheets();
+    this.agGrid.api.redrawRows();
+    this.operation = null;
+  }
 }

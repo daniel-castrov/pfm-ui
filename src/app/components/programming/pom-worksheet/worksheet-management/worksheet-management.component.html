@@ -43,10 +43,10 @@
       <div class="row">
         <div class="col-12">
 
-          <duplicate [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.DUPLICATE" (operationOver)="operation=null" ></duplicate>
-          <rename    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.RENAME"    (operationOver)="operation=null" ></rename>
-          <export    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.EXPORT"    (operationOver)="operation=null" ></export>
-          <import                                            [hidden]="operation!=Operation.IMPORT"    (operationOver)="operation=null" ></import>
+          <duplicate [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.DUPLICATE" (operationOver)="onOperationOver()" ></duplicate>
+          <rename    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
+          <export    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
+          <import    [worksheets]="worksheets"               [hidden]="operation!=Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
 
         </div>
       </div>

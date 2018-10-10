@@ -20,9 +20,8 @@
       </td>
       <td>
         <div class="form-group">
-          <select class="form-control copy-select">
-            <option value="">*POM Worksheet - Version</option>
-            <option>POM 2018 Worksheet v2</option>
+          <select [(ngModel)]="selectedWorksheet" class="form-control copy-select">
+            <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Version {{worksheet.version}}</option>
           </select>
         </div>
       </td>
@@ -30,7 +29,7 @@
     <tr>
       <td colspan="4">
         <div class="button-controls pull-right">
-          <button class="btn btn-primary pull-right" (click)="operationOver.emit()" >Save</button>
+          <button class="btn btn-primary pull-right" (click)="onSave()" >Save</button>
           <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
         </div>
       </td>

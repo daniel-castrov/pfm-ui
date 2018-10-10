@@ -20,8 +20,9 @@ export class ExportComponent implements OnChanges {
     this.version = this.selectedWorksheet && this.selectedWorksheet.version;
   }
 
-  onSave() {
+  async onSave() {
     this.selectedWorksheet.locked = true;
-    this.worksheetService.create(this.selectedWorksheet).subscribe();
+    await this.worksheetService.create(this.selectedWorksheet).toPromise();
+    this.operationOver.emit();
   }
 }
