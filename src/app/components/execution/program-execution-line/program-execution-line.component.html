@@ -33,7 +33,12 @@
             </actuals-tab>
           </tab>
           <tab heading="Graph" id="tab2">
-            <graphs-tab role="tabpanel"></graphs-tab>
+            <graphs-tab role="tabpanel"
+              [oandes]="oandes"
+              [exeline]="exeline"
+              [exe]="exe"
+              [deltas]="deltaMap">
+            </graphs-tab>
           </tab>
         </tabset>
       </div>

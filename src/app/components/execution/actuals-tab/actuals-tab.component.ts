@@ -3,13 +3,11 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 // Other Components
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, ExecutionEventData } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs/Subject';
-import { async } from 'q';
 
 declare const $: any;
 
@@ -512,7 +510,7 @@ export class ActualsTabComponent implements OnInit {
 
     // go through all our deltas and calculate toas and released
     var toasAndReleaseds: ToaAndReleased[]
-      = OandETools.calculateToasAndReleaseds(this.exeline, this._deltas,
+      = OandETools.calculateToasAndReleaseds(this.exeline, this.deltas,
         this.rows[0].values.length, this.exe.fy);
 
     for (var i = 0; i < this.rows[0].values.length; i++) {
@@ -650,8 +648,10 @@ export class ActualsTabComponent implements OnInit {
         obs.complete();
       }
       else {
-        var opct: number = 1 - (this.rows[5].values[this.editMonth] / this.rows[6].values[this.editMonth]);
-        var epct: number = 1 - (this.rows[9].values[this.editMonth] / this.rows[10].values[this.editMonth]);
+
+        var toa: number = this.rows[0].values[this.editMonth];
+        var opct: number = (this.rows[6].values[this.editMonth] - this.rows[5].values[this.editMonth])/toa;
+        var epct: number = (this.rows[10].values[this.editMonth] - this.rows[9].values[this.editMonth])/toa;
 
         var oande: OandEMonthly = {
           executionLineId: this.exeline.id,

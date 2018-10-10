@@ -1,0 +1,157 @@
+$graph-blue:     #1158ab;
+$graph-green:    #008d45;
+$graph-red:      #f12b25;
+$graph-orange:   #f67d03;
+$graph-black:    #000000;
+$graph-purple:   #672793;
+$graph-dark-red: #a41b1b;
+$graph-pink:     #b63395;
+
+.line {
+    fill: none;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.hover-line {
+  stroke: #6F257F;
+  stroke-width: 2px;
+  stroke-dasharray: 3,3;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+#legend {
+  position: absolute;
+  top: 60px;
+  left: 100px;
+}
+
+/* Style the dots by assigning a fill and stroke */
+.dot {
+  fill: rgb(4, 35, 53);
+  stroke: #fff;
+}
+
+.dot-red {
+  fill: $graph-red !important;
+}
+
+.dot-yellow {
+  fill: yellow!important;
+}
+
+.line-expplan {
+  stroke: $graph-orange;
+  stroke-width: 3;
+}
+
+.dot-expplan {
+  fill: $graph-orange;
+  //display:none;
+}
+
+.line-obgplan {
+  stroke: $graph-blue;
+  stroke-width: 3;
+}
+
+.line-realobg {
+  stroke: $graph-purple;
+  stroke-width: 3;
+}
+
+.dot-realobg {
+  fill: $graph-purple;
+}
+
+.line-realexp {
+  stroke: $graph-pink;
+  stroke-width: 3;
+}
+
+.dot-realexp {
+  fill: $graph-pink;
+}
+
+.line-planred {
+  stroke: red;
+  stroke-dasharray: 3 2;
+  stroke-width: 3;
+  opacity: 0.25;
+}
+
+.dot-planred {
+  display: none;
+}
+
+.line-planyellow {
+  stroke: yellow;
+  stroke-dasharray: 3 2;
+  stroke-width: 3;
+  opacity: 0.5;
+}
+
+.dot-planyellow {
+  display: none;
+}
+
+
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}
+
+.dot-obgplan {
+  fill: $graph-blue;
+  //display:none;
+}
+
+.legend-item {
+  list-style: none;
+  margin-left: -40px;
+}
+
+.legend-item-expplan {
+  color: $graph-orange;
+
+  span.legend-text {
+    color: $graph-black;
+  }
+}
+
+.legend-item-obgplan {
+  color: $graph-blue;
+
+  span.legend-text {
+    color: $graph-black;
+  }
+}
+
+.legend-item-realobg {
+  color: $graph-purple;
+
+  span.legend-text {
+    color: $graph-black;
+  }
+}
+
+.legend-item-realexp {
+  color: $graph-pink;
+
+  span.legend-text {
+    color: $graph-black;
+  }
+}
