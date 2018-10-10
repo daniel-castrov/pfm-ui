@@ -1,23 +1,16 @@
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {Worksheet, WorksheetService} from "../../../../../generated";
+import {Component} from '@angular/core';
+import {WorksheetService} from "../../../../../generated";
+import {BaseComponent} from "../base.component";
 
 @Component({
   selector: 'export',
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss']
 })
-export class ExportComponent implements OnChanges {
-  @Input() selectedWorksheet: Worksheet;
-  @Output() operationOver = new EventEmitter();
+export class ExportComponent extends BaseComponent {
 
-  constructor(private worksheetService: WorksheetService) {}
-
-  name: string;
-  version: number;
-
-  ngOnChanges() {
-    this.name = this.selectedWorksheet && this.selectedWorksheet.name;
-    this.version = this.selectedWorksheet && this.selectedWorksheet.version;
+  constructor(private worksheetService: WorksheetService) {
+    super();
   }
 
   async onSave() {

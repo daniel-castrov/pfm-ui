@@ -32,7 +32,7 @@ export class WorksheetManagementComponent extends StateService implements OnInit
 
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
                    {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameRendererComponent},
-                   {headerName: 'Number', field: 'number', maxWidth: 90},
+                   {headerName: 'Version', field: 'number', maxWidth: 90},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
                    {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]
     };
@@ -84,9 +84,10 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   }
 
   onOperationOver() {
-    console.log('operation is over');
     this.updateWorksheets();
-    this.agGrid.api.redrawRows();
+    // Trigger ngOnChange() to make sure the operation components (Duplicate, Rename, etc.) are initialized, possible unnecessary.
+    // Feels cleaner, with it thought.
+    this.selectedWorksheet = {...this.selectedWorksheet};
     this.operation = null;
   }
 }

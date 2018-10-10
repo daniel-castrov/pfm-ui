@@ -399,19 +399,19 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "pomId"
+        name: "pom"
         required: true
         schema:
           $ref: "#/definitions/Worksheet"
     put:
       tags:
       - "Worksheet"
-      operationId: "create"
+      operationId: "update"
       produces:
       - "application/json"
       parameters:
       - in: "body"
-        name: "pomId"
+        name: "pom"
         required: true
         schema:
           $ref: "#/definitions/Worksheet"

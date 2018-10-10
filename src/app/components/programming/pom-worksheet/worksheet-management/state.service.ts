@@ -32,5 +32,8 @@ export class StateService {
   get selectedWorksheet() {
     return StateService.selectedWorksheet_;
   }
+  set selectedWorksheet(worksheet: Worksheet) {
+    StateService.selectedWorksheet_ = worksheet;
+  }
 
 }

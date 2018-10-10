@@ -2,8 +2,9 @@ import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from "ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer";
 
+// *ngIf="params.value.id" below is needed to address some case where RouterLink somehow tries to render the link before params.value.id is initialized
 @Component({
-  template: `<a [routerLink]="['/worksheet',params.value.id]">
+  template: `<a *ngIf="params.value.id" [routerLink]="['/worksheet',params.value.id]">
               <span class="worksheet-lock" *ngIf="params.value.locked">
                 <i class="fa fa-lock" aria-hidden="true"></i>
               </span>

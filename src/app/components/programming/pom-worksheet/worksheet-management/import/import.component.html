@@ -29,7 +29,7 @@
     <tr>
       <td colspan="4">
         <div class="button-controls pull-right">
-          <button class="btn btn-primary pull-right" (click)="onSave()" >Save</button>
+          <button class="btn btn-primary pull-right" (click)="onSave()" [disabled]="!selectedWorksheet">Save</button>
           <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
         </div>
       </td>
