@@ -2,13 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
-import { Router, UrlSegment, ActivatedRoute } from '@angular/router'
+import { UrlSegment, ActivatedRoute } from '@angular/router'
 import { ExecutionService, ProgramsService, ExecutionLine, OandEService, Execution, OandEMonthly, ExecutionEvent } from '../../../generated';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ActualsTabComponent } from '../actuals-tab/actuals-tab.component';
-import { ToaAndReleased, OandETools } from '../model/oande-tools';
 
 @Component({
   selector: 'program-execution-line',
@@ -52,35 +50,6 @@ export class ProgramExecutionLineComponent implements OnInit {
       this.exesvc.getById(this.exeline.phaseId).subscribe(d2 => {
         this.exe = d2.result;
       });
-    });
-  }
-
-  save(tag) {
-    // the actuals tab might have to get more info from the user, so 
-    // this function doesn't return immediately.
-    var obs = this.actualstab.monthlies().subscribe(data => {
-      if (this.actualstab.isadmin) {
-        this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(d2 => {
-          if (d2.error) {
-            NotifyUtil.notifyError(d2.error);
-          }
-          else {
-            NotifyUtil.notifySuccess('Data saved');
-            this.refresh( this.exeline.id);
-          }
-        });
-      }
-      else {
-        this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
-          if (data.error) {
-            NotifyUtil.notifyError(data.error);
-          }
-          else {
-            NotifyUtil.notifySuccess('Data saved');
-            this.refresh( this.exeline.id);
-          }
-        });
-      }
     });
   }
 }
