@@ -3,10 +3,16 @@ import {GridOptions} from 'ag-grid';
 import {AgGridNg2} from 'ag-grid-angular';
 import {HeaderComponent} from '../../../header/header.component';
 import {UserUtils} from '../../../../services/user.utils';
-import {Pom, POMService, User, Worksheet, WorksheetService} from '../../../../generated';
+import {Pom, POMService, User, WorksheetService} from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
-import {StateService} from "./state.service";
+import {Operation, StateService} from "./state.service";
 import {NameRendererComponent} from "./name-renderer.component";
+import {Operator} from "rxjs";
+import {DuplicateComponent} from "./duplicate/duplicate.component";
+import {RenameComponent} from "./rename/rename.component";
+import {ExportComponent} from "./export/export.component";
+import {ImportComponent} from "./import/import.component";
+import {OperationBase} from "./operartion.base";
 
 
 @Component({
@@ -14,25 +20,29 @@ import {NameRendererComponent} from "./name-renderer.component";
   templateUrl: './worksheet-management.component.html',
   styleUrls: ['./worksheet-management.component.scss']
 })
-export class WorksheetManagementComponent extends StateService implements OnInit {
+export class WorksheetManagementComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
+  @ViewChild("duplicate") private duplicateComponent: DuplicateComponent;
+  @ViewChild("rename") private renameComponent: RenameComponent;
+  @ViewChild("import") private importComponent: ImportComponent;
+  @ViewChild("export") private exportComponent: ExportComponent;
 
-  private worksheets: Worksheet[];
   private fy: number;
   private agOptions: GridOptions;
+  private pomId: string;
 
   constructor( private pomService: POMService,
                private worksheetService: WorksheetService,
+               public stateService: StateService,
                private userUtils: UserUtils ) {
-    super();
     this.agOptions = <GridOptions>{
       enableColResize: true,
 
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
                    {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameRendererComponent},
-                   {headerName: 'Number', field: 'number', maxWidth: 90},
+                   {headerName: 'Version', field: 'number', maxWidth: 90},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
                    {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]
     };
@@ -41,14 +51,22 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   async ngOnInit() {
     const user: User = await this.userUtils.user().toPromise();
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
+    this.pomId = pom.id;
     this.fy = pom.fy;
-    this.worksheets = (await this.worksheetService.getByPomId(pom.id).toPromise()).result;
-    const rowData = this.worksheets.map(worksheet => { return {
-      checkbox: '', // custom renderer
-      worksheet: {"name":worksheet.name,"id":worksheet.id},
-      number: worksheet.version,
-      createdOn: new Date(worksheet.createDate).toLocaleString(),
-      lastUpdatedOn: new Date(worksheet.lastUpdateDate).toLocaleString()}});
+    await this.updateWorksheets();
+  }
+
+  private async updateWorksheets() {
+    this.stateService.worksheets = (await this.worksheetService.getByPomId(this.pomId).toPromise()).result;
+    const rowData = this.stateService.worksheets.map(worksheet => {
+      return {
+        checkbox: worksheet,  // custom renderer
+        worksheet: worksheet, // custom renderer
+        number: worksheet.version,
+        createdOn: new Date(worksheet.createDate).toLocaleString(),
+        lastUpdatedOn: new Date(worksheet.lastUpdateDate).toLocaleString()
+      }
+    });
 
     this.agGrid.api.setRowData(rowData);
   }
@@ -72,7 +90,18 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   }
 
   isRowNotSelected(): boolean {
-    return isNaN(this.selectedRowIndex);
+    return isNaN(this.stateService.selectedRowIndex);
   }
 
+  startOperation(operation: Operation) {
+    this.stateService.operation=operation;
+    const operationComponents = [this.duplicateComponent, this.renameComponent, this.importComponent, this.exportComponent] as OperationBase[];
+    operationComponents.forEach(operationCompopnent => operationCompopnent.init());
+  }
+
+  onOperationOver() {
+    this.updateWorksheets();
+    this.stateService.selectedRowIndex = NaN;
+    this.stateService.operation = null;
+  }
 }

@@ -155,6 +155,7 @@ import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
 import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
 import {WorksheetService} from "app/generated/api/worksheet.service";
+import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 
 
 // ROUTES
@@ -391,6 +392,7 @@ const appRoutes: Routes = [
     ExecutionService,
     OandEService,
     LibraryService,
+    StateService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],

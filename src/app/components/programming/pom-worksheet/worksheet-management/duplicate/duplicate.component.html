@@ -7,7 +7,7 @@
         </td>
         <td>
           <span class="form-group">
-            <input type="text" class="form-control copy-input mr-2" minlength="2" required>
+            <input type="text" [ngModel]="name" class="form-control copy-input mr-2" minlength="2" readonly>
           </span>
         </td>
         <td>
@@ -15,14 +15,14 @@
         </td>
         <td>
           <span class="form-group">
-            <input type="number" class="form-control version-input" minlength="2" required>
+            <input type="number" [ngModel]="version" class="form-control version-input" minlength="2" readonly>
           </span>
         </td>
       </tr>
       <tr>
         <td colspan="4">
           <div class="button-controls pull-right">
-            <button class="btn btn-primary pull-right" (click)="operationOver.emit()" >Save</button>
+            <button class="btn btn-primary pull-right" (click)="onSave()" >Save</button>
             <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
           </div>
         </td>

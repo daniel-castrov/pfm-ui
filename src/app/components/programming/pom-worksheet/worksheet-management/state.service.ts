@@ -1,17 +1,24 @@
-enum Operation {
+import {Worksheet} from "../../../../generated";
+import {Injectable} from "@angular/core";
+
+export enum Operation {
   DUPLICATE=1,RENAME,EXPORT,IMPORT
 }
 
+@Injectable()
 export class StateService {
 
-  private static selectedRowIndex_: number;
-  get selectedRowIndex() { return StateService.selectedRowIndex_; }
-  set selectedRowIndex(selectedRowIndex: number) { StateService.selectedRowIndex_ = selectedRowIndex; }
+  selectedRowIndex: number;
+  Operation = Operation;
+  operation: Operation;
+  worksheets: Worksheet[];
 
-  get Operation() { return Operation; } // allows Angular templates to use expressions like <button (click)="operation=Operation.DUPLICATE">
-
-  private static operation_: Operation;
-  get operation() { return StateService.operation_ }
-  set operation(operation: Operation) { StateService.operation_ = operation; }
+  get selectedWorksheet() {
+    if(isNaN(this.selectedRowIndex)) {
+      return null;
+    } else {
+      return this.worksheets[this.selectedRowIndex];
+    }
+  }
 
 }
