@@ -26,7 +26,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private modelpb: PB;
   private message: string;
-  private fileToUpload: File = null;
+  private fileToUpload: File;
 
   constructor(private pbsvc: PBService, private usvc: MyDetailsService,
   private esvc:ExecutionService, private router:Router ) { }
@@ -65,7 +65,6 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log(this.fileToUpload);
   }
 
 

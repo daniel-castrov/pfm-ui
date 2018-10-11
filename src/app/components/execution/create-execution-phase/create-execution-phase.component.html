@@ -33,7 +33,7 @@
     </div>
     <div class="row">
       <div class="col-8  mb-4">
-        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!modelpb">Create Phase</button>
+        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!( modelpb && fileToUpload )">Create Phase</button>
       </div>
     </div>
     <div class="row">

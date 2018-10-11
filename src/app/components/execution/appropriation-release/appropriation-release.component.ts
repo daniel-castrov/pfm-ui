@@ -97,4 +97,14 @@ export class AppropriationReleaseComponent implements OnInit {
       });
     });
   }
+
+  onFileUploaded(event) {
+    //let imagePath = 'data:' + fileResponse.contentType + ';base64,' + fileResponse.content;
+    //this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
+    //this.pr.imageName = fileResponse.id;
+    //this.pr.imageArea = this.fileArea;
+    
+    console.log(event);
+
+  }
 }
