@@ -97,16 +97,17 @@ div.tooltip {
   display: none;
 }
 
-.line-planyellow {
-  stroke: yellow;
-  stroke-width: 48;
-  opacity: 0.10;
+.yellowband {
+  stroke: none;
+  fill: yellow;
+  opacity: 0.15;
 }
 
-.dot-planyellow {
-  display: none;
+.redband {
+  stroke: none;
+  fill: red;
+  opacity: 0.15;
 }
-
 
 .focus circle {
   fill: none;
