@@ -10,10 +10,10 @@
       <div class="row">
         <div class="col-9">
           <ul class="worksheet-controls mb-3">
-            <li><button class="btn btn-primary" (click)="operation=Operation.DUPLICATE" [disabled]="isRowNotSelected()" >Duplicate</button></li>
-            <li><button class="btn btn-primary" (click)="operation=Operation.RENAME"    [disabled]="isRowNotSelected()" >Rename</button></li>
-            <li><button class="btn btn-primary" (click)="operation=Operation.EXPORT"    [disabled]="isRowNotSelected()" >Export</button></li>
-            <li><button class="btn btn-primary" (click)="operation=Operation.IMPORT"                                    >Import</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()" >Duplicate</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()" >Rename</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()" >Export</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"                                    >Import</button></li>
           </ul>
         </div>
       </div>
@@ -43,10 +43,10 @@
       <div class="row">
         <div class="col-12">
 
-          <duplicate [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.DUPLICATE" (operationOver)="onOperationOver()" ></duplicate>
-          <rename    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
-          <export    [selectedWorksheet]="selectedWorksheet" [hidden]="operation!=Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
-          <import    [worksheets]="worksheets"               [hidden]="operation!=Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
+          <duplicate #duplicate [hidden]="stateService.operation!=stateService.Operation.DUPLICATE" (operationOver)="onOperationOver()" ></duplicate>
+          <rename    #rename    [hidden]="stateService.operation!=stateService.Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
+          <export    #export    [hidden]="stateService.operation!=stateService.Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
+          <import    #import    [hidden]="stateService.operation!=stateService.Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
 
         </div>
       </div>

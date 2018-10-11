@@ -1,21 +1,29 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {WorksheetService} from "../../../../../generated";
-import {BaseComponent} from "../base.component";
+import {StateService} from "../state.service";
+import {OperationBase} from "../operartion.base";
 
 @Component({
   selector: 'export',
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss']
 })
-export class ExportComponent extends BaseComponent {
+export class ExportComponent implements OperationBase {
+  @Output() operationOver = new EventEmitter();
+  name: string;
+  version: number;
 
-  constructor(private worksheetService: WorksheetService) {
-    super();
+  constructor( private stateService: StateService,
+               private worksheetService: WorksheetService) {}
+
+
+  init() {
+    this.name = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.name;
+    this.version = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.version;
   }
 
   async onSave() {
-    this.selectedWorksheet.locked = true;
-    await this.worksheetService.create(this.selectedWorksheet).toPromise();
+    await this.worksheetService.update({...this.stateService.selectedWorksheet, locked:true}).toPromise();
     this.operationOver.emit();
   }
 }

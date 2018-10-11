@@ -3,10 +3,16 @@ import {GridOptions} from 'ag-grid';
 import {AgGridNg2} from 'ag-grid-angular';
 import {HeaderComponent} from '../../../header/header.component';
 import {UserUtils} from '../../../../services/user.utils';
-import {Pom, POMService, User, Worksheet, WorksheetService} from '../../../../generated';
+import {Pom, POMService, User, WorksheetService} from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
-import {StateService} from "./state.service";
+import {Operation, StateService} from "./state.service";
 import {NameRendererComponent} from "./name-renderer.component";
+import {Operator} from "rxjs";
+import {DuplicateComponent} from "./duplicate/duplicate.component";
+import {RenameComponent} from "./rename/rename.component";
+import {ExportComponent} from "./export/export.component";
+import {ImportComponent} from "./import/import.component";
+import {OperationBase} from "./operartion.base";
 
 
 @Component({
@@ -14,10 +20,14 @@ import {NameRendererComponent} from "./name-renderer.component";
   templateUrl: './worksheet-management.component.html',
   styleUrls: ['./worksheet-management.component.scss']
 })
-export class WorksheetManagementComponent extends StateService implements OnInit {
+export class WorksheetManagementComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
+  @ViewChild("duplicate") private duplicateComponent: DuplicateComponent;
+  @ViewChild("rename") private renameComponent: RenameComponent;
+  @ViewChild("import") private importComponent: ImportComponent;
+  @ViewChild("export") private exportComponent: ExportComponent;
 
   private fy: number;
   private agOptions: GridOptions;
@@ -25,8 +35,8 @@ export class WorksheetManagementComponent extends StateService implements OnInit
 
   constructor( private pomService: POMService,
                private worksheetService: WorksheetService,
+               public stateService: StateService,
                private userUtils: UserUtils ) {
-    super();
     this.agOptions = <GridOptions>{
       enableColResize: true,
 
@@ -47,8 +57,8 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   }
 
   private async updateWorksheets() {
-    StateService.worksheets = (await this.worksheetService.getByPomId(this.pomId).toPromise()).result;
-    const rowData = StateService.worksheets.map(worksheet => {
+    this.stateService.worksheets = (await this.worksheetService.getByPomId(this.pomId).toPromise()).result;
+    const rowData = this.stateService.worksheets.map(worksheet => {
       return {
         checkbox: worksheet,  // custom renderer
         worksheet: worksheet, // custom renderer
@@ -80,14 +90,18 @@ export class WorksheetManagementComponent extends StateService implements OnInit
   }
 
   isRowNotSelected(): boolean {
-    return isNaN(this.selectedRowIndex);
+    return isNaN(this.stateService.selectedRowIndex);
+  }
+
+  startOperation(operation: Operation) {
+    this.stateService.operation=operation;
+    const operationComponents = [this.duplicateComponent, this.renameComponent, this.importComponent, this.exportComponent] as OperationBase[];
+    operationComponents.forEach(operationCompopnent => operationCompopnent.init());
   }
 
   onOperationOver() {
     this.updateWorksheets();
-    // Trigger ngOnChange() to make sure the operation components (Duplicate, Rename, etc.) are initialized, possible unnecessary.
-    // Feels cleaner, with it thought.
-    this.selectedWorksheet = {...this.selectedWorksheet};
-    this.operation = null;
+    this.stateService.selectedRowIndex = NaN;
+    this.stateService.operation = null;
   }
 }

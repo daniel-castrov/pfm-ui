@@ -20,7 +20,7 @@
       </td>
       <td>
         <div class="form-group">
-          <select [(ngModel)]="selectedWorksheet" class="form-control copy-select">
+          <select [(ngModel)]="selectedImportableWorksheet" class="form-control copy-select">
             <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Version {{worksheet.version}}</option>
           </select>
         </div>
@@ -29,7 +29,7 @@
     <tr>
       <td colspan="4">
         <div class="button-controls pull-right">
-          <button class="btn btn-primary pull-right" (click)="onSave()" [disabled]="!selectedWorksheet">Save</button>
+          <button class="btn btn-primary pull-right" (click)="onSave()" [disabled]="!selectedImportableWorksheet">Save</button>
           <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
         </div>
       </td>
