@@ -6,6 +6,7 @@ $graph-black:    #000000;
 $graph-purple:   #672793;
 $graph-dark-red: #a41b1b;
 $graph-pink:     #b63395;
+$graph-yellow:   #ffff00;
 
 .line {
     fill: none;
@@ -25,7 +26,7 @@ $graph-pink:     #b63395;
 div.tooltip {
   position: absolute;
   text-align: center;
-  padding: 2px;
+  padding: 4px;
   font: 12px sans-serif;
   background: lightsteelblue;
   border: 0px;
@@ -50,7 +51,7 @@ div.tooltip {
 }
 
 .dot-yellow {
-  fill: yellow!important;
+  fill: $graph-yellow!important;
 }
 
 .line-expplan {
@@ -66,6 +67,7 @@ div.tooltip {
 .line-obgplan {
   stroke: $graph-blue;
   stroke-width: 3;
+  opacity: .6;
 }
 
 .line-realobg {
@@ -99,7 +101,7 @@ div.tooltip {
 
 .yellowband {
   stroke: none;
-  fill: yellow;
+  fill: $graph-yellow;
   opacity: 0.15;
 }
 
@@ -116,6 +118,7 @@ div.tooltip {
 
 .dot-obgplan {
   fill: $graph-blue;
+  opacity: .6;
   display:none;
 }
 
@@ -134,6 +137,7 @@ div.tooltip {
 
 .legend-item-obgplan {
   color: $graph-blue;
+  opacity: .7;
 
   span.legend-text {
     color: $graph-black;
