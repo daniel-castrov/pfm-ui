@@ -13,7 +13,7 @@
             <div class="col-auto">
               <span class="form-group inline-name">
                 <select [(ngModel)]="selectedWorksheet" (change)="onWorksheetSelected()" class="form-control-sm worksheet-width">
-                  <option value="null" disabled selected>Select Worksheet</option>
+                  <option value="undefined" disabled selected>Select Worksheet</option>
                   <option *ngFor="let w of worksheets" [ngValue]="w">{{w.name}}</option>
                 </select>
               </span>
