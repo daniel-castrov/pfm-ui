@@ -197,6 +197,7 @@ const appRoutes: Routes = [
   {path:'spend-plan-update', component:SpendPlansTabComponent},
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session/:id', component:UpdatePomSessionComponent},
+  {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
