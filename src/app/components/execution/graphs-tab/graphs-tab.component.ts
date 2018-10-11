@@ -150,22 +150,6 @@ export class GraphsTabComponent implements OnInit {
             notes: []
         };
 
-        var obgplanYellow: DataSet = {
-            csskey: 'planyellow',
-            data: [],
-            toas: [],
-            status: [],
-            notes: []
-        };
-
-        var expplanYellow: DataSet = {
-            csskey: 'planyellow',
-            data: [],
-            toas: [],
-            status: [],
-            notes: []
-        };
-
         var makeHtmlNote = function (oande: OandEMonthly, title: string,
             goal: number, actual: number, toa: number) {
             var notes: string =
@@ -182,10 +166,10 @@ export class GraphsTabComponent implements OnInit {
 
         var getStatus = function (actual: number, goal: number, toa: number) :number {
             var diff: number = (goal - actual) / toa;
-            if (diff >= 0.15) {
+            if (diff > 0.10) {
                 return 2;
             }
-            if (diff > 0.10) {
+            if (diff >= 0 && diff <= 0.10) {
                 return 1;
             }
             return 0;
@@ -193,37 +177,32 @@ export class GraphsTabComponent implements OnInit {
 
         for (var i = 0; i < this.maxmonths; i++) {
             var toa = toasAndReleaseds[i].toa;
-            var ogoal: number = toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
-            var egoal: number = toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            var redtoa: number = toa * 0.1;
+            var ogoal: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+            var egoal: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            var ogoalt: number = toa * ogoal;
+            var egoalt: number = toa * egoal;
+
+
             obgDataset.toas.push(toa);
-            obgDataset.data.push(ogoal);
-            obgDataset.notes.push('Obligation Goal: ' + ogoal.toFixed(2) + ' (' + (ogoal / toa * 100).toFixed(2) + '%)');
+            obgDataset.data.push(ogoalt);
+            obgDataset.notes.push('Obligation Goal: ' + ogoalt.toFixed(2) + ' (' + (ogoal * 100).toFixed(2) + '%)');
             obgDataset.status.push(0);
 
             obgplanRed.toas.push(toa);
-            obgplanRed.data.push(ogoal - (toa * 0.15));
+            obgplanRed.data.push(ogoalt - redtoa);
             obgplanRed.notes.push('Obligation "Red Zone"');
             obgplanRed.status.push(0);
 
-            obgplanYellow.toas.push(toa);
-            obgplanYellow.data.push(ogoal - (toa * 0.10));
-            obgplanYellow.notes.push('Obligation "Yellow Zone"');
-            obgplanYellow.status.push(0);
-
             expDataset.toas.push(toa);
-            expDataset.data.push(egoal);            
-            expDataset.notes.push('Expenditure Goal: ' + egoal.toFixed(2) + ' (' + (egoal / toa * 100).toFixed(2) + '%)');
+            expDataset.data.push(egoalt);
+            expDataset.notes.push('Expenditure Goal: ' + egoalt.toFixed(2) + ' (' + (egoal * 100).toFixed(2) + '%)');
             expDataset.status.push(0);
 
             expplanRed.toas.push(toa);
-            expplanRed.data.push(egoal - (toa * 0.15));
+            expplanRed.data.push(egoalt - redtoa);
             expplanRed.notes.push('Expenditure "Red Zone"');
             expplanRed.status.push(0);
-
-            expplanYellow.toas.push(toa);
-            expplanYellow.data.push(egoal - (toa * 0.10));
-            expplanYellow.notes.push('Expenditure "Yellow Zone"');
-            expplanYellow.status.push(0);
 
             // we want cumulatives, so add last month's totals
             var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
@@ -233,27 +212,29 @@ export class GraphsTabComponent implements OnInit {
             if (myoandes[i]) {
                 var eactual: number = myoandes[i].outlayed + lastexp;
                 realexpDataset.data.push(eactual);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, eactual, toa));
-                realexpDataset.status.push(getStatus(eactual, egoal, toa));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, eactual, toa));
+                realexpDataset.status.push(getStatus(eactual, egoalt, toa));
 
                 var oactual: number = myoandes[i].obligated + lastobg;
                 realobgDataset.data.push(oactual);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, oactual, toa));
-                realobgDataset.status.push(getStatus(oactual, ogoal, toa));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalt, oactual, toa));
+                realobgDataset.status.push(getStatus(oactual, ogoalt, toa));
             }
             else {
                 realexpDataset.data.push(lastexp);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, lastexp, toa));
-                realexpDataset.status.push(getStatus(lastexp, egoal, toa));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, lastexp, toa));
+                realexpDataset.status.push(getStatus(lastexp, egoalt, toa));
 
                 realobgDataset.data.push(lastobg);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, lastobg, toa));
-                realobgDataset.status.push(getStatus(lastobg, ogoal, toa));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalt, lastobg, toa));
+                realobgDataset.status.push(getStatus(lastobg, ogoalt, toa));
             }
         }
 
-        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset,
-            obgplanRed, obgplanYellow, expplanRed, expplanYellow];
+        this.datasets = [obgDataset, expDataset,
+            obgplanRed, expplanRed,
+            //obgplanYellow, expplanYellow,
+            realexpDataset, realobgDataset];
     }
 
     private regraph() {
@@ -311,7 +292,20 @@ export class GraphsTabComponent implements OnInit {
         // 7. d3's line generator
         var line = d3.line()
             .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
-            .y(function (d) { return yScale(d); }) // set the y values for the line generator
+            .y(function (d) { return yScale(d < 0 ? 0 : d); }) // set the y values for the line generator
+            .curve(d3.curveMonotoneX) // apply smoothing to the line
+
+        var topidx: number = this.datasets[0].data.length;
+        var toprange: number[] = [];
+        for (var i = 0; i < topidx; i++) {
+            toprange.push(i);
+        }
+        for (var i = 0; i < topidx; i++) {
+            toprange.push(topidx - i - 1);
+        }
+        var bandline = d3.line()
+            .x(function (d, i) { return xScale(toprange[i]); }) // set the x values for the line generator
+            .y(function (d) { return yScale(d < 0 ? 0 : d); }) // set the y values for the line generator
             .curve(d3.curveMonotoneX) // apply smoothing to the line
 
         this.datasets.forEach(ds => {
@@ -329,7 +323,7 @@ export class GraphsTabComponent implements OnInit {
                 .data(ds.data)
                 .enter().append('circle')
                 .attr("class", function (value, month) {
-                    var klass : string = 'dot dot-' + ds.csskey;
+                    var klass: string = 'dot dot-' + ds.csskey;
                     if (2 === ds.status[month]) {
                         klass += ' dot-red';
                     }
@@ -350,7 +344,7 @@ export class GraphsTabComponent implements OnInit {
                         .style("top", yScale(value) + 60 + "px");
                     div.transition()
                         .duration(200)
-                        .style("opacity", .9);
+                        .style("opacity", 0.9);
                     // d3.select(this).attr('class', 'focus');
                 })
                 .on("mouseout", function (d) {
@@ -359,38 +353,36 @@ export class GraphsTabComponent implements OnInit {
                         .style("opacity", 0);
                     // d3.select(this).attr('')
                 })
+            
+            
+            if (ds.csskey.endsWith('plan')) {
+                // make a yellow band that follows the plan line
+                var yellows: number[] = [];
+                ds.data.forEach(val => {
+                    yellows.push(val);
+                });
+                for (var i = ds.data.length - 1; i >= 0; i--) {
+                    yellows.push(ds.data[i] - ds.toas[i] * 0.1);
+                }
+                svg.append('path')
+                    .datum(yellows)
+                    .attr('class', 'yellowband')
+                    .attr('d', bandline);
+
+                // make a small red band, too
+                var reds: number[] = [];
+                for (var i = 0; i < ds.data.length; i++){
+                    reds.push(ds.data[i] - ds.toas[i] * 0.1);
+                };
+                for (var i = ds.data.length - 1; i >= 0; i--) {
+                    reds.push(ds.data[i] - ds.toas[i] * 0.15);
+                }
+                svg.append('path')
+                    .datum(reds)
+                    .attr('class', 'redband')
+                    .attr('d', bandline);
+            }
         });
-
-        //       .on("mousemove", mousemove);
-
-        //   var focus = svg.append("g")
-        //       .attr("class", "focus")
-        //       .style("display", "none");
-
-        //   focus.append("circle")
-        //       .attr("r", 4.5);
-
-        //   focus.append("text")
-        //       .attr("x", 9)
-        //       .attr("dy", ".35em");
-
-        //   svg.append("rect")
-        //       .attr("class", "overlay")
-        //       .attr("width", width)
-        //       .attr("height", height)
-        //       .on("mouseover", function() { focus.style("display", null); })
-        //       .on("mouseout", function() { focus.style("display", "none"); })
-        //       .on("mousemove", mousemove);
-
-        //   function mousemove() {
-        //     var x0 = x.invert(d3.mouse(this)[0]),
-        //         i = bisectDate(data, x0, 1),
-        //         d0 = data[i - 1],
-        //         d1 = data[i],
-        //         d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-        //     focus.attr("transform", "translate(" + x(d.date) + "," + y(d.close) + ")");
-        //     focus.select("text").text(d);
-        //   }
     }
 
     getLegendDatasets(): DataSet[] {

@@ -138,35 +138,41 @@ export class ActualsTabComponent implements OnInit {
       return true;
     }
 
+    function isPctInRange(data: ActualsRow, row: number, fymonth: number, cutoff: number[]): boolean {      
+      if (my.rows && data && (my.isadmin || fymonth <= my.editMonth)) {
+        // if we're in a red/yellow/green cell, then the previous row is the "goal" row,
+        // and the value we want to check is the one before that ("cumulative")
+        var pct: number = my.rows[row - 2].values[fymonth] / data.toa[fymonth];
+        var goal: number = (7 === row
+          ? data.oblgoal_pct[fymonth]
+          : data.expgoal_pct[fymonth]);
+
+        var diff: number = (goal - pct) * 100;
+        var low: number = cutoff[0];
+        var high: number = cutoff[1];
+
+        return (diff >= low && diff < high);
+      }
+
+      return false;
+    }
+
     var isyellow = function (params): boolean {
-      if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var fymonth: number = my.firstMonth + params.colDef.colId;
-        if (my.isadmin || fymonth <= my.editMonth) {
-          var pct = params.value / params.data.toa[fymonth];
-          return (pct >= 0.1 && pct < 0.15);
-        }
-      }
-      return false;
+      return ( 7 === params.rowIndex || 11 === params.rowIndex
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [0,10.0001])
+        : false);
     }
+
     var isred = function (params): boolean {
-      if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var fymonth: number = my.firstMonth + params.colDef.colId;
-        if (my.isadmin || fymonth <= my.editMonth) {
-          var pct = params.value / params.data.toa[fymonth];
-          return pct >= 0.15;
-        }
-      }
-      return false;
+      return (7 === params.rowIndex || 11 === params.rowIndex
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [10, 1000])
+        : false);
     }
+
     var isgreen = function (params): boolean {
-      if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var fymonth: number = my.firstMonth + params.colDef.colId;
-        if (my.isadmin || fymonth <= my.editMonth) {
-          var pct = params.value / params.data.toa[fymonth];
-          return pct < 0.1;
-        }
-      }
-      return false;
+      return (7 === params.rowIndex || 11 === params.rowIndex
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-1000, 0.0001])
+        : false);
     }
 
     var getHeaderValue = function (params) {
@@ -694,7 +700,7 @@ export class ActualsTabComponent implements OnInit {
           accruals: this.rows[12].values[this.editMonth]
         };
 
-        if (opct >= 0.15 || epct >= 0.15) {
+        if (opct >= 0.1 || epct >= 0.1) {
           $('#explanation-modal').on('hidden.bs.modal', function (event) {
             oande.monthsToFix = my.fixtime;
             oande.explanation = my.explanation;
