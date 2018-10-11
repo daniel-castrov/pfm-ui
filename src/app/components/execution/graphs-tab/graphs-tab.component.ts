@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, MyDetailsService } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
 import * as d3 from 'd3';
