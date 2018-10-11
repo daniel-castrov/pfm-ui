@@ -700,7 +700,7 @@ export class ActualsTabComponent implements OnInit {
           accruals: this.rows[12].values[this.editMonth]
         };
 
-        if (opct >= 0.15 || epct >= 0.15) {
+        if (opct >= 0.1 || epct >= 0.1) {
           $('#explanation-modal').on('hidden.bs.modal', function (event) {
             oande.monthsToFix = my.fixtime;
             oande.explanation = my.explanation;
