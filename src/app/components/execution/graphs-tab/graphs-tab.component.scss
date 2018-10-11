@@ -88,9 +88,9 @@ div.tooltip {
 
 .line-planred {
   stroke: red;
-  stroke-dasharray: 3 2;
+  stroke-dasharray: 2 7;
   stroke-width: 3;
-  opacity: 0.25;
+  opacity: 0.75;
 }
 
 .dot-planred {
@@ -99,9 +99,8 @@ div.tooltip {
 
 .line-planyellow {
   stroke: yellow;
-  stroke-dasharray: 3 2;
-  stroke-width: 3;
-  opacity: 0.5;
+  stroke-width: 48;
+  opacity: 0.10;
 }
 
 .dot-planyellow {

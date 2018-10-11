@@ -182,10 +182,10 @@ export class GraphsTabComponent implements OnInit {
 
         var getStatus = function (actual: number, goal: number, toa: number) :number {
             var diff: number = (goal - actual) / toa;
-            if (diff >= 0.15) {
+            if (diff > 0.10) {
                 return 2;
             }
-            if (diff > 0.10) {
+            if (diff >= 0 && diff <= 0.10) {
                 return 1;
             }
             return 0;
@@ -193,35 +193,40 @@ export class GraphsTabComponent implements OnInit {
 
         for (var i = 0; i < this.maxmonths; i++) {
             var toa = toasAndReleaseds[i].toa;
-            var ogoal: number = toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
-            var egoal: number = toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            var redtoa: number = toa * 0.1;
+            var ogoal: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+            var egoal: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            var ogoalt: number = toa * ogoal;
+            var egoalt: number = toa * egoal;
+
+
             obgDataset.toas.push(toa);
-            obgDataset.data.push(ogoal);
-            obgDataset.notes.push('Obligation Goal: ' + ogoal.toFixed(2) + ' (' + (ogoal / toa * 100).toFixed(2) + '%)');
+            obgDataset.data.push(ogoalt);
+            obgDataset.notes.push('Obligation Goal: ' + ogoalt.toFixed(2) + ' (' + (ogoal * 100).toFixed(2) + '%)');
             obgDataset.status.push(0);
 
             obgplanRed.toas.push(toa);
-            obgplanRed.data.push(ogoal - (toa * 0.15));
+            obgplanRed.data.push(ogoalt - redtoa);
             obgplanRed.notes.push('Obligation "Red Zone"');
             obgplanRed.status.push(0);
 
             obgplanYellow.toas.push(toa);
-            obgplanYellow.data.push(ogoal - (toa * 0.10));
+            obgplanYellow.data.push(ogoalt - (redtoa / 2));
             obgplanYellow.notes.push('Obligation "Yellow Zone"');
             obgplanYellow.status.push(0);
 
             expDataset.toas.push(toa);
-            expDataset.data.push(egoal);            
-            expDataset.notes.push('Expenditure Goal: ' + egoal.toFixed(2) + ' (' + (egoal / toa * 100).toFixed(2) + '%)');
+            expDataset.data.push(egoalt);
+            expDataset.notes.push('Expenditure Goal: ' + egoalt.toFixed(2) + ' (' + (egoal * 100).toFixed(2) + '%)');
             expDataset.status.push(0);
 
             expplanRed.toas.push(toa);
-            expplanRed.data.push(egoal - (toa * 0.15));
+            expplanRed.data.push(egoalt - redtoa);
             expplanRed.notes.push('Expenditure "Red Zone"');
             expplanRed.status.push(0);
 
             expplanYellow.toas.push(toa);
-            expplanYellow.data.push(egoal - (toa * 0.10));
+            expplanYellow.data.push(egoalt - (redtoa / 2)); // want yellow in the middle of the range
             expplanYellow.notes.push('Expenditure "Yellow Zone"');
             expplanYellow.status.push(0);
 
@@ -233,27 +238,29 @@ export class GraphsTabComponent implements OnInit {
             if (myoandes[i]) {
                 var eactual: number = myoandes[i].outlayed + lastexp;
                 realexpDataset.data.push(eactual);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, eactual, toa));
-                realexpDataset.status.push(getStatus(eactual, egoal, toa));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, eactual, toa));
+                realexpDataset.status.push(getStatus(eactual, egoalt, toa));
 
                 var oactual: number = myoandes[i].obligated + lastobg;
                 realobgDataset.data.push(oactual);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, oactual, toa));
-                realobgDataset.status.push(getStatus(oactual, ogoal, toa));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalt, oactual, toa));
+                realobgDataset.status.push(getStatus(oactual, ogoalt, toa));
             }
             else {
                 realexpDataset.data.push(lastexp);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoal, lastexp, toa));
-                realexpDataset.status.push(getStatus(lastexp, egoal, toa));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, lastexp, toa));
+                realexpDataset.status.push(getStatus(lastexp, egoalt, toa));
 
                 realobgDataset.data.push(lastobg);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoal, lastobg, toa));
-                realobgDataset.status.push(getStatus(lastobg, ogoal, toa));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalt, lastobg, toa));
+                realobgDataset.status.push(getStatus(lastobg, ogoalt, toa));
             }
         }
 
-        this.datasets = [obgDataset, expDataset, realexpDataset, realobgDataset,
-            obgplanRed, obgplanYellow, expplanRed, expplanYellow];
+        this.datasets = [obgDataset, expDataset,
+            obgplanRed, expplanRed,
+            obgplanYellow, expplanYellow,
+            realexpDataset, realobgDataset];
     }
 
     private regraph() {
