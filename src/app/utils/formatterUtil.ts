@@ -5,7 +5,7 @@ export class FormatterUtil {
     return unique;
   }
 
-  public static currencyFormatter(value, decimalDigits?) {
+  public static currencyFormatter(value, decimalDigits?, round?) {
     if(!decimalDigits){
       decimalDigits = 0;
     }
@@ -17,7 +17,11 @@ export class FormatterUtil {
       currency: 'USD',
       minimumFractionDigits: decimalDigits
     });
-    return this.transformNegative(usdFormate.format(value.value));
+    if(round){
+      return this.transformNegative(usdFormate.format(Math.round(value.value)));
+    } else {
+      return this.transformNegative(usdFormate.format(value.value));
+    }
   }
 
   public static transformNegative(value: any){

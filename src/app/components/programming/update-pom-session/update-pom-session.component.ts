@@ -81,14 +81,17 @@ export class UpdatePomSessionComponent implements OnInit {
   applyBulkChange(){
     this.agGrid.api.forEachNodeAfterFilterAndSort((rowNode: RowNode) => {
       if (rowNode.rowIndex <= this.agGrid.api.getLastDisplayedRow()) {
-        Object.keys(rowNode.data.fundingLine.funds).forEach(year => {
+        this.columnKeys.forEach(year => {
           let additionalAmount = 0;
           if (this.bulkType === 'percentage') {
             additionalAmount = rowNode.data.fundingLine.funds[year] * (this.bulkAmount / 100);
           } else {
             additionalAmount = this.bulkAmount;
           }
-          rowNode.data.fundingLine.funds[year] += additionalAmount;
+          rowNode.data.fundingLine.funds[year] = (isNaN(rowNode.data.fundingLine.funds[year])? 0 : rowNode.data.fundingLine.funds[year]) + additionalAmount;
+          if (rowNode.data.fundingLine.funds[year] < 0) {
+            rowNode.data.fundingLine.funds[year] = 0;
+          }
         });
       }
     });
@@ -183,7 +186,7 @@ export class UpdatePomSessionComponent implements OnInit {
           suppressMenu: true,
           cellClass: ['text-right'],
           valueFormatter: params => {
-            return FormatterUtil.currencyFormatter(params)
+            return FormatterUtil.currencyFormatter(params, 0, true)
           },
           cellStyle: params => {
             if (params.data.funds[key] < 0) {
@@ -204,7 +207,7 @@ export class UpdatePomSessionComponent implements OnInit {
       minWidth: 100,
       cellClass: 'text-right',
       valueGetter: params => {return this.getTotalToa(params.data, this.columnKeys)},
-      valueFormatter: params => {return FormatterUtil.currencyFormatter(params)},
+      valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)},
       cellStyle: params => {
         if (this.getTotalToa(params.data, this.columnKeys) < 0) {
           return {color: 'red', 'font-weight': 'bold'};
@@ -301,7 +304,7 @@ export class UpdatePomSessionComponent implements OnInit {
               cellClass: ['text-right', 'ag-cell-edit'],
               editable: true,
               valueFormatter: params => {
-                return FormatterUtil.currencyFormatter(params)
+                return FormatterUtil.currencyFormatter(params, 0, true)
               },
               onCellValueChanged: params => this.onBudgetYearValueChanged(params)
             }]
@@ -320,7 +323,7 @@ export class UpdatePomSessionComponent implements OnInit {
       minWidth: 100,
       cellClass: 'text-right',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
-      valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
+      valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };
     this.columnDefs.push(totalColDef);
 
