@@ -210,7 +210,7 @@ export class GraphsTabComponent implements OnInit {
             realexpDataset.toas.push(toa);
             realobgDataset.toas.push(toa);
             if (myoandes[i]) {
-                var eactual: number = myoandes[i].outlayed + lastexp;
+                var eactual: number = myoandes[i].expensed + lastexp;
                 realexpDataset.data.push(eactual);
                 realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, eactual, toa));
                 realexpDataset.status.push(getStatus(eactual, egoalt, toa));

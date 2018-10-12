@@ -3343,31 +3343,31 @@ definitions:
       programName:
         type: "string"
       toa:
-        type: "integer"
+        type: "number"
       released:
-        type: "integer"
+        type: "number"
       withheld:
-        type: "integer"
+        type: "number"
       commitments:
-        type: "integer"
+        type: "number"
       obligations:
-        type: "integer"
+        type: "number"
       accruals:
-        type: "integer"
-      outlays:
-        type: "integer"
+        type: "number"
+      expensed:
+        type: "number"
       initial:
-        type: "integer"
+        type: "number"
       craTotal:
-        type: "integer"
+        type: "number"
       apprTotal:
-        type: "integer"
+        type: "number"
       ousdcTotal:
-        type: "integer"
+        type: "number"
       btrTotal:
-        type: "integer"
+        type: "number"
       realignedTotal:
-        type: "integer"
+        type: "number"
       hasTransactions:
         type: "boolean"
       phaseId:
@@ -3479,7 +3479,7 @@ definitions:
         type: "number"
       obligated:
         type: "number"
-      outlayed:
+      expensed:
         type: "number"
       accruals:
         type: "number"

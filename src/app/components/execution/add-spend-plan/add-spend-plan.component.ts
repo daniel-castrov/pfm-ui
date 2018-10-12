@@ -124,7 +124,7 @@ export class AddSpendPlanComponent implements OnInit {
       { spendplans2: 'Obligated', sept: 'item 1', aug: 500 },
       { spendplans3: 'In House/Other', dec: 'item 1', oct: 5550 },
       { spendplans3: 'Contracted', may: 'item 1', jul: 45000 },
-      { spendplans2: 'Outlayed', oct: 'item 1', feb: 50000 }
+      { spendplans2: 'Expensed', oct: 'item 1', feb: 50000 }
     ];
   }
 

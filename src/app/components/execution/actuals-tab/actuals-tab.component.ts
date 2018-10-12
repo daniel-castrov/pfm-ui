@@ -470,8 +470,8 @@ export class ActualsTabComponent implements OnInit {
       { label: 'Cumulative Obligated', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'OSD Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Delta', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Outlayed (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Cumulative Outlayed', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Expensed (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Expensed', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'OSD Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Delta', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Accruals (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
@@ -515,7 +515,7 @@ export class ActualsTabComponent implements OnInit {
         this.rows[6].values.push(0);
         this.rows[7].values.push(0);
 
-        this.rows[8].values.push(myoandes[i] ? myoandes[i].outlayed : 0);
+        this.rows[8].values.push(myoandes[i] ? myoandes[i].expensed : 0);
 
         this.rows[9].values.push(0);
         this.rows[10].values.push(0);
@@ -544,7 +544,7 @@ export class ActualsTabComponent implements OnInit {
 
     var committed: number = 0;
     var obligated: number = 0;
-    var outlayed: number = 0;
+    var expensed: number = 0;
     var accruals: number = 0;
 
     // go through all our deltas and calculate toas and released
@@ -577,12 +577,12 @@ export class ActualsTabComponent implements OnInit {
         this.rows[7].values[i] = this.rows[6].values[i] - obligated;
       }
 
-      outlayed += this.rows[8].values[i];
-      this.rows[9].values[i] = outlayed;
+      expensed += this.rows[8].values[i];
+      this.rows[9].values[i] = expensed;
 
       if (i < egoals.monthlies.length) {
         this.rows[10].values[i] = toa * egoals.monthlies[i];
-        this.rows[11].values[i] = this.rows[10].values[i] - outlayed;
+        this.rows[11].values[i] = this.rows[10].values[i] - expensed;
       }
 
       accruals += this.rows[12].values[i];
@@ -673,15 +673,29 @@ export class ActualsTabComponent implements OnInit {
       if (this.isadmin) {
         var data: OandEMonthly[] = [];
 
+        var rowsToCheck: number[] = [2, 4, 8, 12];
+
         for (var i = 0; i < this.rows[0].values.length; i++) {
-          data.push({
-            executionLineId: this.exeline.id,
-            month: i,
-            committed: my.rows[2].values[i],
-            obligated: my.rows[4].values[i],
-            outlayed: my.rows[8].values[i],
-            accruals: my.rows[12].values[i]
+          var okToAdd: boolean = false;
+
+          rowsToCheck.forEach(val => { 
+            if (my.rows[val].values[i] && 0 !== my.rows[val].values[i]) {
+              okToAdd = true;
+            }
           });
+
+          if (okToAdd) {
+            var exline: OandEMonthly = {
+              executionLineId: this.exeline.id,
+              month: i,
+              committed: my.rows[2].values[i],
+              obligated: my.rows[4].values[i],
+              expensed: my.rows[8].values[i],
+              accruals: my.rows[12].values[i]
+            };
+
+            data.push(exline);
+          }
         }
         obs.next(data);
         obs.complete();
@@ -696,7 +710,7 @@ export class ActualsTabComponent implements OnInit {
           month: this.editMonth,
           committed: this.rows[2].values[this.editMonth],
           obligated: this.rows[4].values[this.editMonth],
-          outlayed: this.rows[8].values[this.editMonth],
+          expensed: this.rows[8].values[this.editMonth],
           accruals: this.rows[12].values[this.editMonth]
         };
 
