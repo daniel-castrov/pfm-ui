@@ -92,6 +92,7 @@ export class OeUpdateComponent implements OnInit {
           field: 'el.toa',
           cellClass: ['ag-cell-light-green'],
           type: 'numericColumn',
+          valueFormatter: p => p.value.toFixed(2),
           maxWidth: 92
         },
         {
@@ -99,18 +100,21 @@ export class OeUpdateComponent implements OnInit {
           field: 'el.released',
           cellClass: ['ag-cell-white'],
           type: 'numericColumn',
+          valueFormatter: p => p.value.toFixed(2),
           maxWidth: 92
         },
         {
           headerName: 'Obligated',
           field: 'obligated',
           cellClass: ['ag-cell-white'],
+          valueFormatter: p => p.value.toFixed(2),
           type: 'numericColumn',
           maxWidth: 92
         },
         {
-          headerName: 'Outlayed',
-          field: 'outlayed',
+          headerName: 'Expensed',
+          field: 'expensed',
+          valueFormatter: p => p.value.toFixed(2),
           type: 'numericColumn',
           cellClass: ['ag-cell-white'],
           maxWidth: 92
@@ -185,7 +189,7 @@ export class OeUpdateComponent implements OnInit {
             accruals: 0,
             committed: 0,
             obligated: 0,
-            outlayed: 0
+            expensed: 0
           };
 
           data[2].result
@@ -194,7 +198,7 @@ export class OeUpdateComponent implements OnInit {
               wrap.accruals += oe.accruals;
               wrap.committed += oe.committed;
               wrap.obligated += oe.obligated;
-              wrap.outlayed += oe.outlayed;
+              wrap.expensed += oe.expensed;
 
               var oeupd: Date = new Date(oe.lastUpdated);
               if (oeupd > wrap.lastupd) {
@@ -234,7 +238,7 @@ interface OandEExecutionRow {
   id: string,
   exe: Execution,
   el: ExecutionLine,
-  outlayed: number,
+  expensed: number,
   obligated: number,
   accruals: number,
   committed: number,
