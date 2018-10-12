@@ -41,6 +41,8 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private reason: string;
   private showtaginput: boolean = false;
   private other: string;
+  private isUploading: boolean;
+  private fileid;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute, private router: Router) {
@@ -180,10 +182,9 @@ export class UpdateProgramExecutionComponent implements OnInit {
     });
 
 
-    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe(d => {
-        this.router.navigate(['/funds-update']);
-      });
+    this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => {
+      this.router.navigate(['/funds-update']);
+    });
   }
 
   updatedropdowns() {
@@ -227,5 +228,13 @@ export class UpdateProgramExecutionComponent implements OnInit {
       || 'BTR_OTHER' === this.etype.subtype
       || 'REALIGNMENT_UFR' === this.etype.subtype
       || 'REALIGNMENT_OTHER' === this.etype.subtype);
+  }
+
+  onUploading(event) {
+    this.isUploading = event;
+  }
+
+  onFileUploaded(event) {
+    this.fileid = event.id;
   }
 }

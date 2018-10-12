@@ -2424,35 +2424,18 @@ paths:
       summary: "Creates an execution event"
       description: "creates an execution event"
       operationId: "createExecutionEvent"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: "string"
-                  format: "binary"
-                transfer:
-                  type: "string"
-                  format: "binary"
       parameters:
       - in: "path"
         name: "phaseId"
         description: "The phase containing the transfer"
         required: true
         type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
+      - in: "body"
+        name: "body"
+        description: "a Community"
         required: true
-        type: "file"
-      - in: "formData"
-        name: "transfer"
-        description: "The transfer object as Blob (sorry)"
-        required: true
-        type: "file"
+        schema:
+          $ref: "#/definitions/ExecutionEventData"
       produces:
       - "application/json"
   /executionevent/phase/{phaseId}:
@@ -3446,6 +3429,8 @@ definitions:
       reason:
         type: "string"
       other:
+        type: "string"
+      fileId:
         type: "string"
   FileResponse:
     type: "object"

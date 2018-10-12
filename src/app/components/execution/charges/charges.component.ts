@@ -36,6 +36,8 @@ export class ChargesComponent implements OnInit {
   private type: string;
   private showotherN: boolean = true;
   private showotherT: boolean = true;
+  private fileid: string;
+  private isUploading: boolean;
   private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
     var okays: boolean[] = [];
     x.forEach(elw => {
@@ -83,10 +85,13 @@ export class ChargesComponent implements OnInit {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
-    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe(d => {
+    if (this.fileid) {
+      et.fileId = this.fileid;
+    }
+
+    this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => {
         this.router.navigate(['/funds-update']);
-      });
+    });
   }
 
   updatedropdowns() {
@@ -113,5 +118,13 @@ export class ChargesComponent implements OnInit {
         this.other = '1';
       }
     }
+  }
+
+  onUploading(event) {
+    this.isUploading = event;
+  }
+
+  onFileUploaded(event) {
+    this.fileid = event.id;
   }
 }

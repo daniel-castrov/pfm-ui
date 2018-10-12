@@ -31,6 +31,8 @@ export class AppropriationReleaseComponent implements OnInit {
   private other: string;
   private subtypes: ExecutionDropDown[];
   private progfilter: ExecutionLineFilter;
+  private isUploading: boolean;
+  private fileid;
   private showAddProgramButton: boolean = false;
   private line: ExecutionLineFilter = function (el: ExecutionLine): boolean {
     return true;
@@ -76,8 +78,11 @@ export class AppropriationReleaseComponent implements OnInit {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
-    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe(d => {
+    if (this.fileid) {
+      et.fileId = this.fileid;
+    }
+
+    this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => {
         this.router.navigate(['/funds-update']);
       });
   }
@@ -98,13 +103,11 @@ export class AppropriationReleaseComponent implements OnInit {
     });
   }
 
-  onFileUploaded(event) {
-    //let imagePath = 'data:' + fileResponse.contentType + ';base64,' + fileResponse.content;
-    //this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
-    //this.pr.imageName = fileResponse.id;
-    //this.pr.imageArea = this.fileArea;
-    
-    console.log(event);
+  onUploading(event) {
+    this.isUploading = event;
+  }
 
+  onFileUploaded(event) {
+    this.fileid = event.id;
   }
 }
