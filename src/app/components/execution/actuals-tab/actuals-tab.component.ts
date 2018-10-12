@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core'
+import { Observable } from 'rxjs';
 
 // Other Components
-import { GridOptions } from 'ag-grid';
+import { GridOptions, CellEditingStartedEvent, CellEditingStoppedEvent } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent } from '../../../generated';
+
+import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, OandEService } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
-
-import { Observable } from 'rxjs';
+import { NotifyUtil } from '../../../utils/NotifyUtil';
 
 declare const $: any;
 
@@ -26,7 +27,7 @@ declare const $: any;
 export class ActualsTabComponent implements OnInit {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-
+  @Input() parent: any;
   private _oandes: OandEMonthly[];
   private _exeline: ExecutionLine;
   private _exe: Execution;
@@ -101,7 +102,7 @@ export class ActualsTabComponent implements OnInit {
     return this._deltas;
   }
 
-  constructor() {
+  constructor(private oandesvc: OandEService) {
     var my: ActualsTabComponent = this;
 
     var editrows: Set<number> = new Set<number>([2, 4, 8, 12]);
@@ -137,40 +138,54 @@ export class ActualsTabComponent implements OnInit {
       return true;
     }
 
+    function isPctInRange(data: ActualsRow, row: number, fymonth: number, cutoff: number[]): boolean {      
+      if (my.rows && data && (my.isadmin || fymonth <= my.editMonth)) {
+        // if we're in a red/yellow/green cell, then the previous row is the "goal" row,
+        // and the value we want to check is the one before that ("cumulative")
+        var pct: number = my.rows[row - 2].values[fymonth] / data.toa[fymonth];
+        var goal: number = (7 === row
+          ? data.oblgoal_pct[fymonth]
+          : data.expgoal_pct[fymonth]);
+
+        var diff: number = (goal - pct) * 100;
+        var low: number = cutoff[0];
+        var high: number = cutoff[1];
+
+        return (diff >= low && diff < high);
+      }
+
+      return false;
+    }
+
     var isyellow = function (params): boolean {
-      if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var fymonth: number = my.firstMonth + params.colDef.colId;
-        if (my.isadmin || fymonth <= my.editMonth) {
-          var pct = params.value / params.data.toa[fymonth];
-          return (pct >= 0.1 && pct < 0.15);
-        }
-      }
-      return false;
+      return ( 7 === params.rowIndex || 11 === params.rowIndex
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [0,10.0001])
+        : false);
     }
+
     var isred = function (params): boolean {
-      if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var fymonth: number = my.firstMonth + params.colDef.colId;
-        if (my.isadmin || fymonth <= my.editMonth) {
-          var pct = params.value / params.data.toa[fymonth];
-          return pct >= 0.15;
-        }
-      }
-      return false;
+      return (7 === params.rowIndex || 11 === params.rowIndex
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [10, 1000])
+        : false);
     }
+
     var isgreen = function (params): boolean {
-      if (7 == params.rowIndex || 11 == params.rowIndex) {
-        var fymonth: number = my.firstMonth + params.colDef.colId;
-        if (my.isadmin || fymonth <= my.editMonth) {
-          var pct = params.value / params.data.toa[fymonth];
-          return pct < 0.1;
-        }
-      }
-      return false;
+      return (7 === params.rowIndex || 11 === params.rowIndex
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-1000, 0.0001])
+        : false);
     }
 
     var getHeaderValue = function (params) {
       var inty: number = my.firstMonth / 12;
       return (my.exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
+    }
+
+    var formatter = function (p): any {
+      if (my.showPercentages) {
+        var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+        return (p.node.data.values[col] / p.node.data.toa[col] * 100).toFixed(2);
+      }
+      return p.value;
     }
 
     var agcomps: any = {
@@ -212,6 +227,8 @@ export class ActualsTabComponent implements OnInit {
               valueSetter: valueSetter,
               type: 'numericColumn',
               cellRenderer: 'actualsRenderer',
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               maxWidth: 88,
               cellClassRules: {
                 'ag-cell-editable': editsok,
@@ -226,6 +243,8 @@ export class ActualsTabComponent implements OnInit {
               colId: 1,
               type: 'numericColumn',
               editable: editsok,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               valueSetter: valueSetter,
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
@@ -243,6 +262,8 @@ export class ActualsTabComponent implements OnInit {
               colId: 2,
               editable: editsok,
               valueGetter: params => my.valueGetter(params),
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               type: 'numericColumn',
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
@@ -260,6 +281,8 @@ export class ActualsTabComponent implements OnInit {
               colId: 3,
               valueSetter: valueSetter,
               editable: editsok,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
               type: 'numericColumn',
@@ -277,6 +300,8 @@ export class ActualsTabComponent implements OnInit {
               colId: 4,
               valueSetter: valueSetter,
               editable: editsok,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
@@ -293,6 +318,8 @@ export class ActualsTabComponent implements OnInit {
               headerName: 'Mar',
               colId: 5,
               editable: editsok,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
               valueGetter: params => my.valueGetter(params),
@@ -312,6 +339,8 @@ export class ActualsTabComponent implements OnInit {
               colId: 6,
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               type: 'numericColumn',
               valueGetter: params => my.valueGetter(params),
               maxWidth: 88,
@@ -327,6 +356,8 @@ export class ActualsTabComponent implements OnInit {
               editable: editsok,
               headerName: 'May',
               colId: 7,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               valueGetter: params => my.valueGetter(params),
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
@@ -343,6 +374,8 @@ export class ActualsTabComponent implements OnInit {
             {
               headerName: 'Jun',
               colId: 8,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               editable: editsok,
               valueGetter: params => my.valueGetter(params),
               type: 'numericColumn',
@@ -360,6 +393,8 @@ export class ActualsTabComponent implements OnInit {
             {
               headerName: 'Jul',
               colId: 9,
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               editable: editsok,
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
@@ -379,6 +414,8 @@ export class ActualsTabComponent implements OnInit {
               colId: 10,
               editable: editsok,
               valueGetter: params => my.valueGetter(params),
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               cellRenderer: 'actualsRenderer',
               maxWidth: 88,
               type: 'numericColumn',
@@ -397,6 +434,8 @@ export class ActualsTabComponent implements OnInit {
               editable: editsok,
               cellRenderer: 'actualsRenderer',
               valueGetter: params => my.valueGetter(params),
+              valueFormatter: p => formatter(p),
+              cellEditorParams: { useFormatter: true },
               maxWidth: 88,
               valueSetter: valueSetter,
               type: 'numericColumn',
@@ -648,7 +687,6 @@ export class ActualsTabComponent implements OnInit {
         obs.complete();
       }
       else {
-
         var toa: number = this.rows[0].values[this.editMonth];
         var opct: number = (this.rows[6].values[this.editMonth] - this.rows[5].values[this.editMonth])/toa;
         var epct: number = (this.rows[10].values[this.editMonth] - this.rows[9].values[this.editMonth])/toa;
@@ -662,7 +700,7 @@ export class ActualsTabComponent implements OnInit {
           accruals: this.rows[12].values[this.editMonth]
         };
 
-        if (opct >= 0.15 || epct >= 0.15) {
+        if (opct >= 0.1 || epct >= 0.1) {
           $('#explanation-modal').on('hidden.bs.modal', function (event) {
             oande.monthsToFix = my.fixtime;
             oande.explanation = my.explanation;
@@ -677,6 +715,35 @@ export class ActualsTabComponent implements OnInit {
           obs.next([oande]);
           obs.complete();
         }
+      }
+    });
+  }
+
+  save() {
+    // the actuals tab might have to get more info from the user, so 
+    // this function doesn't return immediately.
+    var obs = this.monthlies().subscribe(data => {
+      if (this.isadmin) {
+        this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(d2 => {
+          if (d2.error) {
+            NotifyUtil.notifyError(d2.error);
+          }
+          else {
+            NotifyUtil.notifySuccess('Data saved');
+            this.parent.refresh(this.exeline.id);
+          }
+        });
+      }
+      else {
+        this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
+          if (data.error) {
+            NotifyUtil.notifyError(data.error);
+          }
+          else {
+            NotifyUtil.notifySuccess('Data saved');
+            this.parent.refresh(this.exeline.id);
+          }
+        });
       }
     });
   }

@@ -390,6 +390,31 @@ paths:
         name: "pomId"
         required: true
         type: "string"
+  /worksheets:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "create"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pom"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
+    put:
+      tags:
+      - "Worksheet"
+      operationId: "update"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pom"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
   /worksheets/updateRows:
     post:
       tags:
@@ -403,7 +428,7 @@ paths:
         description: "a Worksheet object"
         required: true
         schema:
-          $ref: "#/definitions/Worksheet"
+          $ref: "#/definitions/Worksheet"          
 # STOP WORKSHEET
 ##############################################################################
 # START PR

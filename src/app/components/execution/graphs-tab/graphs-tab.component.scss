@@ -6,6 +6,7 @@ $graph-black:    #000000;
 $graph-purple:   #672793;
 $graph-dark-red: #a41b1b;
 $graph-pink:     #b63395;
+$graph-yellow:   #ffff00;
 
 .line {
     fill: none;
@@ -25,7 +26,7 @@ $graph-pink:     #b63395;
 div.tooltip {
   position: absolute;
   text-align: center;
-  padding: 2px;
+  padding: 4px;
   font: 12px sans-serif;
   background: lightsteelblue;
   border: 0px;
@@ -50,7 +51,7 @@ div.tooltip {
 }
 
 .dot-yellow {
-  fill: yellow!important;
+  fill: $graph-yellow!important;
 }
 
 .line-expplan {
@@ -60,12 +61,13 @@ div.tooltip {
 
 .dot-expplan {
   fill: $graph-orange;
-  //display:none;
+  display:none;
 }
 
 .line-obgplan {
   stroke: $graph-blue;
   stroke-width: 3;
+  opacity: .6;
 }
 
 .line-realobg {
@@ -88,26 +90,26 @@ div.tooltip {
 
 .line-planred {
   stroke: red;
-  stroke-dasharray: 3 2;
+  stroke-dasharray: 2 7;
   stroke-width: 3;
-  opacity: 0.25;
+  opacity: 0.75;
 }
 
 .dot-planred {
   display: none;
 }
 
-.line-planyellow {
-  stroke: yellow;
-  stroke-dasharray: 3 2;
-  stroke-width: 3;
-  opacity: 0.5;
+.yellowband {
+  stroke: none;
+  fill: $graph-yellow;
+  opacity: 0.15;
 }
 
-.dot-planyellow {
-  display: none;
+.redband {
+  stroke: none;
+  fill: red;
+  opacity: 0.15;
 }
-
 
 .focus circle {
   fill: none;
@@ -116,7 +118,8 @@ div.tooltip {
 
 .dot-obgplan {
   fill: $graph-blue;
-  //display:none;
+  opacity: .6;
+  display:none;
 }
 
 .legend-item {
@@ -134,6 +137,7 @@ div.tooltip {
 
 .legend-item-obgplan {
   color: $graph-blue;
+  opacity: .7;
 
   span.legend-text {
     color: $graph-black;

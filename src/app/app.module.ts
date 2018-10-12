@@ -131,7 +131,6 @@ import { SetEppComponent } from './components/programming/set-epp/set-epp.compon
 import { EppService, LibraryService, UserService, OandEService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
-import { WorksheetComponent } from './components/programming/pom-worksheet/worksheet/worksheet.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
 import { LibraryComponent } from "./components/manage/library/library.component";
 import { SimpleLinkCellRendererComponent } from './components/renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -155,6 +154,7 @@ import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
 import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
 import {WorksheetService} from "app/generated/api/worksheet.service";
+import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 
 
 // ROUTES
@@ -196,6 +196,7 @@ const appRoutes: Routes = [
   {path:'select-program-request', component:SelectProgramRequestComponent},
   {path:'spend-plan-update', component:SpendPlansTabComponent},
   {path:'user/:id', component:ManageSelfComponent},
+  {path:'update-pom-session/:id', component:UpdatePomSessionComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
@@ -206,7 +207,6 @@ const appRoutes: Routes = [
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent},
-  {path:'worksheet/:id', component: WorksheetComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent },
   {path:'library', component: LibraryComponent}
 ];
@@ -301,7 +301,6 @@ const appRoutes: Routes = [
     FyPipe,
     MapAsListPipe,
     ExecutionLineTableComponent,
-    WorksheetComponent,
     FileUploadComponent,
     CheckboxRendererComponent,
     NameRendererComponent,
@@ -391,6 +390,7 @@ const appRoutes: Routes = [
     ExecutionService,
     OandEService,
     LibraryService,
+    StateService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],

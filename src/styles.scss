@@ -17,7 +17,7 @@ $primary-color: #25527a;
 $red: #ff0000;
 $white-border: 1px solid #ffffff;
 $white: #ffffff;
-$yellow: #fec001;
+$yellow: #ffff00;
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -715,7 +715,7 @@ tab {
 
 .ag-cell-red {
   background-color: $red;
-  color: $black;
+  color: $white;
 }
 
 .ag-clickable {
@@ -813,4 +813,15 @@ tab {
 .align-column {
   display: flex;
   align-items: flex-end;
+}
+
+.isDisabled {
+  cursor: not-allowed;
+}
+
+.isDisabled > a {
+  color: currentColor;
+  display: inline-block;  /* For IE11/ MS Edge bug */
+  pointer-events: none;
+  text-decoration: none;
 }

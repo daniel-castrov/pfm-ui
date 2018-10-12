@@ -10,10 +10,10 @@
       <div class="row">
         <div class="col-9">
           <ul class="worksheet-controls mb-3">
-            <li><button class="btn btn-primary" (click)="operation=Operation.DUPLICATE" [disabled]="isRowNotSelected()" >Duplicate</button></li>
-            <li><button class="btn btn-primary" (click)="operation=Operation.RENAME"    [disabled]="isRowNotSelected()" >Rename</button></li>
-            <li><button class="btn btn-primary" (click)="operation=Operation.EXPORT"    [disabled]="isRowNotSelected()" >Export</button></li>
-            <li><button class="btn btn-primary" (click)="operation=Operation.IMPORT"                                    >Import</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()" >Duplicate</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()" >Rename</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()" >Export</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"                                    >Import</button></li>
           </ul>
         </div>
       </div>
@@ -39,20 +39,14 @@
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>
       </div>
-      <span class="worksheet-lock">
-        <i class="fa fa-lock" aria-hidden="true"></i>
-      </span>
-      <span class="worksheet-lock">
-        <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-      </span>
 
       <div class="row">
         <div class="col-12">
 
-          <duplicate [hidden]="operation!=Operation.DUPLICATE" (operationOver)="operation=null" ></duplicate>
-          <rename    [hidden]="operation!=Operation.RENAME"    (operationOver)="operation=null" ></rename>
-          <export    [hidden]="operation!=Operation.EXPORT"    (operationOver)="operation=null" ></export>
-          <import    [hidden]="operation!=Operation.IMPORT"    (operationOver)="operation=null" ></import>
+          <duplicate #duplicate [hidden]="stateService.operation!=stateService.Operation.DUPLICATE" (operationOver)="onOperationOver()" ></duplicate>
+          <rename    #rename    [hidden]="stateService.operation!=stateService.Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
+          <export    #export    [hidden]="stateService.operation!=stateService.Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
+          <import    #import    [hidden]="stateService.operation!=stateService.Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
 
         </div>
       </div>

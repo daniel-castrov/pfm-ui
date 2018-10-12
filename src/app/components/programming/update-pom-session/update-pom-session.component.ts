@@ -10,6 +10,7 @@ import {AgGridNg2} from "ag-grid-angular";
 import {CellEditor} from "../../../utils/CellEditor";
 import {NotifyUtil} from "../../../utils/NotifyUtil";
 import {RowNode} from "ag-grid";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'update-pom-session',
@@ -33,14 +34,16 @@ export class UpdatePomSessionComponent implements OnInit {
   bulkType: string;
   bulkAmount: number;
   worksheets: Array<Worksheet>;
-  selectedWorksheet: Worksheet = null;
+  selectedWorksheet: Worksheet = undefined;
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
-              private worksheetService: WorksheetService) { }
+              private worksheetService: WorksheetService,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
+    let worksheetId = this.route.snapshot.params['id'];
     this.userUtils.user().subscribe( user => {
       this.pomService.getOpen(user.currentCommunityId).subscribe( pom => {
         this.pom = pom.result;
@@ -54,7 +57,11 @@ export class UpdatePomSessionComponent implements OnInit {
           this.pom.fy + 3,
           this.pom.fy + 4];
         this.worksheetService.getByPomId(pom.result.id).subscribe( worksheets => {
-          this.worksheets = worksheets.result;
+          this.worksheets = worksheets.result.filter(worksheet => !worksheet.locked);
+          this.selectedWorksheet = this.worksheets.find(worksheet => worksheet.id === worksheetId);
+          if (this.selectedWorksheet !== undefined) {
+            this.onWorksheetSelected();
+          }
         });
       });
     });
