@@ -7,12 +7,10 @@ $light-grey: #eae9e9;
 $medium-grey: #dddddd;
 $dark-grey: #848282;
 
-.forminput {
-  width: 300px;
-  padding: 6px 4px;
-  clear: both;
-  display: inline;
-}
+// .forminput {
+//   clear: both;
+//   display: inline;
+// }
 
 .worksheet-width {
   width: 300px;
@@ -25,9 +23,8 @@ $dark-grey: #848282;
 }
 
 label {
-  color: $primary-color;
+  color: #6b757c;
   margin: 0;
-  display: block;
 }
 
 .pom-tab-style {

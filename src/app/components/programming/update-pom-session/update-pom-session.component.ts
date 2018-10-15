@@ -226,39 +226,39 @@ export class UpdatePomSessionComponent implements OnInit {
         headerName: 'Core Capability',
         headerTooltip: 'Core Capability',
         field: 'coreCapability',
-        cellClass: 'funding-line-default'
+        cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'Program ID',
         headerTooltip: 'Program ID',
         colId: 'programId',
         field: 'programId',
-        cellClass: 'funding-line-default'
+        cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'Appn',
         headerTooltip: 'Appropriation',
         field: 'fundingLine.appropriation',
-        cellClass: 'funding-line-default',
+        cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'BA/BLIN',
         headerTooltip: 'BA/BLIN',
         field: 'fundingLine.baOrBlin',
-        cellClass: 'funding-line-default',
+        cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'Item',
         headerTooltip: 'Item',
         field: 'fundingLine.item',
-        cellClass: 'funding-line-default'
+        cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'OpAgency',
         headerTooltip: 'OpAgency',
         field: 'fundingLine.opAgency',
         hide: true,
-        cellClass: 'funding-line-default',
+        cellClass: ['funding-line-default', 'text-left']
       }];
 
     this.columnKeys.forEach(key => {
@@ -321,7 +321,7 @@ export class UpdatePomSessionComponent implements OnInit {
       suppressToolPanel: true,
       maxWidth: 100,
       minWidth: 100,
-      cellClass: 'text-right',
+      cellClass: ['funding-line-default', 'text-right'],
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };

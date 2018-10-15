@@ -25,14 +25,18 @@
         </div>
         <div *ngIf="selectedWorksheet" class="col-auto">
           <span class="form-group inline-name">
-            <label for="reasonCode" style="float: left;margin-top: 3px !important;">Reason Code:</label>
-            <select id="reasonCode" style="float: right" class="form-control-sm worksheet-width">
-              <option value="null" disabled selected>Select a reason code</option>
-              <option>Worksheet code 1</option>
-              <option>Worksheet code 2</option>
-              <option>Worksheet code 3</option>
-              <option>Worksheet code 4</option>
-            </select>
+            <span class="mr-2">
+              <label for="reasonCode">Reason Code:</label>
+            </span>
+            <span class="form-group">
+              <select id="reasonCode" class="form-control-sm worksheet-width pull-right">
+                <option value="null" disabled selected>Select a reason code</option>
+                <option>Worksheet code 1</option>
+                <option>Worksheet code 2</option>
+                <option>Worksheet code 3</option>
+                <option>Worksheet code 4</option>
+              </select>
+            </span>
           </span>
         </div>
         <div *ngIf="selectedWorksheet" class="col-auto">
@@ -62,10 +66,12 @@
                   </label>
                 </div>
               </div>
-              <div class="col-4 vertical-align">
-                <input type="number" [(ngModel)]="bulkAmount" class="w-100"/>
+              <div class="col-4">
+                <span class="form-group">
+                  <input class="form-control forminput-sm w-100" type="number" [(ngModel)]="bulkAmount">
+                </span>
               </div>
-              <div class="col-5 vertical-align">
+              <div class="col-5">
                 <button class="btn btn-primary" (click)="applyBulkChange()">Apply to visible cells</button>
               </div>
             </div>
@@ -79,7 +85,7 @@
       </div>
       <div *ngIf="selectedWorksheet" class="row mb-3">
         <div class="col-5 align-column">
-          <input class="w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
+          <input class="form-control forminput w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
         </div>
         <div class="col-7">
           <ag-grid-angular #agGridToa
