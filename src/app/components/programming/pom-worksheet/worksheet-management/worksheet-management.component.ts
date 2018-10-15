@@ -42,7 +42,7 @@ export class WorksheetManagementComponent implements OnInit {
 
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
                    {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameRendererComponent},
-                   {headerName: 'Version', field: 'number', maxWidth: 90},
+                   {headerName: 'Number', field: 'number', maxWidth: 90},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
                    {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]
     };
