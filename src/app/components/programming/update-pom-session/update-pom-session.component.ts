@@ -171,7 +171,7 @@ export class UpdatePomSessionComponent implements OnInit {
       {
         headerName: '',
         field: 'description',
-        cellClass: 'text-right'
+        cellClass: ['ag-cell-white','text-right'],
       }
     ];
     this.columnKeys.forEach(key => {
@@ -184,7 +184,7 @@ export class UpdatePomSessionComponent implements OnInit {
           field: 'funds.' + key,
           maxWidth: 92,
           suppressMenu: true,
-          cellClass: ['text-right'],
+          cellClass: ['ag-cell-white','text-right'],
           valueFormatter: params => {
             return FormatterUtil.currencyFormatter(params, 0, true)
           },
@@ -205,7 +205,7 @@ export class UpdatePomSessionComponent implements OnInit {
       suppressToolPanel: true,
       maxWidth: 100,
       minWidth: 100,
-      cellClass: 'text-right',
+      cellClass: ['ag-cell-white','text-right'],
       valueGetter: params => {return this.getTotalToa(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)},
       cellStyle: params => {
@@ -321,7 +321,7 @@ export class UpdatePomSessionComponent implements OnInit {
       suppressToolPanel: true,
       maxWidth: 100,
       minWidth: 100,
-      cellClass: ['funding-line-default', 'text-right'],
+      cellClass: ['ag-cell-white','text-right'],
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };
