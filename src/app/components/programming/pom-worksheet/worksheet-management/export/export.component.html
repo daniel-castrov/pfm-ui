@@ -20,22 +20,9 @@
       </td>
     </tr>
     <tr>
-      <td>
-        <label class="pull-right">To Folder:</label>
-      </td>
-      <td colspan="2">
-        <div class="input-group forminput-width">
-          <input type="text" class="form-control copy-input" aria-label="Enter File Location" aria-describedby="basic-addon1">
-          <div class="input-group-append">
-            <span class="input-group-text">Browse</span>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
       <td colspan="4">
         <div class="button-controls pull-right">
-          <button class="btn btn-primary pull-right" (click)="onSave()" >Save</button>
+          <button class="btn btn-primary pull-right" (click)="onExport()" >Export</button>
           <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
         </div>
       </td>
