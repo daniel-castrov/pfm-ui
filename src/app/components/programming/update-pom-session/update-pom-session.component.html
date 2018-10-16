@@ -55,24 +55,26 @@
               <div class="col-3">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="bulkType" [(ngModel)]="bulkType" id="percentage" value="percentage" checked>
-                  <label class="form-check-label" for="percentage">
+                  <label class="form-check-label ml-4" for="percentage">
                     % change
                   </label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="bulkType" [(ngModel)]="bulkType" id="fixed" value="fixed">
-                  <label class="form-check-label" for="fixed">
+                  <label class="form-check-label ml-4" for="fixed">
                     fixed $
                   </label>
                 </div>
               </div>
               <div class="col-4">
                 <span class="form-group">
-                  <input class="form-control forminput-sm w-100" type="number" [(ngModel)]="bulkAmount">
+                  <input class="form-control forminput-sm w-100 mt-1" type="number" [(ngModel)]="bulkAmount">
                 </span>
               </div>
               <div class="col-5">
-                <button class="btn btn-primary" (click)="applyBulkChange()">Apply to visible cells</button>
+                <span class="form-group">
+                  <button class="btn btn-primary mt-1" (click)="applyBulkChange()">Apply to visible cells</button>
+                </span>
               </div>
             </div>
           </fieldset>
