@@ -143,10 +143,22 @@
       </ng-template>
 
       <!-- Budget Menu -->
-      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('BES_Manager') ) ; else disabledBudgetMenu">
-        <li class="nav-item">
-            <a class="nav-link" href="#" routerLink="/home">Budget</a>
+      <!-- <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('BES_Manager') ) ; else disabledBudgetMenu"> -->
+      <div *ngIf="true ; else disabledBudgetMenu">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownbes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Budget</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownbes">
+            <a class="dropdown-item" href="#" routerLink="/bes-rdte">BES RDTE</a>
+            <a class="dropdown-item" href="#" routerLink="/home">BES PROC</a>
+            <div *ngIf="roles?.includes('Execution_Manager')" class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" routerLink="/home">PB RDTE</a>
+            <a class="dropdown-item" href="#" routerLink="/home">PB PROC</a>
+          </div>
         </li>
+
+        <!-- <li class="nav-item">
+            <a class="nav-link" href="#" routerLink="/home">Budget</a>
+        </li> -->
       </div>
       <ng-template #disabledBudgetMenu>
         <li class="nav-item">

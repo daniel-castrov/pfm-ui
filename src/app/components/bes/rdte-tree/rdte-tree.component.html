@@ -1,0 +1,40 @@
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12" id="set-epp">
+          <div class="h5 mb-4">BES RDTE</div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12"></div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12">
+
+          <ag-grid-angular #agGrid
+            class="ag-theme-balham"
+            id="mygrid"
+            [gridAutoHeight]="true"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
+            [toolPanelSuppressSideButtons]="true"
+            [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
+            [suppressPaginationPanel]="true"
+            [treeData]="true"
+            [animateRows]="true"
+            [groupDefaultExpanded]="groupDefaultExpanded"
+            [getDataPath]="getTreeHierarchy"
+            [autoGroupColumnDef]="autoGroupColumnDef"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
