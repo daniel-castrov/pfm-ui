@@ -783,14 +783,21 @@ tab {
 .ag-header-group-cell,
 .ag-header-cell-text,
 .ag-header-cell-number {
-  // padding-left: 2px !important;
-  // padding-right: 2px !important;
+  display: grid;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
   text-align: center !important;
 }
 
 .ag-header-group-cell-label {
   display: grid;
   text-align: center;
+}
+
+.ag-theme-balham .ag-header-cell-label {
+  display: grid !important;
+  text-align: center !important;
+  padding-right: 2px !important;
 }
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table
