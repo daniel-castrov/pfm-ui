@@ -8,7 +8,7 @@
       <td>
         <div class="input-group forminput-width">
           <input type="file" id="input-file" class="custom-file-input" (change)="onFileChange($event)" aria-label="Enter File Location" aria-describedby="basic-addon1">
-          <label class="custom-file-label" for="input-file" >{{fileName}}</label>
+          <label class="custom-file-label" for="input-file" >{{file?.name}}</label>
         </div>
       </td>
     </tr>
@@ -27,7 +27,7 @@
     <tr>
       <td colspan="4">
         <div class="button-controls pull-right">
-          <button class="btn btn-primary pull-right" (click)="onImport()" [disabled]="!selectedImportableWorksheet">Import</button>
+          <button class="btn btn-primary pull-right" (click)="onImport()" [disabled]="!selectedImportableWorksheet || !file">Import</button>
           <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
         </div>
       </td>

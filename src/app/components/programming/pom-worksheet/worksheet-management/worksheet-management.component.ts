@@ -7,7 +7,6 @@ import {Pom, POMService, User, WorksheetService} from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
 import {Operation, StateService} from "./state.service";
 import {NameRendererComponent} from "./name-renderer.component";
-import {Operator} from "rxjs";
 import {DuplicateComponent} from "./duplicate/duplicate.component";
 import {RenameComponent} from "./rename/rename.component";
 import {ExportComponent} from "./export/export.component";
@@ -53,10 +52,10 @@ export class WorksheetManagementComponent implements OnInit {
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
     this.pomId = pom.id;
     this.fy = pom.fy;
-    await this.updateWorksheets();
+    await this.refreshPage();
   }
 
-  private async updateWorksheets() {
+  private async refreshPage() {
     this.stateService.worksheets = (await this.worksheetService.getByPomId(this.pomId).toPromise()).result;
     const rowData = this.stateService.worksheets.map(worksheet => {
       return {
@@ -69,6 +68,7 @@ export class WorksheetManagementComponent implements OnInit {
     });
 
     this.agGrid.api.setRowData(rowData);
+    this.initOperations();
   }
 
   onPageSizeChanged(event) {
@@ -95,12 +95,15 @@ export class WorksheetManagementComponent implements OnInit {
 
   startOperation(operation: Operation) {
     this.stateService.operation=operation;
+  }
+
+  private initOperations() {
     const operationComponents = [this.duplicateComponent, this.renameComponent, this.importComponent, this.exportComponent] as OperationBase[];
-    operationComponents.forEach(operationCompopnent => operationCompopnent.init());
+    operationComponents.forEach(operation => operation.init());
   }
 
   onOperationOver() {
-    this.updateWorksheets();
+    this.refreshPage();
     this.stateService.selectedRowIndex = NaN;
     this.stateService.operation = null;
   }
