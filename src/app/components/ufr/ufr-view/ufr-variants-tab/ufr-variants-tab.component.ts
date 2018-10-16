@@ -114,8 +114,7 @@ export class UfrVariantsTabComponent {
       value.forEach(row => {
         if (row.phaseType == PhaseType.POM ) {
           this.years.forEach(year => {
-            pomTotal[year] =  Number(pomTotal[year] || 0) 
-                              + (isNaN(row.serviceLine.quantity[year]) ? Number(0) : Number(row.serviceLine.quantity[year]));
+            pomTotal[year] =  (pomTotal[year] || 0) + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
           });
         }
       });
@@ -225,6 +224,7 @@ export class UfrVariantsTabComponent {
       this.years.forEach(year => {
         let colDef = {
           headerName: "FY" + (year-2000),
+          colId:year,
           field: 'serviceLine.quantity.' + year,
           maxWidth: 92,
           suppressMenu: true,
@@ -350,7 +350,7 @@ export class UfrVariantsTabComponent {
   }
 
   onBudgetYearValueChanged(params){
-    let year = params.colDef.headerName;
+    let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
     let displayModel = this.gridApi.get(params.data.variantName).getModel();
