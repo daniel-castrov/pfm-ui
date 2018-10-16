@@ -156,6 +156,7 @@ import {NameRendererComponent} from "./components/programming/pom-worksheet/work
 import {WorksheetService} from "./generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import { BesRdteComponent } from './components/budget/bes-rdte/bes-rdte.component';
+import { BesProcComponent } from './components/budget/bes-proc/bes-proc.component';
 
 
 // ROUTES
@@ -167,6 +168,7 @@ const appRoutes: Routes = [
   {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'appropriation-release/:phaseId', component:AppropriationReleaseComponent},
   {path:'bes-rdte', component:BesRdteComponent},
+  {path:'bes-proc', component:BesProcComponent},
   {path:'charges/:phaseId', component:ChargesComponent},
   {path:'exedetails/:lineId', component: ExecutionLineDetailsComponent },
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
@@ -324,6 +326,7 @@ const appRoutes: Routes = [
     ImportComponent,
     ActualsCellRendererComponent,
     BesRdteComponent,
+    BesProcComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

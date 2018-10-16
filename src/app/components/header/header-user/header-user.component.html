@@ -148,11 +148,16 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownbes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Budget</a>
           <div class="dropdown-menu" aria-labelledby="dropdownbes">
-            <a class="dropdown-item" href="#" routerLink="/bes-rdte">BES RDTE</a>
-            <a class="dropdown-item" href="#" routerLink="/home">BES PROC</a>
-            <div *ngIf="roles?.includes('Execution_Manager')" class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" routerLink="/home">PB RDTE</a>
-            <a class="dropdown-item" href="#" routerLink="/home">PB PROC</a>
+            <a class="dropdown-item" disabled>Create BES</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" disabled>Open BES</a>
+            <a class="dropdown-item" href="#" routerLink="/bes-rdte">Update BES</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" routerLink="/home">Close BES</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" disabled>Update PB</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" disabled>Close PB</a>
           </div>
         </li>
 
