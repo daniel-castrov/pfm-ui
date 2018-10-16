@@ -155,7 +155,7 @@ import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-
 import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
 import {WorksheetService} from "./generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
-import { RdteTreeComponent } from './components/bes/rdte-tree/rdte-tree.component';
+import { BesRdteComponent } from './components/budget/bes-rdte/bes-rdte.component';
 
 
 // ROUTES
@@ -166,7 +166,7 @@ const appRoutes: Routes = [
   {path:'apply', component:ApplyComponent},
   {path:'approve-requests', component:ApproveRequestsComponent},
   {path:'appropriation-release/:phaseId', component:AppropriationReleaseComponent},
-  {path:'bes-rdte', component:RdteTreeComponent},
+  {path:'bes-rdte', component:BesRdteComponent},
   {path:'charges/:phaseId', component:ChargesComponent},
   {path:'exedetails/:lineId', component: ExecutionLineDetailsComponent },
   {path:'community-details/:id', component:MamageCommunityDetailsComponent},
@@ -323,7 +323,7 @@ const appRoutes: Routes = [
     ExportComponent,
     ImportComponent,
     ActualsCellRendererComponent,
-    RdteTreeComponent,
+    BesRdteComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

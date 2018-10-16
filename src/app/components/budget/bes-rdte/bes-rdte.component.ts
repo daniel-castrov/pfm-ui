@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { HeaderComponent } from '../../header/header.component';
 
-@Component({
-  selector: 'app-rdte-tree',
-  templateUrl: './rdte-tree.component.html',
-  styleUrls: ['./rdte-tree.component.scss']
+@Component({ 
+  selector: 'app-bes-rdte',
+  templateUrl: './bes-rdte.component.html',
+  styleUrls: ['./bes-rdte.component.scss']
 })
-export class RdteTreeComponent {
+export class BesRdteComponent {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;

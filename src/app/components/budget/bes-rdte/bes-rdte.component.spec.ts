@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RdteTreeComponent } from './rdte-tree.component';
+import { BesRdteComponent } from './bes-rdte.component';
 
 describe('RdteTreeComponent', () => {
-  let component: RdteTreeComponent;
-  let fixture: ComponentFixture<RdteTreeComponent>;
+  let component: BesRdteComponent;
+  let fixture: ComponentFixture<BesRdteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RdteTreeComponent ]
+      declarations: [ BesRdteComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RdteTreeComponent);
+    fixture = TestBed.createComponent(BesRdteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
