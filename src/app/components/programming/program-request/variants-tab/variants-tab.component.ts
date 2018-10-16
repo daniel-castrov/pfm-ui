@@ -151,13 +151,15 @@ export class VariantsTabComponent {
     this.data.forEach((value: DataRow[], key: string) => {
       let pinnedData = [];
       let pomTotal: IntMap = {};
+
+      this.years.forEach(year => { pomTotal[year] = 0 });
+
       value.forEach(row => {
-        switch(row.phaseType) {
-          case PhaseType.POM:
-            this.years.forEach(year => {
-              pomTotal[year] = (pomTotal[year] || 0) + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
-            });
-            break;
+        if (row.phaseType == PhaseType.POM ) {
+          this.years.forEach(year => {
+            pomTotal[year] =  Number(pomTotal[year] || 0) 
+                              + (isNaN(row.serviceLine.quantity[year]) ? Number(0) : Number(row.serviceLine.quantity[year]));
+          });
         }
       });
       let pomRow: DataRow = new DataRow();
