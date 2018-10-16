@@ -75,9 +75,7 @@ export class UfrFundsComponent implements OnChanges {
 
   initCurrentFunding() {
     let data: Array<DataRow> = [];
-    if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
+    if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM) {
       this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
         pr.result.fundingLines.forEach(fundingLine => {
@@ -87,12 +85,9 @@ export class UfrFundsComponent implements OnChanges {
         this.currentFunding = data;
         this.initRevisedChanges();
       });
-    } else if (this.ufr.shortyType === ShortyType.PR ||
-      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR) {
+    } else if (this.ufr.shortyType === ShortyType.PR) {
       this.prService.getById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
-
         pr.result.fundingLines.forEach(fundingLine => {
           let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
           data.push(pomRow);
@@ -101,7 +96,7 @@ export class UfrFundsComponent implements OnChanges {
         this.initRevisedChanges();
       });
     } else {
-      this.shorty = this.ufr
+      this.shorty = this.ufr;
       let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
       data.push(pomRow);
       this.currentFunding = data;
