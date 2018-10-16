@@ -16,7 +16,7 @@
       <div class="col-6 mb-4">
         <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
 
-          <label>Upload DoD Goals by selecting local Excel file:</label>
+          <div class="h6">Upload DoD Goals by selecting local Excel file:</div>
           <div class="input-group">
             <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
             <span class="input-group-btn">
