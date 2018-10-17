@@ -13,7 +13,8 @@ import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '
 import { ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {NotifyUtil} from "../../../utils/NotifyUtil";
+import { NotifyUtil } from "../../../utils/NotifyUtil";
+import { MyDetailsService, User, Organization, OrganizationService } from '../../../generated';
 
 @Component({
   selector: 'program-request',
@@ -29,9 +30,9 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
   @ViewChild(VariantsTabComponent) private variantsTabComponent: VariantsTabComponent;
 
-  constructor( private prService: PRService,
+  constructor( private prService: PRService, private detailsService: MyDetailsService,
                private programRequestPageMode: ProgramRequestPageModeService,
-               private cd: ChangeDetectorRef ) {
+               private cd: ChangeDetectorRef, private orgService: OrganizationService ) {
     this.pr.fundingLines = [];
   }
 
@@ -50,7 +51,13 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       this.pr = (await this.prService.getById(this.programRequestPageMode.prId).toPromise()).result;
     } else { // PR is in create mode
       this.initPrFields();
+      if (!this.pr.leadComponent) {
+        var user: User = (await this.detailsService.getCurrentUser().toPromise()).result;
+        var organization: Organization = (await this.orgService.getById(user.organizationId).toPromise()).result;
+        this.pr.leadComponent = organization.abbreviation;
+      }
     }
+    console.log('now: ' + JSON.stringify(this.pr));
   }
 
 
@@ -59,6 +66,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.creationTimeType = this.programRequestPageMode.type;
     this.pr.bulkOrigin = false;
     this.pr.state = 'SAVED';
+
     switch (this.programRequestPageMode.type) {
       case CreationTimeType.PROGRAM_OF_MRDB:
         this.pr.originalMrId = this.programRequestPageMode.reference.id;
