@@ -24,7 +24,7 @@ export class ExportComponent implements OperationBase {
 
   async onExport() {
     const xlsBlob = await this.worksheetService.export1(this.stateService.selectedWorksheet.id).toPromise();
-    saveAs(xlsBlob, this.stateService.selectedWorksheet.name);
+    saveAs(xlsBlob, this.stateService.selectedWorksheet.name + ' ' + this.stateService.selectedWorksheet.version);
     this.operationOver.emit();
   }
 
