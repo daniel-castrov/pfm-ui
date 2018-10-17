@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { NotifyUtil } from '../../../../utils/NotifyUtil';
+import { Notify } from '../../../../utils/Notify';
 
 // Generated
 import { Community, RestResult, User, Organization, OrganizationService } from '../../../../generated';
@@ -56,11 +56,11 @@ export class RequestComponent implements OnChanges {
     if (this.useOrgs){ request.organizationId=this.selectedOrg.id; }
     try {
       await this.service.create(request).toPromise();
-      NotifyUtil.notifySuccess("You will receive an email once your request is processed.");
+      Notify.success("You will receive an email once your request is processed.");
       this.updateRequestedCommuntyIds();
       this.header.refreshActions();
     } catch(e) {
-      NotifyUtil.notifyError(e.message);
+      Notify.exception(e.message);
     }
     this.selectedCommunity=null;
     this.selectedOrg=null;

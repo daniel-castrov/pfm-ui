@@ -23,7 +23,7 @@ import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {Validation} from "./Validation";
-import {NotifyUtil} from "../../../../utils/NotifyUtil";
+import {Notify} from "../../../../utils/Notify";
 import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
 import {GridType} from "./GridType";
 import {CellEditor} from "../../../../utils/CellEditor";
@@ -910,7 +910,7 @@ export class FundsTabComponent implements OnChanges {
           this.agGrid.api.sizeColumnsToFit();
         }
       } else {
-        NotifyUtil.notifyError('Can\'t delete this funding line because is being used by one of the subprograms');
+        Notify.error('Can\'t delete this funding line because is being used by one of the subprograms');
       }
     });
   }

@@ -439,6 +439,14 @@ paths:
       operationId: "import1"
       consumes:
       - "multipart/form-data"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
       produces:
       - "application/json"
       parameters:
@@ -450,14 +458,6 @@ paths:
         name: "file"
         required: true
         type: file
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
   /worksheets/updateRows:
     post:
       tags:

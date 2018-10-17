@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 import { Community } from '../../../generated/model/community';
 import { CommunityService } from '../../../generated/api/community.service';
@@ -63,7 +63,7 @@ export class CommunityJoinComponent implements OnInit {
         this.joinCommunityRequest = result.result;
 
         if (null == this.joinCommunityRequest) {
-          NotifyUtil.notifyInfo("The requested Join-Community-Request does not exist");
+          Notify.info("The requested Join-Community-Request does not exist");
           return;
         }
 
@@ -101,7 +101,7 @@ export class CommunityJoinComponent implements OnInit {
       await this.joinCommunityRequestService.status(status, this.joinCommunityRequest.id).toPromise();
       this.router.navigate(['./home']);
     } catch(e) {
-      NotifyUtil.notifyError(e.message);
+      Notify.exception(e.message);
     }
   }
 

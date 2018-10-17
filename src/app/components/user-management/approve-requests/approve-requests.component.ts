@@ -5,7 +5,7 @@ import { Request } from '../../../services/request';
 import { HeaderComponent } from '../../header/header.component';
 import { Injectables } from '../../../services/injectables';
 import { RequestsService } from '../../../services/requests.service';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 @Component({
   selector: 'approve-requests',
@@ -40,11 +40,11 @@ export class ApproveRequestsComponent implements OnInit {
   async submit(action: any, message: string) {
     try {
       await action();
-      NotifyUtil.notifySuccess("The request has been " + message);
+      Notify.success("The request has been " + message);
       this.ngOnInit();
       this.header.refreshActions();
     } catch(e) {
-      NotifyUtil.notifyError(e.message);
+      Notify.exception(e.message);
     }
   }
 

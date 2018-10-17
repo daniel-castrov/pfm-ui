@@ -6,7 +6,7 @@ import {PhaseType} from '../../../programming/select-program-request/UiProgramma
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import { NotifyUtil } from '../../../../utils/NotifyUtil';
+import { Notify } from '../../../../utils/Notify';
 
 @Component({
   selector: 'ufr-variants-tab',
@@ -415,7 +415,7 @@ export class UfrVariantsTabComponent {
 
   addVariant(){
     if (this.fund.variants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
-      NotifyUtil.notifyError('A Variant named "' + this.newVariantName + '" already exists');
+      Notify.error('A Variant named "' + this.newVariantName + '" already exists');
       return;
     }
 

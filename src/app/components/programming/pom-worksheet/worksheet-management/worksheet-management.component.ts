@@ -102,9 +102,9 @@ export class WorksheetManagementComponent implements OnInit {
     operationComponents.forEach(operation => operation.init());
   }
 
-  onOperationOver() {
-    this.refreshPage();
+  async onOperationOver() {
     this.stateService.selectedRowIndex = NaN;
     this.stateService.operation = null;
+    await this.refreshPage();
   }
 }

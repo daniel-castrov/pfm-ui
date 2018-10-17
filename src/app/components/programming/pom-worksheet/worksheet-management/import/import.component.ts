@@ -2,6 +2,8 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {Worksheet, WorksheetService} from "../../../../../generated";
 import {StateService} from "../state.service";
 import {OperationBase} from "../operartion.base";
+import {Notify} from "../../../../../utils/Notify";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'import',
@@ -24,9 +26,14 @@ export class ImportComponent implements OperationBase {
   }
 
   async onImport() {
-    // await this.worksheetService.import1(this.selectedImportableWorksheet.id, this.file).toPromise();
-    await this.worksheetService.update({...this.selectedImportableWorksheet, locked:false}).toPromise();
-    this.operationOver.emit();
+    try {
+      await this.worksheetService.import1(this.selectedImportableWorksheet.id, this.file).toPromise();
+      Notify.success('Import successful');
+      this.operationOver.emit();
+    } catch (ex) {
+      const e = ex as HttpErrorResponse;
+      Notify.error('Import failed. Reason: ' + e.error.error);
+    }
   }
 
   onFileChange(event){

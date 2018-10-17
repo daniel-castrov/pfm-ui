@@ -7,7 +7,7 @@ import { DualListComponent } from 'angular-dual-listbox';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
 import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 // Generated
 import { Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
@@ -293,13 +293,13 @@ export class MyRolesComponent {
     // Submit it
     try {
       await this.assignRoleRequestService.create(request).toPromise();
-      NotifyUtil.notifySuccess("Your request has been submitted. Your will recieve an email once your request is processed.");
+      Notify.success("Your request has been submitted. Your will recieve an email once your request is processed.");
       this.assignRequests.push(request);
       this.selectedRole = null;
       this.clear();
       this.header.refreshActions();
     } catch(e) {
-      NotifyUtil.notifyError(e.message);
+      Notify.exception(e.message);
     }
   }
 
@@ -314,13 +314,13 @@ export class MyRolesComponent {
     // Submit it
     try {
       await this.dropRoleRequestService.create(request).toPromise();
-      NotifyUtil.notifySuccess("Your request has been submitted. Your will recieve an email once your request is processed.");
+      Notify.success("Your request has been submitted. Your will recieve an email once your request is processed.");
       this.dropRequests.push(request);
       this.selectedRole = null;
       this.clear();
       this.header.refreshActions();
     } catch(e) {
-      NotifyUtil.notifySuccess(e.message);
+      Notify.success(e.message);
     }
   }
   
