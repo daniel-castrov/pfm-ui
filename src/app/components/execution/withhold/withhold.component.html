@@ -10,7 +10,7 @@
       <div class="col-8">
       </div>
       <div class="col-4">
-        <button class="btn btn-success pull-right" (click)="submit()" [disabled]="!table.tableok">Withhold</button>
+        <button class="btn btn-success pull-right" (click)="submit()" [disabled]="!table.tableok || isUploading">Withhold</button>
       </div>
     </div>
     <div class="row">
@@ -53,13 +53,8 @@
    </div>
    <div class="row">
      <div class="col-4 mb-4">
-       <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
          <label>Attach Document:</label>
-         <div class="input-group input-group-sm">
-           <input type="file" class="custom-file-input" placeholder="Choose file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
-           <label class="custom-file-label" for="charges">Chose file</label>
-         </div>
-       </form>
+         <file-upload #fileupload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
      </div>
    </div>
   </div>

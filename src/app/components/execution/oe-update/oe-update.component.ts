@@ -52,6 +52,7 @@ export class OeUpdateComponent implements OnInit {
       columnDefs: [
         {
           headerName: 'Program',
+          headerTooltip: 'Program',
           field: 'programName',
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
@@ -59,36 +60,42 @@ export class OeUpdateComponent implements OnInit {
         },
         {
           headerName: 'Appn.',
+          headerTooltip: 'Appropriation',
           field: 'el.appropriation',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
         },
         {
           headerName: 'BA/BLIN',
+          headerTooltip: 'BA/BLIN',
           field: 'el.blin',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
         },
         {
           headerName: 'Item',
+          headerTooltip: 'Item',
           field: 'el.item',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
         },
         {
           headerName: 'OpAgency',
+          headerTooltip: 'OpAgency',
           field: 'el.opAgency',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
         },
         {
           headerName: 'PE',
+          headerTooltip: 'PE',
           field: 'el.programElement',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
         },
         {
           headerName: 'TOA',
+          headerTooltip: 'TOA',
           field: 'el.toa',
           cellClass: ['ag-cell-light-green'],
           type: 'numericColumn',
@@ -97,6 +104,7 @@ export class OeUpdateComponent implements OnInit {
         },
         {
           headerName: 'Released',
+          headerTooltip: 'Released',
           field: 'el.released',
           cellClass: ['ag-cell-white'],
           type: 'numericColumn',
@@ -105,6 +113,7 @@ export class OeUpdateComponent implements OnInit {
         },
         {
           headerName: 'Obligated',
+          headerTooltip: 'Obligated',
           field: 'obligated',
           cellClass: ['ag-cell-white'],
           valueFormatter: p => p.value.toFixed(2),
@@ -113,6 +122,7 @@ export class OeUpdateComponent implements OnInit {
         },
         {
           headerName: 'Expensed',
+          headerTooltip: 'Expensed',
           field: 'expensed',
           valueFormatter: p => p.value.toFixed(2),
           type: 'numericColumn',
@@ -121,6 +131,7 @@ export class OeUpdateComponent implements OnInit {
         },
         {
           headerName: 'Plan',
+          headerTooltip: 'Plan',
           field: 'plan',
           cellClass: ['ag-cell-white'],
           type: 'numericColumn',
@@ -128,6 +139,7 @@ export class OeUpdateComponent implements OnInit {
         },
         {
           headerName: 'Last Upated',
+          headerTooltip: 'Last Upated',
           field: 'lastupd',
           cellClass: ['ag-cell-white'],
           maxWidth: 92
@@ -213,7 +225,7 @@ export class OeUpdateComponent implements OnInit {
       }
     });
   }
- 
+
 
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);

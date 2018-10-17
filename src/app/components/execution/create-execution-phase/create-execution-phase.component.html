@@ -16,8 +16,8 @@
       <div class="col-6 mb-4">
         <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
 
-          <label class="primary-label">Upload DoD Goals by selecting local Excel file:</label>
-          <div class="input-group input-group-sm">
+          <div class="h6">Upload DoD Goals by selecting local Excel file:</div>
+          <div class="input-group">
             <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
             <span class="input-group-btn">
               <span class="btn btn-secondary btn-file">
@@ -33,7 +33,7 @@
     </div>
     <div class="row">
       <div class="col-8  mb-4">
-        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!modelpb">Create Phase</button>
+        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!( modelpb && fileToUpload )">Create Phase</button>
       </div>
     </div>
     <div class="row">

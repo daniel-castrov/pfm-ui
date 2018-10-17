@@ -423,7 +423,10 @@ export class ExecutionLineTableComponent implements OnInit {
     //console.log('checking validity');
     var lines: ExecutionLineWrapper[] = [];
     this.agOptions.api.forEachNodeAfterFilter(rn => { 
-      lines.push(rn.data);
+      if (rn.data.line.id && this.elIdNameLkp.has(rn.data.line.id)
+        && rn.data.amt && 0 !== rn.data.amt) {
+        lines.push(rn.data);
+      }
     });
 
     var failure: boolean = false;

@@ -13,9 +13,12 @@ declare const $: any;
 
 export class FileUploadComponent implements OnInit {
 
-  @Output() fileUploadEvent: EventEmitter<FileResponse >=new EventEmitter();
+  @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
+  @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
   @Input() disabled: boolean;
+  doingit: boolean = false;
+  private uploadsuccess: boolean = false;
 
   fileName: string;
 
@@ -30,8 +33,14 @@ export class FileUploadComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.fileName = file.name;
+        this.doingit = true;
+        this.uploadsuccess = false;
+        this.uploading.emit(this.doingit);
         this.libraryService.uploadFile(file, this.area).subscribe(response => {
+          this.doingit = false;
+          this.uploading.emit(this.doingit);
           if (response.result) {
+            this.uploadsuccess = true;
             this.fileUploadEvent.emit(response.result);
           }
         })

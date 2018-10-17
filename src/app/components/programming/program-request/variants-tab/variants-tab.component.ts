@@ -151,13 +151,15 @@ export class VariantsTabComponent {
     this.data.forEach((value: DataRow[], key: string) => {
       let pinnedData = [];
       let pomTotal: IntMap = {};
+
+      this.years.forEach(year => { pomTotal[year] = 0 });
+
       value.forEach(row => {
-        switch(row.phaseType) {
-          case PhaseType.POM:
-            this.years.forEach(year => {
-              pomTotal[year] = (pomTotal[year] || 0) + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
-            });
-            break;
+        if (row.phaseType == PhaseType.POM ) {
+          this.years.forEach(year => {
+            pomTotal[year] =  (pomTotal[year] || 0) 
+                              + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
+          });
         }
       });
       let pomRow: DataRow = new DataRow();
@@ -266,6 +268,7 @@ export class VariantsTabComponent {
       this.years.forEach(year => {
         let colDef = {
           headerName: "FY" + (year-2000),
+          colId:year,
           field: 'serviceLine.quantity.' + year,
           maxWidth: 92,
           suppressMenu: true,
@@ -420,7 +423,7 @@ export class VariantsTabComponent {
   }
 
   onBudgetYearValueChanged(params){
-    let year = params.colDef.headerName;
+    let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
     let displayModel = this.gridApi.get(params.data.variantName).getModel();

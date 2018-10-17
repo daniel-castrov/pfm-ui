@@ -1,4 +1,7 @@
 <div class="form-group">
   <input type="file" class="custom-file-input" id="input-file" (change)="onFileChange($event)" [disabled]="disabled" >
-  <label class="custom-file-label" for="input-file" >{{fileName}}</label>
+  <label class="custom-file-label" for="input-file" >{{fileName}}
+    <span *ngIf="doingit"><i class="fa fa-arrow-circle-up" aria-hidden="true"></i></span>
+    <span *ngIf="uploadsuccess"><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>
+  </label>
 </div>

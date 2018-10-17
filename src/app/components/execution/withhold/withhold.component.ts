@@ -34,8 +34,9 @@ export class WithholdComponent implements OnInit {
   private reason: string;
   private etype: ExecutionDropDown;
   private other: string;
-  private longname: string;
+  private isUploading: boolean = false;
   private subtypes: ExecutionDropDown[];
+  private fileid: string;
   private linefilter: ExecutionLineFilter = function (x: ExecutionLine): boolean {
     return ( x.released > 0 );
   };
@@ -76,9 +77,20 @@ export class WithholdComponent implements OnInit {
       et.toIdAmtLkp[l.line.id] = l.amt;
     });
 
-    this.exesvc.createExecutionEvent(this.phase.id, new Blob(["stuff"]),
-      new Blob([JSON.stringify(et)])).subscribe(d => { 
+    if (this.fileid) {
+      et.fileId = this.fileid;
+    }
+
+    this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => { 
         this.router.navigate(['/funds-update']);
       });
+  }
+
+  onUploading(event) {
+    this.isUploading = event;
+  }
+
+  onFileUploaded(event) {
+    this.fileid = event.id;
   }
 }

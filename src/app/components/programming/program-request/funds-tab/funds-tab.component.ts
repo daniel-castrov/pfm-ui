@@ -61,6 +61,7 @@ export class FundsTabComponent implements OnChanges {
   parentData;
   siblingsData;
   showSiblingsInformation: Boolean = false;
+  showParentInformation: Boolean = false;
   pinnedBottomData;
   pinnedSiblingsBottomData;
   existingFundingLines: FundingLine[] = [];
@@ -260,9 +261,6 @@ export class FundsTabComponent implements OnChanges {
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
         this.agGrid.columnApi.setColumnVisible('delete', true);
       }
-      if (this.pr.type === ProgramType.GENERIC) {
-        this.agGrid.columnApi.setColumnVisible('programId', true);
-      }
       this.agGrid.api.sizeColumnsToFit();
     });
   }
@@ -278,6 +276,7 @@ export class FundsTabComponent implements OnChanges {
     let pbRow: DataRow = new DataRow();
     pbRow.phaseType = PhaseType.PB;
     pbRow.programId = this.pr.shortName;
+    pbRow.gridType = GridType.CURRENT_PR;
 
     if(this.pbPr !== undefined) {
       pbRow.fundingLine = this.pbPr.fundingLines.filter(fl =>
@@ -394,7 +393,8 @@ export class FundsTabComponent implements OnChanges {
           },
           cellClass: 'funding-line-default',
           cellStyle: {'text-align': 'center', 'padding': '0px'},
-          maxWidth: 40
+          maxWidth: 40,
+          minWidth: 40,
         },
           {
             headerName: 'Program ID',
@@ -488,6 +488,7 @@ export class FundsTabComponent implements OnChanges {
           field: 'fundingLine.opAgency',
           hide: true,
           maxWidth: 65,
+          minWidth: 65,
           cellClass: 'funding-line-default',
           cellClassRules: {
             'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -498,7 +499,8 @@ export class FundsTabComponent implements OnChanges {
           headerName: 'Cycle',
           headerTooltip: 'Cycle',
           field: 'phaseType',
-          maxWidth: 92,
+          maxWidth: 80,
+          minWidth: 80,
           suppressMenu: true,
           suppressToolPanel: true,
           cellClassRules: {
@@ -561,7 +563,8 @@ export class FundsTabComponent implements OnChanges {
             colId: key,
             headerTooltip: 'Fiscal Year ' + key,
             field: 'fundingLine.funds.' + key,
-            maxWidth: 92,
+            maxWidth: 80,
+            minWidth: 80,
             suppressMenu: true,
             suppressToolPanel: true,
             cellEditor: 'numericCellEditor',
@@ -603,7 +606,8 @@ export class FundsTabComponent implements OnChanges {
       headerTooltip: 'Future Years Defense Program Total',
       suppressMenu: true,
       suppressToolPanel: true,
-      maxWidth: 92,
+      maxWidth: 80,
+      minWidth: 80,
       cellClass: 'text-right',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
@@ -615,7 +619,8 @@ export class FundsTabComponent implements OnChanges {
       headerTooltip: 'Cost to Complete',
       suppressMenu: true,
       suppressToolPanel: true,
-      maxWidth: 92,
+      maxWidth: 80,
+      minWidth: 80,
       field: 'fundingLine.ctc',
       cellEditor: 'numericCellEditor',
       cellClass: 'text-right',
@@ -638,6 +643,10 @@ export class FundsTabComponent implements OnChanges {
     this.columnDefs.push(ctcColDef);
 
     this.agGrid.api.setColumnDefs(this.columnDefs);
+    if (this.pr.type === ProgramType.GENERIC) {
+      this.agGrid.columnApi.setColumnVisible('programId', true);
+    }
+
     this.agGrid.api.sizeColumnsToFit();
   }
 
@@ -826,8 +835,6 @@ export class FundsTabComponent implements OnChanges {
     setTimeout(() => {
       this.agGridParent.api.setColumnDefs(this.columnDefs);
       this.agGridParent.columnApi.setColumnVisible('programId', true);
-      this.agGridParent.api.getColumnDef('programId').headerName = 'Parent';
-      this.agGridParent.api.refreshHeader();
       this.agGridParent.api.setRowData(this.parentData);
       this.agGridParent.api.sizeColumnsToFit();
     }, 500);
@@ -842,8 +849,6 @@ export class FundsTabComponent implements OnChanges {
     setTimeout(() => {
       this.agGridSiblings.api.setColumnDefs(this.columnDefs);
       this.agGridSiblings.columnApi.setColumnVisible('programId', true);
-      this.agGridSiblings.api.getColumnDef('programId').headerName = 'Sibling';
-      this.agGridSiblings.api.refreshHeader();
       this.agGridSiblings.api.setRowData(this.siblingsData);
       this.agGridSiblings.api.sizeColumnsToFit();
     }, 500);
@@ -867,9 +872,17 @@ export class FundsTabComponent implements OnChanges {
 
   viewSiblings(fundingLine){
     this.showSiblingsInformation = true;
+    this.showParentInformation = true;
     this.initParentDataRows(fundingLine);
     this.initSiblingsDataRows(fundingLine);
 
+  }
+
+  closeParentInformation() {
+    this.showParentInformation = false;
+    setTimeout(() => {
+      this.agGrid.api.sizeColumnsToFit();
+    }, 500)
   }
 
   closeSiblingsInformation() {

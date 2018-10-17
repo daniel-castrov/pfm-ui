@@ -24,7 +24,7 @@
         </span>
       </div>
       <div class="col-2">
-        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]='!table.tableok'>Submit</button>
+        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]='!table.tableok || isUploading'>Submit</button>
       </div>
     </div>
     <div class="row mb-3">
@@ -101,20 +101,12 @@
         </span>
      </div>
    </div>
-   <div class="row">
-     <div class="col-6 mb-4">
-       <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
-         <label>Attach Document:</label>
-         <div class="input-group input-group">
-           <input type="text" class="form-control form-input" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
-           <span class="input-group-btn">
-             <span class="btn btn-secondary btn-file">
-             Browse… <input type="file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files)">
-             </span>
-           </span>
-         </div>
-       </form>
+   <div class="row mb-3">
+     <div class="col">
+       <span class="form-group">
+         <label class="mb-1">Attach File:</label>
+         <file-upload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+       </span>
      </div>
    </div>
-  </div>
 </div>
