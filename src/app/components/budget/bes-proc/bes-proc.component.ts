@@ -7,7 +7,7 @@ import { HeaderComponent } from '../../header/header.component';
   templateUrl: './bes-proc.component.html',
   styleUrls: ['./bes-proc.component.scss']
 })
-export class BesProcComponent implements OnInit {
+export class BesProcComponent  {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
