@@ -3,7 +3,7 @@ import { WithFullNameService, ProgramWithFullName } from '../../../../services/w
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
-import {ProgramType} from "../../../../generated";
+import {ProgramType, MyDetailsService, OrganizationService, Organization, User} from "../../../../generated";
 
 enum AddNewPrForMode {
   AN_MRDB_PROGRAM = 'Previously Funded Program',
@@ -30,7 +30,9 @@ export class NewProgrammaticRequestComponent implements OnInit {
   constructor(
     private router: Router,
     private programRequestPageMode: ProgramRequestPageModeService,
-    private withFullNameService: WithFullNameService
+    private withFullNameService: WithFullNameService,
+    private detailsService: MyDetailsService,
+    private orgService: OrganizationService,
   ) {}
 
   async ngOnInit() {
@@ -54,6 +56,10 @@ export class NewProgrammaticRequestComponent implements OnInit {
         this.initialSelectOption = 'Program Request';
         break;
     }
+
+    // make sure we can only add new programs in our organization
+    var user: User = (await this.detailsService.getCurrentUser().toPromise()).result;
+    this.selectableProgramsOrPrs = this.selectableProgramsOrPrs.filter(prog => (prog.organization === user.organizationId));
   }
 
   async next() {
