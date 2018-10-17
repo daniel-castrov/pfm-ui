@@ -8,18 +8,12 @@ import {OperationBase} from "../operartion.base";
   templateUrl: './rename.component.html',
   styleUrls: ['./rename.component.scss']
 })
-export class RenameComponent implements OperationBase {
-  @Output() operationOver = new EventEmitter();
-  name: string;
-  version: number;
+export class RenameComponent extends OperationBase {
   editableName: string;
 
-  constructor( private stateService: StateService,
-               private worksheetService: WorksheetService ) {}
+  constructor( stateService: StateService, private worksheetService: WorksheetService ) {super(stateService);}
 
   init() {
-    this.name = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.name;
-    this.version = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.version;
     this.editableName = this.name;
   }
 

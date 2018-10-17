@@ -9,18 +9,10 @@ import {saveAs} from "file-saver";
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss']
 })
-export class ExportComponent implements OperationBase {
-  @Output() operationOver = new EventEmitter();
-  name: string;
-  version: number;
+export class ExportComponent extends OperationBase {
+  constructor( stateService: StateService, private worksheetService: WorksheetService ) {super(stateService);}
 
-  constructor( private stateService: StateService,
-               private worksheetService: WorksheetService) {}
-
-  init() {
-    this.name = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.name;
-    this.version = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.version;
-  }
+  init() {}
 
   async onExport() {
     const xlsBlob = await this.worksheetService.export1(this.stateService.selectedWorksheet.id).toPromise();

@@ -10,14 +10,12 @@ import {HttpErrorResponse} from "@angular/common/http";
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.scss']
 })
-export class ImportComponent implements OperationBase {
-  @Output() operationOver = new EventEmitter();
+export class ImportComponent extends OperationBase {
   selectedImportableWorksheet: Worksheet;
   importableWorksheets: Worksheet[];
   file: File;
 
-  constructor( private stateService: StateService,
-               private worksheetService: WorksheetService ) {}
+  constructor( stateService: StateService, private worksheetService: WorksheetService ) {super(stateService);}
 
   init() {
     this.file = null;
