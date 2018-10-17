@@ -19,7 +19,7 @@
       <td>
         <div class="form-group">
           <select [(ngModel)]="selectedImportableWorksheet" class="form-control copy-select">
-            <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Version {{worksheet.version}}</option>
+            <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Number {{worksheet.version}}</option>
           </select>
         </div>
       </td>
