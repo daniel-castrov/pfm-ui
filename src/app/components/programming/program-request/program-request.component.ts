@@ -13,8 +13,8 @@ import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '
 import { ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import { NotifyUtil } from "../../../utils/NotifyUtil";
 import { MyDetailsService, User, Organization, OrganizationService } from '../../../generated';
+import {Notify} from "../../../utils/Notify";
 
 @Component({
   selector: 'program-request',
@@ -114,19 +114,19 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   async save(state: ProgrammaticRequestState) {
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
-      NotifyUtil.notifyError(fundsTabValidation.message);
+      Notify.error(fundsTabValidation.message);
     } else {
       if(this.pr.id) {
         this.pr.state = state;
         this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
         if (this.pr.state === ProgrammaticRequestState.SAVED) {
-          NotifyUtil.notifySuccess('Program request saved successfully')
+          Notify.success('Program request saved successfully')
         } else {
-          NotifyUtil.notifySuccess('Program request submitted successfully')
+          Notify.success('Program request submitted successfully')
         }
       } else {
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
-        NotifyUtil.notifySuccess('Program request created successfully')
+        Notify.success('Program request created successfully')
       }
     }
   }

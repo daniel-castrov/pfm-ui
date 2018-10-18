@@ -8,7 +8,7 @@ import { AgGridNg2 } from 'ag-grid-angular';
 import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, OandEService } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 declare const $: any;
 
@@ -740,10 +740,10 @@ export class ActualsTabComponent implements OnInit {
       if (this.isadmin) {
         this.oandesvc.createAdminMonthlyInput(this.exeline.id, data).subscribe(d2 => {
           if (d2.error) {
-            NotifyUtil.notifyError(d2.error);
+            Notify.error(d2.error);
           }
           else {
-            NotifyUtil.notifySuccess('Data saved');
+            Notify.success('Data saved');
             this.parent.refresh(this.exeline.id);
           }
         });
@@ -751,10 +751,10 @@ export class ActualsTabComponent implements OnInit {
       else {
         this.oandesvc.createMonthlyInput(this.exeline.id, data[0]).subscribe(data => {
           if (data.error) {
-            NotifyUtil.notifyError(data.error);
+            Notify.error(data.error);
           }
           else {
-            NotifyUtil.notifySuccess('Data saved');
+            Notify.success('Data saved');
             this.parent.refresh(this.exeline.id);
           }
         });

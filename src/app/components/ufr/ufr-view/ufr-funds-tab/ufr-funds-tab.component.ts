@@ -8,7 +8,7 @@ import {AutoValuesService} from "../../../programming/program-request/funds-tab/
 import {DataRow} from "./DataRow";
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
-import {NotifyUtil} from "../../../../utils/NotifyUtil";
+import {Notify} from "../../../../utils/Notify";
 import {PhaseType} from "../../../programming/select-program-request/UiProgrammaticRequest";
 
 @Component({
@@ -445,7 +445,7 @@ export class UfrFundsComponent implements OnChanges {
 
   addRow(){
     if (!this.shorty.leadComponent && !this.shorty.functionalArea) {
-      NotifyUtil.notifyError('You must select the lead component and the functional area in the program tab before creating a funding line')
+      Notify.error('You must select the lead component and the functional area in the program tab before creating a funding line')
     } else {
       let newPomRow: DataRow = new DataRow();
       newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));

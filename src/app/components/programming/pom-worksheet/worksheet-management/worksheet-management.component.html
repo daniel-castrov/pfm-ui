@@ -10,10 +10,10 @@
       <div class="row">
         <div class="col-9">
           <ul class="worksheet-controls mb-3">
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()" >Duplicate</button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()" >Rename</button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()" >Export</button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"                                    >Import</button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()"                             > Duplicate </button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()"                             > Rename    </button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()"                             > Export    </button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"    [disabled]="!importComponent?.importableWorksheets?.length" > Import    </button></li>
           </ul>
         </div>
       </div>

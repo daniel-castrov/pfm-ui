@@ -1,7 +1,7 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
-import { NotifyUtil } from '../../../../utils/NotifyUtil';
+import { Notify } from '../../../../utils/Notify';
 
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
@@ -66,7 +66,7 @@ export class VariantsTabComponent {
     if ( procTotal > 0 && variantCount ==0 ) {
       let message:string="This PR has Procurement Funds but no Variants.";
       this.fundsAvailable = message;
-      NotifyUtil.notifyInfo(message);
+      Notify.info(message);
     }
   }
 
@@ -492,7 +492,7 @@ export class VariantsTabComponent {
 
   addVariant(){
     if (this.fund.variants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
-      NotifyUtil.notifyError('A Variant named "' + this.newVariantName + '" already exists');
+      Notify.error('A Variant named "' + this.newVariantName + '" already exists');
       return;
     }
 

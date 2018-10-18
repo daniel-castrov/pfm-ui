@@ -415,6 +415,49 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/Worksheet"
+  /worksheets/export/{id}:
+    get:
+      tags:
+      - "Worksheet"
+      operationId: "export1"
+      produces:
+      - application/vnd.ms-excel
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: file
+  /worksheets/import/{id}:
+    put:
+      tags:
+      - "Worksheet"
+      operationId: "import1"
+      consumes:
+      - "multipart/form-data"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        required: true
+        type: file
   /worksheets/updateRows:
     post:
       tags:
@@ -428,7 +471,7 @@ paths:
         description: "a Worksheet object"
         required: true
         schema:
-          $ref: "#/definitions/Worksheet"          
+          $ref: "#/definitions/Worksheet"
 # STOP WORKSHEET
 ##############################################################################
 # START PR

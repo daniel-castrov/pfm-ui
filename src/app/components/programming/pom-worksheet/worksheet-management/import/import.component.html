@@ -7,10 +7,8 @@
       </td>
       <td>
         <div class="input-group forminput-width">
-          <input type="text" class="form-control copy-input" aria-label="Enter File Location" aria-describedby="basic-addon1">
-          <div class="input-group-append">
-            <span class="input-group-text">Browse</span>
-          </div>
+          <input type="file" id="input-file" class="custom-file-input" (change)="onFileChange($event)" aria-label="Enter File Location" aria-describedby="basic-addon1">
+          <label class="custom-file-label" for="input-file" >{{file?.name}}</label>
         </div>
       </td>
     </tr>
@@ -21,7 +19,7 @@
       <td>
         <div class="form-group">
           <select [(ngModel)]="selectedImportableWorksheet" class="form-control copy-select">
-            <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Version {{worksheet.version}}</option>
+            <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Number {{worksheet.version}}</option>
           </select>
         </div>
       </td>
@@ -29,7 +27,7 @@
     <tr>
       <td colspan="4">
         <div class="button-controls pull-right">
-          <button class="btn btn-primary pull-right" (click)="onSave()" [disabled]="!selectedImportableWorksheet">Save</button>
+          <button class="btn btn-primary pull-right" (click)="onImport()" [disabled]="!selectedImportableWorksheet || !file">Import</button>
           <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
         </div>
       </td>

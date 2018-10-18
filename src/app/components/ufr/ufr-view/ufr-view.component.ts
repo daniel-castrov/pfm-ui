@@ -7,7 +7,7 @@ import {WithFullName, WithFullNameService} from "../../../services/with-full-nam
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
-import {NotifyUtil} from "../../../utils/NotifyUtil";
+import {Notify} from "../../../utils/Notify";
 
 @Component({
   selector: 'app-ufr-view',
@@ -68,18 +68,18 @@ export class UfrViewComponent implements OnInit {
   async save() {
     let fundsTabValidation = this.ufrFundsComponent.validate;
     if(!fundsTabValidation.isValid){
-      NotifyUtil.notifyError(fundsTabValidation.message);
+      Notify.error(fundsTabValidation.message);
     } else {
       if(this.ufr.id) {
         this.ufrService.update(this.ufr).subscribe();
         if (this.ufr.status === UfrStatus.SUBMITTED) {
-          NotifyUtil.notifySuccess('UFR submitted successfully');
+          Notify.success('UFR submitted successfully');
         } else {
-          NotifyUtil.notifySuccess('UFR saved successfully');
+          Notify.success('UFR saved successfully');
         }
       } else {
         this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
-        NotifyUtil.notifySuccess('UFR created successfully')
+        Notify.success('UFR created successfully')
       }
     }
   }

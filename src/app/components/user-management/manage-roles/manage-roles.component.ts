@@ -7,7 +7,7 @@ import { DualListComponent } from 'angular-dual-listbox';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
 import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 // Generated
 import { RestResult, Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
@@ -237,7 +237,7 @@ export class ManageRolesComponent {
     this.userRoleResourceService.deleteById(this.selectedURR.id).subscribe(() => { 
       this.clear(); 
       this.submitted = true;
-      NotifyUtil.notifySuccess(this.getMessage(0));
+      Notify.success(this.getMessage(0));
     });
   }
 
@@ -263,13 +263,13 @@ export class ManageRolesComponent {
       this.userRoleResourceService.create(this.selectedURR).subscribe(() => {
         this.clear(); 
         this.submitted = true;
-        NotifyUtil.notifySuccess(this.getMessage(1));
+        Notify.success(this.getMessage(1));
       });
     } else {
       this.userRoleResourceService.update(this.selectedURR).subscribe(() => {
         this.clear(); 
         this.submitted = true;
-        NotifyUtil.notifySuccess(this.getMessage(2));
+        Notify.success(this.getMessage(2));
       });
     }
   }

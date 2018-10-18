@@ -4,7 +4,7 @@ import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
 import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 @Component({
   selector: 'app-open-pom-session',
@@ -42,7 +42,7 @@ export class OpenPomSessionComponent implements OnInit {
 
       if ( !this.pom || null==this.pom ){
         this.pomStatusIsCreated = false;
-        NotifyUtil.notifyError('No POM Session in the "CREATED" state was found');
+        Notify.error('No POM Session in the "CREATED" state was found');
       } else {
 
         await this.initPbPrs();
@@ -86,7 +86,7 @@ export class OpenPomSessionComponent implements OnInit {
     if (this.allPrsSubmitted) {
       this.pomService.open(this.pom.id).subscribe(data => {
         this.pomStatusIsCreated = false;
-        NotifyUtil.notifySuccess('The POM Session is now OPEN');
+        Notify.success('The POM Session is now OPEN');
         this.header.refreshActions();
       });
     }

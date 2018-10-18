@@ -8,7 +8,7 @@ import {UserUtils} from "../../../services/user.utils";
 import {FormatterUtil} from "../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {CellEditor} from "../../../utils/CellEditor";
-import {NotifyUtil} from "../../../utils/NotifyUtil";
+import {Notify} from "../../../utils/Notify";
 import {RowNode} from "ag-grid";
 import {ActivatedRoute} from "@angular/router";
 
@@ -70,9 +70,9 @@ export class UpdatePomSessionComponent implements OnInit {
   update(){
     this.worksheetService.updateRows(this.selectedWorksheet).subscribe(response => {
       if (!response.error) {
-        NotifyUtil.notifySuccess('Worksheet updated successfully');
+        Notify.success('Worksheet updated successfully');
       } else {
-        NotifyUtil.notifyError('Something went wrong while trying to update the worksheet');
+        Notify.error('Something went wrong while trying to update the worksheet');
         console.log(response.error);
       }
     });

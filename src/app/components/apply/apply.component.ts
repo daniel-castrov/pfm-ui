@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 // Generated
 import { Stranger, Community, Organization, CreateUserRequest, RestResult } from '../../generated';
 import { StrangerService, CreateUserRequestService  } from '../../generated';
-import { NotifyUtil } from '../../utils/NotifyUtil';
+import { Notify } from '../../utils/Notify';
 
 @Component({
   selector: 'app-apply',
@@ -77,9 +77,9 @@ export class ApplyComponent implements OnInit {
 
       this.formsubmitted = true;
 
-      NotifyUtil.notifySuccess("Your application to join JSCBIS has been submitted. Please check your email for the status of your request.");
+      Notify.success("Your application to join JSCBIS has been submitted. Please check your email for the status of your request.");
     } else {
-      NotifyUtil.notifyError("An error occured. Unable to submit New User Request Form");
+      Notify.error("An error occured. Unable to submit New User Request Form");
     }
   }
 
