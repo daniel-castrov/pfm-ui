@@ -1039,7 +1039,7 @@ export class FundsTabComponent implements OnChanges {
     } else if (this.flHaveIncorrectAppropriation()){
       return new Validation(false, 'You can only have one funding line with the PROC appropriation. Changes were not saved');
     } else if (this.flHaveEmptyFields()) {
-      return new Validation(false, 'You must fill all the fields for a funding line');
+      return new Validation(false, 'You must fill all the fields for a funding line. Changes were not saved');
     } else {
       return new Validation(true);
     }
@@ -1057,7 +1057,7 @@ export class FundsTabComponent implements OnChanges {
 
   flHaveEmptyFields(): Boolean{
     let hasEmptyFields = false;
-    this.pr.fundingLines.forEach(function(fl, index) {
+    this.pr.fundingLines.forEach(function(fl) {
       if (!fl.baOrBlin || !fl.appropriation || !fl.item) {
         hasEmptyFields = true;
       }
