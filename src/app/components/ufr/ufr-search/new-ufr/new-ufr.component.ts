@@ -2,7 +2,7 @@ import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest, MyDetailsService, User, Organization, OrganizationService } from '../../../../generated';
+import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest, User, Organization, OrganizationService } from '../../../../generated';
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UserUtils } from '../../../../services/user.utils';

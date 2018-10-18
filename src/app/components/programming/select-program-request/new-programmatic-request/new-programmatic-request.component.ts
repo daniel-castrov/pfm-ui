@@ -3,7 +3,8 @@ import { WithFullNameService, ProgramWithFullName } from '../../../../services/w
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
-import {ProgramType, MyDetailsService, User, RolesPermissionsService} from "../../../../generated";
+import {ProgramType, User, RolesPermissionsService} from "../../../../generated";
+import { UserUtils } from '../../../../services/user.utils';
 
 enum AddNewPrForMode {
   AN_MRDB_PROGRAM = 'Previously Funded Program',
@@ -31,7 +32,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
     private router: Router,
     private programRequestPageMode: ProgramRequestPageModeService,
     private withFullNameService: WithFullNameService,
-    private detailsService: MyDetailsService,
+    private userUtils: UserUtils,
     private rolesService: RolesPermissionsService
   ) {}
 
@@ -60,7 +61,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
     // make sure we can only add new programs in our organization
     var mgr: boolean = ('true' === (await this.rolesService.hasRole('POM_Manager').toPromise()).result );
     if (false === mgr) {
-      var user: User = (await this.detailsService.getCurrentUser().toPromise()).result;
+      var user: User = await this.userUtils.user().toPromise();
       this.selectableProgramsOrPrs = this.selectableProgramsOrPrs.filter(prog => (prog.organization === user.organizationId));
     }
   }
