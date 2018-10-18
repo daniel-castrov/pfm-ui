@@ -350,6 +350,11 @@ export class UfrVariantsTabComponent {
   }
 
   onBudgetYearValueChanged(params){
+
+    if ( Number(params.newValue) < 0 ){
+      params.newValue = params.oldValue;
+      Notify.warning( "You cannot request negative quantities." );
+    } 
     let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);

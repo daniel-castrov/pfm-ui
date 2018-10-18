@@ -80,7 +80,15 @@ export class VariantsTabComponent {
     return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
   }
 
-  initDataRows(){
+  async initDataRows(){
+
+    let pbPr:ProgrammaticRequest;
+
+    if( this.current.originalMrId ){
+      let pb = (await this.pbService.getLatest(this.user.currentCommunityId).toPromise()).result;
+      pbPr = (await this.prService.getByPhaseAndMrId(pb.id, this.current.originalMrId).toPromise()).result;
+    }
+
     this.fund.variants.forEach(variant => {
       let data: Array<DataRow> = [];
       variant.serviceLines.forEach( sl => {
@@ -94,29 +102,27 @@ export class VariantsTabComponent {
         };
         pbRow.variantName = variant.shortName;
 
-        this.pbService.getLatest(this.user.currentCommunityId).subscribe(pb => {
-          if(this.current.originalMrId){
-            this.prService.getByPhaseAndMrId(pb.result.id, this.current.originalMrId).subscribe(pbPr => {
-              pbPr.result.fundingLines.forEach(fl => {
-                if (fl.result && fl.result.appropriation === this.fund.appropriation && fl.result.baOrBlin === this.fund.baOrBlin
-                  && fl.result.item === this.fund.item && fl.result.opAgency === this.fund.opAgency){
-                  fl.result.variants.forEach( pbVariant => {
-                    pbVariant.result.serviceLines.forEach( pbSl => {
-                      pbRow.serviceLine.quantity = pbSl.result.quantity;
-                    });
-                  });
-                }
-              })
-            });
-          }
-        });
+        if  ( pbPr ) {
+          pbPr.fundingLines.forEach(fl => {
+            if (fl && fl.appropriation === this.fund.appropriation && fl.baOrBlin === this.fund.baOrBlin
+              && fl.item === this.fund.item && fl.opAgency === this.fund.opAgency){
+                
+              fl.variants.forEach( pbVariant => {
+                pbVariant.serviceLines.forEach( pbSl => {
+                  pbRow.serviceLine.quantity = pbSl.quantity;
+                });
+              });
+            }
+          })
+        }
 
-        if(!pbRow.serviceLine.quantity) {
+        if( !pbRow.serviceLine.quantity ) {
           pbRow.serviceLine.quantity = {};
           this.years.forEach(key => {
             pbRow.serviceLine.quantity[key] = 0;
           });
         }
+
         let pomRow = new DataRow();
         pomRow.phaseType = PhaseType.POM;
         pomRow.serviceLine = {
@@ -145,6 +151,7 @@ export class VariantsTabComponent {
       });
       this.data.set(variant.shortName, data);
     });
+
   }
 
   initPinnedBottomRows(){
@@ -423,6 +430,11 @@ export class VariantsTabComponent {
   }
 
   onBudgetYearValueChanged(params){
+
+    if ( Number(params.newValue) < 0 ){
+      params.newValue = params.oldValue;
+      Notify.warning( "You cannot request negative quantities." );
+    } 
     let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
