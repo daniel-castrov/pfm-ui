@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest, MyDetailsService, User, Organization, OrganizationService } from '../../../../generated';
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
+import { UserUtils } from '../../../../services/user.utils';
 
 
 enum CreateNewUfrMode {
@@ -36,7 +37,7 @@ export class NewUfrComponent implements OnInit {
                private programsService: ProgramsService,
                private prService: PRService,
                private orgService: OrganizationService,
-               private detailsService: MyDetailsService ) {}
+               private userUtils: UserUtils ) {}
 
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs();
@@ -139,7 +140,7 @@ export class NewUfrComponent implements OnInit {
     }
 
     if (!ufr.leadComponent) {
-      var user: User = (await this.detailsService.getCurrentUser().toPromise()).result;
+      var user: User = (await this.userUtils.user().toPromise());
       var organization: Organization = (await this.orgService.getById(user.organizationId).toPromise()).result;
       ufr.leadComponent = organization.abbreviation;
     }
