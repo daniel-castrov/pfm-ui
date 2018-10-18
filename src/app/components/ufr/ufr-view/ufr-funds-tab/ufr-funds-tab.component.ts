@@ -522,7 +522,8 @@ export class UfrFundsComponent implements OnChanges {
     this.agGridProposedChanges.api.setRowData(this.proposedChange);
 
     this.loadDropdownOptions();
-    }
+    this.calculateRevisedChanges();
+  }
 
   onColumnVisible(params) {
     this.agGridProposedChanges.api.sizeColumnsToFit();
