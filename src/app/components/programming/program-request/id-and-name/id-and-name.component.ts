@@ -96,7 +96,8 @@ export class IdAndNameComponent {
   }
 
   private type() {
-    if(this.pr.type == ProgramType.GENERIC) return 'SUBPROGRAM';
+    if (this.pr.type == ProgramType.GENERIC) return 'SUBPROGRAM';
+    if (this.pr.type === ProgramType.FOS) return 'FoS';
     return this.pr.type;
   }
 }
