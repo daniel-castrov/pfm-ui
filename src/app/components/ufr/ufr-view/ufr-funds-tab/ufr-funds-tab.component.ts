@@ -540,6 +540,8 @@ export class UfrFundsComponent implements OnChanges {
     let pomNode = params.node.data;
     if (params.colDef.headerName === 'Appn') {
       this.filterBlins(params.data.fundingLine.appropriation);
+      params.data.fundingLine.item = null;
+      params.data.fundingLine.baOrBlin = null;
     }
     if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
