@@ -10,6 +10,7 @@ import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 import {Notify} from "../../../../utils/Notify";
 import {PhaseType} from "../../../programming/select-program-request/UiProgrammaticRequest";
+import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 
 @Component({
   selector: 'ufr-funds-tab',
@@ -79,7 +80,9 @@ export class UfrFundsComponent implements OnChanges {
       this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
         pr.result.fundingLines.forEach(fundingLine => {
-          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+          let pomRow: DataRow = {fundingLine: fundingLine,
+            editable: false,
+            gridType: GridType.CURRENT_PR}
           data.push(pomRow);
         });
         this.currentFunding = data;
@@ -89,7 +92,9 @@ export class UfrFundsComponent implements OnChanges {
       this.prService.getById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
         pr.result.fundingLines.forEach(fundingLine => {
-          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+          let pomRow: DataRow = {fundingLine: fundingLine,
+            editable: false,
+            gridType: GridType.CURRENT_PR}
           data.push(pomRow);
         });
         this.currentFunding = data;
@@ -97,7 +102,10 @@ export class UfrFundsComponent implements OnChanges {
       });
     } else {
       this.shorty = this.ufr;
-      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())),
+        editable: false,
+        gridType: GridType.CURRENT_PR
+      };
       data.push(pomRow);
       this.currentFunding = data;
       this.initRevisedChanges();
@@ -164,6 +172,7 @@ export class UfrFundsComponent implements OnChanges {
         let row: DataRow = JSON.parse(JSON.stringify(pc));
         row.editable = false;
         row.fundingLine.userCreated = false;
+        row.gridType = GridType.CURRENT_PR;
         Object.keys(row.fundingLine.funds).forEach(year =>{
           row.fundingLine.funds[year] = (cf && cf.fundingLine.funds[year]? cf.fundingLine.funds[year] : 0) + (pc.fundingLine.funds[year]? pc.fundingLine.funds[year] : 0);
         });
@@ -171,7 +180,9 @@ export class UfrFundsComponent implements OnChanges {
       });
       this.revisedPrograms = data;
     } else {
-      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())),
+        editable: false,
+        gridType: GridType.CURRENT_PR};
       data.push(pomRow);
       this.revisedPrograms = data;
     }
@@ -180,7 +191,9 @@ export class UfrFundsComponent implements OnChanges {
   initDataRows(){
     let data: Array<DataRow> = [];
     this.ufr.fundingLines.forEach(fundingLine => {
-      let pomRow: DataRow = {fundingLine: fundingLine, editable: true}
+      let pomRow: DataRow = {fundingLine: fundingLine,
+        editable: true,
+        gridType: GridType.CURRENT_PR}
       data.push(pomRow);
     });
     this.proposedChange = data;
@@ -288,7 +301,6 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'OpAgency',
             headerTooltip: 'OpAgency',
             field: 'fundingLine.opAgency',
-            hide: true,
             cellClass: 'funding-line-default'
           }]}
     ];
@@ -450,6 +462,7 @@ export class UfrFundsComponent implements OnChanges {
       let newPomRow: DataRow = new DataRow();
       newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
       newPomRow.editable = true;
+      newPomRow.gridType = GridType.CURRENT_PR
       this.ufr.fundingLines.push(newPomRow.fundingLine);
       this.proposedChange.push(newPomRow);
 
@@ -509,14 +522,13 @@ export class UfrFundsComponent implements OnChanges {
     this.agGridProposedChanges.api.setRowData(this.proposedChange);
 
     this.loadDropdownOptions();
-    }
-
-  onToolPanelVisibleChanged(params) {
-    this.agGridProposedChanges.api.sizeColumnsToFit();
+    this.calculateRevisedChanges();
   }
 
   onColumnVisible(params) {
     this.agGridProposedChanges.api.sizeColumnsToFit();
+    this.agGridCurrentFunding.api.sizeColumnsToFit();
+    this.agGridRevisedPrograms.api.sizeColumnsToFit();
   }
 
   onCellEditingStarted(params) {
@@ -528,6 +540,8 @@ export class UfrFundsComponent implements OnChanges {
     let pomNode = params.node.data;
     if (params.colDef.headerName === 'Appn') {
       this.filterBlins(params.data.fundingLine.appropriation);
+      params.data.fundingLine.item = null;
+      params.data.fundingLine.baOrBlin = null;
     }
     if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
@@ -608,6 +622,8 @@ export class UfrFundsComponent implements OnChanges {
       return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');
     } else if (this.flHaveIncorrectAppropriation()){
       return new Validation(false, 'You can only have one funding line with the PROC appropriation. Changes were not saved');
+    } else if (this.flIsIncomplete()) {
+      return new Validation(false, 'You must fill all the fields for a funding line. Changes were not saved');
     } else {
       return new Validation(true);
     }
@@ -621,6 +637,16 @@ export class UfrFundsComponent implements OnChanges {
       }
     });
     return count > 1;
+  }
+
+  flIsIncomplete(): Boolean{
+    let count = 0;
+    this.ufr.fundingLines.forEach(function(fl, index) {
+      if(fl.appropriation === null || fl.baOrBlin === null || fl.item === null){
+        count++;
+      }
+    });
+    return count > 0;
   }
 
   flHaveIncorrectBa(): Boolean{

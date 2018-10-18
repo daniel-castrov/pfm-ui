@@ -941,6 +941,8 @@ export class FundsTabComponent implements OnChanges {
     let pomNode = this.data[params.node.rowIndex + 1];
     if (params.colDef.headerName === 'Appn') {
       this.filterBlins(params.data.fundingLine.appropriation);
+      params.data.fundingLine.item = null;
+      params.data.fundingLine.baOrBlin = null;
     }
     if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
@@ -1039,7 +1041,7 @@ export class FundsTabComponent implements OnChanges {
     } else if (this.flHaveIncorrectAppropriation()){
       return new Validation(false, 'You can only have one funding line with the PROC appropriation. Changes were not saved');
     } else if (this.flHaveEmptyFields()) {
-      return new Validation(false, 'You must fill all the fields for a funding line');
+      return new Validation(false, 'You must fill all the fields for a funding line. Changes were not saved');
     } else {
       return new Validation(true);
     }
@@ -1057,7 +1059,7 @@ export class FundsTabComponent implements OnChanges {
 
   flHaveEmptyFields(): Boolean{
     let hasEmptyFields = false;
-    this.pr.fundingLines.forEach(function(fl, index) {
+    this.pr.fundingLines.forEach(function(fl) {
       if (!fl.baOrBlin || !fl.appropriation || !fl.item) {
         hasEmptyFields = true;
       }
