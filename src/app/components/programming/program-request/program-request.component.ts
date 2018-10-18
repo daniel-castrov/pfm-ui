@@ -57,7 +57,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         this.pr.leadComponent = organization.abbreviation;
       }
     }
-    console.log('now: ' + JSON.stringify(this.pr));
   }
 
 
