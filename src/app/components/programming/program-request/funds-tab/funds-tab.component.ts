@@ -27,6 +27,7 @@ import {Notify} from "../../../../utils/Notify";
 import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
 import {GridType} from "./GridType";
 import {CellEditor} from "../../../../utils/CellEditor";
+import { ok } from 'assert';
 
 @Component({
   selector: 'funds-tab',
@@ -311,6 +312,7 @@ export class FundsTabComponent implements OnChanges {
     this.selectedFundingLine = null;
 
     this.columnKeys.forEach(year => {
+      // FIXME: RPB: pretty sure this creates an array with at least 2018 indices. (we only ever use 4 of them)
       this.isFundsTabValid[year] = {
         isValid: this.isValidBa(pomRow.fundingLine.baOrBlin, year),
         baOrBlin: pomRow.fundingLine.baOrBlin,
@@ -1046,6 +1048,36 @@ export class FundsTabComponent implements OnChanges {
       return new Validation(true);
     }
   }
+
+  isSubmittable(): boolean {
+    var fundcount: number = 0;
+    var okcount: number = 0;
+    this.agGrid.api.forEachNodeAfterFilter(node => {
+      if ('CURRENT PR' === node.data.gridType && 'POM' === node.data.phaseType) {
+        fundcount += 1;
+        var ok: boolean = (
+          node.data.fundingLine.appropriation && null !== node.data.fundingLine.appropriation
+          && node.data.fundingLine.baOrBlin && null !== node.data.fundingLine.baOrBlin
+          && node.data.fundingLine.item && null !== node.data.fundingLine.item
+        );
+        if (ok) {
+          ok = false; // now check that we have at least one value for the FL
+          Object.getOwnPropertyNames(node.data.fundingLine.funds).forEach(key => {
+            if (0 !== node.data.fundingLine.funds[key]) {
+              ok = true;
+            }
+          });
+        }
+
+        if (ok) {
+          okcount += 1;
+        }
+      }
+    });
+  
+    return (fundcount > 0 && fundcount === okcount);
+  }
+
 
   flHaveIncorrectAppropriation() : Boolean {
     let count = 0;
