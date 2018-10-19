@@ -131,6 +131,10 @@
                 <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
                 <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
               </ng-container>
+
+              <ng-container *ngIf="pomStatusIsCreated||pomStatusIsOpen">
+                <a *ngIf="roles?.includes('POM_Manager')" class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
+              </ng-container>
             </div>
 
           </div>
@@ -162,7 +166,7 @@
             <a class="dropdown-item" href="#" routerLink="/funds-update">Funds Update</a>
             <a class="dropdown-item" href="#" routerLink="/oe-update">O&amp;E Update</a>
             <a class="dropdown-item" href="#" routerLink="/spend-plan-update">Spend Plan Update</a>
-            
+
             <div *ngIf="roles?.includes('Execution_Manager')" class="dropdown-divider"></div>
             <a *ngIf="roles?.includes('Execution_Manager')" class="dropdown-item" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
           </div>

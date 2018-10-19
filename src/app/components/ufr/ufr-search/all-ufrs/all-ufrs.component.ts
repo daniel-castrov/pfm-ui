@@ -2,7 +2,10 @@ import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
-import { ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter } from '../../../../generated';
+import {
+  ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter,
+  UfrStatus
+} from '../../../../generated';
 import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -32,6 +35,8 @@ export class AllUfrsComponent implements OnInit {
   private rowData: any[];
   private colDefs;
   private menuTabs = ['filterMenuTab'];
+
+  @Input() urlPath;
 
   private frameworkComponents:any = {
     simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
@@ -213,7 +218,12 @@ export class AllUfrsComponent implements OnInit {
   private async populateRowData() {
 
     const ufrFilter: UFRFilter = {};
+
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
+
+    if (this.urlPath === 'ufr-approval-detail') {
+      ufrs = ufrs.filter(ufr => ufr.status === UfrStatus.SUBMITTED)
+    }
 
     let alldata: any[] = [];
     let progId:string, funcArea:string , orgid:string;
@@ -237,7 +247,7 @@ export class AllUfrsComponent implements OnInit {
       }
 
       let row = {
-        "UFR #": new SimpleLink( "/ufr-view/"+ufr.id, this.ufrNumber(ufr) ),
+        "UFR #": new SimpleLink( "/" + this.urlPath + "/"+ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.ufrName,
         "Prog Id": progId,
         "Status": ufr.status,

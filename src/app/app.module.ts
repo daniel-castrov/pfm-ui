@@ -155,6 +155,7 @@ import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-
 import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
 import {WorksheetService} from "app/generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
+import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval-summary/ufr-approval-summary.component";
 
 
 // ROUTES
@@ -203,6 +204,7 @@ const appRoutes: Routes = [
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
+  {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
@@ -282,6 +284,7 @@ const appRoutes: Routes = [
     UserApprovalComponent,
     UserListComponent,
     UfrSearchComponent,
+    UfrApprovalSummaryComponent,
     UfrViewComponent,
     UfrProgramComponent,
     UfrFundsComponent,
