@@ -1,4 +1,4 @@
-import { TagsService } from '../../../../services/tags.service';
+import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
 import {FileResponse, LibraryService, ProgrammaticRequest, Tag} from '../../../../generated';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -14,16 +14,16 @@ export class ProgramTabComponent implements OnChanges {
   readonly fileArea = 'pr';
   imagePath: string;
 
-  readonly tagTypes: string[] =
-  ['Lead Component',
-    'Manager',
-    'Primary Capability',
-    'Core Capability Area',
-    'Secondary Capability',
-    'Functional Area',
-    'Medical Category',
-    'DASD CBD',
-    'Emphasis Areas'];
+  readonly tagTypes: TagType[] =
+   [ TagType.LEAD_COMPONENT,
+     TagType.MANAGER,
+     TagType.PRIMARY_CAPABILITY,
+     TagType.CORE_CAPABILITY_AREA,
+     TagType.SECOMDARY_CAPABILITY,
+     TagType.FUNCTIONAL_AREA,
+     TagType.MEDICAL_CATEGORY,
+     TagType.DASD_CBD,
+     TagType.EMPHASIS_AREA];
 
   readonly mapTypeToTags = new Map<string, Tag[]>();
 

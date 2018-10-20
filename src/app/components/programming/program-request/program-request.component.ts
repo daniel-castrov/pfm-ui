@@ -1,21 +1,21 @@
-import { ProgramTabComponent } from './program-tab/program-tab.component';
-import { PRUtils } from '../../../services/pr.utils.service';
-import { ProgramRequestWithFullName, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { ProgrammaticRequestState } from '../../../generated/model/programmaticRequestState';
-import { CreationTimeType } from '../../../generated/model/creationTimeType';
-import { ProgramType } from '../../../generated/model/programType';
-import { IdAndNameComponent } from './id-and-name/id-and-name.component';
-import { ProgrammaticRequest } from '../../../generated/model/programmaticRequest';
-import { PRService } from '../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-
-// Other Components
-import { ProgramRequestPageModeService} from './page-mode.service';
+import {ProgramTabComponent} from './program-tab/program-tab.component';
+import {PRUtils} from '../../../services/pr.utils.service';
+import {ProgramRequestWithFullName, ProgramWithFullName} from '../../../services/with-full-name.service';
+import {ProgrammaticRequestState} from '../../../generated/model/programmaticRequestState';
+import {CreationTimeType} from '../../../generated/model/creationTimeType';
+import {ProgramType} from '../../../generated/model/programType';
+import {IdAndNameComponent} from './id-and-name/id-and-name.component';
+import {ProgrammaticRequest} from '../../../generated/model/programmaticRequest';
+import {PRService} from '../../../generated/api/pR.service';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import { User, Organization, OrganizationService } from '../../../generated';
+import {Organization, OrganizationService, User} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
-import { UserUtils } from '../../../services/user.utils';
+import {UserUtils} from '../../../services/user.utils';
+import {TagsService, TagType} from "../../../services/tags.service";
+import {NewProgramService} from "../../../services/new.program.service";
 
 @Component({
   selector: 'program-request',
@@ -31,9 +31,12 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
   @ViewChild(VariantsTabComponent) private variantsTabComponent: VariantsTabComponent;
 
-  constructor( private prService: PRService, private userUtils: UserUtils,
+  constructor( private prService: PRService,
+               private userUtils: UserUtils,
                private programRequestPageMode: ProgramRequestPageModeService,
-               private cd: ChangeDetectorRef, private orgService: OrganizationService ) {
+               private changeDetectorRef: ChangeDetectorRef,
+               private orgService: OrganizationService,
+               private newProgramService: NewProgramService ) {
     this.pr.fundingLines = [];
   }
 
@@ -44,7 +47,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.cd.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   private async initPr() {
@@ -59,7 +62,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
 
   private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
@@ -88,6 +90,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         break;
       case CreationTimeType.NEW_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
+        this.newProgramService.initRequiredFieldsWithSomeValues(this.pr);
         break;
       default:
         console.log('Wrong programRequestPageMode.type');
@@ -131,13 +134,13 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private isNotSavable(): boolean {
+  isNotSavable(): boolean {
     if(!this.idAndNameComponent) return true; // not fully initilized yet
     if(this.variantsTabComponent.invalid) return true;
     return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
-  private isNotSubmittable(): boolean {
+  isNotSubmittable(): boolean {
     if( !this.prs || !this.idAndNameComponent || !this.programTabComponent ) return true // not fully initilized yet
     if( this.pr.type == ProgramType.GENERIC ) return true;
     if( this.thereAreOutstandingGenericSubprogramsAmongTheChildren() ) return true;
@@ -148,4 +151,5 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
     return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.state === 'OUTSTANDING');
   }
+
 }

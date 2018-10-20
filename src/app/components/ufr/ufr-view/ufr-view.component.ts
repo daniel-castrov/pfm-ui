@@ -98,20 +98,20 @@ export class UfrViewComponent implements OnInit {
     }
   }
 
-  private isNotSavable(): boolean {
+  isNotSavable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
     return this.ufr.status == UfrStatus.SUBMITTED;
   }
 
-  private isNotSubmittable(): boolean {
+  isNotSubmittable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
     if(this.ufrFundsComponent && this.ufrFundsComponent.invalid()) return true;
     return this.ufr.status == UfrStatus.SUBMITTED;
   }
 
-  private ufrType(): string {
+  ufrType(): string {
     if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return ` ${this.shorty ? this.shorty.fullname : ''} program`;
     if(this.ufr.shortyType == ShortyType.PR) return " a program request";
     if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return " a new increment";

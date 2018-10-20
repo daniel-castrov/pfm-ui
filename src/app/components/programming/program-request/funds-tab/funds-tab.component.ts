@@ -1,21 +1,20 @@
-import { TagsService } from '../../../../services/tags.service';
-import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
-import { ProgramType } from '../../../../generated/model/programType';
-import { PRUtils } from '../../../../services/pr.utils.service';
-import { AutoValuesService } from './AutoValues.service';
-import { User } from '../../../../generated/model/user';
-import { UserUtils } from '../../../../services/user.utils';
-import { PB } from '../../../../generated/model/pB';
+import {TagsService, TagType} from '../../../../services/tags.service';
+import {ProgrammaticRequest} from '../../../../generated/model/programmaticRequest';
+import {ProgramType} from '../../../../generated/model/programType';
+import {PRUtils} from '../../../../services/pr.utils.service';
+import {AutoValuesService} from './AutoValues.service';
+import {User} from '../../../../generated/model/user';
+import {UserUtils} from '../../../../services/user.utils';
+import {PB} from '../../../../generated/model/pB';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  FundingLine,
-  POMService,
-  Pom,
-  PRService,
-  PBService,
   CreationTimeType,
+  FundingLine,
   IntMap,
-  ProgramsService
+  PBService,
+  POMService,
+  ProgramsService,
+  PRService
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
@@ -948,7 +947,7 @@ export class FundsTabComponent implements OnChanges {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-        this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
+        this.tagsService.tags(TagType.OP_AGENCY).subscribe(tags => {
           params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.pr.leadComponent) !== -1).abbr
           this.agGrid.api.refreshCells();
         });
