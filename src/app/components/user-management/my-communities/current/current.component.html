@@ -6,7 +6,7 @@
 </ul>
 <hr/>
 <span class="form-group">
-  <label class="mb-2 mr-sm-2">Change Current Community</label>
+  <label class="mb-2 mr-sm-2">Chane Current Community</label>
   <select class="form-control-sm mb-2 mr-sm-2" [(ngModel)]="selectedCommunityId">
     <option value="null" disabled selected>Select Community</option>
     <option *ngFor="let community of communitiesToSelectFrom" [value]="community.id">{{community.abbreviation}}</option>
