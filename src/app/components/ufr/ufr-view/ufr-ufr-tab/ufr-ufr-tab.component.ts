@@ -1,7 +1,7 @@
-import {TagsService} from './../../../../services/tags.service';
+import {TagsService, TagType} from './../../../../services/tags.service';
 import {CycleUtils} from './../../../../services/cycle.utils';
 import {Component, Input, OnInit} from '@angular/core';
-import {Tag, UFR, UfrStatus, Disposition} from '../../../../generated';
+import {Disposition, Tag, UFR, UfrStatus} from '../../../../generated';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class UfrUfrTabComponent implements OnInit {
   }
 
   private async initCapabilities() {
-    this.capabilities = await this.tagsService.tags('Core Capability Area').toPromise();
+    this.capabilities = await this.tagsService.tags(TagType.CORE_CAPABILITY_AREA).toPromise();
   }
 
   invalid(): boolean {

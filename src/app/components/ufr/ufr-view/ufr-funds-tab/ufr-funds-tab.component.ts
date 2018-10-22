@@ -1,6 +1,6 @@
-import { TagsService } from '../../../../services/tags.service';
-import {Component, Input, ViewChild, ViewEncapsulation, OnChanges} from '@angular/core'
-import {FundingLine, UFR, POMService, PRService, PBService, ShortyType, ProgramsService} from '../../../../generated'
+import {TagsService, TagType} from '../../../../services/tags.service';
+import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
+import {FundingLine, PBService, POMService, ProgramsService, PRService, ShortyType, UFR} from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -547,7 +547,7 @@ export class UfrFundsComponent implements OnChanges {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-        this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
+        this.tagsService.tags(TagType.OP_AGENCY).subscribe(tags => {
           params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
           this.agGridProposedChanges.api.refreshCells();
         });

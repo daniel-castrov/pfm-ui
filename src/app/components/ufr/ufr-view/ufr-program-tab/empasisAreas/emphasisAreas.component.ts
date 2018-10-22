@@ -1,4 +1,4 @@
-import {TagsService} from './../../../../../services/tags.service';
+import {TagsService, TagType} from './../../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
 import {ProgrammaticRequest, Tag, UFR} from '../../../../../generated';
 
@@ -22,7 +22,7 @@ export class EmphasisAreasComponent implements OnChanges {
 
   async ngOnChanges() {
     if(this.ufrOrPr && this.ufrOrPr.emphases) {
-      const tags: Tag[] = await this.tagsService.tags('Emphasis Areas').toPromise();
+      const tags: Tag[] = await this.tagsService.tags(TagType.EMPHASIS_AREA).toPromise();
       this.tagsWithPercent = tags.map(tag => {
         return {...tag, percent: this.percentFromUfrOrPr(tag.abbr)}
       });

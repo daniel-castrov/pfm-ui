@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FileResponse, LibraryService, POMService, ProgramsService, ShortyType, Tag, UFR } from '../../../../generated';
 import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 import {DomSanitizer} from "@angular/platform-browser";
-import {TagsService} from "../../../../services/tags.service";
+import {TagsService, TagType} from "../../../../services/tags.service";
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {Observable} from "rxjs";
 
@@ -44,7 +44,7 @@ export class UfrProgramComponent implements OnInit, OnChanges {
 
   private async initTagNames() {
     const tagNames = (await this.programService.getTagtypes().toPromise()).result as string[];
-    const observables: Observable<Tag[]>[] = tagNames.map( (tagType: string) => this.tagsService.tags(tagType) );
+    const observables: Observable<Tag[]>[] = tagNames.map( (tagType: TagType) => this.tagsService.tags(tagType) );
     const tags = await forkJoin(...observables).toPromise() as Tag[][];
     tagNames.forEach((tagName, idx) => {
       this.tagNames.set(tagName, new Map<string, string>());
