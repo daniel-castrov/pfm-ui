@@ -57,7 +57,12 @@
           <legend>Add Spend Plan</legend>
           <div class="row">
             <div class="col-11">
-              <add-spend-plan></add-spend-plan>
+              <add-spend-plan
+                [oandes]="oandes"
+                [exeline]="exeline"
+                [exe]="exe"
+                [deltas]="deltaMap">
+              </add-spend-plan>
             </div>
             <div class="col-1">
               <button class="btn btn-primary pull-right" (click)="save('SUBMITTED')">

@@ -10,6 +10,7 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
 import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OSDGoalPlan } from '../../../generated';
 import { getParentRenderElement } from '@angular/core/src/view/util';
 import { getTypeNameForDebugging } from '@angular/common/src/directives/ng_for_of';
+import { AddSpendPlanComponent } from '../add-spend-plan/add-spend-plan.component';
 
 @Component({
   selector: 'spend-plans-tab',
@@ -24,6 +25,7 @@ import { getTypeNameForDebugging } from '@angular/common/src/directives/ng_for_o
 export class SpendPlansTabComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
+  @ViewChild(AddSpendPlanComponent) private addarea;
   @Input() parent: any;
 
   private agOptions: GridOptions;
@@ -78,7 +80,6 @@ export class SpendPlansTabComponent implements OnInit {
     return this._deltas;
   }
 
-
   ngOnInit() { }
 
   constructor() {
@@ -94,7 +95,7 @@ export class SpendPlansTabComponent implements OnInit {
 
     var getHeaderValueFy = function (p) {
       var inty: number = my.firstMonth / 12;
-      return (my._exe ? 'FY' + (my.exe.fy + inty) : 'Firsto Yearo');
+      return (my._exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
     }
 
     var getter = function (p) {
@@ -132,7 +133,6 @@ export class SpendPlansTabComponent implements OnInit {
       },
       {
         headerValueGetter: getHeaderValueFy,
-        field: 'firstYear',
         children: [
           {
             headerName: 'Oct',
@@ -156,14 +156,12 @@ export class SpendPlansTabComponent implements OnInit {
             headerName: 'Jan',
             colId: 3,
             valueGetter: getter,
-            maxWidth: 80,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Feb',
             colId: 4,
             valueGetter: getter,
-            maxWidth: 80,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
