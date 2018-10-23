@@ -29,8 +29,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-          <ag-grid-angular #agGrid class="ag-theme-balham"
-            id="myGrid"
+          <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
             [enableSorting]="true"
             [enableColResize]="true"
             [enableFilter]="false"
@@ -43,7 +42,6 @@
             [toolPanelSuppressSideButtons]="true"
             [pagination]="true"
             [paginationPageSize]="20"
-            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
             [suppressDragLeaveHidesColumns]="true"
             [suppressMovableColumns]="true"
             [suppressPaginationPanel]="true"

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild, Input } from '@angular/core'
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
@@ -7,24 +7,79 @@ import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OSDGoalPlan } from '../../../generated';
+import { getParentRenderElement } from '@angular/core/src/view/util';
+import { getTypeNameForDebugging } from '@angular/common/src/directives/ng_for_of';
 
 @Component({
   selector: 'spend-plans-tab',
   templateUrl: './spend-plans-tab.component.html',
   styleUrls: ['./spend-plans-tab.component.scss']
 })
+
+//////////////////////////////////////////////////////////////
+// WARNING: This class relies HEAVILY on the order of rows. //
+//          Do not change the order willy-nilly             //
+//////////////////////////////////////////////////////////////
 export class SpendPlansTabComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
+  @Input() parent: any;
 
-  private spendplans: Map<string, string> = new Map<string, string>();
   private agOptions: GridOptions;
-  private selectedRow: number = -1;
-  private columnDefs: any[];
-  private rowData: any[];
-  private defaultColDef: any[];
 
-  ngOnInit() {}
+  private firstMonth: number = 0;
+  private _oandes: OandEMonthly[];
+  private _exeline: ExecutionLine;
+  private _exe: Execution;
+  private _deltas: Map<Date, ExecutionEvent>;
+  private columnDefs: any[];
+  private rowData: PlanRow[];
+
+  @Input() set exeline(e: ExecutionLine) {
+    this._exeline = e;
+    this.refreshTableData();
+  }
+
+  get exeline(): ExecutionLine {
+    return this._exeline;
+  }
+
+  @Input() set exe(e: Execution) {
+    //console.log('setting exe');
+    this._exe = e;
+    this.firstMonth = 0;
+
+    if (this.agOptions.api) {
+      this.agOptions.api.refreshHeader();
+    }
+    this.refreshTableData();
+  }
+
+  get exe(): Execution {
+    return this._exe;
+  }
+
+  @Input() set oandes(o: OandEMonthly[]) {
+    this._oandes = o;
+    this.refreshTableData();
+  }
+
+  get oandes() {
+    return this._oandes;
+  }
+
+  @Input() set deltas(evs: Map<Date, ExecutionLine>) {
+    this._deltas = evs;
+    this.refreshTableData();
+  }
+
+  get deltas(): Map<Date, ExecutionLine> {
+    return this._deltas;
+  }
+
+
+  ngOnInit() { }
 
   constructor() {
 
@@ -32,16 +87,34 @@ export class SpendPlansTabComponent implements OnInit {
       enableColResize: true,
     }
 
+    var my: SpendPlansTabComponent = this;
+    var getHeaderValue1 = function (p) {
+      return (my._exeline ? my.exeline.appropriation : '');
+    }
+
+    var getHeaderValueFy = function (p) {
+      var inty: number = my.firstMonth / 12;
+      return (my._exe ? 'FY' + (my.exe.fy + inty) : 'Firsto Yearo');
+    }
+
+    var getter = function (p) {
+      var row: number = p.node.rowIndex;
+      var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+      return '(' + row + ',' + col + ')';
+    }
+
+
     this.columnDefs = [
-        {
-          headerName: 'RDTE',
-          field: 'rdte',
-          cellClass: ['ag-cell-white'],
-          maxWidth: 220,
-          children: [
+      {
+        headerValueGetter: getHeaderValue1,
+        headerName: 'RDTE',
+        field: 'rdte',
+        cellClass: ['ag-cell-white'],
+        maxWidth: 220,
+        children: [
           {
             headerName: 'Spend Plans',
-            field: 'spendplans',
+            field: 'label',
             maxWidth: 220,
             cellClass: ['ag-cell-white'],
             // colSpan: function(params) {
@@ -58,107 +131,151 @@ export class SpendPlansTabComponent implements OnInit {
         ],
       },
       {
-        headerName: 'First Year',
+        headerValueGetter: getHeaderValueFy,
         field: 'firstYear',
         children: [
-        {
-          headerName: 'Oct',
-          field: 'oct',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Nov',
-          field: 'nov',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Dec',
-          field: 'dec',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Jan',
-          field: 'jan',
-          maxWidth: 80,
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Feb',
-          field: 'feb',
-          maxWidth: 80,
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Mar',
-          field: 'mar',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Apr',
-          field: 'apr',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'May',
-          field: 'may',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Jun',
-          field: 'jun',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Jul',
-          field: 'jul',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Aug',
-          field: 'aug',
-          cellClass: ['ag-cell-white', 'text-right']
-        },
-        {
-          headerName: 'Sep',
-          field: 'sep',
-          cellClass: ['ag-cell-white', 'text-right']
-        }
-      ]
-    }
-  ];
-
-  this.rowData = [
-      { spendplans: 'Baseline', mar: 'item 1', jun: 35000 },
-      { spendplans: 'Obligated', sept: 'item 1', aug: 500 },
-      { spendplans: 'In House/Other', dec: 'item 1', oct: 5550 },
-      { spendplans: 'Contracted', may: 'item 1', jul: 45000 },
-      { spendplans: 'Expensed', oct: 'item 1', feb: 50000 },
-      { spendplans: 'Cummulative Obligated', jan: 'item 1', nov: 7000 },
-      { spendplans: 'In House', aug: 'item 1', dec: 7450 },
-      { spendplans: 'Delta', apr: 'item 1', aug: 5900 },
-      { spendplans: 'Expensed (Monthly)', oct: 'item 1', feb: 50000 },
-      { spendplans: 'Cummulative Expensed', jan: 'item 1', nov: 70000 },
-      { spendplans: 'OSD Goal', aug: 'item 1', dec: 7000 },
-      { spendplans: 'Delta', apr: 'item 1', aug: 59000 },
-      { spendplans: 'Actulals (Monthly)', mar: 'item 1', sep: 69050 },
-      { spendplans: 'Cummulative Actuals', mar: 'item 1', jun: 35000 }
-  ];
-
-}
+          {
+            headerName: 'Oct',
+            colId: 0,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Nov',
+            colId: 1,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Dec',
+            colId: 2,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Jan',
+            colId: 3,
+            valueGetter: getter,
+            maxWidth: 80,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Feb',
+            colId: 4,
+            valueGetter: getter,
+            maxWidth: 80,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Mar',
+            colId: 5,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Apr',
+            colId: 6,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'May',
+            colId: 7,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Jun',
+            colId: 8,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Jul',
+            colId: 9,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Aug',
+            colId: 10,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          },
+          {
+            headerName: 'Sep',
+            colId: 11,
+            valueGetter: getter,
+            cellClass: ['ag-cell-white', 'text-right']
+          }
+        ]
+      }
+    ];
+  }
 
   onPageSizeChanged(event) {
     var selectedValue = Number(event.target.value);
     this.agGrid.api.paginationSetPageSize(selectedValue);
     this.agGrid.api.sizeColumnsToFit();
   }
-   onGridReady(params) {
-     setTimeout(() => {
-       params.api.sizeColumnsToFit();
-     }, 500);
-     window.addEventListener("resize", function() {
-       setTimeout(() => {
-         params.api.sizeColumnsToFit();
-       });
-     });
-   }
- }
+
+  onGridReady(params) {
+    setTimeout(() => {
+      params.api.sizeColumnsToFit();
+    }, 500);
+    window.addEventListener("resize", function () {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
+  }
+
+  refreshTableData() {
+    if (this._exe && this._exeline && this._oandes && this._deltas) {
+      var tmpdata:PlanRow[] = [
+        { label: 'Baseline', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Obligated', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'In House/Other', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Contracted', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Expensed', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'OSD', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Obligated', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Expensed', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'DELTA', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Obligated', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Expensed', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+      ];
+
+      var progtype: string = this.exeline.appropriation;
+      var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
+      var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
+      var max = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      for (var i = 0; i < max; i++){
+        tmpdata.forEach(row => { 
+          row.obligated.push(0);
+          row.inhouse.push(1);
+          row.contracted.push(2);
+          row.expensed.push(3);
+          row.osdobligated.push(4);
+          row.osdexpensed.push(5);
+          row.deltaobligated.push(6);
+          row.deltaexpensed.push(7);
+        });
+      }
+
+      this.rowData = tmpdata;
+    }
+  }
+}
+
+interface PlanRow {
+  label: string,
+  obligated: number[],
+  inhouse: number[],
+  contracted: number[],
+  expensed:number[],
+  osdobligated: number[],
+  osdexpensed: number[],
+  deltaobligated: number[],
+  deltaexpensed: number[]
+}

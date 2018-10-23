@@ -19,7 +19,16 @@
     <div class="row">
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
-          <tab heading="Actuals" id="tab1" active="true">
+          <tab heading="Spend Plans" id="tab1" active="true">
+            <spend-plans-tab role="tabpanel" 
+              [oandes]="oandes" 
+              [exeline]="exeline" 
+              [exe]="exe"
+              [parent]="this"
+              [deltas]="deltaMap">
+            </spend-plans-tab>
+          </tab>
+          <tab heading="Actuals" id="tab2">
             <actuals-tab role="tabpanel" 
               [oandes]="oandes" 
               [exeline]="exeline" 
@@ -28,7 +37,7 @@
               [deltas]="deltaMap">
             </actuals-tab>
           </tab>
-          <tab heading="Graph" id="tab2">
+          <tab heading="Graph" id="tab3">
             <graphs-tab role="tabpanel"
               [oandes]="oandes"
               [exeline]="exeline"
