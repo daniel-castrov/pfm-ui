@@ -1,20 +1,6 @@
-<j-header></j-header>
 <div class="row main-content">
   <div class="col-md-12">
     <div class="row mb-2">
-      <div class="col-8">
-        <span class="h5 mr-2">Spend Plan Update</span>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-8">
-        <span class="form-group">
-          <span class="mr-sm-4">{{exeline?.programName}}</span>
-        </span>
-        <span class="form-group">
-            <span class="mr-sm-4">{{exeline?.appropriation}}/{{exeline?.baOrBlin}}/{{exeline?.item}}/{{exeline?.opAgency}}</span>
-        </span>
-      </div>
       <div class="col-4">
         <div class="pull-right program-controls">
           <button class="btn btn-primary" (click)="save('SUBMITTED')">Submit</button>
@@ -24,7 +10,7 @@
     <div class="row mb-3">
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
-            [enableSorting]="true"
+            [enableSorting]="false"
             [enableColResize]="true"
             [enableFilter]="false"
             [gridAutoHeight]="true"

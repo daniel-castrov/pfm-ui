@@ -87,7 +87,6 @@ export class AddSpendPlanComponent implements OnInit {
     var getter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-
       return (0 === row ? '' : my.rowData[row].values[col]);
     }
 
@@ -96,6 +95,12 @@ export class AddSpendPlanComponent implements OnInit {
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
       my.rowData[row].values[col] = Number.parseFloat(p.newValue);
       p.node.data.values[col] = Number.parseFloat(p.newValue);
+
+      my.rowData[1].values[col] = 0;
+      for (var i = 2; i < 6; i++){
+        my.rowData[1].values[col] += my.rowData[i].values[col];
+      }
+
       return true;
     }
     
@@ -104,20 +109,18 @@ export class AddSpendPlanComponent implements OnInit {
       return (my._exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
     }
 
+    var get2 = function (p) {
+      return (my.exeline && my.exeline.appropriated ? 'After Appropriation' : 'Baseline');
+    }
+
     this.columnDefs = [
       {
-        headerName: 'After Appropriation',
-        field: 'afterAppropriation',
+        headerValueGetter: get2,
         maxWidth: 320,
         children: [
           {
             headerName: 'Spend Plans',
             field: 'label',
-            editable: true,
-            cellEditor: 'agRichSelectCellEditor',
-            cellEditorParams: {
-              values:['Baseline','After Appropriation']
-            },
             cellClass: ['ag-cell-white']
           },
         ],
@@ -128,7 +131,7 @@ export class AddSpendPlanComponent implements OnInit {
           {
             headerName: 'Oct',
             colId: 0,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueGetter: getter,
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -138,14 +141,14 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 1,
             valueGetter: getter,
             valueSetter: setter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Dec',
             colId: 2,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -153,7 +156,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Jan',
             colId: 3,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -161,7 +164,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Feb',
             colId: 4,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -169,7 +172,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Mar',
             colId: 5,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -178,14 +181,14 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 6,
             valueGetter: getter,
             valueSetter: setter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'May',
             colId: 7,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -193,7 +196,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Jun',
             colId: 8,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -201,7 +204,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Jul',
             colId: 9,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -209,7 +212,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Aug',
             colId: 10,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -217,7 +220,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Sep',
             colId: 11,
             valueGetter: getter,
-            editable: p => (p.node.rowIndex > 0),
+            editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           }
@@ -247,12 +250,13 @@ export class AddSpendPlanComponent implements OnInit {
     if (this._exe && this._exeline && this._oandes && this._deltas) {
 
       var tmpdata: DataRow[] = [
-        { label: 'Baseline', values: [] },
+        { label: (this.exeline && this.exeline.appropriated ? 'After Appropriation' : 'Baseline'), values: [] },
         { label: 'Obligated', values: [] },
         { label: 'Civilian Labor', values: [] },
         { label: 'Travel', values: [] },
         { label: 'Contracts', values: [] },
         { label: 'Other', values: [] },
+        { label: 'Expensed', values: [] },
       ];
 
       var progtype: string = this.exeline.appropriation;
@@ -277,11 +281,11 @@ export class AddSpendPlanComponent implements OnInit {
 
     for (var i = 0; i < this.maxmonths; i++){
       plan.monthlies.push({
-        total: this.rowData[1].values[i],
         labor: this.rowData[2].values[i],
         travel: this.rowData[3].values[i],
         contracts: this.rowData[4].values[i],
-        other: this.rowData[5].values[i]
+        other: this.rowData[5].values[i],
+        expensed: this.rowData[6].values[i]
       });
     }
 

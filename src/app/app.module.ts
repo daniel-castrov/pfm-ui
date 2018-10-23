@@ -128,7 +128,7 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService, LibraryService, UserService, OandEService} from './generated';
+import { EppService, LibraryService, UserService, OandEService, SpendPlanService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
@@ -396,6 +396,7 @@ const appRoutes: Routes = [
     LibraryService,
     StateService,
     NewProgramService,
+    SpendPlanService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],
