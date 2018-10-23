@@ -233,9 +233,10 @@ export class SpendPlansTabComponent implements OnInit {
       var tmpdata:PlanRow[] = [
         { label: 'Baseline', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
         { label: 'Obligated', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
-        { label: 'In House/Other', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
-        { label: 'Contracted', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
-        { label: 'Expensed', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Civilian Labor', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Travel', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Contracts', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
+        { label: 'Other', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
         { label: 'OSD', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
         { label: 'Obligated', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
         { label: 'Expensed', obligated: [], inhouse: [], contracted: [], expensed: [], osdobligated: [], osdexpensed: [], deltaobligated: [], deltaexpensed: [] },
@@ -263,6 +264,11 @@ export class SpendPlansTabComponent implements OnInit {
 
       this.rowData = tmpdata;
     }
+  }
+
+  addplan() {
+    var newplan = this.addarea.getSpendPlan();
+    console.log(newplan);
   }
 }
 

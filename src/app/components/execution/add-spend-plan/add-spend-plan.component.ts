@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, setTestabilityGetter } from '@angular/core'
+import { Component, OnInit, ViewChild, Input, setTestabilityGetter, Output } from '@angular/core'
 
 // Other Components
 import { Router } from '@angular/router'
@@ -6,7 +6,9 @@ import { ProgramsService } from '../../../generated/api/programs.service';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
-import { ExecutionLine, OandEMonthly, Execution, ExecutionEvent } from '../../../generated';
+import { ExecutionLine, OandEMonthly, Execution, ExecutionEvent, SpendPlan, OSDGoalPlan } from '../../../generated';
+import { SpendPlansTabComponent } from '../spend-plans-tab/spend-plans-tab.component';
+import { validateConfig } from '@angular/router/src/config';
 
 @Component({
   selector: 'add-spend-plan',
@@ -17,9 +19,7 @@ import { ExecutionLine, OandEMonthly, Execution, ExecutionEvent } from '../../..
 export class AddSpendPlanComponent implements OnInit {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-
   private agOptions: GridOptions;
-
   private firstMonth: number = 0;
   private _oandes: OandEMonthly[];
   private _exeline: ExecutionLine;
@@ -27,6 +27,7 @@ export class AddSpendPlanComponent implements OnInit {
   private _deltas: Map<Date, ExecutionEvent>;
   private columnDefs: any[];
   private rowData: DataRow[];
+  private maxmonths: number;
 
   @Input() set exeline(e: ExecutionLine) {
     this._exeline = e;
@@ -86,12 +87,15 @@ export class AddSpendPlanComponent implements OnInit {
     var getter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-      return '(' + row + ',' + col + ')';
+
+      return (0 === row ? '' : my.rowData[row].values[col]);
     }
 
     var setter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+      my.rowData[row].values[col] = Number.parseFloat(p.newValue);
+      p.node.data.values[col] = Number.parseFloat(p.newValue);
       return true;
     }
     
@@ -109,6 +113,11 @@ export class AddSpendPlanComponent implements OnInit {
           {
             headerName: 'Spend Plans',
             field: 'label',
+            editable: true,
+            cellEditor: 'agRichSelectCellEditor',
+            cellEditorParams: {
+              values:['Baseline','After Appropriation']
+            },
             cellClass: ['ag-cell-white']
           },
         ],
@@ -119,8 +128,8 @@ export class AddSpendPlanComponent implements OnInit {
           {
             headerName: 'Oct',
             colId: 0,
+            editable: p => (p.node.rowIndex > 0),
             valueGetter: getter,
-            editable: true,
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -129,14 +138,14 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 1,
             valueGetter: getter,
             valueSetter: setter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Dec',
             colId: 2,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -144,7 +153,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Jan',
             colId: 3,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -152,7 +161,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Feb',
             colId: 4,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -160,7 +169,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Mar',
             colId: 5,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -169,14 +178,14 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 6,
             valueGetter: getter,
             valueSetter: setter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'May',
             colId: 7,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -184,7 +193,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Jun',
             colId: 8,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -192,7 +201,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Jul',
             colId: 9,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -200,7 +209,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Aug',
             colId: 10,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -208,7 +217,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Sep',
             colId: 11,
             valueGetter: getter,
-            editable: true,
+            editable: p => (p.node.rowIndex > 0),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           }
@@ -235,22 +244,63 @@ export class AddSpendPlanComponent implements OnInit {
   }
 
   refreshTableData() {
-    var tmpdata:DataRow[] = [
-      { label: 'Baseline', obligated: [], inhouse: [], contracted: [], expensed: [] },
-      { label: 'Obligated', obligated: [], inhouse: [], contracted: [], expensed: [] },
-      { label: 'In House/Other', obligated: [], inhouse: [], contracted: [], expensed: [] },
-      { label: 'Contracted', obligated: [], inhouse: [], contracted: [], expensed: [] },
-      { label: 'Expensed', obligated: [], inhouse: [], contracted: [], expensed: [] },
-    ];
+    if (this._exe && this._exeline && this._oandes && this._deltas) {
 
-    this.rowData = tmpdata;
+      var tmpdata: DataRow[] = [
+        { label: 'Baseline', values: [] },
+        { label: 'Obligated', values: [] },
+        { label: 'Civilian Labor', values: [] },
+        { label: 'Travel', values: [] },
+        { label: 'Contracts', values: [] },
+        { label: 'Other', values: [] },
+      ];
+
+      var progtype: string = this.exeline.appropriation;
+      var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
+      this.maxmonths = ogoals.monthlies.length;
+      for (var i = 0; i < this.maxmonths; i++) {
+        tmpdata.forEach(row => {
+          row.values.push(0);
+        });
+      }
+      this.rowData = tmpdata;
+    }
+  }
+
+  getSpendPlan(): SpendPlan {
+    var plan: SpendPlan = {
+      type: ('Baseline' === this.rowData[0].label
+        ? SpendPlan.TypeEnum.BASELINE
+        : SpendPlan.TypeEnum.AFTERAPPROPRIATION),
+      monthlies:[]
+    };
+
+    for (var i = 0; i < this.maxmonths; i++){
+      plan.monthlies.push({
+        total: this.rowData[1].values[i],
+        labor: this.rowData[2].values[i],
+        travel: this.rowData[3].values[i],
+        contracts: this.rowData[4].values[i],
+        other: this.rowData[5].values[i]
+      });
+    }
+
+    return plan;
+  }
+
+  @Output() get valid(): boolean {
+    var ok: boolean = false;
+    if (this.rowData) {
+      ok = true;
+      this.rowData.forEach(row => {
+        // is there anything to check here?
+      });
+    }
+    return ok;
   }
 }
 
 interface DataRow {
   label: string,
-  obligated: number[],
-  inhouse: number[],
-  contracted: number[],
-  expensed: number[]
+  values: number[];
 }
