@@ -3,19 +3,19 @@
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
     <div class="col-12">
-      <div class="h5">{{ community?.name }}</div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="h5">{{ community?.name }}</div>
+        </div>
+      </div>
       <div class="row">
-
         <div class="col-6">
-
-          <fieldset>
-            <legend>Organizations within this Community</legend>
+          <div class="h6">Organizations within this Community</div>
             <ul class="community-list">
               <li *ngFor="let organization of organizations">
                 {{ organization.abbreviation }}
               </li>
             </ul>
-          </fieldset>
           <fieldset>
             <legend>Create an Organization</legend>
               <span class="form-group">
@@ -31,33 +31,27 @@
               <div class="text-danger" *ngIf="orgname.touched && orgname.invalid && orgname.errors.required">Community name is required</div>
               <div class="text-danger" *ngIf="orgidentifier.invalid && orgidentifier.errors.alreadyExists">Community identifier already exists</div>
               <div class="text-danger" *ngIf="orgidentifier.touched && orgidentifier.invalid && orgidentifier.errors.required">Community identifier is required</div>
-
             </fieldset>
-
         </div>
-
         <div class="col-5">
-          <fieldset>
-            <legend>List of User Approvers within this Community</legend>
+          <div class="h6">List of User Approvers within this Community</div>
             <ul class="community-list">
               <li *ngIf ="approvers.length == 0">(none)</li>
               <li *ngFor="let user of approvers">
                 {{ user?.firstName }} {{ user?.lastName }}
               </li>
             </ul>
-          </fieldset>
-          <fieldset>
-            <legend>Add User Approver</legend>
-            <select class="form-control-sm dropdown-width mr-sm-2" name="communityApprover" [(ngModel)]="addedapprover" required>
-              <option *ngFor="let user of users"
-                [value]="user.id">
-                {{user.firstName}} {{user.lastName}}
-              </option>
-            </select>
-            <button class="btn btn-primary" (click)="addApprover()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Add</button>
-          </fieldset>
+            <fieldset>
+              <legend>Add User Approver</legend>
+              <select class="form-control-sm dropdown-width mr-sm-2" name="communityApprover" [(ngModel)]="addedapprover" required>
+                <option *ngFor="let user of users"
+                  [value]="user.id">
+                  {{user.firstName}} {{user.lastName}}
+                </option>
+              </select>
+              <button class="btn btn-primary" (click)="addApprover()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Add</button>
+            </fieldset>
         </div>
-
       </div>
     </div>
   </div>

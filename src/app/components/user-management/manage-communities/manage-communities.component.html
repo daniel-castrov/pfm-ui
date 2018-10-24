@@ -2,16 +2,18 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="error" *ngFor="let error of resultError">{{error}}</div>
-    <div class="col-md-12">
-      <fieldset>
-        <legend>List of Communities</legend>
-        <ul class="community-list">
-          <li *ngFor="let comm of communities">
-            <span class="community-name">{{ comm?.name }}</span>
-            <span class="btn-card-header"><a href="#" routerLink="/community-details/{{ comm?.id}}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Details</a></span>
-          </li>
-        </ul>
-      </fieldset>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="h6">List of Communities</div>
+          <ul class="community-list">
+            <li *ngFor="let comm of communities">
+              <span class="community-name">{{ comm?.name }}</span>
+              <span class="btn-card-header"><a href="#" routerLink="/community-details/{{ comm?.id}}"><i class="fa fa-pencil icon-pad" aria-hidden="true"></i> Details</a></span>
+            </li>
+          </ul>
+        </div>
+      </div>
       <fieldset>
         <legend>Create a Community</legend>
         <form novalidate #addForm="ngForm">

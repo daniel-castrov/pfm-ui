@@ -488,26 +488,6 @@ tab {
   color: #000;
 }
 
-/* community */
-
-.community-list li {
-  list-style: none;
-  line-height: 1.5rem;
-  padding: 5px 10px;
-  margin-left: -50px;
-}
-
-.community-list li:nth-child(even) {
-  background-color: #f7f7f7;
-}
-
-.community-name {
-  display: inline-block;
-  word-wrap: break-word;
-  min-width: 350px;
-  margin-right: 100px;
-}
-
 // table pagination
 
 .mat-paginator-page-size {
@@ -524,7 +504,6 @@ tab {
 }
 
 // New tab design
-
 
 .program-tab-style,
 .ufr-tab-style {
