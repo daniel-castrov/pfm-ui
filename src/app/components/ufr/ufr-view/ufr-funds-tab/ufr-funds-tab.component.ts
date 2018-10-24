@@ -1,6 +1,6 @@
-import { TagsService } from '../../../../services/tags.service';
-import {Component, Input, ViewChild, ViewEncapsulation, OnChanges} from '@angular/core'
-import {FundingLine, UFR, POMService, PRService, PBService, ShortyType, ProgramsService} from '../../../../generated'
+import {TagsService, TagType} from '../../../../services/tags.service';
+import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
+import {FundingLine, PBService, POMService, ProgramsService, PRService, ShortyType, UFR} from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -8,8 +8,9 @@ import {AutoValuesService} from "../../../programming/program-request/funds-tab/
 import {DataRow} from "./DataRow";
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
-import {NotifyUtil} from "../../../../utils/NotifyUtil";
+import {Notify} from "../../../../utils/Notify";
 import {PhaseType} from "../../../programming/select-program-request/UiProgrammaticRequest";
+import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 
 @Component({
   selector: 'ufr-funds-tab',
@@ -75,34 +76,36 @@ export class UfrFundsComponent implements OnChanges {
 
   initCurrentFunding() {
     let data: Array<DataRow> = [];
-    if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM) {
+    if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM) {
       this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
         pr.result.fundingLines.forEach(fundingLine => {
-          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+          let pomRow: DataRow = {fundingLine: fundingLine,
+            editable: false,
+            gridType: GridType.CURRENT_PR}
           data.push(pomRow);
         });
         this.currentFunding = data;
         this.initRevisedChanges();
       });
-    } else if (this.ufr.shortyType === ShortyType.PR ||
-      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_PR ||
-      this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_PR) {
+    } else if (this.ufr.shortyType === ShortyType.PR) {
       this.prService.getById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
-
         pr.result.fundingLines.forEach(fundingLine => {
-          let pomRow: DataRow = {fundingLine: fundingLine, editable: false}
+          let pomRow: DataRow = {fundingLine: fundingLine,
+            editable: false,
+            gridType: GridType.CURRENT_PR}
           data.push(pomRow);
         });
         this.currentFunding = data;
         this.initRevisedChanges();
       });
     } else {
-      this.shorty = this.ufr
-      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
+      this.shorty = this.ufr;
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())),
+        editable: false,
+        gridType: GridType.CURRENT_PR
+      };
       data.push(pomRow);
       this.currentFunding = data;
       this.initRevisedChanges();
@@ -169,6 +172,7 @@ export class UfrFundsComponent implements OnChanges {
         let row: DataRow = JSON.parse(JSON.stringify(pc));
         row.editable = false;
         row.fundingLine.userCreated = false;
+        row.gridType = GridType.CURRENT_PR;
         Object.keys(row.fundingLine.funds).forEach(year =>{
           row.fundingLine.funds[year] = (cf && cf.fundingLine.funds[year]? cf.fundingLine.funds[year] : 0) + (pc.fundingLine.funds[year]? pc.fundingLine.funds[year] : 0);
         });
@@ -176,7 +180,9 @@ export class UfrFundsComponent implements OnChanges {
       });
       this.revisedPrograms = data;
     } else {
-      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())), editable: false};
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())),
+        editable: false,
+        gridType: GridType.CURRENT_PR};
       data.push(pomRow);
       this.revisedPrograms = data;
     }
@@ -185,7 +191,9 @@ export class UfrFundsComponent implements OnChanges {
   initDataRows(){
     let data: Array<DataRow> = [];
     this.ufr.fundingLines.forEach(fundingLine => {
-      let pomRow: DataRow = {fundingLine: fundingLine, editable: true}
+      let pomRow: DataRow = {fundingLine: fundingLine,
+        editable: true,
+        gridType: GridType.CURRENT_PR}
       data.push(pomRow);
     });
     this.proposedChange = data;
@@ -293,7 +301,6 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'OpAgency',
             headerTooltip: 'OpAgency',
             field: 'fundingLine.opAgency',
-            hide: true,
             cellClass: 'funding-line-default'
           }]}
     ];
@@ -450,11 +457,12 @@ export class UfrFundsComponent implements OnChanges {
 
   addRow(){
     if (!this.shorty.leadComponent && !this.shorty.functionalArea) {
-      NotifyUtil.notifyError('You must select the lead component and the functional area in the program tab before creating a funding line')
+      Notify.error('You must select the lead component and the functional area in the program tab before creating a funding line')
     } else {
       let newPomRow: DataRow = new DataRow();
       newPomRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine()));
       newPomRow.editable = true;
+      newPomRow.gridType = GridType.CURRENT_PR
       this.ufr.fundingLines.push(newPomRow.fundingLine);
       this.proposedChange.push(newPomRow);
 
@@ -514,14 +522,13 @@ export class UfrFundsComponent implements OnChanges {
     this.agGridProposedChanges.api.setRowData(this.proposedChange);
 
     this.loadDropdownOptions();
-    }
-
-  onToolPanelVisibleChanged(params) {
-    this.agGridProposedChanges.api.sizeColumnsToFit();
+    this.calculateRevisedChanges();
   }
 
   onColumnVisible(params) {
     this.agGridProposedChanges.api.sizeColumnsToFit();
+    this.agGridCurrentFunding.api.sizeColumnsToFit();
+    this.agGridRevisedPrograms.api.sizeColumnsToFit();
   }
 
   onCellEditingStarted(params) {
@@ -533,12 +540,14 @@ export class UfrFundsComponent implements OnChanges {
     let pomNode = params.node.data;
     if (params.colDef.headerName === 'Appn') {
       this.filterBlins(params.data.fundingLine.appropriation);
+      params.data.fundingLine.item = null;
+      params.data.fundingLine.baOrBlin = null;
     }
     if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-        this.tagsService.tags('OpAgency (OA)').subscribe(tags => {
+        this.tagsService.tags(TagType.OP_AGENCY).subscribe(tags => {
           params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
           this.agGridProposedChanges.api.refreshCells();
         });
@@ -613,6 +622,8 @@ export class UfrFundsComponent implements OnChanges {
       return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');
     } else if (this.flHaveIncorrectAppropriation()){
       return new Validation(false, 'You can only have one funding line with the PROC appropriation. Changes were not saved');
+    } else if (this.flIsIncomplete()) {
+      return new Validation(false, 'You must fill all the fields for a funding line. Changes were not saved');
     } else {
       return new Validation(true);
     }
@@ -626,6 +637,16 @@ export class UfrFundsComponent implements OnChanges {
       }
     });
     return count > 1;
+  }
+
+  flIsIncomplete(): Boolean{
+    let count = 0;
+    this.ufr.fundingLines.forEach(function(fl, index) {
+      if(fl.appropriation === null || fl.baOrBlin === null || fl.item === null){
+        count++;
+      }
+    });
+    return count > 0;
   }
 
   flHaveIncorrectBa(): Boolean{

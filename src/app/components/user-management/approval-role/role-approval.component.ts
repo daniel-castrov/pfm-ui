@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { NotifyUtil } from '../../../utils/NotifyUtil';
+import { Notify } from '../../../utils/Notify';
 
 // Generated
 import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest, DropRoleRequest } from '../../../generated';
@@ -133,7 +133,7 @@ export class AccessChangeApprovalComponent implements OnInit {
       await this.requestService.status(status, this.request.id).toPromise();
       this.router.navigate(['./home']);
     } catch (e) {
-      NotifyUtil.notifyError(e.message);
+      Notify.exception(e.message);
     }
   }
 }

@@ -8,11 +8,14 @@
         </div>
       </div>
 
-      <fieldset>
-        <legend>My Assigned Roles</legend>
-        <table class="my-roles-list">
+        <div class="h6">My Assigned Roles</div>
+
+        <table class="my-roles-list mb-4">
           <thead>
-            <tr><th>Roles</th><th>Resources</th></tr>
+            <tr>
+              <th>Roles</th>
+              <th>Resources</th>
+            </tr>
           </thead>
           <tbody>
             <tr *ngFor="let roleWres of currentRolesWithResources">
@@ -21,7 +24,6 @@
             </tr>
           </tbody>
         </table>
-      </fieldset>
 
       <fieldset>
         <legend>My Pending Role Requests.</legend>
@@ -46,9 +48,9 @@
                       [disabled]="true">
                       <span>(drop) - </span>{{dreq.roleName}}
               </option>
-            </select>        
+            </select>
           </div>
-        </div>   
+        </div>
       </fieldset>
 
       <fieldset>
@@ -115,7 +117,7 @@
                   {{ org.abbreviation }}
                 </option>
               </select>
-            </div>  
+            </div>
             <div style="max-width:800px;">
               <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">

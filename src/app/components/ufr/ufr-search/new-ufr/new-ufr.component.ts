@@ -2,9 +2,11 @@ import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest } from '../../../../generated';
+import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest, User, Organization, OrganizationService } from '../../../../generated';
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
+import { UserUtils } from '../../../../services/user.utils';
+import {NewProgramService} from "../../../../services/new.program.service";
 
 
 enum CreateNewUfrMode {
@@ -34,7 +36,10 @@ export class NewUfrComponent implements OnInit {
                private ufrService: UFRsService,
                private cycleUtils: CycleUtils,
                private programsService: ProgramsService,
-               private prService: PRService ) {}
+               private prService: PRService,
+               private orgService: OrganizationService,
+               private userUtils: UserUtils,
+               private newProgramService: NewProgramService ) {}
 
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs();
@@ -133,8 +138,16 @@ export class NewUfrComponent implements OnInit {
         ufr.shortyType = ShortyType.NEW_PROGRAM;
         ufr.fundingLines=[];
         ufr.emphases=[];
+        this.newProgramService.initRequiredFieldsWithSomeValues(ufr);
         break;
     }
+
+    if (!ufr.leadComponent) {
+      var user: User = (await this.userUtils.user().toPromise());
+      var organization: Organization = (await this.orgService.getById(user.organizationId).toPromise()).result;
+      ufr.leadComponent = organization.abbreviation;
+    }
+
     sessionStorage.setItem('ufr', JSON.stringify(ufr));
     this.router.navigate(['/ufr-view/create/']);
   }
@@ -173,7 +186,6 @@ export class NewUfrComponent implements OnInit {
 
     // For a UFR variants always start empty
     ufr.fundingLines.forEach( fl => fl.variants=[] );
-
   }
 
 }

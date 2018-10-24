@@ -8,18 +8,10 @@ import {OperationBase} from "../operartion.base";
   templateUrl: './duplicate.component.html',
   styleUrls: ['./duplicate.component.scss']
 })
-export class DuplicateComponent implements OperationBase {
-  @Output() operationOver = new EventEmitter();
-  name: string;
-  version: number;
+export class DuplicateComponent extends OperationBase {
+  constructor( stateService: StateService, private worksheetService: WorksheetService ) {super(stateService);}
 
-  constructor( private stateService: StateService,
-               private worksheetService: WorksheetService ) {}
-
-  init() {
-    this.name = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.name;
-    this.version = this.stateService.selectedWorksheet && this.stateService.selectedWorksheet.version;
-  }
+  init() {}
 
   async onSave() {
     await this.worksheetService.create({...this.stateService.selectedWorksheet, id:null}).toPromise();

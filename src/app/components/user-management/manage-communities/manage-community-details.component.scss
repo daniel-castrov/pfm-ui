@@ -1,3 +1,34 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #f7f7f7;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+
+.community-list {
+
+  margin-left: -42px;
+
+  li:nth-child(odd) {
+    background-color: $light-grey;
+  }
+}
+
+.community-list > li {
+  list-style: none;
+  line-height: 1.5rem;
+  padding: 5px 10px;
+}
+
+.community-name {
+  display: inline-block;
+  word-wrap: break-word;
+  min-width: 350px;
+  margin-right: 100px;
+}
+
 .dropdown-width {
   width: 300px;
 }

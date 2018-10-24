@@ -157,6 +157,8 @@ import {WorksheetService} from "./generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import { BesRdteComponent } from './components/budget/bes-rdte/bes-rdte.component';
 import { BesProcComponent } from './components/budget/bes-proc/bes-proc.component';
+import {NewProgramService} from "./services/new.program.service";
+import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval-summary/ufr-approval-summary.component";
 
 
 // ROUTES
@@ -207,6 +209,7 @@ const appRoutes: Routes = [
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
+  {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
@@ -286,6 +289,7 @@ const appRoutes: Routes = [
     UserApprovalComponent,
     UserListComponent,
     UfrSearchComponent,
+    UfrApprovalSummaryComponent,
     UfrViewComponent,
     UfrProgramComponent,
     UfrFundsComponent,
@@ -397,6 +401,7 @@ const appRoutes: Routes = [
     OandEService,
     LibraryService,
     StateService,
+    NewProgramService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],

@@ -1,19 +1,21 @@
-import { ProgramTabComponent } from './program-tab/program-tab.component';
-import { PRUtils } from '../../../services/pr.utils.service';
-import { ProgramRequestWithFullName, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { ProgrammaticRequestState } from '../../../generated/model/programmaticRequestState';
-import { CreationTimeType } from '../../../generated/model/creationTimeType';
-import { ProgramType } from '../../../generated/model/programType';
-import { IdAndNameComponent } from './id-and-name/id-and-name.component';
-import { ProgrammaticRequest } from '../../../generated/model/programmaticRequest';
-import { PRService } from '../../../generated/api/pR.service';
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-
-// Other Components
-import { ProgramRequestPageModeService} from './page-mode.service';
+import {ProgramTabComponent} from './program-tab/program-tab.component';
+import {PRUtils} from '../../../services/pr.utils.service';
+import {ProgramRequestWithFullName, ProgramWithFullName} from '../../../services/with-full-name.service';
+import {ProgrammaticRequestState} from '../../../generated/model/programmaticRequestState';
+import {CreationTimeType} from '../../../generated/model/creationTimeType';
+import {ProgramType} from '../../../generated/model/programType';
+import {IdAndNameComponent} from './id-and-name/id-and-name.component';
+import {ProgrammaticRequest} from '../../../generated/model/programmaticRequest';
+import {PRService} from '../../../generated/api/pR.service';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {NotifyUtil} from "../../../utils/NotifyUtil";
+import {Organization, OrganizationService, User} from '../../../generated';
+import {Notify} from "../../../utils/Notify";
+import {UserUtils} from '../../../services/user.utils';
+import {TagsService, TagType} from "../../../services/tags.service";
+import {NewProgramService} from "../../../services/new.program.service";
 
 @Component({
   selector: 'program-request',
@@ -30,8 +32,11 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   @ViewChild(VariantsTabComponent) private variantsTabComponent: VariantsTabComponent;
 
   constructor( private prService: PRService,
+               private userUtils: UserUtils,
                private programRequestPageMode: ProgramRequestPageModeService,
-               private cd: ChangeDetectorRef ) {
+               private changeDetectorRef: ChangeDetectorRef,
+               private orgService: OrganizationService,
+               private newProgramService: NewProgramService ) {
     this.pr.fundingLines = [];
   }
 
@@ -42,7 +47,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.cd.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   private async initPr() {
@@ -50,15 +55,20 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       this.pr = (await this.prService.getById(this.programRequestPageMode.prId).toPromise()).result;
     } else { // PR is in create mode
       this.initPrFields();
+      if (!this.pr.leadComponent) {
+        var user: User = await this.userUtils.user().toPromise();
+        var organization: Organization = (await this.orgService.getById(user.organizationId).toPromise()).result;
+        this.pr.leadComponent = organization.abbreviation;
+      }
     }
   }
-
 
   private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
     this.pr.creationTimeType = this.programRequestPageMode.type;
     this.pr.bulkOrigin = false;
     this.pr.state = 'SAVED';
+
     switch (this.programRequestPageMode.type) {
       case CreationTimeType.PROGRAM_OF_MRDB:
         this.pr.originalMrId = this.programRequestPageMode.reference.id;
@@ -80,6 +90,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         break;
       case CreationTimeType.NEW_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
+        this.newProgramService.initRequiredFieldsWithSomeValues(this.pr);
         break;
       default:
         console.log('Wrong programRequestPageMode.type');
@@ -106,38 +117,44 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   async save(state: ProgrammaticRequestState) {
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
-      NotifyUtil.notifyError(fundsTabValidation.message);
+      Notify.error(fundsTabValidation.message);
     } else {
       if(this.pr.id) {
         this.pr.state = state;
         this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
         if (this.pr.state === ProgrammaticRequestState.SAVED) {
-          NotifyUtil.notifySuccess('Program request saved successfully')
+          Notify.success('Program request saved successfully')
         } else {
-          NotifyUtil.notifySuccess('Program request submitted successfully')
+          Notify.success('Program request submitted successfully')
         }
       } else {
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
-        NotifyUtil.notifySuccess('Program request created successfully')
+        Notify.success('Program request created successfully')
       }
     }
   }
 
-  private isNotSavable(): boolean {
+  isNotSavable(): boolean {
     if(!this.idAndNameComponent) return true; // not fully initilized yet
     if(this.variantsTabComponent.invalid) return true;
     return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
-  private isNotSubmittable(): boolean {
+  isNotSubmittable(): boolean {
     if( !this.prs || !this.idAndNameComponent || !this.programTabComponent ) return true // not fully initilized yet
     if( this.pr.type == ProgramType.GENERIC ) return true;
     if( this.thereAreOutstandingGenericSubprogramsAmongTheChildren() ) return true;
-    if(this.variantsTabComponent.invalid) return true;
+    if (this.variantsTabComponent.invalid) return true;
+
+    if (!this.pr.bulkOrigin) { // if we're creating a new PR, check for funding
+      if (!this.fundsTabComponent.flHaveValues()) return true;
+    }
+
     return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
     return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.state === 'OUTSTANDING');
   }
+
 }

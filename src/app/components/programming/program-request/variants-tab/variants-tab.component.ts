@@ -1,7 +1,7 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
-import { NotifyUtil } from '../../../../utils/NotifyUtil';
+import { Notify } from '../../../../utils/Notify';
 
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
@@ -66,7 +66,7 @@ export class VariantsTabComponent {
     if ( procTotal > 0 && variantCount ==0 ) {
       let message:string="This PR has Procurement Funds but no Variants.";
       this.fundsAvailable = message;
-      NotifyUtil.notifyInfo(message);
+      Notify.info(message);
     }
   }
 
@@ -80,7 +80,15 @@ export class VariantsTabComponent {
     return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
   }
 
-  initDataRows(){
+  async initDataRows(){
+
+    let pbPr:ProgrammaticRequest;
+
+    if( this.current.originalMrId ){
+      let pb = (await this.pbService.getLatest(this.user.currentCommunityId).toPromise()).result;
+      pbPr = (await this.prService.getByPhaseAndMrId(pb.id, this.current.originalMrId).toPromise()).result;
+    }
+
     this.fund.variants.forEach(variant => {
       let data: Array<DataRow> = [];
       variant.serviceLines.forEach( sl => {
@@ -94,29 +102,27 @@ export class VariantsTabComponent {
         };
         pbRow.variantName = variant.shortName;
 
-        this.pbService.getLatest(this.user.currentCommunityId).subscribe(pb => {
-          if(this.current.originalMrId){
-            this.prService.getByPhaseAndMrId(pb.result.id, this.current.originalMrId).subscribe(pbPr => {
-              pbPr.result.fundingLines.forEach(fl => {
-                if (fl.result && fl.result.appropriation === this.fund.appropriation && fl.result.baOrBlin === this.fund.baOrBlin
-                  && fl.result.item === this.fund.item && fl.result.opAgency === this.fund.opAgency){
-                  fl.result.variants.forEach( pbVariant => {
-                    pbVariant.result.serviceLines.forEach( pbSl => {
-                      pbRow.serviceLine.quantity = pbSl.result.quantity;
-                    });
-                  });
-                }
-              })
-            });
-          }
-        });
+        if  ( pbPr ) {
+          pbPr.fundingLines.forEach(fl => {
+            if (fl && fl.appropriation === this.fund.appropriation && fl.baOrBlin === this.fund.baOrBlin
+              && fl.item === this.fund.item && fl.opAgency === this.fund.opAgency){
+                
+              fl.variants.forEach( pbVariant => {
+                pbVariant.serviceLines.forEach( pbSl => {
+                  pbRow.serviceLine.quantity = pbSl.quantity;
+                });
+              });
+            }
+          })
+        }
 
-        if(!pbRow.serviceLine.quantity) {
+        if( !pbRow.serviceLine.quantity ) {
           pbRow.serviceLine.quantity = {};
           this.years.forEach(key => {
             pbRow.serviceLine.quantity[key] = 0;
           });
         }
+
         let pomRow = new DataRow();
         pomRow.phaseType = PhaseType.POM;
         pomRow.serviceLine = {
@@ -145,19 +151,22 @@ export class VariantsTabComponent {
       });
       this.data.set(variant.shortName, data);
     });
+
   }
 
   initPinnedBottomRows(){
     this.data.forEach((value: DataRow[], key: string) => {
       let pinnedData = [];
       let pomTotal: IntMap = {};
+
+      this.years.forEach(year => { pomTotal[year] = 0 });
+
       value.forEach(row => {
-        switch(row.phaseType) {
-          case PhaseType.POM:
-            this.years.forEach(year => {
-              pomTotal[year] = (pomTotal[year] || 0) + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
-            });
-            break;
+        if (row.phaseType == PhaseType.POM ) {
+          this.years.forEach(year => {
+            pomTotal[year] =  (pomTotal[year] || 0) 
+                              + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
+          });
         }
       });
       let pomRow: DataRow = new DataRow();
@@ -266,6 +275,7 @@ export class VariantsTabComponent {
       this.years.forEach(year => {
         let colDef = {
           headerName: "FY" + (year-2000),
+          colId:year,
           field: 'serviceLine.quantity.' + year,
           maxWidth: 92,
           suppressMenu: true,
@@ -420,7 +430,12 @@ export class VariantsTabComponent {
   }
 
   onBudgetYearValueChanged(params){
-    let year = params.colDef.headerName;
+
+    if ( Number(params.newValue) < 0 ){
+      params.newValue = params.oldValue;
+      Notify.warning( "You cannot request negative quantities." );
+    } 
+    let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
     let displayModel = this.gridApi.get(params.data.variantName).getModel();
@@ -489,7 +504,7 @@ export class VariantsTabComponent {
 
   addVariant(){
     if (this.fund.variants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
-      NotifyUtil.notifyError('A Variant named "' + this.newVariantName + '" already exists');
+      Notify.error('A Variant named "' + this.newVariantName + '" already exists');
       return;
     }
 

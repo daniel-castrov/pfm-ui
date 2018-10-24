@@ -6,7 +6,7 @@ import {PhaseType} from '../../../programming/select-program-request/UiProgramma
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import { NotifyUtil } from '../../../../utils/NotifyUtil';
+import { Notify } from '../../../../utils/Notify';
 
 @Component({
   selector: 'ufr-variants-tab',
@@ -110,13 +110,12 @@ export class UfrVariantsTabComponent {
     this.data.forEach((value: DataRow[], key: string) => {
       let pinnedData = [];
       let pomTotal: IntMap = {};
+      this.years.forEach(year => { pomTotal[year] = 0 });
       value.forEach(row => {
-        switch(row.phaseType) {
-          case PhaseType.POM:
-            this.years.forEach(year => {
-              pomTotal[year] = (pomTotal[year] || 0) + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
-            });
-            break;
+        if (row.phaseType == PhaseType.POM ) {
+          this.years.forEach(year => {
+            pomTotal[year] =  (pomTotal[year] || 0) + (isNaN(row.serviceLine.quantity[year]) ? 0 : row.serviceLine.quantity[year]);
+          });
         }
       });
       let pomRow: DataRow = new DataRow();
@@ -225,6 +224,7 @@ export class UfrVariantsTabComponent {
       this.years.forEach(year => {
         let colDef = {
           headerName: "FY" + (year-2000),
+          colId:year,
           field: 'serviceLine.quantity.' + year,
           maxWidth: 92,
           suppressMenu: true,
@@ -350,7 +350,12 @@ export class UfrVariantsTabComponent {
   }
 
   onBudgetYearValueChanged(params){
-    let year = params.colDef.headerName;
+
+    if ( Number(params.newValue) < 0 ){
+      params.newValue = params.oldValue;
+      Notify.warning( "You cannot request negative quantities." );
+    } 
+    let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
     let displayModel = this.gridApi.get(params.data.variantName).getModel();
@@ -415,7 +420,7 @@ export class UfrVariantsTabComponent {
 
   addVariant(){
     if (this.fund.variants.filter(vari => (vari.shortName === this.newVariantName)).length > 0 ){
-      NotifyUtil.notifyError('A Variant named "' + this.newVariantName + '" already exists');
+      Notify.error('A Variant named "' + this.newVariantName + '" already exists');
       return;
     }
 

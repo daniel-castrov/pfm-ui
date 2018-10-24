@@ -7,7 +7,7 @@ import {WithFullName, WithFullNameService} from "../../../services/with-full-nam
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
-import {NotifyUtil} from "../../../utils/NotifyUtil";
+import {Notify} from "../../../utils/Notify";
 
 @Component({
   selector: 'app-ufr-view',
@@ -68,18 +68,18 @@ export class UfrViewComponent implements OnInit {
   async save() {
     let fundsTabValidation = this.ufrFundsComponent.validate;
     if(!fundsTabValidation.isValid){
-      NotifyUtil.notifyError(fundsTabValidation.message);
+      Notify.error(fundsTabValidation.message);
     } else {
       if(this.ufr.id) {
         this.ufrService.update(this.ufr).subscribe();
         if (this.ufr.status === UfrStatus.SUBMITTED) {
-          NotifyUtil.notifySuccess('UFR submitted successfully');
+          Notify.success('UFR submitted successfully');
         } else {
-          NotifyUtil.notifySuccess('UFR saved successfully');
+          Notify.success('UFR saved successfully');
         }
       } else {
         this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
-        NotifyUtil.notifySuccess('UFR created successfully')
+        Notify.success('UFR created successfully')
       }
     }
   }
@@ -98,20 +98,20 @@ export class UfrViewComponent implements OnInit {
     }
   }
 
-  private isNotSavable(): boolean {
+  isNotSavable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
     return this.ufr.status == UfrStatus.SUBMITTED;
   }
 
-  private isNotSubmittable(): boolean {
+  isNotSubmittable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
     if(this.ufrFundsComponent && this.ufrFundsComponent.invalid()) return true;
     return this.ufr.status == UfrStatus.SUBMITTED;
   }
 
-  private ufrType(): string {
+  ufrType(): string {
     if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return ` ${this.shorty ? this.shorty.fullname : ''} program`;
     if(this.ufr.shortyType == ShortyType.PR) return " a program request";
     if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return " a new increment";
