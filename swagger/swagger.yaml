@@ -2276,6 +2276,40 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /ufr/next/{requestNumber}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets the next UFR document based on the current requestNumber"
+      description: "Gets next UFR"
+      operationId: "getNext"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "requestNumber"
+        description: "The Request Number"
+        required: true
+        type: "integer"
+  /ufr/previous/{requestNumber}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets the previous UFR document based on the current requestNumber"
+      description: "Gets previous UFR"
+      operationId: "getPrevious"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "requestNumber"
+        description: "The Request Number"
+        required: true
+        type: "integer"
 # STOP UFRs
 ##############################################################################
 # START SNAPSHOTS

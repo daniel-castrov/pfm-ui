@@ -1,0 +1,86 @@
+<j-header></j-header>
+<div *ngIf="ufr">
+  <div class="row mr-3 ml-3">
+    <div class="col-12 p-1">
+      <a class="pull-right" href="#" routerLink="/ufr-search">
+        <i class="fa fa-angle-double-left" aria-hidden="true"></i> Back to UFR Requests
+      </a>
+    </div>
+  </div>
+  <div class="row ml-3 mr-3 mb-4">
+    <div class="col-2 p-1">
+      <a class="pull-left {{previousUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{previousUfrId? '/ufr-approval-detail/' + previousUfrId : ''}}">
+        <i class="fa fa-angle-double-left" aria-hidden="true"></i> previous UFR
+      </a>
+    </div>
+    <div class="col-8 text-center">
+      <div class="h5">Approve UFR {{requestNumber}}: {{ufr.shortName}}</div>
+    </div>
+    <div class="col-2 p-1">
+      <a class="pull-right {{nextUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{nextUfrId? '/ufr-approval-detail/' + nextUfrId : ''}}">
+        next UFR <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+  <div class="row ml-3 mr-3" *ngIf="shorty">
+    <div class="col-7">
+      <div class="row">
+        <div class="col-2 p-1">
+          <label class="mr-1">Program ID: </label>
+        </div>
+        <div class="col-10 p-1">
+          <span class="mr-1 text-truncate">{{shorty.fullname}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 p-1">
+          <label class="mr-1">CCA: </label>
+        </div>
+        <div class="col-10 p-1">
+          <span class="mr-1 text-truncate">{{shorty.coreCapability}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="row">
+        <div class="col-4">
+          <label class="select-label" *ngIf="statusSelected" for="status">Status: </label>
+          <select id="status" [(ngModel)]="statusSelected" class="form-control">
+            <option hidden value="null">Status</option>
+            <option>Valid</option>
+            <option>Invalid</option>
+            <option>Withdrawn</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label class="select-label" *ngIf="prioritySelected" for="status">Priority: </label>
+          <select *ngIf="statusSelected === 'Valid'" [(ngModel)]="prioritySelected" class="form-control">
+            <option hidden value="null">Priority</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label class="select-label" *ngIf="dispositionSelected" for="status">Disposition: </label>
+          <select *ngIf="statusSelected === 'Valid'" [(ngModel)]="dispositionSelected" class="form-control">
+            <option hidden value="null">Disposition</option>
+            <option>Approved</option>
+            <option>Partially approved</option>
+            <option>Deferred to future POM</option>
+            <option>Deferred to YOE</option>
+            <option>Issue Paper</option>
+            <option>Disapproved</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

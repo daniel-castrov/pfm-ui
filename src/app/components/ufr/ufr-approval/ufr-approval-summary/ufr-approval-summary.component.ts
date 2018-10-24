@@ -1,8 +1,8 @@
-import { UserUtils } from '../../../services/user.utils';
+import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
-import { HeaderComponent } from '../../header/header.component';
-import { POMService, Pom, User } from '../../../generated';
-import {AllUfrsComponent} from "../ufr-search/all-ufrs/all-ufrs.component";
+import { HeaderComponent } from '../../../header/header.component';
+import { POMService, Pom, User } from '../../../../generated/index';
+import {AllUfrsComponent} from "../../ufr-search/all-ufrs/all-ufrs.component";
 
 @Component({
   selector: 'ufr-approval-summary',
