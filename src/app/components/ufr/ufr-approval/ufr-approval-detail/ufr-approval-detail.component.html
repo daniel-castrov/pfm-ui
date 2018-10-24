@@ -2,15 +2,15 @@
 <div *ngIf="ufr">
   <div class="row mr-3 ml-3">
     <div class="col-12 p-1">
-      <a class="pull-right" href="#" routerLink="/ufr-search">
-        <i class="fa fa-angle-double-left" aria-hidden="true"></i> Back to UFR Requests
+      <a class="pull-right" href="#" routerLink="/ufr-approval-summary">
+        <i class="fa fa-angle-double-left" aria-hidden="true"></i> Back to UFR Approval Summary
       </a>
     </div>
   </div>
   <div class="row ml-3 mr-3 mb-4">
     <div class="col-2 p-1">
       <a class="pull-left {{previousUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{previousUfrId? '/ufr-approval-detail/' + previousUfrId : ''}}">
-        <i class="fa fa-angle-double-left" aria-hidden="true"></i> previous UFR
+        <i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous UFR
       </a>
     </div>
     <div class="col-8 text-center">
@@ -18,7 +18,7 @@
     </div>
     <div class="col-2 p-1">
       <a class="pull-right {{nextUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{nextUfrId? '/ufr-approval-detail/' + nextUfrId : ''}}">
-        next UFR <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        Next UFR <i class="fa fa-angle-double-right" aria-hidden="true"></i>
       </a>
     </div>
   </div>
