@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OSDGoalPlan } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 
 import * as d3 from 'd3';
@@ -77,8 +77,8 @@ export class GraphsTabComponent implements OnInit {
 
     private createDatasets() {
         var progtype: string = this.exeline.appropriation;
-        var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
-        var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
+        var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
+        var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
         var cutoff = new Date();
         cutoff.setMonth(cutoff.getMonth() + 1);

@@ -31,6 +31,7 @@ tags:
 - name: "Execution"
 - name: "Library"
 - name: "OandE"
+- name: "SpendPlan"
 
 #
 ##############################################################################
@@ -2553,6 +2554,64 @@ paths:
       produces:
       - "application/json"
 # STOP EXECUTION
+##############################################################################
+# START SPENDPLANS
+#
+  /spendplans/execution/{exelineid}:
+    get:
+      operationId: "getByExecutionLineId"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
+      produces:
+      - "application/json"
+    post:
+      operationId: "createSpendPlan"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Spend Plan"
+        required: true
+        schema:
+          $ref: "#/definitions/SpendPlan"
+      tags:
+      - "SpendPlan"
+      summary: "Create a new Spend Plan for this execution line"
+      produces:
+      - "application/json"
+    put:
+      operationId: "UpdateSpendPlan"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Spend Plan"
+        required: true
+        schema:
+          $ref: "#/definitions/SpendPlan"
+      tags:
+      - "SpendPlan"
+      summary: "Updates an existing Spend Plan for this execution line"
+      produces:
+      - "application/json"
+
+# STOP EXECUTION
 #################################################################
 # START LIBRARY
   /library:
@@ -3400,10 +3459,10 @@ definitions:
         type: "string"
       appropriated:
         type: "boolean"
-      spendPlans:
+      goalPlans:
         type: "array"
         items:
-          $ref: "#/definitions/SpendPlan"
+          $ref: "#/definitions/OSDGoalPlan"
   Execution:
     type: "object"
     properties:
@@ -3417,11 +3476,11 @@ definitions:
         type: "string"
       osdObligationGoals:
         type: "object"
-        $ref: "#/definitions/SpendPlan"
+        $ref: "#/definitions/OSDGoalPlan"
       osdExpenditureGoals:
         type: "object"
-        $ref: "#/definitions/SpendPlan"
-  SpendPlan:
+        $ref: "#/definitions/OSDGoalPlan"
+  OSDGoalPlan:
     type: "object"
     properties:
       type:
@@ -3519,5 +3578,35 @@ definitions:
         type: "number"
       monthsToFix:
         type: "number"
+  SpendPlanMonthly:
+    type: "object"
+    properties:
+      obligated:
+        type: "number"
+      labor:
+        type: "number"
+      travel:
+        type: "number"
+      contracts:
+        type: "number"
+      other:
+        type: "number"
+      expensed:
+        type: "number"
+  SpendPlan:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      executionLineId:
+        type: "string"
+      type:
+        enum: [BASELINE, AFTER_APPROPRIATION]
+      explanation:
+        type: "string"
+      monthlies:
+        type: "array"
+        items:
+          $ref: "#/definitions/SpendPlanMonthly"
 ##############################################################################
 # ENDFILE
