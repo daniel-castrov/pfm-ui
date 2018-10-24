@@ -1,22 +1,8 @@
 <div class="row mb-2">
   <div class="col-12">
-      <ag-grid-angular #agGrid class="ag-theme-balham"
-        id="myGrid"
-        [enableSorting]="false"
-        [enableFilter]="false"
-        [gridAutoHeight]="true"
+      <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
         [gridOptions]="agOptions"
         [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        [columnTypes]="columnTypes"
-        [toolPanelSuppressSideButtons]="true"
-        [pagination]="true"
-        [paginationPageSize]="20"
-        [enableColResize]="true"
-        [suppressDragLeaveHidesColumns]="true"
-        [suppressMovableColumns]="true"
-        [suppressPaginationPanel]="true"
         (gridReady)="onGridReady($event)"
         >
       </ag-grid-angular>

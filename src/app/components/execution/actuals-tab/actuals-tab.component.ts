@@ -9,6 +9,7 @@ import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OandEService, O
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 import { Notify } from '../../../utils/Notify';
+import { FyHeaderComponent } from '../fy-header/fy-header.component';
 
 declare const $: any;
 
@@ -43,6 +44,7 @@ export class ActualsTabComponent implements OnInit {
   remediation: string;
   explanation: string;
   fixtime: number = 1;
+  private maxmonths: number;
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -189,7 +191,8 @@ export class ActualsTabComponent implements OnInit {
     }
 
     var agcomps: any = {
-      actualsRenderer: ActualsCellRendererComponent
+      actualsRenderer: ActualsCellRendererComponent,
+      fyheader: FyHeaderComponent
     };
 
     var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 6, 7, 9, 10, 11, 13]);
@@ -203,7 +206,16 @@ export class ActualsTabComponent implements OnInit {
       },
       columnDefs: [
         {
-          headerValueGetter: getHeaderValue,
+          headerGroupComponent: 'fyheader',
+          headerGroupComponentParams: function () {
+            return {
+              firstMonth: my.firstMonth,
+              maxMonths: my.maxmonths,
+              fy: (my._exe ? my.exe.fy : 0),
+              next: function () { my.nextMonth() },
+              prev: function () { my.prevMonth() }
+            };
+          },
           children: [
             {
               headerName: 'Actuals',
@@ -484,16 +496,16 @@ export class ActualsTabComponent implements OnInit {
       var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
-      var max = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
       // get our O&E values in order of month, so we can
       // run right through them
-      var myoandes: OandEMonthly[] = new Array(max);
+      var myoandes: OandEMonthly[] = new Array(this.maxmonths);
       this.oandes.forEach(oande => {
         myoandes[oande.month] = oande;
       });
 
       this.rows.forEach(ar => {
-        for (var i = 0; i < max; i++) {
+        for (var i = 0; i < this.maxmonths; i++) {
           ar.toa.push(0);
           ar.released.push(0);
 
@@ -502,7 +514,7 @@ export class ActualsTabComponent implements OnInit {
         }
       });
 
-      for (var i = 0; i < max; i++) {
+      for (var i = 0; i < this.maxmonths; i++) {
         this.rows[0].values.push(0);
         this.rows[1].values.push(0);
         
@@ -643,7 +655,7 @@ export class ActualsTabComponent implements OnInit {
     this.agOptions.api.redrawRows();
   }
 
-  prevFy() {
+  prevMonth() {
     if (this.firstMonth - 12 >= 0) {
       this.firstMonth -= 12;
       this.agOptions.api.refreshHeader();
@@ -653,7 +665,7 @@ export class ActualsTabComponent implements OnInit {
     this.enableNextPrevButtons();
   }
 
-  nextFy() {
+  nextMonth() {
     if (this.firstMonth + 12 < this.rows[0].values.length) {
       this.firstMonth += 12;
       this.agOptions.api.refreshHeader();

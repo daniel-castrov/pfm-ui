@@ -105,9 +105,7 @@ export class AddSpendPlanComponent implements OnInit {
       enableSorting: false,
       enableFilter: false,
       gridAutoHeight: true,
-      pagination: true,
-      paginationPageSize: 30,
-      rowData: this.rowData,
+      pagination: false,
       suppressPaginationPanel: true,
       toolPanelSuppressSideButtons: true,
       frameworkComponents: { fyheader: FyHeaderComponent },
@@ -142,6 +140,7 @@ export class AddSpendPlanComponent implements OnInit {
             editable: p => (p.node.rowIndex > 1),
             valueGetter: getter,
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -150,6 +149,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             valueSetter: setter,
             editable: p => (p.node.rowIndex > 1),
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -158,12 +158,14 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Jan',
             colId: 3,
             valueGetter: getter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -172,6 +174,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Feb',
             colId: 4,
             valueGetter: getter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -180,6 +183,7 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Mar',
             colId: 5,
             valueGetter: getter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -189,6 +193,7 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 6,
             valueGetter: getter,
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             editable: p => (p.node.rowIndex > 1),
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -198,6 +203,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -206,6 +212,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -214,6 +221,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -221,6 +229,7 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 10,
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -230,6 +239,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
             cellClass: ['ag-cell-white', 'text-right']
           }
         ]

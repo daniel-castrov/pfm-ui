@@ -34,10 +34,10 @@ export class SpendPlansTabComponent implements OnInit {
   private _exeline: ExecutionLine;
   private _exe: Execution;
   private _deltas: Map<Date, ExecutionEvent>;
-  private columnDefs: any[];
   private rowData: PlanRow[];
   private plans: SpendPlan[];
   private plan: SpendPlan;
+  private maxmonths: number;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -98,18 +98,9 @@ export class SpendPlansTabComponent implements OnInit {
   ngOnInit() { }
 
   constructor(private plansvc: SpendPlanService) {
-    this.agOptions = <GridOptions>{
-      enableColResize: true,
-    }
-
     var my: SpendPlansTabComponent = this;
     var getHeaderValue1 = function (p) {
       return (my._exeline ? my.exeline.appropriation : '');
-    }
-
-    var getHeaderValueFy = function (p) {
-      var inty: number = my.firstMonth / 12;
-      return (my._exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
     }
 
     var getter = function (p) {
@@ -117,7 +108,7 @@ export class SpendPlansTabComponent implements OnInit {
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
       if (0 === row || 7 === row || 10 === row) {
         return '';
-      }     
+      }
       return p.node.data.values[col];
     }
 
@@ -126,8 +117,19 @@ export class SpendPlansTabComponent implements OnInit {
       return true;
     }
 
-    this.columnDefs = [
-      {
+    this.agOptions = <GridOptions>{
+      enableColResize: true,
+      enableSorting: false,
+      enableFilter: false,
+      gridAutoHeight: true,
+      pagination: true,
+      paginationPageSize: 30,
+      suppressPaginationPanel: true,
+      toolPanelSuppressSideButtons: true,
+      frameworkComponents: { fyheader: FyHeaderComponent },
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      columnDefs: [{
         headerValueGetter: getHeaderValue1,
         headerName: 'RDTE',
         field: 'rdte',
@@ -159,7 +161,16 @@ export class SpendPlansTabComponent implements OnInit {
         ],
       },
       {
-        headerValueGetter: getHeaderValueFy,
+        headerGroupComponent: 'fyheader',
+        headerGroupComponentParams: function () {
+          return {
+            firstMonth: my.firstMonth,
+            maxMonths: my.maxmonths,
+            fy: (my._exe ? my.exe.fy : 0),
+            next: function () { my.nextMonth() },
+            prev: function () { my.prevMonth() }
+          };
+        },
         children: [
           {
             headerName: 'Oct',
@@ -247,7 +258,8 @@ export class SpendPlansTabComponent implements OnInit {
           }
         ]
       }
-    ];
+      ]
+    }
   }
 
   onPageSizeChanged(event) {
@@ -274,30 +286,31 @@ export class SpendPlansTabComponent implements OnInit {
         return;
       }
 
-      var tmpdata:PlanRow[] = [
-        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ?  'Baseline' : 'After Appropriation' ), values:[] },
-        { label: 'Obligated', values:[] },
-        { label: 'Civilian Labor', values:[] },
-        { label: 'Travel', values:[] },
-        { label: 'Contracts', values:[] },
+      var tmpdata: PlanRow[] = [
+        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation'), values: [] },
+        { label: 'Obligated', values: [] },
+        { label: 'Civilian Labor', values: [] },
+        { label: 'Travel', values: [] },
+        { label: 'Contracts', values: [] },
         { label: 'Other', values: [] },
         { label: 'Expensed', values: [] },
-        { label: 'OSD', values:[] },
-        { label: 'Obligated', values:[] },
-        { label: 'Expensed', values:[] },
-        { label: 'DELTA', values:[] },
-        { label: 'Obligated', values:[] },
-        { label: 'Expensed', values:[] },
+        { label: 'OSD', values: [] },
+        { label: 'Obligated', values: [] },
+        { label: 'Expensed', values: [] },
+        { label: 'DELTA', values: [] },
+        { label: 'Obligated', values: [] },
+        { label: 'Expensed', values: [] },
       ];
 
       var progtype: string = this.exeline.appropriation;
       var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
-      var max = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
 
-      var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline, this.deltas, max, this.exe.fy);
+      var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline,
+        this.deltas, this.maxmonths, this.exe.fy);
 
-      for (var i = 0; i < max; i++){
+      for (var i = 0; i < this.maxmonths; i++) {
         var monthly: SpendPlanMonthly = (i < this.plan.monthlies.length
           ? this.plan.monthlies[i]
           : { obligated: 0, labor: 0, travel: 0, contracts: 0, expensed: 0, other: 0 });
@@ -308,7 +321,7 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[4].values.push(monthly.contracts);
         tmpdata[5].values.push(monthly.other);
         tmpdata[6].values.push(monthly.expensed);
-        
+
         // OSD section
         tmpdata[7].values.push(0);
         tmpdata[8].values.push(toas[i].toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1.0));
@@ -321,6 +334,8 @@ export class SpendPlansTabComponent implements OnInit {
       }
 
       this.rowData = tmpdata;
+
+      this.agOptions.api.refreshHeader();
     }
   }
 
@@ -339,6 +354,16 @@ export class SpendPlansTabComponent implements OnInit {
         this.refreshTableData();
       }
     });
+  }
+
+  nextMonth() {
+    this.firstMonth += 12;
+    this.agOptions.api.redrawRows();
+  }
+
+  prevMonth() {
+    this.firstMonth -= 12;
+    this.agOptions.api.redrawRows();
   }
 }
 

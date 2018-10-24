@@ -27,6 +27,7 @@
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
             [gridOptions]="agOptions"
+            [rowData]="rowData"
             (gridReady)="onGridReady($event)"
             >
           </ag-grid-angular>
