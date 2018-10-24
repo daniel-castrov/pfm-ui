@@ -26,21 +26,7 @@
     <div class="row mb-3">
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
-            [enableSorting]="false"
-            [enableColResize]="true"
-            [enableFilter]="false"
-            [gridAutoHeight]="true"
             [gridOptions]="agOptions"
-            [rowData]="rowData"
-            [columnDefs]="columnDefs"
-            [defaultColDef]="defaultColDef"
-            [columnTypes]="columnTypes"
-            [toolPanelSuppressSideButtons]="true"
-            [pagination]="true"
-            [paginationPageSize]="20"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
-            [suppressPaginationPanel]="true"
             (gridReady)="onGridReady($event)"
             >
           </ag-grid-angular>

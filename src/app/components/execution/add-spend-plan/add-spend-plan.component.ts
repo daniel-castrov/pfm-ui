@@ -9,6 +9,7 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
 import { ExecutionLine, OandEMonthly, Execution, ExecutionEvent, SpendPlan, OSDGoalPlan } from '../../../generated';
 import { SpendPlansTabComponent } from '../spend-plans-tab/spend-plans-tab.component';
 import { validateConfig } from '@angular/router/src/config';
+import { FyHeaderComponent } from '../fy-header/fy-header.component';
 
 @Component({
   selector: 'add-spend-plan',
@@ -73,15 +74,6 @@ export class AddSpendPlanComponent implements OnInit {
   ngOnInit() { }
 
   constructor() {
-    this.agOptions = <GridOptions>{
-      enableColResize: true,
-      enableSorting: true,
-      enableFilter: true,
-      gridAutoHeight: true,
-      pagination: true,
-      paginationPageSize: 30,
-      suppressPaginationPanel: true,
-    }
 
     var my: AddSpendPlanComponent = this;
     var getter = function (p) {
@@ -97,24 +89,31 @@ export class AddSpendPlanComponent implements OnInit {
       p.node.data.values[col] = Number.parseFloat(p.newValue);
 
       my.rowData[1].values[col] = 0;
-      for (var i = 2; i < 6; i++){
+      for (var i = 2; i < 6; i++) {
         my.rowData[1].values[col] += my.rowData[i].values[col];
       }
 
       return true;
-    }
-    
-    var getHeaderValueFy = function (p) {
-      var inty: number = my.firstMonth / 12;
-      return (my._exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
     }
 
     var get2 = function (p) {
       return (my.exeline && my.exeline.appropriated ? 'After Appropriation' : 'Baseline');
     }
 
-    this.columnDefs = [
-      {
+    this.agOptions = <GridOptions>{
+      enableColResize: true,
+      enableSorting: false,
+      enableFilter: false,
+      gridAutoHeight: true,
+      pagination: true,
+      paginationPageSize: 30,
+      rowData: this.rowData,
+      suppressPaginationPanel: true,
+      toolPanelSuppressSideButtons: true,
+      frameworkComponents: { fyheader: FyHeaderComponent },
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      columnDefs: [{
         headerValueGetter: get2,
         maxWidth: 320,
         children: [
@@ -126,7 +125,16 @@ export class AddSpendPlanComponent implements OnInit {
         ],
       },
       {
-        headerValueGetter: getHeaderValueFy,
+        headerGroupComponent: 'fyheader',
+        headerGroupComponentParams: function () {
+          return {
+            firstMonth: my.firstMonth,
+            maxMonths: my.maxmonths,
+            fy: ( my._exe ? my.exe.fy : 0 ),
+            next: function () { my.nextMonth() },
+            prev: function () { my.prevMonth() }
+          };
+        },
         children: [
           {
             headerName: 'Oct',
@@ -225,8 +233,8 @@ export class AddSpendPlanComponent implements OnInit {
             cellClass: ['ag-cell-white', 'text-right']
           }
         ]
-      }
-    ];
+      }]
+    }
   }
 
   onPageSizeChanged(event) {
@@ -268,6 +276,8 @@ export class AddSpendPlanComponent implements OnInit {
         });
       }
       this.rowData = tmpdata;
+
+      this.agOptions.api.refreshHeader();
     }
   }
 
@@ -301,6 +311,16 @@ export class AddSpendPlanComponent implements OnInit {
       });
     }
     return ok;
+  }
+
+  nextMonth() {
+    this.firstMonth += 12;
+    this.agOptions.api.redrawRows();
+  }
+
+  prevMonth() {
+    this.firstMonth -= 12;
+    this.agOptions.api.redrawRows();
   }
 }
 

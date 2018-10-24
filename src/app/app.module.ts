@@ -157,6 +157,7 @@ import {WorksheetService} from "app/generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import {NewProgramService} from "./services/new.program.service";
 import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval-summary/ufr-approval-summary.component";
+import { FyHeaderComponent } from './components/execution/fy-header/fy-header.component';
 
 
 // ROUTES
@@ -325,6 +326,7 @@ const appRoutes: Routes = [
     ExportComponent,
     ImportComponent,
     ActualsCellRendererComponent,
+    FyHeaderComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -338,7 +340,8 @@ const appRoutes: Routes = [
     NameRendererComponent,
     ViewSiblingsRenderer,
     ViewSiblingsRenderer,
-    ActualsCellRendererComponent
+    ActualsCellRendererComponent,
+    FyHeaderComponent
   ],
   imports: [
     AccordionModule.forRoot(),

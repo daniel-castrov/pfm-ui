@@ -9,7 +9,7 @@ import { AddSpendPlanComponent } from '../add-spend-plan/add-spend-plan.componen
 import { Notify } from '../../../utils/Notify';
 import { SpendPlanMonthly } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
-import { UfrStatus } from '../../../generated';
+import { FyHeaderComponent } from '../fy-header/fy-header.component';
 
 @Component({
   selector: 'spend-plans-tab',
