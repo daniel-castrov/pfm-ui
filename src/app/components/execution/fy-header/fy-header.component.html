@@ -1,13 +1,17 @@
-<button [disabled]="!prevOk" (click)="prev()" class="actuals-slider-buttons pull-left">
-    <span>
-        <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-    </span>
-</button>
-
-{{fy|FY}}
-
-<button [disabled]="!nextOk" (click)="next()" class="actuals-slider-buttons pull-right">
-    <span>
-        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-    </span>
-</button>
+<div class="row mb-1">
+  <div class="col-5">
+    <button [disabled]="!prevOk" (click)="prev()" class="actuals-slider-buttons pull-left">
+        <span>
+            <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+        </span>
+    </button>
+  </div>
+  <div class="col-1 text-center">{{fy|FY}}</div>
+  <div class="col-5">
+    <button [disabled]="!nextOk" (click)="next()" class="actuals-slider-buttons pull-right">
+        <span>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </span>
+    </button>
+  </div>
+</div>
