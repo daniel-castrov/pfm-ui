@@ -186,13 +186,15 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Oct',
             colId: 0,
-            valueGetter: getter,  
+            width: 82,
+            valueGetter: getter,
             valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Nov',
             colId: 1,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -200,6 +202,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Dec',
             colId: 2,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -207,6 +210,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Jan',
             colId: 3,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -214,6 +218,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Feb',
             colId: 4,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -221,6 +226,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Mar',
             colId: 5,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -228,6 +234,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Apr',
             colId: 6,
+            width: 80,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -235,6 +242,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'May',
             colId: 7,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -242,6 +250,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Jun',
             colId: 8,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -249,6 +258,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Jul',
             colId: 9,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -256,6 +266,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Aug',
             colId: 10,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -263,6 +274,7 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Sep',
             colId: 11,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -343,7 +355,7 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[11].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
         tmpdata[12].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
 
-        tmpdata.forEach(row => { 
+        tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
         });
       }

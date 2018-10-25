@@ -170,14 +170,16 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             valueSetter: setter,
             valueFormatter: formatter,
+            width: 88,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-editable', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Nov',
             colId: 1,
             valueGetter: getter,
             valueSetter: setter,
+            width: 88,
             cellEditorParams: { useFormatter: true },
             editable: p => (p.node.rowIndex > 1),
             valueFormatter: formatter,
@@ -189,6 +191,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            width: 88,
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -201,6 +204,7 @@ export class AddSpendPlanComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            width: 88,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -211,6 +215,7 @@ export class AddSpendPlanComponent implements OnInit {
             editable: p => (p.node.rowIndex > 1),
             cellEditorParams: { useFormatter: true },
             valueSetter: setter,
+            width: 88,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -220,6 +225,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueFormatter: formatter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            width: 88,
             cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -228,6 +234,7 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 6,
             valueGetter: getter,
             valueSetter: setter,
+            width: 88,
             valueFormatter: formatter,
             editable: p => (p.node.rowIndex > 1),
             cellEditorParams: { useFormatter: true },
@@ -239,6 +246,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            width: 88,
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -249,6 +257,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            width: 88,
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -260,6 +269,7 @@ export class AddSpendPlanComponent implements OnInit {
             editable: p => (p.node.rowIndex > 1),
             cellEditorParams: { useFormatter: true },
             valueSetter: setter,
+            width: 88,
             valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -271,6 +281,7 @@ export class AddSpendPlanComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
             valueSetter: setter,
+            width: 88,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -280,6 +291,7 @@ export class AddSpendPlanComponent implements OnInit {
             editable: p => (p.node.rowIndex > 1),
             cellEditorParams: { useFormatter: true },
             valueSetter: setter,
+            width: 88,
             valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           }
