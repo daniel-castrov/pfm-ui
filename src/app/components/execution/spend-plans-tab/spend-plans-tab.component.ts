@@ -165,6 +165,10 @@ export class SpendPlansTabComponent implements OnInit {
       var row: number = p.node.rowIndex;
       return !(0 === row || 7 === row || 10 === row);
     }
+    var cssbold: Set<number> = new Set<number>([0, 7, 10]);
+    var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
+    var csscenter: Set<number> = new Set<number>([1, 6, 8, 9, 11, 12 ]);
+    var csssum: Set<number> = new Set<number>([7, 10]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -201,6 +205,12 @@ export class SpendPlansTabComponent implements OnInit {
             valueSetter: setPlan,
             maxWidth: 220,
             cellClass: ['ag-cell-white'],
+            cellClassRules: {
+              'text-right': params => cssright.has(params.node.rowIndex),
+              'text-center': params => csscenter.has(params.node.rowIndex),
+              'font-weight-bold': params => cssbold.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           }
         ],
       },
@@ -219,122 +229,170 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Oct',
             colId: 0,
-            valueGetter: getter,  
+            width: 82,
+            valueGetter: getter,
             valueFormatter: formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Nov',
             colId: 1,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Dec',
             colId: 2,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jan',
             colId: 3,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Feb',
             colId: 4,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Mar',
             colId: 5,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Apr',
             colId: 6,
+            width: 80,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'May',
             colId: 7,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jun',
             colId: 8,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jul',
             colId: 9,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Aug',
             colId: 10,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Sep',
             colId: 11,
+            width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
             valueSetter: setter,
             editable: editable,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           }
         ]
       }
@@ -417,7 +475,7 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[11].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
         tmpdata[12].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
 
-        tmpdata.forEach(row => { 
+        tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
         });
       }

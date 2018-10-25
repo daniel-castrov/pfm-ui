@@ -140,7 +140,7 @@ export class ActualsTabComponent implements OnInit {
       return true;
     }
 
-    function isPctInRange(data: ActualsRow, row: number, fymonth: number, cutoff: number[]): boolean {      
+    function isPctInRange(data: ActualsRow, row: number, fymonth: number, cutoff: number[]): boolean {
       if (my.rows && data && (my.isadmin || fymonth <= my.editMonth)) {
         // if we're in a red/yellow/green cell, then the previous row is the "goal" row,
         // and the value we want to check is the one before that ("cumulative")
@@ -222,7 +222,7 @@ export class ActualsTabComponent implements OnInit {
               field: 'label',
               filter: 'agTextColumnFilter',
               cellClass: ['ag-cell-white'],
-              maxWidth: 250,
+              width: 240,
               cellClassRules: {
                 'text-right': params => cssright.has(params.node.rowIndex),
                 'font-weight-bold': params => cssbold.has(params.node.rowIndex),
@@ -241,9 +241,9 @@ export class ActualsTabComponent implements OnInit {
               cellRenderer: 'actualsRenderer',
               valueFormatter: p => formatter(p),
               cellEditorParams: { useFormatter: true },
-              maxWidth: 88,
+              width: 88,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -260,9 +260,9 @@ export class ActualsTabComponent implements OnInit {
               valueSetter: valueSetter,
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
-              maxWidth: 88,
+              width: 88,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -279,9 +279,9 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
-              maxWidth: 88,
+              width: 88,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -298,9 +298,9 @@ export class ActualsTabComponent implements OnInit {
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
               type: 'numericColumn',
-              maxWidth: 88,
+              width: 90,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -316,10 +316,10 @@ export class ActualsTabComponent implements OnInit {
               cellEditorParams: { useFormatter: true },
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
-              maxWidth: 88,
+              width: 88,
               type: 'numericColumn',
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -336,9 +336,9 @@ export class ActualsTabComponent implements OnInit {
               cellRenderer: 'actualsRenderer',
               valueGetter: params => my.valueGetter(params),
               type: 'numericColumn',
-              maxWidth: 80,
+              width: 82,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -355,9 +355,9 @@ export class ActualsTabComponent implements OnInit {
               cellEditorParams: { useFormatter: true },
               type: 'numericColumn',
               valueGetter: params => my.valueGetter(params),
-              maxWidth: 88,
+              width: 88,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -374,9 +374,9 @@ export class ActualsTabComponent implements OnInit {
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
               type: 'numericColumn',
-              maxWidth: 88,
+              width: 88,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -393,9 +393,9 @@ export class ActualsTabComponent implements OnInit {
               type: 'numericColumn',
               valueSetter: valueSetter,
               cellRenderer: 'actualsRenderer',
-              maxWidth: 88,
+              width: 88,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -411,10 +411,10 @@ export class ActualsTabComponent implements OnInit {
               valueGetter: params => my.valueGetter(params),
               cellRenderer: 'actualsRenderer',
               valueSetter: valueSetter,
-              maxWidth: 80,
+              width: 82,
               type: 'numericColumn',
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -429,11 +429,11 @@ export class ActualsTabComponent implements OnInit {
               valueFormatter: p => formatter(p),
               cellEditorParams: { useFormatter: true },
               cellRenderer: 'actualsRenderer',
-              maxWidth: 88,
+              width: 88,
               type: 'numericColumn',
               valueSetter: valueSetter,
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -448,11 +448,11 @@ export class ActualsTabComponent implements OnInit {
               valueGetter: params => my.valueGetter(params),
               valueFormatter: p => formatter(p),
               cellEditorParams: { useFormatter: true },
-              maxWidth: 88,
+              width: 88,
               valueSetter: valueSetter,
               type: 'numericColumn',
               cellClassRules: {
-                'ag-cell-editable': editsok,
+                'ag-cell-edit': editsok,
                 'ag-cell-light-green': p => (!editsok(p)),
                 'ag-cell-yellow': isyellow,
                 'ag-cell-red': isred,
@@ -517,7 +517,7 @@ export class ActualsTabComponent implements OnInit {
       for (var i = 0; i < this.maxmonths; i++) {
         this.rows[0].values.push(0);
         this.rows[1].values.push(0);
-        
+
         this.rows[2].values.push(myoandes[i] ? myoandes[i].committed : 0);
         this.rows[3].values.push(0);
 
@@ -681,7 +681,7 @@ export class ActualsTabComponent implements OnInit {
 
   monthlies() : Observable<OandEMonthly[]> {
     var my: ActualsTabComponent = this;
-    return new Observable<OandEMonthly[]>(obs => { 
+    return new Observable<OandEMonthly[]>(obs => {
       if (this.isadmin) {
         var data: OandEMonthly[] = [];
 
@@ -690,7 +690,7 @@ export class ActualsTabComponent implements OnInit {
         for (var i = 0; i < this.rows[0].values.length; i++) {
           var okToAdd: boolean = false;
 
-          rowsToCheck.forEach(val => { 
+          rowsToCheck.forEach(val => {
             if (my.rows[val].values[i] && 0 !== my.rows[val].values[i]) {
               okToAdd = true;
             }
@@ -746,7 +746,7 @@ export class ActualsTabComponent implements OnInit {
   }
 
   save() {
-    // the actuals tab might have to get more info from the user, so 
+    // the actuals tab might have to get more info from the user, so
     // this function doesn't return immediately.
     var obs = this.monthlies().subscribe(data => {
       if (this.isadmin) {
