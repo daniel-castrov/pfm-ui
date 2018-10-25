@@ -156,8 +156,9 @@ import {NameRendererComponent} from "./components/programming/pom-worksheet/work
 import {WorksheetService} from "app/generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import {NewProgramService} from "./services/new.program.service";
-import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval-summary/ufr-approval-summary.component";
+import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval/ufr-approval-summary/ufr-approval-summary.component";
 import { FyHeaderComponent } from './components/execution/fy-header/fy-header.component';
+import {UfrApprovalDetailComponent} from "./components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component";
 
 
 // ROUTES
@@ -207,6 +208,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent},
+  {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
@@ -287,6 +289,7 @@ const appRoutes: Routes = [
     UserListComponent,
     UfrSearchComponent,
     UfrApprovalSummaryComponent,
+    UfrApprovalDetailComponent,
     UfrViewComponent,
     UfrProgramComponent,
     UfrFundsComponent,
