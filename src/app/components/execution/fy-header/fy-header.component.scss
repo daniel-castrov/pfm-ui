@@ -14,12 +14,12 @@ $yellow: #fec001;
 
 .actuals-slider-buttons {
 
- background-color: $white;
+ background-color: $primary-color;
  padding: 2px;
  border: none;
 
   .fa {
-    color: $primary-color;
+    color: $white;
     font-size: 22px;
     font-weight: bold;
     cursor: pointer;
