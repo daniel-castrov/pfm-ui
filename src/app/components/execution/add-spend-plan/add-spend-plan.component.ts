@@ -132,7 +132,7 @@ export class AddSpendPlanComponent implements OnInit {
     var cssright: Set<number> = new Set<number>([2, 4, 6, 7, 9, 10, 11, 13]);
     var csscenter: Set<number> = new Set<number>([1, 3, 5, 9]);
     var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6, 7]);
-    var csswhite: Set<number> = new Set<number>([0, 1]);
+    var csswhite: Set<number> = new Set<number>([8, 9]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,

@@ -137,6 +137,9 @@ export class SpendPlansTabComponent implements OnInit {
     var cssright: Set<number> = new Set<number>([2, 4, 6, 7, 9, 10, 11, 12, 13]);
     var csscenter: Set<number> = new Set<number>([1, 3, 5, 8, 11]);
     var csssum: Set<number> = new Set<number>([7, 10]);
+    var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6, 7]);
+    var csswhite: Set<number> = new Set<number>([0, 1, 2, 3, 4, 5, 6]);
+    var csslightgreen: Set<number> = new Set<number>([8, 9]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -200,9 +203,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -211,9 +216,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -222,9 +229,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -233,9 +242,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -244,9 +255,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -255,9 +268,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -266,9 +281,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 80,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -277,9 +294,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -288,9 +307,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -299,9 +320,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -310,9 +333,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           },
           {
@@ -321,9 +346,11 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right'],
+            cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex)
             }
           }
         ]
