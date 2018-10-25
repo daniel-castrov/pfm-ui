@@ -83,4 +83,68 @@
       </div>
     </div>
   </div>
+  <div class="row ml-3 mr-3">
+    <div class="col-12 p-0">
+      <ag-grid-angular #agGridCurrentFunding
+                       class="ag-theme-balham pr-funds-tab group-header-white"
+                       [toolPanelSuppressPivotMode]="true"
+                       [toolPanelSuppressRowGroups]="true"
+                       [toolPanelSuppressValues]="true"
+                       [toolPanelSuppressPivots]="true"
+                       [toolPanelSuppressColumnFilter]="true"
+                       [toolPanelSuppressColumnSelectAll]="true"
+                       [suppressMovableColumns]="true"
+                       [rowData]="currentFunding"
+                       (gridReady)="onGridReady($event)"
+                       (rowDataChanged)="sizeColumnsToFit($event)"
+                       (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                       (columnVisible)="sizeColumnsToFit($event)"
+                       [gridAutoHeight]="true">
+      </ag-grid-angular>
+      <ag-grid-angular #agGridProposedChanges
+                       id="agGridProposedChanges"
+                       class="ag-theme-balham pr-funds-tab group-header-white separator"
+                       [gridAutoHeight]="true"
+                       [toolPanelSuppressPivotMode]="true"
+                       [toolPanelSuppressRowGroups]="true"
+                       [toolPanelSuppressValues]="true"
+                       [toolPanelSuppressPivots]="true"
+                       [toolPanelSuppressColumnFilter]="true"
+                       [toolPanelSuppressColumnSelectAll]="true"
+                       [suppressMovableColumns]="true"
+                       [suppressRowTransform]="true"
+                       [showToolPanel]="false"
+                       [enableSorting]="false"
+                       [enableFilter]="false"
+                       [singleClickEdit]="true"
+                       [stopEditingWhenGridLosesFocus]="true"
+                       [rowData]="proposedChange"
+                       (gridReady)="onGridReady($event)"
+                       (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                       (columnVisible)="sizeColumnsToFit($event)"
+                       (rowDataChanged)="sizeColumnsToFit($event)"
+                       headerHeight="0">
+      </ag-grid-angular>
+      <ag-grid-angular
+        #agGridRevisedPrograms
+        id="agGridRevisedPrograms"
+        class="ag-theme-balham pr-funds-tab group-header-white separator"
+        [rowData]="revisedPrograms"
+        [suppressRowTransform]="true"
+        [suppressMovableColumns]="true"
+        [toolPanelSuppressPivotMode]="true"
+        [toolPanelSuppressRowGroups]="true"
+        [toolPanelSuppressValues]="true"
+        [toolPanelSuppressPivots]="true"
+        [toolPanelSuppressColumnFilter]="true"
+        [toolPanelSuppressColumnSelectAll]="true"
+        (gridReady)="onGridReady($event)"
+        (rowDataChanged)="sizeColumnsToFit($event)"
+        (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+        (columnVisible)="sizeColumnsToFit($event)"
+        [gridAutoHeight]="true"
+        headerHeight="0">
+      </ag-grid-angular>
+    </div>
+  </div>
 </div>
