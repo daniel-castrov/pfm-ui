@@ -171,7 +171,7 @@ export class AddSpendPlanComponent implements OnInit {
             valueSetter: setter,
             valueFormatter: formatter,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-editable', 'text-right']
           },
           {
             headerName: 'Nov',
