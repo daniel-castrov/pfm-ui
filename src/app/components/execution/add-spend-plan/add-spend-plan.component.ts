@@ -131,6 +131,8 @@ export class AddSpendPlanComponent implements OnInit {
     var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 7, 9, 10, 11, 13]);
     var cssright: Set<number> = new Set<number>([2, 4, 6, 7, 9, 10, 11, 13]);
     var csscenter: Set<number> = new Set<number>([1, 3, 5, 9]);
+    var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6, 7]);
+    var csswhite: Set<number> = new Set<number>([0, 1]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -180,7 +182,11 @@ export class AddSpendPlanComponent implements OnInit {
             valueFormatter: formatter,
             width: 88,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Nov',
@@ -191,7 +197,11 @@ export class AddSpendPlanComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             editable: p => (p.node.rowIndex > 1),
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Dec',
@@ -202,7 +212,11 @@ export class AddSpendPlanComponent implements OnInit {
             width: 88,
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jan',
@@ -213,7 +227,11 @@ export class AddSpendPlanComponent implements OnInit {
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             width: 88,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Feb',
@@ -224,7 +242,11 @@ export class AddSpendPlanComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             valueSetter: setter,
             width: 88,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Mar',
@@ -235,7 +257,11 @@ export class AddSpendPlanComponent implements OnInit {
             valueSetter: setter,
             width: 88,
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Apr',
@@ -246,7 +272,11 @@ export class AddSpendPlanComponent implements OnInit {
             valueFormatter: formatter,
             editable: p => (p.node.rowIndex > 1),
             cellEditorParams: { useFormatter: true },
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'May',
@@ -257,7 +287,11 @@ export class AddSpendPlanComponent implements OnInit {
             width: 88,
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jun',
@@ -268,7 +302,11 @@ export class AddSpendPlanComponent implements OnInit {
             width: 88,
             cellEditorParams: { useFormatter: true },
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jul',
@@ -279,7 +317,11 @@ export class AddSpendPlanComponent implements OnInit {
             valueSetter: setter,
             width: 88,
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Aug',
@@ -290,7 +332,11 @@ export class AddSpendPlanComponent implements OnInit {
             valueFormatter: formatter,
             valueSetter: setter,
             width: 88,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Sep',
@@ -301,7 +347,11 @@ export class AddSpendPlanComponent implements OnInit {
             valueSetter: setter,
             width: 88,
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex)
+            }
           }
         ]
       }]
