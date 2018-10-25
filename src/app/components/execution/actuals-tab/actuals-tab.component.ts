@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { GridOptions, CellEditingStartedEvent, CellEditingStoppedEvent } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 
-import { OandEMonthly, ExecutionLine, Execution, SpendPlan, ExecutionEvent, OandEService } from '../../../generated';
+import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OandEService, OSDGoalPlan } from '../../../generated';
 import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 import { Notify } from '../../../utils/Notify';
@@ -481,8 +481,8 @@ export class ActualsTabComponent implements OnInit {
     if (this._exeline && this._exe && this._oandes && this._deltas) {
       // get our goals information
       var progtype: string = this.exeline.appropriation;
-      var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
-      var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
+      var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
+      var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
       var max = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
       // get our O&E values in order of month, so we can
@@ -539,8 +539,8 @@ export class ActualsTabComponent implements OnInit {
     console.log('recalculating table data');
     // get our goals information
     var progtype: string = this.exeline.appropriation;
-    var ogoals: SpendPlan = this.exe.osdObligationGoals[progtype];
-    var egoals: SpendPlan = this.exe.osdExpenditureGoals[progtype];
+    var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
+    var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
     var committed: number = 0;
     var obligated: number = 0;

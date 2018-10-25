@@ -128,7 +128,7 @@ import { RbacPermissionDirective } from './directives/rbac.permission.directive'
 import { MapAsListPipe } from './pipes/map-as-list.pipe';
 import { ProgramRequestPageModeService } from './components/programming/program-request/page-mode.service';
 import { SetEppComponent } from './components/programming/set-epp/set-epp.component';
-import { EppService, LibraryService, UserService, OandEService} from './generated';
+import { EppService, LibraryService, UserService, OandEService, SpendPlanService} from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
 import { FileUploadComponent } from "./components/file-upload/file-upload.component";
@@ -156,7 +156,8 @@ import {NameRendererComponent} from "./components/programming/pom-worksheet/work
 import {WorksheetService} from "app/generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import {NewProgramService} from "./services/new.program.service";
-import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval-summary/ufr-approval-summary.component";
+import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval/ufr-approval-summary/ufr-approval-summary.component";
+import {UfrApprovalDetailComponent} from "./components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component";
 
 
 // ROUTES
@@ -206,6 +207,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent},
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent},
+  {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
@@ -286,6 +288,7 @@ const appRoutes: Routes = [
     UserListComponent,
     UfrSearchComponent,
     UfrApprovalSummaryComponent,
+    UfrApprovalDetailComponent,
     UfrViewComponent,
     UfrProgramComponent,
     UfrFundsComponent,
@@ -396,6 +399,7 @@ const appRoutes: Routes = [
     LibraryService,
     StateService,
     NewProgramService,
+    SpendPlanService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],
