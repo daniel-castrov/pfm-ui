@@ -114,7 +114,8 @@ export class SpendPlansTabComponent implements OnInit {
     }
 
     var setPlan = function (p) {
-      my.plan = my.plans.filter(sp => (sp.type === p.newValue))[0];
+      my.plan = p.newValue;
+      my.refreshTableData();
       return true;
     }
 
@@ -155,23 +156,18 @@ export class SpendPlansTabComponent implements OnInit {
             headerName: 'Spend Plans',
             editable: p => (0 === p.node.rowIndex && my.plans && my.plans.length > 1),
             field: 'label',
-            cellEditor: 'agRichSelectEditor',
-            cellEditorParams: {
-              values: ['Baseline', 'After Appropriation']
+            cellEditor: 'agRichSelectCellEditor',
+            cellEditorParams: function (p) {
+              return {
+                values: my.plans,
+                formatValue: p => (p && p.type
+                  ? (SpendPlan.TypeEnum.BASELINE === p.type ? 'Baseline' : 'After Appropriation')
+                  : p)
+              };
             },
             valueSetter: setPlan,
             maxWidth: 220,
             cellClass: ['ag-cell-white'],
-            // colSpan: function(params) {
-            //    var spendplans = params.data.spendplans;
-            //    if (spendplans === "Baseline") {
-            //      return 2;
-            //    } else if (spendplans === "Obligated") {
-            //      return 4;
-            //    } else {
-            //      return 1;
-            //   }
-            // }
           }
         ],
       },

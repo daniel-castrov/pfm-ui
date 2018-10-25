@@ -37,7 +37,7 @@
     <div class="row">
       <div class="col-12">
         <fieldset>
-          <legend>Add Spend Plan</legend>
+          <legend>Add {{_exeline?.appropriated ? 'After Appropriation' : 'Baseline' }} Spend Plan</legend>
           <div class="row">
             <div class="col-11">
               <add-spend-plan
@@ -57,7 +57,7 @@
                 <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onTogglePct()">
                   <div class="handle"></div>
                 </button>
-                <label class="text-center">Import Acutuals</label>
+                <label class="text-center">Import Actuals</label>
               </div>
             </div>
           </div>
