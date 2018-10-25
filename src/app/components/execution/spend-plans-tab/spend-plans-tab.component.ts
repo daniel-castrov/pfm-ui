@@ -39,6 +39,7 @@ export class SpendPlansTabComponent implements OnInit {
   private plan: SpendPlan;
   private maxmonths: number;
   private showPercentages: boolean = true;
+  private submittable: boolean = false;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -126,11 +127,43 @@ export class SpendPlansTabComponent implements OnInit {
       if (my.showPercentages) {
         var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
         var toa: number = p.data.toas[col];
-        return ( 100 * p.value / toa).toFixed(2);
+        return (100 * p.value / toa).toFixed(2);
       }
       else {
         return p.value.toFixed(2);
       }
+    }
+
+    var setter = function (p) {
+      var row: number = p.node.rowIndex;
+      var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+
+      var value: number = Number.parseFloat(p.newValue);
+      if (my.showPercentages) {
+        value *= p.data.toas[col] / 100;
+      }
+
+      my.rowData[row].values[col] = value;
+      p.node.data.values[col] = value;
+
+      my.rowData[1].values[col] = 0;
+      for (var i = 1; i < 5; i++) {
+        my.rowData[1].values[col] += my.rowData[i].values[col];
+      }
+
+      my.rowData[11].values[col] = my.rowData[8].values[col] - my.rowData[1].values[col];
+      my.rowData[12].values[col] = my.rowData[9].values[col] - my.rowData[6].values[col];
+
+      return true;
+    }
+
+    var editable = function (p): boolean {
+      if (!my.submittable) {
+        return false;
+      }
+
+      var row: number = p.node.rowIndex;
+      return !(0 === row || 7 === row || 10 === row);
     }
 
     this.agOptions = <GridOptions>{
@@ -153,7 +186,7 @@ export class SpendPlansTabComponent implements OnInit {
         maxWidth: 220,
         children: [
           {
-            headerName: 'Spend Plans',
+            headerName: 'Category',
             editable: p => (0 === p.node.rowIndex && my.plans && my.plans.length > 1),
             field: 'label',
             cellEditor: 'agRichSelectCellEditor',
@@ -188,6 +221,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 0,
             valueGetter: getter,  
             valueFormatter: formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -195,6 +231,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 1,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -202,6 +241,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 2,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -209,6 +251,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 3,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -216,6 +261,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 4,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -223,6 +271,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 5,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -230,6 +281,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 6,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -237,6 +291,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 7,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -244,6 +301,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 8,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -251,6 +311,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 9,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -258,6 +321,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 10,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -265,6 +331,9 @@ export class SpendPlansTabComponent implements OnInit {
             colId: 11,
             valueGetter: getter,
             valueFormatter:formatter,
+            valueSetter: setter,
+            editable: editable,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           }
         ]
@@ -292,13 +361,18 @@ export class SpendPlansTabComponent implements OnInit {
 
   refreshTableData() {
     if (this._exe && this._exeline && this._oandes && this._deltas) {
-      if (!this.plan) {
-        this.rowData = [];
-        return;
-      }
+      // if we already have two plans, we can't submit any more
+      // also, if we have one plan, but haven't been appropriated yet
+      this.submittable = !(this.plans.length === 2
+        || (1 === this.plans.length && !this.exeline.appropriated));
 
+      var label: string = (this.exeline.appropriated ? 'After Appropriation' : 'Baseline');
+      if (this.plan) {
+        label = (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation');
+      }
+      
       var tmpdata: PlanRow[] = [
-        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation'), values: [], toas:[] },
+        { label: label, values: [], toas:[] },
         { label: 'Obligated', values: [], toas: [] },
         { label: 'Civilian Labor', values: [], toas: [] },
         { label: 'Travel', values: [], toas: [] },
@@ -322,7 +396,7 @@ export class SpendPlansTabComponent implements OnInit {
         this.deltas, this.maxmonths, this.exe.fy);
 
       for (var i = 0; i < this.maxmonths; i++) {
-        var monthly: SpendPlanMonthly = (i < this.plan.monthlies.length
+        var monthly: SpendPlanMonthly = (this.plan && this.plan.monthlies && i < this.plan.monthlies.length
           ? this.plan.monthlies[i]
           : { obligated: 0, labor: 0, travel: 0, contracts: 0, expensed: 0, other: 0 });
 
@@ -360,7 +434,27 @@ export class SpendPlansTabComponent implements OnInit {
   }
 
   addplan() {
-    var newplan = this.addarea.getSpendPlan();
+    var newplan: SpendPlan = {
+      monthlies: []
+    };
+
+    for (var i = 0; i < this.maxmonths; i++) {
+      newplan.monthlies.push({
+        labor: this.rowData[2].values[i],
+        travel: this.rowData[3].values[i],
+        contracts: this.rowData[4].values[i],
+        other: this.rowData[5].values[i],
+        expensed: this.rowData[6].values[i]
+      });
+    }
+
+    if ( !this.plans || 0 === this.plans.length) {
+      newplan.type = SpendPlan.TypeEnum.BASELINE;
+    }
+    else if (this.exeline.appropriated) {
+      newplan.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
+    }
+
     console.log(newplan);
     this.plansvc.createSpendPlan(this.exeline.id, newplan).subscribe(d => {
       if (d.error) {

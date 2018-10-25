@@ -3,7 +3,7 @@
     <div class="row mb-2">
       <div class="col-12">
         <div class="pull-right program-controls mb-2">
-          <button class="btn btn-primary" (click)="save('SUBMITTED')">Submit</button>
+          <button class="btn btn-primary" (click)="addplan()" [disabled]="!submittable">Submit</button>
         </div>
       </div>
     </div>
@@ -24,17 +24,25 @@
       </div>
     </div>
     <div class="row mb-3">
+      <div *ngIf="_exeline?.appropriated">
+        <span *ngIf="submittable">Create After Appropriation Spend Plan</span>
+        <span *ngIf="!submittable">After Appropriation Spend Plan</span>
+      </div>
+      <div *ngIf="!_exeline?.appropriated">
+        <span *ngIf="submittable">Create Baseline Spend Plan</span>
+        <span *ngIf="!submittable">Baseline Spend Plan</span>      
+      </div>
+
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
             [gridOptions]="agOptions"
             [rowData]="rowData"
             (gridReady)="onGridReady($event)"
-            >
+          >
           </ag-grid-angular>
-          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
       </div>
     </div>
-    <div class="row">
+    <!--div class="row">
       <div class="col-12">
         <fieldset>
           <legend>Add {{_exeline?.appropriated ? 'After Appropriation' : 'Baseline' }} Spend Plan</legend>
@@ -63,6 +71,6 @@
           </div>
         </fieldset>
       </div>
-    </div>
+    </div-->
   </div>
 </div>
