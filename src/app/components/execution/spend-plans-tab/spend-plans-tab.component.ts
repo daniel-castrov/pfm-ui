@@ -133,9 +133,9 @@ export class SpendPlansTabComponent implements OnInit {
       }
     }
 
-    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 7, 8, 10, 11, 13]);
-    var cssright: Set<number> = new Set<number>([2, 4, 6, 7, 9, 10, 11, 12, 13]);
-    var csscenter: Set<number> = new Set<number>([1, 3, 5, 8, 11]);
+    var cssbold: Set<number> = new Set<number>([0, 7, 10]);
+    var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
+    var csscenter: Set<number> = new Set<number>([1, 6, 8, 9, 11, 12 ]);
     var csssum: Set<number> = new Set<number>([7, 10]);
 
     this.agOptions = <GridOptions>{
