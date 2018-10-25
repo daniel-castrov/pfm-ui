@@ -133,9 +133,10 @@ export class SpendPlansTabComponent implements OnInit {
       }
     }
 
-    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 6, 7, 9, 10, 11, 13]);
-    var cssright: Set<number> = new Set<number>([3, 5, 6, 7, 9, 10, 11, 13]);
-    var csscenter: Set<number> = new Set<number>([1, 8]);
+    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 7, 8, 10, 11, 13]);
+    var cssright: Set<number> = new Set<number>([2, 4, 6, 7, 9, 10, 11, 12, 13]);
+    var csscenter: Set<number> = new Set<number>([1, 3, 5, 8, 11]);
+    var csssum: Set<number> = new Set<number>([7, 10]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -175,7 +176,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'text-right': params => cssright.has(params.node.rowIndex),
               'text-center': params => csscenter.has(params.node.rowIndex),
-              'font-weight-bold': params => cssbold.has(params.node.rowIndex)
+              'font-weight-bold': params => cssbold.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
             }
           }
         ],
@@ -198,7 +200,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter: formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Nov',
@@ -206,7 +211,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Dec',
@@ -214,7 +222,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jan',
@@ -222,7 +233,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Feb',
@@ -230,7 +244,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Mar',
@@ -238,7 +255,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Apr',
@@ -246,7 +266,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 80,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'May',
@@ -254,7 +277,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jun',
@@ -262,7 +288,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jul',
@@ -270,7 +299,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Aug',
@@ -278,7 +310,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Sep',
@@ -286,7 +321,10 @@ export class SpendPlansTabComponent implements OnInit {
             width: 82,
             valueGetter: getter,
             valueFormatter:formatter,
-            cellClass: ['ag-cell-white', 'text-right']
+            cellClass: ['ag-cell-white', 'text-right'],
+            cellClassRules: {
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           }
         ]
       }

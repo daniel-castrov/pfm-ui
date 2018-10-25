@@ -128,9 +128,9 @@ export class AddSpendPlanComponent implements OnInit {
         return p.value.toFixed(2);
       }
     }
-    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 6, 7, 9, 10, 11, 13]);
-    var cssright: Set<number> = new Set<number>([3, 5, 6, 7, 9, 10, 11, 13]);
-    var csscenter: Set<number> = new Set<number>([2, 9]);
+    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 7, 9, 10, 11, 13]);
+    var cssright: Set<number> = new Set<number>([2, 4, 6, 7, 9, 10, 11, 13]);
+    var csscenter: Set<number> = new Set<number>([1, 3, 5, 9]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
