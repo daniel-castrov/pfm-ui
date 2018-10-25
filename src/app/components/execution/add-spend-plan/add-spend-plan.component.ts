@@ -128,6 +128,9 @@ export class AddSpendPlanComponent implements OnInit {
         return p.value.toFixed(2);
       }
     }
+    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 6, 7, 9, 10, 11, 13]);
+    var cssright: Set<number> = new Set<number>([3, 5, 6, 7, 9, 10, 11, 13]);
+    var csscenter: Set<number> = new Set<number>([2, 9]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -147,7 +150,12 @@ export class AddSpendPlanComponent implements OnInit {
           {
             headerName: 'Spend Plans',
             field: 'label',
-            cellClass: ['ag-cell-white']
+            cellClass: ['ag-cell-white'],
+            cellClassRules: {
+              'text-right': params => cssright.has(params.node.rowIndex),
+              'text-center': params => csscenter.has(params.node.rowIndex),
+              'font-weight-bold': params => cssbold.has(params.node.rowIndex)
+            }
           },
         ],
       },

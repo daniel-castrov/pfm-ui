@@ -133,6 +133,10 @@ export class SpendPlansTabComponent implements OnInit {
       }
     }
 
+    var cssbold: Set<number> = new Set<number>([0, 1, 3, 5, 6, 7, 9, 10, 11, 13]);
+    var cssright: Set<number> = new Set<number>([3, 5, 6, 7, 9, 10, 11, 13]);
+    var csscenter: Set<number> = new Set<number>([1, 8]);
+
     this.agOptions = <GridOptions>{
       enableColResize: true,
       enableSorting: false,
@@ -168,6 +172,11 @@ export class SpendPlansTabComponent implements OnInit {
             valueSetter: setPlan,
             maxWidth: 220,
             cellClass: ['ag-cell-white'],
+            cellClassRules: {
+              'text-right': params => cssright.has(params.node.rowIndex),
+              'text-center': params => csscenter.has(params.node.rowIndex),
+              'font-weight-bold': params => cssbold.has(params.node.rowIndex)
+            }
           }
         ],
       },
