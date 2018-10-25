@@ -121,7 +121,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     } else {
       if(this.pr.id) {
         this.pr.state = state;
-        //this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
         let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise()); 
         if (data.error) {
           Notify.error('Program request failed to save.\n' + data.error);
