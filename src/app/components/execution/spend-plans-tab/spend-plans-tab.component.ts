@@ -38,6 +38,7 @@ export class SpendPlansTabComponent implements OnInit {
   private plans: SpendPlan[];
   private plan: SpendPlan;
   private maxmonths: number;
+  private showPercentages: boolean = true;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -117,6 +118,20 @@ export class SpendPlansTabComponent implements OnInit {
       return true;
     }
 
+    var formatter = function (p) {
+      if ('' === p.value) {
+        return '';
+      }
+      if (my.showPercentages) {
+        var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+        var toa: number = p.data.toas[col];
+        return ( 100 * p.value / toa).toFixed(2);
+      }
+      else {
+        return p.value.toFixed(2);
+      }
+    }
+
     this.agOptions = <GridOptions>{
       enableColResize: true,
       enableSorting: false,
@@ -175,85 +190,85 @@ export class SpendPlansTabComponent implements OnInit {
           {
             headerName: 'Oct',
             colId: 0,
-            valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueGetter: getter,  
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Nov',
             colId: 1,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Dec',
             colId: 2,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Jan',
             colId: 3,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Feb',
             colId: 4,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Mar',
             colId: 5,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Apr',
             colId: 6,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'May',
             colId: 7,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Jun',
             colId: 8,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Jul',
             colId: 9,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Aug',
             colId: 10,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Sep',
             colId: 11,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter:formatter,
             cellClass: ['ag-cell-white', 'text-right']
           }
         ]
@@ -287,19 +302,19 @@ export class SpendPlansTabComponent implements OnInit {
       }
 
       var tmpdata: PlanRow[] = [
-        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation'), values: [] },
-        { label: 'Obligated', values: [] },
-        { label: 'Civilian Labor', values: [] },
-        { label: 'Travel', values: [] },
-        { label: 'Contracts', values: [] },
-        { label: 'Other', values: [] },
-        { label: 'Expensed', values: [] },
-        { label: 'OSD', values: [] },
-        { label: 'Obligated', values: [] },
-        { label: 'Expensed', values: [] },
-        { label: 'DELTA', values: [] },
-        { label: 'Obligated', values: [] },
-        { label: 'Expensed', values: [] },
+        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation'), values: [], toas:[] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Civilian Labor', values: [], toas: [] },
+        { label: 'Travel', values: [], toas: [] },
+        { label: 'Contracts', values: [], toas: [] },
+        { label: 'Other', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
+        { label: 'OSD', values: [], toas: [] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
+        { label: 'DELTA', values: [], toas: [] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
       ];
 
       var progtype: string = this.exeline.appropriation;
@@ -331,12 +346,21 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[10].values.push(0);
         tmpdata[11].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
         tmpdata[12].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
+
+        tmpdata.forEach(row => { 
+          row.toas.push(toas[i].toa);
+        });
       }
 
       this.rowData = tmpdata;
 
       this.agOptions.api.refreshHeader();
     }
+  }
+
+  onTogglePct() {
+    this.showPercentages = !this.showPercentages;
+    this.agOptions.api.redrawRows();
   }
 
   addplan() {
@@ -369,5 +393,6 @@ export class SpendPlansTabComponent implements OnInit {
 
 interface PlanRow {
   label: string,
+  toas: number[],
   values: number[];
 }

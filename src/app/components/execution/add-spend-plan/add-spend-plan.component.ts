@@ -10,6 +10,7 @@ import { ExecutionLine, OandEMonthly, Execution, ExecutionEvent, SpendPlan, OSDG
 import { SpendPlansTabComponent } from '../spend-plans-tab/spend-plans-tab.component';
 import { validateConfig } from '@angular/router/src/config';
 import { FyHeaderComponent } from '../fy-header/fy-header.component';
+import { ToaAndReleased, OandETools } from '../model/oande-tools';
 
 @Component({
   selector: 'add-spend-plan',
@@ -29,6 +30,14 @@ export class AddSpendPlanComponent implements OnInit {
   private columnDefs: any[];
   private rowData: DataRow[];
   private maxmonths: number;
+  private _showpercentages: boolean = true;
+
+  @Input() set showPercentages(perc: boolean) {
+    this._showpercentages = perc;
+    if (this.agOptions.api) {
+      this.agOptions.api.redrawRows();
+    }
+  }
 
   @Input() set exeline(e: ExecutionLine) {
     this._exeline = e;
@@ -85,8 +94,14 @@ export class AddSpendPlanComponent implements OnInit {
     var setter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-      my.rowData[row].values[col] = Number.parseFloat(p.newValue);
-      p.node.data.values[col] = Number.parseFloat(p.newValue);
+
+      var value: number = Number.parseFloat(p.newValue);
+      if (my._showpercentages) {
+        value *= p.data.toas[col] / 100;
+      }
+
+      my.rowData[row].values[col] = value;
+      p.node.data.values[col] = value;
 
       my.rowData[1].values[col] = 0;
       for (var i = 2; i < 6; i++) {
@@ -98,6 +113,20 @@ export class AddSpendPlanComponent implements OnInit {
 
     var get2 = function (p) {
       return (my.exeline && my.exeline.appropriated ? 'After Appropriation' : 'Baseline');
+    }
+
+    var formatter = function (p) {
+      if ('' === p.value) {
+        return '';
+      }
+      if (my._showpercentages) {
+        var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+        var toa: number = p.data.toas[col];
+        return (100 * p.value / toa).toFixed(2);
+      }
+      else {
+        return p.value.toFixed(2);
+      }
     }
 
     this.agOptions = <GridOptions>{
@@ -128,7 +157,7 @@ export class AddSpendPlanComponent implements OnInit {
           return {
             firstMonth: my.firstMonth,
             maxMonths: my.maxmonths,
-            fy: ( my._exe ? my.exe.fy : 0 ),
+            fy: (my._exe ? my.exe.fy : 0),
             next: function () { my.nextMonth() },
             prev: function () { my.prevMonth() }
           };
@@ -140,7 +169,8 @@ export class AddSpendPlanComponent implements OnInit {
             editable: p => (p.node.rowIndex > 1),
             valueGetter: getter,
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -148,8 +178,9 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 1,
             valueGetter: getter,
             valueSetter: setter,
+            cellEditorParams: { useFormatter: true },
             editable: p => (p.node.rowIndex > 1),
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -158,14 +189,16 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            cellEditorParams: { useFormatter: true },
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
             headerName: 'Jan',
             colId: 3,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
+            cellEditorParams: { useFormatter: true },
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
@@ -174,8 +207,9 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Feb',
             colId: 4,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
             editable: p => (p.node.rowIndex > 1),
+            cellEditorParams: { useFormatter: true },
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -183,9 +217,10 @@ export class AddSpendPlanComponent implements OnInit {
             headerName: 'Mar',
             colId: 5,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -193,8 +228,9 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 6,
             valueGetter: getter,
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
             editable: p => (p.node.rowIndex > 1),
+            cellEditorParams: { useFormatter: true },
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -203,7 +239,8 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            cellEditorParams: { useFormatter: true },
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -212,7 +249,8 @@ export class AddSpendPlanComponent implements OnInit {
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            cellEditorParams: { useFormatter: true },
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -220,8 +258,9 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 9,
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
+            cellEditorParams: { useFormatter: true },
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           },
           {
@@ -229,7 +268,8 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 10,
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            cellEditorParams: { useFormatter: true },
+            valueFormatter: formatter,
             valueSetter: setter,
             cellClass: ['ag-cell-white', 'text-right']
           },
@@ -238,8 +278,9 @@ export class AddSpendPlanComponent implements OnInit {
             colId: 11,
             valueGetter: getter,
             editable: p => (p.node.rowIndex > 1),
+            cellEditorParams: { useFormatter: true },
             valueSetter: setter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
+            valueFormatter: formatter,
             cellClass: ['ag-cell-white', 'text-right']
           }
         ]
@@ -266,23 +307,27 @@ export class AddSpendPlanComponent implements OnInit {
 
   refreshTableData() {
     if (this._exe && this._exeline && this._oandes && this._deltas) {
-
       var tmpdata: DataRow[] = [
-        { label: (this.exeline && this.exeline.appropriated ? 'After Appropriation' : 'Baseline'), values: [] },
-        { label: 'Obligated', values: [] },
-        { label: 'Civilian Labor', values: [] },
-        { label: 'Travel', values: [] },
-        { label: 'Contracts', values: [] },
-        { label: 'Other', values: [] },
-        { label: 'Expensed', values: [] },
+        { label: (this.exeline && this.exeline.appropriated ? 'After Appropriation' : 'Baseline'), values: [], toas:[] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Civilian Labor', values: [], toas: [] },
+        { label: 'Travel', values: [], toas: [] },
+        { label: 'Contracts', values: [], toas: [] },
+        { label: 'Other', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
       ];
 
       var progtype: string = this.exeline.appropriation;
       var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
       this.maxmonths = ogoals.monthlies.length;
+
+      var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this._exeline, this._deltas,
+        this.maxmonths, this.exe.fy);
+
       for (var i = 0; i < this.maxmonths; i++) {
         tmpdata.forEach(row => {
           row.values.push(0);
+          row.toas.push(toas[i].toa);
         });
       }
       this.rowData = tmpdata;
@@ -296,10 +341,10 @@ export class AddSpendPlanComponent implements OnInit {
       type: ('Baseline' === this.rowData[0].label
         ? SpendPlan.TypeEnum.BASELINE
         : SpendPlan.TypeEnum.AFTERAPPROPRIATION),
-      monthlies:[]
+      monthlies: []
     };
 
-    for (var i = 0; i < this.maxmonths; i++){
+    for (var i = 0; i < this.maxmonths; i++) {
       plan.monthlies.push({
         labor: this.rowData[2].values[i],
         travel: this.rowData[3].values[i],
@@ -336,5 +381,6 @@ export class AddSpendPlanComponent implements OnInit {
 
 interface DataRow {
   label: string,
+  toas: number[],
   values: number[];
 }
