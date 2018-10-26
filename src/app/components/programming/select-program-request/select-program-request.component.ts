@@ -4,7 +4,8 @@ import { ProgramRequestWithFullName, WithFullNameService } from '../../../servic
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Pom ,PRService, PB, PBService } from '../../../generated';
+import { Pom ,PRService, PB, PBService, RestResult } from '../../../generated';
+import {Notify} from "../../../utils/Notify";
 
 @Component({
   selector: 'app-select-program-request',
@@ -58,7 +59,12 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   async submit() {
-    await this.pomService.submit(this.pom.id).toPromise();
-    this.reloadPrs();
+    let data:RestResult = await this.pomService.submit(this.pom.id).toPromise();
+    if (data.error) {
+      Notify.error('No Program requests were submitted.\n' + data.error);
+    } else {
+      Notify.success('All Program requests were submitted.\n' + data.result);
+      this.reloadPrs();
+    } 
   }
 }

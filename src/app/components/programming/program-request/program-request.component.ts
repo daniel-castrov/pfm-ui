@@ -11,7 +11,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@a
 import {ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {Organization, OrganizationService, User} from '../../../generated';
+import {Organization, OrganizationService, User, RestResult} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
 import {TagsService, TagType} from "../../../services/tags.service";
@@ -121,11 +121,15 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     } else {
       if(this.pr.id) {
         this.pr.state = state;
-        this.pr = (await this.prService.save(this.pr.id, this.pr).toPromise()).result;
-        if (this.pr.state === ProgrammaticRequestState.SAVED) {
-          Notify.success('Program request saved successfully')
+        let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise()); 
+        if (data.error) {
+          Notify.error('Program request failed to save.\n' + data.error);
         } else {
-          Notify.success('Program request submitted successfully')
+          if (this.pr.state === ProgrammaticRequestState.SAVED) {
+            Notify.success('Program request saved successfully')
+          } else {
+            Notify.success('Program request submitted successfully')
+          }
         }
       } else {
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
