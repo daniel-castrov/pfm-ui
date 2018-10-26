@@ -2194,7 +2194,7 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-  /ufr/{eventType}:
+  /ufr/event/{eventType}:
     post:
       tags:
       - "UFRs"
