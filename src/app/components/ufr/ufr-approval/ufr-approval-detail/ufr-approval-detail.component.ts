@@ -1,13 +1,16 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
-import {FundingLine, Pom, POMService, ProgramsService, ShortyType, UFR, UFRsService} from '../../../../generated'
+import {
+  Disposition, FundingLine, Pom, POMService, ProgramsService, ShortyType, UFR,
+  UFRsService, UfrStatus
+} from '../../../../generated'
 import {WithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 import {ActivatedRoute} from "@angular/router";
 import {HeaderComponent} from "../../../header/header.component";
 import {DataRow} from "../../ufr-view/ufr-funds-tab/DataRow";
 import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 import {AgGridNg2} from "ag-grid-angular";
-import {PhaseType} from "../../../programming/select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
+import {Notify} from "../../../../utils/Notify";
 
 @Component({
   selector: 'ufr-approval-detail',
@@ -25,9 +28,6 @@ export class UfrApprovalDetailComponent implements OnInit {
   shorty: WithFullName;
   pom: Pom;
   requestNumber: string;
-  statusSelected: string = null;
-  prioritySelected: number = null;
-  dispositionSelected: string = null;
   nextUfrId;
   previousUfrId;
 
@@ -41,6 +41,9 @@ export class UfrApprovalDetailComponent implements OnInit {
   currentFundingColumnDefs = [];
   proposedChangesColumnDefs = [];
   revisedProgramsColumnDefs = [];
+
+  Disposition = Disposition;
+  UfrStatus = UfrStatus;
 
   constructor(private withFullNameService: WithFullNameService,
               private pomService: POMService,
@@ -72,6 +75,11 @@ export class UfrApprovalDetailComponent implements OnInit {
     this.initRevisedChanges()
 
     this.setAlignedGrids();
+  }
+
+  async updateUfr(type: string){
+    this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+    Notify.success('UFR ' + type + ' updated successfully');
   }
 
   async initCurrentFunding() {
