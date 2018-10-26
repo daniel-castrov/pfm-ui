@@ -1092,8 +1092,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   flHaveValues(): boolean {
-    var ok: boolean = true;
-    let result = [];
+    var ok: boolean = (this.pr.fundingLines.length > 0);
     this.pr.fundingLines.forEach(function (fl, index) {
       var flok: boolean = false;
       Object.getOwnPropertyNames(fl.funds).forEach(key => {

@@ -9,7 +9,7 @@ import { AddSpendPlanComponent } from '../add-spend-plan/add-spend-plan.componen
 import { Notify } from '../../../utils/Notify';
 import { SpendPlanMonthly } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
-import { UfrStatus } from '../../../generated';
+import { FyHeaderComponent } from '../fy-header/fy-header.component';
 
 @Component({
   selector: 'spend-plans-tab',
@@ -34,10 +34,11 @@ export class SpendPlansTabComponent implements OnInit {
   private _exeline: ExecutionLine;
   private _exe: Execution;
   private _deltas: Map<Date, ExecutionEvent>;
-  private columnDefs: any[];
   private rowData: PlanRow[];
   private plans: SpendPlan[];
   private plan: SpendPlan;
+  private maxmonths: number;
+  private showPercentages: boolean = true;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -98,18 +99,9 @@ export class SpendPlansTabComponent implements OnInit {
   ngOnInit() { }
 
   constructor(private plansvc: SpendPlanService) {
-    this.agOptions = <GridOptions>{
-      enableColResize: true,
-    }
-
     var my: SpendPlansTabComponent = this;
     var getHeaderValue1 = function (p) {
       return (my._exeline ? my.exeline.appropriation : '');
-    }
-
-    var getHeaderValueFy = function (p) {
-      var inty: number = my.firstMonth / 12;
-      return (my._exe ? 'FY' + (my.exe.fy + inty) : 'First Year');
     }
 
     var getter = function (p) {
@@ -117,17 +109,52 @@ export class SpendPlansTabComponent implements OnInit {
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
       if (0 === row || 7 === row || 10 === row) {
         return '';
-      }     
+      }
       return p.node.data.values[col];
     }
 
     var setPlan = function (p) {
-      my.plan = my.plans.filter(sp => (sp.type === p.newValue))[0];
+      my.plan = p.newValue;
+      my.refreshTableData();
       return true;
     }
 
-    this.columnDefs = [
-      {
+    var formatter = function (p) {
+      if ('' === p.value) {
+        return '';
+      }
+      if (my.showPercentages) {
+        var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
+        var toa: number = p.data.toas[col];
+        return ( 100 * p.value / toa).toFixed(2);
+      }
+      else {
+        return p.value.toFixed(2);
+      }
+    }
+
+    var cssbold: Set<number> = new Set<number>([0, 7, 10]);
+    var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
+    var csscenter: Set<number> = new Set<number>([1, 6, 8, 9, 11, 12 ]);
+    var csssum: Set<number> = new Set<number>([7, 10]);
+    var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6, 7]);
+    var csswhite: Set<number> = new Set<number>([0, 1, 2, 3, 4, 5, 6]);
+    var csslightgreen: Set<number> = new Set<number>([8, 9]);
+    var csslightorange: Set<number> = new Set<number>([11, 12]);
+
+    this.agOptions = <GridOptions>{
+      enableColResize: true,
+      enableSorting: false,
+      enableFilter: false,
+      gridAutoHeight: true,
+      pagination: true,
+      paginationPageSize: 30,
+      suppressPaginationPanel: true,
+      toolPanelSuppressSideButtons: true,
+      frameworkComponents: { fyheader: FyHeaderComponent },
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      columnDefs: [{
         headerValueGetter: getHeaderValue1,
         headerName: 'RDTE',
         field: 'rdte',
@@ -138,116 +165,211 @@ export class SpendPlansTabComponent implements OnInit {
             headerName: 'Spend Plans',
             editable: p => (0 === p.node.rowIndex && my.plans && my.plans.length > 1),
             field: 'label',
-            cellEditor: 'agRichSelectEditor',
-            cellEditorParams: {
-              values: ['Baseline', 'After Appropriation']
+            cellEditor: 'agRichSelectCellEditor',
+            cellEditorParams: function (p) {
+              return {
+                values: my.plans,
+                formatValue: p => (p && p.type
+                  ? (SpendPlan.TypeEnum.BASELINE === p.type ? 'Baseline' : 'After Appropriation')
+                  : p)
+              };
             },
             valueSetter: setPlan,
             maxWidth: 220,
             cellClass: ['ag-cell-white'],
-            // colSpan: function(params) {
-            //    var spendplans = params.data.spendplans;
-            //    if (spendplans === "Baseline") {
-            //      return 2;
-            //    } else if (spendplans === "Obligated") {
-            //      return 4;
-            //    } else {
-            //      return 1;
-            //   }
-            // }
+            cellClassRules: {
+              'text-right': params => cssright.has(params.node.rowIndex),
+              'text-center': params => csscenter.has(params.node.rowIndex),
+              'font-weight-bold': params => cssbold.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex)
+            }
           }
         ],
       },
       {
-        headerValueGetter: getHeaderValueFy,
+        headerGroupComponent: 'fyheader',
+        headerGroupComponentParams: function () {
+          return {
+            firstMonth: my.firstMonth,
+            maxMonths: my.maxmonths,
+            fy: (my._exe ? my.exe.fy : 0),
+            next: function () { my.nextMonth() },
+            prev: function () { my.prevMonth() }
+          };
+        },
         children: [
           {
             headerName: 'Oct',
             colId: 0,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter: formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Nov',
             colId: 1,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Dec',
             colId: 2,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jan',
             colId: 3,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Feb',
             colId: 4,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Mar',
             colId: 5,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Apr',
             colId: 6,
+            width: 80,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'May',
             colId: 7,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jun',
             colId: 8,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Jul',
             colId: 9,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Aug',
             colId: 10,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           },
           {
             headerName: 'Sep',
             colId: 11,
+            width: 82,
             valueGetter: getter,
-            valueFormatter: p => ('' === p.value ? '' : p.value.toFixed(2)),
-            cellClass: ['ag-cell-white', 'text-right']
+            valueFormatter:formatter,
+            cellClass: ['text-right'],
+            cellClassRules: {
+              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
+              'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
+              'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+            }
           }
         ]
       }
-    ];
+      ]
+    }
   }
 
   onPageSizeChanged(event) {
@@ -274,30 +396,31 @@ export class SpendPlansTabComponent implements OnInit {
         return;
       }
 
-      var tmpdata:PlanRow[] = [
-        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ?  'Baseline' : 'After Appropriation' ), values:[] },
-        { label: 'Obligated', values:[] },
-        { label: 'Civilian Labor', values:[] },
-        { label: 'Travel', values:[] },
-        { label: 'Contracts', values:[] },
-        { label: 'Other', values: [] },
-        { label: 'Expensed', values: [] },
-        { label: 'OSD', values:[] },
-        { label: 'Obligated', values:[] },
-        { label: 'Expensed', values:[] },
-        { label: 'DELTA', values:[] },
-        { label: 'Obligated', values:[] },
-        { label: 'Expensed', values:[] },
+      var tmpdata: PlanRow[] = [
+        { label: (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation'), values: [], toas:[] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Civilian Labor', values: [], toas: [] },
+        { label: 'Travel', values: [], toas: [] },
+        { label: 'Contracts', values: [], toas: [] },
+        { label: 'Other', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
+        { label: 'OSD', values: [], toas: [] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
+        { label: 'DELTA', values: [], toas: [] },
+        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Expensed', values: [], toas: [] },
       ];
 
       var progtype: string = this.exeline.appropriation;
       var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
-      var max = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
 
-      var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline, this.deltas, max, this.exe.fy);
+      var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline,
+        this.deltas, this.maxmonths, this.exe.fy);
 
-      for (var i = 0; i < max; i++){
+      for (var i = 0; i < this.maxmonths; i++) {
         var monthly: SpendPlanMonthly = (i < this.plan.monthlies.length
           ? this.plan.monthlies[i]
           : { obligated: 0, labor: 0, travel: 0, contracts: 0, expensed: 0, other: 0 });
@@ -308,7 +431,7 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[4].values.push(monthly.contracts);
         tmpdata[5].values.push(monthly.other);
         tmpdata[6].values.push(monthly.expensed);
-        
+
         // OSD section
         tmpdata[7].values.push(0);
         tmpdata[8].values.push(toas[i].toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1.0));
@@ -318,10 +441,21 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[10].values.push(0);
         tmpdata[11].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
         tmpdata[12].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
+
+        tmpdata.forEach(row => {
+          row.toas.push(toas[i].toa);
+        });
       }
 
       this.rowData = tmpdata;
+
+      this.agOptions.api.refreshHeader();
     }
+  }
+
+  onTogglePct() {
+    this.showPercentages = !this.showPercentages;
+    this.agOptions.api.redrawRows();
   }
 
   addplan() {
@@ -340,9 +474,20 @@ export class SpendPlansTabComponent implements OnInit {
       }
     });
   }
+
+  nextMonth() {
+    this.firstMonth += 12;
+    this.agOptions.api.redrawRows();
+  }
+
+  prevMonth() {
+    this.firstMonth -= 12;
+    this.agOptions.api.redrawRows();
+  }
 }
 
 interface PlanRow {
   label: string,
+  toas: number[],
   values: number[];
 }
