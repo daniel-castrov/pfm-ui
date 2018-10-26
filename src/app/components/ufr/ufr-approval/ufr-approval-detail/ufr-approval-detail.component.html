@@ -44,43 +44,110 @@
     <div class="col-5">
       <div class="row">
         <div class="col-4">
-          <label class="select-label" *ngIf="statusSelected" for="status">Status: </label>
-          <select id="status" [(ngModel)]="statusSelected" class="form-control">
-            <option hidden value="null">Status</option>
-            <option>Valid</option>
-            <option>Invalid</option>
-            <option>Withdrawn</option>
+          <label class="select-label" *ngIf="ufr.status !== UfrStatus.SUBMITTED" for="status">Status: </label>
+          <select id="status"
+                  [disabled]="ufr.status !== UfrStatus.SUBMITTED"
+                  [(ngModel)]="ufr.status"
+                  (change)="updateUfr('status')"
+                  class="form-control">
+            <option hidden [value]="UfrStatus.SUBMITTED">Status</option>
+            <option [value]="UfrStatus.VALID">Valid</option>
+            <option [value]="UfrStatus.INVALID">Invalid</option>
+            <option [value]="UfrStatus.WITHDRAWN">Withdrawn</option>
           </select>
         </div>
         <div class="col-4">
-          <label class="select-label" *ngIf="prioritySelected" for="status">Priority: </label>
-          <select *ngIf="statusSelected === 'Valid'" [(ngModel)]="prioritySelected" class="form-control">
+          <label class="select-label" *ngIf="ufr.priority" for="status">Priority: </label>
+          <select *ngIf="ufr.status === UfrStatus.VALID"
+                  [disabled]="ufr.disposition === Disposition.OGI"
+                  [(ngModel)]="ufr.priority"
+                  (change)="updateUfr('priority')"
+                  class="form-control">
             <option hidden value="null">Priority</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+            <option *ngFor="let index of [1,2,3,4,5,6,7,8,9,10]">{{index}}</option>
           </select>
         </div>
         <div class="col-4">
-          <label class="select-label" *ngIf="dispositionSelected" for="status">Disposition: </label>
-          <select *ngIf="statusSelected === 'Valid'" [(ngModel)]="dispositionSelected" class="form-control">
+          <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
+          <select *ngIf="ufr.status === UfrStatus.VALID"
+                  [disabled]="ufr.disposition === Disposition.OGI"
+                  [(ngModel)]="ufr.disposition"
+                  (change)="updateUfr('disposition')"
+                  class="form-control">
             <option hidden value="null">Disposition</option>
-            <option>Approved</option>
-            <option>Partially approved</option>
-            <option>Deferred to future POM</option>
-            <option>Deferred to YOE</option>
-            <option>Issue Paper</option>
-            <option>Disapproved</option>
+            <option [value]="Disposition.APPROVED">Approved</option>
+            <option [value]="Disposition.PARTIALLY_APPROVED">Partially approved</option>
+            <option [value]="Disposition.DEFERRED">Deferred to future POM</option>
+            <option [value]="Disposition.YEAR_OF_EXECUTION">Deferred to YOE</option>
+            <option [value]="Disposition.OGI">Issue Paper</option>
+            <option [value]="Disposition.DISAPPROVED">Disapproved</option>
           </select>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row ml-3 mr-3">
+    <div class="col-12 p-0">
+      <ag-grid-angular #agGridCurrentFunding
+                       class="ag-theme-balham pr-funds-tab group-header-white"
+                       [toolPanelSuppressPivotMode]="true"
+                       [toolPanelSuppressRowGroups]="true"
+                       [toolPanelSuppressValues]="true"
+                       [toolPanelSuppressPivots]="true"
+                       [toolPanelSuppressColumnFilter]="true"
+                       [toolPanelSuppressColumnSelectAll]="true"
+                       [suppressMovableColumns]="true"
+                       [rowData]="currentFunding"
+                       (gridReady)="onGridReady($event)"
+                       (rowDataChanged)="sizeColumnsToFit($event)"
+                       (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                       (columnVisible)="sizeColumnsToFit($event)"
+                       [gridAutoHeight]="true">
+      </ag-grid-angular>
+      <ag-grid-angular #agGridProposedChanges
+                       id="agGridProposedChanges"
+                       class="ag-theme-balham pr-funds-tab group-header-white separator"
+                       [gridAutoHeight]="true"
+                       [toolPanelSuppressPivotMode]="true"
+                       [toolPanelSuppressRowGroups]="true"
+                       [toolPanelSuppressValues]="true"
+                       [toolPanelSuppressPivots]="true"
+                       [toolPanelSuppressColumnFilter]="true"
+                       [toolPanelSuppressColumnSelectAll]="true"
+                       [suppressMovableColumns]="true"
+                       [suppressRowTransform]="true"
+                       [showToolPanel]="false"
+                       [enableSorting]="false"
+                       [enableFilter]="false"
+                       [singleClickEdit]="true"
+                       [stopEditingWhenGridLosesFocus]="true"
+                       [rowData]="proposedChange"
+                       (gridReady)="onGridReady($event)"
+                       (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                       (columnVisible)="sizeColumnsToFit($event)"
+                       (rowDataChanged)="sizeColumnsToFit($event)"
+                       headerHeight="0">
+      </ag-grid-angular>
+      <ag-grid-angular
+        #agGridRevisedPrograms
+        id="agGridRevisedPrograms"
+        class="ag-theme-balham pr-funds-tab group-header-white separator"
+        [rowData]="revisedPrograms"
+        [suppressRowTransform]="true"
+        [suppressMovableColumns]="true"
+        [toolPanelSuppressPivotMode]="true"
+        [toolPanelSuppressRowGroups]="true"
+        [toolPanelSuppressValues]="true"
+        [toolPanelSuppressPivots]="true"
+        [toolPanelSuppressColumnFilter]="true"
+        [toolPanelSuppressColumnSelectAll]="true"
+        (gridReady)="onGridReady($event)"
+        (rowDataChanged)="sizeColumnsToFit($event)"
+        (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+        (columnVisible)="sizeColumnsToFit($event)"
+        [gridAutoHeight]="true"
+        headerHeight="0">
+      </ag-grid-angular>
     </div>
   </div>
 </div>

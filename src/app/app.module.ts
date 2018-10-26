@@ -149,11 +149,11 @@ import { ActualsCellRendererComponent } from './components/execution/actuals-cel
 import {EmphasisAreasComponent} from "./components/ufr/ufr-view/ufr-program-tab/empasisAreas/emphasisAreas.component";
 import {CheckboxRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/checkbox-renderer.component";
 import {DuplicateComponent} from "./components/programming/pom-worksheet/worksheet-management/duplicate/duplicate.component";
-import {RenameComponent} from "app/components/programming/pom-worksheet/worksheet-management/rename/rename.component";
+import {RenameComponent} from "./components/programming/pom-worksheet/worksheet-management/rename/rename.component";
 import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
 import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
-import {WorksheetService} from "app/generated/api/worksheet.service";
+import {WorksheetService} from "./generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import {NewProgramService} from "./services/new.program.service";
 import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval/ufr-approval-summary/ufr-approval-summary.component";

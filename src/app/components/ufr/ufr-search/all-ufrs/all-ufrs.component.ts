@@ -222,7 +222,7 @@ export class AllUfrsComponent implements OnInit {
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
     if (this.urlPath === 'ufr-approval-detail') {
-      ufrs = ufrs.filter(ufr => ufr.status === UfrStatus.SUBMITTED)
+      ufrs = ufrs.filter(ufr => ufr.status !== UfrStatus.SAVED)
     }
 
     let alldata: any[] = [];
