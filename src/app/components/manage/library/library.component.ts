@@ -5,8 +5,8 @@ import {AgGridNg2} from 'ag-grid-angular';
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
 import {FileMetadata, FileResponse, LibraryService} from "../../../generated";
-import {DatePipe} from "@angular/common";
 import {LibraryViewCellRenderer} from "../../renderers/library-view-cell-renderer/library-view-cell-renderer.component";
+import {FormatterUtil} from "../../../utils/formatterUtil";
 declare const $: any;
 
 @Component({
@@ -20,7 +20,6 @@ export class LibraryComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  datePipe: DatePipe = new DatePipe('en-US')
   data: Array<FileMetadata>;
   columnDefs= [];
   frameworkComponents = {libraryViewCellRenderer: LibraryViewCellRenderer};
@@ -48,7 +47,7 @@ export class LibraryComponent implements OnInit {
         menuTabs: this.menuTabs,
         width: 60,
         filter: 'agDateColumnFilter',
-        valueFormatter: params => this.dateFormatter(params),
+        valueFormatter: params => FormatterUtil.dateFormatter(params),
         valueGetter: 'data.metadata.IngestDate',
         filterParams:{
           comparator: function (filterValue, cellValue) {
@@ -122,12 +121,6 @@ export class LibraryComponent implements OnInit {
       default:
         return '<i title="Unknown File" class="align-middle fa fa-file-o" style="font-size:20px"></i>'
     }
-  }
-
-  dateFormatter(params){
-    let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
-    let parsedDate = Date.parse(params.value);
-    return this.datePipe.transform(parsedDate, dateFormat);
   }
 
   openFile(fileId, fileArea) {

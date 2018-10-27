@@ -1646,6 +1646,20 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /users/cn/{cn}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a user by the CN"
+      description: "Returns a User with the given cn"
+      operationId: "getByCn"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cn"
+        in: "path"
+        required: true
+        type: "string"
   /users/community/{commId}:
     get:
       tags:
@@ -2213,6 +2227,23 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /ufr/getEvents/{ufrId}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets all the UFR events from the specified UFR"
+      description: "Returns the ufr events"
+      operationId: "getUfrEventsById"
+      parameters:
+      - in: "path"
+        name: "ufrId"
+        description: "The id of the ufr"
+        required: true
+        type: "string"
       consumes:
       - "application/json"
       produces:
@@ -3315,12 +3346,25 @@ definitions:
         type: "string"
       imageArea:
         type: "string"
+  UfrEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      value:
+        $ref: "#/definitions/Ufr"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "integer"
+      success:
+        type: "boolean"
   ShortyType:
     enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
   UfrStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
   Disposition:
-    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, OGI]
+    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
   Pom:
     type: "object"
     properties:
