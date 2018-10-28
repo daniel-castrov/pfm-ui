@@ -2194,6 +2194,29 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+  /ufr/event/{eventType}:
+    post:
+      tags:
+      - "UFRs"
+      summary: "Updates a UFR and created an event"
+      description: "Updates a UFR"
+      operationId: "generateTransaction"
+      parameters:
+      - in: "path"
+        name: "eventType"
+        description: "The type of event"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
   /ufr/pom/{pomId}/program/{mrdbId}:
     put:
       tags:
@@ -3297,7 +3320,7 @@ definitions:
   UfrStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
   Disposition:
-    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, DEFERRED, OGI]
+    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, OGI]
   Pom:
     type: "object"
     properties:
