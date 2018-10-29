@@ -2614,7 +2614,7 @@ paths:
 ##############################################################################
 # START SPENDPLANS
 #
-  /spendplans/execution/{exelineid}:
+  /spendplans/executionline/{exelineid}:
     get:
       operationId: "getByExecutionLineId"
       parameters:
