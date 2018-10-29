@@ -11,6 +11,8 @@ import { SpendPlanMonthly } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
 import { FyHeaderComponent } from '../fy-header/fy-header.component';
 
+declare const $: any;
+
 @Component({
   selector: 'spend-plans-tab',
   templateUrl: './spend-plans-tab.component.html',
@@ -40,6 +42,7 @@ export class SpendPlansTabComponent implements OnInit {
   private maxmonths: number;
   private showPercentages: boolean = true;
   private submittable: boolean = false;
+  private explanation: string;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -150,7 +153,8 @@ export class SpendPlansTabComponent implements OnInit {
       for (var i = 2; i < 6; i++) {
         my.rowData[1].values[col] += my.rowData[i].values[col];
       }
-      // fix cumulatives
+
+      // fix cumulatives and deltas
       var totalobl: number = (col > 0 ? my.rowData[7].values[col - 1] : 0);
       var totalexp: number = (col > 0 ? my.rowData[8].values[col - 1] : 0);
       for (var i = col; i < my.maxmonths; i++){
@@ -253,6 +257,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -270,6 +275,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -287,6 +293,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -304,6 +311,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -321,6 +329,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -338,6 +347,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -355,6 +365,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -372,6 +383,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -389,6 +401,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -406,6 +419,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -423,6 +437,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -440,6 +455,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           }
@@ -552,7 +568,7 @@ export class SpendPlansTabComponent implements OnInit {
     this.agOptions.api.redrawRows();
   }
 
-  addplan() {
+  dosave() {
     var newplan: SpendPlan = {
       monthlies: []
     };
@@ -567,7 +583,11 @@ export class SpendPlansTabComponent implements OnInit {
       });
     }
 
-    if ( !this.plans || 0 === this.plans.length) {
+    if (this.explanation) {
+      newplan.explanation = this.explanation;
+    }
+    
+    if (!this.plans || 0 === this.plans.length) {
       newplan.type = SpendPlan.TypeEnum.BASELINE;
     }
     else if (this.exeline.appropriated) {
@@ -587,6 +607,19 @@ export class SpendPlansTabComponent implements OnInit {
         this.refreshTableData();
       }
     });
+  }
+
+  submit_check() {
+    // make sure we give an explanation if we need to
+    var needexplanation: boolean
+      = (this.rowData[13].values.filter(val => (val > 10)).length > 0);
+    if (!needexplanation) {
+      needexplanation = (this.rowData[14].values.filter(val => (val > 10)).length > 0);
+    }
+
+    if (needexplanation) {
+        $('#explanation-modal').modal('show');
+    }
   }
 
   nextMonth() {
