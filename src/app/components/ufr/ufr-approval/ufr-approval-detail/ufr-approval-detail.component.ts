@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  Disposition, FundingLine, Pom, POMService, ProgramsService, ShortyType, UFR,
-  UFRsService, UfrStatus
+  Disposition, FundingLine, Pom, POMService, ProgramsService, ShortyType, UFR, UfrEvent,
+  UFRsService, UfrStatus, User, UserService
 } from '../../../../generated'
 import {WithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 import {ActivatedRoute} from "@angular/router";
@@ -24,6 +24,8 @@ export class UfrApprovalDetailComponent implements OnInit {
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
+  @ViewChild("agGridTransactions") private agGridTransactions: AgGridNg2;
+
   ufr: UFR;
   shorty: WithFullName;
   pom: Pom;
@@ -37,6 +39,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   proposedChange;
   revisedPrograms;
   currentFunding;
+  transactions;
 
   currentFundingColumnDefs = [];
   proposedChangesColumnDefs = [];
@@ -49,13 +52,16 @@ export class UfrApprovalDetailComponent implements OnInit {
               private pomService: POMService,
               private programService: ProgramsService,
               private route: ActivatedRoute,
-              private ufrService: UFRsService) {}
+              private ufrService: UFRsService,
+              private userService: UserService) {}
 
   async ngOnInit() {
     let ufrId;
     this.route.params.subscribe(async params => {
-     ufrId = params['id'];
-     await this.init(ufrId);
+      this.ufr = null;
+      this.shorty = null;
+      ufrId = params['id'];
+      await this.init(ufrId);
     });
   }
 
@@ -75,11 +81,14 @@ export class UfrApprovalDetailComponent implements OnInit {
     this.initRevisedChanges()
 
     this.setAlignedGrids();
+
+    await this.initTransactions();
   }
 
   async updateUfr(type: string){
     this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
     Notify.success('UFR ' + type + ' updated successfully');
+    await this.initTransactions();
   }
 
   async initCurrentFunding() {
@@ -157,6 +166,58 @@ export class UfrApprovalDetailComponent implements OnInit {
     });
 
     this.agGridRevisedPrograms.api.setColumnDefs(this.revisedProgramsColumnDefs);
+  }
+
+  async initTransactions(){
+    let columnDefs = [
+      {
+        headerName: 'Transaction Type',
+        field: 'type'
+        },
+      {
+        headerName: 'Value',
+        field: 'value'
+      },
+      {
+        headerName: 'User',
+        field: 'user'
+      },
+      {
+        headerName: 'Date',
+        filter: 'agDateColumnFilter',
+        field: 'date',
+        valueFormatter: params => FormatterUtil.dateFormatter(params),
+      }
+    ];
+
+    this.agGridTransactions.api.setColumnDefs(columnDefs);
+    let events: UfrEvent[] = (await this.ufrService.getUfrEventsById(this.ufr.id).toPromise()).result;
+    let transactions : TransactionRow [] = [];
+    events.reverse();
+    for(let e of events) {
+      let date = new Date(e.timestamp);
+      let user = (await this.userService.getByCn(e.userCN).toPromise()).result;
+      let type;
+      let value;
+      switch (e.eventType) {
+        case 'UFR_PRIORITY':
+          type = 'Priority';
+          value = e.value.priority;
+          break;
+        case 'UFR_STATUS':
+          type = 'Status';
+          value = e.value.status;
+          break;
+        case 'UFR_DISPOSITION':
+          type = 'Disposition';
+          value = e.value.disposition;
+          break;
+      };
+      let row: TransactionRow = {date: date, user: user.firstName + ' ' + user.lastName, value: value, type: type};
+      transactions.push(row);
+    };
+    this.transactions = transactions
+    this.agGridTransactions.api.sizeColumnsToFit();
   }
 
   calculateRevisedChanges() {
@@ -437,4 +498,11 @@ export class UfrApprovalDetailComponent implements OnInit {
       });
     });
   }
+}
+
+interface TransactionRow {
+  date: Date,
+  type: string,
+  user: string,
+  value: string
 }

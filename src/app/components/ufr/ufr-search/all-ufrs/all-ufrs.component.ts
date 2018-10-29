@@ -6,11 +6,11 @@ import {
   ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter,
   UfrStatus
 } from '../../../../generated';
-import { DatePipe } from "@angular/common";
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import {CycleUtils} from "../../../../services/cycle.utils";
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
+import {FormatterUtil} from "../../../../utils/formatterUtil";
 
 @Component({
   selector: 'all-ufrs',
@@ -26,7 +26,6 @@ export class AllUfrsComponent implements OnInit {
 
   private user: User;
   private orgMap: any[] = []
-  private datePipe: DatePipe = new DatePipe('en-US')
   private filtertext;
   private fy: number;
 
@@ -105,7 +104,7 @@ export class AllUfrsComponent implements OnInit {
               editable: false,
               menuTabs: this.menuTabs,
               filter: 'agTextColumnFilter',
-            }
+            };
           break;
         case ("Prog ID"):
             coldef = {
@@ -116,7 +115,7 @@ export class AllUfrsComponent implements OnInit {
               editable: false,
               menuTabs: this.menuTabs,
               filter: 'agTextColumnFilter',
-            }
+            };
           break;
         case ("Priority"):
             coldef = {
@@ -127,7 +126,7 @@ export class AllUfrsComponent implements OnInit {
               editable: false,
               menuTabs: this.menuTabs,
               filter: 'agTextColumnFilter',
-            }
+            };
           break;
         case ("Disposition"):
             coldef = {
@@ -138,7 +137,7 @@ export class AllUfrsComponent implements OnInit {
               editable: false,
               menuTabs: this.menuTabs,
               filter: 'agTextColumnFilter',
-            }
+            };
           break;
         case ("Funding Request"):
             coldef = {
@@ -149,7 +148,7 @@ export class AllUfrsComponent implements OnInit {
               editable: false,
               menuTabs: this.menuTabs,
               filter: 'agTextColumnFilter',
-            }
+            };
           break;
         case ("Last Updated"):
           coldef = {
@@ -158,10 +157,10 @@ export class AllUfrsComponent implements OnInit {
             headerTooltip: 'Last Updated',
             width: 102,
             editable: false,
-            cellRenderer: params => this.dateFormatter(params.value),
+            cellRenderer: params => FormatterUtil.dateFormatter(params.value),
             menuTabs: this.menuTabs,
             filter: 'agDateColumnFilter',
-          }
+          };
           break;
         case ("Func Area"):
           coldef = {
@@ -173,7 +172,7 @@ export class AllUfrsComponent implements OnInit {
             editable: false,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-          }
+          };
           break;
         case ("Organization"):
           coldef = {
@@ -185,7 +184,7 @@ export class AllUfrsComponent implements OnInit {
             editable: false,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-          }
+          };
           break;
         default:
           coldef = {
@@ -195,7 +194,7 @@ export class AllUfrsComponent implements OnInit {
             editable: false,
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-          }
+          };
           break;
       }
       this.colDefs.push(coldef);
@@ -265,11 +264,6 @@ export class AllUfrsComponent implements OnInit {
 
   sum(ufr: UFR): number {
     return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.fy );
-  }
-
-  private dateFormatter(longdate) {
-    let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
-    return this.datePipe.transform(new Date(longdate), dateFormat);
   }
 
   private async initProgrammyIdToFullName(): Promise<any> {

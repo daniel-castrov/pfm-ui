@@ -1,4 +1,9 @@
+import {DatePipe} from "@angular/common";
+
 export class FormatterUtil {
+
+  private static datePipe: DatePipe = new DatePipe('en-US');
+
   public static removeDuplicates(array): any[]{
     let unique = array.filter((value, index, array) =>
       !array.filter((v, i) => JSON.stringify(value) == JSON.stringify(v) && i < index).length);
@@ -38,5 +43,11 @@ export class FormatterUtil {
       minimumFractionDigits: 0
     });
     return usdFormate.format(value.value);
+  }
+
+  public static dateFormatter(params){
+    let dateFormat = 'MM/dd/yyyy hh:mm:ss a';
+    let parsedDate = Date.parse(params.value);
+    return this.datePipe.transform(parsedDate, dateFormat);
   }
 }

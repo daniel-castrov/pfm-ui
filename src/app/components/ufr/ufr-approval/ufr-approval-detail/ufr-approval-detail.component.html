@@ -22,14 +22,21 @@
       </a>
     </div>
   </div>
-  <div class="row ml-3 mr-3" *ngIf="shorty">
+  <div class="row ml-3 mr-3">
     <div class="col-7">
       <div class="row">
         <div class="col-2 p-1">
           <label class="mr-1">Program ID: </label>
         </div>
         <div class="col-10 p-1">
-          <span class="mr-1 text-truncate">{{shorty.fullname}}</span>
+          <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
+            <span class="mr-1 text-truncate" *ngIf="shorty?.fullname">{{shorty.fullname}}</span>
+          </ng-container>
+          <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
+                                         ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR' ||
+                                         ufr.shortyType=='NEW_PROGRAM'">
+            <span class="mr-1 text-truncate" *ngIf="ufr.shortName">{{ufr.shortName}}</span>
+          </ng-container>
         </div>
       </div>
       <div class="row">
@@ -37,7 +44,7 @@
           <label class="mr-1">CCA: </label>
         </div>
         <div class="col-10 p-1">
-          <span class="mr-1 text-truncate">{{shorty.coreCapability}}</span>
+          <span class="mr-1 text-truncate">{{ufr.coreCapability}}</span>
         </div>
       </div>
     </div>
@@ -59,7 +66,7 @@
         <div class="col-4">
           <label class="select-label" *ngIf="ufr.priority" for="status">Priority: </label>
           <select *ngIf="ufr.status === UfrStatus.VALID"
-                  [disabled]="ufr.disposition === Disposition.OGI"
+                  [disabled]="ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER"
                   [(ngModel)]="ufr.priority"
                   (change)="updateUfr('priority')"
                   class="form-control">
@@ -70,7 +77,7 @@
         <div class="col-4">
           <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
           <select *ngIf="ufr.status === UfrStatus.VALID"
-                  [disabled]="ufr.disposition === Disposition.OGI"
+                  [disabled]="ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER"
                   [(ngModel)]="ufr.disposition"
                   (change)="updateUfr('disposition')"
                   class="form-control">
@@ -79,7 +86,7 @@
             <option [value]="Disposition.PARTIALLY_APPROVED">Partially approved</option>
             <option [value]="Disposition.DEFERRED">Deferred to future POM</option>
             <option [value]="Disposition.YEAR_OF_EXECUTION">Deferred to YOE</option>
-            <option [value]="Disposition.OGI">Issue Paper</option>
+            <option [value]="Disposition.ISSUE_PAPER">Issue Paper</option>
             <option [value]="Disposition.DISAPPROVED">Disapproved</option>
           </select>
         </div>
@@ -148,6 +155,46 @@
         [gridAutoHeight]="true"
         headerHeight="0">
       </ag-grid-angular>
+    </div>
+  </div>
+  <div class="row m-3">
+    <div class="col-12 p-0">
+      <label>Transaction History:</label>
+      <ag-grid-angular
+        #agGridTransactions
+        id="agGridTransactions"
+        class="ag-theme-balham"
+        [rowData]="transactions"
+        [suppressMovableColumns]="true"
+        [toolPanelSuppressSideButtons]="true"
+        (gridReady)="onGridReady($event)"
+        [pagination]="true"
+        [paginationPageSize]="5"
+        (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+        [suppressPaginationPanel]="true"
+        [gridAutoHeight]="true">
+      </ag-grid-angular>
+      <ag-grid-pagination #agGridPagination [agGrid]="agGridTransactions"></ag-grid-pagination>
+    </div>
+  </div>
+  <div class="row mr-3 ml-3">
+    <div class="col-4 p-0">
+      <label class="mb-2">*Rationale:</label>
+      <div class="form-group mr-4">
+        <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.justification" class="form-control" id="rationale" name="rationale"></textarea>
+      </div>
+    </div>
+    <div class="col-4 p-0">
+      <label class="mb-2">*Milestone Impact:</label>
+      <div class="form-group mr-4">
+        <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.milestoneImpact" class="form-control" id="impact-1" name="impact-1"></textarea>
+      </div>
+    </div>
+    <div class="col-4 p-0">
+      <label class="mb-2">*Impact if not funded:</label>
+      <div class="form-group">
+        <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.impactN" class="form-control" id="impact-2" name="impact-2"></textarea>
+      </div>
     </div>
   </div>
 </div>
