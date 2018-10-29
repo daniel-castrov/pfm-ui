@@ -29,8 +29,13 @@
           <label class="mr-1">Program ID: </label>
         </div>
         <div class="col-10 p-1">
-          <span class="mr-1 text-truncate" *ngIf="shorty?.fullname">{{shorty.fullname}}</span>
-          <span class="mr-1 text-truncate" *ngIf="ufr.shortName">{{ufr.shortName}}</span>
+          <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
+            <span class="mr-1 text-truncate" *ngIf="shorty?.fullname">{{shorty.fullname}}</span>
+          </ng-container>
+          <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
+                                         ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR'">
+            <span class="mr-1 text-truncate" *ngIf="ufr.shortName">{{ufr.shortName}}</span>
+          </ng-container>
         </div>
       </div>
       <div class="row">
