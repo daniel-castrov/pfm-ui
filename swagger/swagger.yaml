@@ -2231,7 +2231,7 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-  /ufr/getEvents/{ufrId}:
+  /ufr/{ufrId}/events:
     get:
       tags:
       - "UFRs"
