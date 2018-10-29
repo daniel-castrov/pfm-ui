@@ -108,7 +108,7 @@ export class SpendPlansTabComponent implements OnInit {
     var getter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-      if (0 === row || 7 === row || 10 === row) {
+      if (0 === row || 9 === row || 12  === row) {
         return '';
       }
       return p.node.data.values[col];
@@ -147,12 +147,21 @@ export class SpendPlansTabComponent implements OnInit {
       p.node.data.values[col] = value;
 
       my.rowData[1].values[col] = 0;
-      for (var i = 1; i < 5; i++) {
+      for (var i = 2; i < 6; i++) {
         my.rowData[1].values[col] += my.rowData[i].values[col];
       }
+      // fix cumulatives
+      var totalobl: number = (col > 0 ? my.rowData[7].values[col - 1] : 0);
+      var totalexp: number = (col > 0 ? my.rowData[8].values[col - 1] : 0);
+      for (var i = col; i < my.maxmonths; i++){
+        totalobl += my.rowData[1].values[i];
+        totalexp += my.rowData[6].values[i];
+        my.rowData[7].values[i] = totalobl;
+        my.rowData[8].values[i] = totalexp;
 
-      my.rowData[11].values[col] = my.rowData[8].values[col] - my.rowData[1].values[col];
-      my.rowData[12].values[col] = my.rowData[9].values[col] - my.rowData[6].values[col];
+        my.rowData[13].values[i] = my.rowData[10].values[i] - my.rowData[7].values[i];
+        my.rowData[14].values[i] = my.rowData[11].values[i] - my.rowData[8].values[i];
+      }
 
       return true;
     }
@@ -165,14 +174,14 @@ export class SpendPlansTabComponent implements OnInit {
       var row: number = p.node.rowIndex;
       return !(0 === row || 7 === row || 10 === row);
     }
-    var cssbold: Set<number> = new Set<number>([0, 7, 10]);
+    var cssbold: Set<number> = new Set<number>([0, 9, 12]);
     var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
-    var csscenter: Set<number> = new Set<number>([1, 6, 8, 9, 11, 12 ]);
-    var csssum: Set<number> = new Set<number>([7, 10]);
-    var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6, 7]);
-    var csswhite: Set<number> = new Set<number>([0, 1, 2, 3, 4, 5, 6]);
-    var csslightgreen: Set<number> = new Set<number>([8, 9]);
-    var csslightorange: Set<number> = new Set<number>([11, 12]);
+    var csscenter: Set<number> = new Set<number>([1, 6, 7, 8, 10, 11, 13, 14 ]);
+    var csssum: Set<number> = new Set<number>([9, 12]);
+    var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6]);
+    var csswhite: Set<number> = new Set<number>([0, 1, 2, 3, 4, 5, 6, 7]);
+    var csslightgreen: Set<number> = new Set<number>([10, 11]);
+    var csslightorange: Set<number> = new Set<number>([13, 14]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -477,9 +486,14 @@ export class SpendPlansTabComponent implements OnInit {
         { label: 'Contracts', values: [], toas: [] },
         { label: 'Other', values: [], toas: [] },
         { label: 'Expensed', values: [], toas: [] },
+
+        { label: 'Cumulative Obligated', values: [], toas: [] },
+        { label: 'Cumulative Expensed', values: [], toas: [] },
+
         { label: 'OSD', values: [], toas: [] },
         { label: 'Obligated', values: [], toas: [] },
         { label: 'Expensed', values: [], toas: [] },
+
         { label: 'DELTA', values: [], toas: [] },
         { label: 'Obligated', values: [], toas: [] },
         { label: 'Expensed', values: [], toas: [] },
@@ -493,6 +507,8 @@ export class SpendPlansTabComponent implements OnInit {
       var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline,
         this.deltas, this.maxmonths, this.exe.fy);
 
+      var totalobl: number = 0;
+      var totalexp: number = 0;
       for (var i = 0; i < this.maxmonths; i++) {
         var monthly: SpendPlanMonthly = (this.plan && this.plan.monthlies && i < this.plan.monthlies.length
           ? this.plan.monthlies[i]
@@ -505,15 +521,20 @@ export class SpendPlansTabComponent implements OnInit {
         tmpdata[5].values.push(monthly.other);
         tmpdata[6].values.push(monthly.expensed);
 
+        totalobl += monthly.obligated;
+        totalexp += monthly.expensed;
+        tmpdata[7].values.push(totalobl);
+        tmpdata[8].values.push(totalexp);
+
         // OSD section
-        tmpdata[7].values.push(0);
-        tmpdata[8].values.push(toas[i].toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1.0));
-        tmpdata[9].values.push(toas[i].toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1.0));
+        tmpdata[9].values.push(0);
+        tmpdata[10].values.push(toas[i].toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1.0));
+        tmpdata[11].values.push(toas[i].toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1.0));
 
         // Delta section
-        tmpdata[10].values.push(0);
-        tmpdata[11].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
-        tmpdata[12].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
+        tmpdata[12].values.push(0);
+        tmpdata[13].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
+        tmpdata[14].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
 
         tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
