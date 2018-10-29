@@ -9,6 +9,20 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
+        <div class="pull-left">
+          <span>
+            <label class="mr-1">View Plan</label>
+          </span>
+          <span>
+            Baseline
+            <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false"
+              autocomplete="off" (click)="onTogglePlan()" [disabled]="0===plans?.length">
+              <div class="handle"></div>
+            </button>
+            After Appropriation
+          </span>
+        </div>
+
         <div class="pull-right">
           <span>
             <label class="mr-1">Show as: </label>
@@ -24,15 +38,6 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div *ngIf="_exeline?.appropriated">
-        <span *ngIf="submittable">Create After Appropriation Spend Plan</span>
-        <span *ngIf="!submittable">After Appropriation Spend Plan</span>
-      </div>
-      <div *ngIf="!_exeline?.appropriated">
-        <span *ngIf="submittable">Create Baseline Spend Plan</span>
-        <span *ngIf="!submittable">Baseline Spend Plan</span>      
-      </div>
-
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
             [gridOptions]="agOptions"

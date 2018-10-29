@@ -4,7 +4,10 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core'
 import { HeaderComponent } from '../../header/header.component'
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OSDGoalPlan, SpendPlanService, SpendPlan } from '../../../generated';
+import {
+  OandEMonthly, ExecutionLine, Execution, ExecutionEvent,
+  OSDGoalPlan, SpendPlanService, SpendPlan
+} from '../../../generated';
 import { AddSpendPlanComponent } from '../add-spend-plan/add-spend-plan.component';
 import { Notify } from '../../../utils/Notify';
 import { SpendPlanMonthly } from '../../../generated';
@@ -37,11 +40,10 @@ export class SpendPlansTabComponent implements OnInit {
   private _exe: Execution;
   private _deltas: Map<Date, ExecutionEvent>;
   private rowData: PlanRow[];
-  private plans: SpendPlan[];
-  private plan: SpendPlan;
+  private plans: SpendPlan[] = [{type: SpendPlan.TypeEnum.BASELINE}, {type: SpendPlan.TypeEnum.AFTERAPPROPRIATION}]; // always pretend to have both spend plans
   private maxmonths: number;
   private showPercentages: boolean = true;
-  private submittable: boolean = false;
+  private showBaseline: boolean = true;
   private explanation: string;
 
   @Input() set exeline(e: ExecutionLine) {
@@ -49,16 +51,29 @@ export class SpendPlansTabComponent implements OnInit {
       this._exeline = e;
       this.plansvc.getByExecutionLineId(e.id).subscribe(d => {
         if (d.error) {
-          delete this.plan;
           Notify.error(d.error);
         }
         else {
-          this.plans = d.result;
-          if (this.plans.length > 0) {
-            this.plan = this.plans[0];
-          }
+          // for convenience, if we only have one plan, make
+          // both plans the same, and only change the type (and delete the id)
+
+          d.result.forEach(sp => {
+            if (SpendPlan.TypeEnum.BASELINE === sp.type) {
+              this.plans[0] = sp;
+              if (1 === d.result.length) {
+                var sp2: SpendPlan = Object.assign({}, sp);
+                delete sp2.id;
+                sp2.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
+                this.plans[1] = sp2;
+              }
+            }
+            else {
+              this.plans[1] = sp;
+            }
+          });
+
+          this.refreshTableData();
         }
-        this.refreshTableData();
       });
     }
   }
@@ -68,7 +83,6 @@ export class SpendPlansTabComponent implements OnInit {
   }
 
   @Input() set exe(e: Execution) {
-    //console.log('setting exe');
     this._exe = e;
     this.firstMonth = 0;
 
@@ -115,12 +129,6 @@ export class SpendPlansTabComponent implements OnInit {
         return '';
       }
       return p.node.data.values[col];
-    }
-
-    var setPlan = function (p) {
-      my.plan = p.newValue;
-      my.refreshTableData();
-      return true;
     }
 
     var formatter = function (p) {
@@ -208,18 +216,8 @@ export class SpendPlansTabComponent implements OnInit {
         children: [
           {
             headerName: 'Category',
-            editable: p => (0 === p.node.rowIndex && my.plans && my.plans.length > 1),
             field: 'label',
             cellEditor: 'agRichSelectCellEditor',
-            cellEditorParams: function (p) {
-              return {
-                values: my.plans,
-                formatValue: p => (p && p.type
-                  ? (SpendPlan.TypeEnum.BASELINE === p.type ? 'Baseline' : 'After Appropriation')
-                  : p)
-              };
-            },
-            valueSetter: setPlan,
             maxWidth: 220,
             cellClass: ['ag-cell-white'],
             cellClassRules: {
@@ -482,16 +480,27 @@ export class SpendPlansTabComponent implements OnInit {
     });
   }
 
+  @Input() get submittable(): boolean {
+    // basically, we can submit a plan if our toggle is on that plan, 
+    // and we don't already have an id for it (it's already been saved)
+    var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
+    var ok: boolean = !plan.hasOwnProperty('id');
+    
+    // also, we can't submit for "After Appropriation" until we have been appropriated
+    if (!this.showBaseline) {
+      ok = ok && this.exeline.appropriated;
+    }
+
+    return ok
+  }
+
   refreshTableData() {
     if (this._exe && this._exeline && this._oandes && this._deltas) {
-      // if we already have two plans, we can't submit any more
-      // also, if we have one plan, but haven't been appropriated yet
-      this.submittable = !(this.plans.length === 2
-        || (1 === this.plans.length && !this.exeline.appropriated));
+      var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
+      var label: string = (this.showBaseline ? 'Baseline' : 'After Appropriation');
 
-      var label: string = (this.exeline.appropriated ? 'After Appropriation' : 'Baseline');
-      if (this.plan) {
-        label = (SpendPlan.TypeEnum.BASELINE === this.plan.type ? 'Baseline' : 'After Appropriation');
+      if (this.submittable) {
+        label = 'Create ' + label;
       }
       
       var tmpdata: PlanRow[] = [
@@ -526,8 +535,8 @@ export class SpendPlansTabComponent implements OnInit {
       var totalobl: number = 0;
       var totalexp: number = 0;
       for (var i = 0; i < this.maxmonths; i++) {
-        var monthly: SpendPlanMonthly = (this.plan && this.plan.monthlies && i < this.plan.monthlies.length
-          ? this.plan.monthlies[i]
+        var monthly: SpendPlanMonthly = (plan.monthlies && i < plan.monthlies.length
+          ? plan.monthlies[i]
           : { obligated: 0, labor: 0, travel: 0, contracts: 0, expensed: 0, other: 0 });
 
         tmpdata[1].values.push(monthly.obligated);
@@ -568,6 +577,11 @@ export class SpendPlansTabComponent implements OnInit {
     this.agOptions.api.redrawRows();
   }
 
+  onTogglePlan() {
+    this.showBaseline = !this.showBaseline;
+    this.refreshTableData();
+  }
+
   dosave() {
     var newplan: SpendPlan = {
       monthlies: []
@@ -594,16 +608,24 @@ export class SpendPlansTabComponent implements OnInit {
       newplan.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
     }
 
-    console.log(newplan);
     this.plansvc.createSpendPlan(this.exeline.id, newplan).subscribe(d => {
       if (d.error) {
         Notify.error(d.error);
       }
       else {
-        this.plans.push(d.result);
-        if (!this.plan) {
-          this.plan = this.plans[0];
+        var plan: SpendPlan = d.result;
+        this.plans[this.showBaseline ? 0 : 1] = plan;
+        
+        // if this was the baseline that just got saved, 
+        // set the values for the after appropriation plan
+        // (just for convenience)
+        if (this.showBaseline) {
+          var sp: SpendPlan = Object.assign({}, plan);
+          delete sp.id;
+          sp.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
+          this.plans[1] = sp;
         }
+
         this.refreshTableData();
       }
     });
@@ -619,6 +641,9 @@ export class SpendPlansTabComponent implements OnInit {
 
     if (needexplanation) {
         $('#explanation-modal').modal('show');
+    }
+    else {
+      this.dosave();
     }
   }
 
