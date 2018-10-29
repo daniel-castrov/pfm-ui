@@ -22,14 +22,15 @@
       </a>
     </div>
   </div>
-  <div class="row ml-3 mr-3" *ngIf="shorty">
+  <div class="row ml-3 mr-3">
     <div class="col-7">
       <div class="row">
         <div class="col-2 p-1">
           <label class="mr-1">Program ID: </label>
         </div>
         <div class="col-10 p-1">
-          <span class="mr-1 text-truncate">{{shorty.fullname}}</span>
+          <span class="mr-1 text-truncate" *ngIf="shorty?.fullname">{{shorty.fullname}}</span>
+          <span class="mr-1 text-truncate" *ngIf="ufr.shortName">{{ufr.shortName}}</span>
         </div>
       </div>
       <div class="row">
@@ -37,7 +38,7 @@
           <label class="mr-1">CCA: </label>
         </div>
         <div class="col-10 p-1">
-          <span class="mr-1 text-truncate">{{shorty.coreCapability}}</span>
+          <span class="mr-1 text-truncate">{{ufr.coreCapability}}</span>
         </div>
       </div>
     </div>

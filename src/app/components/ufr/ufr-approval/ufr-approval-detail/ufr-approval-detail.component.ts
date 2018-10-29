@@ -58,8 +58,10 @@ export class UfrApprovalDetailComponent implements OnInit {
   async ngOnInit() {
     let ufrId;
     this.route.params.subscribe(async params => {
-     ufrId = params['id'];
-     await this.init(ufrId);
+      this.ufr = null;
+      this.shorty = null;
+      ufrId = params['id'];
+      await this.init(ufrId);
     });
   }
 
