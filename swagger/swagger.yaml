@@ -3352,7 +3352,7 @@ definitions:
       eventType:
         type: "string"
       value:
-        $ref: "#/definitions/Ufr"
+        $ref: "#/definitions/UFR"
       userCN:
         type: "string"
       timestamp:
