@@ -70,14 +70,11 @@ input {
 }
 
 .disabled-style {
+
   color: $primary-color;
   pointer-events: none;
   opacity: .5;
 
-  cursor: not-allowed;
-  &:disabled:hover {
-    cursor: not-allowed !important;
-  }
 }
 
 .next-link,
@@ -95,10 +92,6 @@ input {
 
   &:disabled {
     opacity: .5;
-    cursor: not-allowed !important;
-  }
-
-  &:disabled:hover {
     cursor: not-allowed !important;
   }
 }
