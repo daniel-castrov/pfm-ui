@@ -558,8 +558,8 @@ export class SpendPlansTabComponent implements OnInit {
 
         // Delta section
         tmpdata[12].values.push(0);
-        tmpdata[13].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
-        tmpdata[14].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
+        tmpdata[13].values.push(tmpdata[10].values[i] - tmpdata[7].values[i]);
+        tmpdata[14].values.push(tmpdata[11].values[i] - tmpdata[8].values[i]);
 
         tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
