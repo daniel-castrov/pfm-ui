@@ -64,11 +64,41 @@ input {
 #agGridProposedChanges .ag-root-wrapper .ag-root-wrapper-body .ag-tool-panel .ag-side-buttons button {
   color: white;
 }
+
 .ag-side-buttons button {
   border: 0 !important;
 }
 
 .disabled-style {
-  color:#6994b9;
+  color: $primary-color;
   pointer-events: none;
+  opacity: .5;
+
+  cursor: not-allowed;
+  &:disabled:hover {
+    cursor: not-allowed !important;
+  }
+}
+
+.next-link,
+.prev-link,
+.breadcrumb {
+  background-color: $white;
+  padding: 0;
+  text-decoration: underline !important;
+
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed !important;
+  }
+
+  &:disabled:hover {
+    cursor: not-allowed !important;
+  }
 }
