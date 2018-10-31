@@ -1,14 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <div class="row mb-2">
-      <div class="col-12">
-        <div class="pull-right program-controls mb-2">
-          <button class="btn btn-primary" (click)="submit_check()" [disabled]="!submittable">Submit</button>
-        </div>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-12">
+      <div class="col-6">
         <div class="pull-left">
           <span>
             <label class="mr-1">View Plan</label>
@@ -22,18 +15,10 @@
             After Appropriation
           </span>
         </div>
-
-        <div class="pull-right">
-          <span>
-            <label class="mr-1">Show as: </label>
-          </span>
-          <span>
-            %
-            <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onTogglePct()">
-              <div class="handle"></div>
-            </button>
-            $
-          </span>
+      </div>
+      <div class="col-6">
+        <div class="pull-right program-controls mb-2">
+          <button class="btn btn-primary" (click)="submit_check()" [disabled]="!submittable">Submit</button>
         </div>
       </div>
     </div>
