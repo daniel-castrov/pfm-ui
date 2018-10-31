@@ -548,7 +548,6 @@ export class ActualsTabComponent implements OnInit {
   }
 
   recalculateTableData() {
-    console.log('recalculating table data');
     // get our goals information
     var progtype: string = this.exeline.appropriation;
     var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
@@ -728,7 +727,7 @@ export class ActualsTabComponent implements OnInit {
           accruals: this.rows[12].values[this.editMonth]
         };
 
-        if (opct >= 0.1 || epct >= 0.1) {
+        if (opct >= 0.0 || epct >= 0.0) {
           $('#explanation-modal').on('hidden.bs.modal', function (event) {
             oande.monthsToFix = my.fixtime;
             oande.explanation = my.explanation;
