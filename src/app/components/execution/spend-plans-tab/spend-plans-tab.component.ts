@@ -44,7 +44,6 @@ export class SpendPlansTabComponent implements OnInit {
   private maxmonths: number;
   private showPercentages: boolean = true;
   private showBaseline: boolean = true;
-  private explanation: string;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -515,7 +514,7 @@ export class SpendPlansTabComponent implements OnInit {
         { label: 'Cumulative Obligated', values: [], toas: [] },
         { label: 'Cumulative Expensed', values: [], toas: [] },
 
-        { label: 'OSD', values: [], toas: [] },
+        { label: 'OUSD(C)', values: [], toas: [] },
         { label: 'Obligated', values: [], toas: [] },
         { label: 'Expensed', values: [], toas: [] },
 
@@ -584,7 +583,7 @@ export class SpendPlansTabComponent implements OnInit {
     this.refreshTableData();
   }
 
-  dosave() {
+  save() {
     var newplan: SpendPlan = {
       monthlies: []
     };
@@ -599,10 +598,6 @@ export class SpendPlansTabComponent implements OnInit {
       });
     }
 
-    if (this.explanation) {
-      newplan.explanation = this.explanation;
-    }
-    
     if (!this.plans || 0 === this.plans.length) {
       newplan.type = SpendPlan.TypeEnum.BASELINE;
     }
@@ -627,26 +622,10 @@ export class SpendPlansTabComponent implements OnInit {
           sp.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
           this.plans[1] = sp;
         }
-
+        Notify.success('Spend Plan saved');
         this.refreshTableData();
       }
     });
-  }
-
-  submit_check() {
-    // make sure we give an explanation if we need to
-    var needexplanation: boolean
-      = (this.rowData[13].values.filter(val => (val > 10)).length > 0);
-    if (!needexplanation) {
-      needexplanation = (this.rowData[14].values.filter(val => (val > 10)).length > 0);
-    }
-
-    if (needexplanation) {
-        $('#explanation-modal').modal('show');
-    }
-    else {
-      this.dosave();
-    }
   }
 
   nextMonth() {

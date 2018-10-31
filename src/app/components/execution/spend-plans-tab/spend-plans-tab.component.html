@@ -18,7 +18,7 @@
       </div>
       <div class="col-6">
         <div class="pull-right program-controls mb-2">
-          <button class="btn btn-primary" (click)="submit_check()" [disabled]="!submittable">Submit</button>
+          <button class="btn btn-primary" (click)="save()" [disabled]="!submittable">Submit</button>
         </div>
       </div>
     </div>
@@ -30,31 +30,6 @@
             (gridReady)="onGridReady($event)"
           >
           </ag-grid-angular>
-      </div>
-    </div>
-  </div>
-
-  <div id="explanation-modal" class="modal fade in">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-9">
-              <div class="mb-2">Why is the program behind?</div>
-              <div class="form-group">
-                <textarea cols="50" rows="4" wrap="physical" class="form-control" [(ngModel)]='explanation'></textarea>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="mt-4 mb-2">
-                <button class="btn btn-primary" data-dismiss="modal" (click)="dosave()">Save</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
