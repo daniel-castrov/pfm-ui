@@ -227,12 +227,14 @@ export class GraphsTabComponent implements OnInit {
             realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
         }
 
-        this.datasets = [obgDataset,
-            //expDataset,
+        this.datasets = [
+            obgDataset,
+            expDataset,
             obgplanRed,
-            //expplanRed,
-            //realexpDataset,
-            realobgDataset];
+            expplanRed,
+            realexpDataset,
+            realobgDataset
+        ];
     }
 
     private regraph() {
