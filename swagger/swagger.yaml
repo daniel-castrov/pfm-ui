@@ -31,6 +31,7 @@ tags:
 - name: "Execution"
 - name: "Library"
 - name: "OandE"
+- name: "SpendPlan"
 
 #
 ##############################################################################
@@ -1645,6 +1646,20 @@ paths:
           description: "An unexpected error occured."
         403:
           description: "Forbidden/not authorized"
+  /users/cn/{cn}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a user by the CN"
+      description: "Returns a User with the given cn"
+      operationId: "getByCn"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cn"
+        in: "path"
+        required: true
+        type: "string"
   /users/community/{commId}:
     get:
       tags:
@@ -2193,6 +2208,46 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+  /ufr/event/{eventType}:
+    post:
+      tags:
+      - "UFRs"
+      summary: "Updates a UFR and created an event"
+      description: "Updates a UFR"
+      operationId: "generateTransaction"
+      parameters:
+      - in: "path"
+        name: "eventType"
+        description: "The type of event"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /ufr/{ufrId}/events:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets all the UFR events from the specified UFR"
+      description: "Returns the ufr events"
+      operationId: "getUfrEventsById"
+      parameters:
+      - in: "path"
+        name: "ufrId"
+        description: "The id of the ufr"
+        required: true
+        type: "string"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
   /ufr/pom/{pomId}/program/{mrdbId}:
     put:
       tags:
@@ -2276,6 +2331,40 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
+  /ufr/next/{requestNumber}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets the next UFR document based on the current requestNumber"
+      description: "Gets next UFR"
+      operationId: "getNext"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "requestNumber"
+        description: "The Request Number"
+        required: true
+        type: "integer"
+  /ufr/previous/{requestNumber}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets the previous UFR document based on the current requestNumber"
+      description: "Gets previous UFR"
+      operationId: "getPrevious"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "requestNumber"
+        description: "The Request Number"
+        required: true
+        type: "integer"
 # STOP UFRs
 ##############################################################################
 # START SNAPSHOTS
@@ -2552,6 +2641,64 @@ paths:
       description: "Returns the execution events"
       produces:
       - "application/json"
+# STOP EXECUTION
+##############################################################################
+# START SPENDPLANS
+#
+  /spendplans/executionline/{exelineid}:
+    get:
+      operationId: "getByExecutionLineId"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
+      produces:
+      - "application/json"
+    post:
+      operationId: "createSpendPlan"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Spend Plan"
+        required: true
+        schema:
+          $ref: "#/definitions/SpendPlan"
+      tags:
+      - "SpendPlan"
+      summary: "Create a new Spend Plan for this execution line"
+      produces:
+      - "application/json"
+    put:
+      operationId: "UpdateSpendPlan"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Spend Plan"
+        required: true
+        schema:
+          $ref: "#/definitions/SpendPlan"
+      tags:
+      - "SpendPlan"
+      summary: "Updates an existing Spend Plan for this execution line"
+      produces:
+      - "application/json"
+
 # STOP EXECUTION
 #################################################################
 # START LIBRARY
@@ -3199,12 +3346,25 @@ definitions:
         type: "string"
       imageArea:
         type: "string"
+  UfrEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      value:
+        $ref: "#/definitions/UFR"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "integer"
+      success:
+        type: "boolean"
   ShortyType:
     enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
   UfrStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
   Disposition:
-    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, DEFERRED, OGI]
+    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
   Pom:
     type: "object"
     properties:
@@ -3400,10 +3560,10 @@ definitions:
         type: "string"
       appropriated:
         type: "boolean"
-      spendPlans:
+      goalPlans:
         type: "array"
         items:
-          $ref: "#/definitions/SpendPlan"
+          $ref: "#/definitions/OSDGoalPlan"
   Execution:
     type: "object"
     properties:
@@ -3417,11 +3577,11 @@ definitions:
         type: "string"
       osdObligationGoals:
         type: "object"
-        $ref: "#/definitions/SpendPlan"
+        $ref: "#/definitions/OSDGoalPlan"
       osdExpenditureGoals:
         type: "object"
-        $ref: "#/definitions/SpendPlan"
-  SpendPlan:
+        $ref: "#/definitions/OSDGoalPlan"
+  OSDGoalPlan:
     type: "object"
     properties:
       type:
@@ -3519,5 +3679,35 @@ definitions:
         type: "number"
       monthsToFix:
         type: "number"
+  SpendPlanMonthly:
+    type: "object"
+    properties:
+      obligated:
+        type: "number"
+      labor:
+        type: "number"
+      travel:
+        type: "number"
+      contracts:
+        type: "number"
+      other:
+        type: "number"
+      expensed:
+        type: "number"
+  SpendPlan:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      executionLineId:
+        type: "string"
+      type:
+        enum: [BASELINE, AFTER_APPROPRIATION]
+      explanation:
+        type: "string"
+      monthlies:
+        type: "array"
+        items:
+          $ref: "#/definitions/SpendPlanMonthly"
 ##############################################################################
 # ENDFILE

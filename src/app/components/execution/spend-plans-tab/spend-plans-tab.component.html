@@ -1,74 +1,75 @@
-<j-header></j-header>
-<div class="row main-content">
+<div class="row">
   <div class="col-md-12">
     <div class="row mb-2">
-      <div class="col-8">
-        <span class="h5 mr-2">Spend Plan Update</span>
-        <span>
-          <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
-            <option></option>
-            <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
-           </select>
-         </span>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-8">
-        <span class="form-group">
-          <span class="mr-sm-4">NGCD/Increment 1</span>
-        </span>
-        <span class="form-group">
-            <span class="mr-sm-4">RDTE/BA4/IS4/5Y</span>
-        </span>
-      </div>
-      <div class="col-4">
-        <div class="pull-right program-controls">
-          <button class="btn btn-primary" (click)="save('SUBMITTED')">Submit</button>
+      <div class="col-12">
+        <div class="pull-right program-controls mb-2">
+          <button class="btn btn-primary" (click)="submit_check()" [disabled]="!submittable">Submit</button>
         </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-12">
-          <ag-grid-angular #agGrid class="ag-theme-balham"
-            id="myGrid"
-            [enableSorting]="true"
-            [enableColResize]="true"
-            [enableFilter]="false"
-            [gridAutoHeight]="true"
-            [gridOptions]="agOptions"
-            [rowData]="rowData"
-            [columnDefs]="columnDefs"
-            [defaultColDef]="defaultColDef"
-            [columnTypes]="columnTypes"
-            [toolPanelSuppressSideButtons]="true"
-            [pagination]="true"
-            [paginationPageSize]="20"
-            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
-            [suppressPaginationPanel]="true"
-            (gridReady)="onGridReady($event)"
-            >
-          </ag-grid-angular>
-          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        <div class="pull-left">
+          <span>
+            <label class="mr-1">View Plan</label>
+          </span>
+          <span>
+            Baseline
+            <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false"
+              autocomplete="off" (click)="onTogglePlan()" [disabled]="0===plans?.length">
+              <div class="handle"></div>
+            </button>
+            After Appropriation
+          </span>
+        </div>
+
+        <div class="pull-right">
+          <span>
+            <label class="mr-1">Show as: </label>
+          </span>
+          <span>
+            %
+            <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onTogglePct()">
+              <div class="handle"></div>
+            </button>
+            $
+          </span>
+        </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col-12">
-        <fieldset>
-          <legend>Add Spend Plan</legend>
+          <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
+            [gridOptions]="agOptions"
+            [rowData]="rowData"
+            (gridReady)="onGridReady($event)"
+          >
+          </ag-grid-angular>
+      </div>
+    </div>
+  </div>
+
+  <div id="explanation-modal" class="modal fade in">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+        </div>
+        <div class="modal-body">
           <div class="row">
-            <div class="col-11">
-              <add-spend-plan></add-spend-plan>
+            <div class="col-9">
+              <div class="mb-2">Why is the program behind?</div>
+              <div class="form-group">
+                <textarea cols="50" rows="4" wrap="physical" class="form-control" [(ngModel)]='explanation'></textarea>
+              </div>
             </div>
-            <div class="col-1">
-              <button class="btn btn-primary pull-right" (click)="save('SUBMITTED')">
-                <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-                Add
-              </button>
+            <div class="col-3">
+              <div class="mt-4 mb-2">
+                <button class="btn btn-primary" data-dismiss="modal" (click)="dosave()">Save</button>
+              </div>
             </div>
           </div>
-        </fieldset>
+        </div>
       </div>
     </div>
   </div>

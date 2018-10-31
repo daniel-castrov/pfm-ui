@@ -71,21 +71,42 @@ export class UfrViewComponent implements OnInit {
       Notify.error(fundsTabValidation.message);
     } else {
       if(this.ufr.id) {
-        this.ufrService.update(this.ufr).subscribe();
-        if (this.ufr.status === UfrStatus.SUBMITTED) {
-          Notify.success('UFR submitted successfully');
-        } else {
-          Notify.success('UFR saved successfully');
-        }
+        this.ufrService.update(this.ufr).subscribe(d => {
+          if (d.error) {
+            Notify.error(d.error); 
+          }
+          else {
+            if (this.ufr.status === UfrStatus.SUBMITTED) {
+              Notify.success('UFR submitted successfully');
+            } else {
+              Notify.success('UFR saved successfully');
+            }
+          }
+        });
       } else {
-        this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
-        Notify.success('UFR created successfully')
+        if (this.ufr.status === UfrStatus.SUBMITTED) {
+          // going straight to SUBMIT without a SAVE first (so save first!)
+          this.ufrService.create(this.ufr).subscribe(d => {
+            if (d.error) {
+              Notify.error(d.error);
+            }
+            else {
+              this.ufr = d.result;
+              this.ufr.status = UfrStatus.SUBMITTED;
+              this.save();
+            }
+          });
+        }
+        else {
+          this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+          Notify.success('UFR created successfully')
+        }
       }
     }
   }
 
   submit() {
-    this.ufr.status = 'SUBMITTED';
+    this.ufr.status = UfrStatus.SUBMITTED;
     this.save();
   }
 

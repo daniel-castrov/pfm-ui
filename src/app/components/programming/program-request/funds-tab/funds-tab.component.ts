@@ -113,6 +113,7 @@ export class FundsTabComponent implements OnChanges {
             fl.item === fundingLine.item &&
             fl.opAgency === fundingLine.opAgency);
           if (!isDuplicate) {
+            fundingLine.userCreated = true;
             this.existingFundingLines.push(fundingLine);
           }
         });
@@ -127,6 +128,7 @@ export class FundsTabComponent implements OnChanges {
             fl.item === fundingLine.item &&
             fl.opAgency === fundingLine.opAgency);
           if (!isDuplicate) {
+            fundingLine.userCreated = true;
             this.existingFundingLines.push(fundingLine);
           }
         });
@@ -247,10 +249,12 @@ export class FundsTabComponent implements OnChanges {
             fundingLine.baOrBlin === fl.baOrBlin &&
             fundingLine.item === fl.item
           )[0];
+          pbRow.fundingLine.userCreated = fundingLine.userCreated;
         }
 
         if (pbRow.fundingLine === undefined) {
           pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
+          pbRow.fundingLine.userCreated = fundingLine.userCreated;
         }
 
         let deltaRow: DataRow = new DataRow();
@@ -1092,8 +1096,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   flHaveValues(): boolean {
-    var ok: boolean = true;
-    let result = [];
+    var ok: boolean = (this.pr.fundingLines.length > 0);
     this.pr.fundingLines.forEach(function (fl, index) {
       var flok: boolean = false;
       Object.getOwnPropertyNames(fl.funds).forEach(key => {

@@ -52,11 +52,13 @@ fieldset {
 }
 
 .form-check {
-  padding-left: 0 !important;
 
  > .form-check-input {
-    display: inline-block;
-    top: 4px !important;
-    margin: 0;
+    margin: 0 !important;
+    position: relative !important;
+  }
+
+  .form-check-label {
+    padding-top: 1px;
   }
 }

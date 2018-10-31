@@ -301,7 +301,8 @@ export class UfrFundsComponent implements OnChanges {
             headerName: 'OpAgency',
             headerTooltip: 'OpAgency',
             field: 'fundingLine.opAgency',
-            cellClass: 'funding-line-default'
+            cellClass: 'funding-line-default',
+            hide: true
           }]}
     ];
 
