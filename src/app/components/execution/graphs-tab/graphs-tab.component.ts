@@ -22,6 +22,7 @@ export class GraphsTabComponent implements OnInit {
     private _deltas: Map<Date, ExecutionEvent>;
     private datasets: DataSet[];
     private maxmonths: number;
+    private showPercentages: boolean;
 
     @Input() set exeline(e: ExecutionLine) {
         this._exeline = e;
@@ -80,6 +81,8 @@ export class GraphsTabComponent implements OnInit {
         var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
         var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
+        var my: GraphsTabComponent = this;
+
         var cutoff = new Date();
         cutoff.setMonth(cutoff.getMonth() + 1);
         var fymonth = OandETools.convertDateToFyMonth(this.exe.fy, cutoff);
@@ -99,7 +102,7 @@ export class GraphsTabComponent implements OnInit {
                 this.maxmonths, this.exe.fy);
 
         var obgDataset: DataSet = {
-            label: 'Obligation Goal',
+            label: 'Obligation Goal' + (this.showPercentages ? ' %' : ''),
             csskey: 'obgplan',
             data: [],
             toas:[],
@@ -108,7 +111,7 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var expDataset: DataSet = {
-            label: 'Expenditure Goal',
+            label: 'Expenditure Goal' + (this.showPercentages ? ' %' : ''),
             data: [],
             toas: [],
             status: [],
@@ -117,7 +120,7 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var realexpDataset: DataSet = {
-            label: 'Actual Expenditures',
+            label: 'Actual Expenditures' + (this.showPercentages ? ' %' : ''),
             data: [],
             toas: [],
             status: [],
@@ -126,7 +129,7 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var realobgDataset: DataSet = {
-            label: 'Actual Obligations',
+            label: 'Actual Obligations' + (this.showPercentages ? ' %' : ''),
             data: [],
             toas: [],
             status: [],
@@ -151,7 +154,9 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var makeHtmlNote = function (oande: OandEMonthly, title: string,
-            goal: number, actual: number, toa: number) {
+            goal: number, actual: number, toa_raw: number) {
+
+            var toa: number = (my.showPercentages ? toa_raw : 1);            
             var notes: string =
                 title + ' Goal: ' + goal.toFixed(2) + ' (' + (goal / toa * 100).toFixed(2) + '%)'
                 + '<br/>Actual: ' + actual.toFixed(2) + ' (' + (actual / toa * 100).toFixed(2) + '%)';
@@ -176,7 +181,7 @@ export class GraphsTabComponent implements OnInit {
         }
 
         for (var i = 0; i < this.maxmonths; i++) {
-            var toa = toasAndReleaseds[i].toa;
+            var toa = ( this.showPercentages ? 1 : toasAndReleaseds[i].toa );
             var redtoa: number = toa * 0.1;
             var ogoal: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
             var egoal: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
@@ -389,6 +394,11 @@ export class GraphsTabComponent implements OnInit {
         return (this.datasets
             ? this.datasets.filter(ds => (!(ds.csskey.endsWith('red') || ds.csskey.endsWith('yellow'))))
             : []);
+    }
+
+    @Input() set percentages(p: boolean) {
+        this.showPercentages = p;
+        this.refreshGraph();
     }
 }
 

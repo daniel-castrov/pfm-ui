@@ -30,6 +30,7 @@
         </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
@@ -39,6 +40,7 @@
               [exeline]="exeline"
               [exe]="exe"
               [parent]="this"
+              [percentages]="showPercentages"
               [deltas]="deltaMap">
             </spend-plans-tab>
           </tab>
@@ -48,6 +50,7 @@
               [exeline]="exeline"
               [exe]="exe"
               [parent]="this"
+              [percentages]="showPercentages"
               [deltas]="deltaMap">
             </actuals-tab>
           </tab>
@@ -56,6 +59,7 @@
               [oandes]="oandes"
               [exeline]="exeline"
               [exe]="exe"
+              [percentages]="showPercentages"
               [deltas]="deltaMap">
             </graphs-tab>
           </tab>
