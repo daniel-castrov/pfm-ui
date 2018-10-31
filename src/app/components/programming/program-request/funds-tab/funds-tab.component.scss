@@ -154,3 +154,9 @@ fieldset {
     }
   }
 }
+
+.close-button {
+  &:hover {
+    opacity: .5;
+  }
+}

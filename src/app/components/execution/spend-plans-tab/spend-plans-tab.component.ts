@@ -572,9 +572,11 @@ export class SpendPlansTabComponent implements OnInit {
     }
   }
 
-  onTogglePct() {
-    this.showPercentages = !this.showPercentages;
-    this.agOptions.api.redrawRows();
+  @Input() set percentages(p: boolean) {
+    this.showPercentages = p;
+    if (this.agOptions.api) {
+      this.agOptions.api.redrawRows();
+    }
   }
 
   onTogglePlan() {
