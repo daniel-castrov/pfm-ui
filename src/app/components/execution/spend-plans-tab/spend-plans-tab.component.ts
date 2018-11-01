@@ -502,23 +502,23 @@ export class SpendPlansTabComponent implements OnInit {
       
       var tmpdata: PlanRow[] = [
         { label: label, values: [], toas:[] },
-        { label: 'Obligated', values: [], toas: [] },
+        { label: 'Obligations', values: [], toas: [] },
         { label: 'Civilian Labor', values: [], toas: [] },
         { label: 'Travel', values: [], toas: [] },
         { label: 'Contracts', values: [], toas: [] },
         { label: 'Other', values: [], toas: [] },
-        { label: 'Expensed', values: [], toas: [] },
+        { label: 'Expenditure', values: [], toas: [] },
 
-        { label: 'Cumulative Obligated', values: [], toas: [] },
-        { label: 'Cumulative Expensed', values: [], toas: [] },
+        { label: 'Cumulative Obligations', values: [], toas: [] },
+        { label: 'Cumulative Expenditure', values: [], toas: [] },
 
-        { label: 'OUSD(C)', values: [], toas: [] },
-        { label: 'Obligated', values: [], toas: [] },
-        { label: 'Expensed', values: [], toas: [] },
+        { label: 'OUSD(C) Goal', values: [], toas: [] },
+        { label: 'Obligations', values: [], toas: [] },
+        { label: 'Expenditure', values: [], toas: [] },
 
-        { label: 'DELTA', values: [], toas: [] },
-        { label: 'Obligated', values: [], toas: [] },
-        { label: 'Expensed', values: [], toas: [] },
+        { label: 'DELTA TO GOAL', values: [], toas: [] },
+        { label: 'Obligations', values: [], toas: [] },
+        { label: 'Expenditure', values: [], toas: [] },
       ];
 
       var progtype: string = this.exeline.appropriation;
