@@ -8,7 +8,6 @@ import {
   OandEMonthly, ExecutionLine, Execution, ExecutionEvent,
   OSDGoalPlan, SpendPlanService, SpendPlan
 } from '../../../generated';
-import { AddSpendPlanComponent } from '../add-spend-plan/add-spend-plan.component';
 import { Notify } from '../../../utils/Notify';
 import { SpendPlanMonthly } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
@@ -29,7 +28,6 @@ declare const $: any;
 export class SpendPlansTabComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  @ViewChild(AddSpendPlanComponent) private addarea;
   @Input() parent: any;
 
   private agOptions: GridOptions;
