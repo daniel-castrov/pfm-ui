@@ -70,6 +70,9 @@ export class UfrFundsComponent implements OnChanges {
         this.pomFy + 4];
       this.generateColumns();
       this.initDataRows();
+      this.agGridCurrentFunding.api.sizeColumnsToFit();
+      this.agGridProposedChanges.api.sizeColumnsToFit();
+      this.agGridRevisedPrograms.api.sizeColumnsToFit();
     });
   }
 
@@ -222,7 +225,6 @@ export class UfrFundsComponent implements OnChanges {
       cellClass: 'funding-line-default'
     });
     this.agGridProposedChanges.api.setColumnDefs(this.proposedChangesColumnDefs);
-    this.agGridProposedChanges.api.sizeColumnsToFit();
     this.initCurrentFunding();
   }
 
@@ -526,10 +528,8 @@ export class UfrFundsComponent implements OnChanges {
     this.calculateRevisedChanges();
   }
 
-  onColumnVisible(params) {
-    this.agGridProposedChanges.api.sizeColumnsToFit();
-    this.agGridCurrentFunding.api.sizeColumnsToFit();
-    this.agGridRevisedPrograms.api.sizeColumnsToFit();
+  sizeColumnsToFit(params) {
+    params.api.sizeColumnsToFit();
   }
 
   onCellEditingStarted(params) {
