@@ -2,7 +2,7 @@ import {Worksheet} from "../../../../generated";
 import {Injectable} from "@angular/core";
 
 export enum Operation {
-  DUPLICATE=1,RENAME,EXPORT,IMPORT
+  DUPLICATE=1,RENAME,EXPORT,IMPORT,UNLOCK
 }
 
 @Injectable()

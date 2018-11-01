@@ -159,6 +159,7 @@ import {NewProgramService} from "./services/new.program.service";
 import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval/ufr-approval-summary/ufr-approval-summary.component";
 import { FyHeaderComponent } from './components/execution/fy-header/fy-header.component';
 import {UfrApprovalDetailComponent} from "./components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component";
+import {UnlockComponent} from "./components/programming/pom-worksheet/worksheet-management/unlock/unlock.component";
 
 
 // ROUTES
@@ -328,6 +329,7 @@ const appRoutes: Routes = [
     RenameComponent,
     ExportComponent,
     ImportComponent,
+    UnlockComponent,
     ActualsCellRendererComponent,
     FyHeaderComponent,
   ],
