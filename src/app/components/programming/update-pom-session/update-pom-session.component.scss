@@ -54,6 +54,11 @@ fieldset {
 .form-check {
 
  > .form-check-input {
-    margin: 0;
+    margin: 0 !important;
+    position: relative !important;
+  }
+
+  .form-check-label {
+    padding-top: 1px;
   }
 }
