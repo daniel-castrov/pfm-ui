@@ -70,7 +70,6 @@ export class ProgramTabComponent implements OnChanges {
   private createMismatchingTagIfNeeded(tags: Tag[], tagType: string, prField: string) {
     if (prField && this.tagAbbreviationIsNotFoundInTagAbbreviations(prField, tags)) {
       const mismatchingTag = { abbr: prField, name: prField + ' (expanded name unavailable)' };
-      console.log( mismatchingTag );
       this.mapTypeToTags.get(tagType).push(mismatchingTag);
     }
   }

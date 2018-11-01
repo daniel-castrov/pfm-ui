@@ -112,13 +112,16 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.primaryCapability = programOrPR.primaryCapability;
     this.pr.secondaryCapability = programOrPR.secondaryCapability;
     this.pr.emphases = [...programOrPR.emphases];
+    this.pr.organization = programOrPR.organization;
   }
 
   async save(state: ProgrammaticRequestState) {
+
+    await this.setOrganizationFromLeadComponent();
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
-    } else {
+    } else {      
       if(this.pr.id) {
         this.pr.state = state;
         let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise()); 
@@ -136,6 +139,19 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         Notify.success('Program request created successfully')
       }
     }
+  }
+
+  async setOrganizationFromLeadComponent(){
+
+    let orgstring:string;
+    if (this.pr.leadComponent == "ECBC"){ 
+      orgstring = "DUSA-TE";
+    } else {
+      orgstring = this.pr.leadComponent;
+    }
+    let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
+    this.pr.organization = org.id;
+    console.log( this.pr );
   }
 
   isNotSavable(): boolean {
