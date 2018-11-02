@@ -151,7 +151,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     }
     let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
     this.pr.organization = org.id;
-    console.log( this.pr );
   }
 
   isNotSavable(): boolean {
