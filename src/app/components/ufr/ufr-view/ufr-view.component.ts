@@ -1,6 +1,6 @@
 import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Pom, POMService, ShortyType, UFR, UFRsService, UfrStatus} from '../../../generated';
+import {Pom, POMService, ShortyType, UFR, UFRsService, UfrStatus, Organization, OrganizationService} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
 import {WithFullName, WithFullNameService} from "../../../services/with-full-name.service";
@@ -29,6 +29,7 @@ export class UfrViewComponent implements OnInit {
                private cycleUtils: CycleUtils,
                private route: ActivatedRoute,
                private pomService: POMService,
+               private orgService: OrganizationService,
                private withFullNameService : WithFullNameService ) {}
 
   async ngOnInit() {
@@ -66,6 +67,7 @@ export class UfrViewComponent implements OnInit {
   }
 
   async save() {
+    await this.setOrganizationFromLeadComponent();
     let fundsTabValidation = this.ufrFundsComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
@@ -108,6 +110,18 @@ export class UfrViewComponent implements OnInit {
   submit() {
     this.ufr.status = UfrStatus.SUBMITTED;
     this.save();
+  }
+
+  async setOrganizationFromLeadComponent(){
+
+    let orgstring:string;
+    if (this.ufr.leadComponent == "ECBC"){ 
+      orgstring = "DUSA-TE";
+    } else {
+      orgstring = this.ufr.leadComponent;
+    }
+    let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
+    this.ufr.organization = org.id;
   }
 
   get ufrNumber(): string {
