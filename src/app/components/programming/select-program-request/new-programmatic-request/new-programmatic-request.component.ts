@@ -62,7 +62,7 @@ export class NewProgrammaticRequestComponent implements OnInit {
     var mgr: boolean = ('true' === (await this.rolesService.hasRole('POM_Manager').toPromise()).result );
     if (false === mgr) {
       var user: User = await this.userUtils.user().toPromise();
-      this.selectableProgramsOrPrs = this.selectableProgramsOrPrs.filter(prog => (prog.organization === user.organizationId));
+      this.selectableProgramsOrPrs = this.selectableProgramsOrPrs.filter(prog => (prog.organizationId === user.organizationId));
     }
   }
 

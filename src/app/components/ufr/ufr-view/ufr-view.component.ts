@@ -121,7 +121,7 @@ export class UfrViewComponent implements OnInit {
       orgstring = this.ufr.leadComponent;
     }
     let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
-    this.ufr.organization = org.id;
+    this.ufr.organizationId = org.id;
   }
 
   get ufrNumber(): string {

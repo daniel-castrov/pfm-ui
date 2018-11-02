@@ -112,7 +112,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.primaryCapability = programOrPR.primaryCapability;
     this.pr.secondaryCapability = programOrPR.secondaryCapability;
     this.pr.emphases = [...programOrPR.emphases];
-    this.pr.organization = programOrPR.organization;
+    this.pr.organizationId = programOrPR.organizationId;
   }
 
   async save(state: ProgrammaticRequestState) {
@@ -150,7 +150,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       orgstring = this.pr.leadComponent;
     }
     let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
-    this.pr.organization = org.id;
+    this.pr.organizationId = org.id;
   }
 
   isNotSavable(): boolean {
