@@ -117,7 +117,9 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async save(state: ProgrammaticRequestState) {
 
-    await this.setOrganizationFromLeadComponent();
+    this.pr.organizationId = (await this.orgService.getByAbbreviation( 
+      PRUtils.getOrganizationNameForLeadComponent(this.pr.leadComponent) ).toPromise()).result.id;
+
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
@@ -139,18 +141,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         Notify.success('Program request created successfully')
       }
     }
-  }
-
-  async setOrganizationFromLeadComponent(){
-
-    let orgstring:string;
-    if (this.pr.leadComponent == "ECBC"){ 
-      orgstring = "DUSA-TE";
-    } else {
-      orgstring = this.pr.leadComponent;
-    }
-    let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
-    this.pr.organizationId = org.id;
   }
 
   isNotSavable(): boolean {

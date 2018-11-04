@@ -6,6 +6,7 @@ import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {AutoValuesService} from "../../../programming/program-request/funds-tab/AutoValues.service";
 import {DataRow} from "./DataRow";
+import {PRUtils} from '../../../../services/pr.utils.service';
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 import {Notify} from "../../../../utils/Notify";
@@ -548,10 +549,9 @@ export class UfrFundsComponent implements OnChanges {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-        this.tagsService.tags(TagType.OP_AGENCY).subscribe(tags => {
-          params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
-          this.agGridProposedChanges.api.refreshCells();
-        });
+
+        params.data.fundingLine.opAgency = PRUtils.getOpAgencyForLeadComponent(this.shorty.leadComponent);
+        this.agGridProposedChanges.api.refreshCells();
 
         if (params.data.fundingLine.appropriation === 'RDTE'){
           params.data.fundingLine.item = this.shorty.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
@@ -579,11 +579,11 @@ export class UfrFundsComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
-    this.limitBaForOrganizations()
+    this.limitBaForLeadComponent()
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
-  limitBaForOrganizations() {
+  limitBaForLeadComponent() {
     switch(this.shorty.leadComponent) {
       case 'DUSA TE':
       case 'JRO':

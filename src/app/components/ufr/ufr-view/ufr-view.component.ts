@@ -3,6 +3,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Pom, POMService, ShortyType, UFR, UFRsService, UfrStatus, Organization, OrganizationService} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {PRUtils} from '../../../services/pr.utils.service';
 import {WithFullName, WithFullNameService} from "../../../services/with-full-name.service";
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
@@ -67,7 +68,10 @@ export class UfrViewComponent implements OnInit {
   }
 
   async save() {
-    await this.setOrganizationFromLeadComponent();
+
+    this.ufr.organizationId = (await this.orgService.getByAbbreviation( 
+      PRUtils.getOrganizationNameForLeadComponent(this.ufr.leadComponent) ).toPromise()).result.id;
+
     let fundsTabValidation = this.ufrFundsComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
@@ -111,19 +115,7 @@ export class UfrViewComponent implements OnInit {
     this.ufr.status = UfrStatus.SUBMITTED;
     this.save();
   }
-
-  async setOrganizationFromLeadComponent(){
-
-    let orgstring:string;
-    if (this.ufr.leadComponent == "ECBC"){ 
-      orgstring = "DUSA-TE";
-    } else {
-      orgstring = this.ufr.leadComponent;
-    }
-    let org:Organization = (await this.orgService.getByAbbreviation(orgstring).toPromise()).result;
-    this.ufr.organizationId = org.id;
-  }
-
+  
   get ufrNumber(): string {
     if(this.ufr.requestNumber) {
       const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);

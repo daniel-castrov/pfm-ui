@@ -963,11 +963,10 @@ export class FundsTabComponent implements OnChanges {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g, '');
     } else {
       if (params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin) {
-        this.tagsService.tags(TagType.OP_AGENCY).subscribe(tags => {
-          params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.pr.leadComponent) !== -1).abbr
-          this.agGrid.api.refreshCells();
-        });
 
+        params.data.fundingLine.opAgency = PRUtils.getOpAgencyForLeadComponent(this.pr.leadComponent);
+        this.agGrid.api.refreshCells(); 
+        
         if (params.data.fundingLine.appropriation === 'RDTE') {
           params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g, '');;
         }
@@ -1017,10 +1016,10 @@ export class FundsTabComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
-    this.limitBaForOrganizations()
+    this.limitBaForLeadComponent()
   }
 
-  limitBaForOrganizations() {
+  limitBaForLeadComponent() {
     if (this.pr.leadComponent) {
       switch (this.pr.leadComponent) {
         case 'DUSA TE':
