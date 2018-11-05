@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {Worksheet, WorksheetService} from "../../../../../generated";
+import {RestResult, Worksheet, WorksheetService} from "../../../../../generated";
 import {StateService} from "../state.service";
 import {OperationBase} from "../operartion.base";
 import {Notify} from "../../../../../utils/Notify";
@@ -23,13 +23,12 @@ export class ImportComponent extends OperationBase {
   }
 
   async onImport() {
-    try {
-      await this.worksheetService.import1(this.selectedImportableWorksheet.id, this.file).toPromise();
+    const restResult = await this.worksheetService.import1(this.selectedImportableWorksheet.id, this.file).toPromise() as RestResult;
+    if(restResult.error) {
+      Notify.error('Import failed. Reason: ' + restResult.error);
+    } else {
       Notify.success('Import successful');
       this.operationOver.emit();
-    } catch (ex) {
-      const e = ex as HttpErrorResponse;
-      Notify.error('Import failed. Reason: ' + e.error.error);
     }
   }
 
