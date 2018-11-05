@@ -14,7 +14,8 @@ export class FyHeaderComponent implements IHeaderGroupAngularComp {
   private prevfx;
   private fy: number;
   private nextOk: boolean;
-  private prevOk: boolean
+  private prevOk: boolean;
+  private prefix: string = '';
 
   constructor() {
   }
@@ -22,29 +23,38 @@ export class FyHeaderComponent implements IHeaderGroupAngularComp {
   agInit(params) {
     this.firstMonth = params.firstMonth;
     this.maxMonths = params.maxMonths;
-    var inty: number = this.firstMonth / 12;
+    var inty: number = Number.parseInt((this.firstMonth / 12).toFixed(0));
     this.fy = ( params.fy + inty );
     this.nextfx = params.next;
     this.prevfx = params.prev;
+    if (params.prefix) {
+      this.prefix = params.prefix;
+    }
     this.resetOks();
   }
 
   resetOks() {
     this.prevOk = (this.firstMonth - 12 >= 0);
-    this.nextOk = (this.firstMonth + 12 < this.maxMonths );
+    this.nextOk = (this.firstMonth + 12 < this.maxMonths);
+    
+    console.log(this);
   }
 
   prev() {
-    this.prevfx();
-    this.firstMonth -= 12;
-    this.fy -= 1;
-    this.resetOks();
+    if (this.prevOk) {
+      this.prevfx();
+      this.firstMonth -= 12;
+      this.fy -= 1;
+      this.resetOks();
+    }
   }
 
   next() {
-    this.nextfx();
-    this.firstMonth += 12;
-    this.fy += 1;
-    this.resetOks();
+    if (this.nextOk) {
+      this.nextfx();
+      this.firstMonth += 12;
+      this.fy += 1;
+      this.resetOks();
+    }
   }
 }

@@ -39,7 +39,7 @@ export class SpendPlansTabComponent implements OnInit {
   private _deltas: Map<Date, ExecutionEvent>;
   private rowData: PlanRow[];
   private plans: SpendPlan[] = [{type: SpendPlan.TypeEnum.BASELINE}, {type: SpendPlan.TypeEnum.AFTERAPPROPRIATION}]; // always pretend to have both spend plans
-  private maxmonths: number;
+  private maxmonths: number = 0;
   private showPercentages: boolean = true;
   private showBaseline: boolean = true;
 
@@ -234,7 +234,8 @@ export class SpendPlansTabComponent implements OnInit {
             maxMonths: my.maxmonths,
             fy: (my._exe ? my.exe.fy : 0),
             next: function () { my.nextMonth() },
-            prev: function () { my.prevMonth() }
+            prev: function () { my.prevMonth() },
+            prefix: 'spend-plan'
           };
         },
         children: [
@@ -628,11 +629,14 @@ export class SpendPlansTabComponent implements OnInit {
 
   nextMonth() {
     this.firstMonth += 12;
+    this.agOptions.api.refreshHeader();
     this.agOptions.api.redrawRows();
+
   }
 
   prevMonth() {
     this.firstMonth -= 12;
+    this.agOptions.api.refreshHeader();
     this.agOptions.api.redrawRows();
   }
 }

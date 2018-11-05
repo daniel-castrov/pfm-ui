@@ -39,12 +39,10 @@ export class ActualsTabComponent implements OnInit {
   editMonth: number = -1;
   isadmin: boolean = false;
   showPercentages: boolean = true;
-  prevok: boolean = false;
-  nextok: boolean = true;
   remediation: string;
   explanation: string;
   fixtime: number = 1;
-  private maxmonths: number;
+  private maxmonths: number = 0;
 
   @Input() set exeline(e: ExecutionLine) {
     //console.log('setting exeline')
@@ -72,7 +70,12 @@ export class ActualsTabComponent implements OnInit {
     }
 
     // skip to the FY that contains the current month
-    this.firstMonth = (this.editMonth / 12) * 12;
+    var cutoffs: number[] = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
+    cutoffs.forEach((val, idx) => { 
+      if (this.editMonth >= val) {
+        this.firstMonth = idx * 12;
+      }
+    });
 
     if (this.agOptions.api) {
       this.agOptions.api.refreshHeader();
@@ -149,7 +152,7 @@ export class ActualsTabComponent implements OnInit {
           ? data.oblgoal_pct[fymonth]
           : data.expgoal_pct[fymonth]);
 
-        var diff: number = (goal - pct) * 100;
+        var diff: number = (pct - goal) * 100;
         var low: number = cutoff[0];
         var high: number = cutoff[1];
 
@@ -161,19 +164,19 @@ export class ActualsTabComponent implements OnInit {
 
     var isyellow = function (params): boolean {
       return ( 7 === params.rowIndex || 11 === params.rowIndex
-        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [0,10.0001])
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-10.000, 0.0001])
         : false);
     }
 
     var isred = function (params): boolean {
       return (7 === params.rowIndex || 11 === params.rowIndex
-        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [10, 1000])
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-10000, -10])
         : false);
     }
 
     var isgreen = function (params): boolean {
       return (7 === params.rowIndex || 11 === params.rowIndex
-        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-1000, 0.0001])
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [0.0001, 10000])
         : false);
     }
 
@@ -213,7 +216,8 @@ export class ActualsTabComponent implements OnInit {
               maxMonths: my.maxmonths,
               fy: (my._exe ? my.exe.fy : 0),
               next: function () { my.nextMonth() },
-              prev: function () { my.prevMonth() }
+              prev: function () { my.prevMonth() },
+              prefix: 'actuals'
             };
           },
           children: [
@@ -497,6 +501,8 @@ export class ActualsTabComponent implements OnInit {
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
       this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      this.agOptions.api.refreshHeader();
+
       // get our O&E values in order of month, so we can
       // run right through them
       var myoandes: OandEMonthly[] = new Array(this.maxmonths);
@@ -543,8 +549,6 @@ export class ActualsTabComponent implements OnInit {
     } else if (this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
-
-    this.enableNextPrevButtons();
   }
 
   recalculateTableData() {
@@ -662,8 +666,6 @@ export class ActualsTabComponent implements OnInit {
       this.agOptions.api.refreshHeader();
       this.agOptions.api.redrawRows();
     }
-
-    this.enableNextPrevButtons();
   }
 
   nextMonth() {
@@ -672,12 +674,6 @@ export class ActualsTabComponent implements OnInit {
       this.agOptions.api.refreshHeader();
       this.agOptions.api.redrawRows();
     }
-    this.enableNextPrevButtons();
-  }
-
-  enableNextPrevButtons() {
-    this.prevok = (this.firstMonth - 12 >= 0);
-    this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
   }
 
   monthlies() : Observable<OandEMonthly[]> {
