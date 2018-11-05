@@ -12,6 +12,7 @@ import {RenameComponent} from "./rename/rename.component";
 import {ExportComponent} from "./export/export.component";
 import {ImportComponent} from "./import/import.component";
 import {OperationBase} from "./operartion.base";
+import {UnlockComponent} from "./unlock/unlock.component";
 
 
 @Component({
@@ -27,6 +28,7 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild("rename") private renameComponent: RenameComponent;
   @ViewChild("import") private importComponent: ImportComponent;
   @ViewChild("export") private exportComponent: ExportComponent;
+  @ViewChild("unlock") private unlockComponent: UnlockComponent;
 
   private fy: number;
   private agOptions: GridOptions;
@@ -98,7 +100,11 @@ export class WorksheetManagementComponent implements OnInit {
   }
 
   private initOperations() {
-    const operationComponents = [this.duplicateComponent, this.renameComponent, this.importComponent, this.exportComponent] as OperationBase[];
+    const operationComponents = [this.duplicateComponent,
+                                 this.renameComponent,
+                                 this.importComponent,
+                                 this.exportComponent,
+                                 this.unlockComponent] as OperationBase[];
     operationComponents.forEach(operation => operation.init());
   }
 
