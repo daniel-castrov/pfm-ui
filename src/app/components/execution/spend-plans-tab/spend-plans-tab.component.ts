@@ -55,18 +55,7 @@ export class SpendPlansTabComponent implements OnInit {
           // both plans the same, and only change the type (and delete the id)
 
           d.result.forEach(sp => {
-            if (SpendPlan.TypeEnum.BASELINE === sp.type) {
-              this.plans[0] = sp;
-              if (1 === d.result.length) {
-                var sp2: SpendPlan = Object.assign({}, sp);
-                delete sp2.id;
-                sp2.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
-                this.plans[1] = sp2;
-              }
-            }
-            else {
-              this.plans[1] = sp;
-            }
+            this.plans[SpendPlan.TypeEnum.BASELINE === sp.type ? 0 : 1] = sp;
           });
 
           this.refreshTableData();
@@ -500,8 +489,19 @@ export class SpendPlansTabComponent implements OnInit {
       var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
       var label: string = (this.showBaseline ? 'Baseline' : 'After Appropriation');
 
+      var progtype: string = this.exeline.appropriation;
+      var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
+      var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
+      this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+
+
       if (this.submittable) {
         label = 'Create ' + label;
+
+        if (!this.showBaseline) {
+          this.plans[1] = this.createAfterAppropriationTemplatePlan();
+          plan = this.plans[1];
+        }
       }
       
       var tmpdata: PlanRow[] = [
@@ -524,11 +524,6 @@ export class SpendPlansTabComponent implements OnInit {
         { label: 'Obligations', values: [], toas: [] },
         { label: 'Expenditure', values: [], toas: [] },
       ];
-
-      var progtype: string = this.exeline.appropriation;
-      var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
-      var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
-      this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
 
       var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline,
         this.deltas, this.maxmonths, this.exe.fy);
@@ -634,13 +629,37 @@ export class SpendPlansTabComponent implements OnInit {
     this.firstMonth += 12;
     this.agOptions.api.refreshHeader();
     this.agOptions.api.redrawRows();
-
   }
 
   prevMonth() {
     this.firstMonth -= 12;
     this.agOptions.api.refreshHeader();
     this.agOptions.api.redrawRows();
+  }
+
+  createAfterAppropriationTemplatePlan(): SpendPlan {
+    var monthlies: SpendPlanMonthly[] = [];
+
+    var myoandes: OandEMonthly[] = new Array(this.maxmonths);
+    this.oandes.forEach(oande => {
+      myoandes[oande.month] = oande;
+    });
+
+    for (var i = 0; i < this.maxmonths; i++){
+      monthlies.push({
+        obligated: (myoandes[i] ? myoandes[i].obligated : 0 ),
+        expensed: (myoandes[i] ? myoandes[i].expensed : 0),
+        labor: 0,
+        travel: 0,
+        contracts: 0,
+        other: 0
+      });
+    }
+    return {
+      type: SpendPlan.TypeEnum.AFTERAPPROPRIATION,
+      monthlies: monthlies
+    }
+    
   }
 }
 
