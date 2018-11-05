@@ -14,8 +14,6 @@ import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
 import {Organization, OrganizationService, User, RestResult} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
-import {TagsService, TagType} from "../../../services/tags.service";
-import {NewProgramService} from "../../../services/new.program.service";
 
 @Component({
   selector: 'program-request',
@@ -35,8 +33,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
                private userUtils: UserUtils,
                private programRequestPageMode: ProgramRequestPageModeService,
                private changeDetectorRef: ChangeDetectorRef,
-               private orgService: OrganizationService,
-               private newProgramService: NewProgramService ) {
+               private orgService: OrganizationService ) {
     this.pr.fundingLines = [];
   }
 
@@ -90,7 +87,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
         break;
       case CreationTimeType.NEW_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
-        this.newProgramService.initRequiredFieldsWithSomeValues(this.pr);
         break;
       default:
         console.log('Wrong programRequestPageMode.type');
@@ -141,7 +137,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   isNotSavable(): boolean {
     if(!this.idAndNameComponent) return true; // not fully initilized yet
     if(this.variantsTabComponent.invalid) return true;
-    return this.idAndNameComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+    return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
   isNotSubmittable(): boolean {

@@ -68,6 +68,11 @@ export class UfrProgramComponent implements OnInit, OnChanges {
 
   invalid(): boolean {
     if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR) return false;
+
+    if(!this.ufr.leadComponent || !this.ufr.manager || !this.ufr.primaryCapability || !this.ufr.coreCapability || !this.ufr.functionalArea) {
+      return true;
+    }
+
     return !this.ufr.shortName || !this.ufr.longName;
   }
 
