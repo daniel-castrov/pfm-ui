@@ -36,8 +36,6 @@ export class FyHeaderComponent implements IHeaderGroupAngularComp {
   resetOks() {
     this.prevOk = (this.firstMonth - 12 >= 0);
     this.nextOk = (this.firstMonth + 12 < this.maxMonths);
-    
-    console.log(this);
   }
 
   prev() {
