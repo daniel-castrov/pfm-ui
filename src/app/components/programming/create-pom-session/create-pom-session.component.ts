@@ -405,7 +405,7 @@ export class CreatePomSessionComponent implements OnInit {
         }
         let index = programs.findIndex(program => program.fullname === epp.shortName);
         if (index > 0) {
-          eppOrgToa[ programs[index].organization ] += amount;
+          eppOrgToa[ programs[index].organizationId ] += amount;
         }
       });
 

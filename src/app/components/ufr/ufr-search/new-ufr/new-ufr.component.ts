@@ -176,7 +176,7 @@ export class NewUfrComponent implements OnInit {
     ufr.nbcCategory = shorty.nbcCategory;
 
     ufr.bsvStrategy = shorty.bsvStrategy;
-    ufr.organization = shorty.organization;
+    ufr.organizationId = shorty.organizationId;
     ufr.manager = shorty.manager;
 
     ufr.emphases = [...shorty.emphases];

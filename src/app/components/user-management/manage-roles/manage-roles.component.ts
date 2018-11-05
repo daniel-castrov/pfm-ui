@@ -293,7 +293,7 @@ export class ManageRolesComponent {
     } else {
       this.availablePrograms.forEach ( prog =>  {
 
-        if ( prog.organization == this.selectedOrganization.id ){
+        if ( prog.organizationId == this.selectedOrganization.id ){
           this.filteredAvailablePrograms.push(prog);
         }
       }); 

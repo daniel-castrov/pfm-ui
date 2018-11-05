@@ -108,13 +108,18 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.primaryCapability = programOrPR.primaryCapability;
     this.pr.secondaryCapability = programOrPR.secondaryCapability;
     this.pr.emphases = [...programOrPR.emphases];
+    this.pr.organizationId = programOrPR.organizationId;
   }
 
   async save(state: ProgrammaticRequestState) {
+
+    this.pr.organizationId = (await this.orgService.getByAbbreviation( 
+      PRUtils.getOrganizationNameForLeadComponent(this.pr.leadComponent) ).toPromise()).result.id;
+
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
-    } else {
+    } else {      
       if(this.pr.id) {
         this.pr.state = state;
         let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise()); 
