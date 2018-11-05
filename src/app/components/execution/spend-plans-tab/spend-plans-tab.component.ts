@@ -171,8 +171,8 @@ export class SpendPlansTabComponent implements OnInit {
         my.rowData[7].values[i] = totalobl;
         my.rowData[8].values[i] = totalexp;
 
-        my.rowData[13].values[i] = my.rowData[10].values[i] - my.rowData[7].values[i];
-        my.rowData[14].values[i] = my.rowData[11].values[i] - my.rowData[8].values[i];
+        my.rowData[13].values[i] = my.rowData[7].values[i] - my.rowData[10].values[i];
+        my.rowData[14].values[i] = my.rowData[8].values[i] - my.rowData[11].values[i];
       }
 
       return true;
