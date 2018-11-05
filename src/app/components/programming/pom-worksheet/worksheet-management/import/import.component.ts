@@ -18,7 +18,6 @@ export class ImportComponent extends OperationBase {
   constructor( stateService: StateService, private worksheetService: WorksheetService ) {super(stateService);}
 
   init() {
-    this.file = null;
     this.importableWorksheets = this.stateService.worksheets.filter(worksheet => worksheet.locked);
     this.selectedImportableWorksheet = this.importableWorksheets[0] ? this.importableWorksheets[0] : null;
   }
