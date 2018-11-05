@@ -132,13 +132,13 @@ export class SpendPlansTabComponent implements OnInit {
       if ('' === p.value) {
         return '';
       }
-      if (my.showPercentages) {
+      if (p.node.rowIndex > 8 && my.showPercentages) {
         var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
         var toa: number = p.data.toas[col];
-        return (100 * p.value / toa).toFixed(2);
+        return (100 * p.value / toa).toFixed(1) + '%';
       }
       else {
-        return p.value.toFixed(2);
+        return '$' + p.value.toFixed(2);
       }
     }
 
@@ -146,10 +146,10 @@ export class SpendPlansTabComponent implements OnInit {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
 
-      var value: number = Number.parseFloat(p.newValue);
-      if (my.showPercentages) {
-        value *= p.data.toas[col] / 100;
-      }
+      var value: number = Number.parseFloat(p.newValue.replace(/[^0-9.]/, ''));
+      //if (my.showPercentages) {
+      //  value *= p.data.toas[col] / 100;
+      //}
 
       my.rowData[row].values[col] = value;
       p.node.data.values[col] = value;
@@ -162,9 +162,12 @@ export class SpendPlansTabComponent implements OnInit {
       // fix cumulatives and deltas
       var totalobl: number = (col > 0 ? my.rowData[7].values[col - 1] : 0);
       var totalexp: number = (col > 0 ? my.rowData[8].values[col - 1] : 0);
+
       for (var i = col; i < my.maxmonths; i++){
+        var toa: number = my.rowData[0].toas[i];
         totalobl += my.rowData[1].values[i];
         totalexp += my.rowData[6].values[i];
+
         my.rowData[7].values[i] = totalobl;
         my.rowData[8].values[i] = totalexp;
 
@@ -556,8 +559,8 @@ export class SpendPlansTabComponent implements OnInit {
 
         // Delta section
         tmpdata[12].values.push(0);
-        tmpdata[13].values.push(tmpdata[10].values[i] - tmpdata[7].values[i]);
-        tmpdata[14].values.push(tmpdata[11].values[i] - tmpdata[8].values[i]);
+        tmpdata[13].values.push(tmpdata[7].values[i] - tmpdata[10].values[i]);
+        tmpdata[14].values.push(tmpdata[8].values[i] - tmpdata[11].values[i]);
 
         tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
