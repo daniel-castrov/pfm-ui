@@ -2460,6 +2460,21 @@ paths:
       description: "Returns a boolean"
       produces:
       - "application/json"
+  /execution/{exeid}/open:
+    post:
+      tags:
+      - "Execution"
+      summary: "Opens an Execution Phase"
+      description: "creates an execution event"
+      operationId: "openExecution"
+      parameters:
+      - in: "path"
+        name: "exeid"
+        description: "The phase to open"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
   /execution/community/{communityId}/year/{year}:
     post:
       tags:
