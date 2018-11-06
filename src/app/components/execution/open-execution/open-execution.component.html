@@ -5,13 +5,15 @@
       <div class="col-9 mb-4">
         <div class="form-group">
           <label>Review Execution Phase:</label>
-                    <select class="form-control-sm dropdown-width" [(ngModel)]="phase" (change)="updatetable()">
-                      <option *ngFor="let p of phases" [ngValue]="p">{{p.fy}}</option>
-                    </select>
-
+            <select class="form-control-sm dropdown-width" [(ngModel)]="phase" (change)="updatetable()">
+              <option *ngFor="let p of phases" [ngValue]="p">{{p.fy}}</option>
+            </select>
         </div>
       </div>
-      <div class="col-md-3 col-sm-12">
+      <div class="col-md-3 col-sm-12" *ngIf="!this.phase">
+        There are no Execution Phases ready to be opened.
+      </div>
+      <div class="col-md-3 col-sm-12" *ngIf="this.phase">
         <span>
           <button class="btn-primary btn pull-right" (click)=openExe() [disabled]="!submitable()">Open Execution Phase</button>
         </span>

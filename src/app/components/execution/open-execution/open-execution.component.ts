@@ -94,6 +94,9 @@ export class OpenExecutionComponent implements OnInit {
           this.phase = this.phases[0];
           this.updatetable();
         }
+        else {
+          this.exelines = [];
+        }
       });
     });
   }
@@ -127,7 +130,16 @@ export class OpenExecutionComponent implements OnInit {
 
   openExe() {
     this.exesvc.openExecution(this.phase.id).subscribe(d => { 
-      console.log(d);
+      if (d.error) {
+        Notify.error(d.error);
+      }
+      else {
+        this.phases = this.phases.filter(ex => (ex.id !== this.phase.id));
+        delete this.phase;
+        if (this.phases.length > 0) {
+          this.phase = this.phases[0];
+        }
+      }
     });
   }
 
