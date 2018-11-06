@@ -2698,6 +2698,23 @@ paths:
       summary: "Updates an existing Spend Plan for this execution line"
       produces:
       - "application/json"
+  /spendplans/execution/{exeid}:
+    get:
+      operationId: "getByExecutionPhaseId"
+      parameters:
+      - name: "exeid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
+      produces:
+      - "application/json"
 
 # STOP EXECUTION
 #################################################################
@@ -3574,7 +3591,8 @@ definitions:
       fy:
         type: "integer"
       status:
-        type: "string"
+      type:
+        enum: [CREATED, OPEN, LOCKED]
       osdObligationGoals:
         type: "object"
         $ref: "#/definitions/OSDGoalPlan"
