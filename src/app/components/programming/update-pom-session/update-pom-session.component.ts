@@ -71,6 +71,10 @@ export class UpdatePomSessionComponent implements OnInit {
   update(){
     this.worksheetService.updateRows(this.selectedWorksheet).subscribe(response => {
       if (!response.error) {
+        this.agGrid.api.forEachNode(node => {
+          node.data.modified = false;
+          node.setSelected(false);
+        });
         Notify.success('Worksheet updated successfully');
       } else {
         Notify.error('Something went wrong while trying to update the worksheet');
