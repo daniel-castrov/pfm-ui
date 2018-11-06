@@ -3183,7 +3183,7 @@ definitions:
         $ref: "#/definitions/ProgramType"
       execution:
         type: "string"
-      organization:
+      organizationId:
         type: "string"
       milestones:
         type: "array"
@@ -3316,7 +3316,7 @@ definitions:
         type: "array"
         items:
           type: "string"
-      organization:
+      organizationId:
         type: "string"
       primaryCapability:
         type: "string"
@@ -3454,7 +3454,7 @@ definitions:
         $ref: "#/definitions/CreationTimeType"
       type:
           $ref: "#/definitions/ProgramType"
-      organization:
+      organizationId:
         type: "string"
       phaseId:
         type: "string"

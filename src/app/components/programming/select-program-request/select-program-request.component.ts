@@ -4,7 +4,7 @@ import { ProgramRequestWithFullName, WithFullNameService } from '../../../servic
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Pom ,PRService, PB, PBService, RestResult } from '../../../generated';
+import { Pom, PB, PBService, RestResult } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 
 @Component({
@@ -24,7 +24,6 @@ export class SelectProgramRequestComponent implements OnInit {
 
   constructor(private pomService: POMService,
               private pbService: PBService,
-              private prService: PRService,
               private withFullNameService: WithFullNameService,
               private userUtils: UserUtils,
               private cycleUtils: CycleUtils) {}

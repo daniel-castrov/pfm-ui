@@ -233,7 +233,7 @@ export class AllUfrsComponent implements OnInit {
         if ( progOrPr ){
           progId = progOrPr.fullname;
           funcArea = progOrPr.functionalArea;
-          orgid = progOrPr.organization;
+          orgid = progOrPr.organizationId;
         } else {
           progId = "";
           funcArea = "";
@@ -242,7 +242,7 @@ export class AllUfrsComponent implements OnInit {
       } else {
         progId = "(new)"
         funcArea = ufr.functionalArea;
-        orgid = ufr.organization;
+        orgid = ufr.organizationId;
       }
 
       let row = {

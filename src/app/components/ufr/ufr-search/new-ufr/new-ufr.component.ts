@@ -6,7 +6,6 @@ import { UFRsService, Program, ShortyType, ProgramsService, PRService, Programma
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UserUtils } from '../../../../services/user.utils';
-import {NewProgramService} from "../../../../services/new.program.service";
 
 
 enum CreateNewUfrMode {
@@ -38,8 +37,7 @@ export class NewUfrComponent implements OnInit {
                private programsService: ProgramsService,
                private prService: PRService,
                private orgService: OrganizationService,
-               private userUtils: UserUtils,
-               private newProgramService: NewProgramService ) {}
+               private userUtils: UserUtils ) {}
 
   async ngOnInit() {
     this.allPrograms = await this.withFullNameService.programs();
@@ -138,7 +136,6 @@ export class NewUfrComponent implements OnInit {
         ufr.shortyType = ShortyType.NEW_PROGRAM;
         ufr.fundingLines=[];
         ufr.emphases=[];
-        this.newProgramService.initRequiredFieldsWithSomeValues(ufr);
         break;
     }
 
@@ -179,7 +176,7 @@ export class NewUfrComponent implements OnInit {
     ufr.nbcCategory = shorty.nbcCategory;
 
     ufr.bsvStrategy = shorty.bsvStrategy;
-    ufr.organization = shorty.organization;
+    ufr.organizationId = shorty.organizationId;
     ufr.manager = shorty.manager;
 
     ufr.emphases = [...shorty.emphases];
