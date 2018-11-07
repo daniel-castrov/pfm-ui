@@ -189,7 +189,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'oe-update', component:OeUpdateComponent},
-  {path: 'open-execution', component: OpenExecutionComponent},
+  {path:'open-execution', component: OpenExecutionComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},

@@ -2,23 +2,23 @@
 <div class="row main-content">
   <div class="col-12">
     <div class="row">
-      <div class="col-9 mb-4">
+      <div class="col-5 mb-4">
         <div class="form-group">
-          <label>Review Execution Phase:</label>
+          <label class="h5">Review Execution Phase:</label>
             <select class="form-control-sm dropdown-width" [(ngModel)]="phase" (change)="updatetable()">
               <option *ngFor="let p of phases" [ngValue]="p">{{p.fy}}</option>
             </select>
         </div>
       </div>
-      <div class="col-md-3 col-sm-12" *ngIf="!this.phase">
+      <div class="col-5" *ngIf="!this.phase">
         There are no Execution Phases ready to be opened.
       </div>
-      <div class="col-md-3 col-sm-12" *ngIf="this.phase">
+      <div class="col-7" *ngIf="this.phase">
         <span>
-          <button class="btn-primary btn pull-right" (click)=openExe() [disabled]="!submitable()">Open Execution Phase</button>
+          <button class="btn-primary btn pull-right mb-2" (click)=openExe() [disabled]="!submitable()">Open Execution Phase</button>
         </span>
         <span>
-          <button class="btn-primary btn pull-right" (click)=demoCreatePlans()>Demo Only - Create All Plans</button>
+          <button class="btn-primary btn pull-right mb-2" (click)=demoCreatePlans()>Demo Only - Create All Plans</button>
         </span>
       </div>
     </div>
