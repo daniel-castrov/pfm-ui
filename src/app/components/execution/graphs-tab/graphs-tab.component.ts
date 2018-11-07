@@ -22,6 +22,7 @@ export class GraphsTabComponent implements OnInit {
     private _deltas: Map<Date, ExecutionEvent>;
     private datasets: DataSet[];
     private maxmonths: number;
+    private showPercentages: boolean;
 
     @Input() set exeline(e: ExecutionLine) {
         this._exeline = e;
@@ -80,6 +81,8 @@ export class GraphsTabComponent implements OnInit {
         var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
         var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
+        var my: GraphsTabComponent = this;
+
         var cutoff = new Date();
         cutoff.setMonth(cutoff.getMonth() + 1);
         var fymonth = OandETools.convertDateToFyMonth(this.exe.fy, cutoff);
@@ -99,7 +102,7 @@ export class GraphsTabComponent implements OnInit {
                 this.maxmonths, this.exe.fy);
 
         var obgDataset: DataSet = {
-            label: 'Obligation Goal',
+            label: 'Obligation Goal' + (this.showPercentages ? ' %' : ''),
             csskey: 'obgplan',
             data: [],
             toas:[],
@@ -108,7 +111,7 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var expDataset: DataSet = {
-            label: 'Expenditure Goal',
+            label: 'Expenditure Goal' + (this.showPercentages ? ' %' : ''),
             data: [],
             toas: [],
             status: [],
@@ -117,7 +120,7 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var realexpDataset: DataSet = {
-            label: 'Actual Expenditures',
+            label: 'Actual Expenditures' + (this.showPercentages ? ' %' : ''),
             data: [],
             toas: [],
             status: [],
@@ -126,7 +129,7 @@ export class GraphsTabComponent implements OnInit {
         };
 
         var realobgDataset: DataSet = {
-            label: 'Actual Obligations',
+            label: 'Actual Obligations' + (this.showPercentages ? ' %' : ''),
             data: [],
             toas: [],
             status: [],
@@ -152,6 +155,7 @@ export class GraphsTabComponent implements OnInit {
 
         var makeHtmlNote = function (oande: OandEMonthly, title: string,
             goal: number, actual: number, toa: number) {
+
             var notes: string =
                 title + ' Goal: ' + goal.toFixed(2) + ' (' + (goal / toa * 100).toFixed(2) + '%)'
                 + '<br/>Actual: ' + actual.toFixed(2) + ' (' + (actual / toa * 100).toFixed(2) + '%)';
@@ -175,66 +179,62 @@ export class GraphsTabComponent implements OnInit {
             return 0;
         }
 
+        var lastexp: number = 0;
+        var lastobg: number = 0;
         for (var i = 0; i < this.maxmonths; i++) {
-            var toa = toasAndReleaseds[i].toa;
+            var raw_toa: number = toasAndReleaseds[i].toa;
+            var toa = (this.showPercentages ? 1 : raw_toa);
             var redtoa: number = toa * 0.1;
-            var ogoal: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
-            var egoal: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
-            var ogoalt: number = toa * ogoal;
-            var egoalt: number = toa * egoal;
-
+            var ogoalpct: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+            var egoalpct: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+            var ogoaltoa: number = toa * ogoalpct;
+            var egoaltoa: number = toa * egoalpct;
 
             obgDataset.toas.push(toa);
-            obgDataset.data.push(ogoalt);
-            obgDataset.notes.push('Obligation Goal: ' + ogoalt.toFixed(2) + ' (' + (ogoal * 100).toFixed(2) + '%)');
+            obgDataset.data.push(ogoaltoa);
+            obgDataset.notes.push('Obligation Goal: ' + ogoaltoa.toFixed(2) + ' (' + (ogoalpct * 100).toFixed(2) + '%)');
             obgDataset.status.push(0);
 
             obgplanRed.toas.push(toa);
-            obgplanRed.data.push(ogoalt - redtoa);
+            obgplanRed.data.push(ogoaltoa - redtoa);
             obgplanRed.notes.push('Obligation "Red Zone"');
             obgplanRed.status.push(0);
 
             expDataset.toas.push(toa);
-            expDataset.data.push(egoalt);
-            expDataset.notes.push('Expenditure Goal: ' + egoalt.toFixed(2) + ' (' + (egoal * 100).toFixed(2) + '%)');
+            expDataset.data.push(egoaltoa);
+            expDataset.notes.push('Expenditure Goal: ' + egoaltoa.toFixed(2) + ' (' + (egoalpct * 100).toFixed(2) + '%)');
             expDataset.status.push(0);
 
             expplanRed.toas.push(toa);
-            expplanRed.data.push(egoalt - redtoa);
+            expplanRed.data.push(egoaltoa - redtoa);
             expplanRed.notes.push('Expenditure "Red Zone"');
             expplanRed.status.push(0);
 
             // we want cumulatives, so add last month's totals
-            var lastexp: number = (i > 0 ? realexpDataset.data[i - 1] : 0);
-            var lastobg: number = (i > 0 ? realobgDataset.data[i - 1] : 0);
             realexpDataset.toas.push(toa);
             realobgDataset.toas.push(toa);
             if (myoandes[i]) {
-                var eactual: number = myoandes[i].expensed + lastexp;
-                realexpDataset.data.push(eactual);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, eactual, toa));
-                realexpDataset.status.push(getStatus(eactual, egoalt, toa));
-
-                var oactual: number = myoandes[i].obligated + lastobg;
-                realobgDataset.data.push(oactual);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalt, oactual, toa));
-                realobgDataset.status.push(getStatus(oactual, ogoalt, toa));
+                lastexp += myoandes[i].expensed;
+                lastobg += myoandes[i].obligated;
             }
-            else {
-                realexpDataset.data.push(lastexp);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalt, lastexp, toa));
-                realexpDataset.status.push(getStatus(lastexp, egoalt, toa));
 
-                realobgDataset.data.push(lastobg);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalt, lastobg, toa));
-                realobgDataset.status.push(getStatus(lastobg, ogoalt, toa));
-            }
+            realexpDataset.data.push(lastexp / (this.showPercentages ? raw_toa : 1));
+            realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa, lastexp, raw_toa));
+            realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa, raw_toa));
+
+            realobgDataset.data.push(lastobg / (this.showPercentages ? raw_toa : 1));
+            realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa, lastobg, raw_toa));
+            realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
         }
 
-        this.datasets = [obgDataset, expDataset,
-            obgplanRed, expplanRed,
-            //obgplanYellow, expplanYellow,
-            realexpDataset, realobgDataset];
+        this.datasets = [
+            obgDataset,
+            expDataset,
+            obgplanRed,
+            expplanRed,
+            realexpDataset,
+            realobgDataset
+        ];
     }
 
     private regraph() {
@@ -389,6 +389,11 @@ export class GraphsTabComponent implements OnInit {
         return (this.datasets
             ? this.datasets.filter(ds => (!(ds.csskey.endsWith('red') || ds.csskey.endsWith('yellow'))))
             : []);
+    }
+
+    @Input() set percentages(p: boolean) {
+        this.showPercentages = p;
+        this.refreshGraph();
     }
 }
 

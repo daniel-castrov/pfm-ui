@@ -21,6 +21,7 @@ export class ProgramExecutionLineComponent implements OnInit {
   private oandes: OandEMonthly[];
   private deltaMap: Map<Date, ExecutionLine>;
   private program: string;
+  private showPercentages: boolean = true;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private oandesvc: OandEService, private route: ActivatedRoute) { }
@@ -51,5 +52,9 @@ export class ProgramExecutionLineComponent implements OnInit {
         this.exe = d2.result;
       });
     });
+  }
+
+  onTogglePct() {
+    this.showPercentages = !this.showPercentages;    
   }
 }

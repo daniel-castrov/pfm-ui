@@ -3,7 +3,7 @@
   <div class="col-12">
     <div class="row mb-2">
       <div class="col-8">
-            <div class="h5 mb2">{{exe?.fy|FY}} - O&amp;E Update for Program Execution Line</div>
+            <div class="h5 mb2">{{exe?.fy|FY}} - Program Update for Program Execution Line</div>
       </div>
     </div>
     <div class="row">
@@ -15,25 +15,42 @@
           <span class="mr-sm-4" *ngIf="exeline" >{{exeline.appropriation}}/{{exeline.blin}}/{{exeline.item}}/{{exeline.opAgency}}</span>
         </span>
       </div>
+      <div class="col-4">
+        <div class="pull-right">
+          <span>
+            <label class="mr-1">Show as: </label>
+          </span>
+          <span>
+            %
+            <button type="button" class="btn btn-sm btn-toggle btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="onTogglePct()">
+              <div class="handle"></div>
+            </button>
+            $
+          </span>
+        </div>
+      </div>
     </div>
+
     <div class="row">
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
           <tab heading="Spend Plans" id="tab1" active="true">
-            <spend-plans-tab role="tabpanel" 
-              [oandes]="oandes" 
-              [exeline]="exeline" 
+            <spend-plans-tab role="tabpanel"
+              [oandes]="oandes"
+              [exeline]="exeline"
               [exe]="exe"
               [parent]="this"
+              [percentages]="showPercentages"
               [deltas]="deltaMap">
             </spend-plans-tab>
           </tab>
           <tab heading="Actuals" id="tab2">
-            <actuals-tab role="tabpanel" disabled='true'
-              [oandes]="oandes" 
-              [exeline]="exeline" 
+            <actuals-tab role="tabpanel"
+              [oandes]="oandes"
+              [exeline]="exeline"
               [exe]="exe"
               [parent]="this"
+              [percentages]="showPercentages"
               [deltas]="deltaMap">
             </actuals-tab>
           </tab>
@@ -42,6 +59,7 @@
               [oandes]="oandes"
               [exeline]="exeline"
               [exe]="exe"
+              [percentages]="showPercentages"
               [deltas]="deltaMap">
             </graphs-tab>
           </tab>
