@@ -15,15 +15,13 @@ export class BesRdteComponent {
   private gridApi;
   private gridColumnApi;
   private columnDefs;
-  private rowData = [];
+  private rows = [];
   private groupDefaultExpanded = -1;
   private autoGroupColumnDef = {
     headerName: "",
     maxWidth: 400,
     cellRendererParams: { suppressCount: true }
   };
-
-  items = [];
 
   constructor() {
     this.columnDefs = [{field: "form",headerName: "Form",maxWidth: 120},
@@ -46,83 +44,84 @@ export class BesRdteComponent {
     params.api.sizeColumnsToFit();
   }
 
+
   initRowData() {
-    this.items = this.getItems();
-    this.getOverviewAndR1( ["RDTE"] ).forEach( x => this.rowData.push(x) );
+    const items = this.getItems();
+    this.getOverviewAndR1( ["RDTE"] ).forEach( x => this.rows.push(x) );
 
     for ( let i=1; i<8; i++ ){
       const ba = "BA-" + i;
       let itempe="";
 
-      const itemsWithCurrentBa = this.items.filter(item => item.ba == i);
+      const itemsWithCurrentBa = items.filter(item => item.ba === i.toString());
 
       itemsWithCurrentBa.forEach(item => {
 
         if ( item.pe != itempe ){
           itempe = item.pe;
-          this.getR2Fields(["RDTE", ba, "PE:" + item.pe, "R-2"], item).forEach( x => this.rowData.push(x) );
+          this.rows.push( ...this.getR2Fields(["RDTE", ba, "PE:" + item.pe, "R-2"], item) );
         }
-        
-        this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ).forEach( x => this.rowData.push(x) );
+
+        this.rows.push( ...this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
 
         if ( item.fyt > 10 && (item.ba == "4" || item.ba == "5" || item.ba == "7") ){
-          this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item).forEach( x => this.rowData.push(x) );
-          this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item).forEach( x => this.rowData.push(x) );
-          this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item).forEach( x => this.rowData.push(x) );
+          this.rows.push( ...this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
+          this.rows.push( ...this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
+          this.rows.push( ...this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
         }
       });
     }
   }
 
   getOverviewAndR1(hierarchy: string[]) {
-    let data = [];
-    data.push({ hierarchy: hierarchy.concat( "FY" ), responsible: "Budget Manager", form: "Title", desc: "THe Budget Year" });
-    data.push({ hierarchy: hierarchy.concat( "Cycle" ), responsible: "Budget Manager", form: "Title", desc: "BES or PB" });
-    data.push({ hierarchy: hierarchy.concat( "Title" ), responsible: "Budget Manager", form: "Title", desc: "A Title" });
-    data.push({ hierarchy: hierarchy.concat( "Community" ), responsible: "Budget Manager", form: "Title", desc: "CBDP" });
-    data.push({ hierarchy: hierarchy.concat( "Type" ), responsible: "Budget Manager", form: "Title", desc: "Type of JB" });
-    data.push({ hierarchy: hierarchy.concat( "Appropriation" ), responsible: "Budget Manager", form: "Title", desc: "RDT&E or PROC" });
-    data.push({ hierarchy: hierarchy.concat( "Overview" ), responsible: "Budget Manager", form: "Overview", desc: "A file with an overall desription" });
-    data.push({ hierarchy: hierarchy.concat( "R-1" ), responsible: "Budget Manager", form: "R-1", desc: "A file that is the R-1 form" });
-    return data;
+    let rows = [];
+    rows.push({ hierarchy: hierarchy.concat( "FY" ), responsible: "Budget Manager", form: "Title", desc: "THe Budget Year" });
+    rows.push({ hierarchy: hierarchy.concat( "Cycle" ), responsible: "Budget Manager", form: "Title", desc: "BES or PB" });
+    rows.push({ hierarchy: hierarchy.concat( "Title" ), responsible: "Budget Manager", form: "Title", desc: "A Title" });
+    rows.push({ hierarchy: hierarchy.concat( "Community" ), responsible: "Budget Manager", form: "Title", desc: "CBDP" });
+    rows.push({ hierarchy: hierarchy.concat( "Type" ), responsible: "Budget Manager", form: "Title", desc: "Type of JB" });
+    rows.push({ hierarchy: hierarchy.concat( "Appropriation" ), responsible: "Budget Manager", form: "Title", desc: "RDT&E or PROC" });
+    rows.push({ hierarchy: hierarchy.concat( "Overview" ), responsible: "Budget Manager", form: "Overview", desc: "A file with an overall desription" });
+    rows.push({ hierarchy: hierarchy.concat( "R-1" ), responsible: "Budget Manager", form: "R-1", desc: "A file that is the R-1 form" });
+    return rows;
   }
 
   getR2Fields( hierarchy: string[], item ) {
-    let data = [];
-    data.push({ hierarchy: hierarchy.concat( "Overview" ), responsible: "Budget Manager", form: "R-2", desc: "Overall Mission Description and Budget Item Justification" });
-    data.push({ hierarchy: hierarchy.concat( "Change Summary" ), responsible: "Budget Manager", form: "R-2", desc: "Overall Program Change Summary ($ in Millions)" });
-    return data;
+    let rows = [];
+    rows.push({ hierarchy: hierarchy.concat( "Overview" ), responsible: "Budget Manager", form: "R-2", desc: "Overall Mission Description and Budget Item Justification" });
+    rows.push({ hierarchy: hierarchy.concat( "Change Summary" ), responsible: "Budget Manager", form: "R-2", desc: "Overall Program Change Summary ($ in Millions)" });
+    return rows;
   }
 
   getR2AFields(hierarchy: string[], item) {
-    let data = [];
-    data.push({ hierarchy: hierarchy.concat("Mission Description"), responsible: "Budget Manager", form: "R-2A", desc: "Item Mission Description and Budget Item Justification" });
-    data.push({ hierarchy: hierarchy.concat("Accomplishments"), responsible: "Budget Manager", form: "R-2A", desc: "Accomplishments Overview" });
-    data.push({ hierarchy: hierarchy.concat("Program Accomplishments"), responsible: "Program Managers", form: "R-2A", desc: "Accomplishments for each Program" });
-    data.push({ hierarchy: hierarchy.concat("Program Bullets"), responsible: "Program Managers", form: "R-2A", desc: "Bullets from each Program" });
+    let rows = [];
+    rows.push({ hierarchy: hierarchy.concat("Mission Description"), responsible: "Budget Manager", form: "R-2A", desc: "Item Mission Description and Budget Item Justification" });
+    rows.push({ hierarchy: hierarchy.concat("Accomplishments"), responsible: "Budget Manager", form: "R-2A", desc: "Accomplishments Overview" });
+    rows.push({ hierarchy: hierarchy.concat("Program Bullets"), responsible: "Program Managers", form: "R-2A", desc: "Bullets from each Program" });
+
 
     if ( item.ba != "6" )
-    data.push({ hierarchy: hierarchy.concat("Other Funding"), responsible: "Budget Manager", form: "R-2A", desc: "Other Program Funding for this Item" });
-    data.push({ hierarchy: hierarchy.concat("Remarks"), responsible: "Budget Manager", form: "R-2A", desc: "Item Remarks" });
+    rows.push({ hierarchy: hierarchy.concat("Other Funding"), responsible: "Budget Manager", form: "R-2A", desc: "Other Program Funding for this Item" });
+    rows.push({ hierarchy: hierarchy.concat("Remarks"), responsible: "Budget Manager", form: "R-2A", desc: "Item Remarks" });
 
     if ( item.ba == "4" || item.ba == "5" || item.ba == "7"   ){
-      data.push({ hierarchy: hierarchy.concat("Acquisition Strategy"), responsible: "Program Managers", form: "R-2A", desc: "Acquisition Strategy from each Program" });
+      rows.push({ hierarchy: hierarchy.concat("Acquisition Strategy"), responsible: "Program Managers", form: "R-2A", desc: "Acquisition Strategy from each Program" });
     }
 
     if ( item.ba == "7"){
-      data.push({ hierarchy: hierarchy.concat("Performance Metrics"), responsible: "Program Managers", form: "R-2A", desc: "Item Performance Metrics" });
+      rows.push({ hierarchy: hierarchy.concat("Performance Metrics"), responsible: "Program Managers", form: "R-2A", desc: "Item Performance Metrics" });
     }
-    return data;
+    return rows;
   }
 
   getR3Fields(hierarchy: string[], item) {
-    let data = [];
-    data.push({ hierarchy: hierarchy.concat("Product Development"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Product Development ($ in Millions)" });
-    data.push({ hierarchy: hierarchy.concat("Support"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Support ($ in Millions)" });
-    data.push({ hierarchy: hierarchy.concat("Test and Evaluation"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Test and Evaluation ($ in Millions)" });
-    data.push({ hierarchy: hierarchy.concat("Management Services"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Management Services ($ in Millions)" });
-    data.push({ hierarchy: hierarchy.concat("Remarks"), responsible: "Budget Manager", form: "R-3", desc: "Item Remarks" });
-    return data;
+    let rows = [];
+    rows.push({ hierarchy: hierarchy.concat("Product Development"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Product Development ($ in Millions)" });
+    rows.push({ hierarchy: hierarchy.concat("Support"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Support ($ in Millions)" });
+    rows.push({ hierarchy: hierarchy.concat("Test and Evaluation"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Test and Evaluation ($ in Millions)" });
+    rows.push({ hierarchy: hierarchy.concat("Management Services"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Management Services ($ in Millions)" });
+    rows.push({ hierarchy: hierarchy.concat("Remarks"), responsible: "Budget Manager", form: "R-3", desc: "Item Remarks" });
+    return rows;
   }
 
   getR4Fields(hierarchy: string[], item) {
