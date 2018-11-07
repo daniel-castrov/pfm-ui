@@ -45,7 +45,6 @@ export class ActualsTabComponent implements OnInit {
   private maxmonths: number = 0;
 
   @Input() set exeline(e: ExecutionLine) {
-    //console.log('setting exeline')
     this._exeline = e;
     this.refreshTableData();
   }
@@ -55,7 +54,6 @@ export class ActualsTabComponent implements OnInit {
   }
 
   @Input() set exe(e: Execution) {
-    //console.log('setting exe');
     this._exe = e;
     this.firstMonth = 0;
 
@@ -89,7 +87,6 @@ export class ActualsTabComponent implements OnInit {
   }
 
   @Input() set oandes(o: OandEMonthly[]) {
-    //console.log('setting oandes ' + JSON.stringify(o));
     this._oandes = o;
     this.refreshTableData();
   }
@@ -619,10 +616,7 @@ export class ActualsTabComponent implements OnInit {
     var row: number = params.node.childIndex;
 
     var index: number = my.firstMonth + col;
-    //if(6===row && 1===col) console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
     if (params.data.values.length >= index) {
-      //console.log(params.data.values);
-      //if( 6===row && 1 === col ) console.log('  returning ' + params.data.values[index]);
       return params.data.values[index];
     }
     else {

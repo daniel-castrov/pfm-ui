@@ -134,11 +134,7 @@ export class SpendPlansTabComponent implements OnInit {
     var setter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-
       var value: number = Number.parseFloat(p.newValue.replace(/[^0-9.]/, ''));
-      //if (my.showPercentages) {
-      //  value *= p.data.toas[col] / 100;
-      //}
 
       my.rowData[row].values[col] = value;
       p.node.data.values[col] = value;
