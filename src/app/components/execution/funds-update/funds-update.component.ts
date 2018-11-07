@@ -318,25 +318,26 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
-        //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
-        my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
+        my.exesvc.getByCommunityId(deets.result.currentCommunityId),
+        //my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
       ]).subscribe(data => {
         my.exephases = data[0].result;
-        my.selectedexe = my.exephases[0];
-        this.agOptions.api.showLoadingOverlay();
-        my.fetchLines();
-        this.agGrid.api.sizeColumnsToFit();
-        this.agGrid.api.refreshHeader();
+        if (my.exephases.length > 0) {
+          my.selectedexe = my.exephases[0];
+          my.fetchLines();
+        }
       });
     });
   }
 
   fetchLines() {
     if (!this.selectedexe) {
+      this.exelines = [];
       this.agOptions.api.showNoRowsOverlay();
       return;
     }
 
+    this.agOptions.api.showLoadingOverlay();
     forkJoin([
       this.exesvc.getExecutionLinesByPhase(this.selectedexe.id),
       this.exesvc.hasAppropriation(this.selectedexe.id)
@@ -351,6 +352,9 @@ export class FundsUpdateComponent implements OnInit {
       this.refreshFilterDropdowns();
 
       this.hasAppropriation = data[1].result;
+
+      this.agGrid.api.sizeColumnsToFit();
+      this.agGrid.api.refreshHeader();
     });
   }
 

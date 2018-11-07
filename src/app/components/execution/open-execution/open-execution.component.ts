@@ -102,6 +102,13 @@ export class OpenExecutionComponent implements OnInit {
   }
 
   updatetable() {
+    this.agOptions.api.showLoadingOverlay();
+    if (!this.phase) {
+      this.exelines = [];
+      this.agOptions.api.showNoRowsOverlay();
+      return;
+    }
+
     forkJoin([
       this.exesvc.getExecutionLinesByPhase(this.phase.id),
       this.spsvc.getByExecutionPhaseId(this.phase.id, SpendPlan.TypeEnum.BASELINE)
@@ -120,6 +127,7 @@ export class OpenExecutionComponent implements OnInit {
           this.spendplans.set(sp.executionLineId, sp);
         });
         this.exelines = d[0].result;
+        this.agOptions.api.hideOverlay();
       }
     });
   }
@@ -139,6 +147,7 @@ export class OpenExecutionComponent implements OnInit {
         if (this.phases.length > 0) {
           this.phase = this.phases[0];
         }
+        this.updatetable();
       }
     });
   }

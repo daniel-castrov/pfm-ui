@@ -179,7 +179,7 @@ export class SpendPlansTabComponent implements OnInit {
     }
 
     var editable = function (p): boolean {
-      if (!my.submittable) {
+      if (!my.submitable) {
         return false;
       }
 
@@ -480,9 +480,10 @@ export class SpendPlansTabComponent implements OnInit {
     });
   }
 
-  @Input() get submittable(): boolean {
+  @Input() get submitable(): boolean {
     // basically, we can submit a plan if our toggle is on that plan, 
     // and we don't already have an id for it (it's already been saved)
+
     var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
     var ok: boolean = !plan.hasOwnProperty('id');
     
@@ -490,7 +491,6 @@ export class SpendPlansTabComponent implements OnInit {
     if (!this.showBaseline) {
       ok = ok && this.exeline.appropriated;
     }
-
     return ok
   }
 
@@ -499,7 +499,7 @@ export class SpendPlansTabComponent implements OnInit {
       var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
       var label: string = (this.showBaseline ? 'Baseline' : 'After Appropriation');
 
-      if (this.submittable) {
+      if (this.submitable) {
         label = 'Create ' + label;
       }
       
