@@ -10,7 +10,7 @@
 
 <ng-container *ngIf="showAddProgramButton">
   <span *ngIf="availablePrograms.length>0; else notable">
-    <button class="btn btn-light" (click)="addrow()">
+    <button class="btn btn-light mb-2" (click)="addrow()">
       <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
       {{sourceOrTarget}}
     </button>
@@ -28,4 +28,3 @@
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-

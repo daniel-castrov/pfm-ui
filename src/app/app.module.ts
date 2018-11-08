@@ -158,6 +158,7 @@ import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval/ufr-app
 import { FyHeaderComponent } from './components/execution/fy-header/fy-header.component';
 import {UfrApprovalDetailComponent} from "./components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component";
 import {UnlockComponent} from "./components/programming/pom-worksheet/worksheet-management/unlock/unlock.component";
+import { OpenExecutionComponent } from './components/execution/open-execution/open-execution.component';
 
 
 // ROUTES
@@ -187,6 +188,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'oe-update', component:OeUpdateComponent},
+  {path:'open-execution', component: OpenExecutionComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
@@ -329,6 +331,7 @@ const appRoutes: Routes = [
     UnlockComponent,
     ActualsCellRendererComponent,
     FyHeaderComponent,
+    OpenExecutionComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

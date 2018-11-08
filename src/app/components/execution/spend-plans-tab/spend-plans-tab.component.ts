@@ -164,12 +164,12 @@ export class SpendPlansTabComponent implements OnInit {
     }
 
     var editable = function (p): boolean {
-      if (!my.submittable) {
+      if (!my.submitable) {
         return false;
       }
 
       var row: number = p.node.rowIndex;
-      return !(0 === row || 7 === row || 10 === row);
+      return (row > 1 || row < 7);
     }
     var cssbold: Set<number> = new Set<number>([0, 9, 12]);
     var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
@@ -466,9 +466,10 @@ export class SpendPlansTabComponent implements OnInit {
     });
   }
 
-  @Input() get submittable(): boolean {
+  @Input() get submitable(): boolean {
     // basically, we can submit a plan if our toggle is on that plan, 
     // and we don't already have an id for it (it's already been saved)
+
     var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
     var ok: boolean = !plan.hasOwnProperty('id');
     
@@ -476,7 +477,6 @@ export class SpendPlansTabComponent implements OnInit {
     if (!this.showBaseline) {
       ok = ok && this.exeline.appropriated;
     }
-
     return ok
   }
 
@@ -490,8 +490,7 @@ export class SpendPlansTabComponent implements OnInit {
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
       this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
 
-
-      if (this.submittable) {
+      if (this.submitable) {
         label = 'Create ' + label;
 
         if (!this.showBaseline) {

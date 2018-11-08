@@ -44,6 +44,12 @@ export class ActualsTabComponent implements OnInit {
   fixtime: number = 1;
   private maxmonths: number = 0;
 
+  @Input() get readonly(): boolean {
+    return (this._exe
+      ? Execution.StatusEnum.OPEN !== this.exe.status
+      : true);
+  }
+
   @Input() set exeline(e: ExecutionLine) {
     this._exeline = e;
     this.refreshTableData();
@@ -115,7 +121,7 @@ export class ActualsTabComponent implements OnInit {
         : (my.firstMonth + params.colDef.colId) === my.editMonth);
       var rowOk: boolean = editrows.has(params.node.rowIndex);
 
-      return (rowOk && colOk);
+      return (rowOk && colOk && !my.readonly);
     }
 
     var valueSetter = function (params) {

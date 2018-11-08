@@ -77,7 +77,7 @@ export class ExecutionLineTableComponent implements OnInit {
               display: el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
             });
           });
-        
+
         my.setAvailablePrograms();
       });
     }
@@ -130,7 +130,7 @@ export class ExecutionLineTableComponent implements OnInit {
   refreshpins() {
     //console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
     var dopinned: boolean = false;
-    this.agOptions.api.forEachNodeAfterFilter(rn => { 
+    this.agOptions.api.forEachNodeAfterFilter(rn => {
       if (rn.data.amt && rn.data.amt > 0) {
         dopinned = true;
       }
@@ -148,18 +148,18 @@ export class ExecutionLineTableComponent implements OnInit {
       delete this.totalsrow;
     }
 
-    this.recheckValidity();    
+    this.recheckValidity();
   }
 
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService, private router: Router) { 
-    
+    private progsvc: ProgramsService, private router: Router) {
+
     var agcomps: any = {
       programCellRendererComponent: ProgramCellRendererComponent,
       eventDetailsCellRendererComponent: EventDetailsCellRendererComponent,
       deleter: DeleteRenderer
     };
-    
+
     var my: ExecutionLineTableComponent = this;
 
     var programSetter = function (params): boolean {
@@ -199,7 +199,7 @@ export class ExecutionLineTableComponent implements OnInit {
     var linecellfilter = function (filter: string, cellval: any, filtertext: string): boolean {
       //console.log('into linecellfilter: '+cellval);
       var elname: string = '';
-      my.agOptions.api.forEachNode(rn => { 
+      my.agOptions.api.forEachNode(rn => {
         if (rn.data.line.id === cellval) {
           elname = rn.data.line.appropriation + '/' + rn.data.line.blin + '/' + rn.data.line.item + '/' + rn.data.line.opAgency;
         }
@@ -333,7 +333,7 @@ export class ExecutionLineTableComponent implements OnInit {
           valueSetter: amtSetter,
           width: 92,
           cellClassRules: {
-            'ag-cell-light-grey': params => my.validateOneRow(params.data),
+            'ag-cell-edit': params => my.validateOneRow(params.data),
             'text-right': true,
             'ag-cell-footer-sum': p => (p.data === this.totalsrow),
             'ag-cell-red': params => !my.validateOneRow(params.data),
@@ -422,7 +422,7 @@ export class ExecutionLineTableComponent implements OnInit {
   recheckValidity() {
     //console.log('checking validity');
     var lines: ExecutionLineWrapper[] = [];
-    this.agOptions.api.forEachNodeAfterFilter(rn => { 
+    this.agOptions.api.forEachNodeAfterFilter(rn => {
       if (rn.data.line.id && this.elIdNameLkp.has(rn.data.line.id)
         && rn.data.amt && 0 !== rn.data.amt) {
         lines.push(rn.data);

@@ -2460,6 +2460,21 @@ paths:
       description: "Returns a boolean"
       produces:
       - "application/json"
+  /execution/{exeid}/open:
+    post:
+      tags:
+      - "Execution"
+      summary: "Opens an Execution Phase"
+      description: "creates an execution event"
+      operationId: "openExecution"
+      parameters:
+      - in: "path"
+        name: "exeid"
+        description: "The phase to open"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
   /execution/community/{communityId}/year/{year}:
     post:
       tags:
@@ -2696,6 +2711,23 @@ paths:
       tags:
       - "SpendPlan"
       summary: "Updates an existing Spend Plan for this execution line"
+      produces:
+      - "application/json"
+  /spendplans/execution/{exeid}:
+    get:
+      operationId: "getByExecutionPhaseId"
+      parameters:
+      - name: "exeid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
       produces:
       - "application/json"
 
@@ -3574,7 +3606,7 @@ definitions:
       fy:
         type: "integer"
       status:
-        type: "string"
+        enum: [CREATED, OPEN, LOCKED]
       osdObligationGoals:
         type: "object"
         $ref: "#/definitions/OSDGoalPlan"
