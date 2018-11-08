@@ -169,7 +169,7 @@ export class SpendPlansTabComponent implements OnInit {
       }
 
       var row: number = p.node.rowIndex;
-      return !(0 === row || 7 === row || 10 === row);
+      return (row > 1 || row < 7);
     }
     var cssbold: Set<number> = new Set<number>([0, 9, 12]);
     var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
