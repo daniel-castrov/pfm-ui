@@ -180,6 +180,7 @@ export class UpdatePomSessionComponent implements OnInit {
         headerName: '',
         field: 'description',
         cellClass: ['ag-cell-white','text-right'],
+        suppressMenu: true
       }
     ];
     this.columnKeys.forEach(key => {
