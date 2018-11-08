@@ -3606,7 +3606,6 @@ definitions:
       fy:
         type: "integer"
       status:
-      type:
         enum: [CREATED, OPEN, LOCKED]
       osdObligationGoals:
         type: "object"

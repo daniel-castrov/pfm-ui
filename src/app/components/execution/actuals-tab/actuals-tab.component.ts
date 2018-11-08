@@ -46,7 +46,7 @@ export class ActualsTabComponent implements OnInit {
 
   @Input() get readonly(): boolean {
     return (this._exe
-      ? Execution.TypeEnum.OPEN !== this.exe.type
+      ? Execution.StatusEnum.OPEN !== this.exe.status
       : true);
   }
 

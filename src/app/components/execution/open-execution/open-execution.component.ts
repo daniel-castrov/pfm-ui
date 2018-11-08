@@ -80,6 +80,9 @@ export class OpenExecutionComponent implements OnInit {
           valueGetter: p => (my.spendplans.has(p.data.id)
             ? 'Complete'
             : 'Missing'),
+          cellClassRules: {
+            'ag-cell-red': p => ('Missing' === p.value)
+          }
         },
       ]
     };
@@ -88,7 +91,7 @@ export class OpenExecutionComponent implements OnInit {
 
   ngOnInit() {
     this.userutils.user().subscribe(user => {
-      this.exesvc.getByCommunityId(user.currentCommunityId, Execution.TypeEnum.CREATED).subscribe(exes => {
+      this.exesvc.getByCommunityId(user.currentCommunityId, Execution.StatusEnum.CREATED).subscribe(exes => {
         this.phases = exes.result;
         if (this.phases.length > 0) {
           this.phase = this.phases[0];
