@@ -136,7 +136,6 @@ export class UpdatePomSessionComponent implements OnInit {
     this.rowData = data;
     this.agGrid.api.sizeColumnsToFit();
   }
-
   initToaDataRows(){
     let data: Array<any> = [];
     let allocatedFunds = [];
