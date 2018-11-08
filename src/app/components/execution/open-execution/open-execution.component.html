@@ -1,0 +1,38 @@
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-5 mb-4">
+        <div class="form-group">
+          <label class="h5">Review Execution Phase:</label>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="phase" (change)="updatetable()">
+              <option *ngFor="let p of phases" [ngValue]="p">{{p.fy}}</option>
+            </select>
+        </div>
+      </div>
+      <div class="col-5" *ngIf="!this.phase">
+        There are no Execution Phases ready to be opened.
+      </div>
+      <div class="col-7" *ngIf="this.phase">
+        <span>
+          <button class="btn-primary btn pull-right mb-2" (click)=openExe() [disabled]="!submitable()">Open Execution Phase</button>
+        </span>
+        <span>
+          <button class="btn-primary btn pull-right mb-2" (click)=demoCreatePlans()>Demo Only - Create All Plans</button>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <ag-grid-angular #agGrid class="ag-theme-balham" style="width:100%"
+            [gridOptions]="agOptions"
+            [rowData]='exelines'
+            [enableColResize]="'true'"
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+      </div>
+    </div>
+  </div>
+</div>

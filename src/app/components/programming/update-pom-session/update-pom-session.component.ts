@@ -31,6 +31,7 @@ export class UpdatePomSessionComponent implements OnInit {
   rowData;
   toaRowData;
   filterText;
+  rowSelection = 'multiple';
   bulkType: string;
   bulkAmount: number;
   worksheets: Array<Worksheet>;
@@ -70,6 +71,12 @@ export class UpdatePomSessionComponent implements OnInit {
   update(){
     this.worksheetService.updateRows(this.selectedWorksheet).subscribe(response => {
       if (!response.error) {
+        this.agGrid.api.forEachNode(node => {
+          node.data.modified = false;
+          node.setSelected(false);
+          node.data.notes = '';
+        });
+        this.agGrid.api.refreshCells();
         Notify.success('Worksheet updated successfully');
       } else {
         Notify.error('Something went wrong while trying to update the worksheet');
@@ -120,7 +127,9 @@ export class UpdatePomSessionComponent implements OnInit {
       let row = {
         coreCapability: value.coreCapability,
         programId: value.programRequestFullname,
-        fundingLine: value.fundingLine
+        fundingLine: value.fundingLine,
+        modified: false,
+        notes: ''
       };
       data.push(row);
     });
@@ -135,7 +144,7 @@ export class UpdatePomSessionComponent implements OnInit {
       allocatedFunds[toa.year] = toa.amount;
     });
 
-    let allocatedRow = {description: 'Allocated TOA', funds: allocatedFunds};
+    let allocatedRow = {description: 'Allocated TOA', funds: allocatedFunds, modified: false};
     data.push(allocatedRow);
 
     let resourcedFunds = [];
@@ -151,7 +160,7 @@ export class UpdatePomSessionComponent implements OnInit {
       });
     });
 
-    let resourcedRow = {description: 'Total Resourced', funds: resourcedFunds};
+    let resourcedRow = {description: 'Total Resourced', funds: resourcedFunds, modified: false};
     data.push(resourcedRow);
 
     let deltaFunds = [];
@@ -326,6 +335,18 @@ export class UpdatePomSessionComponent implements OnInit {
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };
     this.columnDefs.push(totalColDef);
+    this.columnDefs.push({
+      headerName: 'Notes',
+      field: 'notes',
+      editable: params => {
+        if(params.data.modified){
+          return true;
+        }
+      },
+      suppressMenu: true,
+      suppressToolPanel: true,
+      cellClass: ['ag-cell-white','text-right']
+    });
 
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
@@ -333,8 +354,22 @@ export class UpdatePomSessionComponent implements OnInit {
 
   onBudgetYearValueChanged(params){
     let year = params.colDef.colId;
-    params.data.fundingLine.funds[year] = Number(params.newValue);
-    this.initToaDataRows();
+    if (Number(params.oldValue) !== Number(params.newValue)) {
+      params.node.setSelected(true);
+      params.data.modified = true;
+      params.data.fundingLine.funds[year] = Number(params.newValue);
+      this.initToaDataRows();
+    }else {
+      params.node.setSelected(false);
+    }
+  }
+
+  onRowSelected(params) {
+    if(params.data.modified){
+      params.node.setSelected(true);
+    } else {
+      params.node.setSelected(false)
+    }
   }
 
   getTotal(row, columnKeys): number {

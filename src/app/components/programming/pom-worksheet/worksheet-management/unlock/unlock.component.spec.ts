@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ImportComponent } from './import.component';
+import { UnlockComponent } from './unlock.component';
 
 describe('UnlockComponent', () => {
-  let component: ImportComponent;
-  let fixture: ComponentFixture<ImportComponent>;
+  let component: UnlockComponent;
+  let fixture: ComponentFixture<UnlockComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImportComponent ]
+      declarations: [ UnlockComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImportComponent);
+    fixture = TestBed.createComponent(UnlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

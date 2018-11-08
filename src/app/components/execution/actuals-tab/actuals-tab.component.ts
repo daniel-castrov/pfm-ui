@@ -39,15 +39,18 @@ export class ActualsTabComponent implements OnInit {
   editMonth: number = -1;
   isadmin: boolean = false;
   showPercentages: boolean = true;
-  prevok: boolean = false;
-  nextok: boolean = true;
   remediation: string;
   explanation: string;
   fixtime: number = 1;
-  private maxmonths: number;
+  private maxmonths: number = 0;
+
+  @Input() get readonly(): boolean {
+    return (this._exe
+      ? Execution.StatusEnum.OPEN !== this.exe.status
+      : true);
+  }
 
   @Input() set exeline(e: ExecutionLine) {
-    //console.log('setting exeline')
     this._exeline = e;
     this.refreshTableData();
   }
@@ -57,7 +60,6 @@ export class ActualsTabComponent implements OnInit {
   }
 
   @Input() set exe(e: Execution) {
-    //console.log('setting exe');
     this._exe = e;
     this.firstMonth = 0;
 
@@ -72,7 +74,12 @@ export class ActualsTabComponent implements OnInit {
     }
 
     // skip to the FY that contains the current month
-    this.firstMonth = (this.editMonth / 12) * 12;
+    var cutoffs: number[] = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120];
+    cutoffs.forEach((val, idx) => { 
+      if (this.editMonth >= val) {
+        this.firstMonth = idx * 12;
+      }
+    });
 
     if (this.agOptions.api) {
       this.agOptions.api.refreshHeader();
@@ -86,7 +93,6 @@ export class ActualsTabComponent implements OnInit {
   }
 
   @Input() set oandes(o: OandEMonthly[]) {
-    //console.log('setting oandes ' + JSON.stringify(o));
     this._oandes = o;
     this.refreshTableData();
   }
@@ -115,7 +121,7 @@ export class ActualsTabComponent implements OnInit {
         : (my.firstMonth + params.colDef.colId) === my.editMonth);
       var rowOk: boolean = editrows.has(params.node.rowIndex);
 
-      return (rowOk && colOk);
+      return (rowOk && colOk && !my.readonly);
     }
 
     var valueSetter = function (params) {
@@ -149,7 +155,7 @@ export class ActualsTabComponent implements OnInit {
           ? data.oblgoal_pct[fymonth]
           : data.expgoal_pct[fymonth]);
 
-        var diff: number = (goal - pct) * 100;
+        var diff: number = (pct - goal) * 100;
         var low: number = cutoff[0];
         var high: number = cutoff[1];
 
@@ -161,19 +167,19 @@ export class ActualsTabComponent implements OnInit {
 
     var isyellow = function (params): boolean {
       return ( 7 === params.rowIndex || 11 === params.rowIndex
-        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [0,10.0001])
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-10.000, 0.0001])
         : false);
     }
 
     var isred = function (params): boolean {
       return (7 === params.rowIndex || 11 === params.rowIndex
-        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [10, 1000])
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-10000, -10])
         : false);
     }
 
     var isgreen = function (params): boolean {
       return (7 === params.rowIndex || 11 === params.rowIndex
-        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [-1000, 0.0001])
+        ? isPctInRange(params.data, params.rowIndex, my.firstMonth + params.colDef.colId, [0.0001, 10000])
         : false);
     }
 
@@ -213,7 +219,8 @@ export class ActualsTabComponent implements OnInit {
               maxMonths: my.maxmonths,
               fy: (my._exe ? my.exe.fy : 0),
               next: function () { my.nextMonth() },
-              prev: function () { my.prevMonth() }
+              prev: function () { my.prevMonth() },
+              prefix: 'actuals'
             };
           },
           children: [
@@ -478,14 +485,14 @@ export class ActualsTabComponent implements OnInit {
       { label: 'Released', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Committed (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Cumulative Committed', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Obligated (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Cumulative Obligated', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'OSD Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Obligations (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Obligations', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'OUSD(C) Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Delta', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Expensed (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Cumulative Expensed', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'OSD Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
-      { label: 'Delta', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Expenditure (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Cumulative Expenditure', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'OUSD(C) Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
+      { label: 'Delta to Goal', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Accruals (Monthly)', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
       { label: 'Cumulative Actuals', values: [], toa: [], released: [], oblgoal_pct: [], expgoal_pct: [] },
     ];
@@ -497,6 +504,8 @@ export class ActualsTabComponent implements OnInit {
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
 
       this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+      this.agOptions.api.refreshHeader();
+
       // get our O&E values in order of month, so we can
       // run right through them
       var myoandes: OandEMonthly[] = new Array(this.maxmonths);
@@ -543,12 +552,9 @@ export class ActualsTabComponent implements OnInit {
     } else if (this.agOptions.api) {
       this.agOptions.api.setRowData(this.rows);
     }
-
-    this.enableNextPrevButtons();
   }
 
   recalculateTableData() {
-    console.log('recalculating table data');
     // get our goals information
     var progtype: string = this.exeline.appropriation;
     var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
@@ -616,10 +622,7 @@ export class ActualsTabComponent implements OnInit {
     var row: number = params.node.childIndex;
 
     var index: number = my.firstMonth + col;
-    //if(6===row && 1===col) console.log('value getter for (' + row + ',' + col + '); index is: ' + index + '; vlen:' + params.data.values.length);
     if (params.data.values.length >= index) {
-      //console.log(params.data.values);
-      //if( 6===row && 1 === col ) console.log('  returning ' + params.data.values[index]);
       return params.data.values[index];
     }
     else {
@@ -645,9 +648,11 @@ export class ActualsTabComponent implements OnInit {
     });
   }
 
-  onTogglePct() {
-    this.showPercentages = !this.showPercentages;
-    this.agOptions.api.redrawRows();
+  @Input() set percentages(p: boolean) {
+    this.showPercentages = p;
+    if (this.agOptions.api) {
+      this.agOptions.api.redrawRows();
+    }
   }
 
   onToggleAdmin() {
@@ -661,8 +666,6 @@ export class ActualsTabComponent implements OnInit {
       this.agOptions.api.refreshHeader();
       this.agOptions.api.redrawRows();
     }
-
-    this.enableNextPrevButtons();
   }
 
   nextMonth() {
@@ -671,12 +674,6 @@ export class ActualsTabComponent implements OnInit {
       this.agOptions.api.refreshHeader();
       this.agOptions.api.redrawRows();
     }
-    this.enableNextPrevButtons();
-  }
-
-  enableNextPrevButtons() {
-    this.prevok = (this.firstMonth - 12 >= 0);
-    this.nextok = (this.firstMonth + 12 < this.rows[0].values.length);
   }
 
   monthlies() : Observable<OandEMonthly[]> {
@@ -726,7 +723,7 @@ export class ActualsTabComponent implements OnInit {
           accruals: this.rows[12].values[this.editMonth]
         };
 
-        if (opct >= 0.1 || epct >= 0.1) {
+        if (opct >= 0.0 || epct >= 0.0) {
           $('#explanation-modal').on('hidden.bs.modal', function (event) {
             oande.monthsToFix = my.fixtime;
             oande.explanation = my.explanation;

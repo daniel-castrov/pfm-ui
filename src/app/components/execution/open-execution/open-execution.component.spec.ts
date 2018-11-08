@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddSpendPlanComponent } from './add-spend-plan.component';
+import { OpenExecutionComponent } from './open-execution.component';
 
-describe('AddSpendPlanComponent', () => {
-  let component: AddSpendPlanComponent;
-  let fixture: ComponentFixture<AddSpendPlanComponent>;
+describe('OpenExecutionComponent', () => {
+  let component: OpenExecutionComponent;
+  let fixture: ComponentFixture<OpenExecutionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddSpendPlanComponent ]
+      declarations: [ OpenExecutionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddSpendPlanComponent);
+    fixture = TestBed.createComponent(OpenExecutionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

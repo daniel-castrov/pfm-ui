@@ -1,0 +1,25 @@
+<fieldset>
+  <legend>Unlock</legend>
+  <table class="worksheet-table">
+    <tr>
+      <td>
+      <label class="pull-right">Select Target Worksheet:</label>
+      </td>
+      <td>
+        <div class="form-group">
+          <select [(ngModel)]="selectedImportableWorksheet" class="form-control copy-select">
+            <option *ngFor="let worksheet of importableWorksheets" [ngValue]="worksheet">{{worksheet.name}} - Number {{worksheet.version}}</option>
+          </select>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <div class="button-controls pull-right">
+          <button class="btn btn-primary pull-right" (click)="onUnlock()" [disabled]="!selectedImportableWorksheet">Save</button>
+          <button class="btn btn-secondary pull-right" (click)="operationOver.emit()" >Cancel</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+</fieldset>

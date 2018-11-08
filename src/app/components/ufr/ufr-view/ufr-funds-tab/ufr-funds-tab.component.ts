@@ -6,6 +6,7 @@ import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {AutoValuesService} from "../../../programming/program-request/funds-tab/AutoValues.service";
 import {DataRow} from "./DataRow";
+import {PRUtils} from '../../../../services/pr.utils.service';
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 import {Notify} from "../../../../utils/Notify";
@@ -70,6 +71,9 @@ export class UfrFundsComponent implements OnChanges {
         this.pomFy + 4];
       this.generateColumns();
       this.initDataRows();
+      this.agGridCurrentFunding.api.sizeColumnsToFit();
+      this.agGridProposedChanges.api.sizeColumnsToFit();
+      this.agGridRevisedPrograms.api.sizeColumnsToFit();
     });
   }
 
@@ -222,7 +226,6 @@ export class UfrFundsComponent implements OnChanges {
       cellClass: 'funding-line-default'
     });
     this.agGridProposedChanges.api.setColumnDefs(this.proposedChangesColumnDefs);
-    this.agGridProposedChanges.api.sizeColumnsToFit();
     this.initCurrentFunding();
   }
 
@@ -526,10 +529,8 @@ export class UfrFundsComponent implements OnChanges {
     this.calculateRevisedChanges();
   }
 
-  onColumnVisible(params) {
-    this.agGridProposedChanges.api.sizeColumnsToFit();
-    this.agGridCurrentFunding.api.sizeColumnsToFit();
-    this.agGridRevisedPrograms.api.sizeColumnsToFit();
+  sizeColumnsToFit(params) {
+    params.api.sizeColumnsToFit();
   }
 
   onCellEditingStarted(params) {
@@ -548,10 +549,9 @@ export class UfrFundsComponent implements OnChanges {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
-        this.tagsService.tags(TagType.OP_AGENCY).subscribe(tags => {
-          params.data.fundingLine.opAgency = tags.find(tag => tag.name.indexOf(this.shorty.leadComponent) !== -1).abbr
-          this.agGridProposedChanges.api.refreshCells();
-        });
+
+        params.data.fundingLine.opAgency = PRUtils.getDefaultOpAgencyForLeadComponent(this.shorty.leadComponent);
+        this.agGridProposedChanges.api.refreshCells();
 
         if (params.data.fundingLine.appropriation === 'RDTE'){
           params.data.fundingLine.item = this.shorty.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
@@ -579,11 +579,11 @@ export class UfrFundsComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
-    this.limitBaForOrganizations()
+    this.limitBaForLeadComponent()
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
-  limitBaForOrganizations() {
+  limitBaForLeadComponent() {
     switch(this.shorty.leadComponent) {
       case 'DUSA TE':
       case 'JRO':

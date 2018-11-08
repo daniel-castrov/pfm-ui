@@ -153,8 +153,8 @@ export class OeUpdateComponent implements OnInit {
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
         my.progsvc.getIdNameMap(),
-        //my.exesvc.getByCommunity(deets.result.currentCommunityId, 'OPEN'),
-        my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED'),
+        my.exesvc.getByCommunityId(deets.result.currentCommunityId),
+        //my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED'),
       ]).subscribe(data => {
         my.programs = new Map<string, string>();
         Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
@@ -163,17 +163,16 @@ export class OeUpdateComponent implements OnInit {
 
         my.exephases = data[1].result;
         my.selectedexe = my.exephases[0];
-        this.agOptions.api.showLoadingOverlay();
         my.fetchLines();
-        this.agGrid.api.sizeColumnsToFit();
-        this.agGrid.api.refreshHeader();
       });
     });
 
   }
 
   fetchLines() {
+    this.agOptions.api.showLoadingOverlay();
     if (!this.selectedexe) {
+      this.datalines = [];
       this.agOptions.api.showNoRowsOverlay();
       return;
     }
@@ -223,6 +222,9 @@ export class OeUpdateComponent implements OnInit {
 
         this.datalines = newdata;
       }
+
+      this.agGrid.api.sizeColumnsToFit();
+      this.agGrid.api.refreshHeader();
     });
   }
 

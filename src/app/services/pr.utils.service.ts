@@ -41,4 +41,27 @@ export class PRUtils {
     return parentSum >= childrenSum;
   }
 
+  static getOrganizationNameForLeadComponent(leadComponent:string) : string {
+
+    let orgstring:string;
+    if (leadComponent == "ECBC"){ 
+      return "DUSA-TE";
+    } else {
+      return leadComponent;
+    }
+  }
+
+  static getDefaultOpAgencyForLeadComponent(leadComponent:string) : string {
+    let map = new Map<string,string>();
+    
+    map.set("JPEO-CBRND", "5Y");
+    map.set("JRO-CBRND",  "JCO");
+    map.set("JSTO-CBD",   "TR");
+    map.set("PAIO",       "26");
+    map.set("ODASD(CBD)", "26");
+    map.set("DUSA-TE",    "41");
+    map.set("ECBC",       "6N");
+     
+    return  map.get(leadComponent);
+  }
 }

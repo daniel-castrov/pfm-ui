@@ -30,7 +30,6 @@ import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
 import { ActualsTabComponent } from './components/execution/actuals-tab/actuals-tab.component';
-import { AddSpendPlanComponent } from './components/execution/add-spend-plan/add-spend-plan.component';
 import { AppComponent } from './app.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { AppropriationReleaseComponent } from './components/execution/appropriation-release/appropriation-release.component';
@@ -164,10 +163,11 @@ import {WorksheetService} from "./generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import { BesRdteComponent } from './components/budget/bes-rdte/bes-rdte.component';
 import { BesProcComponent } from './components/budget/bes-proc/bes-proc.component';
-import {NewProgramService} from "./services/new.program.service";
 import {UfrApprovalSummaryComponent} from "./components/ufr/ufr-approval/ufr-approval-summary/ufr-approval-summary.component";
 import { FyHeaderComponent } from './components/execution/fy-header/fy-header.component';
 import {UfrApprovalDetailComponent} from "./components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component";
+import {UnlockComponent} from "./components/programming/pom-worksheet/worksheet-management/unlock/unlock.component";
+import { OpenExecutionComponent } from './components/execution/open-execution/open-execution.component';
 
 
 // ROUTES
@@ -199,6 +199,7 @@ const appRoutes: Routes = [
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'oe-update', component:OeUpdateComponent},
+  {path:'open-execution', component: OpenExecutionComponent},
   {path:'planning', component:PlanningComponent},
   {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
@@ -234,7 +235,6 @@ const appRoutes: Routes = [
     AboutPrivateComponent,
     AccessChangeApprovalComponent,
     ActualsTabComponent,
-    AddSpendPlanComponent,
     AllUfrsComponent,
     AppComponent,
     ApplyComponent,
@@ -339,10 +339,12 @@ const appRoutes: Routes = [
     RenameComponent,
     ExportComponent,
     ImportComponent,
+    UnlockComponent,
     ActualsCellRendererComponent,
     BesRdteComponent,
     BesProcComponent,
     FyHeaderComponent,
+    OpenExecutionComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -414,7 +416,6 @@ const appRoutes: Routes = [
     OandEService,
     LibraryService,
     StateService,
-    NewProgramService,
     SpendPlanService,
     BudgetFundingLinesService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
