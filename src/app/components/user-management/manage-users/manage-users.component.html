@@ -44,7 +44,7 @@
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
           </button>
-          <button class="btn-card-header" title="Save" (click)="saveTargetUser()">
+          <button class="btn-card-header" [disabled]="!targetUser.firstName || !targetUser.lastName || !targetUser.communication.primaryEmail || !targetUser.communication.primaryPhone" title="Save" (click)="saveTargetUser()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
           </button>
           <br>
