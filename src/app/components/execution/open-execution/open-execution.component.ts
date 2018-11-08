@@ -151,6 +151,7 @@ export class OpenExecutionComponent implements OnInit {
           this.phase = this.phases[0];
         }
         this.updatetable();
+        Notify.success('Execution Phase opened');
       }
     });
   }
