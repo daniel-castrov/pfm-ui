@@ -964,7 +964,7 @@ export class FundsTabComponent implements OnChanges {
     } else {
       if (params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin) {
 
-        params.data.fundingLine.opAgency = PRUtils.getOpAgencyForLeadComponent(this.pr.leadComponent);
+        params.data.fundingLine.opAgency = PRUtils.getDefaultOpAgencyForLeadComponent(this.pr.leadComponent);
         this.agGrid.api.refreshCells(); 
         
         if (params.data.fundingLine.appropriation === 'RDTE') {

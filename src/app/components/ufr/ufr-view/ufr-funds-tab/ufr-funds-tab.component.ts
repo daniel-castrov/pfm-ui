@@ -550,7 +550,7 @@ export class UfrFundsComponent implements OnChanges {
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
 
-        params.data.fundingLine.opAgency = PRUtils.getOpAgencyForLeadComponent(this.shorty.leadComponent);
+        params.data.fundingLine.opAgency = PRUtils.getDefaultOpAgencyForLeadComponent(this.shorty.leadComponent);
         this.agGridProposedChanges.api.refreshCells();
 
         if (params.data.fundingLine.appropriation === 'RDTE'){
