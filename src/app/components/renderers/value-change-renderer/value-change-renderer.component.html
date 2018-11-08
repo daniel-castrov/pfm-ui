@@ -1,0 +1,4 @@
+<div *ngIf="previousValue !== newValue" class="row">
+  <div class="col-auto">{{previousValueFormatted}} <i class="fa fa-long-arrow-right" [style.color]="previousValue > newValue? 'red': 'green'"></i> {{newValueFormatted}}</div>
+</div>
+<div style="text-align: left" *ngIf="previousValue === newValue">{{newValueFormatted}}</div>

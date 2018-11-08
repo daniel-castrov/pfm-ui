@@ -168,6 +168,8 @@ import { FyHeaderComponent } from './components/execution/fy-header/fy-header.co
 import {UfrApprovalDetailComponent} from "./components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component";
 import {UnlockComponent} from "./components/programming/pom-worksheet/worksheet-management/unlock/unlock.component";
 import { OpenExecutionComponent } from './components/execution/open-execution/open-execution.component';
+import {ViewEventsRenderer} from "./components/renderers/view-events-renderer/view-events-renderer.component";
+import {ValueChangeRenderer} from "./components/renderers/value-change-renderer/value-change-renderer.component";
 
 
 // ROUTES
@@ -343,8 +345,10 @@ const appRoutes: Routes = [
     ActualsCellRendererComponent,
     BesRdteComponent,
     BesProcComponent,
+    ViewEventsRenderer,
+    ValueChangeRenderer,
     FyHeaderComponent,
-    OpenExecutionComponent,
+    OpenExecutionComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -357,7 +361,8 @@ const appRoutes: Routes = [
     CheckboxRendererComponent,
     NameRendererComponent,
     ViewSiblingsRenderer,
-    ViewSiblingsRenderer,
+    ViewEventsRenderer,
+    ValueChangeRenderer,
     ActualsCellRendererComponent,
     FyHeaderComponent
   ],

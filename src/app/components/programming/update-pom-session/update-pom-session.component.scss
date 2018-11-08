@@ -66,3 +66,11 @@ fieldset {
 .ag-row-selected > .ag-cell{
   background-color: #b7e4ff !important;
 }
+
+.modal-dialog {
+  max-width: none !important;
+}
+
+.modal-header {
+  padding: 2px !important;
+}

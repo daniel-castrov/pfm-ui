@@ -513,13 +513,6 @@ export class UfrFundsComponent implements OnChanges {
     });
   }
 
-  onColumnValueChanged(params){
-    setTimeout(() => {
-      params.api.sizeColumnsToFit();
-    }, 500);
-  }
-
-
   delete(index, data) {
     this.ufr.fundingLines.splice(this.ufr.fundingLines.indexOf(this.proposedChange[index].fundingLine), 1);
     this.proposedChange.splice(index, 1);

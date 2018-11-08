@@ -14,8 +14,11 @@ export class FormatterUtil {
     if(!decimalDigits){
       decimalDigits = 0;
     }
-    if(isNaN(value.value)) {
-      value.value = 0;
+    let amount = 0;
+    if(!isNaN(value) && value !== undefined){
+      amount = value;
+    } else if(value && !isNaN(value.value) && value.value !== undefined) {
+      amount = value.value;
     }
     var usdFormate = new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -23,9 +26,9 @@ export class FormatterUtil {
       minimumFractionDigits: decimalDigits
     });
     if(round){
-      return this.transformNegative(usdFormate.format(Math.round(value.value)));
+      return this.transformNegative(usdFormate.format(Math.round(amount)));
     } else {
-      return this.transformNegative(usdFormate.format(value.value));
+      return this.transformNegative(usdFormate.format(amount));
     }
   }
 
