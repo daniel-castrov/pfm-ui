@@ -34,7 +34,7 @@
     <div class="row">
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
-          <tab heading="Spend Plans" id="tab1" active="true">
+          <tab heading="Spend Plans" id="tab1" [active]="hash==='SpendPlan'">
             <spend-plans-tab role="tabpanel"
               [oandes]="oandes"
               [exeline]="exeline"
@@ -44,7 +44,7 @@
               [deltas]="deltaMap">
             </spend-plans-tab>
           </tab>
-          <tab heading="Actuals" id="tab2">
+          <tab heading="Actuals" id="tab2" [active]="hash==='Actuals'">
             <actuals-tab role="tabpanel"
               [oandes]="oandes"
               [exeline]="exeline"
@@ -54,7 +54,7 @@
               [deltas]="deltaMap">
             </actuals-tab>
           </tab>
-          <tab heading="Graph" id="tab3">
+          <tab heading="Graph" id="tab3" [active]="hash==='Graph'">
             <graphs-tab role="tabpanel"
               [oandes]="oandes"
               [exeline]="exeline"
