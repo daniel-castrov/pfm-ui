@@ -2817,7 +2817,22 @@ paths:
             $ref: "#/definitions/OandEMonthly"
 # STOP O&E
 #################################################################
-
+  /budgetFundingLines/{pomId}:
+    get:
+      tags:
+      - "BudgetFundingLines"
+      operationId: "getByPomId"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
 # END PATHS
 #################################################################
 #
@@ -3709,5 +3724,12 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/SpendPlanMonthly"
+  BudgetFundingLine:
+    type: "object"
+    properties:
+      item:
+        type: "string"
+      name:
+        type: "string"
 ##############################################################################
 # ENDFILE

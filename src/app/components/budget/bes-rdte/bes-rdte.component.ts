@@ -1,13 +1,16 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
 import {HeaderComponent} from '../../header/header.component';
+import {BudgetFundingLine, BudgetFundingLinesService, Pom, POMService, User} from "../../../generated";
+import {UserUtils} from "../../../services/user.utils";
+import {Item} from "./Item";
 
 @Component({ 
   selector: 'app-bes-rdte',
   templateUrl: './bes-rdte.component.html',
   styleUrls: ['./bes-rdte.component.scss']
 })
-export class BesRdteComponent {
+export class BesRdteComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -22,12 +25,19 @@ export class BesRdteComponent {
     maxWidth: 400,
     cellRendererParams: { suppressCount: true }
   };
+  private budgetFundingLines: BudgetFundingLine[];
 
-  constructor() {
+  constructor( private userUtils: UserUtils,
+               private pomService: POMService,
+               private budgetFundingLinesService: BudgetFundingLinesService ) {
     this.columnDefs = [{field: "form",headerName: "Form",maxWidth: 120},
                        {field: "responsible",headerName: "Responsible",maxWidth: 120},
                        {field: "desc",headerName: "Description"}];
-    this.initRowData();
+  }
+
+  async ngOnInit() {
+    await this.initBudgetFundingLines();
+    this.initRows();
   }
 
   treeHierarchy(data) {
@@ -45,8 +55,9 @@ export class BesRdteComponent {
   }
 
 
-  initRowData() {
+  initRows() {
     const items = this.getItems();
+    const rows = [];
     this.getOverviewAndR1( ["RDTE"] ).forEach( x => this.rows.push(x) );
 
     for ( let i=1; i<8; i++ ){
@@ -59,18 +70,19 @@ export class BesRdteComponent {
 
         if ( item.pe != itempe ){
           itempe = item.pe;
-          this.rows.push( ...this.getR2Fields(["RDTE", ba, "PE:" + item.pe, "R-2"], item) );
+          rows.push( ...this.getR2Fields(["RDTE", ba, "PE:" + item.pe, "R-2"], item) );
         }
 
-        this.rows.push( ...this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
+        rows.push( ...this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
 
         if ( item.fyt > 10 && (item.ba == "4" || item.ba == "5" || item.ba == "7") ){
-          this.rows.push( ...this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
-          this.rows.push( ...this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
-          this.rows.push( ...this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
+          rows.push( ...this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
+          rows.push( ...this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
+          rows.push( ...this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
         }
       });
     }
+    this.rows = rows;
   }
 
   getOverviewAndR1(hierarchy: string[]) {
@@ -86,19 +98,19 @@ export class BesRdteComponent {
     return rows;
   }
 
-  getR2Fields( hierarchy: string[], item ) {
+  getR2Fields( hierarchy: string[], item: Item ) {
     let rows = [];
     rows.push({ hierarchy: hierarchy.concat( "Overview" ), responsible: "Budget Manager", form: "R-2", desc: "Overall Mission Description and Budget Item Justification" });
     rows.push({ hierarchy: hierarchy.concat( "Change Summary" ), responsible: "Budget Manager", form: "R-2", desc: "Overall Program Change Summary ($ in Millions)" });
     return rows;
   }
 
-  getR2AFields(hierarchy: string[], item) {
+  getR2AFields(hierarchy: string[], item: Item) {
     let rows = [];
     rows.push({ hierarchy: hierarchy.concat("Mission Description"), responsible: "Budget Manager", form: "R-2A", desc: "Item Mission Description and Budget Item Justification" });
     rows.push({ hierarchy: hierarchy.concat("Accomplishments"), responsible: "Budget Manager", form: "R-2A", desc: "Accomplishments Overview" });
-    rows.push({ hierarchy: hierarchy.concat("Program Bullets"), responsible: "Program Managers", form: "R-2A", desc: "Bullets from each Program" });
-
+    // rows.push({ hierarchy: hierarchy.concat("Program Bullets"), responsible: "Program Managers", form: "R-2A", desc: "Bullets from each Program" });
+    rows.push( ...this.getBullets(hierarchy.concat("Program Bullets"), item) );
 
     if ( item.ba != "6" )
     rows.push({ hierarchy: hierarchy.concat("Other Funding"), responsible: "Budget Manager", form: "R-2A", desc: "Other Program Funding for this Item" });
@@ -114,7 +126,7 @@ export class BesRdteComponent {
     return rows;
   }
 
-  getR3Fields(hierarchy: string[], item) {
+  getR3Fields(hierarchy: string[], item: Item) {
     let rows = [];
     rows.push({ hierarchy: hierarchy.concat("Product Development"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Product Development ($ in Millions)" });
     rows.push({ hierarchy: hierarchy.concat("Support"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Support ($ in Millions)" });
@@ -124,15 +136,15 @@ export class BesRdteComponent {
     return rows;
   }
 
-  getR4Fields(hierarchy: string[], item) {
+  getR4Fields(hierarchy: string[], item: Item) {
     return [{ hierarchy: hierarchy.concat("Gantt Chart"), responsible: "Budget Manager", form: "R-4", desc: "A generated Gantt Chart" } ];
   }
 
-  getR4AFields(hierarchy: string[], item) {
+  getR4AFields(hierarchy: string[], item: Item) {
     return [{ hierarchy: hierarchy.concat("Schedule Details"), responsible: "Program Managers", form: "R-4A", desc: "Schedule Details from each program to generate a Gantt Chart" } ];
   }
 
-  getItems() {
+  getItems(): Item[] {
 
     return [
       { inum: "LF1", ba: "1", pe: "0601384BP", fyt: 30 },
@@ -181,5 +193,19 @@ export class BesRdteComponent {
       { inum: "MB7", ba: "7", pe: "0607384BP", fyt: 3 },
       { inum: "TE7", ba: "7", pe: "0607384BP", fyt: 5 }
     ];
+  }
+
+  getBullets(hierarchy: string[], item: Item) {
+    let rows = [];
+    this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl =>
+      rows.push({ hierarchy: hierarchy.concat( bfl.name ), responsible: "Program Manager", form: "R-2A", desc: "Program Mission Description" })
+    );
+    return rows;
+  }
+
+  async initBudgetFundingLines() {
+    const user: User = await this.userUtils.user().toPromise();
+    const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
+    this.budgetFundingLines = (await this.budgetFundingLinesService.getByPomId(pom.id).toPromise()).result;
   }
 }
