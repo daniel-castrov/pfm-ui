@@ -22,7 +22,7 @@
   [columnDefs]="currentFundingColumnDefs"
   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
   (gridReady)="onGridReady($event)"
-  (columnValueChanged)="onColumnValueChanged($event)"
+  (columnValueChanged)="sizeColumnsToFit($event)"
   [gridAutoHeight]="true">
 </ag-grid-angular>
 
@@ -47,10 +47,10 @@
                  [components]="components"
                  [context]="context"
                  [stopEditingWhenGridLosesFocus]="true"
-                 (toolPanelVisibleChanged)="onColumnVisible($event)"
-                 (columnVisible)="onColumnVisible($event)"
+                 (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                 (columnVisible)="sizeColumnsToFit($event)"
                  (gridReady)="onGridReady($event)"
-                 (columnValueChanged)="onColumnValueChanged($event)"
+                 (columnValueChanged)="sizeColumnsToFit($event)"
                  (cellEditingStarted)="onCellEditingStarted($event)"
                  headerHeight="0">
 </ag-grid-angular>
@@ -71,7 +71,7 @@
   [columnDefs]="revisedProgramsColumnDefs"
   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
   (gridReady)="onGridReady($event)"
-  (columnValueChanged)="onColumnValueChanged($event)"
+  (columnValueChanged)="sizeColumnsToFit($event)"
   [gridAutoHeight]="true"
   headerHeight="0">
 </ag-grid-angular>

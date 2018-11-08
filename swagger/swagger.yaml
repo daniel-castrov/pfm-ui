@@ -472,7 +472,34 @@ paths:
         description: "a Worksheet object"
         required: true
         schema:
-          $ref: "#/definitions/Worksheet"
+          $ref: "#/definitions/WorksheetEvent"
+  /worksheets/{worksheetId}/program/{programId}/key/{fundingLineKey}/events/:
+    get:
+      tags:
+      - "Worksheet"
+      summary: "Gets all the Worksheet events from the specified funding line"
+      description: "Returns the events for modified rows in a worksheet"
+      operationId: "getWorksheetRowEvents"
+      parameters:
+      - in: "path"
+        name: "worksheetId"
+        description: "The id of the worksheet"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "programId"
+        description: "The id of the program where the funding line was modified"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "fundingLineKey"
+        description: "A combination of the appropriation, baOrBlin, item and opagency"
+        required: true
+        type: "string"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
 # STOP WORKSHEET
 ##############################################################################
 # START PR
@@ -3741,5 +3768,45 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/SpendPlanMonthly"
+  RowUpdateEventData:
+    type: "object"
+    properties:
+      worksheetId:
+        type: "string"
+      fundingLineKey:
+        type: "string"
+      programId:
+        type: "string"
+      previousFundingLine:
+        $ref: "#/definitions/FundingLine"
+      newFundingLine:
+        $ref: "#/definitions/FundingLine"
+      reasonCode:
+        type: "string"
+      notes:
+        type: "string"
+  WorksheetEvent:
+    type: "object"
+    properties:
+      rowUpdateEvents:
+        type: "array"
+        items:
+          $ref: "#/definitions/RowUpdateEventData"
+      worksheet:
+        $ref: "#/definitions/Worksheet"
+  RowUpdateEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      phaseId:
+        type: "string"
+      value:
+        type: "object"
+        $ref: "#/definitions/RowUpdateEventData"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "integer"
 ##############################################################################
 # ENDFILE
