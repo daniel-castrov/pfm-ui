@@ -48,7 +48,7 @@
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">
-        <div class="col-md-5">
+        <div class="col-5">
           <fieldset>
             <legend>Bulk changes</legend>
             <div class="row">
@@ -87,20 +87,9 @@
             </div>
           </fieldset>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-md-7 pt-3 pb-3">
-          <span class="form-group">
-            <textarea [(ngModel)]="selectedWorksheet.notes" placeholder="Area to enter more specific notes" wrap="physical" class="h-100 form-control"></textarea>
-          </span>
-        </div>
-      </div>
-      <div *ngIf="selectedWorksheet" class="row mb-3">
-        <div class="col-5 align-column">
-          <input class="form-control forminput w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
-        </div>
-        <div class="col-7">
+        <div class="col-7 mt-3">
           <ag-grid-angular #agGridToa
                            class="ag-theme-balham"
-                           headerHeight="0"
                            [rowData]="toaRowData"
                            [gridAutoHeight]="true"
                            [toolPanelSuppressSideButtons]="true"
@@ -108,6 +97,11 @@
                            [suppressMovableColumns]="true"
                            (gridReady)="onGridReady($event)">
           </ag-grid-angular>
+        </div>
+      </div>
+      <div *ngIf="selectedWorksheet" class="row mb-3">
+        <div class="col-5 align-column">
+          <input class="form-control forminput w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">

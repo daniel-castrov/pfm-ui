@@ -212,7 +212,6 @@ export class UpdatePomSessionComponent implements OnInit {
     this.agGrid.api.sizeColumnsToFit();
     this.generateUnmodifiedFundingLines();
   }
-
   initToaDataRows(){
     let data: Array<any> = [];
     let allocatedFunds = [];
@@ -341,6 +340,7 @@ export class UpdatePomSessionComponent implements OnInit {
         headerName: '',
         field: 'description',
         cellClass: ['ag-cell-white','text-right'],
+        suppressMenu: true
       }
     ];
     this.columnKeys.forEach(key => {
