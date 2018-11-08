@@ -31,12 +31,12 @@
           <ul>
             <li>
               <label>First Name:</label>
-                {{ currentUser?.firstName }}
+              {{ currentUser?.firstName }}
             </li>
             <li>
               <label>Last Name:</label>
-            {{ currentUser?.lastName }}
-          </li>
+              {{ currentUser?.lastName }}
+            </li>
             <li>
               <label>Email:</label>
               {{currentUser?.communication.primaryEmail}}
@@ -77,7 +77,7 @@
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"></i>Cancel
           </button>
-          <button class="btn-card-header" title="Save" (click)="saveCurrentUser()">
+          <button class="btn-card-header" title="Save" [disabled]="!currentUser.firstName || !currentUser.lastName || !currentUser.communication.primaryEmail || !currentUser.communication.primaryPhone" (click)="saveCurrentUser()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"></i>Save
           </button>
         </div>
@@ -96,7 +96,7 @@
               <input class="form-control form-input" [(ngModel)]="currentUser?.communication.primaryEmail" placeholder="value">
             </li>
             <li>
-            <label>*Phone:</label>
+              <label>*Phone:</label>
               <input class="form-control form-input" [(ngModel)]="currentUser?.communication.primaryPhone" placeholder="value1">
             </li>
           </ul>
@@ -125,7 +125,7 @@
           <button *ngIf="isdEditMode" class="btn-card-header" title="Cancel" (click)="cancelEdit()">
             <i class="fa fa-ban icon-pad" aria-hidden="true"> </i>Cancel
           </button>
-          <button class="btn-card-header" title="Save" (click)="saveCurrentUser()">
+          <button class="btn-card-header" title="Save" [disabled]="!currentUser.firstName || !currentUser.lastName || !currentUser.communication.primaryEmail || !currentUser.communication.primaryPhone" (click)="saveCurrentUser()">
             <i class="fa fa-floppy-o icon-pad" aria-hidden="true"> </i>Save
           </button>
         </div>
