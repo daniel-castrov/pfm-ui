@@ -26,7 +26,15 @@
                 <input [formControl]="orgidentifier" class="form-control organization" name="orgIdentifier" [(ngModel)]="newOrg.abbreviation"
                 minlength="2" placeholder="*Identifier" required/>
               </span>
-              <button class="btn btn-primary" (click)="addOrganization()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Create</button>
+              <button class="btn btn-primary" (click)="addOrganization()"
+                [disabled]="!orgname.touched || !orgidentifier.touched ||
+                          (orgname.invalid && orgname.errors.alreadyExists) ||
+                          (orgname.touched && orgname.invalid && orgname.errors.required) ||
+                          (orgidentifier.invalid && orgidentifier.errors.alreadyExists) ||
+                          (orgidentifier.touched && orgidentifier.invalid && orgidentifier.errors.required)">
+                <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
+                Create
+              </button>
               <div class="text-danger" *ngIf="orgname.invalid && orgname.errors.alreadyExists">Community name already exists</div>
               <div class="text-danger" *ngIf="orgname.touched && orgname.invalid && orgname.errors.required">Community name is required</div>
               <div class="text-danger" *ngIf="orgidentifier.invalid && orgidentifier.errors.alreadyExists">Community identifier already exists</div>
@@ -49,7 +57,7 @@
                   {{user.firstName}} {{user.lastName}}
                 </option>
               </select>
-              <button class="btn btn-primary" (click)="addApprover()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Add</button>
+              <button class="btn btn-primary" [disabled]="!addedapprover" (click)="addApprover()"><i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>Add</button>
             </fieldset>
         </div>
       </div>

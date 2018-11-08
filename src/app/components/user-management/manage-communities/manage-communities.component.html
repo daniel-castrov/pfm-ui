@@ -27,7 +27,12 @@
             <input [formControl]="commidentifier" class="form-control community" name="communityIdentifier"
             [(ngModel)]="newCommunity.abbreviation" minlength="2" placeholder="*Identifier" required/>
           </span>
-            <button class="btn btn-primary btn" (click)="addCommunity()">
+            <button class="btn btn-primary btn" (click)="addCommunity()"
+              [disabled]="!commname.touched || !commidentifier.touched || 
+                         (commname.invalid && commname.errors.alreadyExists) || 
+                         (commname.touched && commname.invalid && commname.errors.required) || 
+                         (commidentifier.invalid && commidentifier.errors.alreadyExists) || 
+                         (commidentifier.touched && commidentifier.invalid && commidentifier.errors.required)">
               <i class="fa fa-plus-square icon-pad" aria-hidden="true"></i>
               Create
             </button>
