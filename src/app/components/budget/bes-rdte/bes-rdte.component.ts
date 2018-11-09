@@ -58,7 +58,7 @@ export class BesRdteComponent implements OnInit {
   initRows() {
     const items = this.getItems();
     const rows = [];
-    this.getOverviewAndR1( ["RDTE"] ).forEach( x => this.rows.push(x) );
+    rows.push( ...this.getOverviewAndR1( ["RDTE"] ));
 
     for ( let i=1; i<8; i++ ){
       const ba = "BA-" + i;
@@ -107,8 +107,7 @@ export class BesRdteComponent implements OnInit {
 
   getR2AFields(hierarchy: string[], item: Item) {
     let rows = [];
-    rows.push({ hierarchy: hierarchy.concat("Mission Description"), responsible: "Budget Manager", form: "R-2A", desc: "Item Mission Description and Budget Item Justification" });
-    rows.push({ hierarchy: hierarchy.concat("Accomplishments"), responsible: "Budget Manager", form: "R-2A", desc: "Accomplishments Overview" });
+    rows.push( ...this.getMissionDescriptions(hierarchy.concat("Mission Description"), item) );
     rows.push( ...this.getBullets(hierarchy.concat("Program Bullets"), item) );
 
     if ( item.ba != "6" )
@@ -127,12 +126,11 @@ export class BesRdteComponent implements OnInit {
 
   getR3Fields(hierarchy: string[], item: Item) {
     let rows = [];
-    rows.push({ hierarchy: hierarchy.concat("Product Development"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Product Development ($ in Millions)" });
-    rows.push({ hierarchy: hierarchy.concat("Support"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Support ($ in Millions)" });
-    rows.push({ hierarchy: hierarchy.concat("Test and Evaluation"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Test and Evaluation ($ in Millions)" });
-    rows.push({ hierarchy: hierarchy.concat("Management Services"), responsible: "Program Managers", form: "R-3", desc: "Table of Contracts from each Program for Management Services ($ in Millions)" });
-    rows.push({ hierarchy: hierarchy.concat("Remarks"), responsible: "Budget Manager", form: "R-3", desc: "Item Remarks" });
-    rows.push( ...this.getR3Breakdown(hierarchy, item) );
+    rows.push( ...this.getR3Breakdown(hierarchy.concat("Product Development"), item) );
+    rows.push( ...this.getR3Breakdown(hierarchy.concat("Support"), item) );
+    rows.push( ...this.getR3Breakdown(hierarchy.concat("Test and Evaluation"), item) );
+    rows.push( ...this.getR3Breakdown(hierarchy.concat("Management Services"), item) );
+    rows.push( ...this.getR3Breakdown(hierarchy.concat("Remarks"), item) );
     return rows;
   }
 
@@ -195,6 +193,14 @@ export class BesRdteComponent implements OnInit {
     ];
   }
 
+  getMissionDescriptions(hierarchy: string[], item: Item) {
+    let rows = [];
+    this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
+      rows.push({ hierarchy: hierarchy.concat( bfl.name ), responsible: "Program Manager", form: "R-2A", desc: "Mission Description" });
+    });
+    return rows;
+  }
+
   getBullets(hierarchy: string[], item: Item) {
     let rows = [];
     this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
@@ -205,9 +211,9 @@ export class BesRdteComponent implements OnInit {
       rows.push({ hierarchy: prHierarchy.concat('plans for this year'), responsible: "Program Manager", form: "R-2A", desc: "Plans for This Year" });
       rows.push({ hierarchy: prHierarchy.concat('plans for previous year'), responsible: "Program Manager", form: "R-2A", desc: "Plans for Previous Year" });
       rows.push({ hierarchy: prHierarchy.concat('increase-decrease statement'), responsible: "Program Manager", form: "R-2A", desc: "Increase-Decrease Statement" });
-      rows.push({ hierarchy: prHierarchy.concat('fy - 2'), responsible: "Program Manager", form: "R-2A", desc: "Plans for Fiscal Year - 2" });
-      rows.push({ hierarchy: prHierarchy.concat('fy - 1'), responsible: "Program Manager", form: "R-2A", desc: "Plans for Fiscal Year - 1" });
-      rows.push({ hierarchy: prHierarchy.concat('fy'), responsible: "Program Manager", form: "R-2A", desc: "Plans for Fiscal Year" });
+      rows.push({ hierarchy: prHierarchy.concat('fy - 2'), responsible: "Program Manager", form: "R-2A", desc: "Funds for Fiscal Year - 2" });
+      rows.push({ hierarchy: prHierarchy.concat('fy - 1'), responsible: "Program Manager", form: "R-2A", desc: "Funds for Fiscal Year - 1" });
+      rows.push({ hierarchy: prHierarchy.concat('fy'), responsible: "Program Manager", form: "R-2A", desc: "Funds for Fiscal Year" });
     });
     return rows;
   }
@@ -216,9 +222,20 @@ export class BesRdteComponent implements OnInit {
     let rows = [];
     this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
       const prHierarchy: string[] = hierarchy.concat( bfl.name );
+      rows.push({ hierarchy: prHierarchy.concat('Category'), responsible: "Program Manager", form: "R-3", desc: "Category" });
       rows.push({ hierarchy: prHierarchy.concat('Cost Category Item'), responsible: "Program Manager", form: "R-3", desc: "Cost Category Item" });
-      rows.push({ hierarchy: prHierarchy.concat('Contract Method & Type'), responsible: "Program Manager", form: "R-3", desc: "Contract Method & Type" });
-      rows.push({ hierarchy: prHierarchy.concat('Performing Activity & Location'), responsible: "Program Manager", form: "R-3", desc: "Performing Activity & Location" });
+      rows.push({ hierarchy: prHierarchy.concat('Contract Method'), responsible: "Program Manager", form: "R-3", desc: "Contract Method" });
+      rows.push({ hierarchy: prHierarchy.concat('Contract Type'), responsible: "Program Manager", form: "R-3", desc: "Contract Type" });
+      rows.push({ hierarchy: prHierarchy.concat('activity'), responsible: "Program Manager", form: "R-3", desc: "Performing Activity" });
+      rows.push({ hierarchy: prHierarchy.concat('location'), responsible: "Program Manager", form: "R-3", desc: "Performing Location" });
+      rows.push({ hierarchy: prHierarchy.concat('prior years'), responsible: "Program Manager", form: "R-3", desc: "Prior Years" });
+      rows.push({ hierarchy: prHierarchy.concat('cost by - 2'), responsible: "Program Manager", form: "R-3", desc: "cost by - 2" });
+      rows.push({ hierarchy: prHierarchy.concat('award date by - 2'), responsible: "Program Manager", form: "R-3", desc: "award by - 2" });
+      rows.push({ hierarchy: prHierarchy.concat('cost by - 1'), responsible: "Program Manager", form: "R-3", desc: "cost by - 1" });
+      rows.push({ hierarchy: prHierarchy.concat('award date by - 1'), responsible: "Program Manager", form: "R-3", desc: "award by - 1" });
+      rows.push({ hierarchy: prHierarchy.concat('cost by'), responsible: "Program Manager", form: "R-3", desc: "cost by" });
+      rows.push({ hierarchy: prHierarchy.concat('award date by'), responsible: "Program Manager", form: "R-3", desc: "award by" });
+      rows.push({ hierarchy: prHierarchy.concat('target value'), responsible: "Program Manager", form: "R-3", desc: "target value" });
     });
     return rows;
   }
@@ -226,7 +243,7 @@ export class BesRdteComponent implements OnInit {
   getR4ABreakdown(hierarchy: string[], item: Item) {
     let rows = [];
     this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
-      const prHierarchy: string[] = hierarchy.concat( bfl.name );
+      const prHierarchy: string[] = hierarchy.concat( bfl.name ).concat( "event" );
       rows.push({ hierarchy: prHierarchy.concat('Start Quarter'), responsible: "Program Manager", form: "R-4A", desc: "Start Quarter" });
       rows.push({ hierarchy: prHierarchy.concat('Start Year'), responsible: "Program Manager", form: "R-4A", desc: "Start Year" });
       rows.push({ hierarchy: prHierarchy.concat('End Quarter'), responsible: "Program Manager", form: "R-4A", desc: "End Quarter" });
