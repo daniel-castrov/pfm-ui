@@ -17,8 +17,8 @@ export class BesRdteComponent implements OnInit {
 
   private gridApi;
   private gridColumnApi;
-  private columnDefs;
-  private rows = [];
+  public columnDefs;
+  public rows = [];
   private groupDefaultExpanded = -1;
   private autoGroupColumnDef = {
     headerName: "",
@@ -56,15 +56,14 @@ export class BesRdteComponent implements OnInit {
 
 
   initRows() {
-    const items = this.getItems();
     const rows = [];
     rows.push( ...this.getOverviewAndR1( ["RDTE"] ));
 
-    for ( let i=1; i<8; i++ ){
-      const ba = "BA-" + i;
+    for ( let i=1; i<8; i++ ) {
+      const ba = "BA" + i;
       let itempe="";
 
-      const itemsWithCurrentBa = items.filter(item => item.ba === i.toString());
+      const itemsWithCurrentBa = this.itemsForBa(ba);
 
       itemsWithCurrentBa.forEach(item => {
 
@@ -75,7 +74,7 @@ export class BesRdteComponent implements OnInit {
 
         rows.push( ...this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
 
-        if ( item.fyt > 10 && (item.ba == "4" || item.ba == "5" || item.ba == "7") ){
+        if ( item.ba == "4" || item.ba == "5" || item.ba == "7") {
           rows.push( ...this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
           rows.push( ...this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
           rows.push( ...this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
@@ -142,60 +141,9 @@ export class BesRdteComponent implements OnInit {
     return [{ hierarchy: hierarchy.concat("Schedule Details"), responsible: "Program Managers", form: "R-4A", desc: "Schedule Details from each program to generate a Gantt Chart" } ];
   }
 
-  getItems(): Item[] {
-
-    return [
-      { inum: "LF1", ba: "1", pe: "0601384BP", fyt: 30 },
-      { inum: "PS1", ba: "1", pe: "0601384BP", fyt: 16 },
-
-      { inum: "CB2", ba: "2", pe: "0602384BP", fyt: 68 },
-      { inum: "NT2", ba: "2", pe: "0602384BP", fyt: 54 },
-      { inum: "TM2", ba: "2", pe: "0602384BP", fyt: 71 },
-
-      { inum: "CB3", ba: "3", pe: "0603384BP", fyt: 21 },
-      { inum: "NT3", ba: "3", pe: "0603384BP", fyt: 22 },
-      { inum: "TM4", ba: "3", pe: "0603384BP", fyt: 88 },
-      { inum: "TT3", ba: "3", pe: "0603384BP", fyt: 10 },
-
-      { inum: "CA4", ba: "4", pe: "0603884BP", fyt: 35 },
-      { inum: "DE4", ba: "4", pe: "0603884BP", fyt: 7 },
-      { inum: "IP4", ba: "4", pe: "0603884BP", fyt: 4 },
-      { inum: "IS4", ba: "4", pe: "0603884BP", fyt: .8 },
-      { inum: "MB4", ba: "4", pe: "0603884BP", fyt: 73 },
-      { inum: "MC4", ba: "4", pe: "0603884BP", fyt: 2 },
-      { inum: "TE4", ba: "4", pe: "0603884BP", fyt: 6 },
-
-      { inum: "CA5", ba: "5", pe: "0604384BP", fyt: 150 },
-      { inum: "CM5", ba: "5", pe: "0604384BP", fyt: 6 },
-      { inum: "CO5", ba: "5", pe: "0604384BP", fyt: 10 },
-      { inum: "DE5", ba: "5", pe: "0604384BP", fyt: 14 },
-      { inum: "IP5", ba: "5", pe: "0604384BP", fyt: 9 },
-      { inum: "IS5", ba: "5", pe: "0604384BP", fyt: 23 },
-      { inum: "MB5", ba: "5", pe: "0604384BP", fyt: 107 },
-      { inum: "MC5", ba: "5", pe: "0604384BP", fyt: 62 },
-      { inum: "TE5", ba: "5", pe: "0604384BP", fyt: 9 },
-
-      { inum: "DT6", ba: "6", pe: "0605384BP", fyt: 3 },
-      { inum: "DW6", ba: "6", pe: "0605384BP", fyt: 55 },
-      { inum: "LS6", ba: "6", pe: "0605384BP", fyt: 13 },
-      { inum: "MS6", ba: "6", pe: "0605384BP", fyt: 34 },
-      { inum: "O49", ba: "6", pe: "0605384BP", fyt: 1 },
-      { inum: "SB6", ba: "6", pe: "0605502BP", fyt: 0 },
-
-      { inum: "CA7", ba: "7", pe: "0607384BP", fyt: 6 },
-      { inum: "CM7", ba: "7", pe: "0607384BP", fyt: 4 },
-      { inum: "CO7", ba: "7", pe: "0607384BP", fyt: 3 },
-      { inum: "DE7", ba: "7", pe: "0607384BP", fyt: .4 },
-      { inum: "IP7", ba: "7", pe: "0607384BP", fyt: 2 },
-      { inum: "IS7", ba: "7", pe: "0607384BP", fyt: 16 },
-      { inum: "MB7", ba: "7", pe: "0607384BP", fyt: 3 },
-      { inum: "TE7", ba: "7", pe: "0607384BP", fyt: 5 }
-    ];
-  }
-
   getMissionDescriptions(hierarchy: string[], item: Item) {
     let rows = [];
-    this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
+    this.budgetFundingLines.filter(bfl => bfl.itemNumber === item.inum).forEach(bfl => {
       rows.push({ hierarchy: hierarchy.concat( bfl.name ), responsible: "Program Manager", form: "R-2A", desc: "Mission Description" });
     });
     return rows;
@@ -203,7 +151,7 @@ export class BesRdteComponent implements OnInit {
 
   getBullets(hierarchy: string[], item: Item) {
     let rows = [];
-    this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
+    this.budgetFundingLines.filter(bfl => bfl.itemNumber === item.inum).forEach(bfl => {
       const prHierarchy: string[] = hierarchy.concat( bfl.name );
       rows.push({ hierarchy: prHierarchy.concat('title'), responsible: "Program Manager", form: "R-2A", desc: "Program Title" });
       rows.push({ hierarchy: prHierarchy.concat('description'), responsible: "Program Manager", form: "R-2A", desc: "Mission Description and Budget Item Justification" });
@@ -220,7 +168,7 @@ export class BesRdteComponent implements OnInit {
 
   getR3Breakdown(hierarchy: string[], item: Item) {
     let rows = [];
-    this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
+    this.budgetFundingLines.filter(bfl => bfl.itemNumber === item.inum).forEach(bfl => {
       const prHierarchy: string[] = hierarchy.concat( bfl.name );
       rows.push({ hierarchy: prHierarchy.concat('Category'), responsible: "Program Manager", form: "R-3", desc: "Category" });
       rows.push({ hierarchy: prHierarchy.concat('Cost Category Item'), responsible: "Program Manager", form: "R-3", desc: "Cost Category Item" });
@@ -242,7 +190,7 @@ export class BesRdteComponent implements OnInit {
 
   getR4ABreakdown(hierarchy: string[], item: Item) {
     let rows = [];
-    this.budgetFundingLines.filter(bfl => bfl.item === item.inum).forEach(bfl => {
+    this.budgetFundingLines.filter(bfl => bfl.itemNumber === item.inum).forEach(bfl => {
       const prHierarchy: string[] = hierarchy.concat( bfl.name ).concat( "event" );
       rows.push({ hierarchy: prHierarchy.concat('Start Quarter'), responsible: "Program Manager", form: "R-4A", desc: "Start Quarter" });
       rows.push({ hierarchy: prHierarchy.concat('Start Year'), responsible: "Program Manager", form: "R-4A", desc: "Start Year" });
@@ -256,5 +204,64 @@ export class BesRdteComponent implements OnInit {
     const user: User = await this.userUtils.user().toPromise();
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
     this.budgetFundingLines = (await this.budgetFundingLinesService.getByPomId(pom.id).toPromise()).result;
+  }
+
+  itemsForBa(ba: string): Set<Item> {
+    const result = new Set();
+    this.budgetFundingLines.filter(bfl => bfl.ba === ba).forEach(bfl => {
+      const item = {inum: bfl.itemNumber, ba: bfl.ba, pe: this.peForItemNumber(bfl.itemNumber) } as Item;
+      result.add(item);
+    })
+    return result;
+  }
+
+  peForItemNumber(itemNumber: string): string {
+    switch(itemNumber) {
+      case "LF1": return "0601384BP";
+      case "PS1": return "0601384BP";
+
+      case "CB2": return "0602384BP";
+      case "NT2": return "0602384BP";
+      case "TM2": return "0602384BP";
+
+      case "CB3": return "0603384BP";
+      case "NT3": return "0603384BP";
+      case "TM4": return "0603384BP";
+      case "TT3": return "0603384BP";
+
+      case "CA4": return "0603884BP";
+      case "DE4": return "0603884BP";
+      case "IP4": return "0603884BP";
+      case "IS4": return "0603884BP";
+      case "MB4": return "0603884BP";
+      case "MC4": return "0603884BP";
+      case "TE4": return "0603884BP";
+
+      case "CA5": return "0604384BP";
+      case "CM5": return "0604384BP";
+      case "CO5": return "0604384BP";
+      case "DE5": return "0604384BP";
+      case "IP5": return "0604384BP";
+      case "IS5": return "0604384BP";
+      case "MB5": return "0604384BP";
+      case "MC5": return "0604384BP";
+      case "TE5": return "0604384BP";
+
+      case "DT6": return "0605384BP";
+      case "DW6": return "0605384BP";
+      case "LS6": return "0605384BP";
+      case "MS6": return "0605384BP";
+      case "O49": return "0605384BP";
+      case "SB6": return "0605502BP";
+
+      case "CA7": return "0607384BP";
+      case "CM7": return "0607384BP";
+      case "CO7": return "0607384BP";
+      case "DE7": return "0607384BP";
+      case "IP7": return "0607384BP";
+      case "IS7": return "0607384BP";
+      case "MB7": return "0607384BP";
+      case "TE7": return "0607384BP";
+    }
   }
 }

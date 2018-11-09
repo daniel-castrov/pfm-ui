@@ -3826,7 +3826,7 @@ definitions:
   BudgetFundingLine:
     type: "object"
     properties:
-      item:
+      itemNumber:
         type: "string"
       name:
         type: "string"
