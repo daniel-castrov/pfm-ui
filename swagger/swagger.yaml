@@ -3829,6 +3829,10 @@ definitions:
       item:
         type: "string"
       name:
-        type: "string"        
+        type: "string"
+      ba:
+        type: "string"
+      pe:
+        type: "string"
 ##############################################################################
 # ENDFILE
