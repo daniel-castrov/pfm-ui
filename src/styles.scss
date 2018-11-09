@@ -384,10 +384,10 @@ label {
 
 .btn-card-header:disabled,
 btn-card-header[disabled]{
-  opacity: .7;
+  opacity: .5;
   color: #000;
   text-decoration: none;
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .btn-sm {
