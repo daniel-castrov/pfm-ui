@@ -2068,6 +2068,24 @@ paths:
       description: "Returns tags for a type"
       produces:
       - "application/json"
+  /tags/type/{type}/name/{name}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getTagsByName"
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets the tags for a given name"
+      description: "Returns tags for a name"
+      produces:
+      - "application/json"
   /search:
     post:
       tags:
@@ -3829,6 +3847,6 @@ definitions:
       item:
         type: "string"
       name:
-        type: "string"        
+        type: "string"
 ##############################################################################
 # ENDFILE

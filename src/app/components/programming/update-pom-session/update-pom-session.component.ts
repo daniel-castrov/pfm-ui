@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
+import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {Observable, Subject} from 'rxjs';
+import {merge} from 'rxjs/observable/merge';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
@@ -15,6 +19,7 @@ import {ActivatedRoute} from "@angular/router";
 import {RowUpdateEventData} from "../../../generated/model/rowUpdateEventData";
 import {ValueChangeRenderer} from "../../renderers/value-change-renderer/value-change-renderer.component";
 import {ViewEventsRenderer} from "../../renderers/view-events-renderer/view-events-renderer.component";
+import {TagsService} from "../../../services/tags.service";
 
 declare const $: any;
 
@@ -30,6 +35,7 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @ViewChild("agGridToa") private agGridToa: AgGridNg2;
   @ViewChild("agGridEvents") private agGridEvents: AgGridNg2;
+  @ViewChild("instance") instance: NgbTypeahead;
 
   pom: Pom;
   columnDefs;
@@ -47,6 +53,10 @@ export class UpdatePomSessionComponent implements OnInit {
   bulkAmount: number;
   worksheets: Array<Worksheet>;
   selectedWorksheet: Worksheet = undefined;
+  reasonCode;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+  search;
   unmodifiedFundingLines: any[];
   frameworkComponents = { valueChangeRenderer: ValueChangeRenderer, viewEventsRenderer: ViewEventsRenderer };
   context = { parentComponent: this };
@@ -56,7 +66,8 @@ export class UpdatePomSessionComponent implements OnInit {
               private pomService: POMService,
               private worksheetService: WorksheetService,
               private route: ActivatedRoute,
-              private userService: UserService) { }
+              private userService: UserService,
+              private tagService: TagsService) { }
 
   ngOnInit() {
     let worksheetId = this.route.snapshot.params['id'];
@@ -81,48 +92,73 @@ export class UpdatePomSessionComponent implements OnInit {
         });
       });
     });
+    this.initReasonCode();
+  }
+
+  initReasonCode(){
+    this.tagService.tagAbbreviationsForReasonCode().then(tags => {
+      this.search = (text$: Observable<string>) => {
+        const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+        const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+        const inputFocus$ = this.focus$;
+        return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+          map(term => (term === '' ? tags
+            : tags.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+        );
+      }
+    });
   }
 
   update(){
     let updateData: RowUpdateEventData [] = [];
-    let someNotesEmpty = this.agGrid.api.getSelectedNodes().some(node => node.data.notes === '');
-    if (someNotesEmpty) {
-      Notify.warning('You must fill the notes column for all highlighted rows')
+    let modifiedRows: RowNode [] = this.agGrid.api.getSelectedNodes();
+    if (modifiedRows.length === 0) {
+      Notify.error('No changed detected.')
     } else {
-      this.agGrid.api.getSelectedNodes().forEach(node => {
-        let modifiedRow : RowUpdateEventData = {};
-        modifiedRow.notes = node.data.notes;
-        modifiedRow.newFundingLine = node.data.fundingLine;
-        modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
-          ufl.programId === node.data.programId &&
-          ufl.fundingLine.appropriation === node.data.fundingLine.appropriation &&
-          ufl.fundingLine.baOrBlin === node.data.fundingLine.baOrBlin &&
-          ufl.fundingLine.opAgency === node.data.fundingLine.opAgency &&
-          ufl.fundingLine.item === node.data.fundingLine.item).fundingLine;
-        modifiedRow.reasonCode = '' //TODO: change this to correct variable
-        modifiedRow.worksheetId = this.selectedWorksheet.id;
-        modifiedRow.programId = node.data.programId
-        modifiedRow.fundingLineKey = node.data.fundingLine.appropriation + '-' +
-          node.data.fundingLine.baOrBlin + '-' +
-          node.data.fundingLine.item + '-' +
-          node.data.fundingLine.opAgency;
-        updateData.push(modifiedRow);
-
-        node.data.modified = false;
-        node.setSelected(false);
-        node.data.notes = '';
-      });
-      this.agGrid.api.refreshCells();
-      let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
-      this.worksheetService.updateRows(body).subscribe(response => {
-        if (!response.error) {
-          this.generateUnmodifiedFundingLines();
-          Notify.success('Worksheet updated successfully');
+      if(!this.reasonCode){
+        Notify.error('You must select or create a reason code.')
+      } else {
+        let someNotesEmpty = modifiedRows.some(node => node.data.notes === '');
+        if(someNotesEmpty) {
+          Notify.error('You must fill the notes column for all highlighted rows.')
         } else {
-          Notify.error('Something went wrong while trying to update the worksheet');
-          console.log(response.error);
+          this.agGrid.api.getSelectedNodes().forEach(node => {
+            let modifiedRow : RowUpdateEventData = {};
+            modifiedRow.notes = node.data.notes;
+            modifiedRow.newFundingLine = node.data.fundingLine;
+            modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
+              ufl.programId === node.data.programId &&
+              ufl.fundingLine.appropriation === node.data.fundingLine.appropriation &&
+              ufl.fundingLine.baOrBlin === node.data.fundingLine.baOrBlin &&
+              ufl.fundingLine.opAgency === node.data.fundingLine.opAgency &&
+              ufl.fundingLine.item === node.data.fundingLine.item).fundingLine;
+            modifiedRow.reasonCode = this.reasonCode;
+            modifiedRow.worksheetId = this.selectedWorksheet.id;
+            modifiedRow.programId = node.data.programId
+            modifiedRow.fundingLineKey = node.data.fundingLine.appropriation + '-' +
+              node.data.fundingLine.baOrBlin + '-' +
+              node.data.fundingLine.item + '-' +
+              node.data.fundingLine.opAgency;
+            updateData.push(modifiedRow);
+
+            node.data.modified = false;
+            node.setSelected(false);
+            node.data.notes = '';
+          });
+          this.agGrid.api.refreshCells();
+          let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
+          this.worksheetService.updateRows(body).subscribe(response => {
+            if (!response.error) {
+              this.generateUnmodifiedFundingLines();
+              this.initReasonCode();
+              Notify.success('Worksheet updated successfully');
+            } else {
+              Notify.error('Something went wrong while trying to update the worksheet');
+              console.log(response.error);
+            }
+          });
         }
-      });
+      }
     }
   }
 

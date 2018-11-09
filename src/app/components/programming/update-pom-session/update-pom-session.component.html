@@ -23,21 +23,19 @@
             </div>
           </div>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-auto">
-          <span class="form-group inline-name">
-            <span class="mr-2">
-              <label for="reasonCode">Reason Code:</label>
-            </span>
-            <span class="form-group">
-              <select id="reasonCode" class="form-control-sm worksheet-width pull-right">
-                <option value="null" disabled selected>Select a reason code</option>
-                <option>Worksheet code 1</option>
-                <option>Worksheet code 2</option>
-                <option>Worksheet code 3</option>
-                <option>Worksheet code 4</option>
-              </select>
-            </span>
-          </span>
+        <div *ngIf="selectedWorksheet" class="col-md-4">
+          <div class="form-row">
+              <label for="typeahead-focus" class="col-sm-4 col-form-label">Reason Code:</label>
+              <input
+                id="typeahead-focus"
+                type="text"
+                class="form-control col-sm-8"
+                [(ngModel)]="reasonCode"
+                [ngbTypeahead]="search"
+                (focus)="focus$.next($event.target.value)"
+                (click)="click$.next($event.target.value)"
+                #instance="ngbTypeahead"/>
+          </div>
         </div>
         <div *ngIf="selectedWorksheet" class="col-auto">
           <div class="pull-right pom-controls">

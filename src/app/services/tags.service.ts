@@ -21,7 +21,8 @@ export enum TagType {
   APPROPRIATION = 'Appropriation',
   BLIN = 'BLIN',
   BA = 'BA',
-  ACQUISITION_TYPE = 'Acquisition Type'
+  ACQUISITION_TYPE = 'Acquisition Type',
+  REASON_CODE = 'Reason Code'
 }
 
 @Injectable()
@@ -29,20 +30,31 @@ export class TagsService {
 
   constructor(private programsService: ProgramsService) {}
 
-  tags(tagType: TagType): Observable<Tag[]> {
-    const resultGetter: () => Observable<Tag[]> = () => this.programsService.getTagsByType(tagType)
-            .map((result: RestResult) => result.result)
-            .map( (tags: Tag[]) => tags.sort((a: Tag, b: Tag) => {
-              if (a.abbr === b.abbr) {
-                return 0;
-              }
-              return (a.abbr < b.abbr ? -1 : 1);
-            }));
-    return CacheService.caching(tagType, resultGetter);
+  tags(tagType: TagType, noCaching?: boolean): Observable<Tag[]> {
+    if (noCaching) {
+      return this.programsService.getTagsByType(tagType)
+        .map((result: RestResult) => result.result)
+        .map( (tags: Tag[]) => tags.sort((a: Tag, b: Tag) => {
+          if (a.abbr === b.abbr) {
+            return 0;
+          }
+          return (a.abbr < b.abbr ? -1 : 1);
+        }));
+    } else {
+      const resultGetter: () => Observable<Tag[]> = () => this.programsService.getTagsByType(tagType)
+        .map((result: RestResult) => result.result)
+        .map( (tags: Tag[]) => tags.sort((a: Tag, b: Tag) => {
+          if (a.abbr === b.abbr) {
+            return 0;
+          }
+          return (a.abbr < b.abbr ? -1 : 1);
+        }));
+      return CacheService.caching(tagType, resultGetter);
+    }
   }
 
-  private tagAbbreviations(tagType: TagType): Promise<string[]> {
-    return this.tags(tagType)
+  private tagAbbreviations(tagType: TagType, noCaching?: boolean): Promise<string[]> {
+    return this.tags(tagType, noCaching)
             .map((tags: Tag[]) => tags.map((tag:Tag)=>tag.abbr))
             .map((tags: string[]) => tags.sort())
             .toPromise();
@@ -70,6 +82,10 @@ export class TagsService {
 
   tagAbbreviationsForFunctionalArea(): Promise<string[]> {
     return this.tagAbbreviations(TagType.FUNCTIONAL_AREA);
+  }
+
+  tagAbbreviationsForReasonCode(): Promise<string[]> {
+    return this.tagAbbreviations(TagType.REASON_CODE, true);
   }
 
 }
