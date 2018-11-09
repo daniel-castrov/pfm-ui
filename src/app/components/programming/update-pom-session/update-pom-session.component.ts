@@ -113,7 +113,7 @@ export class UpdatePomSessionComponent implements OnInit {
     let updateData: RowUpdateEventData [] = [];
     let modifiedRows: RowNode [] = this.agGrid.api.getSelectedNodes();
     if (modifiedRows.length === 0) {
-      Notify.error('No changed detected.')
+      Notify.error('No changes detected.')
     } else {
       if(!this.reasonCode){
         Notify.error('You must select or create a reason code.')
