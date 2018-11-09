@@ -145,6 +145,7 @@ export class UpdatePomSessionComponent implements OnInit {
             node.setSelected(false);
             node.data.notes = '';
           });
+          this.reasonCode = null;
           this.agGrid.api.refreshCells();
           let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
           this.worksheetService.updateRows(body).subscribe(response => {
