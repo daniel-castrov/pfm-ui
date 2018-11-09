@@ -74,7 +74,7 @@ export class BesRdteComponent implements OnInit {
 
         rows.push( ...this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
 
-        if ( item.ba == "4" || item.ba == "5" || item.ba == "7") {
+        if ( item.ba == "BA4" || item.ba == "BA5" || item.ba == "BA7") {
           rows.push( ...this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
           rows.push( ...this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
           rows.push( ...this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
