@@ -56,11 +56,20 @@ export class UpdatePomSessionComponent implements OnInit {
   reasonCode;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
-  search;
   unmodifiedFundingLines: any[];
   frameworkComponents = { valueChangeRenderer: ValueChangeRenderer, viewEventsRenderer: ViewEventsRenderer };
   context = { parentComponent: this };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
+  tags: any[];
+  search = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus$;
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => (term === '' ? this.tags
+        : this.tags.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+  };
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
@@ -97,15 +106,7 @@ export class UpdatePomSessionComponent implements OnInit {
 
   initReasonCode(){
     this.tagService.tagAbbreviationsForReasonCode().then(tags => {
-      this.search = (text$: Observable<string>) => {
-        const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
-        const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
-        const inputFocus$ = this.focus$;
-        return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-          map(term => (term === '' ? tags
-            : tags.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
-        );
-      }
+      this.tags = tags;
     });
   }
 
