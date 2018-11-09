@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-8">
+        <div class="col-3">
           <div class="row">
             <div class="col-8">
               <div class="form-group inline-name">
@@ -23,8 +23,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-4">
-          <table class="reason-code-table pull-right">
+        <div *ngIf="selectedWorksheet" class="col-3">
+          <table class="reason-code-table">
             <tr>
               <td>
                 <label for="typeahead-focus" class="pull-right col-form-label">Reason Code:</label>
@@ -40,13 +40,13 @@
                   (click)="click$.next($event.target.value)"
                   #instance="ngbTypeahead"/>
               </td>
-              <td>
-                <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
-                  <button (click)="update()" class="btn btn-primary">Update</button>
-                </span>
-              </td>
             </tr>
           </table>
+        </div>
+        <div class="col-6">
+          <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
+            <button (click)="update()" class="btn btn-primary">Update</button>
+          </span>
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">
