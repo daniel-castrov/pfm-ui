@@ -562,10 +562,10 @@ export class UpdatePomSessionComponent implements OnInit {
 
   onBudgetYearValueChanged(params){
     let year = params.colDef.colId;
+    params.data.fundingLine.funds[year] = Number(params.newValue);
     if (Number(params.oldValue) !== Number(params.newValue)) {
       params.node.setSelected(true);
       params.data.modified = true;
-      params.data.fundingLine.funds[year] = Number(params.newValue);
       this.initToaDataRows();
     }else {
       params.node.setSelected(false);
