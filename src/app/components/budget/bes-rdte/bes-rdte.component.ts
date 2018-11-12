@@ -90,8 +90,6 @@ export class BesRdteComponent implements OnInit {
     rows.push({ hierarchy: hierarchy.concat( "Cycle" ), responsible: "Budget Manager", form: "Title", desc: "BES or PB" });
     rows.push({ hierarchy: hierarchy.concat( "Title" ), responsible: "Budget Manager", form: "Title", desc: "A Title" });
     rows.push({ hierarchy: hierarchy.concat( "Community" ), responsible: "Budget Manager", form: "Title", desc: "CBDP" });
-    rows.push({ hierarchy: hierarchy.concat( "Type" ), responsible: "Budget Manager", form: "Title", desc: "Type of JB" });
-    rows.push({ hierarchy: hierarchy.concat( "Appropriation" ), responsible: "Budget Manager", form: "Title", desc: "RDT&E or PROC" });
     rows.push({ hierarchy: hierarchy.concat( "Overview" ), responsible: "Budget Manager", form: "Overview", desc: "A file with an overall desription" });
     rows.push({ hierarchy: hierarchy.concat( "R-1" ), responsible: "Budget Manager", form: "R-1", desc: "A file that is the R-1 form" });
     return rows;
@@ -106,6 +104,7 @@ export class BesRdteComponent implements OnInit {
 
   getR2AFields(hierarchy: string[], item: Item) {
     let rows = [];
+    rows.push({ hierarchy: hierarchy.concat("Overall Mission Description"), responsible: "Budget Manager", form: "R-2A", desc: "Overall Mission Description" });
     rows.push( ...this.getMissionDescriptions(hierarchy.concat("Mission Description"), item) );
     rows.push( ...this.getBullets(hierarchy.concat("Program Bullets"), item) );
 
@@ -143,7 +142,8 @@ export class BesRdteComponent implements OnInit {
 
   getMissionDescriptions(hierarchy: string[], item: Item) {
     let rows = [];
-    this.budgetFundingLines.filter(bfl => bfl.itemNumber === item.inum).forEach(bfl => {
+    const budgetFundingLinesForItem = this.budgetFundingLines.filter(bfl => bfl.itemNumber === item.inum);
+    budgetFundingLinesForItem.forEach(bfl => {
       rows.push({ hierarchy: hierarchy.concat( bfl.name ), responsible: "Program Manager", form: "R-2A", desc: "Mission Description" });
     });
     return rows;
@@ -206,12 +206,15 @@ export class BesRdteComponent implements OnInit {
     this.budgetFundingLines = (await this.budgetFundingLinesService.getByPomId(pom.id).toPromise()).result;
   }
 
-  itemsForBa(ba: string): Set<Item> {
-    const result = new Set();
+  itemsForBa(ba: string): Item[] {
+    const mapNameToItem = new Map<string,Item>();
     this.budgetFundingLines.filter(bfl => bfl.ba === ba).forEach(bfl => {
       const item = {inum: bfl.itemNumber, ba: bfl.ba, pe: this.peForItemNumber(bfl.itemNumber) } as Item;
-      result.add(item);
+      mapNameToItem.set(item.inum, item);
     })
+    const result = [] as Item[];
+
+    mapNameToItem.forEach(item=>result.push(item));
     return result;
   }
 
@@ -226,7 +229,7 @@ export class BesRdteComponent implements OnInit {
 
       case "CB3": return "0603384BP";
       case "NT3": return "0603384BP";
-      case "TM4": return "0603384BP";
+      case "TM3": return "0603384BP";
       case "TT3": return "0603384BP";
 
       case "CA4": return "0603884BP";
