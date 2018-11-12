@@ -238,7 +238,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -256,7 +255,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -274,7 +272,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -292,7 +289,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -310,7 +306,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -328,7 +323,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -346,7 +340,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -364,7 +357,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -382,7 +374,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -400,7 +391,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -418,7 +408,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -436,7 +425,6 @@ export class SpendPlansTabComponent implements OnInit {
             cellEditorParams: { useFormatter: true },
             cellClass: ['text-right'],
             cellClassRules: {
-              'ag-cell-white': params => csswhite.has(params.node.rowIndex),
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
@@ -467,12 +455,12 @@ export class SpendPlansTabComponent implements OnInit {
   }
 
   @Input() get submitable(): boolean {
-    // basically, we can submit a plan if our toggle is on that plan, 
+    // basically, we can submit a plan if our toggle is on that plan,
     // and we don't already have an id for it (it's already been saved)
 
     var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
     var ok: boolean = !plan.hasOwnProperty('id');
-    
+
     // also, we can't submit for "After Appropriation" until we have been appropriated
     if (!this.showBaseline) {
       ok = ok && this.exeline.appropriated;
@@ -498,7 +486,7 @@ export class SpendPlansTabComponent implements OnInit {
           plan = this.plans[1];
         }
       }
-      
+
       var tmpdata: PlanRow[] = [
         { label: label, values: [], toas:[] },
         { label: 'Obligations', values: [], toas: [] },
@@ -604,8 +592,8 @@ export class SpendPlansTabComponent implements OnInit {
       else {
         var plan: SpendPlan = d.result;
         this.plans[this.showBaseline ? 0 : 1] = plan;
-        
-        // if this was the baseline that just got saved, 
+
+        // if this was the baseline that just got saved,
         // set the values for the after appropriation plan
         // (just for convenience)
         if (this.showBaseline) {
@@ -654,7 +642,7 @@ export class SpendPlansTabComponent implements OnInit {
       type: SpendPlan.TypeEnum.AFTERAPPROPRIATION,
       monthlies: monthlies
     }
-    
+
   }
 }
 
