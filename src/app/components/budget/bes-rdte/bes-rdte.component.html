@@ -1,0 +1,40 @@
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-1 h5" style="border-style: solid; border-width: 1px 0px 0px 0px;">RDTE</div>
+        <div class="col-1 h5" style="border-style: solid; border-width: 0px 1px 1px 1px;">
+            <a href="#" routerLink="/bes-proc">PROC</a>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12"></div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12">
+
+          <ag-grid-angular #agGrid
+            class="ag-theme-balham"
+            id="mygrid"
+            [gridAutoHeight]="true"
+            [rowData]="rows"
+            [columnDefs]="columnDefs"
+            [toolPanelSuppressSideButtons]="true"
+            [suppressDragLeaveHidesColumns]="true"
+            [suppressMovableColumns]="true"
+            [suppressPaginationPanel]="true"
+            [treeData]="true"
+            [animateRows]="true"
+            [groupDefaultExpanded]="groupDefaultExpanded"
+            [getDataPath]="treeHierarchy"
+            [autoGroupColumnDef]="autoGroupColumnDef"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

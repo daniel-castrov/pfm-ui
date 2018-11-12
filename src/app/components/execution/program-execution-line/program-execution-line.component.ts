@@ -21,6 +21,8 @@ export class ProgramExecutionLineComponent implements OnInit {
   private oandes: OandEMonthly[];
   private deltaMap: Map<Date, ExecutionLine>;
   private program: string;
+  private showPercentages: boolean = true;
+  private hash: string;
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private oandesvc: OandEService, private route: ActivatedRoute) { }
@@ -30,6 +32,14 @@ export class ProgramExecutionLineComponent implements OnInit {
     this.route.url.subscribe((segments: UrlSegment[]) => {
       var exelineid = segments[segments.length - 1].path;
       this.refresh( exelineid);
+    });
+    this.route.fragment.subscribe(f => { 
+      if ('SpendPlan' === f || 'Actuals' === f || 'Graph' === f) {
+        this.hash = f;
+      }
+      else {
+        this.hash = 'SpendPlan'; // default tab is SpendPlans?
+      }
     });
   }
 
@@ -51,5 +61,9 @@ export class ProgramExecutionLineComponent implements OnInit {
         this.exe = d2.result;
       });
     });
+  }
+
+  onTogglePct() {
+    this.showPercentages = !this.showPercentages;    
   }
 }

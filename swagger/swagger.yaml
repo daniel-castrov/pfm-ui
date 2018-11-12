@@ -472,7 +472,34 @@ paths:
         description: "a Worksheet object"
         required: true
         schema:
-          $ref: "#/definitions/Worksheet"
+          $ref: "#/definitions/WorksheetEvent"
+  /worksheets/{worksheetId}/program/{programId}/key/{fundingLineKey}/events/:
+    get:
+      tags:
+      - "Worksheet"
+      summary: "Gets all the Worksheet events from the specified funding line"
+      description: "Returns the events for modified rows in a worksheet"
+      operationId: "getWorksheetRowEvents"
+      parameters:
+      - in: "path"
+        name: "worksheetId"
+        description: "The id of the worksheet"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "programId"
+        description: "The id of the program where the funding line was modified"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "fundingLineKey"
+        description: "A combination of the appropriation, baOrBlin, item and opagency"
+        required: true
+        type: "string"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
 # STOP WORKSHEET
 ##############################################################################
 # START PR
@@ -2041,6 +2068,24 @@ paths:
       description: "Returns tags for a type"
       produces:
       - "application/json"
+  /tags/type/{type}/name/{name}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getTagsByName"
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets the tags for a given name"
+      description: "Returns tags for a name"
+      produces:
+      - "application/json"
   /search:
     post:
       tags:
@@ -2460,6 +2505,21 @@ paths:
       description: "Returns a boolean"
       produces:
       - "application/json"
+  /execution/{exeid}/open:
+    post:
+      tags:
+      - "Execution"
+      summary: "Opens an Execution Phase"
+      description: "creates an execution event"
+      operationId: "openExecution"
+      parameters:
+      - in: "path"
+        name: "exeid"
+        description: "The phase to open"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
   /execution/community/{communityId}/year/{year}:
     post:
       tags:
@@ -2698,6 +2758,23 @@ paths:
       summary: "Updates an existing Spend Plan for this execution line"
       produces:
       - "application/json"
+  /spendplans/execution/{exeid}:
+    get:
+      operationId: "getByExecutionPhaseId"
+      parameters:
+      - name: "exeid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
+      produces:
+      - "application/json"
 
 # STOP EXECUTION
 #################################################################
@@ -2817,7 +2894,22 @@ paths:
             $ref: "#/definitions/OandEMonthly"
 # STOP O&E
 #################################################################
-
+  /budgetFundingLines/{pomId}:
+    get:
+      tags:
+      - "BudgetFundingLines"
+      operationId: "getByPomId"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
 # END PATHS
 #################################################################
 #
@@ -3183,7 +3275,7 @@ definitions:
         $ref: "#/definitions/ProgramType"
       execution:
         type: "string"
-      organization:
+      organizationId:
         type: "string"
       milestones:
         type: "array"
@@ -3316,7 +3408,7 @@ definitions:
         type: "array"
         items:
           type: "string"
-      organization:
+      organizationId:
         type: "string"
       primaryCapability:
         type: "string"
@@ -3454,7 +3546,7 @@ definitions:
         $ref: "#/definitions/CreationTimeType"
       type:
           $ref: "#/definitions/ProgramType"
-      organization:
+      organizationId:
         type: "string"
       phaseId:
         type: "string"
@@ -3574,7 +3666,7 @@ definitions:
       fy:
         type: "integer"
       status:
-        type: "string"
+        enum: [CREATED, OPEN, LOCKED]
       osdObligationGoals:
         type: "object"
         $ref: "#/definitions/OSDGoalPlan"
@@ -3709,5 +3801,56 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/SpendPlanMonthly"
+  RowUpdateEventData:
+    type: "object"
+    properties:
+      worksheetId:
+        type: "string"
+      fundingLineKey:
+        type: "string"
+      programId:
+        type: "string"
+      previousFundingLine:
+        $ref: "#/definitions/FundingLine"
+      newFundingLine:
+        $ref: "#/definitions/FundingLine"
+      reasonCode:
+        type: "string"
+      notes:
+        type: "string"
+  WorksheetEvent:
+    type: "object"
+    properties:
+      rowUpdateEvents:
+        type: "array"
+        items:
+          $ref: "#/definitions/RowUpdateEventData"
+      worksheet:
+        $ref: "#/definitions/Worksheet"
+  RowUpdateEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      phaseId:
+        type: "string"
+      value:
+        type: "object"
+        $ref: "#/definitions/RowUpdateEventData"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "integer"
+  BudgetFundingLine:
+    type: "object"
+    properties:
+      itemNumber:
+        type: "string"
+      name:
+        type: "string"
+      ba:
+        type: "string"
+      pe:
+        type: "string"
 ##############################################################################
 # ENDFILE

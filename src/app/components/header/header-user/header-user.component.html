@@ -147,10 +147,27 @@
       </ng-template>
 
       <!-- Budget Menu -->
-      <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('BES_Manager') ) ; else disabledBudgetMenu">
-        <li class="nav-item">
-            <a class="nav-link" href="#" routerLink="/home">Budget</a>
+      <!-- <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('BES_Manager') ) ; else disabledBudgetMenu"> -->
+      <div *ngIf="true ; else disabledBudgetMenu">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownbes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Budget</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownbes">
+            <a class="dropdown-item" disabled>Create BES</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" disabled>Open BES</a>
+            <a class="dropdown-item" href="#" routerLink="/bes-rdte">Update BES</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" routerLink="/home">Close BES</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" disabled>Update PB</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" disabled>Close PB</a>
+          </div>
         </li>
+
+        <!-- <li class="nav-item">
+            <a class="nav-link" href="#" routerLink="/home">Budget</a>
+        </li> -->
       </div>
       <ng-template #disabledBudgetMenu>
         <li class="nav-item">
@@ -168,6 +185,7 @@
 
             <div *ngIf="roles?.includes('Execution_Manager')" class="dropdown-divider"></div>
             <a *ngIf="roles?.includes('Execution_Manager')" class="dropdown-item" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
+            <a *ngIf="roles?.includes('Execution_Manager')" class="dropdown-item" href="#" routerLink="/open-execution">Open Execution Phase</a>
           </div>
         </li>
       </div>

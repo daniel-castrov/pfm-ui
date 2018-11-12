@@ -1,9 +1,14 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
+import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {Observable, Subject} from 'rxjs';
+import {merge} from 'rxjs/observable/merge';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
-import {Pom, POMService, TOA, Worksheet, WorksheetRow, WorksheetService} from "../../../generated";
+import {Pom, POMService, RowUpdateEvent, TOA, UserService, Worksheet, WorksheetEvent, WorksheetRow,
+  WorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 import {FormatterUtil} from "../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
@@ -11,6 +16,12 @@ import {CellEditor} from "../../../utils/CellEditor";
 import {Notify} from "../../../utils/Notify";
 import {RowNode} from "ag-grid";
 import {ActivatedRoute} from "@angular/router";
+import {RowUpdateEventData} from "../../../generated/model/rowUpdateEventData";
+import {ValueChangeRenderer} from "../../renderers/value-change-renderer/value-change-renderer.component";
+import {ViewEventsRenderer} from "../../renderers/view-events-renderer/view-events-renderer.component";
+import {TagsService} from "../../../services/tags.service";
+
+declare const $: any;
 
 @Component({
   selector: 'update-pom-session',
@@ -23,24 +34,49 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @ViewChild("agGridToa") private agGridToa: AgGridNg2;
+  @ViewChild("agGridEvents") private agGridEvents: AgGridNg2;
+  @ViewChild("instance") instance: NgbTypeahead;
 
   pom: Pom;
   columnDefs;
   toaColumnDefs;
+  eventsColumnDefs;
+  detailCellRendererParams;
+  detailRowHeight = 100;
   columnKeys;
   rowData;
   toaRowData;
+  eventsRowData;
   filterText;
+  rowSelection = 'multiple';
   bulkType: string;
   bulkAmount: number;
   worksheets: Array<Worksheet>;
   selectedWorksheet: Worksheet = undefined;
+  reasonCode;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+  unmodifiedFundingLines: any[];
+  frameworkComponents = { valueChangeRenderer: ValueChangeRenderer, viewEventsRenderer: ViewEventsRenderer };
+  context = { parentComponent: this };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
+  tags: any[];
+  search = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus$;
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => (term === '' ? this.tags
+        : this.tags.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+  };
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
               private worksheetService: WorksheetService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private userService: UserService,
+              private tagService: TagsService) { }
 
   ngOnInit() {
     let worksheetId = this.route.snapshot.params['id'];
@@ -65,17 +101,99 @@ export class UpdatePomSessionComponent implements OnInit {
         });
       });
     });
+    this.initReasonCode();
+  }
+
+  initReasonCode(){
+    this.tagService.tagAbbreviationsForReasonCode().then(tags => {
+      this.tags = tags;
+    });
   }
 
   update(){
-    this.worksheetService.updateRows(this.selectedWorksheet).subscribe(response => {
-      if (!response.error) {
-        Notify.success('Worksheet updated successfully');
+    let updateData: RowUpdateEventData [] = [];
+    let modifiedRows: RowNode [] = this.agGrid.api.getSelectedNodes();
+    if (modifiedRows.length === 0) {
+      Notify.error('No changes detected.')
+    } else {
+      if(!this.reasonCode){
+        Notify.error('You must select or create a reason code.')
       } else {
-        Notify.error('Something went wrong while trying to update the worksheet');
-        console.log(response.error);
+        let someNotesEmpty = modifiedRows.some(node => node.data.notes === '');
+        if(someNotesEmpty) {
+          Notify.error('You must fill the notes column for all highlighted rows.')
+        } else {
+          this.agGrid.api.getSelectedNodes().forEach(node => {
+            let modifiedRow : RowUpdateEventData = {};
+            modifiedRow.notes = node.data.notes;
+            modifiedRow.newFundingLine = node.data.fundingLine;
+            modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
+              ufl.programId === node.data.programId &&
+              ufl.fundingLine.appropriation === node.data.fundingLine.appropriation &&
+              ufl.fundingLine.baOrBlin === node.data.fundingLine.baOrBlin &&
+              ufl.fundingLine.opAgency === node.data.fundingLine.opAgency &&
+              ufl.fundingLine.item === node.data.fundingLine.item).fundingLine;
+            modifiedRow.reasonCode = this.reasonCode;
+            modifiedRow.worksheetId = this.selectedWorksheet.id;
+            modifiedRow.programId = node.data.programId
+            modifiedRow.fundingLineKey = node.data.fundingLine.appropriation + '-' +
+              node.data.fundingLine.baOrBlin + '-' +
+              node.data.fundingLine.item + '-' +
+              node.data.fundingLine.opAgency;
+            updateData.push(modifiedRow);
+
+            node.data.modified = false;
+            node.setSelected(false);
+            node.data.notes = '';
+          });
+          this.reasonCode = null;
+          this.agGrid.api.refreshCells();
+          let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
+          this.worksheetService.updateRows(body).subscribe(response => {
+            if (!response.error) {
+              this.generateUnmodifiedFundingLines();
+              this.initReasonCode();
+              Notify.success('Worksheet updated successfully');
+            } else {
+              Notify.error('Something went wrong while trying to update the worksheet');
+              console.log(response.error);
+            }
+          });
+        }
       }
-    });
+    }
+  }
+
+  async viewEvents(params){
+    let data: Array<any> = [];
+    let fungdingLineKey = params.data.fundingLine.appropriation + '-' +
+      params.data.fundingLine.baOrBlin + '-' +
+      params.data.fundingLine.item + '-' +
+      params.data.fundingLine.opAgency;
+    let worksheetRowEvents : RowUpdateEvent[] = (await this.worksheetService.getWorksheetRowEvents(
+      this.selectedWorksheet.id, params.data.programId, fungdingLineKey).toPromise()).result;
+
+    for(let wre of worksheetRowEvents) {
+      let user = (await this.userService.getByCn(wre.userCN).toPromise()).result;
+      let date = new Date(wre.timestamp);
+      let dataRow = {
+        date: date,
+        user: user.firstName + ' ' + user.lastName,
+        reasonCode: wre.value.reasonCode,
+        notes: wre.value.notes,
+        programId: wre.value.programId,
+        previousFundingLine: wre.value.previousFundingLine,
+        newFundingLine: wre.value.newFundingLine
+      };
+      data.push(dataRow);
+    }
+    if(data.length > 0){
+      this.eventsRowData = data;
+      this.agGridEvents.api.sizeColumnsToFit();
+      $('#events-modal').modal('show');
+    } else {
+      Notify.info('There are no transactions registered for this funding line')
+    }
   }
 
   applyBulkChange(){
@@ -107,6 +225,8 @@ export class UpdatePomSessionComponent implements OnInit {
 
       this.initToaDataRows();
       this.generateToaColumns();
+
+      this.generateEventsColumns();
     });
   }
 
@@ -120,14 +240,16 @@ export class UpdatePomSessionComponent implements OnInit {
       let row = {
         coreCapability: value.coreCapability,
         programId: value.programRequestFullname,
-        fundingLine: value.fundingLine
+        fundingLine: value.fundingLine,
+        modified: false,
+        notes: ''
       };
       data.push(row);
     });
     this.rowData = data;
     this.agGrid.api.sizeColumnsToFit();
+    this.generateUnmodifiedFundingLines();
   }
-
   initToaDataRows(){
     let data: Array<any> = [];
     let allocatedFunds = [];
@@ -135,7 +257,7 @@ export class UpdatePomSessionComponent implements OnInit {
       allocatedFunds[toa.year] = toa.amount;
     });
 
-    let allocatedRow = {description: 'Allocated TOA', funds: allocatedFunds};
+    let allocatedRow = {description: 'Allocated TOA', funds: allocatedFunds, modified: false};
     data.push(allocatedRow);
 
     let resourcedFunds = [];
@@ -151,7 +273,7 @@ export class UpdatePomSessionComponent implements OnInit {
       });
     });
 
-    let resourcedRow = {description: 'Total Resourced', funds: resourcedFunds};
+    let resourcedRow = {description: 'Total Resourced', funds: resourcedFunds, modified: false};
     data.push(resourcedRow);
 
     let deltaFunds = [];
@@ -166,12 +288,97 @@ export class UpdatePomSessionComponent implements OnInit {
     this.agGridToa.api.sizeColumnsToFit();
   }
 
+  generateUnmodifiedFundingLines() {
+    let data: Array<any> = [];
+    this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
+      let worksheet = JSON.parse(JSON.stringify(value));
+      let row = {
+        programId: worksheet.programRequestFullname,
+        fundingLine: worksheet.fundingLine
+      };
+      data.push(row);
+    });
+    this.unmodifiedFundingLines = data;
+  }
+
+  generateEventsColumns(){
+    this.eventsColumnDefs = [
+      {
+        headerName: 'Reason Code',
+        field: 'reasonCode',
+        cellRenderer: 'agGroupCellRenderer',
+        maxWidth: 200,
+        minWidth: 200
+      },
+      {
+        headerName: 'Notes',
+        field: 'notes',
+        tooltipField: 'notes'
+      },
+      {
+        headerName: 'User',
+        field: 'user',
+        maxWidth: 125,
+        minWidth: 125
+      },
+      {
+        headerName: 'Date',
+        filter: 'agDateColumnFilter',
+        field: 'date',
+        valueFormatter: params => FormatterUtil.dateFormatter(params),
+        maxWidth: 200,
+        minWidth: 200
+      }
+    ];
+
+    let detailColumnDefs: any[] = [
+      {
+        headerName: 'Program ID',
+        field: 'programId'
+      }];
+    this.columnKeys.forEach(key => {
+      if (key >= this.pom.fy) {
+        let columnKey = key.toString().replace('20', 'FY')
+        let colDef = {
+          headerName: columnKey,
+          colId: key,
+          suppressToolPanel: true,
+          cellRenderer: 'valueChangeRenderer',
+          cellClass: ['funding-line-default']
+        };
+        detailColumnDefs.push(colDef);
+      }
+    });
+
+    this.detailCellRendererParams = {
+      detailGridOptions: {
+        columnDefs: detailColumnDefs,
+        frameworkComponents: this.frameworkComponents,
+        context: this.context,
+        gridAutoHeight: true,
+        toolPanelSuppressSideButtons: true,
+        onGridReady(params) {
+          params.api.sizeColumnsToFit();
+        }
+      },
+      getDetailRowData: function(params) {
+        let data = [{programId: params.data.programId,
+          newFundingLine: params.data.newFundingLine,
+          previousFundingLine: params.data.previousFundingLine}];
+        params.successCallback(data);
+      }
+    };
+
+
+  }
+
   generateToaColumns() {
     this.toaColumnDefs = [
       {
         headerName: '',
         field: 'description',
         cellClass: ['ag-cell-white','text-right'],
+        suppressMenu: true
       }
     ];
     this.columnKeys.forEach(key => {
@@ -222,6 +429,16 @@ export class UpdatePomSessionComponent implements OnInit {
 
   generateColumns() {
     this.columnDefs = [
+      {
+        headerName: 'Transactions',
+        colId: 'events',
+        suppressToolPanel: true,
+        cellRenderer: 'viewEventsRenderer',
+        cellClass: ['funding-line-default'],
+        maxWidth: 93,
+        minWidth: 93,
+        suppressFilter: true
+      },
       {
         headerName: 'Core Capability',
         headerTooltip: 'Core Capability',
@@ -326,6 +543,18 @@ export class UpdatePomSessionComponent implements OnInit {
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };
     this.columnDefs.push(totalColDef);
+    this.columnDefs.push({
+      headerName: 'Notes',
+      field: 'notes',
+      editable: params => {
+        if(params.data.modified){
+          return true;
+        }
+      },
+      suppressMenu: true,
+      suppressToolPanel: true,
+      cellClass: ['ag-cell-white','text-right']
+    });
 
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
@@ -334,7 +563,21 @@ export class UpdatePomSessionComponent implements OnInit {
   onBudgetYearValueChanged(params){
     let year = params.colDef.colId;
     params.data.fundingLine.funds[year] = Number(params.newValue);
-    this.initToaDataRows();
+    if (Number(params.oldValue) !== Number(params.newValue)) {
+      params.node.setSelected(true);
+      params.data.modified = true;
+      this.initToaDataRows();
+    }else {
+      params.node.setSelected(false);
+    }
+  }
+
+  onRowSelected(params) {
+    if(params.data.modified){
+      params.node.setSelected(true);
+    } else {
+      params.node.setSelected(false)
+    }
   }
 
   getTotal(row, columnKeys): number {

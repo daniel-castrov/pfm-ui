@@ -8,47 +8,49 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-3">
           <div class="row">
-            <div class="col-auto">
-              <span class="form-group inline-name">
+            <div class="col-8">
+              <div class="form-group inline-name">
                 <select [(ngModel)]="selectedWorksheet" (change)="onWorksheetSelected()" class="form-control-sm worksheet-width">
                   <option value="undefined" disabled selected>Select Worksheet</option>
                   <option *ngFor="let w of worksheets" [ngValue]="w">{{w.name}}</option>
                 </select>
-              </span>
+              </div>
             </div>
-            <div *ngIf="selectedWorksheet" class="col-auto timestamp">
+            <div *ngIf="selectedWorksheet" class="col-12 timestamp">
               Last Update on {{selectedWorksheet.lastUpdateDate | date:'MM/dd/yyyy'}}
             </div>
           </div>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-auto">
-          <span class="form-group inline-name">
-            <span class="mr-2">
-              <label for="reasonCode">Reason Code:</label>
-            </span>
-            <span class="form-group">
-              <select id="reasonCode" class="form-control-sm worksheet-width pull-right">
-                <option value="null" disabled selected>Select a reason code</option>
-                <option>Worksheet code 1</option>
-                <option>Worksheet code 2</option>
-                <option>Worksheet code 3</option>
-                <option>Worksheet code 4</option>
-              </select>
-            </span>
-          </span>
+        <div *ngIf="selectedWorksheet" class="col-3">
+          <table class="reason-code-table">
+            <tr>
+              <td>
+                <label for="typeahead-focus" class="pull-right col-form-label">Reason Code:</label>
+              </td>
+              <td>
+                <input
+                  id="typeahead-focus"
+                  type="text"
+                  class="form-control pull-right"
+                  [(ngModel)]="reasonCode"
+                  [ngbTypeahead]="search"
+                  (focus)="focus$.next($event.target.value)"
+                  (click)="click$.next($event.target.value)"
+                  #instance="ngbTypeahead"/>
+              </td>
+            </tr>
+          </table>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-auto">
-          <div class="pull-right pom-controls">
-            <span>
-              <button (click)="update()" class="btn btn-primary">Update</button>
-            </span>
-          </div>
+        <div class="col-6">
+          <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
+            <button (click)="update()" class="btn btn-primary">Update</button>
+          </span>
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">
-        <div class="col-md-5">
+        <div class="col-5">
           <fieldset>
             <legend>Bulk changes</legend>
             <div class="row">
@@ -87,20 +89,9 @@
             </div>
           </fieldset>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-md-7 pt-3 pb-3">
-          <span class="form-group">
-            <textarea [(ngModel)]="selectedWorksheet.notes" placeholder="Area to enter more specific notes" wrap="physical" class="h-100 form-control"></textarea>
-          </span>
-        </div>
-      </div>
-      <div *ngIf="selectedWorksheet" class="row mb-3">
-        <div class="col-5 align-column">
-          <input class="form-control forminput w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
-        </div>
-        <div class="col-7">
+        <div class="col-7 mt-3">
           <ag-grid-angular #agGridToa
                            class="ag-theme-balham"
-                           headerHeight="0"
                            [rowData]="toaRowData"
                            [gridAutoHeight]="true"
                            [toolPanelSuppressSideButtons]="true"
@@ -108,6 +99,11 @@
                            [suppressMovableColumns]="true"
                            (gridReady)="onGridReady($event)">
           </ag-grid-angular>
+        </div>
+      </div>
+      <div *ngIf="selectedWorksheet" class="row mb-3">
+        <div class="col-5 align-column">
+          <input class="form-control forminput w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">
@@ -123,6 +119,11 @@
                              [enableSorting]="true"
                              [enableFilter]="true"
                              [components]="components"
+                             [rowSelection]="rowSelection"
+                             [frameworkComponents]="frameworkComponents"
+                             [context]="context"
+                             [rowMultiSelectWithClick]="true"
+                             (rowSelected)="onRowSelected($event)"
                              [rowData]="rowData"
                              [singleClickEdit]="true"
                              [stopEditingWhenGridLosesFocus]="true"
@@ -137,5 +138,43 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div id="events-modal" class="modal fade in">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a class="btn" data-dismiss="modal">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="modal-body mt-4">
+          <div class="row">
+            <div class="col-12">
+              <ag-grid-angular #agGridEvents
+                               class="ag-theme-balham"
+                               [gridAutoHeight]="true"
+                               [toolPanelSuppressSideButtons]="true"
+                               [suppressMovableColumns]="true"
+                               [suppressRowTransform]="true"
+                               [showToolPanel]="false"
+                               [enableSorting]="true"
+                               [enableFilter]="true"
+                               [columnDefs]="eventsColumnDefs"
+                               [rowData]="eventsRowData"
+                               [detailCellRendererParams]="detailCellRendererParams"
+                               [detailRowHeight]="detailRowHeight"
+                               [masterDetail]="true"
+                               [pagination]="true"
+                               [paginationPageSize]="15"
+                               (paginationChanged)="agGridPaginationEvents.onPaginationChanged($event)"
+                               [suppressPaginationPanel]="true"
+                               (gridReady)="onGridReady($event)">
+              </ag-grid-angular>
+              <ag-grid-pagination #agGridPaginationEvents [agGrid]="agGridEvents"></ag-grid-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 </div>

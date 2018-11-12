@@ -8,7 +8,6 @@ import {
   OandEMonthly, ExecutionLine, Execution, ExecutionEvent,
   OSDGoalPlan, SpendPlanService, SpendPlan
 } from '../../../generated';
-import { AddSpendPlanComponent } from '../add-spend-plan/add-spend-plan.component';
 import { Notify } from '../../../utils/Notify';
 import { SpendPlanMonthly } from '../../../generated';
 import { OandETools, ToaAndReleased } from '../model/oande-tools';
@@ -29,7 +28,6 @@ declare const $: any;
 export class SpendPlansTabComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  @ViewChild(AddSpendPlanComponent) private addarea;
   @Input() parent: any;
 
   private agOptions: GridOptions;
@@ -41,10 +39,9 @@ export class SpendPlansTabComponent implements OnInit {
   private _deltas: Map<Date, ExecutionEvent>;
   private rowData: PlanRow[];
   private plans: SpendPlan[] = [{type: SpendPlan.TypeEnum.BASELINE}, {type: SpendPlan.TypeEnum.AFTERAPPROPRIATION}]; // always pretend to have both spend plans
-  private maxmonths: number;
+  private maxmonths: number = 0;
   private showPercentages: boolean = true;
   private showBaseline: boolean = true;
-  private explanation: string;
 
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
@@ -58,18 +55,7 @@ export class SpendPlansTabComponent implements OnInit {
           // both plans the same, and only change the type (and delete the id)
 
           d.result.forEach(sp => {
-            if (SpendPlan.TypeEnum.BASELINE === sp.type) {
-              this.plans[0] = sp;
-              if (1 === d.result.length) {
-                var sp2: SpendPlan = Object.assign({}, sp);
-                delete sp2.id;
-                sp2.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
-                this.plans[1] = sp2;
-              }
-            }
-            else {
-              this.plans[1] = sp;
-            }
+            this.plans[SpendPlan.TypeEnum.BASELINE === sp.type ? 0 : 1] = sp;
           });
 
           this.refreshTableData();
@@ -135,24 +121,20 @@ export class SpendPlansTabComponent implements OnInit {
       if ('' === p.value) {
         return '';
       }
-      if (my.showPercentages) {
+      if (p.node.rowIndex > 8 && my.showPercentages) {
         var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
         var toa: number = p.data.toas[col];
-        return (100 * p.value / toa).toFixed(2);
+        return (100 * p.value / toa).toFixed(1) + '%';
       }
       else {
-        return p.value.toFixed(2);
+        return '$' + p.value.toFixed(2);
       }
     }
 
     var setter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-
-      var value: number = Number.parseFloat(p.newValue);
-      if (my.showPercentages) {
-        value *= p.data.toas[col] / 100;
-      }
+      var value: number = Number.parseFloat(p.newValue.replace(/[^0-9.]/, ''));
 
       my.rowData[row].values[col] = value;
       p.node.data.values[col] = value;
@@ -165,26 +147,29 @@ export class SpendPlansTabComponent implements OnInit {
       // fix cumulatives and deltas
       var totalobl: number = (col > 0 ? my.rowData[7].values[col - 1] : 0);
       var totalexp: number = (col > 0 ? my.rowData[8].values[col - 1] : 0);
+
       for (var i = col; i < my.maxmonths; i++){
+        var toa: number = my.rowData[0].toas[i];
         totalobl += my.rowData[1].values[i];
         totalexp += my.rowData[6].values[i];
+
         my.rowData[7].values[i] = totalobl;
         my.rowData[8].values[i] = totalexp;
 
-        my.rowData[13].values[i] = my.rowData[10].values[i] - my.rowData[7].values[i];
-        my.rowData[14].values[i] = my.rowData[11].values[i] - my.rowData[8].values[i];
+        my.rowData[13].values[i] = my.rowData[7].values[i] - my.rowData[10].values[i];
+        my.rowData[14].values[i] = my.rowData[8].values[i] - my.rowData[11].values[i];
       }
 
       return true;
     }
 
     var editable = function (p): boolean {
-      if (!my.submittable) {
+      if (!my.submitable) {
         return false;
       }
 
       var row: number = p.node.rowIndex;
-      return !(0 === row || 7 === row || 10 === row);
+      return (row > 1 && row < 7);
     }
     var cssbold: Set<number> = new Set<number>([0, 9, 12]);
     var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
@@ -237,7 +222,8 @@ export class SpendPlansTabComponent implements OnInit {
             maxMonths: my.maxmonths,
             fy: (my._exe ? my.exe.fy : 0),
             next: function () { my.nextMonth() },
-            prev: function () { my.prevMonth() }
+            prev: function () { my.prevMonth() },
+            prefix: 'spend-plan'
           };
         },
         children: [
@@ -480,9 +466,10 @@ export class SpendPlansTabComponent implements OnInit {
     });
   }
 
-  @Input() get submittable(): boolean {
+  @Input() get submitable(): boolean {
     // basically, we can submit a plan if our toggle is on that plan, 
     // and we don't already have an id for it (it's already been saved)
+
     var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
     var ok: boolean = !plan.hasOwnProperty('id');
     
@@ -490,7 +477,6 @@ export class SpendPlansTabComponent implements OnInit {
     if (!this.showBaseline) {
       ok = ok && this.exeline.appropriated;
     }
-
     return ok
   }
 
@@ -499,35 +485,40 @@ export class SpendPlansTabComponent implements OnInit {
       var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
       var label: string = (this.showBaseline ? 'Baseline' : 'After Appropriation');
 
-      if (this.submittable) {
-        label = 'Create ' + label;
-      }
-      
-      var tmpdata: PlanRow[] = [
-        { label: label, values: [], toas:[] },
-        { label: 'Obligated', values: [], toas: [] },
-        { label: 'Civilian Labor', values: [], toas: [] },
-        { label: 'Travel', values: [], toas: [] },
-        { label: 'Contracts', values: [], toas: [] },
-        { label: 'Other', values: [], toas: [] },
-        { label: 'Expensed', values: [], toas: [] },
-
-        { label: 'Cumulative Obligated', values: [], toas: [] },
-        { label: 'Cumulative Expensed', values: [], toas: [] },
-
-        { label: 'OSD', values: [], toas: [] },
-        { label: 'Obligated', values: [], toas: [] },
-        { label: 'Expensed', values: [], toas: [] },
-
-        { label: 'DELTA', values: [], toas: [] },
-        { label: 'Obligated', values: [], toas: [] },
-        { label: 'Expensed', values: [], toas: [] },
-      ];
-
       var progtype: string = this.exeline.appropriation;
       var ogoals: OSDGoalPlan = this.exe.osdObligationGoals[progtype];
       var egoals: OSDGoalPlan = this.exe.osdExpenditureGoals[progtype];
       this.maxmonths = Math.max(ogoals.monthlies.length, egoals.monthlies.length);
+
+      if (this.submitable) {
+        label = 'Create ' + label;
+
+        if (!this.showBaseline) {
+          this.plans[1] = this.createAfterAppropriationTemplatePlan();
+          plan = this.plans[1];
+        }
+      }
+      
+      var tmpdata: PlanRow[] = [
+        { label: label, values: [], toas:[] },
+        { label: 'Obligations', values: [], toas: [] },
+        { label: 'Civilian Labor', values: [], toas: [] },
+        { label: 'Travel', values: [], toas: [] },
+        { label: 'Contracts', values: [], toas: [] },
+        { label: 'Other', values: [], toas: [] },
+        { label: 'Expenditure', values: [], toas: [] },
+
+        { label: 'Cumulative Obligations', values: [], toas: [] },
+        { label: 'Cumulative Expenditure', values: [], toas: [] },
+
+        { label: 'OUSD(C) Goal', values: [], toas: [] },
+        { label: 'Obligations', values: [], toas: [] },
+        { label: 'Expenditure', values: [], toas: [] },
+
+        { label: 'DELTA TO GOAL', values: [], toas: [] },
+        { label: 'Obligations', values: [], toas: [] },
+        { label: 'Expenditure', values: [], toas: [] },
+      ];
 
       var toas: ToaAndReleased[] = OandETools.calculateToasAndReleaseds(this.exeline,
         this.deltas, this.maxmonths, this.exe.fy);
@@ -558,8 +549,8 @@ export class SpendPlansTabComponent implements OnInit {
 
         // Delta section
         tmpdata[12].values.push(0);
-        tmpdata[13].values.push(tmpdata[8].values[i] - tmpdata[1].values[i]);
-        tmpdata[14].values.push(tmpdata[9].values[i] - tmpdata[6].values[i]);
+        tmpdata[13].values.push(tmpdata[7].values[i] - tmpdata[10].values[i]);
+        tmpdata[14].values.push(tmpdata[8].values[i] - tmpdata[11].values[i]);
 
         tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
@@ -572,9 +563,11 @@ export class SpendPlansTabComponent implements OnInit {
     }
   }
 
-  onTogglePct() {
-    this.showPercentages = !this.showPercentages;
-    this.agOptions.api.redrawRows();
+  @Input() set percentages(p: boolean) {
+    this.showPercentages = p;
+    if (this.agOptions.api) {
+      this.agOptions.api.redrawRows();
+    }
   }
 
   onTogglePlan() {
@@ -582,7 +575,7 @@ export class SpendPlansTabComponent implements OnInit {
     this.refreshTableData();
   }
 
-  dosave() {
+  save() {
     var newplan: SpendPlan = {
       monthlies: []
     };
@@ -597,10 +590,6 @@ export class SpendPlansTabComponent implements OnInit {
       });
     }
 
-    if (this.explanation) {
-      newplan.explanation = this.explanation;
-    }
-    
     if (!this.plans || 0 === this.plans.length) {
       newplan.type = SpendPlan.TypeEnum.BASELINE;
     }
@@ -625,36 +614,47 @@ export class SpendPlansTabComponent implements OnInit {
           sp.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
           this.plans[1] = sp;
         }
-
+        Notify.success('Spend Plan saved');
         this.refreshTableData();
       }
     });
   }
 
-  submit_check() {
-    // make sure we give an explanation if we need to
-    var needexplanation: boolean
-      = (this.rowData[13].values.filter(val => (val > 10)).length > 0);
-    if (!needexplanation) {
-      needexplanation = (this.rowData[14].values.filter(val => (val > 10)).length > 0);
-    }
-
-    if (needexplanation) {
-        $('#explanation-modal').modal('show');
-    }
-    else {
-      this.dosave();
-    }
-  }
-
   nextMonth() {
     this.firstMonth += 12;
+    this.agOptions.api.refreshHeader();
     this.agOptions.api.redrawRows();
   }
 
   prevMonth() {
     this.firstMonth -= 12;
+    this.agOptions.api.refreshHeader();
     this.agOptions.api.redrawRows();
+  }
+
+  createAfterAppropriationTemplatePlan(): SpendPlan {
+    var monthlies: SpendPlanMonthly[] = [];
+
+    var myoandes: OandEMonthly[] = new Array(this.maxmonths);
+    this.oandes.forEach(oande => {
+      myoandes[oande.month] = oande;
+    });
+
+    for (var i = 0; i < this.maxmonths; i++){
+      monthlies.push({
+        obligated: (myoandes[i] ? myoandes[i].obligated : 0 ),
+        expensed: (myoandes[i] ? myoandes[i].expensed : 0),
+        labor: 0,
+        travel: 0,
+        contracts: 0,
+        other: 0
+      });
+    }
+    return {
+      type: SpendPlan.TypeEnum.AFTERAPPROPRIATION,
+      monthlies: monthlies
+    }
+    
   }
 }
 

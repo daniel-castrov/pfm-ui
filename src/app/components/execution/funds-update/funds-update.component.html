@@ -6,7 +6,6 @@
         <span class="h5 mr-2">Funds Update for Fiscal Year </span>
         <span>
           <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
-            <option></option>
             <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
            </select>
          </span>
@@ -27,7 +26,7 @@
         </div>
         <div class="col-2">
           <span class="form-group pull-right">
-            <button class="btn btn-primary" (click)="addline()">
+            <button class="btn btn-primary" (click)="addline()" [disabled]='!selectedexe'>
               <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
               Add Execution Line
             </button>
@@ -56,22 +55,17 @@
         <div class="pull-right program-controls">
           <span>
             <button [routerLink]="['/charges', selectedexe?.id]"
-              class="btn btn-primary" [disabled]="!hasAppropriation">Action</button>
+              class="btn btn-primary" [disabled]="!(selectedexe || hasAppropriation)">Action</button>
           </span>
           <span>
-            <button class="btn btn-primary" [routerLink]="['/appropriation-release', selectedexe?.id]">Release</button>
+            <button class="btn btn-primary" [routerLink]="['/appropriation-release', selectedexe?.id]" [disabled]='!selectedexe'>Release</button>
           </span>
           <span>
-            <button class="btn btn-primary" [routerLink]="['/withhold', selectedexe?.id]">Withhold</button>
+            <button class="btn btn-primary" [routerLink]="['/withhold', selectedexe?.id]" [disabled]='!selectedexe'>Withhold</button>
           </span>
         </div>
       </div>
     </div>
-    <!--div class="row">
-      <div class="col-12">
-        <button class="btn btn-primary btn" data-toggle="modal" href="#name-modal">Enter Name</button>
-      </div>
-    </div-->
   </div>
 </div>
 

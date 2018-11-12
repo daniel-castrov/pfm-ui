@@ -382,6 +382,14 @@ label {
   text-decoration: none;
 }
 
+.btn-card-header:disabled,
+btn-card-header[disabled]{
+  opacity: .5;
+  color: #000;
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
 .btn-sm {
   cursor: pointer;
 }

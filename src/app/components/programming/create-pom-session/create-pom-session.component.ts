@@ -379,10 +379,12 @@ export class CreatePomSessionComponent implements OnInit {
       
       let fls:string[] = [];
       prs.forEach( pr => {
-        pr.fundingLines.forEach( fl => {
-          let flId:string = pr.fullname + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
-          fls.push( flId );
-        });
+        if ( pr.type != "GENERIC" ){
+          pr.fundingLines.forEach( fl => {
+            let flId:string = pr.fullname + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
+            fls.push( flId );
+          });
+        }
       });
       
       let eppData:any[] = []
@@ -405,7 +407,7 @@ export class CreatePomSessionComponent implements OnInit {
         }
         let index = programs.findIndex(program => program.fullname === epp.shortName);
         if (index > 0) {
-          eppOrgToa[ programs[index].organization ] += amount;
+          eppOrgToa[ programs[index].organizationId ] += amount;
         }
       });
 
