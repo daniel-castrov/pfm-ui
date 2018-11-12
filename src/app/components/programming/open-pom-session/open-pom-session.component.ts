@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import {  HeaderComponent } from '../../header/header.component'
 import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
@@ -30,6 +31,7 @@ export class OpenPomSessionComponent implements OnInit {
     private pomService: POMService,
     private pbService: PBService,
     private globalsService: UserUtils,
+    private router: Router,
     private withFullNameService: WithFullNameService ) {}
 
   async ngOnInit() {
@@ -88,6 +90,7 @@ export class OpenPomSessionComponent implements OnInit {
         this.pomStatusIsCreated = false;
         Notify.success('The POM Session is now OPEN');
         this.header.refreshActions();
+        this.router.navigate(['/home']);
       });
     }
   }
