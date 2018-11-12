@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3">
+        <div class="col-5">
           <div class="row">
             <div class="col-8">
               <div class="form-group inline-name">
@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="selectedWorksheet" class="col-3">
+        <div *ngIf="selectedWorksheet" class="col-4">
           <table class="reason-code-table">
             <tr>
               <td>
@@ -43,7 +43,7 @@
             </tr>
           </table>
         </div>
-        <div class="col-6">
+        <div class="col-3">
           <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
             <button (click)="update()" class="btn btn-primary">Update</button>
           </span>
