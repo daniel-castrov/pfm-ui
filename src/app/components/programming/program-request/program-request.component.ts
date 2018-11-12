@@ -121,9 +121,11 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       Notify.error(fundsTabValidation.message);
     } else {      
       if(this.pr.id) {
+        let oldState = this.pr.state;
         this.pr.state = state;
         let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise()); 
         if (data.error) {
+          this.pr.state = oldState;
           Notify.error('Program request failed to save.\n' + data.error);
         } else {
           if (this.pr.state === ProgrammaticRequestState.SAVED) {
