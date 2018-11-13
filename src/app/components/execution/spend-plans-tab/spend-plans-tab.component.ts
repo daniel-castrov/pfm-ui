@@ -240,7 +240,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -257,7 +258,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -274,7 +276,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -291,7 +294,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -308,7 +312,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -325,7 +330,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -342,7 +348,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -359,7 +366,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -376,7 +384,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -393,7 +402,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -410,7 +420,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -427,7 +438,8 @@ export class SpendPlansTabComponent implements OnInit {
             cellClassRules: {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
-              'ag-cell-edit': params => cssedit.has(params.node.rowIndex),
+              'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
+              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           }

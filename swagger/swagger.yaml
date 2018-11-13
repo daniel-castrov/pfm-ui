@@ -3608,6 +3608,8 @@ definitions:
     properties:
       id:
         type: "string"
+      originalMrId:
+        type: "string"
       appropriation:
         type: "string"
       blin:
