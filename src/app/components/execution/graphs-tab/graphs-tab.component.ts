@@ -183,48 +183,93 @@ export class GraphsTabComponent implements OnInit {
         var lastobg: number = 0;
         for (var i = 0; i < this.maxmonths; i++) {
             var raw_toa: number = toasAndReleaseds[i].toa;
-            var toa = (this.showPercentages ? 1 : raw_toa);
-            var redtoa: number = toa * 0.1;
-            var ogoalpct: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
-            var egoalpct: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
-            var ogoaltoa: number = toa * ogoalpct;
-            var egoaltoa: number = toa * egoalpct;
 
-            obgDataset.toas.push(toa);
-            obgDataset.data.push(ogoaltoa);
-            obgDataset.notes.push('Obligation Goal: ' + ogoaltoa.toFixed(2) + ' (' + (ogoalpct * 100).toFixed(2) + '%)');
-            obgDataset.status.push(0);
+            if (this.showPercentages) {
+                var toa = 100;
+                var redtoa: number = toa * 0.1;
+                var ogoalpct: number = 100 * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+                var egoalpct: number = 100 * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
 
-            obgplanRed.toas.push(toa);
-            obgplanRed.data.push(ogoaltoa - redtoa);
-            obgplanRed.notes.push('Obligation "Red Zone"');
-            obgplanRed.status.push(0);
+                obgDataset.toas.push(toa);
+                obgDataset.data.push(ogoalpct);
+                obgDataset.notes.push('Obligation Goal: ' + ogoalpct.toFixed(2) + '%');
+                obgDataset.status.push(0);
 
-            expDataset.toas.push(toa);
-            expDataset.data.push(egoaltoa);
-            expDataset.notes.push('Expenditure Goal: ' + egoaltoa.toFixed(2) + ' (' + (egoalpct * 100).toFixed(2) + '%)');
-            expDataset.status.push(0);
+                obgplanRed.toas.push(toa);
+                obgplanRed.data.push(ogoalpct - redtoa);
+                obgplanRed.notes.push('Obligation "Red Zone"');
+                obgplanRed.status.push(0);
 
-            expplanRed.toas.push(toa);
-            expplanRed.data.push(egoaltoa - redtoa);
-            expplanRed.notes.push('Expenditure "Red Zone"');
-            expplanRed.status.push(0);
+                expDataset.toas.push(toa);
+                expDataset.data.push(egoalpct);
+                expDataset.notes.push('Expenditure Goal: ' + egoalpct.toFixed(2) + '%');
+                expDataset.status.push(0);
 
-            // we want cumulatives, so add last month's totals
-            realexpDataset.toas.push(toa);
-            realobgDataset.toas.push(toa);
-            if (myoandes[i]) {
-                lastexp += myoandes[i].expensed;
-                lastobg += myoandes[i].obligated;
+                expplanRed.toas.push(toa);
+                expplanRed.data.push(egoalpct - redtoa);
+                expplanRed.notes.push('Expenditure "Red Zone"');
+                expplanRed.status.push(0);
+
+                // we want cumulatives, so add last month's totals
+                realexpDataset.toas.push(toa);
+                realobgDataset.toas.push(toa);
+                if (myoandes[i]) {
+                    lastexp += myoandes[i].expensed;
+                    lastobg += myoandes[i].obligated;
+                }
+
+                realexpDataset.data.push(100 * lastexp / raw_toa);
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa/100, lastexp, raw_toa));
+                realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa/100, raw_toa));
+
+                realobgDataset.data.push(100 * lastobg / raw_toa);
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa/100, lastobg, raw_toa));
+                realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa/100, raw_toa));
             }
+            else {
+                var toa = (this.showPercentages ? 1 : raw_toa);
+                var redtoa: number = toa * 0.1;
+                var ogoalpct: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
+                var egoalpct: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
+                var ogoaltoa: number = toa * ogoalpct;
+                var egoaltoa: number = toa * egoalpct;
 
-            realexpDataset.data.push(lastexp / (this.showPercentages ? raw_toa : 1));
-            realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa, lastexp, raw_toa));
-            realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa, raw_toa));
+                obgDataset.toas.push(toa);
+                obgDataset.data.push(ogoaltoa);
+                obgDataset.notes.push('Obligation Goal: ' + ogoaltoa.toFixed(2) + ' (' + (ogoalpct * 100).toFixed(2) + '%)');
+                obgDataset.status.push(0);
 
-            realobgDataset.data.push(lastobg / (this.showPercentages ? raw_toa : 1));
-            realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa, lastobg, raw_toa));
-            realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
+                obgplanRed.toas.push(toa);
+                obgplanRed.data.push(ogoaltoa - redtoa);
+                obgplanRed.notes.push('Obligation "Red Zone"');
+                obgplanRed.status.push(0);
+
+                expDataset.toas.push(toa);
+                expDataset.data.push(egoaltoa);
+                expDataset.notes.push('Expenditure Goal: ' + egoaltoa.toFixed(2) + ' (' + (egoalpct * 100).toFixed(2) + '%)');
+                expDataset.status.push(0);
+
+                expplanRed.toas.push(toa);
+                expplanRed.data.push(egoaltoa - redtoa);
+                expplanRed.notes.push('Expenditure "Red Zone"');
+                expplanRed.status.push(0);
+
+                // we want cumulatives, so add last month's totals
+                realexpDataset.toas.push(toa);
+                realobgDataset.toas.push(toa);
+                if (myoandes[i]) {
+                    lastexp += myoandes[i].expensed;
+                    lastobg += myoandes[i].obligated;
+                }
+
+                realexpDataset.data.push(lastexp / (this.showPercentages ? raw_toa : 1));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa, lastexp, raw_toa));
+                realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa, raw_toa));
+
+                realobgDataset.data.push(lastobg / (this.showPercentages ? raw_toa : 1));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa, lastobg, raw_toa));
+                realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
+            } 
         }
 
         this.datasets = [
