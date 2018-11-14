@@ -20,6 +20,7 @@ import {RowUpdateEventData} from "../../../generated/model/rowUpdateEventData";
 import {ValueChangeRenderer} from "../../renderers/value-change-renderer/value-change-renderer.component";
 import {ViewEventsRenderer} from "../../renderers/view-events-renderer/view-events-renderer.component";
 import {TagsService} from "../../../services/tags.service";
+import {CheckboxCellRenderer} from "../../renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 
 declare const $: any;
 
@@ -45,6 +46,7 @@ export class UpdatePomSessionComponent implements OnInit {
   detailRowHeight = 100;
   columnKeys;
   rowData;
+  topPinnedData = [];
   toaRowData;
   eventsRowData;
   filterText;
@@ -57,7 +59,10 @@ export class UpdatePomSessionComponent implements OnInit {
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
   unmodifiedFundingLines: any[];
-  frameworkComponents = { valueChangeRenderer: ValueChangeRenderer, viewEventsRenderer: ViewEventsRenderer };
+  frameworkComponents = {
+    valueChangeRenderer: ValueChangeRenderer,
+    viewEventsRenderer: ViewEventsRenderer,
+    checkboxCellRenderer: CheckboxCellRenderer};
   context = { parentComponent: this };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
   tags: any[];
@@ -220,6 +225,8 @@ export class UpdatePomSessionComponent implements OnInit {
 
   onWorksheetSelected(){
     setTimeout(() => {
+      this.initRowClass();
+
       this.initDataRows();
       this.generateColumns();
 
@@ -234,6 +241,13 @@ export class UpdatePomSessionComponent implements OnInit {
     this.agGrid.gridOptions.api.setQuickFilter( this.filterText );
   }
 
+  initRowClass(){
+    this.agGrid.gridOptions.rowClassRules = {
+      'pinned-row-modified': function(params) {
+        return params.node.rowPinned === 'top' && params.data.modified === true}
+    }
+  }
+
   initDataRows(){
     let data: Array<any> = [];
     this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
@@ -242,7 +256,8 @@ export class UpdatePomSessionComponent implements OnInit {
         programId: value.programRequestFullname,
         fundingLine: value.fundingLine,
         modified: false,
-        notes: ''
+        notes: '',
+        anchored: false
       };
       data.push(row);
     });
@@ -250,6 +265,7 @@ export class UpdatePomSessionComponent implements OnInit {
     this.agGrid.api.sizeColumnsToFit();
     this.generateUnmodifiedFundingLines();
   }
+
   initToaDataRows(){
     let data: Array<any> = [];
     let allocatedFunds = [];
@@ -430,19 +446,33 @@ export class UpdatePomSessionComponent implements OnInit {
   generateColumns() {
     this.columnDefs = [
       {
+        headerName: 'Anchor',
+        colId: 'anchor',
+        field: 'anchored',
+        suppressToolPanel: true,
+        cellRenderer: 'checkboxCellRenderer',
+        cellClass: ['funding-line-default'],
+        headerClass: 'header-without-filter',
+        maxWidth: 50,
+        minWidth: 50,
+        suppressMenu: true
+      },
+      {
         headerName: 'Transactions',
         colId: 'events',
         suppressToolPanel: true,
         cellRenderer: 'viewEventsRenderer',
         cellClass: ['funding-line-default'],
-        maxWidth: 93,
-        minWidth: 93,
-        suppressFilter: true
+        headerClass: 'header-without-filter',
+        maxWidth: 80,
+        minWidth: 80,
+        suppressMenu: true
       },
       {
         headerName: 'Core Capability',
         headerTooltip: 'Core Capability',
         field: 'coreCapability',
+        suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
       },
       {
@@ -450,24 +480,28 @@ export class UpdatePomSessionComponent implements OnInit {
         headerTooltip: 'Program ID',
         colId: 'programId',
         field: 'programId',
+        suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'Appn',
         headerTooltip: 'Appropriation',
         field: 'fundingLine.appropriation',
+        suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'BA/BLIN',
         headerTooltip: 'BA/BLIN',
         field: 'fundingLine.baOrBlin',
+        suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
       },
       {
         headerName: 'Item',
         headerTooltip: 'Item',
         field: 'fundingLine.item',
+        suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
       },
       {
@@ -475,6 +509,7 @@ export class UpdatePomSessionComponent implements OnInit {
         headerTooltip: 'OpAgency',
         field: 'fundingLine.opAgency',
         hide: true,
+        suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
       }];
 
@@ -519,6 +554,7 @@ export class UpdatePomSessionComponent implements OnInit {
               suppressToolPanel: true,
               cellEditor: 'numericCellEditor',
               cellClass: ['text-right', 'ag-cell-edit'],
+              headerClass: 'header-without-filter',
               editable: true,
               valueFormatter: params => {
                 return FormatterUtil.currencyFormatter(params, 0, true)
@@ -539,6 +575,7 @@ export class UpdatePomSessionComponent implements OnInit {
       maxWidth: 100,
       minWidth: 100,
       cellClass: ['ag-cell-white','text-right'],
+      headerClass: 'header-without-filter',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };
@@ -560,6 +597,28 @@ export class UpdatePomSessionComponent implements OnInit {
     this.agGrid.api.sizeColumnsToFit();
   }
 
+  onAnchor(params){
+    this.agGrid.api.onFilterChanged();
+    if (params.data.anchored) {
+      params.data.rowIndex = params.node.rowIndex;
+      this.topPinnedData.push(params.data);
+    } else {
+      this.topPinnedData.splice(this.topPinnedData.indexOf(params.data), 1);
+      if(params.data.modified){
+        this.agGrid.api.getDisplayedRowAtIndex(params.data.rowIndex).setSelected(true);
+      }
+    }
+    this.agGrid.api.setPinnedTopRowData(this.topPinnedData);
+  }
+
+  isExternalFilterPresent(){
+    return true;
+  }
+
+  doesExternalFilterPass(node) {
+    return !node.data.anchored;
+  }
+
   onBudgetYearValueChanged(params){
     let year = params.colDef.colId;
     params.data.fundingLine.funds[year] = Number(params.newValue);
@@ -570,6 +629,7 @@ export class UpdatePomSessionComponent implements OnInit {
     }else {
       params.node.setSelected(false);
     }
+    this.agGrid.api.redrawRows();
   }
 
   onRowSelected(params) {

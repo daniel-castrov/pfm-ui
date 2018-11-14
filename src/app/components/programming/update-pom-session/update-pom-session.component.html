@@ -127,6 +127,8 @@
                              [rowData]="rowData"
                              [singleClickEdit]="true"
                              [stopEditingWhenGridLosesFocus]="true"
+                             [isExternalFilterPresent]="isExternalFilterPresent"
+                             [doesExternalFilterPass]="doesExternalFilterPass"
                              [pagination]="true"
                              [paginationPageSize]="15"
                              (paginationChanged)="agGridPagination.onPaginationChanged($event)"
