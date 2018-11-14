@@ -219,15 +219,15 @@ export class GraphsTabComponent implements OnInit {
                 }
 
                 realexpDataset.data.push(100 * lastexp / raw_toa);
-                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa/100, lastexp, raw_toa));
-                realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa/100, raw_toa));
+                realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa / 100, lastexp, raw_toa));
+                realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa / 100, raw_toa));
 
                 realobgDataset.data.push(100 * lastobg / raw_toa);
-                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa/100, lastobg, raw_toa));
-                realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa/100, raw_toa));
+                realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa / 100, lastobg, raw_toa));
+                realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa / 100, raw_toa));
             }
             else {
-                var toa = (this.showPercentages ? 1 : raw_toa);
+                var toa = raw_toa;
                 var redtoa: number = toa * 0.1;
                 var ogoalpct: number = (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1);
                 var egoalpct: number = (egoals.monthlies.length > i ? egoals.monthlies[i] : 1);
@@ -262,11 +262,11 @@ export class GraphsTabComponent implements OnInit {
                     lastobg += myoandes[i].obligated;
                 }
 
-                realexpDataset.data.push(lastexp / (this.showPercentages ? raw_toa : 1));
+                realexpDataset.data.push(lastexp);
                 realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa, lastexp, raw_toa));
                 realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa, raw_toa));
 
-                realobgDataset.data.push(lastobg / (this.showPercentages ? raw_toa : 1));
+                realobgDataset.data.push(lastobg);
                 realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa, lastobg, raw_toa));
                 realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
             } 
