@@ -128,12 +128,11 @@ export class UpdatePomSessionComponent implements OnInit {
             modifiedRow.notes = node.data.notes;
             modifiedRow.newFundingLine = node.data.fundingLine;
             modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
-              ufl.programId === node.data.programId &&
-              ufl.fundingLine.key === node.data.fundingLine.key).fundingLine;
+              ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
             modifiedRow.reasonCode = this.reasonCode;
             modifiedRow.worksheetId = this.selectedWorksheet.id;
             modifiedRow.programId = node.data.programId
-            modifiedRow.fundingLineKey = node.data.fundingLine.key;
+            modifiedRow.fundingLineId = node.data.fundingLine.id;
             updateData.push(modifiedRow);
 
             node.data.modified = false;
@@ -161,7 +160,7 @@ export class UpdatePomSessionComponent implements OnInit {
   async viewEvents(params){
     let data: Array<any> = [];
     let worksheetRowEvents : RowUpdateEvent[] = (await this.worksheetService.getWorksheetRowEvents(
-      this.selectedWorksheet.id, params.data.programId, params.data.fundingLine.key).toPromise()).result;
+      this.selectedWorksheet.id, params.data.fundingLine.id).toPromise()).result;
 
     for(let wre of worksheetRowEvents) {
       let user = (await this.userService.getByCn(wre.userCN).toPromise()).result;
@@ -358,8 +357,6 @@ export class UpdatePomSessionComponent implements OnInit {
         params.successCallback(data);
       }
     };
-
-
   }
 
   generateToaColumns() {

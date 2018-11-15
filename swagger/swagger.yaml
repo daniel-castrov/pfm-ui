@@ -473,7 +473,7 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/WorksheetEvent"
-  /worksheets/{worksheetId}/program/{programId}/key/{fundingLineKey}/events/:
+  /worksheets/{worksheetId}/fundingLine/{fundingLineId}/events/:
     get:
       tags:
       - "Worksheet"
@@ -487,13 +487,8 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "programId"
-        description: "The id of the program where the funding line was modified"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "fundingLineKey"
-        description: "A combination of the appropriation, baOrBlin, item and opagency"
+        name: "fundingLineId"
+        description: "A unique id for the funding line"
         required: true
         type: "string"
       consumes:
@@ -3169,7 +3164,7 @@ definitions:
     properties:
       tags:
         $ref: "#/definitions/StringMap"
-      key:
+      id:
         type: "string"
       appropriation:
         type: "string"
@@ -3808,7 +3803,7 @@ definitions:
     properties:
       worksheetId:
         type: "string"
-      fundingLineKey:
+      fundingLineId:
         type: "string"
       programId:
         type: "string"
