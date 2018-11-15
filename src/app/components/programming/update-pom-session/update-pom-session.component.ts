@@ -133,18 +133,11 @@ export class UpdatePomSessionComponent implements OnInit {
             modifiedRow.notes = node.data.notes;
             modifiedRow.newFundingLine = node.data.fundingLine;
             modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
-              ufl.programId === node.data.programId &&
-              ufl.fundingLine.appropriation === node.data.fundingLine.appropriation &&
-              ufl.fundingLine.baOrBlin === node.data.fundingLine.baOrBlin &&
-              ufl.fundingLine.opAgency === node.data.fundingLine.opAgency &&
-              ufl.fundingLine.item === node.data.fundingLine.item).fundingLine;
+              ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
             modifiedRow.reasonCode = this.reasonCode;
             modifiedRow.worksheetId = this.selectedWorksheet.id;
             modifiedRow.programId = node.data.programId
-            modifiedRow.fundingLineKey = node.data.fundingLine.appropriation + '-' +
-              node.data.fundingLine.baOrBlin + '-' +
-              node.data.fundingLine.item + '-' +
-              node.data.fundingLine.opAgency;
+            modifiedRow.fundingLineId = node.data.fundingLine.id;
             updateData.push(modifiedRow);
 
             node.data.modified = false;
@@ -171,12 +164,8 @@ export class UpdatePomSessionComponent implements OnInit {
 
   async viewEvents(params){
     let data: Array<any> = [];
-    let fungdingLineKey = params.data.fundingLine.appropriation + '-' +
-      params.data.fundingLine.baOrBlin + '-' +
-      params.data.fundingLine.item + '-' +
-      params.data.fundingLine.opAgency;
     let worksheetRowEvents : RowUpdateEvent[] = (await this.worksheetService.getWorksheetRowEvents(
-      this.selectedWorksheet.id, params.data.programId, fungdingLineKey).toPromise()).result;
+      this.selectedWorksheet.id, params.data.fundingLine.id).toPromise()).result;
 
     for(let wre of worksheetRowEvents) {
       let user = (await this.userService.getByCn(wre.userCN).toPromise()).result;
@@ -384,8 +373,6 @@ export class UpdatePomSessionComponent implements OnInit {
         params.successCallback(data);
       }
     };
-
-
   }
 
   generateToaColumns() {
