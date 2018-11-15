@@ -215,6 +215,12 @@ paths:
         description: "the PB to use as a model"
         required: false
         type: "string"
+      - in: "query"
+        name: "useepp"
+        description: "Use Epp data"
+        required: false
+        type: "boolean"
+
       - in: "body"
         name: "body"
         description: "a POM object"
