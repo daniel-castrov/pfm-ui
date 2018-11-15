@@ -220,7 +220,6 @@ paths:
         description: "Use Epp data"
         required: false
         type: "boolean"
-
       - in: "body"
         name: "body"
         description: "a POM object"
