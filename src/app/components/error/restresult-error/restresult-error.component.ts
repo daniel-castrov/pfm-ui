@@ -5,7 +5,7 @@ import { ErrorDataService } from '../errorData.service';
 @Component({
   selector: 'app-restresult-error',
   templateUrl: './restresult-error.component.html',
-  styleUrls: ['./restresult-error.component.css']
+  styleUrls: ['./restresult-error.component.scss']
 })
 export class RestResultErrorComponent implements OnInit {
 
@@ -16,7 +16,7 @@ export class RestResultErrorComponent implements OnInit {
 
   ngOnInit() {
 
-    let msg:any = this.errorDataSvc.errorData; 
+    let msg:any = this.errorDataSvc.errorData;
 
     if (typeof msg == 'string'){
       this.message = msg;

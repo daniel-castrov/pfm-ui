@@ -6,7 +6,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 @Component({
   selector: 'app-about-private',
   templateUrl: './about-private.component.html',
-  styleUrls: ['./about-private.component.css']
+  styleUrls: ['./about-private.component.scss']
 })
 export class AboutPrivateComponent {
 
