@@ -20,6 +20,7 @@ export class VariantsTabComponent {
   @Input() current: ProgrammaticRequest;
   @Input() editable:boolean;
 
+  pomStatus: Pom.StatusEnum;
   pomFy:number;
   fund:FundingLine = null;
   fundsAvailable:string = null;
@@ -183,6 +184,7 @@ export class VariantsTabComponent {
 
   generateColumns() {
     this.pomService.getById(this.current.phaseId).subscribe(pom => {
+      this.pomStatus = pom.result.status;
       this.pomFy = pom.result.fy;
       this.years = [this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
@@ -446,7 +448,7 @@ export class VariantsTabComponent {
     }
     this.gridApi.get(params.data.variantName).refreshCells();
     this.initPinnedBottomRows();
-    this.isVariantsTabValid[year] = this.isServiceLineValid(year);
+    this.isVariantsTabValid[year] = (Pom.StatusEnum.RECONCILIATION === this.pomStatus ? true : this.isServiceLineValid(year) );
   }
 
   onServiceLineValueChanged(params) {
