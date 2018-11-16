@@ -15,7 +15,8 @@ import {
   POMService,
   ProgramsService,
   PRService,
-  Pom
+  Pom,
+  ProgrammaticRequestState
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
@@ -752,7 +753,7 @@ export class FundsTabComponent implements OnChanges {
       params.data.fundingLine.userCreated === true &&
       params.data.phaseType === PhaseType.PB &&
       params.data.gridType === GridType.CURRENT_PR &&
-      Pom.StatusEnum.RECONCILIATION!==this.pom.status
+      this.isEditableInReconciliation();
   }
 
   isAmountEditable(params, key): boolean {
@@ -760,7 +761,21 @@ export class FundsTabComponent implements OnChanges {
       params.data.phaseType == PhaseType.POM &&
       params.data.programId !== 'Total Funds Request' &&
       params.data.gridType === GridType.CURRENT_PR &&
-      Pom.StatusEnum.RECONCILIATION !== this.pom.status
+      this.isEditableInReconciliation();
+  }
+
+  isEditableInReconciliation() {
+    if (this.pom && Pom.StatusEnum.RECONCILIATION !== this.pom.status) {
+      return true;
+    }
+    else {
+      return (this.pr && this.pr.type === ProgramType.GENERIC &&
+        ProgrammaticRequestState.SUBMITTED !== this.pr.state);
+    }
+  }
+
+  addFundingLineOk(): boolean {
+    return this.isEditableInReconciliation();
   }
 
   rowSpanCount(params): number {
