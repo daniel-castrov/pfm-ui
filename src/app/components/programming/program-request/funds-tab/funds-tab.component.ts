@@ -14,7 +14,8 @@ import {
   PBService,
   POMService,
   ProgramsService,
-  PRService
+  PRService,
+  Pom
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
@@ -44,6 +45,7 @@ export class FundsTabComponent implements OnChanges {
   private isFundsTabValid: any[] = [];
   @Input() private prs: ProgrammaticRequest[];
 
+  private pom: Pom;
   private pomFy: number;
   private pbFy: number;
   private pbPr: ProgrammaticRequest;
@@ -88,6 +90,7 @@ export class FundsTabComponent implements OnChanges {
         this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
       }
       this.pomService.getById(this.pr.phaseId).subscribe(data => {
+        this.pom = data.result;
         this.pomFy = data.result.fy;
         this.columnKeys = [
           this.pomFy - 3,
@@ -748,14 +751,16 @@ export class FundsTabComponent implements OnChanges {
     return params.data.programId !== 'Total Funds Request' &&
       params.data.fundingLine.userCreated === true &&
       params.data.phaseType === PhaseType.PB &&
-      params.data.gridType === GridType.CURRENT_PR
+      params.data.gridType === GridType.CURRENT_PR &&
+      Pom.StatusEnum.RECONCILIATION!==this.pom.status
   }
 
   isAmountEditable(params, key): boolean {
     return key >= this.pomFy &&
       params.data.phaseType == PhaseType.POM &&
       params.data.programId !== 'Total Funds Request' &&
-      params.data.gridType === GridType.CURRENT_PR
+      params.data.gridType === GridType.CURRENT_PR &&
+      Pom.StatusEnum.RECONCILIATION !== this.pom.status
   }
 
   rowSpanCount(params): number {
