@@ -201,14 +201,33 @@ export class UpdatePomSessionComponent implements OnInit {
             additionalAmount = this.bulkAmount;
           }
           rowNode.data.fundingLine.funds[year] = (isNaN(rowNode.data.fundingLine.funds[year])? 0 : rowNode.data.fundingLine.funds[year]) + additionalAmount;
+          rowNode.data.modified = true;
+          rowNode.setSelected(true);
           if (rowNode.data.fundingLine.funds[year] < 0) {
             rowNode.data.fundingLine.funds[year] = 0;
           }
         });
       }
     });
+
+    this.topPinnedData.forEach(row => {
+      this.columnKeys.forEach(year => {
+        let additionalAmount = 0;
+        if (this.bulkType === 'percentage') {
+          additionalAmount = row.fundingLine.funds[year] * (this.bulkAmount / 100);
+        } else {
+          additionalAmount = this.bulkAmount;
+        }
+        row.fundingLine.funds[year] = (isNaN(row.fundingLine.funds[year])? 0 : row.fundingLine.funds[year]) + additionalAmount;
+        row.modified = true;
+        if (row.fundingLine.funds[year] < 0) {
+          row.fundingLine.funds[year] = 0;
+        }
+      });
+    });
+
     this.bulkAmount = null;
-    this.agGrid.api.refreshCells();
+    this.agGrid.api.redrawRows();
     this.initToaDataRows();
   }
 
@@ -235,12 +254,16 @@ export class UpdatePomSessionComponent implements OnInit {
       'pinned-row-modified': function(params) {
         return params.node.rowPinned === 'top' && params.data.modified === true}
     }
+    this.agGrid.gridOptions.getRowNodeId = data => {
+      return data.fundingLine.id;
+    }
   }
 
   initDataRows(){
     let data: Array<any> = [];
     this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
       let row = {
+        id: value.fundingLine.id,
         coreCapability: value.coreCapability,
         programId: value.programRequestFullname,
         fundingLine: value.fundingLine,
@@ -587,12 +610,11 @@ export class UpdatePomSessionComponent implements OnInit {
   onAnchor(params){
     this.agGrid.api.onFilterChanged();
     if (params.data.anchored) {
-      params.data.rowIndex = params.node.rowIndex;
       this.topPinnedData.push(params.data);
     } else {
-      this.topPinnedData.splice(this.topPinnedData.indexOf(params.data), 1);
+      this.topPinnedData.splice(this.topPinnedData.indexOf(this.agGrid.api.getRowNode(params.node.data.id).data), 1);
       if(params.data.modified){
-        this.agGrid.api.getDisplayedRowAtIndex(params.data.rowIndex).setSelected(true);
+        this.agGrid.api.getRowNode(params.node.data.id).setSelected(true)
       }
     }
     this.agGrid.api.setPinnedTopRowData(this.topPinnedData);
