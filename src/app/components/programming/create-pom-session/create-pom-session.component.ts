@@ -348,7 +348,7 @@ export class CreatePomSessionComponent implements OnInit {
     // This only effects FY + 4 Data
     if (this.useEpp == true) {
       // show the FY + 4 data from the epp data
-      this.getEppData( this.fy+4 );
+      this.getEppData();
     } else {
       // replace all values in fy+4 with the original fy+4 data
       this.rowsCommunity[0][this.fy+4] = this.originalFyplus4[this.community.id];
@@ -365,7 +365,7 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
-  private getEppData(eppYear:number) {
+  private getEppData() {
 
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
@@ -387,7 +387,8 @@ export class CreatePomSessionComponent implements OnInit {
         }
       });
       
-      let eppData:any[] = []
+      let eppData:any[] = [];
+      let eppYear:number = this.fy+4;
       alleppData.forEach( epp => {
         let eppId:string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
         if ( epp.fySums[eppYear] > 0 && fls.includes(eppId) ){
@@ -436,7 +437,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
 
-    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.pb.id ).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.pb.id, this.useEpp  ).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);
