@@ -1,6 +1,6 @@
 <div class="row">
   <div *ngIf="pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
-    <button class="btn btn-primary mb-3" (click)="addRow()">
+    <button class="btn btn-primary mb-3" (click)="addRow()" [disabled]='"RECONCILIATION"===pom?.status'>
       <span class="icon-pad">Add a new funding line</span>
     </button>
   </div>
@@ -13,7 +13,7 @@
     </div>
   </div>
   <div *ngIf="pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
-    <button [disabled]="existingFundingLines?.length === 0 || selectedFundingLine === null" class="btn btn-primary mb-3" (click)="addParentFundingLine()">
+    <button [disabled]="existingFundingLines?.length === 0 || selectedFundingLine === null" class="btn btn-primary mb-3" (click)="addParentFundingLine()" [disabled]='"RECONCILIATION"===pom?.status'>
       <span class="icon-pad">Add parent funding line</span>
     </button>
   </div>
