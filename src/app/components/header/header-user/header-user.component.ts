@@ -48,7 +48,7 @@ export class HeaderUserComponent implements OnInit {
       }
 
       if (this.roles.includes('Funds_Requestor')) {
-        this.prChangeNotifications = (await this.prChangeNotificationsService.get().toPromise()).result;
+        this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
       }
 
       if ( this.roles.includes('POM_Manager') || this.roles.includes('Funds_Requestor') ){

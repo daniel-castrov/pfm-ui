@@ -2910,9 +2910,19 @@ paths:
     get:
       tags:
       - "PrChangeNotifications"
-      operationId: "get"
+      operationId: "getByOrganization"
       produces:
       - "application/json"
+  /prChangeNotifications/{prId}:
+    delete:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "deleteByPr"
+      parameters:
+      - in: "path"
+        name: "prId"
+        required: true
+        type: "string"
 # END PATHS
 #################################################################
 #
