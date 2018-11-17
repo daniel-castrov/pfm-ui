@@ -22,8 +22,7 @@ export class HeaderUserComponent implements OnInit {
   @Input() authUser: AuthUser;
   requests: Request[];
   prChangeNotifications: PrChangeNotification[];
-  pomStatusIsOpen: boolean = false;
-  pomStatusIsCreated: boolean = false;
+  pomStatus: Pom.StatusEnum;
   pomId: string = '';
   roles: string[];
 
@@ -53,18 +52,10 @@ export class HeaderUserComponent implements OnInit {
 
       if ( this.roles.includes('POM_Manager') || this.roles.includes('Funds_Requestor') ){
         this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {       
-          this.pomStatusIsCreated = false;
-          this.pomStatusIsOpen = false;
-
+          delete this.pomStatus;
           data.result.forEach((p: Pom) => {
-            if ('CREATED' === p.status) {
-              this.pomStatusIsCreated = true;
-              this.pomId = p.id;
-            }
-            else if ('OPEN' === p.status) {
-              this.pomStatusIsOpen = true;
-              this.pomId = p.id;
-            }
+            this.pomStatus = p.status;
+            this.pomId = p.id;
           });
         });
       }
