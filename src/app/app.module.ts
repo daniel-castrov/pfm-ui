@@ -133,7 +133,8 @@ import {
   UserService,
   OandEService,
   SpendPlanService,
-  BudgetFundingLinesService
+  BudgetFundingLinesService,
+  PrChangeNotificationsService
 } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
@@ -423,6 +424,7 @@ const appRoutes: Routes = [
     StateService,
     SpendPlanService,
     BudgetFundingLinesService,
+    PrChangeNotificationsService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],
