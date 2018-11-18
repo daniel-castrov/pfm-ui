@@ -263,7 +263,7 @@
   <div class="col-3">
     <span class="dropdown show actions-menu" *ngIf="roles?.includes('User_Approver')">
       <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
+         aria-haspopup="true" aria-expanded="false">
         <div class="icon-wrapper">
           Actions
           <i class="fa fa-bell" aria-hidden="true"></i>
@@ -277,6 +277,22 @@
             <br/>{{request?.name}}</ng-template>
           <a class="dropdown-item" href="#" routerLink="{{request.link}}" [ngbTooltip]="tipContent">
             {{request?.date | date:'MM/dd/yyyy @ h:mma'}}
+          </a>
+        </div>
+      </div>
+    </span>
+    <span class="dropdown show actions-menu" *ngIf="roles?.includes('Funds_Requestor')">
+      <a class="super-user dropdown-toggle" href="#" role="button" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="icon-wrapper">
+          PR changes
+          <i class="fa fa-bell" aria-hidden="true"></i>
+          <span class="badge" *ngIf="prChangeNotifications?.length > 0">{{prChangeNotifications?.length}}</span>
+        </div>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
+        <div *ngFor="let prChangeNotification of prChangeNotifications">
+          <a class="dropdown-item">
+            {{prChangeNotification?.shortName}}
           </a>
         </div>
       </div>

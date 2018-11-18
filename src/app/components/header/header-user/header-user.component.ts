@@ -9,6 +9,7 @@ import { RolesPermissionsService } from '../../../generated/api/rolesPermissions
 // Generated
 import { AuthUser } from '../../../generated/model/authUser';
 import { Pom } from '../../../generated/model/pom';
+import {PrChangeNotification, PrChangeNotificationsService} from "../../../generated";
 
 @Component({
   selector: 'header-user',
@@ -20,6 +21,7 @@ export class HeaderUserComponent implements OnInit {
   @Input() isAuthenticated: boolean;
   @Input() authUser: AuthUser;
   requests: Request[];
+  prChangeNotifications: PrChangeNotification[];
   pomStatus: Pom.StatusEnum;
   pomId: string = '';
   roles: string[];
@@ -28,19 +30,24 @@ export class HeaderUserComponent implements OnInit {
     private requestsService: RequestsService,
     private elevationService: ElevationService,
     private pomService: POMService,
-    private rolesPermissionsService: RolesPermissionsService
+    private rolesPermissionsService: RolesPermissionsService,
+    private prChangeNotificationsService: PrChangeNotificationsService
   ) {}
 
   ngOnInit() {
 
-    this.rolesPermissionsService.getRoles().subscribe( data => {
+    this.rolesPermissionsService.getRoles().subscribe( async data => {
       this.roles = data.result;
-      
+
       if (this.roles.includes('User_Approver')) {
         this.requestsService.getRequests().subscribe(
           (allRequests) => this.requests = allRequests );
       } else {
         this.requests = [];
+      }
+
+      if (this.roles.includes('Funds_Requestor')) {
+        this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
       }
 
       if ( this.roles.includes('POM_Manager') || this.roles.includes('Funds_Requestor') ){

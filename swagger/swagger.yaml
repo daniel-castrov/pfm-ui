@@ -2910,6 +2910,24 @@ paths:
         200:
           schema:
             $ref: "#/definitions/RestResult"
+#################################################################
+  /prChangeNotifications:
+    get:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "getByOrganization"
+      produces:
+      - "application/json"
+  /prChangeNotifications/{prId}:
+    delete:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "deleteByPr"
+      parameters:
+      - in: "path"
+        name: "prId"
+        required: true
+        type: "string"
 # END PATHS
 #################################################################
 #
@@ -3853,6 +3871,17 @@ definitions:
       ba:
         type: "string"
       pe:
+        type: "string"
+  PrChangeNotification:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      organizationId:
+        type: "string"
+      prId:
+        type: "string"
+      shortName:
         type: "string"
 ##############################################################################
 # ENDFILE
