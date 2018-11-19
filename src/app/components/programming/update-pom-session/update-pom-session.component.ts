@@ -7,8 +7,10 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 // Other Components
 import { HeaderComponent } from '../../../components/header/header.component';
-import {Pom, POMService, RowUpdateEvent, TOA, UserService, Worksheet, WorksheetEvent, WorksheetRow,
-  WorksheetService} from "../../../generated";
+import {
+  Pom, POMService, RowUpdateEvent, TOA, User, UserService, Worksheet, WorksheetEvent, WorksheetRow,
+  WorksheetService
+} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 import {FormatterUtil} from "../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
@@ -39,6 +41,7 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild("instance") instance: NgbTypeahead;
 
   pom: Pom;
+  user: User;
   columnDefs;
   toaColumnDefs;
   eventsColumnDefs;
@@ -86,6 +89,7 @@ export class UpdatePomSessionComponent implements OnInit {
   ngOnInit() {
     let worksheetId = this.route.snapshot.params['id'];
     this.userUtils.user().subscribe( user => {
+      this.user = user;
       this.pomService.getOpen(user.currentCommunityId).subscribe( pom => {
         this.pom = pom.result;
         this.columnKeys = [
@@ -112,6 +116,26 @@ export class UpdatePomSessionComponent implements OnInit {
   initReasonCode(){
     this.tagService.tagAbbreviationsForReasonCode().then(tags => {
       this.tags = tags;
+    });
+  }
+
+  final() {
+    this.worksheetService.getByPomId(this.pom.id).subscribe( response => {
+      let worksheets: Worksheet[] = response.result;
+      worksheets.forEach(worksheet => {
+        let isFinal;
+        if(this.selectedWorksheet.id === worksheet.id) {
+          isFinal = true;
+          this.selectedWorksheet.isFinal = isFinal;
+        } else {
+          isFinal = false;
+        }
+        this.worksheetService.update({...worksheet, isFinal: isFinal, locked: true}).subscribe(response => {
+          this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
+            Notify.success('Worksheet marked as final successfully')
+          })
+        });
+      });
     });
   }
 

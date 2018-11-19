@@ -30,9 +30,8 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild("export") private exportComponent: ExportComponent;
   @ViewChild("unlock") private unlockComponent: UnlockComponent;
 
-  private fy: number;
   private agOptions: GridOptions;
-  private pomId: string;
+  pom: Pom;
 
   constructor( private pomService: POMService,
                private worksheetService: WorksheetService,
@@ -51,14 +50,12 @@ export class WorksheetManagementComponent implements OnInit {
 
   async ngOnInit() {
     const user: User = await this.userUtils.user().toPromise();
-    const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
-    this.pomId = pom.id;
-    this.fy = pom.fy;
+    this.pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
     await this.refreshPage();
   }
 
   private async refreshPage() {
-    this.stateService.worksheets = (await this.worksheetService.getByPomId(this.pomId).toPromise()).result;
+    this.stateService.worksheets = (await this.worksheetService.getByPomId(this.pom.id).toPromise()).result;
     const rowData = this.stateService.worksheets.map(worksheet => {
       return {
         checkbox: worksheet,  // custom renderer
