@@ -132,7 +132,7 @@ export class UpdatePomSessionComponent implements OnInit {
         }
         this.worksheetService.update({...worksheet, isFinal: isFinal, locked: true}).subscribe(response => {
           this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
-            Notify.success('Worksheet masked as final successfully')
+            Notify.success('Worksheet marked as final successfully')
           })
         });
       });
