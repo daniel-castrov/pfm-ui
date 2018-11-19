@@ -17,7 +17,7 @@ export class CycleUtils {
   currentPom(): Observable<Pom> {
     return this.poms()
       .switchMap((poms: Pom[]) => from(poms))
-      .filter( (pom: Pom) => 'CREATED' === pom.status || 'OPEN' === pom.status);
+      .filter( (pom: Pom) => Pom.StatusEnum.CREATED === pom.status || Pom.StatusEnum.OPEN === pom.status || Pom.StatusEnum.RECONCILIATION===pom.status);
       // toPromise() returns the last emitted Observable
   }
 

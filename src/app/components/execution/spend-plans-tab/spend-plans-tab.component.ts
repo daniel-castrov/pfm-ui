@@ -124,7 +124,9 @@ export class SpendPlansTabComponent implements OnInit {
       if (p.node.rowIndex > 8 && my.showPercentages) {
         var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
         var toa: number = p.data.toas[col];
-        return (100 * p.value / toa).toFixed(1) + '%';
+        return (0 === toa 
+          ? 0
+          : 100 * p.value / toa).toFixed(1) + '%';
       }
       else {
         return '$' + p.value.toFixed(2);

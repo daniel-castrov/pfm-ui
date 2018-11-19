@@ -133,7 +133,8 @@ import {
   UserService,
   OandEService,
   SpendPlanService,
-  BudgetFundingLinesService
+  BudgetFundingLinesService,
+  PrChangeNotificationsService
 } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
@@ -170,6 +171,7 @@ import {UnlockComponent} from "./components/programming/pom-worksheet/worksheet-
 import { OpenExecutionComponent } from './components/execution/open-execution/open-execution.component';
 import {ViewEventsRenderer} from "./components/renderers/view-events-renderer/view-events-renderer.component";
 import {ValueChangeRenderer} from "./components/renderers/value-change-renderer/value-change-renderer.component";
+import {CheckboxCellRenderer} from "./components/renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 
 
 // ROUTES
@@ -324,6 +326,7 @@ const appRoutes: Routes = [
     ExecutionLineTableComponent,
     FileUploadComponent,
     CheckboxRendererComponent,
+    CheckboxCellRenderer,
     NameRendererComponent,
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
@@ -359,6 +362,7 @@ const appRoutes: Routes = [
     TransferFromToDetailsCellRendererComponent,
     DeleteRenderer,
     CheckboxRendererComponent,
+    CheckboxCellRenderer,
     NameRendererComponent,
     ViewSiblingsRenderer,
     ViewEventsRenderer,
@@ -423,6 +427,7 @@ const appRoutes: Routes = [
     StateService,
     SpendPlanService,
     BudgetFundingLinesService,
+    PrChangeNotificationsService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],

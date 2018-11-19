@@ -218,11 +218,11 @@ export class GraphsTabComponent implements OnInit {
                     lastobg += myoandes[i].obligated;
                 }
 
-                realexpDataset.data.push(100 * lastexp / raw_toa);
+                realexpDataset.data.push(0===raw_toa ? 0 : 100 * lastexp / raw_toa);
                 realexpDataset.notes.push(makeHtmlNote(myoandes[i], 'Expenditure', egoalpct * raw_toa / 100, lastexp, raw_toa));
                 realexpDataset.status.push(getStatus(lastexp, egoalpct * raw_toa / 100, raw_toa));
 
-                realobgDataset.data.push(100 * lastobg / raw_toa);
+                realobgDataset.data.push(0 === raw_toa ? 0 : 100 * lastobg / raw_toa);
                 realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa / 100, lastobg, raw_toa));
                 realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa / 100, raw_toa));
             }

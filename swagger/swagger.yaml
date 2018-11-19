@@ -215,6 +215,11 @@ paths:
         description: "the PB to use as a model"
         required: false
         type: "string"
+      - in: "query"
+        name: "useepp"
+        description: "Use Epp data"
+        required: false
+        type: "boolean"
       - in: "body"
         name: "body"
         description: "a POM object"
@@ -473,7 +478,7 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/WorksheetEvent"
-  /worksheets/{worksheetId}/program/{programId}/key/{fundingLineKey}/events/:
+  /worksheets/{worksheetId}/fundingLine/{fundingLineId}/events/:
     get:
       tags:
       - "Worksheet"
@@ -487,13 +492,8 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "programId"
-        description: "The id of the program where the funding line was modified"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "fundingLineKey"
-        description: "A combination of the appropriation, baOrBlin, item and opagency"
+        name: "fundingLineId"
+        description: "A unique id for the funding line"
         required: true
         type: "string"
       consumes:
@@ -2910,6 +2910,24 @@ paths:
         200:
           schema:
             $ref: "#/definitions/RestResult"
+#################################################################
+  /prChangeNotifications:
+    get:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "getByOrganization"
+      produces:
+      - "application/json"
+  /prChangeNotifications/{prId}:
+    delete:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "deleteByPr"
+      parameters:
+      - in: "path"
+        name: "prId"
+        required: true
+        type: "string"
 # END PATHS
 #################################################################
 #
@@ -3477,7 +3495,7 @@ definitions:
           items:
             $ref: "#/definitions/TOA"
       status:
-        type: "string"
+        enum: [CREATED, OPEN, RECONCILIATION, LOCKED]
       startdate:
         type: "integer"
       enddate:
@@ -3808,7 +3826,7 @@ definitions:
     properties:
       worksheetId:
         type: "string"
-      fundingLineKey:
+      fundingLineId:
         type: "string"
       programId:
         type: "string"
@@ -3853,6 +3871,17 @@ definitions:
       ba:
         type: "string"
       pe:
+        type: "string"
+  PrChangeNotification:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      organizationId:
+        type: "string"
+      prId:
+        type: "string"
+      shortName:
         type: "string"
 ##############################################################################
 # ENDFILE
