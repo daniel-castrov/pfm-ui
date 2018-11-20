@@ -486,6 +486,19 @@ paths:
         name: "file"
         required: true
         type: file
+
+  /worksheets/{id}/updateProgramRequests/:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "updateProgramRequests"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
   /worksheets/updateRows:
     post:
       tags:

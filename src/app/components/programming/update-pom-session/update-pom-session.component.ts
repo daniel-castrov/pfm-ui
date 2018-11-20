@@ -120,21 +120,12 @@ export class UpdatePomSessionComponent implements OnInit {
   }
 
   final() {
-    this.worksheetService.getByPomId(this.pom.id).subscribe( response => {
-      let worksheets: Worksheet[] = response.result;
-      worksheets.forEach(worksheet => {
-        let isFinal;
-        if(this.selectedWorksheet.id === worksheet.id) {
-          isFinal = true;
-          this.selectedWorksheet.isFinal = isFinal;
-        } else {
-          isFinal = false;
-        }
-        this.worksheetService.update({...worksheet, isFinal: isFinal, locked: true}).subscribe(response => {
-          this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
-            Notify.success('Worksheet marked as final successfully')
-          })
-        });
+    this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
+      this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
+        this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
+          this.selectedWorksheet.isFinal = true;
+          Notify.success('Worksheet marked as final successfully')
+        })
       });
     });
   }
