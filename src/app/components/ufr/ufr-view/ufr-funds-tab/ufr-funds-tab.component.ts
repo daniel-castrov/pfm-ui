@@ -564,6 +564,7 @@ export class UfrFundsComponent implements OnChanges {
     }
 
     this.agGridProposedChanges.api.refreshCells();
+    this.calculateRevisedChanges();
   }
 
   filterBlins(appropriation) {
