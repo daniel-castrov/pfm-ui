@@ -322,12 +322,18 @@ export class GraphsTabComponent implements OnInit {
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+        
         // 3. Call the x axis in a group tag
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+        svg.append("text")
+            .attr("transform",
+                 "translate(" + (width / 2) + " ," +
+                  (height + margin.top + 20) + ")")
+            .style("text-anchor", "middle")
+            .text("FY Month");
 
         // 4. Call the y axis in a group tag
         svg.append("g")
