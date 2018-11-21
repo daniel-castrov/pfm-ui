@@ -12,11 +12,11 @@ import {
   FundingLine,
   IntMap,
   PBService,
-  POMService,
   ProgramsService,
   PRService,
   Pom,
-  ProgrammaticRequestState
+  ProgrammaticRequestState,
+  RolesPermissionsService
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
@@ -50,6 +50,7 @@ export class FundsTabComponent implements OnChanges {
   private pomFy: number;
   private pbFy: number;
   private pbPr: ProgrammaticRequest;
+  private ismgr: boolean = false;
 
   private appropriations: string[] = [];
   private functionalAreas: string[] = [];
@@ -79,7 +80,8 @@ export class FundsTabComponent implements OnChanges {
     private globalsService: UserUtils,
     private tagsService: TagsService,
     private autoValuesService: AutoValuesService,
-    private programsService: ProgramsService) { }
+    private programsService: ProgramsService,
+    private rolesvc:RolesPermissionsService ) { }
 
   async ngOnChanges() {
     if (!this.pr.phaseId) {
@@ -105,6 +107,11 @@ export class FundsTabComponent implements OnChanges {
         this.initDataRows();
       }
     }
+
+    this.ismgr = false;
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
+    });
   }
 
   loadExistingFundingLines() {
@@ -768,7 +775,7 @@ export class FundsTabComponent implements OnChanges {
       return true;
     }
     else {
-      return (this.pr && this.pr.type === ProgramType.GENERIC &&
+      return this.ismgr || (this.pr && this.pr.type === ProgramType.GENERIC &&
         ProgrammaticRequestState.SUBMITTED !== this.pr.state);
     }
   }

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ProgrammaticRequest, Pom} from "../../../../generated";
+import {ProgrammaticRequest, Pom, RolesPermissionsService} from "../../../../generated";
 
 @Component({
   selector: 'justification-tab',
@@ -10,10 +10,14 @@ export class JustificationTabComponent implements OnInit {
 
   @Input() pr: ProgrammaticRequest;
   @Input() pom: Pom;
+  private ismgr: boolean = false;
 
-  constructor() { }
+  constructor( private rolesvc:RolesPermissionsService) { }
 
   ngOnInit() {
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
+    });
   }
 
   @Input() get readonly(): boolean {
