@@ -44,7 +44,7 @@ export class ActualsTabComponent implements OnInit {
   fixtime: number = 1;
   private maxmonths: number = 0;
 
-  @Input() get readonly(): boolean {
+  get readonly(): boolean {
     return (this._exe
       ? Execution.StatusEnum.OPEN !== this.exe.status
       : true);

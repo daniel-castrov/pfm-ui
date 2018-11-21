@@ -64,7 +64,7 @@ export class ProgramTabComponent implements OnChanges {
     });
   }
 
-  @Input() get readonly(): boolean {
+  get readonly(): boolean {
     return !this.ismgr && (this.pom ? Pom.StatusEnum.RECONCILIATION === this.pom.status : true);
   }
 

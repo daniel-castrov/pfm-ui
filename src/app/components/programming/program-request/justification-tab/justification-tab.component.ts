@@ -20,7 +20,7 @@ export class JustificationTabComponent implements OnInit {
     });
   }
 
-  @Input() get readonly(): boolean {
+  get readonly(): boolean {
     return (this.pom ? Pom.StatusEnum.RECONCILIATION === this.pom.status : false);
   }
 }
