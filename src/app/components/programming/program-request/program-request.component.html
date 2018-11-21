@@ -34,16 +34,16 @@
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
           <tab heading="Program" id="tab1" role="tablist">
-            <program-tab [pr]="pr" role="tabpanel"></program-tab>
+            <program-tab [pr]="pr" role="tabpanel" [pom]="pom"></program-tab>
           </tab>
           <tab heading="Funds" id="tab2" active="true">
-            <funds-tab [pr]="pr" [prs]="prs" role="tabpanel"></funds-tab>
+            <funds-tab [pr]="pr" [prs]="prs" role="tabpanel" [pom]="pom"></funds-tab>
           </tab>
           <tab heading="Variants" id="tab3">
-            <variants-tab [current]="pr" [editable]="true" role="tabpanel"></variants-tab>
+            <variants-tab [current]="pr" [editable]="true" role="tabpanel" [pom]="pom"></variants-tab>
           </tab>
           <tab heading="Justification" id="tab4">
-            <justification-tab [pr]="pr" role="tabpanel"></justification-tab>
+            <justification-tab [pr]="pr" role="tabpanel" [pom]="pom"></justification-tab>
           </tab>
         </tabset>
       </div>

@@ -46,7 +46,7 @@ export class FundsTabComponent implements OnChanges {
   private isFundsTabValid: any[] = [];
   @Input() private prs: ProgrammaticRequest[];
 
-  private pom: Pom;
+  @Input() private pom: Pom;
   private pomFy: number;
   private pbFy: number;
   private pbPr: ProgrammaticRequest;
@@ -74,8 +74,7 @@ export class FundsTabComponent implements OnChanges {
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
-  constructor(private pomService: POMService,
-    private pbService: PBService,
+  constructor(private pbService: PBService,
     private prService: PRService,
     private globalsService: UserUtils,
     private tagsService: TagsService,
@@ -90,9 +89,9 @@ export class FundsTabComponent implements OnChanges {
       if (this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
         this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
       }
-      this.pomService.getById(this.pr.phaseId).subscribe(data => {
-        this.pom = data.result;
-        this.pomFy = data.result.fy;
+
+      if( this.pom ){
+        this.pomFy = this.pom.fy;
         this.columnKeys = [
           this.pomFy - 3,
           this.pomFy - 2,
@@ -104,7 +103,7 @@ export class FundsTabComponent implements OnChanges {
           this.pomFy + 4];
         this.loadExistingFundingLines();
         this.initDataRows();
-      });
+      }
     }
   }
 

@@ -11,7 +11,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@a
 import {ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {Organization, OrganizationService, User, RestResult} from '../../../generated';
+import {Organization, OrganizationService, User, RestResult, Pom, POMService} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
 
@@ -24,6 +24,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private pr: ProgrammaticRequest = {};
   private prs: ProgrammaticRequest[];
+  private pom: Pom;
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
   @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
   @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
@@ -33,13 +34,15 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
                private userUtils: UserUtils,
                private programRequestPageMode: ProgramRequestPageModeService,
                private changeDetectorRef: ChangeDetectorRef,
-               private orgService: OrganizationService ) {
+               private orgService: OrganizationService,
+               private pomService:POMService ) {
     this.pr.fundingLines = [];
   }
 
   async ngOnInit() {
     await this.initPr();
     this.idAndNameComponent.init(this.pr);
+    this.pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
   }
 

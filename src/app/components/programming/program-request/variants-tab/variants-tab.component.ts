@@ -18,7 +18,8 @@ import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer
 export class VariantsTabComponent {
 
   @Input() current: ProgrammaticRequest;
-  @Input() editable:boolean;
+  @Input() editable: boolean;
+  @Input() pom: Pom; // not currently used, but here to be consistent with other tabs
 
   pomStatus: Pom.StatusEnum;
   pomFy:number;

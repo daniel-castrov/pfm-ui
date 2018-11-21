@@ -10,9 +10,9 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class ProgramTabComponent implements OnChanges {
   @Input() pr: ProgrammaticRequest;
+  @Input() pom: Pom;
   readonly fileArea = 'pr';
   imagePath: string;
-  private readonly: boolean = false;
 
   readonly tagTypes: TagType[] =
    [ TagType.LEAD_COMPONENT,
@@ -41,8 +41,7 @@ export class ProgramTabComponent implements OnChanges {
 
   constructor(private tagsService: TagsService,
               private libraryService: LibraryService,
-              private sanitization: DomSanitizer, 
-              private pomsvc:POMService) { }
+              private sanitization: DomSanitizer) { }
 
   ngOnChanges() {
     this.createMismatchingTags();
@@ -56,17 +55,11 @@ export class ProgramTabComponent implements OnChanges {
         }
       });
     }
+  }
 
-    if (this.pr.phaseId && !this.readonly) {
-      this.pomsvc.getById(this.pr.phaseId).subscribe(d => {
-        if (d.error) {
-          this.readonly = true;
-        }
-        else {
-          this.readonly = (Pom.StatusEnum.RECONCILIATION === d.result.status);
-        }
-      });
-    }
+  @Input() get readonly(): boolean {
+    console.log(this.pom);
+    return (this.pom ? Pom.StatusEnum.RECONCILIATION === this.pom.status : true);
   }
 
   private createMismatchingTags() { // creates tags for the 
