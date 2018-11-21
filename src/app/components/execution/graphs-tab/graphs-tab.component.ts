@@ -269,7 +269,7 @@ export class GraphsTabComponent implements OnInit {
                 realobgDataset.data.push(lastobg);
                 realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa, lastobg, raw_toa));
                 realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
-            } 
+            }
         }
 
         this.datasets = [
@@ -283,6 +283,8 @@ export class GraphsTabComponent implements OnInit {
     }
 
     private regraph() {
+        var my: GraphsTabComponent = this;
+
         // 2. Use the margin convention practice
         var margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
@@ -327,7 +329,25 @@ export class GraphsTabComponent implements OnInit {
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+            .call(d3.axisBottom(xScale)
+                .tickFormat(function (d) {
+                    var months:string[] = [
+                        "Oct", "Nov", "Dec", "Jan", "Feb", "Mar",
+                        "Apr", "May", "Jun", "Jul", "Aug", "Sep"
+                    ];
+
+                    var year: number = my.exe.fy + Math.floor((d + 9) / 12) - 2000;
+                    return months[d%12]+year;
+            }))
+            ; // Create an axis component with d3.axisBottom
+
+        // Label for x-axis
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("x", width / 2)
+            .attr("y", height + 40)
+            .attr("text-anchor", "middle")
+            .text("Month");
 
         // 4. Call the y axis in a group tag
         svg.append("g")
@@ -398,8 +418,8 @@ export class GraphsTabComponent implements OnInit {
                         .style("opacity", 0);
                     // d3.select(this).attr('')
                 })
-            
-            
+
+
             if (ds.csskey.endsWith('plan')) {
                 // make a yellow band that follows the plan line
                 var yellows: number[] = [];
