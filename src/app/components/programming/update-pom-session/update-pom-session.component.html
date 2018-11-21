@@ -45,8 +45,8 @@
         </div>
         <div class="col-3">
           <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
-            <button [disabled]="selectedWorksheet.isFinal" (click)="final()" class="btn btn-success">Mark as final</button>
-            <button [disabled]="selectedWorksheet.isFinal" (click)="update()" class="btn btn-primary">Update</button>
+            <button [disabled]="selectedWorksheet.isFinal" (click)="update(true)" class="btn btn-success">Use this worksheet as final position</button>
+            <button [disabled]="selectedWorksheet.isFinal" (click)="update(false)" class="btn btn-primary">Update</button>
           </span>
         </div>
       </div>

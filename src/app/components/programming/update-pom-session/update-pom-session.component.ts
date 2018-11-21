@@ -119,24 +119,10 @@ export class UpdatePomSessionComponent implements OnInit {
     });
   }
 
-  final() {
-    this.worksheets.forEach(worksheet => {
-      this.worksheetService.update({...worksheet, locked: true}).toPromise();
-    });
-    this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
-      this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
-        this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
-          this.selectedWorksheet.isFinal = true;
-          Notify.success('Worksheet marked as final successfully')
-        })
-      });
-    });
-  }
-
-  update(){
+  update(final: boolean){
     let updateData: RowUpdateEventData [] = [];
     let modifiedRows: RowNode [] = this.agGrid.api.getSelectedNodes();
-    if (modifiedRows.length === 0) {
+    if (modifiedRows.length === 0 && !final) {
       Notify.error('No changes detected.')
     } else {
       if(!this.reasonCode){
@@ -175,6 +161,19 @@ export class UpdatePomSessionComponent implements OnInit {
               console.log(response.error);
             }
           });
+          if (final) {
+            this.worksheets.forEach(worksheet => {
+              this.worksheetService.update({...worksheet, locked: true}).toPromise();
+            });
+            this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
+              this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
+                this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
+                  this.selectedWorksheet.isFinal = true;
+                  Notify.success('Worksheet marked as final successfully')
+                })
+              });
+            });
+          }
         }
       }
     }
