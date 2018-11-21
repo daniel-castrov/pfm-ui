@@ -1,8 +1,7 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
-import {FileResponse, LibraryService, ProgrammaticRequest, Tag} from '../../../../generated';
+import {FileResponse, LibraryService, ProgrammaticRequest, Tag, Pom, POMService} from '../../../../generated';
 import {DomSanitizer} from '@angular/platform-browser';
-
 
 @Component({
   selector: 'program-tab',
@@ -13,6 +12,7 @@ export class ProgramTabComponent implements OnChanges {
   @Input() pr: ProgrammaticRequest;
   readonly fileArea = 'pr';
   imagePath: string;
+  private readonly: boolean = false;
 
   readonly tagTypes: TagType[] =
    [ TagType.LEAD_COMPONENT,
@@ -41,7 +41,8 @@ export class ProgramTabComponent implements OnChanges {
 
   constructor(private tagsService: TagsService,
               private libraryService: LibraryService,
-              private sanitization: DomSanitizer) {}
+              private sanitization: DomSanitizer, 
+              private pomsvc:POMService) { }
 
   ngOnChanges() {
     this.createMismatchingTags();
@@ -52,6 +53,17 @@ export class ProgramTabComponent implements OnChanges {
           let fileResponse = response.result as FileResponse;
           let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
           this.imagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
+        }
+      });
+    }
+
+    if (this.pr.phaseId && !this.readonly) {
+      this.pomsvc.getById(this.pr.phaseId).subscribe(d => {
+        if (d.error) {
+          this.readonly = true;
+        }
+        else {
+          this.readonly = (Pom.StatusEnum.RECONCILIATION === d.result.status);
         }
       });
     }
