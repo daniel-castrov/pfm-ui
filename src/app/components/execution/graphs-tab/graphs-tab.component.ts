@@ -269,7 +269,7 @@ export class GraphsTabComponent implements OnInit {
                 realobgDataset.data.push(lastobg);
                 realobgDataset.notes.push(makeHtmlNote(myoandes[i], 'Obligation', ogoalpct * raw_toa, lastobg, raw_toa));
                 realobgDataset.status.push(getStatus(lastobg, ogoalpct * raw_toa, raw_toa));
-            } 
+            }
         }
 
         this.datasets = [
@@ -322,17 +322,19 @@ export class GraphsTabComponent implements OnInit {
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        
+
         // 3. Call the x axis in a group tag
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+
+        // Label for x-axis
         svg.append("text")
-            .attr("transform",
-                 "translate(" + (width / 2) + " ," +
-                  (height + margin.top + 20) + ")")
-            .style("text-anchor", "middle")
+            .attr("class", "x label")
+            .attr("x", width / 2)
+            .attr("y", height + 40)
+            .attr("text-anchor", "middle")
             .text("FY Month");
 
         // 4. Call the y axis in a group tag
@@ -404,8 +406,8 @@ export class GraphsTabComponent implements OnInit {
                         .style("opacity", 0);
                     // d3.select(this).attr('')
                 })
-            
-            
+
+
             if (ds.csskey.endsWith('plan')) {
                 // make a yellow band that follows the plan line
                 var yellows: number[] = [];
