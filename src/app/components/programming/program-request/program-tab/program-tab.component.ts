@@ -58,7 +58,6 @@ export class ProgramTabComponent implements OnChanges {
   }
 
   @Input() get readonly(): boolean {
-    console.log(this.pom);
     return (this.pom ? Pom.StatusEnum.RECONCILIATION === this.pom.status : true);
   }
 
