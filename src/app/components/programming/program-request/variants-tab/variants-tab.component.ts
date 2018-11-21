@@ -1,5 +1,5 @@
-import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB} from '../../../../generated'
+import {Component, Input, ViewEncapsulation, OnInit} from '@angular/core';
+import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB, RolesPermissionsService} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
 import { Notify } from '../../../../utils/Notify';
 
@@ -15,10 +15,12 @@ import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer
   styleUrls: ['./variants-tab.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class VariantsTabComponent {
+export class VariantsTabComponent implements OnInit {
 
   @Input() current: ProgrammaticRequest;
-  @Input() editable:boolean;
+  @Input() editable: boolean;
+  @Input() pom: Pom; // not currently used, but here to be consistent with other tabs
+  private ismgr: boolean = false;
 
   pomStatus: Pom.StatusEnum;
   pomFy:number;
@@ -44,7 +46,9 @@ export class VariantsTabComponent {
   constructor(private pomService: POMService,
     private pbService: PBService,
     private prService: PRService,
-    private globalsService: UserUtils ) { }
+    private globalsService: UserUtils,
+    private rolesvc:RolesPermissionsService
+  ) { }
 
   ngOnChanges(){
     if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
@@ -55,6 +59,13 @@ export class VariantsTabComponent {
       this.generateColumns();
     }
     this.determineProcWithoutVariant();
+  }
+
+  ngOnInit() {
+    this.ismgr = false;
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
+    });
   }
 
   determineProcWithoutVariant(){

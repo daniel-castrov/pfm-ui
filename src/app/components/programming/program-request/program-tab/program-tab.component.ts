@@ -1,8 +1,7 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
-import {FileResponse, LibraryService, ProgrammaticRequest, Tag} from '../../../../generated';
+import {FileResponse, LibraryService, ProgrammaticRequest, Tag, Pom, POMService, RolesPermissionsService} from '../../../../generated';
 import {DomSanitizer} from '@angular/platform-browser';
-
 
 @Component({
   selector: 'program-tab',
@@ -11,8 +10,10 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class ProgramTabComponent implements OnChanges {
   @Input() pr: ProgrammaticRequest;
+  @Input() pom: Pom;
   readonly fileArea = 'pr';
   imagePath: string;
+  private ismgr: boolean = false;
 
   readonly tagTypes: TagType[] =
    [ TagType.LEAD_COMPONENT,
@@ -41,7 +42,8 @@ export class ProgramTabComponent implements OnChanges {
 
   constructor(private tagsService: TagsService,
               private libraryService: LibraryService,
-              private sanitization: DomSanitizer) {}
+              private sanitization: DomSanitizer,
+              private rolesvc:RolesPermissionsService) { }
 
   ngOnChanges() {
     this.createMismatchingTags();
@@ -55,6 +57,15 @@ export class ProgramTabComponent implements OnChanges {
         }
       });
     }
+
+    this.ismgr = false;
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
+    });
+  }
+
+  get readonly(): boolean {
+    return !this.ismgr && (this.pom ? Pom.StatusEnum.RECONCILIATION === this.pom.status : true);
   }
 
   private createMismatchingTags() { // creates tags for the 

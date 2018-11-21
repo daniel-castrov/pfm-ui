@@ -12,11 +12,11 @@ import {
   FundingLine,
   IntMap,
   PBService,
-  POMService,
   ProgramsService,
   PRService,
   Pom,
-  ProgrammaticRequestState
+  ProgrammaticRequestState,
+  RolesPermissionsService
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
@@ -46,10 +46,11 @@ export class FundsTabComponent implements OnChanges {
   private isFundsTabValid: any[] = [];
   @Input() private prs: ProgrammaticRequest[];
 
-  private pom: Pom;
+  @Input() private pom: Pom;
   private pomFy: number;
   private pbFy: number;
   private pbPr: ProgrammaticRequest;
+  private ismgr: boolean = false;
 
   private appropriations: string[] = [];
   private functionalAreas: string[] = [];
@@ -74,13 +75,13 @@ export class FundsTabComponent implements OnChanges {
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
-  constructor(private pomService: POMService,
-    private pbService: PBService,
+  constructor(private pbService: PBService,
     private prService: PRService,
     private globalsService: UserUtils,
     private tagsService: TagsService,
     private autoValuesService: AutoValuesService,
-    private programsService: ProgramsService) { }
+    private programsService: ProgramsService,
+    private rolesvc:RolesPermissionsService ) { }
 
   async ngOnChanges() {
     if (!this.pr.phaseId) {
@@ -90,9 +91,9 @@ export class FundsTabComponent implements OnChanges {
       if (this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
         this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
       }
-      this.pomService.getById(this.pr.phaseId).subscribe(data => {
-        this.pom = data.result;
-        this.pomFy = data.result.fy;
+
+      if( this.pom ){
+        this.pomFy = this.pom.fy;
         this.columnKeys = [
           this.pomFy - 3,
           this.pomFy - 2,
@@ -104,8 +105,13 @@ export class FundsTabComponent implements OnChanges {
           this.pomFy + 4];
         this.loadExistingFundingLines();
         this.initDataRows();
-      });
+      }
     }
+
+    this.ismgr = false;
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
+    });
   }
 
   loadExistingFundingLines() {
@@ -769,7 +775,7 @@ export class FundsTabComponent implements OnChanges {
       return true;
     }
     else {
-      return (this.pr && this.pr.type === ProgramType.GENERIC &&
+      return this.ismgr || (this.pr && this.pr.type === ProgramType.GENERIC &&
         ProgrammaticRequestState.SUBMITTED !== this.pr.state);
     }
   }

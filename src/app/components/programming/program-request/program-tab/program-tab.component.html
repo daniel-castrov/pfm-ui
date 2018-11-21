@@ -6,20 +6,20 @@
           <div class="row">
             <span class="col form-group inline-name">
               <label class="mb-1">*Lead Component</label>
-              <select [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
+              <select [disabled]='readonly' [(ngModel)]="pr.leadComponent" name="leadComponent" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let lc of mapTypeToTags.get('Lead Component')" [ngValue]="lc.abbr">{{lc.abbr}}</option>
               </select>
             </span>
             <span class="col form-group inline-name">
               <label class="mb-1">*Manager</label>
-              <select [(ngModel)]="pr.manager" name="manager" class="form-control-sm dropdown-width mb-2">
+              <select  [disabled]='readonly' [(ngModel)]="pr.manager" name="manager" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let m of mapTypeToTags.get('Manager')" [ngValue]="m.abbr">{{m.name}}</option>
               </select>
             </span>
           </div>
           <div class="row px-3">
             <div class="col">
-              <file-upload [area]="fileArea" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+              <file-upload [area]="fileArea" [disabled]='readonly' (fileUploadEvent)="onFileUploaded($event)"></file-upload>
             </div>
           </div>
         </div>
@@ -38,19 +38,19 @@
             <legend>Capability</legend>
             <span class="form-group inline-name">
               <label class="mb-1">*Primary</label>
-              <select [(ngModel)]="pr.primaryCapability" name="primaryCapability" class="form-control-sm dropdown-width mb-2">
+              <select [disabled]='readonly' [(ngModel)]="pr.primaryCapability" name="primaryCapability" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let pc of mapTypeToTags.get('Primary Capability')" [ngValue]="pc.abbr">{{pc.name}}</option>
               </select>
              </span>
              <span class="form-group inline-name">
                 <label class="mb-1">*Core</label>
-                <select [(ngModel)]="pr.coreCapability" name="coreCapability" class="form-control-sm dropdown-width mb-2">
+                <select [disabled]='readonly' [(ngModel)]="pr.coreCapability" name="coreCapability" class="form-control-sm dropdown-width mb-2">
                   <option *ngFor="let cc of mapTypeToTags.get('Core Capability Area')" [ngValue]="cc.abbr">{{cc.name}}</option>
                 </select>
               </span>
               <span class="form-group inline-name">
                 <label class="mb-1">Secondary</label>
-                <select [(ngModel)]="pr.secondaryCapability" name="secondaryCapability" class="form-control-sm dropdown-width mb-2">
+                <select [disabled]='readonly' [(ngModel)]="pr.secondaryCapability" name="secondaryCapability" class="form-control-sm dropdown-width mb-2">
                   <option *ngFor="let sc of mapTypeToTags.get('Secondary Capability')" [ngValue]="sc.abbr">{{sc.name}}</option>
                 </select>
               </span>
@@ -63,25 +63,25 @@
             <legend>Area</legend>
             <span class="form-group inline-name mr-4">
               <label class="mb-1">*Functional</label>
-              <select [(ngModel)]="pr.functionalArea" name="functionalArea" class="form-control-sm dropdown-width mb-2">
+              <select [disabled]='readonly' [(ngModel)]="pr.functionalArea" name="functionalArea" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let fa of mapTypeToTags.get('Functional Area')" [ngValue]="fa.abbr">{{fa.name}}</option>
               </select>
             </span>
             <span class="form-group inline-name">
               <label class="mb-1"> Medical &amp; Non-Medical</label>
-              <select [(ngModel)]="pr.medicalArea" name="medicalCategory" class="form-control-sm dropdown-width mb-2">
+              <select [disabled]='readonly' [(ngModel)]="pr.medicalArea" name="medicalCategory" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let mc of mapTypeToTags.get('Medical Category')" [ngValue]="mc.abbr">{{mc.name}}</option>
               </select>
             </span>
             <span class="form-group inline-name">
-              <emphasisAreas [ufrOrPr]="pr"></emphasisAreas>
+              <emphasisAreas [ufrOrPr]="pr" [disabled]='readonly'></emphasisAreas>
             </span>
           </fieldset>
         </div>
         <div class="col-md-3">
           <span class="form-group inline-name">
               <label class="mb-1">DASD Taxonomy</label>
-              <select name="medicalCategory" class="form-control-sm dropdown-width mb-2">
+              <select [disabled]='readonly' name="medicalCategory" class="form-control-sm dropdown-width mb-2">
                 <option *ngFor="let dasd of mapTypeToTags.get('DASD CBD')" [ngValue]="dasd.abbr">{{dasd.name}}</option>
               </select>
             </span>
