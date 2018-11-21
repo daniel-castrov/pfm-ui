@@ -1,4 +1,4 @@
-$graph-blue:     #1158ab;
+$graph-blue:     #5c8bc4;
 $graph-green:    #008d45;
 $graph-red:      #f12b25;
 $graph-orange:   #f67d03;
@@ -67,7 +67,6 @@ div.tooltip {
 .line-obgplan {
   stroke: $graph-blue;
   stroke-width: 3;
-  opacity: .6;
 }
 
 .line-realobg {
@@ -118,7 +117,6 @@ div.tooltip {
 
 .dot-obgplan {
   fill: $graph-blue;
-  opacity: .6;
   display:none;
 }
 
@@ -137,7 +135,6 @@ div.tooltip {
 
 .legend-item-obgplan {
   color: $graph-blue;
-  opacity: .7;
 
   span.legend-text {
     color: $graph-black;
