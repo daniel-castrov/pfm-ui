@@ -11,7 +11,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@a
 import {ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {Organization, OrganizationService, User, RestResult, Pom, POMService} from '../../../generated';
+import {Organization, OrganizationService, User, RestResult, Pom, POMService, RolesPermissionsService} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
 
@@ -25,6 +25,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   private pr: ProgrammaticRequest = {};
   private prs: ProgrammaticRequest[];
   private pom: Pom;
+  private ismgr: boolean;
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
   @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
   @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
@@ -35,7 +36,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
                private programRequestPageMode: ProgramRequestPageModeService,
                private changeDetectorRef: ChangeDetectorRef,
                private orgService: OrganizationService,
-               private pomService:POMService ) {
+               private pomService:POMService,
+               private rolesvc: RolesPermissionsService ) {
     this.pr.fundingLines = [];
   }
 
@@ -44,6 +46,11 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.idAndNameComponent.init(this.pr);
     this.pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
+
+    this.ismgr = false;
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
+    });
   }
 
   ngAfterViewInit() {
@@ -158,6 +165,12 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
     if (!this.pr.bulkOrigin) { // if we're creating a new PR, check for funding
       if (!this.fundsTabComponent.flHaveValues()) return true;
+    }
+
+    // check if we're the POM_Manager, and have funds edits
+    // POM_Manager can always submit edited values
+    if (this.ismgr && this.fundsTabComponent.hasEditedValues()) {
+      return false;
     }
 
     return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
