@@ -32,7 +32,7 @@ export class UserUtils {
       .map( (response: RestResult) => response.result );
   }
 
-  @Caching('roles')
+  @TemporaryCaching('roles')
   roles(): Observable<string[]> {
     return this.rolesPermissionsService.getRoles().map( (response: RestResult) => response.result );
   }
