@@ -105,8 +105,8 @@
 
             <div apppermission="POM:edit">
               <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus)">
-                <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-                <a class="dropdown-item" disabled>Open POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" disabled>Open POM Session</a>
                 <a class="dropdown-item" disabled>Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" disabled>Update TOAs</a>
@@ -114,8 +114,8 @@
               </ng-container>
 
               <ng-container *ngIf="'CREATED'===pomStatus">
-                <a class="dropdown-item" disabled>Create POM Session</a>
-                <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" disabled>Create POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
                 <a class="dropdown-item" disabled>Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <!-- <div class="dropdown-header">Dropdown header 1</div> -->
@@ -124,8 +124,8 @@
               </ng-container>
 
               <ng-container *ngIf="'OPEN'===pomStatus">
-                <a class="dropdown-item" disabled>Create POM Session</a>
-                <a class="dropdown-item" disabled>Open POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" disabled>Create POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" disabled>Open POM Session</a>
                 <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
@@ -133,8 +133,8 @@
               </ng-container>
 
               <ng-container *ngIf="'RECONCILIATION'===pomStatus">
-                <a class="dropdown-item" disabled>Create POM Session</a>
-                <a class="dropdown-item" disabled>Open POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" disabled>Create POM Session</a>
+                <a approle="POM_Manager" class="dropdown-item" disabled>Open POM Session</a>
                 <a class="dropdown-item" disabled>Update POM Session</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" disabled>Update TOAs</a>
@@ -142,7 +142,7 @@
               </ng-container>
 
               <ng-container *ngIf="'CREATED'===pomStatus||'OPEN'===pomStatus">
-                <a *ngIf="roles?.includes('POM_Manager')" class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
+                <a approle="POM_Manager"  class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
               </ng-container>
             </div>
 

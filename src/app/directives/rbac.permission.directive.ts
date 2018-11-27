@@ -4,7 +4,7 @@ import { RolesPermissionsService } from '../generated'
 @Directive({
   selector: '[apppermission]'
 })
-export class RbacPermissionDirective {
+export class RbacPermissionDirective  implements AfterViewInit {
 
 
   @Input('apppermission') permission:string;

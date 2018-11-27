@@ -1,51 +1,23 @@
-import { Directive, ElementRef, Input, AfterViewInit  } from '@angular/core';
-import { RolesPermissionsService } from '../generated'
+import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
+import {UserUtils} from "../services/user.utils";
 
 @Directive({
   selector: '[approle]'
 })
-export class RbacRoleDirective {
+export class RbacRoleDirective implements AfterViewInit {
 
+  @Input('approle') roles: string;
 
-  @Input('approle') role: string;
+  constructor( private el: ElementRef,
+               private userUtils: UserUtils ) {}
 
-  constructor(
-    private el: ElementRef,
-    private rpsvc:RolesPermissionsService
-    ) {}
-
-  ngAfterViewInit(){
-
-    this.role=this.role.trim();
-    let roles:string[] = this.role.split(",");
-    if  (roles.length<1){ }
-    if (roles.length==1){
-      this.determinVisibility_single(this.role);
+  async ngAfterViewInit() {
+    this.roles=this.roles.trim();
+    const roles = this.roles.split(",");
+    const hasRole = await this.userUtils.hasAnyOfTheseRoles(roles).toPromise();
+    if (!hasRole) {
+      this.el.nativeElement.remove();
     } 
-    if ( roles.length>1 ){
-      this.determinVisibility_multiple(this.role);
-    }
-
-  }
-
-  async determinVisibility_single(rolename){
-    let data = await this.rpsvc.hasRole(rolename).toPromise();
-    let hide = data.result;
-    //console.log(hide);    
-    if (hide==="false"){
-      this.el.nativeElement.style.display = "none";
-    }
-  }
-
-  async determinVisibility_multiple(rolenames){
-    let data = await this.rpsvc.hasRoles(rolenames).toPromise();
-    let results:string[] =  data.result;
-    for (let i=0; i<results.length; i++){
-      if (results[i]){
-        return;
-      }
-    };
-    this.el.nativeElement.style.display = "none";
   }
 
 }
