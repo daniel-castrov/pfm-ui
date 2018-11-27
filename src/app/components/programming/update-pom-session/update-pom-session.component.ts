@@ -128,52 +128,47 @@ export class UpdatePomSessionComponent implements OnInit {
       if(!this.reasonCode){
         Notify.error('You must select or create a reason code.')
       } else {
-        let someNotesEmpty = modifiedRows.some(node => node.data.notes === '');
-        if(someNotesEmpty) {
-          Notify.error('You must fill the notes column for all highlighted rows.')
-        } else {
-          this.agGrid.api.getSelectedNodes().forEach(node => {
-            let modifiedRow : RowUpdateEventData = {};
-            modifiedRow.notes = node.data.notes;
-            modifiedRow.newFundingLine = node.data.fundingLine;
-            modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
-              ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
-            modifiedRow.reasonCode = this.reasonCode;
-            modifiedRow.worksheetId = this.selectedWorksheet.id;
-            modifiedRow.programId = node.data.programId
-            modifiedRow.fundingLineId = node.data.fundingLine.id;
-            updateData.push(modifiedRow);
+        this.agGrid.api.getSelectedNodes().forEach(node => {
+          let modifiedRow : RowUpdateEventData = {};
+          modifiedRow.notes = node.data.notes;
+          modifiedRow.newFundingLine = node.data.fundingLine;
+          modifiedRow.previousFundingLine = this.unmodifiedFundingLines.find(ufl =>
+            ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
+          modifiedRow.reasonCode = this.reasonCode;
+          modifiedRow.worksheetId = this.selectedWorksheet.id;
+          modifiedRow.programId = node.data.programId
+          modifiedRow.fundingLineId = node.data.fundingLine.id;
+          updateData.push(modifiedRow);
 
-            node.data.modified = false;
-            node.setSelected(false);
-            node.data.notes = '';
-          });
-          this.reasonCode = null;
-          this.agGrid.api.refreshCells();
-          let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
-          this.worksheetService.updateRows(body).subscribe(response => {
-            if (!response.error) {
-              this.generateUnmodifiedFundingLines();
-              this.initReasonCode();
-              Notify.success('Worksheet updated successfully');
-            } else {
-              Notify.error('Something went wrong while trying to update the worksheet');
-              console.log(response.error);
-            }
-          });
-          if (final) {
-            this.worksheets.forEach(worksheet => {
-              this.worksheetService.update({...worksheet, locked: true}).toPromise();
-            });
-            this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
-              this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
-                this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
-                  this.selectedWorksheet.isFinal = true;
-                  Notify.success('Worksheet marked as final successfully')
-                })
-              });
-            });
+          node.data.modified = false;
+          node.setSelected(false);
+          node.data.notes = '';
+        });
+        this.reasonCode = null;
+        this.agGrid.api.refreshCells();
+        let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
+        this.worksheetService.updateRows(body).subscribe(response => {
+          if (!response.error) {
+            this.generateUnmodifiedFundingLines();
+            this.initReasonCode();
+            Notify.success('Worksheet updated successfully');
+          } else {
+            Notify.error('Something went wrong while trying to update the worksheet');
+            console.log(response.error);
           }
+        });
+        if (final) {
+          this.worksheets.forEach(worksheet => {
+            this.worksheetService.update({...worksheet, locked: true}).toPromise();
+          });
+          this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
+            this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
+              this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
+                this.selectedWorksheet.isFinal = true;
+                Notify.success('Worksheet marked as final successfully')
+              })
+            });
+          });
         }
       }
     }
@@ -586,7 +581,7 @@ export class UpdatePomSessionComponent implements OnInit {
               valueFormatter: params => {
                 return FormatterUtil.currencyFormatter(params, 0, true)
               },
-              onCellValueChanged: params => this.onBudgetYearValueChanged(params)
+              onCellValueChanged: params => this.onValueChanged(params)
             }]
           };
           this.columnDefs.push(colDef);
@@ -610,14 +605,11 @@ export class UpdatePomSessionComponent implements OnInit {
     this.columnDefs.push({
       headerName: 'Notes',
       field: 'notes',
-      editable: params => {
-        if(params.data.modified){
-          return true;
-        }
-      },
+      editable: true,
       suppressMenu: true,
       suppressToolPanel: true,
-      cellClass: ['ag-cell-white','text-right']
+      cellClass: ['ag-cell-edit'],
+      onCellValueChanged: params => this.onValueChanged(params)
     });
 
     this.agGrid.api.setColumnDefs(this.columnDefs);
@@ -645,15 +637,21 @@ export class UpdatePomSessionComponent implements OnInit {
     return !node.data.anchored;
   }
 
-  onBudgetYearValueChanged(params){
-    let year = params.colDef.colId;
-    params.data.fundingLine.funds[year] = Number(params.newValue);
-    if (Number(params.oldValue) !== Number(params.newValue)) {
+  onValueChanged(params){
+    let textChanged: boolean = false;
+    let amountChanged: boolean = false;
+    if(params.colDef.headerName === 'Notes') {
+      params.data.notes = params.newValue;
+      textChanged = params.data.notes !== '' && params.data.notes !== undefined;
+    } else {
+      let year = params.colDef.colId;
+      params.data.fundingLine.funds[year] = Number(params.newValue);
+      amountChanged = Number(params.oldValue) !== Number(params.newValue)
+    }
+    if (amountChanged || textChanged) {
       params.node.setSelected(true);
       params.data.modified = true;
       this.initToaDataRows();
-    }else {
-      params.node.setSelected(false);
     }
     this.agGrid.api.redrawRows();
   }
