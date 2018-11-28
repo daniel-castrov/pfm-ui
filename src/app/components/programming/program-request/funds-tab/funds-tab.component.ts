@@ -51,6 +51,7 @@ export class FundsTabComponent implements OnChanges {
   private pbFy: number;
   private pbPr: ProgrammaticRequest;
   private ismgr: boolean = false;
+  private fieldedits: boolean = false;
 
   private appropriations: string[] = [];
   private functionalAreas: string[] = [];
@@ -81,7 +82,7 @@ export class FundsTabComponent implements OnChanges {
     private tagsService: TagsService,
     private autoValuesService: AutoValuesService,
     private programsService: ProgramsService,
-    private rolesvc:RolesPermissionsService ) { }
+    private rolesvc: RolesPermissionsService ) { }
 
   async ngOnChanges() {
     if (!this.pr.phaseId) {
@@ -759,7 +760,7 @@ export class FundsTabComponent implements OnChanges {
       params.data.fundingLine.userCreated === true &&
       params.data.phaseType === PhaseType.PB &&
       params.data.gridType === GridType.CURRENT_PR &&
-      this.isEditableInReconciliation();
+      ( this.ismgr || this.isEditableInReconciliation() );
   }
 
   isAmountEditable(params, key): boolean {
@@ -767,7 +768,7 @@ export class FundsTabComponent implements OnChanges {
       params.data.phaseType == PhaseType.POM &&
       params.data.programId !== 'Total Funds Request' &&
       params.data.gridType === GridType.CURRENT_PR &&
-      this.isEditableInReconciliation();
+      (this.ismgr || this.isEditableInReconciliation());
   }
 
   isEditableInReconciliation() {
@@ -775,14 +776,16 @@ export class FundsTabComponent implements OnChanges {
       return true;
     }
     else {
-      return this.ismgr || (this.pr && this.pr.type === ProgramType.GENERIC &&
+      return (this.pr && this.pr.type === ProgramType.GENERIC &&
         ProgrammaticRequestState.SUBMITTED !== this.pr.state);
     }
   }
 
   addFundingLineOk(): boolean {
-    return this.isEditableInReconciliation();
+    return this.ismgr || this.isEditableInReconciliation();
   }
+
+
 
   rowSpanCount(params): number {
     if (params.data.phaseType === PhaseType.PB) {
@@ -851,6 +854,7 @@ export class FundsTabComponent implements OnChanges {
   }
 
   onBudgetYearValueChanged(params) {
+    this.fieldedits = true;
     let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.fundingLine.funds[year] = Number(params.newValue);
@@ -870,6 +874,10 @@ export class FundsTabComponent implements OnChanges {
       baOrBlin: params.data.fundingLine.baOrBlin,
       year: year
     };
+  }
+
+  hasEditedValues(): boolean {
+    return this.fieldedits;
   }
 
   onParentGridReady(params) {
