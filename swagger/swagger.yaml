@@ -359,6 +359,23 @@ paths:
         description: "The community id"
         required: true
         type: "string"
+  /pom/community/{communityId}/reconciliation:
+      get:
+        tags:
+        - "POM"
+        summary: "Gets the POM in reconciliation"
+        description: "pom in reconciliation for the com"
+        operationId: "getReconciliation"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "path"
+          name: "communityId"
+          description: "The community id"
+          required: true
+          type: "string"
   /pom/{pomId}:
     get:
       tags:
@@ -3530,7 +3547,7 @@ definitions:
           items:
             $ref: "#/definitions/TOA"
       status:
-        enum: [CREATED, OPEN, RECONCILIATION, LOCKED]
+        enum: [CREATED, OPEN, RECONCILIATION, LOCKED, CLOSED]
       startdate:
         type: "integer"
       enddate:
