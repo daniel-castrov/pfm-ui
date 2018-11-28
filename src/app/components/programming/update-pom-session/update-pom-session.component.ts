@@ -1,14 +1,18 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, Subject} from 'rxjs';
 import {merge} from 'rxjs/observable/merge';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-
-// Other Components
-import { HeaderComponent } from '../../../components/header/header.component';
+import {HeaderComponent} from '../../../components/header/header.component';
 import {
-  Pom, POMService, RowUpdateEvent, TOA, User, UserService, Worksheet, WorksheetEvent, WorksheetRow,
+  Pom,
+  POMService,
+  RowUpdateEvent,
+  User,
+  UserService,
+  Worksheet,
+  WorksheetEvent,
+  WorksheetRow,
   WorksheetService
 } from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
@@ -23,6 +27,7 @@ import {ValueChangeRenderer} from "../../renderers/value-change-renderer/value-c
 import {ViewEventsRenderer} from "../../renderers/view-events-renderer/view-events-renderer.component";
 import {TagsService} from "../../../services/tags.service";
 import {CheckboxCellRenderer} from "../../renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
+import {GridToaComponent} from "./grid-toa/grid-toa.component";
 
 declare const $: any;
 
@@ -36,21 +41,19 @@ export class UpdatePomSessionComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  @ViewChild("agGridToa") private agGridToa: AgGridNg2;
+  @ViewChild(GridToaComponent) private gridToaComponent: GridToaComponent;
   @ViewChild("agGridEvents") private agGridEvents: AgGridNg2;
   @ViewChild("instance") instance: NgbTypeahead;
 
   pom: Pom;
   user: User;
   columnDefs;
-  toaColumnDefs;
   eventsColumnDefs;
   detailCellRendererParams;
   detailRowHeight = 100;
   columnKeys;
   rowData;
   topPinnedData = [];
-  toaRowData;
   eventsRowData;
   filterText;
   rowSelection = 'multiple';
@@ -245,7 +248,7 @@ export class UpdatePomSessionComponent implements OnInit {
 
     this.bulkAmount = null;
     this.agGrid.api.redrawRows();
-    this.initToaDataRows();
+    this.gridToaComponent.initToaDataRows();
   }
 
   onWorksheetSelected(){
@@ -255,8 +258,8 @@ export class UpdatePomSessionComponent implements OnInit {
       this.initDataRows();
       this.generateColumns();
 
-      this.initToaDataRows();
-      this.generateToaColumns();
+      this.gridToaComponent.initToaDataRows();
+      this.gridToaComponent.generateToaColumns();
 
       this.generateEventsColumns();
     });
@@ -293,44 +296,6 @@ export class UpdatePomSessionComponent implements OnInit {
     this.rowData = data;
     this.agGrid.api.sizeColumnsToFit();
     this.generateUnmodifiedFundingLines();
-  }
-
-  initToaDataRows(){
-    let data: Array<any> = [];
-    let allocatedFunds = [];
-    this.pom.communityToas.forEach((toa: TOA) => {
-      allocatedFunds[toa.year] = toa.amount;
-    });
-
-    let allocatedRow = {description: 'Allocated TOA', funds: allocatedFunds, modified: false};
-    data.push(allocatedRow);
-
-    let resourcedFunds = [];
-    this.columnKeys.forEach((year: number) => {
-      resourcedFunds[year] = 0;
-    });
-    this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
-      this.columnKeys.forEach((year: number) => {
-        if(year >= this.pom.fy) {
-          let amount = value.fundingLine.funds[year];
-          resourcedFunds[year] += isNaN(amount)? 0 : amount;
-        }
-      });
-    });
-
-    let resourcedRow = {description: 'Total Resourced', funds: resourcedFunds, modified: false};
-    data.push(resourcedRow);
-
-    let deltaFunds = [];
-    this.columnKeys.forEach((year: number) => {
-      deltaFunds[year] = allocatedFunds[year] - resourcedFunds[year];
-    });
-
-    let deltaRow = {description: 'Delta', funds: deltaFunds};
-    data.push(deltaRow);
-
-    this.toaRowData = data;
-    this.agGridToa.api.sizeColumnsToFit();
   }
 
   generateUnmodifiedFundingLines() {
@@ -415,60 +380,6 @@ export class UpdatePomSessionComponent implements OnInit {
     };
   }
 
-  generateToaColumns() {
-    this.toaColumnDefs = [
-      {
-        headerName: '',
-        field: 'description',
-        cellClass: ['ag-cell-white','text-right'],
-        suppressMenu: true
-      }
-    ];
-    this.columnKeys.forEach(key => {
-      if (key >= this.pom.fy) {
-        let columnKey = key.toString().replace('20', 'FY')
-        let colDef = {
-          headerName: columnKey,
-          colId: key,
-          headerTooltip: 'Fiscal Year ' + key,
-          field: 'funds.' + key,
-          maxWidth: 92,
-          suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right'],
-          valueFormatter: params => {
-            return FormatterUtil.currencyFormatter(params, 0, true)
-          },
-          cellStyle: params => {
-            if (params.data.funds[key] < 0) {
-              return {color: 'red', 'font-weight': 'bold'};
-            };
-          }
-        };
-        this.toaColumnDefs.push(colDef);
-      }
-    });
-
-    let totalColDef = {
-      headerName: 'FYDP Total',
-      headerTooltip: 'Future Years Defense Program Total',
-      suppressMenu: true,
-      suppressToolPanel: true,
-      maxWidth: 100,
-      minWidth: 100,
-      cellClass: ['ag-cell-white','text-right'],
-      valueGetter: params => {return this.getTotalToa(params.data, this.columnKeys)},
-      valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)},
-      cellStyle: params => {
-        if (this.getTotalToa(params.data, this.columnKeys) < 0) {
-          return {color: 'red', 'font-weight': 'bold'};
-        };
-      }
-    };
-    this.toaColumnDefs.push(totalColDef);
-
-    this.agGridToa.api.setColumnDefs(this.toaColumnDefs);
-    this.agGridToa.api.sizeColumnsToFit();
-  }
 
   generateColumns() {
     this.columnDefs = [
@@ -651,7 +562,7 @@ export class UpdatePomSessionComponent implements OnInit {
     if (Number(params.oldValue) !== Number(params.newValue)) {
       params.node.setSelected(true);
       params.data.modified = true;
-      this.initToaDataRows();
+      this.gridToaComponent.initToaDataRows();
     }else {
       params.node.setSelected(false);
     }
@@ -671,17 +582,6 @@ export class UpdatePomSessionComponent implements OnInit {
     columnKeys.forEach(year => {
       if(year >= this.pom.fy) {
         let amount = row.fundingLine.funds[year];
-        result += isNaN(amount)? 0 : Number(amount);
-      }
-    });
-    return result;
-  }
-
-  getTotalToa(row, columnKeys): number {
-    let result = 0;
-    columnKeys.forEach(year => {
-      if(year >= this.pom.fy) {
-        let amount = row.funds[year];
         result += isNaN(amount)? 0 : Number(amount);
       }
     });

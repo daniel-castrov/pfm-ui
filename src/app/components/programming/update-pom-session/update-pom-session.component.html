@@ -91,15 +91,11 @@
           </fieldset>
         </div>
         <div class="col-7 mt-3">
-          <ag-grid-angular #agGridToa
-                           class="ag-theme-balham"
-                           [rowData]="toaRowData"
-                           [gridAutoHeight]="true"
-                           [toolPanelSuppressSideButtons]="true"
-                           [suppressDragLeaveHidesColumns]="true"
-                           [suppressMovableColumns]="true"
-                           (gridReady)="onGridReady($event)">
-          </ag-grid-angular>
+          <grid-toa [selectedWorksheet]="selectedWorksheet"
+                    [pom]="pom"
+                    [columnKeys]="columnKeys"
+          >
+          </grid-toa>
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row mb-3">
