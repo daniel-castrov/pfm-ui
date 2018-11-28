@@ -16,7 +16,7 @@ export class ViewEventsRenderer implements ICellRendererAngularComp {
   }
 
   viewEvents() {
-    this.params.context.parentComponent.viewEvents(this.params);
+    this.params.context.eventsModalComponent.viewEvents(this.params);
   }
 
   refresh(): boolean {
