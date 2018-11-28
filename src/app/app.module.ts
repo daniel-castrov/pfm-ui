@@ -173,6 +173,7 @@ import {ViewEventsRenderer} from "./components/renderers/view-events-renderer/vi
 import {ValueChangeRenderer} from "./components/renderers/value-change-renderer/value-change-renderer.component";
 import {CheckboxCellRenderer} from "./components/renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 import {GridToaComponent} from "./components/programming/update-pom-session/grid-toa/grid-toa.component";
+import {EventsModalComponent} from "app/components/programming/update-pom-session/events-modal/events-modal.component";
 
 
 // ROUTES
@@ -353,7 +354,8 @@ const appRoutes: Routes = [
     ValueChangeRenderer,
     FyHeaderComponent,
     OpenExecutionComponent,
-    GridToaComponent
+    GridToaComponent,
+    EventsModalComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

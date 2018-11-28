@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UpdatePomSessionComponent } from './update-pom-session.component';
+import { EventsModalComponent } from './events-modal.component';
 
 describe('EventsModalComponent', () => {
-  let component: UpdatePomSessionComponent;
-  let fixture: ComponentFixture<UpdatePomSessionComponent>;
+  let component: EventsModalComponent;
+  let fixture: ComponentFixture<EventsModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpdatePomSessionComponent ]
+      declarations: [ EventsModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UpdatePomSessionComponent);
+    fixture = TestBed.createComponent(EventsModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

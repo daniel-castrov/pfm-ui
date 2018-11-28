@@ -1,0 +1,38 @@
+<div id="events-modal" class="modal fade in">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a class="btn" data-dismiss="modal">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="modal-body mt-4">
+          <div class="row">
+            <div class="col-12">
+              <ag-grid-angular #agGridEvents
+                               class="ag-theme-balham"
+                               [gridAutoHeight]="true"
+                               [toolPanelSuppressSideButtons]="true"
+                               [suppressMovableColumns]="true"
+                               [suppressRowTransform]="true"
+                               [showToolPanel]="false"
+                               [enableSorting]="true"
+                               [enableFilter]="true"
+                               [columnDefs]="eventsColumnDefs"
+                               [rowData]="eventsRowData"
+                               [detailCellRendererParams]="detailCellRendererParams"
+                               [detailRowHeight]="detailRowHeight"
+                               [masterDetail]="true"
+                               [pagination]="true"
+                               [paginationPageSize]="15"
+                               (paginationChanged)="agGridPaginationEvents.onPaginationChanged($event)"
+                               [suppressPaginationPanel]="true"
+                               (gridReady)="onGridReady($event)">
+              </ag-grid-angular>
+              <ag-grid-pagination #agGridPaginationEvents [agGrid]="agGridEvents"></ag-grid-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
