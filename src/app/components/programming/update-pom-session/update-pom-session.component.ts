@@ -1,8 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, Subject} from 'rxjs';
-import {merge} from 'rxjs/observable/merge';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {HeaderComponent} from '../../../components/header/header.component';
 import {Pom, POMService, User, UserService, Worksheet, WorksheetEvent, WorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
@@ -14,6 +11,7 @@ import {TagsService} from "../../../services/tags.service";
 import {GridToaComponent} from "./grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./events-modal/events-modal.component";
 import {WorksheetComponent} from "./worksheet/worksheet.component";
+import {ReasonCodeComponent} from "./reason-code/reason-code.component";
 
 @Component({
   selector: 'update-pom-session',
@@ -27,6 +25,7 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild(WorksheetComponent) private worksheetComponent: WorksheetComponent;
   @ViewChild(GridToaComponent) private gridToaComponent: GridToaComponent;
   @ViewChild(EventsModalComponent) private eventsModalComponent: EventsModalComponent;
+  @ViewChild(ReasonCodeComponent) private reasonCodeComponent: ReasonCodeComponent;
   @ViewChild("instance") instance: NgbTypeahead;
 
   pom: Pom;
@@ -38,19 +37,6 @@ export class UpdatePomSessionComponent implements OnInit {
   bulkAmount: number;
   worksheets: Array<Worksheet>;
   selectedWorksheet: Worksheet;
-  reasonCode;
-  focus$ = new Subject<string>();
-  click$ = new Subject<string>();
-  tags: any[];
-  search = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
-    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
-    const inputFocus$ = this.focus$;
-    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term => (term === '' ? this.tags
-        : this.tags.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
-    );
-  };
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
@@ -84,14 +70,8 @@ export class UpdatePomSessionComponent implements OnInit {
         });
       });
     });
-    this.initReasonCode();
   }
 
-  initReasonCode(){
-    this.tagService.tagAbbreviationsForReasonCode().then(tags => {
-      this.tags = tags;
-    });
-  }
 
   update(final: boolean){
     let updateData: RowUpdateEventData [] = [];
@@ -99,7 +79,7 @@ export class UpdatePomSessionComponent implements OnInit {
     if (modifiedRows.length === 0 && !final) {
       Notify.error('No changes detected.')
     } else {
-      if(!this.reasonCode){
+      if(!this.reasonCodeComponent.reasonCode){
         Notify.error('You must select or create a reason code.')
       } else {
         this.worksheetComponent.agGrid.api.getSelectedNodes().forEach(node => {
@@ -108,7 +88,7 @@ export class UpdatePomSessionComponent implements OnInit {
           modifiedRow.newFundingLine = node.data.fundingLine;
           modifiedRow.previousFundingLine = this.worksheetComponent.unmodifiedFundingLines.find(ufl =>
             ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
-          modifiedRow.reasonCode = this.reasonCode;
+          modifiedRow.reasonCode = this.reasonCodeComponent.reasonCode;
           modifiedRow.worksheetId = this.selectedWorksheet.id;
           modifiedRow.programId = node.data.programId
           modifiedRow.fundingLineId = node.data.fundingLine.id;
@@ -118,13 +98,13 @@ export class UpdatePomSessionComponent implements OnInit {
           node.setSelected(false);
           node.data.notes = '';
         });
-        this.reasonCode = null;
+        this.reasonCodeComponent.reasonCode = null;
         this.worksheetComponent.agGrid.api.refreshCells();
         let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
         this.worksheetService.updateRows(body).subscribe(response => {
           if (!response.error) {
             this.worksheetComponent.generateUnmodifiedFundingLines();
-            this.initReasonCode();
+            this.reasonCodeComponent.ngOnInit();
             Notify.success('Worksheet updated successfully');
           } else {
             Notify.error('Something went wrong while trying to update the worksheet');

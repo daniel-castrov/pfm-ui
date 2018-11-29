@@ -24,24 +24,7 @@
           </div>
         </div>
         <div *ngIf="selectedWorksheet" class="col-4">
-          <table class="reason-code-table">
-            <tr>
-              <td>
-                <label for="typeahead-focus" class="pull-right col-form-label">Reason Code:</label>
-              </td>
-              <td>
-                <input
-                  id="typeahead-focus"
-                  type="text"
-                  class="form-control pull-right"
-                  [(ngModel)]="reasonCode"
-                  [ngbTypeahead]="search"
-                  (focus)="focus$.next($event.target.value)"
-                  (click)="click$.next($event.target.value)"
-                  #instance="ngbTypeahead"/>
-              </td>
-            </tr>
-          </table>
+          <reason-code></reason-code>
         </div>
         <div class="col-3">
           <span *ngIf="selectedWorksheet" class="pom-controls pull-right">

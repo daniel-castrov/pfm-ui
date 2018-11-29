@@ -175,6 +175,7 @@ import {CheckboxCellRenderer} from "./components/renderers/anchor-checkbox-rende
 import {GridToaComponent} from "./components/programming/update-pom-session/grid-toa/grid-toa.component";
 import {EventsModalComponent} from "app/components/programming/update-pom-session/events-modal/events-modal.component";
 import {WorksheetComponent} from "./components/programming/update-pom-session/worksheet/worksheet.component";
+import {ReasonCodeComponent} from "app/components/programming/update-pom-session/reason-code/reason-code.component";
 
 
 // ROUTES
@@ -357,7 +358,8 @@ const appRoutes: Routes = [
     OpenExecutionComponent,
     GridToaComponent,
     EventsModalComponent,
-    WorksheetComponent
+    WorksheetComponent,
+    ReasonCodeComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
