@@ -178,6 +178,7 @@ import {WorksheetComponent} from "./components/programming/update-pom-session/wo
 import {ReasonCodeComponent} from "app/components/programming/update-pom-session/reason-code/reason-code.component";
 import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
 import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
+import {UpdateButtonComponent} from "./components/programming/update-pom-session/update-button/update-button.component";
 
 
 // ROUTES
@@ -363,7 +364,8 @@ const appRoutes: Routes = [
     WorksheetComponent,
     ReasonCodeComponent,
     BulkChangesComponent,
-    FilterTextComponent
+    FilterTextComponent,
+    UpdateButtonComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

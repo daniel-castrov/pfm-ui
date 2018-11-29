@@ -1,17 +1,12 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {HeaderComponent} from '../../../components/header/header.component';
-import {Pom, POMService, User, UserService, Worksheet, WorksheetEvent, WorksheetService} from "../../../generated";
+import {Pom, POMService, User, UserService, Worksheet, WorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 import {Notify} from "../../../utils/Notify";
-import {RowNode} from "ag-grid";
 import {ActivatedRoute} from "@angular/router";
-import {RowUpdateEventData} from "../../../generated/model/rowUpdateEventData";
 import {GridToaComponent} from "./grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./events-modal/events-modal.component";
 import {WorksheetComponent} from "./worksheet/worksheet.component";
-import {ReasonCodeComponent} from "./reason-code/reason-code.component";
-import {BulkChangesComponent} from "./bulk-changes/bulk-changes.component";
-import {FilterTextComponent} from "./filter-text/filter-text.component";
 
 @Component({
   selector: 'update-pom-session',
@@ -25,9 +20,6 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild(WorksheetComponent) private worksheetComponent: WorksheetComponent;
   @ViewChild(GridToaComponent) private gridToaComponent: GridToaComponent;
   @ViewChild(EventsModalComponent) private eventsModalComponent: EventsModalComponent;
-  @ViewChild(ReasonCodeComponent) private reasonCodeComponent: ReasonCodeComponent;
-  @ViewChild(BulkChangesComponent) private bulkChangesComponent: BulkChangesComponent;
-  @ViewChild(FilterTextComponent) private filterTextComponent: FilterTextComponent;
 
   pom: Pom;
   user: User;
@@ -70,59 +62,18 @@ export class UpdatePomSessionComponent implements OnInit {
   }
 
 
-  update(final: boolean){
-    let updateData: RowUpdateEventData [] = [];
-    let modifiedRows: RowNode [] = this.worksheetComponent.agGrid.api.getSelectedNodes();
-    if (modifiedRows.length === 0 && !final) {
-      Notify.error('No changes detected.')
-    } else {
-      if(!this.reasonCodeComponent.reasonCode){
-        Notify.error('You must select or create a reason code.')
-      } else {
-        this.worksheetComponent.agGrid.api.getSelectedNodes().forEach(node => {
-          let modifiedRow : RowUpdateEventData = {};
-          modifiedRow.notes = node.data.notes;
-          modifiedRow.newFundingLine = node.data.fundingLine;
-          modifiedRow.previousFundingLine = this.worksheetComponent.unmodifiedFundingLines.find(ufl =>
-            ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
-          modifiedRow.reasonCode = this.reasonCodeComponent.reasonCode;
-          modifiedRow.worksheetId = this.selectedWorksheet.id;
-          modifiedRow.programId = node.data.programId
-          modifiedRow.fundingLineId = node.data.fundingLine.id;
-          updateData.push(modifiedRow);
-
-          node.data.modified = false;
-          node.setSelected(false);
-          node.data.notes = '';
-        });
-        this.reasonCodeComponent.reasonCode = null;
-        this.worksheetComponent.agGrid.api.refreshCells();
-        let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
-        this.worksheetService.updateRows(body).subscribe(response => {
-          if (!response.error) {
-            this.worksheetComponent.generateUnmodifiedFundingLines();
-            this.reasonCodeComponent.ngOnInit();
-            Notify.success('Worksheet updated successfully');
-          } else {
-            Notify.error('Something went wrong while trying to update the worksheet');
-            console.log(response.error);
-          }
-        });
-        if (final) {
-          this.worksheets.forEach(worksheet => {
-            this.worksheetService.update({...worksheet, locked: true}).toPromise();
-          });
-          this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
-            this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
-              this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
-                this.selectedWorksheet.isFinal = true;
-                Notify.success('Worksheet marked as final successfully')
-              })
-            });
-          });
-        }
-      }
-    }
+  lockPom(){
+    this.worksheets.forEach(worksheet => {
+      this.worksheetService.update({...worksheet, locked: true}).toPromise();
+    });
+    this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
+      this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
+        this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
+          this.selectedWorksheet.isFinal = true;
+          Notify.success('Worksheet marked as final successfully');
+        })
+      });
+    });
   }
 
   onWorksheetSelected(){
