@@ -111,7 +111,7 @@ export class SpendPlansTabComponent implements OnInit {
     var getter = function (p) {
       var row: number = p.node.rowIndex;
       var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
-      if (0 === row || 9 === row || 12  === row) {
+      if (0 === row || 10 === row || 13  === row) {
         return '';
       }
       return p.node.data.values[col];
@@ -121,7 +121,7 @@ export class SpendPlansTabComponent implements OnInit {
       if ('' === p.value) {
         return '';
       }
-      if (p.node.rowIndex > 8 && my.showPercentages) {
+      if (p.node.rowIndex > 9 && my.showPercentages) {
         var col: number = my.firstMonth + Number.parseInt(p.colDef.colId);
         var toa: number = p.data.toas[col];
         return (0 === toa 
@@ -141,25 +141,25 @@ export class SpendPlansTabComponent implements OnInit {
       my.rowData[row].values[col] = value;
       p.node.data.values[col] = value;
 
-      my.rowData[1].values[col] = 0;
-      for (var i = 2; i < 6; i++) {
-        my.rowData[1].values[col] += my.rowData[i].values[col];
+      my.rowData[2].values[col] = 0;
+      for (var i = 3; i < 7; i++) {
+        my.rowData[2].values[col] += my.rowData[i].values[col];
       }
 
       // fix cumulatives and deltas
-      var totalobl: number = (col > 0 ? my.rowData[7].values[col - 1] : 0);
-      var totalexp: number = (col > 0 ? my.rowData[8].values[col - 1] : 0);
+      var totalobl: number = (col > 0 ? my.rowData[8].values[col - 1] : 0);
+      var totalexp: number = (col > 0 ? my.rowData[9].values[col - 1] : 0);
 
       for (var i = col; i < my.maxmonths; i++){
         var toa: number = my.rowData[0].toas[i];
-        totalobl += my.rowData[1].values[i];
-        totalexp += my.rowData[6].values[i];
+        totalobl += my.rowData[2].values[i];
+        totalexp += my.rowData[7].values[i];
 
-        my.rowData[7].values[i] = totalobl;
-        my.rowData[8].values[i] = totalexp;
+        my.rowData[8].values[i] = totalobl;
+        my.rowData[9].values[i] = totalexp;
 
-        my.rowData[13].values[i] = my.rowData[7].values[i] - my.rowData[10].values[i];
         my.rowData[14].values[i] = my.rowData[8].values[i] - my.rowData[11].values[i];
+        my.rowData[15].values[i] = my.rowData[9].values[i] - my.rowData[12].values[i];
       }
 
       return true;
@@ -171,16 +171,17 @@ export class SpendPlansTabComponent implements OnInit {
       }
 
       var row: number = p.node.rowIndex;
-      return (row > 1 && row < 7);
+      return (row > 2 && row < 8);
     }
-    var cssbold: Set<number> = new Set<number>([0, 9, 12]);
-    var cssright: Set<number> = new Set<number>([2, 3, 4, 5]);
-    var csscenter: Set<number> = new Set<number>([1, 6, 7, 8, 10, 11, 13, 14 ]);
-    var csssum: Set<number> = new Set<number>([9, 12]);
-    var cssedit: Set<number> = new Set<number>([2, 3, 4, 5, 6]);
-    var csswhite: Set<number> = new Set<number>([0, 1, 2, 3, 4, 5, 6, 7]);
-    var csslightgreen: Set<number> = new Set<number>([10, 11]);
-    var csslightorange: Set<number> = new Set<number>([13, 14]);
+    var cssbold: Set<number> = new Set<number>([0, 1, 10, 13]);
+    var cssright: Set<number> = new Set<number>([3, 4, 5, 6]);
+    var csscenter: Set<number> = new Set<number>([2, 7, 8, 9, 11, 12, 14, 15 ]);
+    var csssum: Set<number> = new Set<number>([10, 13]);
+    var cssedit: Set<number> = new Set<number>([3, 4, 5, 6, 7]);
+    var csswhite: Set<number> = new Set<number>([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+    var csslightgreen: Set<number> = new Set<number>([11, 12]);
+    var cssalwayswhite: Set<number> = new Set<number>([0, 1, 2, 8, 9]);
+    var csslightorange: Set<number> = new Set<number>([14, 15]);
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
@@ -243,7 +244,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -261,7 +262,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -279,7 +280,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -297,7 +298,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -315,7 +316,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -333,7 +334,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -351,7 +352,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -369,7 +370,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -387,7 +388,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -405,7 +406,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -423,7 +424,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           },
@@ -441,7 +442,7 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-footer-sum': params => csssum.has(params.node.rowIndex),
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
-              'ag-cell-white': params => !my.submitable && csswhite.has(params.node.rowIndex),
+              'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
               'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
             }
           }
@@ -503,6 +504,7 @@ export class SpendPlansTabComponent implements OnInit {
 
       var tmpdata: PlanRow[] = [
         { label: label, values: [], toas:[] },
+        { label: 'TOA', values: [], toas: [] },
         { label: 'Obligations', values: [], toas: [] },
         { label: 'Civilian Labor', values: [], toas: [] },
         { label: 'Travel', values: [], toas: [] },
@@ -532,27 +534,28 @@ export class SpendPlansTabComponent implements OnInit {
           ? plan.monthlies[i]
           : { obligated: 0, labor: 0, travel: 0, contracts: 0, expensed: 0, other: 0 });
 
-        tmpdata[1].values.push(monthly.obligated);
-        tmpdata[2].values.push(monthly.labor);
-        tmpdata[3].values.push(monthly.travel);
-        tmpdata[4].values.push(monthly.contracts);
-        tmpdata[5].values.push(monthly.other);
-        tmpdata[6].values.push(monthly.expensed);
+        tmpdata[1].values.push(toas[i].toa);
+        tmpdata[2].values.push(monthly.obligated);
+        tmpdata[3].values.push(monthly.labor);
+        tmpdata[4].values.push(monthly.travel);
+        tmpdata[5].values.push(monthly.contracts);
+        tmpdata[6].values.push(monthly.other);
+        tmpdata[7].values.push(monthly.expensed);
 
         totalobl += monthly.obligated;
         totalexp += monthly.expensed;
-        tmpdata[7].values.push(totalobl);
-        tmpdata[8].values.push(totalexp);
+        tmpdata[8].values.push(totalobl);
+        tmpdata[9].values.push(totalexp);
 
         // OSD section
-        tmpdata[9].values.push(0);
-        tmpdata[10].values.push(toas[i].toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1.0));
-        tmpdata[11].values.push(toas[i].toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1.0));
+        tmpdata[10].values.push(0);
+        tmpdata[11].values.push(toas[i].toa * (ogoals.monthlies.length > i ? ogoals.monthlies[i] : 1.0));
+        tmpdata[12].values.push(toas[i].toa * (egoals.monthlies.length > i ? egoals.monthlies[i] : 1.0));
 
         // Delta section
-        tmpdata[12].values.push(0);
-        tmpdata[13].values.push(tmpdata[7].values[i] - tmpdata[10].values[i]);
-        tmpdata[14].values.push(tmpdata[8].values[i] - tmpdata[11].values[i]);
+        tmpdata[13].values.push(0);
+        tmpdata[14].values.push(tmpdata[7].values[i] - tmpdata[10].values[i]);
+        tmpdata[15].values.push(tmpdata[8].values[i] - tmpdata[11].values[i]);
 
         tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
@@ -584,11 +587,11 @@ export class SpendPlansTabComponent implements OnInit {
 
     for (var i = 0; i < this.maxmonths; i++) {
       newplan.monthlies.push({
-        labor: this.rowData[2].values[i],
-        travel: this.rowData[3].values[i],
-        contracts: this.rowData[4].values[i],
-        other: this.rowData[5].values[i],
-        expensed: this.rowData[6].values[i]
+        labor: this.rowData[3].values[i],
+        travel: this.rowData[4].values[i],
+        contracts: this.rowData[5].values[i],
+        other: this.rowData[6].values[i],
+        expensed: this.rowData[7].values[i]
       });
     }
 
