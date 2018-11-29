@@ -1,5 +1,4 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {HeaderComponent} from '../../../components/header/header.component';
 import {Pom, POMService, User, UserService, Worksheet, WorksheetEvent, WorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
@@ -7,11 +6,11 @@ import {Notify} from "../../../utils/Notify";
 import {RowNode} from "ag-grid";
 import {ActivatedRoute} from "@angular/router";
 import {RowUpdateEventData} from "../../../generated/model/rowUpdateEventData";
-import {TagsService} from "../../../services/tags.service";
 import {GridToaComponent} from "./grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./events-modal/events-modal.component";
 import {WorksheetComponent} from "./worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./reason-code/reason-code.component";
+import {BulkChangesComponent} from "./bulk-changes/bulk-changes.component";
 
 @Component({
   selector: 'update-pom-session',
@@ -26,15 +25,13 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild(GridToaComponent) private gridToaComponent: GridToaComponent;
   @ViewChild(EventsModalComponent) private eventsModalComponent: EventsModalComponent;
   @ViewChild(ReasonCodeComponent) private reasonCodeComponent: ReasonCodeComponent;
-  @ViewChild("instance") instance: NgbTypeahead;
+  @ViewChild(BulkChangesComponent) private bulkChangesComponent: BulkChangesComponent;
 
   pom: Pom;
   user: User;
   columnDefs;
   columnKeys;
   filterText;
-  bulkType: string;
-  bulkAmount: number;
   worksheets: Array<Worksheet>;
   selectedWorksheet: Worksheet;
 
@@ -43,8 +40,7 @@ export class UpdatePomSessionComponent implements OnInit {
               private worksheetService: WorksheetService,
               private route: ActivatedRoute,
               private userService: UserService,
-              private tagService: TagsService,
-              private cd: ChangeDetectorRef) { }
+              private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
     let worksheetId = this.route.snapshot.params['id'];
@@ -126,47 +122,6 @@ export class UpdatePomSessionComponent implements OnInit {
         }
       }
     }
-  }
-
-  applyBulkChange(){
-    this.worksheetComponent.agGrid.api.forEachNodeAfterFilterAndSort((rowNode: RowNode) => {
-      if (rowNode.rowIndex <= this.worksheetComponent.agGrid.api.getLastDisplayedRow()) {
-        this.columnKeys.forEach(year => {
-          let additionalAmount = 0;
-          if (this.bulkType === 'percentage') {
-            additionalAmount = rowNode.data.fundingLine.funds[year] * (this.bulkAmount / 100);
-          } else {
-            additionalAmount = this.bulkAmount;
-          }
-          rowNode.data.fundingLine.funds[year] = (isNaN(rowNode.data.fundingLine.funds[year])? 0 : rowNode.data.fundingLine.funds[year]) + additionalAmount;
-          rowNode.data.modified = true;
-          rowNode.setSelected(true);
-          if (rowNode.data.fundingLine.funds[year] < 0) {
-            rowNode.data.fundingLine.funds[year] = 0;
-          }
-        });
-      }
-    });
-
-    this.worksheetComponent.topPinnedData.forEach(row => {
-      this.columnKeys.forEach(year => {
-        let additionalAmount = 0;
-        if (this.bulkType === 'percentage') {
-          additionalAmount = row.fundingLine.funds[year] * (this.bulkAmount / 100);
-        } else {
-          additionalAmount = this.bulkAmount;
-        }
-        row.fundingLine.funds[year] = (isNaN(row.fundingLine.funds[year])? 0 : row.fundingLine.funds[year]) + additionalAmount;
-        row.modified = true;
-        if (row.fundingLine.funds[year] < 0) {
-          row.fundingLine.funds[year] = 0;
-        }
-      });
-    });
-
-    this.bulkAmount = null;
-    this.worksheetComponent.agGrid.api.redrawRows();
-    this.gridToaComponent.initToaDataRows();
   }
 
   onWorksheetSelected(){

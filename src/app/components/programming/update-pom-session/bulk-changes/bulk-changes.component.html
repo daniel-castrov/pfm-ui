@@ -1,0 +1,37 @@
+<fieldset>
+  <legend>Bulk changes</legend>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-check">
+        <span class="mr-1">
+          <input class="form-check-input" type="radio" name="bulkType" [(ngModel)]="bulkType" id="percentage" value="percentage" checked>
+        </span>
+        <span>
+          <label class="form-check-label" for="percentage">
+          % change
+        </label>
+      </span>
+      </div>
+      <div class="form-check">
+        <span class="mr-1">
+          <input class="form-check-input" type="radio" name="bulkType" [(ngModel)]="bulkType" id="fixed" value="fixed">
+        </span>
+        <span>
+          <label class="form-check-label" for="fixed">
+          fixed $
+          </label>
+        </span>
+      </div>
+    </div>
+    <div class="col-4">
+      <span class="form-group">
+        <input class="form-control forminput-sm w-100 mt-1" type="number" [(ngModel)]="bulkAmount">
+      </span>
+    </div>
+    <div class="col-5">
+      <span class="form-group">
+        <button class="btn btn-primary mt-1" (click)="applyBulkChange()">Apply to visible cells</button>
+      </span>
+    </div>
+  </div>
+</fieldset>

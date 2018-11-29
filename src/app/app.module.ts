@@ -176,6 +176,7 @@ import {GridToaComponent} from "./components/programming/update-pom-session/grid
 import {EventsModalComponent} from "app/components/programming/update-pom-session/events-modal/events-modal.component";
 import {WorksheetComponent} from "./components/programming/update-pom-session/worksheet/worksheet.component";
 import {ReasonCodeComponent} from "app/components/programming/update-pom-session/reason-code/reason-code.component";
+import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
 
 
 // ROUTES
@@ -359,7 +360,8 @@ const appRoutes: Routes = [
     GridToaComponent,
     EventsModalComponent,
     WorksheetComponent,
-    ReasonCodeComponent
+    ReasonCodeComponent,
+    BulkChangesComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
