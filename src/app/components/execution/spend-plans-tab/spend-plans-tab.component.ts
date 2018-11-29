@@ -166,22 +166,7 @@ export class SpendPlansTabComponent implements OnInit {
         my.rowData[15].values[i] = my.rowData[9].values[i] - my.rowData[12].values[i];
       }
 
-      // check business rules: 
-      // 1: expenditures cannot exceed obligations
-      // 2: obligations cannot exceed toa
-      my.ruleExpBelowObg.clear();
-      my.ruleObgBelowTOA.clear();
-      for (var i = 0; i < my.maxmonths; i++){
-        // 1:
-        if (my.rowData[9].values[i] > my.rowData[8].values[i]) {
-          my.ruleExpBelowObg.add(i);
-        }
-
-        // 2:
-        if (my.rowData[8].values[i] > my.rowData[0].toas[i]) {
-          my.ruleObgBelowTOA.add(i);
-        }
-      }
+      my.checkBusinessRules();
 
       return true;
     }
@@ -533,6 +518,26 @@ export class SpendPlansTabComponent implements OnInit {
     return ok;
   }
 
+  checkBusinessRules() {
+    // check business rules: 
+    // 1: expenditures cannot exceed obligations
+    // 2: obligations cannot exceed toa
+    this.ruleExpBelowObg.clear();
+    this.ruleObgBelowTOA.clear();
+    for (var i = 0; i < this.maxmonths; i++) {
+      // 1:
+      if (this.rowData[9].values[i] > this.rowData[8].values[i]) {
+        this.ruleExpBelowObg.add(i);
+      }
+
+      // 2:
+      if (this.rowData[8].values[i] > this.rowData[0].toas[i]) {
+        this.ruleObgBelowTOA.add(i);
+      }
+    }
+
+  }
+
   refreshTableData() {
     if (this._exe && this._exeline && this._oandes && this._deltas) {
       var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
@@ -613,7 +618,7 @@ export class SpendPlansTabComponent implements OnInit {
       }
 
       this.rowData = tmpdata;
-
+      this.checkBusinessRules();
       this.agOptions.api.refreshHeader();
     }
   }
