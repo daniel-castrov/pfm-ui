@@ -2,11 +2,11 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation} from
 import {HeaderComponent} from '../../../components/header/header.component';
 import {Pom, POMService, User, UserService, Worksheet, WorksheetService} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
-import {Notify} from "../../../utils/Notify";
 import {ActivatedRoute} from "@angular/router";
 import {GridToaComponent} from "./grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./events-modal/events-modal.component";
 import {WorksheetComponent} from "./worksheet/worksheet.component";
+import {ReasonCodeComponent} from "./reason-code/reason-code.component";
 
 @Component({
   selector: 'update-pom-session',
@@ -20,6 +20,7 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild(WorksheetComponent) private worksheetComponent: WorksheetComponent;
   @ViewChild(GridToaComponent) private gridToaComponent: GridToaComponent;
   @ViewChild(EventsModalComponent) private eventsModalComponent: EventsModalComponent;
+  @ViewChild(ReasonCodeComponent) private reasonCodeComponent: ReasonCodeComponent;
 
   pom: Pom;
   user: User;
@@ -57,21 +58,6 @@ export class UpdatePomSessionComponent implements OnInit {
             this.onWorksheetSelected();
           }
         });
-      });
-    });
-  }
-
-
-  lockPom(){
-    this.worksheets.forEach(worksheet => {
-      this.worksheetService.update({...worksheet, locked: true}).toPromise();
-    });
-    this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
-      this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
-        this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
-          this.selectedWorksheet.isFinal = true;
-          Notify.success('Worksheet marked as final successfully');
-        })
       });
     });
   }

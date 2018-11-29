@@ -29,7 +29,10 @@
         </div>
         <div class="col-3">
           <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
-            <button [disabled]="selectedWorksheet.isFinal" (click)="lockPom()" class="btn btn-success">Use this worksheet as final position</button>
+            <lock-button [pom]="pom"
+                         [selectedWorksheet]="selectedWorksheet"
+                         [worksheets]="worksheets">
+            </lock-button>
             <update-button [worksheetComponent]="worksheetComponent"
                            [selectedWorksheet]="selectedWorksheet"
                            [reasonCodeComponent]="reasonCodeComponent">

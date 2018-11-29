@@ -179,6 +179,7 @@ import {ReasonCodeComponent} from "app/components/programming/update-pom-session
 import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
 import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
 import {UpdateButtonComponent} from "./components/programming/update-pom-session/update-button/update-button.component";
+import {LockButtonComponent} from "app/components/programming/update-pom-session/lock-button/lock-button.component";
 
 
 // ROUTES
@@ -365,7 +366,8 @@ const appRoutes: Routes = [
     ReasonCodeComponent,
     BulkChangesComponent,
     FilterTextComponent,
-    UpdateButtonComponent
+    UpdateButtonComponent,
+    LockButtonComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

@@ -4,6 +4,8 @@ import {Notify} from "../../../../utils/Notify";
 import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
 import {WorksheetComponent} from "./../worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./../reason-code/reason-code.component";
+import {RowNode} from "ag-grid";
+
 
 @Component({
   selector: 'update-button',
@@ -19,7 +21,13 @@ export class UpdateButtonComponent {
 
   constructor( private worksheetService: WorksheetService ) {}
 
-  update(): boolean  {
+  update()  {
+    let modifiedRows: RowNode [] = this.worksheetComponent.agGrid.api.getSelectedNodes();
+    if (modifiedRows.length === 0) {
+      Notify.error('No changes detected.')
+      return;
+    }
+
     if(!this.reasonCodeComponent.reasonCode) {
       Notify.error('You must select or create a reason code.');
       return;
