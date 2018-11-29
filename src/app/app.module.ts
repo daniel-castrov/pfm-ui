@@ -177,6 +177,7 @@ import {EventsModalComponent} from "app/components/programming/update-pom-sessio
 import {WorksheetComponent} from "./components/programming/update-pom-session/worksheet/worksheet.component";
 import {ReasonCodeComponent} from "app/components/programming/update-pom-session/reason-code/reason-code.component";
 import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
+import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
 
 
 // ROUTES
@@ -361,7 +362,8 @@ const appRoutes: Routes = [
     EventsModalComponent,
     WorksheetComponent,
     ReasonCodeComponent,
-    BulkChangesComponent
+    BulkChangesComponent,
+    FilterTextComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

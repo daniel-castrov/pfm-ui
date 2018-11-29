@@ -11,6 +11,7 @@ import {EventsModalComponent} from "./events-modal/events-modal.component";
 import {WorksheetComponent} from "./worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./reason-code/reason-code.component";
 import {BulkChangesComponent} from "./bulk-changes/bulk-changes.component";
+import {FilterTextComponent} from "./filter-text/filter-text.component";
 
 @Component({
   selector: 'update-pom-session',
@@ -26,12 +27,12 @@ export class UpdatePomSessionComponent implements OnInit {
   @ViewChild(EventsModalComponent) private eventsModalComponent: EventsModalComponent;
   @ViewChild(ReasonCodeComponent) private reasonCodeComponent: ReasonCodeComponent;
   @ViewChild(BulkChangesComponent) private bulkChangesComponent: BulkChangesComponent;
+  @ViewChild(FilterTextComponent) private filterTextComponent: FilterTextComponent;
 
   pom: Pom;
   user: User;
   columnDefs;
   columnKeys;
-  filterText;
   worksheets: Array<Worksheet>;
   selectedWorksheet: Worksheet;
 
@@ -137,10 +138,6 @@ export class UpdatePomSessionComponent implements OnInit {
       this.eventsModalComponent.generateEventsColumns();
     });
     this.cd.detectChanges();
-  }
-
-  onFilterTextBoxChanged() {
-    this.worksheetComponent.agGrid.gridOptions.api.setQuickFilter( this.filterText );
   }
 
   onGridReady(params) {

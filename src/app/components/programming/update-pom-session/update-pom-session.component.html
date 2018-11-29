@@ -50,7 +50,8 @@
       </div>
       <div *ngIf="selectedWorksheet" class="row mb-3">
         <div class="col-5 align-column">
-          <input class="form-control forminput w-100" type="text" placeholder="Enter filter..." [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()">
+          <filter-text [worksheetComponent]="worksheetComponent">
+          </filter-text>
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">
