@@ -42,7 +42,11 @@ export class SpendPlansTabComponent implements OnInit {
   private maxmonths: number = 0;
   private showPercentages: boolean = true;
   private showBaseline: boolean = true;
-
+  
+  // business rules
+  private ruleExpBelowObg: Set<number> = new Set<number>();
+  private ruleObgBelowTOA: Set<number> = new Set<number>();
+  
   @Input() set exeline(e: ExecutionLine) {
     if (e) {
       this._exeline = e;
@@ -162,6 +166,23 @@ export class SpendPlansTabComponent implements OnInit {
         my.rowData[15].values[i] = my.rowData[9].values[i] - my.rowData[12].values[i];
       }
 
+      // check business rules: 
+      // 1: expenditures cannot exceed obligations
+      // 2: obligations cannot exceed toa
+      my.ruleExpBelowObg.clear();
+      my.ruleObgBelowTOA.clear();
+      for (var i = 0; i < my.maxmonths; i++){
+        // 1:
+        if (my.rowData[9].values[i] > my.rowData[8].values[i]) {
+          my.ruleExpBelowObg.add(i);
+        }
+
+        // 2:
+        if (my.rowData[8].values[i] > my.rowData[0].toas[i]) {
+          my.ruleObgBelowTOA.add(i);
+        }
+      }
+
       return true;
     }
 
@@ -173,6 +194,22 @@ export class SpendPlansTabComponent implements OnInit {
       var row: number = p.node.rowIndex;
       return (row > 2 && row < 8);
     }
+
+    var brsOk = function (p): boolean{
+      var row: number = p.node.rowIndex;
+      var col: number = p.colDef.colId;
+
+      if (1 == row) {
+        return my.ruleObgBelowTOA.has(col);
+      } else if (8 == row) {
+        return (my.ruleObgBelowTOA.has(col) || my.ruleExpBelowObg.has(col));
+      } else if (9 == row) {
+        return my.ruleExpBelowObg.has(col);
+      }
+
+      return false;
+    }
+
     var cssbold: Set<number> = new Set<number>([0, 1, 10, 13]);
     var cssright: Set<number> = new Set<number>([3, 4, 5, 6]);
     var csscenter: Set<number> = new Set<number>([2, 7, 8, 9, 11, 12, 14, 15 ]);
@@ -245,7 +282,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -263,7 +301,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -281,7 +320,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -299,7 +339,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -317,7 +358,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -335,7 +377,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -353,7 +396,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -371,7 +415,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -389,7 +434,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -407,7 +453,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -425,7 +472,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           },
           {
@@ -443,7 +491,8 @@ export class SpendPlansTabComponent implements OnInit {
               'ag-cell-light-green': params => csslightgreen.has(params.node.rowIndex),
               'ag-cell-edit': params => cssedit.has(params.node.rowIndex) && my.submitable,
               'ag-cell-white': params => cssalwayswhite.has(params.node.rowIndex) || (!my.submitable && csswhite.has(params.node.rowIndex)),
-              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex)
+              'ag-cell-light-orange': params => csslightorange.has(params.node.rowIndex),
+              'ag-cell-red': params => brsOk(params)
             }
           }
         ]
@@ -480,7 +529,8 @@ export class SpendPlansTabComponent implements OnInit {
     if (!this.showBaseline) {
       ok = ok && this.exeline.appropriated;
     }
-    return ok
+
+    return ok;
   }
 
   refreshTableData() {
@@ -554,8 +604,8 @@ export class SpendPlansTabComponent implements OnInit {
 
         // Delta section
         tmpdata[13].values.push(0);
-        tmpdata[14].values.push(tmpdata[7].values[i] - tmpdata[10].values[i]);
-        tmpdata[15].values.push(tmpdata[8].values[i] - tmpdata[11].values[i]);
+        tmpdata[14].values.push(tmpdata[8].values[i] - tmpdata[11].values[i]);
+        tmpdata[15].values.push(tmpdata[9].values[i] - tmpdata[12].values[i]);
 
         tmpdata.forEach(row => {
           row.toas.push(toas[i].toa);
