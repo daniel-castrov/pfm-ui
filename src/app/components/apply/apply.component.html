@@ -43,7 +43,7 @@
                   </a>
                 </div>
                 <div class="modal-body">
-                  <h4 class="modal-title">JSCBIS NON-DISCLOSURE CERTIFICATION</h4>
+                  <h4 class="modal-title">JICAP NON-DISCLOSURE CERTIFICATION</h4>
                   <pre class="nda-message">{{ndaText}}</pre>
                   <input type="checkbox" [checked]="ndaSatisfied" (change)="ndaSatisfied= !ndaSatisfied" name="ndaSatisfied" class="checkbox" required>
                   <strong>I agree to the terms and conditions of this Non-Disclosure Agreement</strong>
@@ -88,7 +88,7 @@
         </div>
 
         <div class="form-group">
-          <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" required #communityId="ngModel" 
+          <select class="form-control-sm mb-2 mr-sm-2" ngModel name="communityId" required #communityId="ngModel"
           (change)="filterOrgs(communityId.viewModel)">
             <option value="">*Community Access Request</option>
             <option *ngFor="let community of communities" [value]="community.id">{{ community.name }}</option>
@@ -101,7 +101,7 @@
           </select>
           <span [hidden]="organizationId.valid || organizationId.pristine" class="alert-danger">*Organization required</span>
         </div>
-           
+
         <div class="form-group">
           <span class="form-group inline-name">
             <input type="text" [(ngModel)]="createUserRequest.sponsorName" #createUserRequestSponsorName="ngModel" [ngClass]="{'is-invalid':createUserRequestSponsorName.errors && createUserRequestSponsorName.touched}"
