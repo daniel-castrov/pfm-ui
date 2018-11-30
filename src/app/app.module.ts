@@ -173,6 +173,7 @@ import {ViewEventsRenderer} from "./components/renderers/view-events-renderer/vi
 import {ValueChangeRenderer} from "./components/renderers/value-change-renderer/value-change-renderer.component";
 import {CheckboxCellRenderer} from "./components/renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 import {GridToaComponent} from "./components/programming/update-pom-session/grid-toa/grid-toa.component";
+import {ClosePomSessionComponent} from "./components/programming/close-pom-session/close-pom-session.component";
 import {EventsModalComponent} from "app/components/programming/update-pom-session/events-modal/events-modal.component";
 import {WorksheetComponent} from "./components/programming/update-pom-session/worksheet/worksheet.component";
 import {ReasonCodeComponent} from "app/components/programming/update-pom-session/reason-code/reason-code.component";
@@ -228,6 +229,7 @@ const appRoutes: Routes = [
   {path:'update-pom-session/:id', component:UpdatePomSessionComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
+  {path:'close-pom-session', component:ClosePomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
@@ -321,6 +323,7 @@ const appRoutes: Routes = [
     UfrJustificationComponent,
     UpdatePomSessionComponent,
     OpenPomSessionComponent,
+    ClosePomSessionComponent,
     UpdateProgramExecutionComponent,
     ValuesPipe,
     WithholdComponent,
