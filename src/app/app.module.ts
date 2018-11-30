@@ -180,6 +180,7 @@ import {BulkChangesComponent} from "./components/programming/update-pom-session/
 import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
 import {UpdateButtonComponent} from "./components/programming/update-pom-session/update-button/update-button.component";
 import {LockButtonComponent} from "app/components/programming/update-pom-session/lock-button/lock-button.component";
+import {WorksheetSelectorComponent} from "app/components/programming/update-pom-session/worksheet-selector/worksheet-selector.component";
 
 
 // ROUTES
@@ -367,7 +368,8 @@ const appRoutes: Routes = [
     BulkChangesComponent,
     FilterTextComponent,
     UpdateButtonComponent,
-    LockButtonComponent
+    LockButtonComponent,
+    WorksheetSelectorComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
