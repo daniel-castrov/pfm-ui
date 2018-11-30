@@ -52,7 +52,7 @@ export class ApplyComponent implements OnInit {
     });
   }
 
-  private filterOrgs( commId:string ){  
+  private filterOrgs( commId:string ){
     this.organizations =  this.allOrganizations.filter(org => org.communityId == commId);
   }
 
@@ -61,7 +61,7 @@ export class ApplyComponent implements OnInit {
 
       this.createUserRequest = value;
       this.createUserRequest.status = "UNDECIDED";
-      this.createUserRequest.cn = this.stranger.cn;      
+      this.createUserRequest.cn = this.stranger.cn;
 
       if ( this.stranger.contractor ){
         this.createUserRequest.nda = this.ndaText.substring(0,this.ndaText.indexOf("\n"));
@@ -77,7 +77,7 @@ export class ApplyComponent implements OnInit {
 
       this.formsubmitted = true;
 
-      Notify.success("Your application to join JSCBIS has been submitted. Please check your email for the status of your request.");
+      Notify.success("Your application to join JICAP has been submitted. Please check your email for the status of your request.");
     } else {
       Notify.error("An error occured. Unable to submit New User Request Form");
     }
