@@ -638,18 +638,6 @@ paths:
         name: "mrId"
         required: true
         type: "string"
-  /pr/phase/{phaseId}/updateMrdb:
-    post:
-      tags:
-      - "PR"
-      operationId: "updateMrdb"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        required: true
-        type: "string"
   /pr/subprograms/{id}:
     get:
       tags:
