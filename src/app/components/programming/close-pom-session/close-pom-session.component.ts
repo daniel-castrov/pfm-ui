@@ -4,7 +4,7 @@ import { HeaderComponent } from '../../header/header.component'
 import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
-import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated';
+import {User, Pom, ProgrammaticRequest, POMService, PBService, PRService} from '../../../generated';
 import { Notify } from '../../../utils/Notify';
 
 @Component({
@@ -29,6 +29,7 @@ export class ClosePomSessionComponent implements OnInit {
   constructor(
     private pomService: POMService,
     private pbService: PBService,
+    private prService: PRService,
     private globalsService: UserUtils,
     private router: Router,
     private withFullNameService: WithFullNameService ) {}
@@ -52,7 +53,6 @@ export class ClosePomSessionComponent implements OnInit {
           break;
         }
       }
-
     });
   }
 
@@ -64,9 +64,11 @@ export class ClosePomSessionComponent implements OnInit {
   closePom( event ) {
     if (this.allPrsSubmitted) {
       this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.CLOSED).subscribe(response => {
-        Notify.success('The POM Session is now CLOSED');
-        this.header.refreshActions();
-        this.router.navigate(['/home']);
+        this.prService.updateMrdb(this.pom.id).subscribe(response => {
+          Notify.success('The POM Session is now CLOSED');
+          this.header.refreshActions();
+          this.router.navigate(['/home']);
+        });
       })
     }
   }

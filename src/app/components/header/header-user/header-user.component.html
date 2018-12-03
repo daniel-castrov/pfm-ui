@@ -85,7 +85,7 @@
       </ng-template>
 
       <!-- Programming Menu -->
-      <div *ngIf=" !elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu">
+      <div *ngIf="'CLOSED'!==pomStatus && !elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown01"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
@@ -104,7 +104,7 @@
             <div approle="POM_Manager">
               <div class="dropdown-divider"></div>
 
-              <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus)">
+              <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus||'CLOSED'===pomStatus)">
                 <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
                 <a class="dropdown-item" disabled>Open POM Session</a>
                 <a class="dropdown-item" disabled>Update POM Session</a>
