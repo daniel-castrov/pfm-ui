@@ -27,6 +27,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
   private modelpb: PB;
   private message: string;
   private fileToUpload: File;
+  private submitted: boolean = false;
 
   constructor(private pbsvc: PBService, private usvc: MyDetailsService,
   private esvc:ExecutionService, private router:Router ) { }
@@ -69,6 +70,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
 
   submit() {
+    this.submitted = true;
     var my: CreateExecutionPhaseComponent = this;
 
     this.esvc.createExecution(this.modelpb.communityId, this.modelpb.fy, this.fileToUpload,
