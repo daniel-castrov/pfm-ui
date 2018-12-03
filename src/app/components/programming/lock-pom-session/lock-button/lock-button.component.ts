@@ -25,10 +25,7 @@ export class LockButtonComponent {
 
   lockPom() {
     $('#confirmation-modal').modal('hide');
-    this.worksheets.forEach(worksheet => {
-      this.worksheetService.update({...worksheet, locked: true}).toPromise();
-    });
-    this.worksheetService.update({...this.selectedWorksheet, isFinal: true, locked: true}).subscribe(response => {
+    this.worksheetService.update({...this.selectedWorksheet, isFinal: true}).subscribe(response => {
       this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
         this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
           this.selectedWorksheet.isFinal = true;
