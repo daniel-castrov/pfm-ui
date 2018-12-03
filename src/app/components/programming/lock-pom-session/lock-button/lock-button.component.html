@@ -1,0 +1,23 @@
+<button [disabled]="selectedWorksheet.isFinal" (click)="popup()" class="btn btn-success">Lock</button>
+<div id="confirmation-modal" class="modal fade in">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="btn" data-dismiss="modal">
+          <i class="fa fa-times-circle" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="modal-body mt-4">
+        <div class="row">
+          <div class="col-4">
+          </div>
+          <div class="col-4">
+            Do you want to lock the POM session? This is irreversible.<p>
+            <button (click)="lockPom()" class="btn btn-success">OK</button>
+            <button (click)="cancel()" class="btn btn-success">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

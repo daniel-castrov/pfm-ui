@@ -180,8 +180,9 @@ import {ReasonCodeComponent} from "app/components/programming/update-pom-session
 import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
 import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
 import {UpdateButtonComponent} from "./components/programming/update-pom-session/update-button/update-button.component";
-import {LockButtonComponent} from "app/components/programming/update-pom-session/lock-button/lock-button.component";
+import {LockButtonComponent} from "app/components/programming/lock-pom-session/lock-button/lock-button.component";
 import {WorksheetSelectorComponent} from "app/components/programming/update-pom-session/worksheet-selector/worksheet-selector.component";
+import {LockPomSessionComponent} from "./components/programming/lock-pom-session/lock-pom-session.component";
 
 
 // ROUTES
@@ -228,6 +229,7 @@ const appRoutes: Routes = [
   {path:'user/:id', component:ManageSelfComponent},
   {path:'update-pom-session/:id', component:UpdatePomSessionComponent},
   {path:'update-pom-session', component:UpdatePomSessionComponent},
+  {path:'lock-pom-session', component:LockPomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
   {path:'close-pom-session', component:ClosePomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
@@ -322,6 +324,7 @@ const appRoutes: Routes = [
     UfrUfrTabComponent,
     UfrJustificationComponent,
     UpdatePomSessionComponent,
+    LockPomSessionComponent,
     OpenPomSessionComponent,
     ClosePomSessionComponent,
     UpdateProgramExecutionComponent,
