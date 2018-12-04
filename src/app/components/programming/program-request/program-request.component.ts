@@ -14,6 +14,7 @@ import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
 import {Organization, OrganizationService, User, RestResult, Pom, POMService, RolesPermissionsService} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
+import { Validation } from './funds-tab/Validation';
 
 @Component({
   selector: 'program-request',
@@ -126,6 +127,13 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.organizationId = (await this.orgService.getByAbbreviation(
       PRUtils.getOrganizationNameForLeadComponent(this.pr.leadComponent) ).toPromise()).result.id;
 
+    // if we're trying to SAVE a GENERIC program during RECONCILIATION, we need to SUBMIT it instead
+    if (Pom.StatusEnum.RECONCILIATION == this.pom.status &&
+      ProgramType.GENERIC === this.pr.type && 
+      ProgrammaticRequestState.SAVED === state) {
+      state = ProgrammaticRequestState.SUBMITTED;
+    }
+
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
@@ -154,7 +162,15 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   isNotSavable(): boolean {
     if(!this.idAndNameComponent) return true; // not fully initilized yet
-    if(this.variantsTabComponent.invalid) return true;
+    if (this.variantsTabComponent.invalid) return true;
+    
+    // if we're in RECONCILIATION mode, we can always save a subprogram
+    if (this.pom && Pom.StatusEnum.RECONCILIATION == this.pom.status &&
+      this.pr.type == ProgramType.GENERIC) {
+      var validation: Validation = this.fundsTabComponent.validate;
+      return (!validation.isValid || this.idAndNameComponent.invalid || this.programTabComponent.invalid);
+    }
+
     return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
   }
 
