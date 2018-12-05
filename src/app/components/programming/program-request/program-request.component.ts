@@ -123,17 +123,17 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async save(state: ProgrammaticRequestState) {
 
-    this.pr.organizationId = (await this.orgService.getByAbbreviation( 
+    this.pr.organizationId = (await this.orgService.getByAbbreviation(
       PRUtils.getOrganizationNameForLeadComponent(this.pr.leadComponent) ).toPromise()).result.id;
 
     let fundsTabValidation = this.fundsTabComponent.validate;
     if(!fundsTabValidation.isValid){
       Notify.error(fundsTabValidation.message);
-    } else {      
+    } else {
       if(this.pr.id) {
         let oldState = this.pr.state;
         this.pr.state = state;
-        let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise()); 
+        let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise());
         if (data.error) {
           this.pr.state = oldState;
           Notify.error('Program request failed to save.\n' + data.error);
@@ -143,6 +143,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
           } else {
             Notify.success('Program request submitted successfully')
           }
+          this.pr = data.result;
         }
       } else {
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
