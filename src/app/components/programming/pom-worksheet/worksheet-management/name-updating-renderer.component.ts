@@ -11,7 +11,7 @@ import {ICellRendererParams} from "ag-grid/dist/lib/rendering/cellRenderers/iCel
               {{params.value.name}}
             </a>`
 })
-export class NameRendererComponent implements ICellRendererAngularComp {
+export class NameUpdatingRendererComponent implements ICellRendererAngularComp {
   params: ICellRendererParams;
 
   agInit(param: ICellRendererParams) {

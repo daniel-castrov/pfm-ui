@@ -19,6 +19,7 @@ export class WorksheetComponent implements OnChanges {
 
   @ViewChild("agGrid") agGrid: AgGridNg2;
 
+  @Input() readonly: boolean;
   @Input() pom: Pom;
   columnDefs;
   @Input() columnKeys;

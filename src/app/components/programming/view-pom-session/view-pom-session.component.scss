@@ -1,0 +1,108 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+
+.worksheet-width {
+  width: 300px;
+}
+
+@media (max-width: 960px) {
+  .worksheet-width {
+    width: 200px;
+  }
+}
+
+label {
+  color: #6b757c;
+  margin: 0;
+}
+
+.pom-controls{
+  display: block;
+  content: "";
+  clear: both;
+}
+
+.breadcrumb {
+  background-color: #ffffff;
+  padding: 0;
+  span > a {
+    text-decoration: underline;;
+    &:hover {
+      text-decoration:none;
+    }
+  }
+}
+
+.timestamp {
+  font-size:12px;
+  display: block;
+  margin-top: -10px;
+  color: $primary-color;
+  font-size: 12px;
+}
+
+fieldset {
+  margin-bottom: 16px !important;
+}
+
+.form-check {
+
+ > .form-check-input {
+    margin: 0 !important;
+    position: relative !important;
+  }
+
+  .form-check-label {
+    padding-top: 1px;
+  }
+}
+
+.ag-row-selected > .ag-cell{
+  background-color: #b7e4ff !important;
+}
+
+.pinned-row-modified > .ag-cell {
+  background-color: #b7e4ff !important;
+}
+
+.header-without-filter > .ag-cell-label-container > .ag-header-cell-label {
+  width: 100% !important;
+}
+
+.modal-dialog {
+  max-width: none !important;
+}
+
+.modal-header {
+  padding: 2px !important;
+
+ .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 0;
+    height: 30px;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    > i {
+      font-size: 26px;
+    }
+  }
+}
+
+.reason-code-table {
+  margin: 0;
+  td {
+    padding: 0 5px 0 0;
+  }
+  td:last-child {
+    padding-right: 0;
+  }
+}

@@ -4,7 +4,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-6" id="update-pom-session">
-          <div class="h5 mb-4">POM {{pom.fy}} - Worksheet Managment </div>
+          <div class="h5 mb-4">POM {{pom?.fy}} - Worksheet Management </div>
         </div>
       </div>
       <div class="row">
@@ -13,8 +13,8 @@
             <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()"                             > Duplicate </button></li>
             <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()"                             > Rename    </button></li>
             <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()"                             > Export    </button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"    [disabled]="!importComponent?.importableWorksheets?.length || pom.status === 'RECONCILIATION'" > Import    </button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.UNLOCK)"    [disabled]="!importComponent?.importableWorksheets?.length || pom.status === 'RECONCILIATION'" > Unlock    </button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"    [disabled]="!importComponent?.importableWorksheets?.length" > Import    </button></li>
+            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.UNLOCK)"    [disabled]="!importComponent?.importableWorksheets?.length" > Unlock    </button></li>
           </ul>
         </div>
       </div>
