@@ -2,8 +2,6 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
 import {Pom, POMService, Worksheet, WorksheetService} from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 
-declare const $: any;
-
 @Component({
   selector: 'lock-button',
   templateUrl: './lock-button.component.html',
@@ -19,12 +17,7 @@ export class LockButtonComponent {
   constructor(private pomService: POMService,
               private worksheetService: WorksheetService) {}
 
-  popup() {
-    $('#confirmation-modal').modal('show');
-  }
-
   lockPom() {
-    $('#confirmation-modal').modal('hide');
     this.worksheetService.update({...this.selectedWorksheet, isFinal: true}).subscribe(response => {
       this.worksheetService.updateProgramRequests(this.selectedWorksheet.id).subscribe(response => {
         this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).subscribe(response => {
@@ -34,9 +27,4 @@ export class LockButtonComponent {
       });
     });
   }
-
-  cancel() {
-    $('#confirmation-modal').modal('hide');
-  }
-
 }

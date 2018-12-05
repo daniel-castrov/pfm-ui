@@ -1,0 +1,16 @@
+<ng-template #modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">{{title}}</h4>
+    <a (click)="onClose()" class="btn" data-dismiss="modal">
+      <i class="fa fa-times-circle" aria-hidden="true"></i>
+    </a>
+  </div>
+  <div class="modal-body">
+    <p [innerHTML]="confirmationMessage"></p>
+    <p *ngIf="note" [innerHTML]="note"></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="onCancel()">{{cancelButtonText || 'Cancel'}}</button>
+    <button type="button" class="btn btn-primary" (click)="onOk()">{{okButtonText || 'Ok'}}</button>
+  </div>
+</ng-template>
