@@ -87,7 +87,13 @@
             <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
           </ng-container>
           <ng-container *ngIf="pomIsCreated">
-            <button [disabled]="tooMuchToa" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Update TOAs</button>
+            <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="toaConfirmationDialog.open()">Update TOAs</button>
+            <confirmation-dialog
+              #toaConfirmationDialog
+              confirmationMessage='<p>Clicking <u>Continue</u> will update all TOAs for the current POM Session
+                      and revert any currently <b>"Submitted"</b> Program Requests to the <b>"Saved"</b> state.</p>'
+              title="Caution"
+              (okEvent)="updatePom()"></confirmation-dialog>
           </ng-container>
           <ng-container *ngIf="pomIsOpen">
             <button class="btn btn-primary" (click)="updatePom()">Update Community TOA</button>
@@ -97,26 +103,6 @@
           <div *ngIf="submitted" class="loader"></div>
         </div>
       </div>
-      <!-- Modal Dialog -->
-      <div id="myModal" class="modal fade in">
-        <div class="modal-dialog">
-          <div class="modal-content nda-content">
-            <div class="modal-header">
-              <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
-              <h2>Caution</h2>
-            </div>
-            <div class="modal-body">
-              <p>Clicking <u>Continue</u> will update all TOAs for the current POM Session
-                and revert any currently <b>"Submitted"</b> Program Requests to the <b>"Saved"</b> state.</p>
-              <span class="controls mb-2">
-                  <button class="btn btn-primary btn" data-dismiss="modal">Cancel</button>
-                  <button class="btn btn-primary btn" data-dismiss="modal" (click)="updatePom()">Continue</button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>

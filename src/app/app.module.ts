@@ -174,15 +174,16 @@ import {ValueChangeRenderer} from "./components/renderers/value-change-renderer/
 import {CheckboxCellRenderer} from "./components/renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 import {GridToaComponent} from "./components/programming/update-pom-session/grid-toa/grid-toa.component";
 import {ClosePomSessionComponent} from "./components/programming/close-pom-session/close-pom-session.component";
-import {EventsModalComponent} from "app/components/programming/update-pom-session/events-modal/events-modal.component";
+import {EventsModalComponent} from "./components/programming/update-pom-session/events-modal/events-modal.component";
 import {WorksheetComponent} from "./components/programming/update-pom-session/worksheet/worksheet.component";
-import {ReasonCodeComponent} from "app/components/programming/update-pom-session/reason-code/reason-code.component";
+import {ReasonCodeComponent} from "./components/programming/update-pom-session/reason-code/reason-code.component";
 import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
 import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
 import {UpdateButtonComponent} from "./components/programming/update-pom-session/update-button/update-button.component";
-import {LockButtonComponent} from "app/components/programming/lock-pom-session/lock-button/lock-button.component";
-import {WorksheetSelectorComponent} from "app/components/programming/update-pom-session/worksheet-selector/worksheet-selector.component";
+import {LockButtonComponent} from "./components/programming/lock-pom-session/lock-button/lock-button.component";
+import {WorksheetSelectorComponent} from "./components/programming/update-pom-session/worksheet-selector/worksheet-selector.component";
 import {LockPomSessionComponent} from "./components/programming/lock-pom-session/lock-pom-session.component";
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 
 // ROUTES
@@ -375,7 +376,8 @@ const appRoutes: Routes = [
     FilterTextComponent,
     UpdateButtonComponent,
     LockButtonComponent,
-    WorksheetSelectorComponent
+    WorksheetSelectorComponent,
+    ConfirmationDialogComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -392,7 +394,8 @@ const appRoutes: Routes = [
     ViewEventsRenderer,
     ValueChangeRenderer,
     ActualsCellRendererComponent,
-    FyHeaderComponent
+    FyHeaderComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     AccordionModule.forRoot(),

@@ -7,7 +7,13 @@
       </div>
       <div class="col-md-3 col-sm-12">
         <span>
-          <button class="btn-primary btn pull-right" (click)=closePom() [disabled]="!allPrsSubmitted">Close POM Session</button>
+          <button class="btn-primary btn pull-right" (click)="closeConfirmationDialog.open()" [disabled]="!allPrsSubmitted">Close POM Session</button>
+          <confirmation-dialog
+            #closeConfirmationDialog
+            confirmationMessage="<strong>Are you sure you want to close the POM Session?</strong>"
+            note="Be advised that this is irreversible"
+            title="Close POM Session"
+            (okEvent)="closePom()"></confirmation-dialog>
         </span>
       </div>
     </div>
