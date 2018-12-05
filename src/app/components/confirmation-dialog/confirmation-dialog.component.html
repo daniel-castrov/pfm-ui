@@ -10,7 +10,7 @@
     <p *ngIf="note" [innerHTML]="note"></p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="onCancel()">{{cancelButtonText? cancelButtonText: 'Cancel'}}</button>
-    <button type="button" class="btn btn-primary" (click)="onOk()">{{okButtonText? okButtonText: 'Ok'}}</button>
+    <button type="button" class="btn btn-danger" (click)="onCancel()">{{cancelButtonText || 'Cancel'}}</button>
+    <button type="button" class="btn btn-primary" (click)="onOk()">{{okButtonText || 'Ok'}}</button>
   </div>
 </ng-template>
