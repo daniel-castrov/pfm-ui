@@ -218,7 +218,7 @@ export class UfrFundsComponent implements OnChanges {
     this.proposedChangesColumnDefs.unshift({
       colId: 'flType',
       //maxWidth: 122,
-      valueGetter: params => {return 'Proposed Change'},
+      valueGetter: () => {return 'Proposed Change'},
       rowSpan: params => {return this.rowSpanCount(params)},
       cellClassRules: {
         'row-span': params => {return this.rowSpanCount(params) > 1}
@@ -522,8 +522,15 @@ export class UfrFundsComponent implements OnChanges {
     this.calculateRevisedChanges();
   }
 
+
   sizeColumnsToFit(params) {
-    params.api.sizeColumnsToFit();
+    if (params === null) {
+      this.agGridProposedChanges.api.sizeColumnsToFit();
+      this.agGridCurrentFunding.api.sizeColumnsToFit();
+      this.agGridRevisedPrograms.api.sizeColumnsToFit();
+    } else {
+      params.api.sizeColumnsToFit();
+    }
   }
 
   onCellEditingStarted(params) {
