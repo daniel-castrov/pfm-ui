@@ -9,6 +9,7 @@ import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 import {Notify} from "../../../utils/Notify";
+import {UfrJustificationComponent} from "./ufr-justification-tab/ufr-justification-tab.component";
 
 @Component({
   selector: 'app-ufr-view',
@@ -20,6 +21,7 @@ export class UfrViewComponent implements OnInit {
   @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
   @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;
+  @ViewChild(UfrJustificationComponent) ufrJustificationComponent: UfrJustificationComponent;
   private ufr: UFR;
   private canedit: boolean = false;
   private pom: Pom;
@@ -69,43 +71,48 @@ export class UfrViewComponent implements OnInit {
 
   async save() {
 
-    this.ufr.organizationId = (await this.orgService.getByAbbreviation( 
+    this.ufr.organizationId = (await this.orgService.getByAbbreviation(
       PRUtils.getOrganizationNameForLeadComponent(this.ufr.leadComponent) ).toPromise()).result.id;
 
     let fundsTabValidation = this.ufrFundsComponent.validate;
-    if(!fundsTabValidation.isValid){
-      Notify.error(fundsTabValidation.message);
+    let justificationTabValidation = this.ufrJustificationComponent.validate;
+    if (justificationTabValidation) {
+      Notify.error(justificationTabValidation.message);
     } else {
-      if(this.ufr.id) {
-        this.ufrService.update(this.ufr).subscribe(d => {
-          if (d.error) {
-            Notify.error(d.error); 
-          }
-          else {
-            if (this.ufr.status === UfrStatus.SUBMITTED) {
-              Notify.success('UFR submitted successfully');
-            } else {
-              Notify.success('UFR saved successfully');
-            }
-          }
-        });
+      if(!fundsTabValidation.isValid){
+        Notify.error(fundsTabValidation.message);
       } else {
-        if (this.ufr.status === UfrStatus.SUBMITTED) {
-          // going straight to SUBMIT without a SAVE first (so save first!)
-          this.ufrService.create(this.ufr).subscribe(d => {
+        if(this.ufr.id) {
+          this.ufrService.update(this.ufr).subscribe(d => {
             if (d.error) {
               Notify.error(d.error);
             }
             else {
-              this.ufr = d.result;
-              this.ufr.status = UfrStatus.SUBMITTED;
-              this.save();
+              if (this.ufr.status === UfrStatus.SUBMITTED) {
+                Notify.success('UFR submitted successfully');
+              } else {
+                Notify.success('UFR saved successfully');
+              }
             }
           });
-        }
-        else {
-          this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
-          Notify.success('UFR created successfully')
+        } else {
+          if (this.ufr.status === UfrStatus.SUBMITTED) {
+            // going straight to SUBMIT without a SAVE first (so save first!)
+            this.ufrService.create(this.ufr).subscribe(d => {
+              if (d.error) {
+                Notify.error(d.error);
+              }
+              else {
+                this.ufr = d.result;
+                this.ufr.status = UfrStatus.SUBMITTED;
+                this.save();
+              }
+            });
+          }
+          else {
+            this.ufr = (await this.ufrService.create(this.ufr).toPromise()).result;
+            Notify.success('UFR created successfully')
+          }
         }
       }
     }
@@ -115,7 +122,7 @@ export class UfrViewComponent implements OnInit {
     this.ufr.status = UfrStatus.SUBMITTED;
     this.save();
   }
-  
+
   get ufrNumber(): string {
     if(this.ufr.requestNumber) {
       const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);
@@ -128,14 +135,28 @@ export class UfrViewComponent implements OnInit {
   isNotSavable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
-    return this.ufr.status == UfrStatus.SUBMITTED;
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 
   isNotSubmittable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
     if(this.ufrFundsComponent && this.ufrFundsComponent.invalid()) return true;
-    return this.ufr.status == UfrStatus.SUBMITTED;
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
+  }
+
+  public fundsTabSelected() {
+    if (this.ufrFundsComponent){
+      this.ufrFundsComponent.sizeColumnsToFit(null);
+    }
   }
 
   ufrType(): string {
