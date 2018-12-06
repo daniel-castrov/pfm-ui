@@ -6,7 +6,7 @@ import {UserUtils} from '../../../../services/user.utils';
 import {Pom, POMService, User, WorksheetService} from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
 import {Operation, StateService} from "./state.service";
-import {NameRendererComponent} from "./name-renderer.component";
+import {NameUpdatingRendererComponent} from "./name-updating-renderer.component";
 import {DuplicateComponent} from "./duplicate/duplicate.component";
 import {RenameComponent} from "./rename/rename.component";
 import {ExportComponent} from "./export/export.component";
@@ -41,7 +41,7 @@ export class WorksheetManagementComponent implements OnInit {
       enableColResize: true,
 
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
-                   {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameRendererComponent},
+                   {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
                    {headerName: 'Number', field: 'number', maxWidth: 90},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
                    {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]

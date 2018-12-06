@@ -159,7 +159,7 @@ import {DuplicateComponent} from "./components/programming/pom-worksheet/workshe
 import {RenameComponent} from "./components/programming/pom-worksheet/worksheet-management/rename/rename.component";
 import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
-import {NameRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-renderer.component";
+import {NameUpdatingRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-updating-renderer.component";
 import {WorksheetService} from "./generated/api/worksheet.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import { BesRdteComponent } from './components/budget/bes-rdte/bes-rdte.component';
@@ -183,7 +183,11 @@ import {UpdateButtonComponent} from "./components/programming/update-pom-session
 import {LockButtonComponent} from "./components/programming/lock-pom-session/lock-button/lock-button.component";
 import {WorksheetSelectorComponent} from "./components/programming/update-pom-session/worksheet-selector/worksheet-selector.component";
 import {LockPomSessionComponent} from "./components/programming/lock-pom-session/lock-pom-session.component";
+import {WorksheetViewingComponent} from "./components/programming/pom-worksheet/worksheet-viewing/worksheet-viewing.component";
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import {NameViewingRendererComponent} from "./components/programming/pom-worksheet/worksheet-viewing/name-viewing-renderer.component";
+import {ViewPomSessionComponent} from "./components/programming/view-pom-session/view-pom-session.component";
+import {WorksheetSelectedComponent} from "./components/programming/view-pom-session/worksheet-selected/worksheet-selected.component";
 
 
 // ROUTES
@@ -232,6 +236,7 @@ const appRoutes: Routes = [
   {path:'update-pom-session', component:UpdatePomSessionComponent},
   {path:'lock-pom-session', component:LockPomSessionComponent},
   {path:'open-pom-session', component:OpenPomSessionComponent},
+  {path:'view-pom-session/:id', component:ViewPomSessionComponent},
   {path:'close-pom-session', component:ClosePomSessionComponent},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
@@ -243,6 +248,7 @@ const appRoutes: Routes = [
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent},
+  {path:'worksheet-viewing', component: WorksheetViewingComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent },
   {path:'library', component: LibraryComponent}
 ];
@@ -327,11 +333,13 @@ const appRoutes: Routes = [
     UpdatePomSessionComponent,
     LockPomSessionComponent,
     OpenPomSessionComponent,
+    ViewPomSessionComponent,
     ClosePomSessionComponent,
     UpdateProgramExecutionComponent,
     ValuesPipe,
     WithholdComponent,
     WorksheetManagementComponent,
+    WorksheetViewingComponent,
     DashForZeroPipe,
     NewUfrComponent,
     OnlyDigitsDirective,
@@ -343,7 +351,8 @@ const appRoutes: Routes = [
     FileUploadComponent,
     CheckboxRendererComponent,
     CheckboxCellRenderer,
-    NameRendererComponent,
+    NameUpdatingRendererComponent,
+    NameViewingRendererComponent,
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
     LibraryComponent,
@@ -377,6 +386,7 @@ const appRoutes: Routes = [
     UpdateButtonComponent,
     LockButtonComponent,
     WorksheetSelectorComponent,
+    WorksheetSelectedComponent,
     ConfirmationDialogComponent
   ],
   entryComponents: [
@@ -389,7 +399,8 @@ const appRoutes: Routes = [
     DeleteRenderer,
     CheckboxRendererComponent,
     CheckboxCellRenderer,
-    NameRendererComponent,
+    NameUpdatingRendererComponent,
+    NameViewingRendererComponent,
     ViewSiblingsRenderer,
     ViewEventsRenderer,
     ValueChangeRenderer,
