@@ -21,7 +21,7 @@ export class WorksheetComponent implements OnChanges {
 
   @Input() readonly: boolean;
   @Input() pom: Pom;
-  columnDefs;
+  columnDefs = [];
   @Input() columnKeys;
   rowData;
   topPinnedData = [];
@@ -86,19 +86,22 @@ export class WorksheetComponent implements OnChanges {
   }
 
   generateColumns() {
-    this.columnDefs = [
-      {
-        headerName: 'Anchor',
-        colId: 'anchor',
-        field: 'anchored',
-        suppressToolPanel: true,
-        cellRenderer: 'checkboxCellRenderer',
-        cellClass: ['funding-line-default'],
-        headerClass: 'header-without-filter',
-        maxWidth: 50,
-        minWidth: 50,
-        suppressMenu: true
-      },
+    if(!this.readonly) {
+      this.columnDefs.push(
+        {
+          headerName: 'Anchor',
+          colId: 'anchor',
+          field: 'anchored',
+          suppressToolPanel: true,
+          cellRenderer: 'checkboxCellRenderer',
+          cellClass: ['funding-line-default'],
+          headerClass: 'header-without-filter',
+          maxWidth: 50,
+          minWidth: 50,
+          suppressMenu: true
+        });
+    }
+    this.columnDefs.push(...[
       {
         headerName: 'Transactions',
         colId: 'events',
@@ -153,7 +156,7 @@ export class WorksheetComponent implements OnChanges {
         hide: true,
         suppressMenu: true,
         cellClass: ['funding-line-default', 'text-left']
-      }];
+      }]);
 
     this.columnKeys.forEach(key => {
       if(key >= this.pom.fy){
@@ -195,9 +198,9 @@ export class WorksheetComponent implements OnChanges {
               suppressMenu: true,
               suppressToolPanel: true,
               cellEditor: 'numericCellEditor',
-              cellClass: ['text-right', 'ag-cell-edit'],
+              cellClass: ['text-right', this.readonly ? '' : 'ag-cell-edit'],
               headerClass: 'header-without-filter',
-              editable: true,
+              editable: !this.readonly,
               valueFormatter: params => {
                 return FormatterUtil.currencyFormatter(params, 0, true)
               },
@@ -225,10 +228,10 @@ export class WorksheetComponent implements OnChanges {
     this.columnDefs.push({
       headerName: 'Notes',
       field: 'notes',
-      editable: true,
+      editable: !this.readonly,
       suppressMenu: true,
       suppressToolPanel: true,
-      cellClass: ['ag-cell-edit'],
+      cellClass:  this.readonly ? [] : ['ag-cell-edit'],
       onCellValueChanged: params => this.onValueChanged(params)
     });
 

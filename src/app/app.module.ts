@@ -386,7 +386,7 @@ const appRoutes: Routes = [
     UpdateButtonComponent,
     LockButtonComponent,
     WorksheetSelectorComponent,
-    WorksheetSelectedComponent
+    WorksheetSelectedComponent,
     ConfirmationDialogComponent
   ],
   entryComponents: [
