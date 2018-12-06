@@ -89,7 +89,7 @@ export class OpenPomSessionComponent implements OnInit {
       this.pomService.open(this.pom.id).subscribe(data => {
         this.pomStatusIsCreated = false;
         Notify.success('The POM Session is now OPEN');
-        this.header.refreshActions();
+        this.header.refresh();
         this.router.navigate(['/home']);
       });
     }

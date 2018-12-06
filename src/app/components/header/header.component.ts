@@ -3,8 +3,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-
-// Generated
 import { AuthUser } from '../../generated/model/authUser';
 import { RestResult } from '../../generated/model/restResult';
 import { BlankService } from '../../generated/api/blank.service';
@@ -51,7 +49,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  async refreshActions() {
+  async refresh() {
     await this.ngOnInit();
     this.headerUserComponent.authUser = {...this.authUser}
     this.headerUserComponent.ngOnInit();

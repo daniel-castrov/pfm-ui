@@ -42,7 +42,7 @@ export class ApproveRequestsComponent implements OnInit {
       await action();
       Notify.success("The request has been " + message);
       this.ngOnInit();
-      this.header.refreshActions();
+      this.header.refresh();
     } catch(e) {
       Notify.exception(e.message);
     }

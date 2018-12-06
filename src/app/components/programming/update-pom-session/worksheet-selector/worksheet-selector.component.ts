@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {POMService, WorksheetService} from "../../../../generated";
 import {UserUtils} from "../../../../services/user.utils";
 import {ActivatedRoute} from "@angular/router";
@@ -8,7 +8,6 @@ import {UpdatePomSessionComponent} from "../update-pom-session.component";
   selector: 'worksheet-selector',
   templateUrl: './worksheet-selector.component.html',
   styleUrls: ['./worksheet-selector.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class WorksheetSelectorComponent implements OnInit {
 

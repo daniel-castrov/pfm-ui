@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, Subject} from 'rxjs';
 import {merge} from 'rxjs/observable/merge';
@@ -9,7 +9,6 @@ import {TagsService} from "../../../../services/tags.service";
   selector: 'reason-code',
   templateUrl: './reason-code.component.html',
   styleUrls: ['./reason-code.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class ReasonCodeComponent implements OnInit {
 

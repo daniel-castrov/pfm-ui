@@ -297,7 +297,7 @@ export class MyRolesComponent {
       this.assignRequests.push(request);
       this.selectedRole = null;
       this.clear();
-      this.header.refreshActions();
+      this.header.refresh();
     } catch(e) {
       Notify.exception(e.message);
     }
@@ -318,7 +318,7 @@ export class MyRolesComponent {
       this.dropRequests.push(request);
       this.selectedRole = null;
       this.clear();
-      this.header.refreshActions();
+      this.header.refresh();
     } catch(e) {
       Notify.success(e.message);
     }

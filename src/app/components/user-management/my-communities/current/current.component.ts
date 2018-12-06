@@ -54,7 +54,7 @@ export class CurrentComponent {
       this.myDetailsService.getCurrentUser().subscribe ( data2 => {
         this._user = data2.result;
         this.updateCommunitiesToSelectFrom();
-        this.header.refreshActions();
+        this.header.refresh();
         //delete this.selectedCommunityId;
         this.selectedCommunityId=null;
         this.orgService.getById(this._user.organizationId).subscribe( org => {

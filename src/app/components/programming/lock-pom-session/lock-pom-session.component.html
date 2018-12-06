@@ -18,7 +18,8 @@
           <span *ngIf="selectedWorksheet" class="pom-controls pull-right">
             <lock-button [pom]="pom"
                          [selectedWorksheet]="selectedWorksheet"
-                         [worksheets]="worksheets">
+                         [worksheets]="worksheets"
+                         (locked)="header.refresh()">
             </lock-button>
           </span>
         </div>

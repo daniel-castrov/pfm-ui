@@ -58,7 +58,7 @@ export class RequestComponent implements OnChanges {
       await this.service.create(request).toPromise();
       Notify.success("You will receive an email once your request is processed.");
       this.updateRequestedCommuntyIds();
-      this.header.refreshActions();
+      this.header.refresh();
     } catch(e) {
       Notify.exception(e.message);
     }

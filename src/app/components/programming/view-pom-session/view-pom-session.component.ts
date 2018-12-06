@@ -1,4 +1,4 @@
-import {AfterContentChecked, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterContentChecked, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {HeaderComponent} from '../../../components/header/header.component';
 import {Pom, Worksheet} from "../../../generated";
 import {GridToaComponent} from "./../update-pom-session/grid-toa/grid-toa.component";
@@ -10,7 +10,6 @@ import {ReasonCodeComponent} from "./../update-pom-session/reason-code/reason-co
   selector: 'view-pom-session',
   templateUrl: './view-pom-session.component.html',
   styleUrls: ['./view-pom-session.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class ViewPomSessionComponent implements AfterContentChecked {
 

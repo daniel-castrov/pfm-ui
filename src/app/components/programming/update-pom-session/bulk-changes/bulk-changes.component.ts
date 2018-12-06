@@ -1,4 +1,4 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {WorksheetComponent} from "../worksheet/worksheet.component";
 import {GridToaComponent} from "../grid-toa/grid-toa.component";
 import {RowNode} from "ag-grid";
@@ -7,7 +7,6 @@ import {RowNode} from "ag-grid";
   selector: 'bulk-changes',
   templateUrl: './bulk-changes.component.html',
   styleUrls: ['./bulk-changes.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class BulkChangesComponent {
 

@@ -1,4 +1,4 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Worksheet, WorksheetEvent, WorksheetService} from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
@@ -11,7 +11,6 @@ import {RowNode} from "ag-grid";
   selector: 'update-button',
   templateUrl: './update-button.component.html',
   styleUrls: ['./update-button.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class UpdateButtonComponent {
 

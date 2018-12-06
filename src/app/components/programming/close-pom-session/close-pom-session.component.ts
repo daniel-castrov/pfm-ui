@@ -65,7 +65,7 @@ export class ClosePomSessionComponent implements OnInit {
     if (this.allPrsSubmitted) {
       this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.CLOSED).subscribe(response => {
         Notify.success('The POM Session is now CLOSED');
-        this.header.refreshActions();
+        this.header.refresh();
         this.router.navigate(['/home']);
       })
     }
