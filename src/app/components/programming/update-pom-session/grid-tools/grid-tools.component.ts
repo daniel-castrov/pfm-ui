@@ -3,8 +3,7 @@ import {WorksheetComponent} from "./../worksheet/worksheet.component";
 
 @Component({
   selector: 'grid-tools',
-  templateUrl: './grid-tools.component.html',
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './grid-tools.component.html'
 })
 export class GridToolsComponent {
 
