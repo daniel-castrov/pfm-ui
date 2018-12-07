@@ -75,28 +75,6 @@ fieldset {
   width: 100% !important;
 }
 
-.modal-dialog {
-  max-width: none !important;
-}
-
-.modal-header {
-  padding: 2px !important;
-
- .btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 0;
-    height: 30px;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 0;
-
-    > i {
-      font-size: 26px;
-    }
-  }
-}
-
 .reason-code-table {
   margin: 0;
   td {

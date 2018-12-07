@@ -1,0 +1,24 @@
+#events-modal > .modal-dialog {
+  max-width: none !important;
+}
+
+#events-modal .modal-header {
+  padding: 2px !important;
+
+  .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 0;
+    height: 30px;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    > i {
+      font-size: 26px;
+    }
+  }
+}
+
+
+

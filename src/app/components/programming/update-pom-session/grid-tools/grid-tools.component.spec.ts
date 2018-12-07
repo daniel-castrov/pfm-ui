@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FilterTextComponent } from './filter-text.component';
+import { GridToolsComponent } from './grid-tools.component';
 
 describe('EventsModalComponent', () => {
-  let component: FilterTextComponent;
-  let fixture: ComponentFixture<FilterTextComponent>;
+  let component: GridToolsComponent;
+  let fixture: ComponentFixture<GridToolsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilterTextComponent ]
+      declarations: [ GridToolsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FilterTextComponent);
+    fixture = TestBed.createComponent(GridToolsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
