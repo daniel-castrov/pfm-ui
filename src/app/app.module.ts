@@ -178,7 +178,7 @@ import {EventsModalComponent} from "./components/programming/update-pom-session/
 import {WorksheetComponent} from "./components/programming/update-pom-session/worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./components/programming/update-pom-session/reason-code/reason-code.component";
 import {BulkChangesComponent} from "./components/programming/update-pom-session/bulk-changes/bulk-changes.component";
-import {GridToolsComponent} from "./components/programming/update-pom-session/grid-tools/grid-tools.component";
+import {FilterTextComponent} from "./components/programming/update-pom-session/filter-text/filter-text.component";
 import {UpdateButtonComponent} from "./components/programming/update-pom-session/update-button/update-button.component";
 import {LockButtonComponent} from "./components/programming/lock-pom-session/lock-button/lock-button.component";
 import {WorksheetSelectorComponent} from "./components/programming/update-pom-session/worksheet-selector/worksheet-selector.component";
@@ -188,6 +188,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import {NameViewingRendererComponent} from "./components/programming/pom-worksheet/worksheet-viewing/name-viewing-renderer.component";
 import {ViewPomSessionComponent} from "./components/programming/view-pom-session/view-pom-session.component";
 import {WorksheetSelectedComponent} from "./components/programming/view-pom-session/worksheet-selected/worksheet-selected.component";
+import {GridRowsComponent} from "./components/ag-grid/grid-rows/grid-rows.component";
 
 
 // ROUTES
@@ -382,12 +383,13 @@ const appRoutes: Routes = [
     WorksheetComponent,
     ReasonCodeComponent,
     BulkChangesComponent,
-    GridToolsComponent,
+    FilterTextComponent,
     UpdateButtonComponent,
     LockButtonComponent,
     WorksheetSelectorComponent,
     WorksheetSelectedComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    GridRowsComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

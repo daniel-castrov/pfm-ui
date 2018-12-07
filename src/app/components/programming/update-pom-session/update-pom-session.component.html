@@ -41,8 +41,16 @@
       </div>
       <div *ngIf="selectedWorksheet" class="row mb-3">
         <div class="col-6 align-column">
-          <grid-tools [worksheetComponent]="worksheetComponent">
-          </grid-tools>
+          <div class="row">
+            <div class="col-auto">
+              <grid-rows [agGrid]="worksheetComponent?.agGrid">
+              </grid-rows>
+            </div>
+            <div class="col-auto">
+              <filter-text [worksheetComponent]="worksheetComponent">
+              </filter-text>
+            </div>
+          </div>
         </div>
       </div>
       <div *ngIf="selectedWorksheet" class="row">

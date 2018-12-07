@@ -18,7 +18,7 @@ export class UpdatePomSessionComponent implements AfterContentChecked {
   @ViewChild(WorksheetComponent) worksheetComponent: WorksheetComponent;
   @ViewChild(GridToaComponent) gridToaComponent: GridToaComponent;
   @ViewChild(EventsModalComponent) eventsModalComponent: EventsModalComponent;
-  @ViewChild(ReasonCodeComponent) private reasonCodeComponent: ReasonCodeComponent;
+  @ViewChild(ReasonCodeComponent) reasonCodeComponent: ReasonCodeComponent;
 
   pom: Pom;
   columnKeys;
