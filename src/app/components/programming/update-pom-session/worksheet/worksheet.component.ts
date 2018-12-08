@@ -225,15 +225,17 @@ export class WorksheetComponent implements OnChanges {
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };
     this.columnDefs.push(totalColDef);
-    this.columnDefs.push({
-      headerName: 'Notes',
-      field: 'notes',
-      editable: !this.readonly,
-      suppressMenu: true,
-      suppressToolPanel: true,
-      cellClass:  this.readonly ? [] : ['ag-cell-edit'],
-      onCellValueChanged: params => this.onValueChanged(params)
-    });
+    if(!this.readonly) {
+      this.columnDefs.push({
+        headerName: 'Notes',
+        field: 'notes',
+        editable: !this.readonly,
+        suppressMenu: true,
+        suppressToolPanel: true,
+        cellClass: this.readonly ? [] : ['ag-cell-edit'],
+        onCellValueChanged: params => this.onValueChanged(params)
+      });
+    }
 
     this.agGrid.api.setColumnDefs(this.columnDefs);
     this.agGrid.api.sizeColumnsToFit();
