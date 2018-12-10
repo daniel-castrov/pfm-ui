@@ -46,6 +46,7 @@ export class ExecutionLineTableComponent implements OnInit {
   private tmpdata: ExecutionLineWrapper[];
 
   @Input() set exelinefilter(x: ExecutionLineFilter) {
+    console.log('setting new line filter');
     this._exelinefilter = x;
     this.setAvailablePrograms();
   }
@@ -90,11 +91,8 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
     console.log( 'into updatelines. '+newdata.length+' lines to update')
     if (this.agOptions && this.agOptions.api) {
-      console.log( 'agOptions has been initted')
-      this.agOptions.api.setRowData(newdata);
-      this.agOptions.api.refreshCells();
-      this.refreshpins();
-      this.setAvailablePrograms();
+      console.log('agOptions has been initted');
+      this.resetTable(newdata);
     }
     else {
       console.log('agOptions has NOT been initted...storing data for later')
@@ -113,6 +111,12 @@ export class ExecutionLineTableComponent implements OnInit {
     return lines;
   }
 
+  resetTable(newdata: ExecutionLineWrapper[]) {
+    this.agOptions.api.setRowData(newdata);
+    this.refreshpins();
+    this.setAvailablePrograms();
+    this.agOptions.api.refreshCells();
+  }
 
   currencyFormatter(value) {
     if (isNaN(value.value)) {
@@ -473,10 +477,8 @@ export class ExecutionLineTableComponent implements OnInit {
 
   onGridReady(params) {
     if (this.tmpdata) {
-      console.log( 'setting row data from stored data')
-      params.api.setRowData(this.tmpdata);
-      this.setAvailablePrograms();
-      this.refreshpins();
+      console.log('setting row data from stored data')
+      this.resetTable( this.tmpdata );
       delete this.tmpdata;
     }
 
