@@ -70,6 +70,7 @@ import { PlanningComponent } from './components/planning/planning.component';
 import { ProgramExecutionLineComponent } from './components/execution/program-execution-line/program-execution-line.component';
 import { VariantsTabComponent } from './components/programming/program-request/variants-tab/variants-tab.component';
 import { UfrVariantsTabComponent } from './components/ufr/ufr-view/ufr-variants-tab/ufr-variants-tab.component';
+import { P40Component } from './components/budget/p40/p40.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
@@ -190,7 +191,6 @@ import {ViewPomSessionComponent} from "./components/programming/view-pom-session
 import {WorksheetSelectedComponent} from "./components/programming/view-pom-session/worksheet-selected/worksheet-selected.component";
 import {GridRowsComponent} from "./components/ag-grid/grid-rows/grid-rows.component";
 
-
 // ROUTES
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
@@ -215,14 +215,15 @@ const appRoutes: Routes = [
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
+  {path:'my-community', component:MyCommunitiesComponent},
   {path:'my-roles', component:MyRolesComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'oe-update', component:OeUpdateComponent},
   {path:'open-execution', component: OpenExecutionComponent},
+  {path:'p40', component:P40Component},
   {path:'planning', component:PlanningComponent},
-  {path:'my-community', component:MyCommunitiesComponent},
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'restresult-error', component:RestResultErrorComponent},
@@ -307,6 +308,7 @@ const appRoutes: Routes = [
     NotImplementedComponent,
     OeUpdateComponent,
     OnlyDigitsDirective,
+    P40Component,
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
