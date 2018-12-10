@@ -72,6 +72,7 @@ import { VariantsTabComponent } from './components/programming/program-request/v
 import { UfrVariantsTabComponent } from './components/ufr/ufr-view/ufr-variants-tab/ufr-variants-tab.component';
 import { P40Component } from './components/budget/p40/p40.component';
 import { P5Component } from './components/budget/p5/p5.component';
+import { P5aComponent } from './components/budget/p5a/p5a.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
@@ -225,6 +226,7 @@ const appRoutes: Routes = [
   {path:'open-execution', component: OpenExecutionComponent},
   {path:'p40', component:P40Component},
   {path:'p5', component:P5Component},
+  {path:'p5a', component:P5aComponent},
   {path:'planning', component:PlanningComponent},
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
@@ -312,6 +314,7 @@ const appRoutes: Routes = [
     OnlyDigitsDirective,
     P40Component,
     P5Component,
+    P5aComponent,
     PlanningComponent,
     PomComponent,
     VariantsTabComponent,
