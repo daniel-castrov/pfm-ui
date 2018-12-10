@@ -46,7 +46,6 @@ export class ExecutionLineTableComponent implements OnInit {
   private tmpdata: ExecutionLineWrapper[];
 
   @Input() set exelinefilter(x: ExecutionLineFilter) {
-    console.log('setting new line filter');
     this._exelinefilter = x;
     this.setAvailablePrograms();
   }
@@ -56,7 +55,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   @Input() set exeprogramfilter(x: ExecutionLineFilter) {
-    console.log('setting new exe filter');
     this._exeprogramfilter = x;
     this.setAvailablePrograms();
   }
@@ -91,11 +89,11 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
     console.log( 'into updatelines. '+newdata.length+' lines to update')
     if (this.agOptions && this.agOptions.api) {
-      console.log('agOptions has been initted');
+      // agOptions has been initted, so we can use newdata directly
       this.resetTable(newdata);
     }
     else {
-      console.log('agOptions has NOT been initted...storing data for later')
+      // agOptions not yet ready, so save this data for when it is
       this.tmpdata = newdata;
     }
   }
@@ -470,14 +468,12 @@ export class ExecutionLineTableComponent implements OnInit {
           this.availablePrograms.push(pname);
         }
       });
-    } else {
-      console.warn( 'skipping available program determination (no names to check)')
     }
   }
 
   onGridReady(params) {
     if (this.tmpdata) {
-      console.log('setting row data from stored data')
+      // we have data to load from earlier, so load it now
       this.resetTable( this.tmpdata );
       delete this.tmpdata;
     }
