@@ -9,6 +9,7 @@
       </div>
       <div class="row">
         <div class="col-5">
+          <locked-worksheets></locked-worksheets>
           <worksheet-selector [parent]="this">
           </worksheet-selector>
         </div>
@@ -19,7 +20,8 @@
             <lock-button [pom]="pom"
                          [selectedWorksheet]="selectedWorksheet"
                          [worksheets]="worksheets"
-                         (locked)="header.refresh()">
+                         (locked)="header.refresh()"
+                         [lockedWorksheetsComponent]="lockedWorksheetsComponent">
             </lock-button>
           </span>
         </div>
