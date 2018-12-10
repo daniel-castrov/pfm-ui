@@ -408,8 +408,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   }
 
   async initPom(){
-    let pomResponse = (await this.pomService.getById(this.ufr.phaseId).toPromise());
-    this.pom = pomResponse.result;
+    this.pom = (await this.pomService.getById(this.ufr.phaseId).toPromise()).result;
     this.columnKeys = [
       this.pom.fy - 3,
       this.pom.fy -2,

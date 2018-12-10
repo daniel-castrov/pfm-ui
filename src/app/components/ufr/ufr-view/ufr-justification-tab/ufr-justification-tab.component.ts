@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UFR } from '../../../../generated';
+import {UFR, UfrStatus} from '../../../../generated';
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 
 @Component({
@@ -20,5 +20,13 @@ export class UfrJustificationComponent implements OnInit {
     if(!this.ufr.justification || !this.ufr.impactN || !this.ufr.milestoneImpact) {
       return new Validation(false, 'You must fill all the required fields from the justification tab');
     }
+  }
+
+  readonly(): boolean {
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 }

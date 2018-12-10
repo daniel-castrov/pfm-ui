@@ -1,6 +1,6 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
-import {FundingLine, PBService, POMService, ProgramsService, PRService, ShortyType, UFR} from '../../../../generated'
+import {FundingLine, PBService, POMService, ProgramsService, PRService, ShortyType, UFR, UfrStatus} from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -481,7 +481,7 @@ export class UfrFundsComponent implements OnChanges {
   }
 
   isAmountEditable(params, key): boolean{
-    return key >= this.pomFy && params.data.editable
+    return key >= this.pomFy && params.data.editable && !this.readonly();
   }
 
   private async loadDropdownOptions() {
@@ -619,6 +619,15 @@ export class UfrFundsComponent implements OnChanges {
   invalid(): boolean {
     return FundingLinesUtils.totalForAndAfterYear(this.ufr.fundingLines, this.fy) == 0;
   }
+
+  readonly(): boolean {
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
+  }
+
   get validate(): Validation {
     if(this.flHaveIncorrectBa()){
       return new Validation(false, 'You have a duplicate in the BA/Blin column. Changes were not saved');

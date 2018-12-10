@@ -1,5 +1,5 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import { ProgrammaticRequest, FundingLine, POMService, IntMap, Variant, User} from '../../../../generated'
+import {FundingLine, POMService, IntMap, Variant, User, UfrStatus, UFR} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
 import {DataRow} from "./DataRow";
 import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
@@ -16,7 +16,7 @@ import { Notify } from '../../../../utils/Notify';
 })
 export class UfrVariantsTabComponent {
 
-  @Input() current: ProgrammaticRequest;
+  @Input() ufr: UFR;
   @Input() editable:boolean;
 
   pomFy:number;
@@ -43,7 +43,7 @@ export class UfrVariantsTabComponent {
                private globalsService: UserUtils ) { }
 
   ngOnChanges(){
-    if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
+    if(!this.ufr.phaseId) return; // the parent has not completed it's ngOnInit()
     this.globalsService.user().subscribe(user => {
       this.user = user;
     });
@@ -81,7 +81,7 @@ export class UfrVariantsTabComponent {
 
 
   procFundingLines(): FundingLine[] {
-    return this.current.fundingLines.filter(fl => fl.appropriation === "PROC");
+    return this.ufr.fundingLines.filter(fl => fl.appropriation === "PROC");
   }
 
   initDataRows(){
@@ -131,7 +131,7 @@ export class UfrVariantsTabComponent {
   }
 
   generateColumns() {
-    this.pomService.getById(this.current.phaseId).subscribe(pom => {
+    this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy = pom.result.fy;
       this.years = [this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
@@ -337,7 +337,7 @@ export class UfrVariantsTabComponent {
   }
 
   isAmountEditable(params): boolean{
-    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals';
+    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals' && !this.readonly();
   }
 
   getTotal(quantities, years): number {
@@ -354,7 +354,7 @@ export class UfrVariantsTabComponent {
     if ( Number(params.newValue) < 0 ){
       params.newValue = params.oldValue;
       Notify.warning( "You cannot request negative quantities." );
-    } 
+    }
     let year = params.colDef.colId;
     let pomNode = params.data;
     pomNode.serviceLine.quantity[year] = Number(params.newValue);
@@ -457,5 +457,13 @@ export class UfrVariantsTabComponent {
 
   get invalid(): boolean {
     return this.isVariantsTabValid.some(valid => valid === false);
+  }
+
+  readonly(): boolean {
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 }

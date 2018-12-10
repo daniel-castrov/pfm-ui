@@ -18,7 +18,7 @@ export class UfrUfrTabComponent implements OnInit {
   private cycles: {}[];
   private capabilities: Tag[];
 
-  constructor( private cycleUtils: CycleUtils, 
+  constructor( private cycleUtils: CycleUtils,
                private tagsService: TagsService ) {}
 
   ngOnInit() {
@@ -38,5 +38,13 @@ export class UfrUfrTabComponent implements OnInit {
 
   invalid(): boolean {
     return !this.ufr.ufrName || !this.ufr.description || !this.ufr.costLeft;
+  }
+
+  readonly(): boolean {
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 }

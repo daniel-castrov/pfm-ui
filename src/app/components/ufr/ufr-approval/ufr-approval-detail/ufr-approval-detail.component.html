@@ -86,7 +86,7 @@
                 <option *ngFor="let index of [1,2,3,4,5,6,7,8,9,10]">{{index}}</option>
               </select>
             </div>
-            <div class="col-4">
+            <div *ngIf="pom" class="col-4">
               <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
               <select *ngIf="ufr.status === UfrStatus.VALID"
                       [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER) || pom.status !== 'OPEN'"
