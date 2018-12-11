@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Pom, POMService, Worksheet, WorksheetService} from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
+import {LockedWorksheetsComponent} from "../locked-worksheets/locked-worksheets.component";
 
 @Component({
   selector: 'lock-button',
@@ -11,6 +12,7 @@ export class LockButtonComponent {
 
   @Input() pom: Pom;
   @Input() worksheets: Array<Worksheet>;
+  @Input() lockedWorksheetsComponent: LockedWorksheetsComponent;
   @Input() selectedWorksheet: Worksheet;
   @Output() locked = new EventEmitter();
 

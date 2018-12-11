@@ -189,6 +189,7 @@ import {NameViewingRendererComponent} from "./components/programming/pom-workshe
 import {ViewPomSessionComponent} from "./components/programming/view-pom-session/view-pom-session.component";
 import {WorksheetSelectedComponent} from "./components/programming/view-pom-session/worksheet-selected/worksheet-selected.component";
 import {GridRowsComponent} from "./components/ag-grid/grid-rows/grid-rows.component";
+import {LockedWorksheetsComponent} from "./components/programming/lock-pom-session/locked-worksheets/locked-worksheets.component";
 
 
 // ROUTES
@@ -389,7 +390,8 @@ const appRoutes: Routes = [
     WorksheetSelectorComponent,
     WorksheetSelectedComponent,
     ConfirmationDialogComponent,
-    GridRowsComponent
+    GridRowsComponent,
+    LockedWorksheetsComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
