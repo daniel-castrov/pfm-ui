@@ -21,12 +21,12 @@
         <div class="row">
           <div class="col-auto mt-1">
             <label class="variant-titles mr-sm-3"><span>{{variant.number}}.</span> <span>{{variant.shortName}}</span></label>
-            <span *ngIf="!variant?.bulkOrigin && !readonly()" class="remove-variant" data-toggle="modal" data-target="#modal" (click)="deleteVariant(variantIndex)" >
+            <span *ngIf="!variant?.bulkOrigin && !readonly" class="remove-variant" data-toggle="modal" data-target="#modal" (click)="deleteVariant(variantIndex)" >
               <i class="fa fa-trash"></i>
             </span>
           </div>
           <div class="col-auto">
-            <button class="btn btn-light" (click)="addRow(variant.shortName)" [disabled]="readonly()">
+            <button class="btn btn-light" (click)="addRow(variant.shortName)" [disabled]="readonly">
               <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
               New Service Line
             </button>
@@ -54,7 +54,7 @@
             <tbody>
               <tr>
                 <td>
-                  <button class="btn btn-primary" (click)="toggleShowAddVariance()" [disabled]="readonly()">
+                  <button class="btn btn-primary" (click)="toggleShowAddVariance()" [disabled]="readonly">
                     <i *ngIf="!showAddVariant" class="fa fa-plus-circle" aria-hidden="true"></i>
                     <i *ngIf="showAddVariant" class="fa fa-minus-circle" aria-hidden="true"></i>
                     <span class="mr-1">New Variant</span>

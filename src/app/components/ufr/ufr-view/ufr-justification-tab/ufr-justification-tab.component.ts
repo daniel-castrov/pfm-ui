@@ -10,6 +10,7 @@ import {Validation} from "../../../programming/program-request/funds-tab/Validat
 export class UfrJustificationComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
+  @Input() readonly: boolean;
 
   constructor() { }
 
@@ -20,13 +21,5 @@ export class UfrJustificationComponent implements OnInit {
     if(!this.ufr.justification || !this.ufr.impactN || !this.ufr.milestoneImpact) {
       return new Validation(false, 'You must fill all the required fields from the justification tab');
     }
-  }
-
-  readonly(): boolean {
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 }

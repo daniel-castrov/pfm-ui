@@ -12,6 +12,7 @@ import {Disposition, Tag, UFR, UfrStatus} from '../../../../generated';
 export class UfrUfrTabComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
+  @Input() readonly: boolean;
 
   private statuses = Object.keys(UfrStatus) as string[];
   private dispositions = Object.keys(Disposition) as string[];
@@ -38,13 +39,5 @@ export class UfrUfrTabComponent implements OnInit {
 
   invalid(): boolean {
     return !this.ufr.ufrName || !this.ufr.description || !this.ufr.costLeft;
-  }
-
-  readonly(): boolean {
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 }

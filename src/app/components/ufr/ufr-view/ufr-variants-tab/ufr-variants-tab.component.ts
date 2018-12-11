@@ -18,6 +18,7 @@ export class UfrVariantsTabComponent {
 
   @Input() ufr: UFR;
   @Input() editable:boolean;
+  @Input() readonly: boolean
 
   pomFy:number;
   fund:FundingLine = null;
@@ -337,7 +338,7 @@ export class UfrVariantsTabComponent {
   }
 
   isAmountEditable(params): boolean{
-    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals' && !this.readonly();
+    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals' && !this.readonly;
   }
 
   getTotal(quantities, years): number {
@@ -457,13 +458,5 @@ export class UfrVariantsTabComponent {
 
   get invalid(): boolean {
     return this.isVariantsTabValid.some(valid => valid === false);
-  }
-
-  readonly(): boolean {
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 }

@@ -23,6 +23,7 @@ export class UfrFundsComponent implements OnChanges {
   @Input() ufr: UFR;
   @Input() fy: number
   @Input() editable: boolean = false;
+  @Input() readonly: boolean;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
@@ -481,7 +482,7 @@ export class UfrFundsComponent implements OnChanges {
   }
 
   isAmountEditable(params, key): boolean{
-    return key >= this.pomFy && params.data.editable && !this.readonly();
+    return key >= this.pomFy && params.data.editable && !this.readonly;
   }
 
   private async loadDropdownOptions() {
@@ -618,14 +619,6 @@ export class UfrFundsComponent implements OnChanges {
 
   invalid(): boolean {
     return FundingLinesUtils.totalForAndAfterYear(this.ufr.fundingLines, this.fy) == 0;
-  }
-
-  readonly(): boolean {
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
   }
 
   get validate(): Validation {
