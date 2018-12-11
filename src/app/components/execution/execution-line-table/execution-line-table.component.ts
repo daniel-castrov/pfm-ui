@@ -78,6 +78,9 @@ export class ExecutionLineTableComponent implements OnInit {
           });
 
         my.setAvailablePrograms();
+        if (my.agOptions) {
+          my.agOptions.api.refreshCells();
+        }
       });
     }
   }
