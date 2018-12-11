@@ -34,19 +34,19 @@
       <div class="col-12">
         <tabset class="ufr-tab-style" role="tablist">
           <tab heading="UFR" id="tab1">
-            <ufr-ufr-tab [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-ufr-tab>
+            <ufr-ufr-tab [readonly]="readonly()" [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-ufr-tab>
           </tab>
           <tab heading="Program" id="tab2">
             <ufr-program-tab [ufr]="ufr" [shorty]="shorty" [editable]="canedit" role="tabpanel"></ufr-program-tab>
           </tab>
           <tab (select)="fundsTabSelected()" heading="Funds" active="true" id="tab3">
-            <ufr-funds-tab [ufr]="ufr" [fy]="pomFy" [editable]="canedit" role="tabpanel"></ufr-funds-tab>
+            <ufr-funds-tab [readonly]="readonly()" [ufr]="ufr" [fy]="pomFy" [editable]="canedit" role="tabpanel"></ufr-funds-tab>
           </tab>
           <tab heading="Variants" id="tab4">
-             <ufr-variants-tab [current]="ufr" [editable]="canedit" role="tabpanel"></ufr-variants-tab>
+             <ufr-variants-tab [readonly]="readonly()" [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-variants-tab>
           </tab>
           <tab heading="Justification" id="tab5">
-            <ufr-justification-tab [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-justification-tab>
+            <ufr-justification-tab [readonly]="readonly()" [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-justification-tab>
           </tab>
         </tabset>
       </div>

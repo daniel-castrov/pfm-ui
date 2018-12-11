@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UFR } from '../../../../generated';
+import {UFR, UfrStatus} from '../../../../generated';
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 
 @Component({
@@ -10,6 +10,7 @@ import {Validation} from "../../../programming/program-request/funds-tab/Validat
 export class UfrJustificationComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
+  @Input() readonly: boolean;
 
   constructor() { }
 

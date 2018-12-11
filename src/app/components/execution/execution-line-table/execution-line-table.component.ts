@@ -55,7 +55,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   @Input() set exeprogramfilter(x: ExecutionLineFilter) {
-    console.log('setting new exe filter');
     this._exeprogramfilter = x;
     this.setAvailablePrograms();
   }
@@ -67,18 +66,20 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() set phase(p: Execution) {
     this._phase = p;
     if (p) {
-      var my: ExecutionLineTableComponent = this;
-      my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
+      this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(d2 => {
         d2.result
           .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0))
           .forEach(el => {
-            my.elIdNameLkp.set(el.id, {
+            this.elIdNameLkp.set(el.id, {
               line: el,
               display: el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
             });
           });
 
-        my.setAvailablePrograms();
+        this.setAvailablePrograms();
+        if (this.agOptions) {
+          this.agOptions.api.redrawRows();
+        }
       });
     }
   }
@@ -90,14 +91,11 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
     console.log( 'into updatelines. '+newdata.length+' lines to update')
     if (this.agOptions && this.agOptions.api) {
-      console.log( 'agOptions has been initted')
-      this.agOptions.api.setRowData(newdata);
-      this.agOptions.api.refreshCells();
-      this.refreshpins();
-      this.setAvailablePrograms();
+      // agOptions has been initted, so we can use newdata directly
+      this.resetTable(newdata);
     }
     else {
-      console.log('agOptions has NOT been initted...storing data for later')
+      // agOptions not yet ready, so save this data for when it is
       this.tmpdata = newdata;
     }
   }
@@ -113,6 +111,12 @@ export class ExecutionLineTableComponent implements OnInit {
     return lines;
   }
 
+  resetTable(newdata: ExecutionLineWrapper[]) {
+    this.agOptions.api.setRowData(newdata);
+    this.refreshpins();
+    this.setAvailablePrograms();
+    this.agOptions.api.refreshCells();
+  }
 
   currencyFormatter(value) {
     if (isNaN(value.value)) {
@@ -270,9 +274,9 @@ export class ExecutionLineTableComponent implements OnInit {
           },
           editable: true,
           field: 'line.id',
-          valueFormatter: params => ( params.data.line.appropriation && my.elIdNameLkp.has( params.data.line.id )
-            ? my.elIdNameLkp.get( params.data.line.id ).display
-            : params.data.line.programName ? 'Select an Execution Line' : 'Select a Program first' ),
+          valueFormatter: params => (params.data.line.appropriation && my.elIdNameLkp.has(params.data.line.id)
+            ? my.elIdNameLkp.get(params.data.line.id).display
+            : params.data.line.programName ? 'Select an Execution Line' : 'Select a Program first'),
           cellEditorParams: params => {
             var choices: string[] = my.getLineChoices(params.data.line.programName);
             //console.log(choices);
@@ -466,17 +470,13 @@ export class ExecutionLineTableComponent implements OnInit {
           this.availablePrograms.push(pname);
         }
       });
-    } else {
-      console.warn( 'skipping available program determination (no names to check)')
     }
   }
 
   onGridReady(params) {
     if (this.tmpdata) {
-      console.log( 'setting row data from stored data')
-      params.api.setRowData(this.tmpdata);
-      this.setAvailablePrograms();
-      this.refreshpins();
+      // we have data to load from earlier, so load it now
+      this.resetTable( this.tmpdata );
       delete this.tmpdata;
     }
 

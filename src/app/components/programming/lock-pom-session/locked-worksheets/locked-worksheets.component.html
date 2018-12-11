@@ -1,0 +1,6 @@
+<div *ngIf="lockedWorksheets?.length" class="form-group inline-name">
+  All worksheets must be Imported or Unlocked in order to proceed.<br>
+  Go to the Worksheets Management section to make changes.<p><p>
+  List of locked worksheets:
+  <span *ngFor="let lockedWorksheet of lockedWorksheets"><br>{{lockedWorksheet.name + ' ' + lockedWorksheet.version}}</span>
+</div>

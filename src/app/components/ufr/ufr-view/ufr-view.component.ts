@@ -153,6 +153,14 @@ export class UfrViewComponent implements OnInit {
       || this.ufr.status == UfrStatus.ARCHIVED;
   }
 
+  readonly(): boolean {
+    return this.ufr.status == UfrStatus.SUBMITTED
+      || this.ufr.status == UfrStatus.VALID
+      || this.ufr.status == UfrStatus.INVALID
+      || this.ufr.status == UfrStatus.WITHDRAWN
+      || this.ufr.status == UfrStatus.ARCHIVED;
+  }
+
   public fundsTabSelected() {
     if (this.ufrFundsComponent){
       this.ufrFundsComponent.sizeColumnsToFit(null);

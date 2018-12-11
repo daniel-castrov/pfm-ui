@@ -12,13 +12,14 @@ import {Disposition, Tag, UFR, UfrStatus} from '../../../../generated';
 export class UfrUfrTabComponent implements OnInit {
   @Input() ufr: UFR;
   @Input() editable: boolean = false;
+  @Input() readonly: boolean;
 
   private statuses = Object.keys(UfrStatus) as string[];
   private dispositions = Object.keys(Disposition) as string[];
   private cycles: {}[];
   private capabilities: Tag[];
 
-  constructor( private cycleUtils: CycleUtils, 
+  constructor( private cycleUtils: CycleUtils,
                private tagsService: TagsService ) {}
 
   ngOnInit() {
