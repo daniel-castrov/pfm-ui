@@ -66,20 +66,19 @@ export class ExecutionLineTableComponent implements OnInit {
   @Input() set phase(p: Execution) {
     this._phase = p;
     if (p) {
-      var my: ExecutionLineTableComponent = this;
-      my.exesvc.getExecutionLinesByPhase(my.phase.id).subscribe(d2 => {
+      this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(d2 => {
         d2.result
           .filter(y => (this.exeprogramfilter ? this.exeprogramfilter(y) : y.released > 0))
           .forEach(el => {
-            my.elIdNameLkp.set(el.id, {
+            this.elIdNameLkp.set(el.id, {
               line: el,
               display: el.appropriation + '/' + el.blin + '/' + el.item + '/' + el.opAgency
             });
           });
 
-        my.setAvailablePrograms();
-        if (my.agOptions) {
-          my.agOptions.api.refreshCells();
+        this.setAvailablePrograms();
+        if (this.agOptions) {
+          this.agOptions.api.redrawRows();
         }
       });
     }
@@ -275,9 +274,9 @@ export class ExecutionLineTableComponent implements OnInit {
           },
           editable: true,
           field: 'line.id',
-          valueFormatter: params => ( params.data.line.appropriation && my.elIdNameLkp.has( params.data.line.id )
-            ? my.elIdNameLkp.get( params.data.line.id ).display
-            : params.data.line.programName ? 'Select an Execution Line' : 'Select a Program first' ),
+          valueFormatter: params => (params.data.line.appropriation && my.elIdNameLkp.has(params.data.line.id)
+            ? my.elIdNameLkp.get(params.data.line.id).display
+            : params.data.line.programName ? 'Select an Execution Line' : 'Select a Program first'),
           cellEditorParams: params => {
             var choices: string[] = my.getLineChoices(params.data.line.programName);
             //console.log(choices);
