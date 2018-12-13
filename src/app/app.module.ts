@@ -77,6 +77,7 @@ import { P21Component } from './components/budget/p21/p21.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { R2Component } from './components/budget/r2/r2.component';
+import { R3Component } from './components/budget/r3/r3.component';
 import { RequestComponent } from './components/user-management/my-communities/request/request.component';
 import { RestResultErrorComponent } from './components/error/restresult-error/restresult-error.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
@@ -235,6 +236,7 @@ const appRoutes: Routes = [
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'r2', component:R2Component},
+  {path:'r3', component:R3Component},
   {path:'restresult-error', component:RestResultErrorComponent},
   {path:'roles', component:ManageRolesComponent},
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
@@ -324,6 +326,7 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     R2Component,
+    R3Component,
     VariantsTabComponent,
     UfrVariantsTabComponent,
     ProgramExecutionLineComponent,
