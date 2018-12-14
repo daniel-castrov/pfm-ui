@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  Disposition, FundingLine, Pom, POMService, ProgramsService, ShortyType, UFR, UfrEvent,
-  UFRsService, UfrStatus, User, UserService
+  Disposition, FundingLine, Pom, POMService, ProgramsService, PRService, ShortyType, UFR, UfrEvent,
+  UFRsService, UfrStatus, User, UserService, Worksheet, WorksheetRow, WorksheetService
 } from '../../../../generated'
 import {WithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 import {ActivatedRoute} from "@angular/router";
@@ -48,9 +48,14 @@ export class UfrApprovalDetailComponent implements OnInit {
   Disposition = Disposition;
   UfrStatus = UfrStatus;
 
+  worksheets: Worksheet[];
+  isDispositionAvailable;
+
   constructor(private withFullNameService: WithFullNameService,
+              private worksheetService: WorksheetService,
               private pomService: POMService,
               private programService: ProgramsService,
+              private prService: PRService,
               private route: ActivatedRoute,
               private ufrService: UFRsService,
               private userService: UserService) {}
@@ -83,10 +88,50 @@ export class UfrApprovalDetailComponent implements OnInit {
     this.setAlignedGrids();
 
     await this.initTransactions();
+
+    this.determineDispositionAvailability();
+  }
+
+  determineDispositionAvailability(){
+    this.worksheetService.getByPomId(this.pom.id).subscribe(response => {
+      this.worksheets = response.result;
+      this.isDispositionAvailable = !this.worksheets.some(ws => ws.locked);
+    });
   }
 
   async updateUfr(type: string){
     this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+    if(type === 'disposition'){
+      switch(this.ufr.disposition) {
+        case Disposition.APPROVED:
+          if(this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+            this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+            this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
+            this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
+            let pr =  (await this.prService.createFromUfr(this.ufr).toPromise()).result;
+            pr.fundingLines.forEach(async fl => {
+              this.worksheets.forEach(async ws => {
+                let flExist =ws.rows.some(r  => r.fundingLine.id === fl.id);
+                if (!flExist) {
+                  let worksheetRow: WorksheetRow = {
+                    programRequestId: pr.id,
+                    programRequestFullname: pr.shortname,
+                    coreCapability: pr.coreCapability,
+                    appropriation: fl.appropriation,
+                    baOrBlin: fl.baOrBlin,
+                    item: fl.item,
+                    fundingLine: fl};
+                  ws.rows.push(worksheetRow);
+                }
+                await this.worksheetService.update({...ws}).toPromise();
+              });
+            })
+          }
+          break;
+        case Disposition.PARTIALLY_APPROVED:
+          break;
+      }
+    }
     Notify.success('UFR ' + type + ' updated successfully');
     await this.initTransactions();
   }

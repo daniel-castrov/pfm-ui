@@ -184,7 +184,6 @@ export class WithFullNameService {
         // do nothing
         break;
       default:
-        debugger;
         console.log('Error!!! Programmatic Request creation time type not set.');
     }
     return parentName + pr.shortName;
