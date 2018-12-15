@@ -190,6 +190,14 @@ import {ViewPomSessionComponent} from "./components/programming/view-pom-session
 import {WorksheetSelectedComponent} from "./components/programming/view-pom-session/worksheet-selected/worksheet-selected.component";
 import {GridRowsComponent} from "./components/ag-grid/grid-rows/grid-rows.component";
 import {LockedWorksheetsComponent} from "./components/programming/lock-pom-session/locked-worksheets/locked-worksheets.component";
+import {MenuBarComponent} from "./components/menu-bar/menu-bar.component";
+import {PlanningMenuComponent} from "./components/menu-bar/planning-menu/planning-menu.component";
+import {ProgrammingMenuComponent} from "./components/menu-bar/programming-menu/programming-menu.component";
+import {BudgetMenuComponent} from "./components/menu-bar/budget-menu/budget-menu.component";
+import {ExecutionMenuComponent} from "./components/menu-bar/execution-menu/execution-menu.component";
+import {ReportsMenuComponent} from "./components/menu-bar/reports-menu/reports-menu.component";
+import {MenageMenuComponent} from "./components/menu-bar/manage-menu/menage-menu.component";
+import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.component";
 
 
 // ROUTES
@@ -391,7 +399,15 @@ const appRoutes: Routes = [
     WorksheetSelectedComponent,
     ConfirmationDialogComponent,
     GridRowsComponent,
-    LockedWorksheetsComponent
+    LockedWorksheetsComponent,
+    MenuBarComponent,
+    PlanningMenuComponent,
+    ProgrammingMenuComponent,
+    BudgetMenuComponent,
+    ExecutionMenuComponent,
+    ReportsMenuComponent,
+    MenageMenuComponent,
+    AdminMenuComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

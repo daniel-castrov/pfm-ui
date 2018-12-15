@@ -1,0 +1,18 @@
+<div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Execution</a>
+    <div class="dropdown-menu" aria-labelledby="dropdown12">
+      <a class="dropdown-item" href="#" routerLink="/funds-update">Funds Update</a>
+      <a class="dropdown-item" href="#" routerLink="/oe-update">Program Update</a>
+
+      <div *ngIf="roles?.includes('Execution_Manager')" class="dropdown-divider"></div>
+      <a *ngIf="roles?.includes('Execution_Manager')" class="dropdown-item" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
+      <a *ngIf="roles?.includes('Execution_Manager')" class="dropdown-item" href="#" routerLink="/open-execution">Open Execution Phase</a>
+    </div>
+  </li>
+</div>
+<ng-template #disabledExecutionMenu>
+  <li class="nav-item">
+    <a class="nav-link disabled-style" disabled>Execution</a>
+  </li>
+</ng-template>

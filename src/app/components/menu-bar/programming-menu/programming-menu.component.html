@@ -1,0 +1,78 @@
+<div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdown01"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
+    <div class="dropdown-menu" aria-labelledby="dropdown01">
+
+      <ng-container *ngIf="('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus)">
+        <a class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
+        <a class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
+      </ng-container>
+      <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus)">
+        <a class="dropdown-item" disabled>Program Request</a>
+        <a class="dropdown-item" disabled>UFR Request</a>
+      </ng-container>
+
+
+      <div approle="POM_Manager">
+        <div class="dropdown-divider"></div>
+
+        <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus||'CLOSED'===pomStatus)">
+          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+          <a class="dropdown-item" disabled>Open POM Session</a>
+          <a class="dropdown-item" disabled>Update POM Session</a>
+          <a class="dropdown-item" disabled>Lock POM Session</a>
+          <a class="dropdown-item" disabled>Close POM Session</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" disabled>Update TOAs</a>
+          <a class="dropdown-item" disabled>Worksheet Mgmt</a>
+        </ng-container>
+
+        <ng-container *ngIf="'CREATED'===pomStatus">
+          <a class="dropdown-item" disabled>Create POM Session</a>
+          <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+          <a class="dropdown-item" disabled>Update POM Session</a>
+          <a class="dropdown-item" disabled>Lock POM Session</a>
+          <a class="dropdown-item" disabled>Close POM Session</a>
+          <div class="dropdown-divider"></div>
+          <!-- <div class="dropdown-header">Dropdown header 1</div> -->
+          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
+          <a class="dropdown-item" routerLink="/worksheet-management">Worksheet Mgmt</a>
+        </ng-container>
+
+        <ng-container *ngIf="'OPEN'===pomStatus">
+          <a class="dropdown-item" disabled>Create POM Session</a>
+          <a class="dropdown-item" disabled>Open POM Session</a>
+          <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
+          <a class="dropdown-item" href="#" routerLink="/lock-pom-session">Lock POM Session</a>
+          <a class="dropdown-item" disabled>Close POM Session</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
+          <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
+        </ng-container>
+
+        <ng-container *ngIf="'RECONCILIATION'===pomStatus">
+          <a class="dropdown-item" disabled>Create POM Session</a>
+          <a class="dropdown-item" disabled>Open POM Session</a>
+          <a class="dropdown-item" disabled>Update POM Session</a>
+          <a class="dropdown-item" disabled>Lock POM Session</a>
+          <a class="dropdown-item" routerLink="/close-pom-session">Close POM Session</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" disabled>Update TOAs</a>
+          <a class="dropdown-item" routerLink="/worksheet-viewing">Worksheet Mgmt</a>
+        </ng-container>
+
+        <ng-container *ngIf="'CREATED'===pomStatus||'OPEN'===pomStatus">
+          <a class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
+        </ng-container>
+      </div>
+
+    </div>
+  </li>
+</div>
+<ng-template #disabledProgrammingMenu>
+  <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle disabled-style" id="dropdown08" disabled>Programming</a>
+  </li>
+</ng-template>
+

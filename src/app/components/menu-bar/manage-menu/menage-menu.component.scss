@@ -1,0 +1,26 @@
+.nav-item .nav-link {
+  color: #fff;
+  font-size: 14px;
+}
+
+li.nav-item {
+  border-right: 1px solid rgba(92, 124, 152, 0.36);
+}
+
+ul.navbar-nav>li.nav-item:first-child {
+  border-right: 1px solid rgba(92, 124, 152, 0.36);
+}
+
+ul.navbar-nav>li.nav-item:last-child {
+  border-right: none;
+}
+
+a.dropdown-item {
+  color: #24537b !important;
+}
+
+.nav-item .nav-link.disabled-style {
+  color:#6994b9;
+  font-size: 14px;
+  cursor: not-allowed;
+}
