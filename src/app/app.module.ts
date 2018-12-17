@@ -198,6 +198,8 @@ import {ExecutionMenuComponent} from "./components/menu-bar/execution-menu/execu
 import {ReportsMenuComponent} from "./components/menu-bar/reports-menu/reports-menu.component";
 import {MenageMenuComponent} from "./components/menu-bar/manage-menu/menage-menu.component";
 import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.component";
+import {UserActionsComponent} from "./components/menu-bar/user-actions/user-actions.component";
+import {PrChangeNotificationsComponent} from "./components/menu-bar/pr-change-notofications/pr-change-notifications.component";
 
 
 // ROUTES
@@ -407,7 +409,9 @@ const appRoutes: Routes = [
     ExecutionMenuComponent,
     ReportsMenuComponent,
     MenageMenuComponent,
-    AdminMenuComponent
+    AdminMenuComponent,
+    UserActionsComponent,
+    PrChangeNotificationsComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

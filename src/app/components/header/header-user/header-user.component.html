@@ -46,7 +46,7 @@
             {{ authUser?.fullName }}
             <i class="fa fa-user" aria-hidden="true"></i>
           </a>
-          <div approle="User" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div *roles="'User'" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
             <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
             <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>

@@ -93,12 +93,12 @@
    <div>
     <hr/>
     <p>Here are some roles, you should see a role if you have that role. <br/>
-      <span approle="Admin">Admin</span>
-      <span approle="POM_Manager">POM_Manager</span>
-      <span approle="User">User</span>
-      <span approle="Program_Manager">Program_Manager</span>
-      <span approle="TestNotARole">TestNotARole</span>
-      <span approle="TestNotARole,Admin,POM_Manager,User,Program_Manager">TestNotARole or Admin or POM_Manager or User or Program_Manager</span>
+      <span *roles="'Admin'">Admin</span>
+      <span *roles="'POM_Manager'">POM_Manager</span>
+      <span *roles="'User'">User</span>
+      <span *roles="'Program_Manager'">Program_Manager</span>
+      <span *roles="'TestNotARole'">TestNotARole</span>
+      <span *roles="'TestNotARole,Admin,POM_Manager,User,Program_Manager'">TestNotARole or Admin or POM_Manager or User or Program_Manager</span>
     </p>
     <p>Here are some permissions, you should see a permissions if you have it. <br/>
       <span apppermission="POM:*">POM:*</span>

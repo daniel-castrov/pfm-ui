@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
   async refresh() {
     await this.ngOnInit();
     this.headerUserComponent.authUser = {...this.authUser}
-    this.headerUserComponent.menuBarComponent.ngOnInit();
+    this.headerUserComponent.menuBarComponent.refresh();
   }
 
 }
