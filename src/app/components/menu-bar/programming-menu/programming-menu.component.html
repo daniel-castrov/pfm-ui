@@ -10,7 +10,7 @@
       <a *menuRolesOk="'ufr-search'" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
       <a *menuRolesNotNow="'ufr-search'" class="dropdown-item" disabled>UFR Request</a>
 
-      <div *menuRolesOk="'create-new-pom'" class="dropdown-divider"></div>
+      <div *roles="'POM_Manager'" class="dropdown-divider"></div>
 
       <a *menuRolesOk="'create-new-pom'" class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
       <a *menuRolesNotNow="'create-new-pom'" class="dropdown-item" disabled>Create POM Session</a>
@@ -27,7 +27,7 @@
       <a *menuRolesOk="'close-pom-session'" class="dropdown-item" routerLink="/close-pom-session">Close POM Session</a>
       <a *menuRolesNotNow="'close-pom-session'" class="dropdown-item" disabled>Close POM Session</a>
 
-      <div *menuRolesOk="'update-toa'" class="dropdown-divider"></div>
+      <div *roles="'POM_Manager'" class="dropdown-divider"></div>
 
       <a *menuRolesOk="'update-toa'" class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
       <a *menuRolesNotNow="'update-toa'" class="dropdown-item" disabled>Update TOAs</a>
