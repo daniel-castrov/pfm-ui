@@ -2,7 +2,8 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import {UserUtils} from "../services/user.utils";
 
 /**
- * Structural directive removing the affected component if the user does not have any of the roles required.
+ * Structural directive removing the affected component if the user does not have any of the roles required,
+ * i.e. keeps the component if the user is role-based authorized. Does not consider the POM status.
  * Example usage:
  *    <span *roles="'POM_Manager,User'">POM_Manager</span>
  */

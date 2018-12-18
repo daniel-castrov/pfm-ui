@@ -4,97 +4,40 @@
       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Programming</a>
     <div class="dropdown-menu" aria-labelledby="dropdown01">
 
-      <div *roles="'POM_Manager'">
+      <a *menuRolesOk="'select-program-request'" class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
+      <a *menuRolesNotNow="'select-program-request'" class="dropdown-item" disabled>Program Request</a>
 
-        <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus||'CLOSED'===pomStatus)">
-          <a class="dropdown-item" disabled>Program Request</a>
-          <a class="dropdown-item" disabled>UFR Request</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
-          <a class="dropdown-item" disabled>Open POM Session</a>
-          <a class="dropdown-item" disabled>Update POM Session</a>
-          <a class="dropdown-item" disabled>Lock POM Session</a>
-          <a class="dropdown-item" disabled>Close POM Session</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Update TOAs</a>
-          <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-          <a class="dropdown-item" disabled>UFR Approval</a>
-        </ng-container>
+      <a *menuRolesOk="'ufr-search'" class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
+      <a *menuRolesNotNow="'ufr-search'" class="dropdown-item" disabled>UFR Request</a>
 
-        <ng-container *ngIf="'CREATED'===pomStatus">
-          <a class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
-          <a class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
-          <a class="dropdown-item" disabled>Update POM Session</a>
-          <a class="dropdown-item" disabled>Lock POM Session</a>
-          <a class="dropdown-item" disabled>Close POM Session</a>
-          <div class="dropdown-divider"></div>
-          <!-- <div class="dropdown-header">Dropdown header 1</div> -->
-          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
-          <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-          <a class="dropdown-item" disabled>UFR Approval</a>
-        </ng-container>
+      <div *menuRolesOk="'create-new-pom'" class="dropdown-divider"></div>
 
-        <ng-container *ngIf="'OPEN'===pomStatus">
-          <a class="dropdown-item" disabled>Program Request</a>
-          <a class="dropdown-item" disabled>UFR Request</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" disabled>Open POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
-          <a class="dropdown-item" href="#" routerLink="/lock-pom-session">Lock POM Session</a>
-          <a class="dropdown-item" disabled>Close POM Session</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
-          <a class="dropdown-item" href="#" routerLink="/worksheet-management">Worksheet Mgmt</a>
-          <a class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
-        </ng-container>
+      <a *menuRolesOk="'create-new-pom'" class="dropdown-item" href="#" routerLink="/create-new-pom">Create POM Session</a>
+      <a *menuRolesNotNow="'create-new-pom'" class="dropdown-item" disabled>Create POM Session</a>
 
-        <ng-container *ngIf="'RECONCILIATION'===pomStatus">
-          <a class="dropdown-item" disabled>Program Request</a>
-          <a class="dropdown-item" disabled>UFR Request</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" disabled>Open POM Session</a>
-          <a class="dropdown-item" disabled>Update POM Session</a>
-          <a class="dropdown-item" disabled>Lock POM Session</a>
-          <a class="dropdown-item" routerLink="/close-pom-session">Close POM Session</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Update TOAs</a>
-          <a class="dropdown-item" routerLink="/worksheet-viewing">Worksheet Mgmt</a>
-          <a class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
-        </ng-container>
+      <a *menuRolesOk="'open-pom-session'" class="dropdown-item" href="#" routerLink="/open-pom-session">Open POM Session</a>
+      <a *menuRolesNotNow="'open-pom-session'" class="dropdown-item" disabled>Open POM Session</a>
 
-        <ng-container *ngIf="'CLOSED'===pomStatus">
-          <a class="dropdown-item" disabled>Program Request</a>
-          <a class="dropdown-item" disabled>UFR Request</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Create POM Session</a>
-          <a class="dropdown-item" disabled>Open POM Session</a>
-          <a class="dropdown-item" disabled>Update POM Session</a>
-          <a class="dropdown-item" disabled>Lock POM Session</a>
-          <a class="dropdown-item" disabled>Close POM Session</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" disabled>Update TOAs</a>
-          <a class="dropdown-item" disabled>Worksheet Mgmt</a>
-          <a class="dropdown-item" disabled>UFR Approval</a>
-        </ng-container>
+      <a *menuRolesOk="'update-pom-session'" class="dropdown-item" href="#" routerLink="/update-pom-session">Update POM Session</a>
+      <a *menuRolesNotNow="'update-pom-session'" class="dropdown-item" disabled>Update POM Session</a>
 
-      </div>
+      <a *menuRolesOk="'lock-pom-session'" class="dropdown-item" href="#" routerLink="/lock-pom-session">Lock POM Session</a>
+      <a *menuRolesNotNow="'lock-pom-session'" class="dropdown-item" disabled>Lock POM Session</a>
 
+      <a *menuRolesOk="'close-pom-session'" class="dropdown-item" routerLink="/close-pom-session">Close POM Session</a>
+      <a *menuRolesNotNow="'close-pom-session'" class="dropdown-item" disabled>Close POM Session</a>
 
-      <div *roles="'Funds_Requestor'">
-        <ng-container *ngIf="('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus)">
-          <a class="dropdown-item" href="#" routerLink="/select-program-request">Program Request</a>
-          <a class="dropdown-item" href="#" routerLink="/ufr-search">UFR Request</a>
-        </ng-container>
-        <ng-container *ngIf="!('CREATED'===pomStatus||'OPEN'===pomStatus||'RECONCILIATION'===pomStatus)">
-          <a class="dropdown-item" disabled>Program Request</a>
-          <a class="dropdown-item" disabled>UFR Request</a>
-        </ng-container>
-      </div>
+      <div *menuRolesOk="'update-toa'" class="dropdown-divider"></div>
+
+      <a *menuRolesOk="'update-toa'" class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
+      <a *menuRolesNotNow="'update-toa'" class="dropdown-item" disabled>Update TOAs</a>
+
+      <a *menuRolesOk="'worksheet-management'" class="dropdown-item" href="#" routerLink="{{ pomStatus == 'OPEN' ? '/worksheet-management' : '/worksheet-viewing'}}">Worksheet Mgmt</a>
+      <a *menuRolesNotNow="'worksheet-management'" class="dropdown-item" disabled>Worksheet Mgmt</a>
+
+      <a *menuRolesOk="'ufr-approval-summary'" class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
+      <a *menuRolesNotNow="'ufr-approval-summary'" class="dropdown-item" disabled>UFR Approval</a>
+
     </div>
 
   </li>
