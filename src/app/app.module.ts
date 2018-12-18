@@ -200,7 +200,7 @@ import {MenageMenuComponent} from "./components/menu-bar/manage-menu/menage-menu
 import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.component";
 import {UserActionsComponent} from "./components/menu-bar/user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./components/menu-bar/pr-change-notofications/pr-change-notifications.component";
-import {CanActivateAuth} from "./directives/page.roles.directive";
+import {CanActivateAuth} from "./utils/can.activate";
 import {PomUtils} from "./services/pom.utils";
 import {MenuRolesOkDirective} from "./directives/menu.roles.ok.directive";
 import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive";
