@@ -21,7 +21,7 @@ export class WorksheetComponent implements OnChanges {
 
   @Input() readonly: boolean;
   @Input() pom: Pom;
-  columnDefs = [];
+  columnDefs;
   @Input() columnKeys;
   rowData;
   topPinnedData = [];
@@ -86,6 +86,7 @@ export class WorksheetComponent implements OnChanges {
   }
 
   generateColumns() {
+    this.columnDefs = [];
     if(!this.readonly) {
       this.columnDefs.push(
         {
