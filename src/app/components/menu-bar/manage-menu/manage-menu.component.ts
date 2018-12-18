@@ -3,11 +3,11 @@ import {ElevationService} from '../../../services/elevation.component';
 import {UserUtils} from "../../../services/user.utils";
 
 @Component({
-  selector: 'menage-menu',
-  templateUrl: './menage-menu.component.html',
-  styleUrls: ['./menage-menu.component.scss']
+  selector: 'manage-menu',
+  templateUrl: './manage-menu.component.html',
+  styleUrls: ['./manage-menu.component.scss']
 })
-export class MenageMenuComponent implements OnInit {
+export class ManageMenuComponent implements OnInit {
 
   roles: string[];
 

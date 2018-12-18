@@ -10,7 +10,7 @@ import {PlanningMenuComponent} from "./planning-menu/planning-menu.component";
 import {ExecutionMenuComponent} from "./execution-menu/execution-menu.component";
 import {BudgetMenuComponent} from "./budget-menu/budget-menu.component";
 import {AdminMenuComponent} from "./admin-menu/admin-menu.component";
-import {MenageMenuComponent} from "./manage-menu/menage-menu.component";
+import {ManageMenuComponent} from "./manage-menu/manage-menu.component";
 import {UserActionsComponent} from "./user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./pr-change-notofications/pr-change-notifications.component";
 
@@ -27,7 +27,7 @@ export class MenuBarComponent implements OnInit {
   @ViewChild(ReportsMenuComponent) reportsMenuComponent: ReportsMenuComponent;
   @ViewChild(ProgrammingMenuComponent) programmingMenuComponent: ProgrammingMenuComponent;
   @ViewChild(PlanningMenuComponent) planningMenuComponent: PlanningMenuComponent;
-  @ViewChild(MenageMenuComponent) menageMenuComponent: MenageMenuComponent;
+  @ViewChild(ManageMenuComponent) manageMenuComponent: ManageMenuComponent;
   @ViewChild(ExecutionMenuComponent) executionMenuComponent: ExecutionMenuComponent;
   @ViewChild(BudgetMenuComponent) budgetMenuComponent: BudgetMenuComponent;
   @ViewChild(AdminMenuComponent) adminMenuComponent: AdminMenuComponent;
@@ -52,7 +52,7 @@ export class MenuBarComponent implements OnInit {
     this.reportsMenuComponent.ngOnInit();
     this.programmingMenuComponent.ngOnInit();
     this.planningMenuComponent.ngOnInit();
-    this.menageMenuComponent.ngOnInit();
+    this.manageMenuComponent.ngOnInit();
     this.executionMenuComponent.ngOnInit();
     this.budgetMenuComponent.ngOnInit();
     this.adminMenuComponent.ngOnInit();

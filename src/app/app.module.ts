@@ -196,7 +196,7 @@ import {ProgrammingMenuComponent} from "./components/menu-bar/programming-menu/p
 import {BudgetMenuComponent} from "./components/menu-bar/budget-menu/budget-menu.component";
 import {ExecutionMenuComponent} from "./components/menu-bar/execution-menu/execution-menu.component";
 import {ReportsMenuComponent} from "./components/menu-bar/reports-menu/reports-menu.component";
-import {MenageMenuComponent} from "./components/menu-bar/manage-menu/menage-menu.component";
+import {ManageMenuComponent} from "./components/menu-bar/manage-menu/manage-menu.component";
 import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.component";
 import {UserActionsComponent} from "./components/menu-bar/user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./components/menu-bar/pr-change-notofications/pr-change-notifications.component";
@@ -415,7 +415,7 @@ const appRoutes: Routes = [
     BudgetMenuComponent,
     ExecutionMenuComponent,
     ReportsMenuComponent,
-    MenageMenuComponent,
+    ManageMenuComponent,
     AdminMenuComponent,
     UserActionsComponent,
     PrChangeNotificationsComponent
