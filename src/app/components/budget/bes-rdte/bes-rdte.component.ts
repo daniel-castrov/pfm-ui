@@ -5,8 +5,8 @@ import {BudgetFundingLine, BudgetFundingLinesService, Pom, POMService, User} fro
 import {UserUtils} from "../../../services/user.utils";
 import {Item} from "./Item";
 
-@Component({ 
-  selector: 'app-bes-rdte',
+@Component({
+  selector: 'bes-rdte',
   templateUrl: './bes-rdte.component.html',
   styleUrls: ['./bes-rdte.component.scss']
 })
