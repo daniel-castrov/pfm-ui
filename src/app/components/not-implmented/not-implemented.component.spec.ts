@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotImplementedComponent } from './not-implemented.component';
 
-describe('NoAccessComponent', () => {
+describe('PageRolesComponent', () => {
   let component: NotImplementedComponent;
   let fixture: ComponentFixture<NotImplementedComponent>;
 
