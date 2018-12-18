@@ -1,34 +1,31 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { Request } from './request';
-import { UiLeaveCommunityRequest } from './uiLeaveCommunityRequest';
-import { UiJoinCommunityRequest } from './uiJoinCommunityRequest';
-import { UiCreateUserRequest } from './uiCreateUserRequest';
-import { UiAssignRoleRequest } from './uiAssignRoleRequest';
-import { UiDropRoleRequest } from './uiDropRoleRequest';
-
-// Generated
-import { User } from '../generated/model/user';
-import { UserService } from '../generated/api/user.service';
-import { MyDetailsService } from '../generated/api/myDetails.service';
-import { CreateUserRequest } from '../generated/model/createUserRequest';
-import { CreateUserRequestService } from '../generated/api/createUserRequest.service';
-import { JoinCommunityRequest } from '../generated/model/joinCommunityRequest';
-import { JoinCommunityRequestService } from '../generated/api/joinCommunityRequest.service';
-import { LeaveCommunityRequest } from '../generated/model/leaveCommunityRequest';
-import { LeaveCommunityRequestService } from '../generated/api/leaveCommunityRequest.service';
-import { AssignRoleRequest } from '../generated/model/assignRoleRequest';
-import { AssignRoleRequestService } from '../generated/api/assignRoleRequest.service';
-import { DropRoleRequest } from '../generated/model/dropRoleRequest';
-import { DropRoleRequestService } from '../generated/api/dropRoleRequest.service';
-import { Response } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {Request} from './request';
+import {UiLeaveCommunityRequest} from './uiLeaveCommunityRequest';
+import {UiJoinCommunityRequest} from './uiJoinCommunityRequest';
+import {UiCreateUserRequest} from './uiCreateUserRequest';
+import {UiAssignRoleRequest} from './uiAssignRoleRequest';
+import {UiDropRoleRequest} from './uiDropRoleRequest';
+import {User} from '../generated/model/user';
+import {UserService} from '../generated/api/user.service';
+import {CreateUserRequest} from '../generated/model/createUserRequest';
+import {CreateUserRequestService} from '../generated/api/createUserRequest.service';
+import {JoinCommunityRequest} from '../generated/model/joinCommunityRequest';
+import {JoinCommunityRequestService} from '../generated/api/joinCommunityRequest.service';
+import {LeaveCommunityRequest} from '../generated/model/leaveCommunityRequest';
+import {LeaveCommunityRequestService} from '../generated/api/leaveCommunityRequest.service';
+import {AssignRoleRequest} from '../generated/model/assignRoleRequest';
+import {AssignRoleRequestService} from '../generated/api/assignRoleRequest.service';
+import {DropRoleRequest} from '../generated/model/dropRoleRequest';
+import {DropRoleRequestService} from '../generated/api/dropRoleRequest.service';
+import {UserUtils} from "./user.utils";
 
 
 @Injectable()
 export class RequestsService {
 
   constructor(
-    private myDetailsService: MyDetailsService,
+    private utilUtils: UserUtils,
     private createUserRequestService: CreateUserRequestService,
     private joinCommunityRequestService: JoinCommunityRequestService,
     private leaveCommunityRequestService: LeaveCommunityRequestService,
@@ -39,30 +36,28 @@ export class RequestsService {
 
   getRequests(): Observable<Request[]> {
 
-    let observable = new Subject<Request[]>();
+    let subject = new Subject<Request[]>();
     let allRequests: Request[] = [];
 
-    this.myDetailsService.getCurrentUser().subscribe(
-      (response) => {
-
-        let communityId: string = response.result.currentCommunityId;
-
-        Promise.all([
-          this.getAssignRoleReqs(allRequests, communityId),
-          this.getDropRoleReqs(allRequests, communityId),
-          this.getJoinCommReqs(allRequests, communityId),
-          this.getLeaveCommReqs(allRequests, communityId),
-          this.getCreateUserReqs(allRequests, communityId)
-        ]).then(
-          (requestArrays: any) => {
-            requestArrays.forEach(
-              (reqArray: Request[]) => {
-                allRequests.concat(reqArray);
-              });
-          });
-          observable.next(allRequests);
-      });
-    return observable;
+    (async () => {
+      let communityId = (await this.utilUtils.user().toPromise()).currentCommunityId;
+      Promise.all([
+        this.getAssignRoleReqs(allRequests, communityId),
+        this.getDropRoleReqs(allRequests, communityId),
+        this.getJoinCommReqs(allRequests, communityId),
+        this.getLeaveCommReqs(allRequests, communityId),
+        this.getCreateUserReqs(allRequests, communityId)
+      ]).then(
+        (requestArrays: any) => {
+          requestArrays.forEach(
+            (requests: Request[]) => allRequests.concat(requests)
+          );
+          subject.next(allRequests);
+          subject.complete();
+        }
+      );
+    })();
+    return subject;
   }
 
   // TRY WITH ASYNC and shared parameter

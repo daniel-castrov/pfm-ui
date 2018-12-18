@@ -37,7 +37,7 @@ export class UserUtils {
     return this.rolesPermissionsService.getRoles().map( (response: RestResult) => response.result );
   }
 
-  hasAnyOfTheseRoles(clientRoles: String[]): Observable<boolean> {
+  hasAnyOfTheseRoles(...clientRoles: String[]): Observable<boolean> {
     return this.roles()
       .map( (serverRoles: string[]) => serverRoles.some( serverRole => clientRoles.includes(serverRole)) );
   }

@@ -190,6 +190,21 @@ import {ViewPomSessionComponent} from "./components/programming/view-pom-session
 import {WorksheetSelectedComponent} from "./components/programming/view-pom-session/worksheet-selected/worksheet-selected.component";
 import {GridRowsComponent} from "./components/ag-grid/grid-rows/grid-rows.component";
 import {LockedWorksheetsComponent} from "./components/programming/lock-pom-session/locked-worksheets/locked-worksheets.component";
+import {MenuBarComponent} from "./components/menu-bar/menu-bar.component";
+import {PlanningMenuComponent} from "./components/menu-bar/planning-menu/planning-menu.component";
+import {ProgrammingMenuComponent} from "./components/menu-bar/programming-menu/programming-menu.component";
+import {BudgetMenuComponent} from "./components/menu-bar/budget-menu/budget-menu.component";
+import {ExecutionMenuComponent} from "./components/menu-bar/execution-menu/execution-menu.component";
+import {ReportsMenuComponent} from "./components/menu-bar/reports-menu/reports-menu.component";
+import {ManageMenuComponent} from "./components/menu-bar/manage-menu/manage-menu.component";
+import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.component";
+import {UserActionsComponent} from "./components/menu-bar/user-actions/user-actions.component";
+import {PrChangeNotificationsComponent} from "./components/menu-bar/pr-change-notofications/pr-change-notifications.component";
+import {CanActivateAuth} from "./utils/can.activate";
+import {PomUtils} from "./services/pom.utils";
+import {MenuRolesOkDirective} from "./directives/menu.roles.ok.directive";
+import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive";
+import {Authorization} from "./services/authorization";
 
 
 // ROUTES
@@ -231,27 +246,27 @@ const appRoutes: Routes = [
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
   {path:'set-epp', component: SetEppComponent},
-  {path:'select-program-request', component:SelectProgramRequestComponent},
+  {path:'select-program-request', component:SelectProgramRequestComponent, canActivate:[CanActivateAuth]},
   {path:'spend-plan-update', component:SpendPlansTabComponent},
   {path:'user/:id', component:ManageSelfComponent},
-  {path:'update-pom-session/:id', component:UpdatePomSessionComponent},
-  {path:'update-pom-session', component:UpdatePomSessionComponent},
-  {path:'lock-pom-session', component:LockPomSessionComponent},
-  {path:'open-pom-session', component:OpenPomSessionComponent},
+  {path:'update-pom-session/:id', component:UpdatePomSessionComponent, canActivate:[CanActivateAuth]},
+  {path:'update-pom-session', component:UpdatePomSessionComponent, canActivate:[CanActivateAuth]},
+  {path:'lock-pom-session', component:LockPomSessionComponent, canActivate:[CanActivateAuth]},
+  {path:'open-pom-session', component:OpenPomSessionComponent, canActivate:[CanActivateAuth]},
   {path:'view-pom-session/:id', component:ViewPomSessionComponent},
-  {path:'close-pom-session', component:ClosePomSessionComponent},
+  {path:'close-pom-session', component:ClosePomSessionComponent, canActivate:[CanActivateAuth]},
   {path:'update-program-execution/:lineId', component:UpdateProgramExecutionComponent},
   {path:'user-approval/:requestId', component:UserApprovalComponent},
   {path:'user-list', component:UserListComponent},
-  {path:'ufr-search', component: UfrSearchComponent},
-  {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent},
+  {path:'ufr-search', component: UfrSearchComponent, canActivate:[CanActivateAuth]},
+  {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
-  {path:'worksheet-management', component: WorksheetManagementComponent},
-  {path:'worksheet-viewing', component: WorksheetViewingComponent},
-  {path:'create-new-pom', component: CreatePomSessionComponent },
+  {path:'worksheet-management', component: WorksheetManagementComponent, canActivate:[CanActivateAuth]},
+  {path:'worksheet-viewing', component: WorksheetViewingComponent, canActivate:[CanActivateAuth]},
+  {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
   {path:'library', component: LibraryComponent}
 ];
 
@@ -346,6 +361,8 @@ const appRoutes: Routes = [
     NewUfrComponent,
     OnlyDigitsDirective,
     RbacRoleDirective,
+    MenuRolesOkDirective,
+    MenuRolesNotNowDirective,
     RbacPermissionDirective,
     FyPipe,
     MapAsListPipe,
@@ -391,7 +408,17 @@ const appRoutes: Routes = [
     WorksheetSelectedComponent,
     ConfirmationDialogComponent,
     GridRowsComponent,
-    LockedWorksheetsComponent
+    LockedWorksheetsComponent,
+    MenuBarComponent,
+    PlanningMenuComponent,
+    ProgrammingMenuComponent,
+    BudgetMenuComponent,
+    ExecutionMenuComponent,
+    ReportsMenuComponent,
+    ManageMenuComponent,
+    AdminMenuComponent,
+    UserActionsComponent,
+    PrChangeNotificationsComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -455,6 +482,7 @@ const appRoutes: Routes = [
     UserRoleResourceService,
     ProgramsService,
     UserUtils,
+    PomUtils,
     CycleUtils,
     RequestsService,
     POMService,
@@ -470,6 +498,8 @@ const appRoutes: Routes = [
     SpendPlanService,
     BudgetFundingLinesService,
     PrChangeNotificationsService,
+    CanActivateAuth,
+    Authorization,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
   ],
