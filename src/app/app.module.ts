@@ -456,9 +456,7 @@ const appRoutes: Routes = [
     ManageMenuComponent,
     AdminMenuComponent,
     UserActionsComponent,
-    PrChangeNotificationsComponent,
-    PFormsComponent,
-    RFormsComponent
+    PrChangeNotificationsComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
