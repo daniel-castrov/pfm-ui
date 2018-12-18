@@ -77,6 +77,7 @@ import { P21Component } from './components/budget/p21/p21.component';
 import { ProgramRequestComponent } from './components/programming/program-request/program-request.component';
 import { ProgramTabComponent } from './components/programming/program-request/program-tab/program-tab.component';
 import { R2Component } from './components/budget/r2/r2.component';
+import { R2AComponent } from './components/budget/r2-a/r2-a.component';
 import { R3Component } from './components/budget/r3/r3.component';
 import { R4Component } from './components/budget/r4/r4.component';
 import { R4AComponent } from './components/budget/r4-a/r4-a.component';
@@ -238,6 +239,7 @@ const appRoutes: Routes = [
   {path:'program-execution-line/:elid', component:ProgramExecutionLineComponent},
   {path:'program-request', component:ProgramRequestComponent},
   {path:'r2', component:R2Component},
+  {path:'r2A', component:R2AComponent},
   {path:'r3', component:R3Component},
   {path:'r4', component:R4Component},
   {path:'r4A', component:R4AComponent},
@@ -330,6 +332,7 @@ const appRoutes: Routes = [
     PlanningComponent,
     PomComponent,
     R2Component,
+    R2AComponent,
     R3Component,
     R4Component,
     R4AComponent,
