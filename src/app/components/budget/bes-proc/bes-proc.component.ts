@@ -3,7 +3,7 @@ import { AgGridNg2 } from 'ag-grid-angular';
 import { HeaderComponent } from '../../header/header.component';
 
 @Component({
-  selector: 'app-bes-proc',
+  selector: 'bes-proc',
   templateUrl: './bes-proc.component.html',
   styleUrls: ['./bes-proc.component.scss']
 })
@@ -104,7 +104,7 @@ export class BesProcComponent  {
     return data;
   }
 
- 
+
 
   getDemoData() {
 

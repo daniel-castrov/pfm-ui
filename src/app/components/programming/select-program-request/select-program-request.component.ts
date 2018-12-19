@@ -16,11 +16,11 @@ export class SelectProgramRequestComponent implements OnInit {
 
   @ViewChild(NewProgrammaticRequestComponent) newProgrammaticRequestComponent: NewProgrammaticRequestComponent;
   private currentCommunityId: string;
-  private pom: Pom;
-  private pomProgrammaticRequests: ProgramRequestWithFullName[];
-  private pb: PB;
-  private pbProgrammaticRequests: ProgramRequestWithFullName[];
-  private thereAreOutstandingPRs: boolean;
+  public pom: Pom;
+  public pomProgrammaticRequests: ProgramRequestWithFullName[];
+  public pb: PB;
+  public pbProgrammaticRequests: ProgramRequestWithFullName[];
+  public thereAreOutstandingPRs: boolean;
 
   constructor(private pomService: POMService,
               private pbService: PBService,

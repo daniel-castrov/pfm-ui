@@ -1,0 +1,17 @@
+<div *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+    <div class="dropdown-menu" aria-labelledby="dropdown02">
+      <a class="dropdown-item" disabled>R1</a>
+      <a class="dropdown-item" disabled>R2</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" disabled>P1</a>
+      <a class="dropdown-item" disabled>P2</a>
+    </div>
+  </li>
+</div>
+<ng-template #disabledReportsMenu>
+  <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle disabled-style"  id="dropdown02" disabled>Reports</a>
+  </li>
+</ng-template>

@@ -24,7 +24,7 @@ export class CacheService {
   static temporaryCaching<T>(key: string, observableGetter: () => Observable<T>): Observable<T> {
     setTimeout(()=> {
       delete this.cache[key];
-    }, 10000); // delete the cache entry in 10 seconds
+    }, 1000); // delete the cache entry in 1 second
     return this.caching(key, observableGetter);
   }
 }
