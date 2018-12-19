@@ -111,17 +111,43 @@ export class UfrApprovalDetailComponent implements OnInit {
             let pr =  (await this.prService.createFromUfr(this.ufr).toPromise()).result;
             pr.fundingLines.forEach(async fl => {
               this.worksheets.forEach(async ws => {
-                let flExist =ws.rows.some(r  => r.fundingLine.id === fl.id);
-                if (!flExist) {
+                let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
+                if (!row) {
                   let worksheetRow: WorksheetRow = {
                     programRequestId: pr.id,
-                    programRequestFullname: pr.shortname,
+                    programRequestFullname: pr.shortName,
                     coreCapability: pr.coreCapability,
                     appropriation: fl.appropriation,
                     baOrBlin: fl.baOrBlin,
                     item: fl.item,
                     fundingLine: fl};
                   ws.rows.push(worksheetRow);
+                } else {
+                  Object.keys(row.fundingLine.funds).forEach(year => {
+                    row.fundingLine.funds[year] += Number(fl.funds[year]);
+                  });
+                }
+                await this.worksheetService.update({...ws}).toPromise();
+              });
+            })
+          } else {
+            this.ufr.fundingLines.forEach(async fl => {
+              this.worksheets.forEach(async ws => {
+                let row = ws.rows.find(r  => r.fundingLine.id === fl.id);
+                if (!row) {
+                  let worksheetRow: WorksheetRow = {
+                    programRequestId: this.ufr.shortyId,
+                    programRequestFullname: this.ufr.shortName,
+                    coreCapability: this.ufr.coreCapability,
+                    appropriation: fl.appropriation,
+                    baOrBlin: fl.baOrBlin,
+                    item: fl.item,
+                    fundingLine: fl};
+                  ws.rows.push(worksheetRow);
+                } else {
+                  Object.keys(row.fundingLine.funds).forEach(year => {
+                    row.fundingLine.funds[year] += Number(fl.funds[year]);
+                  });
                 }
                 await this.worksheetService.update({...ws}).toPromise();
               });
