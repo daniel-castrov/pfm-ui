@@ -134,7 +134,7 @@ export class UfrVariantsTabComponent {
   generateColumns() {
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy = pom.result.fy;
-      this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
+      this.years = [this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
         {
           headerName: '',
