@@ -157,7 +157,7 @@ export class AllUfrsComponent implements OnInit {
             headerTooltip: 'Last Updated',
             width: 102,
             editable: false,
-            cellRenderer: params => FormatterUtil.dateFormatter(params.value),
+            cellRenderer: params => FormatterUtil.dateFormatter(params),
             menuTabs: this.menuTabs,
             filter: 'agDateColumnFilter',
           };
@@ -252,7 +252,7 @@ export class AllUfrsComponent implements OnInit {
         "Status": ufr.status,
         "Priority": ufr.priority,
         "Disposition": ufr.disposition,
-        "Last Updated": ufr.lastMod,
+        "Last Updated": new Date(ufr.lastMod),
         "Funding Request": '$' + this.sum(ufr),
         "Func Area": funcArea,
         "Organization": this.orgMap[orgid]
