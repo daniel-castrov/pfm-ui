@@ -137,90 +137,114 @@ export class UfrVariantsTabComponent {
       this.years = [this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
         {
-          headerName: '',
-          colId: 'delete',
-          suppressToolPanel: true,
-          hide: false,
-          cellRenderer: 'deleteRenderer',
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'font-weight-bold': params => {return this.colSpanCount(params) > 1},
-            'row-span': params => {return this.rowSpanCount(params) > 1}
+          headerName: 'Funds in $K',
+          children: [{
+            headerName: '',
+            colId: 'delete',
+            suppressToolPanel: true,
+            hide: false,
+            cellRenderer: 'deleteRenderer',
+            rowSpan: params => {
+              return this.rowSpanCount(params)
+            },
+            cellClassRules: {
+              'font-weight-bold': params => {
+                return this.colSpanCount(params) > 1
+              },
+              'row-span': params => {
+                return this.rowSpanCount(params) > 1
+              }
+            },
+            cellClass: 'funding-line-default',
+            cellStyle: {'text-align': 'center'},
+            width: 50
           },
-          cellClass: 'funding-line-default',
-          cellStyle: {'text-align': 'center'},
-          width: 50
-        },
-        {
-          headerName: 'Service',
-          field: 'serviceLine.branch',
-          editable: params => {
-            return this.isEditable(params)
-          },
-          rowSpan: params => {return this.rowSpanCount(params)},
-          colSpan: params => {return this.colSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1},
-            'text-right': params => {return this.colSpanCount(params) > 1}
-          },
-          onCellValueChanged: params => this.onServiceLineValueChanged(params),
-          cellClass: 'funding-line-default',
-          cellEditorSelector: params => {
-            return {
-              component: 'agSelectCellEditor',
-              params: {values: this.branches}
-            };
-          }
-        },
-        {
-          headerName: 'Contractor',
-          field: 'serviceLine.contractor',
-          editable: params => {
-            return this.isEditable(params)
-          },
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1}
-          },
-          onCellValueChanged: params => this.onServiceLineValueChanged(params),
-          cellClass: 'funding-line-default'
-        },
-        {
-          headerName: 'Unit Costs ($)',
-          field: 'serviceLine.unitCost',
-          valueFormatter: params => {
-            return FormatterUtil.currencyFormatter(params, 2)
-          },
-          editable: params => {
-            return this.isEditable(params)
-          },
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1}
-          },
-          onCellValueChanged: params => this.onServiceLineValueChanged(params),
-          cellClass: 'funding-line-default'
-        },
-        {
-          headerName: 'Cycle',
-          maxWidth: 92,
-          valueGetter: params => {
-            switch(params.data.phaseType) {
-              case PhaseType.POM:
-                return params.data.phaseType + (this.pomFy - 2000);
-              case PhaseType.PB:
-                return params.data.phaseType + (this.pomFy - 2001);
-              case PhaseType.DELTA:
-                return params.data.phaseType;
-            }
-          },
-          cellClassRules: {
-            'delta-row': params => {
-              return params.data.phaseType === PhaseType.DELTA;
-            }
-          }
-        }
-      ];
+            {
+              headerName: 'Service',
+              field: 'serviceLine.branch',
+              editable: params => {
+                return this.isEditable(params)
+              },
+              rowSpan: params => {
+                return this.rowSpanCount(params)
+              },
+              colSpan: params => {
+                return this.colSpanCount(params)
+              },
+              cellClassRules: {
+                'row-span': params => {
+                  return this.rowSpanCount(params) > 1
+                },
+                'text-right': params => {
+                  return this.colSpanCount(params) > 1
+                }
+              },
+              onCellValueChanged: params => this.onServiceLineValueChanged(params),
+              cellClass: 'funding-line-default',
+              cellEditorSelector: params => {
+                return {
+                  component: 'agSelectCellEditor',
+                  params: {values: this.branches}
+                };
+              }
+            },
+            {
+              headerName: 'Contractor',
+              field: 'serviceLine.contractor',
+              editable: params => {
+                return this.isEditable(params)
+              },
+              rowSpan: params => {
+                return this.rowSpanCount(params)
+              },
+              cellClassRules: {
+                'row-span': params => {
+                  return this.rowSpanCount(params) > 1
+                }
+              },
+              onCellValueChanged: params => this.onServiceLineValueChanged(params),
+              cellClass: 'funding-line-default'
+            },
+            {
+              headerName: 'Unit Costs ($)',
+              field: 'serviceLine.unitCost',
+              valueFormatter: params => {
+                return FormatterUtil.currencyFormatter(params, 2)
+              },
+              editable: params => {
+                return this.isEditable(params)
+              },
+              rowSpan: params => {
+                return this.rowSpanCount(params)
+              },
+              cellClassRules: {
+                'row-span': params => {
+                  return this.rowSpanCount(params) > 1
+                }
+              },
+              onCellValueChanged: params => this.onServiceLineValueChanged(params),
+              cellClass: 'funding-line-default'
+            },
+            {
+              headerName: 'Cycle',
+              maxWidth: 92,
+              valueGetter: params => {
+                switch (params.data.phaseType) {
+                  case PhaseType.POM:
+                    return params.data.phaseType + (this.pomFy - 2000);
+                  case PhaseType.PB:
+                    return params.data.phaseType + (this.pomFy - 2001);
+                  case PhaseType.DELTA:
+                    return params.data.phaseType;
+                }
+              },
+              cellClassRules: {
+                'delta-row': params => {
+                  return params.data.phaseType === PhaseType.DELTA;
+                }
+              }
+            }]
+        }];
       this.years.forEach(year => {
         this.addYearlyColumns(year);
       });
