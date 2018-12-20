@@ -333,14 +333,14 @@ export class VariantsTabComponent implements OnInit {
       let columnKey = key.toString().replace('20', 'FY')
       let colDef = {
         headerName: subHeader,
-        type: "numericColumn",
+        suppressMenu: true,
         suppressToolPanel: true,
+        cellClass: ['text-center'],
         children: [{
           headerName: columnKey,
           colId: key,
           headerTooltip: 'Fiscal Year ' + key,
-          field: 'fundingLine.funds.' + key,
-          cellEditor: 'numericCellEditor',
+          field: 'serviceLine.quantity.' + key,
           maxWidth: 80,
           minWidth: 80,
           suppressMenu: true,

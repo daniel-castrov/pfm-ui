@@ -275,7 +275,7 @@ export class UfrVariantsTabComponent {
           headerName: columnKey,
           colId: key,
           headerTooltip: 'Fiscal Year ' + key,
-          field: 'fundingLine.funds.' + key,
+          field: 'serviceLine.quantity.' + key,
           maxWidth: 90,
           suppressMenu: true,
           suppressToolPanel: true,
