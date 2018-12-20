@@ -476,7 +476,6 @@ export class VariantsTabComponent implements OnInit {
   }
 
   onBudgetYearValueChanged(params){
-debugger;
     if ( Number(params.newValue) < 0 ){
       params.newValue = params.oldValue;
       Notify.warning( "You cannot request negative quantities." );
