@@ -541,90 +541,7 @@ export class FundsTabComponent implements OnChanges {
     ];
 
     this.columnKeys.forEach(key => {
-
-      let subHeader;
-      let cellClass = [];
-      switch (Number(key)) {
-        case (this.pomFy + 4):
-          subHeader = 'BY+4';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy + 3:
-          subHeader = 'BY+3';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy + 2:
-          subHeader = 'BY+2';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy + 1:
-          subHeader = 'BY+1';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy:
-          subHeader = 'BY';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy - 1:
-          subHeader = 'CY';
-          cellClass = ['ag-cell-white', 'text-right'];
-          break;
-        case this.pomFy - 2:
-          subHeader = 'PY';
-          cellClass = ['ag-cell-white', 'text-right'];
-          break;
-        case this.pomFy - 3:
-          subHeader = 'PY-1';
-          cellClass = ['ag-cell-white', 'text-right'];
-          break;
-      }
-      if (subHeader) {
-        let columnKey = key.toString().replace('20', 'FY')
-        let colDef = {
-          headerName: subHeader,
-          type: "numericColumn",
-          suppressToolPanel: true,
-          children: [{
-            headerName: columnKey,
-            colId: key,
-            headerTooltip: 'Fiscal Year ' + key,
-            field: 'fundingLine.funds.' + key,
-            maxWidth: 80,
-            minWidth: 80,
-            suppressMenu: true,
-            suppressToolPanel: true,
-            cellEditor: 'numericCellEditor',
-            cellClass: 'text-right',
-            cellClassRules: {
-              'ag-cell-edit': params => {
-                return this.isAmountEditable(params, key)
-              },
-              'font-weight-bold': params => {
-                return this.colSpanCount(params) > 1
-              },
-              'delta-row': params => {
-                return params.data.phaseType === PhaseType.DELTA;
-              }
-            },
-            cellStyle: params => {
-              if (this.prs &&
-                params.data.phaseType === PhaseType.POM &&
-                params.data.gridType === GridType.CURRENT_PR &&
-                !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
-                return { color: 'red', 'font-weight': 'bold' };
-              };
-            },
-            editable: params => {
-              return this.isAmountEditable(params, key)
-            },
-            onCellValueChanged: params => this.onBudgetYearValueChanged(params),
-            valueFormatter: params => {
-              return FormatterUtil.currencyFormatter(params)
-            }
-          }]
-        };
-        this.columnDefs.push(colDef);
-      }
+      this.addYearlyColumn(key);
     });
 
     let totalColDef = {
@@ -685,6 +602,93 @@ export class FundsTabComponent implements OnChanges {
       }
     });
     return result;
+  }
+
+  private addYearlyColumn(key) {
+    let subHeader;
+    let cellClass = [];
+    switch (Number(key)) {
+      case (this.pomFy + 4):
+        subHeader = 'BY+4';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 3:
+        subHeader = 'BY+3';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 2:
+        subHeader = 'BY+2';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 1:
+        subHeader = 'BY+1';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy:
+        subHeader = 'BY';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy - 1:
+        subHeader = 'CY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 2:
+        subHeader = 'PY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 3:
+        subHeader = 'PY-1';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+    }
+    if (subHeader) {
+      let columnKey = key.toString().replace('20', 'FY')
+      let colDef = {
+        headerName: subHeader,
+        type: "numericColumn",
+        suppressToolPanel: true,
+        children: [{
+          headerName: columnKey,
+          colId: key,
+          headerTooltip: 'Fiscal Year ' + key,
+          field: 'fundingLine.funds.' + key,
+          maxWidth: 80,
+          minWidth: 80,
+          suppressMenu: true,
+          suppressToolPanel: true,
+          cellEditor: 'numericCellEditor',
+          cellClass: 'text-right',
+          cellClassRules: {
+            'ag-cell-edit': params => {
+              return this.isAmountEditable(params, key)
+            },
+            'font-weight-bold': params => {
+              return this.colSpanCount(params) > 1
+            },
+            'delta-row': params => {
+              return params.data.phaseType === PhaseType.DELTA;
+            }
+          },
+          cellStyle: params => {
+            if (this.prs &&
+              params.data.phaseType === PhaseType.POM &&
+              params.data.gridType === GridType.CURRENT_PR &&
+              !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
+              return {color: 'red', 'font-weight': 'bold'};
+            }
+            ;
+          },
+          editable: params => {
+            return this.isAmountEditable(params, key)
+          },
+          onCellValueChanged: params => this.onBudgetYearValueChanged(params),
+          valueFormatter: params => {
+            return FormatterUtil.currencyFormatter(params)
+          }
+        }]
+      };
+      this.columnDefs.push(colDef);
+    }
   }
 
   generateEmptyFundingLine(pomFundingLine?: FundingLine): FundingLine {

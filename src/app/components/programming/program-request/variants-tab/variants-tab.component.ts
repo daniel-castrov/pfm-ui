@@ -8,6 +8,7 @@ import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
+import {GridType} from "../funds-tab/GridType";
 
 @Component({
   selector: 'variants-tab',
@@ -197,7 +198,7 @@ export class VariantsTabComponent implements OnInit {
     this.pomService.getById(this.current.phaseId).subscribe(pom => {
       this.pomStatus = pom.result.status;
       this.pomFy = pom.result.fy;
-      this.years = [this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
+      this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
         {
           headerName: '',
@@ -284,13 +285,64 @@ export class VariantsTabComponent implements OnInit {
           }
         }
       ];
-      let childrens = [];
+
       this.years.forEach(year => {
-        let colDef = {
-          headerName: "FY" + (year-2000),
-          colId:year,
-          field: 'serviceLine.quantity.' + year,
-          maxWidth: 92,
+        this.addYearlyColumn(year);
+      });
+    });
+  }
+
+  private addYearlyColumn(key) {
+    let subHeader;
+    let cellClass = [];
+    switch (Number(key)) {
+      case (this.pomFy + 4):
+        subHeader = 'BY+4';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 3:
+        subHeader = 'BY+3';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 2:
+        subHeader = 'BY+2';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 1:
+        subHeader = 'BY+1';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy:
+        subHeader = 'BY';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy - 1:
+        subHeader = 'CY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 2:
+        subHeader = 'PY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 3:
+        subHeader = 'PY-1';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+    }
+    if (subHeader) {
+      let columnKey = key.toString().replace('20', 'FY')
+      let colDef = {
+        headerName: subHeader,
+        type: "numericColumn",
+        suppressToolPanel: true,
+        children: [{
+          headerName: columnKey,
+          colId: key,
+          headerTooltip: 'Fiscal Year ' + key,
+          field: 'fundingLine.funds.' + key,
+          cellEditor: 'numericCellEditor',
+          maxWidth: 80,
+          minWidth: 80,
           suppressMenu: true,
           suppressToolPanel: true,
           cellClass: 'text-right',
@@ -303,7 +355,7 @@ export class VariantsTabComponent implements OnInit {
             }
           },
           cellStyle: params => {
-            if (params.data.phaseType === PhaseType.POM && !this.isServiceLineValid(year)) {
+            if (params.data.phaseType === PhaseType.POM && !this.isServiceLineValid(key)) {
               return {color: 'red'};
             }else {
               return {color: 'black'};
@@ -314,29 +366,10 @@ export class VariantsTabComponent implements OnInit {
           },
           onCellValueChanged: params => this.onBudgetYearValueChanged(params),
           editable: params => {return this.isAmountEditable(params)}
-        };
-        childrens.push(colDef);
-      });
-
-      let totalColDef = {
-        headerName: 'Total',
-        suppressMenu: true,
-        suppressToolPanel: true,
-        maxWidth: 92,
-        type: "numericColumn",
-        valueGetter: params => {return this.getTotal(params.data.serviceLine.quantity, this.years)},
-        valueFormatter: params => {return FormatterUtil.numberFormatter(params)}
-      };
-      childrens.push(totalColDef);
-      let colDef = {
-        headerName: 'Quantities',
-        suppressMenu: true,
-        suppressToolPanel: true,
-        cellClass: ['text-center'],
-        children: childrens
+        }]
       };
       this.columnDefs.push(colDef);
-    });
+    }
   }
 
   isEditable(params): boolean{
@@ -443,7 +476,7 @@ export class VariantsTabComponent implements OnInit {
   }
 
   onBudgetYearValueChanged(params){
-
+debugger;
     if ( Number(params.newValue) < 0 ){
       params.newValue = params.oldValue;
       Notify.warning( "You cannot request negative quantities." );
