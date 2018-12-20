@@ -29,7 +29,7 @@ export class Authorization {
   async 'select-program-request'(): Promise<AuthorizationResult> {
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
-      if (Pom.StatusEnum.CREATED == (await this.pomUtils.currentPom().toPromise()).status) return AuthorizationResult.Ok;
+      if ([Pom.StatusEnum.CREATED, Pom.StatusEnum.OPEN, Pom.StatusEnum.RECONCILIATION].includes((await this.pomUtils.currentPom().toPromise()).status) ) return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
     if(await this.userUtils.hasAnyOfTheseRoles('Funds_Requestor').toPromise()) {
@@ -42,7 +42,7 @@ export class Authorization {
   async 'ufr-search'(): Promise<AuthorizationResult> {
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
-      if (Pom.StatusEnum.CREATED == (await this.pomUtils.currentPom().toPromise()).status) return AuthorizationResult.Ok;
+      if ([Pom.StatusEnum.CREATED, Pom.StatusEnum.OPEN, Pom.StatusEnum.RECONCILIATION].includes((await this.pomUtils.currentPom().toPromise()).status) ) return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
     if(await this.userUtils.hasAnyOfTheseRoles('Funds_Requestor').toPromise()) {
