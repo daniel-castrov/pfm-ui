@@ -622,6 +622,19 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/ProgrammaticRequest"
+  /pr/createFromUfr:
+    post:
+      tags:
+      - "PR"
+      operationId: "createFromUfr"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
   /pr/phase/{phaseId}/program/{mrId}:
     get:
       tags:
@@ -3585,6 +3598,12 @@ definitions:
       programRequestFullname:
         type: "string"
       coreCapability:
+        type: "string"
+      appropriation:
+        type: "string"
+      baOrBlin:
+        type: "string"
+      item:
         type: "string"
       fundingLine:
         type: "object"

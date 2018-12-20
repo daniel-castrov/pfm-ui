@@ -89,7 +89,10 @@
             <div *ngIf="pom" class="col-4">
               <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
               <select *ngIf="ufr.status === UfrStatus.VALID"
-                      [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER) || pom.status !== 'OPEN'"
+                      [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER)
+                       || pom.status !== 'OPEN'
+                       || !ufr.priority
+                       || !isDispositionAvailable"
                       [(ngModel)]="ufr.disposition"
                       (change)="updateUfr('disposition')"
                       class="form-control">
