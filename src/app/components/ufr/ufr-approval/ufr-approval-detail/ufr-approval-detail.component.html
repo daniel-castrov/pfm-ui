@@ -215,3 +215,86 @@
     </div>
   </div>
 </div>
+<!-- Modal Dialog -->
+<div id="partial-approval" class="modal fade in">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <ag-grid-angular #agGridCurrentFundingModal
+                             id="agGridCurrentFundingModal"
+                             class="ag-theme-balham pr-funds-tab group-header-white"
+                             [toolPanelSuppressPivotMode]="true"
+                             [toolPanelSuppressRowGroups]="true"
+                             [toolPanelSuppressValues]="true"
+                             [toolPanelSuppressPivots]="true"
+                             [toolPanelSuppressColumnFilter]="true"
+                             [toolPanelSuppressColumnSelectAll]="true"
+                             [suppressMovableColumns]="true"
+                             [rowData]="currentFunding"
+                             (gridReady)="onGridReady($event)"
+                             (rowDataChanged)="sizeColumnsToFit($event)"
+                             (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                             (columnVisible)="sizeColumnsToFit($event)"
+                             [gridAutoHeight]="true">
+            </ag-grid-angular>
+            <ag-grid-angular #agGridProposedChangesModal
+                             id="agGridProposedChangesModal"
+                             class="ag-theme-balham pr-funds-tab group-header-white separator"
+                             [gridAutoHeight]="true"
+                             [toolPanelSuppressPivotMode]="true"
+                             [toolPanelSuppressRowGroups]="true"
+                             [toolPanelSuppressValues]="true"
+                             [toolPanelSuppressPivots]="true"
+                             [toolPanelSuppressColumnFilter]="true"
+                             [toolPanelSuppressColumnSelectAll]="true"
+                             [suppressMovableColumns]="true"
+                             [suppressRowTransform]="true"
+                             [showToolPanel]="false"
+                             [enableSorting]="false"
+                             [enableFilter]="false"
+                             [singleClickEdit]="true"
+                             [stopEditingWhenGridLosesFocus]="true"
+                             [components]="components"
+                             [rowData]="proposedChange"
+                             (gridReady)="onGridReady($event)"
+                             (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                             (columnVisible)="sizeColumnsToFit($event)"
+                             (rowDataChanged)="sizeColumnsToFit($event)"
+                             headerHeight="0">
+            </ag-grid-angular>
+            <ag-grid-angular
+              #agGridRevisedProgramsModal
+              id="agGridRevisedProgramsModal"
+              class="ag-theme-balham pr-funds-tab group-header-white separator"
+              [rowData]="revisedPrograms"
+              [suppressRowTransform]="true"
+              [suppressMovableColumns]="true"
+              [toolPanelSuppressPivotMode]="true"
+              [toolPanelSuppressRowGroups]="true"
+              [toolPanelSuppressValues]="true"
+              [toolPanelSuppressPivots]="true"
+              [toolPanelSuppressColumnFilter]="true"
+              [toolPanelSuppressColumnSelectAll]="true"
+              (gridReady)="onGridReady($event)"
+              (rowDataChanged)="sizeColumnsToFit($event)"
+              (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+              (columnVisixble)="sizeColumnsToFit($event)"
+              [gridAutoHeight]="true"
+              headerHeight="0">
+            </ag-grid-angular>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-right mt-2">
+            <button class="btn btn-primary" (click)="submitPartialApproved()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

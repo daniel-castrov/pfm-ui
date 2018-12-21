@@ -633,8 +633,6 @@ paths:
       - in: "body"
         name: "body"
         required: true
-        schema:
-          $ref: "#/definitions/UFR"
   /pr/phase/{phaseId}/program/{mrId}:
     get:
       tags:
