@@ -111,7 +111,6 @@ export class UfrApprovalDetailComponent implements OnInit {
   }
 
   async updateUfr(type: string){
-    this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
     if(type === 'disposition'){
       switch(this.ufr.disposition) {
         case Disposition.APPROVED:
@@ -119,7 +118,7 @@ export class UfrApprovalDetailComponent implements OnInit {
             this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
             this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
             this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
-            let pr =  (await this.prService.createFromUfr({ufr: this.ufr}).toPromise()).result;
+            let pr =  (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: null}).toPromise()).result;
             pr.fundingLines.forEach(async fl => {
               this.worksheets.forEach(async ws => {
                 let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
@@ -164,6 +163,7 @@ export class UfrApprovalDetailComponent implements OnInit {
               });
             })
           }
+          // this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
           Notify.success('UFR ' + type + ' updated successfully');
           break;
         case Disposition.PARTIALLY_APPROVED:
@@ -171,6 +171,8 @@ export class UfrApprovalDetailComponent implements OnInit {
           this.initModalData();
           break;
       }
+    } else {
+      this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
     }
     await this.initTransactions();
   }
@@ -715,6 +717,7 @@ export class UfrApprovalDetailComponent implements OnInit {
         }
       });
     }
+    this.ufr = (await this.ufrService.generateTransaction('disposition', this.ufr).toPromise()).result;
     $('#partial-approval').modal('hide');
     Notify.success('UFR disposition updated successfully');
   }
