@@ -392,7 +392,7 @@ export class UfrVariantsTabComponent {
   }
 
   isAmountEditable(params): boolean{
-    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals' && !this.readonly;
+    return params.data.phaseType == PhaseType.POM && params.colDef.colId >= this.pomFy && !this.readonly;
   }
 
   getTotal(quantities, years): number {
