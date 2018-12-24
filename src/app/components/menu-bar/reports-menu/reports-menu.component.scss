@@ -5,14 +5,13 @@
 
 li.nav-item {
   border-right: 1px solid rgba(92, 124, 152, 0.36);
+  padding-right: 10px !important;
+  padding-left: 10px !important;
 }
 
 ul.navbar-nav>li.nav-item:first-child {
   border-right: 1px solid rgba(92, 124, 152, 0.36);
-}
-
-ul.navbar-nav>li.nav-item:last-child {
-  border-right: none;
+  padding-right: 10px;
 }
 
 a:not([href]):not([tabindex]) {
