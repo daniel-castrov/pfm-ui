@@ -95,3 +95,8 @@ input {
     cursor: not-allowed !important;
   }
 }
+
+.modal-dialog {
+  max-width: 100% !important;
+  margin: 1.75rem auto;
+}
