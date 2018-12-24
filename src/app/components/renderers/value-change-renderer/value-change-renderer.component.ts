@@ -19,8 +19,8 @@ export class ValueChangeRenderer implements ICellRendererAngularComp {
 
   agInit(param) {
     this.params = param;
-    this.previousValueFormatted = FormatterUtil.currencyFormatter(param.data.previousFundingLine.funds[param.colDef.colId]);
-    this.previousValue = param.data.previousFundingLine.funds[param.colDef.colId];
+    this.previousValueFormatted = param.data.previousValueFormatted? param.data.previousFundingLine.funds[param.colDef.colId]: 0;
+    this.previousValue = param.data.previousFundingLine? param.data.previousFundingLine.funds[param.colDef.colId] : 0;
     this.newValueFormatted= FormatterUtil.currencyFormatter(param.data.newFundingLine.funds[param.colDef.colId]);
     this.newValue = param.data.newFundingLine.funds[param.colDef.colId];
   }

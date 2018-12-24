@@ -530,6 +530,20 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/WorksheetEvent"
+  /worksheets/createRows:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "createRows"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Worksheet object"
+        required: true
+        schema:
+          $ref: "#/definitions/WorksheetEvent"
   /worksheets/{worksheetId}/fundingLine/{fundingLineId}/events/:
     get:
       tags:
@@ -633,6 +647,8 @@ paths:
       - in: "body"
         name: "body"
         required: true
+        schema:
+          type: "object"
   /pr/phase/{phaseId}/program/{mrId}:
     get:
       tags:
