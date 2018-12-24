@@ -1,12 +1,12 @@
-import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {FundingLine, POMService, IntMap, Variant, User, UfrStatus, UFR} from '../../../../generated'
-import { UserUtils } from '../../../../services/user.utils';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {FundingLine, IntMap, POMService, UFR, User, Variant} from '../../../../generated'
+import {UserUtils} from '../../../../services/user.utils';
 import {DataRow} from "./DataRow";
 import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import { Notify } from '../../../../utils/Notify';
+import {Notify} from '../../../../utils/Notify';
 
 @Component({
   selector: 'ufr-variants-tab',
@@ -134,7 +134,7 @@ export class UfrVariantsTabComponent {
   generateColumns() {
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy = pom.result.fy;
-      this.years = [this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
+      this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
         {
           headerName: 'Funds in $K',
