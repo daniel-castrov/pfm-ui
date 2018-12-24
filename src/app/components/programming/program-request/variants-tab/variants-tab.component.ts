@@ -486,8 +486,10 @@ export class VariantsTabComponent implements OnInit {
     }
   }
 
-  isAmountEditable(params): boolean{
-    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals';
+  isAmountEditable(params): boolean {
+    return params.data.phaseType == PhaseType.POM &&
+           params.data.serviceLine.branch !== 'Totals' &&
+           params.colDef.colId >= this.pomFy;
   }
 
   getTotal(quantities, years): number {
