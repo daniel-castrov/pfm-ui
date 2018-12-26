@@ -164,7 +164,7 @@ export class UfrApprovalDetailComponent implements OnInit {
               });
             })
           }
-          // this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+          this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
           Notify.success('UFR ' + type + ' updated successfully');
           break;
         case Disposition.PARTIALLY_APPROVED:
