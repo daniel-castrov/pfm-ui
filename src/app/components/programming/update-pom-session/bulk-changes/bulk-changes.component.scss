@@ -1,0 +1,26 @@
+fieldset {
+  margin: 0;
+  padding: 10px 20px;
+}
+
+
+.bulk-changes {
+  margin: 0;
+  padding:0;
+  margin-left: -20px;
+
+  .form-check-label {
+    width: 100px;
+  }
+
+  tr {
+    margin: 0px;
+    padding: 0;
+    vertical-align: top;
+  }
+  td {
+    padding: 0 15px 0 0;
+    margin: 0;
+    vertical-align: top;
+  }
+}
