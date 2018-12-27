@@ -9,18 +9,26 @@ fieldset {
   padding:0;
   margin-left: -20px;
 
-  .form-check-label {
-    width: 100px;
-  }
-
   tr {
     margin: 0px;
     padding: 0;
     vertical-align: top;
   }
+
   td {
-    padding: 0 15px 0 0;
+    padding: 0 10px 0 0;
     margin: 0;
     vertical-align: top;
   }
+
+  .form-check-label {
+    width: 83px;
+  }
+
+  .form-check > .form-check-input {
+    margin: 0 !important;
+    position: relative !important;
+    transform: scale(1) !important;
+  }
+
 }

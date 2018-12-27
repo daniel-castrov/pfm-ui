@@ -3,7 +3,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from "ag-grid";
 
 @Component({
-  template: `<input type="checkbox" (click)="onChange($event)" [checked]="params.value"/>`
+  template: `<input type="checkbox" class="form-check-input" (click)="onChange($event)" [checked]="params.value"/>`
 })
 
 export class CheckboxCellRenderer implements ICellRendererAngularComp {
