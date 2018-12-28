@@ -47,6 +47,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   proposedChange;
   partiallyApproved;
   revisedPrograms;
+  revisedProgramsModal;
   currentFunding;
   transactions;
 
@@ -165,6 +166,7 @@ export class UfrApprovalDetailComponent implements OnInit {
             })
           }
           this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+          await this.initTransactions();
           Notify.success('UFR ' + type + ' updated successfully');
           break;
         case Disposition.PARTIALLY_APPROVED:
@@ -174,8 +176,8 @@ export class UfrApprovalDetailComponent implements OnInit {
       }
     } else {
       this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+      await this.initTransactions();
     }
-    await this.initTransactions();
   }
 
   initModalData() {
@@ -215,7 +217,6 @@ export class UfrApprovalDetailComponent implements OnInit {
 
     this.agGridRevisedProgramsModal.api.setColumnDefs(this.revisedProgramsColumnDefs);
     this.agGridRevisedProgramsModal.api.setRowData(this.revisedPrograms);
-
 
     this.agGridProposedChangesModal.gridOptions.alignedGrids = [];
     this.agGridProposedChangesModal.gridOptions.alignedGrids.push(this.agGridCurrentFundingModal.gridOptions);
@@ -357,6 +358,38 @@ export class UfrApprovalDetailComponent implements OnInit {
     };
     this.transactions = transactions
     this.agGridTransactions.api.sizeColumnsToFit();
+  }
+
+  calculateRevisedModalChanges() {
+    let data: Array<DataRow> = [];
+    if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0) {
+      this.partiallyApproved.forEach(pc => {
+        if (pc.type === 'Proposed Partial') {
+          let cf = this.currentFunding.find(cf => {
+            return cf.fundingLine.appropriation === pc.fundingLine.appropriation &&
+              cf.fundingLine.baOrBlin === pc.fundingLine.baOrBlin &&
+              cf.fundingLine.opAgency === pc.fundingLine.opAgency &&
+              cf.fundingLine.item === pc.fundingLine.item
+          });
+          let row: DataRow = JSON.parse(JSON.stringify(pc));
+          row.editable = false;
+          row.fundingLine.userCreated = false;
+          row.gridType = GridType.CURRENT_PR;
+          Object.keys(row.fundingLine.funds).forEach(year =>{
+            row.fundingLine.funds[year] = (cf && cf.fundingLine.funds[year]? cf.fundingLine.funds[year] : 0) + (pc.fundingLine.funds[year]? pc.fundingLine.funds[year] : 0);
+          });
+          data.push(row);
+        }
+      });
+      this.revisedProgramsModal = data;
+    } else {
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())),
+        editable: false,
+        gridType: GridType.CURRENT_PR};
+      data.push(pomRow);
+      this.revisedProgramsModal = data;
+    }
+    this.agGridRevisedProgramsModal.api.setRowData(this.revisedProgramsModal);
   }
 
   calculateRevisedChanges() {
@@ -538,7 +571,7 @@ export class UfrApprovalDetailComponent implements OnInit {
     let pomNode = params.data;
     pomNode.fundingLine.funds[year] = Number(params.newValue);
     this.agGridProposedChangesModal.api.refreshCells();
-    this.calculateRevisedChanges();
+    this.calculateRevisedModalChanges();
   }
 
   isAmountEditable(params, key): boolean{
@@ -766,6 +799,7 @@ export class UfrApprovalDetailComponent implements OnInit {
       });
     }
     this.ufr = (await this.ufrService.generateTransaction('disposition', this.ufr).toPromise()).result;
+    await this.initTransactions();
     $('#partial-approval').modal('hide');
     Notify.success('UFR disposition updated successfully');
   }

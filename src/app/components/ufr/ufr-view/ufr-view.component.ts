@@ -78,6 +78,7 @@ export class UfrViewComponent implements OnInit {
     let justificationTabValidation = this.ufrJustificationComponent.validate;
     if (justificationTabValidation) {
       Notify.error(justificationTabValidation.message);
+      this.ufr.status = UfrStatus.SAVED;
     } else {
       if(!fundsTabValidation.isValid){
         Notify.error(fundsTabValidation.message);
