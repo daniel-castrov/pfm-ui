@@ -127,7 +127,7 @@ export class UfrApprovalDetailComponent implements OnInit {
                 if (!row) {
                   let worksheetRow: WorksheetRow = {
                     programRequestId: pr.id,
-                    programRequestFullname: pr.longName,
+                    programRequestFullname: pr.shortName,
                     coreCapability: pr.coreCapability,
                     appropriation: fl.appropriation,
                     baOrBlin: fl.baOrBlin,
@@ -149,7 +149,7 @@ export class UfrApprovalDetailComponent implements OnInit {
                 if (!row) {
                   let worksheetRow: WorksheetRow = {
                     programRequestId: this.ufr.shortyId,
-                    programRequestFullname: this.ufr.longName,
+                    programRequestFullname: this.ufr.shortName,
                     coreCapability: this.ufr.coreCapability,
                     appropriation: fl.appropriation,
                     baOrBlin: fl.baOrBlin,
@@ -178,6 +178,118 @@ export class UfrApprovalDetailComponent implements OnInit {
       this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
       await this.initTransactions();
     }
+  }
+
+  async submitPartialApproved() {
+    if(this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
+      let updateData: RowUpdateEventData [] = [];
+      let partiallyApprovedFL: FundingLine [] = [];
+      this.partiallyApproved.forEach((dr: DataRow) => {
+        if (dr.type === 'Proposed Partial') {
+          partiallyApprovedFL.push(dr.fundingLine);
+        }
+      });
+      let pr = (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: partiallyApprovedFL}).toPromise()).result;
+      pr.fundingLines.forEach(async fl => {
+        this.worksheets.forEach(async ws => {
+          let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
+          if (!row) {
+            let worksheetRow: WorksheetRow = {
+              programRequestId: pr.id,
+              programRequestFullname: pr.shortName,
+              coreCapability: pr.coreCapability,
+              appropriation: fl.appropriation,
+              baOrBlin: fl.baOrBlin,
+              item: fl.item,
+              fundingLine: fl};
+            ws.rows.push(worksheetRow);
+
+            let modifiedRow: RowUpdateEventData = {};
+            modifiedRow.newFundingLine = fl;
+            modifiedRow.worksheetId = ws.id;
+            modifiedRow.programId = pr.shortName;
+            modifiedRow.fundingLineId = fl.id;
+            modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
+            updateData.push(modifiedRow);
+
+            let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+            await this.worksheetService.createRows(body).toPromise();
+          } else {
+            Object.keys(row.fundingLine.funds).forEach(year => {
+              row.fundingLine.funds[year] += Number(fl.funds[year]);
+            });
+            let modifiedRow: RowUpdateEventData = {};
+            modifiedRow.newFundingLine = fl;
+            modifiedRow.previousFundingLine = row.fundingLine;
+            modifiedRow.worksheetId = ws.id;
+            modifiedRow.programId = row.programRequestFullname;
+            modifiedRow.fundingLineId = row.fundingLine.id;
+            modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
+
+            updateData.push(modifiedRow);
+
+            let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+            await this.worksheetService.updateRows(body).toPromise();
+          }
+        });
+      })
+    } else {
+      let updateData: RowUpdateEventData [] = [];
+      this.partiallyApproved.forEach((dr: DataRow) => {
+        let fl = dr.fundingLine;
+        if (dr.type === 'Proposed Partial') {
+          this.worksheets.forEach(async (ws : Worksheet) => {
+            let row = ws.rows.find(r  => r.fundingLine.id === fl.id);
+            if (!row) {
+              let worksheetRow: WorksheetRow = {
+                programRequestId: this.ufr.shortyId,
+                programRequestFullname: this.ufr.shortName,
+                coreCapability: this.ufr.coreCapability,
+                appropriation: fl.appropriation,
+                baOrBlin: fl.baOrBlin,
+                item: fl.item,
+                fundingLine: fl};
+              ws.rows.push(worksheetRow);
+
+              let modifiedRow: RowUpdateEventData = {};
+              modifiedRow.newFundingLine = fl;
+              modifiedRow.worksheetId = ws.id;
+              modifiedRow.programId = this.ufr.shortName;
+              modifiedRow.fundingLineId = fl.id;
+              modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
+              updateData.push(modifiedRow);
+
+              let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+              await this.worksheetService.createRows(body).toPromise();
+
+            } else {
+              Object.keys(row.fundingLine.funds).forEach(year => {
+                row.fundingLine.funds[year] += Number(fl.funds[year]);
+              });
+              let modifiedRow: RowUpdateEventData = {};
+              modifiedRow.newFundingLine = fl;
+              modifiedRow.previousFundingLine = row.fundingLine;
+              modifiedRow.worksheetId = ws.id;
+              modifiedRow.programId = row.programRequestFullname;
+              modifiedRow.fundingLineId = row.fundingLine.id;
+              modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy
+
+              updateData.push(modifiedRow);
+
+              let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+              await this.worksheetService.updateRows(body).toPromise();
+            }
+          });
+        }
+      });
+    }
+    this.ufr = (await this.ufrService.generateTransaction('disposition', this.ufr).toPromise()).result;
+    await this.initTransactions();
+    $('#partial-approval').modal('hide');
+    Notify.success('UFR disposition updated successfully');
   }
 
   initModalData() {
@@ -690,118 +802,6 @@ export class UfrApprovalDetailComponent implements OnInit {
 
   sizeColumnsToFit(params){
     params.api.sizeColumnsToFit();
-  }
-
-  async submitPartialApproved() {
-    if(this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
-      this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
-      let updateData: RowUpdateEventData [] = [];
-      let partiallyApprovedFL: FundingLine [] = [];
-      this.partiallyApproved.forEach((dr: DataRow) => {
-        if (dr.type === 'Proposed Partial') {
-          partiallyApprovedFL.push(dr.fundingLine);
-        }
-      });
-      let pr = (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: partiallyApprovedFL}).toPromise()).result;
-      pr.fundingLines.forEach(async fl => {
-        this.worksheets.forEach(async ws => {
-          let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
-          if (!row) {
-            let worksheetRow: WorksheetRow = {
-              programRequestId: pr.id,
-              programRequestFullname: pr.longName,
-              coreCapability: pr.coreCapability,
-              appropriation: fl.appropriation,
-              baOrBlin: fl.baOrBlin,
-              item: fl.item,
-              fundingLine: fl};
-            ws.rows.push(worksheetRow);
-
-            let modifiedRow: RowUpdateEventData = {};
-            modifiedRow.newFundingLine = fl;
-            modifiedRow.worksheetId = ws.id;
-            modifiedRow.programId = pr.longName;
-            modifiedRow.fundingLineId = fl.id;
-            modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
-            updateData.push(modifiedRow);
-
-            let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
-            await this.worksheetService.createRows(body).toPromise();
-          } else {
-            Object.keys(row.fundingLine.funds).forEach(year => {
-              row.fundingLine.funds[year] += Number(fl.funds[year]);
-            });
-            let modifiedRow: RowUpdateEventData = {};
-            modifiedRow.newFundingLine = fl;
-            modifiedRow.previousFundingLine = row.fundingLine;
-            modifiedRow.worksheetId = ws.id;
-            modifiedRow.programId = row.programRequestFullname;
-            modifiedRow.fundingLineId = row.fundingLine.id;
-            modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
-
-            updateData.push(modifiedRow);
-
-            let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
-            await this.worksheetService.updateRows(body).toPromise();
-          }
-        });
-      })
-    } else {
-      let updateData: RowUpdateEventData [] = [];
-      this.partiallyApproved.forEach((dr: DataRow) => {
-        let fl = dr.fundingLine;
-        if (dr.type === 'Proposed Partial') {
-          this.worksheets.forEach(async (ws : Worksheet) => {
-            let row = ws.rows.find(r  => r.fundingLine.id === fl.id);
-            if (!row) {
-              let worksheetRow: WorksheetRow = {
-                programRequestId: this.ufr.shortyId,
-                programRequestFullname: this.ufr.longName,
-                coreCapability: this.ufr.coreCapability,
-                appropriation: fl.appropriation,
-                baOrBlin: fl.baOrBlin,
-                item: fl.item,
-                fundingLine: fl};
-              ws.rows.push(worksheetRow);
-
-              let modifiedRow: RowUpdateEventData = {};
-              modifiedRow.newFundingLine = fl;
-              modifiedRow.worksheetId = ws.id;
-              modifiedRow.programId = this.ufr.longName;
-              modifiedRow.fundingLineId = fl.id;
-              modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
-              updateData.push(modifiedRow);
-
-              let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
-              await this.worksheetService.createRows(body).toPromise();
-
-            } else {
-              Object.keys(row.fundingLine.funds).forEach(year => {
-                row.fundingLine.funds[year] += Number(fl.funds[year]);
-              });
-              let modifiedRow: RowUpdateEventData = {};
-              modifiedRow.newFundingLine = fl;
-              modifiedRow.previousFundingLine = row.fundingLine;
-              modifiedRow.worksheetId = ws.id;
-              modifiedRow.programId = row.programRequestFullname;
-              modifiedRow.fundingLineId = row.fundingLine.id;
-              modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy
-
-              updateData.push(modifiedRow);
-
-              let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
-              await this.worksheetService.updateRows(body).toPromise();
-            }
-          });
-        }
-      });
-    }
-    this.ufr = (await this.ufrService.generateTransaction('disposition', this.ufr).toPromise()).result;
-    await this.initTransactions();
-    $('#partial-approval').modal('hide');
-    Notify.success('UFR disposition updated successfully');
   }
 
   onGridReady(params) {
