@@ -3,7 +3,6 @@ import { ProgramRequestWithFullName, ProgramWithFullName} from './with-full-name
 import { PRService } from './../generated/api/pR.service';
 import { Program } from './../generated/model/program';
 import { ProgramsService } from './../generated/api/programs.service';
-// import { Program } from './../generated/model/program';
 import { Injectable } from '@angular/core';
 import { ProgramType } from "../generated";
 import { FundingLine } from "../generated/model/fundingLine";
@@ -148,8 +147,8 @@ export class WithFullNameService {
     return allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
   }
 
-  isProgram(programOrPr): boolean {
-    return (typeof programOrPr.creationTimeType) === 'undefined';
+  isProgram(programOrPr:Program): boolean {
+    return ( programOrPr.programStatus == "COMPLETED" );
   }
 
   private sort(withFullName: WithFullName[]): WithFullName[] {

@@ -373,7 +373,6 @@ const appRoutes: Routes = [
     SelectProgramRequestComponent,
     SetEppComponent,
     SpendPlansTabComponent,
-    SummaryTabComponent,
     UserApprovalComponent,
     UserListComponent,
     UfrSearchComponent,

@@ -2,7 +2,7 @@ import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, ShortyType, ProgramsService, PRService, Program, User, Organization, OrganizationService } from '../../../../generated';
+import { UFRsService, ShortyType, ProgramsService, PRService, Program, ProgramStatus, User, Organization, OrganizationService } from '../../../../generated';
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UserUtils } from '../../../../services/user.utils';
@@ -58,23 +58,23 @@ export class NewUfrComponent implements OnInit {
         break;
       case 'New FoS':
       case 'New Increment':
-        const progsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
-        this.selectableProgramsOrPrs = this.removePrsInOutstandingState(progsOrPrs);
+        const programs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
+        this.selectableProgramsOrPrs = this.removePrsInOutstandingState(programs);
         this.initialSelectOption = 'Program';
         break;
     }
   }
 
-  removePrsInOutstandingState(progsOrPrs?: any[]) {
+  removePrsInOutstandingState(programs?: any[]) {
     let newPRs:any[] = [];
-    progsOrPrs.forEach((item, index) => {
-      // programs don't have a state
-      if ( !item.state ) {
-        newPRs.push(item);
+    programs.forEach((program:Program, index) => {
+      // previously funded programs are COMPLETED
+      if ( program.programStatus == "COMPLETED" ) {
+        newPRs.push(program);
       }
-      // prs in OUTSTNADING are not valid for creating a UFR
-      else if ( item.state != "OUTSTANDING" ) {
-        newPRs.push(item);
+      // prs in OUTSTANDING are not valid for creating a UFR
+      else if ( program.programStatus != "OUTSTANDING" ) {
+        newPRs.push(program);
       }
     });
     return newPRs;

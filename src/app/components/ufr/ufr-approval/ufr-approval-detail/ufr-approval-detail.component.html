@@ -63,10 +63,10 @@
         <div class="col-5">
           <div class="row">
             <div class="col-4">
-              <label class="select-label" *ngIf="ufr.status !== UfrStatus.SUBMITTED" for="status">Status: </label>
+              <label class="select-label" *ngIf="ufr.ufrStatus !== UfrStatus.SUBMITTED" for="status">Status: </label>
               <select id="status"
-                      [disabled]="ufr.status !== UfrStatus.SUBMITTED"
-                      [(ngModel)]="ufr.status"
+                      [disabled]="ufr.ufrStatus !== UfrStatus.SUBMITTED"
+                      [(ngModel)]="ufr.ufrStatus"
                       (change)="updateUfr('status')"
                       class="form-control">
                 <option hidden [value]="UfrStatus.SUBMITTED">Status</option>
@@ -77,7 +77,7 @@
             </div>
             <div class="col-4">
               <label class="select-label" *ngIf="ufr.priority" for="status">Priority: </label>
-              <select *ngIf="ufr.status === UfrStatus.VALID"
+              <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
                       [disabled]="ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER"
                       [(ngModel)]="ufr.priority"
                       (change)="updateUfr('priority')"
@@ -88,7 +88,7 @@
             </div>
             <div *ngIf="pom" class="col-4">
               <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
-              <select *ngIf="ufr.status === UfrStatus.VALID"
+              <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
                       [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER)
                        || pom.status !== 'OPEN'
                        || !ufr.priority
