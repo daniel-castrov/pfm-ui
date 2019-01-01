@@ -5,34 +5,38 @@ info:
   description: "API services for JSCBIS"
 basePath: "/api"
 tags:
-- name: "AssignRoleRequest"
+#
 - name: "Blank"
 - name: "Community"
+- name: "Organization"
+- name: "Library"
+# PHASES
+- name: "POM"
+- name: "PB"
+- name: "Execution"
+# PROGRAMS AND UFRS
+- name: "PR"
+- name: "Programs"
+- name: "UFRs"
+- name: "Epp"
+- name: "Worksheet"
+- name: "OandE"
+- name: "SpendPlan"
+- name: "Snapshots"
+# USERS AND ROLES
+- name: "MyDetails"
+- name: "Stranger"
+- name: "User"
+- name: "Role"
+- name: "Permission"
+- name: "RolesPermissions"
+- name: "UserRoleResource"
+# USER REQUESTS
+- name: "AssignRoleRequest"
 - name: "CreateUserRequest"
 - name: "DropRoleRequest"
 - name: "JoinCommunityRequest"
 - name: "LeaveCommunityRequest"
-- name: "MyDetails"
-- name: "Organization"
-- name: "PB"
-- name: "Permission"
-- name: "POM"
-- name: "Worksheet"
-- name: "PR"
-- name: "Programs"
-- name: "Role"
-- name: "RolesPermissions"
-- name: "Snapshots"
-- name: "Stranger"
-- name: "UFRs"
-- name: "User"
-- name: "UserRoleResource"
-- name: "Epp"
-- name: "Execution"
-- name: "Library"
-- name: "OandE"
-- name: "SpendPlan"
-
 #
 ##############################################################################
 # PATHS
@@ -58,7 +62,6 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-#
 # STOP BLANK
 ##############################################################################
 # START COMMUNITIES
@@ -186,6 +189,238 @@ paths:
         500:
           description: "An unexpected error occurred."
 # STOP COMMUNITIES
+##############################################################################
+# START ORGANIZATIONS
+  /organizations:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get all"
+      description: "Get all the Organization in a community"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Organizations"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+    post:
+      tags:
+      - "Organization"
+      summary: "Creates an Organization"
+      description: "Adds an Organization."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        200:
+          description: "The newly created organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "Community couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "Organization"
+      summary: "Update an Organization"
+      description: "Update an Organization"
+      operationId: "update"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        204:
+          description: "Successfully updated Organization"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Organization does not exist."
+        500:
+          description: "An unexpected error occured."
+  /organizations/{orgId}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get an organization by its id"
+      description: "Get an organization by its id"
+      operationId: "getById"
+      parameters:
+      - name: "orgId"
+        in: "path"
+        description: "am id "
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An Organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/abbreviation/{abbr}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get an organization by its abbreviation"
+      description: "Get an organization by its abbreviation"
+      operationId: "getByAbbreviation"
+      parameters:
+      - name: "abbr"
+        in: "path"
+        description: "an abbreviation"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An Organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/name/{name}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get an organization by its name"
+      description: "Get an organization by its name"
+      operationId: "getByName"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "a name "
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "An Organization"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /organizations/community/{communityId}:
+    get:
+      tags:
+      - "Organization"
+      summary: "Get organizations by community"
+      description: "Get an organization by its name"
+      operationId: "getByCommunityId"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        description: "a name "
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Organizations"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP ORGANIZATIONS
+##############################################################################
+# START LIBRARY
+  /library:
+    get:
+      tags:
+      - "Library"
+      summary: "Get all"
+      description: "Get all the documents in the library"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+  /library/uploadFile:
+    post:
+      tags:
+      - "Library"
+      operationId: "uploadFile"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "upload a document to the server"
+        required: true
+        type: file
+      - in: "query"
+        name: "area"
+        description: "the area where the file is going to be stored"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+  /library/downloadFile:
+    get:
+      tags:
+      - "Library"
+      operationId: "downloadFile"
+      parameters:
+      - in: "query"
+        name: "id"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "area"
+        description: "the area where the file is located"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+# END LIBRARY
+##############################################################################
+#
+##############################################################################
+#####################            PHASES        ###############################
+##############################################################################
+#
 ##############################################################################
 # START POM
   /pom/community/{communityId}/year/{year}:
@@ -422,68 +657,130 @@ paths:
         type: "string"
 # STOP POM
 ##############################################################################
-# START WORKSHEET
-  /worksheets/pom/{pomId}:
+# START PB
+  /pb/community/{communityId}:
     get:
       tags:
-      - "Worksheet"
-      operationId: "getByPomId"
+      - "PB"
+      summary: "Fetches all existing PBs for this community"
+      description: "Gets the PB information"
+      operationId: "getByCommunityId"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
       parameters:
       - in: "path"
-        name: "pomId"
+        name: "communityId"
+        description: "The community id"
         required: true
         type: "string"
-  /worksheets:
+  /pb/community/{communityId}/year/{year}:
+    get:
+      tags:
+      - "PB"
+      operationId: "getByCommunityAndYear"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        required: true
+        type: "number"
+  /pb/community/{communityId}/latest:
+    get:
+      tags:
+      - "PB"
+      summary: "Gets the current PB, whatever that means"
+      description: "Gets the PB information"
+      operationId: "getLatest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "communityId"
+        description: "The community id"
+        required: true
+        type: "string"
+# END PB
+##############################################################################
+# START EXECUTION
+  /execution/community/{communityId}:
+    get:
+      operationId: "getByCommunityId"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "status"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution phases for this community"
+      description: "Returns open community execution phases"
+      produces:
+      - "application/json"
+  /execution/{id}:
+    get:
+      operationId: "getById"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets the given Execution"
+      description: "Returns an execution"
+      produces:
+      - "application/json"
+  /execution/{id}/hasAppropriation:
+    get:
+      operationId: "hasAppropriation"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Does this Execution have an appropriation?"
+      description: "Returns a boolean"
+      produces:
+      - "application/json"
+  /execution/{exeid}/open:
     post:
       tags:
-      - "Worksheet"
-      operationId: "create"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "pom"
-        required: true
-        schema:
-          $ref: "#/definitions/Worksheet"
-    put:
-      tags:
-      - "Worksheet"
-      operationId: "update"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "pom"
-        required: true
-        schema:
-          $ref: "#/definitions/Worksheet"
-  /worksheets/export/{id}:
-    get:
-      tags:
-      - "Worksheet"
-      operationId: "export1"
-      produces:
-      - application/vnd.ms-excel
+      - "Execution"
+      summary: "Opens an Execution Phase"
+      description: "creates an execution event"
+      operationId: "openExecution"
       parameters:
       - in: "path"
-        name: "id"
+        name: "exeid"
+        description: "The phase to open"
         required: true
         type: "string"
-      responses:
-        200:
-          description: OK
-          schema:
-            type: file
-  /worksheets/import/{id}:
-    put:
+      produces:
+      - "application/json"
+  /execution/community/{communityId}/year/{year}:
+    post:
       tags:
-      - "Worksheet"
-      operationId: "import1"
+      - "Execution"
+      summary: "Creates a new Execution phase"
+      description: "creates a new execution phase"
+      operationId: "createExecution"
       consumes:
-      - "multipart/form-data"
+        - multipart/form-data
       requestBody:
         content:
           multipart/form-data:
@@ -492,81 +789,72 @@ paths:
                 file:
                   type: string
                   format: binary
-      produces:
-      - "application/json"
       parameters:
       - in: "path"
-        name: "id"
+        name: "communityId"
+        description: "The community id"
         required: true
+        type: "string"
+      - in: "path"
+        name: "year"
+        description: "the year"
+        required: true
+        type: "integer"
+      - in: "query"
+        name: "model"
+        description: "the PB to use as a model"
+        required: false
         type: "string"
       - in: "formData"
         name: "file"
+        description: "the file to upload"
         required: true
-        type: file
-
-  /worksheets/{id}/updateProgramRequests/:
-    post:
-      tags:
-      - "Worksheet"
-      operationId: "updateProgramRequests"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "id"
-        required: true
-        type: "string"
-  /worksheets/updateRows:
-    post:
-      tags:
-      - "Worksheet"
-      operationId: "updateRows"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a Worksheet object"
-        required: true
-        schema:
-          $ref: "#/definitions/WorksheetEvent"
-  /worksheets/createRows:
-    post:
-      tags:
-      - "Worksheet"
-      operationId: "createRows"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a Worksheet object"
-        required: true
-        schema:
-          $ref: "#/definitions/WorksheetEvent"
-  /worksheets/{worksheetId}/fundingLine/{fundingLineId}/events/:
+        type: "file"
+# STOP EXECUTION
+##############################################################################
+# START TAGS          
+  /tagtypes:
     get:
       tags:
-      - "Worksheet"
-      summary: "Gets all the Worksheet events from the specified funding line"
-      description: "Returns the events for modified rows in a worksheet"
-      operationId: "getWorksheetRowEvents"
-      parameters:
-      - in: "path"
-        name: "worksheetId"
-        description: "The id of the worksheet"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "fundingLineId"
-        description: "A unique id for the funding line"
-        required: true
-        type: "string"
-      consumes:
-      - "application/json"
+      - "Programs"
+      operationId: "getTagtypes"
+      summary: "Gets all type names"
+      description: "Returns a collection of type names"
       produces:
       - "application/json"
-# STOP WORKSHEET
+  /tags/type/{type}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getTagsByType"
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets all the tags for a given type"
+      description: "Returns tags for a type"
+      produces:
+      - "application/json"
+  /tags/type/{type}/name/{name}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getTagsByName"
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets the tags for a given name"
+      description: "Returns tags for a name"
+      produces:
+      - "application/json"
+# END TAGS
 ##############################################################################
 # START PR
   /pr/phase/{phaseId}:
@@ -679,14 +967,314 @@ paths:
         type: "string"
 # STOP PR
 ##############################################################################
-# START PB
-  /pb/community/{communityId}:
+# START PROGRAMS
+  /programs/{mrId}:
     get:
       tags:
-      - "PB"
-      summary: "Fetches all existing PBs for this community"
-      description: "Gets the PB information"
-      operationId: "getByCommunityId"
+      - "Programs"
+      operationId: "getProgramById"
+      parameters:
+      - name: "mrId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get one program"
+      description: "Returns a given program"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A program object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/fullnamemap:
+      get:
+        tags:
+        - "Programs"
+        operationId: "getIdNameMap"
+        summary: "Get a mapping of mrId-to-full (short)name"
+        description: "Returns a mapping"
+        produces:
+        - "application/json"
+  /programs/{mrId}/fullname:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getFullName"
+      parameters:
+      - name: "mrId"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "sep"
+        description: "how to separate names"
+        required: false
+        type: "string"
+      summary: "Get program"
+      description: "Returns a given program's full name"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A string"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/{mrId}/ancestors:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getAncestors"
+      parameters:
+      - name: "mrId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get program's ancestors"
+      description: "Returns a given program's ancestors"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Programs, from top to bottom in the tree"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getAll"
+      summary: "Get all programs"
+      description: "Returns all programs"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /programs/community/{communityId}:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getProgramsByCommunity"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get all programs for a community"
+      description: "Returns a collection of programs"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /exports:
+    get:
+      tags:
+      - "Programs"
+      operationId: "getExportYears"
+      summary: "Get all export years"
+      description: "Returns all years we an export"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of export years"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /search:
+    post:
+      tags:
+      - "Programs"
+      operationId: "search"
+      summary: "Search programs based on criteria"
+      description: "Returns a collection of programs that meet the criteria"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a ProgramFilter"
+        required: true
+        schema:
+          $ref: "#/definitions/ProgramFilter"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP PROGRAMS
+##############################################################################
+# START UFRs
+  /ufr/{ufrId}:
+    get:
+      tags:
+      - "UFRs"
+      operationId: "getUfrById"
+      parameters:
+      - name: "ufrId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Get one UFR"
+      description: "Returns the requested UFR"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A program object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /ufr:
+    put:
+      tags:
+      - "UFRs"
+      summary: "Create a UFR"
+      description: "Create a UFR"
+      operationId: "update"
+      parameters:
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+    post:
+      tags:
+      - "UFRs"
+      summary: "Updates a UFR"
+      description: "Updates a UFR"
+      operationId: "create"
+      parameters:
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /ufr/event/{eventType}:
+    post:
+      tags:
+      - "UFRs"
+      summary: "Updates a UFR and created an event"
+      description: "Updates a UFR"
+      operationId: "generateTransaction"
+      parameters:
+      - in: "path"
+        name: "eventType"
+        description: "The type of event"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "ufr"
+        description: "a UFR"
+        required: true
+        schema:
+          $ref: "#/definitions/UFR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /ufr/{ufrId}/events:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets all the UFR events from the specified UFR"
+      description: "Returns the ufr events"
+      operationId: "getUfrEventsById"
+      parameters:
+      - in: "path"
+        name: "ufrId"
+        description: "The id of the ufr"
+        required: true
+        type: "string"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /ufr/pom/{pomId}/program/{mrdbId}:
+    put:
+      tags:
+      - "UFRs"
+      summary: "Create a UFR from an existing PR"
+      description: "Create a UFR"
+      operationId: "addFundingLine"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        description: "the pom"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "mrdbId"
+        type: "string"
+        description: "the program id from the MRDB"
+        required: true
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        204:
+          description: "Successfully created UFR"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
+  /ufr/community/{communityId}/year/{year}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets a list of UFRs for this community and year"
+      description: "Gets UFRs as specified"
+      operationId: "getAll"
       consumes:
       - "application/json"
       produces:
@@ -695,42 +1283,1414 @@ paths:
       - in: "path"
         name: "communityId"
         description: "The community id"
-        required: true
-        type: "string"
-  /pb/community/{communityId}/year/{year}:
-    get:
-      tags:
-      - "PB"
-      operationId: "getByCommunityAndYear"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
         required: true
         type: "string"
       - in: "path"
         name: "year"
+        description: "the year"
         required: true
-        type: "number"
-  /pb/community/{communityId}/latest:
-    get:
+        type: "integer"
+  /ufr/community/{communityId}/search:
+    post:
       tags:
-      - "PB"
-      summary: "Gets the current PB, whatever that means"
-      description: "Gets the PB information"
-      operationId: "getLatest"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      - "UFRs"
+      operationId: "search"
+      summary: "Search UFRs based on criteria"
+      description: "Returns a collection of UFRs that meet the criteria"
       parameters:
       - in: "path"
         name: "communityId"
         description: "The community id"
         required: true
         type: "string"
-# END PB
+      - in: "body"
+        name: "body"
+        description: "a UFRFilter"
+        required: true
+        schema:
+          $ref: "#/definitions/UFRFilter"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /ufr/next/{requestNumber}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets the next UFR document based on the current requestNumber"
+      description: "Gets next UFR"
+      operationId: "getNext"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "requestNumber"
+        description: "The Request Number"
+        required: true
+        type: "integer"
+  /ufr/previous/{requestNumber}:
+    get:
+      tags:
+      - "UFRs"
+      summary: "Gets the previous UFR document based on the current requestNumber"
+      description: "Gets previous UFR"
+      operationId: "getPrevious"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "requestNumber"
+        description: "The Request Number"
+        required: true
+        type: "integer"
+# STOP UFRs
+##############################################################################
+# START EPPs
+  /epp/importFile:
+    post:
+      tags:
+      - "Epp"
+      operationId: "importFile"
+      summary: "Imports EPP spreadsheet"
+      description: "This option allows POM managers to upload a EPP spreadsheet into the system"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "The EPP spreadsheet file"
+        required: true
+        type: file
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A collection of Programs"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /epp:
+    get:
+      tags:
+      - "Epp"
+      summary: "Gets all the epp in existence"
+      description: "Gets all the epp in existence"
+      operationId: "getAll"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /epp/{communityId}:
+    get:
+      tags:
+      - "Epp"
+      operationId: "getByCommunityId"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets all Epps for a given community"
+      description: "Returns List of Epps"
+      produces:
+      - "application/json"
+  /epp/{communityId}/phase/{phaseId}:
+    get:
+      tags:
+      - "Epp"
+      operationId: "getValid"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      summary: "Gets all Epps for a given community and phase that are valid"
+      description: "Returns List of Epps"
+      produces:
+      - "application/json"
+# STOP EPP
+##############################################################################
+# START WORKSHEET
+  /worksheets/pom/{pomId}:
+    get:
+      tags:
+      - "Worksheet"
+      operationId: "getByPomId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+  /worksheets:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "create"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pom"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
+    put:
+      tags:
+      - "Worksheet"
+      operationId: "update"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "pom"
+        required: true
+        schema:
+          $ref: "#/definitions/Worksheet"
+  /worksheets/export/{id}:
+    get:
+      tags:
+      - "Worksheet"
+      operationId: "export1"
+      produces:
+      - application/vnd.ms-excel
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: file
+  /worksheets/import/{id}:
+    put:
+      tags:
+      - "Worksheet"
+      operationId: "import1"
+      consumes:
+      - "multipart/form-data"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "file"
+        required: true
+        type: file
+  /worksheets/{id}/updateProgramRequests/:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "updateProgramRequests"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+  /worksheets/updateRows:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "updateRows"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Worksheet object"
+        required: true
+        schema:
+          $ref: "#/definitions/WorksheetEvent"
+  /worksheets/createRows:
+    post:
+      tags:
+      - "Worksheet"
+      operationId: "createRows"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Worksheet object"
+        required: true
+        schema:
+          $ref: "#/definitions/WorksheetEvent"
+  /worksheets/{worksheetId}/fundingLine/{fundingLineId}/events/:
+    get:
+      tags:
+      - "Worksheet"
+      summary: "Gets all the Worksheet events from the specified funding line"
+      description: "Returns the events for modified rows in a worksheet"
+      operationId: "getWorksheetRowEvents"
+      parameters:
+      - in: "path"
+        name: "worksheetId"
+        description: "The id of the worksheet"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "fundingLineId"
+        description: "A unique id for the funding line"
+        required: true
+        type: "string"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+# STOP WORKSHEET
+##############################################################################
+# START EXECUTION LINES
+  /executionlines/phase/{phaseId}:
+    get:
+      operationId: "getExecutionLinesByPhase"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "programName"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "appr"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "blin"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "item"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "opAgency"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution lines for this execution phase"
+      description: "Returns the execution lines"
+      produces:
+      - "application/json"
+    put:
+      operationId: "createExecutionLine"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "line"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExecutionLine"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution lines for this execution phase"
+      description: "Returns the execution lines"
+      produces:
+      - "application/json"
+    post:
+      tags:
+      - "Execution"
+      summary: "Creates an execution event"
+      description: "creates an execution event"
+      operationId: "createExecutionEvent"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase containing the transfer"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Community"
+        required: true
+        schema:
+          $ref: "#/definitions/ExecutionEventData"
+      produces:
+      - "application/json"
+  /executionevent/phase/{phaseId}:
+    get:
+      operationId: "getExecutionEventsByPhase"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution events for this execution phase"
+      description: "Returns the execution events"
+      produces:
+      - "application/json"
+  /executionevent/exeline/{lineId}:
+    get:
+      operationId: "getExecutionEventsByExecutionLine"
+      parameters:
+      - name: "lineId"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution events for this execution line"
+      description: "Returns the execution events"
+      produces:
+      - "application/json"
+  /executionevent/dropdowns:
+    get:
+      operationId: "getExecutionDropdowns"
+      tags:
+      - "Execution"
+      summary: "Gets all the subtypes for the execution pages"
+      description: "Returns the execution event subtypes"
+      produces:
+      - "application/json"
+  /executionlines/{lineId}:
+    get:
+      operationId: "getExecutionLineById"
+      parameters:
+      - name: "lineId"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets one execution line"
+      description: "Returns an execution line"
+      produces:
+      - "application/json"
+  /executionlines/{lineId}/monthlydeltas:
+    get:
+      operationId: "getExecutionLineMonthlyDeltas"
+      parameters:
+      - name: "lineId"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Execution"
+      summary: "Gets all the execution events for this execution line"
+      description: "Returns the execution events"
+      produces:
+      - "application/json"
+# STOP EXECUTION LINES
+##############################################################################
+# START SPENDPLANS
+  /spendplans/executionline/{exelineid}:
+    get:
+      operationId: "getByExecutionLineId"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
+      produces:
+      - "application/json"
+    post:
+      operationId: "createSpendPlan"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Spend Plan"
+        required: true
+        schema:
+          $ref: "#/definitions/SpendPlan"
+      tags:
+      - "SpendPlan"
+      summary: "Create a new Spend Plan for this execution line"
+      produces:
+      - "application/json"
+    put:
+      operationId: "UpdateSpendPlan"
+      parameters:
+      - name: "exelineid"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a Spend Plan"
+        required: true
+        schema:
+          $ref: "#/definitions/SpendPlan"
+      tags:
+      - "SpendPlan"
+      summary: "Updates an existing Spend Plan for this execution line"
+      produces:
+      - "application/json"
+  /spendplans/execution/{exeid}:
+    get:
+      operationId: "getByExecutionPhaseId"
+      parameters:
+      - name: "exeid"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "type"
+        in: "query"
+        required: false
+        type: "string"
+      tags:
+      - "SpendPlan"
+      summary: "Gets all the spend plans phases for this execution line"
+      produces:
+      - "application/json"
+# STOP SPENDPLANS
+##############################################################################
+# START O&E
+  /oande/phase/{exeId}:
+    get:
+      tags:
+      - "OandE"
+      operationId: "getByPhaseId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "exeId"
+        required: true
+        type: "string"
+  /oande/execution/{elid}:
+    get:
+      tags:
+      - "OandE"
+      operationId: "getByExecutionLineId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "elid"
+        required: true
+        type: "string"
+    put:
+      tags:
+      - "OandE"
+      operationId: "createMonthlyInput"
+      parameters:
+      - in: "path"
+        name: "elid"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "an OandEMonthly"
+        required: true
+        schema:
+          $ref: "#/definitions/OandEMonthly"
+    post:
+      tags:
+      - "OandE"
+      operationId: "createAdminMonthlyInput"
+      parameters:
+      - in: "path"
+        name: "elid"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "a full list of OandEMonthlies"
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: "#/definitions/OandEMonthly"
+# STOP O&E
+##############################################################################
+# START BUDGETFUNDINGLINES
+  /budgetFundingLines/{pomId}:
+    get:
+      tags:
+      - "BudgetFundingLines"
+      operationId: "getByPomId"
+      parameters:
+      - in: "path"
+        name: "pomId"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
+# STOP BUDGETFUNDINGLINES
+##############################################################################
+# START PRCHANGENOTIFICATION
+  /prChangeNotifications:
+    get:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "getByOrganization"
+      produces:
+      - "application/json"
+  /prChangeNotifications/{prId}:
+    delete:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "deleteByPr"
+      parameters:
+      - in: "path"
+        name: "prId"
+        required: true
+        type: "string"
+# STOP PRCHANGENOTIFICATION
+##############################################################################
+# START SNAPSHOTS
+  /snapshots:
+    get:
+      operationId: "getAll"
+      tags:
+      - "Snapshots"
+      summary: "Gets a mapping for snapshot names and creation dates"
+      description: "Returns snapshots map"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A mapping of snapshot labels, create dates"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+  /snapshots/{name}/programs:
+    get:
+      operationId: "getPrograms"
+      parameters:
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      tags:
+      - "Snapshots"
+      summary: "Gets programs associated with this snapshot"
+      description: "Returns a collection of snapshots"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of program objects"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP SNAPSHOTS
+##############################################################################
+#
+##############################################################################
+######################       USERS and ROLES     ############################# 
+##############################################################################
+#
+##############################################################################
+# START MYDETAILS
+  /mydetails:
+    get:
+      tags:
+      - "MyDetails"
+      summary: "Get the current user"
+      description: "Get the current user"
+      operationId: "getCurrentUser"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "current User"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+    put:
+      tags:
+      - "MyDetails"
+      summary: "Update "
+      description: "Update the current user"
+      operationId: "updateCurrentUser"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "the Current User"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        204:
+          description: "Successfully updated User"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
+# STOP MYDETAILS
+##############################################################################
+# START STRANGER
+  /stranger:
+    get:
+      tags:
+      - "Stranger"
+      summary: "List of all users"
+      description: "Returns a list containing all Users"
+      operationId: "get"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A stranger object"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP STRANGER
+##############################################################################
+# START USERS
+  /users:
+    get:
+      tags:
+      - "User"
+      summary: "List of all users"
+      description: "Returns a list containing all Users"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "User"
+      summary: "changes a user"
+      operationId: "updateUser"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "the User"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      produces:
+      - "application/json"
+      responses:
+        204:
+          description: "Successfully updated a User"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The User does not exist."
+        500:
+          description: "An unexpected error occured."
+  /users/{id}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a user by Id"
+      description: "Returns a User with the given id"
+      operationId: "getById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A User"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /users/cn/{cn}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a user by the CN"
+      description: "Returns a User with the given cn"
+      operationId: "getByCn"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cn"
+        in: "path"
+        required: true
+        type: "string"
+  /users/community/{commId}:
+    get:
+      tags:
+      - "User"
+      summary: "Get a users by CommunityId"
+      description: "Returns a Users for a given Community"
+      operationId: "getByCommId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "commId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /users/community/{communityId}/role/{roleName}:
+    get:
+      tags:
+      - "User"
+      summary: "Get Users by CommunityId and Rolename"
+      description: "Returns all Users by CommunityId and Rolename"
+      operationId: "getByCommunityIdAndRoleName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "roleName"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Users"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+# STOP USERS
+##############################################################################
+# START ROLES
+  /roles:
+    get:
+      tags:
+      - "Role"
+      summary: "List of Roles"
+      description: "Returns a list containing all Roles"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Roles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+    post:
+      tags:
+      - "Role"
+      summary: "Create a new Role"
+      description: "Create a new Role"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Role"
+        required: true
+        schema:
+          $ref: "#/definitions/Role"
+      responses:
+        201:
+          description: "Role successfully created."
+        400:
+          description: "Role couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+  /roles/{roleId}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get a Role by Id"
+      description: "Returns a Role with the given id"
+      operationId: "getById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A Role"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+    delete:
+      tags:
+      - "Role"
+      summary: "Delete a Role by Id"
+      description: "Deletes a Role with the given id"
+      operationId: "deleteById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "deleted a Role."
+        403:
+          description: "Forbidden"
+        404:
+          description: "Role does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /roles/community/{communityId}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get all Roles for a community"
+      description: "Returns all Roles for a community"
+      operationId: "getByCommunityId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Roles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /roles/community/{communityId}/name/{name}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get one Role by name and communityId"
+      description: "Returns one Role by name and communityId"
+      operationId: "getByNameAndCommunityId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "name"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "One Role"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /roles/user/{userId}/community/{communityId}:
+    get:
+      tags:
+      - "Role"
+      summary: "Get all Roles a User has in a Community"
+      description: "Returns all Roles a User has in a Community"
+      operationId: "getByUserIdAndCommunityId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Roles"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+# STOP ROLES
+##############################################################################
+# START PERMISSIONS
+  /permissions:
+    get:
+      tags:
+      - "Permission"
+      summary: "Get all Permissions"
+      description: "Get all the Permissions"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Permissions"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+    post:
+      tags:
+      - "Permission"
+      summary: "Creates a Permission"
+      description: "Creates a new a Permission."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Permission"
+        required: true
+        schema:
+          $ref: "#/definitions/Permission"
+      responses:
+        201:
+          description: "Permission successfully created."
+        400:
+          description: "Permission couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    delete:
+      tags:
+      - "Permission"
+      summary: "delete a Permission"
+      description: "delete a Permission"
+      operationId: "deleteAll"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Permission"
+        required: true
+        schema:
+          $ref: "#/definitions/Permission"
+      responses:
+        204:
+          description: "deleted a Permission."
+        403:
+          description: "Forbidden"
+        404:
+          description: "Permission does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /permissions/role/{roleId}:
+    get:
+      tags:
+      - "Permission"
+      summary: "Find all the Permissions for a Role by the roleId"
+      description: "Find all the Permissions for a Role by the roleId"
+      operationId: "getPermissionsByRoleId"
+      parameters:
+      - name: "roleId"
+        in: "path"
+        description: "Role id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a Permission"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Role does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /permissions/{permission}:
+    get:
+      tags:
+      - "Permission"
+      summary: "Find all the Permissions (Roles and all) by the Permission string"
+      description: "Find all the Permissions (Roles and all) by the Permission string"
+      operationId: "getPermissionsByPermissionId"
+      parameters:
+      - name: "permission"
+        in: "path"
+        description: "permission string"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Permissions"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+# STOP PERMISSIONS
+##############################################################################
+# START ROLES_AND_PERMISSIONS
+  /hasrole/{roleName}:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns true if the current user has rolename"
+      description: "Returns true if the current user has rolename"
+      operationId: "hasRole"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleName"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "true or false"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /hasroles/{roleNames}:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns array of t/f for each string"
+      description: "Returns array of t/f for each string"
+      operationId: "hasRoles"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "roleNames"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "true or false"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /getroles:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns array of rolenames for the current user"
+      description: "Returns array of rolenames for the current user"
+      operationId: "getRoles"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "rolenames"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+  /ispermitted/{permission}:
+    get:
+      tags:
+      - "RolesPermissions"
+      summary: "Returns true if the current user has permission"
+      description: "Returns true if the current user has permission"
+      operationId: "hasPermission"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "permission"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "true or false"
+          schema:
+            $ref: "#/definitions/RestResult"
+        500:
+          description: "An unexpected error occured."
+        403:
+          description: "Forbidden/not authorized"
+# END ROLES_AND_PERMISSIONS
+##############################################################################
+# START USERROLERESOURCE
+  /userRoles:
+    post:
+      tags:
+      - "UserRoleResource"
+      summary: "Creates a UserRoleResource"
+      description: "Creates a UserRoleResource"
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a UserRoleResource"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRoleResource"
+      responses:
+        201:
+          description: "UserRoleResource successfully created."
+        400:
+          description: "UserRoleResource couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "UserRoleResource"
+      summary: "Updates a UserRoleResource"
+      description: "Updates a UserRoleResource"
+      operationId: "update"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a UserRoleResource"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRoleResource"
+      responses:
+        201:
+          description: "UserRoleResource successfully updated."
+        400:
+          description: "UserRoleResource couldn't be updated."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+  /userRoles/{userRoleResourceId}:
+    delete:
+      tags:
+      - "UserRoleResource"
+      summary: "Deletes a UserRoleResource"
+      description: "Delete a UserRoleResource"
+      operationId: "deleteById"
+      parameters:
+      - name: "userRoleResourceId"
+        in: "path"
+        description: "userRoleResourceId"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "UserRoleResource successfully deleted."
+        403:
+          description: "Forbidden"
+        404:
+          description: "UserRoleResource does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /userRoles/user/{userId}:
+    get:
+      tags:
+      - "UserRoleResource"
+      summary: "Gets all UserRoleResorces for a user"
+      description: "Gets all UserRoleResorces for a user"
+      operationId: "getUserRolesbyUserId"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User Id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of UserRoleResorces"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "User does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /userRoles/user/{userId}/community/{communityId}/role/{roleName}:
+    get:
+      tags:
+      - "UserRoleResource"
+      operationId: "getUserRoleByUserAndCommunityAndRoleName"
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "communityId"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "roleName"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of UserRoleResources"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "User does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /userRoles/joinCommunity/user/{userId}:
+    post:
+      tags:
+      - "UserRoleResource"
+      summary: "Join a community"
+      description: "A user joins a community"
+      operationId: "joinCommunity"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "userId"
+        description: "a User Id"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "an Organization"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        201:
+          description: "User successfully joined a community."
+        400:
+          description: "User didnot join the community."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+# STOP USERROLERESOURCE
+##############################################################################
+#
+##############################################################################
+###################        USER REQUESTS        ##############################
+##############################################################################
+#
 ##############################################################################
 # START CREATEUSERREQUEST
   /createUserRequests:
@@ -1069,1961 +3029,22 @@ paths:
         required: true
         type: "string"
 # STOP ASSIGNROLEREQUEST
-##############################################################################
-# START MYDETAILS
-  /mydetails:
-    get:
-      tags:
-      - "MyDetails"
-      summary: "Get the current user"
-      description: "Get the current user"
-      operationId: "getCurrentUser"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "current User"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-    put:
-      tags:
-      - "MyDetails"
-      summary: "Update "
-      description: "Update the current user"
-      operationId: "updateCurrentUser"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "the Current User"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        204:
-          description: "Successfully updated User"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
-        500:
-          description: "An unexpected error occured."
-# STOP MYDETAILS
-##############################################################################
-# START ORGANIZATIONS
-#
-#/organizations/name/{name}
-
-  /organizations:
-    get:
-      tags:
-      - "Organization"
-      summary: "Get all"
-      description: "Get all the Organization in a community"
-      operationId: "getAll"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Organizations"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-    post:
-      tags:
-      - "Organization"
-      summary: "Creates an Organization"
-      description: "Adds an Organization."
-      operationId: "create"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "an Organization"
-        required: true
-        schema:
-          $ref: "#/definitions/Organization"
-      responses:
-        200:
-          description: "The newly created organization"
-          schema:
-            $ref: "#/definitions/RestResult"
-        400:
-          description: "Community couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-    put:
-      tags:
-      - "Organization"
-      summary: "Update an Organization"
-      description: "Update an Organization"
-      operationId: "update"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "an Organization"
-        required: true
-        schema:
-          $ref: "#/definitions/Organization"
-      responses:
-        204:
-          description: "Successfully updated Organization"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The Organization does not exist."
-        500:
-          description: "An unexpected error occured."
-  /organizations/{orgId}:
-    get:
-      tags:
-      - "Organization"
-      summary: "Get an organization by its id"
-      description: "Get an organization by its id"
-      operationId: "getById"
-      parameters:
-      - name: "orgId"
-        in: "path"
-        description: "am id "
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "An Organization"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /organizations/abbreviation/{abbr}:
-    get:
-      tags:
-      - "Organization"
-      summary: "Get an organization by its abbreviation"
-      description: "Get an organization by its abbreviation"
-      operationId: "getByAbbreviation"
-      parameters:
-      - name: "abbr"
-        in: "path"
-        description: "an abbreviation"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "An Organization"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /organizations/name/{name}:
-    get:
-      tags:
-      - "Organization"
-      summary: "Get an organization by its name"
-      description: "Get an organization by its name"
-      operationId: "getByName"
-      parameters:
-      - name: "name"
-        in: "path"
-        description: "a name "
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "An Organization"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /organizations/community/{communityId}:
-    get:
-      tags:
-      - "Organization"
-      summary: "Get organizations by community"
-      description: "Get an organization by its name"
-      operationId: "getByCommunityId"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        description: "a name "
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Organizations"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-# STOP ORGANIZATIONS
-##############################################################################
-# START PERMISSIONS
-  /permissions:
-    get:
-      tags:
-      - "Permission"
-      summary: "Get all Permissions"
-      description: "Get all the Permissions"
-      operationId: "getAll"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Permissions"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-    post:
-      tags:
-      - "Permission"
-      summary: "Creates a Permission"
-      description: "Creates a new a Permission."
-      operationId: "create"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a Permission"
-        required: true
-        schema:
-          $ref: "#/definitions/Permission"
-      responses:
-        201:
-          description: "Permission successfully created."
-        400:
-          description: "Permission couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-    delete:
-      tags:
-      - "Permission"
-      summary: "delete a Permission"
-      description: "delete a Permission"
-      operationId: "deleteAll"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a Permission"
-        required: true
-        schema:
-          $ref: "#/definitions/Permission"
-      responses:
-        204:
-          description: "deleted a Permission."
-        403:
-          description: "Forbidden"
-        404:
-          description: "Permission does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /permissions/role/{roleId}:
-    get:
-      tags:
-      - "Permission"
-      summary: "Find all the Permissions for a Role by the roleId"
-      description: "Find all the Permissions for a Role by the roleId"
-      operationId: "getPermissionsByRoleId"
-      parameters:
-      - name: "roleId"
-        in: "path"
-        description: "Role id"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "a Permission"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "Role does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /permissions/{permission}:
-    get:
-      tags:
-      - "Permission"
-      summary: "Find all the Permissions (Roles and all) by the Permission string"
-      description: "Find all the Permissions (Roles and all) by the Permission string"
-      operationId: "getPermissionsByPermissionId"
-      parameters:
-      - name: "permission"
-        in: "path"
-        description: "permission string"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Permissions"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-# STOP PERMISSIONS
-##############################################################################
-# START ROLES
-  /roles:
-    get:
-      tags:
-      - "Role"
-      summary: "List of Roles"
-      description: "Returns a list containing all Roles"
-      operationId: "getAll"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Roles"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-    post:
-      tags:
-      - "Role"
-      summary: "Create a new Role"
-      description: "Create a new Role"
-      operationId: "create"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a Role"
-        required: true
-        schema:
-          $ref: "#/definitions/Role"
-      responses:
-        201:
-          description: "Role successfully created."
-        400:
-          description: "Role couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-  /roles/{roleId}:
-    get:
-      tags:
-      - "Role"
-      summary: "Get a Role by Id"
-      description: "Returns a Role with the given id"
-      operationId: "getById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "roleId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "A Role"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-    delete:
-      tags:
-      - "Role"
-      summary: "Delete a Role by Id"
-      description: "Deletes a Role with the given id"
-      operationId: "deleteById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "roleId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        204:
-          description: "deleted a Role."
-        403:
-          description: "Forbidden"
-        404:
-          description: "Role does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /roles/community/{communityId}:
-    get:
-      tags:
-      - "Role"
-      summary: "Get all Roles for a community"
-      description: "Returns all Roles for a community"
-      operationId: "getByCommunityId"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "List of Roles"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /roles/community/{communityId}/name/{name}:
-    get:
-      tags:
-      - "Role"
-      summary: "Get one Role by name and communityId"
-      description: "Returns one Role by name and communityId"
-      operationId: "getByNameAndCommunityId"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "name"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "One Role"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /roles/user/{userId}/community/{communityId}:
-    get:
-      tags:
-      - "Role"
-      summary: "Get all Roles a User has in a Community"
-      description: "Returns all Roles a User has in a Community"
-      operationId: "getByUserIdAndCommunityId"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "userId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "List of Roles"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-# STOP ROLES
-##############################################################################
-# START rolesandpermission
-  /hasrole/{roleName}:
-    get:
-      tags:
-      - "RolesPermissions"
-      summary: "Returns true if the current user has rolename"
-      description: "Returns true if the current user has rolename"
-      operationId: "hasRole"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "roleName"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "true or false"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /hasroles/{roleNames}:
-    get:
-      tags:
-      - "RolesPermissions"
-      summary: "Returns array of t/f for each string"
-      description: "Returns array of t/f for each string"
-      operationId: "hasRoles"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "roleNames"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "true or false"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /getroles:
-    get:
-      tags:
-      - "RolesPermissions"
-      summary: "Returns array of rolenames for the current user"
-      description: "Returns array of rolenames for the current user"
-      operationId: "getRoles"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "rolenames"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /ispermitted/{permission}:
-    get:
-      tags:
-      - "RolesPermissions"
-      summary: "Returns true if the current user has permission"
-      description: "Returns true if the current user has permission"
-      operationId: "hasPermission"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "permission"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "true or false"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-
-
-# END rolesandpermission
-# START STRANGER
-  /stranger:
-    get:
-      tags:
-      - "Stranger"
-      summary: "List of all users"
-      description: "Returns a list containing all Users"
-      operationId: "get"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A stranger object"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-# STOP STRANGER
-##############################################################################
-# START USERS
-  /users:
-    get:
-      tags:
-      - "User"
-      summary: "List of all users"
-      description: "Returns a list containing all Users"
-      operationId: "getAll"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of users"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-    put:
-      tags:
-      - "User"
-      summary: "changes a user"
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "the User"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      produces:
-      - "application/json"
-      responses:
-        204:
-          description: "Successfully updated a User"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
-        500:
-          description: "An unexpected error occured."
-  /users/{id}:
-    get:
-      tags:
-      - "User"
-      summary: "Get a user by Id"
-      description: "Returns a User with the given id"
-      operationId: "getById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "A User"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /users/cn/{cn}:
-    get:
-      tags:
-      - "User"
-      summary: "Get a user by the CN"
-      description: "Returns a User with the given cn"
-      operationId: "getByCn"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "cn"
-        in: "path"
-        required: true
-        type: "string"
-  /users/community/{commId}:
-    get:
-      tags:
-      - "User"
-      summary: "Get a users by CommunityId"
-      description: "Returns a Users for a given Community"
-      operationId: "getByCommId"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "commId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "A List of Users"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-  /users/community/{communityId}/role/{roleName}:
-    get:
-      tags:
-      - "User"
-      summary: "Get Users by CommunityId and Rolename"
-      description: "Returns all Users by CommunityId and Rolename"
-      operationId: "getByCommunityIdAndRoleName"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "roleName"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "List of Users"
-          schema:
-            $ref: "#/definitions/RestResult"
-        500:
-          description: "An unexpected error occured."
-        403:
-          description: "Forbidden/not authorized"
-# STOP USERS
-##############################################################################
-# START USERROLERESOURCE
-  /userRoles:
-    post:
-      tags:
-      - "UserRoleResource"
-      summary: "Creates a UserRoleResource"
-      description: "Creates a UserRoleResource"
-      operationId: "create"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a UserRoleResource"
-        required: true
-        schema:
-          $ref: "#/definitions/UserRoleResource"
-      responses:
-        201:
-          description: "UserRoleResource successfully created."
-        400:
-          description: "UserRoleResource couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-    put:
-      tags:
-      - "UserRoleResource"
-      summary: "Updates a UserRoleResource"
-      description: "Updates a UserRoleResource"
-      operationId: "update"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a UserRoleResource"
-        required: true
-        schema:
-          $ref: "#/definitions/UserRoleResource"
-      responses:
-        201:
-          description: "UserRoleResource successfully updated."
-        400:
-          description: "UserRoleResource couldn't be updated."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-  /userRoles/{userRoleResourceId}:
-    delete:
-      tags:
-      - "UserRoleResource"
-      summary: "Deletes a UserRoleResource"
-      description: "Delete a UserRoleResource"
-      operationId: "deleteById"
-      parameters:
-      - name: "userRoleResourceId"
-        in: "path"
-        description: "userRoleResourceId"
-        required: true
-        type: "string"
-      responses:
-        204:
-          description: "UserRoleResource successfully deleted."
-        403:
-          description: "Forbidden"
-        404:
-          description: "UserRoleResource does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /userRoles/user/{userId}:
-    get:
-      tags:
-      - "UserRoleResource"
-      summary: "Gets all UserRoleResorces for a user"
-      description: "Gets all UserRoleResorces for a user"
-      operationId: "getUserRolesbyUserId"
-      parameters:
-      - name: "userId"
-        in: "path"
-        description: "User Id"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "List of UserRoleResorces"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "User does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /userRoles/user/{userId}/community/{communityId}/role/{roleName}:
-    get:
-      tags:
-      - "UserRoleResource"
-      operationId: "getUserRoleByUserAndCommunityAndRoleName"
-      parameters:
-      - name: "userId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "roleName"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "List of UserRoleResources"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden"
-        404:
-          description: "User does not exist."
-        500:
-          description: "An unexpected error occurred."
-  /userRoles/joinCommunity/user/{userId}:
-    post:
-      tags:
-      - "UserRoleResource"
-      summary: "Join a community"
-      description: "A user joins a community"
-      operationId: "joinCommunity"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "userId"
-        description: "a User Id"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "an Organization"
-        required: true
-        schema:
-          $ref: "#/definitions/Organization"
-      responses:
-        201:
-          description: "User successfully joined a community."
-        400:
-          description: "User didnot join the community."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-# STOP USERROLERESOURCE
-##############################################################################
-# START PROGRAMS
-  /programs/{mrId}:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getProgramById"
-      parameters:
-      - name: "mrId"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Get one program"
-      description: "Returns a given program"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A program object"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /programs/fullnamemap:
-      get:
-        tags:
-        - "Programs"
-        operationId: "getIdNameMap"
-        summary: "Get a mapping of mrId-to-full (short)name"
-        description: "Returns a mapping"
-        produces:
-        - "application/json"
-  /programs/{mrId}/fullname:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getFullName"
-      parameters:
-      - name: "mrId"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "query"
-        name: "sep"
-        description: "how to separate names"
-        required: false
-        type: "string"
-      summary: "Get program"
-      description: "Returns a given program's full name"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A string"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /programs/{mrId}/ancestors:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getAncestors"
-      parameters:
-      - name: "mrId"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Get program's ancestors"
-      description: "Returns a given program's ancestors"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of Programs, from top to bottom in the tree"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /programs:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getAll"
-      summary: "Get all programs"
-      description: "Returns all programs"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /programs/community/{communityId}:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getProgramsByCommunity"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Get all programs for a community"
-      description: "Returns a collection of programs"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /exports:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getExportYears"
-      summary: "Get all export years"
-      description: "Returns all years we an export"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of export years"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /tagtypes:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getTagtypes"
-      summary: "Gets all type names"
-      description: "Returns a collection of type names"
-      produces:
-      - "application/json"
-  /tags/type/{type}:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getTagsByType"
-      parameters:
-      - name: "type"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Gets all the tags for a given type"
-      description: "Returns tags for a type"
-      produces:
-      - "application/json"
-  /tags/type/{type}/name/{name}:
-    get:
-      tags:
-      - "Programs"
-      operationId: "getTagsByName"
-      parameters:
-      - name: "type"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "name"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Gets the tags for a given name"
-      description: "Returns tags for a name"
-      produces:
-      - "application/json"
-  /search:
-    post:
-      tags:
-      - "Programs"
-      operationId: "search"
-      summary: "Search programs based on criteria"
-      description: "Returns a collection of programs that meet the criteria"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "a ProgramFilter"
-        required: true
-        schema:
-          $ref: "#/definitions/ProgramFilter"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A collection of Programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-# STOP PROGRAMS
-##############################################################################
-# START EPPs
-  /epp/importFile:
-    post:
-      tags:
-      - "Epp"
-      operationId: "importFile"
-      summary: "Imports EPP spreadsheet"
-      description: "This option allows POM managers to upload a EPP spreadsheet into the system"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
-      parameters:
-      - in: "formData"
-        name: "file"
-        description: "The EPP spreadsheet file"
-        required: true
-        type: file
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A collection of Programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /epp:
-    get:
-      tags:
-      - "Epp"
-      summary: "Gets all the epp in existence"
-      description: "Gets all the epp in existence"
-      operationId: "getAll"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-  /epp/{communityId}:
-    get:
-      tags:
-      - "Epp"
-      operationId: "getByCommunityId"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Gets all Epps for a given community"
-      description: "Returns List of Epps"
-      produces:
-      - "application/json"
-  /epp/{communityId}/phase/{phaseId}:
-    get:
-      tags:
-      - "Epp"
-      operationId: "getValid"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "phaseId"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Gets all Epps for a given community and phase that are valid"
-      description: "Returns List of Epps"
-      produces:
-      - "application/json"
-# STOP EPP
-##############################################################################
-# START UFRs
-  /ufr/{ufrId}:
-    get:
-      tags:
-      - "UFRs"
-      operationId: "getUfrById"
-      parameters:
-      - name: "ufrId"
-        in: "path"
-        required: true
-        type: "string"
-      summary: "Get one UFR"
-      description: "Returns the requested UFR"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A program object"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /ufr:
-    put:
-      tags:
-      - "UFRs"
-      summary: "Create a UFR"
-      description: "Create a UFR"
-      operationId: "update"
-      parameters:
-      - in: "body"
-        name: "ufr"
-        description: "a UFR"
-        required: true
-        schema:
-          $ref: "#/definitions/UFR"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-    post:
-      tags:
-      - "UFRs"
-      summary: "Updates a UFR"
-      description: "Updates a UFR"
-      operationId: "create"
-      parameters:
-      - in: "body"
-        name: "ufr"
-        description: "a UFR"
-        required: true
-        schema:
-          $ref: "#/definitions/UFR"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-  /ufr/event/{eventType}:
-    post:
-      tags:
-      - "UFRs"
-      summary: "Updates a UFR and created an event"
-      description: "Updates a UFR"
-      operationId: "generateTransaction"
-      parameters:
-      - in: "path"
-        name: "eventType"
-        description: "The type of event"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "ufr"
-        description: "a UFR"
-        required: true
-        schema:
-          $ref: "#/definitions/UFR"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-  /ufr/{ufrId}/events:
-    get:
-      tags:
-      - "UFRs"
-      summary: "Gets all the UFR events from the specified UFR"
-      description: "Returns the ufr events"
-      operationId: "getUfrEventsById"
-      parameters:
-      - in: "path"
-        name: "ufrId"
-        description: "The id of the ufr"
-        required: true
-        type: "string"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-  /ufr/pom/{pomId}/program/{mrdbId}:
-    put:
-      tags:
-      - "UFRs"
-      summary: "Create a UFR from an existing PR"
-      description: "Create a UFR"
-      operationId: "addFundingLine"
-      parameters:
-      - in: "path"
-        name: "pomId"
-        description: "the pom"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "mrdbId"
-        type: "string"
-        description: "the program id from the MRDB"
-        required: true
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        204:
-          description: "Successfully created UFR"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
-        500:
-          description: "An unexpected error occured."
-  /ufr/community/{communityId}/year/{year}:
-    get:
-      tags:
-      - "UFRs"
-      summary: "Gets a list of UFRs for this community and year"
-      description: "Gets UFRs as specified"
-      operationId: "getAll"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "year"
-        description: "the year"
-        required: true
-        type: "integer"
-  /ufr/community/{communityId}/search:
-    post:
-      tags:
-      - "UFRs"
-      operationId: "search"
-      summary: "Search UFRs based on criteria"
-      description: "Returns a collection of UFRs that meet the criteria"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "a UFRFilter"
-        required: true
-        schema:
-          $ref: "#/definitions/UFRFilter"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A collection of Programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /ufr/next/{requestNumber}:
-    get:
-      tags:
-      - "UFRs"
-      summary: "Gets the next UFR document based on the current requestNumber"
-      description: "Gets next UFR"
-      operationId: "getNext"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "requestNumber"
-        description: "The Request Number"
-        required: true
-        type: "integer"
-  /ufr/previous/{requestNumber}:
-    get:
-      tags:
-      - "UFRs"
-      summary: "Gets the previous UFR document based on the current requestNumber"
-      description: "Gets previous UFR"
-      operationId: "getPrevious"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "requestNumber"
-        description: "The Request Number"
-        required: true
-        type: "integer"
-# STOP UFRs
-##############################################################################
-# START SNAPSHOTS
-#
-  /snapshots:
-    get:
-      operationId: "getAll"
-      tags:
-      - "Snapshots"
-      summary: "Gets a mapping for snapshot names and creation dates"
-      description: "Returns snapshots map"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A mapping of snapshot labels, create dates"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-  /snapshots/{name}/programs:
-    get:
-      operationId: "getPrograms"
-      parameters:
-      - name: "name"
-        in: "path"
-        required: true
-        type: "string"
-      tags:
-      - "Snapshots"
-      summary: "Gets programs associated with this snapshot"
-      description: "Returns a collection of snapshots"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A list of program objects"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
-# STOP SNAPSHOTS
-##############################################################################
-# START EXECUTION
-#
-  /execution/community/{communityId}:
-    get:
-      operationId: "getByCommunityId"
-      parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "status"
-        in: "query"
-        required: false
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets all the execution phases for this community"
-      description: "Returns open community execution phases"
-      produces:
-      - "application/json"
-  /execution/{id}:
-    get:
-      operationId: "getById"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets the given Execution"
-      description: "Returns an execution"
-      produces:
-      - "application/json"
-  /execution/{id}/hasAppropriation:
-    get:
-      operationId: "hasAppropriation"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Does this Execution have an appropriation?"
-      description: "Returns a boolean"
-      produces:
-      - "application/json"
-  /execution/{exeid}/open:
-    post:
-      tags:
-      - "Execution"
-      summary: "Opens an Execution Phase"
-      description: "creates an execution event"
-      operationId: "openExecution"
-      parameters:
-      - in: "path"
-        name: "exeid"
-        description: "The phase to open"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-  /execution/community/{communityId}/year/{year}:
-    post:
-      tags:
-      - "Execution"
-      summary: "Creates a new Execution phase"
-      description: "creates a new execution phase"
-      operationId: "createExecution"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "year"
-        description: "the year"
-        required: true
-        type: "integer"
-      - in: "query"
-        name: "model"
-        description: "the PB to use as a model"
-        required: false
-        type: "string"
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-  /executionlines/phase/{phaseId}:
-    get:
-      operationId: "getExecutionLinesByPhase"
-      parameters:
-      - name: "phaseId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "programName"
-        in: "query"
-        required: false
-        type: "string"
-      - name: "appr"
-        in: "query"
-        required: false
-        type: "string"
-      - name: "blin"
-        in: "query"
-        required: false
-        type: "string"
-      - name: "item"
-        in: "query"
-        required: false
-        type: "string"
-      - name: "opAgency"
-        in: "query"
-        required: false
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets all the execution lines for this execution phase"
-      description: "Returns the execution lines"
-      produces:
-      - "application/json"
-    put:
-      operationId: "createExecutionLine"
-      parameters:
-      - name: "phaseId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "line"
-        in: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/ExecutionLine"
-      tags:
-      - "Execution"
-      summary: "Gets all the execution lines for this execution phase"
-      description: "Returns the execution lines"
-      produces:
-      - "application/json"
-    post:
-      tags:
-      - "Execution"
-      summary: "Creates an execution event"
-      description: "creates an execution event"
-      operationId: "createExecutionEvent"
-      parameters:
-      - in: "path"
-        name: "phaseId"
-        description: "The phase containing the transfer"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "a Community"
-        required: true
-        schema:
-          $ref: "#/definitions/ExecutionEventData"
-      produces:
-      - "application/json"
-  /executionevent/phase/{phaseId}:
-    get:
-      operationId: "getExecutionEventsByPhase"
-      parameters:
-      - name: "phaseId"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "type"
-        in: "query"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets all the execution events for this execution phase"
-      description: "Returns the execution events"
-      produces:
-      - "application/json"
-  /executionevent/exeline/{lineId}:
-    get:
-      operationId: "getExecutionEventsByExecutionLine"
-      parameters:
-      - name: "lineId"
-        in: "path"
-        required: true
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets all the execution events for this execution line"
-      description: "Returns the execution events"
-      produces:
-      - "application/json"
-  /executionevent/dropdowns:
-    get:
-      operationId: "getExecutionDropdowns"
-      tags:
-      - "Execution"
-      summary: "Gets all the subtypes for the execution pages"
-      description: "Returns the execution event subtypes"
-      produces:
-      - "application/json"
-  /executionlines/{lineId}:
-    get:
-      operationId: "getExecutionLineById"
-      parameters:
-      - name: "lineId"
-        in: "path"
-        required: true
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets one execution line"
-      description: "Returns an execution line"
-      produces:
-      - "application/json"
-  /executionlines/{lineId}/monthlydeltas:
-    get:
-      operationId: "getExecutionLineMonthlyDeltas"
-      parameters:
-      - name: "lineId"
-        in: "path"
-        required: true
-        type: "string"
-      tags:
-      - "Execution"
-      summary: "Gets all the execution events for this execution line"
-      description: "Returns the execution events"
-      produces:
-      - "application/json"
-# STOP EXECUTION
-##############################################################################
-# START SPENDPLANS
-#
-  /spendplans/executionline/{exelineid}:
-    get:
-      operationId: "getByExecutionLineId"
-      parameters:
-      - name: "exelineid"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "type"
-        in: "query"
-        required: false
-        type: "string"
-      tags:
-      - "SpendPlan"
-      summary: "Gets all the spend plans phases for this execution line"
-      produces:
-      - "application/json"
-    post:
-      operationId: "createSpendPlan"
-      parameters:
-      - name: "exelineid"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "a Spend Plan"
-        required: true
-        schema:
-          $ref: "#/definitions/SpendPlan"
-      tags:
-      - "SpendPlan"
-      summary: "Create a new Spend Plan for this execution line"
-      produces:
-      - "application/json"
-    put:
-      operationId: "UpdateSpendPlan"
-      parameters:
-      - name: "exelineid"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "a Spend Plan"
-        required: true
-        schema:
-          $ref: "#/definitions/SpendPlan"
-      tags:
-      - "SpendPlan"
-      summary: "Updates an existing Spend Plan for this execution line"
-      produces:
-      - "application/json"
-  /spendplans/execution/{exeid}:
-    get:
-      operationId: "getByExecutionPhaseId"
-      parameters:
-      - name: "exeid"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "type"
-        in: "query"
-        required: false
-        type: "string"
-      tags:
-      - "SpendPlan"
-      summary: "Gets all the spend plans phases for this execution line"
-      produces:
-      - "application/json"
-
-# STOP EXECUTION
-#################################################################
-# START LIBRARY
-  /library:
-    get:
-      tags:
-      - "Library"
-      summary: "Get all"
-      description: "Get all the documents in the library"
-      operationId: "getAll"
-      produces:
-      - "application/json"
-  /library/uploadFile:
-    post:
-      tags:
-      - "Library"
-      operationId: "uploadFile"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
-      parameters:
-      - in: "formData"
-        name: "file"
-        description: "upload a document to the server"
-        required: true
-        type: file
-      - in: "query"
-        name: "area"
-        description: "the area where the file is going to be stored"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-  /library/downloadFile:
-    get:
-      tags:
-      - "Library"
-      operationId: "downloadFile"
-      parameters:
-      - in: "query"
-        name: "id"
-        required: true
-        type: "string"
-      - in: "query"
-        name: "area"
-        description: "the area where the file is located"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-# END LIBRARY
-##############################################################################
-# START O&E
-  /oande/phase/{exeId}:
-    get:
-      tags:
-      - "OandE"
-      operationId: "getByPhaseId"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "exeId"
-        required: true
-        type: "string"
-  /oande/execution/{elid}:
-    get:
-      tags:
-      - "OandE"
-      operationId: "getByExecutionLineId"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "elid"
-        required: true
-        type: "string"
-    put:
-      tags:
-      - "OandE"
-      operationId: "createMonthlyInput"
-      parameters:
-      - in: "path"
-        name: "elid"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "an OandEMonthly"
-        required: true
-        schema:
-          $ref: "#/definitions/OandEMonthly"
-    post:
-      tags:
-      - "OandE"
-      operationId: "createAdminMonthlyInput"
-      parameters:
-      - in: "path"
-        name: "elid"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "a full list of OandEMonthlies"
-        required: true
-        schema:
-          type: array
-          items:
-            $ref: "#/definitions/OandEMonthly"
-# STOP O&E
-#################################################################
-  /budgetFundingLines/{pomId}:
-    get:
-      tags:
-      - "BudgetFundingLines"
-      operationId: "getByPomId"
-      parameters:
-      - in: "path"
-        name: "pomId"
-        required: true
-        type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-#################################################################
-  /prChangeNotifications:
-    get:
-      tags:
-      - "PrChangeNotifications"
-      operationId: "getByOrganization"
-      produces:
-      - "application/json"
-  /prChangeNotifications/{prId}:
-    delete:
-      tags:
-      - "PrChangeNotifications"
-      operationId: "deleteByPr"
-      parameters:
-      - in: "path"
-        name: "prId"
-        required: true
-        type: "string"
-# END PATHS
 #################################################################
 #
-# START DEFINITONS
+#################################################################
+#############           END PATHS             ###################
+#################################################################
+#
+#################################################################
+#############       MODEL  DEFINITONS         ###################
+#################################################################
 #
 definitions:
-  AuthUser:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-      fullName:
-        type: "string"
-      admin:
-        type: "boolean"
-      currentCommunity:
-        type: "object"
+#
+###########################
+###       MISC         ####
+###########################
+#
   Communication:
     type: "object"
     properties:
@@ -3040,6 +3061,880 @@ definitions:
         type: "string"
       abbreviation:
         type: "string"
+  Organization:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"
+      name:
+        type: "string"
+      abbreviation:
+        type: "string"
+  IntMap:
+    type: "object"
+    additionalProperties:
+      type: "integer"
+  StringMap:
+    type: "object"
+    additionalProperties:
+      type: "string"
+#
+###########################
+###       PHASES       ####
+###########################
+#
+  Pom:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"
+      fy:
+        type: "integer"
+      communityToas:
+        type: "array"
+        items:
+          $ref: "#/definitions/TOA"
+      orgToas:
+        type: "object"
+        additionalProperties:
+          type: "array"
+          items:
+            $ref: "#/definitions/TOA"
+      status:
+        enum: [CREATED, OPEN, RECONCILIATION, LOCKED, CLOSED]
+      startdate:
+        type: "integer"
+      enddate:
+        type: "integer"
+  PB:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"
+      fy:
+        type: "integer"
+      startdate:
+        type: "integer"
+      enddate:
+        type: "integer"
+  Execution:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      communityId:
+        type: "string"
+      fy:
+        type: "integer"
+      status:
+        enum: [CREATED, OPEN, LOCKED]
+      osdObligationGoals:
+        type: "object"
+        $ref: "#/definitions/OSDGoalPlan"
+      osdExpenditureGoals:
+        type: "object"
+        $ref: "#/definitions/OSDGoalPlan"
+#
+###########################
+### PROGRAMS AND UFRS  ####
+###########################
+#
+# PROGRAM AND UFR ENUMS
+  ProgramType:
+    enum: [PROGRAM, GENERIC, INCREMENT, FOS]
+  CreationTimeType:
+    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR, NEW_PROGRAM]
+  ProgrammaticRequestState:
+    enum: [OUTSTANDING, SAVED, SUBMITTED]
+  ShortyType:
+    enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
+  UfrStatus:
+    enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
+  Disposition:
+    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
+#
+  # Program:
+  #   type: "object"
+  #   properties:
+  #     id:
+  #       type: "string"
+  ##     tags:
+  ##       $ref: "#/definitions/StringMap"
+  #     description:
+  #       type: "string"
+  #     parentMrId:
+  #       type: "string"
+  ##     infolink:
+  ##       type: "string"
+  ##     imgLink:
+  ##       type: "string"
+  #     shortName:
+  #       type: "string"
+  #     longName:
+  #       type: "string"
+  #     type:
+  #       $ref: "#/definitions/ProgramType"
+  #     execution:
+  #       type: "string"
+  #     organizationId:
+  #       type: "string"
+  #     milestones:
+  #       type: "array"
+  #       items:
+  #         $ref: "#/definitions/Milestone"
+  #?     funding:
+  #?       type: "array"
+  #?       items:
+  #?         $ref: "#/definitions/FundingLine"
+  ##     fy:
+  ##       type: "integer"
+  ##     variants:
+  ##       type: "array"
+  ##       items:
+  ##         $ref: "#/definitions/Variant"
+  #     emphases:
+  #       type: "array"
+  #       items:
+  #         type: "string"
+  #     primaryCapability:
+  #       type: "string"
+  #     coreCapability:
+  #       type: "string"
+  #     secondaryCapability:
+  #       type: "string"
+  #     functionalArea:
+  #       type: "string"
+  #     medicalArea:
+  #       type: "string"
+  #     nbcCategory:
+  #       type: "string"
+  #     commodityArea:
+  #       type: "string"
+  #     bsvStrategy:
+  #       type: "string"
+  #     leadComponent:
+  #       type: "string"
+  #     manager:
+  #       type: "string"
+  #     acquisitionType:
+  #       type: "string"
+  ProgramFilter:
+    type: "object"
+    properties:
+      tagCriteria:
+        $ref: "#/definitions/StringMap"
+      blin:
+        type: "string" 
+      agency:
+        type: "string"
+      appropriation:
+        type: "string"
+  ProgrammaticRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      originalMrId:
+        type: "string"
+      parentMrId:
+        type: "string"
+      state:
+        $ref: "#/definitions/ProgrammaticRequestState"
+      bulkOrigin:
+        type: "boolean"
+      type:
+          $ref: "#/definitions/ProgramType"
+      lastMod:
+        type: "integer"
+      phaseId:
+        type: "string"
+      organizationId:
+        type: "string"
+      description:
+        type: "string"
+      shortName:
+        type: "string"
+      longName:
+        type: "string"
+      imageName:
+        type: "string"
+      imageArea:
+        type: "string"
+      infolink:
+        type: "string"
+      justification:
+        type: "string"
+      impactN:
+        type: "string"
+      execution:
+        type: "string"
+      fundingLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/FundingLine"
+      milestones:
+        type: "array"
+        items:
+          $ref: "#/definitions/Milestone"
+      emphases:
+        type: "array"
+        items:
+          type: "string"
+      creationTimeReferenceId:
+        type: "string"
+      creationTimeType:
+        $ref: "#/definitions/CreationTimeType"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
+      functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
+        type: "string"
+  UFR:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      tags:
+        $ref: "#/definitions/StringMap"
+      description:
+        type: "string"
+      phaseId:
+        type: "string"
+      shortyType:
+        $ref: "#/definitions/ShortyType"
+      shortyId:
+        type: "string"
+      infolink:
+        type: "string"
+      imgLink:
+        type: "string"
+      costLeft:
+        type: "number"
+      shortName:
+        type: "string"
+      longName:
+        type: "string"
+      yoE:
+        type: "boolean"
+      active:
+        type: "boolean"
+      status:
+        $ref: "#/definitions/UfrStatus"
+      disposition:
+        $ref: "#/definitions/Disposition"
+      lastMod:
+        type: "integer"
+      notes:
+        type: "string"
+      justification:
+        type: "string"
+      requestNumber:
+        type: "integer"
+      ufrName:
+        type: "string"
+      creationTime:
+        type: "integer"
+      coreCapability2:
+        type: "string"
+      milestoneImpact:
+        type: "string"
+      impactN:
+        type: "string"
+      fundingLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/FundingLine"
+      emphases:
+        type: "array"
+        items:
+          type: "string"
+      organizationId:
+        type: "string"
+      primaryCapability:
+        type: "string"
+      coreCapability:
+        type: "string"
+      secondaryCapability:
+        type: "string"
+      functionalArea:
+        type: "string"
+      medicalArea:
+        type: "string"
+      nbcCategory:
+        type: "string"
+      commodityArea:
+        type: "string"
+      bsvStrategy:
+        type: "string"
+      leadComponent:
+        type: "string"
+      manager:
+        type: "string"
+      acquisitionType:
+        type: "string"
+      priority:
+        type: "number"
+      imageName:
+        type: "string"
+      imageArea:
+        type: "string"
+  UFRFilter:
+    type: "object"
+    properties:
+      orgId:
+        type: "string"
+      fa:
+        type: "string"
+      from:
+        type: "integer"
+      to:
+        type: "integer"
+      yoe:
+        type: "boolean"
+      active:
+        type: "boolean"
+      status:
+        type: "string"
+      disposition:
+        type: "string"
+      cycle:
+        type: "string"
+  UfrEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      value:
+        $ref: "#/definitions/UFR"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "integer"
+      success:
+        type: "boolean"
+#
+###########################
+###  MORE PROGRAM STUFF ###
+###########################
+#
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      abbr:
+        type: "string"
+      name:
+        type: "string"
+  FundingLine:
+    type: "object"
+    properties:
+      tags:
+        $ref: "#/definitions/StringMap"
+      id:
+        type: "string"
+      appropriation:
+        type: "string"
+      baOrBlin:
+        type: "string"
+      opAgency:
+        type: "string"
+      item:
+        type: "string"
+      programElement:
+        type: "string"
+      acquisitionType:
+        type: "string"
+      funds:
+        $ref: "#/definitions/IntMap"
+      ctc:
+        type: "number"
+      variants:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variant"
+      userCreated:
+        type: "boolean"
+  Milestone:
+    type: "object"
+    properties:
+      start:
+        type: "integer"
+      end:
+        type: "integer"
+      phase:
+        type: "string"
+      name:
+        type: "string"
+      acronym:
+        type: "string"
+      status:
+        type: "string"
+  TOA:
+    type: "object"
+    properties:
+      year:
+        type: "number"
+      amount:
+        type: "number"
+  Variant:
+    type: "object"
+    properties:
+      shortName:
+        type: "string"
+      number:
+        type: "number"
+      bulkOrigin:
+        type: "boolean"
+      serviceLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/ServiceLine"
+  ServiceLine:
+    type: "object"
+    properties:
+      branch:
+        type: "string"
+      contractor:
+        type: "string"
+      unitCost:
+        type: "number"
+      bulkOrigin:
+        type: "boolean"
+      quantity:
+        $ref: "#/definitions/IntMap"
+#
+###########################
+###    EXECUTION       ####
+###########################
+#
+  ExecutionLine:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      originalMrId:
+        type: "string"
+      appropriation:
+        type: "string"
+      blin:
+        type: "string"
+      opAgency:
+        type: "string"
+      item:
+        type: "string"
+      programElement:
+        type: "string"
+      programName:
+        type: "string"
+      toa:
+        type: "number"
+      released:
+        type: "number"
+      withheld:
+        type: "number"
+      commitments:
+        type: "number"
+      obligations:
+        type: "number"
+      accruals:
+        type: "number"
+      expensed:
+        type: "number"
+      initial:
+        type: "number"
+      craTotal:
+        type: "number"
+      apprTotal:
+        type: "number"
+      ousdcTotal:
+        type: "number"
+      btrTotal:
+        type: "number"
+      realignedTotal:
+        type: "number"
+      hasTransactions:
+        type: "boolean"
+      phaseId:
+        type: "string"
+      appropriated:
+        type: "boolean"
+      goalPlans:
+        type: "array"
+        items:
+          $ref: "#/definitions/OSDGoalPlan"
+  OSDGoalPlan:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+      fy:
+        type: "integer"
+      monthlies:
+        type: "array"
+        items:
+          type: "number"
+  ExecutionDropDown:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      type:
+        type: "string"
+      subtype:
+        type: "string"
+  ExecutionEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      phaseId:
+        type: "string"
+      value:
+        type: "object"
+        $ref: "#/definitions/ExecutionEventData"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "number"
+  ExecutionEventData:
+    type: "object"
+    properties:
+      fromId:
+        type: "string"
+      fromIsSource:
+        type: "boolean"
+      toIdAmtLkp:
+        type: "object"
+        $ref: "#/definitions/IntMap"
+      type:
+        type: "string"
+      reason:
+        type: "string"
+      other:
+        type: "string"
+      fileId:
+        type: "string"
+  OandEMonthly:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      executionLineId:
+        type: "string"
+      month:
+        type: "integer"
+      committed:
+        type: "number"
+      obligated:
+        type: "number"
+      expensed:
+        type: "number"
+      accruals:
+        type: "number"
+      explanation:
+        type: "string"
+      remediation:
+        type: "string"
+      lastUpdated:
+        type: "number"
+      monthsToFix:
+        type: "number"
+  SpendPlanMonthly:
+    type: "object"
+    properties:
+      obligated:
+        type: "number"
+      labor:
+        type: "number"
+      travel:
+        type: "number"
+      contracts:
+        type: "number"
+      other:
+        type: "number"
+      expensed:
+        type: "number"
+  SpendPlan:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      executionLineId:
+        type: "string"
+      type:
+        enum: [BASELINE, AFTER_APPROPRIATION]
+      explanation:
+        type: "string"
+      monthlies:
+        type: "array"
+        items:
+          $ref: "#/definitions/SpendPlanMonthly"
+  BudgetFundingLine:
+    type: "object"
+    properties:
+      itemNumber:
+        type: "string"
+      name:
+        type: "string"
+      ba:
+        type: "string"
+      pe:
+        type: "string"
+#
+###########################
+###     WORKSHEETS     ####
+###########################
+#
+  Worksheet:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      pomId:
+        type: "string"
+      name:
+        type: "string"
+      version:
+        type: "integer"
+      notes:
+        type: "string"
+      createDate:
+        type: "integer"
+      lastUpdateDate:
+        type: "integer"
+      isFinal:
+        type: "boolean"
+      locked:
+        type: "boolean"
+      rows:
+        type: "array"
+        items:
+          $ref: "#/definitions/WorksheetRow"
+  WorksheetRow:
+    type: "object"
+    properties:
+      programRequestId:
+        type: "string"
+      programRequestFullname:
+        type: "string"
+      coreCapability:
+        type: "string"
+      appropriation:
+        type: "string"
+      baOrBlin:
+        type: "string"
+      item:
+        type: "string"
+      fundingLine:
+        type: "object"
+        $ref: "#/definitions/FundingLine"           
+  RowUpdateEventData:
+    type: "object"
+    properties:
+      worksheetId:
+        type: "string"
+      fundingLineId:
+        type: "string"
+      programId:
+        type: "string"
+      previousFundingLine:
+        $ref: "#/definitions/FundingLine"
+      newFundingLine:
+        $ref: "#/definitions/FundingLine"
+      reasonCode:
+        type: "string"
+      notes:
+        type: "string"
+  RowUpdateEvent:
+    type: "object"
+    properties:
+      eventType:
+        type: "string"
+      phaseId:
+        type: "string"
+      value:
+        type: "object"
+        $ref: "#/definitions/RowUpdateEventData"
+      userCN:
+        type: "string"
+      timestamp:
+        type: "integer"
+  WorksheetEvent:
+    type: "object"
+    properties:
+      rowUpdateEvents:
+        type: "array"
+        items:
+          $ref: "#/definitions/RowUpdateEventData"
+      worksheet:
+        $ref: "#/definitions/Worksheet"
+  PrChangeNotification:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      organizationId:
+        type: "string"
+      prId:
+        type: "string"
+      shortName:
+        type: "string"
+#
+###########################
+###       FILES        ####
+###########################
+#
+  FileResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      content:
+        type: "string"
+      contentType:
+        type: "string"
+  FileMetadata:
+    type: "object"
+    properties:
+      metadata:
+        type: "object"
+        additionalProperties:
+        type: "object"
+        properties:
+          area:
+            type: "string"
+#
+###########################
+###        USERS        ###
+###########################
+#
+  AuthUser:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      fullName:
+        type: "string"
+      admin:
+        type: "boolean"
+      currentCommunity:
+        type: "object"
+  Stranger:
+    type: "object"
+    properties:
+      cn:
+        type: "string"
+      contractor:
+        type: "boolean"
+      nda:
+        type: "string"
+      communities:
+        type: "array"
+        items:
+          $ref: "#/definitions/Community"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      cn:
+        type: "string"
+      firstName:
+        type: "string"
+      middleInitial:
+        type: "string"
+      lastName:
+        type: "string"
+      suspended:
+        type: "boolean"
+      communication:
+        type: "object"
+        $ref: "#/definitions/Communication"
+      currentCommunityId:
+        type: "string"
+      organizationId:
+        type: "string"
+      preferences:
+        type: "object"
+        additionalProperties:
+            type: "string"
+  Permission:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      roleId:
+        type: "string"
+      permission:
+        type: "string"
+  RestResult:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+      result:
+        type: "object"
+  Role:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      desc:
+        type: "string"
+      communityId:
+        type: "string"
+  Status:
+    type: "string"
+  UserRoleResource:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      userId:
+        type: "string"
+      roleId:
+        type: "string"
+      resourceIds:
+        type: "array"
+        items:
+          type: "string"
+#
+###########################
+###    USER REQUEST    ####
+###########################
+#
   CreateUserRequest:
     type: "object"
     properties:
@@ -3159,816 +4054,10 @@ definitions:
         type: "string"
       roleName:
         type: "string"
-  Permission:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      roleId:
-        type: "string"
-      permission:
-        type: "string"
-  RestResult:
-    type: "object"
-    properties:
-      error:
-        type: "string"
-      result:
-        type: "object"
-  Role:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      name:
-        type: "string"
-      desc:
-        type: "string"
-      communityId:
-        type: "string"
-  Status:
-    type: "string"
-  Stranger:
-    type: "object"
-    properties:
-      cn:
-        type: "string"
-      contractor:
-        type: "boolean"
-      nda:
-        type: "string"
-      communities:
-        type: "array"
-        items:
-          $ref: "#/definitions/Community"
-      organizations:
-        type: "array"
-        items:
-          $ref: "#/definitions/Organization"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      cn:
-        type: "string"
-      firstName:
-        type: "string"
-      middleInitial:
-        type: "string"
-      lastName:
-        type: "string"
-      suspended:
-        type: "boolean"
-      communication:
-        type: "object"
-        $ref: "#/definitions/Communication"
-      currentCommunityId:
-        type: "string"
-      organizationId:
-        type: "string"
-      preferences:
-        type: "object"
-        additionalProperties:
-            type: "string"
-  UserRoleResource:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      userId:
-        type: "string"
-      roleId:
-        type: "string"
-      resourceIds:
-        type: "array"
-        items:
-          type: "string"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      abbr:
-        type: "string"
-      name:
-        type: "string"
-  IntMap:
-    type: "object"
-    additionalProperties:
-      type: "integer"
-  StringMap:
-    type: "object"
-    additionalProperties:
-      type: "string"
-  FundingLine:
-    type: "object"
-    properties:
-      tags:
-        $ref: "#/definitions/StringMap"
-      id:
-        type: "string"
-      appropriation:
-        type: "string"
-      baOrBlin:
-        type: "string"
-      opAgency:
-        type: "string"
-      item:
-        type: "string"
-      programElement:
-        type: "string"
-      acquisitionType:
-        type: "string"
-      funds:
-        $ref: "#/definitions/IntMap"
-      ctc:
-        type: "number"
-      variants:
-        type: "array"
-        items:
-          $ref: "#/definitions/Variant"
-      userCreated:
-        type: "boolean"
-  Milestone:
-    type: "object"
-    properties:
-      start:
-        type: "integer"
-      end:
-        type: "integer"
-      phase:
-        type: "string"
-      name:
-        type: "string"
-      acronym:
-        type: "string"
-      status:
-        type: "string"
-  Organization:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      communityId:
-        type: "string"
-      name:
-        type: "string"
-      abbreviation:
-        type: "string"
-  TOA:
-    type: "object"
-    properties:
-      year:
-        type: "number"
-      amount:
-        type: "number"
-  Variant:
-    type: "object"
-    properties:
-      shortName:
-        type: "string"
-      number:
-        type: "number"
-      bulkOrigin:
-        type: "boolean"
-      serviceLines:
-        type: "array"
-        items:
-          $ref: "#/definitions/ServiceLine"
-  ServiceLine:
-    type: "object"
-    properties:
-      branch:
-        type: "string"
-      contractor:
-        type: "string"
-      unitCost:
-        type: "number"
-      bulkOrigin:
-        type: "boolean"
-      quantity:
-        $ref: "#/definitions/IntMap"
-  Program:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      tags:
-        $ref: "#/definitions/StringMap"
-      description:
-        type: "string"
-      parentMrId:
-        type: "string"
-      infolink:
-        type: "string"
-      imgLink:
-        type: "string"
-      shortName:
-        type: "string"
-      longName:
-        type: "string"
-      type:
-        $ref: "#/definitions/ProgramType"
-      execution:
-        type: "string"
-      organizationId:
-        type: "string"
-      milestones:
-        type: "array"
-        items:
-          $ref: "#/definitions/Milestone"
-      funding:
-        type: "array"
-        items:
-          $ref: "#/definitions/FundingLine"
-      fy:
-        type: "integer"
-      variants:
-        type: "array"
-        items:
-          $ref: "#/definitions/Variant"
-      emphases:
-        type: "array"
-        items:
-          type: "string"
-      primaryCapability:
-        type: "string"
-      coreCapability:
-        type: "string"
-      secondaryCapability:
-        type: "string"
-      functionalArea:
-        type: "string"
-      medicalArea:
-        type: "string"
-      nbcCategory:
-        type: "string"
-      commodityArea:
-        type: "string"
-      bsvStrategy:
-        type: "string"
-      leadComponent:
-        type: "string"
-      manager:
-        type: "string"
-      acquisitionType:
-        type: "string"
-  ProgramFilter:
-    type: "object"
-    properties:
-      tagCriteria:
-        $ref: "#/definitions/StringMap"
-      blin:
-        type: "string"
-      agency:
-        type: "string"
-      appropriation:
-        type: "string"
-  UFRFilter:
-    type: "object"
-    properties:
-      orgId:
-        type: "string"
-      fa:
-        type: "string"
-      from:
-        type: "integer"
-      to:
-        type: "integer"
-      yoe:
-        type: "boolean"
-      active:
-        type: "boolean"
-      status:
-        type: "string"
-      disposition:
-        type: "string"
-      cycle:
-        type: "string"
-  UFR:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      tags:
-        $ref: "#/definitions/StringMap"
-      description:
-        type: "string"
-      phaseId:
-        type: "string"
-      shortyType:
-        $ref: "#/definitions/ShortyType"
-      shortyId:
-        type: "string"
-      infolink:
-        type: "string"
-      imgLink:
-        type: "string"
-      costLeft:
-        type: "number"
-      shortName:
-        type: "string"
-      longName:
-        type: "string"
-      yoE:
-        type: "boolean"
-      active:
-        type: "boolean"
-      status:
-        $ref: "#/definitions/UfrStatus"
-      disposition:
-        $ref: "#/definitions/Disposition"
-      lastMod:
-        type: "integer"
-      notes:
-        type: "string"
-      justification:
-        type: "string"
-      requestNumber:
-        type: "integer"
-      ufrName:
-        type: "string"
-      creationTime:
-        type: "integer"
-      coreCapability2:
-        type: "string"
-      milestoneImpact:
-        type: "string"
-      impactN:
-        type: "string"
-      fundingLines:
-        type: "array"
-        items:
-          $ref: "#/definitions/FundingLine"
-      emphases:
-        type: "array"
-        items:
-          type: "string"
-      organizationId:
-        type: "string"
-      primaryCapability:
-        type: "string"
-      coreCapability:
-        type: "string"
-      secondaryCapability:
-        type: "string"
-      functionalArea:
-        type: "string"
-      medicalArea:
-        type: "string"
-      nbcCategory:
-        type: "string"
-      commodityArea:
-        type: "string"
-      bsvStrategy:
-        type: "string"
-      leadComponent:
-        type: "string"
-      manager:
-        type: "string"
-      acquisitionType:
-        type: "string"
-      priority:
-        type: "number"
-      imageName:
-        type: "string"
-      imageArea:
-        type: "string"
-  UfrEvent:
-    type: "object"
-    properties:
-      eventType:
-        type: "string"
-      value:
-        $ref: "#/definitions/UFR"
-      userCN:
-        type: "string"
-      timestamp:
-        type: "integer"
-      success:
-        type: "boolean"
-  ShortyType:
-    enum: [MRDB_PROGRAM, PR, NEW_INCREMENT_FOR_MRDB_PROGRAM, NEW_INCREMENT_FOR_PR, NEW_FOS_FOR_MRDB_PROGRAM, NEW_FOS_FOR_PR, NEW_PROGRAM]
-  UfrStatus:
-    enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
-  Disposition:
-    enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
-  Pom:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      communityId:
-        type: "string"
-      fy:
-        type: "integer"
-      communityToas:
-        type: "array"
-        items:
-          $ref: "#/definitions/TOA"
-      orgToas:
-        type: "object"
-        additionalProperties:
-          type: "array"
-          items:
-            $ref: "#/definitions/TOA"
-      status:
-        enum: [CREATED, OPEN, RECONCILIATION, LOCKED, CLOSED]
-      startdate:
-        type: "integer"
-      enddate:
-        type: "integer"
-  Worksheet:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      pomId:
-        type: "string"
-      name:
-        type: "string"
-      version:
-        type: "integer"
-      notes:
-        type: "string"
-      createDate:
-        type: "integer"
-      lastUpdateDate:
-        type: "integer"
-      isFinal:
-        type: "boolean"
-      locked:
-        type: "boolean"
-      rows:
-        type: "array"
-        items:
-          $ref: "#/definitions/WorksheetRow"
-  WorksheetRow:
-    type: "object"
-    properties:
-      programRequestId:
-        type: "string"
-      programRequestFullname:
-        type: "string"
-      coreCapability:
-        type: "string"
-      appropriation:
-        type: "string"
-      baOrBlin:
-        type: "string"
-      item:
-        type: "string"
-      fundingLine:
-        type: "object"
-        $ref: "#/definitions/FundingLine"
-  ProgrammaticRequest:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      description:
-        type: "string"
-      state:
-        $ref: "#/definitions/ProgrammaticRequestState"
-      fundingLines:
-        type: "array"
-        items:
-          $ref: "#/definitions/FundingLine"
-      shortName:
-        type: "string"
-      longName:
-        type: "string"
-      bulkOrigin:
-        type: "boolean"
-      originalMrId:
-        type: "string"
-      parentMrId:
-        type: "string"
-      creationTimeReferenceId:
-        type: "string"
-      creationTimeType:
-        $ref: "#/definitions/CreationTimeType"
-      type:
-          $ref: "#/definitions/ProgramType"
-      organizationId:
-        type: "string"
-      phaseId:
-        type: "string"
-      primaryCapability:
-        type: "string"
-      coreCapability:
-        type: "string"
-      secondaryCapability:
-        type: "string"
-      functionalArea:
-        type: "string"
-      medicalArea:
-        type: "string"
-      nbcCategory:
-        type: "string"
-      commodityArea:
-        type: "string"
-      bsvStrategy:
-        type: "string"
-      leadComponent:
-        type: "string"
-      manager:
-        type: "string"
-      acquisitionType:
-        type: "string"
-      emphases:
-        type: "array"
-        items:
-          type: "string"
-      justification:
-        type: "string"
-      impactN:
-        type: "string"
-      imageName:
-        type: "string"
-      imageArea:
-        type: "string"
-  ProgramType:
-    enum: [PROGRAM, GENERIC, INCREMENT, FOS]
-  CreationTimeType:
-    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR, NEW_PROGRAM]
-  ProgrammaticRequestState:
-    enum: [OUTSTANDING, SAVED, SUBMITTED]
-  PB:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      communityId:
-        type: "string"
-      fy:
-        type: "integer"
-      startdate:
-        type: "integer"
-      enddate:
-        type: "integer"
-  ExecutionLine:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      originalMrId:
-        type: "string"
-      appropriation:
-        type: "string"
-      blin:
-        type: "string"
-      opAgency:
-        type: "string"
-      item:
-        type: "string"
-      programElement:
-        type: "string"
-      programName:
-        type: "string"
-      toa:
-        type: "number"
-      released:
-        type: "number"
-      withheld:
-        type: "number"
-      commitments:
-        type: "number"
-      obligations:
-        type: "number"
-      accruals:
-        type: "number"
-      expensed:
-        type: "number"
-      initial:
-        type: "number"
-      craTotal:
-        type: "number"
-      apprTotal:
-        type: "number"
-      ousdcTotal:
-        type: "number"
-      btrTotal:
-        type: "number"
-      realignedTotal:
-        type: "number"
-      hasTransactions:
-        type: "boolean"
-      phaseId:
-        type: "string"
-      appropriated:
-        type: "boolean"
-      goalPlans:
-        type: "array"
-        items:
-          $ref: "#/definitions/OSDGoalPlan"
-  Execution:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      communityId:
-        type: "string"
-      fy:
-        type: "integer"
-      status:
-        enum: [CREATED, OPEN, LOCKED]
-      osdObligationGoals:
-        type: "object"
-        $ref: "#/definitions/OSDGoalPlan"
-      osdExpenditureGoals:
-        type: "object"
-        $ref: "#/definitions/OSDGoalPlan"
-  OSDGoalPlan:
-    type: "object"
-    properties:
-      type:
-        type: "string"
-      fy:
-        type: "integer"
-      monthlies:
-        type: "array"
-        items:
-          type: "number"
-  ExecutionDropDown:
-    type: "object"
-    properties:
-      name:
-        type: "string"
-      description:
-        type: "string"
-      type:
-        type: "string"
-      subtype:
-        type: "string"
-  ExecutionEvent:
-    type: "object"
-    properties:
-      eventType:
-        type: "string"
-      phaseId:
-        type: "string"
-      value:
-        type: "object"
-        $ref: "#/definitions/ExecutionEventData"
-      userCN:
-        type: "string"
-      timestamp:
-        type: "number"
-  ExecutionEventData:
-    type: "object"
-    properties:
-      fromId:
-        type: "string"
-      fromIsSource:
-        type: "boolean"
-      toIdAmtLkp:
-        type: "object"
-        $ref: "#/definitions/IntMap"
-      type:
-        type: "string"
-      reason:
-        type: "string"
-      other:
-        type: "string"
-      fileId:
-        type: "string"
-  FileResponse:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      content:
-        type: "string"
-      contentType:
-        type: "string"
-  FileMetadata:
-    type: "object"
-    properties:
-      metadata:
-        type: "object"
-        additionalProperties:
-        type: "object"
-        properties:
-          area:
-            type: "string"
-  OandEMonthly:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      executionLineId:
-        type: "string"
-      month:
-        type: "integer"
-      committed:
-        type: "number"
-      obligated:
-        type: "number"
-      expensed:
-        type: "number"
-      accruals:
-        type: "number"
-      explanation:
-        type: "string"
-      remediation:
-        type: "string"
-      lastUpdated:
-        type: "number"
-      monthsToFix:
-        type: "number"
-  SpendPlanMonthly:
-    type: "object"
-    properties:
-      obligated:
-        type: "number"
-      labor:
-        type: "number"
-      travel:
-        type: "number"
-      contracts:
-        type: "number"
-      other:
-        type: "number"
-      expensed:
-        type: "number"
-  SpendPlan:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      executionLineId:
-        type: "string"
-      type:
-        enum: [BASELINE, AFTER_APPROPRIATION]
-      explanation:
-        type: "string"
-      monthlies:
-        type: "array"
-        items:
-          $ref: "#/definitions/SpendPlanMonthly"
-  RowUpdateEventData:
-    type: "object"
-    properties:
-      worksheetId:
-        type: "string"
-      fundingLineId:
-        type: "string"
-      programId:
-        type: "string"
-      previousFundingLine:
-        $ref: "#/definitions/FundingLine"
-      newFundingLine:
-        $ref: "#/definitions/FundingLine"
-      reasonCode:
-        type: "string"
-      notes:
-        type: "string"
-  WorksheetEvent:
-    type: "object"
-    properties:
-      rowUpdateEvents:
-        type: "array"
-        items:
-          $ref: "#/definitions/RowUpdateEventData"
-      worksheet:
-        $ref: "#/definitions/Worksheet"
-  RowUpdateEvent:
-    type: "object"
-    properties:
-      eventType:
-        type: "string"
-      phaseId:
-        type: "string"
-      value:
-        type: "object"
-        $ref: "#/definitions/RowUpdateEventData"
-      userCN:
-        type: "string"
-      timestamp:
-        type: "integer"
-  BudgetFundingLine:
-    type: "object"
-    properties:
-      itemNumber:
-        type: "string"
-      name:
-        type: "string"
-      ba:
-        type: "string"
-      pe:
-        type: "string"
-  PrChangeNotification:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      organizationId:
-        type: "string"
-      prId:
-        type: "string"
-      shortName:
-        type: "string"
-##############################################################################
+#
+#################################################################
+#############      END MODEL  DEFINITONS      ###################
+#################################################################
+#
+#################################################################
 # ENDFILE

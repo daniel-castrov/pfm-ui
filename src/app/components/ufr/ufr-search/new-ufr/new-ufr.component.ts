@@ -2,7 +2,7 @@ import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, Program, ShortyType, ProgramsService, PRService, ProgrammaticRequest, User, Organization, OrganizationService } from '../../../../generated';
+import { UFRsService, ShortyType, ProgramsService, PRService, ProgrammaticRequest, User, Organization, OrganizationService } from '../../../../generated';
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UserUtils } from '../../../../services/user.utils';
@@ -150,7 +150,7 @@ export class NewUfrComponent implements OnInit {
   }
 
   private async initFromShortyProgram(ufr: UFR, includeNames: boolean) {
-    const shorty = (await this.programsService.getProgramById(ufr.shortyId).toPromise()).result as Program;
+    const shorty = (await this.programsService.getProgramById(ufr.shortyId).toPromise()).result as ProgrammaticRequest;
     this.initFromShorty(ufr, shorty, includeNames);
   }
 
@@ -159,7 +159,7 @@ export class NewUfrComponent implements OnInit {
     this.initFromShorty(ufr, shorty, includeNames);
   }
 
-  private initFromShorty(ufr: UFR, shorty: Program | ProgrammaticRequest, includeNames: boolean) {
+  private initFromShorty(ufr: UFR, shorty: ProgrammaticRequest, includeNames: boolean) {
     if(includeNames) {
       ufr.shortName = shorty.shortName;
       ufr.longName = shorty.longName;

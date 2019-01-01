@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, Input, ViewEncapsulation } from '@angular
 // Other Components
 import { HeaderComponent } from '../../header/header.component'
 import { Router } from '@angular/router'
-import { ExecutionService, Execution, MyDetailsService, Program, ExecutionLine } from '../../../generated'
+import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ProgramsService } from '../../../generated/api/programs.service';
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper'

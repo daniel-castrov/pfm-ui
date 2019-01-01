@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import {
-  ProgramsService, OrganizationService, Organization, User, Program, UFRsService, UFR, UFRFilter,
+  ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
   UfrStatus
 } from '../../../../generated';
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
