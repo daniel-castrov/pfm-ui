@@ -1,13 +1,13 @@
 import { ProgramType } from './../generated/model/programType';
-import { ProgrammaticRequest } from './../generated/model/programmaticRequest';
+import { Program } from './../generated/model/program';
 
 export class PRUtils {
 
-  static findGenericSubprogramChildren(parentId: string, prs: ProgrammaticRequest[]): ProgrammaticRequest[] {
+  static findGenericSubprogramChildren(parentId: string, prs: Program[]): Program[] {
     return prs.filter( pr => pr.type === ProgramType.GENERIC && pr.creationTimeReferenceId == parentId );
   }
 
-  private static calculateBaSumForPr(ba: string, year: number, pr: ProgrammaticRequest): number {
+  private static calculateBaSumForPr(ba: string, year: number, pr: Program): number {
     return pr.fundingLines.filter(fl => fl.baOrBlin == ba)
                           .map( fl => fl.funds[year] ? fl.funds[year] : 0 )
                           .reduce((a,b)=>a+b, 0);
@@ -15,13 +15,13 @@ export class PRUtils {
 
   static isParentBaSumGreater(  ba: string, 
                                 year: number, 
-                                parentPr: ProgrammaticRequest, 
-                                inPr: ProgrammaticRequest,
-                                inPrs: ProgrammaticRequest[] ): boolean {
+                                parentPr: Program, 
+                                inPr: Program,
+                                inPrs: Program[] ): boolean {
     const parentSum: number = PRUtils.calculateBaSumForPr(ba, year, parentPr);
 
     // from the list of prs: remove the current pr (if saved/existing) and (re)apply it with one that exists separately from the list. Trey are different.
-    let prs: ProgrammaticRequest[] = PRUtils.findGenericSubprogramChildren(parentPr.id, inPrs);
+    let prs: Program[] = PRUtils.findGenericSubprogramChildren(parentPr.id, inPrs);
     prs = prs.filter(pr => pr.id !== inPr.id);
     prs.push(inPr);
 
@@ -32,8 +32,8 @@ export class PRUtils {
 
   static isChildrenBaSumSmaller(  ba: string, 
                                   year: number, 
-                                  pr: ProgrammaticRequest, 
-                                  prs: ProgrammaticRequest[] ): boolean {
+                                  pr: Program, 
+                                  prs: Program[] ): boolean {
     const parentSum: number = PRUtils.calculateBaSumForPr(ba, year, pr);
     const childrenSum: number = PRUtils.findGenericSubprogramChildren(pr.id, prs)
                                        .map(pr => PRUtils.calculateBaSumForPr(ba, year, pr))

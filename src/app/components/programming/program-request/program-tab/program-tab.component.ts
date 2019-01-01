@@ -1,6 +1,6 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
-import {FileResponse, LibraryService, ProgrammaticRequest, Tag, Pom, POMService, RolesPermissionsService} from '../../../../generated';
+import {FileResponse, LibraryService, Program, Tag, Pom, POMService, RolesPermissionsService} from '../../../../generated';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
@@ -9,7 +9,7 @@ import {DomSanitizer} from '@angular/platform-browser';
   styleUrls: ['./program-tab.component.scss']
 })
 export class ProgramTabComponent implements OnChanges {
-  @Input() pr: ProgrammaticRequest;
+  @Input() pr: Program;
   @Input() pom: Pom;
   readonly fileArea = 'pr';
   imagePath: string;

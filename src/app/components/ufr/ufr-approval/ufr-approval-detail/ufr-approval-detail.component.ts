@@ -458,7 +458,7 @@ export class UfrApprovalDetailComponent implements OnInit {
           break;
         case 'UFR_STATUS':
           type = 'Status';
-          value = e.value.status;
+          value = e.value.ufrStatus;
           break;
         case 'UFR_DISPOSITION':
           type = 'Disposition';

@@ -1,12 +1,12 @@
 import {TagsService, TagType} from './../../../../../services/tags.service';
 import {Component, Input, OnChanges} from '@angular/core';
-import {ProgrammaticRequest, Tag, UFR} from '../../../../../generated';
+import {Program, Tag, UFR} from '../../../../../generated';
 
 interface TagWithPercent extends Tag {
   percent: number;
 }
 
-type UfrOrPr = UFR | ProgrammaticRequest;
+type UfrOrPr = UFR | Program;
 
 @Component({
   selector: 'emphasisAreas',

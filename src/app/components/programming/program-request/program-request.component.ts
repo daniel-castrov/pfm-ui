@@ -1,11 +1,11 @@
 import {ProgramTabComponent} from './program-tab/program-tab.component';
 import {PRUtils} from '../../../services/pr.utils.service';
 import {ProgramRequestWithFullName, ProgramWithFullName} from '../../../services/with-full-name.service';
-import {ProgrammaticRequestState} from '../../../generated/model/programmaticRequestState';
+import {ProgramStatus} from '../../../generated/model/programStatus';
 import {CreationTimeType} from '../../../generated/model/creationTimeType';
 import {ProgramType} from '../../../generated/model/programType';
 import {IdAndNameComponent} from './id-and-name/id-and-name.component';
-import {ProgrammaticRequest} from '../../../generated/model/programmaticRequest';
+import {Program} from '../../../generated/model/program';
 import {PRService} from '../../../generated/api/pR.service';
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ProgramRequestPageModeService} from './page-mode.service';
@@ -23,8 +23,8 @@ import { Validation } from './funds-tab/Validation';
 })
 export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
-  private pr: ProgrammaticRequest = {};
-  private prs: ProgrammaticRequest[];
+  private pr: Program = {};
+  private prs: Program[];
   private pom: Pom;
   private ismgr: boolean;
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
@@ -75,7 +75,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
     this.pr.creationTimeType = this.programRequestPageMode.type;
     this.pr.bulkOrigin = false;
-    this.pr.state = 'SAVED';
+    this.pr.programStatus = 'SAVED';
 
     switch (this.programRequestPageMode.type) {
       case CreationTimeType.PROGRAM_OF_MRDB:
@@ -122,7 +122,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.organizationId = programOrPR.organizationId;
   }
 
-  async save(state: ProgrammaticRequestState) {
+  async save(programStatus: ProgramStatus) {
 
     this.pr.organizationId = (await this.orgService.getByAbbreviation(
       PRUtils.getOrganizationNameForLeadComponent(this.pr.leadComponent) ).toPromise()).result.id;
@@ -130,8 +130,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     // if we're trying to SAVE a GENERIC program during RECONCILIATION, we need to SUBMIT it instead
     if (Pom.StatusEnum.RECONCILIATION == this.pom.status &&
       ProgramType.GENERIC === this.pr.type && 
-      ProgrammaticRequestState.SAVED === state) {
-      state = ProgrammaticRequestState.SUBMITTED;
+      ProgramStatus.SAVED === programStatus) {
+        programStatus = ProgramStatus.SUBMITTED;
     }
 
     let fundsTabValidation = this.fundsTabComponent.validate;
@@ -139,14 +139,14 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       Notify.error(fundsTabValidation.message);
     } else {
       if(this.pr.id) {
-        let oldState = this.pr.state;
-        this.pr.state = state;
+        let oldStatus = this.pr.programStatus;
+        this.pr.programStatus = programStatus;
         let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise());
         if (data.error) {
-          this.pr.state = oldState;
+          this.pr.programStatus = oldStatus;
           Notify.error('Program request failed to save.\n' + data.error);
         } else {
-          if (this.pr.state === ProgrammaticRequestState.SAVED) {
+          if (this.pr.programStatus === ProgramStatus.SAVED) {
             Notify.success('Program request saved successfully')
           } else {
             Notify.success('Program request submitted successfully')
@@ -171,7 +171,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       return (!validation.isValid || this.idAndNameComponent.invalid || this.programTabComponent.invalid);
     }
 
-    return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+    return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.programStatus == ProgramStatus.SUBMITTED;
   }
 
   isNotSubmittable(): boolean {
@@ -190,11 +190,11 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       return false;
     }
 
-    return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.state == ProgrammaticRequestState.SUBMITTED;
+    return this.idAndNameComponent.invalid || this.programTabComponent.invalid || this.pr.programStatus == ProgramStatus.SUBMITTED;
   }
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
-    return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.state === 'OUTSTANDING');
+    return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.programStatus === 'OUTSTANDING');
   }
 
 }

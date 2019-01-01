@@ -1,10 +1,10 @@
 import {Component, Input, ViewEncapsulation, OnInit} from '@angular/core';
-import { ProgrammaticRequest, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB, RolesPermissionsService} from '../../../../generated'
+import { Program, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB, RolesPermissionsService} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
 import { Notify } from '../../../../utils/Notify';
 
 import {DataRow} from "./DataRow";
-import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
+import {PhaseType} from "../../select-program-request/UiProgramRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -18,7 +18,7 @@ import {GridType} from "../funds-tab/GridType";
 })
 export class VariantsTabComponent implements OnInit {
 
-  @Input() current: ProgrammaticRequest;
+  @Input() current: Program;
   @Input() editable: boolean;
   @Input() pom: Pom; // not currently used, but here to be consistent with other tabs
   private ismgr: boolean = false;
@@ -95,7 +95,7 @@ export class VariantsTabComponent implements OnInit {
 
   async initDataRows(){
 
-    let pbPr:ProgrammaticRequest;
+    let pbPr:Program;
 
     if( this.current.originalMrId ){
       let pb = (await this.pbService.getLatest(this.user.currentCommunityId).toPromise()).result;

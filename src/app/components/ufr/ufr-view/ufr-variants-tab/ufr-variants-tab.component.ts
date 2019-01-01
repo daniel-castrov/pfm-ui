@@ -2,7 +2,7 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
 import {FundingLine, IntMap, POMService, UFR, User, Variant} from '../../../../generated'
 import {UserUtils} from '../../../../services/user.utils';
 import {DataRow} from "./DataRow";
-import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
+import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";

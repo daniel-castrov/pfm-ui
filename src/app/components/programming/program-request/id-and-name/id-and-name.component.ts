@@ -1,6 +1,6 @@
 import { CreationTimeType } from '../../../../generated/model/creationTimeType';
 import { WithFullName, WithFullNameService, ProgramOrPrWithFullName } from '../../../../services/with-full-name.service';
-import { ProgrammaticRequest } from '../../../../generated/model/programmaticRequest';
+import { Program } from '../../../../generated/model/program';
 import { Component, Input } from '@angular/core';
 
 // Other Components
@@ -15,7 +15,7 @@ import { ProgramType } from '../../../../generated/model/programType';
 })
 export class IdAndNameComponent {
 
-  @Input() private pr: ProgrammaticRequest;
+  @Input() private pr: Program;
   private parentFullName: string;
   private invalidShortNames: Set<string>;
   private invalidLongNames: Set<string>;
@@ -27,7 +27,7 @@ export class IdAndNameComponent {
                private withFullNameService: WithFullNameService ) {
   }
 
-  async init(pr: ProgrammaticRequest) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
+  async init(pr: Program) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
     this.parentFullName = await this.getParentFullName(pr);
     const programsPlusPrs: WithFullName[] = await this.withFullNameService.programsPlusPrs(pr.phaseId);
     this.invalidShortNames = this.getInvalidShortNames(programsPlusPrs);
@@ -86,7 +86,7 @@ export class IdAndNameComponent {
     return null;
   }
 
-  private async getParentFullName(pr: ProgrammaticRequest) {
+  private async getParentFullName(pr: Program) {
     const prFullName: string = await this.withFullNameService.fullNameDerivedFromCreationTimeData(pr);
     if (prFullName.lastIndexOf('/') == -1) {
       return '';

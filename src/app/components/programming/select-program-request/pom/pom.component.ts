@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AgGridNg2 } from "ag-grid-angular";
 import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
-import { UiProgrammaticRequest } from '../UiProgrammaticRequest';
+import { UiProgramRequest } from '../UiProgramRequest';
 import { Pom } from '../../../../generated/model/pom';
 
 @Component({
@@ -12,8 +12,8 @@ import { Pom } from '../../../../generated/model/pom';
 })
 export class PomComponent implements OnChanges {
 
-  @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
-  @Input() private pbProgrammaticRequests: ProgramRequestWithFullName[];
+  @Input() private pomPrograms: ProgramRequestWithFullName[];
+  @Input() private pbPrograms: ProgramRequestWithFullName[];
   @Input() private pom: Pom;
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -22,7 +22,7 @@ export class PomComponent implements OnChanges {
 
   ngOnChanges() {
 
-    if (this.pbProgrammaticRequests && this.pomProgrammaticRequests && this.pom) {
+    if (this.pbPrograms && this.pomPrograms && this.pom) {
       this.initGrid( this.pom.fy );
       this.populateRowData(this.pom.fy);
       setTimeout(() => {
@@ -114,7 +114,7 @@ export class PomComponent implements OnChanges {
     row["id"] = "PB " + (by-2000-1);
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
-      row[year] = this.aggregateToas(this.pbProgrammaticRequests, year);
+      row[year] = this.aggregateToas(this.pbPrograms, year);
       sum += row[year];
     }
     row["total"] = sum;
@@ -145,7 +145,7 @@ export class PomComponent implements OnChanges {
 
     row= new Object();
     row["id"] = "PRs Submitted";
-    let submittedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state=="SUBMITTED" );
+    let submittedPRs = this.pomPrograms.filter( (pr:ProgramRequestWithFullName) => pr.programStatus=="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(submittedPRs, year);
@@ -156,7 +156,7 @@ export class PomComponent implements OnChanges {
 
     row= new Object();
     row["id"] = "PRs Planned";
-    let plannedPRs = this.pomProgrammaticRequests.filter( (pr:ProgramRequestWithFullName) => pr.state!="SUBMITTED" );
+    let plannedPRs = this.pomPrograms.filter( (pr:ProgramRequestWithFullName) => pr.programStatus!="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(plannedPRs, year);
@@ -169,7 +169,7 @@ export class PomComponent implements OnChanges {
     sum = 0;
     let requests: { [year: number]: number } = {};
     for (let year: number = by; year < by + 5; year++) {
-      requests[year] = this.aggregateToas(this.pomProgrammaticRequests, year);
+      requests[year] = this.aggregateToas(this.pomPrograms, year);
       row[year] = requests[year] - allocatedToas[year];
       sum += row[year];
     }
@@ -180,6 +180,6 @@ export class PomComponent implements OnChanges {
   }
 
   private aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
-    return prs.map(pr => new UiProgrammaticRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
+    return prs.map(pr => new UiProgramRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 }

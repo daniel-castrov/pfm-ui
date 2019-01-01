@@ -4,7 +4,7 @@ import {  HeaderComponent } from '../../header/header.component'
 import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
-import { User, Pom, ProgrammaticRequest, POMService, PBService } from '../../../generated';
+import { User, Pom, Program, POMService, PBService } from '../../../generated';
 import { Notify } from '../../../utils/Notify';
 
 @Component({
@@ -18,8 +18,8 @@ export class OpenPomSessionComponent implements OnInit {
   @ViewChild(HeaderComponent) header: HeaderComponent;
 
   private pom:Pom;
-  private pomProgrammaticRequests:ProgramRequestWithFullName[];
-  private pbProgrammaticRequests:ProgrammaticRequest[];
+  private pomPrograms:ProgramRequestWithFullName[];
+  private pbPrograms:Program[];
   private pb;
   private by;
   private currentCommunityId:string;
@@ -51,8 +51,8 @@ export class OpenPomSessionComponent implements OnInit {
 
         this.by = this.pom.fy;
         this.allPrsSubmitted = true;
-        for ( var i = 0; i< this.pomProgrammaticRequests.length; i++ ){
-          if ( this.pomProgrammaticRequests[i].state  != "SUBMITTED" ){
+        for ( var i = 0; i< this.pomPrograms.length; i++ ){
+          if ( this.pomPrograms[i].programStatus  != "SUBMITTED" ){
             this.allPrsSubmitted = false;
             break;
           }
@@ -69,7 +69,7 @@ export class OpenPomSessionComponent implements OnInit {
           if ('CREATED' === pom.status) {
             this.pom = pom;
             this.pomStatusIsCreated = true;
-            this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+            this.pomPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
             resolve();
             break;
           }
@@ -81,7 +81,7 @@ export class OpenPomSessionComponent implements OnInit {
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
+    this.pbPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
   }
 
   openPom( event ) {

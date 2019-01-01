@@ -1,5 +1,5 @@
 import { CycleUtils } from './../../../services/cycle.utils';
-import { NewProgrammaticRequestComponent } from './new-programmatic-request/new-programmatic-request.component';
+import { NewProgramComponent } from './new-program-request/new-program-request.component';
 import { ProgramRequestWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
@@ -14,12 +14,12 @@ import {Notify} from "../../../utils/Notify";
 })
 export class SelectProgramRequestComponent implements OnInit {
 
-  @ViewChild(NewProgrammaticRequestComponent) newProgrammaticRequestComponent: NewProgrammaticRequestComponent;
+  @ViewChild(NewProgramComponent) newProgramComponent: NewProgramComponent;
   private currentCommunityId: string;
   public pom: Pom;
-  public pomProgrammaticRequests: ProgramRequestWithFullName[];
+  public pomPrograms: ProgramRequestWithFullName[];
   public pb: PB;
-  public pbProgrammaticRequests: ProgramRequestWithFullName[];
+  public pbPrograms: ProgramRequestWithFullName[];
   public thereAreOutstandingPRs: boolean;
 
   constructor(private pomService: POMService,
@@ -36,25 +36,25 @@ export class SelectProgramRequestComponent implements OnInit {
 
   async reloadPrs() {
     await this.initPomPrs();
-    this.thereAreOutstandingPRs = this.pomProgrammaticRequests.filter(pr => pr.state === 'OUTSTANDING').length > 0;
+    this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
   }
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
       this.pom = await this.cycleUtils.currentPom().toPromise();
-      this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+      this.pomPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
       resolve();
     });
   }
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
+    this.pbPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
   }
 
   onDeletePr() {
     this.reloadPrs();
-    this.newProgrammaticRequestComponent.addNewPrForMode = null;
+    this.newProgramComponent.addNewPrForMode = null;
   }
 
   async submit() {

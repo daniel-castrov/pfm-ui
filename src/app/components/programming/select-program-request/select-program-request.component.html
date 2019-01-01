@@ -16,21 +16,21 @@
     </div>
     <div class="row">
       <div class="col-lg-5 col-md-12">
-        <new-programmatic-request [pomId]="pom?.id"></new-programmatic-request>
+        <new-program-request [pomId]="pom?.id"></new-program-request>
       </div>
       <div class="col-lg-7 col-md-12">
-        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom"></j-pom>
+        <j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests"
-                               [pbProgrammaticRequests]="pbProgrammaticRequests"
+        <program-requests [pomPrograms]="pomPrograms"
+                               [pbPrograms]="pbPrograms"
                                [pomFy]="pom?.fy"
                                [pbFy]="pb?.fy"
                                [reviewOnly]="false"
                                (deleted)="onDeletePr()">
-        </programmatic-requests>
+        </program-requests>
       </div>
     </div>
   </div>

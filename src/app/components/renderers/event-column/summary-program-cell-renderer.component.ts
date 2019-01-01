@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
-import {PhaseType} from "../../programming/select-program-request/UiProgrammaticRequest";
+import {PhaseType} from "../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'summary-program-cell-renderer',

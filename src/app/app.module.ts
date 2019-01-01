@@ -4,7 +4,7 @@ import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.
 import { TagsService } from './services/tags.service';
 import { UserUtils } from './services/user.utils';
 import { WithFullNameService } from './services/with-full-name.service';
-import { NewProgrammaticRequestComponent } from './components/programming/select-program-request/new-programmatic-request/new-programmatic-request.component';
+import { NewProgramComponent } from './components/programming/select-program-request/new-program-request/new-program-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
 // app.modules
 // ANGULAR IMPORTS
@@ -89,7 +89,6 @@ import { RequestComponent } from './components/user-management/my-communities/re
 import { RestResultErrorComponent } from './components/error/restresult-error/restresult-error.component';
 import { SelectProgramRequestComponent } from './components/programming/select-program-request/select-program-request.component';
 import { SpendPlansTabComponent } from './components/execution/spend-plans-tab/spend-plans-tab.component';
-import { SummaryTabComponent } from './components/programming/program-request/summary-tab/summary-tab.component';
 import { UpdatePomSessionComponent } from './components/programming/update-pom-session/update-pom-session.component';
 import { OpenPomSessionComponent } from './components/programming/open-pom-session/open-pom-session.component'
 import { UserApprovalComponent } from './components/user-management/approval-newUser/user-approval.component';
@@ -125,7 +124,7 @@ import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
 import { ExecutionService } from './generated/api/execution.service';
-import { ProgrammaticRequestsComponent } from './components/programming/select-program-request/programmatic-requests/programmatic-requests.component';
+import { ProgramsComponent } from './components/programming/select-program-request/program-requests/program-requests.component';
 import { UfrSearchComponent } from './components/ufr/ufr-search/ufr-search.component';
 import { UfrViewComponent } from './components/ufr/ufr-view/ufr-view.component';
 import { UfrProgramComponent } from './components/ufr/ufr-view/ufr-program-tab/ufr-program-tab.component';
@@ -340,7 +339,7 @@ const appRoutes: Routes = [
     MapAsListPipe,
     MyCommunitiesComponent,
     MyRolesComponent,
-    NewProgrammaticRequestComponent,
+    NewProgramComponent,
     NewUfrComponent,
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
@@ -368,7 +367,7 @@ const appRoutes: Routes = [
     ProgramExecutionLineComponent,
     ProgramRequestComponent,
     ProgramTabComponent,
-    ProgrammaticRequestsComponent,
+    ProgramsComponent,
     RequestComponent,
     RestResultErrorComponent,
     SelectProgramRequestComponent,

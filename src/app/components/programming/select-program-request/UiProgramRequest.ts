@@ -2,13 +2,13 @@ import { ProgramRequestWithFullName } from '../../../services/with-full-name.ser
 import { FundingLine } from '../../../generated/model/fundingLine';
 import { ProgramType } from '../../../generated';
 
-export class UiProgrammaticRequest {
+export class UiProgramRequest {
   constructor(public pr: ProgramRequestWithFullName) {}
   phaseType: PhaseType
   //This variable is used for the tree functionality in the summary of program request page
   dataPath: string[];
   get id():string {return this.pr.id}
-  get state():string {return this.pr.state}
+  get state():string {return this.pr.programStatus}
   get shortName():string {return this.pr.shortName}
   get fullname():string {return this.pr.fullname}
   get longName():string {return this.pr.longName}

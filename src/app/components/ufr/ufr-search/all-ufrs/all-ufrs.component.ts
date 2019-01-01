@@ -221,7 +221,7 @@ export class AllUfrsComponent implements OnInit {
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
     if (this.urlPath === 'ufr-approval-detail') {
-      ufrs = ufrs.filter(ufr => ufr.status !== UfrStatus.SAVED)
+      ufrs = ufrs.filter(ufr => ufr.ufrStatus !== UfrStatus.SAVED)
     }
 
     let alldata: any[] = [];
@@ -249,7 +249,7 @@ export class AllUfrsComponent implements OnInit {
         "UFR #": new SimpleLink( "/" + this.urlPath + "/"+ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.ufrName,
         "Prog Id": progId,
-        "Status": ufr.status,
+        "Status": ufr.ufrStatus,
         "Priority": ufr.priority,
         "Disposition": ufr.disposition,
         "Last Updated": new Date(ufr.lastMod),

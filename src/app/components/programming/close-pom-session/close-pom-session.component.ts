@@ -4,7 +4,7 @@ import { HeaderComponent } from '../../header/header.component'
 import { UserUtils } from '../../../services/user.utils';
 import { WithFullNameService } from '../../../services/with-full-name.service';
 import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
-import {User, Pom, ProgrammaticRequest, POMService, PBService, PRService} from '../../../generated';
+import {User, Pom, Program, POMService, PBService, PRService} from '../../../generated';
 import { Notify } from '../../../utils/Notify';
 
 @Component({
@@ -19,8 +19,8 @@ export class ClosePomSessionComponent implements OnInit {
   pom:Pom;
   pb;
   by;
-  pomProgrammaticRequests:ProgramRequestWithFullName[];
-  pbProgrammaticRequests:ProgrammaticRequest[];
+  pomPrograms:ProgramRequestWithFullName[];
+  pbPrograms:Program[];
 
 
   private currentCommunityId:string;
@@ -41,14 +41,14 @@ export class ClosePomSessionComponent implements OnInit {
       this.currentCommunityId = user.currentCommunityId;
 
       this.pom = (await this.pomService.getReconciliation(user.currentCommunityId).toPromise()).result as Pom;
-      this.pomProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+      this.pomPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
 
       await this.initPbPrs();
 
       this.by = this.pom.fy;
       this.allPrsSubmitted = true;
-      for ( var i = 0; i< this.pomProgrammaticRequests.length; i++ ){
-        if ( this.pomProgrammaticRequests[i].state  != "SUBMITTED" ){
+      for ( var i = 0; i< this.pomPrograms.length; i++ ){
+        if ( this.pomPrograms[i].programStatus  != "SUBMITTED" ){
           this.allPrsSubmitted = false;
           break;
         }
@@ -58,7 +58,7 @@ export class ClosePomSessionComponent implements OnInit {
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbProgrammaticRequests = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
+    this.pbPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
   }
 
   closePom( event ) {

@@ -1,5 +1,5 @@
 import { FundingLine } from './../../../../generated/model/fundingLine';
-import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
+import {PhaseType} from "../../select-program-request/UiProgramRequest";
 import {GridType} from "./GridType";
 
 export class DataRow {

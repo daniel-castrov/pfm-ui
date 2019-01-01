@@ -15,11 +15,11 @@ enum AddNewPrForMode {
 }
 
 @Component({
-  selector: 'new-programmatic-request',
-  templateUrl: './new-programmatic-request.component.html',
-  styleUrls: ['./new-programmatic-request.component.scss']
+  selector: 'new-program-request',
+  templateUrl: './new-program-request.component.html',
+  styleUrls: ['./new-program-request.component.scss']
 })
-export class NewProgrammaticRequestComponent implements OnInit {
+export class NewProgramComponent implements OnInit {
 
   addNewPrForMode: AddNewPrForMode;
   @Input() pomId: string;

@@ -10,7 +10,7 @@ import {PRUtils} from '../../../../services/pr.utils.service';
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {Validation} from "../../../programming/program-request/funds-tab/Validation";
 import {Notify} from "../../../../utils/Notify";
-import {PhaseType} from "../../../programming/select-program-request/UiProgrammaticRequest";
+import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
 import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 
 @Component({

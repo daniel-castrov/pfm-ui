@@ -1,15 +1,15 @@
-import { ProgrammaticRequest } from '../generated/model/programmaticRequest'
+import { Program } from '../generated/model/program'
 
 export class ProgramTreeUtils {
-    public static fullnames(programs: ProgrammaticRequest[]): Map<ProgrammaticRequest, string> {
-        var fullnames: Map<ProgrammaticRequest, string> = new Map<ProgrammaticRequest, string>();
+    public static fullnames(programs: Program[]): Map<Program, string> {
+        var fullnames: Map<Program, string> = new Map<Program, string>();
 
-        var idproglkp: Map<string, ProgrammaticRequest> = new Map<string, ProgrammaticRequest>();
-        programs.forEach((p: ProgrammaticRequest) => {
+        var idproglkp: Map<string, Program> = new Map<string, Program>();
+        programs.forEach((p: Program) => {
             idproglkp.set(p.id, p);
         });
 
-        function progFullName(p: ProgrammaticRequest): string {
+        function progFullName(p: Program): string {
             var pname = '';
             if (null != p.parentMrId) {
                 pname = progFullName(idproglkp.get(p.parentMrId)) + '/';
@@ -17,7 +17,7 @@ export class ProgramTreeUtils {
             return pname + p.shortName;
         }
 
-        programs.forEach((p: ProgrammaticRequest) => {
+        programs.forEach((p: Program) => {
             fullnames.set(p, progFullName(p));
         });
 
