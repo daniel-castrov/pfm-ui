@@ -17,7 +17,7 @@ export class LibraryViewCellRenderer implements ICellRendererAngularComp {
   }
 
   openFile() {
-    this.params.context.parentComponent.openFile(this.params.data.metadata.id, this.params.data.metadata.area);
+    this.params.context.parentComponent.openFile(this.params.data.metadata.fileid, this.params.data.metadata.area);
   }
 
   id(): string{
