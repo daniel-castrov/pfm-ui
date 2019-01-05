@@ -3164,10 +3164,6 @@ definitions:
     properties:
       id:
         type: "string"
-      originalMrId:
-        type: "string"
-      parentMrId:
-        type: "string"
       programStatus:
         $ref: "#/definitions/ProgramStatus"
       bulkOrigin:
@@ -3208,10 +3204,6 @@ definitions:
         type: "array"
         items:
           type: "string"
-      creationTimeReferenceId:
-        type: "string"
-      creationTimeType:
-        $ref: "#/definitions/CreationTimeType"
       primaryCapability:
         type: "string"
       coreCapability:
@@ -3250,10 +3242,6 @@ definitions:
     properties:
       id:
         type: "string"
-      # originalMrId:
-      #   type: "string"
-      # parentMrId:
-      #   type: "string"
       # programStatus:
       #   $ref: "#/definitions/ProgramStatus"
       # bulkOrigin:
@@ -3296,10 +3284,6 @@ definitions:
         type: "array"
         items:
           type: "string"
-      # creationTimeReferenceId:
-      #   type: "string"
-      # creationTimeType:
-      #   $ref: "#/definitions/CreationTimeType"
       primaryCapability:
         type: "string"
       coreCapability:
@@ -3349,8 +3333,6 @@ definitions:
         $ref: "#/definitions/ShortyType"
       shortyId:
         type: "string"
-      costLeft:
-        type: "number"
       active:
         type: "boolean"
 ## mistakes
@@ -3778,8 +3760,6 @@ definitions:
     type: "object"
     properties:
       metadata:
-        type: "object"
-        additionalProperties:
         type: "object"
         properties:
           area:
