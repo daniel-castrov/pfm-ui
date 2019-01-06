@@ -837,19 +837,19 @@ export class FundsTabComponent implements OnChanges {
   private async getPBData(): Promise<Program> {
     const user: User = await this.globalsService.user().toPromise();
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
-    let originalMrId;
+    let name;
     if (this.pr.type === ProgramType.GENERIC) {
-      originalMrId = this.parentPr.originalMrId;
+      name = this.parentPr.shortName;
     } else {
-      originalMrId = this.pr.originalMrId;
+      name = this.pr.shortName;
     }
     this.pbFy = pb.fy;
 
-    if (!originalMrId) {
+    if (!name) {
       return;
     }
 
-    const pbPr: Program = (await this.prService.getByPhaseAndMrId(pb.id, originalMrId).toPromise()).result;
+    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, name).toPromise()).result;
 
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"

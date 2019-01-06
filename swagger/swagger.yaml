@@ -937,11 +937,11 @@ paths:
         required: true
         schema:
           type: "object"
-  /pr/phase/{phaseId}/program/{mrId}:
+  /pr/phase/{phaseId}/program/{shortname}:
     get:
       tags:
       - "PR"
-      operationId: "getByPhaseAndMrId"
+      operationId: "getByPhaseAndName"
       produces:
       - "application/json"
       parameters:
@@ -950,7 +950,7 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "mrId"
+        name: "shortname"
         required: true
         type: "string"
   /pr/subprograms/{id}:
@@ -1237,7 +1237,7 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-  /ufr/pom/{pomId}/program/{mrdbId}:
+  /ufr/pom/{pomId}/program/{shortname}:
     put:
       tags:
       - "UFRs"
@@ -1251,7 +1251,7 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "mrdbId"
+        name: "shortname"
         type: "string"
         description: "the program id from the MRDB"
         required: true

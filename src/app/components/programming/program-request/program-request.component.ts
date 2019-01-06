@@ -73,14 +73,11 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
-    this.pr.creationTimeType = this.programRequestPageMode.type;
     this.pr.bulkOrigin = false;
     this.pr.programStatus = 'SAVED';
 
     switch (this.programRequestPageMode.type) {
       case CreationTimeType.PROGRAM_OF_MRDB:
-        this.pr.originalMrId = this.programRequestPageMode.reference.id;
-        this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.pr.type = this.programRequestPageMode.programType;
         this.pr.longName = this.programRequestPageMode.reference.longName;
         this.pr.shortName = this.programRequestPageMode.reference.shortName;
@@ -89,11 +86,9 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       case CreationTimeType.SUBPROGRAM_OF_MRDB:
         this.initPrWith(this.programRequestPageMode.reference);
         this.pr.type = this.programRequestPageMode.programType;
-        this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         break;
       case CreationTimeType.SUBPROGRAM_OF_PR:
         this.pr.type = this.programRequestPageMode.programType;
-        this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
       case CreationTimeType.NEW_PROGRAM:
