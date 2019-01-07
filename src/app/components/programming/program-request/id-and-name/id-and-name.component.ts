@@ -1,12 +1,10 @@
-import { CreationTimeType } from '../../../../generated/model/creationTimeType';
-import { WithFullName, WithFullNameService, ProgramOrPrWithFullName } from '../../../../services/with-full-name.service';
-import { Program } from '../../../../generated/model/program';
-import { Component, Input } from '@angular/core';
-
-// Other Components
-import { ProgramRequestPageModeService} from '../page-mode.service';
-import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
-import { ProgramType } from '../../../../generated/model/programType';
+import {CreationTimeType} from '../../../../generated/model/creationTimeType';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
+import {Program} from '../../../../generated/model/program';
+import {Component, Input} from '@angular/core';
+import {ProgramRequestPageModeService} from '../page-mode.service';
+import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
+import {ProgramType} from '../../../../generated/model/programType';
 
 @Component({
   selector: 'id-and-name',
@@ -24,12 +22,12 @@ export class IdAndNameComponent {
   private longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
 
   constructor( private programRequestPageMode: ProgramRequestPageModeService,
-               private withFullNameService: WithFullNameService ) {
+               private programAndPrService: ProgramAndPrService ) {
   }
 
   async init(pr: Program) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
     this.parentFullName = await this.getParentFullName(pr);
-    const programsPlusPrs: WithFullName[] = await this.withFullNameService.programsPlusPrs(pr.phaseId);
+    const programsPlusPrs: Program[] = await this.programAndPrService.programsPlusPrs(pr.phaseId);
     this.invalidShortNames = this.getInvalidShortNames(programsPlusPrs);
     this.invalidLongNames = this.getInvalidLongNames(programsPlusPrs);
   }
@@ -51,10 +49,10 @@ export class IdAndNameComponent {
     }
   }
 
-  private getInvalidShortNames(programsPlusPrs: WithFullName[]): Set<string> {
+  private getInvalidShortNames(programsPlusPrs: Program[]): Set<string> {
     const nonUniqueInvalidNames: string[] = programsPlusPrs
-                          .filter( (programOrPr: WithFullName) => programOrPr.fullname.startsWith(this.parentFullName) )
-                          .map( (programOrPr: WithFullName) => programOrPr.fullname.substring(this.parentFullName.length) )
+                          .filter( (programOrPr: Program) => programOrPr.shortName.startsWith(this.parentFullName) )
+                          .map( (programOrPr: Program) => programOrPr.shortName.substring(this.parentFullName.length) )
                           .map( (fullnameEnding: string) =>  fullnameEnding.substring( 0,
                                                   (fullnameEnding.indexOf('/') == -1) ? 99999 : fullnameEnding.indexOf('/')
                               ))
@@ -62,14 +60,14 @@ export class IdAndNameComponent {
     return new Set(nonUniqueInvalidNames);
   }
 
-  private getInvalidLongNames(programsPlusPrs: ProgramOrPrWithFullName[]): Set<string> {
+  private getInvalidLongNames(programsPlusPrs: Program[]): Set<string> {
     const nonUniqueInvalidDescriptions: string[] = programsPlusPrs
-                          .filter( (programOrPr: ProgramOrPrWithFullName) => programOrPr.fullname.startsWith(this.parentFullName) )
-                          .filter( (programOrPr: ProgramOrPrWithFullName) => {
-                            const fullnameEnding: string = programOrPr.fullname.substring(this.parentFullName.length);
+                          .filter( (programOrPr: Program) => programOrPr.shortName.startsWith(this.parentFullName) )
+                          .filter( (programOrPr: Program) => {
+                            const fullnameEnding: string = programOrPr.shortName.substring(this.parentFullName.length);
                             return fullnameEnding.indexOf('/') == -1;
                           })
-                          .map( (programOrPr: ProgramOrPrWithFullName) => programOrPr.longName )
+                          .map( (programOrPr: Program) => programOrPr.longName )
                           .map((name: string) => name.toUpperCase());
     return new Set(nonUniqueInvalidDescriptions);
   }
@@ -86,8 +84,8 @@ export class IdAndNameComponent {
     return null;
   }
 
-  private async getParentFullName(pr: Program) {
-    const prFullName: string = await this.withFullNameService.fullNameDerivedFromCreationTimeData(pr);
+  private getParentFullName(pr: Program) {
+    const prFullName: string = pr.shortName;
     if (prFullName.lastIndexOf('/') == -1) {
       return '';
     } else {

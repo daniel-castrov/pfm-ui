@@ -1,10 +1,10 @@
-import { CreationTimeType } from './../../../../generated/model/creationTimeType';
-import { WithFullNameService, ProgramWithFullName } from '../../../../services/with-full-name.service';
-import { Router } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import {CreationTimeType} from './../../../../generated/model/creationTimeType';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
+import {Router} from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
-import {ProgramType, User, RolesPermissionsService} from "../../../../generated";
-import { UserUtils } from '../../../../services/user.utils';
+import {Program, ProgramType, RolesPermissionsService, User} from "../../../../generated";
+import {UserUtils} from '../../../../services/user.utils';
 
 enum AddNewPrForMode {
   AN_MRDB_PROGRAM = 'Previously Funded Program',
@@ -23,37 +23,37 @@ export class NewProgramComponent implements OnInit {
 
   addNewPrForMode: AddNewPrForMode;
   @Input() pomId: string;
-  allPrograms: ProgramWithFullName[];
-  selectableProgramsOrPrs: ProgramWithFullName[];
-  selectedProgramOrPr: ProgramWithFullName = null;
+  allPrograms: Program[];
+  selectableProgramsOrPrs: Program[];
+  selectedProgramOrPr: Program = null;
   initialSelectOption: string;
 
   constructor(
     private router: Router,
     private programRequestPageMode: ProgramRequestPageModeService,
-    private withFullNameService: WithFullNameService,
+    private programAndPrService: ProgramAndPrService,
     private userUtils: UserUtils,
     private rolesService: RolesPermissionsService
   ) {}
 
   async ngOnInit() {
-    this.allPrograms = await this.withFullNameService.programs()
+    this.allPrograms = await this.programAndPrService.programs()
   }
 
   async setAddNewPrRadioMode(selection: AddNewPrForMode) {
     this.addNewPrForMode = selection;
     switch(this.addNewPrForMode) {
       case 'Previously Funded Program':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'New FoS':
       case 'New Increment':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programsPlusPrsMinusSubprograms(this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'New Subprogram':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programRequests(this.pomId);
         this.initialSelectOption = 'Program Request';
         break;
     }
@@ -76,7 +76,7 @@ export class NewProgramComponent implements OnInit {
         break;
       case 'New FoS':
         this.programRequestPageMode.programType = ProgramType.FOS;
-        if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
+        if(this.programAndPrService.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
             this.selectedProgramOrPr,
@@ -89,7 +89,7 @@ export class NewProgramComponent implements OnInit {
         }
         break;
       case 'New Increment':
-        if(this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
+        if(this.programAndPrService.isProgram(this.selectedProgramOrPr)) {
           this.programRequestPageMode.set(CreationTimeType.SUBPROGRAM_OF_MRDB,
             this.pomId,
             this.selectedProgramOrPr,

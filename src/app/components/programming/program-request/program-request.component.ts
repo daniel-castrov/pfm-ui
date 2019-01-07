@@ -1,6 +1,5 @@
 import {ProgramTabComponent} from './program-tab/program-tab.component';
 import {PRUtils} from '../../../services/pr.utils.service';
-import {ProgramRequestWithFullName, ProgramWithFullName} from '../../../services/with-full-name.service';
 import {ProgramStatus} from '../../../generated/model/programStatus';
 import {CreationTimeType} from '../../../generated/model/creationTimeType';
 import {ProgramType} from '../../../generated/model/programType';
@@ -99,7 +98,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     }
   }
 
-  initPrWith(programOrPR: ProgramWithFullName | ProgramRequestWithFullName) {
+  initPrWith(programOrPR: Program) {
     this.pr.acquisitionType = programOrPR.acquisitionType;
     this.pr.bsvStrategy = programOrPR.bsvStrategy;
     this.pr.commodityArea = programOrPR.commodityArea;

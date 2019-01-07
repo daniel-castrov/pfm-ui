@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AgGridNg2 } from "ag-grid-angular";
-import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
 import { UiProgramRequest } from '../UiProgramRequest';
 import { Pom } from '../../../../generated/model/pom';
+import {Program} from "../../../../generated";
 
 @Component({
   selector: 'j-pom',
@@ -12,8 +12,8 @@ import { Pom } from '../../../../generated/model/pom';
 })
 export class PomComponent implements OnChanges {
 
-  @Input() private pomPrograms: ProgramRequestWithFullName[];
-  @Input() private pbPrograms: ProgramRequestWithFullName[];
+  @Input() private pomPrograms: Program[];
+  @Input() private pbPrograms: Program[];
   @Input() private pom: Pom;
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -145,7 +145,7 @@ export class PomComponent implements OnChanges {
 
     row= new Object();
     row["id"] = "PRs Submitted";
-    let submittedPRs = this.pomPrograms.filter( (pr:ProgramRequestWithFullName) => pr.programStatus=="SUBMITTED" );
+    let submittedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus=="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(submittedPRs, year);
@@ -156,7 +156,7 @@ export class PomComponent implements OnChanges {
 
     row= new Object();
     row["id"] = "PRs Planned";
-    let plannedPRs = this.pomPrograms.filter( (pr:ProgramRequestWithFullName) => pr.programStatus!="SUBMITTED" );
+    let plannedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus!="SUBMITTED" );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(plannedPRs, year);
@@ -179,7 +179,7 @@ export class PomComponent implements OnChanges {
     this.rowsData = rowdata;
   }
 
-  private aggregateToas(prs: ProgramRequestWithFullName[], year: number): number {
+  private aggregateToas(prs: Program[], year: number): number {
     return prs.map(pr => new UiProgramRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 }

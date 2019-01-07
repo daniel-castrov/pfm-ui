@@ -1,4 +1,3 @@
-import {ProgramRequestWithFullName} from '../../../../services/with-full-name.service';
 import {Router} from '@angular/router';
 import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {PRService} from '../../../../generated/api/pR.service';
@@ -6,7 +5,7 @@ import {ProgramRequestPageModeService} from '../../program-request/page-mode.ser
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
-import {ProgramType} from "../../../../generated";
+import {Program, ProgramType} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
@@ -16,8 +15,8 @@ import {NameUtils} from "../../../../utils/NameUtils";
 })
 export class ProgramsComponent implements OnChanges {
 
-  @Input() private pomPrograms: ProgramRequestWithFullName[];
-  @Input() private pbPrograms: ProgramRequestWithFullName[];
+  @Input() private pomPrograms: Program[];
+  @Input() private pbPrograms: Program[];
   @Input() private pomFy: number;
   @Input() private pbFy: number;
   @Input() private reviewOnly: boolean;
@@ -59,32 +58,32 @@ export class ProgramsComponent implements OnChanges {
         let program = new UiProgramRequest(prOne);
         program.phaseType = PhaseType.POM;
         if (prOne.type === ProgramType.GENERIC) {
-          let prTwo = this.pomPrograms.filter((prTwo: ProgramRequestWithFullName) => NameUtils.getParentName(prOne.shortName) === prTwo.shortName)[0];
+          let prTwo = this.pomPrograms.filter((prTwo: Program) => NameUtils.getParentName(prOne.shortName) === prTwo.shortName)[0];
 
           if (prTwo.type === ProgramType.GENERIC) {
-            let prThree = this.pomPrograms.filter((prThree: ProgramRequestWithFullName) => NameUtils.getParentName(prTwo.shortName) === prThree.shortName)[0];
+            let prThree = this.pomPrograms.filter((prThree: Program) => NameUtils.getParentName(prTwo.shortName) === prThree.shortName)[0];
 
             if (prThree.type === ProgramType.GENERIC) {
-              let prFour = this.pomPrograms.filter((prFour: ProgramRequestWithFullName) => NameUtils.getParentName(prThree.shortName) === prFour.shortName)[0];
-              program.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
+              let prFour = this.pomPrograms.filter((prFour: Program) => NameUtils.getParentName(prThree.shortName) === prFour.shortName)[0];
+              program.dataPath = [prFour.shortName, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {
-              program.dataPath = [prThree.fullname, prTwo.shortName, prOne.shortName];
+              program.dataPath = [prThree.shortName, prTwo.shortName, prOne.shortName];
             }
           } else {
-            program.dataPath = [prTwo.fullname, prOne.shortName];
+            program.dataPath = [prTwo.shortName, prOne.shortName];
           }
         } else {
-          program.dataPath = [prOne.fullname];
+          program.dataPath = [prOne.shortName];
         }
         data.push(program);
       });
       this.pbPrograms.forEach(pr => {
         let programRequest = new UiProgramRequest(pr);
         programRequest.phaseType = PhaseType.PB;
-        programRequest.dataPath = [pr.fullname, '']
+        programRequest.dataPath = [pr.shortName, '']
         data.push(programRequest);
       });
-      this.sortObjects(data, ['fullname', 'phaseType']);
+      this.sortObjects(data, ['shortName', 'phaseType']);
       this.data = data;
       this.defineColumns(this.data);
     }

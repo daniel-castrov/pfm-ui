@@ -1,5 +1,5 @@
 import { CycleUtils } from './../../../../services/cycle.utils';
-import { ProgramWithFullName, WithFullNameService } from './../../../../services/with-full-name.service';
+import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UFRsService, ShortyType, ProgramsService, PRService, Program, ProgramStatus, User, Organization, OrganizationService } from '../../../../generated';
@@ -25,13 +25,13 @@ export class NewUfrComponent implements OnInit {
 
   createNewUfrMode: CreateNewUfrMode;
   pomId: string;
-  allPrograms: ProgramWithFullName[];
-  selectableProgramsOrPrs: ProgramWithFullName[];
-  selectedProgramOrPr: ProgramWithFullName = null;
+  allPrograms: Program[];
+  selectableProgramsOrPrs: Program[];
+  selectedProgramOrPr: Program = null;
   initialSelectOption: string;
 
   constructor( private router: Router,
-               private withFullNameService: WithFullNameService,
+               private programAndPrService: ProgramAndPrService,
                private ufrService: UFRsService,
                private cycleUtils: CycleUtils,
                private programsService: ProgramsService,
@@ -40,7 +40,7 @@ export class NewUfrComponent implements OnInit {
                private userUtils: UserUtils ) {}
 
   async ngOnInit() {
-    this.allPrograms = await this.withFullNameService.programs();
+    this.allPrograms = await this.programAndPrService.programs();
     this.pomId = (await this.cycleUtils.currentPom().toPromise()).id;
   }
 
@@ -48,17 +48,17 @@ export class NewUfrComponent implements OnInit {
     this.createNewUfrMode = createNewUfrMode;
     switch (this.createNewUfrMode) {
       case 'Previously Funded Program':
-        this.selectableProgramsOrPrs = await this.withFullNameService.programsMunisPrs(this.allPrograms, this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programsMunisPrs(this.allPrograms, this.pomId);
         this.initialSelectOption = 'Program';
         break;
       case 'Program Request':
-        const prs = await this.withFullNameService.prsMinusGenericSubprograms(this.pomId);
+        const prs = await this.programAndPrService.prsMinusGenericSubprograms(this.pomId);
         this.selectableProgramsOrPrs = this.removePrsInOutstandingState(prs);
         this.initialSelectOption = 'Program Request';
         break;
       case 'New FoS':
       case 'New Increment':
-        const programs = await this.withFullNameService.programsPlusPrsMinusSubprograms(this.pomId);
+        const programs = await this.programAndPrService.programsPlusPrsMinusSubprograms(this.pomId);
         this.selectableProgramsOrPrs = this.removePrsInOutstandingState(programs);
         this.initialSelectOption = 'Program';
         break;
@@ -110,7 +110,7 @@ export class NewUfrComponent implements OnInit {
         break;
       case 'New FoS':
         ufr.fundingLines=[];
-        if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
+        if (this.programAndPrService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_FOS_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
           await this.initFromShortyProgram(ufr, false);
@@ -122,7 +122,7 @@ export class NewUfrComponent implements OnInit {
         break;
       case 'New Increment':
         ufr.fundingLines=[];
-        if (this.withFullNameService.isProgram(this.selectedProgramOrPr)) {
+        if (this.programAndPrService.isProgram(this.selectedProgramOrPr)) {
           ufr.shortyType = ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM;
           ufr.shortyId = this.selectedProgramOrPr.id;
           await this.initFromShortyProgram(ufr, false);

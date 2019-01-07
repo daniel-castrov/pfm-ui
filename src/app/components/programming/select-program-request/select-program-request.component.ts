@@ -1,10 +1,10 @@
 import { CycleUtils } from './../../../services/cycle.utils';
 import { NewProgramComponent } from './new-program-request/new-program-request.component';
-import { ProgramRequestWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
+import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Pom, PB, PBService, RestResult } from '../../../generated';
+import {Pom, PB, PBService, RestResult, Program} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 
 @Component({
@@ -17,14 +17,14 @@ export class SelectProgramRequestComponent implements OnInit {
   @ViewChild(NewProgramComponent) newProgramComponent: NewProgramComponent;
   private currentCommunityId: string;
   public pom: Pom;
-  public pomPrograms: ProgramRequestWithFullName[];
+  public pomPrograms: Program[];
   public pb: PB;
-  public pbPrograms: ProgramRequestWithFullName[];
+  public pbPrograms: Program[];
   public thereAreOutstandingPRs: boolean;
 
   constructor(private pomService: POMService,
               private pbService: PBService,
-              private withFullNameService: WithFullNameService,
+              private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
               private cycleUtils: CycleUtils) {}
 
@@ -42,14 +42,14 @@ export class SelectProgramRequestComponent implements OnInit {
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
       this.pom = await this.cycleUtils.currentPom().toPromise();
-      this.pomPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
       resolve();
     });
   }
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
+    this.pbPrograms = (await this.programAndPrService.programRequests(this.pb.id));
   }
 
   onDeletePr() {

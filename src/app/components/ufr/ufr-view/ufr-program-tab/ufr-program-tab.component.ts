@@ -1,6 +1,15 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {FileResponse, LibraryService, POMService, ProgramsService, ShortyType, Tag, UFR } from '../../../../generated';
-import {ProgramOrPrWithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
+import {
+  FileResponse,
+  LibraryService,
+  POMService,
+  Program,
+  ProgramsService,
+  ShortyType,
+  Tag,
+  UFR
+} from '../../../../generated';
+import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {TagsService, TagType} from "../../../../services/tags.service";
 import {forkJoin} from 'rxjs/observable/forkJoin';
@@ -13,7 +22,7 @@ import {Observable} from "rxjs";
 })
 export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() editable: boolean = false;
-  @Input() shorty: ProgramOrPrWithFullName;
+  @Input() shorty: Program;
   @Input() ufr: UFR;
   private tagNames = new Map<string, Map<string, string>>();
   readonly fileArea = 'ufr';
@@ -21,7 +30,7 @@ export class UfrProgramComponent implements OnInit, OnChanges {
 
   constructor( private programService: ProgramsService,
                private pomService: POMService,
-               private withFullNameService: WithFullNameService,
+               private programAndPrService: ProgramAndPrService,
                private libraryService: LibraryService,
                private sanitization: DomSanitizer,
                private tagsService: TagsService ) {}

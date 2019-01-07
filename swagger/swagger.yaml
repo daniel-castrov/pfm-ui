@@ -1002,16 +1002,12 @@ paths:
       description: "Returns a given program"
       produces:
         - "application/json"
-  /programs/phase/{phaseId}/name/{name}/parent:
+  /programs/name/{name}/parent:
     get:
       tags:
         - "Programs"
       operationId: "getParentByName"
       parameters:
-        - name: "phaseId"
-          in: "path"
-          required: true
-          type: "string"
         - name: "name"
           in: "path"
           required: true

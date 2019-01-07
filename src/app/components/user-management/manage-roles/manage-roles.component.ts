@@ -1,17 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AngularDualListBoxModule } from 'angular-dual-listbox';
-import { DualListComponent } from 'angular-dual-listbox';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { Notify } from '../../../utils/Notify';
-
-// Generated
-import { RestResult, Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
-import { CommunityService, RoleService, UserRoleResourceService, UserService, OrganizationService,} from '../../../generated';
+import {Component, ViewChild} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {DualListComponent} from 'angular-dual-listbox';
+import {HeaderComponent} from '../../header/header.component';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {Notify} from '../../../utils/Notify';
+import {
+  Community,
+  CommunityService,
+  Organization,
+  OrganizationService,
+  Program,
+  RestResult,
+  Role,
+  RoleService,
+  User,
+  UserRoleResource,
+  UserRoleResourceService,
+  UserService
+} from '../../../generated';
 
 @Component({
   selector: 'app-manage-roles',
@@ -59,8 +66,8 @@ export class ManageRolesComponent {
 
 
   // For the angular-dual-listbox
-  private availablePrograms: Array<ProgramWithFullName> = [];
-  private filteredAvailablePrograms: Array<ProgramWithFullName> = [];
+  private availablePrograms: Array<Program> = [];
+  private filteredAvailablePrograms: Array<Program> = [];
   private assignedPrograms: Array<any> = [];
   private key: string = "id";
   private display: string = "fullname";
@@ -81,7 +88,7 @@ export class ManageRolesComponent {
     private userService: UserService,
     private userRoleResourceService: UserRoleResourceService,
     private orgService: OrganizationService,
-    private withFullNameService: WithFullNameService,
+    private programAndPrService: ProgramAndPrService,
   ) { 
 
     this.route.params.subscribe((params: Params) => {
@@ -177,7 +184,7 @@ export class ManageRolesComponent {
     Observable.forkJoin([
       this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(this.selectedUser.id, this.selectedCommunity.id, this.selectedRole.name),
       this.orgService.getByCommunityId((this.selectedCommunity.id)),
-      this.withFullNameService.programsByCommunity(this.selectedCommunity.id),
+      this.programAndPrService.programsByCommunity(this.selectedCommunity.id),
       this.userService.getById(this.selectedUser.id)
     ]).subscribe(data => {
 
@@ -207,7 +214,7 @@ export class ManageRolesComponent {
           this.assignedPrograms = [ ...this.availablePrograms ];
         } else {
           // some are granted
-          let newAvail:ProgramWithFullName[]=[];
+          let newAvail:Program[]=[];
           this.selectedURR.resourceIds.forEach( progId =>  {
             this.availablePrograms.forEach( prog => {
               if ( prog.id == progId ){

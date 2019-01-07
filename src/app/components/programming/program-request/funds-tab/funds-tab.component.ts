@@ -130,7 +130,7 @@ export class FundsTabComponent implements OnChanges {
       this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
     }
 
-    const mrdbParent: Program = (await this.programsService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
+    const mrdbParent: Program = (await this.programsService.getParentByName(this.pr.shortName).toPromise()).result;
     if (mrdbParent) {
       mrdbParent.fundingLines.forEach(fundingLine => {
         let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&

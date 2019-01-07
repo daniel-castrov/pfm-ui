@@ -1,10 +1,19 @@
 import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Pom, POMService, ShortyType, UFR, UFRsService, UfrStatus, Organization, OrganizationService} from '../../../generated';
+import {
+  OrganizationService,
+  Pom,
+  POMService,
+  Program,
+  ShortyType,
+  UFR,
+  UFRsService,
+  UfrStatus
+} from '../../../generated';
 import {HeaderComponent} from '../../header/header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
 import {PRUtils} from '../../../services/pr.utils.service';
-import {WithFullName, WithFullNameService} from "../../../services/with-full-name.service";
+import {ProgramAndPrService} from "../../../services/program-and-pr.service";
 import {UfrUfrTabComponent} from "./ufr-ufr-tab/ufr-ufr-tab.component";
 import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
@@ -26,14 +35,14 @@ export class UfrViewComponent implements OnInit {
   private canedit: boolean = false;
   private pom: Pom;
   private pomFy: number;
-  private shorty: WithFullName;
+  private shorty: Program;
 
   constructor( private ufrService: UFRsService,
                private cycleUtils: CycleUtils,
                private route: ActivatedRoute,
                private pomService: POMService,
                private orgService: OrganizationService,
-               private withFullNameService : WithFullNameService ) {}
+               private programAndPrService : ProgramAndPrService ) {}
 
   async ngOnInit() {
     this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
@@ -59,11 +68,11 @@ export class UfrViewComponent implements OnInit {
     if( this.ufr.shortyType == ShortyType.MRDB_PROGRAM ||
         this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
         this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ) {
-      this.shorty = await this.withFullNameService.program(this.ufr.shortyId);
+      this.shorty = await this.programAndPrService.program(this.ufr.shortyId);
     } else if( this.ufr.shortyType == ShortyType.PR ||
                this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
                this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
-      this.shorty = await this.withFullNameService.programRequest(this.pom.id, this.ufr.shortyId);
+      this.shorty = await this.programAndPrService.programRequest(this.pom.id, this.ufr.shortyId);
     } else { // this.ufr.shortyType == ShortyType.NEW_PROGRAM
       // leave this.shorty null
     }
@@ -169,7 +178,7 @@ export class UfrViewComponent implements OnInit {
   }
 
   ufrType(): string {
-    if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return ` ${this.shorty ? this.shorty.fullname : ''} program`;
+    if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return ` ${this.shorty ? this.shorty.shortName : ''} program`;
     if(this.ufr.shortyType == ShortyType.PR) return " a program request";
     if(this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR) return " a new increment";
     if(this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM || this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR) return " a new FoS";

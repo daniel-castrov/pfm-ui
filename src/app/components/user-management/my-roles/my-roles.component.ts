@@ -1,24 +1,26 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AngularDualListBoxModule } from 'angular-dual-listbox';
-import { DualListComponent } from 'angular-dual-listbox';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { Notify } from '../../../utils/Notify';
-
-// Generated
-import { Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
-import { CommunityService, RoleService, UserRoleResourceService, OrganizationService,} from '../../../generated';
-
-import { 
-  AssignRoleRequest, 
+import {Component, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {DualListComponent} from 'angular-dual-listbox';
+import {HeaderComponent} from '../../header/header.component';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {Notify} from '../../../utils/Notify';
+import {
+  AssignRoleRequest,
+  AssignRoleRequestService,
+  Community,
+  CommunityService,
   DropRoleRequest,
-  MyDetailsService, 
-  AssignRoleRequestService, 
-  DropRoleRequestService } from '../../../generated';
+  DropRoleRequestService,
+  MyDetailsService,
+  Organization,
+  OrganizationService, Program,
+  Role,
+  RoleService,
+  User,
+  UserRoleResource,
+  UserRoleResourceService
+} from '../../../generated';
 
 @Component({
   selector: 'app-my-roles',
@@ -66,8 +68,8 @@ export class MyRolesComponent {
   private hiddenRoles: string [] = ["Organization_Member", "User" ];
   
   // For the angular-dual-listbox
-  private availablePrograms: Array<ProgramWithFullName> = [];
-  private filteredAvailablePrograms: Array<ProgramWithFullName> = [];
+  private availablePrograms: Array<Program> = [];
+  private filteredAvailablePrograms: Array<Program> = [];
   private assignedPrograms: Array<any> = [];
   private key: string = "id";
   private display: string = "fullname";
@@ -84,7 +86,7 @@ export class MyRolesComponent {
     private roleService: RoleService,
     private userRoleResourceService: UserRoleResourceService,
     private orgService: OrganizationService,
-    private withFullNameService: WithFullNameService,
+    private programAndPrService: ProgramAndPrService,
     private myDetailsService:MyDetailsService,  
     private assignRoleRequestService: AssignRoleRequestService,
     private dropRoleRequestService:DropRoleRequestService,
@@ -105,7 +107,7 @@ export class MyRolesComponent {
       Observable.forkJoin([
         this.communityService.getById( this.currentUser.currentCommunityId ),
         this.orgService.getById(this.currentUser.organizationId),
-        this.withFullNameService.programsByCommunity(this.currentUser.currentCommunityId),
+        this.programAndPrService.programsByCommunity(this.currentUser.currentCommunityId),
         this.roleService.getByUserIdAndCommunityId(this.currentUser.id, this.currentUser.currentCommunityId),
         this.roleService.getByCommunityId(this.currentUser.currentCommunityId),
         this.assignRoleRequestService.getByUser(this.currentUser.id),
@@ -124,9 +126,9 @@ export class MyRolesComponent {
         // Put the users org in the map
         pogramsMap[this.currentUser.organizationId] = this.myOrganization.abbreviation + " (Org)";
         // Get the current user's roles and match them with the program names
-        let programs:ProgramWithFullName[] = data[2];
+        let programs:Program[] = data[2];
         programs.forEach( prog => {
-          pogramsMap[prog.id] = prog.fullname;
+          pogramsMap[prog.id] = prog.shortName;
         });
 
         this.resultError.push(data[3].error);
@@ -207,7 +209,7 @@ export class MyRolesComponent {
 
     Observable.forkJoin([
       this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(this.currentUser.id, this.myCommunity.id, this.selectedRole.name),
-      this.withFullNameService.programsByCommunity(this.myCommunity.id),
+      this.programAndPrService.programsByCommunity(this.myCommunity.id),
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
@@ -227,7 +229,7 @@ export class MyRolesComponent {
           this.assignedPrograms = [ ...this.availablePrograms ];
         } else {
           // some are granted
-          let newAvail:ProgramWithFullName[]=[];
+          let newAvail:Program[]=[];
           this.selectedURR.resourceIds.forEach( progId =>  {
             this.availablePrograms.forEach( prog => {
               if ( prog.id == progId ){
