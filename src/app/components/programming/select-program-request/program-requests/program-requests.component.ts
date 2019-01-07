@@ -1,12 +1,13 @@
-import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
-import { Router } from '@angular/router';
-import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
-import { PRService } from '../../../../generated/api/pR.service';
-import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
-import { AgGridNg2 } from "ag-grid-angular";
-import { SummaryProgramCellRenderer } from "../../../renderers/event-column/summary-program-cell-renderer.component";
-import { PhaseType, UiProgramRequest } from "../UiProgramRequest";
-import { CreationTimeType, ProgramType } from "../../../../generated";
+import {ProgramRequestWithFullName} from '../../../../services/with-full-name.service';
+import {Router} from '@angular/router';
+import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
+import {PRService} from '../../../../generated/api/pR.service';
+import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
+import {AgGridNg2} from "ag-grid-angular";
+import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
+import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
+import {ProgramType} from "../../../../generated";
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'program-requests',
@@ -57,14 +58,14 @@ export class ProgramsComponent implements OnChanges {
       this.pomPrograms.forEach(prOne => {
         let program = new UiProgramRequest(prOne);
         program.phaseType = PhaseType.POM;
-        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR && prOne.type === ProgramType.GENERIC) {
-          let prTwo = this.pomPrograms.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
+        if (prOne.type === ProgramType.GENERIC) {
+          let prTwo = this.pomPrograms.filter((prTwo: ProgramRequestWithFullName) => NameUtils.getParentName(prOne.shortName) === prTwo.shortName)[0];
 
-          if (prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prTwo.type === ProgramType.GENERIC) {
-            let prThree = this.pomPrograms.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
+          if (prTwo.type === ProgramType.GENERIC) {
+            let prThree = this.pomPrograms.filter((prThree: ProgramRequestWithFullName) => NameUtils.getParentName(prTwo.shortName) === prThree.shortName)[0];
 
-            if (prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prThree.type === ProgramType.GENERIC) {
-              let prFour = this.pomPrograms.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
+            if (prThree.type === ProgramType.GENERIC) {
+              let prFour = this.pomPrograms.filter((prFour: ProgramRequestWithFullName) => NameUtils.getParentName(prThree.shortName) === prFour.shortName)[0];
               program.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {
               program.dataPath = [prThree.fullname, prTwo.shortName, prOne.shortName];

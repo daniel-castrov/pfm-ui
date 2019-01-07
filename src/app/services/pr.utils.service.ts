@@ -1,10 +1,11 @@
 import { ProgramType } from './../generated/model/programType';
 import { Program } from './../generated/model/program';
+import {NameUtils} from "../utils/NameUtils";
 
 export class PRUtils {
 
-  static findGenericSubprogramChildren(parentId: string, prs: Program[]): Program[] {
-    return prs.filter( pr => pr.type === ProgramType.GENERIC && pr.creationTimeReferenceId == parentId );
+  static findGenericSubprogramChildren(parent: Program, prs: Program[]): Program[] {
+    return prs.filter( pr => pr.type === ProgramType.GENERIC && NameUtils.getParentName(pr.shortName) == parent.shortName );
   }
 
   private static calculateBaSumForPr(ba: string, year: number, pr: Program): number {
@@ -21,7 +22,7 @@ export class PRUtils {
     const parentSum: number = PRUtils.calculateBaSumForPr(ba, year, parentPr);
 
     // from the list of prs: remove the current pr (if saved/existing) and (re)apply it with one that exists separately from the list. Trey are different.
-    let prs: Program[] = PRUtils.findGenericSubprogramChildren(parentPr.id, inPrs);
+    let prs: Program[] = PRUtils.findGenericSubprogramChildren(parentPr, inPrs);
     prs = prs.filter(pr => pr.id !== inPr.id);
     prs.push(inPr);
 
@@ -35,7 +36,7 @@ export class PRUtils {
                                   pr: Program, 
                                   prs: Program[] ): boolean {
     const parentSum: number = PRUtils.calculateBaSumForPr(ba, year, pr);
-    const childrenSum: number = PRUtils.findGenericSubprogramChildren(pr.id, prs)
+    const childrenSum: number = PRUtils.findGenericSubprogramChildren(pr, prs)
                                        .map(pr => PRUtils.calculateBaSumForPr(ba, year, pr))
                                        .reduce((a,b) => a+b, 0);
     return parentSum >= childrenSum;

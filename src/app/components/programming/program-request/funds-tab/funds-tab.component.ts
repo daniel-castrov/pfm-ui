@@ -1,4 +1,4 @@
-import {TagsService, TagType} from '../../../../services/tags.service';
+import {TagsService} from '../../../../services/tags.service';
 import {Program} from '../../../../generated/model/program';
 import {ProgramType} from '../../../../generated/model/programType';
 import {PRUtils} from '../../../../services/pr.utils.service';
@@ -12,10 +12,10 @@ import {
   FundingLine,
   IntMap,
   PBService,
-  ProgramsService,
-  PRService,
   Pom,
+  ProgramsService,
   ProgramStatus,
+  PRService,
   RolesPermissionsService
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
@@ -28,7 +28,6 @@ import {Notify} from "../../../../utils/Notify";
 import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
 import {GridType} from "./GridType";
 import {CellEditor} from "../../../../utils/CellEditor";
-import { ok } from 'assert';
 
 @Component({
   selector: 'funds-tab',
@@ -89,8 +88,8 @@ export class FundsTabComponent implements OnChanges {
       return;
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
-      if (this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
-        this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
+      if (this.pr.type === ProgramType.GENERIC) {
+        this.parentPr = (await this.prService.getParentByName(this.pr.phaseId ,this.pr.shortName).toPromise()).result;
       }
 
       if( this.pom ){
@@ -115,36 +114,35 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  loadExistingFundingLines() {
-    if (this.pr.creationTimeReferenceId && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
-      this.prService.getById(this.pr.creationTimeReferenceId).subscribe(pr => {
-        pr.result.fundingLines.forEach(fundingLine => {
-          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
-            fl.baOrBlin === fundingLine.baOrBlin &&
-            fl.item === fundingLine.item &&
-            fl.opAgency === fundingLine.opAgency);
-          if (!isDuplicate) {
-            fundingLine.userCreated = true;
-            this.existingFundingLines.push(fundingLine);
-          }
-        });
-        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
+  async loadExistingFundingLines() {
+    const prParent: Program = (await this.prService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
+    if (parent) {
+      prParent.fundingLines.forEach(fundingLine => {
+        let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+          fl.baOrBlin === fundingLine.baOrBlin &&
+          fl.item === fundingLine.item &&
+          fl.opAgency === fundingLine.opAgency);
+        if (!isDuplicate) {
+          fundingLine.userCreated = true;
+          this.existingFundingLines.push(fundingLine);
+        }
       });
+      this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
     }
-    if (this.pr.originalMrId) {
-      this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
-        program.result.fundingLines.forEach(fundingLine => {
-          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
-            fl.baOrBlin === fundingLine.baOrBlin &&
-            fl.item === fundingLine.item &&
-            fl.opAgency === fundingLine.opAgency);
-          if (!isDuplicate) {
-            fundingLine.userCreated = true;
-            this.existingFundingLines.push(fundingLine);
-          }
-        });
-        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
+
+    const mrdbParent: Program = (await this.programsService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
+    if (mrdbParent) {
+      mrdbParent.fundingLines.forEach(fundingLine => {
+        let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+          fl.baOrBlin === fundingLine.baOrBlin &&
+          fl.item === fundingLine.item &&
+          fl.opAgency === fundingLine.opAgency);
+        if (!isDuplicate) {
+          fundingLine.userCreated = true;
+          this.existingFundingLines.push(fundingLine);
+        }
       });
+      this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
     }
   }
 
@@ -168,9 +166,11 @@ export class FundsTabComponent implements OnChanges {
     this.parentData = data;
   }
 
-  initSiblingsDataRows(selectedFundingLine: FundingLine) {
+  async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    this.prService.getSubProgramsById(this.pr.creationTimeReferenceId).subscribe(response => {
+    const parent: Program = (await this.prService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
+
+    this.prService.getChildrenByName(this.pr.phaseId, this.pr.shortName).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
@@ -948,7 +948,7 @@ export class FundsTabComponent implements OnChanges {
   delete(index) {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
-    this.prService.getSubProgramsById(this.pr.id).subscribe(data => {
+    this.prService.getChildrenByName(this.pr.phaseId, this.pr.shortName).subscribe(data => {
       let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&

@@ -189,7 +189,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
-    return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.programStatus === 'OUTSTANDING');
+    return !!PRUtils.findGenericSubprogramChildren(this.pr, this.prs).find(pr => this.pr.programStatus === 'OUTSTANDING');
   }
 
 }

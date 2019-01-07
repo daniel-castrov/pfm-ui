@@ -953,44 +953,72 @@ paths:
         name: "shortname"
         required: true
         type: "string"
-  /pr/subprograms/{id}:
+  /pr/phase/{phaseId}/name/{name}/children:
     get:
       tags:
-      - "PR"
-      operationId: "getSubProgramsById"
+        - "PR"
+      operationId: "getChildrenByName"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "id"
-        required: true
-        type: "string"
+        - in: "path"
+          name: "phaseId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "name"
+          required: true
+          type: "string"
+  /pr/phase/{phaseId}/name/{name}/parent:
+    get:
+      tags:
+        - "PR"
+      operationId: "getParentByName"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "phaseId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "name"
+          required: true
+          type: "string"
 # STOP PR
 ############################################################################## 
 # START PROGRAMS
   /programs/{mrId}:
     get:
       tags:
-      - "Programs"
+        - "Programs"
       operationId: "getProgramById"
       parameters:
-      - name: "mrId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "mrId"
+          in: "path"
+          required: true
+          type: "string"
       summary: "Get one program"
       description: "Returns a given program"
       produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A program object"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
+        - "application/json"
+  /programs/phase/{phaseId}/name/{name}/parent:
+    get:
+      tags:
+        - "Programs"
+      operationId: "getParentByName"
+      parameters:
+        - name: "phaseId"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "name"
+          in: "path"
+          required: true
+          type: "string"
+      summary: "Get one program"
+      produces:
+        - "application/json"
   /programs/fullnamemap:
       get:
         tags:
