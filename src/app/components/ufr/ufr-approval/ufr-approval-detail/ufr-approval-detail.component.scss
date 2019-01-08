@@ -100,3 +100,22 @@ input {
   max-width: 100% !important;
   margin: 1.75rem auto;
 }
+
+.modal-header {
+  border-bottom: none;
+  position: relative;
+
+ .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 0;
+    height: 30px;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    > i {
+      font-size: 26px;
+    }
+  }
+}

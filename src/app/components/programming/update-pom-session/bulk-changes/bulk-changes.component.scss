@@ -1,33 +1,32 @@
 fieldset {
   margin: 0;
-  padding: 10px 20px;
+  padding: 10px 10px;
+  height: 134px;
+}
+
+input[type=radio] {
+  -ms-transform: scale(1) !important;
+   -webkit-transform: scale(1) !important;
+   transform: scale(1) !important;
+   display: inline !important;
 }
 
 
-.bulk-changes {
-  margin: 0;
-  padding:0;
-  margin-left: -20px;
+.bulk-amount {
+  width: 110px;
+}
 
-  tr {
-    margin: 0px;
-    padding: 0;
-    vertical-align: top;
+.form-check {
+  color: #8a8787;
+  width: 110px;
+  padding: 0 0 10px 0;
+
+  > .form-check-input {
+   margin: 3px 0 0 0 !important;
+   position: absolute !important;
   }
+}
 
-  td {
-    padding: 0 10px 0 0;
-    margin: 0;
-    vertical-align: top;
-  }
-
-  .form-check-label {
-    width: 100px;
-  }
-
-  .form-check > .form-check-input {
-    margin: 0 !important;
-    position: relative !important;
-  }
-
+.form-check-label {
+ margin-left: 25px;
 }

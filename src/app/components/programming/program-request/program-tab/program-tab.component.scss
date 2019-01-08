@@ -30,23 +30,3 @@ label {
   height: 110px;
   overflow: auto;
 }
-
-@media (min-width: 768px) {
-  .img-placeholder > i.fa {
-    font-size: 160px;
-    color: #ccc;
-  }
-}
-
-@media (min-width: 1200px) {
-
-  .img-placeholder > i.fa {
-    font-size: 200px;
-  }
-}
-
-.img-thumbnail{
-  max-width: 200px;
-  max-height: 200px;
-  margin: 0 auto;
-}

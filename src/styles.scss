@@ -122,11 +122,15 @@ label {
   color: #8a8787;
 }
 
-input[type="radio"],
-input[type="checkbox"] {
-  margin: 0 !important;
-  position: relative !important;
-  transform: scale(1) !important;
+input[type=radio] {
+  -ms-transform: scale(1) !important;
+   -webkit-transform: scale(1) !important;
+   transform: scale(1) !important;
+}
+
+input[type=checkbox] {
+  -webkit-transform: scale(1.2) !important;
+  transform: scale(1.2) !important;
 }
 
 .form-horizontal {
