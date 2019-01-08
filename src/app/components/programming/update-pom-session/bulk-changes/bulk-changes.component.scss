@@ -1,6 +1,7 @@
 fieldset {
   margin: 0;
   padding: 10px 10px;
+  height: 134px;
 }
 
 input[type=radio] {
@@ -19,4 +20,13 @@ input[type=radio] {
   color: #8a8787;
   width: 110px;
   padding: 0 0 10px 0;
+
+  > .form-check-input {
+   margin: 3px 0 0 0 !important;
+   position: absolute !important;
+  }
+}
+
+.form-check-label {
+ margin-left: 25px;
 }
