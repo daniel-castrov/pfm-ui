@@ -63,10 +63,10 @@
         <div class="col-5">
           <div class="row">
             <div class="col-4">
-              <label class="select-label" *ngIf="ufr.status !== UfrStatus.SUBMITTED" for="status">Status: </label>
+              <label class="select-label" *ngIf="ufr.ufrStatus !== UfrStatus.SUBMITTED" for="status">Status: </label>
               <select id="status"
-                      [disabled]="ufr.status !== UfrStatus.SUBMITTED"
-                      [(ngModel)]="ufr.status"
+                      [disabled]="ufr.ufrStatus !== UfrStatus.SUBMITTED"
+                      [(ngModel)]="ufr.ufrStatus"
                       (change)="updateUfr('status')"
                       class="form-control">
                 <option hidden [value]="UfrStatus.SUBMITTED">Status</option>
@@ -77,7 +77,7 @@
             </div>
             <div class="col-4">
               <label class="select-label" *ngIf="ufr.priority" for="status">Priority: </label>
-              <select *ngIf="ufr.status === UfrStatus.VALID"
+              <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
                       [disabled]="ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER"
                       [(ngModel)]="ufr.priority"
                       (change)="updateUfr('priority')"
@@ -88,7 +88,7 @@
             </div>
             <div *ngIf="pom" class="col-4">
               <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
-              <select *ngIf="ufr.status === UfrStatus.VALID"
+              <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
                       [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER)
                        || pom.status !== 'OPEN'
                        || !ufr.priority
@@ -209,6 +209,89 @@
           <label class="mb-2">Impact if not funded:</label>
           <div class="form-group">
             <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.impactN" class="form-control" id="impact-2" name="impact-2"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Dialog -->
+<div id="partial-approval" class="modal fade in">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="btn" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <ag-grid-angular #agGridCurrentFundingModal
+                             id="agGridCurrentFundingModal"
+                             class="ag-theme-balham pr-funds-tab group-header-white"
+                             [toolPanelSuppressPivotMode]="true"
+                             [toolPanelSuppressRowGroups]="true"
+                             [toolPanelSuppressValues]="true"
+                             [toolPanelSuppressPivots]="true"
+                             [toolPanelSuppressColumnFilter]="true"
+                             [toolPanelSuppressColumnSelectAll]="true"
+                             [suppressMovableColumns]="true"
+                             [rowData]="currentFunding"
+                             (gridReady)="onGridReady($event)"
+                             (rowDataChanged)="sizeColumnsToFit($event)"
+                             (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                             (columnVisible)="sizeColumnsToFit($event)"
+                             [gridAutoHeight]="true">
+            </ag-grid-angular>
+            <ag-grid-angular #agGridProposedChangesModal
+                             id="agGridProposedChangesModal"
+                             class="ag-theme-balham pr-funds-tab group-header-white separator"
+                             [gridAutoHeight]="true"
+                             [toolPanelSuppressPivotMode]="true"
+                             [toolPanelSuppressRowGroups]="true"
+                             [toolPanelSuppressValues]="true"
+                             [toolPanelSuppressPivots]="true"
+                             [toolPanelSuppressColumnFilter]="true"
+                             [toolPanelSuppressColumnSelectAll]="true"
+                             [suppressMovableColumns]="true"
+                             [suppressRowTransform]="true"
+                             [showToolPanel]="false"
+                             [enableSorting]="false"
+                             [enableFilter]="false"
+                             [singleClickEdit]="true"
+                             [stopEditingWhenGridLosesFocus]="true"
+                             [components]="components"
+                             [rowData]="proposedChange"
+                             (gridReady)="onGridReady($event)"
+                             (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                             (columnVisible)="sizeColumnsToFit($event)"
+                             (rowDataChanged)="sizeColumnsToFit($event)"
+                             headerHeight="0">
+            </ag-grid-angular>
+            <ag-grid-angular
+              #agGridRevisedProgramsModal
+              id="agGridRevisedProgramsModal"
+              class="ag-theme-balham pr-funds-tab group-header-white separator"
+              [rowData]="revisedProgramsModal"
+              [suppressRowTransform]="true"
+              [suppressMovableColumns]="true"
+              [toolPanelSuppressPivotMode]="true"
+              [toolPanelSuppressRowGroups]="true"
+              [toolPanelSuppressValues]="true"
+              [toolPanelSuppressPivots]="true"
+              [toolPanelSuppressColumnFilter]="true"
+              [toolPanelSuppressColumnSelectAll]="true"
+              (gridReady)="onGridReady($event)"
+              (rowDataChanged)="sizeColumnsToFit($event)"
+              (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+              (columnVisixble)="sizeColumnsToFit($event)"
+              [gridAutoHeight]="true"
+              headerHeight="0">
+            </ag-grid-angular>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-right mt-2">
+            <button class="btn btn-primary" (click)="submitPartialApproved()">Submit</button>
           </div>
         </div>
       </div>

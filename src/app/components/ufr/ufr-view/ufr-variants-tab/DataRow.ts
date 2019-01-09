@@ -1,4 +1,4 @@
-import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
+import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 import {ServiceLine} from "../../../../generated";
 
 export class DataRow {

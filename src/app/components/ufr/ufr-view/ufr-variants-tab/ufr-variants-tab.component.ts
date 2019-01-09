@@ -1,12 +1,12 @@
-import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {FundingLine, POMService, IntMap, Variant, User, UfrStatus, UFR} from '../../../../generated'
-import { UserUtils } from '../../../../services/user.utils';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {FundingLine, IntMap, POMService, UFR, User, Variant} from '../../../../generated'
+import {UserUtils} from '../../../../services/user.utils';
 import {DataRow} from "./DataRow";
-import {PhaseType} from '../../../programming/select-program-request/UiProgrammaticRequest';
+import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import { Notify } from '../../../../utils/Notify';
+import {Notify} from '../../../../utils/Notify';
 
 @Component({
   selector: 'ufr-variants-tab',
@@ -134,100 +134,173 @@ export class UfrVariantsTabComponent {
   generateColumns() {
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
       this.pomFy = pom.result.fy;
-      this.years = [this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
+      this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [
         {
-          headerName: '',
-          colId: 'delete',
-          suppressToolPanel: true,
-          hide: false,
-          cellRenderer: 'deleteRenderer',
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'font-weight-bold': params => {return this.colSpanCount(params) > 1},
-            'row-span': params => {return this.rowSpanCount(params) > 1}
+          headerName: 'Funds in $K',
+          children: [{
+            headerName: '',
+            colId: 'delete',
+            suppressToolPanel: true,
+            hide: false,
+            cellRenderer: 'deleteRenderer',
+            rowSpan: params => {
+              return this.rowSpanCount(params)
+            },
+            cellClassRules: {
+              'font-weight-bold': params => {
+                return this.colSpanCount(params) > 1
+              },
+              'row-span': params => {
+                return this.rowSpanCount(params) > 1
+              }
+            },
+            cellClass: 'funding-line-default',
+            cellStyle: {'text-align': 'center'},
+            width: 50
           },
-          cellClass: 'funding-line-default',
-          cellStyle: {'text-align': 'center'},
-          width: 50
-        },
-        {
-          headerName: 'Service',
-          field: 'serviceLine.branch',
-          editable: params => {
-            return this.isEditable(params)
-          },
-          rowSpan: params => {return this.rowSpanCount(params)},
-          colSpan: params => {return this.colSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1},
-            'text-right': params => {return this.colSpanCount(params) > 1}
-          },
-          onCellValueChanged: params => this.onServiceLineValueChanged(params),
-          cellClass: 'funding-line-default',
-          cellEditorSelector: params => {
-            return {
-              component: 'agSelectCellEditor',
-              params: {values: this.branches}
-            };
-          }
-        },
-        {
-          headerName: 'Contractor',
-          field: 'serviceLine.contractor',
-          editable: params => {
-            return this.isEditable(params)
-          },
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1}
-          },
-          onCellValueChanged: params => this.onServiceLineValueChanged(params),
-          cellClass: 'funding-line-default'
-        },
-        {
-          headerName: 'Unit Costs ($)',
-          field: 'serviceLine.unitCost',
-          valueFormatter: params => {
-            return FormatterUtil.currencyFormatter(params, 2)
-          },
-          editable: params => {
-            return this.isEditable(params)
-          },
-          rowSpan: params => {return this.rowSpanCount(params)},
-          cellClassRules: {
-            'row-span': params => {return this.rowSpanCount(params) > 1}
-          },
-          onCellValueChanged: params => this.onServiceLineValueChanged(params),
-          cellClass: 'funding-line-default'
-        },
-        {
-          headerName: 'Cycle',
-          maxWidth: 92,
-          valueGetter: params => {
-            switch(params.data.phaseType) {
-              case PhaseType.POM:
-                return params.data.phaseType + (this.pomFy - 2000);
-              case PhaseType.PB:
-                return params.data.phaseType + (this.pomFy - 2001);
-              case PhaseType.DELTA:
-                return params.data.phaseType;
-            }
-          },
-          cellClassRules: {
-            'delta-row': params => {
-              return params.data.phaseType === PhaseType.DELTA;
-            }
-          }
-        }
-      ];
-      let childrens = [];
+            {
+              headerName: 'Service',
+              field: 'serviceLine.branch',
+              editable: params => {
+                return this.isEditable(params)
+              },
+              rowSpan: params => {
+                return this.rowSpanCount(params)
+              },
+              colSpan: params => {
+                return this.colSpanCount(params)
+              },
+              cellClassRules: {
+                'row-span': params => {
+                  return this.rowSpanCount(params) > 1
+                },
+                'text-right': params => {
+                  return this.colSpanCount(params) > 1
+                }
+              },
+              onCellValueChanged: params => this.onServiceLineValueChanged(params),
+              cellClass: 'funding-line-default',
+              cellEditorSelector: params => {
+                return {
+                  component: 'agSelectCellEditor',
+                  params: {values: this.branches}
+                };
+              }
+            },
+            {
+              headerName: 'Contractor',
+              field: 'serviceLine.contractor',
+              editable: params => {
+                return this.isEditable(params)
+              },
+              rowSpan: params => {
+                return this.rowSpanCount(params)
+              },
+              cellClassRules: {
+                'row-span': params => {
+                  return this.rowSpanCount(params) > 1
+                }
+              },
+              onCellValueChanged: params => this.onServiceLineValueChanged(params),
+              cellClass: 'funding-line-default'
+            },
+            {
+              headerName: 'Unit Costs ($)',
+              field: 'serviceLine.unitCost',
+              valueFormatter: params => {
+                return FormatterUtil.currencyFormatter(params, 2)
+              },
+              editable: params => {
+                return this.isEditable(params)
+              },
+              rowSpan: params => {
+                return this.rowSpanCount(params)
+              },
+              cellClassRules: {
+                'row-span': params => {
+                  return this.rowSpanCount(params) > 1
+                }
+              },
+              onCellValueChanged: params => this.onServiceLineValueChanged(params),
+              cellClass: 'funding-line-default'
+            },
+            {
+              headerName: 'Cycle',
+              maxWidth: 92,
+              valueGetter: params => {
+                switch (params.data.phaseType) {
+                  case PhaseType.POM:
+                    return params.data.phaseType + (this.pomFy - 2000);
+                  case PhaseType.PB:
+                    return params.data.phaseType + (this.pomFy - 2001);
+                  case PhaseType.DELTA:
+                    return params.data.phaseType;
+                }
+              },
+              cellClassRules: {
+                'delta-row': params => {
+                  return params.data.phaseType === PhaseType.DELTA;
+                }
+              }
+            }]
+        }];
       this.years.forEach(year => {
-        let colDef = {
-          headerName: "FY" + (year-2000),
-          colId:year,
-          field: 'serviceLine.quantity.' + year,
-          maxWidth: 92,
+        this.addYearlyColumns(year);
+      });
+
+    });
+  }
+
+  private addYearlyColumns(key) {
+    let subHeader;
+    let cellClass = [];
+    switch (Number(key)) {
+      case (this.pomFy + 4):
+        subHeader = 'BY+4';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 3:
+        subHeader = 'BY+3';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 2:
+        subHeader = 'BY+2';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 1:
+        subHeader = 'BY+1';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy:
+        subHeader = 'BY';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy - 1:
+        subHeader = 'CY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 2:
+        subHeader = 'PY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 3:
+        subHeader = 'PY-1';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+    }
+    if (subHeader) {
+      let columnKey = key.toString().replace('20', 'FY')
+      let colDef = {
+        headerName: subHeader,
+        suppressMenu: true,
+        suppressToolPanel: true,
+        children: [{
+          headerName: columnKey,
+          colId: key,
+          headerTooltip: 'Fiscal Year ' + key,
+          field: 'serviceLine.quantity.' + key,
+          maxWidth: 90,
           suppressMenu: true,
           suppressToolPanel: true,
           cellClass: 'text-right',
@@ -240,7 +313,7 @@ export class UfrVariantsTabComponent {
             }
           },
           cellStyle: params => {
-            if (params.data.phaseType === PhaseType.POM && !this.isServiceLineValid(year)) {
+            if (params.data.phaseType === PhaseType.POM && !this.isServiceLineValid(key)) {
               return {color: 'red'};
             }else {
               return {color: 'black'};
@@ -251,29 +324,10 @@ export class UfrVariantsTabComponent {
           },
           onCellValueChanged: params => this.onBudgetYearValueChanged(params),
           editable: params => {return this.isAmountEditable(params)}
-        };
-        childrens.push(colDef);
-      });
-
-      let totalColDef = {
-        headerName: 'Total',
-        suppressMenu: true,
-        suppressToolPanel: true,
-        maxWidth: 92,
-        type: "numericColumn",
-        valueGetter: params => {return this.getTotal(params.data.serviceLine.quantity, this.years)},
-        valueFormatter: params => {return FormatterUtil.numberFormatter(params)}
-      };
-      childrens.push(totalColDef);
-      let colDef = {
-        headerName: 'Quantities',
-        suppressMenu: true,
-        suppressToolPanel: true,
-        cellClass: ['text-center'],
-        children: childrens
+        }]
       };
       this.columnDefs.push(colDef);
-    });
+    }
   }
 
   isEditable(params): boolean{
@@ -337,8 +391,11 @@ export class UfrVariantsTabComponent {
     }
   }
 
-  isAmountEditable(params): boolean{
-    return params.data.phaseType == PhaseType.POM && params.data.serviceLine.branch !== 'Totals' && !this.readonly;
+  isAmountEditable(params): boolean {
+    return params.data.phaseType == PhaseType.POM &&
+           params.data.serviceLine.branch !== 'Totals' &&
+           params.colDef.colId >= this.pomFy &&
+           !this.readonly;
   }
 
   getTotal(quantities, years): number {

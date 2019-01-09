@@ -1,5 +1,5 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
-import {ProgrammaticRequest} from '../../../../generated/model/programmaticRequest';
+import {Program} from '../../../../generated/model/program';
 import {ProgramType} from '../../../../generated/model/programType';
 import {PRUtils} from '../../../../services/pr.utils.service';
 import {AutoValuesService} from './AutoValues.service';
@@ -15,12 +15,12 @@ import {
   ProgramsService,
   PRService,
   Pom,
-  ProgrammaticRequestState,
+  ProgramStatus,
   RolesPermissionsService
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
 import {DataRow} from "./DataRow";
-import {PhaseType} from "../../select-program-request/UiProgrammaticRequest";
+import {PhaseType} from "../../select-program-request/UiProgramRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {Validation} from "./Validation";
@@ -41,15 +41,15 @@ export class FundsTabComponent implements OnChanges {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @ViewChild("agGridParent") private agGridParent: AgGridNg2;
   @ViewChild("agGridSiblings") private agGridSiblings: AgGridNg2;
-  @Input() pr: ProgrammaticRequest;
-  private parentPr: ProgrammaticRequest;
+  @Input() pr: Program;
+  private parentPr: Program;
   private isFundsTabValid: any[] = [];
-  @Input() private prs: ProgrammaticRequest[];
+  @Input() private prs: Program[];
 
   @Input() private pom: Pom;
   private pomFy: number;
   private pbFy: number;
-  private pbPr: ProgrammaticRequest;
+  private pbPr: Program;
   private ismgr: boolean = false;
   private fieldedits: boolean = false;
 
@@ -541,90 +541,7 @@ export class FundsTabComponent implements OnChanges {
     ];
 
     this.columnKeys.forEach(key => {
-
-      let subHeader;
-      let cellClass = [];
-      switch (Number(key)) {
-        case (this.pomFy + 4):
-          subHeader = 'BY+4';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy + 3:
-          subHeader = 'BY+3';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy + 2:
-          subHeader = 'BY+2';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy + 1:
-          subHeader = 'BY+1';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy:
-          subHeader = 'BY';
-          cellClass = ['text-right'];
-          break;
-        case this.pomFy - 1:
-          subHeader = 'CY';
-          cellClass = ['ag-cell-white', 'text-right'];
-          break;
-        case this.pomFy - 2:
-          subHeader = 'PY';
-          cellClass = ['ag-cell-white', 'text-right'];
-          break;
-        case this.pomFy - 3:
-          subHeader = 'PY-1';
-          cellClass = ['ag-cell-white', 'text-right'];
-          break;
-      }
-      if (subHeader) {
-        let columnKey = key.toString().replace('20', 'FY')
-        let colDef = {
-          headerName: subHeader,
-          type: "numericColumn",
-          suppressToolPanel: true,
-          children: [{
-            headerName: columnKey,
-            colId: key,
-            headerTooltip: 'Fiscal Year ' + key,
-            field: 'fundingLine.funds.' + key,
-            maxWidth: 80,
-            minWidth: 80,
-            suppressMenu: true,
-            suppressToolPanel: true,
-            cellEditor: 'numericCellEditor',
-            cellClass: 'text-right',
-            cellClassRules: {
-              'ag-cell-edit': params => {
-                return this.isAmountEditable(params, key)
-              },
-              'font-weight-bold': params => {
-                return this.colSpanCount(params) > 1
-              },
-              'delta-row': params => {
-                return params.data.phaseType === PhaseType.DELTA;
-              }
-            },
-            cellStyle: params => {
-              if (this.prs &&
-                params.data.phaseType === PhaseType.POM &&
-                params.data.gridType === GridType.CURRENT_PR &&
-                !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
-                return { color: 'red', 'font-weight': 'bold' };
-              };
-            },
-            editable: params => {
-              return this.isAmountEditable(params, key)
-            },
-            onCellValueChanged: params => this.onBudgetYearValueChanged(params),
-            valueFormatter: params => {
-              return FormatterUtil.currencyFormatter(params)
-            }
-          }]
-        };
-        this.columnDefs.push(colDef);
-      }
+      this.addYearlyColumn(key);
     });
 
     let totalColDef = {
@@ -685,6 +602,93 @@ export class FundsTabComponent implements OnChanges {
       }
     });
     return result;
+  }
+
+  private addYearlyColumn(key) {
+    let subHeader;
+    let cellClass = [];
+    switch (Number(key)) {
+      case (this.pomFy + 4):
+        subHeader = 'BY+4';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 3:
+        subHeader = 'BY+3';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 2:
+        subHeader = 'BY+2';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy + 1:
+        subHeader = 'BY+1';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy:
+        subHeader = 'BY';
+        cellClass = ['text-right'];
+        break;
+      case this.pomFy - 1:
+        subHeader = 'CY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 2:
+        subHeader = 'PY';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+      case this.pomFy - 3:
+        subHeader = 'PY-1';
+        cellClass = ['ag-cell-white', 'text-right'];
+        break;
+    }
+    if (subHeader) {
+      let columnKey = key.toString().replace('20', 'FY')
+      let colDef = {
+        headerName: subHeader,
+        type: "numericColumn",
+        suppressToolPanel: true,
+        children: [{
+          headerName: columnKey,
+          colId: key,
+          headerTooltip: 'Fiscal Year ' + key,
+          field: 'fundingLine.funds.' + key,
+          maxWidth: 80,
+          minWidth: 80,
+          suppressMenu: true,
+          suppressToolPanel: true,
+          cellEditor: 'numericCellEditor',
+          cellClass: 'text-right',
+          cellClassRules: {
+            'ag-cell-edit': params => {
+              return this.isAmountEditable(params, key)
+            },
+            'font-weight-bold': params => {
+              return this.colSpanCount(params) > 1
+            },
+            'delta-row': params => {
+              return params.data.phaseType === PhaseType.DELTA;
+            }
+          },
+          cellStyle: params => {
+            if (this.prs &&
+              params.data.phaseType === PhaseType.POM &&
+              params.data.gridType === GridType.CURRENT_PR &&
+              !this.isValidBa(params.data.fundingLine.baOrBlin, key)) {
+              return {color: 'red', 'font-weight': 'bold'};
+            }
+            ;
+          },
+          editable: params => {
+            return this.isAmountEditable(params, key)
+          },
+          onCellValueChanged: params => this.onBudgetYearValueChanged(params),
+          valueFormatter: params => {
+            return FormatterUtil.currencyFormatter(params)
+          }
+        }]
+      };
+      this.columnDefs.push(colDef);
+    }
   }
 
   generateEmptyFundingLine(pomFundingLine?: FundingLine): FundingLine {
@@ -777,7 +781,7 @@ export class FundsTabComponent implements OnChanges {
     }
     else {
       return (this.pr && this.pr.type === ProgramType.GENERIC &&
-        ProgrammaticRequestState.SUBMITTED !== this.pr.state);
+        ProgramStatus.SUBMITTED !== this.pr.programStatus);
     }
   }
 
@@ -830,7 +834,7 @@ export class FundsTabComponent implements OnChanges {
     this.baOrBlins = blins.concat(bas);
   }
 
-  private async getPBData(): Promise<ProgrammaticRequest> {
+  private async getPBData(): Promise<Program> {
     const user: User = await this.globalsService.user().toPromise();
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
     let originalMrId;
@@ -845,7 +849,7 @@ export class FundsTabComponent implements OnChanges {
       return;
     }
 
-    const pbPr: ProgrammaticRequest = (await this.prService.getByPhaseAndMrId(pb.id, originalMrId).toPromise()).result;
+    const pbPr: Program = (await this.prService.getByPhaseAndMrId(pb.id, originalMrId).toPromise()).result;
 
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
@@ -945,7 +949,7 @@ export class FundsTabComponent implements OnChanges {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
     this.prService.getSubProgramsById(this.pr.id).subscribe(data => {
-      let subPrograms: ProgrammaticRequest[] = data.result;
+      let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&
         fl.item === selectedFundingLine.item &&

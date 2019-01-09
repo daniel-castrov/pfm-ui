@@ -22,17 +22,17 @@
         <!-- placeholder for grid/scaffold DO NOT remove -->
       </div>
       <div class="col-lg-7 col-md-12">
-        <j-pom [pomProgrammaticRequests]="pomProgrammaticRequests" [pbProgrammaticRequests]="pbProgrammaticRequests" [pom]="pom"></j-pom>
+        <j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <programmatic-requests [pomProgrammaticRequests]="pomProgrammaticRequests"
-                               [pbProgrammaticRequests]="pbProgrammaticRequests"
+        <program-requests [pomPrograms]="pomPrograms"
+                               [pbPrograms]="pbPrograms"
                                [pomFy]="pom?.fy"
                                [pbFy]="pb?.fy"
                                [reviewOnly]="true">
-        </programmatic-requests>
+        </program-requests>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
-import {PhaseType} from "../../programming/select-program-request/UiProgrammaticRequest";
+import {PhaseType} from "../../programming/select-program-request/UiProgramRequest";
 import {GridType} from "../../programming/program-request/funds-tab/GridType";
 import {ProgramType} from "../../../generated";
 

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
   Disposition, FundingLine, Pom, POMService, ProgramsService, PRService, ShortyType, UFR, UfrEvent,
-  UFRsService, UfrStatus, User, UserService, Worksheet, WorksheetRow, WorksheetService
+  UFRsService, UfrStatus, User, UserService, Worksheet, WorksheetEvent, WorksheetRow, WorksheetService
 } from '../../../../generated'
 import {WithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
 import {ActivatedRoute} from "@angular/router";
@@ -11,6 +11,9 @@ import {GridType} from "../../../programming/program-request/funds-tab/GridType"
 import {AgGridNg2} from "ag-grid-angular";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {Notify} from "../../../../utils/Notify";
+import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
+
+declare const $: any;
 
 @Component({
   selector: 'ufr-approval-detail',
@@ -18,6 +21,7 @@ import {Notify} from "../../../../utils/Notify";
   styleUrls: ['./ufr-approval-detail.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
+
 export class UfrApprovalDetailComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
@@ -25,6 +29,10 @@ export class UfrApprovalDetailComponent implements OnInit {
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
   @ViewChild("agGridTransactions") private agGridTransactions: AgGridNg2;
+
+  @ViewChild("agGridProposedChangesModal") private agGridProposedChangesModal: AgGridNg2;
+  @ViewChild("agGridCurrentFundingModal") private agGridCurrentFundingModal: AgGridNg2;
+  @ViewChild("agGridRevisedProgramsModal") private agGridRevisedProgramsModal: AgGridNg2;
 
   ufr: UFR;
   shorty: WithFullName;
@@ -37,12 +45,15 @@ export class UfrApprovalDetailComponent implements OnInit {
   defaultColumnDefs = [];
 
   proposedChange;
+  partiallyApproved;
   revisedPrograms;
+  revisedProgramsModal;
   currentFunding;
   transactions;
 
   currentFundingColumnDefs = [];
   proposedChangesColumnDefs = [];
+  partiallyApprovedColumnDefs = [];
   revisedProgramsColumnDefs = [];
 
   Disposition = Disposition;
@@ -50,6 +61,8 @@ export class UfrApprovalDetailComponent implements OnInit {
 
   worksheets: Worksheet[];
   isDispositionAvailable;
+  components = { numericCellEditor: this.getNumericCellEditor() };
+
 
   constructor(private withFullNameService: WithFullNameService,
               private worksheetService: WorksheetService,
@@ -100,7 +113,6 @@ export class UfrApprovalDetailComponent implements OnInit {
   }
 
   async updateUfr(type: string){
-    this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
     if(type === 'disposition'){
       switch(this.ufr.disposition) {
         case Disposition.APPROVED:
@@ -108,7 +120,7 @@ export class UfrApprovalDetailComponent implements OnInit {
             this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
             this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
             this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
-            let pr =  (await this.prService.createFromUfr(this.ufr).toPromise()).result;
+            let pr =  (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: null}).toPromise()).result;
             pr.fundingLines.forEach(async fl => {
               this.worksheets.forEach(async ws => {
                 let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
@@ -153,13 +165,182 @@ export class UfrApprovalDetailComponent implements OnInit {
               });
             })
           }
+          this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+          await this.initTransactions();
+          Notify.success('UFR ' + type + ' updated successfully');
           break;
         case Disposition.PARTIALLY_APPROVED:
+          $('#partial-approval').modal('show');
+          this.initModalData();
           break;
       }
+    } else {
+      this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+      await this.initTransactions();
     }
-    Notify.success('UFR ' + type + ' updated successfully');
+  }
+
+  async submitPartialApproved() {
+    if(this.ufr.shortyType === ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
+      this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
+      let updateData: RowUpdateEventData [] = [];
+      let partiallyApprovedFL: FundingLine [] = [];
+      this.partiallyApproved.forEach((dr: DataRow) => {
+        if (dr.type === 'Proposed Partial') {
+          partiallyApprovedFL.push(dr.fundingLine);
+        }
+      });
+      let pr = (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: partiallyApprovedFL}).toPromise()).result;
+      pr.fundingLines.forEach(async fl => {
+        this.worksheets.forEach(async ws => {
+          let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
+          if (!row) {
+            let worksheetRow: WorksheetRow = {
+              programRequestId: pr.id,
+              programRequestFullname: pr.shortName,
+              coreCapability: pr.coreCapability,
+              appropriation: fl.appropriation,
+              baOrBlin: fl.baOrBlin,
+              item: fl.item,
+              fundingLine: fl};
+            ws.rows.push(worksheetRow);
+
+            let modifiedRow: RowUpdateEventData = {};
+            modifiedRow.newFundingLine = fl;
+            modifiedRow.worksheetId = ws.id;
+            modifiedRow.programId = pr.shortName;
+            modifiedRow.fundingLineId = fl.id;
+            modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
+            updateData.push(modifiedRow);
+
+            let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+            await this.worksheetService.createRows(body).toPromise();
+          } else {
+            Object.keys(row.fundingLine.funds).forEach(year => {
+              row.fundingLine.funds[year] += Number(fl.funds[year]);
+            });
+            let modifiedRow: RowUpdateEventData = {};
+            modifiedRow.newFundingLine = fl;
+            modifiedRow.previousFundingLine = row.fundingLine;
+            modifiedRow.worksheetId = ws.id;
+            modifiedRow.programId = row.programRequestFullname;
+            modifiedRow.fundingLineId = row.fundingLine.id;
+            modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
+
+            updateData.push(modifiedRow);
+
+            let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+            await this.worksheetService.updateRows(body).toPromise();
+          }
+        });
+      })
+    } else {
+      let updateData: RowUpdateEventData [] = [];
+      this.partiallyApproved.forEach((dr: DataRow) => {
+        let fl = dr.fundingLine;
+        if (dr.type === 'Proposed Partial') {
+          this.worksheets.forEach(async (ws : Worksheet) => {
+            let row = ws.rows.find(r  => r.fundingLine.id === fl.id);
+            if (!row) {
+              let worksheetRow: WorksheetRow = {
+                programRequestId: this.ufr.shortyId,
+                programRequestFullname: this.ufr.shortName,
+                coreCapability: this.ufr.coreCapability,
+                appropriation: fl.appropriation,
+                baOrBlin: fl.baOrBlin,
+                item: fl.item,
+                fundingLine: fl};
+              ws.rows.push(worksheetRow);
+
+              let modifiedRow: RowUpdateEventData = {};
+              modifiedRow.newFundingLine = fl;
+              modifiedRow.worksheetId = ws.id;
+              modifiedRow.programId = this.ufr.shortName;
+              modifiedRow.fundingLineId = fl.id;
+              modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
+              updateData.push(modifiedRow);
+
+              let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+              await this.worksheetService.createRows(body).toPromise();
+
+            } else {
+              Object.keys(row.fundingLine.funds).forEach(year => {
+                row.fundingLine.funds[year] += Number(fl.funds[year]);
+              });
+              let modifiedRow: RowUpdateEventData = {};
+              modifiedRow.newFundingLine = fl;
+              modifiedRow.previousFundingLine = row.fundingLine;
+              modifiedRow.worksheetId = ws.id;
+              modifiedRow.programId = row.programRequestFullname;
+              modifiedRow.fundingLineId = row.fundingLine.id;
+              modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy
+
+              updateData.push(modifiedRow);
+
+              let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: ws};
+              await this.worksheetService.updateRows(body).toPromise();
+            }
+          });
+        }
+      });
+    }
+    this.ufr = (await this.ufrService.generateTransaction('disposition', this.ufr).toPromise()).result;
     await this.initTransactions();
+    $('#partial-approval').modal('hide');
+    Notify.success('UFR disposition updated successfully');
+  }
+
+  initModalData() {
+    this.agGridCurrentFundingModal.api.setColumnDefs(this.currentFundingColumnDefs);
+    this.agGridCurrentFundingModal.api.setRowData(this.currentFunding);
+
+    let tempColumnDefs =Object.assign({}, this.defaultColumnDefs);
+    this.partiallyApprovedColumnDefs = Object.keys(tempColumnDefs).map(i => tempColumnDefs[i]);
+
+    this.partiallyApprovedColumnDefs.unshift({
+      colId: 'flType',
+      field: 'type',
+      cellClass: 'funding-line-default'
+    });
+
+    let data: Array<DataRow> = [];
+    this.ufr.fundingLines.forEach(fundingLine => {
+      let proposedRow: DataRow = {
+        type: 'Proposed Full',
+        fundingLine: fundingLine,
+        editable: false,
+        gridType: GridType.CURRENT_PR}
+      data.push(proposedRow);
+
+      let partiallyApprovedRow: DataRow = {
+        type: 'Proposed Partial',
+        fundingLine: this.generateEmptyFundingLine(fundingLine),
+        editable: true,
+        gridType: GridType.CURRENT_PR}
+      data.push(partiallyApprovedRow)
+    });
+
+    this.partiallyApproved = data;
+
+    this.agGridProposedChangesModal.api.setColumnDefs(this.partiallyApprovedColumnDefs);
+    this.agGridProposedChangesModal.api.setRowData(this.partiallyApproved);
+
+    this.agGridRevisedProgramsModal.api.setColumnDefs(this.revisedProgramsColumnDefs);
+    this.agGridRevisedProgramsModal.api.setRowData(this.revisedPrograms);
+
+    this.agGridProposedChangesModal.gridOptions.alignedGrids = [];
+    this.agGridProposedChangesModal.gridOptions.alignedGrids.push(this.agGridCurrentFundingModal.gridOptions);
+    this.agGridProposedChangesModal.gridOptions.alignedGrids.push(this.agGridRevisedProgramsModal.gridOptions);
+
+    this.agGridCurrentFundingModal.gridOptions.alignedGrids = [];
+    this.agGridCurrentFundingModal.gridOptions.alignedGrids.push(this.agGridProposedChangesModal.gridOptions);
+    this.agGridCurrentFundingModal.gridOptions.alignedGrids.push(this.agGridRevisedProgramsModal.gridOptions);
+
+    this.agGridRevisedProgramsModal.gridOptions.alignedGrids = [];
+    this.agGridRevisedProgramsModal.gridOptions.alignedGrids.push(this.agGridProposedChangesModal.gridOptions);
+    this.agGridRevisedProgramsModal.gridOptions.alignedGrids.push(this.agGridCurrentFundingModal.gridOptions);
   }
 
   async initCurrentFunding() {
@@ -200,7 +381,7 @@ export class UfrApprovalDetailComponent implements OnInit {
     let data: Array<DataRow> = [];
     this.ufr.fundingLines.forEach(fundingLine => {
       let pomRow: DataRow = {fundingLine: fundingLine,
-        editable: true,
+        editable: false,
         gridType: GridType.CURRENT_PR}
       data.push(pomRow);
     });
@@ -277,7 +458,7 @@ export class UfrApprovalDetailComponent implements OnInit {
           break;
         case 'UFR_STATUS':
           type = 'Status';
-          value = e.value.status;
+          value = e.value.ufrStatus;
           break;
         case 'UFR_DISPOSITION':
           type = 'Disposition';
@@ -289,6 +470,38 @@ export class UfrApprovalDetailComponent implements OnInit {
     };
     this.transactions = transactions
     this.agGridTransactions.api.sizeColumnsToFit();
+  }
+
+  calculateRevisedModalChanges() {
+    let data: Array<DataRow> = [];
+    if (this.ufr.fundingLines && this.ufr.fundingLines.length > 0) {
+      this.partiallyApproved.forEach(pc => {
+        if (pc.type === 'Proposed Partial') {
+          let cf = this.currentFunding.find(cf => {
+            return cf.fundingLine.appropriation === pc.fundingLine.appropriation &&
+              cf.fundingLine.baOrBlin === pc.fundingLine.baOrBlin &&
+              cf.fundingLine.opAgency === pc.fundingLine.opAgency &&
+              cf.fundingLine.item === pc.fundingLine.item
+          });
+          let row: DataRow = JSON.parse(JSON.stringify(pc));
+          row.editable = false;
+          row.fundingLine.userCreated = false;
+          row.gridType = GridType.CURRENT_PR;
+          Object.keys(row.fundingLine.funds).forEach(year =>{
+            row.fundingLine.funds[year] = (cf && cf.fundingLine.funds[year]? cf.fundingLine.funds[year] : 0) + (pc.fundingLine.funds[year]? pc.fundingLine.funds[year] : 0);
+          });
+          data.push(row);
+        }
+      });
+      this.revisedProgramsModal = data;
+    } else {
+      let pomRow: DataRow = {fundingLine: JSON.parse(JSON.stringify(this.generateEmptyFundingLine())),
+        editable: false,
+        gridType: GridType.CURRENT_PR};
+      data.push(pomRow);
+      this.revisedProgramsModal = data;
+    }
+    this.agGridRevisedProgramsModal.api.setRowData(this.revisedProgramsModal);
   }
 
   calculateRevisedChanges() {
@@ -410,6 +623,16 @@ export class UfrApprovalDetailComponent implements OnInit {
             suppressMenu: true,
             suppressToolPanel: true,
             type: "numericColumn",
+            cellEditor: 'numericCellEditor',
+            cellClassRules: {
+              'ag-cell-edit': params => {
+                return this.isAmountEditable(params, key)
+              }
+            },
+            editable: params => {
+              return this.isAmountEditable(params, key)
+            },
+            onCellValueChanged: params => this.onBudgetYearValueChanged(params),
             valueFormatter: params => {
               return FormatterUtil.currencyFormatter(params)
             }
@@ -439,10 +662,32 @@ export class UfrApprovalDetailComponent implements OnInit {
       suppressToolPanel: true,
       maxWidth: 90,
       field: 'fundingLine.ctc',
+      type: "numericColumn",
+      cellEditor: 'numericCellEditor',
+      cellClassRules: {
+        'ag-cell-edit': params => {
+          return params.data.type !== undefined && params.data.type === 'Proposed Partial';
+        }
+      },
+      editable: params => {
+        return params.data.type !== undefined && params.data.type === 'Proposed Partial';
+      },
       cellClass:['text-right'],
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
     this.defaultColumnDefs.push(ctcColDef);
+  }
+
+  onBudgetYearValueChanged(params){
+    let year = params.colDef.colId;
+    let pomNode = params.data;
+    pomNode.fundingLine.funds[year] = Number(params.newValue);
+    this.agGridProposedChangesModal.api.refreshCells();
+    this.calculateRevisedModalChanges();
+  }
+
+  isAmountEditable(params, key): boolean{
+    return key >= this.pom.fy && params.data.editable;
   }
 
   setAlignedGrids() {
@@ -543,6 +788,7 @@ export class UfrApprovalDetailComponent implements OnInit {
       variants: []
     };
     if(pomFundingLine){
+      emptyFundingLine.id = pomFundingLine.id;
       emptyFundingLine.appropriation = pomFundingLine.appropriation
       emptyFundingLine.item = pomFundingLine.item
       emptyFundingLine.opAgency = pomFundingLine.opAgency
@@ -567,6 +813,61 @@ export class UfrApprovalDetailComponent implements OnInit {
         params.api.sizeColumnsToFit();
       });
     });
+  }
+  getNumericCellEditor() {
+    function isCharNumeric(charStr) {
+      return !!/\d/.test(charStr);
+    }
+    function isKeyPressedNumeric(event) {
+      var charCode = getCharCodeFromEvent(event);
+      var charStr = String.fromCharCode(charCode);
+      return isCharNumeric(charStr);
+    }
+    function getCharCodeFromEvent(event) {
+      event = event || window.event;
+      return typeof event.which === "undefined" ? event.keyCode : event.which;
+    }
+    function NumericCellEditor() {}
+    NumericCellEditor.prototype.init = function(params) {
+      this.focusAfterAttached = params.cellStartedEdit;
+      this.eInput = document.createElement("input");
+      this.eInput.style.width = "100%";
+      this.eInput.style.height = "100%";
+      this.eInput.value = isCharNumeric(params.charPress) ? params.charPress : params.value;
+      var that = this;
+      this.eInput.addEventListener("keypress", function(event) {
+        if (!isKeyPressedNumeric(event)) {
+          that.eInput.focus();
+          if (event.preventDefault) event.preventDefault();
+        }
+      });
+    };
+    NumericCellEditor.prototype.getGui = function() {
+      return this.eInput;
+    };
+    NumericCellEditor.prototype.afterGuiAttached = function() {
+      if (this.focusAfterAttached) {
+        this.eInput.focus();
+        this.eInput.select();
+      }
+    };
+    NumericCellEditor.prototype.isCancelBeforeStart = function() {
+      return this.cancelBeforeStart;
+    };
+    NumericCellEditor.prototype.isCancelAfterEnd = function() {};
+    NumericCellEditor.prototype.getValue = function() {
+      return this.eInput.value;
+    };
+    NumericCellEditor.prototype.focusIn = function() {
+      var eInput = this.getGui();
+      eInput.focus();
+      eInput.select();
+      console.log("NumericCellEditor.focusIn()");
+    };
+    NumericCellEditor.prototype.focusOut = function() {
+      console.log("NumericCellEditor.focusOut()");
+    };
+    return NumericCellEditor;
   }
 }
 

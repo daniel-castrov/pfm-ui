@@ -17,14 +17,21 @@ export class FileUploadComponent implements OnInit {
   @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
   @Input() disabled: boolean;
-  doingit: boolean = false;
-  private uploadsuccess: boolean = false;
+  @Input() isImageThumbnail: boolean;
+  @Input() imagePath: string;
+  processing: boolean = false;
+  uploadSuccess: boolean = false;
 
   fileName: string;
 
   constructor(private libraryService: LibraryService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  onImageClick(){
+    $("#hidden-input-file").trigger('click');
+  }
 
   onFileChange(event){
     let reader = new FileReader();
@@ -33,14 +40,14 @@ export class FileUploadComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.fileName = file.name;
-        this.doingit = true;
-        this.uploadsuccess = false;
-        this.uploading.emit(this.doingit);
+        this.processing = true;
+        this.uploadSuccess = false;
+        this.uploading.emit(this.processing);
         this.libraryService.uploadFile(file, this.area).subscribe(response => {
-          this.doingit = false;
-          this.uploading.emit(this.doingit);
+          this.processing = false;
+          this.uploading.emit(this.processing);
           if (response.result) {
-            this.uploadsuccess = true;
+            this.uploadSuccess = true;
             this.fileUploadEvent.emit(response.result);
           }
         })

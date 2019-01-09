@@ -6,7 +6,7 @@ import { HeaderComponent } from '../../header/header.component';
 import { Notify } from '../../../utils/Notify';
 
 // Generated
-import { Community, Program, User, Role, UserRoleResource, AssignRoleRequest, DropRoleRequest } from '../../../generated';
+import { User, Role, UserRoleResource } from '../../../generated';
 import { UserService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
 
 @Component({

@@ -37,20 +37,6 @@ label {
   overflow: auto;
 }
 
-@media (min-width: 768px) {
-  .img-placeholder > i.fa {
-    font-size: 160px;
-    color: #ccc;
-  }
-}
-
-@media (min-width: 1200px) {
-
-  .img-placeholder > i.fa {
-    font-size: 200px;
-  }
-}
-
 .program-name {
   display: inline-block;
   width: 410px;

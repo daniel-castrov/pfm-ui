@@ -12,3 +12,26 @@ $dark-grey: #848282;
   margin: 0;
   display: inline-block;
 }
+
+@media (min-width: 768px) {
+  .img-placeholder > i.fa {
+    font-size: 160px;
+    color: #ccc;
+    cursor:pointer;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .img-placeholder > i.fa {
+    font-size: 200px;
+    cursor:pointer;
+  }
+}
+
+.img-thumbnail{
+  max-width: 200px;
+  max-height: 200px;
+  margin: 0 auto;
+  cursor:pointer;
+}

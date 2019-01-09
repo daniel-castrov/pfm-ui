@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ProgrammaticRequest, Pom, RolesPermissionsService} from "../../../../generated";
+import {Program, Pom, RolesPermissionsService} from "../../../../generated";
 
 @Component({
   selector: 'justification-tab',
@@ -8,7 +8,7 @@ import {ProgrammaticRequest, Pom, RolesPermissionsService} from "../../../../gen
 })
 export class JustificationTabComponent implements OnInit {
 
-  @Input() pr: ProgrammaticRequest;
+  @Input() pr: Program;
   @Input() pom: Pom;
   private ismgr: boolean = false;
 

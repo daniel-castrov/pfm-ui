@@ -10,7 +10,7 @@
     <div *ngFor="let request of requests">
       <ng-template #tipContent>
         <strong>{{request?.type}}</strong>
-        <br/>{{request?.name}}
+        <div>{{request?.name}}</div>
       </ng-template>
       <a class="dropdown-item" href="#" routerLink="{{request.link}}" [ngbTooltip]="tipContent">
         {{request?.date | date:'MM/dd/yyyy @ h:mma'}}

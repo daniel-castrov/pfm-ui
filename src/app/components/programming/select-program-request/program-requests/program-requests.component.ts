@@ -5,18 +5,18 @@ import { PRService } from '../../../../generated/api/pR.service';
 import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
 import { AgGridNg2 } from "ag-grid-angular";
 import { SummaryProgramCellRenderer } from "../../../renderers/event-column/summary-program-cell-renderer.component";
-import { PhaseType, UiProgrammaticRequest } from "../UiProgrammaticRequest";
+import { PhaseType, UiProgramRequest } from "../UiProgramRequest";
 import { CreationTimeType, ProgramType } from "../../../../generated";
 
 @Component({
-  selector: 'programmatic-requests',
-  templateUrl: './programmatic-requests.component.html',
-  styleUrls: ['./programmatic-requests.component.scss']
+  selector: 'program-requests',
+  templateUrl: './program-requests.component.html',
+  styleUrls: ['./program-requests.component.scss']
 })
-export class ProgrammaticRequestsComponent implements OnChanges {
+export class ProgramsComponent implements OnChanges {
 
-  @Input() private pomProgrammaticRequests: ProgramRequestWithFullName[];
-  @Input() private pbProgrammaticRequests: ProgramRequestWithFullName[];
+  @Input() private pomPrograms: ProgramRequestWithFullName[];
+  @Input() private pbPrograms: ProgramRequestWithFullName[];
   @Input() private pomFy: number;
   @Input() private pbFy: number;
   @Input() private reviewOnly: boolean;
@@ -52,36 +52,36 @@ export class ProgrammaticRequestsComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    if (this.pomProgrammaticRequests && this.pbProgrammaticRequests) {
+    if (this.pomPrograms && this.pbPrograms) {
       let data = []
-      this.pomProgrammaticRequests.forEach(prOne => {
-        let programmaticRequest = new UiProgrammaticRequest(prOne);
-        programmaticRequest.phaseType = PhaseType.POM;
+      this.pomPrograms.forEach(prOne => {
+        let program = new UiProgramRequest(prOne);
+        program.phaseType = PhaseType.POM;
         if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR && prOne.type === ProgramType.GENERIC) {
-          let prTwo = this.pomProgrammaticRequests.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
+          let prTwo = this.pomPrograms.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
 
           if (prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prTwo.type === ProgramType.GENERIC) {
-            let prThree = this.pomProgrammaticRequests.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
+            let prThree = this.pomPrograms.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
 
             if (prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prThree.type === ProgramType.GENERIC) {
-              let prFour = this.pomProgrammaticRequests.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
-              programmaticRequest.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
+              let prFour = this.pomPrograms.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
+              program.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
             } else {
-              programmaticRequest.dataPath = [prThree.fullname, prTwo.shortName, prOne.shortName];
+              program.dataPath = [prThree.fullname, prTwo.shortName, prOne.shortName];
             }
           } else {
-            programmaticRequest.dataPath = [prTwo.fullname, prOne.shortName];
+            program.dataPath = [prTwo.fullname, prOne.shortName];
           }
         } else {
-          programmaticRequest.dataPath = [prOne.fullname];
+          program.dataPath = [prOne.fullname];
         }
-        data.push(programmaticRequest);
+        data.push(program);
       });
-      this.pbProgrammaticRequests.forEach(pr => {
-        let programmaticRequest = new UiProgrammaticRequest(pr);
-        programmaticRequest.phaseType = PhaseType.PB;
-        programmaticRequest.dataPath = [pr.fullname, '']
-        data.push(programmaticRequest);
+      this.pbPrograms.forEach(pr => {
+        let programRequest = new UiProgramRequest(pr);
+        programRequest.phaseType = PhaseType.PB;
+        programRequest.dataPath = [pr.fullname, '']
+        data.push(programRequest);
       });
       this.sortObjects(data, ['fullname', 'phaseType']);
       this.data = data;

@@ -1,12 +1,11 @@
 import { CreationTimeType } from './../generated/model/creationTimeType';
 import { ProgramRequestWithFullName, ProgramWithFullName} from './with-full-name.service';
 import { PRService } from './../generated/api/pR.service';
-import { ProgrammaticRequest } from './../generated/model/programmaticRequest';
-import { ProgramsService } from './../generated/api/programs.service';
 import { Program } from './../generated/model/program';
+import { ProgramsService } from './../generated/api/programs.service';
 import { Injectable } from '@angular/core';
-import {ProgramType} from "../generated";
-import {FundingLine} from "../generated/model/fundingLine";
+import { ProgramType } from "../generated";
+import { FundingLine } from "../generated/model/fundingLine";
 
 export interface WithFullName {
   fullname: string;
@@ -14,7 +13,7 @@ export interface WithFullName {
 }
 
 export interface ProgramWithFullName extends Program, WithFullName {};
-export interface ProgramRequestWithFullName extends ProgrammaticRequest, WithFullName {};
+export interface ProgramRequestWithFullName extends Program, WithFullName {};
 export type ProgramOrPrWithFullName = ProgramWithFullName | ProgramRequestWithFullName;
 
 @Injectable()
@@ -68,10 +67,10 @@ export class WithFullNameService {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
-    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
+    const prs: Program[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const mapIdToPr: Map<string, Program> = this.createMapIdToProgramOrPr(prs);
 
-    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: Program) =>
       ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
     );
 
@@ -87,9 +86,9 @@ export class WithFullNameService {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const prs: Program[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
 
-    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: Program) =>
       ({ ...pr, fullname: this.prFullNameDerivedFromArchivalData(pr, mapIdToProgram) })
     );
 
@@ -100,22 +99,22 @@ export class WithFullNameService {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getPrsForAllPoms().toPromise()).result;
-    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
+    const prs: Program[] = (await this.prService.getPrsForAllPoms().toPromise()).result;
+    const mapIdToPr: Map<string, Program> = this.createMapIdToProgramOrPr(prs);
 
-    const result: ProgramRequestWithFullName[] = prs.map( (pr: ProgrammaticRequest) =>
+    const result: ProgramRequestWithFullName[] = prs.map( (pr: Program) =>
       ({ ...pr, fullname: this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr) })
     );
 
     return this.sort(result);
   }
 
-  async fullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest): Promise<string> {
+  async fullNameDerivedFromCreationTimeData(pr: Program): Promise<string> {
     const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
     const mapIdToProgram: Map<string, Program> = this.createMapIdToProgramOrPr(programs);
 
-    const prs: ProgrammaticRequest[] = (await this.prService.getByPhase(pr.phaseId).toPromise()).result;
-    const mapIdToPr: Map<string, ProgrammaticRequest> = this.createMapIdToProgramOrPr(prs);
+    const prs: Program[] = (await this.prService.getByPhase(pr.phaseId).toPromise()).result;
+    const mapIdToPr: Map<string, Program> = this.createMapIdToProgramOrPr(prs);
 
     return this.prFullNameDerivedFromCreationTimeData(pr, mapIdToProgram, mapIdToPr);
   }
@@ -148,8 +147,8 @@ export class WithFullNameService {
     return allPrograms.filter( (program: ProgramWithFullName) => !referenceIds.has(program.id) );
   }
 
-  isProgram(programOrPr): boolean {
-    return (typeof programOrPr.creationTimeType) === 'undefined';
+  isProgram(programOrPr:Program): boolean {
+    return ( programOrPr.programStatus == "COMPLETED" );
   }
 
   private sort(withFullName: WithFullName[]): WithFullName[] {
@@ -165,7 +164,7 @@ export class WithFullNameService {
     return mapIdToProgramOrPr;
   }
 
-  private prFullNameDerivedFromCreationTimeData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, ProgrammaticRequest>): string {
+  private prFullNameDerivedFromCreationTimeData(pr: Program, mapIdToProgram: Map<string, Program>, mapIdToPr: Map<string, Program>): string {
     let parentName = '';
     switch(pr.creationTimeType) {
       case CreationTimeType.SUBPROGRAM_OF_PR:
@@ -189,7 +188,7 @@ export class WithFullNameService {
     return parentName + pr.shortName;
   }
 
-  private prFullNameDerivedFromArchivalData(pr: ProgrammaticRequest, mapIdToProgram: Map<string, Program>): string {
+  private prFullNameDerivedFromArchivalData(pr: Program, mapIdToProgram: Map<string, Program>): string {
     return this.programFullName(mapIdToProgram.get(pr.originalMrId), mapIdToProgram);
   }
 

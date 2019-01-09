@@ -78,6 +78,7 @@ export class UfrViewComponent implements OnInit {
     let justificationTabValidation = this.ufrJustificationComponent.validate;
     if (justificationTabValidation) {
       Notify.error(justificationTabValidation.message);
+      this.ufr.ufrStatus = UfrStatus.SAVED;
     } else {
       if(!fundsTabValidation.isValid){
         Notify.error(fundsTabValidation.message);
@@ -88,7 +89,7 @@ export class UfrViewComponent implements OnInit {
               Notify.error(d.error);
             }
             else {
-              if (this.ufr.status === UfrStatus.SUBMITTED) {
+              if (this.ufr.ufrStatus === UfrStatus.SUBMITTED) {
                 Notify.success('UFR submitted successfully');
               } else {
                 Notify.success('UFR saved successfully');
@@ -96,7 +97,7 @@ export class UfrViewComponent implements OnInit {
             }
           });
         } else {
-          if (this.ufr.status === UfrStatus.SUBMITTED) {
+          if (this.ufr.ufrStatus === UfrStatus.SUBMITTED) {
             // going straight to SUBMIT without a SAVE first (so save first!)
             this.ufrService.create(this.ufr).subscribe(d => {
               if (d.error) {
@@ -104,7 +105,7 @@ export class UfrViewComponent implements OnInit {
               }
               else {
                 this.ufr = d.result;
-                this.ufr.status = UfrStatus.SUBMITTED;
+                this.ufr.ufrStatus = UfrStatus.SUBMITTED;
                 this.save();
               }
             });
@@ -119,7 +120,7 @@ export class UfrViewComponent implements OnInit {
   }
 
   submit() {
-    this.ufr.status = UfrStatus.SUBMITTED;
+    this.ufr.ufrStatus = UfrStatus.SUBMITTED;
     this.save();
   }
 
@@ -135,30 +136,30 @@ export class UfrViewComponent implements OnInit {
   isNotSavable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
+    return this.ufr.ufrStatus == UfrStatus.SUBMITTED
+      || this.ufr.ufrStatus == UfrStatus.VALID
+      || this.ufr.ufrStatus == UfrStatus.INVALID
+      || this.ufr.ufrStatus == UfrStatus.WITHDRAWN
+      || this.ufr.ufrStatus == UfrStatus.ARCHIVED;
   }
 
   isNotSubmittable(): boolean {
     if(this.ufrUfrTabComponent && this.ufrUfrTabComponent.invalid()) return true;
     if(this.ufrProgramComponent && this.ufrProgramComponent.invalid()) return true;
     if(this.ufrFundsComponent && this.ufrFundsComponent.invalid()) return true;
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
+    return this.ufr.ufrStatus == UfrStatus.SUBMITTED
+      || this.ufr.ufrStatus == UfrStatus.VALID
+      || this.ufr.ufrStatus == UfrStatus.INVALID
+      || this.ufr.ufrStatus == UfrStatus.WITHDRAWN
+      || this.ufr.ufrStatus == UfrStatus.ARCHIVED;
   }
 
   readonly(): boolean {
-    return this.ufr.status == UfrStatus.SUBMITTED
-      || this.ufr.status == UfrStatus.VALID
-      || this.ufr.status == UfrStatus.INVALID
-      || this.ufr.status == UfrStatus.WITHDRAWN
-      || this.ufr.status == UfrStatus.ARCHIVED;
+    return this.ufr.ufrStatus == UfrStatus.SUBMITTED
+      || this.ufr.ufrStatus == UfrStatus.VALID
+      || this.ufr.ufrStatus == UfrStatus.INVALID
+      || this.ufr.ufrStatus == UfrStatus.WITHDRAWN
+      || this.ufr.ufrStatus == UfrStatus.ARCHIVED;
   }
 
   public fundsTabSelected() {

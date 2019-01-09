@@ -122,18 +122,29 @@ label {
   color: #8a8787;
 }
 
+input[type=radio] {
+  -ms-transform: scale(1) !important;
+   -webkit-transform: scale(1) !important;
+   transform: scale(1) !important;
+}
+
+input[type=checkbox] {
+  -webkit-transform: scale(1.2) !important;
+  transform: scale(1.2) !important;
+}
+
 .form-horizontal {
-    width: 100%;
+  width: 100%;
 }
 
 .form-horizontal .form-group {
-    margin-right: 0;
-    width: 100%;
+  margin-right: 0;
+  width: 100%;
 }
 
 .form-group .form-control:last-child {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .alert-success-group {
