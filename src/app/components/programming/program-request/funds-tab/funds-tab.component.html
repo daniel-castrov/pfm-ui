@@ -1,10 +1,10 @@
 <div class="row">
-  <div *ngIf="pr.creationTimeType !== CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
+  <div *ngIf="pr.type !== ProgramType.GENERIC" class="col-auto">
     <button class="btn btn-primary mb-3" (click)="addRow()" [disabled]='!addFundingLineOk()'>
       <span class="icon-pad">Add a new funding line</span>
     </button>
   </div>
-  <div *ngIf="pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
+  <div *ngIf="pr.type === ProgramType.GENERIC" class="col-auto">
     <div class="dropdown-label">
       <select [(ngModel)]="selectedFundingLine" class="form-control-sm" name="dummy">
         <option value="null" disabled selected>Select a Funding Line</option>
@@ -12,7 +12,7 @@
       </select>
     </div>
   </div>
-  <div *ngIf="pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR" class="col-auto">
+  <div *ngIf="pr.type === ProgramType.GENERIC" class="col-auto">
     <button [disabled]="existingFundingLines?.length === 0 || selectedFundingLine === null" class="btn btn-primary mb-3" (click)="addParentFundingLine()" [disabled]='!addFundingLineOk()'>
       <span class="icon-pad">Add parent funding line</span>
     </button>

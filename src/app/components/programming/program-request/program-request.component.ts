@@ -1,19 +1,26 @@
 import {ProgramTabComponent} from './program-tab/program-tab.component';
 import {PRUtils} from '../../../services/pr.utils.service';
 import {ProgramStatus} from '../../../generated/model/programStatus';
-import {CreationTimeType} from '../../../generated/model/creationTimeType';
 import {ProgramType} from '../../../generated/model/programType';
 import {IdAndNameComponent} from './id-and-name/id-and-name.component';
 import {Program} from '../../../generated/model/program';
 import {PRService} from '../../../generated/api/pR.service';
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {ProgramRequestPageModeService} from './page-mode.service';
+import {AddNewPrForMode, ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {Organization, OrganizationService, User, RestResult, Pom, POMService, RolesPermissionsService} from '../../../generated';
+import {
+  Organization,
+  OrganizationService,
+  Pom,
+  POMService,
+  RestResult,
+  RolesPermissionsService,
+  User
+} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
-import { Validation } from './funds-tab/Validation';
+import {Validation} from './funds-tab/Validation';
 
 @Component({
   selector: 'program-request',
@@ -22,9 +29,9 @@ import { Validation } from './funds-tab/Validation';
 })
 export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
-  private pr: Program = {};
-  private prs: Program[];
-  private pom: Pom;
+  public pr: Program = {};
+  public prs: Program[];
+  public pom: Pom;
   private ismgr: boolean;
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
   @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
@@ -33,7 +40,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   constructor( private prService: PRService,
                private userUtils: UserUtils,
-               private programRequestPageMode: ProgramRequestPageModeService,
+               public programRequestPageMode: ProgramRequestPageModeService,
                private changeDetectorRef: ChangeDetectorRef,
                private orgService: OrganizationService,
                private pomService:POMService,
@@ -76,21 +83,19 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.programStatus = 'SAVED';
 
     switch (this.programRequestPageMode.type) {
-      case CreationTimeType.PROGRAM_OF_MRDB:
+      case AddNewPrForMode.A_NEW_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
         this.pr.longName = this.programRequestPageMode.reference.longName;
         this.pr.shortName = this.programRequestPageMode.reference.shortName;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
-      case CreationTimeType.SUBPROGRAM_OF_MRDB:
+      case AddNewPrForMode.A_NEW_INCREMENT:
+      case AddNewPrForMode.A_NEW_FOS:
+      case AddNewPrForMode.A_NEW_SUBPROGRAM:
         this.initPrWith(this.programRequestPageMode.reference);
         this.pr.type = this.programRequestPageMode.programType;
         break;
-      case CreationTimeType.SUBPROGRAM_OF_PR:
-        this.pr.type = this.programRequestPageMode.programType;
-        this.initPrWith(this.programRequestPageMode.reference);
-        break;
-      case CreationTimeType.NEW_PROGRAM:
+      case AddNewPrForMode.A_NEW_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
         break;
       default:

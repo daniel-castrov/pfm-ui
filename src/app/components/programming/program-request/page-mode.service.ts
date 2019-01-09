@@ -1,14 +1,21 @@
-import { CreationTimeType } from './../../../generated/model/creationTimeType';
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ProgramType} from "../../../generated/model/programType";
 import {Program} from "../../../generated";
+
+export enum AddNewPrForMode {
+  AN_MRDB_PROGRAM = 'Previously Funded Program',
+  A_NEW_INCREMENT = 'New Increment',
+  A_NEW_FOS = 'New FoS',
+  A_NEW_SUBPROGRAM = 'New Subprogram',
+  A_NEW_PROGRAM = 'New Program'
+}
 
 @Injectable()
 export class ProgramRequestPageModeService {
 
   private _initialized: boolean;
   private _prId: string;                                                  // null if a PR is being created, an id if an existing PR is being edited
-  public type: CreationTimeType;                                          // applicable only when this._prId is not defined
+  public type: AddNewPrForMode;                                          // applicable only when this._prId is not defined
   public reference: Program;                                              // applicable only when this._prId is not defined
   public phaseId: string;                                                 // applicable only when this._prId is not defined
   public programType: ProgramType;
@@ -20,7 +27,7 @@ export class ProgramRequestPageModeService {
   }
 
   // create mode
-  set(type: CreationTimeType, phaseId: string, reference: Program, programType: ProgramType) {
+  set(type: AddNewPrForMode, phaseId: string, reference: Program, programType: ProgramType) {
     this.init();
     this.type = type;
     this.phaseId = phaseId;
@@ -42,19 +49,15 @@ export class ProgramRequestPageModeService {
   }
 
   get programOfMrDb(): boolean {
-    return this.type === CreationTimeType.PROGRAM_OF_MRDB;
+    return this.type === AddNewPrForMode.AN_MRDB_PROGRAM;
   }
 
-  get subprogramOfMrDb(): boolean {
-    return this.type === CreationTimeType.SUBPROGRAM_OF_MRDB;
-  }
-
-  get subprogramOfPrOrUfr(): boolean {
-    return this.type === CreationTimeType.SUBPROGRAM_OF_PR;
+  get child(): boolean {
+    return this.type === AddNewPrForMode.A_NEW_INCREMENT || this.type === AddNewPrForMode.A_NEW_FOS || this.type === AddNewPrForMode.A_NEW_SUBPROGRAM;
   }
 
   get newProgram(): boolean {
-    return this.type === CreationTimeType.NEW_PROGRAM;
+    return this.type === AddNewPrForMode.A_NEW_PROGRAM;
   }
 
   get initialized() {

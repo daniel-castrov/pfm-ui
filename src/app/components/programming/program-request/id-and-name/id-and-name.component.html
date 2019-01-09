@@ -20,7 +20,7 @@
   </div>
 </div>
 <div id="create-new-subprogram"
-        *ngIf="!programRequestPageMode.prId && (programRequestPageMode.subprogramOfMrDb || programRequestPageMode.subprogramOfPrOrUfr || pr.type === 'GENERIC')">
+        *ngIf="!programRequestPageMode.prId && programRequestPageMode.child">
   <ng-container *ngIf="programRequestPageMode.type">
     <div *ngIf="pr.type==='INCREMENT'"   class="h5 mb-4">Create Program Request for a New Increment:</div>
     <div *ngIf="pr.type==='FOS'" class="h5 mb-4">Create Program Request for a New FoS:</div>

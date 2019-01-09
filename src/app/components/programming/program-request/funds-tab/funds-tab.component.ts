@@ -8,7 +8,6 @@ import {UserUtils} from '../../../../services/user.utils';
 import {PB} from '../../../../generated/model/pB';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  CreationTimeType,
   FundingLine,
   IntMap,
   PBService,
@@ -57,7 +56,6 @@ export class FundsTabComponent implements OnChanges {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
-  CreationTimeType = CreationTimeType;
   ProgramType = ProgramType;
   columnDefs = [];
   defaultColumnDefs = { editable: false };

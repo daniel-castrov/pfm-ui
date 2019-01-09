@@ -3172,8 +3172,6 @@ definitions:
 # PROGRAM AND UFR ENUMS
   ProgramType:
     enum: [PROGRAM, GENERIC, INCREMENT, FOS]
-  CreationTimeType:
-    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR, NEW_PROGRAM]
   ProgramStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, COMPLETED]
   ShortyType:

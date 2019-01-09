@@ -1,8 +1,7 @@
-import {CreationTimeType} from '../../../../generated/model/creationTimeType';
 import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
 import {Program} from '../../../../generated/model/program';
 import {Component, Input} from '@angular/core';
-import {ProgramRequestPageModeService} from '../page-mode.service';
+import {AddNewPrForMode, ProgramRequestPageModeService} from '../page-mode.service';
 import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
 import {ProgramType} from '../../../../generated/model/programType';
 
@@ -13,15 +12,15 @@ import {ProgramType} from '../../../../generated/model/programType';
 })
 export class IdAndNameComponent {
 
-  @Input() private pr: Program;
-  private parentFullName: string;
+  @Input() public pr: Program;
+  public parentFullName: string;
   private invalidShortNames: Set<string>;
   private invalidLongNames: Set<string>;
 
-  private shortname = new FormControl('', [Validators.required, this.validShortName.bind(this)]);
-  private longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
+  public shortname = new FormControl('', [Validators.required, this.validShortName.bind(this)]);
+  public longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
 
-  constructor( private programRequestPageMode: ProgramRequestPageModeService,
+  constructor( public programRequestPageMode: ProgramRequestPageModeService,
                private programAndPrService: ProgramAndPrService ) {
   }
 
@@ -37,11 +36,12 @@ export class IdAndNameComponent {
       return false;
     } else {
       switch (this.programRequestPageMode.type) {
-        case CreationTimeType.PROGRAM_OF_MRDB:
+        case AddNewPrForMode.A_NEW_PROGRAM:
           return false;
-        case CreationTimeType.SUBPROGRAM_OF_MRDB:
-        case CreationTimeType.SUBPROGRAM_OF_PR:
-        case CreationTimeType.NEW_PROGRAM:
+        case AddNewPrForMode.A_NEW_FOS:
+        case AddNewPrForMode.A_NEW_INCREMENT:
+        case AddNewPrForMode.A_NEW_SUBPROGRAM:
+        case AddNewPrForMode.A_NEW_PROGRAM:
           return this.shortname.invalid || this.longname.invalid;
         default:
           console.log('Wrong programRequestPageMode.type in IdAndNameComponent.invalid()');
