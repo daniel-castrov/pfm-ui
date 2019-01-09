@@ -128,9 +128,33 @@ input[type=radio] {
    transform: scale(1) !important;
 }
 
+@supports (zoom:1) {
+  input[type=radio] {
+  	zoom: 1;
+	}
+}
+
+@supports not (zoom:1) {
+	input[type=radio] {
+		transform: scale(1);
+	}
+}
+
 input[type=checkbox] {
   -webkit-transform: scale(1.2) !important;
   transform: scale(1.2) !important;
+}
+
+@supports (zoom:1.2) {
+  input[type=checkbox]{
+	zoom: 1.2;
+	}
+}
+
+@supports not (zoom:1.2) {
+  input[type=checkbox]{
+		transform: scale(1.2);
+	}
 }
 
 .form-horizontal {
