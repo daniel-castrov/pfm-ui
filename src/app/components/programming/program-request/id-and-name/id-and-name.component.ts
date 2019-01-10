@@ -86,7 +86,7 @@ export class IdAndNameComponent {
 
   private getParentFullName(pr: Program) {
     const prFullName: string = pr.shortName;
-    if (prFullName.lastIndexOf('/') == -1) {
+    if (!prFullName || prFullName.lastIndexOf('/') == -1) {
       return '';
     } else {
       return prFullName.substring(0, prFullName.lastIndexOf('/') + 1);

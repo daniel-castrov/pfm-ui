@@ -24,14 +24,13 @@ export class ProgramsComponent implements OnChanges {
 
   // used only during PR deletion
   private idToDelete: string;
-  private nameToDelete: string;
+  public nameToDelete: string;
   private menuTabs = ['filterMenuTab'];
   autoGroupColumnDef = {
     headerName: "Program",
     cellStyle: { backgroundColor: "#eae9e9" },
     menuTabs: this.menuTabs,
     filter: 'agTextColumnFilter',
-    filterValueGetter: params => { return params.data.fullname },
     cellRendererParams: { suppressCount: true, innerRenderer: 'summaryProgramCellRenderer' }
   };
 

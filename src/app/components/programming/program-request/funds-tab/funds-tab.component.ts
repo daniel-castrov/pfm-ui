@@ -113,8 +113,10 @@ export class FundsTabComponent implements OnChanges {
   }
 
   async loadExistingFundingLines() {
+    if(!this.pr.shortName) return;
+
     const prParent: Program = (await this.prService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
-    if (parent) {
+    if (prParent) {
       prParent.fundingLines.forEach(fundingLine => {
         let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
           fl.baOrBlin === fundingLine.baOrBlin &&

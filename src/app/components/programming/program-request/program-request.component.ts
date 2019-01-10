@@ -83,7 +83,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     this.pr.programStatus = 'SAVED';
 
     switch (this.programRequestPageMode.type) {
-      case AddNewPrForMode.A_NEW_PROGRAM:
+      case AddNewPrForMode.AN_MRDB_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
         this.pr.longName = this.programRequestPageMode.reference.longName;
         this.pr.shortName = this.programRequestPageMode.reference.shortName;
