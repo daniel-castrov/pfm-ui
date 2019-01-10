@@ -24,7 +24,7 @@ export class DeleteRenderer implements ICellRendererAngularComp {
     }
     else {
       if (this.params.data.fundingLine && this.params.data.fundingLine.userCreated && this.params.data.gridType === GridType.CURRENT_PR) {
-        if(Pom.StatusEnum.RECONCILIATION !== this.params.context.parentComponent.pom.status || this.params.context.parentComponent.ismgr) {
+        if((this.params.context.parentComponent.pom) && Pom.StatusEnum.RECONCILIATION !== this.params.context.parentComponent.pom.status || this.params.context.parentComponent.ismgr) {
           this.hidden = false;
         }
       }
