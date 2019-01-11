@@ -6,6 +6,8 @@ import { UserUtils } from './services/user.utils';
 import { WithFullNameService } from './services/with-full-name.service';
 import { NewProgramComponent } from './components/programming/select-program-request/new-program-request/new-program-request.component';
 import { PomComponent } from './components/programming/select-program-request/pom/pom.component';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+
 // app.modules
 // ANGULAR IMPORTS
 import { AccordionModule } from 'ngx-bootstrap/accordion';
@@ -492,7 +494,8 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    AgGridModule.withComponents([NumericCellEditor])
+    AgGridModule.withComponents([NumericCellEditor]),
+    Ng2GoogleChartsModule,
   ],
   providers: [
     AssignRoleRequestService,

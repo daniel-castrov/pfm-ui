@@ -53,11 +53,19 @@ export class CreatePomSessionComponent implements OnInit {
   private pinnedRowOrgsDelta;
   private menuTabs = ['filterMenuTab'];
 
+  private chartdata;
+
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
     private router: Router, private globalsvc: UserUtils,
-    private withFullNameService: WithFullNameService ) {
+    private withFullNameService: WithFullNameService) {
+    
+    this.chartdata = {
+      chartType: 'ColumnChart',
+      dataTable: [],
+      options: { 'title': 'Community TOA' },
+    };
   }
 
   ngOnInit() {
@@ -275,7 +283,7 @@ export class CreatePomSessionComponent implements OnInit {
 
     // Community Toas
     row = {}
-    row["orgid"] = this.community.abbreviation+" TOA";
+    row["orgid"] = this.community.abbreviation + " TOA";
     pomData.communityToas.forEach((toa: TOA) => {
       row[toa.year] = toa.amount;
     });
@@ -311,7 +319,35 @@ export class CreatePomSessionComponent implements OnInit {
         this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
     });
 
+    this.resetCharts();
   }
+
+  resetCharts() {
+    var yeartoas: Map<number, number> = new Map<number, number>();
+
+    for ( var i = 0; i < 5; i++) {
+      yeartoas.set(this.fy + i, this.rowsCommunity[0][this.fy + i]);
+    }
+
+    var charty: [any[]] = [['Year', 'Baseline', 'TOA', { role: 'annotation' }]];
+    for (var i = 0; i < 5; i++) {
+      var newamt = yeartoas.get(this.fy + i);
+      if ('string' === typeof newamt) {
+        newamt = Number.parseInt(newamt);
+      }
+
+      var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
+
+      charty.push([(this.fy + i).toString(), baseamt, newamt, newamt]);
+    }
+
+    this.chartdata = {
+      chartType: 'ColumnChart',
+      dataTable: charty,
+      options: { 'title': `FY${this.fy - 2000} Community TOA` }
+    };
+  }
+
 
   // Compute and set the bottom 'pinned' row.
   private setDeltaRow(fy:number) {
@@ -329,7 +365,6 @@ export class CreatePomSessionComponent implements OnInit {
         deltaRow[fy+i] = deltaRow[fy+i] - row[fy+i]
         if (deltaRow[fy+i] <0 ){
           this.tooMuchToa = true;
-
         }
       }
      });
@@ -339,6 +374,8 @@ export class CreatePomSessionComponent implements OnInit {
     this.pinnedRowOrgsDelta = [];
     deltaRow["orgid"] = "Delta";
     this.pinnedRowOrgsDelta = [deltaRow];
+
+    this.resetCharts();
   }
 
   private useEppData() {
