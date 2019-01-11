@@ -1,6 +1,6 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
-import {FundingLine, PBService, POMService, ProgramsService, PRService, ShortyType, UFR, UfrStatus} from '../../../../generated'
+import {FundingLine, PBService, Pom, POMService, ProgramsService, PRService, ShortyType, UFR} from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -28,7 +28,7 @@ export class UfrFundsComponent implements OnChanges {
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
 
-  private pomFy: number;
+  private pom: Pom;
   private appropriations: string[] = [];
   private functionalAreas: string[] = [];
   private baOrBlins: string[] = [];
@@ -60,16 +60,16 @@ export class UfrFundsComponent implements OnChanges {
 
   ngOnChanges() {
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
-      this.pomFy =  pom.result.fy;
+      this.pom =  pom.result;
       this.columnKeys = [
-        this.pomFy - 3,
-        this.pomFy -2,
-        this.pomFy - 1,
-        this.pomFy,
-        this.pomFy + 1,
-        this.pomFy + 2,
-        this.pomFy + 3,
-        this.pomFy + 4];
+        this.pom.fy - 3,
+        this.pom.fy -2,
+        this.pom.fy - 1,
+        this.pom.fy,
+        this.pom.fy + 1,
+        this.pom.fy + 2,
+        this.pom.fy + 3,
+        this.pom.fy + 4];
       this.generateColumns();
       this.initDataRows();
       this.agGridCurrentFunding.api.sizeColumnsToFit();
@@ -337,17 +337,17 @@ export class UfrFundsComponent implements OnChanges {
       cellClass:['text-right'],
       cellClassRules: {
         'ag-cell-edit': params => {
-          return this.isAmountEditable(params, this.pomFy)
+          return this.isAmountEditable(params, this.pom.fy)
         },
         'text-right': params => {
-          return this.isAmountEditable(params, this.pomFy)
+          return this.isAmountEditable(params, this.pom.fy)
         },
         'delta-row': params => {
           return params.data.phaseType === PhaseType.DELTA;
         }
       },
       editable: params => {
-        return this.isAmountEditable(params, this.pomFy)
+        return this.isAmountEditable(params, this.pom.fy)
       },
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
@@ -358,35 +358,35 @@ export class UfrFundsComponent implements OnChanges {
     let subHeader;
     let cellClass = [];
     switch (Number(key)) {
-      case (this.pomFy + 4):
+      case (this.pom.fy + 4):
         subHeader = 'BY+4';
         cellClass = ['text-right'];
         break;
-      case this.pomFy + 3:
+      case this.pom.fy + 3:
         subHeader = 'BY+3';
         cellClass = ['text-right'];
         break;
-      case this.pomFy + 2:
+      case this.pom.fy + 2:
         subHeader = 'BY+2';
         cellClass = ['text-right'];
         break;
-      case this.pomFy + 1:
+      case this.pom.fy + 1:
         subHeader = 'BY+1';
         cellClass = ['text-right'];
         break;
-      case this.pomFy:
+      case this.pom.fy:
         subHeader = 'BY';
         cellClass = ['text-right'];
         break;
-      case this.pomFy - 1:
+      case this.pom.fy - 1:
         subHeader = 'CY';
         cellClass = ['ag-cell-white', 'text-right'];
         break;
-      case this.pomFy - 2:
+      case this.pom.fy - 2:
         subHeader = 'PY';
         cellClass = ['ag-cell-white', 'text-right'];
         break;
-      case this.pomFy - 3:
+      case this.pom.fy - 3:
         subHeader = 'PY-1';
         cellClass = ['ag-cell-white', 'text-right'];
         break;
@@ -427,7 +427,7 @@ export class UfrFundsComponent implements OnChanges {
   getTotal(pr, columnKeys): number {
     let result = 0;
     columnKeys.forEach(year => {
-      if(year >= this.pomFy) {
+      if(year >= this.pom.fy) {
         let amount = pr.fundingLine.funds[year];
         result += isNaN(amount)? 0 : amount;
       }
@@ -485,7 +485,7 @@ export class UfrFundsComponent implements OnChanges {
   }
 
   isAmountEditable(params, key): boolean{
-    return key >= this.pomFy && params.data.editable && !this.readonly;
+    return key >= this.pom.fy && params.data.editable && !this.readonly;
   }
 
   private async loadDropdownOptions() {

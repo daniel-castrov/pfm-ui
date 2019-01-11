@@ -1,4 +1,4 @@
-<button [disabled]="lockedWorksheetsComponent.lockedWorksheets.length" (click)="lockConfirmationDialog.open()" class="btn btn-success">Lock</button>
+<button [disabled]="lockedWorksheetsComponent.lockedWorksheets.length" (click)="openDialog()" class="btn btn-success">Lock</button>
 <confirmation-dialog
   #lockConfirmationDialog
   confirmationMessage="<strong>Are you sure you want to lock the POM Session?</strong>"

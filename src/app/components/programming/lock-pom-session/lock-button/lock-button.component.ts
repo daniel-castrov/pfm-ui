@@ -1,7 +1,9 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {Pom, POMService, Worksheet, WorksheetService} from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 import {LockedWorksheetsComponent} from "../locked-worksheets/locked-worksheets.component";
+import {GridToaComponent} from "../../update-pom-session/grid-toa/grid-toa.component";
+import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'lock-button',
@@ -14,10 +16,22 @@ export class LockButtonComponent {
   @Input() worksheets: Array<Worksheet>;
   @Input() lockedWorksheetsComponent: LockedWorksheetsComponent;
   @Input() selectedWorksheet: Worksheet;
+  @Input() gridToaComponent: GridToaComponent;
+
   @Output() locked = new EventEmitter();
+
+  @ViewChild('lockConfirmationDialog') dialog: ConfirmationDialogComponent;
 
   constructor(private pomService: POMService,
               private worksheetService: WorksheetService) {}
+
+  openDialog(){
+    if (!this.gridToaComponent.isToaExceeded) {
+      this.dialog.open();
+    } else {
+      Notify.error('This worksheet is exceeding the TOA');
+    }
+  }
 
   async lockPom() {
     await this.worksheetService.update({...this.selectedWorksheet, isFinal: true}).toPromise();

@@ -21,6 +21,7 @@ export class GridToaComponent {
   @Input() columnKeys;
   rowData;
   toaRowData;
+  isToaExceeded = false;
   @Input() selectedWorksheet: Worksheet;
 
   initToaDataRows(){
@@ -53,6 +54,8 @@ export class GridToaComponent {
     this.columnKeys.forEach((year: number) => {
       deltaFunds[year] = allocatedFunds[year] - resourcedFunds[year];
     });
+
+    this.isToaExceeded = deltaFunds.some(value => value < 0);
 
     let deltaRow = {description: 'Delta', funds: deltaFunds};
     data.push(deltaRow);
