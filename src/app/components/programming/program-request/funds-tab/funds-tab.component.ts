@@ -487,7 +487,7 @@ export class FundsTabComponent implements OnChanges {
           headerTooltip: 'Item',
           field: 'fundingLine.item',
           editable: params => {
-            return this.isEditable(params)
+            return this.isEditable(params) && params.data.fundingLine.baOrBlin
           },
           cellClass: 'funding-line-default',
           cellEditorSelector: params => {
@@ -997,14 +997,14 @@ export class FundsTabComponent implements OnChanges {
       params.data.fundingLine.item = null;
       params.data.fundingLine.baOrBlin = null;
     }
-    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
+    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item' && params.newValue !== '') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g, '');
     } else {
       if (params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin) {
 
         params.data.fundingLine.opAgency = PRUtils.getDefaultOpAgencyForLeadComponent(this.pr.leadComponent);
-        this.agGrid.api.refreshCells(); 
-        
+        this.agGrid.api.refreshCells();
+
         if (params.data.fundingLine.appropriation === 'RDTE') {
           params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g, '');;
         }
@@ -1054,6 +1054,7 @@ export class FundsTabComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
+    this.filteredBlins.unshift('');
     this.limitBaForLeadComponent()
   }
 
