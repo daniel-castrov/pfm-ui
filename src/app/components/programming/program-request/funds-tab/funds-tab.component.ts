@@ -1054,8 +1054,8 @@ export class FundsTabComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
-    this.filteredBlins.unshift('');
     this.limitBaForLeadComponent()
+    this.filteredBlins.unshift('');
   }
 
   limitBaForLeadComponent() {

@@ -584,8 +584,8 @@ export class UfrFundsComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
-    this.filteredBlins.unshift('');
     this.limitBaForLeadComponent()
+    this.filteredBlins.unshift('');
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
 
