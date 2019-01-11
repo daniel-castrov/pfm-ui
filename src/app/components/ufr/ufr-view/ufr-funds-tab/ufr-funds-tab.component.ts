@@ -286,7 +286,7 @@ export class UfrFundsComponent implements OnChanges {
             field: 'fundingLine.item',
             maxWidth: 70,
             editable: params => {
-              return this.isEditable(params)
+              return this.isEditable(params) && params.data.fundingLine.baOrBlin
             },
             cellClass: 'funding-line-default',
             cellEditorSelector: params => {
@@ -549,7 +549,7 @@ export class UfrFundsComponent implements OnChanges {
       params.data.fundingLine.item = null;
       params.data.fundingLine.baOrBlin = null;
     }
-    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item') {
+    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item' && params.newValue !== '') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g,'');
     } else {
       if(params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin){
@@ -584,6 +584,7 @@ export class UfrFundsComponent implements OnChanges {
     } else {
       this.filteredBlins = this.baOrBlins.filter(baOrBlin => (baOrBlin.match(/BA[1-9]/)));
     }
+    this.filteredBlins.unshift('');
     this.limitBaForLeadComponent()
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }
