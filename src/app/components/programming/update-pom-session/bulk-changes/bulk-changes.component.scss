@@ -4,14 +4,6 @@ fieldset {
   height: 134px;
 }
 
-input[type=radio] {
-  -ms-transform: scale(1) !important;
-   -webkit-transform: scale(1) !important;
-   transform: scale(1) !important;
-   display: inline !important;
-}
-
-
 .bulk-amount {
   width: 110px;
 }
@@ -22,8 +14,10 @@ input[type=radio] {
   padding: 0 0 10px 0;
 
   > .form-check-input {
-   margin: 3px 0 0 0 !important;
-   position: absolute !important;
+     margin: 3px 0 0 0 !important;
+     top: 0 !important;
+     left: 0 !important;
+     position: absolute !important;
   }
 }
 
