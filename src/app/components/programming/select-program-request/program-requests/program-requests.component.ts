@@ -35,7 +35,7 @@ export class ProgramsComponent implements OnChanges {
   };
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  data = [];
+  rowData = [];
   context: any;
   columnDefs = [];
   groupDefaultExpanded = -1;
@@ -52,7 +52,7 @@ export class ProgramsComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.pomPrograms && this.pbPrograms) {
-      let data = []
+      let rowData = []
       this.pomPrograms.forEach(prOne => {
         let program = new UiProgramRequest(prOne);
         program.phaseType = PhaseType.POM;
@@ -74,17 +74,17 @@ export class ProgramsComponent implements OnChanges {
         } else {
           program.dataPath = [prOne.shortName];
         }
-        data.push(program);
+        rowData.push(program);
       });
       this.pbPrograms.forEach(pr => {
         let programRequest = new UiProgramRequest(pr);
         programRequest.phaseType = PhaseType.PB;
         programRequest.dataPath = [pr.shortName, '']
-        data.push(programRequest);
+        rowData.push(programRequest);
       });
-      this.sortObjects(data, ['shortName', 'phaseType']);
-      this.data = data;
-      this.defineColumns(this.data);
+      this.sortObjects(rowData, ['shortName', 'phaseType']);
+      this.rowData = rowData;
+      this.defineColumns(this.rowData);
     }
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()

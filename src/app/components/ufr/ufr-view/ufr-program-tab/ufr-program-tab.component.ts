@@ -71,7 +71,7 @@ export class UfrProgramComponent implements OnInit, OnChanges {
     if(this.ufr.shortyType == ShortyType.NEW_PROGRAM) return "Program";
   }
 
-  private get disabled(): boolean {
+  public get disabled(): boolean {
     return this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR;
   }
 

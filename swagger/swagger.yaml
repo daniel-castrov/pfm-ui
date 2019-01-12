@@ -3698,7 +3698,7 @@ definitions:
     properties:
       programRequestId:
         type: "string"
-      programRequestFullname:
+      programRequest:
         type: "string"
       coreCapability:
         type: "string"

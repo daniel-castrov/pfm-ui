@@ -59,7 +59,7 @@ export class WorksheetComponent implements OnChanges {
       let row = {
         id: value.fundingLine.id,
         coreCapability: value.coreCapability,
-        programId: value.programRequestFullname,
+        programId: value.programRequest,
         fundingLine: value.fundingLine,
         modified: false,
         notes: '',
@@ -77,7 +77,7 @@ export class WorksheetComponent implements OnChanges {
     this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
       let worksheet = JSON.parse(JSON.stringify(value));
       let row = {
-        programId: worksheet.programRequestFullname,
+        programId: worksheet.programRequest,
         fundingLine: worksheet.fundingLine
       };
       data.push(row);

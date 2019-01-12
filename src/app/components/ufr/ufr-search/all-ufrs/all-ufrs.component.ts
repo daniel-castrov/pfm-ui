@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import {
   ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus
+  UfrStatus, Program
 } from '../../../../generated';
 import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -229,9 +229,9 @@ export class AllUfrsComponent implements OnInit {
     ufrs.forEach(ufr => {
 
       if ( ufr.shortyId ){
-        let progOrPr = this.mapPrIdToObj.get(ufr.shortyId);
+        let progOrPr: Program = this.mapPrIdToObj.get(ufr.shortyId);
         if ( progOrPr ){
-          progId = progOrPr.fullname;
+          progId = progOrPr.shortName;
           funcArea = progOrPr.functionalArea;
           orgid = progOrPr.organizationId;
         } else {
