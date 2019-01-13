@@ -14,10 +14,10 @@ export class IdAndNameComponent {
 
   @Input() public pr: Program;
   public parentFullName: string;
-  private invalidShortNames: Set<string>;
+  private invalidChildNames: Set<string>;
   private invalidLongNames: Set<string>;
 
-  public shortname = new FormControl('', [Validators.required, this.validShortName.bind(this)]);
+  public childname = new FormControl('', [Validators.required, this.validChildName.bind(this)]);
   public longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
 
   constructor( public programRequestPageMode: ProgramRequestPageModeService,
@@ -27,7 +27,7 @@ export class IdAndNameComponent {
   async init(pr: Program) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
     this.parentFullName = await this.getParentFullName(pr);
     const programsPlusPrs: Program[] = await this.programAndPrService.programsPlusPrs(pr.phaseId);
-    this.invalidShortNames = this.getInvalidShortNames(programsPlusPrs);
+    this.invalidChildNames = this.getInvalidChildNames(programsPlusPrs);
     this.invalidLongNames = this.getInvalidLongNames(programsPlusPrs);
   }
 
@@ -42,14 +42,14 @@ export class IdAndNameComponent {
         case AddNewPrForMode.A_NEW_INCREMENT:
         case AddNewPrForMode.A_NEW_SUBPROGRAM:
         case AddNewPrForMode.A_NEW_PROGRAM:
-          return this.shortname.invalid || this.longname.invalid;
+          return this.childname.invalid || this.longname.invalid;
         default:
           console.log('Wrong programRequestPageMode.type in IdAndNameComponent.invalid()');
       }
     }
   }
 
-  private getInvalidShortNames(programsPlusPrs: Program[]): Set<string> {
+  private getInvalidChildNames(programsPlusPrs: Program[]): Set<string> {
     const nonUniqueInvalidNames: string[] = programsPlusPrs
                           .filter( (programOrPr: Program) => programOrPr.shortName.startsWith(this.parentFullName) )
                           .map( (programOrPr: Program) => programOrPr.shortName.substring(this.parentFullName.length) )
@@ -72,9 +72,9 @@ export class IdAndNameComponent {
     return new Set(nonUniqueInvalidDescriptions);
   }
 
-  private validShortName(control: AbstractControl): ValidationErrors | null {
-    if(!this.invalidShortNames) return null; // if init(...) has not been called yet there cannot be any validation
-    if(this.invalidShortNames.has(this.pr.shortName.toLocaleUpperCase())) return {alreadyExists:true};
+  private validChildName(control: AbstractControl): ValidationErrors | null {
+    if(!this.invalidChildNames) return null; // if init(...) has not been called yet there cannot be any validation
+    if(this.invalidChildNames.has(this.childname.value.toLocaleUpperCase())) return {alreadyExists:true};
     return null;
   }
 

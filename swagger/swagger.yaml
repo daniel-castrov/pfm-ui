@@ -953,7 +953,7 @@ paths:
         name: "shortname"
         required: true
         type: "string"
-  /pr/phase/{phaseId}/name/{name}/children:
+  /pr/phase/{phaseId}/name/{shortname}/children:
     get:
       tags:
         - "PR"
@@ -966,10 +966,10 @@ paths:
           required: true
           type: "string"
         - in: "path"
-          name: "name"
+          name: "shortname"
           required: true
           type: "string"
-  /pr/phase/{phaseId}/name/{name}/parent:
+  /pr/phase/{phaseId}/name/{shortname}/parent:
     get:
       tags:
         - "PR"
@@ -982,7 +982,7 @@ paths:
           required: true
           type: "string"
         - in: "path"
-          name: "name"
+          name: "shortname"
           required: true
           type: "string"
 # STOP PR
@@ -1002,13 +1002,13 @@ paths:
       description: "Returns a given program"
       produces:
         - "application/json"
-  /programs/name/{name}/parent:
+  /programs/name/{shortname}/parent:
     get:
       tags:
         - "Programs"
       operationId: "getParentByName"
       parameters:
-        - name: "name"
+        - name: "shortname"
           in: "path"
           required: true
           type: "string"

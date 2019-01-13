@@ -27,6 +27,7 @@ import {Notify} from "../../../../utils/Notify";
 import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
 import {GridType} from "./GridType";
 import {CellEditor} from "../../../../utils/CellEditor";
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'funds-tab',
@@ -87,7 +88,7 @@ export class FundsTabComponent implements OnChanges {
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       if (this.pr.type === ProgramType.GENERIC) {
-        this.parentPr = (await this.prService.getParentByName(this.pr.phaseId ,this.pr.shortName).toPromise()).result;
+        this.parentPr = (await this.prService.getParentByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
       }
 
       if( this.pom ){
@@ -115,7 +116,7 @@ export class FundsTabComponent implements OnChanges {
   async loadExistingFundingLines() {
     if(!this.pr.shortName) return;
 
-    const prParent: Program = (await this.prService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
+    const prParent: Program = (await this.prService.getParentByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
     if (prParent) {
       prParent.fundingLines.forEach(fundingLine => {
         let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -130,7 +131,7 @@ export class FundsTabComponent implements OnChanges {
       this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
     }
 
-    const mrdbParent: Program = (await this.programsService.getParentByName(this.pr.shortName).toPromise()).result;
+    const mrdbParent: Program = (await this.programsService.getParentByName(NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
     if (mrdbParent) {
       mrdbParent.fundingLines.forEach(fundingLine => {
         let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -168,9 +169,9 @@ export class FundsTabComponent implements OnChanges {
 
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    const parent: Program = (await this.prService.getParentByName(this.pr.phaseId, this.pr.shortName).toPromise()).result;
+    const parent: Program = (await this.prService.getParentByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
 
-    this.prService.getChildrenByName(this.pr.phaseId, this.pr.shortName).subscribe(response => {
+    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
@@ -849,7 +850,7 @@ export class FundsTabComponent implements OnChanges {
       return;
     }
 
-    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, name).toPromise()).result;
+    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, NameUtils.urlEncode(name)).toPromise()).result;
 
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
@@ -948,7 +949,7 @@ export class FundsTabComponent implements OnChanges {
   delete(index) {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
-    this.prService.getChildrenByName(this.pr.phaseId, this.pr.shortName).subscribe(data => {
+    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
       let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&

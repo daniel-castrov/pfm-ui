@@ -21,6 +21,7 @@ import {
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
 import {Validation} from './funds-tab/Validation';
+import {NameUtils} from "../../../utils/NameUtils";
 
 @Component({
   selector: 'program-request',
@@ -153,6 +154,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
           this.pr = data.result;
         }
       } else {
+        this.pr.shortName = NameUtils.createShortName(this.programRequestPageMode.reference, this.idAndNameComponent.childname.value);
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
         Notify.success('Program request created successfully')
       }

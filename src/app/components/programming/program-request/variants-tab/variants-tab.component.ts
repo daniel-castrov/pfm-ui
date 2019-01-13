@@ -9,6 +9,7 @@ import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
 import {GridType} from "../funds-tab/GridType";
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'variants-tab',
@@ -96,7 +97,7 @@ export class VariantsTabComponent implements OnInit {
   async initDataRows(){
 
     const pb = (await this.pbService.getLatest(this.user.currentCommunityId).toPromise()).result;
-    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, this.current.shortName).toPromise()).result;
+    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, NameUtils.urlEncode(this.current.shortName)).toPromise()).result;
 
     this.fund.variants.forEach(variant => {
       let data: Array<DataRow> = [];
