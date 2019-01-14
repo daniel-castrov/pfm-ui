@@ -61,8 +61,15 @@ export class NewProgramComponent implements OnInit {
     this.programRequestPageMode.set( this.addNewPrForMode,
                                      this.pomId,
                                      this.selectedProgramOrPr,
-                                     ProgramType.PROGRAM );
+                                     this.toProgramType(this.addNewPrForMode) );
     this.router.navigate(['/program-request']);
+  }
+
+  private toProgramType(addNewPrForMode: AddNewPrForMode) {
+    if(this.addNewPrForMode == AddNewPrForMode.AN_MRDB_PROGRAM || this.addNewPrForMode == AddNewPrForMode.A_NEW_PROGRAM) return ProgramType.PROGRAM;
+    if(this.addNewPrForMode == AddNewPrForMode.A_NEW_FOS) return ProgramType.FOS;
+    if(this.addNewPrForMode == AddNewPrForMode.A_NEW_INCREMENT) return ProgramType.INCREMENT;
+    if(this.addNewPrForMode == AddNewPrForMode.A_NEW_SUBPROGRAM) return ProgramType.GENERIC;
   }
 
 }
