@@ -82,8 +82,8 @@
 
       <div class="row">
         <ng-container *ngIf='subchartdata'>
-          <div class="col-8">
-            <div class="agtoatable">
+          <div class="col-5">
+            <div class="set-toatable">
               <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
                 [gridOptions]="gridOptionsOrgs"
                 [rowData]="rowsOrgs"
@@ -95,10 +95,12 @@
             </div>
           </div>
           <div class="col-4">
-            <google-chart #subchart
-              [data]='subchartdata'
-              (chartSelect)='select($event)'
-            ></google-chart>
+            <div class="pie-chart-google">
+              <google-chart #subchart
+                [data]='subchartdata'
+                (chartSelect)='select($event)'
+              ></google-chart>
+            </div>
           </div>
         </ng-container>
 

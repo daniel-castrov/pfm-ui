@@ -28,8 +28,18 @@ label {
   width:800px;
 }
 
+.set-toatable {
+  width:500px;
+}
+
 .bar-chart-google {
   width:810px;
+}
+
+.pie-chart-google {
+  margin-left: -86px;
+  position: absolute;
+  z-index: -9999;
 }
 
 .toa-alert {
