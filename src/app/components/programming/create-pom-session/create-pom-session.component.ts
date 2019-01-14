@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
 import { NumericCellEditor } from './numeric-celleditior.component';
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
+import { ChartSelectEvent, GoogleChartComponent } from 'ng2-google-charts';
 import { 
   Community,
   Organization,
@@ -28,7 +29,8 @@ import {Notify} from "../../../utils/Notify";
 
 export class CreatePomSessionComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
 
   private fy: number;
   private community: Community;
@@ -54,6 +56,8 @@ export class CreatePomSessionComponent implements OnInit {
   private menuTabs = ['filterMenuTab'];
 
   private chartdata;
+  private subchartdata;
+  private pomData;
 
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -260,14 +264,10 @@ export class CreatePomSessionComponent implements OnInit {
       }
     }
 
-    let pomData;
-
-    if ( null == currentPom ){
+    this.pomData = (null == currentPom
       // Use the values from the samplepom ( the previous pb )
-      pomData= samplepom;
-    } else {
-      pomData= currentPom;
-    }
+      ? samplepom
+      : currentPom );
 
     // BaseLine
     let row = {}
@@ -284,7 +284,7 @@ export class CreatePomSessionComponent implements OnInit {
     // Community Toas
     row = {}
     row["orgid"] = this.community.abbreviation + " TOA";
-    pomData.communityToas.forEach((toa: TOA) => {
+    this.pomData.communityToas.forEach((toa: TOA) => {
       row[toa.year] = toa.amount;
     });
     for (i = 0; i < 5; i++) {
@@ -293,13 +293,13 @@ export class CreatePomSessionComponent implements OnInit {
     this.rowsCommunity = [row];
 
     // Org TOAs
-    Object.keys(pomData.orgToas).forEach(key => {
+    Object.keys(this.pomData.orgToas).forEach(key => {
       var toamap: Map<number, number> = new Map<number, number>();
 
       row = {};
       let total = 0;
       row["orgid"] = key ;
-        pomData.orgToas[key].forEach( (toa:TOA) => {
+        this.pomData.orgToas[key].forEach( (toa:TOA) => {
           row[toa.year] = toa.amount;
         });
       this.rowsOrgs.push(row);
@@ -319,35 +319,10 @@ export class CreatePomSessionComponent implements OnInit {
         this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
     });
 
+    console.log(this.pomData);
+
     this.resetCharts();
   }
-
-  resetCharts() {
-    var yeartoas: Map<number, number> = new Map<number, number>();
-
-    for ( var i = 0; i < 5; i++) {
-      yeartoas.set(this.fy + i, this.rowsCommunity[0][this.fy + i]);
-    }
-
-    var charty: [any[]] = [['Year', 'Baseline', 'TOA', { role: 'annotation' }]];
-    for (var i = 0; i < 5; i++) {
-      var newamt = yeartoas.get(this.fy + i);
-      if ('string' === typeof newamt) {
-        newamt = Number.parseInt(newamt);
-      }
-
-      var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
-
-      charty.push([(this.fy + i).toString(), baseamt, newamt, newamt]);
-    }
-
-    this.chartdata = {
-      chartType: 'ColumnChart',
-      dataTable: charty,
-      options: { 'title': `FY${this.fy - 2000} Community TOA` }
-    };
-  }
-
 
   // Compute and set the bottom 'pinned' row.
   private setDeltaRow(fy:number) {
@@ -466,6 +441,8 @@ export class CreatePomSessionComponent implements OnInit {
       // refresh both grids
       this.gridOptionsCommunity.api.refreshCells();
       this.gridOptionsOrgs.api.refreshCells();
+
+      this.resetCharts();
     });
   }
 
@@ -545,4 +522,83 @@ export class CreatePomSessionComponent implements OnInit {
     });
   }
 
+
+  resetCharts() {
+    var yeartoas: Map<number, number> = new Map<number, number>();
+
+    for (var i = 0; i < 5; i++) {
+      yeartoas.set(this.fy + i, this.rowsCommunity[0][this.fy + i]);
+    }
+
+    var charty: [any[]] = [['Year', 'Baseline', 'TOA', { role: 'annotation' }]];
+    for (var i = 0; i < 5; i++) {
+      var newamt = yeartoas.get(this.fy + i);
+      if ('string' === typeof newamt) {
+        newamt = Number.parseInt(newamt);
+      }
+
+      var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
+
+      charty.push([(this.fy + i).toString(), baseamt, newamt, newamt]);
+    }
+
+    this.chartdata = {
+      chartType: 'ColumnChart',
+      dataTable: charty,
+      options: {
+        title: 'Community TOA',
+        tooltip: { trigger: 'selection'}
+      }
+    };
+  }
+
+  select(event: ChartSelectEvent) {
+    //console.log(event);
+    if ('deselect' === event.message) {
+      delete this.subchartdata;
+    }
+  }
+
+  createSubchart(myfy: number, isbaseline: boolean) {
+
+    var subdata: [any[]] = [['Organization', myfy + ' TOA', { role: 'annotation' }]];
+    this.rowsOrgs.forEach(orgdata => { 
+      var orgname: string = this.orgMap.get(orgdata.orgid);
+      var amt: number = (isbaseline
+        ? this.pomData.orgToas[orgdata.orgid].filter( x=>x.year===myfy).map(x=>x.amount)[0]
+        : orgdata[myfy]);
+      if ('string' === typeof amt) {
+        amt = Number.parseInt(amt);
+      }
+
+      subdata.push([ orgname, amt, amt]);
+    });
+
+    console.log(subdata);
+
+    this.subchartdata = {
+      chartType: 'PieChart',
+      dataTable: subdata,
+      options: {
+        title: `FY${myfy-2000} Organizational TOA Breakdown` + (isbaseline ? ' (Baseline)': '')
+      }
+    };
+  }
+
+  addAction(rawchart:any) {
+    rawchart.setAction({
+      id: 'orgtoas',
+      text: 'Organization Breakdown',
+      action: () => {
+        var selection = rawchart.getSelection();
+        var myfy = this.fy + selection[0].row;
+        var baseline = (1 === selection[0].column);
+        this.createSubchart(myfy, baseline);
+      }
+    });
+  }
+
+  chartready() {
+    this.addAction(this.comchart.wrapper.getChart());
+  }
 }

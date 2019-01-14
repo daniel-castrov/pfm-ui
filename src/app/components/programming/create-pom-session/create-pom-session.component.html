@@ -53,7 +53,22 @@
       <div class="row mb-2">
         <div class="col-12">
           <div class='agtoatable'>
-            <google-chart [data]='chartdata'></google-chart>
+            <google-chart #comchart 
+              [data]='chartdata' 
+              (chartReady)='chartready()'
+              (chartSelect)='select($event)'
+            ></google-chart>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf='subchartdata'>
+        <div class="col-12">
+          <div class='agtoatable'>
+            <google-chart #subchart 
+              [data]='subchartdata' 
+              (chartSelect)='select($event)'
+            ></google-chart>
           </div>
         </div>
       </div>
