@@ -51,27 +51,20 @@
       </div>
 
       <div class="row mb-2">
-        <div class="col-12">
-          <div class='agtoatable'>
-            <google-chart #comchart 
-              [data]='chartdata' 
-              (chartReady)='chartready()'
-              (chartSelect)='select($event)'
-              (mouseOver)='createSubchart($event)'
-              (mouseOut)='removeSubchart($event)'
-            ></google-chart>
-          </div>
+        <div class="col-8">
+          <google-chart #comchart 
+            [data]='chartdata' 
+            (chartReady)='chartready()'
+            (chartSelect)='select($event)'
+            (mouseOver)='createSubchart($event)'
+            (mouseOut)='removeSubchart($event)'
+          ></google-chart>
         </div>
-      </div>
-
-      <div class="row" *ngIf='subchartdata'>
-        <div class="col-12">
-          <div class='agtoatable'>
-            <google-chart #subchart 
-              [data]='subchartdata' 
-              (chartSelect)='select($event)'
-            ></google-chart>
-          </div>
+        <div class="col-4" *ngIf='subchartdata'>
+          <google-chart #subchart 
+            [data]='subchartdata'
+            (chartSelect)='select($event)'
+          ></google-chart>
         </div>
       </div>
 

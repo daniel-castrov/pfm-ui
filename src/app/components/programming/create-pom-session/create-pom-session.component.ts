@@ -58,6 +58,7 @@ export class CreatePomSessionComponent implements OnInit {
   private chartdata;
   private subchartdata;
   private pomData;
+  private chartLockEvent;
 
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -240,7 +241,6 @@ export class CreatePomSessionComponent implements OnInit {
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
         this.setDeltaRow(this.fy);
-
       });
     });
   }
@@ -547,47 +547,71 @@ export class CreatePomSessionComponent implements OnInit {
         title: 'Community TOA'
       }
     };
+
+    if (this.chartLockEvent) {
+      this.comchart.wrapper.getChart().setSelection
+      this.createSubchart(this.chartLockEvent);
+    }
   }
 
   select(event: ChartSelectEvent) {
-    //console.log(event);
     if ('deselect' === event.message) {
       delete this.subchartdata;
+      delete this.chartLockEvent;
     }
+    else if ('select' === event.message) {
+      this.chartLockEvent = {
+        position: {
+          row: event.row,
+          column: event.column
+        }
+      };
+    }
+  }
+
+  createSubchart(event: ChartMouseOverEvent) {
+    var myfy: number = this.fy + event.position.row;
+    var isbaseline: boolean = (1 === event.position.column);
+    this.generateSubchart(myfy, isbaseline);
   }
 
   removeSubchart(event: ChartMouseOutEvent) {
-    if (0 === this.comchart.wrapper.getChart().getSelection().length) {
+    if (this.chartLockEvent) {
+      this.createSubchart(this.chartLockEvent);
+    }
+    else {
       delete this.subchartdata;
+      delete this.chartLockEvent;
     }
   }
 
-  createSubchart(event:ChartMouseOverEvent) {
-    var myfy: number = this.fy + event.position.row;
-    var isbaseline: boolean = (1 === event.position.column);
-
+  generateSubchart(myfy: number, isbaseline: boolean) {
     var subdata: [any[]] = [['Organization', myfy + ' TOA', { role: 'annotation' }]];
-    this.rowsOrgs.forEach(orgdata => { 
+    var totalalloc: number = 0;
+    this.rowsOrgs.forEach(orgdata => {
       var orgname: string = this.orgMap.get(orgdata.orgid);
       var amt: number = (isbaseline
-        ? this.pomData.orgToas[orgdata.orgid].filter( x=>x.year===myfy).map(x=>x.amount)[0]
+        ? this.pomData.orgToas[orgdata.orgid].filter(x => x.year === myfy).map(x => x.amount)[0]
         : orgdata[myfy]);
       if ('string' === typeof amt) {
         amt = Number.parseInt(amt);
       }
-
-      subdata.push([ orgname, amt, amt]);
+      totalalloc += amt;
+      subdata.push([orgname, amt, amt]);
     });
+
+    // add an "unallocated" pie wedge, too
+    var maxtoa: number = this.chartdata.dataTable[myfy - this.fy + 1][isbaseline ? 1 : 2];
+    subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);
 
     this.subchartdata = {
       chartType: 'PieChart',
       dataTable: subdata,
       options: {
-        title: `FY${myfy-2000} Organizational TOA Breakdown` + (isbaseline ? ' (Baseline)': '')
+        title: `FY${myfy - 2000} Organizational TOA Breakdown` + (isbaseline ? ' (Baseline)' : '')
       }
     };
   }
-
 
   chartready() {
     //this.addAction(this.comchart.wrapper.getChart());
