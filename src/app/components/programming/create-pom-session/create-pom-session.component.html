@@ -37,8 +37,8 @@
 
       <div class="row mb-2">
         <div class="col-12">
-          <div>
-            <ag-grid-angular #agGridComm class="ag-theme-balham agtoatable set-toa"
+          <div class="agtoatable">
+            <ag-grid-angular #agGridComm class="ag-theme-balham set-toa"
               [gridOptions]="gridOptionsCommunity"
               [rowData]="rowsCommunity"
               [toolPanelSuppressSideButtons]="true"
@@ -52,9 +52,9 @@
 
       <div class="row mb-2">
         <div class="col-12">
-          <div class='agtoatable'>
+          <div class="bar-chart-google">
             <google-chart #comchart
-              [data]='chartdata' 
+              [data]='chartdata'
               (chartReady)='chartready()'
               (chartSelect)='select($event)'
               (mouseOver)='createSubchart($event)'
@@ -80,20 +80,22 @@
         </div>
       </div>
 
-      <div class="row" class='agtoatable'>
+      <div class="row">
         <ng-container *ngIf='subchartdata'>
-          <div class="col-7">
-            <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
-              [gridOptions]="gridOptionsOrgs"
-              [rowData]="rowsOrgs"
-              [toolPanelSuppressSideButtons]="true"
-              [suppressDragLeaveHidesColumns]="true"
-              [pinnedBottomRowData]="pinnedRowOrgsDelta"
-              (gridReady)="onGridReadyOrgs($event)">
-            </ag-grid-angular>
+          <div class="col-8">
+            <div class="agtoatable">
+              <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
+                [gridOptions]="gridOptionsOrgs"
+                [rowData]="rowsOrgs"
+                [toolPanelSuppressSideButtons]="true"
+                [suppressDragLeaveHidesColumns]="true"
+                [pinnedBottomRowData]="pinnedRowOrgsDelta"
+                (gridReady)="onGridReadyOrgs($event)">
+              </ag-grid-angular>
+            </div>
           </div>
-          <div class="col-5">
-            <google-chart #subchart 
+          <div class="col-4">
+            <google-chart #subchart
               [data]='subchartdata'
               (chartSelect)='select($event)'
             ></google-chart>
@@ -101,21 +103,23 @@
         </ng-container>
 
         <ng-container *ngIf='!subchartdata'>
-          <div class='col-12'>
-            <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
-              [gridOptions]="gridOptionsOrgs"
-              [rowData]="rowsOrgs"
-              [toolPanelSuppressSideButtons]="true"
-              [suppressDragLeaveHidesColumns]="true"
-              [pinnedBottomRowData]="pinnedRowOrgsDelta"
-              (gridReady)="onGridReadyOrgs($event)">
-            </ag-grid-angular>
+          <div class="col-8">
+            <div class="agtoatable">
+              <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
+                [gridOptions]="gridOptionsOrgs"
+                [rowData]="rowsOrgs"
+                [toolPanelSuppressSideButtons]="true"
+                [suppressDragLeaveHidesColumns]="true"
+                [pinnedBottomRowData]="pinnedRowOrgsDelta"
+                (gridReady)="onGridReadyOrgs($event)">
+              </ag-grid-angular>
+            </div>
           </div>
         </ng-container>
       </div>
 
-      <div class="row mb-2">
-        <div class="col-lg-2 col-md-3">
+      <div class="row mt-3">
+        <div class="col-2">
           <ng-container *ngIf="!pomIsCreated && !pomIsOpen">
             <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
           </ng-container>
