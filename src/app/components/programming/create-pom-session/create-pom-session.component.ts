@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { GridOptions }  from 'ag-grid';
+import { GridOptions, ColDef }  from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
 import { NumericCellEditor } from './numeric-celleditior.component';
@@ -20,6 +20,7 @@ import {
   EppService
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
+import { AgGridNg2 } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -31,6 +32,7 @@ export class CreatePomSessionComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
   @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
+  @ViewChild('agGridOrgs') agGridOrgs: AgGridNg2;
 
   private fy: number;
   private community: Community;
@@ -193,9 +195,15 @@ export class CreatePomSessionComponent implements OnInit {
   // a callback for determining if a ROW is editable
   private shouldEdit ( params ){
     if ( this.pomIsOpen ) {
-      if ( params.data.orgid === this.community.abbreviation+' TOA' )  return true; 
-      else return false;
-    } else return params.node.rowPinned ? false : true;  
+      if (params.data.orgid === this.community.abbreviation + ' TOA') {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
+    return params.node.rowPinned ? false : true;  
   }
 
   // helper for currency formatting
@@ -569,10 +577,26 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
+  resetOrgTableColumns(myfy: number) {
+    for (var i = 0; i < 5; i++) {
+      var year: number = this.fy + i;
+      var colkey: string = year.toString();
+
+      var visi: boolean = (myfy < 0 || year === myfy);
+      this.agGridOrgs.columnApi.setColumnVisible(colkey, visi);
+      
+      if (visi) {
+        this.agGridOrgs.columnApi.setColumnWidth(colkey, 100);
+      }
+    }
+    this.agGridOrgs.api.sizeColumnsToFit();
+  }
+
   createSubchart(event: ChartMouseOverEvent) {
     var myfy: number = this.fy + event.position.row;
     var isbaseline: boolean = (1 === event.position.column);
     this.generateSubchart(myfy, isbaseline);
+    this.resetOrgTableColumns(myfy);
   }
 
   removeSubchart(event: ChartMouseOutEvent) {
@@ -582,6 +606,7 @@ export class CreatePomSessionComponent implements OnInit {
     else {
       delete this.subchartdata;
       delete this.chartLockEvent;
+      this.resetOrgTableColumns(-1);
     }
   }
 

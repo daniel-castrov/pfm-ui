@@ -51,20 +51,16 @@
       </div>
 
       <div class="row mb-2">
-        <div class="col-8">
-          <google-chart #comchart 
-            [data]='chartdata' 
-            (chartReady)='chartready()'
-            (chartSelect)='select($event)'
-            (mouseOver)='createSubchart($event)'
-            (mouseOut)='removeSubchart($event)'
-          ></google-chart>
-        </div>
-        <div class="col-4" *ngIf='subchartdata'>
-          <google-chart #subchart 
-            [data]='subchartdata'
-            (chartSelect)='select($event)'
-          ></google-chart>
+        <div class="col-12">
+          <div class='agtoatable'>
+            <google-chart #comchart
+              [data]='chartdata' 
+              (chartReady)='chartready()'
+              (chartSelect)='select($event)'
+              (mouseOver)='createSubchart($event)'
+              (mouseOut)='removeSubchart($event)'
+            ></google-chart>
+          </div>
         </div>
       </div>
 
@@ -84,10 +80,10 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-12">
-          <div>
-            <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable sub-toa"
+      <div class="row" class='agtoatable'>
+        <ng-container *ngIf='subchartdata'>
+          <div class="col-7">
+            <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
               [gridOptions]="gridOptionsOrgs"
               [rowData]="rowsOrgs"
               [toolPanelSuppressSideButtons]="true"
@@ -96,7 +92,26 @@
               (gridReady)="onGridReadyOrgs($event)">
             </ag-grid-angular>
           </div>
-        </div>
+          <div class="col-5">
+            <google-chart #subchart 
+              [data]='subchartdata'
+              (chartSelect)='select($event)'
+            ></google-chart>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf='!subchartdata'>
+          <div class='col-12'>
+            <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
+              [gridOptions]="gridOptionsOrgs"
+              [rowData]="rowsOrgs"
+              [toolPanelSuppressSideButtons]="true"
+              [suppressDragLeaveHidesColumns]="true"
+              [pinnedBottomRowData]="pinnedRowOrgsDelta"
+              (gridReady)="onGridReadyOrgs($event)">
+            </ag-grid-angular>
+          </div>
+        </ng-container>
       </div>
 
       <div class="row mb-2">
