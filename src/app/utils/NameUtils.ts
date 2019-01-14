@@ -21,6 +21,6 @@ export class NameUtils {
 
   static urlEncode(shortname: string): string {
     // flawn algo: '//' is encoded as 'slashslash' which will be decoded to 'slash'; Hopefully we will never be encoding '//';
-    return shortname.replace('slash','slashslash').replace('/','slash')
+    return shortname.replace(/slash/g,'slashslash').replace(/\//g,'slash')
   }
 }

@@ -77,10 +77,9 @@ export class ProgramsComponent implements OnChanges {
         rowData.push(program);
       });
       this.pbPrograms.forEach(pr => {
-      debugger;
         let programRequest = new UiProgramRequest(pr);
         programRequest.phaseType = PhaseType.PB;
-        programRequest.dataPath = [pr.shortName, '']
+        programRequest.dataPath = [pr.shortName, ''];
         rowData.push(programRequest);
       });
       this.sortObjects(rowData, ['shortName', 'phaseType']);
