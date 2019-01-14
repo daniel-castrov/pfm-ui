@@ -57,6 +57,8 @@
               [data]='chartdata' 
               (chartReady)='chartready()'
               (chartSelect)='select($event)'
+              (mouseOver)='createSubchart($event)'
+              (mouseOut)='removeSubchart($event)'
             ></google-chart>
           </div>
         </div>

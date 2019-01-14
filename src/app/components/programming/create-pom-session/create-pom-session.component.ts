@@ -6,7 +6,7 @@ import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
 import { NumericCellEditor } from './numeric-celleditior.component';
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
-import { ChartSelectEvent, GoogleChartComponent } from 'ng2-google-charts';
+import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 import { 
   Community,
   Organization,
@@ -319,8 +319,6 @@ export class CreatePomSessionComponent implements OnInit {
         this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
     });
 
-    console.log(this.pomData);
-
     this.resetCharts();
   }
 
@@ -546,8 +544,7 @@ export class CreatePomSessionComponent implements OnInit {
       chartType: 'ColumnChart',
       dataTable: charty,
       options: {
-        title: 'Community TOA',
-        tooltip: { trigger: 'selection'}
+        title: 'Community TOA'
       }
     };
   }
@@ -559,7 +556,15 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
-  createSubchart(myfy: number, isbaseline: boolean) {
+  removeSubchart(event: ChartMouseOutEvent) {
+    if (0 === this.comchart.wrapper.getChart().getSelection().length) {
+      delete this.subchartdata;
+    }
+  }
+
+  createSubchart(event:ChartMouseOverEvent) {
+    var myfy: number = this.fy + event.position.row;
+    var isbaseline: boolean = (1 === event.position.column);
 
     var subdata: [any[]] = [['Organization', myfy + ' TOA', { role: 'annotation' }]];
     this.rowsOrgs.forEach(orgdata => { 
@@ -574,8 +579,6 @@ export class CreatePomSessionComponent implements OnInit {
       subdata.push([ orgname, amt, amt]);
     });
 
-    console.log(subdata);
-
     this.subchartdata = {
       chartType: 'PieChart',
       dataTable: subdata,
@@ -585,20 +588,8 @@ export class CreatePomSessionComponent implements OnInit {
     };
   }
 
-  addAction(rawchart:any) {
-    rawchart.setAction({
-      id: 'orgtoas',
-      text: 'Organization Breakdown',
-      action: () => {
-        var selection = rawchart.getSelection();
-        var myfy = this.fy + selection[0].row;
-        var baseline = (1 === selection[0].column);
-        this.createSubchart(myfy, baseline);
-      }
-    });
-  }
 
   chartready() {
-    this.addAction(this.comchart.wrapper.getChart());
+    //this.addAction(this.comchart.wrapper.getChart());
   }
 }
