@@ -574,7 +574,7 @@ export class CreatePomSessionComponent implements OnInit {
       ]);
     }
 
-    console.log(charty);
+    //console.log(charty);
 
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -678,24 +678,35 @@ export class CreatePomSessionComponent implements OnInit {
   generatePeChart(myfy: number) {
     this.prsvc.getByPhase(this.pb.id).subscribe(d => { 
       var pemap: Map<string, number> = new Map<string, number>();
-      var total: number = 0;
-      var toa: number = this.rowsCommunity[0][myfy];
+      var childparentmap: Map<string, string> = new Map<string, string>();
+      var apps: Set<string> = new Set<string>();
+
+      console.log(d);
 
       d.result.forEach((pr:Program) => { 
         pr.fundingLines.forEach(fl => { 
           var cost: number = (pemap.has(fl.baOrBlin) ? pemap.get(fl.baOrBlin) : 0);
           pemap.set(fl.baOrBlin, cost + fl.funds[myfy]);
-          total += fl.funds[myfy];
+          childparentmap.set(fl.baOrBlin, fl.appropriation);
+          apps.add(fl.appropriation);
         });
       });
 
-      var data:[any[]] = [['BA/Blin', `${myfy} Allocation`]];
+      var data: [string[], (string | number)[]] = [
+        ['BA/Blin', 'Parent', `${myfy} Allocation`, 'color'],
+        [myfy.toString(), null, 0, 0],
+      ];
+
+      apps.forEach(app => { 
+        data.push([app, myfy.toString(), 0, 0]);
+      });
+
       pemap.forEach((num, pe) => {
-        data.push([pe, toa * num / total]);
+        data.push([pe, childparentmap.get(pe), num, 0]);
       });
 
       this.pechartdata = {
-        chartType: 'PieChart',
+        chartType: 'TreeMap',
         dataTable: data,
         options: { 'title': 'BA/Blin Breakdown' },
       }
