@@ -16,7 +16,9 @@ import {
   OrganizationService,
   PBService,
   POMService,
-  EppService
+  EppService,
+  PRService,
+  Program
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 
@@ -58,11 +60,12 @@ export class CreatePomSessionComponent implements OnInit {
   private subchartdata;
   private pomData;
   private chartLockEvent;
+  private pechartdata;
 
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    private router: Router, private globalsvc: UserUtils,
+    private router: Router, private globalsvc: UserUtils, private prsvc: PRService,
     private withFullNameService: WithFullNameService) {
     
     this.chartdata = {
@@ -328,7 +331,7 @@ export class CreatePomSessionComponent implements OnInit {
         this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
     });
 
-    this.resetCharts();
+    //this.resetCharts();
   }
 
   // Compute and set the bottom 'pinned' row.
@@ -533,21 +536,45 @@ export class CreatePomSessionComponent implements OnInit {
   resetCharts() {
     var yeartoas: Map<number, number> = new Map<number, number>();
 
+    var totaltoa: number = 0;
+    var totalvals: number = 0;
     for (var i = 0; i < 5; i++) {
-      yeartoas.set(this.fy + i, this.rowsCommunity[0][this.fy + i]);
+      var newamt: number = ('string' === typeof this.rowsCommunity[0][this.fy + i]
+        ? Number.parseInt(this.rowsCommunity[0][this.fy + i])
+        : this.rowsCommunity[0][this.fy + i]);
+
+      yeartoas.set(this.fy + i, newamt);
+
+      if (newamt > 0) {
+        totaltoa += newamt;
+        totalvals += 1;
+      }
     }
 
-    var charty: [any[]] = [['Year', 'Baseline', 'TOA', { role: 'annotation' }]];
+    var charty: [any[]] = [[
+      'Year',
+      'Baseline',
+      'TOA',
+      { role: 'annotation' },
+      //{ role: 'style' }
+    ]];
+
+    var baseavg: number = Math.ceil(totaltoa / totalvals);
     for (var i = 0; i < 5; i++) {
       var newamt = yeartoas.get(this.fy + i);
-      if ('string' === typeof newamt) {
-        newamt = Number.parseInt(newamt);
-      }
-
       var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
 
-      charty.push([(this.fy + i).toString(), baseamt, newamt, newamt]);
+
+      charty.push([
+        (this.fy + i).toString(),
+        baseamt,
+        (0 === newamt ? baseavg : newamt),
+        (0 === newamt ? baseavg + ' (est.)' : newamt.toString()),
+        //(0 === newamt ? 'opacity: 0.2' : '')
+      ]);
     }
+
+    console.log(charty);
 
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -603,6 +630,7 @@ export class CreatePomSessionComponent implements OnInit {
     var isbaseline: boolean = (1 === event.position.column);
     this.resetOrgTableColumns(myfy);
     this.generateSubchart(myfy, isbaseline);
+    this.generatePeChart( myfy );
   }
 
   removeSubchart(event: ChartMouseOutEvent) {
@@ -612,6 +640,7 @@ export class CreatePomSessionComponent implements OnInit {
     else {
       delete this.subchartdata;
       delete this.chartLockEvent;
+      delete this.pechartdata;
       this.resetOrgTableColumns(-1);
     }
   }
@@ -645,6 +674,34 @@ export class CreatePomSessionComponent implements OnInit {
       }
     };
   }
+
+  generatePeChart(myfy: number) {
+    this.prsvc.getByPhase(this.pb.id).subscribe(d => { 
+      var pemap: Map<string, number> = new Map<string, number>();
+      var total: number = 0;
+      var toa: number = this.rowsCommunity[0][myfy];
+
+      d.result.forEach((pr:Program) => { 
+        pr.fundingLines.forEach(fl => { 
+          var cost: number = (pemap.has(fl.baOrBlin) ? pemap.get(fl.baOrBlin) : 0);
+          pemap.set(fl.baOrBlin, cost + fl.funds[myfy]);
+          total += fl.funds[myfy];
+        });
+      });
+
+      var data:[any[]] = [['BA/Blin', `${myfy} Allocation`]];
+      pemap.forEach((num, pe) => {
+        data.push([pe, toa * num / total]);
+      });
+
+      this.pechartdata = {
+        chartType: 'PieChart',
+        dataTable: data,
+        options: { 'title': 'BA/Blin Breakdown' },
+      }
+    });
+  }
+
 
   chartready() {
     //this.addAction(this.comchart.wrapper.getChart());
