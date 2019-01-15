@@ -492,6 +492,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    AgGridModule.withComponents([]),
     Ng2GoogleChartsModule,
   ],
   providers: [
