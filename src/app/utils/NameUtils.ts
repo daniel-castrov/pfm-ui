@@ -6,6 +6,10 @@ export class NameUtils {
     return fullName.substring(0, fullName.lastIndexOf("/"));
   }
 
+  static getChildName(fullName: string): string {
+    return fullName.substring(fullName.lastIndexOf("/") + 1);
+  }
+
   /**
    * Creates a shortname from a prent program and a child name
    * @param reference can be null or undefined

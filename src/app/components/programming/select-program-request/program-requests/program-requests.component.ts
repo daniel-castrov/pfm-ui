@@ -64,12 +64,12 @@ export class ProgramsComponent implements OnChanges {
 
             if (prThree.type === ProgramType.GENERIC) {
               let prFour = this.pomPrograms.filter((prFour: Program) => NameUtils.getParentName(prThree.shortName) === prFour.shortName)[0];
-              program.dataPath = [prFour.shortName, prThree.shortName, prTwo.shortName, prOne.shortName];
+              program.dataPath = [prFour.shortName, NameUtils.getChildName(prThree.shortName), NameUtils.getChildName(prTwo.shortName), NameUtils.getChildName(prOne.shortName)];
             } else {
-              program.dataPath = [prThree.shortName, prTwo.shortName, prOne.shortName];
+              program.dataPath = [prThree.shortName, NameUtils.getChildName(prTwo.shortName), NameUtils.getChildName(prOne.shortName)];
             }
           } else {
-            program.dataPath = [prTwo.shortName, prOne.shortName];
+            program.dataPath = [prTwo.shortName, NameUtils.getChildName(prOne.shortName)];
           }
         } else {
           program.dataPath = [prOne.shortName];
