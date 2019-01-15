@@ -4,7 +4,6 @@ import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions, ColDef }  from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
-import { NumericCellEditor } from './numeric-celleditior.component';
 import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 import { 
@@ -20,7 +19,6 @@ import {
   EppService
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
-import { AgGridNg2 } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -32,7 +30,6 @@ export class CreatePomSessionComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
   @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
-  @ViewChild('agGridOrgs') agGridOrgs: AgGridNg2;
 
   private fy: number;
   private community: Community;
@@ -90,9 +87,6 @@ export class CreatePomSessionComponent implements OnInit {
       suppressDragLeaveHidesColumns:true,
       suppressMovableColumns: true,
       onCellValueChanged : params => this.setDeltaRow(fy),
-      frameworkComponents: {
-        numericCellEditor: NumericCellEditor
-      }
     }
 
     this.gridOptionsOrgs = {
@@ -101,9 +95,6 @@ export class CreatePomSessionComponent implements OnInit {
       suppressDragLeaveHidesColumns:true,
       suppressMovableColumns: true,
       onCellValueChanged : params => this.setDeltaRow(fy),
-      frameworkComponents: {
-        numericCellEditor: NumericCellEditor
-      }
     }
   }
 
@@ -111,6 +102,16 @@ export class CreatePomSessionComponent implements OnInit {
   private setAgGridColDefs(column1Name:string, fy:number): any {
 
     let colDefs = [];
+
+    var numbersOnly = function (p, myfy: number): boolean {
+      var raw = p.newValue;
+      var cleaned: string = p.newValue.replace(/[^0-9]/g, '');
+      var val: number = Number.parseInt(cleaned);
+      p.data[myfy] = val;  
+      p.node.data[myfy] = val;
+      return true;
+    }
+
 
     colDefs.push(
       { headerName: column1Name,
@@ -136,7 +137,7 @@ export class CreatePomSessionComponent implements OnInit {
           width: 100,
           editable: params => this.shouldEdit(params),
           cellRenderer: params => this.negativeNumberRenderer(params),
-          cellEditor: "numericCellEditor",
+          valueSetter: p => numbersOnly(p, fy + i - 1),
           cellClassRules: {
           'ag-cell-edit': params =>this.shouldEdit(params),
           'ag-cell-footer-sum': params => {
@@ -152,7 +153,7 @@ export class CreatePomSessionComponent implements OnInit {
         field: 'total',
         width: 120,
         editable: false,
-        valueGetter: params => this.rowTotal( params.data, fy ),
+        valueGetter: params => this.rowTotal(params.data, fy),
         cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>',
         cellClassRules: {
         'ag-cell-footer-sum': params => {
@@ -583,20 +584,25 @@ export class CreatePomSessionComponent implements OnInit {
       var colkey: string = year.toString();
 
       var visi: boolean = (myfy < 0 || year === myfy);
-      this.agGridOrgs.columnApi.setColumnVisible(colkey, visi);
-      
-      if (visi) {
-        this.agGridOrgs.columnApi.setColumnWidth(colkey, 100);
+      if (this.gridOptionsOrgs && this.gridOptionsOrgs.columnApi ) {
+        this.gridOptionsOrgs.columnApi.setColumnVisible(colkey, visi);
+
+        if (visi) {
+          this.gridOptionsOrgs.columnApi.setColumnWidth(colkey, 100);
+        }
       }
     }
-    this.agGridOrgs.api.sizeColumnsToFit();
+
+    if (this.gridOptionsOrgs) {
+      this.gridOptionsOrgs.api.sizeColumnsToFit();
+    }
   }
 
   createSubchart(event: ChartMouseOverEvent) {
     var myfy: number = this.fy + event.position.row;
     var isbaseline: boolean = (1 === event.position.column);
-    this.generateSubchart(myfy, isbaseline);
     this.resetOrgTableColumns(myfy);
+    this.generateSubchart(myfy, isbaseline);
   }
 
   removeSubchart(event: ChartMouseOutEvent) {
@@ -625,9 +631,11 @@ export class CreatePomSessionComponent implements OnInit {
       subdata.push([orgname, amt, amt]);
     });
 
-    // add an "unallocated" pie wedge, too
+    // add an "unallocated" pie wedge, too (if we can!)
     var maxtoa: number = this.chartdata.dataTable[myfy - this.fy + 1][isbaseline ? 1 : 2];
-    subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);
+    if (totalalloc < maxtoa) {
+      subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);
+    }
 
     this.subchartdata = {
       chartType: 'PieChart',

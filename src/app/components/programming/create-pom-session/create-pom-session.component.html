@@ -81,33 +81,29 @@
       </div>
 
       <div class="row">
-        <ng-container *ngIf='subchartdata'>
+        <ng-container *ngIf='subchartdata' class="agtoatable">
           <div class="col-5">
-            <div class="set-toatable">
-              <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
-                [gridOptions]="gridOptionsOrgs"
-                [rowData]="rowsOrgs"
-                [toolPanelSuppressSideButtons]="true"
-                [suppressDragLeaveHidesColumns]="true"
-                [pinnedBottomRowData]="pinnedRowOrgsDelta"
-                (gridReady)="onGridReadyOrgs($event)">
-              </ag-grid-angular>
-            </div>
+            <ag-grid-angular class="ag-theme-balham sub-toa"
+              [gridOptions]="gridOptionsOrgs"
+              [rowData]="rowsOrgs"
+              [toolPanelSuppressSideButtons]="true"
+              [suppressDragLeaveHidesColumns]="true"
+              [pinnedBottomRowData]="pinnedRowOrgsDelta"
+              (gridReady)="onGridReadyOrgs($event)">
+            </ag-grid-angular>
           </div>
           <div class="col-4">
-            <div class="pie-chart-google">
-              <google-chart #subchart
-                [data]='subchartdata'
-                (chartSelect)='select($event)'
-              ></google-chart>
-            </div>
+            <google-chart #subchart
+              [data]='subchartdata'
+              (chartSelect)='select($event)'
+            ></google-chart>
           </div>
         </ng-container>
 
         <ng-container *ngIf='!subchartdata'>
           <div class="col-8">
             <div class="agtoatable">
-              <ag-grid-angular #agGridOrgs class="ag-theme-balham sub-toa"
+              <ag-grid-angular class="ag-theme-balham sub-toa"
                 [gridOptions]="gridOptionsOrgs"
                 [rowData]="rowsOrgs"
                 [toolPanelSuppressSideButtons]="true"
