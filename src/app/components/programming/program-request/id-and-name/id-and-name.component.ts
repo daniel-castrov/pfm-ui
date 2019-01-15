@@ -36,7 +36,7 @@ export class IdAndNameComponent {
       return false;
     } else {
       switch (this.programRequestPageMode.type) {
-        case AddNewPrForMode.A_NEW_PROGRAM:
+        case AddNewPrForMode.AN_MRDB_PROGRAM:
           return false;
         case AddNewPrForMode.A_NEW_FOS:
         case AddNewPrForMode.A_NEW_INCREMENT:

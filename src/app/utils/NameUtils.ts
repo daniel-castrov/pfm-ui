@@ -12,11 +12,9 @@ export class NameUtils {
    * @param value
    */
   static createShortName(parent: Program, childName: string): string {
-    if(parent) {
-      return parent.shortName + "/" + childName;
-    } else {
-      return childName;
-    }
+    if(parent && childName) return parent.shortName + "/" + childName;
+    if(parent) return parent.shortName;
+    if(childName) return childName;
   }
 
   static urlEncode(shortname: string): string {
