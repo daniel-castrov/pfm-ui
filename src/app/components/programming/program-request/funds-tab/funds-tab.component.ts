@@ -246,13 +246,12 @@ export class FundsTabComponent implements OnChanges {
             fundingLine.baOrBlin === fl.baOrBlin &&
             fundingLine.item === fl.item
           )[0];
-          pbRow.fundingLine.userCreated = fundingLine.userCreated;
         }
 
         if (pbRow.fundingLine === undefined) {
           pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
-          pbRow.fundingLine.userCreated = fundingLine.userCreated;
         }
+        pbRow.fundingLine.userCreated = fundingLine.userCreated;
 
         let deltaRow: DataRow = new DataRow();
         deltaRow.fundingLine = this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
