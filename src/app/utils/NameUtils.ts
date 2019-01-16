@@ -1,24 +1,25 @@
-import {Program} from "../generated";
 
 export class NameUtils {
 
+  static getUrlEncodedParentName(fullName: string): string {
+    return this.urlEncode(this.getParentName(fullName));
+  }
+
   static getParentName(fullName: string): string {
     return fullName.substring(0, fullName.lastIndexOf("/"));
+  }
+
+  static hasParent(fullName: string): boolean {
+    return fullName.lastIndexOf("/") != -1;
   }
 
   static getChildName(fullName: string): string {
     return fullName.substring(fullName.lastIndexOf("/") + 1);
   }
 
-  /**
-   * Creates a shortname from a prent program and a child name
-   * @param reference can be null or undefined
-   * @param value
-   */
-  static createShortName(parent: Program, childName: string): string {
-    if(parent && childName) return parent.shortName + "/" + childName;
-    if(parent) return parent.shortName;
-    if(childName) return childName;
+  static createShortName(parentName: string, childName: string): string {
+    if(parentName) return parentName + "/" + childName;
+    return childName;
   }
 
   static urlEncode(shortname: string): string {

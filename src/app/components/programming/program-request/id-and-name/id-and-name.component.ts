@@ -1,19 +1,19 @@
 import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
 import {Program} from '../../../../generated/model/program';
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {AddNewPrForMode, ProgramRequestPageModeService} from '../page-mode.service';
 import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
 import {ProgramType} from '../../../../generated/model/programType';
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'id-and-name',
   templateUrl: './id-and-name.component.html',
   styleUrls: ['./id-and-name.component.scss']
 })
-export class IdAndNameComponent {
+export class IdAndNameComponent implements OnChanges {
 
   @Input() public pr: Program;
-  public parentFullName: string;
   private invalidChildNames: Set<string>;
   private invalidLongNames: Set<string>;
 
@@ -21,12 +21,25 @@ export class IdAndNameComponent {
   public longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
 
   constructor( public programRequestPageMode: ProgramRequestPageModeService,
-               private programAndPrService: ProgramAndPrService ) {
+               private programAndPrService: ProgramAndPrService ) {}
+
+  set childNameModel(childName: string) {
+    this.pr.shortName = NameUtils.createShortName(NameUtils.getParentName(this.pr.shortName), childName);
   }
 
-  async init(pr: Program) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
-    this.parentFullName = await this.getParentFullName(pr);
-    const programsPlusPrs: Program[] = await this.programAndPrService.programsPlusPrs(pr.phaseId);
+  get childNameModel() {
+    if(!this.pr.shortName) return "";
+    return NameUtils.getChildName(this.pr.shortName);
+  }
+
+  get parentFullName() {
+    if(!this.pr.shortName) return "";
+    return NameUtils.getParentName(this.pr.shortName);
+  }
+
+  async ngOnChanges() {
+    if(!this.pr.phaseId) return;
+    const programsPlusPrs: Program[] = await this.programAndPrService.programsPlusPrs(this.pr.phaseId);
     this.invalidChildNames = this.getInvalidChildNames(programsPlusPrs);
     this.invalidLongNames = this.getInvalidLongNames(programsPlusPrs);
   }
@@ -82,15 +95,6 @@ export class IdAndNameComponent {
     if(!this.invalidLongNames) return null; // if init(...) has not been called yet there cannot be any validation
     if(this.invalidLongNames.has(this.pr.longName.toLocaleUpperCase()))  return {alreadyExists:true};
     return null;
-  }
-
-  private getParentFullName(pr: Program) {
-    const prFullName: string = pr.shortName;
-    if (!prFullName || prFullName.lastIndexOf('/') == -1) {
-      return '';
-    } else {
-      return prFullName.substring(0, prFullName.lastIndexOf('/') + 1);
-    }
   }
 
   private type() {

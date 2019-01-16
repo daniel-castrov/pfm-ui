@@ -88,7 +88,7 @@ export class FundsTabComponent implements OnChanges {
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       if (this.pr.type === ProgramType.GENERIC) {
-        this.parentPr = (await this.prService.getParentByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
+        this.parentPr = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       }
 
       if( this.pom ){
@@ -116,22 +116,24 @@ export class FundsTabComponent implements OnChanges {
   async loadExistingFundingLines() {
     if(!this.pr.shortName) return;
 
-    const prParent: Program = (await this.prService.getParentByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
-    if (prParent) {
-      prParent.fundingLines.forEach(fundingLine => {
-        let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
-          fl.baOrBlin === fundingLine.baOrBlin &&
-          fl.item === fundingLine.item &&
-          fl.opAgency === fundingLine.opAgency);
-        if (!isDuplicate) {
-          fundingLine.userCreated = true;
-          this.existingFundingLines.push(fundingLine);
-        }
-      });
-      this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
+    if (NameUtils.hasParent(this.pr.shortName)) {
+      const prParent: Program = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+      if (prParent) {
+        prParent.fundingLines.forEach(fundingLine => {
+          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
+            fl.baOrBlin === fundingLine.baOrBlin &&
+            fl.item === fundingLine.item &&
+            fl.opAgency === fundingLine.opAgency);
+          if (!isDuplicate) {
+            fundingLine.userCreated = true;
+            this.existingFundingLines.push(fundingLine);
+          }
+        });
+        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
+      }
     }
 
-    const mrdbParent: Program = (await this.programsService.getParentByName(NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
+    const mrdbParent: Program = (await this.programsService.getByName(NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
     if (mrdbParent) {
       mrdbParent.fundingLines.forEach(fundingLine => {
         let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -169,7 +171,7 @@ export class FundsTabComponent implements OnChanges {
 
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    const parent: Program = (await this.prService.getParentByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).toPromise()).result;
+    const parent: Program = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
 
     this.prService.getChildrenByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {

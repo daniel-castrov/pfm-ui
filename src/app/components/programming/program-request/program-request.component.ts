@@ -51,7 +51,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.idAndNameComponent.init(this.pr);
     this.pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
 
@@ -94,9 +93,11 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       case AddNewPrForMode.A_NEW_FOS:
       case AddNewPrForMode.A_NEW_SUBPROGRAM:
         this.initPrWith(this.programRequestPageMode.reference);
+        this.pr.shortName = this.programRequestPageMode.reference.shortName + "/";
         this.pr.type = this.programRequestPageMode.programType;
         break;
       case AddNewPrForMode.A_NEW_PROGRAM:
+        this.pr.shortName = "";
         this.pr.type = this.programRequestPageMode.programType;
         break;
       default:
@@ -154,7 +155,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
           this.pr = data.result;
         }
       } else {
-        this.pr.shortName = NameUtils.createShortName(this.programRequestPageMode.reference, this.idAndNameComponent.childname.value);
         this.pr = (await this.prService.create(this.pr).toPromise()).result;
         Notify.success('Program request created successfully')
       }
