@@ -46,9 +46,9 @@ export class ProgramAndPrService {
     const prs: Program[] = await this.programRequests(phaseId);
 
     const programs: Program[] = (await this.programs());
-    const mapIdToProgram: Map<string, Program> = this.createMapIdToProgram(programs);
+    const mapNameToProgram: Map<string, Program> = this.createNameIdToProgram(programs);
 
-    const prsWithoutPrograms: Program[] = prs.filter( pr => !mapIdToProgram.get(pr.id) );
+    const prsWithoutPrograms: Program[] = prs.filter( pr => !mapNameToProgram.get(pr.shortName) );
 
     return this.sort(programs.concat(prsWithoutPrograms));
   }
@@ -88,10 +88,10 @@ export class ProgramAndPrService {
     });
   }
 
-  private createMapIdToProgram(programs: Program[]): Map<string, Program> {
-    const mapIdToProgramOrPr: Map<string, Program> = new Map();
-    programs.forEach( program => mapIdToProgramOrPr.set(program.id, program) );
-    return mapIdToProgramOrPr;
+  private createNameIdToProgram(programs: Program[]): Map<string, Program> {
+    const result: Map<string, Program> = new Map();
+    programs.forEach( program => result.set(program.shortName, program) );
+    return result;
   }
 
 }
