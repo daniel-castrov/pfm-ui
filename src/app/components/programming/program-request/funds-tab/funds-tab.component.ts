@@ -154,9 +154,7 @@ export class FundsTabComponent implements OnChanges {
 
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    const parent: Program = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
-
-    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).subscribe(response => {
+    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
