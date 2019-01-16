@@ -69,8 +69,8 @@ export class ManageRolesComponent {
   private availablePrograms: Array<Program> = [];
   private filteredAvailablePrograms: Array<Program> = [];
   private assignedPrograms: Array<any> = [];
-  private key: string = "id";
-  private display: string = "fullname";
+  private key: string = "shortName";
+  private display: string = "shortName";
   private keepSorted = true;
   private filter = false;
   private format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
@@ -191,6 +191,8 @@ export class ManageRolesComponent {
       this.resultError.push(data[0].error);
       let urr: UserRoleResource = data[0].result;
 
+      console.log(urr); 
+
       this.resultError.push(data[1].error);
       this.organizations = data[1].result;
 
@@ -215,9 +217,9 @@ export class ManageRolesComponent {
         } else {
           // some are granted
           let newAvail:Program[]=[];
-          this.selectedURR.resourceIds.forEach( progId =>  {
+          this.selectedURR.resourceIds.forEach( progShortName =>  {
             this.availablePrograms.forEach( prog => {
-              if ( prog.id == progId ){
+              if ( prog.shortName == progShortName ){
                 this.assignedPrograms.push(prog);
               } else {
                 newAvail.push(prog);
@@ -262,7 +264,7 @@ export class ManageRolesComponent {
       } else {
         // some are selected
         this.selectedURR.resourceIds=[];
-        this.assignedPrograms.forEach( (value) => this.selectedURR.resourceIds.push(value.id));
+        this.assignedPrograms.forEach( (prog:Program) => this.selectedURR.resourceIds.push(prog.shortName));
       }
     }
 
