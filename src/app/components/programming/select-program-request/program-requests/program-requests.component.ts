@@ -80,7 +80,9 @@ export class ProgramsComponent implements OnChanges {
         let programRequest = new UiProgramRequest(pr);
         programRequest.phaseType = PhaseType.PB;
         programRequest.dataPath = [pr.shortName, ''];
-        rowData.push(programRequest);
+        if (pr.type !== ProgramType.GENERIC) {
+          rowData.push(programRequest);
+        }
       });
       this.sortObjects(rowData, ['shortName', 'phaseType']);
       this.rowData = rowData;
