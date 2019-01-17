@@ -59,12 +59,14 @@ export class WorksheetComponent implements OnChanges {
       let row = {
         id: value.fundingLine.id,
         coreCapability: value.coreCapability,
-        programId: value.programRequest,
+        programId: value.programRequestFullname,
         fundingLine: value.fundingLine,
         modified: false,
         notes: '',
         anchored: false
       };
+
+      console.log(row)
       data.push(row);
     });
     this.rowData = data;

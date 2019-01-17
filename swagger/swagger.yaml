@@ -812,7 +812,7 @@ paths:
         type: "file"
 # STOP EXECUTION
 ##############################################################################
-# START TAGS          
+# START TAGS
   /tagtypes:
     get:
       tags:
@@ -970,7 +970,7 @@ paths:
           required: true
           type: "string"
 # STOP PR
-############################################################################## 
+##############################################################################
 # START PROGRAMS
   /programs/{mrId}:
     get:
@@ -1952,7 +1952,7 @@ paths:
 ##############################################################################
 #
 ##############################################################################
-######################       USERS and ROLES     ############################# 
+######################       USERS and ROLES     #############################
 ##############################################################################
 #
 ##############################################################################
@@ -3238,7 +3238,7 @@ definitions:
       tagCriteria:
         $ref: "#/definitions/StringMap"
       blin:
-        type: "string" 
+        type: "string"
       agency:
         type: "string"
       appropriation:
@@ -3253,7 +3253,7 @@ definitions:
       # bulkOrigin:
       #   type: "boolean"
       # type:
-      #     $ref: "#/definitions/ProgramType"     
+      #     $ref: "#/definitions/ProgramType"
       lastMod:
         type: "integer"
       phaseId:
@@ -3312,7 +3312,7 @@ definitions:
         type: "string"
       acquisitionType:
         type: "string"
-## additional        
+## additional
       creationTime:
         type: "integer"
       yoE:
@@ -3682,7 +3682,7 @@ definitions:
     properties:
       programRequestId:
         type: "string"
-      programRequest:
+      programRequestFullname:
         type: "string"
       coreCapability:
         type: "string"
@@ -3694,7 +3694,7 @@ definitions:
         type: "string"
       fundingLine:
         type: "object"
-        $ref: "#/definitions/FundingLine"           
+        $ref: "#/definitions/FundingLine"
   RowUpdateEventData:
     type: "object"
     properties:
