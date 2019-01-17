@@ -127,7 +127,7 @@ export class UfrApprovalDetailComponent implements OnInit {
                 if (!row) {
                   let worksheetRow: WorksheetRow = {
                     programRequestId: pr.id,
-                    programRequest: pr.shortName,
+                    programRequestFullname: pr.shortName,
                     coreCapability: pr.coreCapability,
                     appropriation: fl.appropriation,
                     baOrBlin: fl.baOrBlin,
@@ -149,7 +149,7 @@ export class UfrApprovalDetailComponent implements OnInit {
                 if (!row) {
                   let worksheetRow: WorksheetRow = {
                     programRequestId: this.ufr.shortyId,
-                    programRequest: this.ufr.shortName,
+                    programRequestFullname: this.ufr.shortName,
                     coreCapability: this.ufr.coreCapability,
                     appropriation: fl.appropriation,
                     baOrBlin: fl.baOrBlin,
@@ -199,7 +199,7 @@ export class UfrApprovalDetailComponent implements OnInit {
           if (!row) {
             let worksheetRow: WorksheetRow = {
               programRequestId: pr.id,
-              programRequest: pr.shortName,
+              programRequestFullname: pr.shortName,
               coreCapability: pr.coreCapability,
               appropriation: fl.appropriation,
               baOrBlin: fl.baOrBlin,
@@ -225,7 +225,7 @@ export class UfrApprovalDetailComponent implements OnInit {
             modifiedRow.newFundingLine = fl;
             modifiedRow.previousFundingLine = row.fundingLine;
             modifiedRow.worksheetId = ws.id;
-            modifiedRow.programId = row.programRequest;
+            modifiedRow.programId = row.programRequestFullname;
             modifiedRow.fundingLineId = row.fundingLine.id;
             modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy;
 
@@ -246,7 +246,7 @@ export class UfrApprovalDetailComponent implements OnInit {
             if (!row) {
               let worksheetRow: WorksheetRow = {
                 programRequestId: this.ufr.shortyId,
-                programRequest: this.ufr.shortName,
+                programRequestFullname: this.ufr.shortName,
                 coreCapability: this.ufr.coreCapability,
                 appropriation: fl.appropriation,
                 baOrBlin: fl.baOrBlin,
@@ -273,7 +273,7 @@ export class UfrApprovalDetailComponent implements OnInit {
               modifiedRow.newFundingLine = fl;
               modifiedRow.previousFundingLine = row.fundingLine;
               modifiedRow.worksheetId = ws.id;
-              modifiedRow.programId = row.programRequest;
+              modifiedRow.programId = row.programRequestFullname;
               modifiedRow.fundingLineId = row.fundingLine.id;
               modifiedRow.reasonCode = 'ufr approval POM' + this.pom.fy
 
