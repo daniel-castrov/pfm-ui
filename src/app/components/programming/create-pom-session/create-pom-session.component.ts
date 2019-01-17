@@ -61,6 +61,9 @@ export class CreatePomSessionComponent implements OnInit {
   private pomData;
   private chartLockEvent;
   private pechartdata;
+  private analysis: boolean = false;
+  private selectedyear: number;
+  private analysis_baseline: boolean = true;
 
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -592,10 +595,18 @@ export class CreatePomSessionComponent implements OnInit {
 
   select(event: ChartSelectEvent) {
     if ('deselect' === event.message) {
+      this.analysis = false;
+
       delete this.subchartdata;
       delete this.chartLockEvent;
     }
     else if ('select' === event.message) {
+      console.log(event);
+
+      this.analysis = true;
+      this.selectedyear = this.fy + event.row;
+      this.analysis_baseline = (1 === event.column);
+
       this.chartLockEvent = {
         position: {
           row: event.row,
@@ -680,8 +691,6 @@ export class CreatePomSessionComponent implements OnInit {
       var pemap: Map<string, number> = new Map<string, number>();
       var childparentmap: Map<string, string> = new Map<string, string>();
       var apps: Set<string> = new Set<string>();
-
-      console.log(d);
 
       d.result.forEach((pr:Program) => { 
         pr.fundingLines.forEach(fl => { 

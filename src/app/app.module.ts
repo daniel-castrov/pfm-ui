@@ -218,6 +218,7 @@ import {PomUtils} from "./services/pom.utils";
 import {MenuRolesOkDirective} from "./directives/menu.roles.ok.directive";
 import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive";
 import {Authorization} from "./services/authorization";
+import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -454,7 +455,8 @@ const appRoutes: Routes = [
     ManageMenuComponent,
     AdminMenuComponent,
     UserActionsComponent,
-    PrChangeNotificationsComponent
+    PrChangeNotificationsComponent,
+    PomAnalysisComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
