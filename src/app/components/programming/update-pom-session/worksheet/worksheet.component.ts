@@ -65,8 +65,6 @@ export class WorksheetComponent implements OnChanges {
         notes: '',
         anchored: false
       };
-
-      console.log(row)
       data.push(row);
     });
     this.rowData = data;
