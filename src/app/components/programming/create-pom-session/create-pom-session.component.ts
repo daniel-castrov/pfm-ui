@@ -51,19 +51,16 @@ export class CreatePomSessionComponent implements OnInit {
   private rowsCommunity;
   private pinnedRowCommunityBaseline;
 
-  private gridOptionsOrgs:GridOptions;
   private rowsOrgs;
   private pinnedRowOrgsDelta;
   private menuTabs = ['filterMenuTab'];
 
   private chartdata;
-  private subchartdata;
   private pomData;
-  private chartLockEvent;
-  private pechartdata;
   private analysis: boolean = false;
   private selectedyear: number;
   private analysis_baseline: boolean = true;
+  private yeartoas: any;
 
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
@@ -80,7 +77,6 @@ export class CreatePomSessionComponent implements OnInit {
 
   ngOnInit() {
     this.gridOptionsCommunity = {};
-    this.gridOptionsOrgs = {};
     this.myinit();
   }
 
@@ -94,14 +90,6 @@ export class CreatePomSessionComponent implements OnInit {
       suppressMovableColumns: true,
       onCellValueChanged : params => this.setDeltaRow(fy),
     }
-
-    this.gridOptionsOrgs = {
-      columnDefs : this.setAgGridColDefs("Organization", fy),
-      gridAutoHeight : true,
-      suppressDragLeaveHidesColumns:true,
-      suppressMovableColumns: true,
-      onCellValueChanged : params => this.setDeltaRow(fy),
-    }
   }
 
   // Set similar column definitions for both grids
@@ -109,15 +97,14 @@ export class CreatePomSessionComponent implements OnInit {
 
     let colDefs = [];
 
-    var numbersOnly = function (p, myfy: number): boolean {
+    var numbersOnly = function (p): boolean {
+      var myfy: number = Number.parseInt(p.colDef.field);
       var raw = p.newValue;
       var cleaned: string = p.newValue.replace(/[^0-9]/g, '');
       var val: number = Number.parseInt(cleaned);
-      p.data[myfy] = val;  
-      p.node.data[myfy] = val;
+      p.data[myfy] = val;
       return true;
     }
-
 
     colDefs.push(
       { headerName: column1Name,
@@ -143,7 +130,7 @@ export class CreatePomSessionComponent implements OnInit {
           width: 100,
           editable: params => this.shouldEdit(params),
           cellRenderer: params => this.negativeNumberRenderer(params),
-          valueSetter: p => numbersOnly(p, fy + i - 1),
+          valueSetter: p => numbersOnly(p),
           cellClassRules: {
           'ag-cell-edit': params =>this.shouldEdit(params),
           'ag-cell-footer-sum': params => {
@@ -282,7 +269,8 @@ export class CreatePomSessionComponent implements OnInit {
     this.pomData = (null == currentPom
       // Use the values from the samplepom ( the previous pb )
       ? samplepom
-      : currentPom );
+      : currentPom);
+    this.pomData.fy = this.fy;
 
     // BaseLine
     let row = {}
@@ -334,7 +322,7 @@ export class CreatePomSessionComponent implements OnInit {
         this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
     });
 
-    //this.resetCharts();
+    this.resetCharts();
   }
 
   // Compute and set the bottom 'pinned' row.
@@ -363,6 +351,7 @@ export class CreatePomSessionComponent implements OnInit {
     deltaRow["orgid"] = "Delta";
     this.pinnedRowOrgsDelta = [deltaRow];
 
+    this.yeartoas = Object.assign({}, this.rowsCommunity[0]);
     this.resetCharts();
   }
 
@@ -385,8 +374,6 @@ export class CreatePomSessionComponent implements OnInit {
 
       // refresh both grids
       this.gridOptionsCommunity.api.refreshCells();
-      this.gridOptionsOrgs.api.refreshCells();
-
     }
   }
 
@@ -453,8 +440,6 @@ export class CreatePomSessionComponent implements OnInit {
 
       // refresh both grids
       this.gridOptionsCommunity.api.refreshCells();
-      this.gridOptionsOrgs.api.refreshCells();
-
       this.resetCharts();
     });
   }
@@ -577,8 +562,6 @@ export class CreatePomSessionComponent implements OnInit {
       ]);
     }
 
-    //console.log(charty);
-
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: charty,
@@ -586,144 +569,48 @@ export class CreatePomSessionComponent implements OnInit {
         title: 'Community TOA'
       }
     };
-
-    if (this.chartLockEvent) {
-      this.comchart.wrapper.getChart().setSelection
-      this.createSubchart(this.chartLockEvent);
-    }
   }
 
   select(event: ChartSelectEvent) {
     if ('deselect' === event.message) {
       this.analysis = false;
-
-      delete this.subchartdata;
-      delete this.chartLockEvent;
     }
     else if ('select' === event.message) {
-      console.log(event);
-
       this.analysis = true;
       this.selectedyear = this.fy + event.row;
       this.analysis_baseline = (1 === event.column);
-
-      this.chartLockEvent = {
-        position: {
-          row: event.row,
-          column: event.column
-        }
-      };
+      this.yeartoas = Object.assign({}, this.rowsCommunity[0]);
     }
   }
-
-  resetOrgTableColumns(myfy: number) {
-    for (var i = 0; i < 5; i++) {
-      var year: number = this.fy + i;
-      var colkey: string = year.toString();
-
-      var visi: boolean = (myfy < 0 || year === myfy);
-      if (this.gridOptionsOrgs && this.gridOptionsOrgs.columnApi ) {
-        this.gridOptionsOrgs.columnApi.setColumnVisible(colkey, visi);
-
-        if (visi) {
-          this.gridOptionsOrgs.columnApi.setColumnWidth(colkey, 100);
-        }
-      }
-    }
-
-    if (this.gridOptionsOrgs) {
-      this.gridOptionsOrgs.api.sizeColumnsToFit();
-    }
-  }
-
-  createSubchart(event: ChartMouseOverEvent) {
-    var myfy: number = this.fy + event.position.row;
-    var isbaseline: boolean = (1 === event.position.column);
-    this.resetOrgTableColumns(myfy);
-    this.generateSubchart(myfy, isbaseline);
-    this.generatePeChart( myfy );
-  }
-
-  removeSubchart(event: ChartMouseOutEvent) {
-    if (this.chartLockEvent) {
-      this.createSubchart(this.chartLockEvent);
-    }
-    else {
-      delete this.subchartdata;
-      delete this.chartLockEvent;
-      delete this.pechartdata;
-      this.resetOrgTableColumns(-1);
-    }
-  }
-
-  generateSubchart(myfy: number, isbaseline: boolean) {
-    var subdata: [any[]] = [['Organization', myfy + ' TOA', { role: 'annotation' }]];
-    var totalalloc: number = 0;
-    this.rowsOrgs.forEach(orgdata => {
-      var orgname: string = this.orgMap.get(orgdata.orgid);
-      var amt: number = (isbaseline
-        ? this.pomData.orgToas[orgdata.orgid].filter(x => x.year === myfy).map(x => x.amount)[0]
-        : orgdata[myfy]);
-      if ('string' === typeof amt) {
-        amt = Number.parseInt(amt);
-      }
-      totalalloc += amt;
-      subdata.push([orgname, amt, amt]);
-    });
-
-    // add an "unallocated" pie wedge, too (if we can!)
-    var maxtoa: number = this.chartdata.dataTable[myfy - this.fy + 1][isbaseline ? 1 : 2];
-    if (totalalloc < maxtoa) {
-      subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);
-    }
-
-    this.subchartdata = {
-      chartType: 'PieChart',
-      dataTable: subdata,
-      options: {
-        title: `FY${myfy - 2000} Organizational TOA Breakdown` + (isbaseline ? ' (Baseline)' : '')
-      }
-    };
-  }
-
-  generatePeChart(myfy: number) {
-    this.prsvc.getByPhase(this.pb.id).subscribe(d => { 
-      var pemap: Map<string, number> = new Map<string, number>();
-      var childparentmap: Map<string, string> = new Map<string, string>();
-      var apps: Set<string> = new Set<string>();
-
-      d.result.forEach((pr:Program) => { 
-        pr.fundingLines.forEach(fl => { 
-          var cost: number = (pemap.has(fl.baOrBlin) ? pemap.get(fl.baOrBlin) : 0);
-          pemap.set(fl.baOrBlin, cost + fl.funds[myfy]);
-          childparentmap.set(fl.baOrBlin, fl.appropriation);
-          apps.add(fl.appropriation);
-        });
-      });
-
-      var data: [string[], (string | number)[]] = [
-        ['BA/Blin', 'Parent', `${myfy} Allocation`, 'color'],
-        [myfy.toString(), null, 0, 0],
-      ];
-
-      apps.forEach(app => { 
-        data.push([app, myfy.toString(), 0, 0]);
-      });
-
-      pemap.forEach((num, pe) => {
-        data.push([pe, childparentmap.get(pe), num, 0]);
-      });
-
-      this.pechartdata = {
-        chartType: 'TreeMap',
-        dataTable: data,
-        options: { 'title': 'BA/Blin Breakdown' },
-      }
-    });
-  }
-
 
   chartready() {
     //this.addAction(this.comchart.wrapper.getChart());
+  }
+
+  onAnalysis(event) {
+    this.rowsOrgs.forEach(obj => { 
+      if (obj.orgid === event.orgid) {
+        obj[event.year] = event.amount;
+      }
+    });
+
+    var newpomdata: Pom = Object.assign({}, this.pomData);
+
+    var found: boolean = false;
+    newpomdata.orgToas[event.orgid].forEach(toa => {
+      if (toa.year === event.year) {
+        toa.amount = event.amount;
+        found = true;
+      }
+    });
+    if (!found) {
+      newpomdata.orgToas[event.orgid].push({
+        year: event.year,
+        amount: event.amount
+      });
+    }
+    this.pomData = newpomdata;
+
+    this.setDeltaRow(event.year);
   }
 }

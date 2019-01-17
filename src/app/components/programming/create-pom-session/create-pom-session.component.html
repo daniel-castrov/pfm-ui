@@ -68,7 +68,10 @@
             [pb]='pb'
             [pom]='pomData'
             [orgmap]='orgMap'
+            [commdata]='yeartoas'
             [baseline]='analysis_baseline'
+            [readonly]='!(pomIsCreated||pomIsOpen)'
+            (changes)='onAnalysis($event)'
           ></app-pom-analysis>
         </div>
       </div>
@@ -85,50 +88,6 @@
               <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
             </span>
           </ng-container>
-        </div>
-      </div>
-
-      <div class="row">
-        <ng-container *ngIf='subchartdata' class="agtoatable">
-          <div class="col-5">
-            <ag-grid-angular class="ag-theme-balham sub-toa"
-              [gridOptions]="gridOptionsOrgs"
-              [rowData]="rowsOrgs"
-              [toolPanelSuppressSideButtons]="true"
-              [suppressDragLeaveHidesColumns]="true"
-              [pinnedBottomRowData]="pinnedRowOrgsDelta"
-              (gridReady)="onGridReadyOrgs($event)">
-            </ag-grid-angular>
-          </div>
-          <div class="col-4">
-            <google-chart
-              [data]='subchartdata'
-              (chartSelect)='select($event)'
-            ></google-chart>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf='!subchartdata'>
-          <div class="col-8">
-            <div class="agtoatable">
-              <ag-grid-angular class="ag-theme-balham sub-toa"
-                [gridOptions]="gridOptionsOrgs"
-                [rowData]="rowsOrgs"
-                [toolPanelSuppressSideButtons]="true"
-                [suppressDragLeaveHidesColumns]="true"
-                [pinnedBottomRowData]="pinnedRowOrgsDelta"
-                (gridReady)="onGridReadyOrgs($event)">
-              </ag-grid-angular>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-
-      <div class="row">
-        <div class="agtoatable">
-          <google-chart
-            [data]='pechartdata'
-          ></google-chart>
         </div>
       </div>
 
