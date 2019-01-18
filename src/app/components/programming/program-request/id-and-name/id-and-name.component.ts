@@ -1,36 +1,46 @@
-import { CreationTimeType } from '../../../../generated/model/creationTimeType';
-import { WithFullName, WithFullNameService, ProgramOrPrWithFullName } from '../../../../services/with-full-name.service';
-import { Program } from '../../../../generated/model/program';
-import { Component, Input } from '@angular/core';
-
-// Other Components
-import { ProgramRequestPageModeService} from '../page-mode.service';
-import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
-import { ProgramType } from '../../../../generated/model/programType';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
+import {Program} from '../../../../generated/model/program';
+import {Component, Input, OnChanges} from '@angular/core';
+import {AddNewPrForMode, ProgramRequestPageModeService} from '../page-mode.service';
+import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
+import {ProgramType} from '../../../../generated/model/programType';
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'id-and-name',
   templateUrl: './id-and-name.component.html',
   styleUrls: ['./id-and-name.component.scss']
 })
-export class IdAndNameComponent {
+export class IdAndNameComponent implements OnChanges {
 
-  @Input() private pr: Program;
-  private parentFullName: string;
-  private invalidShortNames: Set<string>;
+  @Input() public pr: Program;
+  private invalidChildNames: Set<string>;
   private invalidLongNames: Set<string>;
 
-  private shortname = new FormControl('', [Validators.required, this.validShortName.bind(this)]);
-  private longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
+  public childname = new FormControl('', [Validators.required, this.validChildName.bind(this)]);
+  public longname  = new FormControl('', [Validators.required, this.validLongName .bind(this)]);
 
-  constructor( private programRequestPageMode: ProgramRequestPageModeService,
-               private withFullNameService: WithFullNameService ) {
+  constructor( public programRequestPageMode: ProgramRequestPageModeService,
+               private programAndPrService: ProgramAndPrService ) {}
+
+  set childNameModel(childName: string) {
+    this.pr.shortName = NameUtils.createShortName(NameUtils.getParentName(this.pr.shortName), childName);
   }
 
-  async init(pr: Program) { // do not be tempted to save the parameter 'pr'; it should be used for initialization only
-    this.parentFullName = await this.getParentFullName(pr);
-    const programsPlusPrs: WithFullName[] = await this.withFullNameService.programsPlusPrs(pr.phaseId);
-    this.invalidShortNames = this.getInvalidShortNames(programsPlusPrs);
+  get childNameModel() {
+    if(!this.pr.shortName) return "";
+    return NameUtils.getChildName(this.pr.shortName);
+  }
+
+  get parentFullName() {
+    if(!this.pr.shortName) return "";
+    return NameUtils.getParentName(this.pr.shortName);
+  }
+
+  async ngOnChanges() {
+    if(!this.pr.phaseId) return;
+    const programsPlusPrs: Program[] = await this.programAndPrService.programsPlusPrs(this.pr.phaseId);
+    this.invalidChildNames = this.getInvalidChildNames(programsPlusPrs);
     this.invalidLongNames = this.getInvalidLongNames(programsPlusPrs);
   }
 
@@ -39,22 +49,23 @@ export class IdAndNameComponent {
       return false;
     } else {
       switch (this.programRequestPageMode.type) {
-        case CreationTimeType.PROGRAM_OF_MRDB:
+        case AddNewPrForMode.AN_MRDB_PROGRAM:
           return false;
-        case CreationTimeType.SUBPROGRAM_OF_MRDB:
-        case CreationTimeType.SUBPROGRAM_OF_PR:
-        case CreationTimeType.NEW_PROGRAM:
-          return this.shortname.invalid || this.longname.invalid;
+        case AddNewPrForMode.A_NEW_FOS:
+        case AddNewPrForMode.A_NEW_INCREMENT:
+        case AddNewPrForMode.A_NEW_SUBPROGRAM:
+        case AddNewPrForMode.A_NEW_PROGRAM:
+          return this.childname.invalid || this.longname.invalid;
         default:
           console.log('Wrong programRequestPageMode.type in IdAndNameComponent.invalid()');
       }
     }
   }
 
-  private getInvalidShortNames(programsPlusPrs: WithFullName[]): Set<string> {
+  private getInvalidChildNames(programsPlusPrs: Program[]): Set<string> {
     const nonUniqueInvalidNames: string[] = programsPlusPrs
-                          .filter( (programOrPr: WithFullName) => programOrPr.fullname.startsWith(this.parentFullName) )
-                          .map( (programOrPr: WithFullName) => programOrPr.fullname.substring(this.parentFullName.length) )
+                          .filter( (programOrPr: Program) => programOrPr.shortName.startsWith(this.parentFullName) )
+                          .map( (programOrPr: Program) => programOrPr.shortName.substring(this.parentFullName.length) )
                           .map( (fullnameEnding: string) =>  fullnameEnding.substring( 0,
                                                   (fullnameEnding.indexOf('/') == -1) ? 99999 : fullnameEnding.indexOf('/')
                               ))
@@ -62,21 +73,21 @@ export class IdAndNameComponent {
     return new Set(nonUniqueInvalidNames);
   }
 
-  private getInvalidLongNames(programsPlusPrs: ProgramOrPrWithFullName[]): Set<string> {
+  private getInvalidLongNames(programsPlusPrs: Program[]): Set<string> {
     const nonUniqueInvalidDescriptions: string[] = programsPlusPrs
-                          .filter( (programOrPr: ProgramOrPrWithFullName) => programOrPr.fullname.startsWith(this.parentFullName) )
-                          .filter( (programOrPr: ProgramOrPrWithFullName) => {
-                            const fullnameEnding: string = programOrPr.fullname.substring(this.parentFullName.length);
+                          .filter( (programOrPr: Program) => programOrPr.shortName.startsWith(this.parentFullName) )
+                          .filter( (programOrPr: Program) => {
+                            const fullnameEnding: string = programOrPr.shortName.substring(this.parentFullName.length);
                             return fullnameEnding.indexOf('/') == -1;
                           })
-                          .map( (programOrPr: ProgramOrPrWithFullName) => programOrPr.longName )
+                          .map( (programOrPr: Program) => programOrPr.longName )
                           .map((name: string) => name.toUpperCase());
     return new Set(nonUniqueInvalidDescriptions);
   }
 
-  private validShortName(control: AbstractControl): ValidationErrors | null {
-    if(!this.invalidShortNames) return null; // if init(...) has not been called yet there cannot be any validation
-    if(this.invalidShortNames.has(this.pr.shortName.toLocaleUpperCase())) return {alreadyExists:true};
+  private validChildName(control: AbstractControl): ValidationErrors | null {
+    if(!this.invalidChildNames) return null; // if init(...) has not been called yet there cannot be any validation
+    if(this.invalidChildNames.has(this.childname.value.toLocaleUpperCase())) return {alreadyExists:true};
     return null;
   }
 
@@ -84,15 +95,6 @@ export class IdAndNameComponent {
     if(!this.invalidLongNames) return null; // if init(...) has not been called yet there cannot be any validation
     if(this.invalidLongNames.has(this.pr.longName.toLocaleUpperCase()))  return {alreadyExists:true};
     return null;
-  }
-
-  private async getParentFullName(pr: Program) {
-    const prFullName: string = await this.withFullNameService.fullNameDerivedFromCreationTimeData(pr);
-    if (prFullName.lastIndexOf('/') == -1) {
-      return '';
-    } else {
-      return prFullName.substring(0, prFullName.lastIndexOf('/') + 1);
-    }
   }
 
   private type() {

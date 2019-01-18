@@ -24,7 +24,7 @@
           <div class="dropdown-label">
             <select [(ngModel)]="selectedProgramOrPr" class="form-control-sm" name="dummy">
               <option value="null" disabled selected>Select a {{initialSelectOption}}</option>
-              <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.fullname}}</option>
+              <option *ngFor="let programOrPr of selectableProgramsOrPrs" [ngValue]="programOrPr">{{programOrPr.shortName}}</option>
             </select>
           </div>
         </div>

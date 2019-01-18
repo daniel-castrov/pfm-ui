@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {  HeaderComponent } from '../../header/header.component'
 import { UserUtils } from '../../../services/user.utils';
-import { WithFullNameService } from '../../../services/with-full-name.service';
-import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
+import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import { User, Pom, Program, POMService, PBService } from '../../../generated';
 import { Notify } from '../../../utils/Notify';
 
@@ -18,7 +17,7 @@ export class OpenPomSessionComponent implements OnInit {
   @ViewChild(HeaderComponent) header: HeaderComponent;
 
   private pom:Pom;
-  private pomPrograms:ProgramRequestWithFullName[];
+  private pomPrograms:Program[];
   private pbPrograms:Program[];
   private pb;
   private by;
@@ -32,7 +31,7 @@ export class OpenPomSessionComponent implements OnInit {
     private pbService: PBService,
     private globalsService: UserUtils,
     private router: Router,
-    private withFullNameService: WithFullNameService ) {}
+    private programAndPrService: ProgramAndPrService ) {}
 
   async ngOnInit() {
 
@@ -69,7 +68,7 @@ export class OpenPomSessionComponent implements OnInit {
           if ('CREATED' === pom.status) {
             this.pom = pom;
             this.pomStatusIsCreated = true;
-            this.pomPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+            this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
             resolve();
             break;
           }
@@ -81,7 +80,7 @@ export class OpenPomSessionComponent implements OnInit {
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
+    this.pbPrograms = (await this.programAndPrService.programRequests(this.pb.id));
   }
 
   openPom( event ) {

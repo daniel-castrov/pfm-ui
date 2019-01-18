@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import {
   ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus
+  UfrStatus, Program
 } from '../../../../generated';
-import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from "../../../../services/with-full-name.service";
+import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import {CycleUtils} from "../../../../services/cycle.utils";
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
@@ -21,7 +21,7 @@ export class AllUfrsComponent implements OnInit {
 
   @Input() private mapCycleIdToFy: Map<string, string>;
 
-  // Map <id of Program or PR, ProgramWithFullName or ProgramRequestWithFullName>
+  // Map <id of Program or PR, Program or PR>
   private mapPrIdToObj: Map<string, any>;
 
   private user: User;
@@ -46,7 +46,7 @@ export class AllUfrsComponent implements OnInit {
                private programsService: ProgramsService,
                private orgSvc: OrganizationService,
                private router: Router,
-               private withFullNameService: WithFullNameService,
+               private programAndPrService: ProgramAndPrService,
                private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
@@ -229,9 +229,9 @@ export class AllUfrsComponent implements OnInit {
     ufrs.forEach(ufr => {
 
       if ( ufr.shortyId ){
-        let progOrPr = this.mapPrIdToObj.get(ufr.shortyId);
+        let progOrPr: Program = this.mapPrIdToObj.get(ufr.shortyId);
         if ( progOrPr ){
-          progId = progOrPr.fullname;
+          progId = progOrPr.shortName;
           funcArea = progOrPr.functionalArea;
           orgid = progOrPr.organizationId;
         } else {
@@ -270,11 +270,11 @@ export class AllUfrsComponent implements OnInit {
     return new Promise( async (resolve) => {
       // TODO: make the following two calls in parallel
       this.mapPrIdToObj = new Map<string, any>();
-      (await this.withFullNameService.programs()).forEach((program: ProgramWithFullName) => {
+      (await this.programAndPrService.programs()).forEach(program => {
         this.mapPrIdToObj.set(program.id, program);
       });
-      (await this.withFullNameService.allProgramRequestsWithFullNamesDerivedFromCreationTimeData())
-        .forEach((pr: ProgramRequestWithFullName) => {
+      (await this.programAndPrService.allProgramRequests())
+        .forEach(pr => {
         this.mapPrIdToObj.set(pr.id, pr);
       });
       resolve();

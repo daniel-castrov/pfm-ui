@@ -1,20 +1,27 @@
 import {ProgramTabComponent} from './program-tab/program-tab.component';
 import {PRUtils} from '../../../services/pr.utils.service';
-import {ProgramRequestWithFullName, ProgramWithFullName} from '../../../services/with-full-name.service';
 import {ProgramStatus} from '../../../generated/model/programStatus';
-import {CreationTimeType} from '../../../generated/model/creationTimeType';
 import {ProgramType} from '../../../generated/model/programType';
 import {IdAndNameComponent} from './id-and-name/id-and-name.component';
 import {Program} from '../../../generated/model/program';
 import {PRService} from '../../../generated/api/pR.service';
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {ProgramRequestPageModeService} from './page-mode.service';
+import {AddNewPrForMode, ProgramRequestPageModeService} from './page-mode.service';
 import {FundsTabComponent} from "./funds-tab/funds-tab.component";
 import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {Organization, OrganizationService, User, RestResult, Pom, POMService, RolesPermissionsService} from '../../../generated';
+import {
+  Organization,
+  OrganizationService,
+  Pom,
+  POMService,
+  RestResult,
+  RolesPermissionsService,
+  User
+} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
-import { Validation } from './funds-tab/Validation';
+import {Validation} from './funds-tab/Validation';
+import {NameUtils} from "../../../utils/NameUtils";
 
 @Component({
   selector: 'program-request',
@@ -23,9 +30,9 @@ import { Validation } from './funds-tab/Validation';
 })
 export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
-  private pr: Program = {};
-  private prs: Program[];
-  private pom: Pom;
+  public pr: Program = {};
+  public prs: Program[];
+  public pom: Pom;
   private ismgr: boolean;
   @ViewChild(IdAndNameComponent) private idAndNameComponent: IdAndNameComponent;
   @ViewChild(ProgramTabComponent) private programTabComponent: ProgramTabComponent;
@@ -34,7 +41,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   constructor( private prService: PRService,
                private userUtils: UserUtils,
-               private programRequestPageMode: ProgramRequestPageModeService,
+               public programRequestPageMode: ProgramRequestPageModeService,
                private changeDetectorRef: ChangeDetectorRef,
                private orgService: OrganizationService,
                private pomService:POMService,
@@ -44,7 +51,6 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.idAndNameComponent.init(this.pr);
     this.pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
     this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
 
@@ -73,30 +79,25 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private initPrFields() {
     this.pr.phaseId = this.programRequestPageMode.phaseId;
-    this.pr.creationTimeType = this.programRequestPageMode.type;
     this.pr.bulkOrigin = false;
     this.pr.programStatus = 'SAVED';
 
     switch (this.programRequestPageMode.type) {
-      case CreationTimeType.PROGRAM_OF_MRDB:
-        this.pr.originalMrId = this.programRequestPageMode.reference.id;
-        this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
+      case AddNewPrForMode.AN_MRDB_PROGRAM:
         this.pr.type = this.programRequestPageMode.programType;
         this.pr.longName = this.programRequestPageMode.reference.longName;
         this.pr.shortName = this.programRequestPageMode.reference.shortName;
         this.initPrWith(this.programRequestPageMode.reference);
         break;
-      case CreationTimeType.SUBPROGRAM_OF_MRDB:
+      case AddNewPrForMode.A_NEW_INCREMENT:
+      case AddNewPrForMode.A_NEW_FOS:
+      case AddNewPrForMode.A_NEW_SUBPROGRAM:
         this.initPrWith(this.programRequestPageMode.reference);
+        this.pr.shortName = this.programRequestPageMode.reference.shortName + "/";
         this.pr.type = this.programRequestPageMode.programType;
-        this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
         break;
-      case CreationTimeType.SUBPROGRAM_OF_PR:
-        this.pr.type = this.programRequestPageMode.programType;
-        this.pr.creationTimeReferenceId = this.programRequestPageMode.reference.id;
-        this.initPrWith(this.programRequestPageMode.reference);
-        break;
-      case CreationTimeType.NEW_PROGRAM:
+      case AddNewPrForMode.A_NEW_PROGRAM:
+        this.pr.shortName = "";
         this.pr.type = this.programRequestPageMode.programType;
         break;
       default:
@@ -104,7 +105,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
     }
   }
 
-  initPrWith(programOrPR: ProgramWithFullName | ProgramRequestWithFullName) {
+  initPrWith(programOrPR: Program) {
     this.pr.acquisitionType = programOrPR.acquisitionType;
     this.pr.bsvStrategy = programOrPR.bsvStrategy;
     this.pr.commodityArea = programOrPR.commodityArea;
@@ -194,7 +195,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private thereAreOutstandingGenericSubprogramsAmongTheChildren(): boolean {
-    return !!PRUtils.findGenericSubprogramChildren(this.pr.id, this.prs).find(pr => this.pr.programStatus === 'OUTSTANDING');
+    return !!PRUtils.findGenericSubprogramChildren(this.pr, this.prs).find(pr => this.pr.programStatus === 'OUTSTANDING');
   }
 
 }

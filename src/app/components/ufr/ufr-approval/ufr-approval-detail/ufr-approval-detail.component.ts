@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  Disposition, FundingLine, Pom, POMService, ProgramsService, PRService, ShortyType, UFR, UfrEvent,
+  Disposition, FundingLine, Pom, POMService, Program, ProgramsService, PRService, ShortyType, UFR, UfrEvent,
   UFRsService, UfrStatus, User, UserService, Worksheet, WorksheetEvent, WorksheetRow, WorksheetService
 } from '../../../../generated'
-import {WithFullName, WithFullNameService} from "../../../../services/with-full-name.service";
+import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
 import {ActivatedRoute} from "@angular/router";
 import {HeaderComponent} from "../../../header/header.component";
 import {DataRow} from "../../ufr-view/ufr-funds-tab/DataRow";
@@ -35,7 +35,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   @ViewChild("agGridRevisedProgramsModal") private agGridRevisedProgramsModal: AgGridNg2;
 
   ufr: UFR;
-  shorty: WithFullName;
+  shorty: Program;
   pom: Pom;
   requestNumber: string;
   nextUfrId;
@@ -64,7 +64,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   components = { numericCellEditor: this.getNumericCellEditor() };
 
 
-  constructor(private withFullNameService: WithFullNameService,
+  constructor(private programAndPrService: ProgramAndPrService,
               private worksheetService: WorksheetService,
               private pomService: POMService,
               private programService: ProgramsService,
@@ -761,11 +761,11 @@ export class UfrApprovalDetailComponent implements OnInit {
     if( this.ufr.shortyType == ShortyType.MRDB_PROGRAM ||
       this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_MRDB_PROGRAM ||
       this.ufr.shortyType == ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ) {
-      this.shorty = await this.withFullNameService.program(this.ufr.shortyId);
+      this.shorty = await this.programAndPrService.program(this.ufr.shortyId);
     } else if( this.ufr.shortyType == ShortyType.PR ||
       this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
       this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
-      this.shorty = await this.withFullNameService.programRequest(this.pom.id, this.ufr.shortyId);
+      this.shorty = await this.programAndPrService.programRequest(this.pom.id, this.ufr.shortyId);
     } else { // this.ufr.shortyType == ShortyType.NEW_PROGRAM
       // leave this.shorty null
     }

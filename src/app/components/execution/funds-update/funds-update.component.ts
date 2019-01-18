@@ -31,7 +31,6 @@ export class FundsUpdateComponent implements OnInit {
   private blins: string[] = [];
   private items: string[] = [];
   private opAgencies: string[] = [];
-  private programNameIdLkp: Map<string, string> = new Map<string, string>();
   private selectedRow: number = -1;
   private programName: string;
   private appropriation: string;
@@ -69,7 +68,6 @@ export class FundsUpdateComponent implements OnInit {
         p.data.withheld = 0;
         my.exesvc.createExecutionLine(my.selectedexe.id, p.data).subscribe(data => {
           console.log('created new EL');
-          //console.log(data.result);
           p.data.id = data.result;
           my.refreshFilterDropdowns();
         });
@@ -120,9 +118,6 @@ export class FundsUpdateComponent implements OnInit {
           },
           valueSetter: p => { 
             p.data.programName = p.newValue;
-            p.data.originalMrId = (my.programNameIdLkp.has(p.newValue) ?
-              my.programNameIdLkp.get(p.data.programName)
-              : null);
             saveIfPossible(p);
             return true;
           }
@@ -381,15 +376,9 @@ export class FundsUpdateComponent implements OnInit {
     var blinset: Set<string> = new Set<string>();
     var agencyset: Set<string> = new Set<string>();
     var programset: Set<string> = new Set<string>();
-
-    this.programNameIdLkp.clear();
     this.exelines.forEach((x: ExecutionLine) => {
       if (x.programName) {
         programset.add(x.programName);
-
-        if (x.originalMrId) {
-          this.programNameIdLkp.set(x.programName, x.originalMrId);
-        }
       }
 
       if (x.appropriation) {

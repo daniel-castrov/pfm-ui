@@ -1,24 +1,26 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AngularDualListBoxModule } from 'angular-dual-listbox';
-import { DualListComponent } from 'angular-dual-listbox';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { WithFullNameService, ProgramWithFullName } from '../../../services/with-full-name.service';
-import { Notify } from '../../../utils/Notify';
-
-// Generated
-import { Community, Role, UserRoleResource, User, Organization }  from '../../../generated';
-import { CommunityService, RoleService, UserRoleResourceService, OrganizationService,} from '../../../generated';
-
-import { 
-  AssignRoleRequest, 
+import {Component, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {DualListComponent} from 'angular-dual-listbox';
+import {HeaderComponent} from '../../header/header.component';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {Notify} from '../../../utils/Notify';
+import {
+  AssignRoleRequest,
+  AssignRoleRequestService,
+  Community,
+  CommunityService,
   DropRoleRequest,
-  MyDetailsService, 
-  AssignRoleRequestService, 
-  DropRoleRequestService } from '../../../generated';
+  DropRoleRequestService,
+  MyDetailsService,
+  Organization,
+  OrganizationService, Program,
+  Role,
+  RoleService,
+  User,
+  UserRoleResource,
+  UserRoleResourceService
+} from '../../../generated';
 
 @Component({
   selector: 'app-my-roles',
@@ -66,11 +68,11 @@ export class MyRolesComponent {
   private hiddenRoles: string [] = ["Organization_Member", "User" ];
   
   // For the angular-dual-listbox
-  private availablePrograms: Array<ProgramWithFullName> = [];
-  private filteredAvailablePrograms: Array<ProgramWithFullName> = [];
+  private availablePrograms: Array<Program> = [];
+  private filteredAvailablePrograms: Array<Program> = [];
   private assignedPrograms: Array<any> = [];
-  private key: string = "id";
-  private display: string = "fullname";
+  private key: string = "shortName";
+  private display: string = "shortName";
   private keepSorted = true;
   private filter = false;
   private format: any = { add: 'Available Programs', remove: 'Assigned Programs', all: 'Select All', none: 'Select None', direction: DualListComponent.RTL, draggable: true, locale: 'en' };
@@ -84,7 +86,7 @@ export class MyRolesComponent {
     private roleService: RoleService,
     private userRoleResourceService: UserRoleResourceService,
     private orgService: OrganizationService,
-    private withFullNameService: WithFullNameService,
+    private programAndPrService: ProgramAndPrService,
     private myDetailsService:MyDetailsService,  
     private assignRoleRequestService: AssignRoleRequestService,
     private dropRoleRequestService:DropRoleRequestService,
@@ -105,7 +107,6 @@ export class MyRolesComponent {
       Observable.forkJoin([
         this.communityService.getById( this.currentUser.currentCommunityId ),
         this.orgService.getById(this.currentUser.organizationId),
-        this.withFullNameService.programsByCommunity(this.currentUser.currentCommunityId),
         this.roleService.getByUserIdAndCommunityId(this.currentUser.id, this.currentUser.currentCommunityId),
         this.roleService.getByCommunityId(this.currentUser.currentCommunityId),
         this.assignRoleRequestService.getByUser(this.currentUser.id),
@@ -120,17 +121,8 @@ export class MyRolesComponent {
         this.resultError.push(data[1].error);
         this.myOrganization=data[1].result;
 
-        let pogramsMap:any[]=[];
-        // Put the users org in the map
-        pogramsMap[this.currentUser.organizationId] = this.myOrganization.abbreviation + " (Org)";
-        // Get the current user's roles and match them with the program names
-        let programs:ProgramWithFullName[] = data[2];
-        programs.forEach( prog => {
-          pogramsMap[prog.id] = prog.fullname;
-        });
-
-        this.resultError.push(data[3].error);
-        this.currentRoles =data[3].result;
+        this.resultError.push(data[2].error);
+        this.currentRoles =data[2].result;
         this.currentRoles = this.currentRoles.filter( role => !this.hiddenRoles.includes( role.name ) );
 
         this.currentRoles.forEach( role => {
@@ -139,37 +131,25 @@ export class MyRolesComponent {
           ).subscribe( ( ur ) => { 
             let urr:UserRoleResource;
             urr=ur.result;
-            let progNames:string[]=[];
-            urr.resourceIds.forEach( r => {
-              
-              if ( pogramsMap[r] ) {
-                progNames.push(pogramsMap[r]);
-              } else {
-                if ( r=="x" ) {r="none";}
-                else { r="*"; }
-                progNames.push(r);
-              }
-            });
-            this.currentRolesWithResources.push( new RoleNameWithResources ( role, progNames ) );
+            this.currentRolesWithResources.push( new RoleNameWithResources ( role, urr.resourceIds ) );
           });
         });
 
         // Get all the roles
-        this.resultError.push(data[4].error);
-        this.roles=data[4].result;  
+        this.resultError.push(data[3].error);
+        this.roles=data[3].result;  
         this.roles = this.roles.filter( role => !this.hiddenRoles.includes( role.name ) );
 
         // get any existing add requests
-        this.resultError.push(data[5].error);
-        this.assignRequests=data[5].result;
+        this.resultError.push(data[4].error);
+        this.assignRequests=data[4].result;
 
         // get any existing drop requests
+        this.resultError.push(data[5].error);
+        this.dropRequests=data[5].result;
+
         this.resultError.push(data[6].error);
-        this.dropRequests=data[6].result;
-
-        this.resultError.push(data[7].error);
-        this.organizations=data[7].result;
-
+        this.organizations=data[6].result;
       });
     });
   }
@@ -207,7 +187,7 @@ export class MyRolesComponent {
 
     Observable.forkJoin([
       this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(this.currentUser.id, this.myCommunity.id, this.selectedRole.name),
-      this.withFullNameService.programsByCommunity(this.myCommunity.id),
+      this.programAndPrService.programsByCommunity(this.myCommunity.id),
     ]).subscribe(data => {
 
       this.resultError.push(data[0].error);
@@ -227,10 +207,10 @@ export class MyRolesComponent {
           this.assignedPrograms = [ ...this.availablePrograms ];
         } else {
           // some are granted
-          let newAvail:ProgramWithFullName[]=[];
-          this.selectedURR.resourceIds.forEach( progId =>  {
+          let newAvail:Program[]=[];
+          this.selectedURR.resourceIds.forEach( progShortName =>  {
             this.availablePrograms.forEach( prog => {
-              if ( prog.id == progId ){
+              if ( prog.shortName == progShortName ){
                 this.assignedPrograms.push(prog);
               } else {
                 newAvail.push(prog);
@@ -276,8 +256,8 @@ export class MyRolesComponent {
       else {
         // some are selected
         assignedResources=[];
-        this.assignedPrograms.forEach(function (value) {
-          assignedResources.push( value.id );
+        this.assignedPrograms.forEach(function (prog:Program) {
+          assignedResources.push( prog.shortName );
         });
       }
   }

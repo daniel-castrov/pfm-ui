@@ -4,9 +4,9 @@ import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions, ColDef }  from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
-import { ProgramRequestWithFullName, ProgramWithFullName, WithFullNameService } from '../../../services/with-full-name.service';
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
-import { 
+import { ProgramAndPrService } from '../../../services/program-and-pr.service';
+import {
   Community,
   Organization,
   TOA,
@@ -16,9 +16,7 @@ import {
   OrganizationService,
   PBService,
   POMService,
-  EppService,
-  PRService,
-  Program
+  EppService, Program
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 
@@ -65,8 +63,8 @@ export class CreatePomSessionComponent implements OnInit {
   constructor(
     private communityService: CommunityService, private orgsvc: OrganizationService,
     private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    private router: Router, private globalsvc: UserUtils, private prsvc: PRService,
-    private withFullNameService: WithFullNameService) {
+    private router: Router, private globalsvc: UserUtils,
+    private programAndPrService: ProgramAndPrService) {
     
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -381,19 +379,19 @@ export class CreatePomSessionComponent implements OnInit {
 
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
-      this.withFullNameService.programsByCommunity(this.community.id),
-      this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id),
+      this.programAndPrService.programsByCommunity(this.community.id),
+      this.programAndPrService.programRequests(this.pb.id),
     ]).subscribe(data => {
 
       let alleppData:any[] = data[0].result;
-      let programs: ProgramWithFullName[] = data[1];
-      let prs:ProgramRequestWithFullName[] = data[2];
+      let programs: Program[] = data[1];
+      let prs:Program[] = data[2];
       
       let fls:string[] = [];
       prs.forEach( pr => {
         if ( pr.type != "GENERIC" ){
           pr.fundingLines.forEach( fl => {
-            let flId:string = pr.fullname + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
+            let flId:string = pr.shortName + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
             fls.push( flId );
           });
         }
@@ -418,7 +416,7 @@ export class CreatePomSessionComponent implements OnInit {
         if (epp.fySums[eppYear]) {
           amount = epp.fySums[eppYear];
         }
-        let index = programs.findIndex(program => program.fullname === epp.shortName);
+        let index = programs.findIndex(program => program.shortName === epp.shortName);
         if (index > 0) {
           eppOrgToa[ programs[index].organizationId ] += amount;
         }

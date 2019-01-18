@@ -812,7 +812,7 @@ paths:
         type: "file"
 # STOP EXECUTION
 ##############################################################################
-# START TAGS          
+# START TAGS
   /tagtypes:
     get:
       tags:
@@ -937,11 +937,11 @@ paths:
         required: true
         schema:
           type: "object"
-  /pr/phase/{phaseId}/program/{mrId}:
+  /pr/phase/{phaseId}/program/{shortname}:
     get:
       tags:
       - "PR"
-      operationId: "getByPhaseAndMrId"
+      operationId: "getByPhaseAndName"
       produces:
       - "application/json"
       parameters:
@@ -950,47 +950,55 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "mrId"
+        name: "shortname"
         required: true
         type: "string"
-  /pr/subprograms/{id}:
+  /pr/phase/{phaseId}/name/{shortname}/children:
     get:
       tags:
-      - "PR"
-      operationId: "getSubProgramsById"
+        - "PR"
+      operationId: "getChildrenByName"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "id"
-        required: true
-        type: "string"
+        - in: "path"
+          name: "phaseId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "shortname"
+          required: true
+          type: "string"
 # STOP PR
-############################################################################## 
+##############################################################################
 # START PROGRAMS
   /programs/{mrId}:
     get:
       tags:
-      - "Programs"
+        - "Programs"
       operationId: "getProgramById"
       parameters:
-      - name: "mrId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "mrId"
+          in: "path"
+          required: true
+          type: "string"
       summary: "Get one program"
       description: "Returns a given program"
       produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A program object"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
+        - "application/json"
+  /programs/name/{shortname}:
+    get:
+      tags:
+        - "Programs"
+      operationId: "getByName"
+      parameters:
+        - name: "shortname"
+          in: "path"
+          required: true
+          type: "string"
+      summary: "Get one program"
+      produces:
+        - "application/json"
   /programs/fullnamemap:
       get:
         tags:
@@ -1237,7 +1245,7 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-  /ufr/pom/{pomId}/program/{mrdbId}:
+  /ufr/pom/{pomId}/program/{shortname}:
     put:
       tags:
       - "UFRs"
@@ -1251,7 +1259,7 @@ paths:
         required: true
         type: "string"
       - in: "path"
-        name: "mrdbId"
+        name: "shortname"
         type: "string"
         description: "the program id from the MRDB"
         required: true
@@ -1944,7 +1952,7 @@ paths:
 ##############################################################################
 #
 ##############################################################################
-######################       USERS and ROLES     ############################# 
+######################       USERS and ROLES     #############################
 ##############################################################################
 #
 ##############################################################################
@@ -3148,8 +3156,6 @@ definitions:
 # PROGRAM AND UFR ENUMS
   ProgramType:
     enum: [PROGRAM, GENERIC, INCREMENT, FOS]
-  CreationTimeType:
-    enum: [PROGRAM_OF_MRDB, SUBPROGRAM_OF_MRDB, SUBPROGRAM_OF_PR, NEW_PROGRAM]
   ProgramStatus:
     enum: [OUTSTANDING, SAVED, SUBMITTED, COMPLETED]
   ShortyType:
@@ -3163,10 +3169,6 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "string"
-      originalMrId:
-        type: "string"
-      parentMrId:
         type: "string"
       programStatus:
         $ref: "#/definitions/ProgramStatus"
@@ -3208,10 +3210,6 @@ definitions:
         type: "array"
         items:
           type: "string"
-      creationTimeReferenceId:
-        type: "string"
-      creationTimeType:
-        $ref: "#/definitions/CreationTimeType"
       primaryCapability:
         type: "string"
       coreCapability:
@@ -3240,7 +3238,7 @@ definitions:
       tagCriteria:
         $ref: "#/definitions/StringMap"
       blin:
-        type: "string" 
+        type: "string"
       agency:
         type: "string"
       appropriation:
@@ -3250,16 +3248,12 @@ definitions:
     properties:
       id:
         type: "string"
-      # originalMrId:
-      #   type: "string"
-      # parentMrId:
-      #   type: "string"
       # programStatus:
       #   $ref: "#/definitions/ProgramStatus"
       # bulkOrigin:
       #   type: "boolean"
       # type:
-      #     $ref: "#/definitions/ProgramType"     
+      #     $ref: "#/definitions/ProgramType"
       lastMod:
         type: "integer"
       phaseId:
@@ -3296,10 +3290,6 @@ definitions:
         type: "array"
         items:
           type: "string"
-      # creationTimeReferenceId:
-      #   type: "string"
-      # creationTimeType:
-      #   $ref: "#/definitions/CreationTimeType"
       primaryCapability:
         type: "string"
       coreCapability:
@@ -3322,7 +3312,7 @@ definitions:
         type: "string"
       acquisitionType:
         type: "string"
-## additional        
+## additional
       creationTime:
         type: "integer"
       yoE:
@@ -3349,8 +3339,6 @@ definitions:
         $ref: "#/definitions/ShortyType"
       shortyId:
         type: "string"
-      costLeft:
-        type: "number"
       active:
         type: "boolean"
 ## mistakes
@@ -3490,8 +3478,6 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "string"
-      originalMrId:
         type: "string"
       appropriation:
         type: "string"
@@ -3708,7 +3694,7 @@ definitions:
         type: "string"
       fundingLine:
         type: "object"
-        $ref: "#/definitions/FundingLine"           
+        $ref: "#/definitions/FundingLine"
   RowUpdateEventData:
     type: "object"
     properties:
@@ -3778,8 +3764,6 @@ definitions:
     type: "object"
     properties:
       metadata:
-        type: "object"
-        additionalProperties:
         type: "object"
         properties:
           area:

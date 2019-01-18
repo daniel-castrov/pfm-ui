@@ -1,12 +1,12 @@
-import { ProgramRequestWithFullName } from '../../../../services/with-full-name.service';
-import { Router } from '@angular/router';
-import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
-import { PRService } from '../../../../generated/api/pR.service';
-import { ProgramRequestPageModeService } from '../../program-request/page-mode.service';
-import { AgGridNg2 } from "ag-grid-angular";
-import { SummaryProgramCellRenderer } from "../../../renderers/event-column/summary-program-cell-renderer.component";
-import { PhaseType, UiProgramRequest } from "../UiProgramRequest";
-import { CreationTimeType, ProgramType } from "../../../../generated";
+import {Router} from '@angular/router';
+import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
+import {PRService} from '../../../../generated/api/pR.service';
+import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
+import {AgGridNg2} from "ag-grid-angular";
+import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
+import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
+import {Program, ProgramType} from "../../../../generated";
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'program-requests',
@@ -15,8 +15,8 @@ import { CreationTimeType, ProgramType } from "../../../../generated";
 })
 export class ProgramsComponent implements OnChanges {
 
-  @Input() private pomPrograms: ProgramRequestWithFullName[];
-  @Input() private pbPrograms: ProgramRequestWithFullName[];
+  @Input() private pomPrograms: Program[];
+  @Input() private pbPrograms: Program[];
   @Input() private pomFy: number;
   @Input() private pbFy: number;
   @Input() private reviewOnly: boolean;
@@ -24,19 +24,18 @@ export class ProgramsComponent implements OnChanges {
 
   // used only during PR deletion
   private idToDelete: string;
-  private nameToDelete: string;
+  public nameToDelete: string;
   private menuTabs = ['filterMenuTab'];
   autoGroupColumnDef = {
     headerName: "Program",
     cellStyle: { backgroundColor: "#eae9e9" },
     menuTabs: this.menuTabs,
     filter: 'agTextColumnFilter',
-    filterValueGetter: params => { return params.data.fullname },
     cellRendererParams: { suppressCount: true, innerRenderer: 'summaryProgramCellRenderer' }
   };
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  data = [];
+  rowData = [];
   context: any;
   columnDefs = [];
   groupDefaultExpanded = -1;
@@ -53,39 +52,41 @@ export class ProgramsComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.pomPrograms && this.pbPrograms) {
-      let data = []
+      let rowData = []
       this.pomPrograms.forEach(prOne => {
         let program = new UiProgramRequest(prOne);
         program.phaseType = PhaseType.POM;
-        if (prOne.creationTimeType == CreationTimeType.SUBPROGRAM_OF_PR && prOne.type === ProgramType.GENERIC) {
-          let prTwo = this.pomPrograms.filter((prTwo: ProgramRequestWithFullName) => prOne.creationTimeReferenceId === prTwo.id)[0];
+        if (prOne.type === ProgramType.GENERIC) {
+          let prTwo = this.pomPrograms.filter((prTwo: Program) => NameUtils.getParentName(prOne.shortName) === prTwo.shortName)[0];
 
-          if (prTwo.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prTwo.type === ProgramType.GENERIC) {
-            let prThree = this.pomPrograms.filter((prThree: ProgramRequestWithFullName) => prTwo.creationTimeReferenceId === prThree.id)[0];
+          if (prTwo.type === ProgramType.GENERIC) {
+            let prThree = this.pomPrograms.filter((prThree: Program) => NameUtils.getParentName(prTwo.shortName) === prThree.shortName)[0];
 
-            if (prThree.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR && prThree.type === ProgramType.GENERIC) {
-              let prFour = this.pomPrograms.filter((prFour: ProgramRequestWithFullName) => prThree.creationTimeReferenceId === prFour.id)[0];
-              program.dataPath = [prFour.fullname, prThree.shortName, prTwo.shortName, prOne.shortName];
+            if (prThree.type === ProgramType.GENERIC) {
+              let prFour = this.pomPrograms.filter((prFour: Program) => NameUtils.getParentName(prThree.shortName) === prFour.shortName)[0];
+              program.dataPath = [prFour.shortName, NameUtils.getChildName(prThree.shortName), NameUtils.getChildName(prTwo.shortName), NameUtils.getChildName(prOne.shortName)];
             } else {
-              program.dataPath = [prThree.fullname, prTwo.shortName, prOne.shortName];
+              program.dataPath = [prThree.shortName, NameUtils.getChildName(prTwo.shortName), NameUtils.getChildName(prOne.shortName)];
             }
           } else {
-            program.dataPath = [prTwo.fullname, prOne.shortName];
+            program.dataPath = [prTwo.shortName, NameUtils.getChildName(prOne.shortName)];
           }
         } else {
-          program.dataPath = [prOne.fullname];
+          program.dataPath = [prOne.shortName];
         }
-        data.push(program);
+        rowData.push(program);
       });
       this.pbPrograms.forEach(pr => {
         let programRequest = new UiProgramRequest(pr);
         programRequest.phaseType = PhaseType.PB;
-        programRequest.dataPath = [pr.fullname, '']
-        data.push(programRequest);
+        programRequest.dataPath = [pr.shortName, ''];
+        if (pr.type !== ProgramType.GENERIC) {
+          rowData.push(programRequest);
+        }
       });
-      this.sortObjects(data, ['fullname', 'phaseType']);
-      this.data = data;
-      this.defineColumns(this.data);
+      this.sortObjects(rowData, ['shortName', 'phaseType']);
+      this.rowData = rowData;
+      this.defineColumns(this.rowData);
     }
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()

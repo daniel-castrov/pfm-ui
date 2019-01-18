@@ -7,7 +7,7 @@ import { Notify } from '../../../utils/Notify';
 
 // Generated
 import { User, Role, UserRoleResource } from '../../../generated';
-import { UserService, RoleService, UserRoleResourceService, ProgramsService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
+import { UserService, RoleService, UserRoleResourceService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
 
 @Component({
   selector: 'app-role-approval',
@@ -28,16 +28,12 @@ export class AccessChangeApprovalComponent implements OnInit {
   requsetDisplay: RoleNameWithResources;
   currentRoles: RoleNameWithResources[] = [];
 
-
-  pogramsMap: any[] = [];
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
     private roleService: RoleService,
     private userRoleResourceService: UserRoleResourceService,
-    private programsService: ProgramsService,
     private assignRoleRequestService: AssignRoleRequestService,
     private dropRoleRequestService: DropRoleRequestService
   ) {
@@ -72,52 +68,25 @@ export class AccessChangeApprovalComponent implements OnInit {
     this.getUserAndRoles();
   }
 
-
   private async getUserAndRoles() {
 
-    this.request = (await this.requestService.getById(this.requestId).toPromise()).result;
-    this.requestingUser = (await this.userService.getById(this.request.userId).toPromise()).result;
-    
-    Observable.forkJoin([
-      this.programsService.getProgramsByCommunity(this.requestingUser.currentCommunityId),
-      this.roleService.getByUserIdAndCommunityId(this.requestingUser.id, this.requestingUser.currentCommunityId)
-    ]).toPromise().then( async r => {
+    this.request = (await this.requestService.getById( this.requestId ).toPromise()).result;
+    this.requestingUser = (await this.userService.getById( this.request.userId ).toPromise()).result;
+    let roles:Role[] = (await this.roleService.getByUserIdAndCommunityId( this.requestingUser.id, this.requestingUser.currentCommunityId ).toPromise()).result;
 
-      // Get all the programs and put them in a map
-      this.resultError.push(r[0].error);
-      let allPrograms = r[0].result;
-      allPrograms.forEach(p => this.pogramsMap[p.id] = p);
-
-      this.resultError.push(r[1].error);
-      let roles: Role[] = r[1].result;
-
-      roles.forEach(role => {
-        this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
-          this.requestingUser.id, this.requestingUser.currentCommunityId, role.name
-        ).subscribe((ur) => {
-          let urr: UserRoleResource = ur.result;
-          this.currentRoles.push(this.createRoleWithResource(role.name, urr.resourceIds));
-        });
+    roles.forEach(role => {
+      this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
+        this.requestingUser.id, this.requestingUser.currentCommunityId, role.name
+      ).subscribe((ur) => {
+        let urr: UserRoleResource = ur.result;
+        this.currentRoles.push( new RoleNameWithResources(role.name, urr.resourceIds) );
       });
-      if (this.isDrop){ 
-        this.requsetDisplay = this.createRoleWithResource(this.request.roleName, [...[]]);
-      } else {
-        this.requsetDisplay = this.createRoleWithResource(this.request.roleName, this.request.resourceIds);
-      }
     });
-  }
-
-  createRoleWithResource(role: string, resourceIds: string[]): RoleNameWithResources {
-    let progNames: string[] = [];
-    resourceIds.forEach(r => {
-      try {
-        progNames.push(this.pogramsMap[r].shortName);
-      } catch (any) {
-        if ( r==="x" ) r="none";
-        progNames.push(r);
-      }
-    });
-    return new RoleNameWithResources(role, progNames);
+    if (this.isDrop){ 
+      this.requsetDisplay = new RoleNameWithResources(this.request.roleName,  [] );
+    } else {
+      this.requsetDisplay = new RoleNameWithResources(this.request.roleName, this.request.resourceIds);
+    }
   }
 
   approve() {
@@ -148,4 +117,3 @@ class RoleNameWithResources {
     this.resources = re;
   }
 }
-

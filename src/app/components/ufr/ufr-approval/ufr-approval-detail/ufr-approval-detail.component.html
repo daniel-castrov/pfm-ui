@@ -42,7 +42,7 @@
             </div>
             <div class="col-10">
               <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
-                <span class="mr-1 text-truncate" *ngIf="shorty?.fullname">{{shorty.fullname}}</span>
+                <span class="mr-1 text-truncate" *ngIf="shorty?.shortName">{{shorty.shortName}}</span>
               </ng-container>
               <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
                                              ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR' ||

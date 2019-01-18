@@ -83,7 +83,7 @@
             [orgmap]='orgMap'
             [commdata]='yeartoas'
             [baseline]='analysis_baseline'
-            [readonly]='!(pomIsCreated||pomIsOpen)'
+            [readonly]='(pomIsCreated||pomIsOpen)'
             (changes)='onAnalysis($event)'
           ></app-pom-analysis>
         </div>

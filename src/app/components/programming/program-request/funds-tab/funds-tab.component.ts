@@ -1,4 +1,4 @@
-import {TagsService, TagType} from '../../../../services/tags.service';
+import {TagsService} from '../../../../services/tags.service';
 import {Program} from '../../../../generated/model/program';
 import {ProgramType} from '../../../../generated/model/programType';
 import {PRUtils} from '../../../../services/pr.utils.service';
@@ -8,14 +8,13 @@ import {UserUtils} from '../../../../services/user.utils';
 import {PB} from '../../../../generated/model/pB';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  CreationTimeType,
   FundingLine,
   IntMap,
   PBService,
-  ProgramsService,
-  PRService,
   Pom,
+  ProgramsService,
   ProgramStatus,
+  PRService,
   RolesPermissionsService
 } from '../../../../generated'
 import {AgGridNg2} from "ag-grid-angular";
@@ -28,7 +27,7 @@ import {Notify} from "../../../../utils/Notify";
 import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
 import {GridType} from "./GridType";
 import {CellEditor} from "../../../../utils/CellEditor";
-import { ok } from 'assert';
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'funds-tab',
@@ -58,7 +57,6 @@ export class FundsTabComponent implements OnChanges {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
-  CreationTimeType = CreationTimeType;
   ProgramType = ProgramType;
   columnDefs = [];
   defaultColumnDefs = { editable: false };
@@ -89,8 +87,8 @@ export class FundsTabComponent implements OnChanges {
       return;
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
-      if (this.pr.type === ProgramType.GENERIC && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
-        this.parentPr = (await this.prService.getById(this.pr.creationTimeReferenceId).toPromise()).result;
+      if (this.pr.type === ProgramType.GENERIC) {
+        this.parentPr = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       }
 
       if( this.pom ){
@@ -115,10 +113,11 @@ export class FundsTabComponent implements OnChanges {
     });
   }
 
-  loadExistingFundingLines() {
-    if (this.pr.creationTimeReferenceId && this.pr.creationTimeType === CreationTimeType.SUBPROGRAM_OF_PR) {
-      this.prService.getById(this.pr.creationTimeReferenceId).subscribe(pr => {
-        pr.result.fundingLines.forEach(fundingLine => {
+  async loadExistingFundingLines() {
+    if (this.pr.type === this.ProgramType.GENERIC) {
+      const prParent: Program = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+      if (prParent) {
+        prParent.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
             fl.baOrBlin === fundingLine.baOrBlin &&
             fl.item === fundingLine.item &&
@@ -129,22 +128,7 @@ export class FundsTabComponent implements OnChanges {
           }
         });
         this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
-      });
-    }
-    if (this.pr.originalMrId) {
-      this.programsService.getProgramById(this.pr.originalMrId).subscribe(program => {
-        program.result.fundingLines.forEach(fundingLine => {
-          let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
-            fl.baOrBlin === fundingLine.baOrBlin &&
-            fl.item === fundingLine.item &&
-            fl.opAgency === fundingLine.opAgency);
-          if (!isDuplicate) {
-            fundingLine.userCreated = true;
-            this.existingFundingLines.push(fundingLine);
-          }
-        });
-        this.existingFundingLines = FormatterUtil.removeDuplicates(this.existingFundingLines)
-      });
+      }
     }
   }
 
@@ -168,9 +152,9 @@ export class FundsTabComponent implements OnChanges {
     this.parentData = data;
   }
 
-  initSiblingsDataRows(selectedFundingLine: FundingLine) {
+  async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    this.prService.getSubProgramsById(this.pr.creationTimeReferenceId).subscribe(response => {
+    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
@@ -260,13 +244,12 @@ export class FundsTabComponent implements OnChanges {
             fundingLine.baOrBlin === fl.baOrBlin &&
             fundingLine.item === fl.item
           )[0];
-          pbRow.fundingLine.userCreated = fundingLine.userCreated;
         }
 
         if (pbRow.fundingLine === undefined) {
           pbRow.fundingLine = JSON.parse(JSON.stringify(this.generateEmptyFundingLine(pomRow.fundingLine)));
-          pbRow.fundingLine.userCreated = fundingLine.userCreated;
         }
+        pbRow.fundingLine.userCreated = fundingLine.userCreated;
 
         let deltaRow: DataRow = new DataRow();
         deltaRow.fundingLine = this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
@@ -837,19 +820,19 @@ export class FundsTabComponent implements OnChanges {
   private async getPBData(): Promise<Program> {
     const user: User = await this.globalsService.user().toPromise();
     const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
-    let originalMrId;
+    let name;
     if (this.pr.type === ProgramType.GENERIC) {
-      originalMrId = this.parentPr.originalMrId;
+      name = this.parentPr.shortName;
     } else {
-      originalMrId = this.pr.originalMrId;
+      name = this.pr.shortName;
     }
     this.pbFy = pb.fy;
 
-    if (!originalMrId) {
+    if (!name) {
       return;
     }
 
-    const pbPr: Program = (await this.prService.getByPhaseAndMrId(pb.id, originalMrId).toPromise()).result;
+    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, NameUtils.urlEncode(name)).toPromise()).result;
 
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
@@ -948,7 +931,7 @@ export class FundsTabComponent implements OnChanges {
   delete(index) {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
-    this.prService.getSubProgramsById(this.pr.id).subscribe(data => {
+    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
       let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&

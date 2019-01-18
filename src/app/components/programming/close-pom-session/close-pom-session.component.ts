@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../header/header.component'
 import { UserUtils } from '../../../services/user.utils';
-import { WithFullNameService } from '../../../services/with-full-name.service';
-import { ProgramRequestWithFullName } from '../../../services/with-full-name.service';
+import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import {User, Pom, Program, POMService, PBService, PRService} from '../../../generated';
 import { Notify } from '../../../utils/Notify';
 
@@ -19,7 +18,7 @@ export class ClosePomSessionComponent implements OnInit {
   pom:Pom;
   pb;
   by;
-  pomPrograms:ProgramRequestWithFullName[];
+  pomPrograms:Program[];
   pbPrograms:Program[];
 
 
@@ -32,7 +31,7 @@ export class ClosePomSessionComponent implements OnInit {
     private prService: PRService,
     private globalsService: UserUtils,
     private router: Router,
-    private withFullNameService: WithFullNameService ) {}
+    private programAndPrService: ProgramAndPrService ) {}
 
   async ngOnInit() {
 
@@ -41,7 +40,7 @@ export class ClosePomSessionComponent implements OnInit {
       this.currentCommunityId = user.currentCommunityId;
 
       this.pom = (await this.pomService.getReconciliation(user.currentCommunityId).toPromise()).result as Pom;
-      this.pomPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromCreationTimeData(this.pom.id));
+      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
 
       await this.initPbPrs();
 
@@ -58,7 +57,7 @@ export class ClosePomSessionComponent implements OnInit {
 
   async initPbPrs() {
     this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbPrograms = (await this.withFullNameService.programRequestsWithFullNamesDerivedFromArchivalData(this.pb.id));
+    this.pbPrograms = (await this.programAndPrService.programRequests(this.pb.id));
   }
 
   closePom( event ) {
