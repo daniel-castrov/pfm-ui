@@ -1,6 +1,6 @@
 import {TagsService, TagType} from '../../../../services/tags.service';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
-import {FundingLine, PBService, Pom, POMService, ProgramsService, PRService, ShortyType, UFR} from '../../../../generated'
+import {FundingLine, PBService, Pom, POMService, ProgramsService, PRService, RolesPermissionsService, ShortyType, UFR} from '../../../../generated'
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
@@ -35,6 +35,7 @@ export class UfrFundsComponent implements OnChanges {
   private filteredBlins: string[] = [];
   private columnKeys;
   private shorty: any;
+  private ismgr: boolean = false;
 
   defaultColumnDefs = [];
   currentFundingColumnDefs = [];
@@ -56,7 +57,8 @@ export class UfrFundsComponent implements OnChanges {
               private prService: PRService,
               private programService: ProgramsService,
               private autoValuesService: AutoValuesService,
-              private tagsService: TagsService) {}
+              private tagsService: TagsService,
+              private rolesvc: RolesPermissionsService) {}
 
   ngOnChanges() {
     this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
@@ -75,6 +77,10 @@ export class UfrFundsComponent implements OnChanges {
       this.agGridCurrentFunding.api.sizeColumnsToFit();
       this.agGridProposedChanges.api.sizeColumnsToFit();
       this.agGridRevisedPrograms.api.sizeColumnsToFit();
+    });
+    this.ismgr = false;
+    this.rolesvc.getRoles().subscribe(data => {
+      this.ismgr = (data.result.includes('POM_Manager'));
     });
   }
 

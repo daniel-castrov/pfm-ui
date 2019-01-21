@@ -179,7 +179,9 @@ export class FundsTabComponent implements OnChanges {
       setTimeout(() => {
         if (this.data.some(row => row.fundingLine.userCreated === true)) {
           this.agGridParent.columnApi.setColumnVisible('delete', true);
-          this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+          if(this.agGridSiblings){
+            this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+          }
         }
         if (this.agGridSiblings) {
           this.agGridSiblings.api.sizeColumnsToFit();
