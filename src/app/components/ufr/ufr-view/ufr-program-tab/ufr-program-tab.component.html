@@ -17,7 +17,7 @@
 </ng-template>
 <form>
   <div class="row">
-    <div class="col-10">
+    <div class="col-8">
       <table class="ufr-program-table">
         <tbody>
           <tr>
@@ -55,19 +55,13 @@
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-8">
-      <div class="row">
-        <div class="col-4 form-group inline-name">
-          <label class="mb-1">*Lead Component</label>
-          <ng-container *ngTemplateOutlet="value;context:{tagname:'Lead Component', property:'leadComponent'}"></ng-container>
-        </div>
-        <div class="col-5 form-group inline-name">
-          <label class="mb-1">*Manager</label>
-          <ng-container *ngTemplateOutlet="value;context:{tagname:'Manager', property:'manager'}"></ng-container>
-        </div>
+      <div class="col-4 form-group inline-name">
+        <label class="mb-1">*Lead Component</label>
+        <ng-container *ngTemplateOutlet="value;context:{tagname:'Lead Component', property:'leadComponent'}"></ng-container>
+      </div>
+      <div class="col-5 form-group inline-name">
+        <label class="mb-1">*Manager</label>
+        <ng-container *ngTemplateOutlet="value;context:{tagname:'Manager', property:'manager'}"></ng-container>
       </div>
       <fieldset>
         <legend>Capability</legend>
