@@ -25,7 +25,7 @@ label {
 }
 
 [name="program-name"] {
-  width: 550px;
+  width: 360px;
 }
 
 .dropdown-width {
@@ -39,9 +39,9 @@ label {
 
 .program-name {
   display: inline-block;
-  width: 410px;
-  min-width: 410px;
-  max-width: 410px;
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
   vertical-align: top;
   cursor: default;
   // word-break: break-all; // use if there are set number of characters in the longname string
