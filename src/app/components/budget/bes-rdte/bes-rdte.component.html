@@ -15,7 +15,10 @@
             [toolPanelSuppressSideButtons]="true"
             [suppressDragLeaveHidesColumns]="true"
             [suppressMovableColumns]="true"
+            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
             [suppressPaginationPanel]="true"
+            [pagination]="true"
+            [paginationPageSize]="20"
             [treeData]="true"
             [animateRows]="true"
             [groupDefaultExpanded]="groupDefaultExpanded"
@@ -23,7 +26,7 @@
             [autoGroupColumnDef]="autoGroupColumnDef"
             (gridReady)="onGridReady($event)">
           </ag-grid-angular>
-
+          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>
       </div>
     </div>
