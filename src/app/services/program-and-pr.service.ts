@@ -55,7 +55,7 @@ export class ProgramAndPrService {
 
   async programsPlusPrsMinusSubprograms(phaseId: string): Promise<Program[]> {
     const progOrPrs = await this.programsPlusPrs(phaseId);
-    return progOrPrs.filter( progOrPr => progOrPr.type == ProgramType.PROGRAM );
+    return progOrPrs.filter( progOrPr => progOrPr.type != ProgramType.GENERIC );
   }
 
   async prsMinusGenericSubprograms(phaseId: string): Promise<Program[]> {
