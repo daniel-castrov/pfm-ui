@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {AgGridNg2} from 'ag-grid-angular';
 import {HeaderComponent} from '../../header/header.component';
 import {BudgetFundingLine, BudgetFundingLinesService, Pom, POMService, User} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
@@ -13,14 +12,11 @@ import {Item} from "./Item";
 export class BesRdteComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header;
-  @ViewChild("agGrid") private agGrid: AgGridNg2;
 
-  private gridApi;
-  private gridColumnApi;
   public columnDefs;
   public rows = [];
-  private groupDefaultExpanded = -1;
-  private autoGroupColumnDef = {
+  groupDefaultExpanded = -1;
+  autoGroupColumnDef = {
     headerName: "",
     maxWidth: 400,
     cellRendererParams: { suppressCount: true }
@@ -44,20 +40,14 @@ export class BesRdteComponent implements OnInit {
     return data.hierarchy;
   }
 
-  onFilterTextBoxChanged() {
-    this.gridApi.setQuickFilter(document.getElementById("filter-text-box").nodeValue);
-  }
-
   onGridReady(params) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
     params.api.sizeColumnsToFit();
   }
 
 
   initRows() {
     const rows = [];
-    rows.push( ...this.getOverviewAndR1( ["RDTE"] ));
+    rows.push( ...this.getOverviewAndR1( [] ));
 
     for ( let i=1; i<8; i++ ) {
       const ba = "BA" + i;
@@ -69,15 +59,15 @@ export class BesRdteComponent implements OnInit {
 
         if ( item.pe != itempe ){
           itempe = item.pe;
-          rows.push( ...this.getR2Fields(["RDTE", ba, "PE:" + item.pe, "R-2"], item) );
+          rows.push( ...this.getR2Fields([ ba, "PE:" + item.pe, "R-2"], item) );
         }
 
-        rows.push( ...this.getR2AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
+        rows.push( ...this.getR2AFields( [ba, "PE:"+item.pe, "ITEM: "+item.inum, "R-2A"], item ) );
 
         if ( item.ba == "BA4" || item.ba == "BA5" || item.ba == "BA7") {
-          rows.push( ...this.getR3Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
-          rows.push( ...this.getR4Fields(  ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
-          rows.push( ...this.getR4AFields( ["RDTE", ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
+          rows.push( ...this.getR3Fields(  [ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-3"],  item) );
+          rows.push( ...this.getR4Fields(  [ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4"],  item) );
+          rows.push( ...this.getR4AFields( [ba, "PE:"+item.pe, "ITEM: "+item.inum,"R-4A"], item) );
         }
       });
     }
