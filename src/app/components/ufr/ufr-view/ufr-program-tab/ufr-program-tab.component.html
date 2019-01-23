@@ -30,8 +30,8 @@
 
                 <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
                                      ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR'">
-                  {{shorty?.shortName}}/
-                  <input [(ngModel)]="ufr.shortName" class="form-control inc_fos" name="program-id" [disabled]="disabled" />
+                  {{parentFullName}}/
+                  <input [(ngModel)]="childNameModel" class="form-control inc_fos" name="program-id" [disabled]="disabled" />
                 </ng-container>
 
                 <ng-container *ngIf="ufr.shortyType=='NEW_PROGRAM'">

@@ -119,6 +119,7 @@ export class NewUfrComponent implements OnInit {
           ufr.shortyId = this.selectedProgramOrPr.id;
           await this.initFromShortyPR(ufr, false);
         }
+        ufr.shortName = this.selectedProgramOrPr.shortName + '/';
         break;
       case 'New Increment':
         ufr.fundingLines=[];
@@ -131,6 +132,7 @@ export class NewUfrComponent implements OnInit {
           ufr.shortyId = this.selectedProgramOrPr.id;
           await this.initFromShortyPR(ufr, false);
         }
+        ufr.shortName = this.selectedProgramOrPr.shortName + '/';
         break;
       case 'New Program':
         ufr.shortyType = ShortyType.NEW_PROGRAM;
