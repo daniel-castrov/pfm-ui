@@ -11,7 +11,6 @@ import {LockedWorksheetsComponent} from "./locked-worksheets/locked-worksheets.c
   selector: 'lock-pom-session',
   templateUrl: './lock-pom-session.component.html',
   styleUrls: ['./lock-pom-session.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class LockPomSessionComponent implements AfterContentChecked {
 
