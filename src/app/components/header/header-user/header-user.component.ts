@@ -18,18 +18,20 @@ export class HeaderUserComponent {
 
   @Input() isAuthenticated: boolean;
   @Input() authUser: AuthUser;
-  pomStatus: Pom.StatusEnum;
 
   @ViewChild(MenuBarComponent) menuBarComponent: MenuBarComponent;
   @ViewChild(UserActionsComponent) userActionsComponent: UserActionsComponent;
   // @ViewChild(PrChangeNotificationsComponent) prChangeNotifications: PrChangeNotificationsComponent;
 
-  requests: Request[];
+  pomStatus: Pom.StatusEnum;
+  requests: any[];
 
-  constructor( private requestsService: RequestsService,
-                 public elevationService: ElevationService,
+  constructor( public elevationService: ElevationService,
+                private pomService: POMService,
+                private requestsService: RequestsService
                  // private prChangeNotificationsService: PrChangeNotificationsService,
-                 private pomService: POMService ) {}
+                  ) {}
+
 
    async ngOnInit() {
      this.requests = await this.requestsService.getRequests().toPromise();
