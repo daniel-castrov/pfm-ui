@@ -37,7 +37,7 @@
             <ufr-ufr-tab [readonly]="readonly()" [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-ufr-tab>
           </tab>
           <tab heading="Program" id="tab2">
-            <ufr-program-tab [ufr]="ufr" [shorty]="shorty" [editable]="canedit" role="tabpanel"></ufr-program-tab>
+            <ufr-program-tab [readonly]="readonly()" [ufr]="ufr" [shorty]="shorty" [editable]="canedit" role="tabpanel"></ufr-program-tab>
           </tab>
           <tab (select)="fundsTabSelected()" heading="Funds" active="true" id="tab3">
             <ufr-funds-tab [readonly]="readonly()" [ufr]="ufr" [fy]="pomFy" [editable]="canedit" role="tabpanel"></ufr-funds-tab>

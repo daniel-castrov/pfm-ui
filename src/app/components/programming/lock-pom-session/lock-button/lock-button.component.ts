@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {Pom, POMService, Worksheet, WorksheetService} from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 import {LockedWorksheetsComponent} from "../locked-worksheets/locked-worksheets.component";
 import {GridToaComponent} from "../../update-pom-session/grid-toa/grid-toa.component";
 import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'lock-button',
@@ -18,12 +19,12 @@ export class LockButtonComponent {
   @Input() selectedWorksheet: Worksheet;
   @Input() gridToaComponent: GridToaComponent;
 
-  @Output() locked = new EventEmitter();
 
   @ViewChild('lockConfirmationDialog') dialog: ConfirmationDialogComponent;
 
   constructor(private pomService: POMService,
-              private worksheetService: WorksheetService) {}
+              private worksheetService: WorksheetService,
+              private router: Router ) {}
 
   openDialog(){
     if (!this.gridToaComponent.isToaExceeded) {
@@ -39,6 +40,6 @@ export class LockButtonComponent {
     await this.pomService.updatePomStatus(this.pom.id, Pom.StatusEnum.RECONCILIATION).toPromise();
     this.selectedWorksheet.isFinal = true;
     Notify.success('Worksheet marked as final successfully');
-    this.locked.emit(null);
+    this.router.navigate(['/home'])
   }
 }

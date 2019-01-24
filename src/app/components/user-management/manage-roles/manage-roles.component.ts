@@ -53,7 +53,7 @@ export class ManageRolesComponent {
   private isNewUserRole: boolean;
   private isVisible: boolean;
 
-  private cannotChangeResources:string [] = ["User_Approver", "POM_Manager", "Funds_Requestor", "Program_Manager", "Execution_Manager" ];
+  private cannotChangeResources:string [] = ["User_Approver", "POM_Manager", "Funds_Requestor", "Program_Manager", "Execution_Manager", "Budget_Manager" ];
   private canChangeResources: boolean;
 
   private orgBasedRoles: string [] = ["Funds_Requestor", "Program_Manager" ];
