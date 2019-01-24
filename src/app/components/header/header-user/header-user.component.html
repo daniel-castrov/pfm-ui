@@ -41,16 +41,22 @@
 
         <!-- User Menu -->
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            {{ authUser?.fullName }}
-            <i class="fa fa-bell" aria-hidden="true"></i>
+          <a class="super-user dropdown-toggle" href="#" role="button"  id="dropdownMenuLink" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="icon-wrapper" *roles="'User'">
+              {{ authUser?.fullName }}
+              <i class="fa fa-bell" aria-hidden="true"></i>
+              <span *roles="'User_Approver'">
+                <span class="badge" *ngIf="requests?.length > 0">{{requests?.length}}</span>
+              </span>
+            </div>
           </a>
-          <div *roles="'User'" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div *roles="'User'" class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
             <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
             <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>
-            <a class="dropdown-item" href="#" routerLink="/my-roles">My Actions</a>
+            <div *roles="'User_Approver'">
+              <a class="dropdown-item" href="#" routerLink="/approve-requests">My Actions</a>
+            </div>
           </div>
         </span>
       </div>
