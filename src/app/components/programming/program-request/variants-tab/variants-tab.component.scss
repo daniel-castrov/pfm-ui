@@ -13,10 +13,8 @@ fieldset {
   padding: 10px 20px;
 }
 
-#variant-table ::ng-deep {
-  .delta-row  {
+#variant-table ::ng-deep .delta-row  {
     background: $light-grey;
-  }
 }
 
 .add-variant-table {
