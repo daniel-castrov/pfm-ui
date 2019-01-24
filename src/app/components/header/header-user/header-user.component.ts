@@ -2,12 +2,13 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ElevationService} from '../../../services/elevation.component';
 import {AuthUser} from '../../../generated/model/authUser';
 import {RequestsService} from '../../../services/requests.service';
+import {Request} from '../../../services/request';
 import {POMService} from '../../../generated/api/pOM.service';
 import {Pom} from '../../../generated/model/pom';
 import {MenuBarComponent} from "../../menu-bar/menu-bar.component";
-import {UserActionsComponent} from "app/components/menu-bar/user-actions/user-actions.component";
-// import {PrChangeNotificationsComponent} from "app/components/menu-bar/pr-change-notofications/pr-change-notifications.component";
-
+import {UserActionsComponent} from "../../menu-bar/user-actions/user-actions.component";
+import {PrChangeNotificationsComponent} from 'app/components/menu-bar/pr-change-notofications/pr-change-notifications.component';
+import {PrChangeNotification, PrChangeNotificationsService} from "../../../generated";
 
 @Component({
   selector: 'header-user',
@@ -21,33 +22,38 @@ export class HeaderUserComponent {
 
   @ViewChild(MenuBarComponent) menuBarComponent: MenuBarComponent;
   @ViewChild(UserActionsComponent) userActionsComponent: UserActionsComponent;
-  // @ViewChild(PrChangeNotificationsComponent) prChangeNotifications: PrChangeNotificationsComponent;
+  @ViewChild(PrChangeNotificationsComponent) prChangeNotificationsComponent: PrChangeNotificationsComponent;
 
   pomStatus: Pom.StatusEnum;
-  requests: any[];
+  requests: Request[];
+  prChangeNotifications: PrChangeNotification[];
+  notificationsTotal: number;
 
   constructor( public elevationService: ElevationService,
                 private pomService: POMService,
-                private requestsService: RequestsService
-                 // private prChangeNotificationsService: PrChangeNotificationsService,
+                private requestsService: RequestsService,
+                private prChangeNotificationsService: PrChangeNotificationsService
                   ) {}
 
 
    async ngOnInit() {
      this.requests = await this.requestsService.getRequests().toPromise();
-     // this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+     this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+     this.notificationsTotal = this.requests.length + this.prChangeNotifications.length;
      this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {
        delete this.pomStatus;
        data.result.forEach((p: Pom) => {
          this.pomStatus = p.status;
        });
      });
+
    }
 
    refresh() {
      this.ngOnInit();
      this.userActionsComponent && this.userActionsComponent.ngOnInit();
-     // this.prChangeNotificationsComponent && this.prChangeNotificationsComponent.ngOnInit();
+     this.prChangeNotificationsComponent && this.prChangeNotificationsComponent.ngOnInit();
+     // this.requests.length + this.prChangeNotifications.length.ngOnInit();
    }
 
 }
