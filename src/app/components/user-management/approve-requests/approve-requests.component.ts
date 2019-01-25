@@ -5,6 +5,7 @@ import { Request } from '../../../services/request';
 import { HeaderComponent } from '../../header/header.component';
 import { Injectables } from '../../../services/injectables';
 import { RequestsService } from '../../../services/requests.service';
+import { PrChangeNotification, PrChangeNotificationsService } from "../../../generated";
 import { Notify } from '../../../utils/Notify';
 
 @Component({
@@ -17,16 +18,19 @@ export class ApproveRequestsComponent implements OnInit {
   @ViewChild(HeaderComponent) header: HeaderComponent;
 
   requests: Request[];
+  prChangeNotifications: PrChangeNotification[];
 
   constructor( injectables: Injectables, // initilizes the static members on the class Injectables
-               private requestsService: RequestsService
-  ){} 
+               private requestsService: RequestsService,
+               private prChangeNotificationsService: PrChangeNotificationsService
+  ){}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.requestsService.getRequests().subscribe(
       (allRequests) => {
         this.requests = allRequests;
       });
+    this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
   }
 
   async approve(request: Request) {
@@ -36,6 +40,7 @@ export class ApproveRequestsComponent implements OnInit {
   async deny(request: Request) {
     this.submit(()=>request.deny(), "denied");
   }
+
 
   async submit(action: any, message: string) {
     try {
@@ -47,5 +52,4 @@ export class ApproveRequestsComponent implements OnInit {
       Notify.exception(e.message);
     }
   }
-
 }

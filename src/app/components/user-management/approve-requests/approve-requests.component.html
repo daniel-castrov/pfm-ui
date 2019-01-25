@@ -33,6 +33,13 @@
               </div>
             </td>
           </tr>
+          <tr *ngFor="let prChangeNotification of prChangeNotifications">
+            <td></td>
+            <td></td>
+            <td>PR Change</td>
+            <td>{{prChangeNotification?.shortName}}</td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
     </div>
