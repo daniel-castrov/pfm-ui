@@ -1,5 +1,5 @@
 import {Component, Input, ViewEncapsulation} from '@angular/core';
-import {FundingLine, IntMap, POMService, UFR, User, Variant} from '../../../../generated'
+import {FundingLine, IntMap, POMService, UFR, User, Variant, ServiceBranch } from '../../../../generated'
 import {UserUtils} from '../../../../services/user.utils';
 import {DataRow} from "./DataRow";
 import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
@@ -12,7 +12,6 @@ import {Notify} from '../../../../utils/Notify';
   selector: 'ufr-variants-tab',
   templateUrl: './ufr-variants-tab.component.html',
   styleUrls: ['./ufr-variants-tab.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class UfrVariantsTabComponent {
 
@@ -26,8 +25,6 @@ export class UfrVariantsTabComponent {
 
   showAddVariant=false;
   newVariantName:string;
-
-  branches:string[]=["USA","USN","USAF","USMC","SOCOM","NGB"];
 
   years:number[];
   columnDefs;
@@ -184,7 +181,7 @@ export class UfrVariantsTabComponent {
               cellEditorSelector: params => {
                 return {
                   component: 'agSelectCellEditor',
-                  params: {values: this.branches}
+                  params: { values: Object.keys(ServiceBranch) }
                 };
               }
             },

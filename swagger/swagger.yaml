@@ -3113,7 +3113,7 @@ definitions:
           items:
             $ref: "#/definitions/TOA"
       status:
-        enum: [CREATED, OPEN, RECONCILIATION, LOCKED, CLOSED]
+        enum: [CREATED, OPEN, RECONCILIATION, CLOSED]
       startdate:
         type: "integer"
       enddate:
@@ -3164,6 +3164,8 @@ definitions:
     enum: [OUTSTANDING, SAVED, SUBMITTED, VALID, INVALID, WITHDRAWN, ARCHIVED]
   Disposition:
     enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
+  ServiceBranch:
+    enum: [USA, USN, USAF, USMC, USNG, SOCOM]    
   #
   Program:
     type: "object"
