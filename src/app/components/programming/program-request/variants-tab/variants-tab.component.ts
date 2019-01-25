@@ -1,5 +1,5 @@
 import {Component, Input, ViewEncapsulation, OnInit} from '@angular/core';
-import { Program, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceLine, User, PB, RolesPermissionsService} from '../../../../generated'
+import { Program, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceBranch, User, PB, RolesPermissionsService} from '../../../../generated'
 import { UserUtils } from '../../../../services/user.utils';
 import { Notify } from '../../../../utils/Notify';
 
@@ -14,9 +14,8 @@ import {NameUtils} from "../../../../utils/NameUtils";
 @Component({
   selector: 'variants-tab',
   templateUrl: './variants-tab.component.html',
-  styleUrls: ['./variants-tab.component.scss'],
-  encapsulation: ViewEncapsulation.None
-})
+  styleUrls: ['./variants-tab.component.scss']
+}) 
 export class VariantsTabComponent implements OnInit {
 
   @Input() current: Program;
@@ -31,8 +30,6 @@ export class VariantsTabComponent implements OnInit {
 
   showAddVariant=false;
   newVariantName:string;
-
-  branches:string[]=["USA","USN","USAF","USMC","SOCOM","NGB"];
 
   years:number[];
   columnDefs;
@@ -245,7 +242,7 @@ export class VariantsTabComponent implements OnInit {
             cellEditorSelector: params => {
               return {
                 component: 'agSelectCellEditor',
-                params: {values: this.branches}
+                params: { values:  Object.keys(ServiceBranch) }
               };
             }
           },
