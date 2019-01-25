@@ -45,7 +45,7 @@
             <div class="icon-wrapper" *roles="'User'">
               {{ authUser?.fullName }}
               <i class="fa fa-bell" aria-hidden="true"></i>
-              <span *roles="'User_Approver','Funds_Requestor'">
+              <span *roles="'User_Approver,Funds_Requestor'">
                 <span class="badge" *ngIf="notificationsTotal > 0">{{notificationsTotal}}</span>
               </span>
             </div>
@@ -54,7 +54,7 @@
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
             <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
             <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>
-            <div *roles="'User_Approver','Funds_Requestor'">
+            <div *roles="'User_Approver,Funds_Requestor'">
               <a class="dropdown-item" href="#" routerLink="/approve-requests">My Actions</a>
             </div>
           </div>

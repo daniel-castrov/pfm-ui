@@ -7,8 +7,7 @@ import {POMService} from '../../../generated/api/pOM.service';
 import {Pom} from '../../../generated/model/pom';
 import {MenuBarComponent} from "../../menu-bar/menu-bar.component";
 import {UserActionsComponent} from "../../menu-bar/user-actions/user-actions.component";
-import {PrChangeNotificationsComponent} from 'app/components/menu-bar/pr-change-notofications/pr-change-notifications.component';
-import {PrChangeNotification, PrChangeNotificationsService} from "../../../generated";
+import {PrChangeNotification, PrChangeNotificationsService, RolesPermissionsService} from "../../../generated";
 
 @Component({
   selector: 'header-user',
@@ -22,38 +21,42 @@ export class HeaderUserComponent {
 
   @ViewChild(MenuBarComponent) menuBarComponent: MenuBarComponent;
   @ViewChild(UserActionsComponent) userActionsComponent: UserActionsComponent;
-  @ViewChild(PrChangeNotificationsComponent) prChangeNotificationsComponent: PrChangeNotificationsComponent;
 
   pomStatus: Pom.StatusEnum;
-  requests: Request[];
-  prChangeNotifications: PrChangeNotification[];
+  requests: Request[] = [];
+  prChangeNotifications: PrChangeNotification[] = [];
   notificationsTotal: number;
 
   constructor( public elevationService: ElevationService,
-                private pomService: POMService,
-                private requestsService: RequestsService,
-                private prChangeNotificationsService: PrChangeNotificationsService
-                  ) {}
+               private pomService: POMService,
+               private requestsService: RequestsService,
+               private prChangeNotificationsService: PrChangeNotificationsService,
+               private rolesvc: RolesPermissionsService) {
+  }
 
+  async ngOnInit() {
+    this.requests = await this.requestsService.getRequests().toPromise();
+    this.rolesvc.getRoles().subscribe(async data => {
+      if (data.result.includes('Funds_Requestor')) {
+        this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+      }
+    });
 
-   async ngOnInit() {
-     this.requests = await this.requestsService.getRequests().toPromise();
-     this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
-     this.notificationsTotal = this.requests.length + this.prChangeNotifications.length;
-     this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {
-       delete this.pomStatus;
-       data.result.forEach((p: Pom) => {
-         this.pomStatus = p.status;
-       });
-     });
+    this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {
+      delete this.pomStatus;
+      data.result.forEach((p: Pom) => {
+        this.pomStatus = p.status;
+      });
+    });
 
+    setTimeout(() => {
+      this.notificationsTotal = this.requests.length + this.prChangeNotifications.length
+    }, 100)
    }
 
    refresh() {
      this.ngOnInit();
      this.userActionsComponent && this.userActionsComponent.ngOnInit();
-     this.prChangeNotificationsComponent && this.prChangeNotificationsComponent.ngOnInit();
-     // this.requests.length + this.prChangeNotifications.length.ngOnInit();
    }
 
 }
