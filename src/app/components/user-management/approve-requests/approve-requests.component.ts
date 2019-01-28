@@ -38,7 +38,7 @@ export class ApproveRequestsComponent implements OnInit {
     {
       headerName: 'Originator',
       field: 'originator',
-      width: 280;
+      width: 280
     },
     {
       headerName: 'Approve',
