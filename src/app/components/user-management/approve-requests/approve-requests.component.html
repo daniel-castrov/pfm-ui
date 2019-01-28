@@ -42,6 +42,18 @@
           </tr>
         </tbody>
       </table>
+      <ag-grid-angular #agGrid
+        class="ag-theme-balham group-header-white approve-requests"
+        [showToolPanel]="false"
+        [enableSorting]="true"
+        [enableFilter]="true"
+        [gridAutoHeight]="true"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [suppressRowTransform]="true"
+        [suppressPaginationPanel]="true"
+        (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
     </div>
   </div>
 </div>
