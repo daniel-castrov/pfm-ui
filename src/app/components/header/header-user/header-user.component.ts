@@ -51,7 +51,7 @@ export class HeaderUserComponent {
 
     setTimeout(() => {
       this.notificationsTotal = this.requests.length + this.prChangeNotifications.length
-    }, 100)
+    }, 1000)
    }
 
    refresh() {
