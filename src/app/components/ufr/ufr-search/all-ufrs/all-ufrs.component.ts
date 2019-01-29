@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import {
   ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus, Program
+  UfrStatus, Program, Pom
 } from '../../../../generated';
 import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -27,7 +27,7 @@ export class AllUfrsComponent implements OnInit {
   private user: User;
   private orgMap: any[] = []
   private filtertext;
-  private fy: number;
+  private pom: Pom;
 
   // agGrid
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -59,7 +59,7 @@ export class AllUfrsComponent implements OnInit {
       this.orgMap[org.id] = org.abbreviation;
     });
 
-    this.fy = (await this.cycleUtils.currentPom().toPromise()).fy;
+    this.pom = (await this.cycleUtils.currentPom().toPromise());
 
     this.setAgGridColDefs();
     this.populateRowData();
@@ -216,7 +216,8 @@ export class AllUfrsComponent implements OnInit {
 
   private async populateRowData() {
 
-    const ufrFilter: UFRFilter = {};
+
+    const ufrFilter: UFRFilter = {cycle: 'POM' + this.pom.fy};
 
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
 
@@ -263,7 +264,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   sum(ufr: UFR): number {
-    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.fy );
+    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.pom.fy );
   }
 
   private async initProgrammyIdToFullName(): Promise<any> {
