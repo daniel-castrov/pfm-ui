@@ -46,7 +46,7 @@
               {{ authUser?.fullName }}
               <i class="fa fa-bell" aria-hidden="true"></i>
               <span *roles="'User_Approver,Funds_Requestor'">
-                <span class="badge" *ngIf="notificationsTotal > 0">{{notificationsTotal}}</span>
+                <span class="badge" *ngIf="(requests?.length + prChangeNotifications?.length) > 0">{{requests?.length + prChangeNotifications?.length}}</span>
               </span>
             </div>
           </a>

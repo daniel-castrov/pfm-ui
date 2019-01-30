@@ -25,7 +25,6 @@ export class HeaderUserComponent {
   pomStatus: Pom.StatusEnum;
   requests: Request[] = [];
   prChangeNotifications: PrChangeNotification[] = [];
-  notificationsTotal: number;
 
   constructor( public elevationService: ElevationService,
                private pomService: POMService,
@@ -35,10 +34,12 @@ export class HeaderUserComponent {
   }
 
   async ngOnInit() {
-    this.requests = await this.requestsService.getRequests().toPromise();
     this.rolesvc.getRoles().subscribe(async data => {
       if (data.result.includes('Funds_Requestor')) {
         this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+      }
+      if (data.result.includes('User_Approver')) {
+        this.requests = await this.requestsService.getRequests().toPromise();
       }
     });
 
@@ -48,10 +49,6 @@ export class HeaderUserComponent {
         this.pomStatus = p.status;
       });
     });
-
-    setTimeout(() => {
-      this.notificationsTotal = this.requests.length + this.prChangeNotifications.length
-    }, 1000)
    }
 
    refresh() {

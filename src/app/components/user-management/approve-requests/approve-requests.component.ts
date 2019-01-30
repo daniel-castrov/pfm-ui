@@ -6,8 +6,9 @@ import { HeaderComponent } from '../../header/header.component';
 import { Injectables } from '../../../services/injectables';
 import { RequestsService } from '../../../services/requests.service';
 import { AgGridNg2 } from 'ag-grid-angular';
-import { PrChangeNotification, PrChangeNotificationsService } from "../../../generated";
+import {PrChangeNotification, PrChangeNotificationsService, RolesPermissionsService} from "../../../generated";
 import { Notify } from '../../../utils/Notify';
+import {FormatterUtil} from "../../../utils/formatterUtil";
 
 @Component({
   selector: 'approve-requests',
@@ -21,54 +22,24 @@ export class ApproveRequestsComponent implements OnInit {
 
   requests: Request[];
   prChangeNotifications: PrChangeNotification[];
-
-  columnDefs = [
-    {
-      headerName: 'Date',
-      field: 'date'
-    },
-    {
-      headerName: 'Timestamp',
-      field: 'timestamp'
-    },
-    {
-      headerName: 'Type',
-      field: 'type'
-    },
-    {
-      headerName: 'Originator',
-      field: 'originator',
-      width: 280
-    },
-    {
-      headerName: 'Approve',
-      field: 'approve'
-    },
-    {
-      headerName: 'Deny',
-      field: 'deny'
-    }
-     ];
-
-  rowData = [
-      {date: '3', timestamp: '12:00', type: 'Assign Role', originator: 'Bill', approve: 'button', deny: 'button' },
-      {date: '1', timestamp: '12:00', type: 'Assign Role', originator: 'Beth',  approve: 'button', deny: 'button' },
-      {date: '4', timestamp: '12:00', type: 'Assign Role', originator: 'Mary', approve: 'button', deny: 'button' },
-      {date: '24', timestamp: '12:00', type: 'Assign Role', originator: 'John', approve: 'button', deny: 'button' },
-      {date: '5', timestamp: '12:00', type: 'Assign Role', originator: 'Sally',  approve: 'button', deny: 'button' }
-     ];
+  isUserApprover: boolean = false;
 
   constructor( injectables: Injectables, // initilizes the static members on the class Injectables
                private requestsService: RequestsService,
-               private prChangeNotificationsService: PrChangeNotificationsService
+               private prChangeNotificationsService: PrChangeNotificationsService,
+               private rolesvc: RolesPermissionsService
   ){}
 
   async ngOnInit() {
-    this.requestsService.getRequests().subscribe(
-      (allRequests) => {
-        this.requests = allRequests;
-      });
-    this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+    this.rolesvc.getRoles().subscribe(async data => {
+      if (data.result.includes('Funds_Requestor')) {
+        this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+      }
+      if (data.result.includes('User_Approver')) {
+        this.isUserApprover = true;
+        this.requests = await this.requestsService.getRequests().toPromise();
+      }
+    });
   }
 
   async approve(request: Request) {
@@ -77,6 +48,15 @@ export class ApproveRequestsComponent implements OnInit {
 
   async deny(request: Request) {
     this.submit(()=>request.deny(), "denied");
+  }
+
+  async dismiss(notification: PrChangeNotification) {
+    notification.dismissed = true;
+    this.prChangeNotificationsService.update(notification).subscribe(async response => {
+      if (!response.error) {
+        this.prChangeNotifications = (await this.prChangeNotificationsService.getByOrganization().toPromise()).result;
+      }
+    });
   }
 
 
@@ -91,7 +71,7 @@ export class ApproveRequestsComponent implements OnInit {
     }
   }
 
- onGridReadyOrgs(params) {
+ onGridReady(params) {
    params.api.sizeColumnsToFit();
    window.addEventListener("resize", function() {
      setTimeout(() => {

@@ -1894,6 +1894,18 @@ paths:
       operationId: "getByOrganization"
       produces:
       - "application/json"
+    post:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "update"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PrChangeNotification"
+      produces:
+      - "application/json"
   /prChangeNotifications/{prId}:
     delete:
       tags:
@@ -3165,7 +3177,7 @@ definitions:
   Disposition:
     enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
   ServiceBranch:
-    enum: [USA, USN, USAF, USMC, USNG, SOCOM]    
+    enum: [USA, USN, USAF, USMC, USNG, SOCOM]
   #
   Program:
     type: "object"
@@ -3748,6 +3760,10 @@ definitions:
         type: "string"
       shortName:
         type: "string"
+      date:
+        type: "string"
+      dismissed:
+        type: "boolean"
 #
 ###########################
 ###       FILES        ####

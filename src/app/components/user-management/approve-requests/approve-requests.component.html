@@ -1,29 +1,28 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="col-md-12">
-    <div class="row">
-      <div class="col-10 mb-4">
-        <span class="h5 mr-2">Approve Requests</span>
-        <span class="h6 font-bold">({{ requests?.length }})</span>
+  <ng-container *ngIf="isUserApprover">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-10 mb-4">
+          <span class="h5 mr-2">Approve Requests</span>
+          <span class="h6 font-bold">({{ requests?.length }})</span>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row main-content">
-    <div class="col-12">
-      <table class="table">
-        <thead>
+    <div class="row main-content">
+      <div class="col-12">
+        <table class="table">
+          <thead>
           <tr>
             <th>Date</th>
-            <th>Time Stamp</th>
             <th>Type</th>
             <th>Originator</th>
             <th>Approve/Deny</th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           <tr *ngFor="let request of requests">
-            <td>{{request.date | date:'MM/dd/yyyy'}}</td>
-            <td>{{request.date | date:'h:mma'}}</td>
+            <td>{{request.date | date:'MM/dd/yyyy h:mma'}}</td>
             <td><a href="{{request.link}}">{{request.approveRequestsPageType}}</a></td>
             <td>{{request.name}}</td>
             <td>
@@ -33,27 +32,43 @@
               </div>
             </td>
           </tr>
-          <tr *ngFor="let prChangeNotification of prChangeNotifications">
-            <td></td>
-            <td></td>
-            <td>PR Change</td>
-            <td>{{prChangeNotification?.shortName}}</td>
-            <td></td>
-          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-10 mb-4">
+        <span class="h5 mr-2">Notifications</span>
+        <span class="h6 font-bold">({{ prChangeNotifications?.length }})</span>
+      </div>
+    </div>
+  </div>
+  <div class="row main-content">
+    <div class="col-12">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let notification of prChangeNotifications">
+          <td>{{notification.date | date:'MM/dd/yyyy h:mma'}}</td>
+          <td>PR Change</td>
+          <td><a class="nav-link" href="#" routerLink="/select-program-request">{{notification.shortName}}</a></td>
+          <td>
+            <div class="controls">
+              <button class="btn btn-primary" (click)="dismiss(notification)">Dismiss</button>
+            </div>
+          </td>
+        </tr>
         </tbody>
       </table>
-      <ag-grid-angular #agGrid
-        class="ag-theme-balham group-header-white approve-requests"
-        [showToolPanel]="false"
-        [enableSorting]="true"
-        [enableFilter]="true"
-        [gridAutoHeight]="true"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [suppressRowTransform]="true"
-        [suppressPaginationPanel]="true"
-        (gridReady)="onGridReady($event)">
-    </ag-grid-angular>
     </div>
   </div>
 </div>
