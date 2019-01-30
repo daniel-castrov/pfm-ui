@@ -1,12 +1,10 @@
 <j-header></j-header>
 <div class="container-fluid">
   <ng-container *ngIf="isUserApprover">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="col-10 mb-4">
-          <span class="h5 mr-2">Approve Requests</span>
-          <span class="h6 font-bold">({{ requests?.length }})</span>
-        </div>
+    <div class="row main-content">
+      <div class="col-10 mb-4">
+        <span class="h5 mr-2">Approve Requests</span>
+        <span class="h6 font-bold">({{ requests?.length }})</span>
       </div>
     </div>
     <div class="row main-content">
@@ -37,12 +35,10 @@
       </div>
     </div>
   </ng-container>
-  <div class="col-md-12">
-    <div class="row">
-      <div class="col-10 mb-4">
-        <span class="h5 mr-2">Notifications</span>
-        <span class="h6 font-bold">({{ prChangeNotifications?.length }})</span>
-      </div>
+  <div class="row main-content">
+    <div class="col-10 mb-4">
+      <span class="h5 mr-2">Notifications</span>
+      <span class="h6 font-bold">({{ prChangeNotifications?.length }})</span>
     </div>
   </div>
   <div class="row main-content">
@@ -57,16 +53,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let notification of prChangeNotifications">
-          <td>{{notification.date | date:'MM/dd/yyyy h:mma'}}</td>
-          <td>PR Change</td>
-          <td><a class="nav-link" href="#" routerLink="/select-program-request">{{notification.shortName}}</a></td>
-          <td>
-            <div class="controls">
-              <button class="btn btn-primary" (click)="dismiss(notification)">Dismiss</button>
-            </div>
-          </td>
-        </tr>
+          <tr *ngFor="let notification of prChangeNotifications">
+            <td>{{notification.date | date:'MM/dd/yyyy h:mma'}}</td>
+            <td>PR Change</td>
+            <td><a class="nav-link" href="#" routerLink="/select-program-request">{{notification.shortName}}</a></td>
+            <td>
+              <div class="controls">
+                <button class="btn btn-primary" (click)="dismiss(notification)">Dismiss</button>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

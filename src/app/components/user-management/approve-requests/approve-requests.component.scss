@@ -8,6 +8,10 @@
     vertical-align: bottom;
     font-weight: bold;
   }
+
+  th, td {
+    width: 25%;
+  }
 }
 
 .message {
@@ -15,5 +19,5 @@
 }
 
 .approve-requests {
-  
+
 }
