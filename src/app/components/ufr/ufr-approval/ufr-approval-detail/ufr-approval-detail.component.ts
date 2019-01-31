@@ -173,6 +173,10 @@ export class UfrApprovalDetailComponent implements OnInit {
           $('#partial-approval').modal('show');
           this.initModalData();
           break;
+        default:
+          this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
+          await this.initTransactions();
+          break;
       }
     } else {
       this.ufr = (await this.ufrService.generateTransaction(type, this.ufr).toPromise()).result;
