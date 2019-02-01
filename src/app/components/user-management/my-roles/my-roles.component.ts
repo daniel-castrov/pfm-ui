@@ -49,7 +49,7 @@ export class MyRolesComponent {
   private organizations: Organization[] = [];
 
   private selectedRole: Role;
-  
+
   private currentUser: User;
   private selectedURR: UserRoleResource;
 
@@ -66,7 +66,7 @@ export class MyRolesComponent {
   private isOrgBased: boolean;
 
   private hiddenRoles: string [] = ["Organization_Member", "User" ];
-  
+
   // For the angular-dual-listbox
   private availablePrograms: Array<Program> = [];
   private filteredAvailablePrograms: Array<Program> = [];
@@ -87,10 +87,10 @@ export class MyRolesComponent {
     private userRoleResourceService: UserRoleResourceService,
     private orgService: OrganizationService,
     private programAndPrService: ProgramAndPrService,
-    private myDetailsService:MyDetailsService,  
+    private myDetailsService:MyDetailsService,
     private assignRoleRequestService: AssignRoleRequestService,
     private dropRoleRequestService:DropRoleRequestService,
-  ) { 
+  ) {
   }
 
   public ngOnInit() {
@@ -114,7 +114,7 @@ export class MyRolesComponent {
         this.orgService.getByCommunityId(this.currentUser.currentCommunityId)
 
       ]).subscribe(data => {
-        
+
         this.resultError.push(data[0].error);
         this.myCommunity = data[0].result;
 
@@ -128,7 +128,7 @@ export class MyRolesComponent {
         this.currentRoles.forEach( role => {
           this.userRoleResourceService.getUserRoleByUserAndCommunityAndRoleName(
             this.currentUser.id, this.currentUser.currentCommunityId, role.name
-          ).subscribe( ( ur ) => { 
+          ).subscribe( ( ur ) => {
             let urr:UserRoleResource;
             urr=ur.result;
             this.currentRolesWithResources.push( new RoleNameWithResources ( role, urr.resourceIds ) );
@@ -137,7 +137,7 @@ export class MyRolesComponent {
 
         // Get all the roles
         this.resultError.push(data[3].error);
-        this.roles=data[3].result;  
+        this.roles=data[3].result;
         this.roles = this.roles.filter( role => !this.hiddenRoles.includes( role.name ) );
 
         // get any existing add requests
@@ -157,7 +157,7 @@ export class MyRolesComponent {
 
   private checkRequestsForExisting(){
 
-    if ( this.dropRequests.find( req => req.roleName == this.selectedRole.name ) 
+    if ( this.dropRequests.find( req => req.roleName == this.selectedRole.name )
     || this.assignRequests.find( req => req.roleName == this.selectedRole.name )
     ) {
       this.requestExists = true;
@@ -175,7 +175,7 @@ export class MyRolesComponent {
     this.canChangeResources = false;
     if ( !this.cannotChangeResources.includes( this.selectedRole.name ) ) {
       this.canChangeResources = true;
-    } 
+    }
 
     this.isOrgBased = false;
     if ( this.orgBasedRoles.includes( this.selectedRole.name ) ){
@@ -195,13 +195,13 @@ export class MyRolesComponent {
 
       this.resultError.push(data[1].error);
       this.availablePrograms = data[1];
-      
+
       if (urr) {
         this.isNewUserRole = false;
         this.selectedURR = urr;
         if (this.selectedURR.resourceIds.includes("x") || this.selectedURR.resourceIds.length==0) {
           // none are granted
-          this.assignedPrograms = []; 
+          this.assignedPrograms = [];
         } else if (this.selectedURR.resourceIds.includes("*")) {
           // all are granted - shallow copy array
           this.assignedPrograms = [ ...this.availablePrograms ];
@@ -237,22 +237,22 @@ export class MyRolesComponent {
 
     if (this.orgBasedRoles.includes(this.selectedRole.name) && this.cannotChangeResources.includes(this.selectedRole.name) ){
       assignedResources=[this.currentUser.organizationId];
-    } 
+    }
     else if (this.orgBasedRoles.includes(this.selectedRole.name)){
       assignedResources=[this.selectedOrganization.id];
-    } 
-    else { 
+    }
+    else {
       if (this.cannotChangeResources.includes(this.selectedRole.name) ){
       // Get all the progIds from the selected 'assignedPrograms'
         assignedResources=["*"];
-      } 
+      }
       else if (!this.assignedPrograms || this.assignedPrograms == null || this.assignedPrograms.length==0) {
         assignedResources=[];
-      } 
+      }
       else if (  this.assignedPrograms.length==this.allcount) {
         // all are selected
         assignedResources=["*"];
-      } 
+      }
       else {
         // some are selected
         assignedResources=[];
@@ -273,7 +273,7 @@ export class MyRolesComponent {
     // Submit it
     try {
       await this.assignRoleRequestService.create(request).toPromise();
-      Notify.success("Your request has been submitted. Your will recieve an email once your request is processed.");
+      Notify.success("Your request has been submitted. Your will receive an email once your request is processed.");
       this.assignRequests.push(request);
       this.selectedRole = null;
       this.clear();
@@ -284,7 +284,7 @@ export class MyRolesComponent {
   }
 
   private async createDropRequest(){
-    
+
     // build the new request
     let request:DropRoleRequest= new Object();
     request.userId = this.currentUser.id;
@@ -294,7 +294,7 @@ export class MyRolesComponent {
     // Submit it
     try {
       await this.dropRoleRequestService.create(request).toPromise();
-      Notify.success("Your request has been submitted. Your will recieve an email once your request is processed.");
+      Notify.success("Your request has been submitted. Your will receive an email once your request is processed.");
       this.dropRequests.push(request);
       this.selectedRole = null;
       this.clear();
@@ -303,7 +303,7 @@ export class MyRolesComponent {
       Notify.success(e.message);
     }
   }
-  
+
   private filterByOrg(){
 
     this.filteredAvailablePrograms = [];
@@ -315,7 +315,7 @@ export class MyRolesComponent {
         if ( prog.organizationId == this.selectedOrganization.id ){
           this.filteredAvailablePrograms.push(prog);
         }
-      }); 
+      });
     }
   }
 

@@ -1245,37 +1245,6 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-  /ufr/pom/{pomId}/program/{shortname}:
-    put:
-      tags:
-      - "UFRs"
-      summary: "Create a UFR from an existing PR"
-      description: "Create a UFR"
-      operationId: "addFundingLine"
-      parameters:
-      - in: "path"
-        name: "pomId"
-        description: "the pom"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "shortname"
-        type: "string"
-        description: "the program id from the MRDB"
-        required: true
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        204:
-          description: "Successfully created UFR"
-        403:
-          description: "Forbidden"
-        404:
-          description: "The User does not exist."
-        500:
-          description: "An unexpected error occured."
   /ufr/community/{communityId}/year/{year}:
     get:
       tags:
@@ -1892,6 +1861,18 @@ paths:
       tags:
       - "PrChangeNotifications"
       operationId: "getByOrganization"
+      produces:
+      - "application/json"
+    post:
+      tags:
+      - "PrChangeNotifications"
+      operationId: "update"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PrChangeNotification"
       produces:
       - "application/json"
   /prChangeNotifications/{prId}:
@@ -3165,7 +3146,7 @@ definitions:
   Disposition:
     enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
   ServiceBranch:
-    enum: [USA, USN, USAF, USMC, USNG, SOCOM]    
+    enum: [USA, USN, USAF, USMC, USNG, SOCOM]
   #
   Program:
     type: "object"
@@ -3748,6 +3729,10 @@ definitions:
         type: "string"
       shortName:
         type: "string"
+      date:
+        type: "string"
+      dismissed:
+        type: "boolean"
 #
 ###########################
 ###       FILES        ####

@@ -41,15 +41,22 @@
 
         <!-- User Menu -->
         <span class="dropdown show">
-          <a class="super-user dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            {{ authUser?.fullName }}
-            <i class="fa fa-user" aria-hidden="true"></i>
+          <a class="super-user dropdown-toggle" href="#" role="button"  id="dropdownMenuLink" inumberOfNotificationsd="dropdownMenuLink4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="icon-wrapper" *roles="'User'">
+              {{ authUser?.fullName }}
+              <i class="fa fa-bell" aria-hidden="true"></i>
+              <span *roles="'User_Approver,Funds_Requestor'">
+                <span class="badge" *ngIf="(requests?.length + prChangeNotifications?.length) > 0">{{requests?.length + prChangeNotifications?.length}}</span>
+              </span>
+            </div>
           </a>
-          <div *roles="'User'" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div *roles="'User'" class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
             <a class="dropdown-item" routerLink="/user/self">My Profile</a>
             <a class="dropdown-item" href="#" routerLink="/my-community">My Communities</a>
             <a class="dropdown-item" href="#" routerLink="/my-roles">My Roles</a>
+            <div *roles="'User','User_Approver,Funds_Requestor'">
+              <a class="dropdown-item" href="#" routerLink="/approve-requests">My Notifications</a>
+            </div>
           </div>
         </span>
       </div>

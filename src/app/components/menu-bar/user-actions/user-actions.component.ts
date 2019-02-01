@@ -9,11 +9,11 @@ import {Request} from '../../../services/request';
 })
 export class UserActionsComponent implements OnInit {
 
-  requests: Request[];
+  // requests: Request[];
 
   constructor( private requestsService: RequestsService ) {}
 
   async ngOnInit() {
-    this.requests = await this.requestsService.getRequests().toPromise();
+    // this.requests = await this.requestsService.getRequests().toPromise();
   }
 }
