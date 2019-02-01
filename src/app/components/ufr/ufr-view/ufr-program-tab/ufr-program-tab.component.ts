@@ -14,6 +14,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {TagsService, TagType} from "../../../../services/tags.service";
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {Observable} from "rxjs";
+import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'ufr-program-tab',
@@ -24,6 +25,8 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   @Input() editable: boolean = false;
   @Input() shorty: Program;
   @Input() ufr: UFR;
+  @Input() readonly: boolean;
+
   private tagNames = new Map<string, Map<string, string>>();
   readonly fileArea = 'ufr';
   imagePath: string;
@@ -63,6 +66,20 @@ export class UfrProgramComponent implements OnInit, OnChanges {
     });
   }
 
+  set childNameModel(childName: string) {
+    this.ufr.shortName = NameUtils.createShortName(NameUtils.getParentName(this.ufr.shortName), childName);
+  }
+
+  get childNameModel() {
+    if(!this.ufr.shortName) return "";
+    return NameUtils.getChildName(this.ufr.shortName);
+  }
+
+  get parentFullName() {
+    if(!this.ufr.shortName) return "";
+    return NameUtils.getParentName(this.ufr.shortName);
+  }
+
   private ufrType(): string {
     if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return "Program";
     if(this.ufr.shortyType == ShortyType.PR) return "Program";
@@ -72,7 +89,7 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   }
 
   public get disabled(): boolean {
-    return this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR;
+    return this.ufr.shortyType == ShortyType.MRDB_PROGRAM || this.ufr.shortyType == ShortyType.PR || this.readonly;
   }
 
   invalid(): boolean {

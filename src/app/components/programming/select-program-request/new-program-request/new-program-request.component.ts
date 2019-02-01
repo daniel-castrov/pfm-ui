@@ -32,6 +32,7 @@ export class NewProgramComponent implements OnInit {
   }
 
   async setAddNewPrRadioMode(selection: AddNewPrForMode) {
+    this.selectedProgramOrPr = null;
     this.addNewPrForMode = selection;
     switch(this.addNewPrForMode) {
       case 'Previously Funded Program':
