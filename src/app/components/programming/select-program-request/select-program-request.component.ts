@@ -6,6 +6,7 @@ import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {Pom, PB, PBService, RestResult, Program} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
+import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 
 @Component({
   selector: 'app-select-program-request',
@@ -21,12 +22,30 @@ export class SelectProgramRequestComponent implements OnInit {
   public pb: PB;
   public pbPrograms: Program[];
   public thereAreOutstandingPRs: boolean;
+  @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
+  private chartdata;
+  private charty;
 
   constructor(private pomService: POMService,
               private pbService: PBService,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {}
+              private cycleUtils: CycleUtils) {
+                this.chartdata = {
+                  chartType: 'ColumnChart',
+                  dataTable: [],
+                  options: { 'title': 'PR' },
+                };
+                this.charty = [[
+                  'Year',
+                  'PB 18',
+                  'POM 19 TOA',
+                  'PRs Submitted',
+                  'PRs Planned',
+                  'TOA Difference',
+                  { role: 'annotation' },
+                ]];
+              }
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -44,6 +63,7 @@ export class SelectProgramRequestComponent implements OnInit {
       this.pom = await this.cycleUtils.currentPom().toPromise();
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
       resolve();
+      await this.initChart();
     });
   }
 
@@ -65,5 +85,28 @@ export class SelectProgramRequestComponent implements OnInit {
       Notify.success('All Program requests were submitted.\n' + data.result);
       this.reloadPrs();
     } 
+  }
+
+  async initChart() {
+    console.log('anunay--->', this.pom)
+    for(var i = 0; i<5; i++) {
+      this.charty.push([
+        (this.pom.fy + i).toString(),
+        0,
+        539,
+        539,
+        500,
+        544,
+        542
+      ]);
+ 
+    }
+     this.chartdata = {
+       chartType: 'ColumnChart',
+       dataTable: this.charty,
+       options: {
+         title: 'PR'
+       }
+     };
   }
 }

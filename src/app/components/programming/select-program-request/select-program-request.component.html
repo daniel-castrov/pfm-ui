@@ -22,6 +22,13 @@
         <j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom>
       </div>
     </div>
+    <div class="bar-chart-google">
+      <google-chart #comchart
+        [data]='chartdata'
+        (chartReady)='chartready()'
+        (chartSelect)='select($event)'
+      ></google-chart>
+    </div>
     <div class="row">
       <div class="col-12">
         <program-requests [pomPrograms]="pomPrograms"
