@@ -13,8 +13,7 @@
         </div>
       </div>
       <div class="row mb-3">
-        <div class="col-12">
-          <div col-2>
+          <div class="col-2">
             Page Size:
             <select class="form-control-sm dropdown-width mb-2" (change)="onPageSizeChanged($event)" id="page-size">
               <option value="15" selected="">15</option>
@@ -25,22 +24,25 @@
               <option value="500">500</option>
             </select>
           </div>
-          <ag-grid-angular #agGrid
-                           class="ag-theme-balham"
-                           [enableSorting]="true"
-                           [enableFilter]="true"
-                           [gridAutoHeight]="true"
-                           [rowData]="data"
-                           [columnDefs]="columnDefs"
-                           [toolPanelSuppressSideButtons]="true"
-                           [suppressDragLeaveHidesColumns]="true"
-                           [pagination]="true"
-                           [paginationPageSize]="15"
-                           [suppressMovableColumns]="true"
-                           (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-                           [suppressPaginationPanel]="true">
-          </ag-grid-angular>
-          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <ag-grid-angular #agGrid
+                             class="ag-theme-balham"
+                             [enableSorting]="true"
+                             [enableFilter]="true"
+                             [gridAutoHeight]="true"
+                             [rowData]="data"
+                             [columnDefs]="columnDefs"
+                             [toolPanelSuppressSideButtons]="true"
+                             [suppressDragLeaveHidesColumns]="true"
+                             [pagination]="true"
+                             [paginationPageSize]="15"
+                             [suppressMovableColumns]="true"
+                             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+                             [suppressPaginationPanel]="true">
+            </ag-grid-angular>
+            <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>
       </div>
     </div>
