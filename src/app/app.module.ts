@@ -25,7 +25,7 @@ import { environment } from '../environments/environment'
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 
-// COMPONENTS
+// COMPONENTS 
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
@@ -120,6 +120,7 @@ import { NoCurrentCommunityMessageComponent } from './components/user-management
 import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
+import { BudgetService } from './generated/api/budget.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
@@ -529,6 +530,7 @@ const appRoutes: Routes = [
     CycleUtils,
     RequestsService,
     POMService,
+    BudgetService,
     WorksheetService,
     PRService,
     PBService,
