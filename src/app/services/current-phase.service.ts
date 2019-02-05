@@ -1,4 +1,4 @@
-import {Budget, BudgetService, MickeyService, Pom, POMService, RestResult, User} from "../generated";
+import {Budget, BudgetService, Pom, POMService, RestResult, User} from "../generated";
 import {Observable} from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map'
