@@ -13,6 +13,7 @@ tags:
 # PHASES
 - name: "POM"
 - name: "PB"
+- name: "Budget"
 - name: "Execution"
 # PROGRAMS AND UFRS
 - name: "PR"
@@ -3018,6 +3019,26 @@ paths:
         required: true
         type: "string"
 # STOP ASSIGNROLEREQUEST
+##############################################################################
+# START BUDGET
+  /budget:
+    get:
+      tags:
+        - "Budget"
+      operationId: "getBudgets"
+  /budget/year/{fy}:
+    post:
+      tags:
+        - "Budget"
+      operationId: "createBudget"
+      parameters:
+        - in: "path"
+          name: "fy"
+          required: true
+          type: "string"
+# STOP BUDGET
+
+
 #################################################################
 #
 #################################################################
@@ -3980,6 +4001,17 @@ definitions:
         type: "string"
       roleName:
         type: "string"
+  Budget:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      fy:
+        type: "number"
+      communityId:
+        type: "string"
+      status:
+        enum: [OPEN, CLOSED]
 #
 #################################################################
 #############      END MODEL  DEFINITONS      ###################

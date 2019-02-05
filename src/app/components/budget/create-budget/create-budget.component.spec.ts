@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BesProcComponent } from './bes-proc.component';
+import { CreateBudgetComponent } from './create-budget.component';
 
 describe('BudgetScenariosComponent', () => {
-  let component: BesProcComponent;
-  let fixture: ComponentFixture<BesProcComponent>;
+  let component: CreateBudgetComponent;
+  let fixture: ComponentFixture<CreateBudgetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BesProcComponent ]
+      declarations: [ CreateBudgetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BesProcComponent);
+    fixture = TestBed.createComponent(CreateBudgetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

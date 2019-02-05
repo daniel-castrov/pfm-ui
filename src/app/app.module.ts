@@ -213,10 +213,12 @@ import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.co
 import {UserActionsComponent} from "./components/menu-bar/user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./components/menu-bar/pr-change-notofications/pr-change-notifications.component";
 import {CanActivateAuth} from "./utils/can.activate";
-import {PomUtils} from "./services/pom.utils";
+import {CurrentPhase} from "./services/current-phase.service";
 import {MenuRolesOkDirective} from "./directives/menu.roles.ok.directive";
 import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive";
 import {Authorization} from "./services/authorization";
+import {CreateBudgetComponent} from "./components/budget/create-budget/create-budget.component";
+import {BudgetScenariosComponent} from "./components/budget/budget-scenarios/budget-scenarios.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -291,7 +293,10 @@ const appRoutes: Routes = [
   {path:'worksheet-management', component: WorksheetManagementComponent, canActivate:[CanActivateAuth]},
   {path:'worksheet-viewing', component: WorksheetViewingComponent, canActivate:[CanActivateAuth]},
   {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
-  {path:'library', component: LibraryComponent}
+  {path:'library', component: LibraryComponent},
+  {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
+  {path:'budget-scenarios', component: BudgetScenariosComponent, canActivate:[CanActivateAuth]}
+
 ];
 
 @NgModule({
@@ -454,7 +459,9 @@ const appRoutes: Routes = [
     ManageMenuComponent,
     AdminMenuComponent,
     UserActionsComponent,
-    PrChangeNotificationsComponent
+    PrChangeNotificationsComponent,
+    CreateBudgetComponent,
+    BudgetScenariosComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -518,7 +525,7 @@ const appRoutes: Routes = [
     UserRoleResourceService,
     ProgramsService,
     UserUtils,
-    PomUtils,
+    CurrentPhase,
     CycleUtils,
     RequestsService,
     POMService,
