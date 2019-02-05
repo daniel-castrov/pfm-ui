@@ -14,11 +14,11 @@
         There are no Execution Phases ready to be opened.
       </div>
       <div class="col-7" *ngIf="this.phase">
-        <span>
-          <button class="btn-primary btn pull-right mb-2" (click)=openExe() [disabled]="!submitable()">Open Execution Phase</button>
+        <span class="pull-right">
+          <button class="btn btn-primary mb-2" (click)=openExe() [disabled]="!submitable()">Open Execution Phase</button>
         </span>
-        <span>
-          <button class="btn-primary btn pull-right mb-2" (click)=demoCreatePlans()>Demo Only - Create All Plans</button>
+        <span class="pull-right mr-2">
+          <button class="btn btn-primary pull-right mb-2" (click)=demoCreatePlans()>Demo Only - Create All Plans</button>
         </span>
       </div>
     </div>
