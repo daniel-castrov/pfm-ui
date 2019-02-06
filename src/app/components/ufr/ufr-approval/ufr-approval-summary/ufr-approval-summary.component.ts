@@ -14,6 +14,7 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
 
   private user: User;
+  private pom: Pom;
   private mapCycleIdToFy = new Map<string, string>();
 
   constructor(private userUtils: UserUtils,
@@ -26,7 +27,7 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
     const poms = await this.pomService.getByCommunityId(this.user.currentCommunityId).toPromise();
     this.initCyclesAndEditable(poms.result);
   }
-
+  
   ngDoCheck() {
     this.changeDetectorRef.detectChanges();
   }

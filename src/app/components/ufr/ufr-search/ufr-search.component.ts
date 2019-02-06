@@ -15,6 +15,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
   @ViewChild(HeaderComponent) header; 
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   
+  public pom: Pom;
   private user: User;
 
   private cycles: string[] = [];
