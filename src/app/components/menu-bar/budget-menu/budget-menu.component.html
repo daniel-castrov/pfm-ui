@@ -1,10 +1,14 @@
-<!-- <div *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('BES_Manager') ) ; else disabledBudgetMenu"> -->
-<div *ngIf="true ; else disabledBudgetMenu">
+<div *ngIf="!elevationService.elevatedBoolean && roles?.includes('Budget_Manager') ; else disabledBudgetMenu">
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="dropdownbes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Budget</a>
     <div class="dropdown-menu" aria-labelledby="dropdownbes">
-      <a class="dropdown-item" routerLink="/create-budget">Create Budget Session</a>
-      <a class="dropdown-item" routerLink="/budget-scenarios">Budget Scenarios</a>
+
+      <a *menuRolesOk="'create-budget'" class="dropdown-item" routerLink="/create-budget">Create Budget Session</a>
+      <a *menuRolesNotNow="'create-budget'" class="dropdown-item" disabled>Create Budget Session</a>
+
+      <a *menuRolesOk="'budget-scenarios'" class="dropdown-item" routerLink="/budget-scenarios">Budget Scenarios</a>
+      <a *menuRolesNotNow="'budget-scenarios'" class="dropdown-item" disabled>Budget Scenarios</a>
+
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="#" routerLink="/bes-rdte">RDTE Data</a>
       <a class="dropdown-item" href="#" routerLink="/bes-proc">Proc Data</a>

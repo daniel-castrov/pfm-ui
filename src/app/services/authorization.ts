@@ -140,11 +140,12 @@ export class Authorization {
   }
 
   async 'create-budget'(): Promise<AuthorizationResult> {
+    debugger;
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
       const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
       if ([Pom.StatusEnum.CLOSED, Pom.StatusEnum.RECONCILIATION].includes( pom.status) )
-        if( Budget.StatusEnum.CLOSED == budget.status )
+        if( Budget.StatusEnum.CLOSED == budget && budget.status )
           if(pom.fy == budget.fy+1)
             return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
@@ -155,7 +156,7 @@ export class Authorization {
   async 'budget-scenarios'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
       const budget = (await this.currentPhase.budget().toPromise());
-      if( Budget.StatusEnum.CLOSED == budget.status )
+      if( Budget.StatusEnum.CLOSED == budget && budget.status )
         return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
