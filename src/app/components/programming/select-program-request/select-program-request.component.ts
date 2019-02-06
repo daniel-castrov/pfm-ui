@@ -4,9 +4,10 @@ import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Pom, PB, PBService, RestResult, Program} from '../../../generated';
+import {Pom, PB, PBService, RestResult, Program, TOA} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
+import { UiProgramRequest } from './UiProgramRequest';
 
 @Component({
   selector: 'app-select-program-request',
@@ -25,6 +26,7 @@ export class SelectProgramRequestComponent implements OnInit {
   @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
   private chartdata;
   private charty;
+  private rowsData: any[];
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -34,7 +36,7 @@ export class SelectProgramRequestComponent implements OnInit {
                 this.chartdata = {
                   chartType: 'ColumnChart',
                   dataTable: [],
-                  options: { 'title': 'PR' },
+                  options: { 'title': 'Community TOA' },
                 };
                 this.charty = [[
                   'Year',
@@ -88,25 +90,101 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   async initChart() {
-    console.log('anunay--->', this.pom)
-    for(var i = 0; i<5; i++) {
-      this.charty.push([
-        (this.pom.fy + i).toString(),
-        0,
-        539,
-        539,
-        500,
-        544,
-        542
-      ]);
- 
+    this.populateRowData(this.pom.fy);
+    const communityToas = this.pom.communityToas
+    for(let i = 0; i < communityToas.length; i++) {
+      let prop = communityToas[i].year.toString()
+      let bar: any[] = []
+      bar.push(prop)
+      bar.push(0)
+      for(let j = 0; j < this.rowsData.length; j++) {
+        bar.push(this.rowsData[j][prop])
+      }
+      this.charty.push(bar)
     }
-     this.chartdata = {
-       chartType: 'ColumnChart',
-       dataTable: this.charty,
-       options: {
-         title: 'PR'
-       }
-     };
+    this.chartdata = {
+      chartType: 'ColumnChart',
+      dataTable: this.charty,
+      options: {
+        title: 'Community TOA'
+      }
+    };
+  }
+  private populateRowData(by: number) {
+
+    let rowdata:any[] = [];
+    let row = new Object();
+    let sum;
+
+    row["id"] = "PB " + (by-2000-1);
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      row[year] = this.aggregateToas(this.pbPrograms, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row = new Object();
+    row["id"] = "POM " + (by-2000) + " TOA";
+    sum = 0;
+    let toas:any[] = []
+
+    if ( this.pom.communityToas.length>0 ){
+      toas = this.pom.communityToas;
+    }
+    else {
+      Object.keys(this.pom.orgToas).forEach(key => {
+        this.pom.orgToas[key].forEach( (toa) => toas.push(toa));
+      });
+    }
+    let allocatedToas: { [year: number]: number } = {};
+    toas.forEach((toa) => {
+      allocatedToas[toa.year] = toa.amount;
+      row[toa.year] = toa.amount;
+      sum += row[toa.year];
+    });
+
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row= new Object();
+    row["id"] = "PRs Submitted";
+    let submittedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus=="SUBMITTED" );
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      row[year]  = this.aggregateToas(submittedPRs, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row= new Object();
+    row["id"] = "PRs Planned";
+    let plannedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus!="SUBMITTED" );
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      row[year]  = this.aggregateToas(plannedPRs, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+    row= new Object();
+    row["id"] = "TOA Difference";
+    sum = 0;
+    let requests: { [year: number]: number } = {};
+    for (let year: number = by; year < by + 5; year++) {
+      requests[year] = this.aggregateToas(this.pomPrograms, year);
+      row[year] = requests[year] - allocatedToas[year];
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    this.rowsData = rowdata;
+  }
+
+  private aggregateToas(prs: Program[], year: number): number {
+    return prs.map(pr => new UiProgramRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 }

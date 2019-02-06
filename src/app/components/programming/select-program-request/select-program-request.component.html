@@ -19,15 +19,13 @@
         <new-program-request [pomId]="pom?.id"></new-program-request>
       </div>
       <div class="col-lg-7 col-md-12">
-        <j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom>
+        <!--j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom-->
       </div>
     </div>
     <div class="bar-chart-google">
       <google-chart #comchart
         [data]='chartdata'
-        (chartReady)='chartready()'
-        (chartSelect)='select($event)'
-      ></google-chart>
+        ></google-chart>
     </div>
     <div class="row">
       <div class="col-12">
