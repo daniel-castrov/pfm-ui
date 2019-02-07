@@ -30,7 +30,7 @@
         </div>
       </td>
       <td>
-        <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!selectedProgramOrPr">
+        <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!selectedProgramOrPr && addNewPrForMode != 'New Program'">
           <span class="icon-pad">Next</span>
           <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
         </button>
