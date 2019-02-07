@@ -7,7 +7,7 @@
           <div class="h5">Extended Planning Period (EPP) Data</div>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row">
         <div class="col-12">
           <button class="btn btn-primary btn float-right" data-toggle="modal" href="#epp-modal" (click)="clearFile()">Import EPP</button>
         </div>
@@ -15,7 +15,7 @@
       <div class="row mb-3">
           <div class="col-2">
             Page Size:
-            <select class="form-control-sm dropdown-width mb-2" (change)="onPageSizeChanged($event)" id="page-size">
+            <select class="form-control-sm" (change)="onPageSizeChanged($event)" id="page-size">
               <option value="15" selected="">15</option>
               <option value="30">30</option>
               <option value="50">50</option>
