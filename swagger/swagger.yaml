@@ -3343,7 +3343,9 @@ definitions:
       active:
         type: "boolean"
       status:
-        type: "string"
+        type: "array"
+        items:
+          type: "string"
       disposition:
         type: "string"
       cycle:

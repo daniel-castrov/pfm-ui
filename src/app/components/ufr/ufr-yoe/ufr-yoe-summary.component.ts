@@ -1,39 +1,36 @@
-import { UserUtils } from '../../../../services/user.utils';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
-import { HeaderComponent } from '../../../header/header.component';
-import { POMService, Pom, User } from '../../../../generated/index';
-import {AllUfrsComponent} from "../../ufr-search/all-ufrs/all-ufrs.component";
-import {UFRFilter, UfrStatus} from "../../../../generated";
-import {CycleUtils} from "../../../../services/cycle.utils";
+import {HeaderComponent} from "../../header/header.component";
+import {AllUfrsComponent} from "../ufr-search/all-ufrs/all-ufrs.component";
+import {Execution, ExecutionService, Pom, POMService, UFRFilter, User} from "../../../generated";
+import {UserUtils} from "../../../services/user.utils";
 
 @Component({
-  selector: 'ufr-approval-summary',
-  templateUrl: './ufr-approval-summary.component.html',
-  styleUrls: ['./ufr-approval-summary.component.scss']
+  selector: 'ufr-yoe-summary',
+  templateUrl: './ufr-yoe-summary.component.html',
+  styleUrls: ['./ufr-yoe-summary.component.scss']
 })
-export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
+
+export class UfrYoeSummaryComponent implements OnInit, DoCheck {
   @ViewChild(HeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
 
   private user: User;
   private mapCycleIdToFy = new Map<string, string>();
-  private pom: Pom;
+  private execution: Execution;
   ufrFilter: UFRFilter;
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
               private changeDetectorRef : ChangeDetectorRef,
-              private cycleUtils: CycleUtils) {}
+              private exeService: ExecutionService) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
 
-    this.pom = (await this.cycleUtils.currentPom().toPromise());
+    this.execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
     this.ufrFilter = {
-      cycle: 'POM' + this.pom.fy,
-      yoe: false,
-      status: [UfrStatus.SUBMITTED, UfrStatus.VALID, UfrStatus.INVALID]
-    };
+      cycle: 'POM' + this.execution[0].fy,
+      yoe: true};
 
     const poms = await this.pomService.getByCommunityId(this.user.currentCommunityId).toPromise();
     this.initCyclesAndEditable(poms.result);

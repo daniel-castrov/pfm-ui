@@ -36,6 +36,7 @@ export class AllUfrsComponent implements OnInit {
   private menuTabs = ['filterMenuTab'];
 
   @Input() urlPath;
+  @Input() ufrFilter: UFRFilter;
 
   private frameworkComponents:any = {
     simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
@@ -216,15 +217,7 @@ export class AllUfrsComponent implements OnInit {
 
   private async populateRowData() {
 
-
-    const ufrFilter: UFRFilter = {cycle: 'POM' + this.pom.fy};
-
-    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
-
-    if (this.urlPath === 'ufr-approval-detail') {
-      ufrs = ufrs.filter(ufr => ufr.ufrStatus !== UfrStatus.SAVED)
-    }
-
+    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, this.ufrFilter).toPromise()).result;
     let alldata: any[] = [];
     let progId:string, funcArea:string , orgid:string;
     ufrs.forEach(ufr => {
@@ -247,7 +240,7 @@ export class AllUfrsComponent implements OnInit {
       }
 
       let row = {
-        "UFR #": new SimpleLink( "/" + this.urlPath + "/"+ufr.id, this.ufrNumber(ufr) ),
+        "UFR #": new SimpleLink( this.urlPath, ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.ufrName,
         "Prog Id": progId,
         "Status": ufr.ufrStatus,

@@ -217,6 +217,7 @@ import {PomUtils} from "./services/pom.utils";
 import {MenuRolesOkDirective} from "./directives/menu.roles.ok.directive";
 import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive";
 import {Authorization} from "./services/authorization";
+import {UfrYoeSummaryComponent} from "./components/ufr/ufr-yoe/ufr-yoe-summary.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -284,6 +285,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent, canActivate:[CanActivateAuth]},
+  {path:'ufr-yoe-summary', component: UfrYoeSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
@@ -347,7 +349,7 @@ const appRoutes: Routes = [
     NotImplementedComponent,
     OeUpdateComponent,
     OnlyDigitsDirective,
-    
+
     PFormsComponent,
     P40Component,
     P5Component,
@@ -377,6 +379,7 @@ const appRoutes: Routes = [
     UserListComponent,
     UfrSearchComponent,
     UfrApprovalSummaryComponent,
+    UfrYoeSummaryComponent,
     UfrApprovalDetailComponent,
     UfrViewComponent,
     UfrProgramComponent,

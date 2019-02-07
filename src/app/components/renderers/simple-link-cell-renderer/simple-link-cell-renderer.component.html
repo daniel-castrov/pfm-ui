@@ -1,1 +1,1 @@
-<a routerLink="{{link()}}">{{ linktext() }}</a>
+<a [ngClass]="{'disabled': !link()}" [routerLink]="link()? link(): []">{{ linkText() }}</a>
