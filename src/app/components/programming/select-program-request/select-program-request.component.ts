@@ -32,32 +32,18 @@ export class SelectProgramRequestComponent implements OnInit {
               private pbService: PBService,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {
-                this.chartdata = {
-                  chartType: 'ColumnChart',
-                  dataTable: [],
-                  options: { 'title': 'Community TOA' },
-                };
-                this.charty = [[
-                  'Year',
-                  'PB 18',
-                  'POM 19 TOA',
-                  'PRs Submitted',
-                  'PRs Planned',
-                  'TOA Difference',
-                  { role: 'annotation' },
-                ]];
-              }
+              private cycleUtils: CycleUtils) {this.initChart()}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
     this.initPbPrs();
     this.reloadPrs();
   }
-
+  
   async reloadPrs() {
     await this.initPomPrs();
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
+    this.loadChart();
   }
 
   initPomPrs(): Promise<void> {
@@ -65,7 +51,6 @@ export class SelectProgramRequestComponent implements OnInit {
       this.pom = await this.cycleUtils.currentPom().toPromise();
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
       resolve();
-      await this.initChart();
     });
   }
 
@@ -89,7 +74,7 @@ export class SelectProgramRequestComponent implements OnInit {
     } 
   }
 
-  async initChart() {
+  async loadChart() {
     this.populateRowData(this.pom.fy);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
@@ -109,6 +94,23 @@ export class SelectProgramRequestComponent implements OnInit {
         title: 'Community TOA'
       }
     };
+  }
+
+  async initChart() {
+    this.chartdata = {
+      chartType: 'ColumnChart',
+      dataTable: [],
+      options: { 'title': 'Community TOA' },
+    };
+    this.charty = [[
+      'Year',
+      'PB 18',
+      'POM 19 TOA',
+      'PRs Submitted',
+      'PRs Planned',
+      'TOA Difference',
+      { role: 'annotation' },
+    ]];
   }
   private populateRowData(by: number) {
 
