@@ -14,7 +14,6 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
 
   private user: User;
-  private pom: Pom;
   private mapCycleIdToFy = new Map<string, string>();
 
   constructor(private userUtils: UserUtils,
