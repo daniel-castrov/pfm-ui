@@ -14,17 +14,25 @@ $yellow: #fec001;
 
 .actuals-slider-buttons {
 
- background-color: $primary-color;
- padding: 2px;
+ background-color: #3c71a1;
+ padding: 0 3px;
+ width: 24px;
+ height: 24px;
+ margin: 3px 6px;
+ border-radius: 50%;
  border: none;
+ &:hover {
+   opacity: .5;
+ }
 
   .fa {
     color: $white;
-    font-size: 22px;
+    font-size: 23px;
     font-weight: bold;
     cursor: pointer;
     &:hover {
-      opacity: .6;
+      opacity: .9;
     }
   }
 }
+
