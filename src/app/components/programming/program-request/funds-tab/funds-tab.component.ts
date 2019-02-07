@@ -83,12 +83,12 @@ export class FundsTabComponent implements OnChanges {
     private rolesvc: RolesPermissionsService ) { }
 
   async ngOnChanges() {
-    if (!this.pr.phaseId) {
+    if (!this.pr.containerId) {
       return;
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       if (this.pr.type === ProgramType.GENERIC) {
-        this.parentPr = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+        this.parentPr = (await this.prService.getByPhaseAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       }
 
       if( this.pom ){
@@ -115,7 +115,7 @@ export class FundsTabComponent implements OnChanges {
 
   async loadExistingFundingLines() {
     if (this.pr.type === this.ProgramType.GENERIC) {
-      const prParent: Program = (await this.prService.getByPhaseAndName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+      const prParent: Program = (await this.prService.getByPhaseAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       if (prParent) {
         prParent.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -154,7 +154,7 @@ export class FundsTabComponent implements OnChanges {
 
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
+    this.prService.getChildrenByName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
@@ -933,7 +933,7 @@ export class FundsTabComponent implements OnChanges {
   delete(index) {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
-    this.prService.getChildrenByName(this.pr.phaseId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
+    this.prService.getChildrenByName(this.pr.containerId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
       let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&

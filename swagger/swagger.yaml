@@ -3182,7 +3182,7 @@ definitions:
           $ref: "#/definitions/ProgramType"
       lastMod:
         type: "integer"
-      phaseId:
+      containerId:
         type: "string"
       organizationId:
         type: "string"

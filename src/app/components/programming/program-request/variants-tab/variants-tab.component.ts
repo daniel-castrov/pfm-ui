@@ -50,7 +50,7 @@ export class VariantsTabComponent implements OnInit {
   ) { }
 
   ngOnChanges(){
-    if(!this.current.phaseId) return; // the parent has not completed it's ngOnInit()
+    if(!this.current.containerId) return; // the parent has not completed it's ngOnInit()
     this.globalsService.user().subscribe(user => {
       this.user = user;
     });
@@ -189,7 +189,7 @@ export class VariantsTabComponent implements OnInit {
   }
 
   generateColumns() {
-    this.pomService.getById(this.current.phaseId).subscribe(pom => {
+    this.pomService.getById(this.current.containerId).subscribe(pom => {
       this.pomStatus = pom.result.status;
       this.pomFy = pom.result.fy;
       this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];

@@ -51,8 +51,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
-    this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
+    this.pom = (await this.pomService.getById(this.pr.containerId).toPromise()).result;
+    this.prs = (await this.prService.getByPhase(this.pr.containerId).toPromise()).result;
 
     this.ismgr = false;
     this.rolesvc.getRoles().subscribe(data => {
@@ -78,7 +78,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private initPrFields() {
-    this.pr.phaseId = this.programRequestPageMode.phaseId;
+    this.pr.containerId = this.programRequestPageMode.phaseId;
     this.pr.bulkOrigin = false;
     this.pr.programStatus = 'SAVED';
 
