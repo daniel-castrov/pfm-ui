@@ -140,7 +140,6 @@ export class Authorization {
   }
 
   async 'create-budget'(): Promise<AuthorizationResult> {
-    debugger;
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
       const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
