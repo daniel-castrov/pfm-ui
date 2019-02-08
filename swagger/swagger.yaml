@@ -3345,7 +3345,7 @@ definitions:
       status:
         type: "array"
         items:
-          type: "string"
+          $ref: "#/definitions/UfrStatus"
       disposition:
         type: "string"
       cycle:
