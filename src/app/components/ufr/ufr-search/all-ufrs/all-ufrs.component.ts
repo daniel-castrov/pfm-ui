@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import {
   ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus, Program, Pom
+  UfrStatus, Program, Pom, Execution, ExecutionService
 } from '../../../../generated';
 import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -27,7 +27,7 @@ export class AllUfrsComponent implements OnInit {
   private user: User;
   private orgMap: any[] = []
   private filtertext;
-  private pom: Pom;
+  private fy: number;
 
   // agGrid
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -48,7 +48,8 @@ export class AllUfrsComponent implements OnInit {
                private orgSvc: OrganizationService,
                private router: Router,
                private programAndPrService: ProgramAndPrService,
-               private cycleUtils: CycleUtils) {}
+               private cycleUtils: CycleUtils,
+               private exeService: ExecutionService) {}
 
   async ngOnInit() {
 
@@ -59,8 +60,13 @@ export class AllUfrsComponent implements OnInit {
     organizations.forEach(org => {
       this.orgMap[org.id] = org.abbreviation;
     });
-
-    this.pom = (await this.cycleUtils.currentPom().toPromise());
+    if(!this.urlPath) {
+      let execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
+      this.fy = execution[0].fy
+    } else {
+      let pom = (await this.cycleUtils.currentPom().toPromise());
+      this.fy = pom.fy
+    }
 
     this.setAgGridColDefs();
     this.populateRowData();
@@ -257,7 +263,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   sum(ufr: UFR): number {
-    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.pom.fy );
+    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.fy );
   }
 
   private async initProgrammyIdToFullName(): Promise<any> {
