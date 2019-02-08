@@ -4,10 +4,12 @@
     <div class="row">
       <div class="col-5 mb-4">
         <div class="form-group">
-          <label class="h5">Review Execution Phase:</label>
-            <select class="form-control-sm dropdown-width" [(ngModel)]="phase" (change)="updatetable()">
+          <span class="h5">Open Execution Phase FY  </span>
+          <span>
+            <select class="form-control-sm" [(ngModel)]="phase" (change)="updatetable()">
               <option *ngFor="let p of phases" [ngValue]="p">{{p.fy}}</option>
             </select>
+          </span> 
         </div>
       </div>
       <div class="col-5" *ngIf="!this.phase">

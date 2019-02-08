@@ -38,7 +38,7 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
     const poms = await this.pomService.getByCommunityId(this.user.currentCommunityId).toPromise();
     this.initCyclesAndEditable(poms.result);
   }
-
+  
   ngDoCheck() {
     this.changeDetectorRef.detectChanges();
   }

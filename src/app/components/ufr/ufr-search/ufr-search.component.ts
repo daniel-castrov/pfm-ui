@@ -13,11 +13,10 @@ import {CycleUtils} from "../../../services/cycle.utils";
   styleUrls: ['./ufr-search.component.scss']
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
+  
   @ViewChild(HeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
-
   private user: User;
-
   private cycles: string[] = [];
   private mapCycleIdToFy = new Map<string, string>();
   private pom: Pom;

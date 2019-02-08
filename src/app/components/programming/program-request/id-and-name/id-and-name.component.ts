@@ -1,5 +1,5 @@
 import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
-import {Program} from '../../../../generated/model/program';
+import {Program, Pom} from '../../../../generated';
 import {Component, Input, OnChanges} from '@angular/core';
 import {AddNewPrForMode, ProgramRequestPageModeService} from '../page-mode.service';
 import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
@@ -14,6 +14,7 @@ import {NameUtils} from "../../../../utils/NameUtils";
 export class IdAndNameComponent implements OnChanges {
 
   @Input() public pr: Program;
+  @Input() public pom: Pom;
   private invalidChildNames: Set<string>;
   private invalidLongNames: Set<string>;
 
