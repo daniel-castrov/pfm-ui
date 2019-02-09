@@ -4,8 +4,9 @@ import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Pom, PB, PBService, RestResult, Program} from '../../../generated';
+import {Pom, PB, PBService, RestResult, Program, Budget} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
+import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-select-program-request',
@@ -18,12 +19,12 @@ export class SelectProgramRequestComponent implements OnInit {
   private currentCommunityId: string;
   public pom: Pom;
   public pomPrograms: Program[];
-  public pb: PB;
+  public budget: Budget;
   public pbPrograms: Program[];
   public thereAreOutstandingPRs: boolean;
 
   constructor(private pomService: POMService,
-              private pbService: PBService,
+              private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
               private cycleUtils: CycleUtils) {}
@@ -48,8 +49,8 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   async initPbPrs() {
-    this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
-    this.pbPrograms = (await this.programAndPrService.programRequests(this.pb.id));
+    this.budget = await this.currentPhase.budget().toPromise();
+    this.pbPrograms = (await this.programAndPrService.programRequests(this.budget.finalPbId));
   }
 
   onDeletePr() {

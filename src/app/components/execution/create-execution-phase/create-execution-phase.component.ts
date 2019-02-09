@@ -10,6 +10,8 @@ import { PB } from '../../../generated/model/pB'
 import { Execution } from '../../../generated/model/execution';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import {Budget, BudgetService} from "../../../generated";
+import {UserUtils} from "../../../services/user.utils";
 
 declare const $: any;
 declare const jQuery: any;
@@ -24,13 +26,15 @@ export class CreateExecutionPhaseComponent implements OnInit {
   @ViewChild(HeaderComponent) header;
 
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
-  private modelpb: PB;
+  private budget: Budget;
   private message: string;
   private fileToUpload: File;
   private submitted: boolean = false;
 
-  constructor(private pbsvc: PBService, private usvc: MyDetailsService,
-  private esvc:ExecutionService, private router:Router ) { }
+  constructor( private budgetService: BudgetService,
+               private userUtils: UserUtils,
+               private esvc:ExecutionService,
+               private router:Router ) { }
 
   ngOnInit() {
     var fn = function(e) {
@@ -39,20 +43,20 @@ export class CreateExecutionPhaseComponent implements OnInit {
 		document.addEventListener('click', fn);
 		document.addEventListener('touchstart', fn);
 
-    this.usvc.getCurrentUser().subscribe(p => {
+    this.userUtils.user().subscribe(p => {
       forkJoin([
-        this.pbsvc.getByCommunityId(p.result.currentCommunityId),
-        this.esvc.getByCommunityId(p.result.currentCommunityId)
+        this.budgetService.getBudgets(),
+        this.esvc.getByCommunityId(p.currentCommunityId)
       ]).subscribe(data => {
         var existingExeYears: Set<number> = new Set<number>();
         data[1].result.forEach((exe: Execution) => {
           existingExeYears.add(exe.fy);
         });
         
-        data[0].result.forEach((pb: PB) => {
-          if (!existingExeYears.has(pb.fy)) {
-            this.yearpblkp.set(pb.fy, pb);
-            this.modelpb = pb;
+        data[0].result.forEach((budget: Budget) => {
+          if (!existingExeYears.has(budget.fy)) {
+            this.yearpblkp.set(budget.fy, budget);
+            this.budget = budget;
           }
         });
 
@@ -73,8 +77,8 @@ export class CreateExecutionPhaseComponent implements OnInit {
     this.submitted = true;
     var my: CreateExecutionPhaseComponent = this;
 
-    this.esvc.createExecution(this.modelpb.communityId, this.modelpb.fy, this.fileToUpload,
-      this.modelpb.id ).subscribe(data => {
+    this.esvc.createExecution(this.budget.communityId, this.budget.fy, this.fileToUpload,
+      this.budget.finalPbId ).subscribe(data => {
       if (data.result) {
         my.router.navigate(['/home']);
       }

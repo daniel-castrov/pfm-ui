@@ -93,8 +93,8 @@ export class VariantsTabComponent implements OnInit {
 
   async initDataRows(){
 
-    const pb = (await this.pbService.getLatest(this.user.currentCommunityId).toPromise()).result;
-    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, NameUtils.urlEncode(this.current.shortName)).toPromise()).result;
+    const pb = (await this.pbService.getFinalLatest().toPromise()).result;
+    const pbPr: Program = (await this.prService.getByContainerAndName(pb.id, NameUtils.urlEncode(this.current.shortName)).toPromise()).result;
 
     this.fund.variants.forEach(variant => {
       let data: Array<DataRow> = [];

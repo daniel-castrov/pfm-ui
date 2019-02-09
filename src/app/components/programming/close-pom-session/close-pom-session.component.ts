@@ -56,7 +56,7 @@ export class ClosePomSessionComponent implements OnInit {
   }
 
   async initPbPrs() {
-    this.pb = (await this.pbService.getLatest(this.currentCommunityId).toPromise()).result;
+    this.pb = (await this.pbService.getFinalLatest().toPromise()).result;
     this.pbPrograms = (await this.programAndPrService.programRequests(this.pb.id));
   }
 

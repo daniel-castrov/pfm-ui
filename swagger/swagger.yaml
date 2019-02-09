@@ -659,56 +659,20 @@ paths:
 # STOP POM
 ##############################################################################
 # START PB
-  /pb/community/{communityId}:
+  /pb/final:
     get:
       tags:
       - "PB"
-      summary: "Fetches all existing PBs for this community"
-      description: "Gets the PB information"
-      operationId: "getByCommunityId"
-      consumes:
-      - "application/json"
+      operationId: "getFinal"
       produces:
       - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
-  /pb/community/{communityId}/year/{year}:
+  /pb/final/latest:
     get:
       tags:
       - "PB"
-      operationId: "getByCommunityAndYear"
+      operationId: "getFinalLatest"
       produces:
       - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        required: true
-        type: "string"
-      - in: "path"
-        name: "year"
-        required: true
-        type: "number"
-  /pb/community/{communityId}/latest:
-    get:
-      tags:
-      - "PB"
-      summary: "Gets the current PB, whatever that means"
-      description: "Gets the PB information"
-      operationId: "getLatest"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
 # END PB
 ##############################################################################
 # START EXECUTION
@@ -858,16 +822,16 @@ paths:
 # END TAGS
 ##############################################################################
 # START PR
-  /pr/phase/{phaseId}:
+  /pr/container/{containerId}:
     get:
       tags:
       - "PR"
-      operationId: "getByPhase"
+      operationId: "getByContainer"
       produces:
       - "application/json"
       parameters:
       - in: "path"
-        name: "phaseId"
+        name: "containerId"
         required: true
         type: "string"
   /pr/{id}:
@@ -938,32 +902,32 @@ paths:
         required: true
         schema:
           type: "object"
-  /pr/phase/{phaseId}/program/{shortname}:
+  /pr/container/{containerId}/program/{shortname}:
     get:
       tags:
       - "PR"
-      operationId: "getByPhaseAndName"
+      operationId: "getByContainerAndName"
       produces:
       - "application/json"
       parameters:
       - in: "path"
-        name: "phaseId"
+        name: "containerId"
         required: true
         type: "string"
       - in: "path"
         name: "shortname"
         required: true
         type: "string"
-  /pr/phase/{phaseId}/name/{shortname}/children:
+  /pr/container/{containerId}/name/{shortname}/children:
     get:
       tags:
         - "PR"
-      operationId: "getChildrenByName"
+      operationId: "getChildrenContainerIdAndName"
       produces:
         - "application/json"
       parameters:
         - in: "path"
-          name: "phaseId"
+          name: "containerId"
           required: true
           type: "string"
         - in: "path"
@@ -3125,14 +3089,8 @@ definitions:
     properties:
       id:
         type: "string"
-      communityId:
+      budgetId:
         type: "string"
-      fy:
-        type: "integer"
-      startdate:
-        type: "integer"
-      enddate:
-        type: "integer"
   Execution:
     type: "object"
     properties:
@@ -4012,6 +3970,10 @@ definitions:
         type: "string"
       status:
         enum: [OPEN, CLOSED]
+      finalBesId:
+        type: "string"
+      finalPbId:
+        type: "string"
 #
 #################################################################
 #############      END MODEL  DEFINITONS      ###################

@@ -51,7 +51,7 @@ export class ProgramsComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    if (this.pomPrograms && this.pbPrograms) {
+    if (this.pomPrograms && this.pbPrograms && this.pomFy && this.pbFy) {
       let rowData = []
       this.pomPrograms.forEach(prOne => {
         let program = new UiProgramRequest(prOne);

@@ -37,8 +37,6 @@ export class CurrentPhase {
     const subject = new Subject();
     (async () => {
       let budgets: Budget[];
-      // budgets = await this.budgetService.getBudgets()
-      //   .map( (response: RestResult) => response.result ).toPromise();
       budgets = await this.budgetService.getBudgets()
         .map( (response: RestResult) => response.result ).toPromise();
       budgets = budgets.sort( (a:Budget, b:Budget) => b.fy-a.fy );

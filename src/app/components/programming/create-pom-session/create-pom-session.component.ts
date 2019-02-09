@@ -1,24 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { GridOptions }  from 'ag-grid';
-import { HeaderComponent } from '../../header/header.component';
-import { UserUtils } from '../../../services/user.utils';
-import { NumericCellEditor } from './numeric-celleditior.component';
-import { ProgramAndPrService } from '../../../services/program-and-pr.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {forkJoin} from "rxjs/observable/forkJoin";
+import {GridOptions} from 'ag-grid';
+import {HeaderComponent} from '../../header/header.component';
+import {UserUtils} from '../../../services/user.utils';
+import {NumericCellEditor} from './numeric-celleditior.component';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {
+  Budget,
   Community,
-  Organization,
-  TOA,
-  Pom,
-  PB,
   CommunityService,
+  EppService,
+  Organization,
   OrganizationService,
-  PBService,
+  Pom,
   POMService,
-  EppService, Program
+  Program,
+  TOA
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
+import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-create-pom-session',
@@ -33,7 +34,7 @@ export class CreatePomSessionComponent implements OnInit {
   private fy: number;
   private community: Community;
   private orgs: Organization[];
-  private pb: PB;
+  private budget: Budget;
 
   private orgMap: Map<string, string>;
   private originalFyplus4;
@@ -53,12 +54,14 @@ export class CreatePomSessionComponent implements OnInit {
   private pinnedRowOrgsDelta;
   private menuTabs = ['filterMenuTab'];
 
-  constructor(
-    private communityService: CommunityService, private orgsvc: OrganizationService,
-    private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    private router: Router, private globalsvc: UserUtils,
-    private programAndPrService: ProgramAndPrService ) {
-  }
+  constructor( private communityService: CommunityService,
+               private orgsvc: OrganizationService,
+               private pomsvc: POMService,
+               private currentPhase: CurrentPhase,
+               private eppsvc: EppService,
+               private router: Router,
+               private globalsvc: UserUtils,
+               private programAndPrService: ProgramAndPrService ) {}
 
   ngOnInit() {
     this.gridOptionsCommunity = {};
@@ -118,8 +121,6 @@ export class CreatePomSessionComponent implements OnInit {
           type: "numericColumn",
           suppressMenu: true,
           field: (fy+ i).toString(),
-          width: 100,
-          editable: params => this.shouldEdit(params),
           cellRenderer: params => this.negativeNumberRenderer(params),
           cellEditor: "numericCellEditor",
           cellClassRules: {
@@ -200,7 +201,7 @@ export class CreatePomSessionComponent implements OnInit {
       forkJoin([this.communityService.getById(user.currentCommunityId),
         this.orgsvc.getByCommunityId(user.currentCommunityId),
         this.pomsvc.getByCommunityId(user.currentCommunityId),
-        this.pbsvc.getLatest(user.currentCommunityId),
+        this.currentPhase.budget(),
         this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
 
@@ -220,9 +221,9 @@ export class CreatePomSessionComponent implements OnInit {
         this.community  = data[0].result;
         this.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
-        this.pb = data[3].result;
+        this.budget = data[3];
         var samplepom: Pom = data[4].result;
-        this.fy = this.pb.fy + 1;
+        this.fy = this.budget.fy + 1;
         this.orgs.forEach( org => this.orgMap.set( org.id, org.abbreviation ) );
 
         this.initGrids(this.fy);
@@ -255,7 +256,7 @@ export class CreatePomSessionComponent implements OnInit {
     let pomData;
 
     if ( null == currentPom ){
-      // Use the values from the samplepom ( the previous pb )
+      // Use the values from the samplepom ( the previous budget )
       pomData= samplepom;
     } else {
       pomData= currentPom;
@@ -370,7 +371,7 @@ export class CreatePomSessionComponent implements OnInit {
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
       this.programAndPrService.programsByCommunity(this.community.id),
-      this.programAndPrService.programRequests(this.pb.id),
+      this.programAndPrService.programRequests(this.budget.id),
     ]).subscribe(data => {
 
       let alleppData:any[] = data[0].result;
@@ -437,7 +438,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
 
-    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.pb.id, this.useEpp  ).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.budget.finalPbId, this.useEpp  ).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);

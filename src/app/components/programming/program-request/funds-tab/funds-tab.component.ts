@@ -28,6 +28,7 @@ import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/vi
 import {GridType} from "./GridType";
 import {CellEditor} from "../../../../utils/CellEditor";
 import {NameUtils} from "../../../../utils/NameUtils";
+import {CurrentPhase} from "../../../../services/current-phase.service";
 
 @Component({
   selector: 'funds-tab',
@@ -47,7 +48,7 @@ export class FundsTabComponent implements OnChanges {
 
   @Input() private pom: Pom;
   private pomFy: number;
-  private pbFy: number;
+  private budgetFy: number;
   private pbPr: Program;
   private ismgr: boolean = false;
   private fieldedits: boolean = false;
@@ -74,7 +75,7 @@ export class FundsTabComponent implements OnChanges {
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
-  constructor(private pbService: PBService,
+  constructor(private currentPhase: CurrentPhase,
     private prService: PRService,
     private globalsService: UserUtils,
     private tagsService: TagsService,
@@ -88,7 +89,7 @@ export class FundsTabComponent implements OnChanges {
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       if (this.pr.type === ProgramType.GENERIC) {
-        this.parentPr = (await this.prService.getByPhaseAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+        this.parentPr = (await this.prService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       }
 
       if( this.pom ){
@@ -115,7 +116,7 @@ export class FundsTabComponent implements OnChanges {
 
   async loadExistingFundingLines() {
     if (this.pr.type === this.ProgramType.GENERIC) {
-      const prParent: Program = (await this.prService.getByPhaseAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+      const prParent: Program = (await this.prService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       if (prParent) {
         prParent.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -154,7 +155,7 @@ export class FundsTabComponent implements OnChanges {
 
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    this.prService.getChildrenByName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
+    this.prService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
@@ -821,20 +822,20 @@ export class FundsTabComponent implements OnChanges {
 
   private async getPBData(): Promise<Program> {
     const user: User = await this.globalsService.user().toPromise();
-    const pb: PB = (await this.pbService.getLatest(user.currentCommunityId).toPromise()).result;
+    const budget = await this.currentPhase.budget().toPromise();
     let name;
     if (this.pr.type === ProgramType.GENERIC) {
       name = this.parentPr.shortName;
     } else {
       name = this.pr.shortName;
     }
-    this.pbFy = pb.fy;
+    this.budgetFy = budget.fy;
 
     if (!name) {
       return;
     }
 
-    const pbPr: Program = (await this.prService.getByPhaseAndName(pb.id, NameUtils.urlEncode(name)).toPromise()).result;
+    const pbPr: Program = (await this.prService.getByContainerAndName(budget.finalPbId, NameUtils.urlEncode(name)).toPromise()).result;
 
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
@@ -933,7 +934,7 @@ export class FundsTabComponent implements OnChanges {
   delete(index) {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
-    this.prService.getChildrenByName(this.pr.containerId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
+    this.prService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
       let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&
