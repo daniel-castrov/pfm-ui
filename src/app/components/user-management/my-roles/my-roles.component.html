@@ -146,7 +146,7 @@
           <!-- Some UserRoleResources are based only on an Organizations -->
           <div  *ngIf="isNewUserRole && isOrgBased">
             <p class="role-controls">
-              Request access to all Programs in the <strong>{{myOrganization.abbreviation}}</strong> Organization for the <strong>{{selectedRole.name}}</str> role.
+              Request access to all Programs in the <strong>{{myOrganization.abbreviation}}</strong> Organization for the <strong>{{selectedRole.name}}</strong> role.
             </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="createAssignRequest()">
