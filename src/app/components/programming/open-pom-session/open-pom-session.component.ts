@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import {  HeaderComponent } from '../../header/header.component'
-import { UserUtils } from '../../../services/user.utils';
-import { ProgramAndPrService } from '../../../services/program-and-pr.service';
-import { User, Pom, Program, POMService, PBService } from '../../../generated';
-import { Notify } from '../../../utils/Notify';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {HeaderComponent} from '../../header/header.component'
+import {UserUtils} from '../../../services/user.utils';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {Budget, Pom, POMService, Program, User} from '../../../generated';
+import {Notify} from '../../../utils/Notify';
+import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-open-pom-session',
@@ -19,23 +20,20 @@ export class OpenPomSessionComponent implements OnInit {
   private pom:Pom;
   private pomPrograms:Program[];
   private pbPrograms:Program[];
-  private pb;
-  private by;
   private currentCommunityId:string;
-
   private allPrsSubmitted:boolean;
   private pomStatusIsCreated:boolean;
 
   constructor(
     private pomService: POMService,
-    private pbService: PBService,
-    private globalsService: UserUtils,
+    private currentPhase: CurrentPhase,
+    private userUtils: UserUtils,
     private router: Router,
     private programAndPrService: ProgramAndPrService ) {}
 
   async ngOnInit() {
 
-    this.globalsService.user().subscribe(async usr =>{
+    this.userUtils.user().subscribe(async usr =>{
       const user:User = usr;
       this.currentCommunityId = user.currentCommunityId;
 
@@ -48,7 +46,6 @@ export class OpenPomSessionComponent implements OnInit {
 
         await this.initPbPrs();
 
-        this.by = this.pom.fy;
         this.allPrsSubmitted = true;
         for ( var i = 0; i< this.pomPrograms.length; i++ ){
           if ( this.pomPrograms[i].programStatus  != "SUBMITTED" ){
@@ -79,8 +76,8 @@ export class OpenPomSessionComponent implements OnInit {
   }
 
   async initPbPrs() {
-    this.pb = (await this.pbService.getFinalLatest().toPromise()).result;
-    this.pbPrograms = (await this.programAndPrService.programRequests(this.pb.id));
+    const budget: Budget = await this.currentPhase.budget().toPromise();
+    this.pbPrograms = (await this.programAndPrService.programRequests(budget.finalPbId));
   }
 
   openPom( event ) {

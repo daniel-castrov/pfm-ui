@@ -3,8 +3,9 @@ import {UserUtils} from '../../../services/user.utils';
 import {ChangeDetectorRef, Component, DoCheck, OnInit, ViewChild} from '@angular/core';
 import {forkJoin} from "rxjs/observable/forkJoin";
 import {HeaderComponent} from '../../header/header.component';
-import {Budget, BudgetService, PB, Pom, POMService, RestResult, User} from '../../../generated';
+import {Budget, BudgetService, PB, Pom, POMService, RestResult, UFRFilter, UfrStatus, User} from '../../../generated';
 import {Cycle} from '../cycle';
+import {CycleUtils} from "../../../services/cycle.utils";
 
 @Component({
   selector: 'app-ufr-search',
@@ -12,29 +13,37 @@ import {Cycle} from '../cycle';
   styleUrls: ['./ufr-search.component.scss']
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
-  @ViewChild(HeaderComponent) header; 
-  @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   
+  @ViewChild(HeaderComponent) header;
+  @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   private user: User;
-
   private cycles: string[] = [];
   private mapCycleIdToFy = new Map<string, string>();
+  private pom: Pom;
+  ufrFilter: UFRFilter;
 
   constructor(private userUtils: UserUtils,
-              private pomService: POMService, 
+              private pomService: POMService,
               private budgetService: BudgetService,
-              private changeDetectorRef : ChangeDetectorRef ) {}
+              private changeDetectorRef : ChangeDetectorRef,
+              private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
-    
+    this.pom = (await this.cycleUtils.currentPom().toPromise());
+    this.ufrFilter = {
+      cycle: 'POM' + this.pom.fy,
+      yoe: false,
+      status: [UfrStatus.SAVED, UfrStatus.SUBMITTED]
+    };
+
     const [poms, budgets] = (await forkJoin([ this.pomService.getByCommunityId(this.user.currentCommunityId),
                                                      this.budgetService.getBudgets() ]).toPromise())
                     .map( (restResult: RestResult) => restResult.result) as [Pom[], Budget[]];
-    
+
     this.initCyclesAndEditable(poms, budgets);
-  } 
-  
+  }
+
   ngDoCheck() {
     this.changeDetectorRef.detectChanges();
   }
@@ -50,7 +59,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     budgets.forEach(budget => {
       phases.push({ fy: budget.fy, phase: 'PB' });
     });
-  
+
     phases.sort((cycle1: Cycle, cycle2: Cycle) => {
       if (cycle1.fy === cycle2.fy) {
         if (cycle1.phase === cycle2.phase) {

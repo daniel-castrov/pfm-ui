@@ -4,7 +4,7 @@ import { AgRendererComponent, ICellRendererAngularComp } from 'ag-grid-angular';
 @Component({
   selector: 'app-simple-link-cell-renderer',
   templateUrl: './simple-link-cell-renderer.component.html',
-  styleUrls: ['./simple-link-cell-renderer.component.scss'] 
+  styleUrls: ['./simple-link-cell-renderer.component.scss']
 })
 
 export class SimpleLinkCellRendererComponent implements ICellRendererAngularComp {
@@ -18,11 +18,11 @@ export class SimpleLinkCellRendererComponent implements ICellRendererAngularComp
   }
 
   link(): string {
-    return this.params.value.link; 
+    return this.params.value.link;
   }
 
-  linktext(): string {
-    return this.params.value.linktext;
+  linkText(): string {
+    return this.params.value.linkText;
   }
 
   refresh(): boolean {
@@ -32,10 +32,12 @@ export class SimpleLinkCellRendererComponent implements ICellRendererAngularComp
 
 export class SimpleLink {
   link: string;
-  linktext: string;
+  linkText: string;
 
-  constructor( lnk:string, lnktext ) {
-    this.link = lnk;
-    this.linktext = lnktext;
+  constructor( link:string, ufrId, linkText ) {
+    if(link){
+      this.link = "/" + link + "/" + ufrId;
+    }
+    this.linkText = linkText;
   }
 }

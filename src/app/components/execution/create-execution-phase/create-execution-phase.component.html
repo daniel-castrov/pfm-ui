@@ -1,9 +1,9 @@
 <j-header></j-header>
 <div class="row main-content">
-  <div class="col-md-12">
+  <div class="col-12">
     <div class="row">
-      <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">Create Execution Phase for FY</span>
+      <div class="col-12 mb-4">
+        <span class="h5 mr-2">Create Execution Phase FY</span>
         <span>
           <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="modelpb">
             <option *ngFor="let pb of yearpblkp|mapAsList" [value]="pb.value">{{pb.key}}</option>
@@ -11,11 +11,9 @@
          </span>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-6 mb-4">
+    <div class="row mb-3">
+      <div class="col-4">
         <form role="form" id="fileForm" target="uploadFrame" method="post" enctype="multipart/form-data" action="loadImage.php?task=file" onsubmit="return ZM.loadImage(this)">
-
           <div class="h6">Upload DoD Goals by selecting local Excel file:</div>
           <div class="input-group">
             <input type="text" class="form-control form-input mr-1" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
@@ -30,10 +28,8 @@
       		</div>
       	</form>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-8  mb-4">
-        <button class="btn btn-primary pull-right" (click)="submit()" [disabled]="!( modelpb && fileToUpload )">Create Phase</button>
+      <div class="col-4">
+        <button class="btn btn-primary pull-right mt-4" (click)="submit()" [disabled]="!( modelpb && fileToUpload )">Create Phase</button>
       </div>
       <div class="col-auto">
         <div *ngIf="submitted" class="loader"></div>

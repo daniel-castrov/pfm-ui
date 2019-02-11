@@ -21,7 +21,6 @@ import {
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
 import {Validation} from './funds-tab/Validation';
-import {NameUtils} from "../../../utils/NameUtils";
 
 @Component({
   selector: 'program-request',

@@ -3218,7 +3218,7 @@ definitions:
       #     $ref: "#/definitions/ProgramType"
       lastMod:
         type: "integer"
-      phaseId:
+      containerId:
         type: "string"
       organizationId:
         type: "string"
@@ -3322,7 +3322,9 @@ definitions:
       active:
         type: "boolean"
       status:
-        type: "string"
+        type: "array"
+        items:
+          $ref: "#/definitions/UfrStatus"
       disposition:
         type: "string"
       cycle:

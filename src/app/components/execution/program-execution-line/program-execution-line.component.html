@@ -1,19 +1,18 @@
 <j-header></j-header>
 <div class="row main-content">
   <div class="col-12">
-    <div class="row mb-2">
-      <div class="col-8">
-            <div class="h5 mb2">{{exe?.fy|FY}} - Program Update for Program Execution Line</div>
+    <div class="row">
+      <div class="col-12">
+          <div class="h5 mb-1">Program Update Detail for Execution Phase {{exe?.fy|FY}}</div>
       </div>
     </div>
     <div class="row">
       <div class="col-8">
-        <span class="form-group">
-          <span class="mr-sm-4">{{program}}</span>
-        </span>
-        <span class="form-group">
-          <span class="mr-sm-4" *ngIf="exeline" >{{exeline.appropriation}}/{{exeline.blin}}/{{exeline.item}}/{{exeline.opAgency}}</span>
-        </span>
+        <div class="form-group">
+            <span class="h6 mr-2">Program Execution Line:</span>
+            <span class="mr-3 execution-titles">{{program}}</span>
+            <span class="mr-3 execution-titles" *ngIf="exeline" >{{exeline.appropriation}}/{{exeline.blin}}/{{exeline.item}}/{{exeline.opAgency}}</span>
+          </div>
       </div>
       <div class="col-4">
         <div class="pull-right">

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AgGridNg2 } from "ag-grid-angular";
 import {
   ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus, Program, Pom
+  UfrStatus, Program, Pom, Execution, ExecutionService
 } from '../../../../generated';
 import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
 import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
@@ -27,7 +27,7 @@ export class AllUfrsComponent implements OnInit {
   private user: User;
   private orgMap: any[] = []
   private filtertext;
-  private pom: Pom;
+  private fy: number;
 
   // agGrid
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -36,6 +36,7 @@ export class AllUfrsComponent implements OnInit {
   private menuTabs = ['filterMenuTab'];
 
   @Input() urlPath;
+  @Input() ufrFilter: UFRFilter;
 
   private frameworkComponents:any = {
     simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
@@ -47,7 +48,8 @@ export class AllUfrsComponent implements OnInit {
                private orgSvc: OrganizationService,
                private router: Router,
                private programAndPrService: ProgramAndPrService,
-               private cycleUtils: CycleUtils) {}
+               private cycleUtils: CycleUtils,
+               private exeService: ExecutionService) {}
 
   async ngOnInit() {
 
@@ -58,8 +60,13 @@ export class AllUfrsComponent implements OnInit {
     organizations.forEach(org => {
       this.orgMap[org.id] = org.abbreviation;
     });
-
-    this.pom = (await this.cycleUtils.currentPom().toPromise());
+    if(!this.urlPath) {
+      let execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
+      this.fy = execution[0].fy
+    } else {
+      let pom = (await this.cycleUtils.currentPom().toPromise());
+      this.fy = pom.fy
+    }
 
     this.setAgGridColDefs();
     this.populateRowData();
@@ -216,15 +223,7 @@ export class AllUfrsComponent implements OnInit {
 
   private async populateRowData() {
 
-
-    const ufrFilter: UFRFilter = {cycle: 'POM' + this.pom.fy};
-
-    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, ufrFilter).toPromise()).result;
-
-    if (this.urlPath === 'ufr-approval-detail') {
-      ufrs = ufrs.filter(ufr => ufr.ufrStatus !== UfrStatus.SAVED)
-    }
-
+    let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, this.ufrFilter).toPromise()).result;
     let alldata: any[] = [];
     let progId:string, funcArea:string , orgid:string;
     ufrs.forEach(ufr => {
@@ -247,7 +246,7 @@ export class AllUfrsComponent implements OnInit {
       }
 
       let row = {
-        "UFR #": new SimpleLink( "/" + this.urlPath + "/"+ufr.id, this.ufrNumber(ufr) ),
+        "UFR #": new SimpleLink( this.urlPath, ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.ufrName,
         "Prog Id": progId,
         "Status": ufr.ufrStatus,
@@ -264,7 +263,7 @@ export class AllUfrsComponent implements OnInit {
   }
 
   sum(ufr: UFR): number {
-    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.pom.fy );
+    return FundingLinesUtils.totalForAndAfterYear(ufr.fundingLines, this.fy );
   }
 
   private async initProgrammyIdToFullName(): Promise<any> {
@@ -284,7 +283,7 @@ export class AllUfrsComponent implements OnInit {
 
   private ufrNumber(ufr: UFR): string {
     // the value stored in this.mapCycleIdToFy looks like this: 'POM 2017'
-    const fullFy = +this.mapCycleIdToFy.get(ufr.phaseId).slice(-4);
+    const fullFy = +this.mapCycleIdToFy.get(ufr.containerId).slice(-4);
     const shortFy = fullFy - 2000;
     const sequentialNumber = ('000' + ufr.requestNumber).slice(-3);
     return shortFy + sequentialNumber;
