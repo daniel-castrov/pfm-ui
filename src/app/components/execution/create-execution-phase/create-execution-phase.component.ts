@@ -5,7 +5,7 @@ import * as $ from 'jquery';
 import { HeaderComponent } from '../../header/header.component';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { MyDetailsService, PBService, BudgetService, ExecutionService, Execution, Budget, PB } from "../../../generated";
+import { BudgetService, ExecutionService, Execution, Budget, PB } from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 
 declare const $: any;
@@ -22,8 +22,9 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private budget: Budget;
-  private message: string;
   private fileToUpload: File;
+
+  private message: string;
   private submitted: boolean = false;
 
   constructor( private budgetService: BudgetService,
@@ -55,7 +56,6 @@ export class CreateExecutionPhaseComponent implements OnInit {
             this.budget = budget;
           }
         });
-
         if (this.yearpblkp.size < 1) {
           this.message = 'All available Execution Phases have been created';
         }
