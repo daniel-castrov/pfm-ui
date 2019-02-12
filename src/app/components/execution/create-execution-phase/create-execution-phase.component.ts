@@ -3,14 +3,9 @@ import * as $ from 'jquery';
 
 // Other Components
 import { HeaderComponent } from '../../header/header.component';
-import { PBService } from '../../../generated/api/pB.service'
-import { MyDetailsService } from '../../../generated/api/myDetails.service'
-import { ExecutionService } from '../../../generated/api/execution.service'
-import { PB } from '../../../generated/model/pB'
-import { Execution } from '../../../generated/model/execution';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import {Budget, BudgetService} from "../../../generated";
+import { MyDetailsService, PBService, BudgetService, ExecutionService, Execution, Budget, PB } from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 
 declare const $: any;
@@ -45,15 +40,16 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
     this.userUtils.user().subscribe(p => {
       forkJoin([
-        this.budgetService.getBudgets(),
-        this.esvc.getByCommunityId(p.currentCommunityId)
+        this.esvc.getByCommunityId(p.currentCommunityId),
+        this.budgetService.getBudgets()
       ]).subscribe(data => {
+        
         var existingExeYears: Set<number> = new Set<number>();
-        data[1].result.forEach((exe: Execution) => {
+        data[0].result.forEach((exe: Execution) => {
           existingExeYears.add(exe.fy);
         });
-        
-        data[0].result.forEach((budget: Budget) => {
+
+        data[1].result.forEach((budget: Budget) => {
           if (!existingExeYears.has(budget.fy)) {
             this.yearpblkp.set(budget.fy, budget);
             this.budget = budget;
@@ -63,7 +59,6 @@ export class CreateExecutionPhaseComponent implements OnInit {
         if (this.yearpblkp.size < 1) {
           this.message = 'All available Execution Phases have been created';
         }
-
       });
     });
   }
