@@ -61,10 +61,10 @@
         <!-- Info -->
         <p class="role-controls" >
           <span class="role-controls" *ngIf="isNewUserRole">
-            New role - <b>{{selectedRole.name}}</b> for <b>{{selectedUserName}}</b>.
+            New role - <strong>{{selectedRole.name}}</strong> for <strong>{{selectedUserName}}</strong>.
           </span>
           <span class="role-controls" *ngIf="!isNewUserRole">
-            The <b>{{selectedRole.name}}</b> role has already been assiged to <b>{{selectedUserName}}</b>.
+            The <strong>{{selectedRole.name}}</strong> role has already been assiged to <strong>{{selectedUserName}}</strong>.
           </span>
         </p>
 
@@ -73,7 +73,7 @@
           <fieldset>
             <legend>Remove a Role</legend>
             <p class="role-controls">
-              Take the <b>{{selectedRole.name}}</b> role away from <b>{{selectedUserName}}</b>.
+              Take the <strong>{{selectedRole.name}}</strong> role away from <strong>{{selectedUserName}}</strong>.
             </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="commitUnassign()">
@@ -91,10 +91,10 @@
             a Role
           </legend>
           <p class="role-controls">
-              Select Programs to access for the <b>{{selectedRole.name}}</b> for <b>{{selectedUserName}}</b>.
+              Select Programs to access for the <strong>{{selectedRole.name}}</strong> for <strong>{{selectedUserName}}</strong>.
             </p>
-          <div style="width:800px;text-align: right; margin-bottom: 10px;">
-            <span>Filter Available Programs</span>
+          <div class="filter-programs">
+            <label>Filter Available Programs</label>
             <select name="orgSelector" class="form-control-sm dropdown-width"
               [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
               <option value=""></option>
@@ -103,7 +103,7 @@
               </option>
             </select>
           </div>  
-          <div style="max-width:800px;">
+          <div class="program-options">
             <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
               [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
             </dual-list>
@@ -121,7 +121,7 @@
         <fieldset *ngIf="!canChangeResources && isNewUserRole && !isOrgBased">
           <legend>Assign a Role</legend>
           <p class="role-controls" *ngIf="!canChangeResources">
-            Resources for the <b>{{selectedRole.name}}</b> role are predefined and cannot be modified.
+            Resources for the <strong>{{selectedRole.name}}</strong> role are predefined and cannot be modified.
           </p>
           <div class="controls pull-right">
             <button class="btn btn-primary" (click)="commit()">
@@ -136,7 +136,7 @@
             <span>Assign a Role</span>
           </legend>
           <p class="role-controls" *ngIf="!canChangeResources">
-              Allow <b>{{selectedUserName}}</b> access all Programs in the <b>{{selectedOrganization?.abbreviation}}</b> Organization for the <b>{{selectedRole.name}}</b> role.
+              Allow <strong>{{selectedUserName}}</strong> access all Programs in the <strong>{{selectedOrganization?.abbreviation}}</strong> Organization for the <strong>{{selectedRole.name}}</strong> role.
           </p>
           <div class="controls pull-right">
             <button class="btn btn-primary" (click)="commit()" [disabled]="!selectedOrganization">

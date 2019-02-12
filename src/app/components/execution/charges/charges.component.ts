@@ -61,7 +61,7 @@ export class ChargesComponent implements OnInit {
 
         this.types.set('EXE_APPROPRIATION_ACTION', 'Appropriation Action');
         this.types.set('EXE_CONGRESSIONAL_ACTION', 'Congressional Action');
-        this.types.set('EXE_OUSDC_ACTION', 'OUSD(c) Action');
+        this.types.set('EXE_OUSDC_ACTION', 'OUSD(C) Action');
         this.allsubtypes = d2[1].result.filter(x => this.types.has(x.type));
 
         this.type = 'EXE_APPROPRIATION_ACTION';

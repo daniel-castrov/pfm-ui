@@ -12,7 +12,7 @@ fieldset {
 }
 
 .role-controls {
-   color: $primary-color;
+   color: $black;
 
   > label {
     margin: 0 0 5px 0;
@@ -28,6 +28,7 @@ fieldset {
 .my-roles-list {
   width: 100%;
   border: $grey-border;
+
 
   th {
     font-weight: 600;
@@ -63,4 +64,14 @@ fieldset {
   a:hover {
     text-decoration: none;
   }
+}
+
+.program-options {
+  max-width:800px
+}
+
+.filter-programs {
+  width: 800px;
+  text-align: right; 
+  margin-bottom: 10px;
 }
