@@ -7,18 +7,19 @@ import { UserUtils } from '../../../services/user.utils';
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import {
+  Budget,
   Community,
-  Organization,
-  TOA,
-  Pom,
-  PB,
   CommunityService,
+  EppService,
+  Organization,
   OrganizationService,
-  PBService,
+  Pom,
   POMService,
-  EppService, Program
+  Program,
+  TOA
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
+import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-create-pom-session',
@@ -34,7 +35,7 @@ export class CreatePomSessionComponent implements OnInit {
   private fy: number;
   private community: Community;
   private orgs: Organization[];
-  private pb: PB;
+  private budget: Budget;
 
   private orgMap: Map<string, string>;
   private originalFyplus4;
@@ -60,10 +61,13 @@ export class CreatePomSessionComponent implements OnInit {
   private analysis_baseline: boolean = true;
   private yeartoas: any;
 
-  constructor(
-    private communityService: CommunityService, private orgsvc: OrganizationService,
-    private pomsvc: POMService, private pbsvc: PBService, private eppsvc: EppService,
-    private router: Router, private globalsvc: UserUtils,
+  constructor( private communityService: CommunityService,
+               private orgsvc: OrganizationService,
+               private pomsvc: POMService,
+               private currentPhase: CurrentPhase,
+               private eppsvc: EppService,
+               private router: Router,
+               private globalsvc: UserUtils,
     private programAndPrService: ProgramAndPrService) {
     
     this.chartdata = {
@@ -111,7 +115,7 @@ export class CreatePomSessionComponent implements OnInit {
         width: 178,
         editable: false,
         valueGetter: params => this.orgName( params.data.orgid ),
-        cellRenderer: params => '<b>'+params.value+'</b>',
+        cellRenderer: params => '<strong>'+params.value+'</strong>',
         cellClassRules: {
         'ag-cell-footer-sum': params => {
           return params.data.orgid == 'Delta'
@@ -125,8 +129,6 @@ export class CreatePomSessionComponent implements OnInit {
           type: "numericColumn",
           suppressMenu: true,
           field: (fy+ i).toString(),
-          width: 100,
-          editable: params => this.shouldEdit(params),
           cellRenderer: params => this.negativeNumberRenderer(params),
           valueSetter: p => numbersOnly(p),
           cellClassRules: {
@@ -213,7 +215,7 @@ export class CreatePomSessionComponent implements OnInit {
       forkJoin([this.communityService.getById(user.currentCommunityId),
         this.orgsvc.getByCommunityId(user.currentCommunityId),
         this.pomsvc.getByCommunityId(user.currentCommunityId),
-        this.pbsvc.getLatest(user.currentCommunityId),
+        this.currentPhase.budget(),
         this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
 
@@ -233,9 +235,9 @@ export class CreatePomSessionComponent implements OnInit {
         this.community  = data[0].result;
         this.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
-        this.pb = data[3].result;
+        this.budget = data[3];
         var samplepom: Pom = data[4].result;
-        this.fy = this.pb.fy + 1;
+        this.fy = this.budget.fy + 1;
         this.orgs.forEach( org => this.orgMap.set( org.id, org.abbreviation ) );
 
         this.initGrids(this.fy);
@@ -380,7 +382,7 @@ export class CreatePomSessionComponent implements OnInit {
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
       this.programAndPrService.programsByCommunity(this.community.id),
-      this.programAndPrService.programRequests(this.pb.id),
+      this.programAndPrService.programRequests(this.budget.id),
     ]).subscribe(data => {
 
       let alleppData:any[] = data[0].result;
@@ -447,7 +449,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
 
-    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.pb.id, this.useEpp  ).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.budget.finalPbId, this.useEpp  ).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);

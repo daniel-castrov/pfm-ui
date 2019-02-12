@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BesProcComponent } from './bes-proc.component';
 
-describe('BesProcComponent', () => {
+describe('BudgetScenariosComponent', () => {
   let component: BesProcComponent;
   let fixture: ComponentFixture<BesProcComponent>;
 

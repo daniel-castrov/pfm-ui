@@ -81,10 +81,10 @@
           <div>
             <p class="role-controls" >
               <span *ngIf="isNewUserRole">
-                  New request for the <b>{{selectedRole.name}}</b> role.
+                  New request for the <strong>{{selectedRole.name}}</strong> role.
               </span>
               <span *ngIf="!isNewUserRole">
-                You are currently a <b>{{selectedRole.name}}</b>.
+                You are currently a <strong>{{selectedRole.name}}</strong>.
               </span>
             </p>
           </div>
@@ -92,7 +92,7 @@
           <!-- Delete existing -->
           <div *ngIf="!isNewUserRole">
               <p class="role-controls">
-                Request to drop the <b>{{selectedRole.name}}</b> role.
+                Request to drop the <strong>{{selectedRole.name}}</strong> role.
               </p>
               <div class="controls pull-right">
                 <button class="btn btn-primary" (click)="createDropRequest()">
@@ -105,11 +105,11 @@
           <div *ngIf="canChangeResources && !isOrgBased">
             <div>
                 <p class="role-controls">
-                Request access to selected Programs for the <b>{{selectedRole.name}}</b> role
+                Request access to selected Programs for the <strong>{{selectedRole.name}}</strong> role
               </p>
             </div>
-            <div style="width:800px;text-align: right; margin-bottom: 10px;">
-              <span>Filter Available Programs</span>
+            <div class="filter-programs">
+              <label>Filter Available Programs</label>
               <select name="orgSelector" class="form-control-sm dropdown-width"
                 [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
                 <option value=""></option>
@@ -118,7 +118,7 @@
                 </option>
               </select>
             </div>
-            <div style="max-width:800px;">
+            <div class="program-options">
               <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
               </dual-list>
@@ -134,7 +134,7 @@
           <!-- Some UserRoleResources CANNOT be modified -->
           <div *ngIf="isNewUserRole && !canChangeResources && !isOrgBased">
             <p class="role-controls" *ngIf="!canChangeResources">
-              Resources for the <b>{{selectedRole.name}}</b> role are predefined and cannot be modified.
+              Resources for the <strong>{{selectedRole.name}}</strong> role are predefined and cannot be modified.
             </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="createAssignRequest()">
@@ -146,7 +146,7 @@
           <!-- Some UserRoleResources are based only on an Organizations -->
           <div  *ngIf="isNewUserRole && isOrgBased">
             <p class="role-controls">
-              Request access to all Programs in the <b>{{myOrganization.abbreviation}}</b> Organization for the <b>{{selectedRole.name}}</b> role.
+              Request access to all Programs in the <strong>{{myOrganization.abbreviation}}</strong> Organization for the <strong>{{selectedRole.name}}</strong> role.
             </p>
             <div class="controls pull-right">
               <button class="btn btn-primary" (click)="createAssignRequest()">

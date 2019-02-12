@@ -27,7 +27,7 @@ import { environment } from '../environments/environment'
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 
-// COMPONENTS
+// COMPONENTS 
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
@@ -121,6 +121,7 @@ import { NoCurrentCommunityMessageComponent } from './components/user-management
 import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
+import { BudgetService } from './generated/api/budget.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
@@ -214,11 +215,14 @@ import {AdminMenuComponent} from "./components/menu-bar/admin-menu/admin-menu.co
 import {UserActionsComponent} from "./components/menu-bar/user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./components/menu-bar/pr-change-notofications/pr-change-notifications.component";
 import {CanActivateAuth} from "./utils/can.activate";
-import {PomUtils} from "./services/pom.utils";
+import {CurrentPhase} from "./services/current-phase.service";
 import {MenuRolesOkDirective} from "./directives/menu.roles.ok.directive";
 import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive";
 import {Authorization} from "./services/authorization";
 import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
+import {CreateBudgetComponent} from "./components/budget/create-budget/create-budget.component";
+import {UfrYoeSummaryComponent} from "./components/ufr/ufr-yoe/ufr-yoe-summary.component";
+import {BudgetScenariosComponent} from "./components/budget/budget-scenarios/budget-scenarios.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -286,6 +290,7 @@ const appRoutes: Routes = [
   {path:'user-list', component:UserListComponent},
   {path:'ufr-search', component: UfrSearchComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent, canActivate:[CanActivateAuth]},
+  {path:'ufr-yoe-summary', component: UfrYoeSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
   {path:'ufr-view/:id', component: UfrViewComponent},
   {path:'ufr-view/create/:ufr', component: UfrViewComponent},
@@ -293,7 +298,10 @@ const appRoutes: Routes = [
   {path:'worksheet-management', component: WorksheetManagementComponent, canActivate:[CanActivateAuth]},
   {path:'worksheet-viewing', component: WorksheetViewingComponent, canActivate:[CanActivateAuth]},
   {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
-  {path:'library', component: LibraryComponent}
+  {path:'library', component: LibraryComponent},
+  {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
+  {path:'budget-scenarios', component: BudgetScenariosComponent, canActivate:[CanActivateAuth]}
+
 ];
 
 @NgModule({
@@ -348,7 +356,7 @@ const appRoutes: Routes = [
     NotImplementedComponent,
     OeUpdateComponent,
     OnlyDigitsDirective,
-    
+
     PFormsComponent,
     P40Component,
     P5Component,
@@ -378,6 +386,7 @@ const appRoutes: Routes = [
     UserListComponent,
     UfrSearchComponent,
     UfrApprovalSummaryComponent,
+    UfrYoeSummaryComponent,
     UfrApprovalDetailComponent,
     UfrViewComponent,
     UfrProgramComponent,
@@ -456,7 +465,9 @@ const appRoutes: Routes = [
     AdminMenuComponent,
     UserActionsComponent,
     PrChangeNotificationsComponent,
-    PomAnalysisComponent
+    PomAnalysisComponent,
+    CreateBudgetComponent,
+    BudgetScenariosComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -521,10 +532,11 @@ const appRoutes: Routes = [
     UserRoleResourceService,
     ProgramsService,
     UserUtils,
-    PomUtils,
+    CurrentPhase,
     CycleUtils,
     RequestsService,
     POMService,
+    BudgetService,
     WorksheetService,
     PRService,
     PBService,

@@ -21,7 +21,6 @@ import {
 import {Notify} from "../../../utils/Notify";
 import {UserUtils} from '../../../services/user.utils';
 import {Validation} from './funds-tab/Validation';
-import {NameUtils} from "../../../utils/NameUtils";
 
 @Component({
   selector: 'program-request',
@@ -51,8 +50,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.pom = (await this.pomService.getById(this.pr.phaseId).toPromise()).result;
-    this.prs = (await this.prService.getByPhase(this.pr.phaseId).toPromise()).result;
+    this.pom = (await this.pomService.getById(this.pr.containerId).toPromise()).result;
+    this.prs = (await this.prService.getByContainer(this.pr.containerId).toPromise()).result;
 
     this.ismgr = false;
     this.rolesvc.getRoles().subscribe(data => {
@@ -78,7 +77,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   }
 
   private initPrFields() {
-    this.pr.phaseId = this.programRequestPageMode.phaseId;
+    this.pr.containerId = this.programRequestPageMode.phaseId;
     this.pr.bulkOrigin = false;
     this.pr.programStatus = 'SAVED';
 

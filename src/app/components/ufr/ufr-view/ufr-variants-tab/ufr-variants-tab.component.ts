@@ -41,7 +41,7 @@ export class UfrVariantsTabComponent {
                private globalsService: UserUtils ) { }
 
   ngOnChanges(){
-    if(!this.ufr.phaseId) return; // the parent has not completed it's ngOnInit()
+    if(!this.ufr.containerId) return; // the parent has not completed it's ngOnInit()
     this.globalsService.user().subscribe(user => {
       this.user = user;
     });
@@ -129,7 +129,7 @@ export class UfrVariantsTabComponent {
   }
 
   generateColumns() {
-    this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
+    this.pomService.getById(this.ufr.containerId).subscribe(pom => {
       this.pomFy = pom.result.fy;
       this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];
       this.columnDefs = [

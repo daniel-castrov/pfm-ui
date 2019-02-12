@@ -1,0 +1,23 @@
+<j-header></j-header>
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="header.isAuthenticated">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 mb-4">
+          <span class="h5 mr-sm-4">YOE UFR Summary</span>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-12">
+          <input id="filtertestbox" type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
+                 [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <all-ufrs #allufrs [urlPath]="undefined" [ufrFilter]="ufrFilter" [mapCycleIdToFy]="mapCycleIdToFy"></all-ufrs>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

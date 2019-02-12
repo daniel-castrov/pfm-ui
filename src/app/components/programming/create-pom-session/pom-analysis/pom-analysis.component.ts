@@ -55,7 +55,7 @@ export class PomAnalysisComponent {
     this._pb = p;
 
     if (p) {
-      this.prsvc.getByPhase(this.pb.id).subscribe(d => {
+      this.prsvc.getById(this.pb.id).subscribe(d => {
         this.pbprs = d.result;
         this.regraph();
       });

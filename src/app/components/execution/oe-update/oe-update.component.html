@@ -3,7 +3,7 @@
   <div class="col-md-12">
     <div class="row">
       <div class="col-lg-7 col-md-12 mb-3">
-        <span class="h5 mr-2">Program Update for Fiscal Year  </span>
+        <span class="h5 mr-2">Program Update for Execution Phase FY  </span>
         <span>
           <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedexe" (change)="fetchLines()">
             <option *ngFor="let exephase of exephases" [ngValue]="exephase">{{exephase.fy}}</option>
@@ -53,10 +53,10 @@
                 <thead>
                   <tr>
                     <th>
-                      <div class="mb-1 primary-label">O&amp;O Data</div>
+                      <label class="mb-1">O&amp;O Data</label>
                     </th>
                     <th>
-                      <div class="mb-1 primary-label">Type</div>
+                      <label class="mb-1">Type</label>
                     </th>
                     <th></th>
                   </tr>

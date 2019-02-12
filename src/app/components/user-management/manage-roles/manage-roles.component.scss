@@ -1,50 +1,35 @@
-$primary-color: #25527a;
 $white: #ffffff;
+$light-grey: #f7f7f7;
+$black: #000000;
 
 fieldset {
   padding: 20px;
 }
 
-
 .role-controls {
-   color: $primary-color;
+   color: $black;
 
   > label {
     margin: 0 0 5px 0;
     width: 233px;
     display: block;
   }
-  
+
   .dropdown-width {
     width: 280px;
   }
 }
 
-
-
 .controls {
   clear: both;
 }
 
-.window {
-
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  min-height: 200px;
-  overflow-y: auto;
-
-  li {
-    list-style: none;
-    margin-left: -40px;
-    &:hover,
-    &:focus {
-      background-color: #3a6489;
-      color: $white;
-      }
-  }
+.program-options {
+  max-width:800px
 }
 
-.arrows {
-  padding: 20px;
+.filter-programs {
+  width: 800px;
+  text-align: right; 
+  margin-bottom: 10px;
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ElevationService} from '../../../services/elevation.component';
 import {UserUtils} from "../../../services/user.utils";
 

@@ -1,5 +1,5 @@
 import {Router} from '@angular/router';
-import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
 import {PRService} from '../../../../generated/api/pR.service';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
 import {AgGridNg2} from "ag-grid-angular";
@@ -7,20 +7,22 @@ import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summar
 import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
 import {Program, ProgramType} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
+import {CurrentPhase} from "../../../../services/current-phase.service";
 
 @Component({
   selector: 'program-requests',
   templateUrl: './program-requests.component.html',
   styleUrls: ['./program-requests.component.scss']
 })
-export class ProgramsComponent implements OnChanges {
+export class ProgramsComponent implements OnChanges, OnInit {
 
   @Input() private pomPrograms: Program[];
   @Input() private pbPrograms: Program[];
   @Input() private pomFy: number;
-  @Input() private pbFy: number;
   @Input() private reviewOnly: boolean;
   @Output() deleted: EventEmitter<any> = new EventEmitter();
+
+  private pbFy: number;
 
   // used only during PR deletion
   private idToDelete: string;
@@ -44,14 +46,19 @@ export class ProgramsComponent implements OnChanges {
     summaryProgramCellRenderer: SummaryProgramCellRenderer,
   };
 
-  constructor(private prService: PRService,
-    private router: Router,
-    private programRequestPageMode: ProgramRequestPageModeService) {
+  constructor( private prService: PRService,
+               private router: Router,
+               private currentPhase: CurrentPhase,
+               private programRequestPageMode: ProgramRequestPageModeService ) {
     this.context = { componentParent: this };
   }
 
+  async ngOnInit() {
+      this.pbFy = (await this.currentPhase.budget().toPromise()).fy;
+  }
+
   ngOnChanges() {
-    if (this.pomPrograms && this.pbPrograms) {
+    if (this.pomPrograms && this.pbPrograms && this.pomFy) {
       let rowData = []
       this.pomPrograms.forEach(prOne => {
         let program = new UiProgramRequest(prOne);

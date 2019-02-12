@@ -59,7 +59,7 @@ export class UfrViewComponent implements OnInit {
   }
 
   private async init() {
-    this.pom = (await this.pomService.getById(this.ufr.phaseId).toPromise()).result;
+    this.pom = (await this.pomService.getById(this.ufr.containerId).toPromise()).result;
     this.pomFy = this.pom.fy - 2000;
     this.initShorty();
   }

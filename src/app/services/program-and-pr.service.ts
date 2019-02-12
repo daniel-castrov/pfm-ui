@@ -27,7 +27,7 @@ export class ProgramAndPrService {
   }
 
   async programRequests(phaseId: string): Promise<Program[]> {
-    const prs: Program[] = (await this.prService.getByPhase(phaseId).toPromise()).result;
+    const prs: Program[] = (await this.prService.getByContainer(phaseId).toPromise()).result;
     return this.sort(prs);
   }
 

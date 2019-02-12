@@ -17,8 +17,8 @@ export class PomComponent implements OnChanges {
   @Input() private pom: Pom;
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-  private rowsData: any[];
-  private colDefs;
+  rowsData: any[];
+  colDefs;
 
   ngOnChanges() {
 

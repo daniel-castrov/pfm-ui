@@ -61,7 +61,7 @@ export class UfrFundsComponent implements OnChanges {
               private rolesvc: RolesPermissionsService) {}
 
   ngOnChanges() {
-    this.pomService.getById(this.ufr.phaseId).subscribe(pom => {
+    this.pomService.getById(this.ufr.containerId).subscribe(pom => {
       this.pom =  pom.result;
       this.columnKeys = [
         this.pom.fy - 3,

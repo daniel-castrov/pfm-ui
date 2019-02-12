@@ -13,6 +13,16 @@ $light-grey-border: 1px solid #eae9e9;
 fieldset {
   padding: 20px;
   min-height: 70px;
+  
+  &.file-upload {
+    height: 100px;
+  }
+  
+  file-upload {
+    position: absolute;
+    top: 45px;
+    left: 30px;
+  }
 }
 
 label {
@@ -23,7 +33,7 @@ label {
 .execution-titles {
   font-size: 20px;
   padding: 0;
-  color: #4f7494;
+  // color: #4f7494;
   font-weight: 500;
 }
 
@@ -114,3 +124,4 @@ input[readonly]{
     }
   }
 }
+

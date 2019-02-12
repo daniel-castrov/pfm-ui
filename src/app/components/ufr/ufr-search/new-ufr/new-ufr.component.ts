@@ -94,7 +94,7 @@ export class NewUfrComponent implements OnInit {
   }
 
   async next() {
-    let ufr: UFR = { phaseId: this.pomId };
+    let ufr: UFR = { containerId: this.pomId };
     switch (this.createNewUfrMode) {
       case 'Previously Funded Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
