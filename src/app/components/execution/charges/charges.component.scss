@@ -10,9 +10,20 @@ $dark-grey: #848282;
 $dark-green: #61bb69;
 $light-grey-border: 1px solid #eae9e9;
 
+
 fieldset {
   padding: 20px;
   min-height: 70px;
+  
+  &.file-upload {
+  height: 100px;
+  }
+  
+  file-upload {
+    position: absolute;
+    top: 45px;
+    left: 30px;
+  }
 }
 
 label {

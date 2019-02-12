@@ -38,7 +38,7 @@
       <div class="col-md-12 col-lg-6">
         <div class="form-group">
           <label>Event Long Name:</label>
-          <label class="primary-label">{{etype?.description}}</label>
+          <span class="font-weight-bold">{{etype?.description}}</span>
         </div>
         <!--
         <div class="transaction-tags form-group">
@@ -74,13 +74,12 @@
         </span>
      </div>
    </div>
-
-   <div class="row mb-3">
-     <div class="col">
-        <span class="form-group">
-          <label class="mb-1">Attach File:</label>
-          <file-upload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
-       </span>
+    <div class="row mb-2">
+      <div class="col-12">
+        <fieldset class="file-upload">
+          <legend>Attach File:</legend>
+        <file-upload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+       </fieldset>
      </div>
    </div>
   </div>

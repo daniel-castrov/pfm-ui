@@ -107,7 +107,7 @@ export class CreatePomSessionComponent implements OnInit {
         width: 178,
         editable: false,
         valueGetter: params => this.orgName( params.data.orgid ),
-        cellRenderer: params => '<b>'+params.value+'</b>',
+        cellRenderer: params => '<strong>'+params.value+'</strong>',
         cellClassRules: {
         'ag-cell-footer-sum': params => {
           return params.data.orgid == 'Delta'
