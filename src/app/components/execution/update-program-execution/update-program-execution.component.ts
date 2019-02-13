@@ -46,7 +46,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute, private router: Router) {
-    var my: UpdateProgramExecutionComponent = this; 
+    var my: UpdateProgramExecutionComponent = this;
     my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
       // console.log('change validator');
       var freleased: number = my.current.line.released;
@@ -87,7 +87,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
             okays.push(elw.amt <= freleased);
           }
           else {
-            // if we're the source, make sure we have enough money 
+            // if we're the source, make sure we have enough money
             if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released) {
               okays.push(elw.line.released !== 0 ? elw.amt <= elw.line.released : false);
             }
@@ -105,10 +105,9 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
   changeFromIsSource( event) {
     this.fromIsSource = ('0: true' === event.target.value);
-    var my: UpdateProgramExecutionComponent = this;
-
-    this.table.setAvailablePrograms();
+    this.table.setAvailablePrograms(this.fromIsSource);
     this.table.recheckValidity();
+    this.table.clearGrid();
   }
 
   ngOnInit() {
@@ -137,7 +136,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
           my.phase = d2.result;
         });
 
-        my.exesvc.hasAppropriation(my.current.line.phaseId).subscribe(d => { 
+        my.exesvc.hasAppropriation(my.current.line.phaseId).subscribe(d => {
           if (d.result) {
             // has appropriation, so only BTR and REALIGNMENTS are possible
             this.types.set('EXE_BTR', 'BTR');
@@ -148,7 +147,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
           }
           this.allsubtypes = data[1].result.filter(x => this.types.has(x.type));
           var first = true;
-          this.types.forEach((val, key) => { 
+          this.types.forEach((val, key) => {
             if (first) {
               this.type = key;
               this.updatedropdowns();

@@ -26,7 +26,7 @@ export class ExecutionLineTableComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private _phase: Execution;
   @Input() private showAddProgramButton: boolean = true;
-  @Input() private sourceOrTarget: string = 'to select target programs';
+  @Input() private fromIsSource: boolean;
   private _exelinefilter: ExecutionLineFilter;
   private _exeprogramfilter: ExecutionLineFilter;
   @Input() exevalidator: ExecutionTableValidator = function (x: ExecutionLineWrapper[]): boolean[] {
@@ -40,7 +40,8 @@ export class ExecutionLineTableComponent implements OnInit {
   tableok: boolean = false;
   private elIdNameLkp: Map<string, ELDisplay> = new Map<string, ELDisplay>();
   private agOptions: GridOptions;
-  private availablePrograms: string[] = [];
+  private availablePrograms: any[] = [];
+  private lineSelected = null;
   private totalsrow: ExecutionLineWrapper;
 
   private tmpdata: ExecutionLineWrapper[];
@@ -89,7 +90,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   @Input() set updatelines(newdata: ExecutionLineWrapper[]) {
-    console.log( 'into updatelines. '+newdata.length+' lines to update')
     if (this.agOptions && this.agOptions.api) {
       // agOptions has been initted, so we can use newdata directly
       this.resetTable(newdata);
@@ -132,7 +132,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   refreshpins() {
-    //console.log('pins: '+this.agOptions.api.getDisplayedRowCount());
     var dopinned: boolean = false;
     this.agOptions.api.forEachNodeAfterFilter(rn => {
       if (rn.data.amt && rn.data.amt > 0) {
@@ -210,7 +209,6 @@ export class ExecutionLineTableComponent implements OnInit {
       });
 
       elname = elname.toLocaleLowerCase();
-      //console.log(elname + ' ' + filter + ' ' + filtertext + '?');
       switch (filter) {
         case 'equals':
           return elname === filtertext;
@@ -250,20 +248,12 @@ export class ExecutionLineTableComponent implements OnInit {
         {
           headerName: "Program",
           filter: 'agTextColumnFilter',
-          editable: p=>(my.availablePrograms.length>0),
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           valueFormatter: params => ( params.data.line.programName
             ? params.data.line.programName
             : 'Please choose a Program'),
           field: 'line.programName',
-          cellEditorParams: function(){
-            return {
-              values: my.availablePrograms,
-              formatValue: params => (null == params ? 'Please choose a Program' : params.value)
-            };
-          },
           valueSetter: programSetter,
-          cellEditor: 'agRichSelectCellEditor',
           pinnedRowCellRenderer: params=>''
         },
         {
@@ -272,24 +262,11 @@ export class ExecutionLineTableComponent implements OnInit {
           filterParams: {
             textCustomComparator: linecellfilter
           },
-          editable: true,
           field: 'line.id',
           valueFormatter: params => (params.data.line.appropriation && my.elIdNameLkp.has(params.data.line.id)
             ? my.elIdNameLkp.get(params.data.line.id).display
             : params.data.line.programName ? 'Select an Execution Line' : 'Select a Program first'),
-          cellEditorParams: params => {
-            var choices: string[] = my.getLineChoices(params.data.line.programName);
-            //console.log(choices);
-            return {
-              values: choices,
-              formatValue: el => {
-                //console.log('formatting value for editor: '+JSON.stringify(el));
-                return (my.elIdNameLkp.has(el) ? my.elIdNameLkp.get(el).display : '');
-              }
-            };
-          },
           valueSetter: linesetter,
-          cellEditor: 'agRichSelectCellEditor',
           cellClass: ['ag-cell-light-grey'],
           pinnedRowCellRenderer: params => ''
         },
@@ -366,9 +343,7 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   validateOneRow(row): boolean {
-    //console.log('validating one row: ' + JSON.stringify(row));
     var ok = this.exevalidator([row], false)[0];
-    //console.log('result: ' + ok);
     return ok;
   }
 
@@ -376,13 +351,14 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   addrow() {
+    this.availablePrograms.splice(this.availablePrograms.indexOf(this.lineSelected), 1);
     this.agOptions.api.updateRowData({
       add: [{
-        line: {},
+        line: this.lineSelected.value.line,
         amt: 0
       }]
     });
-
+    this.lineSelected = null;
     this.refreshpins();
   }
 
@@ -424,7 +400,6 @@ export class ExecutionLineTableComponent implements OnInit {
   }
 
   recheckValidity() {
-    //console.log('checking validity');
     var lines: ExecutionLineWrapper[] = [];
     this.agOptions.api.forEachNodeAfterFilter(rn => {
       if (rn.data.line.id && this.elIdNameLkp.has(rn.data.line.id)
@@ -435,7 +410,6 @@ export class ExecutionLineTableComponent implements OnInit {
 
     var failure: boolean = false;
     if (0 === lines.length) {
-      //console.log('no lines to check, failed');
       failure = true;
     }
     else {
@@ -452,25 +426,31 @@ export class ExecutionLineTableComponent implements OnInit {
       this.totalsrow = newtots;
       this.agOptions.api.setPinnedBottomRowData([this.totalsrow]);
     }
-
-    //console.log('table ok ? ' + this.tableok);
     this.agGrid.api.refreshCells(); // need to update CSS classes
   }
 
-  setAvailablePrograms() {
-    this.availablePrograms.splice(0, this.availablePrograms.length);
-    var avails: Set<string> = new Set<string>();
-    this.elIdNameLkp.forEach(el => {
-      avails.add(el.line.programName);
-     });
+  clearGrid(){
+    this.agGrid.api.setRowData([])
+  }
 
-    if (avails.size > 0) {
-      avails.forEach( pname => {
-        if (this.getLineChoices(pname).length > 0) {
-          this.availablePrograms.push(pname);
+  setAvailablePrograms(fromIsSource?: boolean) {
+    this.fromIsSource = fromIsSource === undefined? this.fromIsSource : fromIsSource;
+    this.availablePrograms.splice(0, this.availablePrograms.length);
+    this.elIdNameLkp.forEach(el => {
+      if (!this.fromIsSource){
+        if (el.line.released > 0) {
+          this.availablePrograms.push({
+            display: el.line.programName + ' ' + el.display,
+            value: el
+          });
         }
-      });
-    }
+      }else {
+        this.availablePrograms.push({
+          display: el.line.programName + ' ' + el.display,
+          value: el
+        });
+      }
+     });
   }
 
   onGridReady(params) {
