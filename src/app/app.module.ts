@@ -1,5 +1,4 @@
 import { UfrUfrTabComponent } from './components/ufr/ufr-view/ufr-ufr-tab/ufr-ufr-tab.component';
-import { CycleUtils } from './services/cycle.utils';
 import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
 import { TagsService } from './services/tags.service';
 import { UserUtils } from './services/user.utils';
@@ -530,7 +529,6 @@ const appRoutes: Routes = [
     ProgramsService,
     UserUtils,
     CurrentPhase,
-    CycleUtils,
     RequestsService,
     POMService,
     BudgetService,

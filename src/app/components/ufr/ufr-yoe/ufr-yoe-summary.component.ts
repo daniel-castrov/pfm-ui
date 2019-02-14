@@ -32,7 +32,7 @@ export class UfrYoeSummaryComponent implements OnInit, DoCheck {
       cycle: 'POM' + this.execution[0].fy,
       yoe: true};
 
-    const poms = await this.pomService.getByCommunityId(this.user.currentCommunityId).toPromise();
+    const poms = await this.pomService.getAll().toPromise();
     this.initCyclesAndEditable(poms.result);
   }
 

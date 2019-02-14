@@ -4,10 +4,24 @@
     <div class="col-12">
 
       <div class="row mb-3">
-        <div class="col-12">
-
-Hello World!
-
+        <div class="col-3">
+          <button (click)="createBudget()">Create budget FY{{nextBudgetYear-2000}}</button>
+          <div></div>
+          <p>
+          <h5>Existing Budget Phases:</h5>
+          <ul>
+            <div *ngFor="let budget of budgets">
+              <li>Budget FY{{budget.fy-2000}}</li>
+          </div>
+          </ul>
+          <p>
+          <div></div>
+          <h5>Existing POM phases:</h5>
+          <ul>
+            <div *ngFor="let pom of poms">
+              <li>POM FY{{pom.fy-2000}}</li>
+            </div>
+          </ul>
         </div>
       </div>
     </div>

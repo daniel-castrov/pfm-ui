@@ -4,7 +4,7 @@ import { HeaderComponent } from '../../../header/header.component';
 import { POMService, Pom, User } from '../../../../generated/index';
 import {AllUfrsComponent} from "../../ufr-search/all-ufrs/all-ufrs.component";
 import {UFRFilter, UfrStatus} from "../../../../generated";
-import {CycleUtils} from "../../../../services/cycle.utils";
+import {CurrentPhase} from "../../../../services/current-phase.service";
 
 @Component({
   selector: 'ufr-approval-summary',
@@ -23,19 +23,19 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
               private changeDetectorRef : ChangeDetectorRef,
-              private cycleUtils: CycleUtils) {}
+              private currentPhase: CurrentPhase) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
 
-    this.pom = (await this.cycleUtils.currentPom().toPromise());
+    this.pom = (await this.currentPhase.pom().toPromise());
     this.ufrFilter = {
       cycle: 'POM' + this.pom.fy,
       yoe: false,
       status: [UfrStatus.SUBMITTED, UfrStatus.VALID, UfrStatus.INVALID]
     };
 
-    const poms = await this.pomService.getByCommunityId(this.user.currentCommunityId).toPromise();
+    const poms = await this.pomService.getAll().toPromise();
     this.initCyclesAndEditable(poms.result);
   }
   

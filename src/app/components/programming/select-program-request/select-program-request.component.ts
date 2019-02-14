@@ -1,10 +1,9 @@
-import { CycleUtils } from './../../../services/cycle.utils';
-import { NewProgramComponent } from './new-program-request/new-program-request.component';
-import { ProgramAndPrService } from '../../../services/program-and-pr.service';
-import { UserUtils } from '../../../services/user.utils';
-import { POMService } from '../../../generated/api/pOM.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {Pom, PB, PBService, RestResult, Program, Budget} from '../../../generated';
+import {NewProgramComponent} from './new-program-request/new-program-request.component';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {UserUtils} from '../../../services/user.utils';
+import {POMService} from '../../../generated/api/pOM.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Budget, Pom, Program, RestResult} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {CurrentPhase} from "../../../services/current-phase.service";
 
@@ -26,8 +25,7 @@ export class SelectProgramRequestComponent implements OnInit {
   constructor(private pomService: POMService,
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
-              private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {}
+              private userUtils: UserUtils) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -42,7 +40,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
-      this.pom = await this.cycleUtils.currentPom().toPromise();
+      this.pom = await this.currentPhase.pom().toPromise();
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
       resolve();
     });

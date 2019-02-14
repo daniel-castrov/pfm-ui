@@ -483,23 +483,13 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-  /pom/community/{communityId}:
+  /pom:
     get:
       tags:
       - "POM"
-      summary: "Fetches all existing POMs for this community"
-      description: "Gets the POM information"
-      operationId: "getByCommunityId"
-      consumes:
-      - "application/json"
+      operationId: "getAll"
       produces:
       - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
     put:
       tags:
       - "POM"
@@ -663,7 +653,7 @@ paths:
     get:
       tags:
         - "Budget"
-      operationId: "getBudgets"
+      operationId: "getAll"
   /budget/year/{fy}:
     post:
       tags:
@@ -673,7 +663,7 @@ paths:
         - in: "path"
           name: "fy"
           required: true
-          type: "string"
+          type: "number"
 # STOP BUDGET
 ##############################################################################
 # START PB

@@ -59,7 +59,7 @@ export class OpenPomSessionComponent implements OnInit {
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.pomService.getByCommunityId(this.currentCommunityId).subscribe(async poms => {
+      this.pomService.getAll().subscribe(async poms => {
         for (var i = 0; i < poms.result.length; i++){
           var pom: Pom = poms.result[i];
           if ('CREATED' === pom.status) {

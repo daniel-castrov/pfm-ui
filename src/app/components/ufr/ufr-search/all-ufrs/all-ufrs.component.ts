@@ -1,16 +1,27 @@
-import { UserUtils } from '../../../../services/user.utils';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { AgGridNg2 } from "ag-grid-angular";
+import {UserUtils} from '../../../../services/user.utils';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {AgGridNg2} from "ag-grid-angular";
 import {
-  ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus, Program, Pom, Execution, ExecutionService
+  Execution,
+  ExecutionService,
+  Organization,
+  OrganizationService,
+  Program,
+  ProgramsService,
+  UFR,
+  UFRFilter,
+  UFRsService,
+  User
 } from '../../../../generated';
-import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
-import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
-import {CycleUtils} from "../../../../services/cycle.utils";
+import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
+import {
+  SimpleLink,
+  SimpleLinkCellRendererComponent
+} from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
+import {CurrentPhase} from "../../../../services/current-phase.service";
 
 @Component({
   selector: 'all-ufrs',
@@ -48,7 +59,7 @@ export class AllUfrsComponent implements OnInit {
                private orgSvc: OrganizationService,
                private router: Router,
                private programAndPrService: ProgramAndPrService,
-               private cycleUtils: CycleUtils,
+               private currentPhase: CurrentPhase,
                private exeService: ExecutionService) {}
 
   async ngOnInit() {
@@ -64,7 +75,7 @@ export class AllUfrsComponent implements OnInit {
       let execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
       this.fy = execution[0].fy
     } else {
-      let pom = (await this.cycleUtils.currentPom().toPromise());
+      let pom = (await this.currentPhase.pom().toPromise());
       this.fy = pom.fy
     }
 

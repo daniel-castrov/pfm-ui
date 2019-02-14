@@ -5,7 +5,7 @@ import {forkJoin} from "rxjs/observable/forkJoin";
 import {HeaderComponent} from '../../header/header.component';
 import {Budget, BudgetService, PB, Pom, POMService, RestResult, UFRFilter, UfrStatus, User} from '../../../generated';
 import {Cycle} from '../cycle';
-import {CycleUtils} from "../../../services/cycle.utils";
+import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-ufr-search',
@@ -26,19 +26,19 @@ export class UfrSearchComponent implements OnInit, DoCheck {
               private pomService: POMService,
               private budgetService: BudgetService,
               private changeDetectorRef : ChangeDetectorRef,
-              private cycleUtils: CycleUtils) {}
+              private currentPhase: CurrentPhase) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
-    this.pom = (await this.cycleUtils.currentPom().toPromise());
+    this.pom = (await this.currentPhase.pom().toPromise());
     this.ufrFilter = {
       cycle: 'POM' + this.pom.fy,
       yoe: false,
       status: [UfrStatus.SAVED, UfrStatus.SUBMITTED]
     };
 
-    const [poms, budgets] = (await forkJoin([ this.pomService.getByCommunityId(this.user.currentCommunityId),
-                                                     this.budgetService.getBudgets() ]).toPromise())
+    const [poms, budgets] = (await forkJoin([ this.pomService.getAll(),
+                                                     this.budgetService.getAll() ]).toPromise())
                     .map( (restResult: RestResult) => restResult.result) as [Pom[], Budget[]];
 
     this.initCyclesAndEditable(poms, budgets);

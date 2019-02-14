@@ -1,4 +1,3 @@
-import {CycleUtils} from './../../../services/cycle.utils';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   OrganizationService,
@@ -19,6 +18,7 @@ import {UfrProgramComponent} from "./ufr-program-tab/ufr-program-tab.component";
 import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 import {Notify} from "../../../utils/Notify";
 import {UfrJustificationComponent} from "./ufr-justification-tab/ufr-justification-tab.component";
+import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-ufr-view',
@@ -38,7 +38,7 @@ export class UfrViewComponent implements OnInit {
   private shorty: Program;
 
   constructor( private ufrService: UFRsService,
-               private cycleUtils: CycleUtils,
+               private currentPhase: CurrentPhase,
                private route: ActivatedRoute,
                private pomService: POMService,
                private orgService: OrganizationService,
@@ -54,7 +54,7 @@ export class UfrViewComponent implements OnInit {
         this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
       }
       this.init();
-      this.canedit = !!await this.cycleUtils.currentPom().toPromise();
+      this.canedit = !!await this.currentPhase.pom().toPromise();
     });
   }
 

@@ -43,7 +43,7 @@ export class HeaderUserComponent {
       }
     });
 
-    this.pomService.getByCommunityId(this.authUser.currentCommunity.id).subscribe(data => {
+    this.pomService.getAll().subscribe(data => {
       delete this.pomStatus;
       data.result.forEach((p: Pom) => {
         this.pomStatus = p.status;

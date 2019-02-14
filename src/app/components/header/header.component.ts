@@ -22,8 +22,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private blankService: BlankService,
     private config: NgbTooltipConfig,
-    private router: Router
-  ) {
+    private router: Router ) {
       config.placement = 'left';
   }
 

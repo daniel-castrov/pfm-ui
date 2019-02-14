@@ -1,4 +1,3 @@
-import { CycleUtils } from './../../../../services/cycle.utils';
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -6,6 +5,7 @@ import { UFRsService, ShortyType, ProgramsService, PRService, Program, ProgramSt
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UserUtils } from '../../../../services/user.utils';
+import {CurrentPhase} from "../../../../services/current-phase.service";
 
 
 enum CreateNewUfrMode {
@@ -33,7 +33,7 @@ export class NewUfrComponent implements OnInit {
   constructor( private router: Router,
                private programAndPrService: ProgramAndPrService,
                private ufrService: UFRsService,
-               private cycleUtils: CycleUtils,
+               private currentPhase: CurrentPhase,
                private programsService: ProgramsService,
                private prService: PRService,
                private orgService: OrganizationService,
@@ -41,7 +41,7 @@ export class NewUfrComponent implements OnInit {
 
   async ngOnInit() {
     this.allPrograms = await this.programAndPrService.programs();
-    this.pomId = (await this.cycleUtils.currentPom().toPromise()).id;
+    this.pomId = (await this.currentPhase.pom().toPromise()).id;
   }
 
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {

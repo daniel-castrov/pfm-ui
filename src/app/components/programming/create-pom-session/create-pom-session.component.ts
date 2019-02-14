@@ -200,7 +200,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.globalsvc.user().subscribe( user => {
       forkJoin([this.communityService.getById(user.currentCommunityId),
         this.orgsvc.getByCommunityId(user.currentCommunityId),
-        this.pomsvc.getByCommunityId(user.currentCommunityId),
+        this.pomsvc.getAll(),
         this.currentPhase.budget(),
         this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {

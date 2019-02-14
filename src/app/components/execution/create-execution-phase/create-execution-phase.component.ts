@@ -1,11 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import * as $ from 'jquery';
-
+import {Component, OnInit, ViewChild} from '@angular/core';
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { BudgetService, ExecutionService, Execution, Budget, PB } from "../../../generated";
+import {HeaderComponent} from '../../header/header.component';
+import {Router} from '@angular/router';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {Budget, BudgetService, Execution, ExecutionService, PB} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 
 declare const $: any;
@@ -42,7 +40,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
     this.userUtils.user().subscribe(p => {
       forkJoin([
         this.esvc.getByCommunityId(p.currentCommunityId),
-        this.budgetService.getBudgets()
+        this.budgetService.getAll()
       ]).subscribe(data => {
         
         var existingExeYears: Set<number> = new Set<number>();
