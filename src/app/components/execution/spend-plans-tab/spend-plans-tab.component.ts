@@ -219,7 +219,7 @@ export class SpendPlansTabComponent implements OnInit {
       suppressMovableColumns: true,
       columnDefs: [{
         headerValueGetter: getHeaderValue1,
-        headerName: 'RDTE',
+        headerName: 'RDT&E',
         field: 'rdte',
         cellClass: ['ag-cell-white'],
         maxWidth: 220,
