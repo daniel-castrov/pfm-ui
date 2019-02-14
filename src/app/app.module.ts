@@ -220,6 +220,11 @@ import {Authorization} from "./services/authorization";
 import {CreateBudgetComponent} from "./components/budget/create-budget/create-budget.component";
 import {UfrYoeSummaryComponent} from "./components/ufr/ufr-yoe/ufr-yoe-summary.component";
 import {BudgetScenariosComponent} from "./components/budget/budget-scenarios/budget-scenarios.component";
+import { EditBudgetScenarioComponent } from './components/budget/edit-budget-scenario/edit-budget-scenario.component';
+import { TitleTabComponent } from './components/budget/edit-budget-scenario/title-tab/title-tab.component';
+import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
+import { R1TabComponent } from './components/budget/edit-budget-scenario/r1-tab/r1-tab.component';
+import { ScenarioSelectorComponent } from './components/budget/edit-budget-scenario/scenario-selector/scenario-selector.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -297,7 +302,9 @@ const appRoutes: Routes = [
   {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
   {path:'library', component: LibraryComponent},
   {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
-  {path:'budget-scenarios', component: BudgetScenariosComponent, canActivate:[CanActivateAuth]}
+  {path:'budget-scenarios', component: BudgetScenariosComponent, canActivate:[CanActivateAuth]},
+  {path:'edit-budget-scenario', component: EditBudgetScenarioComponent, canActivate:[CanActivateAuth]}
+  
 
 ];
 
@@ -464,7 +471,12 @@ const appRoutes: Routes = [
     UserActionsComponent,
     PrChangeNotificationsComponent,
     CreateBudgetComponent,
-    BudgetScenariosComponent
+    BudgetScenariosComponent,
+    EditBudgetScenarioComponent,
+    TitleTabComponent,
+    OverviewTabComponent,
+    R1TabComponent,
+    ScenarioSelectorComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

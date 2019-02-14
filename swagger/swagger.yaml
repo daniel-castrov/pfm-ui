@@ -3097,6 +3097,8 @@ definitions:
         type: "string"
       budgetId:
         type: "string"
+      name: 
+        type: "string"
   Execution:
     type: "object"
     properties:

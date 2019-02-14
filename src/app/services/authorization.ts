@@ -164,5 +164,13 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
+  async 'edit-budget-scenario'(): Promise<AuthorizationResult> {
+    if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
+      const budget = (await this.currentPhase.budget().toPromise());
+        return AuthorizationResult.Ok;
+    }
+    return AuthorizationResult.Never;
+  }
+
 
 }
