@@ -23,7 +23,7 @@ export class ViewSiblingsRenderer implements ICellRendererAngularComp {
         this.value = param.data.phaseType + (param.context.parentComponent.pomFy - 2000);
         break;
       case PhaseType.PB:
-        this.value = param.data.phaseType + (param.context.parentComponent.pbFy - 2000);
+        this.value = param.data.phaseType + (param.context.parentComponent.budgetFy - 2000);
         break;
       case PhaseType.DELTA:
         this.value = param.data.phaseType;

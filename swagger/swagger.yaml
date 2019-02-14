@@ -658,6 +658,24 @@ paths:
         type: "string"
 # STOP POM
 ##############################################################################
+# START BUDGET
+  /budget:
+    get:
+      tags:
+        - "Budget"
+      operationId: "getBudgets"
+  /budget/year/{fy}:
+    post:
+      tags:
+        - "Budget"
+      operationId: "createBudget"
+      parameters:
+        - in: "path"
+          name: "fy"
+          required: true
+          type: "string"
+# STOP BUDGET
+##############################################################################
 # START PB
   /pb/final:
     get:
@@ -2983,24 +3001,7 @@ paths:
         required: true
         type: "string"
 # STOP ASSIGNROLEREQUEST
-##############################################################################
-# START BUDGET
-  /budget:
-    get:
-      tags:
-        - "Budget"
-      operationId: "getBudgets"
-  /budget/year/{fy}:
-    post:
-      tags:
-        - "Budget"
-      operationId: "createBudget"
-      parameters:
-        - in: "path"
-          name: "fy"
-          required: true
-          type: "string"
-# STOP BUDGET
+
 
 
 #################################################################
@@ -3084,6 +3085,21 @@ definitions:
         type: "integer"
       enddate:
         type: "integer"
+  Budget:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      fy:
+        type: "number"
+      communityId:
+        type: "string"
+      status:
+        enum: [OPEN, CLOSED]
+      finalBesId:
+        type: "string"
+      finalPbId:
+        type: "string"
   PB:
     type: "object"
     properties:
@@ -3960,21 +3976,6 @@ definitions:
       status:
         type: "string"
       roleName:
-        type: "string"
-  Budget:
-    type: "object"
-    properties:
-      id:
-        type: "string"
-      fy:
-        type: "number"
-      communityId:
-        type: "string"
-      status:
-        enum: [OPEN, CLOSED]
-      finalBesId:
-        type: "string"
-      finalPbId:
         type: "string"
 #
 #################################################################
