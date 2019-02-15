@@ -3,10 +3,12 @@
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="col-12">
       <div class="row mb-3">
-        <div class="col-9">
+        <div class="col-12">
           <span class="h5">Create Budget Session</span>
         </div>
-        <div class="col-3">
+      </div>      
+      <div class="row">
+        <div class="col-12">
           <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget FY{{nextBudgetYear-2000}}</button>
         </div>
       </div>
