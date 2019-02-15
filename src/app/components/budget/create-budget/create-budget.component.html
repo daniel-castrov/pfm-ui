@@ -11,6 +11,20 @@
         </div>
       </div>
       <div class="row mb-3">
+      <div class="col-12">
+        <div class="card-container">
+          <div class="card-header">Existing Budget Phases:</div>
+          <div class="card-body">            
+            <table class="table-budget">
+              <tr *ngFor="let budget of budgets">
+                <td>Budget FY{{budget.fy-2000}}</td>
+              </tr>
+            </table>
+            </div>  
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
         <div class="col-12">
           <div class="card-container">
             <div class="card-header">Existing POM phases:</div>
