@@ -1,3 +1,8 @@
-<p>Title Tab</p>
-<p>Budget FY{{ budget.fy }}</p>
-<p>Scenario {{ scenario.name }}</p>
+<!-- <p>Title Tab | Budget FY{{ budget.fy }} | Scenario {{ scenario.name }} {{ scenario.type }}</p> -->
+
+<div class="h6">Select Logo:</div>
+<file-upload [isImageThumbnail]="true"
+[imagePath]="logoImagePath"
+[area]="r0r1data.fileArea"
+[disabled]='readonly'
+(fileUploadEvent)="onlogoUploaded($event)"></file-upload>

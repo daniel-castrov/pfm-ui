@@ -1,3 +1,31 @@
-<p>TOC/Overview Tab</p>
-<p>Budget FY{{ budget.fy }}</p>
-<p>Scenario {{ scenario.name }}</p>
+<!-- <p>TOC/Overview Tab | Budget FY{{ budget.fy }} | Scenario {{ scenario.name }} {{ scenario.type }}</p> -->
+
+<div class="row mb-3">
+  <div class="col-4">
+    <div class="h6">Upload Overview file:</div>
+    <div class="input-group">
+      <input type="text" class="form-control form-input mr-1" placeholder="Choose file" value="{{ ovFileName }}" name="uploadname" [ngModel]="ovFileToUpload?.name" readonly>
+      <span class="input-group-btn">
+        <span class="btn btn-secondary btn-file">
+        Browse… <input type="file" name="file" accept="*.pdf" (change)="ovHandleFileInput($event.target.files)">
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div class="row mb-3">
+  <div class="col-4">
+    <div class="h6">Specify Line Number for each PE:</div>
+    <ag-grid-angular #agGrid class="ag-theme-balham"
+      [columnDefs]="colDefs"
+      [rowData]="rowsData"
+      [gridAutoHeight]="true"
+      [toolPanelSuppressSideButtons]="true"
+      [suppressDragLeaveHidesColumns]="true"
+      [suppressMovableColumns]="true"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular> 
+  </div>
+</div>

@@ -10,13 +10,13 @@
         <div class="col-12">
           <tabset class="program-tab-style" role="tablist">
             <tab heading="Title" id="tab1" role="tablist" active="true">
-              <title-tab [scenario]="selectedScenario" [budget]="budget" editable="true"></title-tab>
+              <title-tab [scenario]="selectedScenario" [budget]="budget" [r0r1data]="r0r1data" editable="true"></title-tab>
             </tab>
             <tab heading="TOC/Overview" id="tab2" role="tablist">
-              <overview-tab [scenario]="selectedScenario" [budget]="budget" editable="true" ></overview-tab>
+              <overview-tab [scenario]="selectedScenario" [budget]="budget" [r0r1data]="r0r1data" editable="true" ></overview-tab>
             </tab>
             <tab heading="R-1" id="tab3">
-              <r1-tab [scenario]="selectedScenario" [budget]="budget" editable="true" ></r1-tab>
+              <r1-tab [scenario]="selectedScenario" [budget]="budget" [r0r1data]="r0r1data" editable="true" ></r1-tab>
             </tab>
           </tabset>
         </div>

@@ -1,3 +1,15 @@
-<p>R-1 Tab</p>
-<p>Budget FY{{ budget.fy }}</p>
-<p>Scenario {{ scenario.name }}</p>
+<!-- <p>R-1 Tab | Budget FY{{ budget.fy }} | Scenario {{ scenario.name }} {{ scenario.type }}</p> -->
+
+<div class="row mb-3">
+  <div class="col-4">
+    <div class="h6">Upload R-1 file:</div>
+    <div class="input-group">
+      <input type="text" class="form-control form-input mr-1" placeholder="Choose File" value="{{ r1FileName }}" name="uploadname" [ngModel]="r1FileToUpload?.name" readonly>
+      <span class="input-group-btn">
+        <span class="btn btn-secondary btn-file">
+        Browse… <input type="file" name="file" accept="*.pdf" (change)="r1HandleFileInput($event.target.files)">
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
