@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetScenarioComponent } from '../edit-budget-scenario.component';
-import { PB } from '../../../../generated';
+import { PB, BudgetType, StringMap } from '../../../../generated';
 
 @Component({
   selector: 'scenario-selector',
   templateUrl: './scenario-selector.component.html',
-  styleUrls: ['./scenario-selector.component.scss']
+  styleUrls: ['../edit-budget-scenario.component.scss']
 })
 export class ScenarioSelectorComponent implements OnInit {
 
@@ -29,23 +29,45 @@ export class ScenarioSelectorComponent implements OnInit {
     this.parent.pbs.push ({
         id:"1",
         budgetId:"12",
-        name:"pb1"
+        name:"BES Default",
+        type: BudgetType["RDT&E"]
       });
       this.parent.pbs.push ({
         id:"2",
         budgetId:"12",
-        name:"pb2"
+        name:"BES 2",
+        type: BudgetType["RDT&E"]
       });
       this.parent.pbs.push ({
         id:"3",
         budgetId:"12",
-        name:"pb3"
+        name:"BES 3",
+        type: BudgetType["RDT&E"]
       });
-    
+
+      this.resetr0r1data();
+
+  }
+
+  resetr0r1data(){
+    this.parent.r0r1data = {}
+    this.parent.r0r1data.fileArea="budget";
+
+    let pes:string[] = [ "0601384BP", "0602384BP" , "0603384BP", "0603884BP", "0604384BP", "0605384BP", "0605502BP", "0607384BP"];
+    let toc:StringMap={};
+    pes.forEach( pe => { toc[pe]="" } )
+    this.parent.r0r1data.toc=toc;
   }
 
   onScenarioSelected(){
     setTimeout(() => {
+
+      this.resetr0r1data();
+
+      this.parent.titleTabComponent.logoImagePath="";
+      this.parent.r1TabComponent.r1FileName="";
+      this.parent.overviewTabComponent.ovFileName="";
+
       // initialize agGrid components in the parent.
     });
   }
