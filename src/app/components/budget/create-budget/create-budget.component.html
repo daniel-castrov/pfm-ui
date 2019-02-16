@@ -2,12 +2,12 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="col-12">
-      <div class="row mb-3">
+      <div class="row mb-2">
         <div class="col-12">
           <span class="h5">Create Budget Session</span>
         </div>
       </div>      
-      <div class="row">
+      <div class="row mb-3">
         <div class="col-12">
           <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget FY{{nextBudgetYear-2000}}</button>
         </div>
