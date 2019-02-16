@@ -12,6 +12,15 @@
           <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget FY{{nextBudgetYear-2000}}</button>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="h6">Budget Being Create From:</div>
+          <fieldset class="mb-3">
+              <div *ngIf="submitted" class="loader"></div>
+            {{message}}
+          </fieldset>
+        </div>
+      </div>
       <div class="row mb-3">
       <div class="col-12">
         <div class="card-container">
