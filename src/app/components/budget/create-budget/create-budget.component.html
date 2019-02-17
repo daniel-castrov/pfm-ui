@@ -2,26 +2,51 @@
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
     <div class="col-12">
-
-      <div class="row mb-3">
-        <div class="col-3">
-          <button (click)="createBudget()">Create budget FY{{nextBudgetYear-2000}}</button>
-          <div></div>
-          <p>
-          <h5>Existing Budget Phases:</h5>
-          <ul>
-            <div *ngFor="let budget of budgets">
-              <li>Budget FY{{budget.fy-2000}}</li>
+      <div class="row mb-2">
+        <div class="col-12">
+          <span class="h5">Create Budget Phase for FY</span>
+        </div>
+      </div>      
+      <div class="row">
+        <div class="col-12">
+          <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget FY{{nextBudgetYear-2000}}</button>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-12">
+          <div class="h6">Budget Being Created From:</div>
+          <fieldset class="mb-3">
+              <div *ngIf="submitted" class="loader"></div>
+            {{message}}
+          </fieldset>
+        </div>
+      </div>
+      <div class="row mb-2">
+      <div class="col-12">
+        <div class="card-container">
+          <div class="card-header">Existing Budget Phases:</div>
+          <div class="card-body">            
+            <table class="table-budget">
+              <tr *ngFor="let budget of budgets">
+                <td>Budget FY{{budget.fy-2000}}</td>
+              </tr>
+            </table>
+            </div>  
           </div>
-          </ul>
-          <p>
-          <div></div>
-          <h5>Existing POM phases:</h5>
-          <ul>
-            <div *ngFor="let pom of poms">
-              <li>POM FY{{pom.fy-2000}}</li>
-            </div>
-          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card-container">
+            <div class="card-header">Existing POM phases:</div>
+            <div class="card-body">            
+              <table class="table-budget">
+                <tr *ngFor="let pom of poms">
+                  <td>POM FY{{pom.fy-2000}}</td>
+                </tr>
+              </table>
+            </div>  
+          </div>
         </div>
       </div>
     </div>
