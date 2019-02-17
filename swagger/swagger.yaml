@@ -447,11 +447,6 @@ paths:
         required: true
         type: "integer"
       - in: "query"
-        name: "model"
-        description: "the PB to use as a model"
-        required: false
-        type: "string"
-      - in: "query"
         name: "useepp"
         description: "Use Epp data"
         required: false
@@ -667,13 +662,6 @@ paths:
 # STOP BUDGET
 ##############################################################################
 # START PB
-  /pb/final:
-    get:
-      tags:
-      - "PB"
-      operationId: "getFinal"
-      produces:
-      - "application/json"
   /pb/final/latest:
     get:
       tags:
@@ -773,11 +761,6 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-      - in: "query"
-        name: "model"
-        description: "the PB to use as a model"
-        required: false
-        type: "string"
       - in: "formData"
         name: "file"
         description: "the file to upload"
@@ -3086,9 +3069,13 @@ definitions:
         type: "string"
       status:
         enum: [OPEN, CLOSED]
-      finalBesId:
+      finalProcBesId:
         type: "string"
-      finalPbId:
+      finalRdteBesId:
+        type: "string"
+      finalProcPbId:
+        type: "string"
+      finalRdtePbId:
         type: "string"
   BudgetType:
     enum: [RDT&E, PROC]

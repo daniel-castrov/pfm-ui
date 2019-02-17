@@ -1,9 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {HeaderComponent} from '../../header/header.component'
-import {UserUtils} from '../../../services/user.utils';
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
-import {Budget, Pom, POMService, Program, User} from '../../../generated';
+import {PBService, Pom, POMService, Program} from '../../../generated';
 import {Notify} from '../../../utils/Notify';
 import {CurrentPhase} from "../../../services/current-phase.service";
 
@@ -20,41 +19,34 @@ export class OpenPomSessionComponent implements OnInit {
   private pom:Pom;
   private pomPrograms:Program[];
   private pbPrograms:Program[];
-  private currentCommunityId:string;
   private allPrsSubmitted:boolean;
   private pomStatusIsCreated:boolean;
 
   constructor(
     private pomService: POMService,
+    private pbService: PBService,
     private currentPhase: CurrentPhase,
-    private userUtils: UserUtils,
     private router: Router,
     private programAndPrService: ProgramAndPrService ) {}
 
   async ngOnInit() {
+    await this.initPomPrs();
 
-    this.userUtils.user().subscribe(async usr =>{
-      const user:User = usr;
-      this.currentCommunityId = user.currentCommunityId;
+    if ( !this.pom || null==this.pom ){
+      this.pomStatusIsCreated = false;
+      Notify.error('No POM Session in the "CREATED" state was found');
+    } else {
 
-      await this.initPomPrs();
+      await this.initPbPrs();
 
-      if ( !this.pom || null==this.pom ){
-        this.pomStatusIsCreated = false;
-        Notify.error('No POM Session in the "CREATED" state was found');
-      } else {
-
-        await this.initPbPrs();
-
-        this.allPrsSubmitted = true;
-        for ( var i = 0; i< this.pomPrograms.length; i++ ){
-          if ( this.pomPrograms[i].programStatus  != "SUBMITTED" ){
-            this.allPrsSubmitted = false;
-            break;
-          }
+      this.allPrsSubmitted = true;
+      for ( var i = 0; i< this.pomPrograms.length; i++ ){
+        if ( this.pomPrograms[i].programStatus  != "SUBMITTED" ){
+          this.allPrsSubmitted = false;
+          break;
         }
       }
-    });
+    }
   }
 
   initPomPrs(): Promise<void> {
@@ -76,8 +68,7 @@ export class OpenPomSessionComponent implements OnInit {
   }
 
   async initPbPrs() {
-    const budget: Budget = await this.currentPhase.budget().toPromise();
-    this.pbPrograms = (await this.programAndPrService.programRequests(budget.finalPbId));
+    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
   }
 
   openPom( event ) {

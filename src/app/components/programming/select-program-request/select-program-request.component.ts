@@ -3,7 +3,7 @@ import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {UserUtils} from '../../../services/user.utils';
 import {POMService} from '../../../generated/api/pOM.service';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Budget, Pom, Program, RestResult} from '../../../generated';
+import {PBService, Pom, Program, RestResult} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {CurrentPhase} from "../../../services/current-phase.service";
 
@@ -18,14 +18,14 @@ export class SelectProgramRequestComponent implements OnInit {
   private currentCommunityId: string;
   public pom: Pom;
   public pomPrograms: Program[];
-  public budget: Budget;
   public pbPrograms: Program[];
   public thereAreOutstandingPRs: boolean;
 
   constructor(private pomService: POMService,
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
-              private userUtils: UserUtils) {}
+              private userUtils: UserUtils,
+              private pbService: PBService ) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -47,8 +47,7 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   async initPbPrs() {
-    this.budget = await this.currentPhase.budget().toPromise();
-    this.pbPrograms = (await this.programAndPrService.programRequests(this.budget.finalPbId));
+    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
   }
 
   onDeletePr() {
