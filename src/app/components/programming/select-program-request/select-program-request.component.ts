@@ -83,17 +83,24 @@ export class SelectProgramRequestComponent implements OnInit {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
-      bar.push(0)
       for(let j = 0; j < this.rowsData.length; j++) {
-        bar.push(this.rowsData[j][prop])
+        if(this.rowsData[j]['id'] != 'PB 18') {
+          bar.push(this.rowsData[j][prop])
+        }
       }
+      bar.push('')
       this.charty.push(bar)
     }
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: this.charty,
       options: {
-        title: 'Community TOA'
+        title: 'Community TOA',
+        width: 600,
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
+        bar: { groupWidth: '75%' },
+        isStacked: true
       }
     };
   }
@@ -102,11 +109,18 @@ export class SelectProgramRequestComponent implements OnInit {
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
-      options: { 'title': 'Community TOA' },
+      options: {
+        title: 'Community TOA',
+        width: 600,
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
+        bar: { groupWidth: '75%' },
+        isStacked: true
+      }
     };
     this.charty = [[
       'Year',
-      'PB 18',
+      //'PB 18',
       'POM 19 TOA',
       'PRs Submitted',
       'PRs Planned',
