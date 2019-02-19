@@ -72,7 +72,7 @@ export class AllUfrsComponent implements OnInit {
       this.orgMap[org.id] = org.abbreviation;
     });
     if(!this.urlPath) {
-      let execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
+      let execution = (await this.exeService.getAll(Execution.StatusEnum.CREATED).toPromise()).result;
       this.fy = execution[0].fy
     } else {
       let pom = (await this.currentPhase.pom().toPromise());

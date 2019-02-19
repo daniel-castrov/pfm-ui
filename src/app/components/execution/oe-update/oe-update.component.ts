@@ -153,8 +153,8 @@ export class OeUpdateComponent implements OnInit {
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
         my.progsvc.getIdNameMap(),
-        my.exesvc.getByCommunityId(deets.result.currentCommunityId),
-        //my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED'),
+        my.exesvc.getAll(),
+        //my.exesvc.getAll('CREATED'),
       ]).subscribe(data => {
         my.programs = new Map<string, string>();
         Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
