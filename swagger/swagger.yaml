@@ -24,6 +24,8 @@ tags:
 - name: "OandE"
 - name: "SpendPlan"
 - name: "Snapshots"
+# BUDGET
+- name: "R0R1Data"
 # USERS AND ROLES
 - name: "MyDetails"
 - name: "Stranger"
@@ -1827,6 +1829,88 @@ paths:
           schema:
             $ref: "#/definitions/RestResult"
 # STOP BUDGETFUNDINGLINES
+##############################################################################
+# START R0R1DATA
+  /r0r1data/{id}:
+    get:
+      tags:
+      - "R0R1Data"
+      operationId: "getById"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
+  /r0r1data/containerId/{id}:
+    get:
+      tags:
+      - "R0R1Data"
+      operationId: "getByContainerId"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
+  /r0r1data:
+    post:
+      tags:
+      - "R0R1Data"
+      operationId: "create"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/R0R1Data"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "new R0R1Data"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "R0/R1 data couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "R0R1Data"
+      operationId: "update"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/R0R1Data"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "updated R0R1Data"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "R0/R1 data couldn't be updated."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+# STOP R0R1DATA
 ##############################################################################
 # START PRCHANGENOTIFICATION
   /prChangeNotifications:
