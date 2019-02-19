@@ -26,10 +26,17 @@
         </div>
         <div class="col-2">
           <span class="form-group pull-right">
-            <button class="btn btn-primary" (click)="addline()" [disabled]='!selectedexe'>
-              <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-              Add Execution Line
-            </button>
+            <div class="dropdown">
+              <button id="dropdownMenuButton" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select an option
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item" type="button" (click)="addline()">Add Execution Line</button>
+                <button class="dropdown-item" type="button" [routerLink]="['/charges', selectedexe?.id]" [disabled]="!(selectedexe || hasAppropriation)">Action</button>
+                <button class="dropdown-item" type="button" [routerLink]="['/appropriation-release', selectedexe?.id]" [disabled]='!selectedexe'>Release</button>
+                <button class="dropdown-item" type="button" [routerLink]="['/withhold', selectedexe?.id]" [disabled]='!selectedexe'>Withhold</button>
+              </div>
+            </div>
           </span>
         </div>
       </div>
@@ -48,22 +55,6 @@
               (gridReady) = "onGridReady($event)">
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="pull-right program-controls">
-          <span>
-            <button [routerLink]="['/charges', selectedexe?.id]"
-              class="btn btn-primary" [disabled]="!(selectedexe || hasAppropriation)">Action</button>
-          </span>
-          <span>
-            <button class="btn btn-primary" [routerLink]="['/appropriation-release', selectedexe?.id]" [disabled]='!selectedexe'>Release</button>
-          </span>
-          <span>
-            <button class="btn btn-primary" [routerLink]="['/withhold', selectedexe?.id]" [disabled]='!selectedexe'>Withhold</button>
-          </span>
-        </div>
       </div>
     </div>
   </div>
