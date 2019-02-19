@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetScenarioComponent } from '../edit-budget-scenario.component';
-import { PB, BudgetType, StringMap } from '../../../../generated';
+import {Appropriation, StringMap} from '../../../../generated';
 
 @Component({
   selector: 'scenario-selector',
@@ -30,19 +30,19 @@ export class ScenarioSelectorComponent implements OnInit {
         id:"1",
         budgetId:"12",
         name:"BES Default",
-        type: BudgetType["RDT&E"]
+        appropriation: Appropriation.RDTE
       });
       this.parent.pbs.push ({
         id:"2",
         budgetId:"12",
         name:"BES 2",
-        type: BudgetType["RDT&E"]
+        appropriation: Appropriation.RDTE
       });
       this.parent.pbs.push ({
         id:"3",
         budgetId:"12",
         name:"BES 3",
-        type: BudgetType["RDT&E"]
+        appropriation: Appropriation.RDTE
       });
 
       this.resetr0r1data();
