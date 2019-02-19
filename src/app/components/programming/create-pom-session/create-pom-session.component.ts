@@ -69,7 +69,7 @@ export class CreatePomSessionComponent implements OnInit {
                private router: Router,
                private globalsvc: UserUtils,
     private programAndPrService: ProgramAndPrService) {
-    
+
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
@@ -197,7 +197,7 @@ export class CreatePomSessionComponent implements OnInit {
       }
     }
 
-    return params.node.rowPinned ? false : true;  
+    return params.node.rowPinned ? false : true;
   }
 
   // helper for currency formatting
@@ -315,7 +315,7 @@ export class CreatePomSessionComponent implements OnInit {
 
       }
     });
-  
+
 
     this.originalFyplus4[this.community.id]  =   this.rowsCommunity[0][this.fy+4];
     this.rowsOrgs.forEach( rowww => {
@@ -388,7 +388,7 @@ export class CreatePomSessionComponent implements OnInit {
       let alleppData:any[] = data[0].result;
       let programs: Program[] = data[1];
       let prs:Program[] = data[2];
-      
+
       let fls:string[] = [];
       prs.forEach( pr => {
         if ( pr.type != "GENERIC" ){
@@ -398,7 +398,7 @@ export class CreatePomSessionComponent implements OnInit {
           });
         }
       });
-      
+
       let eppData:any[] = [];
       let eppYear:number = this.fy+4;
       alleppData.forEach( epp => {
@@ -541,11 +541,13 @@ export class CreatePomSessionComponent implements OnInit {
 
     var charty: [any[]] = [[
       'Year',
-      'Baseline',
+      // 'Baseline',
       'TOA',
       { role: 'annotation' },
-      //{ role: 'style' }
+      // { role: 'style' },
+      { role: 'tooltip', p: {html: true} }
     ]];
+
 
     var baseavg: number = Math.ceil(totaltoa / totalvals);
     for (var i = 0; i < 5; i++) {
@@ -555,10 +557,15 @@ export class CreatePomSessionComponent implements OnInit {
 
       charty.push([
         (this.fy + i).toString(),
-        baseamt,
         (0 === newamt ? baseavg : newamt),
         (0 === newamt ? baseavg + ' (est.)' : newamt.toString()),
         //(0 === newamt ? 'opacity: 0.2' : '')
+
+
+        ("<div class='tool-tip-container'>" +
+        "<p class='tooltip-fy'>FY" + (this.fy+i -2000) +
+        "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
+        newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
     }
 
@@ -566,9 +573,20 @@ export class CreatePomSessionComponent implements OnInit {
       chartType: 'ColumnChart',
       dataTable: charty,
       options: {
-        title: 'Community TOA'
+        title: 'Community TOA',
+        // colors: ['red'],
+        vAxis: {
+          minValue: 5
+        },
+        tooltip:{
+          isHtml: true,
+          trigger: 'focus'
+        },
+        colors: ['#24527b']
+
       }
     };
+
   }
 
   select(event: ChartSelectEvent) {
@@ -588,7 +606,7 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   onAnalysis(event) {
-    this.rowsOrgs.forEach(obj => { 
+    this.rowsOrgs.forEach(obj => {
       if (obj.orgid === event.orgid) {
         obj[event.year] = event.amount;
       }
