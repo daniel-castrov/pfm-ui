@@ -364,21 +364,21 @@ export class FundsTabComponent implements OnChanges {
 
     pbRow.fundingLine = { funds: pbTotal };
     pbRow.programId = 'Total Funds Request';
-    pbRow.fundingLine.appropriation = Appropriation.RDTE;
+    pbRow.fundingLine.appropriation = 'Total Funds Request';
     pbRow.phaseType = PhaseType.PB;
     pinnedData.push(pbRow);
 
     let pomRow: DataRow = new DataRow();
     pomRow.fundingLine = { funds: pomTotal };
     pomRow.programId = 'Total Funds Request';
-    pomRow.fundingLine.appropriation = Appropriation.RDTE;
+    pomRow.fundingLine.appropriation = 'Total Funds Request';
     pomRow.phaseType = PhaseType.POM;
     pinnedData.push(pomRow);
 
     let deltaRow: DataRow = new DataRow();
     deltaRow.fundingLine = { funds: deltaTotal };
     deltaRow.programId = 'Total Funds Request';
-    deltaRow.fundingLine.appropriation = Appropriation.RDTE;
+    deltaRow.fundingLine.appropriation = 'Total Funds Request';
 
     deltaRow.phaseType = PhaseType.DELTA;
     pinnedData.push(deltaRow);
