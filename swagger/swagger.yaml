@@ -3361,7 +3361,7 @@ definitions:
       id:
         type: "string"
       appropriation:
-        $ref: "#/definitions/Appropriation"
+        type: "string"
       baOrBlin:
         type: "string"
       opAgency:
@@ -3672,7 +3672,7 @@ definitions:
       coreCapability:
         type: "string"
       appropriation:
-        $ref: "#/definitions/Appropriation"
+        type: "string"
       baOrBlin:
         type: "string"
       item:
