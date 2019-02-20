@@ -25,7 +25,7 @@ tags:
 - name: "SpendPlan"
 - name: "Snapshots"
 # BUDGET
-- name: "R0R1Data"
+- name: "RdteData"
 # USERS AND ROLES
 - name: "MyDetails"
 - name: "Stranger"
@@ -1809,11 +1809,11 @@ paths:
             $ref: "#/definitions/RestResult"
 # STOP BUDGETFUNDINGLINES
 ##############################################################################
-# START R0R1DATA
-  /r0r1data/{id}:
+# START RDTEDATA
+  /rdtedata/{id}:
     get:
       tags:
-      - "R0R1Data"
+      - "RdteData"
       operationId: "getById"
       parameters:
       - in: "path"
@@ -1826,10 +1826,10 @@ paths:
         200:
           schema:
             $ref: "#/definitions/RestResult"
-  /r0r1data/containerId/{id}:
+  /rdtedata/containerId/{id}:
     get:
       tags:
-      - "R0R1Data"
+      - "RdteData"
       operationId: "getByContainerId"
       parameters:
       - in: "path"
@@ -1842,54 +1842,54 @@ paths:
         200:
           schema:
             $ref: "#/definitions/RestResult"
-  /r0r1data:
+  /rdtedata:
     post:
       tags:
-      - "R0R1Data"
+      - "RdteData"
       operationId: "create"
       parameters:
       - in: "body"
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/R0R1Data"
+          $ref: "#/definitions/RdteData"
       produces:
       - "application/json"
       responses:
         200:
-          description: "new R0R1Data"
+          description: "new RdteData"
           schema:
             $ref: "#/definitions/RestResult"
         400:
-          description: "R0/R1 data couldn't be created."
+          description: "RDTE data couldn't be created."
         403:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
     put:
       tags:
-      - "R0R1Data"
+      - "RdteData"
       operationId: "update"
       parameters:
       - in: "body"
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/R0R1Data"
+          $ref: "#/definitions/RdteData"
       produces:
       - "application/json"
       responses:
         200:
-          description: "updated R0R1Data"
+          description: "updated RdteData"
           schema:
             $ref: "#/definitions/RestResult"
         400:
-          description: "R0/R1 data couldn't be updated."
+          description: "RDTE data couldn't be updated."
         403:
           description: "Forbidden"
         500:
           description: "An unexpected error occured."
-# STOP R0R1DATA
+# STOP RDTEDATA
 ##############################################################################
 # START PRCHANGENOTIFICATION
   /prChangeNotifications:
@@ -3519,7 +3519,7 @@ definitions:
 ###       BUDGET       ####
 ###########################
 #
-  R0R1Data:
+  RdteData:
     type: "object"
     properties:
       fileArea:
@@ -3538,6 +3538,40 @@ definitions:
         type: "string"
       toc:
         $ref: "#/definitions/StringMap"
+      r2data:
+        type: "array"
+        items:
+          $ref: "#/definitions/R2Data"
+      r2Adata:
+        type: "array"
+        items:
+          $ref: "#/definitions/R2AData"
+  R2Data:
+    type: "object"
+    properties:
+      programElement:
+        type: "string"
+      missionDescription:
+        type: "string"
+      fundingChange:
+        type: "string"
+      scheduleChange:
+        type: "string"
+      techincalChange:
+        type: "string"
+  R2AData:
+    type: "object"
+    properties:
+      programElement:
+        type: "string"
+      item:
+        type: "string"
+      missionDescription:
+        type: "string"      
+      relatedItems:
+        type: "array"
+        items:
+          type: "string"
 #
 ###########################
 ###    EXECUTION       ####

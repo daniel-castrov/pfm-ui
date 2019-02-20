@@ -1,18 +1,17 @@
 import { Component, OnChanges, Input, ViewChild } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
 import { AgGridNg2 } from "ag-grid-angular"; 
-import { Budget, PB, R0R1Data, FileResponse, LibraryService } from '../../../../generated';
+import { Budget, PB, RdteData, LibraryService } from '../../../../generated';
 
 @Component({
   selector: 'overview-tab',
   templateUrl: './overview-tab.component.html',
-  styleUrls: ['../edit-budget-scenario.component.scss']
+  styleUrls: ['../edit-budget-details.component.scss']
 })
 export class OverviewTabComponent implements OnChanges {
 
   @Input() scenario: PB;
   @Input() budget: Budget;
-  @Input() r0r1data: R0R1Data;
+  @Input() rdteData: RdteData;
   @Input() editable: boolean;
 
   ovFileName:string;
@@ -21,29 +20,25 @@ export class OverviewTabComponent implements OnChanges {
   rowsData: any[]=[];
   colDefs;
 
-  constructor(
-    private sanitization: DomSanitizer,
-    private libraryService:LibraryService ) { }
+  constructor( private libraryService:LibraryService ) { }
 
   ngOnChanges() {
 
-    if ( this.r0r1data && this.r0r1data.r1Name ){
-      this.ovFileName = this.r0r1data.r1Name;
+    if ( this.rdteData && this.rdteData.r1Name ){
+      this.ovFileName = this.rdteData.r1Name;
     }
-
     this.initGrid();
     this.populateRowData();
-
   }
 
   ovHandleFileInput(files: FileList) {
     let ovFileToUpload:File = files.item(0);
-    this.libraryService.uploadFile(ovFileToUpload, this.r0r1data.fileArea).subscribe(response => {
+    this.libraryService.uploadFile(ovFileToUpload, this.rdteData.fileArea).subscribe(response => {
       if (response.result) {
-        this.r0r1data.overviewId = response.result.id;
-        this.r0r1data.overviewName = ovFileToUpload.name;
+        this.rdteData.overviewId = response.result.id;
+        this.rdteData.overviewName = ovFileToUpload.name;
         this.ovFileName = ovFileToUpload.name;
-        // console.log(this.r0r1data);
+        // console.log(this.rdteData);
       } else if (response.error) {
         console.log( "Something went wrong with the overview file upload" );
         console.log( response.error );
@@ -95,10 +90,10 @@ export class OverviewTabComponent implements OnChanges {
 
       let rowdata:any[] = [];
 
-      Object.keys(this.r0r1data.toc).forEach(key => {
+      Object.keys(this.rdteData.toc).forEach(key => {
         let row = new Object();
         row["pe"] = key;
-        row["lineItem"] =  this.r0r1data.toc[key];
+        row["lineItem"] =  this.rdteData.toc[key];
         rowdata.push(row);
       });
       this.rowsData = rowdata;

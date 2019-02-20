@@ -1,17 +1,17 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import { Budget, PB, FileResponse, R0R1Data } from '../../../../generated';
+import { Budget, PB, FileResponse, RdteData } from '../../../../generated';
 
 @Component({
   selector: 'title-tab',
   templateUrl: './title-tab.component.html',
-  styleUrls: ['../edit-budget-scenario.component.scss']
+  styleUrls: ['../edit-budget-details.component.scss']
 })
 export class TitleTabComponent implements OnChanges {
 
   @Input() scenario: PB;
   @Input() budget: Budget;
-  @Input() r0r1data: R0R1Data;
+  @Input() rdteData: RdteData;
   @Input() editable: boolean;
   
   logoImagePath: string;
@@ -25,9 +25,9 @@ export class TitleTabComponent implements OnChanges {
 
     let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
     this.logoImagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
-    this.r0r1data.logoName=fileResponse.id;
+    this.rdteData.logoName=fileResponse.id;
 
-    // console.log(this.r0r1data);
+    // console.log(this.rdteData);
 
   }
 

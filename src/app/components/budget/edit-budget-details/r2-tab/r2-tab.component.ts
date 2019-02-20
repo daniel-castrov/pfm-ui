@@ -4,7 +4,7 @@ import { Budget, PB } from '../../../../generated';
 @Component({
   selector: 'r2-tab',
   templateUrl: './r2-tab.component.html',
-  styleUrls: ['../edit-budget-scenario.component.scss']
+  styleUrls: ['../edit-budget-details.component.scss']
 })
 export class R2TabComponent implements OnChanges {
 
