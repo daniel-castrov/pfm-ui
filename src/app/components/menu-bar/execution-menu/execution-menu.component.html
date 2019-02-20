@@ -2,13 +2,22 @@
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Execution</a>
     <div class="dropdown-menu" aria-labelledby="dropdown12">
-      <a class="dropdown-item" href="#" routerLink="/funds-update">Funds Update</a>
-      <a class="dropdown-item" href="#" routerLink="/oe-update">Program Update</a>
+      <a *menuRolesOk="'open-execution-phase'" class="dropdown-item" href="#" routerLink="/funds-update">Funds Update</a>
+      <a *menuRolesNotNow="'open-execution-phase'" class="dropdown-item" disabled>Funds Update</a>
+
+      <a *menuRolesOk="'open-execution-phase'" class="dropdown-item" href="#" routerLink="/oe-update">Program Update</a>
+      <a *menuRolesNotNow="'open-execution-phase'" class="dropdown-item" disabled>Program Update</a>
 
       <div *roles="'Execution_Manager'" class="dropdown-divider"></div>
-      <a *roles="'Execution_Manager'" class="dropdown-item" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
-      <a *roles="'Execution_Manager'" class="dropdown-item" href="#" routerLink="/open-execution">Open Execution Phase</a>
+
+      <a *menuRolesOk="'create-new-execution'" class="dropdown-item" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
+      <a *menuRolesNotNow="'create-new-execution'" class="dropdown-item" disabled>Create Execution Phase</a>
+
+      <a *menuRolesOk="'open-execution-phase'" class="dropdown-item" href="#" routerLink="/open-execution">Open Execution Phase</a>
+      <a *menuRolesNotNow="'open-execution-phase'" class="dropdown-item" disabled>Open Execution Phase</a>
+
       <div class="dropdown-divider"></div>
+
       <a *roles="'Execution_Manager'" class="dropdown-item" href="#" routerLink="/ufr-yoe-summary">Deferred YOE UFR</a>
     </div>
   </li>

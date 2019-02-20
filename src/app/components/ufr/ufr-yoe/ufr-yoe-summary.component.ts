@@ -27,7 +27,7 @@ export class UfrYoeSummaryComponent implements OnInit, DoCheck {
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
 
-    this.execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
+    this.execution = (await this.exeService.getAll(Execution.StatusEnum.CREATED).toPromise()).result;
     this.ufrFilter = {
       cycle: 'POM' + this.execution[0].fy,
       yoe: true};

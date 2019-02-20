@@ -50,6 +50,14 @@ fieldset {
   }
 }
 
+.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item:disabled {
+  cursor: not-allowed;
+}
+
 .dropdown-width {
   width: 100%;
 }

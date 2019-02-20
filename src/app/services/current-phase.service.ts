@@ -1,4 +1,4 @@
-import {Budget, BudgetService, Pom, POMService, RestResult} from "../generated";
+import {Budget, BudgetService, Execution, ExecutionService, Pom, POMService, RestResult} from "../generated";
 import {Observable} from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map'
@@ -12,7 +12,8 @@ import {Subject} from "rxjs";
 export class CurrentPhase {
 
   constructor( private pomService: POMService,
-               private budgetService: BudgetService ) {}
+               private budgetService: BudgetService,
+               private executionService: ExecutionService) {}
 
   @TemporaryCaching('currentPOM')
   pom(): Observable<Pom> {
@@ -37,6 +38,20 @@ export class CurrentPhase {
         .map( (response: RestResult) => response.result ).toPromise();
       budgets = budgets.sort( (a:Budget, b:Budget) => b.fy-a.fy );
       subject.next(budgets[0]);
+      subject.complete();
+    })();
+    return subject;
+  }
+
+  @TemporaryCaching('currentExecution')
+  execution(): Observable<Execution> {
+    const subject = new Subject();
+    (async () => {
+      let executions: Execution[];
+      executions = await this.executionService.getAll()
+        .map( (response: RestResult) => response.result ).toPromise();
+      executions = executions.sort( (a:Execution, b:Execution) => b.fy-a.fy );
+      subject.next(executions[0]);
       subject.complete();
     })();
     return subject;
