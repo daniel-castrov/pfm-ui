@@ -34,7 +34,7 @@ export class SelectProgramRequestComponent implements OnInit {
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {this.initChart()}
+              private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -45,7 +45,9 @@ export class SelectProgramRequestComponent implements OnInit {
   async reloadPrs() {
     await this.initPomPrs();
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
-    this.loadChart();
+    const by: number = this.pom.fy;
+    await this.initChart(by);
+    await this.loadChart(by);
   }
 
   initPomPrs(): Promise<void> {
@@ -76,15 +78,15 @@ export class SelectProgramRequestComponent implements OnInit {
     } 
   }
 
-  async loadChart() {
-    this.populateRowData(this.pom.fy);
+  async loadChart(by:number) {
+    this.populateRowData(by);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
       for(let j = 0; j < this.rowsData.length; j++) {
-        if(this.rowsData[j]['id'] != 'PB 18') {
+        if(this.rowsData[j]['id'] != 'PB '+(by-2000-1)) {
           bar.push(this.rowsData[j][prop])
         }
       }
@@ -105,7 +107,7 @@ export class SelectProgramRequestComponent implements OnInit {
     };
   }
 
-  async initChart() {
+  async initChart(by: number) {
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
@@ -120,8 +122,7 @@ export class SelectProgramRequestComponent implements OnInit {
     };
     this.charty = [[
       'Year',
-      //'PB 18',
-      'POM 19 TOA',
+      'POM '+(by-2000)+' TOA',
       'PRs Submitted',
       'PRs Planned',
       'TOA Difference',
