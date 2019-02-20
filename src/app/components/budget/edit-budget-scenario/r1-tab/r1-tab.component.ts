@@ -1,6 +1,5 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import { Budget, PB, R0R1Data, FileResponse, LibraryService } from '../../../../generated';
+import { Budget, PB, R0R1Data, LibraryService } from '../../../../generated';
 
 @Component({
   selector: 'r1-tab',
@@ -16,9 +15,7 @@ export class R1TabComponent implements OnChanges {
 
   r1FileName:string;
 
-  constructor(
-    private sanitization: DomSanitizer,
-    private libraryService:LibraryService) { }
+  constructor(private libraryService:LibraryService) { }
 
   ngOnChanges() {
 

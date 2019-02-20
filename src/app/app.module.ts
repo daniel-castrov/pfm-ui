@@ -225,6 +225,8 @@ import { TitleTabComponent } from './components/budget/edit-budget-scenario/titl
 import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
 import { R1TabComponent } from './components/budget/edit-budget-scenario/r1-tab/r1-tab.component';
 import { ScenarioSelectorComponent } from './components/budget/edit-budget-scenario/scenario-selector/scenario-selector.component';
+import { R2TabComponent } from './components/budget/edit-budget-scenario/r2-tab/r2-tab.component';
+import { R2aTabComponent } from './components/budget/edit-budget-scenario/r2a-tab/r2a-tab.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -476,7 +478,9 @@ const appRoutes: Routes = [
     TitleTabComponent,
     OverviewTabComponent,
     R1TabComponent,
-    ScenarioSelectorComponent
+    ScenarioSelectorComponent,
+    R2TabComponent,
+    R2aTabComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
