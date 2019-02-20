@@ -219,7 +219,7 @@ import {MenuRolesNotNowDirective} from "./directives/menu.roles.notnow.directive
 import {Authorization} from "./services/authorization";
 import {CreateBudgetComponent} from "./components/budget/create-budget/create-budget.component";
 import {UfrYoeSummaryComponent} from "./components/ufr/ufr-yoe/ufr-yoe-summary.component";
-import {BudgetScenariosComponent} from "./components/budget/budget-scenarios/budget-scenarios.component";
+import {CopyBudgetComponent} from "./components/budget/copy-budget/copy-budget.component";
 import { EditBudgetScenarioComponent } from './components/budget/edit-budget-scenario/edit-budget-scenario.component';
 import { TitleTabComponent } from './components/budget/edit-budget-scenario/title-tab/title-tab.component';
 import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
@@ -304,7 +304,7 @@ const appRoutes: Routes = [
   {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
   {path:'library', component: LibraryComponent},
   {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
-  {path:'budget-scenarios', component: BudgetScenariosComponent, canActivate:[CanActivateAuth]},
+  {path:'copy-budget', component: CopyBudgetComponent, canActivate:[CanActivateAuth]},
   {path:'edit-budget-scenario', component: EditBudgetScenarioComponent, canActivate:[CanActivateAuth]}
   
 
@@ -473,7 +473,7 @@ const appRoutes: Routes = [
     UserActionsComponent,
     PrChangeNotificationsComponent,
     CreateBudgetComponent,
-    BudgetScenariosComponent,
+    CopyBudgetComponent,
     EditBudgetScenarioComponent,
     TitleTabComponent,
     OverviewTabComponent,

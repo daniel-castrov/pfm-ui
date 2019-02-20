@@ -2,11 +2,11 @@ import {Component, ViewChild} from '@angular/core';
 import {HeaderComponent} from '../../header/header.component';
 
 @Component({
-  selector: 'budget-scenarios',
-  templateUrl: './budget-scenarios.component.html',
-  styleUrls: ['./budget-scenarios.component.scss']
+  selector: 'copy-budget',
+  templateUrl: './copy-budget.component.html',
+  styleUrls: ['./copy-budget.component.scss']
 })
-export class BudgetScenariosComponent  {
+export class CopyBudgetComponent  {
 
   @ViewChild(HeaderComponent) header;
 

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { HeaderComponent } from '../../header/header.component'
-import { UserUtils } from '../../../services/user.utils';
-import { ProgramAndPrService } from '../../../services/program-and-pr.service';
-import {User, Pom, Program, POMService, PBService, PRService, Budget} from '../../../generated';
-import { Notify } from '../../../utils/Notify';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {HeaderComponent} from '../../header/header.component'
+import {UserUtils} from '../../../services/user.utils';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {PBService, Pom, POMService, Program, PRService, User} from '../../../generated';
+import {Notify} from '../../../utils/Notify';
 import {CurrentPhase} from "../../../services/current-phase.service";
 
 @Component({
@@ -29,6 +29,7 @@ export class ClosePomSessionComponent implements OnInit {
     private pomService: POMService,
     private currentPhase: CurrentPhase,
     private prService: PRService,
+    private pbService: PBService,
     private globalsService: UserUtils,
     private router: Router,
     private programAndPrService: ProgramAndPrService ) {}
@@ -56,8 +57,7 @@ export class ClosePomSessionComponent implements OnInit {
   }
 
   async initPbPrs() {
-    const budget: Budget = await this.currentPhase.budget().toPromise();
-    this.pbPrograms = (await this.programAndPrService.programRequests(budget.finalPbId));
+    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
   }
 
   closePom( event ) {

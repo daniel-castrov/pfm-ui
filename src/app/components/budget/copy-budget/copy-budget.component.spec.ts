@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BudgetScenariosComponent } from './budget-scenarios.component';
+import { CopyBudgetComponent } from './copy-budget.component';
 
-describe('BudgetScenariosComponent', () => {
-  let component: BudgetScenariosComponent;
-  let fixture: ComponentFixture<BudgetScenariosComponent>;
+describe('CopyBudgetComponent', () => {
+  let component: CopyBudgetComponent;
+  let fixture: ComponentFixture<CopyBudgetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BudgetScenariosComponent ]
+      declarations: [ CopyBudgetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BudgetScenariosComponent);
+    fixture = TestBed.createComponent(CopyBudgetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

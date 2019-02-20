@@ -3,12 +3,13 @@ import {Program} from '../../../../generated/model/program';
 import {ProgramType} from '../../../../generated/model/programType';
 import {PRUtils} from '../../../../services/pr.utils.service';
 import {AutoValuesService} from './AutoValues.service';
-import {User} from '../../../../generated/model/user';
 import {UserUtils} from '../../../../services/user.utils';
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
+  Appropriation,
   FundingLine,
   IntMap,
+  PBService,
   Pom,
   ProgramsService,
   ProgramStatus,
@@ -75,6 +76,7 @@ export class FundsTabComponent implements OnChanges {
 
   constructor(private currentPhase: CurrentPhase,
     private prService: PRService,
+    private pbService: PBService,
     private globalsService: UserUtils,
     private tagsService: TagsService,
     private autoValuesService: AutoValuesService,
@@ -819,7 +821,6 @@ export class FundsTabComponent implements OnChanges {
   }
 
   private async getPBData(): Promise<Program> {
-    const user: User = await this.globalsService.user().toPromise();
     const budget = await this.currentPhase.budget().toPromise();
     let name;
     if (this.pr.type === ProgramType.GENERIC) {
@@ -833,7 +834,8 @@ export class FundsTabComponent implements OnChanges {
       return;
     }
 
-    const pbPr: Program = (await this.prService.getByContainerAndName(budget.finalPbId, NameUtils.urlEncode(name)).toPromise()).result;
+    const pbPrograms: Program[] = (await this.pbService.getFinalLatest().toPromise()).result;
+    const pbPr: Program = pbPrograms.find(program => program.shortName === name);
 
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"

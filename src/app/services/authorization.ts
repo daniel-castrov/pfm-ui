@@ -152,7 +152,7 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
-  async 'budget-scenarios'(): Promise<AuthorizationResult> {
+  async 'copy-budget'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
       const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
