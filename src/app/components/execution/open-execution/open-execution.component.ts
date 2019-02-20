@@ -22,10 +22,10 @@ export class OpenExecutionComponent implements OnInit {
   private agOptions: GridOptions;
   private exelines: ExecutionLine[];
   private spendplans: Map<string, SpendPlan> = new Map<string, SpendPlan>();
-  
+
   constructor(private exesvc: ExecutionService, private spsvc: SpendPlanService,
     private userutils: UserUtils) {
-    
+
     var my: OpenExecutionComponent = this;
 
     this.agOptions = <GridOptions>{
@@ -91,7 +91,7 @@ export class OpenExecutionComponent implements OnInit {
 
   ngOnInit() {
     this.userutils.user().subscribe(user => {
-      this.exesvc.getByCommunityId(user.currentCommunityId, Execution.StatusEnum.CREATED).subscribe(exes => {
+      this.exesvc.getAll(Execution.StatusEnum.CREATED).subscribe(exes => {
         this.phases = exes.result;
         if (this.phases.length > 0) {
           this.phase = this.phases[0];
@@ -140,7 +140,7 @@ export class OpenExecutionComponent implements OnInit {
   }
 
   openExe() {
-    this.exesvc.openExecution(this.phase.id).subscribe(d => { 
+    this.exesvc.openExecution(this.phase.id).subscribe(d => {
       if (d.error) {
         Notify.error(d.error);
       }
@@ -158,7 +158,7 @@ export class OpenExecutionComponent implements OnInit {
 
   demoCreatePlans() {
     // create spend plans for everybody without a spend plan, then open the phase
-    this.exelines.forEach(el => { 
+    this.exelines.forEach(el => {
       if (!this.spendplans.has(el.id)) {
         this.spsvc.createSpendPlan(el.id, {
           type: SpendPlan.TypeEnum.BASELINE

@@ -39,10 +39,10 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
     this.userUtils.user().subscribe(p => {
       forkJoin([
-        this.esvc.getByCommunityId(p.currentCommunityId),
+        this.esvc.getAll(),
         this.budgetService.getAll()
       ]).subscribe(data => {
-        
+
         var existingExeYears: Set<number> = new Set<number>();
         data[0].result.forEach((exe: Execution) => {
           existingExeYears.add(exe.fy);

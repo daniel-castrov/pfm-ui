@@ -116,7 +116,7 @@ export class FundsUpdateComponent implements OnInit {
             }
             return { component: editor };
           },
-          valueSetter: p => { 
+          valueSetter: p => {
             p.data.programName = p.newValue;
             saveIfPossible(p);
             return true;
@@ -317,8 +317,8 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
-        my.exesvc.getByCommunityId(deets.result.currentCommunityId),
-        //my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
+        my.exesvc.getAll(),
+        //my.exesvc.getAll('CREATED')
       ]).subscribe(data => {
         my.exephases = data[0].result;
         if (my.exephases.length > 0) {
@@ -416,7 +416,7 @@ export class FundsUpdateComponent implements OnInit {
     });
 
     this.programs = [];
-    programset.forEach(s => { 
+    programset.forEach(s => {
       this.programs.push(s);
     });
     this.programs.push( 'Other');
@@ -425,7 +425,7 @@ export class FundsUpdateComponent implements OnInit {
     this.items.sort();
     this.blins.sort();
     this.opAgencies.sort();
-    this.programs.sort((a, b) => { 
+    this.programs.sort((a, b) => {
       if ('Other' === a) {
         return -1;
       } else if ('Other' === b) {

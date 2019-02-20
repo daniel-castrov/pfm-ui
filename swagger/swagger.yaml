@@ -672,14 +672,10 @@ paths:
 # END PB
 ##############################################################################
 # START EXECUTION
-  /execution/community/{communityId}:
+  /execution:
     get:
-      operationId: "getByCommunityId"
+      operationId: "getAll"
       parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
       - name: "status"
         in: "query"
         required: false
@@ -3086,7 +3082,7 @@ definitions:
         type: "string"
       budgetId:
         type: "string"
-      name: 
+      name:
         type: "string"
       appropriation:
         $ref: "#/definitions/Appropriation"
@@ -3100,7 +3096,7 @@ definitions:
       fy:
         type: "integer"
       status:
-        enum: [CREATED, OPEN, LOCKED]
+        enum: [CREATED, OPEN, LOCKED, CLOSED]
       osdObligationGoals:
         type: "object"
         $ref: "#/definitions/OSDGoalPlan"

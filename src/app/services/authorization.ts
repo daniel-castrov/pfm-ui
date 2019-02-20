@@ -1,4 +1,4 @@
-import {Budget, Pom} from './../generated';
+import {Budget, Execution, Pom} from './../generated';
 import {UserUtils} from './user.utils';
 import {Injectable} from '@angular/core';
 import {CurrentPhase} from "./current-phase.service";
@@ -168,6 +168,32 @@ export class Authorization {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
       const budget = (await this.currentPhase.budget().toPromise());
         return AuthorizationResult.Ok;
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'create-new-execution'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+        return AuthorizationResult.Ok;
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'funds-update'(): Promise<AuthorizationResult> {
+    return this['open-execution-phase']();
+  }
+
+  async 'program-update'(): Promise<AuthorizationResult> {
+    return this['open-execution-phase']();
+  }
+
+  async 'open-execution-phase'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && Execution.StatusEnum.CREATED == execution.status) return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
