@@ -662,11 +662,6 @@ paths:
           name: "fy"
           required: true
           type: "number"
-  /budget/status/open:
-    get:
-      tags:
-        - "Budget"
-      operationId: "getOpen"
 # STOP BUDGET
 ##############################################################################
 # START PB

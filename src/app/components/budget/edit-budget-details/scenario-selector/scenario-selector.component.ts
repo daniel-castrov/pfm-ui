@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetDetailsComponent } from '../edit-budget-details.component';
-import {Appropriation, StringMap, BudgetService, RdteDataService , RdteData} from '../../../../generated';
+import { Appropriation, StringMap, RdteDataService , RdteData } from '../../../../generated';
+import { CurrentPhase } from "../../../../services/current-phase.service";
+import { Notify } from '../../../../utils/Notify';
 
 @Component({
   selector: 'scenario-selector',
@@ -12,7 +14,7 @@ export class ScenarioSelectorComponent implements OnInit {
   @Input() parent: EditBudgetDetailsComponent;
 
   constructor(
-    private budgetService : BudgetService,
+    private currentPhase : CurrentPhase,
     private rdteDataService: RdteDataService) { }
 
   ngOnInit() {
@@ -21,7 +23,10 @@ export class ScenarioSelectorComponent implements OnInit {
 
   async init() {
 
-    this.parent.budget= (await this.budgetService.getOpen().toPromise()).result;
+    this.parent.budget= (await this.currentPhase.budget().toPromise());
+    if ( this.parent.budget.status != "OPEN" ){
+      Notify.error("There is no OPEN budget phase");
+    }
 
     this.parent.bess.push ({
         id: "1",
