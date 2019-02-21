@@ -46,7 +46,7 @@ export class SelectProgramRequestComponent implements OnInit {
     await this.initPomPrs();
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
     const by: number = this.pom.fy;
-    await this.initChart(by);
+    await this.initChart();
     await this.loadChart(by);
   }
 
@@ -85,12 +85,18 @@ export class SelectProgramRequestComponent implements OnInit {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
+      let total = 0
       for(let j = 0; j < this.rowsData.length; j++) {
-        if(this.rowsData[j]['id'] != 'PB '+(by-2000-1)) {
+        if(this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA') {
+          total = this.rowsData[j][prop]
+        }
+        if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
           bar.push(this.rowsData[j][prop])
+          //bar.push('PB '+(by-2000-1)+' + '+'POM '+(by-2000)+' TOA')
+          //bar.push('PB '+(communityToas[i].year-2000-1)+' + '+'POM '+(communityToas[i].year-2000)+' TOA'+' = '+total)
+          bar.push(total)
         }
       }
-      bar.push('')
       this.charty.push(bar)
     }
     this.chartdata = {
@@ -102,12 +108,12 @@ export class SelectProgramRequestComponent implements OnInit {
         height: 400,
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
-        isStacked: true
+        isStacked: true,
       }
     };
   }
 
-  async initChart(by: number) {
+  async initChart() {
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
@@ -117,16 +123,17 @@ export class SelectProgramRequestComponent implements OnInit {
         height: 400,
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
-        isStacked: true
+        isStacked: true,
       }
     };
     this.charty = [[
       'Year',
-      'POM '+(by-2000)+' TOA',
       'PRs Submitted',
+      { type: 'string', role: 'tooltip'},
       'PRs Planned',
+      { type: 'string', role: 'tooltip'},
       'TOA Difference',
-      { role: 'annotation' },
+      { type: 'string', role: 'tooltip'},
     ]];
   }
   private populateRowData(by: number) {
