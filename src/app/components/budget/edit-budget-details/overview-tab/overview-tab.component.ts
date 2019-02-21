@@ -87,6 +87,7 @@ export class OverviewTabComponent implements OnChanges {
           field: 'lineItem',
           maxWidth: 110,
           editable: true,
+          cellClass: "ag-cell-edit"
           onCellValueChanged: params => this.onValueChanged(params),
         });
     }
