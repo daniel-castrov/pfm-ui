@@ -3534,6 +3534,8 @@ definitions:
   RdteData:
     type: "object"
     properties:
+      id:
+        type: "string"
       containerId:
         type: "string"
       fileArea:

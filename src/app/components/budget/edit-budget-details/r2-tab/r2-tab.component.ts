@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { Budget, PB, RdteData } from '../../../../generated';
+import { Budget, PB, RdteData, R2Data } from '../../../../generated';
 
 @Component({
   selector: 'r2-tab',
@@ -13,9 +13,28 @@ export class R2TabComponent implements OnChanges {
   @Input() editable: boolean;
   @Input() rdteData: RdteData;
 
-  constructor() { }
+  pes: string[];
+  selectedPE: string;
+  r2data:R2Data
+
+  constructor() { 
+
+  }
 
   ngOnChanges() {
+    this.init();
   }
+
+  async init(){
+    this.pes=[];
+    this.rdteData.r2data.forEach( r2 => this.pes.push(r2.programElement) );    
+  }
+
+  onPESelected(){
+    this.r2data = {};
+    this.r2data.programElement = this.selectedPE;
+    this.rdteData.r2data.push(this.r2data);
+  }
+
 
 }

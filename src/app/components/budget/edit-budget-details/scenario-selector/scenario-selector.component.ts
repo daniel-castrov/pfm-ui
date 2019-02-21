@@ -48,7 +48,7 @@ export class ScenarioSelectorComponent implements OnInit {
       });
 
       this.setRdteData();
-
+     
   }
 
   setRdteData(){
@@ -59,24 +59,31 @@ export class ScenarioSelectorComponent implements OnInit {
     let toc:StringMap={};
     pes.forEach( pe => { toc[pe]="" } )
     this.parent.rdteData.toc=toc;
+    this.parent.rdteData.r2data=[];
     
   }
 
   async onScenarioSelected(){
-
+    
     let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
 
-    if ( rdteData ){
+    console.log(rdteData );
+
+    if ( rdteData && rdteData.id ){
       this.parent.isRdteDataNew=false;
       this.parent.rdteData = rdteData;
     } else {
       this.parent.isRdteDataNew=true;
-      this.setRdteData();
+      //this.setRdteData();
+      this.parent.rdteData = rdteData;
       this.parent.rdteData.containerId = this.parent.selectedScenario.id;
+      
     }
+    console.log(this.parent.rdteData );
   }
 
   async save(){
+    console.log(this.parent.rdteData );
     if ( this.parent.isRdteDataNew){
       (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
       this.parent.isRdteDataNew = false;
