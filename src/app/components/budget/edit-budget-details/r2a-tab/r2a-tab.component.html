@@ -1,12 +1,15 @@
 <div class="row">
   <div class="col-10 mb-4">
-    <span>Select a Program Element:</span>
-    <span>
-      <select [(ngModel)]="selectedPE" class="form-control-sm mb-2" (change)="onPESelected()">
+    <span class="mr-2">
+      <label>Select a Program Element:</label>
+    </span>
+    <span class="mr-2">
+      <select [(ngModel)]="selectedPE" class="form-control-sm mb-2 mt-2" (change)="onPESelected()">
         <option value="undefined" disabled selected>Select PE</option>
         <option *ngFor="let pe of pes" [ngValue]="pe">{{pe}}</option>
       </select>
-
+    </span>
+    <span class="mr-2">
       <ng-container *ngIf="selectedPE">  
         <select [(ngModel)]="selectedItem" class="form-control-sm mb-2" (change)="onItemSelected()">
           <option value="undefined" disabled selected>Select Item</option>
@@ -16,13 +19,10 @@
     </span>
   </div>
 </div>
-
 <ng-container *ngIf="selectedPE && selectedItem">  
 <div class="row">
-  <div class="col-md-12">
-
-    <h4>R2A Section A: Mission Description and Budget Item Justification</h4>
-
+  <div class="col-12">
+    <div class="title badge-light mb-1">R2A Section A: Mission Description and Budget Item Justification</div>
     <label class="mb-2">Mission Description and Budget Item Justification:</label>
     <div class="form-group">
       <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="missionDescription" [(ngModel)]="r2adata.missionDescription"></textarea>
@@ -31,15 +31,11 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-
-    <h4>R2A Section C:Other Program Funding Summary</h4>
-
+    <div class="title badge-light mb-1">R2A Section C:Other Program Funding Summary</div>
     <label class="mb-2">Line Items:</label>
     <div class="form-group">
       <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="relatedItems" [(ngModel)]="r2adata.relatedItems"></textarea>
     </div>
-
-
   </div>
 </div>
 </ng-container>
