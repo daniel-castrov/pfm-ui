@@ -13,6 +13,7 @@ tags:
 # PHASES
 - name: "POM"
 - name: "PB"
+- name: "BES"
 - name: "Budget"
 - name: "Execution"
 # PROGRAMS AND UFRS
@@ -661,6 +662,11 @@ paths:
           name: "fy"
           required: true
           type: "number"
+  /budget/status/open:
+    get:
+      tags:
+        - "Budget"
+      operationId: "getOpen"
 # STOP BUDGET
 ##############################################################################
 # START PB
@@ -3170,6 +3176,17 @@ definitions:
         type: "string"
       appropriation:
         $ref: "#/definitions/Appropriation"
+  BES:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      budgetId:
+        type: "string"
+      name:
+        type: "string"
+      appropriation:
+        $ref: "#/definitions/Appropriation"
   Execution:
     type: "object"
     properties:
@@ -3522,6 +3539,8 @@ definitions:
   RdteData:
     type: "object"
     properties:
+      containerId:
+        type: "string"
       fileArea:
         type: "string"
       logoName:

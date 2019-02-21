@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { Budget, PB } from '../../../../generated';
+import { Budget, PB, RdteData } from '../../../../generated';
 
 @Component({
   selector: 'r2-tab',
@@ -11,6 +11,7 @@ export class R2TabComponent implements OnChanges {
   @Input() scenario: PB;
   @Input() budget: Budget;
   @Input() editable: boolean;
+  @Input() rdteData: RdteData;
 
   constructor() { }
 

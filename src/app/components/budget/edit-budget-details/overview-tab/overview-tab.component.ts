@@ -24,9 +24,14 @@ export class OverviewTabComponent implements OnChanges {
 
   ngOnChanges() {
 
-    if ( this.rdteData && this.rdteData.r1Name ){
-      this.ovFileName = this.rdteData.r1Name;
+    if ( this.rdteData && this.rdteData.overviewName ){
+      this.ovFileName = this.rdteData.overviewName;
+    } else {
+      this.ovFileName = "";
     }
+
+
+
     this.initGrid();
     this.populateRowData();
   }
@@ -38,7 +43,6 @@ export class OverviewTabComponent implements OnChanges {
         this.rdteData.overviewId = response.result.id;
         this.rdteData.overviewName = ovFileToUpload.name;
         this.ovFileName = ovFileToUpload.name;
-        // console.log(this.rdteData);
       } else if (response.error) {
         console.log( "Something went wrong with the overview file upload" );
         console.log( response.error );
@@ -82,7 +86,8 @@ export class OverviewTabComponent implements OnChanges {
           suppressMenu: true,
           field: 'lineItem',
           maxWidth: 110,
-          editable: true
+          editable: true,
+          onCellValueChanged: params => this.onValueChanged(params),
         });
     }
 
@@ -97,6 +102,10 @@ export class OverviewTabComponent implements OnChanges {
         rowdata.push(row);
       });
       this.rowsData = rowdata;
+    }
+
+    private onValueChanged(params){
+      this.rdteData.toc[ params.data.pe ] = params.data.lineItem;
     }
 
 }

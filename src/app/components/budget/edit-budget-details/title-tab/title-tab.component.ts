@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import { Budget, PB, FileResponse, RdteData } from '../../../../generated';
+import { Budget, PB, FileResponse, RdteData, LibraryService } from '../../../../generated';
 
 @Component({
   selector: 'title-tab',
@@ -16,19 +16,30 @@ export class TitleTabComponent implements OnChanges {
   
   logoImagePath: string;
   
-  constructor(private sanitization: DomSanitizer) { }
+  constructor(
+    private libraryService: LibraryService,
+    private sanitization: DomSanitizer) { }
 
   ngOnChanges() {
+
+    // Load the image if it exists
+    if (this.rdteData.logoId) {
+      this.libraryService.downloadFile(this.rdteData.logoId, this.rdteData.fileArea).subscribe(response => {
+        if (response.result) {
+          let fileResponse = response.result as FileResponse;
+          let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
+          this.logoImagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
+        }
+      });
+    } else {
+      this.logoImagePath="";
+    }
   } 
 
   onlogoUploaded(fileResponse: FileResponse){
-
     let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
     this.logoImagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
-    this.rdteData.logoName=fileResponse.id;
-
-    // console.log(this.rdteData);
-
+    this.rdteData.logoId=fileResponse.id;
   }
 
 }

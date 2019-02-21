@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetDetailsComponent } from '../edit-budget-details.component';
-import {Appropriation, StringMap} from '../../../../generated';
+import {Appropriation, StringMap, BudgetService, RdteDataService , RdteData} from '../../../../generated';
 
 @Component({
   selector: 'scenario-selector',
@@ -11,45 +11,42 @@ export class ScenarioSelectorComponent implements OnInit {
 
   @Input() parent: EditBudgetDetailsComponent;
 
-  constructor() { }
+  constructor(
+    private budgetService : BudgetService,
+    private rdteDataService: RdteDataService) { }
 
   ngOnInit() {
     this.init();
   }
 
-  init() {
+  async init() {
 
-    // Fetch Data
-    this.parent.budget={
-      id:"12",
-      fy:2018,
-      communityId:"7",
-    }
+    this.parent.budget= (await this.budgetService.getOpen().toPromise()).result;
 
-    this.parent.pbs.push ({
-        id:"1",
-        budgetId:"12",
-        name:"BES Default",
+    this.parent.bess.push ({
+        id: "1",
+        budgetId: this.parent.budget.id,
+        name: "BES Default",
         appropriation: Appropriation.RDTE
       });
-      this.parent.pbs.push ({
-        id:"2",
-        budgetId:"12",
-        name:"BES 2",
+      this.parent.bess.push ({
+        id: "2",
+        budgetId: this.parent.budget.id,
+        name: "BES 2",
         appropriation: Appropriation.RDTE
       });
-      this.parent.pbs.push ({
-        id:"3",
-        budgetId:"12",
-        name:"BES 3",
+      this.parent.bess.push ({
+        id: "3",
+        budgetId: this.parent.budget.id,
+        name: "BES 3",
         appropriation: Appropriation.RDTE
       });
 
-      this.resetRdteData();
+      this.setRdteData();
 
   }
 
-  resetRdteData(){
+  setRdteData(){
     this.parent.rdteData = {}
     this.parent.rdteData.fileArea="budget";
 
@@ -57,19 +54,30 @@ export class ScenarioSelectorComponent implements OnInit {
     let toc:StringMap={};
     pes.forEach( pe => { toc[pe]="" } )
     this.parent.rdteData.toc=toc;
+    
   }
 
-  onScenarioSelected(){
-    setTimeout(() => {
+  async onScenarioSelected(){
 
-      this.resetRdteData();
+    let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
 
-      this.parent.titleTabComponent.logoImagePath="";
-      this.parent.r1TabComponent.r1FileName="";
-      this.parent.overviewTabComponent.ovFileName="";
+    if ( rdteData ){
+      this.parent.isRdteDataNew=false;
+      this.parent.rdteData = rdteData;
+    } else {
+      this.parent.isRdteDataNew=true;
+      this.setRdteData();
+      this.parent.rdteData.containerId = this.parent.selectedScenario.id;
+    }
+  }
 
-      // initialize agGrid components in the parent.
-    });
+  async save(){
+    if ( this.parent.isRdteDataNew){
+      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
+      this.parent.isRdteDataNew = false;
+    } else {
+      (await this.rdteDataService.update( this.parent.rdteData ).toPromise()).result;
+    }
   }
 
 }

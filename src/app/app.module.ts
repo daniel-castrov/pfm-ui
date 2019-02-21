@@ -120,6 +120,7 @@ import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
 import { BudgetService } from './generated/api/budget.service';
+import { RdteDataService } from './generated/api/rdteData.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
@@ -548,6 +549,7 @@ const appRoutes: Routes = [
     RequestsService,
     POMService,
     BudgetService,
+    RdteDataService,
     WorksheetService,
     PRService,
     PBService,

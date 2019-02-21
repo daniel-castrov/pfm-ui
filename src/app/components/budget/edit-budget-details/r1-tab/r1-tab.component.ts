@@ -21,6 +21,8 @@ export class R1TabComponent implements OnChanges {
 
     if ( this.rdteData && this.rdteData.r1Name ){
       this.r1FileName = this.rdteData.r1Name;
+    } else {
+      this.r1FileName = "";
     }
   }
 
