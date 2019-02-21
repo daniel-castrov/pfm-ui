@@ -3,6 +3,7 @@ import {HeaderComponent} from "../../header/header.component";
 import {AllUfrsComponent} from "../ufr-search/all-ufrs/all-ufrs.component";
 import {Execution, ExecutionService, Pom, POMService, UFRFilter, User} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
+import {PhaseType} from "../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'ufr-yoe-summary',
@@ -14,35 +15,40 @@ export class UfrYoeSummaryComponent implements OnInit, DoCheck {
   @ViewChild(HeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
 
-  private user: User;
-  private mapCycleIdToFy = new Map<string, string>();
-  private execution: Execution;
+  executionPhases: Execution[];
+  selectedExecution: Execution;
+  user: User;
+  mapCycleIdToFy = new Map<string, string>();
+  execution: Execution;
   ufrFilter: UFRFilter;
+  PhaseType = PhaseType;
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
               private changeDetectorRef : ChangeDetectorRef,
-              private exeService: ExecutionService) {}
+              private executionService: ExecutionService) {}
 
   async ngOnInit() {
     this.user = await this.userUtils.user().toPromise();
+    this.executionPhases = (await this.executionService.getAll().toPromise()).result;
 
-    this.execution = (await this.exeService.getAll(Execution.StatusEnum.CREATED).toPromise()).result;
+    this.initCyclesAndEditable(this.executionPhases);
+  }
+
+  onExecutionSelection() {
     this.ufrFilter = {
-      cycle: 'POM' + this.execution[0].fy,
-      yoe: true};
-
-    const poms = await this.pomService.getAll().toPromise();
-    this.initCyclesAndEditable(poms.result);
+      cycle: PhaseType.EXE + this.selectedExecution.fy,
+      yoe: true
+    };
   }
 
   ngDoCheck() {
     this.changeDetectorRef.detectChanges();
   }
 
-  private initCyclesAndEditable(poms: Pom[]) {
-    poms.forEach((pom: Pom) => {
-      this.mapCycleIdToFy.set(pom.id, 'POM ' + pom.fy);
+  private initCyclesAndEditable(executions: Execution[]) {
+    executions.forEach((execution: Execution) => {
+      this.mapCycleIdToFy.set(execution.id, 'EXE ' + execution.fy);
     });
   }
 }

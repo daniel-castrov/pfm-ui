@@ -24,7 +24,7 @@ import { environment } from '../environments/environment'
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 
-// COMPONENTS 
+// COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
@@ -297,8 +297,8 @@ const appRoutes: Routes = [
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-yoe-summary', component: UfrYoeSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
-  {path:'ufr-view/:id', component: UfrViewComponent},
-  {path:'ufr-view/create/:ufr', component: UfrViewComponent},
+  {path:'ufr-view/:phaseType/:id', component: UfrViewComponent},
+  {path:'ufr-view/:phaseType', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent, canActivate:[CanActivateAuth]},
   {path:'worksheet-viewing', component: WorksheetViewingComponent, canActivate:[CanActivateAuth]},
@@ -307,7 +307,7 @@ const appRoutes: Routes = [
   {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
   {path:'copy-budget', component: CopyBudgetComponent, canActivate:[CanActivateAuth]},
   {path:'edit-budget-details', component: EditBudgetDetailsComponent, canActivate:[CanActivateAuth]}
-  
+
 
 ];
 
