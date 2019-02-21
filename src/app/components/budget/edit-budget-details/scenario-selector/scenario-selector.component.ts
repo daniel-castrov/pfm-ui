@@ -45,41 +45,33 @@ export class ScenarioSelectorComponent implements OnInit {
         budgetId: this.parent.budget.id,
         name: "BES 3",
         appropriation: Appropriation.RDTE
-      });
-
-      this.setRdteData();
-     
-  }
-
-  setRdteData(){
-    this.parent.rdteData = {}
-    this.parent.rdteData.fileArea="budget";
-
-    let pes:string[] = [ "0601384BP", "0602384BP" , "0603384BP", "0603884BP", "0604384BP", "0605384BP", "0605502BP", "0607384BP"];
-    let toc:StringMap={};
-    pes.forEach( pe => { toc[pe]="" } )
-    this.parent.rdteData.toc=toc;
-    this.parent.rdteData.r2data=[];
-    
+      });     
   }
 
   async onScenarioSelected(){
+
+    this.clearTabData();
     
     let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
-
-    console.log(rdteData );
 
     if ( rdteData && rdteData.id ){
       this.parent.isRdteDataNew=false;
       this.parent.rdteData = rdteData;
     } else {
       this.parent.isRdteDataNew=true;
-      //this.setRdteData();
       this.parent.rdteData = rdteData;
       this.parent.rdteData.containerId = this.parent.selectedScenario.id;
-      
     }
     console.log(this.parent.rdteData );
+  }
+
+  clearTabData(){
+    if ( this.parent.r2TabComponent ){ 
+      this.parent.r2TabComponent.clearData(); 
+    }
+    if ( this.parent.r2aTabComponent ){ 
+      this.parent.r2aTabComponent.cleardata();
+    }
   }
 
   async save(){
@@ -90,6 +82,7 @@ export class ScenarioSelectorComponent implements OnInit {
     } else {
       (await this.rdteDataService.update( this.parent.rdteData ).toPromise()).result;
     }
+    console.log(this.parent.rdteData );
   }
 
 }

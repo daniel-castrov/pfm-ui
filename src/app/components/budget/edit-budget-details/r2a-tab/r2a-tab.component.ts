@@ -17,22 +17,33 @@ export class R2aTabComponent implements OnChanges {
   selectedPE: string;
   items: string[];
   selectedItem: string;
+  r2adata : R2AData;
+  allItems: string[];
 
-  r2adata : R2AData
+  cleardata(){
+    this.r2adata={};
+    this.selectedPE=null;
+    this.selectedItem=null;
+  }
 
   constructor() { }
 
   ngOnChanges() {
-    if (this.rdteData.r2Adata){
+    if (this.rdteData && this.rdteData.r2Adata){
       this.init();
     }
   }
 
   async init(){
     this.pes=[];
+    this.allItems=[];
     this.rdteData.r2Adata.forEach( r2a => { 
-      if ( !this.pes.includes( r2a.programElement ) ) 
-      this.pes.push(r2a.programElement);
+      if ( !this.pes.includes( r2a.programElement ) ){ 
+        this.pes.push(r2a.programElement);
+      }
+      if ( ! this.allItems.includes( r2a.item ) ){
+        this.allItems.push( r2a.item );
+      }
     });    
   }
 
@@ -44,12 +55,7 @@ export class R2aTabComponent implements OnChanges {
   }
 
   onItemSelected(){
-
-    this.r2adata = {};
-    this.r2adata.programElement = this.selectedPE;
-    this.r2adata.item = this.selectedItem;
-    this.rdteData.r2Adata.push(this.r2adata);
-
+    this.r2adata = this.rdteData.r2Adata.find( data => data.item === this.selectedItem );
   }
 
 }

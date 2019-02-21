@@ -21,8 +21,14 @@ export class R2TabComponent implements OnChanges {
 
   }
 
+  clearData(){
+    this.r2data={}; 
+    this.selectedPE=null;
+  }
   ngOnChanges() {
-    this.init();
+    if (this.rdteData && this.rdteData.r2data){
+      this.init();
+    }
   }
 
   async init(){
@@ -31,9 +37,7 @@ export class R2TabComponent implements OnChanges {
   }
 
   onPESelected(){
-    this.r2data = {};
-    this.r2data.programElement = this.selectedPE;
-    this.rdteData.r2data.push(this.r2data);
+    this.r2data = this.rdteData.r2data.find( data =>  data.programElement == this.selectedPE  );
   }
 
 

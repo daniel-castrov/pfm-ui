@@ -28,6 +28,7 @@ export class EditBudgetDetailsComponent implements AfterContentChecked {
   selectedScenario:BES;
   rdteData:RdteData;
   isRdteDataNew:boolean;
+  activeTab="1";
 
   constructor(
     private cd: ChangeDetectorRef) {}

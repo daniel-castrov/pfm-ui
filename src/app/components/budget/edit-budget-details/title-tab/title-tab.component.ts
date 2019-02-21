@@ -23,7 +23,7 @@ export class TitleTabComponent implements OnChanges {
   ngOnChanges() {
 
     // Load the image if it exists
-    if (this.rdteData.logoId) {
+    if (this.rdteData && this.rdteData.logoId && this.rdteData.fileArea) {
       this.libraryService.downloadFile(this.rdteData.logoId, this.rdteData.fileArea).subscribe(response => {
         if (response.result) {
           let fileResponse = response.result as FileResponse;

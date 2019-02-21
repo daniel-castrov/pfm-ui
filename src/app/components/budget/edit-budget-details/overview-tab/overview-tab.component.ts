@@ -26,14 +26,16 @@ export class OverviewTabComponent implements OnChanges {
 
     if ( this.rdteData && this.rdteData.overviewName ){
       this.ovFileName = this.rdteData.overviewName;
-    } else {
-      this.ovFileName = "";
+      this.initGrid();
+      this.populateRowData();
     }
+    // } else {
+    //   this.ovFileName = "";
+    // }
 
 
 
-    this.initGrid();
-    this.populateRowData();
+    
   }
 
   ovHandleFileInput(files: FileList) {
