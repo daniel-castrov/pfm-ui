@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {HeaderComponent} from '../../header/header.component';
 import {Budget, BudgetService, Pom, POMService} from "../../../generated";
 import {Router} from "@angular/router";
+import {Notify} from "../../../utils/Notify";
 
 @Component({
   selector: 'create-budget',
@@ -29,8 +30,9 @@ export class CreateBudgetComponent implements OnInit {
     this.poms.sort((a, b) => b.fy-a.fy);
   }
 
-  createBudget() {
-    this.budgetService.createBudget(this.nextBudgetYear).subscribe();
-    this.router.navigate(['/home'])
+  async createBudget() {
+    await this.budgetService.createBudget(this.nextBudgetYear).toPromise();
+    this.router.navigate(['/home']);
+    Notify.success("Budget created");
   }
 }

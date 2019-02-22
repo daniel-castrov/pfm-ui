@@ -61,7 +61,7 @@ import { ManageUsersComponent } from './components/user-management/manage-users/
 import { MyCommunitiesComponent } from './components/user-management/my-communities/my-communities.component';
 import { MyRolesComponent } from './components/user-management/my-roles/my-roles.component';
 import { NoAccessComponent } from './components/error/no-access/no-access.component';
-import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
+import { ErrorHandlingInterceptor } from './components/interceptors/errror-handling-interceptor.component';
 import { NotFoundComponent } from './components/error/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
@@ -225,6 +225,7 @@ import { TitleTabComponent } from './components/budget/edit-budget-scenario/titl
 import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
 import { R1TabComponent } from './components/budget/edit-budget-scenario/r1-tab/r1-tab.component';
 import { ScenarioSelectorComponent } from './components/budget/edit-budget-scenario/scenario-selector/scenario-selector.component';
+import {ServerErrorComponent} from "./components/error/server-error/server-error.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -254,6 +255,7 @@ const appRoutes: Routes = [
   {path:'my-roles', component:MyRolesComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
+  {path:'server-error', component:ServerErrorComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'oe-update', component:OeUpdateComponent},
   {path:'open-execution', component: OpenExecutionComponent},
@@ -358,6 +360,7 @@ const appRoutes: Routes = [
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
+    ServerErrorComponent,
     NotImplementedComponent,
     OeUpdateComponent,
     OnlyDigitsDirective,
@@ -559,7 +562,7 @@ const appRoutes: Routes = [
     CanActivateAuth,
     Authorization,
     { provide: BASE_PATH, useValue: environment.apiUrl },
-    { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
