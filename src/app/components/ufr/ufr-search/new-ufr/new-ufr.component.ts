@@ -1,11 +1,14 @@
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import { UFRsService, ShortyType, ProgramsService, PRService, Program, ProgramStatus, User, Organization, OrganizationService } from '../../../../generated';
+import {
+  UFRsService, ShortyType, ProgramsService, PRService, Program, User, Organization, OrganizationService
+} from '../../../../generated';
 import { UFR } from '../../../../generated/model/uFR';
 import { FundingLine } from '../../../../generated/model/fundingLine';
 import { UserUtils } from '../../../../services/user.utils';
 import {CurrentPhase} from "../../../../services/current-phase.service";
+import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
 
 
 enum CreateNewUfrMode {
@@ -23,8 +26,9 @@ enum CreateNewUfrMode {
 })
 export class NewUfrComponent implements OnInit {
 
+  @Input() phaseType: PhaseType;
+  @Input() containerId: string;
   createNewUfrMode: CreateNewUfrMode;
-  pomId: string;
   allPrograms: Program[];
   selectableProgramsOrPrs: Program[];
   selectedProgramOrPr: Program = null;
@@ -41,28 +45,33 @@ export class NewUfrComponent implements OnInit {
 
   async ngOnInit() {
     this.allPrograms = await this.programAndPrService.programs();
-    this.pomId = (await this.currentPhase.pom().toPromise()).id;
   }
 
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {
     this.createNewUfrMode = createNewUfrMode;
-    switch (this.createNewUfrMode) {
-      case 'Previously Funded Program':
-        this.selectableProgramsOrPrs = await this.programAndPrService.programsMunisPrs(this.allPrograms, this.pomId);
-        this.initialSelectOption = 'Program';
-        break;
-      case 'Program Request':
-        const prs = await this.programAndPrService.prsMinusGenericSubprograms(this.pomId);
-        this.selectableProgramsOrPrs = this.removePrsInOutstandingState(prs);
-        this.initialSelectOption = 'Program Request';
-        break;
-      case 'New FoS':
-      case 'New Increment':
-        const programs = await this.programAndPrService.programsPlusPrsMinusSubprograms(this.pomId);
-        this.selectableProgramsOrPrs = this.removePrsInOutstandingState(programs);
-        this.initialSelectOption = 'Program';
-        break;
+    if (this.phaseType === PhaseType.POM) {
+      switch (this.createNewUfrMode) {
+        case 'Previously Funded Program':
+          this.selectableProgramsOrPrs = await this.programAndPrService.programsMunisPrs(this.allPrograms, this.containerId);
+          this.initialSelectOption = 'Program';
+          break;
+        case 'Program Request':
+          const prs = await this.programAndPrService.prsMinusGenericSubprograms(this.containerId);
+          this.selectableProgramsOrPrs = this.removePrsInOutstandingState(prs);
+          this.initialSelectOption = 'Program Request';
+          break;
+        case 'New FoS':
+        case 'New Increment':
+          const programs = await this.programAndPrService.programsPlusPrsMinusSubprograms(this.containerId);
+          this.selectableProgramsOrPrs = this.removePrsInOutstandingState(programs);
+          this.initialSelectOption = 'Program';
+          break;
+      }
+    } else {
+      this.selectableProgramsOrPrs = this.allPrograms;
+      this.initialSelectOption = 'Program';
     }
+
   }
 
   removePrsInOutstandingState(programs?: any[]) {
@@ -94,7 +103,7 @@ export class NewUfrComponent implements OnInit {
   }
 
   async next() {
-    let ufr: UFR = { containerId: this.pomId };
+    let ufr: UFR = { containerId: this.containerId };
     switch (this.createNewUfrMode) {
       case 'Previously Funded Program':
         ufr.shortyType = ShortyType.MRDB_PROGRAM;
@@ -148,7 +157,7 @@ export class NewUfrComponent implements OnInit {
     }
 
     sessionStorage.setItem('ufr', JSON.stringify(ufr));
-    this.router.navigate(['/ufr-view/create/']);
+    this.router.navigate(['/ufr-view/' + this.phaseType.toLowerCase()]);
   }
 
   private async initFromShortyProgram(ufr: UFR, includeNames: boolean) {

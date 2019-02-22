@@ -14,7 +14,7 @@
                     <i class="fa fa-angle-double-left" aria-hidden="true"></i>
                   </span>
                   <span>
-                    <a href="#" routerLink="/ufr-search">back to UFR Requests</a>
+                    <a href="#" [routerLink]="phaseType === 'EXE'? '/ufr-yoe-summary' : '/ufr-search'" routerLink="/ufr-search">back to UFR Requests</a>
                   </span>
                 </li>
               </ol>
@@ -40,10 +40,10 @@
             <ufr-program-tab [readonly]="readonly()" [ufr]="ufr" [shorty]="shorty" [editable]="canedit" role="tabpanel"></ufr-program-tab>
           </tab>
           <tab (select)="fundsTabSelected()" heading="Funds" active="true" id="tab3">
-            <ufr-funds-tab [readonly]="readonly()" [ufr]="ufr" [fy]="pomFy" [editable]="canedit" role="tabpanel"></ufr-funds-tab>
+            <ufr-funds-tab [readonly]="readonly()" [ufr]="ufr" [fy]="fy" [editable]="canedit" role="tabpanel"></ufr-funds-tab>
           </tab>
           <tab heading="Variants" id="tab4">
-             <ufr-variants-tab [readonly]="readonly()" [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-variants-tab>
+            <ufr-variants-tab [readonly]="readonly()" [ufr]="ufr" [fy]="fy" [editable]="canedit" role="tabpanel"></ufr-variants-tab>
           </tab>
           <tab heading="Justification" id="tab5">
             <ufr-justification-tab [readonly]="readonly()" [ufr]="ufr" [editable]="canedit" role="tabpanel"></ufr-justification-tab>

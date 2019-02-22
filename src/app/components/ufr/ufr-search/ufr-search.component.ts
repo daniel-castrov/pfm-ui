@@ -3,9 +3,12 @@ import {UserUtils} from '../../../services/user.utils';
 import {ChangeDetectorRef, Component, DoCheck, OnInit, ViewChild} from '@angular/core';
 import {forkJoin} from "rxjs/observable/forkJoin";
 import {HeaderComponent} from '../../header/header.component';
-import {Budget, BudgetService, PB, Pom, POMService, RestResult, UFRFilter, UfrStatus, User} from '../../../generated';
+import {
+  Budget, BudgetService, ExecutionService, Pom, POMService, RestResult, UFRFilter, UfrStatus, User
+} from '../../../generated';
 import {Cycle} from '../cycle';
 import {CurrentPhase} from "../../../services/current-phase.service";
+import {PhaseType} from "../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'app-ufr-search',
@@ -13,18 +16,20 @@ import {CurrentPhase} from "../../../services/current-phase.service";
   styleUrls: ['./ufr-search.component.scss']
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
-  
+
   @ViewChild(HeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   private user: User;
   private cycles: string[] = [];
   private mapCycleIdToFy = new Map<string, string>();
-  private pom: Pom;
+  pom: Pom;
   ufrFilter: UFRFilter;
+  PhaseType = PhaseType;
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
               private budgetService: BudgetService,
+              private executionService: ExecutionService,
               private changeDetectorRef : ChangeDetectorRef,
               private currentPhase: CurrentPhase) {}
 
@@ -37,9 +42,10 @@ export class UfrSearchComponent implements OnInit, DoCheck {
       status: [UfrStatus.SAVED, UfrStatus.SUBMITTED]
     };
 
-    const [poms, budgets] = (await forkJoin([ this.pomService.getAll(),
-                                                     this.budgetService.getAll() ]).toPromise())
-                    .map( (restResult: RestResult) => restResult.result) as [Pom[], Budget[]];
+    const [poms, budgets] = (await forkJoin([
+      this.pomService.getAll(),
+      this.budgetService.getAll()])
+      .toPromise()).map( (restResult: RestResult) => restResult.result) as [Pom[], Budget[]];
 
     this.initCyclesAndEditable(poms, budgets);
   }
@@ -52,12 +58,12 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     const phases: Cycle[] = [];
 
     poms.forEach((pom: Pom) => {
-      phases.push({ fy: pom.fy, phase: 'POM' });
-      this.mapCycleIdToFy.set(pom.id, 'POM ' + pom.fy);
+      phases.push({ fy: pom.fy, phase: PhaseType.POM });
+      this.mapCycleIdToFy.set(pom.id, PhaseType.POM + ' ' + pom.fy);
     });
 
     budgets.forEach(budget => {
-      phases.push({ fy: budget.fy, phase: 'PB' });
+      phases.push({ fy: budget.fy, phase: PhaseType.PB });
     });
 
     phases.sort((cycle1: Cycle, cycle2: Cycle) => {
