@@ -34,7 +34,7 @@ export class SelectProgramRequestComponent implements OnInit {
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {this.initChart()}
+              private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -45,7 +45,9 @@ export class SelectProgramRequestComponent implements OnInit {
   async reloadPrs() {
     await this.initPomPrs();
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
-    this.loadChart();
+    const by: number = this.pom.fy;
+    await this.initChart();
+    await this.loadChart(by);
   }
 
   initPomPrs(): Promise<void> {
@@ -76,16 +78,24 @@ export class SelectProgramRequestComponent implements OnInit {
     } 
   }
 
-  async loadChart() {
-    this.populateRowData(this.pom.fy);
+  async loadChart(by:number) {
+    this.populateRowData(by);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
-      bar.push(0)
+      let total = 0
       for(let j = 0; j < this.rowsData.length; j++) {
-        bar.push(this.rowsData[j][prop])
+        if(this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA') {
+          total = this.rowsData[j][prop]
+        }
+        if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
+          bar.push(this.rowsData[j][prop])
+          //bar.push('PB '+(by-2000-1)+' + '+'POM '+(by-2000)+' TOA')
+          //bar.push('PB '+(communityToas[i].year-2000-1)+' + '+'POM '+(communityToas[i].year-2000)+' TOA'+' = '+total)
+          bar.push(total)
+        }
       }
       this.charty.push(bar)
     }
@@ -93,7 +103,12 @@ export class SelectProgramRequestComponent implements OnInit {
       chartType: 'ColumnChart',
       dataTable: this.charty,
       options: {
-        title: 'Community TOA'
+        title: 'Community TOA',
+        width: 600,
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
+        bar: { groupWidth: '75%' },
+        isStacked: true,
       }
     };
   }
@@ -102,16 +117,23 @@ export class SelectProgramRequestComponent implements OnInit {
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
-      options: { 'title': 'Community TOA' },
+      options: {
+        title: 'Community TOA',
+        width: 600,
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
+        bar: { groupWidth: '75%' },
+        isStacked: true,
+      }
     };
     this.charty = [[
       'Year',
-      'PB 18',
-      'POM 19 TOA',
       'PRs Submitted',
+      { type: 'string', role: 'tooltip'},
       'PRs Planned',
+      { type: 'string', role: 'tooltip'},
       'TOA Difference',
-      { role: 'annotation' },
+      { type: 'string', role: 'tooltip'},
     ]];
   }
   private populateRowData(by: number) {
