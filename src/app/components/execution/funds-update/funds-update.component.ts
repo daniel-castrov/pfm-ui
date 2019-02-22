@@ -41,7 +41,7 @@ export class FundsUpdateComponent implements OnInit {
   private menuTabs = ['filterMenuTab'];
   private hasAppropriation: boolean = false;
   private agOptions: GridOptions;
-
+  containerStyle = {width: '100%',margin: 'auto'};
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private autovalues: AutoValuesService,
     private router: Router) {
@@ -86,9 +86,12 @@ export class FundsUpdateComponent implements OnInit {
         route: '/update-program-execution',
         enabled: programLinkEnabled
       },
+      defaultColDef: {
+        resizable: false
+      },
       columnDefs: [
         {
-          width: 40,
+          width: 50,
           headerName: "View",
           headerTooltip: 'View',
           filter: 'agTextColumnFilter',
@@ -96,6 +99,7 @@ export class FundsUpdateComponent implements OnInit {
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'programName',
+          suppressSizeToFit:true
         },
         {
           headerName: "Program",
@@ -120,7 +124,8 @@ export class FundsUpdateComponent implements OnInit {
             p.data.programName = p.newValue;
             saveIfPossible(p);
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'Appn.',
@@ -138,7 +143,8 @@ export class FundsUpdateComponent implements OnInit {
             delete p.data.blin;
             delete p.data.programElement;
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'BA/BLIN',
@@ -167,7 +173,8 @@ export class FundsUpdateComponent implements OnInit {
               saveIfPossible(p);
             });
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'Item',
@@ -190,14 +197,15 @@ export class FundsUpdateComponent implements OnInit {
               });
             }
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'opAgency',
           headerTooltip: 'opAgency',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
-          width: 60,
+          width: 80,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center'],
           editable: p => (!p.data.id),
@@ -207,16 +215,18 @@ export class FundsUpdateComponent implements OnInit {
             p.data.opAgency = p.newValue;
             saveIfPossible(p);
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'PE',
           headerTooltip: 'PE',
           filter: 'agTextColumnFilter',
           field: 'programElement',
-          width: 120,
+          width: 100,
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey', 'text-center']
+          cellClass: ['ag-cell-light-grey', 'text-center'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Initial Funds',
@@ -227,7 +237,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-light-green', 'text-right']
+          cellClass: ['ag-cell-light-green', 'text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'CRA',
@@ -237,7 +248,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Realigned',
@@ -247,7 +259,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Appr. Actions',
@@ -257,17 +270,19 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'OUSD(C) Actions',
           headerTooltip: 'OUSD(C) Actions',
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 104,
+          width: 115,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'BTR',
@@ -277,7 +292,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'TOA',
@@ -287,7 +303,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-dark-green','text-right']
+          cellClass: ['ag-cell-dark-green','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Released',
@@ -297,7 +314,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-dark-green','text-right']
+          cellClass: ['ag-cell-dark-green','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Withheld',
@@ -307,7 +325,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-dark-green', 'text-right']
+          cellClass: ['ag-cell-dark-green', 'text-right'],
+          suppressSizeToFit:true
         }
       ]
     };
@@ -355,6 +374,20 @@ export class FundsUpdateComponent implements OnInit {
       this.agGrid.api.sizeColumnsToFit();
       this.agGrid.api.refreshHeader();
     });
+  }
+
+  sizeColumnsToFit(params) {
+    let totalColsWidth = 0;
+    let allColumns = params.columnApi.getAllDisplayedColumns();
+    for (var i = 0; i < allColumns.length; i++) {
+      let column = allColumns[i];
+      totalColsWidth += column.actualWidth;
+    }
+    if (totalColsWidth > 1366) {
+      totalColsWidth = 1300;
+    }
+    totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
+    this.containerStyle = {width: totalColsWidth + 'px', margin: 'auto'}
   }
 
   currencyFormatter(value) {

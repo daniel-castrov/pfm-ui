@@ -8,7 +8,8 @@ import { GridOptions } from 'ag-grid';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { SpendPlanService } from '../../../generated';
 import { SpendPlan } from '../../../generated';
-import { Observable } from 'rxjs';
+import {HeaderComponent} from "../../header/header.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-open-execution',
@@ -16,6 +17,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./open-execution.component.scss']
 })
 export class OpenExecutionComponent implements OnInit {
+  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private phases: Execution[];
   private phase: Execution;
@@ -23,8 +25,10 @@ export class OpenExecutionComponent implements OnInit {
   private exelines: ExecutionLine[];
   private spendplans: Map<string, SpendPlan> = new Map<string, SpendPlan>();
 
-  constructor(private exesvc: ExecutionService, private spsvc: SpendPlanService,
-    private userutils: UserUtils) {
+  constructor(private exesvc: ExecutionService,
+              private spsvc: SpendPlanService,
+              private userutils: UserUtils,
+              private router:Router) {
 
     var my: OpenExecutionComponent = this;
 
@@ -149,8 +153,11 @@ export class OpenExecutionComponent implements OnInit {
         delete this.phase;
         if (this.phases.length > 0) {
           this.phase = this.phases[0];
+        } else {
+          this.router.navigate(['/home']);
         }
         this.updatetable();
+        this.header.refresh();
         Notify.success('Execution Phase opened');
       }
     });

@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
+import {Notify} from "../../utils/Notify";
 
 
 @Injectable()
-export class NoAccessInterceptor implements HttpInterceptor {
-
+export class ErrorHandlingInterceptor implements HttpInterceptor {
 
   constructor(private router: Router){};
 
@@ -15,19 +15,18 @@ export class NoAccessInterceptor implements HttpInterceptor {
     return next.handle(req).do(event => {}, err => {
       
       if (err instanceof HttpErrorResponse ) {
-        // handle 403 errors      
         if ( err.status == 403) {
           this.router.navigate(['/no-access']);
         }
-        // handle 404 errors      
         if ( err.status == 404) {
           this.router.navigate(['/not-found']);
         }
-        // handle 500 errors      
         if ( err.status == 500) {
-          this.router.navigate(['/no-access']);
+          this.router.navigate(['/server-error']);
         }
-        // Handle more errors
+        if ( err.status == 409) {
+          Notify.error(err.error.error);
+        }
       }
       // If you do nothing then this interceptor just passes the requests and reponses through
   });
