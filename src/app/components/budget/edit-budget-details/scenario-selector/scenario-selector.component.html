@@ -6,12 +6,12 @@
         <span>
           <select [(ngModel)]="parent.selectedScenario" class="form-control-sm mb-2" (change)="onScenarioSelected()">
             <option value="undefined" disabled selected>Select Scenario</option>
-            <option *ngFor="let pb of parent.pbs" [ngValue]="pb">{{pb.name}}</option>
+            <option *ngFor="let bes of parent.bess" [ngValue]="bes">{{bes.name}}</option>
           </select>
         </span>
       </div>
       <div class="col-2 mb-4">
-          <button class="btn btn-primary" (click)="void()">Save</button>
+          <button class="btn btn-primary" (click)="save()">Save</button>
       </div>
     </div>
   </div>

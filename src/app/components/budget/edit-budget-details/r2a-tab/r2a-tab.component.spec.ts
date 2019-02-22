@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditBudgetScenarioComponent } from './edit-budget-scenario.component';
+import { R2aTabComponent } from './r2a-tab.component';
 
-describe('EditBudgetScenarioComponent', () => {
-  let component: EditBudgetScenarioComponent;
-  let fixture: ComponentFixture<EditBudgetScenarioComponent>;
+describe('R2aTabComponent', () => {
+  let component: R2aTabComponent;
+  let fixture: ComponentFixture<R2aTabComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditBudgetScenarioComponent ]
+      declarations: [ R2aTabComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditBudgetScenarioComponent);
+    fixture = TestBed.createComponent(R2aTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

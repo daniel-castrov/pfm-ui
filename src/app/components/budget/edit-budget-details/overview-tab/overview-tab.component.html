@@ -1,10 +1,8 @@
-<!-- <p>TOC/Overview Tab | Budget FY{{ budget.fy }} | Scenario {{ scenario.name }} {{ scenario.type }}</p> -->
-
 <div class="row mb-3">
   <div class="col-4">
     <div class="h6">Upload Overview file:</div>
     <div class="input-group">
-      <input type="text" class="form-control form-input mr-1" placeholder="Choose file" value="{{ ovFileName }}" name="uploadname" [ngModel]="ovFileToUpload?.name" readonly>
+      <input type="text" class="form-control form-input mr-1" placeholder="Choose file" value="{{ ovFileName }}" name="ovupload" [ngModel]="ovFileToUpload?.name" readonly>
       <span class="input-group-btn">
         <span class="btn btn-secondary btn-file">
         Browse… <input type="file" name="file" accept="*.pdf" (change)="ovHandleFileInput($event.target.files)">
@@ -13,7 +11,6 @@
     </div>
   </div>
 </div>
-
 
 <div class="row mb-3">
   <div class="col-4">

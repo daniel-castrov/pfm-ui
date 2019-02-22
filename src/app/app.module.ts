@@ -120,6 +120,7 @@ import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
 import { BudgetService } from './generated/api/budget.service';
+import { RdteDataService } from './generated/api/rdteData.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
@@ -220,12 +221,14 @@ import {Authorization} from "./services/authorization";
 import {CreateBudgetComponent} from "./components/budget/create-budget/create-budget.component";
 import {UfrYoeSummaryComponent} from "./components/ufr/ufr-yoe/ufr-yoe-summary.component";
 import {CopyBudgetComponent} from "./components/budget/copy-budget/copy-budget.component";
-import { EditBudgetScenarioComponent } from './components/budget/edit-budget-scenario/edit-budget-scenario.component';
-import { TitleTabComponent } from './components/budget/edit-budget-scenario/title-tab/title-tab.component';
-import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
-import { R1TabComponent } from './components/budget/edit-budget-scenario/r1-tab/r1-tab.component';
-import { ScenarioSelectorComponent } from './components/budget/edit-budget-scenario/scenario-selector/scenario-selector.component';
+import { EditBudgetDetailsComponent } from './components/budget/edit-budget-details/edit-budget-details.component';
+import { TitleTabComponent } from './components/budget/edit-budget-details/title-tab/title-tab.component';
+import { OverviewTabComponent } from './components/budget/edit-budget-details/overview-tab/overview-tab.component';
+import { R1TabComponent } from './components/budget/edit-budget-details/r1-tab/r1-tab.component';
+import { ScenarioSelectorComponent } from './components/budget/edit-budget-details/scenario-selector/scenario-selector.component';
 import {ServerErrorComponent} from "./components/error/server-error/server-error.component";
+import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
+import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -305,7 +308,7 @@ const appRoutes: Routes = [
   {path:'library', component: LibraryComponent},
   {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
   {path:'copy-budget', component: CopyBudgetComponent, canActivate:[CanActivateAuth]},
-  {path:'edit-budget-scenario', component: EditBudgetScenarioComponent, canActivate:[CanActivateAuth]}
+  {path:'edit-budget-details', component: EditBudgetDetailsComponent, canActivate:[CanActivateAuth]}
   
 
 ];
@@ -475,11 +478,13 @@ const appRoutes: Routes = [
     PrChangeNotificationsComponent,
     CreateBudgetComponent,
     CopyBudgetComponent,
-    EditBudgetScenarioComponent,
+    EditBudgetDetailsComponent,
     TitleTabComponent,
     OverviewTabComponent,
     R1TabComponent,
-    ScenarioSelectorComponent
+    ScenarioSelectorComponent,
+    R2TabComponent,
+    R2aTabComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -547,6 +552,7 @@ const appRoutes: Routes = [
     RequestsService,
     POMService,
     BudgetService,
+    RdteDataService,
     WorksheetService,
     PRService,
     PBService,
