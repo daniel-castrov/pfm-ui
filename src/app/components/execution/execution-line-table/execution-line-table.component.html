@@ -9,12 +9,16 @@
 </ng-template>
 
 <ng-container *ngIf="showAddProgramButton">
-  <span *ngIf="availablePrograms.length>0; else notable">
-    <button class="btn btn-light mb-2" (click)="addrow()">
-      <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i>
-      {{sourceOrTarget}}
-    </button>
-  </span>
+  <div class="row">
+    <div class="col-auto">
+      <span *ngIf="availablePrograms.length>0; else notable">
+        <select class="form-control-sm dropdown-width mb-2" [(ngModel)]="lineSelected" (change)="addrow()">
+          <option value="null" selected [label]="fromIsSource? 'to select target execution line' : 'from select source execution line'"></option>
+          <option *ngFor="let ap of availablePrograms" [ngValue]="ap">{{ap.display}}</option>
+        </select>
+      </span>
+    </div>
+  </div>
 </ng-container>
 
 <ag-grid-angular #agGrid class="ag-theme-balham"
