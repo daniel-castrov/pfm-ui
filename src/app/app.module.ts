@@ -228,6 +228,7 @@ import { R1TabComponent } from './components/budget/edit-budget-details/r1-tab/r
 import { ScenarioSelectorComponent } from './components/budget/edit-budget-details/scenario-selector/scenario-selector.component';
 import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
 import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
+import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -246,6 +247,7 @@ const appRoutes: Routes = [
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
+  {path:'import-execution-data', component:ImportActualsComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
@@ -481,7 +483,8 @@ const appRoutes: Routes = [
     R1TabComponent,
     ScenarioSelectorComponent,
     R2TabComponent,
-    R2aTabComponent
+    R2aTabComponent,
+    ImportActualsComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
