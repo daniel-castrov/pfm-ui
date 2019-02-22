@@ -1,0 +1,13 @@
+<ag-grid-angular #agGrid class="ag-theme-balham"
+  [gridOptions]="agOptions"
+  [rowData]="exelines"
+  [rowSelection]="'single'"
+  (selectionChanged)="onSelectionChanged($event)"
+  [enableColResize]="true"
+  [toolPanelSuppressSideButtons]="true"
+  [suppressDragLeaveHidesColumns]="true"
+  [suppressMovableColumns]="true"
+  (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+  (gridReady) = "onGridReady($event)">
+</ag-grid-angular>
+<ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

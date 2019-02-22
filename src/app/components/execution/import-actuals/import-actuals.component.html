@@ -1,19 +1,85 @@
-<div class="input-group">
-  <input type="text" 
-    class="form-control form-input mr-1" 
-    placeholder="Choose file"
-    name="uploadname"
-    [ngModel]="gfebsfile?.name" 
-    readonly>
-  <span class="input-group-btn">
-    <span class="btn btn-secondary btn-file">
-      Browse… <input type="file" name="file" accept="*.xlsx" (change)="handleFileInput($event.target.files, 'GFEBS')">
-    </span>
-  </span>
-</div>
-
-<button (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Upload</button>
-
-<div *ngFor="let file of oldgfebs">{{file|json}}</div>
-<hr>
-<div *ngFor="let file of olddai">{{file|json}}</div>
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-12">
+    <div class="row mb-4">
+      <div class="col-7">
+        <span class="h5">Execution Phase - Import Actuals</span>
+      </div>
+      <div class="col-5">
+        <span class="pull-right">
+          <button class="btn btn-primary" (click)=submit()>Import</button>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <fieldset>
+          <legend>GFEBS</legend>            
+          <div class="row">
+            <div class="col-4">
+              <label>Select location of the GFEBS to be uploaded:</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="input-group">
+                <input type="text" 
+                  class="form-control form-input mr-1" 
+                  placeholder="Choose file"
+                  name="uploadname"
+                  [ngModel]="gfebsfile?.name" 
+                  readonly>
+                  <span class="input-group-btn">
+                    <span class="btn btn-secondary btn-file">
+                      Browse… 
+                      <input type="file" 
+                      name="file" accept="*.xlsx" 
+                      (change)="handleFileInput($event.target.files, 'GFEBS')">
+                  </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-1">
+                <button class="btn btn-primary" (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Upload</button>
+              </div>
+            </div>
+          </fieldset>
+    
+          <fieldset>
+            <legend>DAI</legend>            
+            <div class="row">
+              <div class="col-4">
+                <label>Select location of the GFEBS to be uploaded:</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <div class="input-group">
+                  <input type="text" 
+                    class="form-control form-input mr-1" 
+                    placeholder="Choose file"
+                    name="uploadname"
+                    [ngModel]="gfebsfile?.name" 
+                    readonly>
+                    <span class="input-group-btn">
+                      <span class="btn btn-secondary btn-file">
+                        Browse… 
+                        <input type="file" 
+                        name="file" accept="*.xlsx" 
+                        (change)="handleFileInput($event.target.files, 'GFEBS')">
+                    </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <button class="btn btn-primary" (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Upload</button>
+                </div>
+              </div>
+            </fieldset>
+          <div *ngFor="let file of oldgfebs">{{file|json}}</div>
+          <hr>
+          <div *ngFor="let file of olddai">{{file|json}}</div>
+        </div>
+      </div>
+    </div>
+  </div>

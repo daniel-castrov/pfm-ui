@@ -229,6 +229,7 @@ import { ScenarioSelectorComponent } from './components/budget/edit-budget-detai
 import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
 import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
 import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
+import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -347,6 +348,8 @@ const appRoutes: Routes = [
     HeaderUserComponent,
     HomeComponent,
     IdAndNameComponent,
+    ImportActualsComponent,
+    ImportAcutalsTableComponent,
     JustificationTabComponent,
     LoginComponent,
     MamageCommunityDetailsComponent,
@@ -483,8 +486,7 @@ const appRoutes: Routes = [
     R1TabComponent,
     ScenarioSelectorComponent,
     R2TabComponent,
-    R2aTabComponent,
-    ImportActualsComponent
+    R2aTabComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
