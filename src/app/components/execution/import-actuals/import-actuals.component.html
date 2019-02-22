@@ -20,7 +20,7 @@
               <label>Select location of the GFEBS to be uploaded:</label>
             </div>
           </div>
-          <div class="row">
+          <div class="row mb-4">
             <div class="col-4">
               <div class="input-group">
                 <input type="text" 
@@ -43,6 +43,11 @@
                 <button class="btn btn-primary" (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Upload</button>
               </div>
             </div>
+            <div class="row">
+              <div class="col-12">
+              <import-acutals-table></import-acutals-table>
+              </div>
+            </div>
           </fieldset>
     
           <fieldset>
@@ -52,7 +57,7 @@
                 <label>Select location of the GFEBS to be uploaded:</label>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-4">
               <div class="col-4">
                 <div class="input-group">
                   <input type="text" 
@@ -75,6 +80,11 @@
                   <button class="btn btn-primary" (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Upload</button>
                 </div>
               </div>
+             <div class="row">
+               <div class="col-12">
+                <import-acutals-table></import-acutals-table>
+               </div>
+             </div>
             </fieldset>
           <div *ngFor="let file of oldgfebs">{{file|json}}</div>
           <hr>

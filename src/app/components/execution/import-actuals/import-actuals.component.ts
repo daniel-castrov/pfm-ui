@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-
+// Other Components
 import { ExecutionService, LibraryService, FileMetadata } from '../../../generated';
 
 @Component({
-  selector: 'app-import-actuals',
+  selector: 'import-actuals',
   templateUrl: './import-actuals.component.html',
   styleUrls: ['./import-actuals.component.scss']
 })
 export class ImportActualsComponent implements OnInit {
+
   private gfebsfile: File;
   private daifile: File;
   private oldgfebs: FileMetadata[] = [];
   private olddai: FileMetadata[] = [];
-
 
   constructor( private exesvc:ExecutionService, private library:LibraryService ) { }
 
