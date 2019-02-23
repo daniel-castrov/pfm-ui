@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetDetailsComponent } from '../edit-budget-details.component';
-import { Appropriation, StringMap, RdteDataService , RdteData } from '../../../../generated';
+import { Appropriation, RdteDataService , RdteData, Budget, BES } from '../../../../generated';
 import { CurrentPhase } from "../../../../services/current-phase.service";
 import { Notify } from '../../../../utils/Notify';
 
@@ -13,6 +13,9 @@ export class ScenarioSelectorComponent implements OnInit {
 
   @Input() parent: EditBudgetDetailsComponent;
 
+  budget:Budget={};
+  bess:BES[] = [];
+
   constructor(
     private currentPhase : CurrentPhase,
     private rdteDataService: RdteDataService) { }
@@ -23,29 +26,30 @@ export class ScenarioSelectorComponent implements OnInit {
 
   async init() {
 
-    this.parent.budget= (await this.currentPhase.budget().toPromise());
-    if ( this.parent.budget.status != "OPEN" ){
+    this.budget= (await this.currentPhase.budget().toPromise());
+    if ( this.budget.status != "OPEN" ){
       Notify.error("There is no OPEN budget phase");
     }
 
-    this.parent.bess.push ({
+    this.bess.push ({
         id: "1",
-        budgetId: this.parent.budget.id,
+        budgetId: this.budget.id,
         name: "BES Default",
         appropriation: Appropriation.RDTE
       });
-      this.parent.bess.push ({
+      this.bess.push ({
         id: "2",
-        budgetId: this.parent.budget.id,
+        budgetId: this.budget.id,
         name: "BES 2",
         appropriation: Appropriation.RDTE
       });
-      this.parent.bess.push ({
+      this.bess.push ({
         id: "3",
-        budgetId: this.parent.budget.id,
+        budgetId: this.budget.id,
         name: "BES 3",
         appropriation: Appropriation.RDTE
-      });     
+      }); 
+      this.parent.rdteData = {}
   }
 
   async onScenarioSelected(){
@@ -55,14 +59,11 @@ export class ScenarioSelectorComponent implements OnInit {
     let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
 
     if ( rdteData && rdteData.id ){
-      this.parent.isRdteDataNew=false;
       this.parent.rdteData = rdteData;
     } else {
-      this.parent.isRdteDataNew=true;
       this.parent.rdteData = rdteData;
       this.parent.rdteData.containerId = this.parent.selectedScenario.id;
     }
-    console.log(this.parent.rdteData );
   }
 
   clearTabData(){
@@ -75,14 +76,11 @@ export class ScenarioSelectorComponent implements OnInit {
   }
 
   async save(){
-    console.log(this.parent.rdteData );
-    if ( this.parent.isRdteDataNew){
-      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
-      this.parent.isRdteDataNew = false;
-    } else {
+    if ( this.parent.rdteData.id ){
       (await this.rdteDataService.update( this.parent.rdteData ).toPromise()).result;
+    } else {
+      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
     }
-    console.log(this.parent.rdteData );
   }
 
 }

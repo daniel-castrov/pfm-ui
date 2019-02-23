@@ -19,34 +19,29 @@
     </span>
   </div>
 </div>
-<ng-container *ngIf="selectedPE && selectedItem">  
-<div class="row">
-  <div class="col-12">
-    <div class="title badge-light mb-1">R2A Section A: Mission Description and Budget Item Justification</div>
-    <label class="mb-2">Mission Description and Budget Item Justification:</label>
-    <div class="form-group">
-      <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="missionDescription" [(ngModel)]="r2adata.missionDescription"></textarea>
+<ng-container *ngIf="selectedPE && selectedItem">
+  <div class="row">
+    <div class="col-12">
+      <div class="title badge-light mb-1">R2A Section A: Mission Description and Budget Item Justification</div>
+      <label class="mb-2">Mission Description and Budget Item Justification:</label>
+      <div class="form-group">
+        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="missionDescription" [(ngModel)]="r2adata.missionDescription"></textarea>
+      </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="title badge-light mb-1">R2A Section C:Other Program Funding Summary</div>
-
-    <select [(ngModel)]="relatedItems" class="form-control-sm mb-2 mt-2" (change)="onRelatedItemSelected()">
-      <option value="undefined" disabled selected>Select Related Item</option>
-      <option *ngFor="let item2 of allItems" [ngValue]="item2">{{item2}}</option>
-    </select>
-
-    <ol>
-      <li *ngFor="let iiii of relatedItems">{{iiii}}</li>
-    </ol>
-
-
-    <!-- <label class="mb-2">Line Items:</label>
-    <div class="form-group">
-      <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="relatedItems" [(ngModel)]="r2adata.relatedItems"></textarea>
-    </div> -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="title badge-light mb-1">R2A Section C:Other Program Funding Summary</div>
+      <span class="mr-2">
+        <label>Select a Related Item:</label>
+      </span>
+      <select [(ngModel)]="relatedItem" class="form-control-sm mb-2 mt-2" (change)="onRelatedItemSelected()">
+        <option value="undefined" disabled selected> </option>
+        <option *ngFor="let item2 of allItems" [ngValue]="item2">{{item2}}</option>
+      </select>
+      <div>
+        <button class="buttonaslist" *ngFor="let iiii of relatedItems" (click)="removeRelated(iiii)" >{{iiii}}</button>
+      </div>
+    </div>
   </div>
-</div>
 </ng-container>

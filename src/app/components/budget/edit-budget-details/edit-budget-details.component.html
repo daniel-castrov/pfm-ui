@@ -9,25 +9,19 @@
       <div class="col-12">
         <tabset class="program-tab-style" role="tablist">
           <tab heading="Title" id="tab1" role="tablist" active="true">
-            <title-tab [scenario]="selectedScenario" [budget]="budget" [rdteData]="rdteData" editable="true"></title-tab>
+            <title-tab [rdteData]="rdteData"></title-tab>
           </tab>
           <tab heading="TOC/Overview" id="tab2" role="tablist">
-            <overview-tab [scenario]="selectedScenario" [budget]="budget" [rdteData]="rdteData" editable="true" ></overview-tab>
+            <overview-tab [rdteData]="rdteData"></overview-tab>
           </tab>
           <tab heading="R-1" id="tab3">
-            <r1-tab [scenario]="selectedScenario" [budget]="budget" [rdteData]="rdteData" editable="true" ></r1-tab>
+            <r1-tab [rdteData]="rdteData"></r1-tab>
           </tab>
           <tab heading="R-2" id="tab3">
-            <r2-tab [scenario]="selectedScenario" [budget]="budget" [rdteData]="rdteData" editable="true" ></r2-tab>
+            <r2-tab [rdteData]="rdteData"></r2-tab>
           </tab>
           <tab heading="R-2A" id="tab3">
-            <r2a-tab [scenario]="selectedScenario" [budget]="budget" [rdteData]="rdteData" editable="true" ></r2a-tab>
-          </tab>
-          <tab heading="R-3" id="tab3">
-            <p>r3-tab</p>
-          </tab>
-          <tab heading="R-4A" id="tab3">
-            <p>r4a-tab</p>
+            <r2a-tab [rdteData]="rdteData"></r2a-tab>
           </tab>
         </tabset>
       </div>

@@ -1,6 +1,7 @@
 import { Component, OnChanges, Input, ViewChild } from '@angular/core';
 import { AgGridNg2 } from "ag-grid-angular"; 
-import { Budget, PB, RdteData, LibraryService } from '../../../../generated';
+import { RdteData, LibraryService } from '../../../../generated';
+import { Notify } from '../../../../utils/Notify';
 
 @Component({
   selector: 'overview-tab',
@@ -9,10 +10,7 @@ import { Budget, PB, RdteData, LibraryService } from '../../../../generated';
 })
 export class OverviewTabComponent implements OnChanges {
 
-  @Input() scenario: PB;
-  @Input() budget: Budget;
   @Input() rdteData: RdteData;
-  @Input() editable: boolean;
 
   ovFileName:string;
 
@@ -23,19 +21,12 @@ export class OverviewTabComponent implements OnChanges {
   constructor( private libraryService:LibraryService ) { }
 
   ngOnChanges() {
-
-    if ( this.rdteData && this.rdteData.overviewName ){
-      this.ovFileName = this.rdteData.overviewName;
+    if ( this.rdteData && this.rdteData.toc){  
       this.initGrid();
-      this.populateRowData();
+      if (this.rdteData.overviewName){
+        this.ovFileName = this.rdteData.overviewName;
+      } 
     }
-    // } else {
-    //   this.ovFileName = "";
-    // }
-
-
-
-    
   }
 
   ovHandleFileInput(files: FileList) {
@@ -46,10 +37,9 @@ export class OverviewTabComponent implements OnChanges {
         this.rdteData.overviewName = ovFileToUpload.name;
         this.ovFileName = ovFileToUpload.name;
       } else if (response.error) {
-        console.log( "Something went wrong with the overview file upload" );
-        console.log( response.error );
+        Notify.error( "Something went wrong with the overview file upload" + response.error );
       } else {
-        console.log( "Something went wrong with the overview file upload" );
+        Notify.error( "Something went wrong with the overview file upload" );
       }
     });
   }
@@ -67,6 +57,7 @@ export class OverviewTabComponent implements OnChanges {
     this.agGrid.gridOptions = {
       columnDefs: this.setAgGridColDefs(),
     }
+    this.populateRowData();
   }
 
   setAgGridColDefs() :any {
@@ -78,6 +69,7 @@ export class OverviewTabComponent implements OnChanges {
         suppressMenu: true,
         field: 'pe',
         maxWidth: 110,
+        sort: "asc",
         editable: false,
         cellClass: "font-weight-bold"
       }];
@@ -89,8 +81,8 @@ export class OverviewTabComponent implements OnChanges {
           field: 'lineItem',
           maxWidth: 110,
           editable: true,
-          cellClass: "ag-cell-edit"
-          onCellValueChanged: params => this.onValueChanged(params),
+          cellClass: "ag-cell-edit",
+          onCellValueChanged: params => this.onValueChanged(params)
         });
     }
 
