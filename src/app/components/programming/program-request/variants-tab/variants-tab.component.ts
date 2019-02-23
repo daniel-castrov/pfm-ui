@@ -152,7 +152,7 @@ export class VariantsTabComponent implements OnInit {
         deltaRow.serviceLine.quantity = this.generateDelta(pomRow.serviceLine.quantity, pbRow.serviceLine.quantity);
         deltaRow.variantName = variant.shortName;
 
-        data.push(pbRow);
+        //data.push(pbRow);
         data.push(pomRow);
         data.push(deltaRow);
       });
@@ -465,8 +465,10 @@ export class VariantsTabComponent implements OnInit {
   }
 
   rowSpanCount(params): number {
-    if (params.data.phaseType === PhaseType.PB) {
-      return 3;
+    /* if (params.data.phaseType === PhaseType.PB) {
+      return 3; */
+    if (params.data.phaseType === PhaseType.POM) {
+      return 2;
     } else {
       return 1;
     }

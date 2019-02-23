@@ -83,14 +83,14 @@ export class ProgramsComponent implements OnChanges, OnInit {
         }
         rowData.push(program);
       });
-      this.pbPrograms.forEach(pr => {
+      /* this.pbPrograms.forEach(pr => {
         let programRequest = new UiProgramRequest(pr);
         programRequest.phaseType = PhaseType.PB;
         programRequest.dataPath = [pr.shortName, ''];
         if (pr.type !== ProgramType.GENERIC) {
           rowData.push(programRequest);
         }
-      });
+      }); */
       this.sortObjects(rowData, ['shortName', 'phaseType']);
       this.rowData = rowData;
       this.defineColumns(this.rowData);
