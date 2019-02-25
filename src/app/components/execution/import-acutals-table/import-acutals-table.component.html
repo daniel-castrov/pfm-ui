@@ -5,11 +5,13 @@
   [pivotMode]="false"
   [enableFilter]="true"
   [gridAutoHeight]="true"
-  [rowData]="rowData" 
+  [rowData]="data" 
   [columnDefs]="columnDefs"
   [enableColResize]="true"
   [toolPanelSuppressSideButtons]="true"
   [suppressDragLeaveHidesColumns]="true"
   [suppressMovableColumns]="true"
+  [frameworkComponents]="frameworkComponents"
+  [context]="context"
   (gridReady) = "onGridReady($event)">
 </ag-grid-angular>

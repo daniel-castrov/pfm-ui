@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 // Other Components
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
+import { FileMetadata, LibraryService, FileResponse } from '../../../generated';
+import { LibraryViewCellRenderer } from '../../renderers/library-view-cell-renderer/library-view-cell-renderer.component';
 
 @Component({
   selector: 'import-acutals-table',
@@ -10,76 +12,44 @@ import { AgGridNg2 } from 'ag-grid-angular';
   styleUrls: ['./import-acutals-table.component.scss']
 })
 export class ImportAcutalsTableComponent implements OnInit {
-
   @ViewChild("agGrid") private agGrid: AgGridNg2;
-
+  @Input() data: FileMetadata[];
   private agOptions: GridOptions;
-  // public rowData: any[];
-  // public columnDefs: any[];
+  private frameworkComponents = { lvcr: LibraryViewCellRenderer };
+  private context = { parentComponent: this };
 
-  columnDefs = [
+  private columnDefs = [
     {
-      headerName: 'Date', 
-      field: 'date'
+      headerName: 'Date',
+      field: 'metadata.IngestDate'
     },
     {
-      headerName: 'Library file link', 
-      field: 'library'
+      headerName: 'File',
+      field: 'metadata.Name'
     },
     {
-      headerName: 'Status', 
-      field: 'status'
+      headerName: 'Status',
+      field: 'metadata.status'
     },
     {
-      headerName: 'Uploaded by', 
-      field: 'uploaded'
+      headerName: 'Uploaded by',
+      field: 'metadata.creator'
     },
+    {
+      headerName: 'Action',
+      width: 30,
+      field: 'metadata.id',
+      autoHeight: true,
+      cellRenderer: 'lvcr',
+      suppressMenu: true,
+      cellStyle: { 'text-align': 'center' }
+    }
   ];
 
-  rowData = [
-      {
-        date: 'Feb 12, 2019', 
-        library: 'link to library', 
-        status: 'success',
-        uploaded: 'Beth Carrie'
-      },
-      {
-        date: 'Feb 15, 2019', 
-        library: 'another bad link to library', 
-        status: 'failed',
-        uploaded: 'Beth Carrie'
-      },
-      {
-        date: 'Feb 20, 2019', 
-        library: 'new link library', 
-        status: 'failed',
-        uploaded: 'Bill Andrew'
-      },
-      {
-        date: 'Feb 22, 2019', 
-        library: 'link to library', 
-        status: 'success',
-        uploaded: 'Bill Andrew'
-      },
-      {
-        date: 'Feb 28, 2019', 
-        library: 'link to library', 
-        status: 'success',
-        uploaded: 'Joseph Peter'
-      },
-  ];
-
-  constructor() { 
-  
-   }
-   
-  ngOnInit() { }
-
-  onSelectionChanged() {
-    this.agOptions.api.getSelectedRows().forEach(row => {
-      this.rowData = row;
-    });
+  constructor( private library: LibraryService ) { 
   }
+
+  ngOnInit() { }
 
   onGridReady(params) {
     setTimeout(() => {
@@ -90,5 +60,27 @@ export class ImportAcutalsTableComponent implements OnInit {
         params.api.sizeColumnsToFit();
       });
     });
+  }
+
+  openFile(fileId, fileArea) {
+    this.library.downloadFile(fileId, fileArea).subscribe(response => {
+      if (response.result) {
+        let fileResponse = response.result as FileResponse;
+        this.convertAndOpen(fileResponse.content, fileResponse.contentType);
+      }
+    });
+  }
+
+  convertAndOpen(content, type) {
+    var byteCharacters = atob(content);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], { type: type });
+
+    var url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 }

@@ -44,7 +44,6 @@ export class ImportActualsComponent implements OnInit {
 
   upload() {
     this.exesvc.upload(this.gfebsfile, "GFEBS").subscribe(d => {
-      console.log(d);
       this.fetchFileRecords();
     });
   }
