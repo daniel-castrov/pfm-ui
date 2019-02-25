@@ -20,6 +20,7 @@ import {
 } from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import {CurrentPhase} from "../../../services/current-phase.service";
+import {PBService} from "../../../generated/api/pB.service";
 
 @Component({
   selector: 'app-create-pom-session',
@@ -61,7 +62,8 @@ export class CreatePomSessionComponent implements OnInit {
                private eppsvc: EppService,
                private router: Router,
                private globalsvc: UserUtils,
-               private programAndPrService: ProgramAndPrService ) {}
+               private programAndPrService: ProgramAndPrService,
+               private pbService: PBService) {}
 
   ngOnInit() {
     this.gridOptionsCommunity = {};
@@ -181,9 +183,9 @@ export class CreatePomSessionComponent implements OnInit {
   // a callback for determining if a ROW is editable
   private shouldEdit ( params ){
     if ( this.pomIsOpen ) {
-      if ( params.data.orgid === this.community.abbreviation+' TOA' )  return true; 
+      if ( params.data.orgid === this.community.abbreviation+' TOA' )  return true;
       else return false;
-    } else return params.node.rowPinned ? false : true;  
+    } else return params.node.rowPinned ? false : true;
   }
 
   // helper for currency formatting
@@ -305,7 +307,7 @@ export class CreatePomSessionComponent implements OnInit {
 
       }
     });
-  
+
 
     this.originalFyplus4[this.community.id]  =   this.rowsCommunity[0][this.fy+4];
     this.rowsOrgs.forEach( rowww => {
@@ -366,18 +368,17 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
-  private getEppData() {
-
+  async getEppData() {
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
       this.programAndPrService.programsByCommunity(this.community.id),
-      this.programAndPrService.programRequests(this.budget.id),
+      this.pbService.getFinalLatest()
     ]).subscribe(data => {
 
       let alleppData:any[] = data[0].result;
       let programs: Program[] = data[1];
-      let prs:Program[] = data[2];
-      
+      let prs:Program[] = data[2].result;
+
       let fls:string[] = [];
       prs.forEach( pr => {
         if ( pr.type != "GENERIC" ){
@@ -387,7 +388,7 @@ export class CreatePomSessionComponent implements OnInit {
           });
         }
       });
-      
+
       let eppData:any[] = [];
       let eppYear:number = this.fy+4;
       alleppData.forEach( epp => {
