@@ -85,16 +85,24 @@ export class SelectProgramRequestComponent implements OnInit {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
-      let total = 0
+      let totalPrevious = ''
+      let totalCurrent = ''
       for(let j = 0; j < this.rowsData.length; j++) {
+        if(this.rowsData[j]['id'] == 'PB '+(by-2000-1)) {
+          totalPrevious = this.rowsData[j]['id'] + ': ' + this.rowsData[j]['total']
+        }
         if(this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA') {
-          total = this.rowsData[j][prop]
+          totalCurrent = this.rowsData[j]['id'] + ': ' + this.rowsData[j]['total']
         }
         if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
           bar.push(this.rowsData[j][prop])
-          //bar.push('PB '+(by-2000-1)+' + '+'POM '+(by-2000)+' TOA')
-          //bar.push('PB '+(communityToas[i].year-2000-1)+' + '+'POM '+(communityToas[i].year-2000)+' TOA'+' = '+total)
-          bar.push(total)
+          bar.push(
+            totalPrevious 
+            +'\n'
+            +totalCurrent
+            +'\n'
+            +this.rowsData[j]['id'] + ': ' + this.rowsData[j]['total']
+          )
         }
       }
       this.charty.push(bar)
