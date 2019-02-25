@@ -4,7 +4,7 @@ import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Pom, RestResult, Program, Budget} from '../../../generated';
+import {Pom, RestResult, Program, Budget, ProgramStatus} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 import { UiProgramRequest } from './UiProgramRequest';
@@ -85,16 +85,24 @@ export class SelectProgramRequestComponent implements OnInit {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
-      let total = 0
+      let totalPrevious = ''
+      let totalCurrent = ''
       for(let j = 0; j < this.rowsData.length; j++) {
-        if(this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA') {
-          total = this.rowsData[j][prop]
+        if(this.rowsData[j]['id'] == 'PB '+(by-2000-1)) {
+          totalPrevious = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
+        }
+        else if(this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA') {
+          totalCurrent = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
         }
         if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
           bar.push(this.rowsData[j][prop])
-          //bar.push('PB '+(by-2000-1)+' + '+'POM '+(by-2000)+' TOA')
-          //bar.push('PB '+(communityToas[i].year-2000-1)+' + '+'POM '+(communityToas[i].year-2000)+' TOA'+' = '+total)
-          bar.push(total)
+          bar.push(
+            totalPrevious
+            + '\n'
+            + totalCurrent
+            + '\n'
+            + this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
+          )
         }
       }
       this.charty.push(bar)
@@ -176,7 +184,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
     row= new Object();
     row["id"] = "PRs Submitted";
-    let submittedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus=="SUBMITTED" );
+    let submittedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus==ProgramStatus.SUBMITTED );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(submittedPRs, year);
@@ -187,7 +195,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
     row= new Object();
     row["id"] = "PRs Planned";
-    let plannedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus!="SUBMITTED" );
+    let plannedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus==ProgramStatus.SAVED );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(plannedPRs, year);
@@ -195,13 +203,13 @@ export class SelectProgramRequestComponent implements OnInit {
     }
     row["total"] = sum;
     rowdata.push( row );
-    row= new Object();
+
+    row = new Object();
     row["id"] = "TOA Difference";
+    let outstandingPrs = this.pomPrograms.filter((pr: Program) => pr.programStatus == ProgramStatus.OUTSTANDING);
     sum = 0;
-    let requests: { [year: number]: number } = {};
     for (let year: number = by; year < by + 5; year++) {
-      requests[year] = this.aggregateToas(this.pomPrograms, year);
-      row[year] = requests[year] - allocatedToas[year];
+      row[year] = this.aggregateToas(outstandingPrs, year);
       sum += row[year];
     }
     row["total"] = sum;
@@ -212,5 +220,15 @@ export class SelectProgramRequestComponent implements OnInit {
 
   private aggregateToas(prs: Program[], year: number): number {
     return prs.map(pr => new UiProgramRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
+  }
+
+  formatCurrency(value) {
+    var usdFormat = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+    return usdFormat.format(value);
   }
 }
