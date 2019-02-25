@@ -983,7 +983,7 @@ export class FundsTabComponent implements OnChanges {
       params.data.fundingLine.item = null;
       params.data.fundingLine.baOrBlin = null;
     }
-    if (params.data.fundingLine.appropriation === 'RDTE' && params.colDef.headerName === 'Item' && params.newValue !== '') {
+    if (params.data.fundingLine.appropriation === 'RDT&E' && params.colDef.headerName === 'Item' && params.newValue !== '') {
       params.data.fundingLine.item = params.newValue + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g, '');
     } else {
       if (params.data.fundingLine.appropriation && params.data.fundingLine.baOrBlin) {
@@ -991,7 +991,7 @@ export class FundsTabComponent implements OnChanges {
         params.data.fundingLine.opAgency = PRUtils.getDefaultOpAgencyForLeadComponent(this.pr.leadComponent);
         this.agGrid.api.refreshCells();
 
-        if (params.data.fundingLine.appropriation === 'RDTE') {
+        if (params.data.fundingLine.appropriation === 'RDT&E') {
           params.data.fundingLine.item = this.pr.functionalArea + params.data.fundingLine.baOrBlin.replace(/[^1-9]/g, '');;
         }
 
@@ -1054,13 +1054,13 @@ export class FundsTabComponent implements OnChanges {
           this.filteredBlins = this.filteredBlins.filter(blin => {
             return blin === 'BA6';
           });
-          this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+          this.appropriations = this.appropriations.filter(a => a === 'RDT&E');
           break;
         case 'JSTO':
           this.filteredBlins = this.filteredBlins.filter(blin => {
             return blin.match(/BA[1-4]/);
           });
-          this.appropriations = this.appropriations.filter(a => a === 'RDTE');
+          this.appropriations = this.appropriations.filter(a => a === 'RDT&E');
           break;
         case 'JPEO':
           this.filteredBlins = this.filteredBlins.filter(blin => {

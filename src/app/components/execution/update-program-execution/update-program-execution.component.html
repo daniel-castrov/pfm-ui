@@ -84,7 +84,7 @@
       <div class="col-12">
         <div id="update-program-execution" class="table-editable">
           <app-execution-line-table
-          [sourceOrTarget]="fromIsSource ? 'to select target programs' : 'from select source programs'"
+          [fromIsSource]="fromIsSource"
           [phase]="phase"
           [exelinefilter]="linefilter"
           [exevalidator]="validator"
