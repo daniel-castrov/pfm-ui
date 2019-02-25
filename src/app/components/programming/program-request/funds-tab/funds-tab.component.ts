@@ -255,7 +255,7 @@ export class FundsTabComponent implements OnChanges {
         let deltaRow: DataRow = new DataRow();
         deltaRow.fundingLine = this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
         deltaRow.phaseType = PhaseType.DELTA;
-        data.push(pbRow);
+        //data.push(pbRow);
         data.push(pomRow);
         data.push(deltaRow);
       });
@@ -302,7 +302,7 @@ export class FundsTabComponent implements OnChanges {
     let deltaRow: DataRow = new DataRow();
     deltaRow.fundingLine = this.generateDelta(pomRow.fundingLine, pbRow.fundingLine);
     deltaRow.phaseType = PhaseType.DELTA;
-    this.data.push(pbRow);
+    //this.data.push(pbRow);
     this.data.push(pomRow);
     this.data.push(deltaRow);
     this.agGrid.columnApi.setColumnVisible('delete', true);
@@ -364,7 +364,7 @@ export class FundsTabComponent implements OnChanges {
     pbRow.programId = 'Total Funds Request';
     pbRow.fundingLine.appropriation = 'Total Funds Request';
     pbRow.phaseType = PhaseType.PB;
-    pinnedData.push(pbRow);
+    //pinnedData.push(pbRow);
 
     let pomRow: DataRow = new DataRow();
     pomRow.fundingLine = { funds: pomTotal };
@@ -725,7 +725,7 @@ export class FundsTabComponent implements OnChanges {
 
 
     this.pr.fundingLines.push(newPomRow.fundingLine);
-    this.data.push(newPbRow);
+    //this.data.push(newPbRow);
     this.data.push(newPomRow);
     this.data.push(newDeltaRow);
     this.agGrid.columnApi.setColumnVisible('delete', true);
@@ -776,8 +776,10 @@ export class FundsTabComponent implements OnChanges {
 
 
   rowSpanCount(params): number {
-    if (params.data.phaseType === PhaseType.PB) {
-      return 3;
+    /* if (params.data.phaseType === PhaseType.PB) {
+      return 3; */
+    if (params.data.phaseType === PhaseType.POM) {
+      return 2;
     } else {
       return 1;
     }
