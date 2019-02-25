@@ -16,8 +16,7 @@
         <div class="col-12">
           <div class="h6">Budget Being Created From:</div>
           <fieldset class="mb-3">
-              <div *ngIf="submitted" class="loader"></div>
-            {{message}}
+            POM FY{{(poms||["dummy"])[0].fy-2000}}
           </fieldset>
         </div>
       </div>

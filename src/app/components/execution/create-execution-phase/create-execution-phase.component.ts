@@ -71,7 +71,9 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
     this.esvc.createExecution(this.budget.communityId, this.budget.fy, this.fileToUpload).subscribe(data => {
       if (data.result) {
+
         this.router.navigate(['/home']);
+        this.header.refresh();
       }
       else {
         this.message = data.error;

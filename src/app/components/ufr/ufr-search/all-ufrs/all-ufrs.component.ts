@@ -22,6 +22,7 @@ import {
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {CurrentPhase} from "../../../../services/current-phase.service";
+import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'all-ufrs',
@@ -38,7 +39,6 @@ export class AllUfrsComponent implements OnInit {
   private user: User;
   private orgMap: any[] = []
   private filtertext;
-  private fy: number;
 
   // agGrid
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -48,6 +48,8 @@ export class AllUfrsComponent implements OnInit {
 
   @Input() urlPath;
   @Input() ufrFilter: UFRFilter;
+  @Input() phaseType: PhaseType;
+  @Input() fy: number;
 
   private frameworkComponents:any = {
     simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
@@ -71,13 +73,6 @@ export class AllUfrsComponent implements OnInit {
     organizations.forEach(org => {
       this.orgMap[org.id] = org.abbreviation;
     });
-    if(!this.urlPath) {
-      let execution = (await this.exeService.getAll(Execution.StatusEnum.CREATED).toPromise()).result;
-      this.fy = execution[0].fy
-    } else {
-      let pom = (await this.currentPhase.pom().toPromise());
-      this.fy = pom.fy
-    }
 
     this.setAgGridColDefs();
     this.populateRowData();
@@ -257,7 +252,7 @@ export class AllUfrsComponent implements OnInit {
       }
 
       let row = {
-        "UFR #": new SimpleLink( this.urlPath, ufr.id, this.ufrNumber(ufr) ),
+        "UFR #": new SimpleLink( this.urlPath + '/' + this.phaseType.toLowerCase(), ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.ufrName,
         "Prog Id": progId,
         "Status": ufr.ufrStatus,

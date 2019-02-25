@@ -1,7 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 
 import {HeaderComponent} from '../../../components/header/header.component';
-import { Budget, BES, RdteData } from '../../../generated';
+import { BES, RdteData } from '../../../generated';
 
 import { TitleTabComponent } from './title-tab/title-tab.component';
 import { OverviewTabComponent } from './overview-tab/overview-tab.component';
@@ -23,11 +23,8 @@ export class EditBudgetDetailsComponent implements AfterContentChecked {
   @ViewChild( R2TabComponent ) r2TabComponent: R2TabComponent;
   @ViewChild( R2aTabComponent ) r2aTabComponent: R2aTabComponent;
 
-  budget:Budget={};
-  bess:BES[] = [];
   selectedScenario:BES;
   rdteData:RdteData;
-  isRdteDataNew:boolean;
 
   constructor(
     private cd: ChangeDetectorRef) {}

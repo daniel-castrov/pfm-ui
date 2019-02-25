@@ -1,17 +1,14 @@
-<div class="col-12">
-    <div class="row">
-      <div class="col-10 mb-4">
-        <span> FY{{parent.budget.fy}} Budget</span>
-        <span>Edit Budget Details for: </span>
-        <span>
-          <select [(ngModel)]="parent.selectedScenario" class="form-control-sm mb-2" (change)="onScenarioSelected()">
-            <option value="undefined" disabled selected>Select Scenario</option>
-            <option *ngFor="let bes of parent.bess" [ngValue]="bes">{{bes.name}}</option>
-          </select>
-        </span>
-      </div>
-      <div class="col-2 mb-4">
-          <button class="btn btn-primary" (click)="save()">Save</button>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-7">
+    <span class="h5 mr-2">FY{{budget.fy}} Budget - Edit Budget Details for: </span>
+    <span><select [(ngModel)]="parent.selectedScenario" class="form-control-sm" (change)="onScenarioSelected()">
+        <option value="undefined" disabled selected>Select Scenario</option>
+        <option *ngFor="let bes of bess" [ngValue]="bes">{{bes.name}}</option>
+      </select>
+    </span>
   </div>
+  <div class="col-5">
+    <button class="btn btn-primary pull-right" (click)="save()">Save</button>
+  </div>
+</div>
+

@@ -1,1 +1,40 @@
-<p>R2 Tab | Budget FY{{ budget.fy }} | Scenario {{ scenario.name }} {{ scenario.type }}</p>
+<div class="row">
+  <div class="col-10 mb-4">
+    <span class="mr-2"><label>Slect a Program Element:</label></span>
+    <span>
+      <select [(ngModel)]="selectedPE" class="form-control-sm mb-2" (change)="onPESelected()">
+        <option value="undefined" disabled selected>Select PE</option>
+        <option *ngFor="let pe of pes" [ngValue]="pe">{{pe}}</option>
+      </select>
+    </span>
+  </div>
+</div>
+<ng-container *ngIf="selectedPE">  
+  <div class="row">
+    <div class="col-12">
+      <div class="title badge-light mb-1">R2 Section A: Mission Description and Budget Item Justification</div>
+      <label class="mb-2">Mission Description and Budget Item Justification:</label>
+      <div class="form-group">
+        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="missionDescription" [(ngModel)]="r2data.missionDescription"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="title badge-light mb-1">R2 Section B: Program Change Summary</div>
+      <div class="title badge-light mb-1">Change Summary Explanation</div>
+      <label class="mb-2">Funding:</label>
+      <div class="form-group">
+        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="fundingChange" [(ngModel)]="r2data.fundingChange"></textarea>
+      </div>
+      <label class="mb-2">Schedule:</label>
+      <div class="form-group">
+        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="scheduleChange" [(ngModel)]="r2data.scheduleChange"></textarea>
+      </div>
+      <label class="mb-2">Technical:</label>
+      <div class="form-group">
+        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="techincalChange" [(ngModel)]="r2data.techincalChange"></textarea>
+      </div>
+    </div>
+  </div>
+</ng-container>

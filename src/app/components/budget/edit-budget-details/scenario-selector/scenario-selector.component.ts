@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetDetailsComponent } from '../edit-budget-details.component';
-import { Appropriation, StringMap, RdteDataService , RdteData } from '../../../../generated';
+import { Appropriation, RdteDataService , RdteData, Budget, BES } from '../../../../generated';
 import { CurrentPhase } from "../../../../services/current-phase.service";
 import { Notify } from '../../../../utils/Notify';
 
@@ -13,6 +13,9 @@ export class ScenarioSelectorComponent implements OnInit {
 
   @Input() parent: EditBudgetDetailsComponent;
 
+  budget:Budget={};
+  bess:BES[] = [];
+
   constructor(
     private currentPhase : CurrentPhase,
     private rdteDataService: RdteDataService) { }
@@ -23,65 +26,60 @@ export class ScenarioSelectorComponent implements OnInit {
 
   async init() {
 
-    this.parent.budget= (await this.currentPhase.budget().toPromise());
-    if ( this.parent.budget.status != "OPEN" ){
+    this.budget= (await this.currentPhase.budget().toPromise());
+    if ( this.budget.status != "OPEN" ){
       Notify.error("There is no OPEN budget phase");
     }
 
-    this.parent.bess.push ({
+    this.bess.push ({
         id: "1",
-        budgetId: this.parent.budget.id,
+        budgetId: this.budget.id,
         name: "BES Default",
         appropriation: Appropriation.RDTE
       });
-      this.parent.bess.push ({
+      this.bess.push ({
         id: "2",
-        budgetId: this.parent.budget.id,
+        budgetId: this.budget.id,
         name: "BES 2",
         appropriation: Appropriation.RDTE
       });
-      this.parent.bess.push ({
+      this.bess.push ({
         id: "3",
-        budgetId: this.parent.budget.id,
+        budgetId: this.budget.id,
         name: "BES 3",
         appropriation: Appropriation.RDTE
-      });
-
-      this.setRdteData();
-
-  }
-
-  setRdteData(){
-    this.parent.rdteData = {}
-    this.parent.rdteData.fileArea="budget";
-
-    let pes:string[] = [ "0601384BP", "0602384BP" , "0603384BP", "0603884BP", "0604384BP", "0605384BP", "0605502BP", "0607384BP"];
-    let toc:StringMap={};
-    pes.forEach( pe => { toc[pe]="" } )
-    this.parent.rdteData.toc=toc;
-    
+      }); 
+      this.parent.rdteData = {}
   }
 
   async onScenarioSelected(){
 
+    this.clearTabData();
+    
     let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
 
-    if ( rdteData ){
-      this.parent.isRdteDataNew=false;
+    if ( rdteData && rdteData.id ){
       this.parent.rdteData = rdteData;
     } else {
-      this.parent.isRdteDataNew=true;
-      this.setRdteData();
+      this.parent.rdteData = rdteData;
       this.parent.rdteData.containerId = this.parent.selectedScenario.id;
     }
   }
 
+  clearTabData(){
+    if ( this.parent.r2TabComponent ){ 
+      this.parent.r2TabComponent.clearData(); 
+    }
+    if ( this.parent.r2aTabComponent ){ 
+      this.parent.r2aTabComponent.cleardata();
+    }
+  }
+
   async save(){
-    if ( this.parent.isRdteDataNew){
-      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
-      this.parent.isRdteDataNew = false;
-    } else {
+    if ( this.parent.rdteData.id ){
       (await this.rdteDataService.update( this.parent.rdteData ).toPromise()).result;
+    } else {
+      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
     }
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import { Budget, PB, FileResponse, RdteData, LibraryService } from '../../../../generated';
+import { FileResponse, RdteData, LibraryService } from '../../../../generated';
 
 @Component({
   selector: 'title-tab',
@@ -9,10 +9,7 @@ import { Budget, PB, FileResponse, RdteData, LibraryService } from '../../../../
 })
 export class TitleTabComponent implements OnChanges {
 
-  @Input() scenario: PB;
-  @Input() budget: Budget;
   @Input() rdteData: RdteData;
-  @Input() editable: boolean;
   
   logoImagePath: string;
   
@@ -23,7 +20,7 @@ export class TitleTabComponent implements OnChanges {
   ngOnChanges() {
 
     // Load the image if it exists
-    if (this.rdteData.logoId) {
+    if (this.rdteData && this.rdteData.logoId && this.rdteData.fileArea) {
       this.libraryService.downloadFile(this.rdteData.logoId, this.rdteData.fileArea).subscribe(response => {
         if (response.result) {
           let fileResponse = response.result as FileResponse;

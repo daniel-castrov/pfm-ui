@@ -1,5 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { Budget, PB, RdteData, LibraryService } from '../../../../generated';
+import { RdteData, LibraryService } from '../../../../generated';
+import { Notify } from '../../../../utils/Notify';
 
 @Component({
   selector: 'r1-tab',
@@ -8,10 +9,7 @@ import { Budget, PB, RdteData, LibraryService } from '../../../../generated';
 })
 export class R1TabComponent implements OnChanges {
 
-  @Input() scenario: PB;
-  @Input() budget: Budget;
   @Input() rdteData: RdteData;
-  @Input() editable: boolean;
 
   r1FileName:string;
 
@@ -35,10 +33,9 @@ export class R1TabComponent implements OnChanges {
         this.r1FileName = this.rdteData.r1Name;
         //console.log(this.rdteData);
       } else if (response.error) {
-        console.log( "Something went wrong with the overview file upload" );
-        console.log( response.error );
+        Notify.error( "Something went wrong with the overview file upload" + response.error );
       } else {
-        console.log( "Something went wrong with the overview file upload" );
+        Notify.error( "Something went wrong with the overview file upload" );
       }
     });
   }

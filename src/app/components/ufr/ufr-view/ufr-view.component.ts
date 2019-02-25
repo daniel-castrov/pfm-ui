@@ -1,5 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {
+  Execution,
+  ExecutionService,
   OrganizationService,
   Pom,
   POMService,
@@ -19,6 +21,7 @@ import {UfrFundsComponent} from "./ufr-funds-tab/ufr-funds-tab.component";
 import {Notify} from "../../../utils/Notify";
 import {UfrJustificationComponent} from "./ufr-justification-tab/ufr-justification-tab.component";
 import {CurrentPhase} from "../../../services/current-phase.service";
+import {PhaseType} from "../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'app-ufr-view',
@@ -34,33 +37,42 @@ export class UfrViewComponent implements OnInit {
   private ufr: UFR;
   private canedit: boolean = false;
   private pom: Pom;
-  private pomFy: number;
+  private execution: Execution;
+  private fy: number;
   private shorty: Program;
+  phaseType: PhaseType;
 
   constructor( private ufrService: UFRsService,
                private currentPhase: CurrentPhase,
                private route: ActivatedRoute,
                private pomService: POMService,
+               private executionService: ExecutionService,
                private orgService: OrganizationService,
                private programAndPrService : ProgramAndPrService ) {}
 
   async ngOnInit() {
-    this.route.url.subscribe(async(urlSegments: UrlSegment[]) => { // don't try to convert this one to Promise -- it doesn't work
-      if(urlSegments[urlSegments.length - 1].path == 'create') {
-        const serializedUfr = sessionStorage.getItem('ufr');
-        this.ufr = JSON.parse(serializedUfr);
-      } else {
-        const ufrId = urlSegments[urlSegments.length - 1].path;
-        this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
-      }
-      this.init();
-      this.canedit = !!await this.currentPhase.pom().toPromise();
-    });
+    let ufrId = this.route.snapshot.params['id'];
+    if(ufrId) {
+      this.ufr = (await this.ufrService.getUfrById(ufrId).toPromise()).result;
+    } else {
+      const serializedUfr = sessionStorage.getItem('ufr');
+      this.ufr = JSON.parse(serializedUfr);
+    }
+
+    this.phaseType = <PhaseType>PhaseType[this.route.snapshot.params['phaseType'].toUpperCase()];
+    this.init();
+    this.canedit = !!await this.currentPhase.pom().toPromise();
   }
 
   private async init() {
-    this.pom = (await this.pomService.getById(this.ufr.containerId).toPromise()).result;
-    this.pomFy = this.pom.fy - 2000;
+    if(this.phaseType === PhaseType.EXE){
+      this.execution = (await this.executionService.getById(this.ufr.containerId).toPromise()).result;
+      this.fy = this.execution.fy - 2000;
+
+    } else {
+      this.pom = (await this.pomService.getById(this.ufr.containerId).toPromise()).result;
+      this.fy = this.pom.fy - 2000;
+    }
     this.initShorty();
   }
 
@@ -79,7 +91,9 @@ export class UfrViewComponent implements OnInit {
   }
 
   async save() {
-
+    if (this.phaseType === PhaseType.EXE) {
+      this.ufr.yoE = true;
+    }
     this.ufr.organizationId = (await this.orgService.getByAbbreviation(
       PRUtils.getOrganizationNameForLeadComponent(this.ufr.leadComponent) ).toPromise()).result.id;
 
@@ -136,7 +150,7 @@ export class UfrViewComponent implements OnInit {
   get ufrNumber(): string {
     if(this.ufr.requestNumber) {
       const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);
-      return 'number ' + this.pomFy + sequentialNumber;
+      return 'number ' + this.fy + sequentialNumber;
     } else {
       return '';
     }
