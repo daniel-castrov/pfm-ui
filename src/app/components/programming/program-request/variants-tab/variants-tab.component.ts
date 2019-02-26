@@ -154,7 +154,7 @@ export class VariantsTabComponent implements OnInit {
 
         //data.push(pbRow);
         data.push(pomRow);
-        data.push(deltaRow);
+        //data.push(deltaRow);
       });
       this.data.set(variant.shortName, data);
     });
