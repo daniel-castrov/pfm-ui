@@ -765,46 +765,6 @@ paths:
         description: "the file to upload"
         required: true
         type: "file"
-  /execution/upload:
-#    get:
-#      tags:
-#      - "Execution"
-#      summary: "Gets all the execution uploads"
-#      description: "Gets all execution uploads"
-#      operationId: "getUploads"
-#      parameters:
-#      - in: "query"
-#        name: "type"
-#        description: "type of uploads to return (GFEBS or DAI)"
-#        required: true
-#        type: "string"
-    post:
-      tags:
-      - "Execution"
-      summary: "Imports a GFEBS or DAI export file"
-      description: "Imports a file to update Execution"
-      operationId: "upload"
-      consumes:
-        - multipart/form-data
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties:
-                file:
-                  type: string
-                  format: binary
-      parameters:
-      - in: "formData"
-        name: "file"
-        description: "the file to upload"
-        required: true
-        type: "file"
-      - in: "query"
-        name: "type"
-        description: "the type of file being uploaded (GFEBS or DAI)"
-        required: true
-        type: "string"
 # STOP EXECUTION
 ##############################################################################
 # START TAGS
@@ -1829,6 +1789,35 @@ paths:
           type: array
           items:
             $ref: "#/definitions/OandEMonthly"
+  /oande/upload:
+    post:
+      tags:
+      - "OandE"
+      summary: "Imports a GFEBS or DAI export file"
+      description: "Imports a file to update Execution"
+      operationId: "upload"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "query"
+        name: "type"
+        description: "the type of file being uploaded (GFEBS or DAI)"
+        required: true
+        type: "string"
+
 # STOP O&E
 ##############################################################################
 # START BUDGETFUNDINGLINES
