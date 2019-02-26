@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 // Other Components
-import { ExecutionService, LibraryService, FileMetadata } from '../../../generated';
+import { LibraryService, FileMetadata, OandEService } from '../../../generated';
 
 @Component({
   selector: 'import-actuals',
@@ -14,7 +14,7 @@ export class ImportActualsComponent implements OnInit {
   private oldgfebs: FileMetadata[] = [];
   private olddai: FileMetadata[] = [];
 
-  constructor( private exesvc:ExecutionService, private library:LibraryService ) { }
+  constructor( private oandesvc:OandEService, private library:LibraryService ) { }
 
   ngOnInit() {
     this.fetchFileRecords();
@@ -43,7 +43,7 @@ export class ImportActualsComponent implements OnInit {
   }
 
   upload() {
-    this.exesvc.upload(this.gfebsfile, "GFEBS").subscribe(d => {
+    this.oandesvc.upload(this.gfebsfile, "GFEBS").subscribe(d => {
       this.fetchFileRecords();
     });
   }
