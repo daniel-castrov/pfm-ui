@@ -64,6 +64,7 @@ export class ScenarioSelectorComponent implements OnInit {
       this.parent.rdteData = rdteData;
       this.parent.rdteData.containerId = this.parent.selectedScenario.id;
     }
+    this.parent.setCannotSubmit();
   }
 
   clearTabData(){
@@ -72,14 +73,6 @@ export class ScenarioSelectorComponent implements OnInit {
     }
     if ( this.parent.r2aTabComponent ){ 
       this.parent.r2aTabComponent.cleardata();
-    }
-  }
-
-  async save(){
-    if ( this.parent.rdteData.id ){
-      (await this.rdteDataService.update( this.parent.rdteData ).toPromise()).result;
-    } else {
-      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
     }
   }
 
