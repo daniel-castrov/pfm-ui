@@ -7,15 +7,21 @@
           <span class="h5 mr-sm-4">Summary of Unfunded Requirements Requests:</span>
         </div>
       </div>
-      <div class="row mb-4">
+      <div *ngIf="pom.status !== 'RECONCILIATION'"  class="row">
         <div class="col-6">
           <new-ufr [phaseType]="PhaseType.POM" [containerId]="pom.id"></new-ufr>
         </div>
         <div class="col-6">
           <div class="filter-columns pull-right">
-            <input id="filtertestbox" type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
-                   [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+             <input  type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
+               [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
           </div>
+        </div>
+      </div>
+      <div *ngIf="pom.status === 'RECONCILIATION'"  class="row mb-2">
+        <div class="col-3">
+          <input type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
+                 [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
         </div>
       </div>
       <div class="row">
