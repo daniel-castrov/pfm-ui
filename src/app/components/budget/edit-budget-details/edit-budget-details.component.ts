@@ -26,7 +26,6 @@ export class EditBudgetDetailsComponent implements AfterContentChecked {
 
   selectedScenario:BES;
   rdteData:RdteData;
-  cannotSubmit :boolean = true;
 
   private _invalidFields: string[];
 
@@ -53,60 +52,60 @@ export class EditBudgetDetailsComponent implements AfterContentChecked {
     } else {
       this.rdteData = (await this.rdteDataService.create( this.rdteData ).toPromise()).result;
     }
-    this.cannotSubmit = false;
+    // this.cannotSubmit = false;
+    Notify.success( "Budget Details saved successfully" );
   }
 
-  async submit(){
-    this.validate();
-    if ( this._invalidFields.length>10 ) {
-      Notify.error( "There are " + this._invalidFields.length + " reqired fields that still need to be addressed." );
-      this.cannotSubmit = true;
-    }
-    else if ( this._invalidFields.length>0 ){
-      let message = "The following Fields are missing/empty but required:";
-      message = message + "<br/>" + this._invalidFields.join("<br/>")
-      Notify.error( message );
-      this.cannotSubmit = true;
-    } else {
-      this.rdteData.submitted=true;
-      this.rdteData = (await this.rdteDataService.update( this.rdteData ).toPromise()).result;
-      this.cannotSubmit = true;
-    }
-  }
+  // cannotSubmit :boolean = true;
 
-  
+  // async submit(){
+  //   this.validate();
+  //   if ( this._invalidFields.length>10 ) {
+  //     Notify.error( "There are " + this._invalidFields.length + " reqired fields that still need to be addressed." );
+  //     this.cannotSubmit = true;
+  //   }
+  //   else if ( this._invalidFields.length>0 ){
+  //     let message = "The following Fields are missing/empty but required:";
+  //     message = message + "<br/>" + this._invalidFields.join("<br/>")
+  //     Notify.error( message );
+  //     this.cannotSubmit = true;
+  //   } else {
+  //     this.rdteData.submitted=true;
+  //     this.rdteData = (await this.rdteDataService.update( this.rdteData ).toPromise()).result;
+  //     this.cannotSubmit = true;
+  //   }
+  // }
 
-  validate(){
+  // validate(){
+  //   this._invalidFields = [];
+  //   // LOGO
+  //   if ( !this.rdteData.logoId || this.rdteData.logoId.length<1 ) this._invalidFields.push( "Logo Image" );
 
-    this._invalidFields = [];
-    // LOGO
-    if ( !this.rdteData.logoId || this.rdteData.logoId.length<1 ) this._invalidFields.push( "Logo Image" );
+  //   // OVERVIEW TOC
+  //   if ( !this.rdteData.overviewName || this.rdteData.overviewName.length<1 ) this._invalidFields.push( "Overview File" );
+  //   Object.keys( this.rdteData.toc ).forEach( key => { 
+  //     if ( (!this.rdteData.toc[key] || this.rdteData.toc[key].length<1) && !this._invalidFields.includes("Overview TOC") ) this._invalidFields.push( "Overview TOC" );
+  //    });
 
-    // OVERVIEW TOC
-    if ( !this.rdteData.overviewName || this.rdteData.overviewName.length<1 ) this._invalidFields.push( "Overview File" );
-    Object.keys( this.rdteData.toc ).forEach( key => { 
-      if ( (!this.rdteData.toc[key] || this.rdteData.toc[key].length<1) && !this._invalidFields.includes("Overview TOC") ) this._invalidFields.push( "Overview TOC" );
-     });
+  //    // R-1
+  //    if ( !this.rdteData.r1Name || this.rdteData.r1Name.length<1 ) this._invalidFields.push( "R-1 File" );
 
-     // R-1
-     if ( !this.rdteData.r1Name || this.rdteData.r1Name.length<1 ) this._invalidFields.push( "R-1 File" );
+  //    // R-2
+  //    this.rdteData.r2data.forEach( r2 => {
+  //      if ( !r2.missionDescription || r2.missionDescription.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Mission Description" );
+  //      if ( !r2.fundingChange || r2.fundingChange.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Funding Change" );
+  //      if ( !r2.scheduleChange || r2.scheduleChange.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Schedule Change" );
+  //      if ( !r2.techincalChange || r2.techincalChange.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Technical Change" );
+  //    })
 
-     // R-2
-     this.rdteData.r2data.forEach( r2 => {
-       if ( !r2.missionDescription || r2.missionDescription.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Mission Description" );
-       if ( !r2.fundingChange || r2.fundingChange.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Funding Change" );
-       if ( !r2.scheduleChange || r2.scheduleChange.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Schedule Change" );
-       if ( !r2.techincalChange || r2.techincalChange.length<1 ) this._invalidFields.push( "R-2 " + r2.programElement + " Technical Change" );
-     })
+  //    //R-2A is not required 
+  // }
 
-     //R-2A is not required 
-  }
-
-  setCannotSubmit(){
-    if ( !this.rdteData ) this.cannotSubmit = true;
-    else if ( !this.rdteData.id ) this.cannotSubmit = true;
-    else if ( !this.rdteData.submitted ) this.cannotSubmit = false;
-    else this.cannotSubmit = true;
-  }
+  // setCannotSubmit(){
+  //   if ( !this.rdteData ) this.cannotSubmit = true;
+  //   else if ( !this.rdteData.id ) this.cannotSubmit = true;
+  //   else if ( !this.rdteData.submitted ) this.cannotSubmit = false;
+  //   else this.cannotSubmit = true;
+  // }
 
 }
