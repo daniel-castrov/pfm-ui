@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-10 mb-4">
-    <span class="mr-2"><label>Slect a Program Element:</label></span>
+    <span class="mr-2"><label>Select a Program Element:</label></span>
     <span>
       <select [(ngModel)]="selectedPE" class="form-control-sm mb-2" (change)="onPESelected()">
         <option value="undefined" disabled selected>Select PE</option>
@@ -23,18 +23,27 @@
     <div class="col-12">
       <div class="title badge-light mb-1">R2 Section B: Program Change Summary</div>
       <div class="title badge-light mb-1">Change Summary Explanation</div>
-      <label class="mb-2">Funding:</label>
-      <div class="form-group">
-        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="fundingChange" [(ngModel)]="r2data.fundingChange"></textarea>
-      </div>
-      <label class="mb-2">Schedule:</label>
-      <div class="form-group">
-        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="scheduleChange" [(ngModel)]="r2data.scheduleChange"></textarea>
-      </div>
-      <label class="mb-2">Technical:</label>
-      <div class="form-group">
-        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="techincalChange" [(ngModel)]="r2data.techincalChange"></textarea>
-      </div>
+
+      <span class="mr-2"><label>Select section:</label></span>
+      <select [(ngModel)]="selChgSumSection" class="form-control-sm mb-2">
+        <option *ngFor="let section of changeSummSections" [ngValue]="section">{{section}}</option>
+      </select>
+
+      <ng-container *ngIf="selChgSumSection == 'Funding'">
+        <div class="form-group">
+          <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="fundingChange" [(ngModel)]="r2data.fundingChange"></textarea>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="selChgSumSection == 'Schedule'">
+        <div class="form-group">
+          <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="scheduleChange" [(ngModel)]="r2data.scheduleChange"></textarea>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="selChgSumSection=='Technical'">
+        <div class="form-group">
+          <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="techincalChange" [(ngModel)]="r2data.techincalChange"></textarea>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-container>

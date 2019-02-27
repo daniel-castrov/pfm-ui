@@ -40,7 +40,18 @@
         <option *ngFor="let item2 of allItems" [ngValue]="item2">{{item2}}</option>
       </select>
       <div>
-        <button class="buttonaslist" *ngFor="let iiii of relatedItems" (click)="removeRelated(iiii)" >{{iiii}}</button>
+        <table class="relatedItems">
+          <thead>
+            <th>Remove</th><th>Selected Item Code</th><th>Item Name</th>
+          </thead>
+            <tbody>
+            <tr *ngFor="let iiii of relatedItems">
+              <td><button class="buttonaslist" (click)="removeRelated(iiii)"><i class="fa fa-trash"></i></button></td>
+              <td>{{iiii}}</td>
+              <td>{{getItemDescription(iiii)}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

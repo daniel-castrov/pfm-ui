@@ -8,7 +8,9 @@
     </span>
   </div>
   <div class="col-5">
-    <button class="btn btn-primary pull-right" (click)="save()">Save</button>
+    <div class="pull-right" *ngIf="parent.selectedScenario">
+      <button class="btn btn-primary" (click)="parent.save()">Save</button>
+    </div>
   </div>
 </div>
 

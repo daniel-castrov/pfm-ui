@@ -47,7 +47,7 @@ export class ChargesComponent implements OnInit {
     });
     return okays;
   };
-  
+
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
     private router: Router ) { }
 
@@ -55,16 +55,19 @@ export class ChargesComponent implements OnInit {
     this.route.params.subscribe(data => {
       forkJoin([
         this.exesvc.getById(data.phaseId),
-        this.exesvc.getExecutionDropdowns()
+        this.exesvc.getExecutionDropdowns(),
+        this.exesvc.getExecutionLinesByPhase(data.phaseId)
       ]).subscribe(d2 => {
         this.phase = d2[0].result;
-
-        this.types.set('EXE_APPROPRIATION_ACTION', 'Appropriation Action');
+        if (!d2[2].result.some(el => !el.appropriated)) {
+          this.types.set('EXE_OUSDC_ACTION', 'OUSD(C) Action');
+        } else {
+          this.types.set('EXE_APPROPRIATION_ACTION', 'Appropriation Action');
+        }
         this.types.set('EXE_CONGRESSIONAL_ACTION', 'Congressional Action');
-        this.types.set('EXE_OUSDC_ACTION', 'OUSD(C) Action');
         this.allsubtypes = d2[1].result.filter(x => this.types.has(x.type));
 
-        this.type = 'EXE_APPROPRIATION_ACTION';
+        this.type = 'EXE_CONGRESSIONAL_ACTION';
         this.updatedropdowns();
       });
     });

@@ -1,5 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { RdteData, R2AData } from '../../../../generated';
+import { RdteData, R2AData, Tag } from '../../../../generated';
+import { TagsService, TagType } from '../../../../services/tags.service';
 
 @Component({
   selector: 'r2a-tab',
@@ -18,6 +19,7 @@ export class R2aTabComponent implements OnChanges {
   allItems: string[];
   relatedItems: string[];
   relatedItem: string="";
+  itemTags: Tag[];
 
   cleardata(){
     this.r2adata={};
@@ -25,7 +27,9 @@ export class R2aTabComponent implements OnChanges {
     this.selectedItem=null;
   }
 
-  constructor() { }
+  constructor(
+    private tagsService: TagsService
+  ) { }
 
   ngOnChanges() {
     if (this.rdteData && this.rdteData.r2Adata){
@@ -49,12 +53,13 @@ export class R2aTabComponent implements OnChanges {
     this.allItems.sort();
   }
 
-  onPESelected(){
+  async onPESelected(){
     this.selectedItem=null;
     let listR2a = this.rdteData.r2Adata.filter( d => d.programElement == this.selectedPE );
     this.items=[];
     listR2a.forEach( dd => this.items.push(dd.item) );
     this.items.sort();
+    if ( !this.itemTags ) { this.itemTags = await this.tagsService.tags(TagType.ITEM).toPromise(); }
   }
 
   onItemSelected(){
@@ -76,6 +81,10 @@ export class R2aTabComponent implements OnChanges {
   removeRelated( removeitem:string ){
     this.relatedItems = this.relatedItems.filter( i => i != removeitem );
     this.r2adata.relatedItems=this.relatedItems;
+  }
+
+  getItemDescription( item:string) : string {
+    return this.itemTags.find( tag => tag.abbr===item ).name ;
   }
 
 }

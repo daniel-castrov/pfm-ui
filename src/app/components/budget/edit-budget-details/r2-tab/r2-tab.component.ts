@@ -14,6 +14,8 @@ export class R2TabComponent implements OnChanges {
   selectedPE: string;
   r2data:R2Data
 
+  selChgSumSection: string;
+  changeSummSections: string[];
   constructor() { 
   }
 
@@ -35,7 +37,7 @@ export class R2TabComponent implements OnChanges {
 
   onPESelected(){
     this.r2data = this.rdteData.r2data.find( data =>  data.programElement == this.selectedPE  );
+    this.changeSummSections = [ "Funding", "Schedule", "Technical"];
   }
-
 
 }
