@@ -40,8 +40,4 @@ export class R2TabComponent implements OnChanges {
     this.changeSummSections = [ "Funding", "Schedule", "Technical"];
   }
 
-  onChgSumSection(){
-    console.log(this.selChgSumSection);
-  }
-
 }

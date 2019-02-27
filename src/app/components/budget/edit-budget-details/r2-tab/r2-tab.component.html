@@ -25,7 +25,7 @@
       <div class="title badge-light mb-1">Change Summary Explanation</div>
 
       <span class="mr-2"><label>Select section:</label></span>
-      <select [(ngModel)]="selChgSumSection" class="form-control-sm mb-2" (change)="onChgSumSection()">
+      <select [(ngModel)]="selChgSumSection" class="form-control-sm mb-2">
         <option *ngFor="let section of changeSummSections" [ngValue]="section">{{section}}</option>
       </select>
 

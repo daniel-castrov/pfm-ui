@@ -64,7 +64,6 @@ export class ScenarioSelectorComponent implements OnInit {
       this.parent.rdteData = rdteData;
       this.parent.rdteData.containerId = this.parent.selectedScenario.id;
     }
-    // this.parent.setCannotSubmit();
   }
 
   clearTabData(){
