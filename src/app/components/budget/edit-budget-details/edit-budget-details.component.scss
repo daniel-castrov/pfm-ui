@@ -37,12 +37,28 @@ input[readonly]{
   border: 0;
   background: none;
   padding-right: 10px;
-  cursor: hand;
+  cursor: pointer;
 }
 
 .add-item {
   font-size: 18px;
 }
+
+.remove-item {
+  i {
+      &.fa {
+       color: $black;
+       opacity: .5;
+       font-size: 18px;
+       cursor: pointer;
+     }
+     &.fa:hover {
+       color: red;
+       opacity: .9;
+     }
+   }
+ }
+ 
 
 .relatedItems {
   width: 100%;

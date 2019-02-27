@@ -34,8 +34,8 @@
         </div>
         <div class="col-6">
             <div class="pull-right">
-                <span class="mt-1 add-item">
-                    <i class="fa fa-plus-circle icon-pad" aria-hidden="true"></i> 
+                <span class="mt-2 add-item">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i> 
                 </span>
                 <span class="mr-2">
                     <label>Add Item:</label>
@@ -59,7 +59,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let iiii of relatedItems">
-                    <td><button class="buttonaslist" (click)="removeRelated(iiii)"><i class="fa fa-trash"></i></button></td>
+                    <td>
+                        <span class="remove-item" (click)="removeRelated(iiii)">
+                         <i class="fa fa-trash"></i>
+                        </span>
+                    </td>
                     <td>{{iiii}}</td>
                     <td>{{getItemDescription(iiii)}}</td>
                     </tr>
