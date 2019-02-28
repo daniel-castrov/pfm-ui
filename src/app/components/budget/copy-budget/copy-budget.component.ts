@@ -54,7 +54,7 @@ export class CopyBudgetComponent implements OnInit {
     } else {
       await this.besService.createFrom(this.selectedScenario.id, this.newName.value).toPromise();
     }
-    Notify.success('Scenario ' + this.newName + ' was created')
+    Notify.success('Scenario ' + this.newName.value + ' was created')
     this.ngOnInit();
   }
 
