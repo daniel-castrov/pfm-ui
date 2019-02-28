@@ -1,28 +1,55 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isAuthenticated">
-    <h3>Create a new budget scenario for FY {{budget.fy}}</h3>
+  <div class="row main-content mb-3" *ngIf="header.isAuthenticated">
+    <div class="col-12">
+      <div class="h5">Create a new budget scenario for FY {{budget.fy}}</div>
+    </div>
   </div>
-  <div>
- Select budget: <select [(ngModel)]="selectedType" class="form-control-sm" (change)="filterScenarios()">
-                    <option [ngValue]="'BES'" selected>BES</option>
-                    <option [ngValue]="'PB'">PB</option>
-                </select>
-                <select [(ngModel)]="selectedAppropriation" class="form-control-sm" (change)="filterScenarios()">
-                    <option [ngValue]="Appropriation.PROC" selected>PROC</option>
-                    <option [ngValue]="Appropriation.RDTE">RDT&E</option>
-                </select>
-                <select [(ngModel)]="selectedScenario" class="form-control-sm">
-                    <option *ngFor="let scenario of filteredScenarios" [ngValue]="scenario">{{scenario.name}}</option>
-                </select>
-  </div>
-  <div *ngIf="selectedScenario">
-      Assign name for the new budget being copied: <input [formControl]="newName" />
-    <span *ngIf="selectedType=='BES'">
-      <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
-    </span>
-    <div class="text-danger" *ngIf="!newName.pristine && newName.invalid && newName.errors.required">Scenario name is required</div>
-    <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
-    <button (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
+  <div class="row main-content mb-3">
+      <div class="col-12">
+        <span class="mr-2">
+          <label>Select budget:</label> 
+        </span>
+        <span class="mr-2">
+          <select [(ngModel)]="selectedType" class="form-control-sm" (change)="filterScenarios()">
+            <option value="undefined" disabled selected>Type</option>
+            <option [ngValue]="'BES'">BES</option>
+            <option [ngValue]="'PB'">PB</option>
+          </select>
+        </span>
+        <span class="mr-2">
+          <select [(ngModel)]="selectedAppropriation" class="form-control-sm" (change)="filterScenarios()">
+              <option value="undefined" disabled selected>Appropriation</option>  
+              <option [ngValue]="Appropriation.PROC">PROC</option>
+              <option [ngValue]="Appropriation.RDTE">RDT&E</option>
+          </select>
+        </span>
+        <span class="mr-2">
+          <select [(ngModel)]="selectedScenario" class="form-control-sm">
+              <option value="undefined" disabled selected>Name</option>
+              <option *ngFor="let scenario of filteredScenarios" [ngValue]="scenario">{{scenario.name}}</option>
+          </select>
+        </span>
+      </div>
+    </div>
+    <div class="row main-content">
+      <div class="col-12">
+        <div *ngIf="selectedScenario">
+            <span class="mr-2">
+              <label>Assign name for the new budget being copied: </label>
+            </span>
+            <span class="mr-2 form-group">
+              <input class="form-control form-input" [formControl]="newName" />  
+            </span>
+            <span class="mr-2" *ngIf="selectedType=='BES'">
+              <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
+             </span>
+            <span>
+              <button class="btn btn-primary" (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
+            </span>
+            <div class="form-group text-danger" *ngIf="!newName.pristine && newName.invalid && newName.errors.required">Scenario name is required</div>
+            <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
+        </div>
+    </div>
   </div>
 </div>
