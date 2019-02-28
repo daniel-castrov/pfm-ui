@@ -1,32 +1,32 @@
 <j-header></j-header>
 <div class="container-fluid">
-  <div class="row main-content mb-2" *ngIf="header.isAuthenticated">
+  <div class="row main-content mb-3" *ngIf="header.isAuthenticated">
     <div class="col-12">
       <div class="h5">Create a new budget scenario for FY {{budget.fy}}</div>
     </div>
   </div>
-  <div class="row main-content">
+  <div class="row main-content mb-3">
       <div class="col-12">
         <span class="mr-2">
           <label>Select budget:</label> 
         </span>
         <span class="mr-2">
           <select [(ngModel)]="selectedType" class="form-control-sm" (change)="filterScenarios()">
-            <option value="undefined" disabled selected>Select</option>
-            <option [ngValue]="'BES'" selected>BES</option>
+            <option value="undefined" disabled selected>Type</option>
+            <option [ngValue]="'BES'">BES</option>
             <option [ngValue]="'PB'">PB</option>
           </select>
         </span>
         <span class="mr-2">
           <select [(ngModel)]="selectedAppropriation" class="form-control-sm" (change)="filterScenarios()">
-              <option value="undefined" disabled selected>Select</option>  
-              <option [ngValue]="Appropriation.PROC" selected>PROC</option>
+              <option value="undefined" disabled selected>Appropriation</option>  
+              <option [ngValue]="Appropriation.PROC">PROC</option>
               <option [ngValue]="Appropriation.RDTE">RDT&E</option>
           </select>
         </span>
         <span class="mr-2">
           <select [(ngModel)]="selectedScenario" class="form-control-sm">
-              <option value="undefined" disabled selected>Select</option>
+              <option value="undefined" disabled selected>Name</option>
               <option *ngFor="let scenario of filteredScenarios" [ngValue]="scenario">{{scenario.name}}</option>
           </select>
         </span>
@@ -38,17 +38,17 @@
             <span class="mr-2">
               <label>Assign name for the new budget being copied: </label>
             </span>
-            <span class="mr-2">
-              <input [formControl]="newName" />
+            <span class="mr-2 form-group">
+              <input class="form-control form-input" [formControl]="newName" />  
             </span>
-            <span *ngIf="selectedType=='BES'">
+            <span class="mr-2" *ngIf="selectedType=='BES'">
               <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
-            </span>
-            <span class="text-danger" *ngIf="newName.touched && newName.invalid && newName.errors.required">Scenario name is required</span>
-            <span class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</span>
+             </span>
             <span>
-              <button (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
+              <button class="btn btn-primary" (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
             </span>
+            <div class="form-group text-danger" *ngIf="newName.touched && newName.invalid && newName.errors.required">Scenario name is required</div>
+            <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
         </div>
     </div>
   </div>
