@@ -17,10 +17,12 @@
                 </select>
   </div>
   <div *ngIf="selectedScenario">
-      Assign name for the new budget being copied: <input [(ngModel)]="newName" />
+      Assign name for the new budget being copied: <input [formControl]="newName" />
     <span *ngIf="selectedType=='BES'">
-      <input type="checkbox" [(ngModel)]="modifyType" /> modify type
+      <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
     </span>
-    <button (click)="copyBudget()">Copy Budget</button>
+    <div class="text-danger" *ngIf="newName.touched && newName.invalid && newName.errors.required">Scenario name is required</div>
+    <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
+    <button (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
   </div>
 </div>
