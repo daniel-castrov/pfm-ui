@@ -1,15 +1,28 @@
 <j-header></j-header>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="header.isAuthenticated">
-    <div class="col-12">
-
-      <div class="row mb-3">
-        <div class="col-12">
-
-Hello World!
-
-        </div>
-      </div>
-    </div>
+    <h3>Create a new budget scenario for FY {{budget.fy}}</h3>
+  </div>
+  <div>
+ Select budget: <select [(ngModel)]="selectedType" class="form-control-sm" (change)="filterScenarios()">
+                    <option [ngValue]="'BES'" selected>BES</option>
+                    <option [ngValue]="'PB'">PB</option>
+                </select>
+                <select [(ngModel)]="selectedAppropriation" class="form-control-sm" (change)="filterScenarios()">
+                    <option [ngValue]="Appropriation.PROC" selected>PROC</option>
+                    <option [ngValue]="Appropriation.RDTE">RDT&E</option>
+                </select>
+                <select [(ngModel)]="selectedScenario" class="form-control-sm">
+                    <option *ngFor="let scenario of filteredScenarios" [ngValue]="scenario">{{scenario.name}}</option>
+                </select>
+  </div>
+  <div *ngIf="selectedScenario">
+      Assign name for the new budget being copied: <input [formControl]="newName" />
+    <span *ngIf="selectedType=='BES'">
+      <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
+    </span>
+    <div class="text-danger" *ngIf="newName.touched && newName.invalid && newName.errors.required">Scenario name is required</div>
+    <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
+    <button (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
   </div>
 </div>

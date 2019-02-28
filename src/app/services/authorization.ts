@@ -164,10 +164,14 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
-  async 'edit-budget-scenario'(): Promise<AuthorizationResult> {
+  async 'edit-budget-details'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
+      const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
-        return AuthorizationResult.Ok;
+      if( Budget.StatusEnum.OPEN === budget.status )
+        if(pom.fy === budget.fy)
+          return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }

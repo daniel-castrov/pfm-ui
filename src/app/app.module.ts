@@ -147,7 +147,7 @@ import {
   OandEService,
   SpendPlanService,
   BudgetFundingLinesService,
-  PrChangeNotificationsService
+  PrChangeNotificationsService, BESService
 } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
@@ -561,6 +561,7 @@ const appRoutes: Routes = [
     WorksheetService,
     PRService,
     PBService,
+    BESService,
     UFRsService,
     EppService,
     ExecutionService,

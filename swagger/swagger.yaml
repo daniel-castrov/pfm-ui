@@ -668,11 +668,62 @@ paths:
   /pb/final/latest:
     get:
       tags:
-      - "PB"
+        - "PB"
       operationId: "getFinalLatest"
       produces:
-      - "application/json"
+        - "application/json"
+  /pb/budget/{budgetId}:
+    get:
+      tags:
+        - "PB"
+      operationId: "getByBudget"
+      parameters:
+        - in: "path"
+          name: "budgetId"
+          required: true
+          type: "string"
+  /pb/from/{containerId}/name/{name}:
+    post:
+      tags:
+        - "PB"
+      operationId: "createFrom"
+      parameters:
+        - in: "path"
+          name: "containerId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "name"
+          required: true
+          type: "string"
 # END PB
+##############################################################################
+# START BES
+  /bes/budget/{budgetId}:
+    get:
+      tags:
+        - "BES"
+      operationId: "getByBudget"
+      parameters:
+        - in: "path"
+          name: "budgetId"
+          required: true
+          type: "string"
+  /bes/from/{containerId}/name/{name}:
+    post:
+      tags:
+        - "BES"
+      operationId: "createFrom"
+      parameters:
+        - in: "path"
+          name: "containerId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "name"
+          required: true
+          type: "string"
+# END BES
 ##############################################################################
 # START EXECUTION
   /execution:
