@@ -54,7 +54,7 @@ export class R2aTabComponent implements OnChanges {
   }
 
   async onPESelected(){
-    this.selectedItem=null;
+    this.selectedItem=undefined;
     let listR2a = this.rdteData.r2Adata.filter( d => d.programElement == this.selectedPE );
     this.items=[];
     listR2a.forEach( dd => this.items.push(dd.item) );
