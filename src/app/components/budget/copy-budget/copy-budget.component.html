@@ -21,7 +21,7 @@
     <span *ngIf="selectedType=='BES'">
       <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
     </span>
-    <div class="text-danger" *ngIf="newName.touched && newName.invalid && newName.errors.required">Scenario name is required</div>
+    <div class="text-danger" *ngIf="!newName.pristine && newName.invalid && newName.errors.required">Scenario name is required</div>
     <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
     <button (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
   </div>
