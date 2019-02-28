@@ -5,6 +5,7 @@ import { POMService, Pom, User } from '../../../../generated/index';
 import {AllUfrsComponent} from "../../ufr-search/all-ufrs/all-ufrs.component";
 import {UFRFilter, UfrStatus} from "../../../../generated";
 import {CurrentPhase} from "../../../../services/current-phase.service";
+import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'ufr-approval-summary',
@@ -19,6 +20,7 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
   private mapCycleIdToFy = new Map<string, string>();
   private pom: Pom;
   ufrFilter: UFRFilter;
+  PhaseType = PhaseType;
 
   constructor(private userUtils: UserUtils,
               private pomService: POMService,
@@ -38,7 +40,7 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
     const poms = await this.pomService.getAll().toPromise();
     this.initCyclesAndEditable(poms.result);
   }
-  
+
   ngDoCheck() {
     this.changeDetectorRef.detectChanges();
   }

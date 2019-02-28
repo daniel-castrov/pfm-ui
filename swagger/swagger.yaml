@@ -3567,6 +3567,8 @@ definitions:
         type: "string"
       containerId:
         type: "string"
+      submitted:
+        type: "boolean"
       fileArea:
         type: "string"
       logoName:

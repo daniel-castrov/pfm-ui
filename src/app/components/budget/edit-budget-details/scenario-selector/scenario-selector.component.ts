@@ -75,12 +75,4 @@ export class ScenarioSelectorComponent implements OnInit {
     }
   }
 
-  async save(){
-    if ( this.parent.rdteData.id ){
-      (await this.rdteDataService.update( this.parent.rdteData ).toPromise()).result;
-    } else {
-      (await this.rdteDataService.create( this.parent.rdteData ).toPromise()).result;
-    }
-  }
-
 }

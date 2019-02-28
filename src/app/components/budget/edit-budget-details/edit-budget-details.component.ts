@@ -1,7 +1,8 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 
 import {HeaderComponent} from '../../../components/header/header.component';
-import { BES, RdteData } from '../../../generated';
+import { BES, RdteData, RdteDataService } from '../../../generated';
+import { Notify } from '../../../utils/Notify';
 
 import { TitleTabComponent } from './title-tab/title-tab.component';
 import { OverviewTabComponent } from './overview-tab/overview-tab.component';
@@ -27,10 +28,20 @@ export class EditBudgetDetailsComponent implements AfterContentChecked {
   rdteData:RdteData;
 
   constructor(
-    private cd: ChangeDetectorRef) {}
+    private cd: ChangeDetectorRef,
+    private rdteDataService: RdteDataService) {}
 
   ngAfterContentChecked() {
     this.cd.detectChanges();
   }
 
+  async save(){
+    this.rdteData.submitted=false;
+    if ( this.rdteData.id ){
+      this.rdteData = (await this.rdteDataService.update( this.rdteData ).toPromise()).result;
+    } else {
+      this.rdteData = (await this.rdteDataService.create( this.rdteData ).toPromise()).result;
+    }
+    Notify.success( "Budget Details saved successfully" );
+  }
 }
