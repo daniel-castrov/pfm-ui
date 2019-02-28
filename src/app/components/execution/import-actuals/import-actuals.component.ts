@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 // Other Components
 import { LibraryService, FileMetadata, OandEService } from '../../../generated';
+import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'import-actuals',
@@ -43,8 +45,18 @@ export class ImportActualsComponent implements OnInit {
   }
 
   upload() {
-    this.oandesvc.upload(this.gfebsfile, "GFEBS").subscribe(d => {
-      this.fetchFileRecords();
-    });
+    var calls: Observable<any>[] = [];
+    if (this.gfebsfile) {
+      calls.push(this.oandesvc.upload(this.gfebsfile, "GFEBS"));
+    }
+    if (this.daifile) {
+      calls.push(this.oandesvc.upload(this.daifile, "DAI"));
+    }
+
+    if (calls.length > 0) {
+      forkJoin(calls).subscribe(d => {
+        this.fetchFileRecords();
+      });
+    }
   }
 }
