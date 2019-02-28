@@ -32,24 +32,28 @@
         </span>
       </div>
     </div>
-    <div class="row main-content">
-      <div class="col-12">
-        <div *ngIf="selectedScenario">
+    <div *ngIf="selectedScenario">
+      <div class="row main-content">
+        <div class="col-7">
+          <div class="form-group">
             <span class="mr-2">
-              <label>Assign name for the new budget being copied: </label>
+              <label>Assign name for the new budget being copied:</label>
             </span>
-            <span class="mr-2 form-group">
+            <span class="form-group">
               <input class="form-control form-input" [formControl]="newName" />  
+              <div class="text-danger" *ngIf="!newName.pristine && newName.invalid && newName.errors.required">Scenario name is required</div>
+              <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
             </span>
-            <span class="mr-2" *ngIf="selectedType=='BES'">
-              <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
-             </span>
-            <span>
-              <button class="btn btn-primary" (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
-            </span>
-            <div class="form-group text-danger" *ngIf="!newName.pristine && newName.invalid && newName.errors.required">Scenario name is required</div>
-            <div class="text-danger" *ngIf="newName.invalid && newName.errors.alreadyExists">Scenario with this name already exists</div>
+          </div>
         </div>
+        <div class="col-2">
+          <span *ngIf="selectedType=='BES'">
+            <input type="checkbox" [(ngModel)]="modifyType" (ngModelChange)="onModifyType()" /> modify type
+          </span>
+        </div>
+        <div class="col-3">
+          <button class="btn btn-primary" (click)="copyBudget()" [disabled]="newName.invalid">Copy Budget</button>
+        </div>
+      </div>
     </div>
-  </div>
 </div>
