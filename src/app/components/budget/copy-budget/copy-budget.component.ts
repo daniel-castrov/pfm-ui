@@ -3,6 +3,7 @@ import {HeaderComponent} from '../../header/header.component';
 import {CurrentPhase} from "../../../services/current-phase.service";
 import {Appropriation, BES, BESService, Budget, PB, PBService} from "../../../generated";
 import {join} from "../../../utils/join";
+import {Notify} from "../../../utils/Notify";
 
 @Component({
   selector: 'copy-budget',
@@ -50,6 +51,7 @@ export class CopyBudgetComponent implements OnInit {
     } else {
       await this.besService.createFrom(this.selectedScenario.id, this.newName).toPromise();
     }
+    Notify.success('Scenario ' + this.newName + ' was created')
     this.ngOnInit();
   }
 }
