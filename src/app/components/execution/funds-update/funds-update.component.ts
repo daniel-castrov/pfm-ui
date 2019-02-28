@@ -40,6 +40,7 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
   private menuTabs = ['filterMenuTab'];
   private hasAppropriation: boolean = false;
+  private hasReleased: boolean = false;
   private agOptions: GridOptions;
   containerStyle = {width: '100%',margin: 'auto'};
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
@@ -367,6 +368,8 @@ export class FundsUpdateComponent implements OnInit {
       else {
         this.agOptions.api.hideOverlay();
       }
+
+      this.hasReleased = data[0].result.some(el => el.released > 0);
       this.refreshFilterDropdowns();
 
       this.hasAppropriation = data[1].result;
