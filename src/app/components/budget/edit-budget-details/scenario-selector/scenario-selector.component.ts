@@ -35,9 +35,8 @@ export class ScenarioSelectorComponent implements OnInit {
       Notify.error("There is no OPEN budget phase");
     } else {
       [this.bess, this.pbs] = await join( this.besService.getByBudget(this.budget.id),
-                                         this.pbService .getByBudget(this.budget.id) ) as [BES[], PB[]];      
+          this.pbService .getByBudget(this.budget.id) ) as [BES[], PB[]];      
     }
-
     this.parent.rdteData = {}
   }
 
@@ -55,10 +54,10 @@ export class ScenarioSelectorComponent implements OnInit {
         this.parent.rdteData.containerId = this.parent.selectedScenario.id;
       }
     } else if ( this.parent.selectedScenario.appropriation == Appropriation.PROC ){
-      this.parent.selectedScenario = null;
+      this.parent.selectedScenario = undefined;
       Notify.info("PROC not yet implemented")
     } else {
-      this.parent.selectedScenario = null;
+      this.parent.selectedScenario = undefined;
       Notify.error("Unknown Appropriation")
     }
   }
