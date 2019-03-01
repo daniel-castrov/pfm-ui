@@ -105,20 +105,14 @@ export class NewUfrComponent implements OnInit {
   }
 
   nextDisbaled() : boolean {
-
     if (!this.createNewUfrMode || this.createNewUfrMode==CreateNewUfrMode.SELECT_AN_OPTION) return true;
-    if ( 
-      this.createNewUfrMode ==  CreateNewUfrMode.AN_MRDB_PROGRAM  
+    if ( this.createNewUfrMode ==  CreateNewUfrMode.AN_MRDB_PROGRAM  
       || this.createNewUfrMode ==  CreateNewUfrMode.A_NEW_FOS
       || this.createNewUfrMode ==  CreateNewUfrMode.A_NEW_INCREMENT
       || this.createNewUfrMode ==  CreateNewUfrMode.A_PROGRAM_REQUEST ) {
-
         if ( !this.selectedProgramOrPr ) return true;
-
       }
-
     return false;
-
   }
 
   async next() {
