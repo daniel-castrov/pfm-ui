@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { JHeaderComponent } from '../../../header/j-header/j-header.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'r3',
@@ -7,8 +6,6 @@ import { JHeaderComponent } from '../../../header/j-header/j-header.component';
   styleUrls: ['./r3.component.scss']
 })
 export class R3Component implements OnInit {
-
-  @ViewChild(JHeaderComponent) header;
 
   constructor() { }
 

@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AgGridNg2 } from 'ag-grid-angular';
-import { JHeaderComponent } from '../../header/j-header/j-header.component';
+import {Component, ViewChild} from '@angular/core';
+import {AgGridNg2} from 'ag-grid-angular';
 
 @Component({
   selector: 'bes-proc',
@@ -9,7 +8,6 @@ import { JHeaderComponent } from '../../header/j-header/j-header.component';
 })
 export class BesProcComponent  {
 
-  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private gridApi;

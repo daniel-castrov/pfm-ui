@@ -1,13 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component';
-import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
-
-// Generated
-import { RestResult } from '../../../generated';
-import { Community } from '../../../generated';
-import { CommunityService } from '../../../generated';
+import {Component} from '@angular/core';
+import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
+import {Community, CommunityService, RestResult} from '../../../generated';
 
 @Component({
   selector: 'app-manage-communities',
@@ -15,8 +8,6 @@ import { CommunityService } from '../../../generated';
   styleUrls: ['./manage-communities.component.scss']
 })
 export class ManageCommunitiesComponent {
-
-  @ViewChild(JHeaderComponent) header;
 
   private commname = new FormControl('', [Validators.required, this.validName.bind(this)]);
   private commidentifier  = new FormControl('', [Validators.required, this.validIdentifier .bind(this)]);

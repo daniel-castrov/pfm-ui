@@ -1,12 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component'
-import { UrlSegment, ActivatedRoute } from '@angular/router'
-import { ExecutionService, ProgramsService, ExecutionLine, OandEService, Execution, OandEMonthly, ExecutionEvent } from '../../../generated';
-
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ActualsTabComponent } from '../actuals-tab/actuals-tab.component';
+import {Component, OnInit, ViewChild} from '@angular/core'
+import {ActivatedRoute, UrlSegment} from '@angular/router'
+import {
+  Execution,
+  ExecutionLine,
+  ExecutionService,
+  OandEMonthly,
+  OandEService,
+  ProgramsService
+} from '../../../generated';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ActualsTabComponent} from '../actuals-tab/actuals-tab.component';
 
 @Component({
   selector: 'program-execution-line',
@@ -14,7 +17,6 @@ import { ActualsTabComponent } from '../actuals-tab/actuals-tab.component';
   styleUrls: ['./program-execution-line.component.scss']
 })
 export class ProgramExecutionLineComponent implements OnInit {
-  @ViewChild(JHeaderComponent) header;
   @ViewChild(ActualsTabComponent) actualstab;
   private exeline: ExecutionLine;
   private exe: Execution;

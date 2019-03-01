@@ -1,13 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { Execution, ExecutionService, ExecutionLine } from '../../../generated';
-import { Notify } from '../../../utils/Notify'
-import { UserUtils } from '../../../services/user.utils'
-import { AgGridNg2 } from 'ag-grid-angular';
-import { GridOptions } from 'ag-grid';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { SpendPlanService } from '../../../generated';
-import { SpendPlan } from '../../../generated';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Execution, ExecutionLine, ExecutionService, SpendPlan, SpendPlanService} from '../../../generated';
+import {Notify} from '../../../utils/Notify'
+import {UserUtils} from '../../../services/user.utils'
+import {AgGridNg2} from 'ag-grid-angular';
+import {GridOptions} from 'ag-grid';
+import {forkJoin} from 'rxjs/observable/forkJoin';
 import {JHeaderComponent} from "../../header/j-header/j-header.component";
 import {Router} from "@angular/router";
 

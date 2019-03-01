@@ -1,5 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {JHeaderComponent} from '../../header/j-header/j-header.component';
+import {Component, OnInit} from '@angular/core';
 import {CurrentPhase} from "../../../services/current-phase.service";
 import {Appropriation, BES, BESService, Budget, PB, PBService} from "../../../generated";
 import {join} from "../../../utils/join";
@@ -13,7 +12,6 @@ import {AbstractControl, FormControl, ValidationErrors, Validators} from "@angul
 })
 export class CopyBudgetComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header;
   budget: Budget;
   beses: BES[];
   pbs: PB[];

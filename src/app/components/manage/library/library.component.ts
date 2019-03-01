@@ -1,12 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import {FileMetadata, FileResponse, LibraryService} from "../../../generated";
 import {LibraryViewCellRenderer} from "../../renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import {FormatterUtil} from "../../../utils/formatterUtil";
+
 declare const $: any;
 
 @Component({
@@ -17,7 +14,6 @@ declare const $: any;
 })
 export class LibraryComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   data: Array<FileMetadata>;

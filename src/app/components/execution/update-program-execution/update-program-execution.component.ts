@@ -1,21 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import * as $ from 'jquery'
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component'
-import { PBService } from '../../../generated/api/pB.service'
-import { MyDetailsService } from '../../../generated/api/myDetails.service'
-import { ExecutionService } from '../../../generated/api/execution.service'
-import { ExecutionEvent } from '../../../generated/model/executionEvent'
-import { PB } from '../../../generated/model/pB'
-import { Execution } from '../../../generated/model/execution'
-import { Router, ActivatedRoute, UrlSegment } from '@angular/router'
-import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData } from '../../../generated';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
-import { ExecutionLineFilter } from '../model/execution-line-filter';
-import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
-import { ExecutionTableValidator } from '../model/execution-table-validator';
+import {Component, OnInit, ViewChild} from '@angular/core'
+import {ExecutionService} from '../../../generated/api/execution.service'
+import {Execution} from '../../../generated/model/execution'
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router'
+import {ExecutionDropDown, ExecutionEventData, ExecutionLine, ProgramsService} from '../../../generated';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
+import {ExecutionLineFilter} from '../model/execution-line-filter';
+import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
+import {ExecutionTableValidator} from '../model/execution-table-validator';
 
 @Component({
   selector: 'update-program-execution',
@@ -23,7 +15,6 @@ import { ExecutionTableValidator } from '../model/execution-table-validator';
   styleUrls: ['./update-program-execution.component.scss']
 })
 export class UpdateProgramExecutionComponent implements OnInit {
-  @ViewChild(JHeaderComponent) header;
   @ViewChild(ExecutionLineTableComponent) table;
   private current: ExecutionLineWrapper = { line: {} };
   private phase: Execution;

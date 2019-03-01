@@ -1,8 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {DualListComponent} from 'angular-dual-listbox';
-import {JHeaderComponent} from '../../header/j-header/j-header.component';
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {Notify} from '../../../utils/Notify';
 import {
@@ -27,8 +26,6 @@ import {
 })
 
 export class ManageRolesComponent {
-
-  @ViewChild(JHeaderComponent) header;
 
   private resultError: string[] = [];
 

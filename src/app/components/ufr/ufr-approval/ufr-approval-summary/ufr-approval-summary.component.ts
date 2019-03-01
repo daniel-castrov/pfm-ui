@@ -1,7 +1,6 @@
-import { UserUtils } from '../../../../services/user.utils';
-import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
-import { JHeaderComponent } from '../../../header/j-header/j-header.component';
-import { POMService, Pom, User } from '../../../../generated/index';
+import {UserUtils} from '../../../../services/user.utils';
+import {ChangeDetectorRef, Component, DoCheck, OnInit, ViewChild} from '@angular/core';
+import {Pom, POMService, User} from '../../../../generated/index';
 import {AllUfrsComponent} from "../../ufr-search/all-ufrs/all-ufrs.component";
 import {UFRFilter, UfrStatus} from "../../../../generated";
 import {CurrentPhase} from "../../../../services/current-phase.service";
@@ -13,7 +12,6 @@ import {PhaseType} from "../../../programming/select-program-request/UiProgramRe
   styleUrls: ['./ufr-approval-summary.component.scss']
 })
 export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
-  @ViewChild(JHeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
 
   private user: User;

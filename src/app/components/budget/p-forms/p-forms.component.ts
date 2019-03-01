@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { JHeaderComponent } from '../../header/j-header/j-header.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-p-forms',
@@ -7,8 +6,6 @@ import { JHeaderComponent } from '../../header/j-header/j-header.component';
   styleUrls: ['./p-forms.component.scss']
 })
 export class PFormsComponent implements OnInit {
-
-  @ViewChild(JHeaderComponent) header;
 
   constructor() { }
   

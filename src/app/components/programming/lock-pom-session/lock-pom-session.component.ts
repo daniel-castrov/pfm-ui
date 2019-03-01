@@ -1,5 +1,4 @@
-import {AfterContentChecked, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import {JHeaderComponent} from '../../header/j-header/j-header.component';
+import {AfterContentChecked, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {Pom, Worksheet} from "../../../generated";
 import {GridToaComponent} from "./../update-pom-session/grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./../update-pom-session/events-modal/events-modal.component";
@@ -14,7 +13,6 @@ import {LockedWorksheetsComponent} from "./locked-worksheets/locked-worksheets.c
 })
 export class LockPomSessionComponent implements AfterContentChecked {
 
-  @ViewChild(JHeaderComponent) header;
   @ViewChild(WorksheetComponent) worksheetComponent: WorksheetComponent;
   @ViewChild(LockedWorksheetsComponent) lockedWorksheetsComponent: LockedWorksheetsComponent;
   @ViewChild(GridToaComponent) gridToaComponent: GridToaComponent;

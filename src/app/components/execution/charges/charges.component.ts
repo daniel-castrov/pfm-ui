@@ -1,20 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import * as $ from 'jquery'
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component'
-import { PBService } from '../../../generated/api/pB.service'
-import { MyDetailsService } from '../../../generated/api/myDetails.service'
-import { ExecutionService } from '../../../generated/api/execution.service'
-import { ExecutionEvent } from '../../../generated/model/executionEvent'
-import { PB } from '../../../generated/model/pB'
-import { Execution } from '../../../generated/model/execution'
-import { ExecutionLine, ProgramsService, ExecutionDropDown, ExecutionEventData } from '../../../generated';
-import { Router, ActivatedRoute, UrlSegment, Route } from '@angular/router'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
-import { ExecutionTableValidator } from '../model/execution-table-validator';
-import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
+import {Component, OnInit, ViewChild} from '@angular/core'
+import {ExecutionService} from '../../../generated/api/execution.service'
+import {Execution} from '../../../generated/model/execution'
+import {ExecutionDropDown, ExecutionEventData} from '../../../generated';
+import {ActivatedRoute, Router} from '@angular/router'
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
+import {ExecutionTableValidator} from '../model/execution-table-validator';
+import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
 
 @Component({
   selector: 'charges',
@@ -22,7 +14,6 @@ import { ExecutionLineTableComponent } from '../execution-line-table/execution-l
   styleUrls: ['./charges.component.scss']
 })
 export class ChargesComponent implements OnInit {
-  @ViewChild(JHeaderComponent) header;
   @ViewChild(ExecutionLineTableComponent) table;
 
   private updatelines: ExecutionLineWrapper[] = [];

@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {GridOptions} from 'ag-grid';
 import {AgGridNg2} from 'ag-grid-angular';
-import {JHeaderComponent} from '../../../header/j-header/j-header.component';
 import {UserUtils} from '../../../../services/user.utils';
 import {Pom, POMService, User, Worksheet, WorksheetService} from '../../../../generated';
 import {NameViewingRendererComponent} from "./name-viewing-renderer.component";
@@ -14,7 +13,6 @@ import {NameViewingRendererComponent} from "./name-viewing-renderer.component";
 })
 export class WorksheetViewingComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private agOptions: GridOptions;

@@ -1,8 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import * as $ from 'jquery';
-
-// Other Components
-import { JHeaderComponent } from '../header/j-header/j-header.component';
+import {Component, OnInit} from '@angular/core';
 
 declare const $: any;
 declare const jQuery: any;
@@ -14,10 +10,6 @@ declare const jQuery: any;
 })
 
 export class PlanningComponent implements OnInit {
-
-  @ViewChild(JHeaderComponent) header;
-
-
 
   constructor() { }
 

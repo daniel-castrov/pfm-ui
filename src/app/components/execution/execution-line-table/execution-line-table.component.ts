@@ -1,19 +1,15 @@
-import { Component, OnInit, ViewChild, Input, ViewEncapsulation } from '@angular/core'
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component'
-import { Router } from '@angular/router'
-import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ProgramsService } from '../../../generated/api/programs.service';
-import { ExecutionLineWrapper } from '../model/execution-line-wrapper'
-import { ExecutionLineFilter } from '../model/execution-line-filter'
-import { ExecutionTableValidator } from '../model/execution-table-validator'
-import { GridOptions, RowNode } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
-import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
-import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.component";
+import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Router} from '@angular/router'
+import {Execution, ExecutionLine, ExecutionService, MyDetailsService} from '../../../generated'
+import {ProgramsService} from '../../../generated/api/programs.service';
+import {ExecutionLineWrapper} from '../model/execution-line-wrapper'
+import {ExecutionLineFilter} from '../model/execution-line-filter'
+import {ExecutionTableValidator} from '../model/execution-table-validator'
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {EventDetailsCellRendererComponent} from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import {DeleteRenderer} from "../../renderers/delete-renderer/delete-renderer.component";
 
 @Component({
   selector: 'app-execution-line-table',
@@ -22,7 +18,6 @@ import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.
   encapsulation: ViewEncapsulation.None
 })
 export class ExecutionLineTableComponent implements OnInit {
-  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private _phase: Execution;
   @Input() private showAddProgramButton: boolean = true;

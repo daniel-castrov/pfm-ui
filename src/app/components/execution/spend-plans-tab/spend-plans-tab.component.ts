@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core'
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component'
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
+import {Component, Input, OnInit, ViewChild} from '@angular/core'
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
 import {
-  OandEMonthly, ExecutionLine, Execution, ExecutionEvent,
-  OSDGoalPlan, SpendPlanService, SpendPlan
+  Execution,
+  ExecutionEvent,
+  ExecutionLine,
+  OandEMonthly,
+  OSDGoalPlan,
+  SpendPlan,
+  SpendPlanMonthly,
+  SpendPlanService
 } from '../../../generated';
-import { Notify } from '../../../utils/Notify';
-import { SpendPlanMonthly } from '../../../generated';
-import { OandETools, ToaAndReleased } from '../model/oande-tools';
-import { FyHeaderComponent } from '../fy-header/fy-header.component';
+import {Notify} from '../../../utils/Notify';
+import {OandETools, ToaAndReleased} from '../model/oande-tools';
+import {FyHeaderComponent} from '../fy-header/fy-header.component';
 
 declare const $: any;
 
@@ -26,7 +28,6 @@ declare const $: any;
 //          Do not change the order willy-nilly             //
 //////////////////////////////////////////////////////////////
 export class SpendPlansTabComponent implements OnInit {
-  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() parent: any;
 

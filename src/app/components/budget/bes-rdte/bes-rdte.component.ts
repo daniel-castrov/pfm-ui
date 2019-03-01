@@ -1,5 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {JHeaderComponent} from '../../header/j-header/j-header.component';
+import {Component, OnInit} from '@angular/core';
 import {BudgetFundingLine, BudgetFundingLinesService, Pom, POMService, User} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 import {Item} from "./Item";
@@ -10,8 +9,6 @@ import {Item} from "./Item";
   styleUrls: ['./bes-rdte.component.scss']
 })
 export class BesRdteComponent implements OnInit {
-
-  @ViewChild(JHeaderComponent) header;
 
   public columnDefs;
   public rows = [];
