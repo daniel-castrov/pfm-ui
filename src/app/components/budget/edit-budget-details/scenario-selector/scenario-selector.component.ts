@@ -46,7 +46,6 @@ export class ScenarioSelectorComponent implements OnInit {
     if ( this.parent.selectedScenario.appropriation == Appropriation.RDTE ){
 
       this.clearTabData();
-      
       let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
 
       if ( rdteData && rdteData.id ){

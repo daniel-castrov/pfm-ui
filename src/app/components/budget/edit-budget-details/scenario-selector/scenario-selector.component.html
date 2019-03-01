@@ -2,9 +2,11 @@
   <div class="col-7">
     <span class="h5 mr-2">FY{{budget.fy}} Budget - Edit Budget Details for: </span>
     <span><select [(ngModel)]="parent.selectedScenario" class="form-control-sm" (change)="onScenarioSelected()">
-        <option value="undefined" disabled selected>Select Scenario</option>
-        <option *ngFor="let bes of bess" [ngValue]="bes"> BES {{bes.appropriation}} {{bes.name}}</option>
-        <option *ngFor="let pb of pbs" [ngValue]="pb"> PB {{pb.appropriation}} {{pb.name}}</option>
+        <option value="undefined" disabled selected>Type / Appropriation / Name</option>
+        <option value="undefined" disabled> - - - - - - </option>
+        <option *ngFor="let bes of bess" [ngValue]="bes"> BES / {{bes.appropriation}} / {{bes.name}}</option>
+        <option value="undefined" disabled> - - - - - - </option>
+        <option *ngFor="let pb of pbs" [ngValue]="pb"> PB / {{pb.appropriation}} / {{pb.name}}</option>
       </select>
     </span>
   </div>
