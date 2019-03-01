@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Communication} from '../../../generated/model/communication';
 import {User} from '../../../generated/model/user';
 import {RestResult} from '../../../generated/model/restResult';
 import {MyDetailsService} from '../../../generated/api/myDetails.service';
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-manage-self',
@@ -11,6 +12,8 @@ import {MyDetailsService} from '../../../generated/api/myDetails.service';
   styleUrls: ['./manage-self.component.scss']
 })
 export class ManageSelfComponent implements OnInit {
+
+  @ViewChild(AppHeaderComponent) header;
 
   currentusername: string;
   currentUser: User;

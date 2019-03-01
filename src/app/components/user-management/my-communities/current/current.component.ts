@@ -1,13 +1,12 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {Community, Organization, User} from '../../../../generated';
+import {MyDetailsService} from '../../../../generated/api/myDetails.service';
+import {OrganizationService} from '../../../../generated/api/organization.service';
+import {AppHeaderComponent} from "../../../header/app-header/app-header.component";
 
-// Generated
-import { JHeaderComponent } from '../../../header/j-header/j-header.component';
-import { Community } from '../../../../generated';
-import { User } from '../../../../generated';
-import { MyDetailsService } from '../../../../generated/api/myDetails.service';
-import { OrganizationService } from '../../../../generated/api/organization.service';
-import { Organization } from '../../../../generated';
 
+class HeaderComponent {
+}
 
 @Component({
   selector: 'j-current',
@@ -16,7 +15,7 @@ import { Organization } from '../../../../generated';
 })
 export class CurrentComponent {
 
-  @Input() header: JHeaderComponent;
+  @Input() header: AppHeaderComponent;
   @Input() private memberOfCommunities: Community[];
   private _user: User;
   private selectedCommunityId: string;

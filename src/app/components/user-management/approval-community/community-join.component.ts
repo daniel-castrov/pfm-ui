@@ -1,18 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-
-// Other Components
-import { JHeaderComponent } from '../../header/j-header/j-header.component';
-import { Notify } from '../../../utils/Notify';
-
-import { Community } from '../../../generated/model/community';
-import { CommunityService } from '../../../generated/api/community.service';
-import { JoinCommunityRequestService } from '../../../generated/api/joinCommunityRequest.service';
-import { JoinCommunityRequest } from '../../../generated/model/joinCommunityRequest';
-import { RestResult } from '../../../generated/model/restResult';
-import { User } from '../../../generated/model/user';
-import { UserService } from '../../../generated/api/user.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {Notify} from '../../../utils/Notify';
+import {Community} from '../../../generated/model/community';
+import {CommunityService} from '../../../generated/api/community.service';
+import {JoinCommunityRequestService} from '../../../generated/api/joinCommunityRequest.service';
+import {JoinCommunityRequest} from '../../../generated/model/joinCommunityRequest';
+import {RestResult} from '../../../generated/model/restResult';
+import {User} from '../../../generated/model/user';
+import {UserService} from '../../../generated/api/user.service';
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 
 @Component({
@@ -23,7 +20,7 @@ import { UserService } from '../../../generated/api/user.service';
 })
 export class CommunityJoinComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header: JHeaderComponent;
+  @ViewChild(AppHeaderComponent) header: AppHeaderComponent;
 
   requestId: string;
   joinCommunityRequest: JoinCommunityRequest;

@@ -1,16 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { JHeaderComponent } from '../../header/j-header/j-header.component';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-
-// Generated
-import { Community } from '../../../generated/model/community';
-import { CommunityService } from '../../../generated/api/community.service';
-import { Organization } from '../../../generated/model/organization';
-import { OrganizationService } from '../../../generated/api/organization.service';
-import { CreateUserRequest } from '../../../generated/model/createUserRequest';
-import { CreateUserRequestService } from '../../../generated/api/createUserRequest.service';
-import { RestResult } from '../../../generated/model/restResult';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {CommunityService} from '../../../generated/api/community.service';
+import {OrganizationService} from '../../../generated/api/organization.service';
+import {CreateUserRequest} from '../../../generated/model/createUserRequest';
+import {CreateUserRequestService} from '../../../generated/api/createUserRequest.service';
+import {RestResult} from '../../../generated/model/restResult';
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-user-approval',
@@ -19,7 +15,7 @@ import { RestResult } from '../../../generated/model/restResult';
 })
 export class UserApprovalComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header: JHeaderComponent;
+  @ViewChild(AppHeaderComponent) header: AppHeaderComponent;
 
   requestId: string;
   resultError;

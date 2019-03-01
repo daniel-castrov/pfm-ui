@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {JHeaderComponent} from '../../header/j-header/j-header.component'
 import {UserUtils} from '../../../services/user.utils';
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {PBService, Pom, POMService, Program, PRService, User} from '../../../generated';
 import {Notify} from '../../../utils/Notify';
 import {CurrentPhase} from "../../../services/current-phase.service";
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'close-pom-session',
@@ -14,7 +14,7 @@ import {CurrentPhase} from "../../../services/current-phase.service";
 
 export class ClosePomSessionComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header: JHeaderComponent;
+  @ViewChild(AppHeaderComponent) header: AppHeaderComponent;
 
   pom:Pom;
   by;

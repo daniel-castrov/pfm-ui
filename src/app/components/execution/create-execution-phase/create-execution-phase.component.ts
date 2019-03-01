@@ -1,10 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-// Other Components
-import {JHeaderComponent} from '../../header/j-header/j-header.component';
 import {Router} from '@angular/router';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {Budget, BudgetService, Execution, ExecutionService, PB} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 declare const $: any;
 declare const jQuery: any;
@@ -16,7 +15,7 @@ declare const jQuery: any;
 })
 export class CreateExecutionPhaseComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header;
+  @ViewChild(AppHeaderComponent) header;
 
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private budget: Budget;

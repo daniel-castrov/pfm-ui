@@ -1,9 +1,7 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { Notify } from '../../../../utils/Notify';
-
-// Generated
-import { Community, RestResult, User, Organization, OrganizationService } from '../../../../generated';
-import { JHeaderComponent } from '../../../header/j-header/j-header.component';
+import {Component, Input, OnChanges} from '@angular/core';
+import {Notify} from '../../../../utils/Notify';
+import {Community, Organization, OrganizationService, RestResult, User} from '../../../../generated';
+import {AppHeaderComponent} from "../../../header/app-header/app-header.component";
 
 @Component({
   selector: 'j-request',
@@ -17,7 +15,7 @@ export class RequestComponent implements OnChanges {
   @Input() user: User;
   @Input() service: any;
   @Input() useOrgs: boolean;
-  @Input() header: JHeaderComponent;
+  @Input() header: AppHeaderComponent;
   
   availableCommunities: Community[];
   requestedCommunities: Community[];

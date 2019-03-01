@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {JHeaderComponent} from '../../header/j-header/j-header.component'
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {PBService, Pom, POMService, Program} from '../../../generated';
 import {Notify} from '../../../utils/Notify';
 import {CurrentPhase} from "../../../services/current-phase.service";
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-open-pom-session',
@@ -14,7 +14,7 @@ import {CurrentPhase} from "../../../services/current-phase.service";
 
 export class OpenPomSessionComponent implements OnInit {
 
-  @ViewChild(JHeaderComponent) header: JHeaderComponent;
+  @ViewChild(AppHeaderComponent) header: AppHeaderComponent;
 
   private pom:Pom;
   private pomPrograms:Program[];

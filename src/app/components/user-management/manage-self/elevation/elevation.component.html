@@ -1,7 +1,7 @@
-<div *ngIf="header.authUser.admin" class="card-header">
+<div *ngIf="header.authUser?.admin" class="card-header">
   Operate as Admin:
 </div>
-<div *ngIf="header.authUser.admin" class="card-container">
+<div *ngIf="header.authUser?.admin" class="card-container">
   <div class="card-body">
     <toggle-button
       offText="Admin Off"
