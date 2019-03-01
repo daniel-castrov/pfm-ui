@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { Notify } from '../../../utils/Notify';
 
 // Generated
@@ -16,7 +16,7 @@ import { UserService, RoleService, UserRoleResourceService, AssignRoleRequestSer
 })
 export class AccessChangeApprovalComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   resultError: string[] = [];
   requestId: string;

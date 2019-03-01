@@ -2,7 +2,7 @@ import { JoinCommunityRequestService } from '../../../generated/api/joinCommunit
 import { LeaveCommunityRequestService } from '../../../generated/api/leaveCommunityRequest.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 
 // Generated
 import { CommunityService } from '../../../generated';
@@ -17,7 +17,7 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 })
 export class MyCommunitiesComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(JHeaderComponent) header: JHeaderComponent;
 
   allCommunities: Community[] = [];
   communitiesToJoin: Community[] = [];

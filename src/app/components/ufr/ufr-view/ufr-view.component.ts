@@ -11,7 +11,7 @@ import {
   UFRsService,
   UfrStatus
 } from '../../../generated';
-import {HeaderComponent} from '../../header/header.component';
+import {JHeaderComponent} from '../../header/j-header/j-header.component';
 import {ActivatedRoute, UrlSegment} from '@angular/router';
 import {PRUtils} from '../../../services/pr.utils.service';
 import {ProgramAndPrService} from "../../../services/program-and-pr.service";
@@ -29,7 +29,7 @@ import {PhaseType} from "../../programming/select-program-request/UiProgramReque
   styleUrls: ['./ufr-view.component.scss']
 })
 export class UfrViewComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild(UfrUfrTabComponent) ufrUfrTabComponent: UfrUfrTabComponent;
   @ViewChild(UfrFundsComponent) ufrFundsComponent: UfrFundsComponent;
   @ViewChild(UfrProgramComponent) ufrProgramComponent: UfrProgramComponent;

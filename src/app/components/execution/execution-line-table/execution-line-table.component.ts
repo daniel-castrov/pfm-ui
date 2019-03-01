@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input, ViewEncapsulation } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
 import { forkJoin } from 'rxjs/observable/forkJoin';
@@ -22,7 +22,7 @@ import { DeleteRenderer } from "../../renderers/delete-renderer/delete-renderer.
   encapsulation: ViewEncapsulation.None
 })
 export class ExecutionLineTableComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private _phase: Execution;
   @Input() private showAddProgramButton: boolean = true;

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../../components/header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { RestResult } from '../../../generated/model/restResult';
 })
 export class UserApprovalComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(JHeaderComponent) header: JHeaderComponent;
 
   requestId: string;
   resultError;

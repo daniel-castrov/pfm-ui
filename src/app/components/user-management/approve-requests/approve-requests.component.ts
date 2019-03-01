@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Request } from '../../../services/request';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { Injectables } from '../../../services/injectables';
 import { RequestsService } from '../../../services/requests.service';
 import { AgGridNg2 } from 'ag-grid-angular';
@@ -17,7 +17,7 @@ import {FormatterUtil} from "../../../utils/formatterUtil";
 })
 export class ApproveRequestsComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(JHeaderComponent) header: JHeaderComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   requests: Request[];

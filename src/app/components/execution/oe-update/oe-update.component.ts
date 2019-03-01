@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 
@@ -19,7 +19,7 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
 })
 
 export class OeUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private programs: Map<string, string> = new Map<string, string>();

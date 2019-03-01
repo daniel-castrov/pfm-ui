@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { HeaderComponent } from '../../../header/header.component';
+import { JHeaderComponent } from '../../../header/j-header/j-header.component';
 import { ElevationService } from '../../../../services/elevation.component';
 
 @Component({
@@ -9,7 +9,7 @@ import { ElevationService } from '../../../../services/elevation.component';
 })
 export class ElevationComponent {
 
-  @Input() header: HeaderComponent;
+  @Input() header: JHeaderComponent;
 
   constructor(private elevationService: ElevationService) {}
 

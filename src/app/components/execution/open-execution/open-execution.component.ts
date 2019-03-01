@@ -8,7 +8,7 @@ import { GridOptions } from 'ag-grid';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { SpendPlanService } from '../../../generated';
 import { SpendPlan } from '../../../generated';
-import {HeaderComponent} from "../../header/header.component";
+import {JHeaderComponent} from "../../header/j-header/j-header.component";
 import {Router} from "@angular/router";
 
 @Component({
@@ -17,7 +17,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./open-execution.component.scss']
 })
 export class OpenExecutionComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private phases: Execution[];
   private phase: Execution;

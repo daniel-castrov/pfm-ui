@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../../header/header.component';
+import { JHeaderComponent } from '../../../header/j-header/j-header.component';
 
 @Component({
   selector: 'p40',
@@ -8,7 +8,7 @@ import { HeaderComponent } from '../../../header/header.component';
 })
 export class P40Component implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   constructor() { }
 

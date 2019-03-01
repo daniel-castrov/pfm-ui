@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { Router } from '@angular/router'
 import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
 import { forkJoin } from 'rxjs/observable/forkJoin';
@@ -20,7 +20,7 @@ import { AutoValuesService} from '../../programming/program-request/funds-tab/Au
 })
 
 export class FundsUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private exephases: Execution[];

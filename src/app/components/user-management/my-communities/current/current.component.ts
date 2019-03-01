@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 
 // Generated
-import { HeaderComponent } from '../../../header/header.component';
+import { JHeaderComponent } from '../../../header/j-header/j-header.component';
 import { Community } from '../../../../generated';
 import { User } from '../../../../generated';
 import { MyDetailsService } from '../../../../generated/api/myDetails.service';
@@ -16,7 +16,7 @@ import { Organization } from '../../../../generated';
 })
 export class CurrentComponent {
 
-  @Input() header: HeaderComponent;
+  @Input() header: JHeaderComponent;
   @Input() private memberOfCommunities: Community[];
   private _user: User;
   private selectedCommunityId: string;

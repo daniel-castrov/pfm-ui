@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {HeaderComponent} from '../../header/header.component'
+import {JHeaderComponent} from '../../header/j-header/j-header.component'
 import {UserUtils} from '../../../services/user.utils';
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {PBService, Pom, POMService, Program, PRService, User} from '../../../generated';
@@ -14,7 +14,7 @@ import {CurrentPhase} from "../../../services/current-phase.service";
 
 export class ClosePomSessionComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(JHeaderComponent) header: JHeaderComponent;
 
   pom:Pom;
   by;

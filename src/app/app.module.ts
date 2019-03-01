@@ -47,7 +47,7 @@ import { FilterComponent } from './components/filter/filter.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { GraphsTabComponent } from './components/execution/graphs-tab/graphs-tab.component';
-import { HeaderComponent } from './components/header/header.component';
+import { JHeaderComponent } from './components/header/j-header/j-header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 import { HomeComponent } from './components/home/home.component';
@@ -250,7 +250,7 @@ const appRoutes: Routes = [
   {path:'create-new-pom', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
-  {path:'header', component:HeaderComponent},
+  {path:'header', component:JHeaderComponent},
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
@@ -341,7 +341,7 @@ const appRoutes: Routes = [
     FundsUpdateComponent,
     FyPipe,
     GraphsTabComponent,
-    HeaderComponent,
+    JHeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
     HeaderUserComponent,

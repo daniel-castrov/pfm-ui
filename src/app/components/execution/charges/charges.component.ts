@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
@@ -22,7 +22,7 @@ import { ExecutionLineTableComponent } from '../execution-line-table/execution-l
   styleUrls: ['./charges.component.scss']
 })
 export class ChargesComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild(ExecutionLineTableComponent) table;
 
   private updatelines: ExecutionLineWrapper[] = [];

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { Notify } from '../../../utils/Notify';
 
 import { Community } from '../../../generated/model/community';
@@ -23,7 +23,7 @@ import { UserService } from '../../../generated/api/user.service';
 })
 export class CommunityJoinComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(JHeaderComponent) header: JHeaderComponent;
 
   requestId: string;
   joinCommunityRequest: JoinCommunityRequest;

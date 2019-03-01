@@ -3,7 +3,7 @@ import { ViewEncapsulation } from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EppService } from '../../../generated/api/epp.service';
 import { UserUtils } from '../../../services/user.utils';
@@ -27,7 +27,7 @@ export class SetEppComponent implements OnInit {
   communityId:string;
   menuTabs = ['filterMenuTab'];
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 

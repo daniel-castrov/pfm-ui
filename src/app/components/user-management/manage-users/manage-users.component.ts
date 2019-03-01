@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { CommunityWithRolesAndOrgs } from './CommunityWithRolesAndOrgs';
 
 
@@ -27,7 +27,7 @@ import { UserRoleResourceService } from '../../../generated/api/userRoleResource
 })
 export class ManageUsersComponent {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   // This is the id of the user we are interested in ... the targetUser
   private userid: string;

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 
 // Generated
@@ -16,7 +16,7 @@ import { CommunityService } from '../../../generated';
 })
 export class ManageCommunitiesComponent {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   private commname = new FormControl('', [Validators.required, this.validName.bind(this)]);
   private commidentifier  = new FormControl('', [Validators.required, this.validIdentifier .bind(this)]);

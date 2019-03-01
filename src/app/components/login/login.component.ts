@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Other Components
-import { HeaderComponent } from '../header/header.component';
+import { JHeaderComponent } from '../header/j-header/j-header.component';
 
 @Component({
   selector: 'app-login',

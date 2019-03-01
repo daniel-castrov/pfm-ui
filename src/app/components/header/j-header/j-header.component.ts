@@ -1,19 +1,19 @@
-import { HeaderUserComponent } from './header-user/header-user.component';
+import { HeaderUserComponent } from '../header-user/header-user.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { AuthUser } from '../../generated/model/authUser';
-import { RestResult } from '../../generated/model/restResult';
-import { BlankService } from '../../generated/api/blank.service';
+import { AuthUser } from '../../../generated/model/authUser';
+import { RestResult } from '../../../generated/model/restResult';
+import { BlankService } from '../../../generated/api/blank.service';
 
 @Component({
   selector: 'j-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  templateUrl: './j-header.component.html',
+  styleUrls: ['./j-header.component.scss'],
   providers: [NgbTooltipConfig]
 })
-export class HeaderComponent implements OnInit {
+export class JHeaderComponent implements OnInit {
 
   @ViewChild(HeaderUserComponent) headerUserComponent: HeaderUserComponent;
   isAuthenticated: boolean = false;

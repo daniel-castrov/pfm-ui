@@ -3,7 +3,7 @@ import { ViewEncapsulation } from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import {FileMetadata, FileResponse, LibraryService} from "../../../generated";
 import {LibraryViewCellRenderer} from "../../renderers/library-view-cell-renderer/library-view-cell-renderer.component";
 import {FormatterUtil} from "../../../utils/formatterUtil";
@@ -17,7 +17,7 @@ declare const $: any;
 })
 export class LibraryComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   data: Array<FileMetadata>;

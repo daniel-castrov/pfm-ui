@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core'
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import {
@@ -26,7 +26,7 @@ declare const $: any;
 //          Do not change the order willy-nilly             //
 //////////////////////////////////////////////////////////////
 export class SpendPlansTabComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() parent: any;
 

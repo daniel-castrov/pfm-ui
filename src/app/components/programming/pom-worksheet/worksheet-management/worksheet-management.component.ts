@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {GridOptions} from 'ag-grid';
 import {AgGridNg2} from 'ag-grid-angular';
-import {HeaderComponent} from '../../../header/header.component';
+import {JHeaderComponent} from '../../../header/j-header/j-header.component';
 import {UserUtils} from '../../../../services/user.utils';
 import {Pom, POMService, User, WorksheetService} from '../../../../generated';
 import {CheckboxRendererComponent} from "./checkbox-renderer.component";
@@ -22,7 +22,7 @@ import {UnlockComponent} from "./unlock/unlock.component";
 })
 export class WorksheetManagementComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @ViewChild("duplicate") private duplicateComponent: DuplicateComponent;
   @ViewChild("rename") private renameComponent: RenameComponent;

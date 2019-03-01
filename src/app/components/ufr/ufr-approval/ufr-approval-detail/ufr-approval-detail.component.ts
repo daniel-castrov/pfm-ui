@@ -5,7 +5,7 @@ import {
 } from '../../../../generated'
 import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
 import {ActivatedRoute} from "@angular/router";
-import {HeaderComponent} from "../../../header/header.component";
+import {JHeaderComponent} from "../../../header/j-header/j-header.component";
 import {DataRow} from "../../ufr-view/ufr-funds-tab/DataRow";
 import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 import {AgGridNg2} from "ag-grid-angular";
@@ -24,7 +24,7 @@ declare const $: any;
 
 export class UfrApprovalDetailComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;

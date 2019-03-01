@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import * as $ from 'jquery'
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { PBService } from '../../../generated/api/pB.service'
 import { MyDetailsService } from '../../../generated/api/myDetails.service'
 import { ExecutionService } from '../../../generated/api/execution.service'
@@ -23,7 +23,7 @@ import { ExecutionTableValidator } from '../model/execution-table-validator';
   styleUrls: ['./update-program-execution.component.scss']
 })
 export class UpdateProgramExecutionComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild(ExecutionLineTableComponent) table;
   private current: ExecutionLineWrapper = { line: {} };
   private phase: Execution;

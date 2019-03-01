@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 
 // Generated
 import { User } from '../../../generated/model/user';
@@ -23,7 +23,7 @@ import { UserService } from '../../../generated/api/user.service';
 })
 export class UserListComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
 
   users: User[]=[];

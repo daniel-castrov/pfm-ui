@@ -3,7 +3,7 @@ import { Notify } from '../../../../utils/Notify';
 
 // Generated
 import { Community, RestResult, User, Organization, OrganizationService } from '../../../../generated';
-import { HeaderComponent } from '../../../header/header.component';
+import { JHeaderComponent } from '../../../header/j-header/j-header.component';
 
 @Component({
   selector: 'j-request',
@@ -17,7 +17,7 @@ export class RequestComponent implements OnChanges {
   @Input() user: User;
   @Input() service: any;
   @Input() useOrgs: boolean;
-  @Input() header: HeaderComponent;
+  @Input() header: JHeaderComponent;
   
   availableCommunities: Community[];
   requestedCommunities: Community[];

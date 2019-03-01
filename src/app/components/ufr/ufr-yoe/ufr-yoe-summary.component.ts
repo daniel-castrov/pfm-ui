@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, DoCheck } from '@angular/core';
-import {HeaderComponent} from "../../header/header.component";
+import {JHeaderComponent} from "../../header/j-header/j-header.component";
 import {AllUfrsComponent} from "../ufr-search/all-ufrs/all-ufrs.component";
 import {Execution, ExecutionService, Pom, POMService, UFRFilter, User} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
@@ -12,7 +12,7 @@ import {PhaseType} from "../../programming/select-program-request/UiProgramReque
 })
 
 export class UfrYoeSummaryComponent implements OnInit, DoCheck {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
 
   executionPhases: Execution[];

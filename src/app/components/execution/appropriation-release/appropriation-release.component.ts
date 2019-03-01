@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import * as $ from 'jquery';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 import { ExecutionService } from '../../../generated/api/execution.service'
 import { Execution } from '../../../generated/model/execution';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,7 +22,7 @@ declare const jQuery: any;
 })
 
 export class AppropriationReleaseComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild(ExecutionLineTableComponent) table;
   private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;

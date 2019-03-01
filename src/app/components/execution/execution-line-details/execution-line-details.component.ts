@@ -4,7 +4,7 @@ import { ActivatedRoute, UrlSegment } from '../../../../../node_modules/@angular
 import { forkJoin } from '../../../../../node_modules/rxjs/observable/forkJoin';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component'
+import { JHeaderComponent } from '../../header/j-header/j-header.component'
 import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
@@ -19,7 +19,7 @@ import { TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-d
 })
 export class ExecutionLineDetailsComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private current: ExecutionLineWrapper;

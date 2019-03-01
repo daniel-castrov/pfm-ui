@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 
 // Generated
 import { User } from '../../../generated/model/user';
@@ -26,7 +26,7 @@ import { OrganizationService } from '../../../generated/api/organization.service
 })
 export class MamageCommunityDetailsComponent {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   // This is the id of the community we are interested in 
   private communityid: string;

@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
+import { JHeaderComponent } from '../../header/j-header/j-header.component';
 
 // Generated
 import { Communication } from '../../../generated/model/communication';
@@ -23,7 +23,7 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 })
 export class ManageSelfComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   currentusername: string;
   currentUser: User;
