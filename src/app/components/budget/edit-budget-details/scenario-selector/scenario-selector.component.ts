@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EditBudgetDetailsComponent } from '../edit-budget-details.component';
-import { Appropriation, RdteDataService , RdteData, Budget, BES } from '../../../../generated';
+import { Appropriation, RdteDataService , RdteData, Budget, BES, BESService, PB, PBService} from '../../../../generated';
 import { CurrentPhase } from "../../../../services/current-phase.service";
+import {join} from "../../../../utils/join";
 import { Notify } from '../../../../utils/Notify';
 
 @Component({
@@ -15,9 +16,12 @@ export class ScenarioSelectorComponent implements OnInit {
 
   budget:Budget={};
   bess:BES[] = [];
+  pbs:PB[] = [];
 
   constructor(
     private currentPhase : CurrentPhase,
+    private besService: BESService,
+    private pbService: PBService,
     private rdteDataService: RdteDataService) { }
 
   ngOnInit() {
@@ -29,40 +33,34 @@ export class ScenarioSelectorComponent implements OnInit {
     this.budget= (await this.currentPhase.budget().toPromise());
     if ( this.budget.status != "OPEN" ){
       Notify.error("There is no OPEN budget phase");
+    } else {
+      [this.bess, this.pbs] = await join( this.besService.getByBudget(this.budget.id),
+                                         this.pbService .getByBudget(this.budget.id) ) as [BES[], PB[]];      
     }
 
-    this.bess.push ({
-        id: "1",
-        budgetId: this.budget.id,
-        name: "BES Default",
-        appropriation: Appropriation.RDTE
-      });
-      this.bess.push ({
-        id: "2",
-        budgetId: this.budget.id,
-        name: "BES 2",
-        appropriation: Appropriation.RDTE
-      });
-      this.bess.push ({
-        id: "3",
-        budgetId: this.budget.id,
-        name: "BES 3",
-        appropriation: Appropriation.RDTE
-      }); 
-      this.parent.rdteData = {}
+    this.parent.rdteData = {}
   }
 
   async onScenarioSelected(){
 
-    this.clearTabData();
-    
-    let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
+    if ( this.parent.selectedScenario.appropriation == Appropriation.RDTE ){
 
-    if ( rdteData && rdteData.id ){
-      this.parent.rdteData = rdteData;
+      this.clearTabData();
+      
+      let rdteData: RdteData = (await this.rdteDataService.getByContainerId( this.parent.selectedScenario.id ).toPromise()).result;
+
+      if ( rdteData && rdteData.id ){
+        this.parent.rdteData = rdteData;
+      } else {
+        this.parent.rdteData = rdteData;
+        this.parent.rdteData.containerId = this.parent.selectedScenario.id;
+      }
+    } else if ( this.parent.selectedScenario.appropriation == Appropriation.PROC ){
+      this.parent.selectedScenario = null;
+      Notify.info("PROC not yet implemented")
     } else {
-      this.parent.rdteData = rdteData;
-      this.parent.rdteData.containerId = this.parent.selectedScenario.id;
+      this.parent.selectedScenario = null;
+      Notify.error("Unknown Appropriation")
     }
   }
 
