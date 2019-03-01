@@ -229,6 +229,8 @@ import { ScenarioSelectorComponent } from './components/budget/edit-budget-detai
 import {ServerErrorComponent} from "./components/error/server-error/server-error.component";
 import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
 import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
+import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
+import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -247,6 +249,7 @@ const appRoutes: Routes = [
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
+  {path:'import-execution-data', component:ImportActualsComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
@@ -347,6 +350,8 @@ const appRoutes: Routes = [
     HeaderUserComponent,
     HomeComponent,
     IdAndNameComponent,
+    ImportActualsComponent,
+    ImportAcutalsTableComponent,
     JustificationTabComponent,
     LoginComponent,
     MamageCommunityDetailsComponent,

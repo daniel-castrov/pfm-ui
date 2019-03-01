@@ -36,10 +36,11 @@ export class OandETools{
             timestamp = new Date(timestamp);
         }
 
-        var yeardiff: number = timestamp.getFullYear() - fy;
+        var fystart: Date = new Date(fy - 1, 9, 1);
 
-        // -9 because the FY starts in October
-        return (yeardiff * 12) + timestamp.getMonth() - 9;
+        var yeardiff: number = timestamp.getFullYear() - fystart.getFullYear();
+        var monthdiff = timestamp.getMonth() - fystart.getMonth();
+        return (yeardiff * 12) + monthdiff;
     }
 }
 

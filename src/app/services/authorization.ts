@@ -27,7 +27,7 @@ export class Authorization {
     if(this[url]) {
       return this[url]();
     } else {
-      console.warn('Authorization requested for a URL that is not set up for authorization');
+      console.warn('Authorization requested for a URL that is not set up for authorization: ' + url );
       return Promise.resolve(AuthorizationResult.Ok);
     }
   }
@@ -189,6 +189,10 @@ export class Authorization {
   }
 
   async 'program-update'(): Promise<AuthorizationResult> {
+    return this['open-execution-phase']();
+  }
+
+  async 'import-execution-data'(): Promise<AuthorizationResult> {
     return this['open-execution-phase']();
   }
 
