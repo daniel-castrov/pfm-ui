@@ -257,7 +257,7 @@ export class FundsTabComponent implements OnChanges {
         deltaRow.phaseType = PhaseType.DELTA;
         //data.push(pbRow);
         data.push(pomRow);
-        data.push(deltaRow);
+        //data.push(deltaRow);
       });
       this.generateColumns();
       this.data = data;
@@ -304,7 +304,7 @@ export class FundsTabComponent implements OnChanges {
     deltaRow.phaseType = PhaseType.DELTA;
     //this.data.push(pbRow);
     this.data.push(pomRow);
-    this.data.push(deltaRow);
+    //this.data.push(deltaRow);
     this.agGrid.columnApi.setColumnVisible('delete', true);
     this.agGrid.api.sizeColumnsToFit();
     if (this.agGridSiblings && this.agGridParent) {
