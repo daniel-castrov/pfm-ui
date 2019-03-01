@@ -31,7 +31,7 @@
             </div>
           </td>
           <td>
-            <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!createNewUfrMode || createNewUfrMode=='Select an option'">
+            <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="nextDisbaled()">
               <span class="icon-pad">Next</span>
               <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
             </button>
