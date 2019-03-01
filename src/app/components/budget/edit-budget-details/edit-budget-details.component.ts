@@ -1,6 +1,6 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 
-import {HeaderComponent} from '../../../components/header/header.component';
+import {JHeaderComponent} from '../../header/j-header/j-header.component';
 import { BES, RdteData, RdteDataService } from '../../../generated';
 import { Notify } from '../../../utils/Notify';
 
@@ -17,7 +17,7 @@ import { R2aTabComponent } from './r2a-tab/r2a-tab.component';
 })
 export class EditBudgetDetailsComponent implements AfterContentChecked {
 
-  @ViewChild( HeaderComponent ) header;
+  @ViewChild( JHeaderComponent ) header;
   @ViewChild( TitleTabComponent ) titleTabComponent: TitleTabComponent;
   @ViewChild( OverviewTabComponent ) overviewTabComponent: OverviewTabComponent;
   @ViewChild( R1TabComponent) r1TabComponent: R1TabComponent;

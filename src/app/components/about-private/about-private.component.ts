@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 // Other Components
-import { HeaderComponent } from '../../components/header/header.component';
+import { JHeaderComponent } from '../header/j-header/j-header.component';
 
 @Component({
   selector: 'app-about-private',
@@ -10,7 +10,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 })
 export class AboutPrivateComponent {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(JHeaderComponent) header;
 
   resultError;
 

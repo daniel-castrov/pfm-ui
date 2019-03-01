@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../../header/header.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'p5a',
@@ -7,8 +6,6 @@ import { HeaderComponent } from '../../../header/header.component';
   styleUrls: ['./p5a.component.scss']
 })
 export class P5aComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header;
 
   constructor() { }
 

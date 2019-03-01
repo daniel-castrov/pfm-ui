@@ -47,7 +47,7 @@ import { FilterComponent } from './components/filter/filter.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { GraphsTabComponent } from './components/execution/graphs-tab/graphs-tab.component';
-import { HeaderComponent } from './components/header/header.component';
+import { JHeaderComponent } from './components/header/j-header/j-header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 import { HomeComponent } from './components/home/home.component';
@@ -230,6 +230,7 @@ import {ServerErrorComponent} from "./components/error/server-error/server-error
 import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
 import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
 import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
+import {AppHeaderComponent} from "./components/header/app-header/app-header.component";
 import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
 
 // ROUTES
@@ -253,7 +254,7 @@ const appRoutes: Routes = [
   {path:'create-new-pom', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
-  {path:'header', component:HeaderComponent},
+  {path:'header', component:JHeaderComponent},
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
@@ -344,7 +345,8 @@ const appRoutes: Routes = [
     FundsUpdateComponent,
     FyPipe,
     GraphsTabComponent,
-    HeaderComponent,
+    JHeaderComponent,
+    AppHeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
     HeaderUserComponent,

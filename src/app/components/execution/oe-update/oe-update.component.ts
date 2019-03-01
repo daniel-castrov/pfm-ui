@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import { Router } from '@angular/router'
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component'
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-
-import { ExecutionService, Execution, MyDetailsService, ExecutionLine, OandEMonthly, OandEService } from '../../../generated'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ProgramsService } from '../../../generated/api/programs.service';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {Component, OnInit, ViewChild} from '@angular/core'
+import {Router} from '@angular/router'
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {
+  Execution,
+  ExecutionLine,
+  ExecutionService,
+  MyDetailsService,
+  OandEMonthly,
+  OandEService
+} from '../../../generated'
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ProgramsService} from '../../../generated/api/programs.service';
+import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 
 @Component({
@@ -19,7 +22,6 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
 })
 
 export class OeUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private programs: Map<string, string> = new Map<string, string>();

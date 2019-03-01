@@ -2,7 +2,6 @@ import {Component, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {DualListComponent} from 'angular-dual-listbox';
-import {HeaderComponent} from '../../header/header.component';
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {Notify} from '../../../utils/Notify';
 import {
@@ -14,13 +13,15 @@ import {
   DropRoleRequestService,
   MyDetailsService,
   Organization,
-  OrganizationService, Program,
+  OrganizationService,
+  Program,
   Role,
   RoleService,
   User,
   UserRoleResource,
   UserRoleResourceService
 } from '../../../generated';
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-my-roles',
@@ -30,7 +31,7 @@ import {
 
 export class MyRolesComponent {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(AppHeaderComponent) header;
 
   private resultError: string[] = [];
 

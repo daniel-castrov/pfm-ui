@@ -2,9 +2,16 @@ import {AllUfrsComponent} from './all-ufrs/all-ufrs.component';
 import {UserUtils} from '../../../services/user.utils';
 import {ChangeDetectorRef, Component, DoCheck, OnInit, ViewChild} from '@angular/core';
 import {forkJoin} from "rxjs/observable/forkJoin";
-import {HeaderComponent} from '../../header/header.component';
 import {
-  Budget, BudgetService, ExecutionService, Pom, POMService, RestResult, UFRFilter, UfrStatus, User
+  Budget,
+  BudgetService,
+  ExecutionService,
+  Pom,
+  POMService,
+  RestResult,
+  UFRFilter,
+  UfrStatus,
+  User
 } from '../../../generated';
 import {Cycle} from '../cycle';
 import {CurrentPhase} from "../../../services/current-phase.service";
@@ -17,7 +24,6 @@ import {PhaseType} from "../../programming/select-program-request/UiProgramReque
 })
 export class UfrSearchComponent implements OnInit, DoCheck {
 
-  @ViewChild(HeaderComponent) header;
   @ViewChild(AllUfrsComponent) allUfrsComponent: AllUfrsComponent;
   private user: User;
   private cycles: string[] = [];

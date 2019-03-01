@@ -1,11 +1,26 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  Disposition, FundingLine, Pom, POMService, Program, ProgramsService, PRService, ShortyType, UFR, UfrEvent,
-  UFRsService, UfrStatus, User, UserService, Worksheet, WorksheetEvent, WorksheetRow, WorksheetService
+  Disposition,
+  FundingLine,
+  Pom,
+  POMService,
+  Program,
+  ProgramsService,
+  PRService,
+  ShortyType,
+  UFR,
+  UfrEvent,
+  UFRsService,
+  UfrStatus,
+  User,
+  UserService,
+  Worksheet,
+  WorksheetEvent,
+  WorksheetRow,
+  WorksheetService
 } from '../../../../generated'
 import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
 import {ActivatedRoute} from "@angular/router";
-import {HeaderComponent} from "../../../header/header.component";
 import {DataRow} from "../../ufr-view/ufr-funds-tab/DataRow";
 import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 import {AgGridNg2} from "ag-grid-angular";
@@ -24,7 +39,6 @@ declare const $: any;
 
 export class UfrApprovalDetailComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;

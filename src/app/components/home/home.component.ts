@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 // Other Components
-import { HeaderComponent } from '../header/header.component';
+import { JHeaderComponent } from '../header/j-header/j-header.component';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +10,6 @@ import { HeaderComponent } from '../header/header.component';
 })
 export class HomeComponent {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(JHeaderComponent) header: JHeaderComponent;
 
 }

@@ -1,14 +1,10 @@
-import { JoinCommunityRequestService } from '../../../generated/api/joinCommunityRequest.service';
-import { LeaveCommunityRequestService } from '../../../generated/api/leaveCommunityRequest.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HeaderComponent } from '../../header/header.component';
-
-// Generated
-import { CommunityService } from '../../../generated';
-import { Community } from '../../../generated';
-import { User } from '../../../generated';
-import { MyDetailsService } from '../../../generated/api/myDetails.service';
+import {JoinCommunityRequestService} from '../../../generated/api/joinCommunityRequest.service';
+import {LeaveCommunityRequestService} from '../../../generated/api/leaveCommunityRequest.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Community, CommunityService, User} from '../../../generated';
+import {MyDetailsService} from '../../../generated/api/myDetails.service';
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-request-community',
@@ -17,7 +13,7 @@ import { MyDetailsService } from '../../../generated/api/myDetails.service';
 })
 export class MyCommunitiesComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(AppHeaderComponent) header: AppHeaderComponent;
 
   allCommunities: Community[] = [];
   communitiesToJoin: Community[] = [];

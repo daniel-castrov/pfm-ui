@@ -1,16 +1,13 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component'
-import { Router } from '@angular/router'
-import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ProgramsService } from '../../../generated/api/programs.service';
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
-import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
-import { AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Router} from '@angular/router'
+import {Execution, ExecutionLine, ExecutionService, MyDetailsService} from '../../../generated'
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ProgramsService} from '../../../generated/api/programs.service';
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {EventDetailsCellRendererComponent} from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import {AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
 
 @Component({
   selector: 'funds-update',
@@ -20,7 +17,6 @@ import { AutoValuesService} from '../../programming/program-request/funds-tab/Au
 })
 
 export class FundsUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private exephases: Execution[];
