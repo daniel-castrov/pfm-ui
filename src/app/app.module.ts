@@ -229,6 +229,7 @@ import { ScenarioSelectorComponent } from './components/budget/edit-budget-detai
 import {ServerErrorComponent} from "./components/error/server-error/server-error.component";
 import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
 import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
+import {AppHeaderComponent} from "./components/header/app-header/app-header.component";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -342,6 +343,7 @@ const appRoutes: Routes = [
     FyPipe,
     GraphsTabComponent,
     JHeaderComponent,
+    AppHeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
     HeaderUserComponent,
