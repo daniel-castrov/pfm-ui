@@ -1,0 +1,16 @@
+$black: #000000;
+
+.remove-item {
+ > i {
+     &.fa {
+      color: $black;
+      opacity: .5;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    &.fa:hover {
+      color: red;
+      opacity: .9;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+<!-- <span *ngIf="!hidden" class="remove-item" (click)="delete()"  aria-label="Left Align">
+  <i class="fa fa-trash" aria-hidden="true"></i>
+</span> -->
+
+<span>
+  <ng-container *ngIf="rate=='LESS'"><i class="fa fa-arrow-circle-o-down"></i>{{value}}</ng-container>
+  <ng-container *ngIf="rate=='MORE'"><i class="fa fa-arrow-circle-o-up"></i>{{value}}</ng-container>
+  <ng-container *ngIf="rate=='EQUAL'"><i class="fa fa-circle"></i>{{value}}</ng-container>
+</span>

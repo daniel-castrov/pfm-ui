@@ -8,6 +8,7 @@ import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
 import {Program, ProgramType} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
 import {CurrentPhase} from "../../../../services/current-phase.service";
+import { FundingRateRenderer, Rate } from '../../../renderers/funding-rate-renderer/funding-rate-renderer.component';
 
 @Component({
   selector: 'program-requests',
@@ -44,6 +45,7 @@ export class ProgramsComponent implements OnChanges, OnInit {
 
   frameworkComponents = {
     summaryProgramCellRenderer: SummaryProgramCellRenderer,
+    fundingRateRenderer: FundingRateRenderer,
   };
 
   constructor( private prService: PRService,
@@ -208,11 +210,16 @@ export class ProgramsComponent implements OnChanges, OnInit {
       }
       if (subHeader) {
         let columnKey = year.toString().replace('20', 'FY')
+        //debugger
+        let renderer = cellClass[0]=='ag-cell-white' ? undefined: 'fundingRateRenderer'
+        let rate = 'LESS'
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
           children: [{
             headerName: columnKey,
+            cellRenderer: renderer,
+            cellRendererParams: {rate: rate, innerRenderer: renderer},
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
             maxWidth: 104,
