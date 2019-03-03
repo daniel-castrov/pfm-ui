@@ -5,10 +5,10 @@ import {ProgramRequestPageModeService} from '../../program-request/page-mode.ser
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
-import {Program, ProgramType} from "../../../../generated";
+import {Program, ProgramType, FundingRate} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
 import {CurrentPhase} from "../../../../services/current-phase.service";
-import { FundingRateRenderer, Rate } from '../../../renderers/funding-rate-renderer/funding-rate-renderer.component';
+import { FundingRateRenderer } from '../../../renderers/funding-rate-renderer/funding-rate-renderer.component';
 
 @Component({
   selector: 'program-requests',
@@ -83,6 +83,22 @@ export class ProgramsComponent implements OnChanges, OnInit {
         } else {
           program.dataPath = [prOne.shortName];
         }
+        this.pbPrograms.forEach(pr => {
+          if(pr.shortName===program.shortName) {
+            program.fundsRates = {}
+            for(var prop in program.fundingLines[0].funds) {
+              let amountPB = this.getToa(pr, prop)
+              let amountPOM = this.getToa(program, prop)
+              if(amountPOM > amountPB) {
+                program.fundsRates[prop] = "MORE"
+              } else if(amountPOM < amountPB) {
+                program.fundsRates[prop] = "LESS"
+              } else {
+                program.fundsRates[prop] = "EQUAL"
+              }
+            }
+          }
+        });
         rowData.push(program);
       });
       /* this.pbPrograms.forEach(pr => {
@@ -210,16 +226,17 @@ export class ProgramsComponent implements OnChanges, OnInit {
       }
       if (subHeader) {
         let columnKey = year.toString().replace('20', 'FY')
-        //debugger
-        let renderer = cellClass[0]=='ag-cell-white' ? undefined: 'fundingRateRenderer'
-        let rate = 'LESS'
+        let renderer = cellClass.indexOf('ag-cell-white')==-1 ? 'fundingRateRenderer' : undefined
         let colDef = {
           headerName: subHeader,
           type: "numericColumn",
           children: [{
             headerName: columnKey,
             cellRenderer: renderer,
-            cellRendererParams: {rate: rate, innerRenderer: renderer},
+            cellRendererParams: {
+              year: year.toString(),
+              innerRenderer: renderer
+            },
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
             maxWidth: 104,

@@ -8,21 +8,18 @@ import { UiProgramRequest } from '../../programming/select-program-request/UiPro
   styleUrls: ['./funding-rate-renderer.component.scss']
 })
 export class FundingRateRenderer implements ICellRendererAngularComp {
-  params;
   rate;
   value;
   constructor() {
   }
 
   agInit(param) {
-    this.params = param;
-    let data: UiProgramRequest = this.params.data
-    if(data.dataPath[0]=='AUTOINJ')  { 
-      console.log(data)
-      console.log(this.params.value)
-    }
-    this.rate = this.params.rate;
-    this.value = this.currencyFormatter(this.params.value);
+    let data: UiProgramRequest = param.data
+    if(data.fundsRates && data.fundsRates.hasOwnProperty(param.year))
+      this.rate = data.fundsRates[param.year] || 'EQUAL';
+    else
+      this.rate = 'EQUAL'
+    this.value = this.currencyFormatter(param.value);
   }
 
   refresh(): boolean {
@@ -38,9 +35,4 @@ export class FundingRateRenderer implements ICellRendererAngularComp {
     });
     return usdFormat.format(value);
   }
-}
-export enum Rate {
-  MORE,
-  LESS,
-  EQUAL
 }
