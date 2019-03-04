@@ -61,7 +61,7 @@ export class OeUpdateComponent implements OnInit {
           cellClass: ['ag-cell-light-grey', 'ag-link'],
         },
         {
-          headerName: 'Appn.',
+          headerName: 'APPN',
           headerTooltip: 'Appropriation',
           field: 'el.appropriation',
           cellClass: ['ag-cell-light-grey'],
