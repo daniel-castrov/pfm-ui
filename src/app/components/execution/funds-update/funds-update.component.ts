@@ -38,7 +38,7 @@ export class FundsUpdateComponent implements OnInit {
   private hasAppropriation: boolean = false;
   private hasReleased: boolean = false;
   private agOptions: GridOptions;
-  containerStyle = {width: '100%',margin: 'auto'};
+  containerStyle = {width: '100%'};
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private autovalues: AutoValuesService,
     private router: Router) {
@@ -386,7 +386,7 @@ export class FundsUpdateComponent implements OnInit {
       totalColsWidth = 1300;
     }
     totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
-    this.containerStyle = {width: totalColsWidth + 'px', margin: 'auto'}
+    this.containerStyle = {width: totalColsWidth + 'px'}
   }
 
   currencyFormatter(value) {

@@ -159,19 +159,17 @@ export class UpdateProgramExecutionComponent implements OnInit {
       validationAmount = my.current.line.toa;
       this.linefilter = function (x: ExecutionLine): boolean {
         if (x.appropriation === 'PROC') {
-          if (x.programElement === my.current.line.programElement) {
+          if (x.blin === my.current.line.blin){
             return true
           }
         } else {
-          if (x.blin === my.current.line.blin){
+          if (x.programElement === my.current.line.programElement) {
             return true;
           }
         }
         return false;
       };
-
     }
-
     my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
       var total: number = 0;
 
