@@ -12,8 +12,6 @@ export class OverviewTabComponent implements OnChanges {
 
   @Input() rdteData: RdteData;
 
-  ovFileName:string;
-
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   rowsData: any[]=[];
   colDefs;
@@ -21,11 +19,8 @@ export class OverviewTabComponent implements OnChanges {
   constructor( private libraryService:LibraryService ) { }
 
   ngOnChanges() {
-    if ( this.rdteData && this.rdteData.toc){  
+    if ( this.rdteData && this.rdteData.toc ){  
       this.initGrid();
-      if (this.rdteData.overviewName){
-        this.ovFileName = this.rdteData.overviewName;
-      } 
     }
   }
 
@@ -35,7 +30,6 @@ export class OverviewTabComponent implements OnChanges {
       if (response.result) {
         this.rdteData.overviewId = response.result.id;
         this.rdteData.overviewName = ovFileToUpload.name;
-        this.ovFileName = ovFileToUpload.name;
       } else if (response.error) {
         Notify.error( "Something went wrong with the overview file upload" + response.error );
       } else {
@@ -62,7 +56,6 @@ export class OverviewTabComponent implements OnChanges {
 
   setAgGridColDefs() :any {
 
-    // First column - id
     this.colDefs =
       [{
         headerName: "Program Element",
@@ -73,7 +66,6 @@ export class OverviewTabComponent implements OnChanges {
         editable: false,
         cellClass: "font-weight-bold"
       }];
-
       this.colDefs.push(
         {
           headerName: "Line #",

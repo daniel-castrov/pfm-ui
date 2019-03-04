@@ -38,9 +38,9 @@ export class EditBudgetDetailsComponent implements AfterContentChecked {
   async save(){
     this.rdteData.submitted=false;
     if ( this.rdteData.id ){
-      this.rdteData = (await this.rdteDataService.update( this.rdteData ).toPromise()).result;
+      (await this.rdteDataService.update( this.rdteData ).toPromise()).result;
     } else {
-      this.rdteData = (await this.rdteDataService.create( this.rdteData ).toPromise()).result;
+      (await this.rdteDataService.create( this.rdteData ).toPromise()).result;
     }
     Notify.success( "Budget Details saved successfully" );
   }

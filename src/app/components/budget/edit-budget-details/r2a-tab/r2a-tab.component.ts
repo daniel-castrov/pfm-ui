@@ -22,6 +22,7 @@ export class R2aTabComponent implements OnChanges {
   itemTags: Tag[];
 
   cleardata(){
+    console.log( "r2A cleared" );
     this.r2adata={};
     this.selectedPE=null;
     this.selectedItem=null;
@@ -84,7 +85,8 @@ export class R2aTabComponent implements OnChanges {
   }
 
   getItemDescription( item:string) : string {
-    return this.itemTags.find( tag => tag.abbr===item ).name ;
+    let tagg:Tag = this.itemTags.find( tag => tag.abbr===item );
+    return ( tagg ? tagg.name : "" );
   }
 
 }
