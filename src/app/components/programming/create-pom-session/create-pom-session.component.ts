@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions, ColDef } from 'ag-grid';
@@ -31,6 +31,8 @@ export class CreatePomSessionComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
   @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
+  @ViewChild(GoogleChartComponent) comchartTwo: GoogleChartComponent;
+  @ViewChild('content') content: ElementRef;
 
   private fy: number;
   private community: Community;
@@ -99,6 +101,13 @@ export class CreatePomSessionComponent implements OnInit {
       onCellValueChanged: params => this.setDeltaRow(fy),
     }
   }
+
+  open(content, toaAmt) {
+    this.modalService.open(content, { centered: true, backdrop: false, backdropClass: 'tooltip-modal-backdrop', windowClass: 'tooltip-modal' }).result.then((result) => {
+
+    }, (reason) => {
+
+    });
 
   // Set similar column definitions for both grids
   private setAgGridColDefs(column1Name: string, fy: number): any {
@@ -633,8 +642,8 @@ export class CreatePomSessionComponent implements OnInit {
         value,
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.selectedyear - 2000) +
-          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
-          value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>")
+          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span class='toa'>" +
+          value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
     });
 
@@ -651,7 +660,13 @@ export class CreatePomSessionComponent implements OnInit {
           isHtml: true,
           trigger: 'focus'
         },
-        colors: ['#24527b']
+        colors: ['#24527b'],
+        height: 500,
+        animation: {
+       'startup': true,
+        duration: 600,
+        easing: 'inAndOut'
+      }
       }
     };
   }
