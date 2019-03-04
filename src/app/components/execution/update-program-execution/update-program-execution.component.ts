@@ -73,13 +73,15 @@ export class UpdateProgramExecutionComponent implements OnInit {
         });
 
         my.exesvc.hasAppropriation(my.current.line.phaseId).subscribe(d => {
-          if (d.result) {
-            // has appropriation, so only BTR and REALIGNMENTS are possible
-            this.types.set('EXE_BTR', 'BTR');
-            this.types.set('EXE_REALIGNMENT', 'Realignment');
-          }
-          else {
-            this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
+          if (this.current.line.released) {
+            if (d.result) {
+              // has appropriation, so only BTR and REALIGNMENTS are possible
+              this.types.set('EXE_BTR', 'BTR');
+              this.types.set('EXE_REALIGNMENT', 'Realignment');
+            }
+            else {
+              this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
+            }
           }
           this.types.set('EXE_FM_DIRECTED_ALIGNMENT', 'FM Directed Alignment');
           this.allsubtypes = data[1].result.filter(x => this.types.has(x.type));

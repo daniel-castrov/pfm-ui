@@ -50,7 +50,7 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     var programLinkEnabled = function (params): boolean {
-      return (params.data.id && 0 !== params.data.released );
+      return (params.data.id);
     };
 
     var saveIfPossible = function(p){
