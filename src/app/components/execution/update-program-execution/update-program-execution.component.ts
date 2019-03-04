@@ -37,61 +37,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
   constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
     private route: ActivatedRoute, private router: Router) {
-    var my: UpdateProgramExecutionComponent = this;
-    my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-      // console.log('change validator');
-      var freleased: number = my.current.line.released;
-      var total: number = 0;
-
-      x.forEach(elw => {
-        total += (elw.amt ? elw.amt : 0);
-      });
-
-      var okays: boolean[] = [];
-
-      if (totalamt) {
-        // check the total against all the rows
-        x.forEach(elw => {
-          if (my.fromIsSource) {
-            okays.push(total <= freleased);
-          }
-          else {
-            // our values are the source, so make sure they have enough money
-            //console.log('from ain\'t source');
-            //console.log(elw);
-
-            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released ) {
-              okays.push( elw.line.released!==0 ? elw.amt <= elw.line.released : false );
-            }
-            else {
-              okays.push(true);
-            }
-          }
-        });
-      }
-      else {
-        // checking individual lines
-        // check to make sure we have enough money to spread around
-        x.forEach(elw => {
-          if (my.fromIsSource) {
-            // if fromIsSource, there's nothing to check
-            okays.push(elw.amt <= freleased);
-          }
-          else {
-            // if we're the source, make sure we have enough money
-            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released) {
-              okays.push(elw.line.released !== 0 ? elw.amt <= elw.line.released : false);
-            }
-            else {
-              okays.push(true);
-            }
-          }
-        });
-      }
-
-      //console.log(okays);
-      return okays;
-    };
   }
 
   changeFromIsSource( event) {
@@ -136,6 +81,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
           else {
             this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
           }
+          this.types.set('EXE_FM_DIRECTED_ALIGNMENT', 'FM Directed Alignment');
           this.allsubtypes = data[1].result.filter(x => this.types.has(x.type));
           var first = true;
           this.types.forEach((val, key) => {
@@ -178,10 +124,12 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   updatedropdowns() {
+    let validationAmount: number;
     this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
     this.etype = this.subtypes[0];
     var my: UpdateProgramExecutionComponent = this;
     if ('EXE_BTR' === this.type) {
+      validationAmount = my.current.line.released;
       // BTR-- only between same PE
       this.linefilter = function (x: ExecutionLine): boolean {
         if (x.programElement === my.current.line.programElement) {
@@ -192,6 +140,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
       };
     }
     else if ('EXE_REALIGNMENT' === this.type) {
+      validationAmount = my.current.line.released;
       // realignment-- only between same blin as current
       this.linefilter = function (x: ExecutionLine): boolean {
         if (x.blin === my.current.line.blin){
@@ -202,12 +151,84 @@ export class UpdateProgramExecutionComponent implements OnInit {
       };
     }
     else if ('EXE_REDISTRIBUTION' === this.type) {
+      validationAmount = my.current.line.released;
       // redistributions can do whatever
       this.linefilter = function (x: ExecutionLine): boolean {
         return true;
         //return (my.fromIsSource ? true : ( x.released > 0 ) );
       };
     }
+    else if ('EXE_FM_DIRECTED_ALIGNMENT' === this.type) {
+      validationAmount = my.current.line.toa;
+      this.linefilter = function (x: ExecutionLine): boolean {
+        if (x.appropriation === 'PROC') {
+          if (x.programElement === my.current.line.programElement) {
+            return true
+          }
+        } else {
+          if (x.blin === my.current.line.blin){
+            return true;
+            //return (my.fromIsSource ? true : (x.released > 0));
+          }
+        }
+        return false;
+      };
+
+    }
+
+    my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
+      // console.log('change validator');
+      var total: number = 0;
+
+      x.forEach(elw => {
+        total += (elw.amt ? elw.amt : 0);
+      });
+
+      var okays: boolean[] = [];
+
+      if (totalamt) {
+        // check the total against all the rows
+        x.forEach(elw => {
+          if (my.fromIsSource) {
+            okays.push(total <= validationAmount);
+          }
+          else {
+            // our values are the source, so make sure they have enough money
+            //console.log('from ain\'t source');
+            //console.log(elw);
+
+            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released ) {
+              okays.push( elw.line.released!==0 ? elw.amt <= elw.line.released : false );
+            }
+            else {
+              okays.push(true);
+            }
+          }
+        });
+      }
+      else {
+        // checking individual lines
+        // check to make sure we have enough money to spread around
+        x.forEach(elw => {
+          if (my.fromIsSource) {
+            // if fromIsSource, there's nothing to check
+            okays.push(elw.amt <= validationAmount);
+          }
+          else {
+            // if we're the source, make sure we have enough money
+            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released) {
+              okays.push(elw.line.released !== 0 ? elw.amt <= elw.line.released : false);
+            }
+            else {
+              okays.push(true);
+            }
+          }
+        });
+      }
+
+      //console.log(okays);
+      return okays;
+    };
 
     this.updatelines = this.updatelines.filter(elw => my.linefilter(elw.line));
     this.updatedropdowns2();

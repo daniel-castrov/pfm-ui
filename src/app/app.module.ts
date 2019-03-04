@@ -302,7 +302,7 @@ const appRoutes: Routes = [
   {path:'ufr-search', component: UfrSearchComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-yoe-summary', component: UfrYoeSummaryComponent, canActivate:[CanActivateAuth]},
-  {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
+  {path:'ufr-approval-detail/:phaseType/:id', component: UfrApprovalDetailComponent},
   {path:'ufr-view/:phaseType/:id', component: UfrViewComponent},
   {path:'ufr-view/:phaseType', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},

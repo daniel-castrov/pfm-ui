@@ -446,6 +446,7 @@ export class ExecutionLineTableComponent implements OnInit {
         });
       }
      });
+    this.availablePrograms = this.availablePrograms.filter( ap => this._exelinefilter(ap.value.line));
   }
 
   onGridReady(params) {
