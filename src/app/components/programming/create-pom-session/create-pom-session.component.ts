@@ -102,13 +102,6 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
-  open(content, toaAmt) {
-    this.modalService.open(content, { centered: true, backdrop: false, backdropClass: 'tooltip-modal-backdrop', windowClass: 'tooltip-modal' }).result.then((result) => {
-
-    }, (reason) => {
-
-    });
-
   // Set similar column definitions for both grids
   private setAgGridColDefs(column1Name: string, fy: number): any {
 
