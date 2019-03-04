@@ -22,7 +22,6 @@ export class R2aTabComponent implements OnChanges {
   itemTags: Tag[];
 
   cleardata(){
-    console.log( "r2A cleared" );
     this.r2adata={};
     this.selectedPE=null;
     this.selectedItem=null;
