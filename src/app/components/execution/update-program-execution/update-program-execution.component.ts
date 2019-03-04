@@ -60,9 +60,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
         };
 
         my.programfilter = function (el: ExecutionLine) {
-          //console.log('into programfilter ' + JSON.stringify(my.current));
           if (my.current.line.id !== el.id) {
-            //console.log(el);
             return (my.fromIsSource ? true : el.released > 0);
           }
           return false;
@@ -136,7 +134,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
       this.linefilter = function (x: ExecutionLine): boolean {
         if (x.programElement === my.current.line.programElement) {
           return true;
-          //return (my.fromIsSource ? true : (x.released > 0));
         }
         return false;
       };
@@ -147,7 +144,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
       this.linefilter = function (x: ExecutionLine): boolean {
         if (x.blin === my.current.line.blin){
           return true;
-          //return (my.fromIsSource ? true : (x.released > 0));
         }
         return false;
       };
@@ -157,7 +153,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
       // redistributions can do whatever
       this.linefilter = function (x: ExecutionLine): boolean {
         return true;
-        //return (my.fromIsSource ? true : ( x.released > 0 ) );
       };
     }
     else if ('EXE_FM_DIRECTED_ALIGNMENT' === this.type) {
@@ -170,7 +165,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
         } else {
           if (x.blin === my.current.line.blin){
             return true;
-            //return (my.fromIsSource ? true : (x.released > 0));
           }
         }
         return false;
@@ -179,7 +173,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
     }
 
     my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-      // console.log('change validator');
       var total: number = 0;
 
       x.forEach(elw => {
@@ -196,8 +189,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
           }
           else {
             // our values are the source, so make sure they have enough money
-            //console.log('from ain\'t source');
-            //console.log(elw);
 
             if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released ) {
               okays.push( elw.line.released!==0 ? elw.amt <= elw.line.released : false );
@@ -227,8 +218,6 @@ export class UpdateProgramExecutionComponent implements OnInit {
           }
         });
       }
-
-      //console.log(okays);
       return okays;
     };
 
