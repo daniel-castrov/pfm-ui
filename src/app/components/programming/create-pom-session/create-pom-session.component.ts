@@ -552,11 +552,12 @@ export class CreatePomSessionComponent implements OnInit {
 
     var charty: [any[]] = [[
       'Year',
-      // 'Baseline',
       'TOA',
       { role: 'annotation' },
-      // { role: 'style' },
-      { role: 'tooltip', p: { html: true } }
+      { role: 'tooltip', p: { html: true } },
+      'YoY %',
+      //{ role: 'annotation' },
+      { role: 'tooltip', p: { html: true } },
     ]];
 
 
@@ -565,6 +566,8 @@ export class CreatePomSessionComponent implements OnInit {
       var newamt = yeartoas.get(this.fy + i);
       var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
 
+      var lastamt = (0 === newamt ? baseavg : newamt);
+      var pctdiff: number = (i < 1 ? 0 : (lastamt - yeartoas.get(this.fy + i - 1)) / lastamt);
 
       charty.push([
         (this.fy + i).toString(),
@@ -573,24 +576,44 @@ export class CreatePomSessionComponent implements OnInit {
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
           "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
-          newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>")
+          newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>"),
+        pctdiff,
+        //(pctdiff * 100).toFixed(1) + '%',
+        ("<div class='tool-tip-container'>" +
+          "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
+          "</p><h3 class='tooltip-h3'>Change Since FY" + (this.fy + i - 2001) + ":<br> " + "<span>" +
+          (pctdiff > 0 ? '+' : '') + (pctdiff * 100).toFixed(2).toLocaleString() + "%</span></h3></div>"),
       ]);
     }
 
+    console.log(charty);
     this.chartdata = {
-      chartType: 'ColumnChart',
+      chartType: 'ComboChart',
       dataTable: charty,
       options: {
         title: 'Community TOA',
-        // colors: ['red'],
-        vAxis: {
-          minValue: 5
+
+        series: {
+          0: { targetAxisIndex: 0, type: 'bars' },
+          1: { targetAxisIndex: 1, type: 'line' },
         },
+        vAxes: {
+          0: {
+          },
+          1: {
+            gridlines: { color: 'transparent' },
+            format: "#%"
+          },
+        },
+
+        selectionMode: 'multiple',
+        aggregationTarget: 'auto',
+
         tooltip: {
           isHtml: true,
           trigger: 'focus'
         },
-        colors: ['#24527b']
+        colors: ['#24527b', '#6495ed']
       }
     };
   }
