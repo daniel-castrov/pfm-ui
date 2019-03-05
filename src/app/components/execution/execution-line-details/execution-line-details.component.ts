@@ -160,8 +160,6 @@ export class ExecutionLineDetailsComponent implements OnInit {
             amt = totalto;
           }
 
-          console.log(x);
-
           evarr.push({
             date: new Date(x.timestamp.year, x.timestamp.monthValue-1, x.timestamp.dayOfMonth),
             category: x.eventType,
