@@ -9,17 +9,26 @@ import { UiProgramRequest } from '../../programming/select-program-request/UiPro
 })
 export class FundingRateRenderer implements ICellRendererAngularComp {
   rate;
+  rateAmount;
   value;
   constructor() {
   }
 
   agInit(param) {
     let data: UiProgramRequest = param.data
-    if(data.fundsRates && data.fundsRates.hasOwnProperty(param.year))
-      this.rate = data.fundsRates[param.year] || 'EQUAL';
-    else
+    if(data.totalFundsPB && data.totalFundsPB.hasOwnProperty(param.year)) {
+      if(param.value > data.totalFundsPB[param.year]) {
+        this.rate = 'MORE'
+      } else if(param.value < data.totalFundsPB[param.year]) {
+        this.rate = 'LESS'
+      } else {
+        this.rate = 'EQUAL'
+      }
+    } else {
       this.rate = 'EQUAL'
+    }
     this.value = this.currencyFormatter(param.value);
+    this.rateAmount = 'PB'+(param.fy - 1).toString().replace('20', '')+'= '+this.currencyFormatter(data.totalFundsPB[param.year]);
   }
 
   refresh(): boolean {

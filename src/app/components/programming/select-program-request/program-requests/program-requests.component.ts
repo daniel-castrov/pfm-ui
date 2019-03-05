@@ -85,17 +85,9 @@ export class ProgramsComponent implements OnChanges, OnInit {
         }
         this.pbPrograms.forEach(pr => {
           if(pr.shortName===program.shortName) {
-            program.fundsRates = {}
+            program.totalFundsPB = {}
             for(var prop in program.fundingLines[0].funds) {
-              let amountPB = this.getToa(pr, prop)
-              let amountPOM = this.getToa(program, prop)
-              if(amountPOM > amountPB) {
-                program.fundsRates[prop] = "MORE"
-              } else if(amountPOM < amountPB) {
-                program.fundsRates[prop] = "LESS"
-              } else {
-                program.fundsRates[prop] = "EQUAL"
-              }
+              program.totalFundsPB[prop] = this.getToa(pr, prop)
             }
           }
         });
@@ -235,6 +227,7 @@ export class ProgramsComponent implements OnChanges, OnInit {
             cellRenderer: renderer,
             cellRendererParams: {
               year: year.toString(),
+              fy: this.pomFy.toString(),
               innerRenderer: renderer
             },
             menuTabs: this.menuTabs,
