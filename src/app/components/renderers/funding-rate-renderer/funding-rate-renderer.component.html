@@ -1,5 +1,5 @@
 <span>
-  <ng-container *ngIf="rate=='LESS'">{{value}}<i class="fa fa-arrow-circle-o-down"></i></ng-container>
-  <ng-container *ngIf="rate=='MORE'">{{value}}<i class="fa fa-arrow-circle-o-up"></i></ng-container>
-  <ng-container *ngIf="rate=='EQUAL'">{{value}}<i class="fa fa-minus"></i></ng-container>
+  <ng-container *ngIf="rate=='LESS'"><span class="mr-1"><i class="fa fa-long-arrow-down" title="PB 18 Value"></i></span>{{value}}</ng-container>
+  <ng-container *ngIf="rate=='MORE'"><span class="mr-1"><i class="fa fa-long-arrow-up"></i></span>{{value}}</ng-container>
+  <ng-container *ngIf="rate=='EQUAL'">{{value}}</ng-container>
 </span>
