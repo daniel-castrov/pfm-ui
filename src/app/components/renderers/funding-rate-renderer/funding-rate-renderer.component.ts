@@ -28,7 +28,7 @@ export class FundingRateRenderer implements ICellRendererAngularComp {
       this.rate = 'EQUAL'
     }
     this.value = this.currencyFormatter(param.value);
-    this.rateAmount = 'PB'+(param.fy - 1).toString().replace('20', '')+'= '+this.currencyFormatter(data.totalFundsPB[param.year]);
+    this.rateAmount = 'PB'+(param.fy - 1).toString().replace('20', '')+': '+this.currencyFormatter(data.totalFundsPB[param.year]);
   }
 
   refresh(): boolean {
