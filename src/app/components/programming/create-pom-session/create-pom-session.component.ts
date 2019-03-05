@@ -586,7 +586,6 @@ export class CreatePomSessionComponent implements OnInit {
       ]);
     }
 
-    console.log(charty);
     this.chartdata = {
       chartType: 'ComboChart',
       dataTable: charty,
