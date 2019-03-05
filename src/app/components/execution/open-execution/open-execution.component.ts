@@ -45,7 +45,7 @@ export class OpenExecutionComponent implements OnInit {
           field: 'programName'
         },
         {
-          headerName: "Appn.",
+          headerName: "APPN",
           filter: 'agTextColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'appropriation'

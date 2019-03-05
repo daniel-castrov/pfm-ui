@@ -558,7 +558,7 @@ export class UfrApprovalDetailComponent implements OnInit {
         headerName: 'Funds in $K',
         children: [
           {
-            headerName: 'Appn',
+            headerName: 'APPN',
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             suppressToolPanel: true,

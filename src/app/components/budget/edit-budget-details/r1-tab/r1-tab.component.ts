@@ -11,17 +11,9 @@ export class R1TabComponent implements OnChanges {
 
   @Input() rdteData: RdteData;
 
-  r1FileName:string;
-
   constructor(private libraryService:LibraryService) { }
 
   ngOnChanges() {
-
-    if ( this.rdteData && this.rdteData.r1Name ){
-      this.r1FileName = this.rdteData.r1Name;
-    } else {
-      this.r1FileName = "";
-    }
   }
 
   r1HandleFileInput(files: FileList) {
@@ -30,8 +22,6 @@ export class R1TabComponent implements OnChanges {
       if (response.result) {
         this.rdteData.r1Id=response.result.id;
         this.rdteData.r1Name=r1FileToUpload.name;
-        this.r1FileName = this.rdteData.r1Name;
-        //console.log(this.rdteData);
       } else if (response.error) {
         Notify.error( "Something went wrong with the overview file upload" + response.error );
       } else {

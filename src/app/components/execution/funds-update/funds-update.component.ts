@@ -125,7 +125,7 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'Appn.',
+          headerName: 'APPN',
           headerTooltip: 'Appropriation',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
@@ -260,8 +260,8 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'Appr. Actions',
-          headerTooltip: 'Appr. Actions',
+          headerName: 'APPN Action',
+          headerTooltip: 'Appropriation Action',
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,

@@ -84,7 +84,8 @@ export class R2aTabComponent implements OnChanges {
   }
 
   getItemDescription( item:string) : string {
-    return this.itemTags.find( tag => tag.abbr===item ).name ;
+    let tagg:Tag = this.itemTags.find( tag => tag.abbr===item );
+    return ( tagg ? tagg.name : "" );
   }
 
 }
