@@ -3189,6 +3189,21 @@ definitions:
     type: "object"
     additionalProperties:
       type: "string"
+  Timestamp:
+    type: "object"
+    properties:
+      dayOfMonth:
+        type: number
+      dayOfWeek:
+        type: "string"
+      dayOfYear:
+        type: number
+      month:
+        type: "string"
+      monthValue:
+        type: number
+      year:
+        type: number
 #
 ###########################
 ###       PHASES       ####
@@ -3512,7 +3527,8 @@ definitions:
       userCN:
         type: "string"
       timestamp:
-        type: "integer"
+        type: "object"
+        $ref: "#/definitions/Timestamp"
       success:
         type: "boolean"
 #
@@ -3763,7 +3779,8 @@ definitions:
       userCN:
         type: "string"
       timestamp:
-        type: "number"
+        type: "object"
+        $ref: "#/definitions/Timestamp"
   ExecutionEventData:
     type: "object"
     properties:
@@ -3926,7 +3943,8 @@ definitions:
       userCN:
         type: "string"
       timestamp:
-        type: "integer"
+        type: "object"
+        $ref: "#/definitions/Timestamp"
   WorksheetEvent:
     type: "object"
     properties:

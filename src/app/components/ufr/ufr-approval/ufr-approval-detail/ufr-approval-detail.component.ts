@@ -465,7 +465,7 @@ export class UfrApprovalDetailComponent implements OnInit {
     let transactions : TransactionRow [] = [];
     events.reverse();
     for(let e of events) {
-      let date = new Date(e.timestamp);
+      let date = new Date(e.timestamp.year, e.timestamp.monthValue-1, e.timestamp.dayOfMonth);
       let user = (await this.userService.getByCn(e.userCN).toPromise()).result;
       let type;
       let value;
