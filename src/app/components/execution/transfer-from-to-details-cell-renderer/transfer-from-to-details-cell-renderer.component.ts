@@ -27,8 +27,9 @@ export class TransferFromToDetailsCellRendererComponent implements ICellRenderer
 
     this.istransfer = ('EXE_BTR' === event.eventType ||
       'EXE_REDISTRIBUTION' === event.eventType ||
-      'EXE_REALIGNMENT' === event.eventType);
-    
+      'EXE_REALIGNMENT' === event.eventType ||
+      'EXE_FM_DIRECTED_ALIGNMENT' === event.eventType);
+
     if (param.context.line) {
       this.programIdNameLkp = param.context.programIdNameLkp;
 
