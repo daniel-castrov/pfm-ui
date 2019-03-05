@@ -5,7 +5,7 @@ import {ProgramRequestPageModeService} from '../../program-request/page-mode.ser
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
-import {Program, ProgramType, FundingRate} from "../../../../generated";
+import {Program, ProgramType} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
 import {CurrentPhase} from "../../../../services/current-phase.service";
 import { FundingRateRenderer } from '../../../renderers/funding-rate-renderer/funding-rate-renderer.component';

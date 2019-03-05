@@ -29,8 +29,3 @@ export enum PhaseType {
   PB = 'PB',
   DELTA = 'Delta'
 }
-export enum FundingRate {
-  MORE = "MORE",
-  LESS = "LESS",
-  EQUAL = "EQUAL"
-}
