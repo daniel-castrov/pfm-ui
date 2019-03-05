@@ -247,6 +247,7 @@ const appRoutes: Routes = [
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent},
+  {path:'update-pom-toas', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
   {path:'header', component:HeaderComponent},
