@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {Router} from '@angular/router'
 import {Execution, ExecutionLine, ExecutionService, MyDetailsService} from '../../../generated'
 import {forkJoin} from 'rxjs/observable/forkJoin';
@@ -375,6 +375,11 @@ export class FundsUpdateComponent implements OnInit {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.sizeColumnsToFit(this.agGrid);
+  }
+
   sizeColumnsToFit(params) {
     let totalColsWidth = 0;
     let allColumns = params.columnApi.getAllDisplayedColumns();
@@ -382,10 +387,13 @@ export class FundsUpdateComponent implements OnInit {
       let column = allColumns[i];
       totalColsWidth += column.actualWidth;
     }
-    if (totalColsWidth > 1366) {
-      totalColsWidth = 1300;
+    if (totalColsWidth > window.innerWidth) {
+      totalColsWidth = window.innerWidth;
+      totalColsWidth-= 55;
+    } else {
+      totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
     }
-    totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
+
     this.containerStyle = {width: totalColsWidth + 'px'}
   }
 
