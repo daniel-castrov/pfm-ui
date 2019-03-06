@@ -17,12 +17,12 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   @ViewChild(AppHeaderComponent) header;
 
-  private yearpblkp: Map<number, PB> = new Map<number, PB>();
-  private budget: Budget;
-  private fileToUpload: File;
+  public yearpblkp: Map<number, PB> = new Map<number, PB>();
+  public budget: Budget;
+  public fileToUpload: File;
 
-  private message: string;
-  private submitted: boolean = false;
+  public message: string;
+  public submitted: boolean = false;
 
   constructor( private budgetService: BudgetService,
                private userUtils: UserUtils,
@@ -68,7 +68,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
   submit() {
     this.submitted = true;
 
-    this.esvc.createExecution(this.budget.communityId, this.budget.fy, this.fileToUpload).subscribe(data => {
+    this.esvc.createExecution(this.budget.fy, this.fileToUpload).subscribe(data => {
       if (data.result) {
 
         this.router.navigate(['/home']);

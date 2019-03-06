@@ -783,7 +783,7 @@ paths:
         type: "string"
       produces:
       - "application/json"
-  /execution/community/{communityId}/year/{year}:
+  /execution/year/{year}:
     post:
       tags:
       - "Execution"
@@ -801,11 +801,6 @@ paths:
                   type: string
                   format: binary
       parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
       - in: "path"
         name: "year"
         description: "the year"
