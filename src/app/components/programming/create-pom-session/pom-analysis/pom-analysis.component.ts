@@ -1,7 +1,8 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Pom, PRService, Program, PB } from '../../../../generated';
+import { Pom, PRService, Program, Budget } from '../../../../generated';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
+import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
 
 
 @Component({
@@ -13,7 +14,7 @@ export class PomAnalysisComponent {
   @ViewChild('entrytable') private agGrid: AgGridNg2;
 
   private _fy: number;
-  private _pb: PB;
+  private _pb: Budget;
   private _pom: Pom;
   private _baseline: boolean = true;
   private _orgmap: Map<string, string> = new Map<string, string>();
@@ -51,12 +52,16 @@ export class PomAnalysisComponent {
     this.regraph();
   }
 
-  @Input() set pb(p: PB) {
+  @Input() set pb(p: Budget) {
     this._pb = p;
 
+    console.log('set pb to:')
+    console.log(p);
+
     if (p) {
-      this.prsvc.getById(this.pb.id).subscribe(d => {
-        this.pbprs = d.result;
+      this.prsvc.programRequests(this.pb.finalPbId).then(ps => {
+        this.pbprs = ps;
+        console.log('got some stuff');
         this.regraph();
       });
     }
@@ -77,7 +82,7 @@ export class PomAnalysisComponent {
     return this._fy;
   }
 
-  get pb(): PB {
+  get pb(): Budget {
     return this._pb;
   }
 
@@ -93,7 +98,7 @@ export class PomAnalysisComponent {
     return this._baseline;
   }
 
-  constructor(private prsvc: PRService) {
+  constructor(private prsvc: ProgramAndPrService) {
     var my: PomAnalysisComponent = this;
     var numbersOnly = function (p): boolean {
       var oldval = p.oldValue;
@@ -168,11 +173,14 @@ export class PomAnalysisComponent {
   }
 
   regraph() {
+    console.log( 'regraph')
     if (this._fy && this._pom && this._orgmap) {
+      console.log( '\thave fy, pom, & orgmap')
       this.generateTableRows();
       this.generateOrgChart();
     }
     if (this.pbprs) {
+      console.log( '\thave pbprs')
       this.generateTreeMap();
     }
   }
