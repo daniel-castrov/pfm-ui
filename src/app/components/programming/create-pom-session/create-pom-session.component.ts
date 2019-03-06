@@ -20,6 +20,7 @@ import {
 } from '../../../generated';
 import { Notify } from "../../../utils/Notify";
 import { CurrentPhase } from "../../../services/current-phase.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -62,6 +63,11 @@ export class CreatePomSessionComponent implements OnInit {
   private selectedyear: number;
   private analysis_baseline: boolean = true;
   private yeartoas: any;
+  fyTOAVal: Number;
+  changedToaVal = false;
+  tooltipYear;
+  years: number[] = [];
+
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -70,7 +76,8 @@ export class CreatePomSessionComponent implements OnInit {
     private eppsvc: EppService,
     private router: Router,
     private globalsvc: UserUtils,
-    private programAndPrService: ProgramAndPrService) {
+    private programAndPrService: ProgramAndPrService,
+    private modalService: NgbModal) {
 
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -88,6 +95,8 @@ export class CreatePomSessionComponent implements OnInit {
   ngOnInit() {
     this.gridOptionsCommunity = {};
     this.myinit();
+
+    console.log(this.years);
   }
 
   // Initialize both grids
@@ -102,6 +111,15 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
+
+
+  open(content, toaAmt) {
+    this.modalService.open(content, { centered: true, backdrop: false, backdropClass: 'tooltip-modal-backdrop', windowClass: 'tooltip-modal' }).result.then((result) => {
+
+    }, (reason) => {
+
+    });
+  }
   // Set similar column definitions for both grids
   private setAgGridColDefs(column1Name: string, fy: number): any {
 
@@ -250,7 +268,11 @@ export class CreatePomSessionComponent implements OnInit {
         var samplepom: Pom = data[4].result;
         this.fy = this.budget.fy + 1;
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
-
+        this.years = [];
+        for (let i =0; i < 5; i++){
+          this.years.push(this.fy+i);
+          console.log(this.years);
+        }
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
         this.setDeltaRow(this.fy);
@@ -530,13 +552,34 @@ export class CreatePomSessionComponent implements OnInit {
       });
     });
   }
+  tooltipChangeYear(tooltipval) {
+    this.tooltipYear = tooltipval.value;
+    console.log(tooltipval.value);
+  }
+  tooltipToaSubmit(c) {
+    this.changedToaVal = true;
+    console.log(this.fyTOAVal);
 
+    console.log(this.tooltipYear);
+    this.resetCharts(this.fyTOAVal, this.tooltipYear);
+    c('close modal');
 
-  resetCharts() {
+  }
+  resetCharts(toaVal?, year?) {
     var yeartoas: Map<number, number> = new Map<number, number>();
 
     var totaltoa: number = 0;
     var totalvals: number = 0;
+
+    var years = Object.keys(this.rowsCommunity[0]);
+    var h:number = Number.parseInt(year);
+
+    if (h) {
+      this.rowsCommunity[0][h] = toaVal;
+      console.log(this.rowsCommunity);
+      // yeartoas.set(h, fyChange);
+    }
+console.log(this.rowsCommunity[0]);
     for (var i = 0; i < 5; i++) {
       var newamt: number = ('string' === typeof this.rowsCommunity[0][this.fy + i]
         ? Number.parseInt(this.rowsCommunity[0][this.fy + i])
@@ -558,6 +601,7 @@ export class CreatePomSessionComponent implements OnInit {
       // { role: 'style' },
       { role: 'tooltip', p: { html: true } }
     ]];
+
 
 
     var baseavg: number = Math.ceil(totaltoa / totalvals);
@@ -590,7 +634,13 @@ export class CreatePomSessionComponent implements OnInit {
           isHtml: true,
           trigger: 'focus'
         },
-        colors: ['#24527b']
+        colors: ['#24527b'],
+        height: 300,
+        animation: {
+          'startup': true,
+          duration: 600,
+          easing: 'inAndOut'
+        }
       }
     };
   }
@@ -656,10 +706,10 @@ export class CreatePomSessionComponent implements OnInit {
         colors: ['#24527b'],
         height: 500,
         animation: {
-       'startup': true,
-        duration: 600,
-        easing: 'inAndOut'
-      }
+          'startup': true,
+          duration: 600,
+          easing: 'inAndOut'
+        }
       }
     };
   }
