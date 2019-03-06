@@ -202,15 +202,22 @@ export class Authorization {
   }
 
   async 'funds-update'(): Promise<AuthorizationResult> {
-    return this['open-execution-phase']();
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      return AuthorizationResult.Ok;
+    }
+    return AuthorizationResult.Never;
   }
 
   async 'program-update'(): Promise<AuthorizationResult> {
-    return this['open-execution-phase']();
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      return AuthorizationResult.Ok;
+    }
+    return AuthorizationResult.Never;
   }
 
   async 'import-execution-data'(): Promise<AuthorizationResult> {
-    return this['open-execution-phase']();
+    let execution = (await this.currentPhase.execution().toPromise())
+    if (execution && Execution.StatusEnum.OPEN == execution.status) return AuthorizationResult.Ok;
   }
 
   async 'open-execution-phase'(): Promise<AuthorizationResult> {
