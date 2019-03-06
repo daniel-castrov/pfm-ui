@@ -1,11 +1,12 @@
 import { FundingLine } from '../../../generated/model/fundingLine';
-import {Program, ProgramType} from '../../../generated';
+import {Program, ProgramType, IntMap} from '../../../generated';
 
 export class UiProgramRequest {
   constructor(public pr: Program) {}
   phaseType: PhaseType
   //This variable is used for the tree functionality in the summary of program request page
   dataPath: string[];
+  totalFundsPB?: IntMap
   get id():string {return this.pr.id}
   get state():string {return this.pr.programStatus}
   get shortName():string {return this.pr.shortName}
