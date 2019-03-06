@@ -1,19 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Response, ResponseContentType } from '@angular/http';
-import {
-  HttpClient, HttpHeaders, HttpParams,
-  HttpResponse, HttpEvent
-} from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-
-// Generated
-import { User } from '../../../generated/model/user';
-import { RestResult } from '../../../generated/model/restResult';
-import { UserService } from '../../../generated/api/user.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {User} from '../../../generated/model/user';
+import {RestResult} from '../../../generated/model/restResult';
+import {UserService} from '../../../generated/api/user.service';
 
 
 @Component({
@@ -22,9 +11,6 @@ import { UserService } from '../../../generated/api/user.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header;
-
 
   users: User[]=[];
   resultError: string;

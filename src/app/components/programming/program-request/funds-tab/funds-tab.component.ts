@@ -422,7 +422,7 @@ export class FundsTabComponent implements OnChanges {
           colSpan: params => { return this.colSpanCount(params) }
         },
         {
-          headerName: 'Appn',
+          headerName: 'APPN',
           headerTooltip: 'Appropriation',
           field: 'fundingLine.appropriation',
           suppressToolPanel: true,
@@ -978,7 +978,7 @@ export class FundsTabComponent implements OnChanges {
 
   onFundingLineValueChanged(params) {
     let pomNode = this.data[params.node.rowIndex + 1];
-    if (params.colDef.headerName === 'Appn') {
+    if (params.colDef.headerName === 'APPN') {
       this.filterBlins(params.data.fundingLine.appropriation);
       params.data.fundingLine.item = null;
       params.data.fundingLine.baOrBlin = null;

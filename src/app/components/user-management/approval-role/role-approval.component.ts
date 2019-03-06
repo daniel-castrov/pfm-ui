@@ -1,13 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { Notify } from '../../../utils/Notify';
-
-// Generated
-import { User, Role, UserRoleResource } from '../../../generated';
-import { UserService, RoleService, UserRoleResourceService, AssignRoleRequestService, DropRoleRequestService } from '../../../generated';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Notify} from '../../../utils/Notify';
+import {
+  AssignRoleRequestService,
+  DropRoleRequestService,
+  Role,
+  RoleService,
+  User,
+  UserRoleResource,
+  UserRoleResourceService,
+  UserService
+} from '../../../generated';
 
 @Component({
   selector: 'app-role-approval',
@@ -15,8 +18,6 @@ import { UserService, RoleService, UserRoleResourceService, AssignRoleRequestSer
   styleUrls: ['./role-approval.component.scss']
 })
 export class AccessChangeApprovalComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header;
 
   resultError: string[] = [];
   requestId: string;

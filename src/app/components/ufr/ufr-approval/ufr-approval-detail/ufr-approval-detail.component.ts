@@ -1,11 +1,26 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
 import {
-  Disposition, FundingLine, Pom, POMService, Program, ProgramsService, PRService, ShortyType, UFR, UfrEvent,
-  UFRsService, UfrStatus, User, UserService, Worksheet, WorksheetEvent, WorksheetRow, WorksheetService
+  Disposition,
+  FundingLine,
+  Pom,
+  POMService,
+  Program,
+  ProgramsService,
+  PRService,
+  ShortyType,
+  UFR,
+  UfrEvent,
+  UFRsService,
+  UfrStatus,
+  User,
+  UserService,
+  Worksheet,
+  WorksheetEvent,
+  WorksheetRow,
+  WorksheetService
 } from '../../../../generated'
 import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
 import {ActivatedRoute} from "@angular/router";
-import {HeaderComponent} from "../../../header/header.component";
 import {DataRow} from "../../ufr-view/ufr-funds-tab/DataRow";
 import {GridType} from "../../../programming/program-request/funds-tab/GridType";
 import {AgGridNg2} from "ag-grid-angular";
@@ -24,7 +39,6 @@ declare const $: any;
 
 export class UfrApprovalDetailComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGridProposedChanges") private agGridProposedChanges: AgGridNg2;
   @ViewChild("agGridCurrentFunding") private agGridCurrentFunding: AgGridNg2;
   @ViewChild("agGridRevisedPrograms") private agGridRevisedPrograms: AgGridNg2;
@@ -451,7 +465,7 @@ export class UfrApprovalDetailComponent implements OnInit {
     let transactions : TransactionRow [] = [];
     events.reverse();
     for(let e of events) {
-      let date = new Date(e.timestamp);
+      let date = new Date(e.timestamp.year, e.timestamp.monthValue-1, e.timestamp.dayOfMonth);
       let user = (await this.userService.getByCn(e.userCN).toPromise()).result;
       let type;
       let value;
@@ -544,7 +558,7 @@ export class UfrApprovalDetailComponent implements OnInit {
         headerName: 'Funds in $K',
         children: [
           {
-            headerName: 'Appn',
+            headerName: 'APPN',
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             suppressToolPanel: true,

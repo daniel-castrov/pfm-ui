@@ -39,9 +39,9 @@
     <label class="mr-1">Program Type:</label>
     <span class="type">{{type()}}</span>
   </span>
-  <div class="text-danger" *ngIf="childname.touched && childname.invalid && childname.errors.required">Program ID is required</div>
+  <div class="text-danger" *ngIf="!childname.pristine && childname.invalid && childname.errors.required">Program ID is required</div>
   <div class="text-danger" *ngIf="childname.invalid && childname.errors.alreadyExists">Program ID already exists</div>
-  <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program Name is required</div>
+  <div class="text-danger" *ngIf="!longname.pristine && longname.invalid && longname.errors.required">Program Name is required</div>
   <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program Name already exists</div>
 </div>
 <div id="create-new-toplevel" *ngIf="!programRequestPageMode.prId && programRequestPageMode.newProgram">
@@ -58,8 +58,8 @@
     <label class="smr-1">Program Type:</label>
     <span class="type">{{type()}}</span>
   </span>
-    <div class="text-danger" *ngIf="childname.touched && childname.invalid && childname.errors.required">Program ID is required</div>
+    <div class="text-danger" *ngIf="!childname.pristine && childname.invalid && childname.errors.required">Program ID is required</div>
     <div class="text-danger" *ngIf="childname.invalid && childname.errors.alreadyExists">Program ID already exists</div>
-    <div class="text-danger" *ngIf="longname.touched && longname.invalid && longname.errors.required">Program Name is required</div>
+    <div class="text-danger" *ngIf="!longname.pristine && longname.invalid && longname.errors.required">Program Name is required</div>
     <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program Name already exists</div>
 </div>

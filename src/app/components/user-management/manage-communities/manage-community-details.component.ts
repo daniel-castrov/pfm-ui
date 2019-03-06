@@ -1,23 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ActivatedRoute, Params } from '@angular/router';
-import { AbstractControl, ValidationErrors, FormControl, Validators } from '@angular/forms';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-
-// Generated
-import { User } from '../../../generated/model/user';
-import { RestResult } from '../../../generated/model/restResult';
-import { CommunityService } from '../../../generated/api/community.service';
-import { Community } from '../../../generated/model/community';
-import { Organization } from '../../../generated/model/organization';
-import { UserService } from '../../../generated/api/user.service';
-import { Role } from '../../../generated/model/role'
-import { RoleService } from '../../../generated/api/role.service';
-import { UserRoleResource } from '../../../generated/model/userRoleResource'
-import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
-import { OrganizationService } from '../../../generated/api/organization.service';
+import {Component} from '@angular/core';
+import {Observable} from 'rxjs';
+import {ActivatedRoute, Params} from '@angular/router';
+import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
+import {User} from '../../../generated/model/user';
+import {RestResult} from '../../../generated/model/restResult';
+import {CommunityService} from '../../../generated/api/community.service';
+import {Community} from '../../../generated/model/community';
+import {Organization} from '../../../generated/model/organization';
+import {UserService} from '../../../generated/api/user.service';
+import {Role} from '../../../generated/model/role'
+import {RoleService} from '../../../generated/api/role.service';
+import {UserRoleResource} from '../../../generated/model/userRoleResource'
+import {UserRoleResourceService} from '../../../generated/api/userRoleResource.service';
+import {OrganizationService} from '../../../generated/api/organization.service';
 
 @Component({
   selector: 'app-manage-community-details',
@@ -26,9 +21,7 @@ import { OrganizationService } from '../../../generated/api/organization.service
 })
 export class MamageCommunityDetailsComponent {
 
-  @ViewChild(HeaderComponent) header;
-
-  // This is the id of the community we are interested in 
+  // This is the id of the community we are interested in
   private communityid: string;
 
   private approvers: User[]=[];

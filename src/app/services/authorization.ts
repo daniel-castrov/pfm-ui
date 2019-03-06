@@ -1,4 +1,4 @@
-import {Budget, Execution, Pom} from './../generated';
+import {Budget, BudgetService, Execution, ExecutionService, Pom} from './../generated';
 import {UserUtils} from './user.utils';
 import {Injectable} from '@angular/core';
 import {CurrentPhase} from "./current-phase.service";
@@ -21,13 +21,15 @@ export class Authorization {
 
   constructor( public elevationService: ElevationService,
                private userUtils: UserUtils,
-               private currentPhase: CurrentPhase ) {}
+               private currentPhase: CurrentPhase,
+               private budgetService: BudgetService,
+               private executionService: ExecutionService) {}
 
   forUrl(url: string): Promise<AuthorizationResult> {
     if(this[url]) {
       return this[url]();
     } else {
-      console.warn('Authorization requested for a URL that is not set up for authorization');
+      console.warn('Authorization requested for a URL that is not set up for authorization: ' + url );
       return Promise.resolve(AuthorizationResult.Ok);
     }
   }
@@ -177,9 +179,24 @@ export class Authorization {
   }
 
   async 'create-new-execution'(): Promise<AuthorizationResult> {
+    let budgets : Budget[] = (await this.budgetService.getAll().toPromise()).result;
+    let executions: Execution[] = (await this.executionService.getAll().toPromise()).result;
+    var existingExeYears: Set<number> = new Set<number>();
+    executions.forEach((exe: Execution) => {
+      existingExeYears.add(exe.fy);
+    });
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      if (executions.length == 0 && budgets.length > 0) {
         return AuthorizationResult.Ok;
+      } else {
+        budgets.forEach((budget: Budget) => {
+          if (!existingExeYears.has(budget.fy)) {
+            return AuthorizationResult.Ok;
+          }
+        });
+      }
+      return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
@@ -189,6 +206,10 @@ export class Authorization {
   }
 
   async 'program-update'(): Promise<AuthorizationResult> {
+    return this['open-execution-phase']();
+  }
+
+  async 'import-execution-data'(): Promise<AuthorizationResult> {
     return this['open-execution-phase']();
   }
 

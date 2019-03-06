@@ -12,6 +12,7 @@ import {PhaseType} from "../../../programming/select-program-request/UiProgramRe
 
 
 enum CreateNewUfrMode {
+  SELECT_AN_OPTION = 'Select an option',
   AN_MRDB_PROGRAM = 'Previously Funded Program',
   A_PROGRAM_REQUEST = 'Program Request',
   A_NEW_INCREMENT = 'New Increment',
@@ -49,6 +50,7 @@ export class NewUfrComponent implements OnInit {
 
   async setCreateNewUfrMode(createNewUfrMode: CreateNewUfrMode) {
     this.createNewUfrMode = createNewUfrMode;
+    this.selectedProgramOrPr = null;
     if (this.phaseType === PhaseType.POM) {
       switch (this.createNewUfrMode) {
         case 'Previously Funded Program':
@@ -100,6 +102,17 @@ export class NewUfrComponent implements OnInit {
       });
       return emptyFundingLines;
     }
+  }
+
+  nextDisbaled() : boolean {
+    if (!this.createNewUfrMode || this.createNewUfrMode==CreateNewUfrMode.SELECT_AN_OPTION) return true;
+    if ( this.createNewUfrMode ==  CreateNewUfrMode.AN_MRDB_PROGRAM  
+      || this.createNewUfrMode ==  CreateNewUfrMode.A_NEW_FOS
+      || this.createNewUfrMode ==  CreateNewUfrMode.A_NEW_INCREMENT
+      || this.createNewUfrMode ==  CreateNewUfrMode.A_PROGRAM_REQUEST ) {
+        if ( !this.selectedProgramOrPr ) return true;
+      }
+    return false;
   }
 
   async next() {

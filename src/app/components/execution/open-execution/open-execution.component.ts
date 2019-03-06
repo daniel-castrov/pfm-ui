@@ -1,15 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { Execution, ExecutionService, ExecutionLine } from '../../../generated';
-import { Notify } from '../../../utils/Notify'
-import { UserUtils } from '../../../services/user.utils'
-import { AgGridNg2 } from 'ag-grid-angular';
-import { GridOptions } from 'ag-grid';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { SpendPlanService } from '../../../generated';
-import { SpendPlan } from '../../../generated';
-import {HeaderComponent} from "../../header/header.component";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Execution, ExecutionLine, ExecutionService, SpendPlan, SpendPlanService} from '../../../generated';
+import {Notify} from '../../../utils/Notify'
+import {UserUtils} from '../../../services/user.utils'
+import {AgGridNg2} from 'ag-grid-angular';
+import {GridOptions} from 'ag-grid';
+import {forkJoin} from 'rxjs/observable/forkJoin';
 import {Router} from "@angular/router";
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-open-execution',
@@ -17,7 +14,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./open-execution.component.scss']
 })
 export class OpenExecutionComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(AppHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private phases: Execution[];
   private phase: Execution;
@@ -48,7 +45,7 @@ export class OpenExecutionComponent implements OnInit {
           field: 'programName'
         },
         {
-          headerName: "Appn.",
+          headerName: "APPN",
           filter: 'agTextColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'appropriation'

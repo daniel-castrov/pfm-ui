@@ -245,7 +245,7 @@ export class UfrFundsComponent implements OnChanges {
           cellClass: 'funding-line-default'
         },
           {
-            headerName: 'Appn',
+            headerName: 'APPN',
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             suppressToolPanel: true,
@@ -547,7 +547,7 @@ export class UfrFundsComponent implements OnChanges {
 
   onFundingLineValueChanged(params) {
     let pomNode = params.node.data;
-    if (params.colDef.headerName === 'Appn') {
+    if (params.colDef.headerName === 'APPN') {
       this.filterBlins(params.data.fundingLine.appropriation);
       params.data.fundingLine.item = null;
       params.data.fundingLine.baOrBlin = null;

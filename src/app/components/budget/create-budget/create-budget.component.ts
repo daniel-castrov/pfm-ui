@@ -1,5 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {HeaderComponent} from '../../header/header.component';
+import {Component, OnInit} from '@angular/core';
 import {Budget, BudgetService, Pom, POMService} from "../../../generated";
 import {Router} from "@angular/router";
 import {Notify} from "../../../utils/Notify";
@@ -10,8 +9,6 @@ import {Notify} from "../../../utils/Notify";
   styleUrls: ['./create-budget.component.scss']
 })
 export class CreateBudgetComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header;
 
   budgets: Budget[];
   nextBudgetYear: number;

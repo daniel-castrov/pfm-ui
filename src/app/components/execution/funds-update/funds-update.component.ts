@@ -1,16 +1,13 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component'
-import { Router } from '@angular/router'
-import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ProgramsService } from '../../../generated/api/programs.service';
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
-import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
-import { AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
+import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Router} from '@angular/router'
+import {Execution, ExecutionLine, ExecutionService, MyDetailsService} from '../../../generated'
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ProgramsService} from '../../../generated/api/programs.service';
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {EventDetailsCellRendererComponent} from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import {AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
 
 @Component({
   selector: 'funds-update',
@@ -20,7 +17,6 @@ import { AutoValuesService} from '../../programming/program-request/funds-tab/Au
 })
 
 export class FundsUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private exephases: Execution[];
@@ -42,7 +38,7 @@ export class FundsUpdateComponent implements OnInit {
   private hasAppropriation: boolean = false;
   private hasReleased: boolean = false;
   private agOptions: GridOptions;
-  containerStyle = {width: '100%',margin: 'auto'};
+  containerStyle = {width: '100%'};
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private autovalues: AutoValuesService,
     private router: Router) {
@@ -54,7 +50,7 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     var programLinkEnabled = function (params): boolean {
-      return (params.data.id && 0 !== params.data.released );
+      return (params.data.id);
     };
 
     var saveIfPossible = function(p){
@@ -129,7 +125,7 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'Appn.',
+          headerName: 'APPN',
           headerTooltip: 'Appropriation',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
@@ -264,8 +260,8 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'Appr. Actions',
-          headerTooltip: 'Appr. Actions',
+          headerName: 'APPN Action',
+          headerTooltip: 'Appropriation Action',
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
@@ -379,6 +375,11 @@ export class FundsUpdateComponent implements OnInit {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.sizeColumnsToFit(this.agGrid);
+  }
+
   sizeColumnsToFit(params) {
     let totalColsWidth = 0;
     let allColumns = params.columnApi.getAllDisplayedColumns();
@@ -386,11 +387,14 @@ export class FundsUpdateComponent implements OnInit {
       let column = allColumns[i];
       totalColsWidth += column.actualWidth;
     }
-    if (totalColsWidth > 1366) {
-      totalColsWidth = 1300;
+    if (totalColsWidth > window.innerWidth) {
+      totalColsWidth = window.innerWidth;
+      totalColsWidth-= 55;
+    } else {
+      totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
     }
-    totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
-    this.containerStyle = {width: totalColsWidth + 'px', margin: 'auto'}
+
+    this.containerStyle = {width: totalColsWidth + 'px'}
   }
 
   currencyFormatter(value) {

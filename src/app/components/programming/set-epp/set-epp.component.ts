@@ -1,12 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
-
 // Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { EppService } from '../../../generated/api/epp.service';
-import { UserUtils } from '../../../services/user.utils';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EppService} from '../../../generated/api/epp.service';
+import {UserUtils} from '../../../services/user.utils';
 
 declare const $: any;
 
@@ -27,7 +24,6 @@ export class SetEppComponent implements OnInit {
   communityId:string;
   menuTabs = ['filterMenuTab'];
 
-  @ViewChild(HeaderComponent) header;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 

@@ -1,8 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {forkJoin} from "rxjs/observable/forkJoin";
 import {GridOptions} from 'ag-grid';
-import {HeaderComponent} from '../../header/header.component';
 import {UserUtils} from '../../../services/user.utils';
 import {NumericCellEditor} from './numeric-celleditior.component';
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
@@ -29,8 +28,6 @@ import {PBService} from "../../../generated/api/pB.service";
 })
 
 export class CreatePomSessionComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header;
 
   private fy: number;
   private community: Community;

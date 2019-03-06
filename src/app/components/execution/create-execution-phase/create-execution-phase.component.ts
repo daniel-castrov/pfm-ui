@@ -1,10 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-// Other Components
-import {HeaderComponent} from '../../header/header.component';
 import {Router} from '@angular/router';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {Budget, BudgetService, Execution, ExecutionService, PB} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 declare const $: any;
 declare const jQuery: any;
@@ -16,7 +15,7 @@ declare const jQuery: any;
 })
 export class CreateExecutionPhaseComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
+  @ViewChild(AppHeaderComponent) header;
 
   private yearpblkp: Map<number, PB> = new Map<number, PB>();
   private budget: Budget;
@@ -68,15 +67,16 @@ export class CreateExecutionPhaseComponent implements OnInit {
 
   submit() {
     this.submitted = true;
-    var my: CreateExecutionPhaseComponent = this;
 
     this.esvc.createExecution(this.budget.communityId, this.budget.fy, this.fileToUpload).subscribe(data => {
       if (data.result) {
-        my.router.navigate(['/home']);
+
+        this.router.navigate(['/home']);
         this.header.refresh();
       }
       else {
-        my.message = data.error;
+        this.message = data.error;
+        this.submitted = false;
       }
     });
   }
