@@ -1,12 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {Budget, BudgetService, Execution, ExecutionService, PB} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
-import {AppHeaderComponent} from "../../header/app-header/app-header.component";
-
-declare const $: any;
-declare const jQuery: any;
 
 @Component({
   selector: 'create-execution-phase',
@@ -15,48 +11,37 @@ declare const jQuery: any;
 })
 export class CreateExecutionPhaseComponent implements OnInit {
 
-  @ViewChild(AppHeaderComponent) header;
-
   public yearpblkp: Map<number, PB> = new Map<number, PB>();
   public budget: Budget;
   public fileToUpload: File;
-
   public message: string;
   public submitted: boolean = false;
 
   constructor( private budgetService: BudgetService,
                private userUtils: UserUtils,
-               private esvc:ExecutionService,
-               private router:Router ) { }
+               private executionService:ExecutionService,
+               private router:Router ) {}
 
   ngOnInit() {
-    var fn = function(e) {
-			if (!/zmore/.test(e.target.className)) { $('#dmore').hide(); }
-		}
-		document.addEventListener('click', fn);
-		document.addEventListener('touchstart', fn);
+    forkJoin([
+      this.executionService.getAll(),
+      this.budgetService.getAll()
+    ]).subscribe(data => {
 
-    this.userUtils.user().subscribe(p => {
-      forkJoin([
-        this.esvc.getAll(),
-        this.budgetService.getAll()
-      ]).subscribe(data => {
+      const existingExeYears: Set<number> = new Set<number>();
+      data[0].result.forEach((exe: Execution) => {
+        existingExeYears.add(exe.fy);
+      });
 
-        var existingExeYears: Set<number> = new Set<number>();
-        data[0].result.forEach((exe: Execution) => {
-          existingExeYears.add(exe.fy);
-        });
-
-        data[1].result.forEach((budget: Budget) => {
-          if (!existingExeYears.has(budget.fy)) {
-            this.yearpblkp.set(budget.fy, budget);
-            this.budget = budget;
-          }
-        });
-        if (this.yearpblkp.size < 1) {
-          this.message = 'All available Execution Phases have been created';
+      data[1].result.forEach((budget: Budget) => {
+        if (!existingExeYears.has(budget.fy)) {
+          this.yearpblkp.set(budget.fy, budget);
+          this.budget = budget;
         }
       });
+      if (this.yearpblkp.size < 1) {
+        this.message = 'All available Execution Phases have been created';
+      }
     });
   }
 
@@ -64,17 +49,13 @@ export class CreateExecutionPhaseComponent implements OnInit {
     this.fileToUpload = files.item(0);
   }
 
-
   submit() {
     this.submitted = true;
 
-    this.esvc.createExecution(this.budget.fy, this.fileToUpload).subscribe(data => {
+    this.executionService.createExecution(this.budget.fy, this.fileToUpload).subscribe(data => {
       if (data.result) {
-
         this.router.navigate(['/home']);
-        this.header.refresh();
-      }
-      else {
+      } else {
         this.message = data.error;
         this.submitted = false;
       }
