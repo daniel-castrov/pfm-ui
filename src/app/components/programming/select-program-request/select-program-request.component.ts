@@ -87,6 +87,8 @@ export class SelectProgramRequestComponent implements OnInit {
       bar.push(prop)
       let totalPrevious = ''
       let totalCurrent = ''
+      let totalPR = 0
+      let unAllocated = 0
       for(let j = 0; j < this.rowsData.length; j++) {
         if(this.rowsData[j]['id'] == 'PB '+(by-2000-1)) {
           totalPrevious = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
@@ -95,6 +97,9 @@ export class SelectProgramRequestComponent implements OnInit {
           totalCurrent = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
         }
         if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
+          if(this.rowsData[j]['id'] == 'PRs Submitted' || this.rowsData[j]['id'] == 'PRs Planned') {
+            totalPR += this.rowsData[j][prop]
+          }
           bar.push(this.rowsData[j][prop])
           bar.push(
             totalPrevious
@@ -105,6 +110,15 @@ export class SelectProgramRequestComponent implements OnInit {
           )
         }
       }
+      unAllocated = communityToas[i].amount - totalPR
+      bar.push(unAllocated)
+      bar.push(
+        'Total PRs: ' + this.formatCurrency(totalPR)
+        + '\n'
+        + 'Community TOA: ' + this.formatCurrency(communityToas[i].amount)
+        + '\n'
+        + 'Unallocated: ' + this.formatCurrency(unAllocated)
+      )
       this.charty.push(bar)
     }
     this.chartdata = {
@@ -117,6 +131,7 @@ export class SelectProgramRequestComponent implements OnInit {
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
+        series: {0: {color: 'green'}, 1: {color: 'blue'}, 2: {color: '#FF4500'}, 3: {color: 'red'}},
       }
     };
   }
@@ -132,6 +147,7 @@ export class SelectProgramRequestComponent implements OnInit {
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
+        series: {0: {color: 'green'}, 1: {color: 'blue'}, 2: {color: '#FF4500'}, 3: {color: 'red'}},
       }
     };
     this.charty = [[
@@ -141,6 +157,8 @@ export class SelectProgramRequestComponent implements OnInit {
       'PRs Planned',
       { type: 'string', role: 'tooltip'},
       'TOA Difference',
+      { type: 'string', role: 'tooltip'},
+      'Unallocated',
       { type: 'string', role: 'tooltip'},
     ]];
   }
