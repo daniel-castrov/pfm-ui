@@ -15,6 +15,7 @@ export class CreateExecutionPhaseComponent implements OnInit {
   public budget: Budget;
   public fileToUpload: File;
   public error: string;
+  public spinner: boolean = false;
 
   constructor( private executionCreationService: ExecutionCreationService,
                private executionService: ExecutionService,
@@ -34,8 +35,13 @@ export class CreateExecutionPhaseComponent implements OnInit {
   }
 
   async submit() {
-    await this.executionService.createExecution(this.budget.fy, this.fileToUpload).toPromise();
-    Notify.success("Execution phase FY" + (this.budget.fy-2000) + " has been created");
-    this.router.navigate(['/home']);
+    this.spinner = true;
+    try {
+      await this.executionService.createExecution(this.budget.fy, this.fileToUpload).toPromise();
+      Notify.success("Execution phase FY" + (this.budget.fy-2000) + " has been created");
+      this.router.navigate(['/home']);
+    } catch (e) {
+      this.spinner = false;
+    }
   }
 }
