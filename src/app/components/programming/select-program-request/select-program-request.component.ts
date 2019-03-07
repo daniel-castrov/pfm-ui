@@ -81,14 +81,13 @@ export class SelectProgramRequestComponent implements OnInit {
   async loadChart(by:number) {
     this.populateRowData(by);
     const communityToas = this.pom.communityToas
+    console.log('row data', this.rowsData)
     for(let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
       let totalPrevious = ''
       let totalCurrent = ''
-      let totalPR = 0
-      let unAllocated = 0
       for(let j = 0; j < this.rowsData.length; j++) {
         if(this.rowsData[j]['id'] == 'PB '+(by-2000-1)) {
           totalPrevious = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
@@ -97,9 +96,6 @@ export class SelectProgramRequestComponent implements OnInit {
           totalCurrent = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
         }
         if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
-          if(this.rowsData[j]['id'] == 'PRs Submitted' || this.rowsData[j]['id'] == 'PRs Planned') {
-            totalPR += this.rowsData[j][prop]
-          }
           bar.push(this.rowsData[j][prop])
           bar.push(
             totalPrevious
@@ -110,15 +106,6 @@ export class SelectProgramRequestComponent implements OnInit {
           )
         }
       }
-      unAllocated = communityToas[i].amount - totalPR
-      bar.push(unAllocated)
-      bar.push(
-        'Total PRs: ' + this.formatCurrency(totalPR)
-        + '\n'
-        + 'Community TOA: ' + this.formatCurrency(communityToas[i].amount)
-        + '\n'
-        + 'Unallocated: ' + this.formatCurrency(unAllocated)
-      )
       this.charty.push(bar)
     }
     this.chartdata = {
@@ -228,6 +215,26 @@ export class SelectProgramRequestComponent implements OnInit {
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year] = this.aggregateToas(outstandingPrs, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row= new Object();
+    row["id"] = "Unallocated PRs";
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      let currentFyToa = 0
+      let toaDifference = 0
+      let prSubmitted = 0
+      let prPlanned = 0
+      rowdata.forEach((row: {year: String, id: String}) =>{
+        if(row.id == "POM " + (by-2000) + " TOA") currentFyToa = row[year]
+        if(row.id == 'PRs Planned') prPlanned = row[year]
+        if(row.id == 'PRs Submitted') prSubmitted = row[year]
+        if(row.id == 'TOA Difference') toaDifference = row[year]
+      });
+      row[year]  = currentFyToa - toaDifference - prPlanned - prSubmitted
       sum += row[year];
     }
     row["total"] = sum;
