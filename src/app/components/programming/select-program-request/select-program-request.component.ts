@@ -117,6 +117,7 @@ export class SelectProgramRequestComponent implements OnInit {
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
+        series: {0: {color: 'green'}, 1: {color: 'blue'}, 2: {color: '#FF4500'}, 3: {color: 'red'}},
       }
     };
   }
@@ -132,6 +133,7 @@ export class SelectProgramRequestComponent implements OnInit {
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
+        series: {0: {color: 'green'}, 1: {color: 'blue'}, 2: {color: '#FF4500'}, 3: {color: 'red'}},
       }
     };
     this.charty = [[
@@ -141,6 +143,8 @@ export class SelectProgramRequestComponent implements OnInit {
       'PRs Planned',
       { type: 'string', role: 'tooltip'},
       'TOA Difference',
+      { type: 'string', role: 'tooltip'},
+      'Unallocated',
       { type: 'string', role: 'tooltip'},
     ]];
   }
@@ -210,6 +214,26 @@ export class SelectProgramRequestComponent implements OnInit {
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year] = this.aggregateToas(outstandingPrs, year);
+      sum += row[year];
+    }
+    row["total"] = sum;
+    rowdata.push( row );
+
+    row= new Object();
+    row["id"] = "Unallocated PRs";
+    sum = 0;
+    for (let year: number = by; year < by + 5; year++) {
+      let currentFyToa = 0
+      let toaDifference = 0
+      let prSubmitted = 0
+      let prPlanned = 0
+      rowdata.forEach((row: {year: String, id: String}) =>{
+        if(row.id == "POM " + (by-2000) + " TOA") currentFyToa = row[year]
+        if(row.id == 'PRs Planned') prPlanned = row[year]
+        if(row.id == 'PRs Submitted') prSubmitted = row[year]
+        if(row.id == 'TOA Difference') toaDifference = row[year]
+      });
+      row[year]  = currentFyToa - toaDifference - prPlanned - prSubmitted
       sum += row[year];
     }
     row["total"] = sum;
