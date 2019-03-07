@@ -81,7 +81,6 @@ export class SelectProgramRequestComponent implements OnInit {
   async loadChart(by:number) {
     this.populateRowData(by);
     const communityToas = this.pom.communityToas
-    console.log('row data', this.rowsData)
     for(let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
