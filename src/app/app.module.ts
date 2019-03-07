@@ -232,6 +232,7 @@ import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab
 import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
 import {AppHeaderComponent} from "./components/header/app-header/app-header.component";
 import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
+import {ExecutionCreationService} from "./components/execution/create-execution-phase/execution-creation.service";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -575,6 +576,7 @@ const appRoutes: Routes = [
     PrChangeNotificationsService,
     CanActivateAuth,
     Authorization,
+    ExecutionCreationService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
   ],

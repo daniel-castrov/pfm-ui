@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {Budget, BudgetService, Execution, ExecutionService, PB} from "../../../generated";
-import {UserUtils} from "../../../services/user.utils";
+import {Budget, ExecutionService} from "../../../generated";
+import {Notify} from "../../../utils/Notify";
+import {ExecutionCreationService} from "./execution-creation.service";
 
 @Component({
   selector: 'create-execution-phase',
@@ -11,54 +11,31 @@ import {UserUtils} from "../../../services/user.utils";
 })
 export class CreateExecutionPhaseComponent implements OnInit {
 
-  public yearpblkp: Map<number, PB> = new Map<number, PB>();
+  public budgetsReadyForExecutionPhaseCreation: Budget[];
   public budget: Budget;
   public fileToUpload: File;
-  public message: string;
-  public submitted: boolean = false;
+  public error: string;
 
-  constructor( private budgetService: BudgetService,
-               private userUtils: UserUtils,
-               private executionService:ExecutionService,
-               private router:Router ) {}
+  constructor( private executionCreationService: ExecutionCreationService,
+               private executionService: ExecutionService,
+               private router: Router ) {}
 
-  ngOnInit() {
-    forkJoin([
-      this.executionService.getAll(),
-      this.budgetService.getAll()
-    ]).subscribe(data => {
-
-      const existingExeYears: Set<number> = new Set<number>();
-      data[0].result.forEach((exe: Execution) => {
-        existingExeYears.add(exe.fy);
-      });
-
-      data[1].result.forEach((budget: Budget) => {
-        if (!existingExeYears.has(budget.fy)) {
-          this.yearpblkp.set(budget.fy, budget);
-          this.budget = budget;
-        }
-      });
-      if (this.yearpblkp.size < 1) {
-        this.message = 'All available Execution Phases have been created';
-      }
-    });
+  async ngOnInit() {
+    this.budgetsReadyForExecutionPhaseCreation = await this.executionCreationService.getBudgetsReadyForExecutionPhaseCreation();
+    if (this.budgetsReadyForExecutionPhaseCreation.length < 1) {
+      this.error = 'All available Execution Phases have been created';
+    } else {
+      this.budget = this.budgetsReadyForExecutionPhaseCreation[0];
+    }
   }
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
   }
 
-  submit() {
-    this.submitted = true;
-
-    this.executionService.createExecution(this.budget.fy, this.fileToUpload).subscribe(data => {
-      if (data.result) {
-        this.router.navigate(['/home']);
-      } else {
-        this.message = data.error;
-        this.submitted = false;
-      }
-    });
+  async submit() {
+    await this.executionService.createExecution(this.budget.fy, this.fileToUpload).toPromise();
+    Notify.success("Execution phase FY" + (this.budget.fy-2000) + " has been created");
+    this.router.navigate(['/home']);
   }
 }
