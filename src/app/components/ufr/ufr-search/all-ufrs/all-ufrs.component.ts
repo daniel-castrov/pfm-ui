@@ -1,5 +1,5 @@
 import {UserUtils} from '../../../../services/user.utils';
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AgGridNg2} from "ag-grid-angular";
 import {
@@ -29,7 +29,7 @@ import {PhaseType} from "../../../programming/select-program-request/UiProgramRe
   templateUrl: './all-ufrs.component.html',
   styleUrls: ['./all-ufrs.component.scss']
 })
-export class AllUfrsComponent implements OnInit {
+export class AllUfrsComponent implements OnChanges {
 
   @Input() private mapCycleIdToFy: Map<string, string>;
 
@@ -64,7 +64,7 @@ export class AllUfrsComponent implements OnInit {
                private currentPhase: CurrentPhase,
                private exeService: ExecutionService) {}
 
-  async ngOnInit() {
+  async ngOnChanges() {
 
     this.user = await this.userUtils.user().toPromise();
     await this.initProgrammyIdToFullName();
