@@ -41,7 +41,7 @@ export class PomAnalysisComponent {
 
   @Input() set commdata(t: any) {
     this.commtoa.clear();
-    Object.getOwnPropertyNames(t).forEach(v => { 
+    Object.getOwnPropertyNames(t).forEach(v => {
       var year = parseInt(v) || -1;
       if (year > 0) {
         this.commtoa.set(year, t[year]);
@@ -51,7 +51,7 @@ export class PomAnalysisComponent {
     this.regraph();
   }
 
-  @Input() set pb(p: PB) { 
+  @Input() set pb(p: PB) {
     this._pb = p;
 
     if (p) {
@@ -66,7 +66,7 @@ export class PomAnalysisComponent {
     this._pom = p;
     this.regraph();
   }
-  
+
   @Input() set fy(year: number) {
     this._fy = year;
 
@@ -222,7 +222,7 @@ export class PomAnalysisComponent {
     });
 
     var totalsum: number = 0;
-    this.commtoa.forEach((val, year) => { 
+    this.commtoa.forEach((val, year) => {
       if (year >= this.pom.fy && year < this.pom.fy + 5) {
         totalsum += val;
       }
@@ -270,7 +270,7 @@ export class PomAnalysisComponent {
     this.pechartdata = {
       chartType: 'TreeMap',
       dataTable: data,
-      options: { 'title': 'Baseline BA/Blin Breakdown' },
+      // options: { 'title': 'Baseline BA/Blin Breakdown' },
     }
 
     //make the initial bar chart, too
@@ -294,7 +294,7 @@ export class PomAnalysisComponent {
     var subdata: [any[]] = [['Organization', this.fy + ' TOA', { role: 'annotation' }]];
     var totalalloc: number = 0;
 
-    this.agoptions.api.forEachNode(row => { 
+    this.agoptions.api.forEachNode(row => {
       var orgname: string = this.orgmap.get(row.data.orgid);
       var amt: number = row.data.amount;
       subdata.push([orgname, amt, amt]);
@@ -307,7 +307,7 @@ export class PomAnalysisComponent {
     if (totalalloc < maxtoa) {
       subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);
     }
-    
+
     this.bardata = {
       chartType: 'PieChart',
       dataTable: subdata,
@@ -395,7 +395,7 @@ export class PomAnalysisComponent {
       totals.set(prog.organizationId, sum);
     });
 
-    totals.forEach((sum, orgid) => { 
+    totals.forEach((sum, orgid) => {
       data.push([this.orgmap.get(orgid), sum]);
     });
 

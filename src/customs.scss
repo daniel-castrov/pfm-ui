@@ -1,0 +1,100 @@
+/*Custom Styles needed before component is loaded*/
+
+.create-pom-session-wrapper .google-visualization-tooltip{
+  border-radius: 3px;
+}
+
+.agtoatable .row h2{
+  font-size: 1.2rem;
+  color: #232323;
+  font-family: source sans pro;
+  font-weight: bolder;
+}
+.tool-tip-container{
+  padding:.5rem;
+  width:140px;
+}
+p.tooltip-fy {
+  font-size: 1rem;
+  font-weight: bolder;
+}
+h3.tooltip-h3 {
+  font-size: .8rem;
+  color:#adadad;;
+}
+h3.tooltip-h3 span {
+  font-size: 1.3rem;
+  font-weight: 400;
+  display:block;
+}
+h3.tooltip-h3 span.toa {
+color:#24527b;
+}
+h3.tooltip-h3 span.base {
+  color:#91A6FF;
+  }
+.tool-tip-change-toa{
+  font-size: 1rem;
+  padding: 0px .2rem;
+  width: 100px;
+  margin-bottom: .3rem;
+}
+.tooltip-toa-submit{
+  border: 1px solid #3d6588;
+  width: 100%;
+    border-radius: .15rem;
+}
+
+body{
+  background: #f9f9f9;
+}
+.toa-modal-input-wrapper{
+
+    margin: 0 auto;
+}
+.toa-tooltip-modal.modal-body{
+  padding: .8rem .5rem;
+}
+.toa-tooltip-modal .close{
+  padding: .8rem;
+}
+.toa-tooltip-modal.modal-header{
+  font-family: Sarabun;
+  padding: .5rem .5rem;
+}
+.comchart-second-wrapper {
+  width: 100%;
+}
+.tooltip-modal{
+  // position: absolute;
+  // top: 0px;
+  // right: 0px;
+  // left: 0px;
+  // bottom: 0;
+  // width: 0px;
+  // z-index: 0;
+  // height: 0px;
+}
+.tooltip-modal .modal-dialog{
+  // position:fixed;
+  // right:0px;
+}
+.tooltip-modal-backdrop{
+  background:none;
+}
+
+.toa-tooltip-modal h4{
+  font-size:1rem;
+}
+
+.modal-open{
+  overflow:scroll;
+}
+.toa-select-edit{
+  width: 90px;
+  display: inline-block;
+}
+.toa-input-edit{
+  display: inline-block;
+  width: 200px;
+}

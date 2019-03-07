@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { GridOptions, ColDef }  from 'ag-grid';
+import { GridOptions, ColDef } from 'ag-grid';
 import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
@@ -18,8 +18,8 @@ import {
   Program,
   TOA
 } from '../../../generated';
-import {Notify} from "../../../utils/Notify";
-import {CurrentPhase} from "../../../services/current-phase.service";
+import { Notify } from "../../../utils/Notify";
+import { CurrentPhase } from "../../../services/current-phase.service";
 
 @Component({
   selector: 'app-create-pom-session',
@@ -31,6 +31,8 @@ export class CreatePomSessionComponent implements OnInit {
 
   @ViewChild(HeaderComponent) header: HeaderComponent;
   @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
+  @ViewChild(GoogleChartComponent) comchartTwo: GoogleChartComponent;
+  @ViewChild('content') content: ElementRef;
 
   private fy: number;
   private community: Community;
@@ -44,9 +46,9 @@ export class CreatePomSessionComponent implements OnInit {
   private pomIsOpen: boolean;
   private tooMuchToa: boolean;
   private useEpp: boolean;
-  private submitted:boolean;
+  private submitted: boolean;
 
-  private gridOptionsCommunity:GridOptions;
+  private gridOptionsCommunity: GridOptions;
   private rowsCommunity;
   private pinnedRowCommunityBaseline;
 
@@ -55,26 +57,32 @@ export class CreatePomSessionComponent implements OnInit {
   private menuTabs = ['filterMenuTab'];
 
   private chartdata;
+  private subchartdata;
   private pomData;
-  private analysis: boolean = false;
   private selectedyear: number;
   private analysis_baseline: boolean = true;
   private yeartoas: any;
 
-  constructor( private communityService: CommunityService,
-               private orgsvc: OrganizationService,
-               private pomsvc: POMService,
-               private currentPhase: CurrentPhase,
-               private eppsvc: EppService,
-               private router: Router,
-               private globalsvc: UserUtils,
+  constructor(private communityService: CommunityService,
+    private orgsvc: OrganizationService,
+    private pomsvc: POMService,
+    private currentPhase: CurrentPhase,
+    private eppsvc: EppService,
+    private router: Router,
+    private globalsvc: UserUtils,
     private programAndPrService: ProgramAndPrService) {
-    
+
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
       options: { 'title': 'Community TOA' },
     };
+    this.subchartdata = {
+      chartType: 'ColumnChart',
+      dataTable: [],
+      options: { 'title': 'Organizational sub-TOAs' },
+    };
+
   }
 
   ngOnInit() {
@@ -83,19 +91,19 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   // Initialize both grids
-  private initGrids(fy:number){
+  private initGrids(fy: number) {
 
     this.gridOptionsCommunity = {
-      columnDefs : this.setAgGridColDefs("Community", fy),
-      gridAutoHeight : true,
-      suppressDragLeaveHidesColumns:true,
+      columnDefs: this.setAgGridColDefs("Community", fy),
+      gridAutoHeight: true,
+      suppressDragLeaveHidesColumns: true,
       suppressMovableColumns: true,
-      onCellValueChanged : params => this.setDeltaRow(fy),
+      onCellValueChanged: params => this.setDeltaRow(fy),
     }
   }
 
   // Set similar column definitions for both grids
-  private setAgGridColDefs(column1Name:string, fy:number): any {
+  private setAgGridColDefs(column1Name: string, fy: number): any {
 
     let colDefs = [];
 
@@ -109,67 +117,70 @@ export class CreatePomSessionComponent implements OnInit {
     }
 
     colDefs.push(
-      { headerName: column1Name,
+      {
+        headerName: column1Name,
         suppressMenu: true,
         field: 'orgid',
         width: 178,
         editable: false,
-        valueGetter: params => this.orgName( params.data.orgid ),
-        cellRenderer: params => '<strong>'+params.value+'</strong>',
+        valueGetter: params => this.orgName(params.data.orgid),
+        cellRenderer: params => '<strong>' + params.value + '</strong>',
         cellClassRules: {
-        'ag-cell-footer-sum': params => {
-          return params.data.orgid == 'Delta'
-        }
-      }
-    });
-
-    for (var i = 0; i < 5; i++) {
-      colDefs.push(
-        { headerName: "FY" + (fy + i - 2000) ,
-          type: "numericColumn",
-          suppressMenu: true,
-          field: (fy+ i).toString(),
-          cellRenderer: params => this.negativeNumberRenderer(params),
-          valueSetter: p => numbersOnly(p),
-          cellClassRules: {
-          'ag-cell-edit': params =>this.shouldEdit(params),
           'ag-cell-footer-sum': params => {
             return params.data.orgid == 'Delta'
           }
         }
       });
+
+    for (var i = 0; i < 5; i++) {
+      colDefs.push(
+        {
+          headerName: "FY" + (fy + i - 2000),
+          type: "numericColumn",
+          suppressMenu: true,
+          field: (fy + i).toString(),
+          cellRenderer: params => this.negativeNumberRenderer(params),
+          valueSetter: p => numbersOnly(p),
+          cellClassRules: {
+            'ag-cell-edit': params => this.shouldEdit(params),
+            'ag-cell-footer-sum': params => {
+              return params.data.orgid == 'Delta'
+            }
+          }
+        });
     }
     colDefs.push(
-      { headerName: "FY" + (fy-2000) + "-"+ "FY" + (fy+4-2000),
+      {
+        headerName: "FY" + (fy - 2000) + "-" + "FY" + (fy + 4 - 2000),
         type: "numericColumn",
         suppressMenu: true,
         field: 'total',
         width: 120,
         editable: false,
         valueGetter: params => this.rowTotal(params.data, fy),
-        cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>',
+        cellRenderer: params => '<i>' + this.negativeNumberRenderer(params) + '</i>',
         cellClassRules: {
-        'ag-cell-footer-sum': params => {
-          return params.data.orgid == 'Delta'
+          'ag-cell-footer-sum': params => {
+            return params.data.orgid == 'Delta'
+          }
         }
-      }
-    });
+      });
 
     return colDefs;
   }
 
   // A valueGetter for totaling a row
-  private rowTotal( data, fy:number ){
-    let total:number=0;
+  private rowTotal(data, fy: number) {
+    let total: number = 0;
     for (var i = 0; i < 5; i++) {
-      total += parseInt(data[fy+i],10);
+      total += parseInt(data[fy + i], 10);
     }
     return total;
   }
 
   // A valueGetter for looking up an org name
-  private orgName( id:string ){
-    if ( null == this.orgMap.get(id) ){
+  private orgName(id: string) {
+    if (null == this.orgMap.get(id)) {
       return id;
     } else {
       return this.orgMap.get(id);
@@ -177,18 +188,18 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   // a sinple CellRenderrer for negative numbers
-  private negativeNumberRenderer( params ){
+  private negativeNumberRenderer(params) {
 
-    if ( params.value < 0 ){
-      return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
+    if (params.value < 0) {
+      return '<span style="color: red;">' + this.formatCurrency(params) + '</span>';
     } else {
-      return this.formatCurrency( params );
+      return this.formatCurrency(params);
     }
   }
 
   // a callback for determining if a ROW is editable
-  private shouldEdit ( params ){
-    if ( this.pomIsOpen ) {
+  private shouldEdit(params) {
+    if (this.pomIsOpen) {
       if (params.data.orgid === this.community.abbreviation + ' TOA') {
         return true;
       }
@@ -197,26 +208,26 @@ export class CreatePomSessionComponent implements OnInit {
       }
     }
 
-    return params.node.rowPinned ? false : true;  
+    return params.node.rowPinned ? false : true;
   }
 
   // helper for currency formatting
-  private formatCurrency( params ) {
-    let str = Math.floor( params.value )
+  private formatCurrency(params) {
+    let str = Math.floor(params.value)
       .toString()
-      .replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
+      .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     return "$ " + str;
   }
 
   // Init and fetch all
   private myinit() {
 
-    this.globalsvc.user().subscribe( user => {
+    this.globalsvc.user().subscribe(user => {
       forkJoin([this.communityService.getById(user.currentCommunityId),
-        this.orgsvc.getByCommunityId(user.currentCommunityId),
-        this.pomsvc.getByCommunityId(user.currentCommunityId),
-        this.currentPhase.budget(),
-        this.pomsvc.getToaSamples(user.currentCommunityId)
+      this.orgsvc.getByCommunityId(user.currentCommunityId),
+      this.pomsvc.getByCommunityId(user.currentCommunityId),
+      this.currentPhase.budget(),
+      this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
 
         this.rowsCommunity = [];
@@ -225,20 +236,20 @@ export class CreatePomSessionComponent implements OnInit {
         this.rowsOrgs = [];
         this.pinnedRowOrgsDelta = [];
         this.orgMap = new Map<string, string>();
-        this.originalFyplus4 ={};
+        this.originalFyplus4 = {};
         this.pomIsCreated = false;
         this.pomIsOpen = false;
         this.tooMuchToa = false;
         this.useEpp = false;
         this.submitted = false;
 
-        this.community  = data[0].result;
+        this.community = data[0].result;
         this.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
         this.budget = data[3];
         var samplepom: Pom = data[4].result;
         this.fy = this.budget.fy + 1;
-        this.orgs.forEach( org => this.orgMap.set( org.id, org.abbreviation ) );
+        this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
 
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
@@ -247,21 +258,21 @@ export class CreatePomSessionComponent implements OnInit {
     });
   }
 
-  private setInitialGridValues(fy:number, poms: Pom[], samplepom: Pom) {
+  private setInitialGridValues(fy: number, poms: Pom[], samplepom: Pom) {
 
-    let i:number;
+    let i: number;
 
     // Is this a new POM?
-    var currentPom:Pom=null;
-    for (i=0; i<poms.length; i++){
-      if ( poms[i].status === "CREATED" ){
-        this.pomIsCreated=true;
-        currentPom=poms[i];
+    var currentPom: Pom = null;
+    for (i = 0; i < poms.length; i++) {
+      if (poms[i].status === "CREATED") {
+        this.pomIsCreated = true;
+        currentPom = poms[i];
         break;
       }
-      if ( poms[i].status === "OPEN" ){
-        this.pomIsOpen=true;
-        currentPom=poms[i];
+      if (poms[i].status === "OPEN") {
+        this.pomIsOpen = true;
+        currentPom = poms[i];
         break;
       }
     }
@@ -274,13 +285,13 @@ export class CreatePomSessionComponent implements OnInit {
 
     // BaseLine
     let row = {}
-    row["orgid"] = this.community.abbreviation+" Baseline";
+    row["orgid"] = this.community.abbreviation + " Baseline";
 
     samplepom.communityToas.forEach((toa: TOA) => {
       row[toa.year] = toa.amount;
     });
     for (i = 0; i < 5; i++) {
-      if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
+      if (row[fy + i] == undefined) row[fy + i] = 0;
     }
     this.pinnedRowCommunityBaseline = [row];
 
@@ -291,7 +302,7 @@ export class CreatePomSessionComponent implements OnInit {
       row[toa.year] = toa.amount;
     });
     for (i = 0; i < 5; i++) {
-      if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
+      if (row[fy + i] == undefined) row[fy + i] = 0;
     }
     this.rowsCommunity = [row];
 
@@ -301,49 +312,49 @@ export class CreatePomSessionComponent implements OnInit {
 
       row = {};
       let total = 0;
-      row["orgid"] = key ;
-        this.pomData.orgToas[key].forEach( (toa:TOA) => {
-          row[toa.year] = toa.amount;
-        });
-      this.rowsOrgs.push(row);
+      row["orgid"] = key;
+      this.pomData.orgToas[key].forEach((toa: TOA) => {
+        row[toa.year] = toa.amount;
       });
-      this.rowsOrgs.forEach( roww => {
+      this.rowsOrgs.push(row);
+    });
+    this.rowsOrgs.forEach(roww => {
       for (i = 0; i < 5; i++) {
-        if ( roww[ fy+i ] == undefined ) {
-          roww[ fy+i ] = 0;
+        if (roww[fy + i] == undefined) {
+          roww[fy + i] = 0;
         }
 
       }
     });
-  
 
-    this.originalFyplus4[this.community.id]  =   this.rowsCommunity[0][this.fy+4];
-    this.rowsOrgs.forEach( rowww => {
-        this.originalFyplus4[rowww["orgid"]] = rowww[fy+4];
+
+    this.originalFyplus4[this.community.id] = this.rowsCommunity[0][this.fy + 4];
+    this.rowsOrgs.forEach(rowww => {
+      this.originalFyplus4[rowww["orgid"]] = rowww[fy + 4];
     });
 
     this.resetCharts();
   }
 
   // Compute and set the bottom 'pinned' row.
-  private setDeltaRow(fy:number) {
+  private setDeltaRow(fy: number) {
 
     this.tooMuchToa = false;
 
-    let i:number;
+    let i: number;
     let deltaRow = {};
     for (i = 0; i < 5; i++) {
-      deltaRow[fy+i] =  this.rowsCommunity[0][fy+ i];
+      deltaRow[fy + i] = this.rowsCommunity[0][fy + i];
     }
 
-    this.rowsOrgs.forEach( row => {
+    this.rowsOrgs.forEach(row => {
       for (i = 0; i < 5; i++) {
-        deltaRow[fy+i] = deltaRow[fy+i] - row[fy+i]
-        if (deltaRow[fy+i] <0 ){
+        deltaRow[fy + i] = deltaRow[fy + i] - row[fy + i]
+        if (deltaRow[fy + i] < 0) {
           this.tooMuchToa = true;
         }
       }
-     });
+    });
     if (this.tooMuchToa) {
       Notify.error('Organizational TOA(s) exceeds Community TOA');
     }
@@ -365,10 +376,10 @@ export class CreatePomSessionComponent implements OnInit {
       this.getEppData();
     } else {
       // replace all values in fy+4 with the original fy+4 data
-      this.rowsCommunity[0][this.fy+4] = this.originalFyplus4[this.community.id];
+      this.rowsCommunity[0][this.fy + 4] = this.originalFyplus4[this.community.id];
 
-      this.rowsOrgs.forEach( row =>  {
-        row[this.fy+4] = this.originalFyplus4[row["orgid"]]
+      this.rowsOrgs.forEach(row => {
+        row[this.fy + 4] = this.originalFyplus4[row["orgid"]]
       });
       this.setDeltaRow(this.fy);
 
@@ -385,25 +396,25 @@ export class CreatePomSessionComponent implements OnInit {
       this.programAndPrService.programRequests(this.budget.id),
     ]).subscribe(data => {
 
-      let alleppData:any[] = data[0].result;
+      let alleppData: any[] = data[0].result;
       let programs: Program[] = data[1];
-      let prs:Program[] = data[2];
-      
-      let fls:string[] = [];
-      prs.forEach( pr => {
-        if ( pr.type != "GENERIC" ){
-          pr.fundingLines.forEach( fl => {
-            let flId:string = pr.shortName + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
-            fls.push( flId );
+      let prs: Program[] = data[2];
+
+      let fls: string[] = [];
+      prs.forEach(pr => {
+        if (pr.type != "GENERIC") {
+          pr.fundingLines.forEach(fl => {
+            let flId: string = pr.shortName + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
+            fls.push(flId);
           });
         }
       });
-      
-      let eppData:any[] = [];
-      let eppYear:number = this.fy+4;
-      alleppData.forEach( epp => {
-        let eppId:string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
-        if ( epp.fySums[eppYear] > 0 && fls.includes(eppId) ){
+
+      let eppData: any[] = [];
+      let eppYear: number = this.fy + 4;
+      alleppData.forEach(epp => {
+        let eppId: string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
+        if (epp.fySums[eppYear] > 0 && fls.includes(eppId)) {
           eppData.push(epp);
         }
       });
@@ -413,23 +424,23 @@ export class CreatePomSessionComponent implements OnInit {
         eppOrgToa[org.id] = 0;
       });
 
-      eppData.forEach( epp => {
+      eppData.forEach(epp => {
         let amount = 0;
         if (epp.fySums[eppYear]) {
           amount = epp.fySums[eppYear];
         }
         let index = programs.findIndex(program => program.shortName === epp.shortName);
         if (index > 0) {
-          eppOrgToa[ programs[index].organizationId ] += amount;
+          eppOrgToa[programs[index].organizationId] += amount;
         }
       });
 
       let total = 0;
       this.orgs.forEach(org => {
-        for (var j = 0; j < this.rowsOrgs.length; j++){
+        for (var j = 0; j < this.rowsOrgs.length; j++) {
           let row = this.rowsOrgs[j];
-          if ( row["orgid"] == org.id ){
-            row[this.fy + 4] =  eppOrgToa[org.id];
+          if (row["orgid"] == org.id) {
+            row[this.fy + 4] = eppOrgToa[org.id];
             total += eppOrgToa[org.id];
             break;
           }
@@ -446,10 +457,10 @@ export class CreatePomSessionComponent implements OnInit {
 
   private submitNewPom() {
 
-    this.submitted=true;
-    var transfer:Pom = this.buildTransfer();
+    this.submitted = true;
+    var transfer: Pom = this.buildTransfer();
 
-    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.budget.finalPbId, this.useEpp  ).subscribe(
+    this.pomsvc.createPom(this.community.id, this.fy, transfer, this.budget.finalPbId, this.useEpp).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);
@@ -457,16 +468,16 @@ export class CreatePomSessionComponent implements OnInit {
       });
   }
 
-  private reload(){
+  private reload() {
     this.myinit();
   }
 
   private updatePom() {
 
-    this.submitted=true;
-    var transfer:Pom = this.buildTransfer();
+    this.submitted = true;
+    var transfer: Pom = this.buildTransfer();
 
-    this.pomsvc.updateCurrentPom( this.community.id, transfer ).subscribe(
+    this.pomsvc.updateCurrentPom(this.community.id, transfer).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);
@@ -477,18 +488,18 @@ export class CreatePomSessionComponent implements OnInit {
   private buildTransfer(): Pom {
 
     var toas: TOA[] = [];
-    for (var i=0; i < 5; i++){
+    for (var i = 0; i < 5; i++) {
       toas.push(
-        { year: this.fy+i, amount: this.rowsCommunity[0][this.fy+i] }
+        { year: this.fy + i, amount: this.rowsCommunity[0][this.fy + i] }
       );
     }
 
     var otoas: { [key: string]: TOA[]; } = {};
-    this.rowsOrgs.forEach( row => {
+    this.rowsOrgs.forEach(row => {
       var tlist: TOA[] = [];
-      for (var i=0; i < 5; i++){
+      for (var i = 0; i < 5; i++) {
         tlist.push(
-          { year: this.fy+i, amount: row[ this.fy+i ]  }
+          { year: this.fy + i, amount: row[this.fy + i] }
         );
       }
       otoas[row["orgid"]] = tlist;
@@ -504,7 +515,7 @@ export class CreatePomSessionComponent implements OnInit {
 
   onGridReadyCom(params) {
     params.api.sizeColumnsToFit();
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", function () {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
       });
@@ -513,7 +524,7 @@ export class CreatePomSessionComponent implements OnInit {
 
   onGridReadyOrgs(params) {
     params.api.sizeColumnsToFit();
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", function () {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
       });
@@ -541,45 +552,80 @@ export class CreatePomSessionComponent implements OnInit {
 
     var charty: [any[]] = [[
       'Year',
-      'Baseline',
       'TOA',
       { role: 'annotation' },
-      //{ role: 'style' }
+      { role: 'tooltip', p: { html: true } },
+      'YoY %',
+      //{ role: 'annotation' },
+      { role: 'tooltip', p: { html: true } },
     ]];
+
 
     var baseavg: number = Math.ceil(totaltoa / totalvals);
     for (var i = 0; i < 5; i++) {
       var newamt = yeartoas.get(this.fy + i);
       var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
 
+      var lastamt = (0 === newamt ? baseavg : newamt);
+      var pctdiff: number = (i < 1 ? 0 : (lastamt - yeartoas.get(this.fy + i - 1)) / lastamt);
 
       charty.push([
         (this.fy + i).toString(),
-        baseamt,
         (0 === newamt ? baseavg : newamt),
-        (0 === newamt ? baseavg + ' (est.)' : newamt.toString()),
-        //(0 === newamt ? 'opacity: 0.2' : '')
+        (0 === newamt ? baseavg + ' (est.)' : newamt.toLocaleString()),
+        ("<div class='tool-tip-container'>" +
+          "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
+          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
+          newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>"),
+        pctdiff,
+        //(pctdiff * 100).toFixed(1) + '%',
+        ("<div class='tool-tip-container'>" +
+          "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
+          "</p><h3 class='tooltip-h3'>Change Since FY" + (this.fy + i - 2001) + ":<br> " + "<span>" +
+          (pctdiff > 0 ? '+' : '') + (pctdiff * 100).toFixed(2).toLocaleString() + "%</span></h3></div>"),
       ]);
     }
 
     this.chartdata = {
-      chartType: 'ColumnChart',
+      chartType: 'ComboChart',
       dataTable: charty,
       options: {
-        title: 'Community TOA'
+        title: 'Community TOA',
+
+        series: {
+          0: { targetAxisIndex: 0, type: 'bars' },
+          1: { targetAxisIndex: 1, type: 'line' },
+        },
+        vAxes: {
+          0: {
+          },
+          1: {
+            gridlines: { color: 'transparent' },
+            format: "#%"
+          },
+        },
+
+        selectionMode: 'multiple',
+        aggregationTarget: 'auto',
+
+        tooltip: {
+          isHtml: true,
+          trigger: 'focus'
+        },
+        colors: ['#24527b', '#6495ed']
       }
     };
   }
 
   select(event: ChartSelectEvent) {
     if ('deselect' === event.message) {
-      this.analysis = false;
+      delete this.selectedyear;
     }
     else if ('select' === event.message) {
-      this.analysis = true;
       this.selectedyear = this.fy + event.row;
       this.analysis_baseline = (1 === event.column);
       this.yeartoas = Object.assign({}, this.rowsCommunity[0]);
+      this.resetSubchart();
     }
   }
 
@@ -587,8 +633,61 @@ export class CreatePomSessionComponent implements OnInit {
     //this.addAction(this.comchart.wrapper.getChart());
   }
 
+
+  resetSubchart() {
+    var charty: [any[]] = [[
+      'Organization',
+      // 'Baseline',
+      'TOA',
+      { role: 'annotation' },
+      // { role: 'style' },
+      { role: 'tooltip', p: { html: true } }
+    ]];
+
+    this.rowsOrgs.forEach(obj => {
+      var orgname: string = this.orgMap.get(obj.orgid);
+      var value = obj[this.selectedyear];
+      var prevs = this.pomData.orgToas[obj.orgid]
+        .filter(yramt => yramt.year == this.selectedyear)
+        .map(yramt => yramt.amount);
+      var baseamt = (prevs.length > 0 ? prevs[0] : 0);
+
+      charty.push([orgname,
+        value,
+        value,
+        ("<div class='tool-tip-container'>" +
+          "<p class='tooltip-fy'>FY" + (this.selectedyear - 2000) +
+          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span class='toa'>" +
+          value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
+      ]);
+    });
+
+    this.subchartdata = {
+      chartType: 'ColumnChart',
+      dataTable: charty,
+      options: {
+        title: 'Organizational sub-TOA',
+        // colors: ['red'],
+        vAxis: {
+          minValue: 5
+        },
+        tooltip: {
+          isHtml: true,
+          trigger: 'focus'
+        },
+        colors: ['#24527b'],
+        height: 500,
+        animation: {
+       'startup': true,
+        duration: 600,
+        easing: 'inAndOut'
+      }
+      }
+    };
+  }
+
   onAnalysis(event) {
-    this.rowsOrgs.forEach(obj => { 
+    this.rowsOrgs.forEach(obj => {
       if (obj.orgid === event.orgid) {
         obj[event.year] = event.amount;
       }
@@ -612,5 +711,9 @@ export class CreatePomSessionComponent implements OnInit {
     this.pomData = newpomdata;
 
     this.setDeltaRow(event.year);
+  }
+
+  selectSub($event) {
+    // do nothing (yet!)
   }
 }

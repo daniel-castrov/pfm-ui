@@ -4,7 +4,7 @@ import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import { UserUtils } from '../../../services/user.utils';
 import { POMService } from '../../../generated/api/pOM.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Pom, RestResult, Program, Budget} from '../../../generated';
+import {Pom, RestResult, Program, Budget, ProgramStatus} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 import { UiProgramRequest } from './UiProgramRequest';
@@ -34,7 +34,7 @@ export class SelectProgramRequestComponent implements OnInit {
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {this.initChart()}
+              private cycleUtils: CycleUtils) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -45,7 +45,9 @@ export class SelectProgramRequestComponent implements OnInit {
   async reloadPrs() {
     await this.initPomPrs();
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
-    this.loadChart();
+    const by: number = this.pom.fy;
+    await this.initChart();
+    await this.loadChart(by);
   }
 
   initPomPrs(): Promise<void> {
@@ -76,19 +78,33 @@ export class SelectProgramRequestComponent implements OnInit {
     } 
   }
 
-  async loadChart() {
-    this.populateRowData(this.pom.fy);
+  async loadChart(by:number) {
+    this.populateRowData(by);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString()
       let bar: any[] = []
       bar.push(prop)
+      let totalPrevious = ''
+      let totalCurrent = ''
       for(let j = 0; j < this.rowsData.length; j++) {
-        if(this.rowsData[j]['id'] != 'PB 18') {
+        if(this.rowsData[j]['id'] == 'PB '+(by-2000-1)) {
+          totalPrevious = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
+        }
+        else if(this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA') {
+          totalCurrent = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
+        }
+        if(!(this.rowsData[j]['id'] == 'PB '+(by-2000-1) || this.rowsData[j]['id'] == 'POM '+(by-2000)+' TOA')) {
           bar.push(this.rowsData[j][prop])
+          bar.push(
+            totalPrevious
+            + '\n'
+            + totalCurrent
+            + '\n'
+            + this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
+          )
         }
       }
-      bar.push('')
       this.charty.push(bar)
     }
     this.chartdata = {
@@ -100,7 +116,7 @@ export class SelectProgramRequestComponent implements OnInit {
         height: 400,
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
-        isStacked: true
+        isStacked: true,
       }
     };
   }
@@ -115,17 +131,17 @@ export class SelectProgramRequestComponent implements OnInit {
         height: 400,
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
-        isStacked: true
+        isStacked: true,
       }
     };
     this.charty = [[
       'Year',
-      //'PB 18',
-      'POM 19 TOA',
       'PRs Submitted',
+      { type: 'string', role: 'tooltip'},
       'PRs Planned',
+      { type: 'string', role: 'tooltip'},
       'TOA Difference',
-      { role: 'annotation' },
+      { type: 'string', role: 'tooltip'},
     ]];
   }
   private populateRowData(by: number) {
@@ -168,7 +184,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
     row= new Object();
     row["id"] = "PRs Submitted";
-    let submittedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus=="SUBMITTED" );
+    let submittedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus==ProgramStatus.SUBMITTED );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(submittedPRs, year);
@@ -179,7 +195,7 @@ export class SelectProgramRequestComponent implements OnInit {
 
     row= new Object();
     row["id"] = "PRs Planned";
-    let plannedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus!="SUBMITTED" );
+    let plannedPRs = this.pomPrograms.filter( (pr:Program) => pr.programStatus==ProgramStatus.SAVED );
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       row[year]  = this.aggregateToas(plannedPRs, year);
@@ -187,13 +203,13 @@ export class SelectProgramRequestComponent implements OnInit {
     }
     row["total"] = sum;
     rowdata.push( row );
-    row= new Object();
+
+    row = new Object();
     row["id"] = "TOA Difference";
+    let outstandingPrs = this.pomPrograms.filter((pr: Program) => pr.programStatus == ProgramStatus.OUTSTANDING);
     sum = 0;
-    let requests: { [year: number]: number } = {};
     for (let year: number = by; year < by + 5; year++) {
-      requests[year] = this.aggregateToas(this.pomPrograms, year);
-      row[year] = requests[year] - allocatedToas[year];
+      row[year] = this.aggregateToas(outstandingPrs, year);
       sum += row[year];
     }
     row["total"] = sum;
@@ -204,5 +220,15 @@ export class SelectProgramRequestComponent implements OnInit {
 
   private aggregateToas(prs: Program[], year: number): number {
     return prs.map(pr => new UiProgramRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
+  }
+
+  formatCurrency(value) {
+    var usdFormat = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+    return usdFormat.format(value);
   }
 }

@@ -22,7 +22,8 @@
       "styles": [
         "../node_modules/bootstrap/scss/bootstrap.scss",
         "../node_modules/animate.css/animate.css",
-        "styles.scss"
+        "styles.scss",
+        "customs.scss"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
@@ -37,7 +38,8 @@
         "dev1":  "environments/environment.dev1.ts",
 	"dev2":  "environments/environment.dev2.ts",
 	"demo1": "environments/environment.demo1.ts",
-	"demo2": "environments/environment.demo2.ts"
+	"demo2": "environments/environment.demo2.ts",
+	"pfmdev": "environments/environment.pfmdev.ts"
       }
     }
   ],

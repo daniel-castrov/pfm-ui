@@ -228,6 +228,7 @@ import { TitleTabComponent } from './components/budget/edit-budget-scenario/titl
 import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
 import { R1TabComponent } from './components/budget/edit-budget-scenario/r1-tab/r1-tab.component';
 import { ScenarioSelectorComponent } from './components/budget/edit-budget-scenario/scenario-selector/scenario-selector.component';
+import { FundingRateRenderer } from './components/renderers/funding-rate-renderer/funding-rate-renderer.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -432,6 +433,7 @@ const appRoutes: Routes = [
     ProgramCellRendererComponent,
     LibraryViewCellRenderer,
     DeleteRenderer,
+    FundingRateRenderer,
     ViewSiblingsRenderer,
     ExecutionLineDetailsComponent,
     EventDetailsCellRendererComponent,
@@ -489,6 +491,7 @@ const appRoutes: Routes = [
     LibraryViewCellRenderer,
     TransferFromToDetailsCellRendererComponent,
     DeleteRenderer,
+    FundingRateRenderer,
     CheckboxRendererComponent,
     CheckboxCellRenderer,
     NameUpdatingRendererComponent,
