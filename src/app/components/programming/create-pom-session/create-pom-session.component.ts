@@ -72,6 +72,7 @@ export class CreatePomSessionComponent implements OnInit {
   tooltipSubToa;
   subOrgVal: Number;
   tooltipSubToaID;
+  fyComToolVal;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
