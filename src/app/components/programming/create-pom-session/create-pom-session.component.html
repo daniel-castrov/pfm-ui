@@ -36,11 +36,42 @@
               <i class="fa fa-refresh" aria-hidden="true"></i>
               Reset
             </button>
+            <div class="comchart-input-value">
+                <button (click)="open(content)" class='btn btn-sm btn-primary'>
+                  <i class="fa fa-edit" aria-hidden="true"></i> Change Values
+                </button>
+              </div>
 
           </span>
         </div>
       </div>
+      <ng-template #content let-modal let-c="close">
+          <div class=" toa-tooltip-modal modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Edit Community TOA values</h4>
 
+            <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class=" toa-tooltip-modal modal-body">
+            <div class="toa-modal-input-wrapper">
+              <form #f="ngForm">
+                <div class="form-group">
+                    <label for="sel1">Select Year:</label>
+                    <select class="form-control toa-select-edit" (change)="tooltipChangeYear($event.target)" >
+                        <option selected></option>
+                        <option *ngFor = "let year of years" [value] = "year">{{year}}</option>
+
+                    </select>
+                    <input name="first" [(ngModel)]="fyTOAVal"  [value] = "fyComToolVal" type="number" class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
+                  </div>
+                  </form>
+
+              <button (click)='tooltipToaSubmit(c)' class='tooltip-toa-submit btn-primary' [disabled]="!f.valid">Submit</button>
+            </div>
+          </div>
+
+        </ng-template>
 
 
       <!-- <div class="row mb-2">
@@ -86,24 +117,14 @@
 
                       <div class="form-group">
                           <label for="sel1">Select Year:</label>
-                          <select class="form-control toa-select-edit" (change)="tooltipChangeYear($event.target)">
-                            <option *ngFor = "let year of years" [value] = "year.id">year.name</option>
-                            <option>2020</option>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                          </select>
-                          <select class="form-control toa-select-edit" id="sel1">
-                              <option>PAIO</option>
-                              <option>JSTO-CBD</option>
-                              <option>JRO-CBRND</option>
-                              <option>DUSA-TE</option>
-                              <option>JFEO-CBRND</option>
+                          <select class="form-control toa-select-edit"  (change)="tooltipChangeSubToa($event.target)">
+                            <option></option>
+                            <option *ngFor = "let subtoa of subOrgName" [value] = "subtoa.key">{{subtoa.value}}</option>
                             </select>
-                          <input type="text" class="form-control toa-input-edit" aria-label="Text input with dropdown button">
+                          <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit" aria-label="Text input with dropdown button">
                         </div>
 
-                <button (click)='tooltipToaSubmit(c)' class='tooltip-toa-submit btn-primary'>Submit</button>
+                <button (click)='tooltipSubOrgSubmit(c)' class='tooltip-toa-submit btn-primary'>Submit</button>
               </div>
             </div>
 
@@ -113,14 +134,7 @@
       <div class="row">
         <!-- <div class="sub-toa-separator"></div> -->
         <div class="col-12">
-          <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
-            <span class="toa-epp-widget">
-              <span>
-                <label>Use EPP Data:</label>
-              </span>
-              <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
-            </span>
-          </ng-container>
+
         </div>
       </div>
       <div class="row" *ngIf='selectedyear'>
@@ -129,9 +143,16 @@
           <i class="fa fa-bar-chart" aria-hidden="true"> </i>
 
           <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
-          <!--button (click)="open(contentTwo)" class='btn btn-sm btn-primary'>   <i class="fa fa-edit" aria-hidden="true"></i> Change Values</button-->
-        </span>
 
+        </span>
+        <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
+            <span class="toa-epp-widget">
+              <span>
+                <label>Use EPP Data:</label>
+              </span>
+              <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
+            </span>
+          </ng-container> -->
         <div class="comchart-second-wrapper">
           <google-chart #comchartSecond
           [data]='subchartdata'

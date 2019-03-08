@@ -20,6 +20,7 @@ import {
 } from '../../../generated';
 import { Notify } from "../../../utils/Notify";
 import { CurrentPhase } from "../../../services/current-phase.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -62,6 +63,16 @@ export class CreatePomSessionComponent implements OnInit {
   private selectedyear: number;
   private analysis_baseline: boolean = true;
   private yeartoas: any;
+  fyTOAVal: Number;
+  changedToaVal = false;
+  tooltipYear;
+  years: number[] = [];
+  subOrgName = [];
+  subToaArray = {};
+  tooltipSubToa;
+  subOrgVal: Number;
+  tooltipSubToaID;
+  fyComToolVal;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -70,7 +81,8 @@ export class CreatePomSessionComponent implements OnInit {
     private eppsvc: EppService,
     private router: Router,
     private globalsvc: UserUtils,
-    private programAndPrService: ProgramAndPrService) {
+    private programAndPrService: ProgramAndPrService,
+    private modalService: NgbModal) {
 
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -88,6 +100,8 @@ export class CreatePomSessionComponent implements OnInit {
   ngOnInit() {
     this.gridOptionsCommunity = {};
     this.myinit();
+
+    console.log(this.years);
   }
 
   // Initialize both grids
@@ -102,6 +116,15 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
+
+
+  open(content, toaAmt) {
+    this.modalService.open(content, { centered: true, backdrop: false, backdropClass: 'tooltip-modal-backdrop', windowClass: 'tooltip-modal' }).result.then((result) => {
+
+    }, (reason) => {
+
+    });
+  }
   // Set similar column definitions for both grids
   private setAgGridColDefs(column1Name: string, fy: number): any {
 
@@ -250,10 +273,19 @@ export class CreatePomSessionComponent implements OnInit {
         var samplepom: Pom = data[4].result;
         this.fy = this.budget.fy + 1;
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
+        // console.log(this.orgMap);
+        this.years = [];
+        for (let i = 0; i < 5; i++) {
+          this.years.push(this.fy + i);
+
+        }
+
 
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
         this.setDeltaRow(this.fy);
+
+
       });
     });
   }
@@ -530,13 +562,44 @@ export class CreatePomSessionComponent implements OnInit {
       });
     });
   }
+  tooltipChangeYear(tooltipval) {
+    this.tooltipYear = tooltipval.value;
+    console.log(tooltipval.value);
 
+    var h: number = Number.parseInt(tooltipval.value);
 
-  resetCharts() {
+    if (h) {
+      console.log(this.rowsCommunity[0][h]);
+      this.fyComToolVal = this.rowsCommunity[0][h];
+
+    }
+  }
+  tooltipToaSubmit(c) {
+    this.changedToaVal = true;
+    console.log(this.fyTOAVal);
+
+    console.log(this.tooltipYear);
+    this.resetCharts(this.fyTOAVal, this.tooltipYear);
+    this.fyComToolVal = null;
+    this.fyTOAVal = null;
+    c('close modal');
+
+  }
+  resetCharts(toaVal?, year?) {
     var yeartoas: Map<number, number> = new Map<number, number>();
 
     var totaltoa: number = 0;
     var totalvals: number = 0;
+
+    var years = Object.keys(this.rowsCommunity[0]);
+    var h: number = Number.parseInt(year);
+
+    if (h) {
+      this.rowsCommunity[0][h] = toaVal;
+
+
+    }
+
     for (var i = 0; i < 5; i++) {
       var newamt: number = ('string' === typeof this.rowsCommunity[0][this.fy + i]
         ? Number.parseInt(this.rowsCommunity[0][this.fy + i])
@@ -559,6 +622,7 @@ export class CreatePomSessionComponent implements OnInit {
       //{ role: 'annotation' },
       { role: 'tooltip', p: { html: true } },
     ]];
+
 
 
     var baseavg: number = Math.ceil(totaltoa / totalvals);
@@ -612,7 +676,13 @@ export class CreatePomSessionComponent implements OnInit {
           isHtml: true,
           trigger: 'focus'
         },
-        colors: ['#24527b', '#6495ed']
+        colors: ['#24527b', '#6495ed'],
+        height: 300,
+        animation: {
+          'startup': true,
+          duration: 600,
+          easing: 'inAndOut'
+        }
       }
     };
   }
@@ -635,6 +705,7 @@ export class CreatePomSessionComponent implements OnInit {
 
 
   resetSubchart() {
+
     var charty: [any[]] = [[
       'Organization',
       // 'Baseline',
@@ -644,13 +715,31 @@ export class CreatePomSessionComponent implements OnInit {
       { role: 'tooltip', p: { html: true } }
     ]];
 
+
+
     this.rowsOrgs.forEach(obj => {
       var orgname: string = this.orgMap.get(obj.orgid);
+
+      // this.subOrgName.push(orgname);
+      // orgIdPair.orgname = this.orgMap.get(obj.orgid);
+
       var value = obj[this.selectedyear];
       var prevs = this.pomData.orgToas[obj.orgid]
         .filter(yramt => yramt.year == this.selectedyear)
         .map(yramt => yramt.amount);
       var baseamt = (prevs.length > 0 ? prevs[0] : 0);
+
+      //   if (newSubOrgVal) {
+      //     var subOrgString = subOrg.toString();
+      //     var orgIdArray = this.rowsOrgs.find(function (subOrgString) {
+
+      //       console.log(subOrgString);
+      //       return subOrgString;
+      //     });
+      // console.log(orgIdArray);
+      // console.log(orgIdArray[this.selectedyear] = Number.parseInt(toaVal));
+      // // value = Number.parseInt(toaVal);
+      //   }
 
       charty.push([orgname,
         value,
@@ -660,8 +749,25 @@ export class CreatePomSessionComponent implements OnInit {
           "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span class='toa'>" +
           value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
+
+      //Select from modal has [orgId, orgName]
+      //Pass in orgID from modal to this function
+      //Find object that has orgId and return that object
+      //Get object's matching year and set value of that year to new value
+
+
+
+
     });
 
+
+
+
+
+
+    console.log(this.rowsOrgs); //Where I need to push the value to
+    // console.log(this.subOrgName); //My array of Key Pair
+    // console.log(this.orgs);
     this.subchartdata = {
       chartType: 'ColumnChart',
       dataTable: charty,
@@ -678,10 +784,10 @@ export class CreatePomSessionComponent implements OnInit {
         colors: ['#24527b'],
         height: 500,
         animation: {
-       'startup': true,
-        duration: 600,
-        easing: 'inAndOut'
-      }
+          'startup': true,
+          duration: 600,
+          easing: 'inAndOut'
+        }
       }
     };
   }
