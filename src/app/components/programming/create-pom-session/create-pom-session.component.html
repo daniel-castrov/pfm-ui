@@ -55,18 +55,17 @@
           </div>
           <div class=" toa-tooltip-modal modal-body">
             <div class="toa-modal-input-wrapper">
+              <form #f="ngForm">
+                <div class="form-group">
+                    <label for="sel1">Select Year:</label>
+                    <select class="form-control toa-select-edit" (change)="tooltipChangeYear($event.target)" >
+                        <option selected></option>
+                        <option *ngFor = "let year of years" [value] = "year">{{year}}</option>
 
-                <form #f="ngForm" (ngSubmit)="submitTOAtooltip()">
-                    <div class="form-group">
-                        <label for="sel1">Select Year:</label>
-                        <select class="form-control toa-select-edit" (change)="tooltipChangeYear($event.target)">
-                            <option></option>
-                            <option *ngFor = "let year of years" [value] = "year">{{year}}</option>
-
-                        </select>
-                        <input name="first" [(ngModel)]="fyTOAVal"  type="number" class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
-                      </div>
-                      </form>
+                    </select>
+                    <input name="first" [(ngModel)]="fyTOAVal"  [value] = "fyComToolVal" type="number" class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
+                  </div>
+                  </form>
 
               <button (click)='tooltipToaSubmit(c)' class='tooltip-toa-submit btn-primary' [disabled]="!f.valid">Submit</button>
             </div>

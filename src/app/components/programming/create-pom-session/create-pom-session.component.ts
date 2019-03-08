@@ -564,6 +564,14 @@ export class CreatePomSessionComponent implements OnInit {
   tooltipChangeYear(tooltipval) {
     this.tooltipYear = tooltipval.value;
     console.log(tooltipval.value);
+
+    var h: number = Number.parseInt(tooltipval.value);
+
+    if (h) {
+      console.log(this.rowsCommunity[0][h]);
+      this.fyComToolVal = this.rowsCommunity[0][h];
+
+    }
   }
   tooltipToaSubmit(c) {
     this.changedToaVal = true;
@@ -571,6 +579,8 @@ export class CreatePomSessionComponent implements OnInit {
 
     console.log(this.tooltipYear);
     this.resetCharts(this.fyTOAVal, this.tooltipYear);
+    this.fyComToolVal = null;
+    this.fyTOAVal = null;
     c('close modal');
 
   }
