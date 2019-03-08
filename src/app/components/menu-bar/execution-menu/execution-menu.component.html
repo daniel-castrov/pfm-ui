@@ -17,12 +17,11 @@
       <a *menuRolesNotNow="'open-execution-phase'" class="dropdown-item" disabled>Open Execution Phase</a>
 
       <div class="dropdown-divider"></div>
-
       <a *menuRolesOk="'import-execution-data'" class="dropdown-item" href="#" routerLink="/import-execution-data">Import Actuals</a>
       <a *menuRolesNotNow="'import-execution-data'" class="dropdown-item" disabled>Import Actuals</a>
 
-
-      <a *roles="'Execution_Manager'" class="dropdown-item" href="#" routerLink="/ufr-yoe-summary">UFR Request</a>
+      <a *menuRolesOk="'ufr-request'" class="dropdown-item" href="#" routerLink="/ufr-yoe-summary">UFR Request</a>
+      <a *menuRolesNotNow="'ufr-request'" class="dropdown-item" disabled>UFR Request</a>
     </div>
   </li>
 </div>

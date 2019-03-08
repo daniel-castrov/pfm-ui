@@ -65,11 +65,11 @@ export class UfrViewComponent implements OnInit {
   private async init() {
     if(this.phaseType === PhaseType.EXE){
       this.execution = (await this.executionService.getById(this.ufr.containerId).toPromise()).result;
-      this.fy = this.execution.fy - 2000;
+      this.fy = this.execution.fy;
 
     } else {
       this.pom = (await this.pomService.getById(this.ufr.containerId).toPromise()).result;
-      this.fy = this.pom.fy - 2000;
+      this.fy = this.pom.fy;
     }
     this.initShorty();
   }
@@ -148,7 +148,7 @@ export class UfrViewComponent implements OnInit {
   get ufrNumber(): string {
     if(this.ufr.requestNumber) {
       const sequentialNumber = ('000' + this.ufr.requestNumber).slice(-3);
-      return 'number ' + this.fy + sequentialNumber;
+      return 'number ' + (this.fy - 2000) + sequentialNumber;
     } else {
       return '';
     }

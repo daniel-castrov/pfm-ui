@@ -1,12 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {Budget, BudgetService, Execution, ExecutionService, PB} from "../../../generated";
-import {UserUtils} from "../../../services/user.utils";
-import {AppHeaderComponent} from "../../header/app-header/app-header.component";
-
-declare const $: any;
-declare const jQuery: any;
+import {Budget, ExecutionService} from "../../../generated";
+import {Notify} from "../../../utils/Notify";
+import {ExecutionCreationService} from "./execution-creation.service";
 
 @Component({
   selector: 'create-execution-phase',
@@ -15,69 +11,37 @@ declare const jQuery: any;
 })
 export class CreateExecutionPhaseComponent implements OnInit {
 
-  @ViewChild(AppHeaderComponent) header;
+  public budgetsReadyForExecutionPhaseCreation: Budget[];
+  public budget: Budget;
+  public fileToUpload: File;
+  public error: string;
+  public spinner: boolean = false;
 
-  private yearpblkp: Map<number, PB> = new Map<number, PB>();
-  private budget: Budget;
-  private fileToUpload: File;
+  constructor( private executionCreationService: ExecutionCreationService,
+               private executionService: ExecutionService,
+               private router: Router ) {}
 
-  private message: string;
-  private submitted: boolean = false;
-
-  constructor( private budgetService: BudgetService,
-               private userUtils: UserUtils,
-               private esvc:ExecutionService,
-               private router:Router ) { }
-
-  ngOnInit() {
-    var fn = function(e) {
-			if (!/zmore/.test(e.target.className)) { $('#dmore').hide(); }
-		}
-		document.addEventListener('click', fn);
-		document.addEventListener('touchstart', fn);
-
-    this.userUtils.user().subscribe(p => {
-      forkJoin([
-        this.esvc.getAll(),
-        this.budgetService.getAll()
-      ]).subscribe(data => {
-
-        var existingExeYears: Set<number> = new Set<number>();
-        data[0].result.forEach((exe: Execution) => {
-          existingExeYears.add(exe.fy);
-        });
-
-        data[1].result.forEach((budget: Budget) => {
-          if (!existingExeYears.has(budget.fy)) {
-            this.yearpblkp.set(budget.fy, budget);
-            this.budget = budget;
-          }
-        });
-        if (this.yearpblkp.size < 1) {
-          this.message = 'All available Execution Phases have been created';
-        }
-      });
-    });
+  async ngOnInit() {
+    this.budgetsReadyForExecutionPhaseCreation = await this.executionCreationService.getBudgetsReadyForExecutionPhaseCreation();
+    if (this.budgetsReadyForExecutionPhaseCreation.length < 1) {
+      this.error = 'All available Execution Phases have been created';
+    } else {
+      this.budget = this.budgetsReadyForExecutionPhaseCreation[0];
+    }
   }
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
   }
 
-
-  submit() {
-    this.submitted = true;
-
-    this.esvc.createExecution(this.budget.communityId, this.budget.fy, this.fileToUpload).subscribe(data => {
-      if (data.result) {
-
-        this.router.navigate(['/home']);
-        this.header.refresh();
-      }
-      else {
-        this.message = data.error;
-        this.submitted = false;
-      }
-    });
+  async submit() {
+    this.spinner = true;
+    try {
+      await this.executionService.createExecution(this.budget.fy, this.fileToUpload).toPromise();
+      Notify.success("Execution phase FY" + (this.budget.fy-2000) + " has been created");
+      this.router.navigate(['/home']);
+    } catch (e) {
+      this.spinner = false;
+    }
   }
 }
