@@ -67,7 +67,11 @@ export class CreatePomSessionComponent implements OnInit {
   changedToaVal = false;
   tooltipYear;
   years: number[] = [];
-
+  subOrgName = [];
+  subToaArray = {};
+  tooltipSubToa;
+  subOrgVal: Number;
+  tooltipSubToaID;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -268,14 +272,29 @@ export class CreatePomSessionComponent implements OnInit {
         var samplepom: Pom = data[4].result;
         this.fy = this.budget.fy + 1;
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
+        // console.log(this.orgMap);
         this.years = [];
-        for (let i =0; i < 5; i++){
-          this.years.push(this.fy+i);
-          console.log(this.years);
+        for (let i = 0; i < 5; i++) {
+          this.years.push(this.fy + i);
+
         }
+
+
         this.initGrids(this.fy);
         this.setInitialGridValues(this.fy, poms, samplepom);
         this.setDeltaRow(this.fy);
+
+        this.rowsOrgs.forEach(obj => {
+
+          var orgname: string = this.orgMap.get(obj.orgid);
+          var orgid = obj.orgid;
+          this.subOrgName.push({ key: orgid, value: orgname });
+
+        });
+        // this.subOrgName.push({ key: orgid, value: orgname });
+        // this.subOrgName.push("id" : this.orgid);
+        console.log(this.rowsOrgs);
+        console.log(this.subOrgName);
       });
     });
   }
@@ -572,14 +591,14 @@ export class CreatePomSessionComponent implements OnInit {
     var totalvals: number = 0;
 
     var years = Object.keys(this.rowsCommunity[0]);
-    var h:number = Number.parseInt(year);
+    var h: number = Number.parseInt(year);
 
     if (h) {
       this.rowsCommunity[0][h] = toaVal;
-      console.log(this.rowsCommunity);
-      // yeartoas.set(h, fyChange);
+
+
     }
-console.log(this.rowsCommunity[0]);
+
     for (var i = 0; i < 5; i++) {
       var newamt: number = ('string' === typeof this.rowsCommunity[0][this.fy + i]
         ? Number.parseInt(this.rowsCommunity[0][this.fy + i])
@@ -616,8 +635,8 @@ console.log(this.rowsCommunity[0]);
         (0 === newamt ? baseavg + ' (est.)' : newamt.toLocaleString()),
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
-          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
-          newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>")
+          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span class='toa'>" +
+          newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
     }
 
@@ -660,9 +679,22 @@ console.log(this.rowsCommunity[0]);
   chartready() {
     //this.addAction(this.comchart.wrapper.getChart());
   }
+  tooltipChangeSubToa(tooltipval) {
+    // this.tooltipSubToaID = tooltipval['key'];
+    this.tooltipSubToa = tooltipval.value;
+    // console.log(this.tooltipSubToaID);
 
+  }
+  tooltipSubOrgSubmit(c) {
+    this.changedToaVal = true;
 
-  resetSubchart() {
+    this.resetSubchart(this.subOrgVal, this.tooltipSubToa);
+    c('close modal');
+
+  }
+
+  resetSubchart(toaVal?, subOrg?: Number) {
+    console.log(toaVal, subOrg);
     var charty: [any[]] = [[
       'Organization',
       // 'Baseline',
@@ -671,14 +703,46 @@ console.log(this.rowsCommunity[0]);
       // { role: 'style' },
       { role: 'tooltip', p: { html: true } }
     ]];
+    var newSubOrgVal: number = Number.parseInt(toaVal);
+
+
+    if (toaVal) {
+
+      var subOrgString = subOrg;
+      console.log(subOrgString);
+
+
+
+
+      var orgIdArray = this.rowsOrgs.find(x => x.orgid === subOrgString);
+      orgIdArray[this.selectedyear] = Number.parseInt(toaVal)
+
+
+    }
 
     this.rowsOrgs.forEach(obj => {
       var orgname: string = this.orgMap.get(obj.orgid);
+
+      // this.subOrgName.push(orgname);
+      // orgIdPair.orgname = this.orgMap.get(obj.orgid);
+
       var value = obj[this.selectedyear];
       var prevs = this.pomData.orgToas[obj.orgid]
         .filter(yramt => yramt.year == this.selectedyear)
         .map(yramt => yramt.amount);
       var baseamt = (prevs.length > 0 ? prevs[0] : 0);
+
+      //   if (newSubOrgVal) {
+      //     var subOrgString = subOrg.toString();
+      //     var orgIdArray = this.rowsOrgs.find(function (subOrgString) {
+
+      //       console.log(subOrgString);
+      //       return subOrgString;
+      //     });
+      // console.log(orgIdArray);
+      // console.log(orgIdArray[this.selectedyear] = Number.parseInt(toaVal));
+      // // value = Number.parseInt(toaVal);
+      //   }
 
       charty.push([orgname,
         value,
@@ -688,8 +752,25 @@ console.log(this.rowsCommunity[0]);
           "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span class='toa'>" +
           value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
+
+      //Select from modal has [orgId, orgName]
+      //Pass in orgID from modal to this function
+      //Find object that has orgId and return that object
+      //Get object's matching year and set value of that year to new value
+
+
+
+
     });
 
+
+
+
+
+
+    console.log(this.rowsOrgs); //Where I need to push the value to
+    // console.log(this.subOrgName); //My array of Key Pair
+    // console.log(this.orgs);
     this.subchartdata = {
       chartType: 'ColumnChart',
       dataTable: charty,

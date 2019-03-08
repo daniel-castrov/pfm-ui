@@ -118,24 +118,14 @@
 
                       <div class="form-group">
                           <label for="sel1">Select Year:</label>
-                          <select class="form-control toa-select-edit" (change)="tooltipChangeYear($event.target)">
-                            <option *ngFor = "let year of years" [value] = "year.id">year.name</option>
-                            <option>2020</option>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                          </select>
-                          <select class="form-control toa-select-edit" id="sel1">
-                              <option>PAIO</option>
-                              <option>JSTO-CBD</option>
-                              <option>JRO-CBRND</option>
-                              <option>DUSA-TE</option>
-                              <option>JFEO-CBRND</option>
+                          <select class="form-control toa-select-edit"  (change)="tooltipChangeSubToa($event.target)">
+                            <option></option>
+                            <option *ngFor = "let subtoa of subOrgName" [value] = "subtoa.key">{{subtoa.value}}</option>
                             </select>
-                          <input type="text" class="form-control toa-input-edit" aria-label="Text input with dropdown button">
+                          <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit" aria-label="Text input with dropdown button">
                         </div>
 
-                <button (click)='tooltipToaSubmit(c)' class='tooltip-toa-submit btn-primary'>Submit</button>
+                <button (click)='tooltipSubOrgSubmit(c)' class='tooltip-toa-submit btn-primary'>Submit</button>
               </div>
             </div>
 
@@ -154,7 +144,10 @@
           <i class="fa fa-bar-chart" aria-hidden="true"> </i>
 
           <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
-          <!--button (click)="open(contentTwo)" class='btn btn-sm btn-primary'>   <i class="fa fa-edit" aria-hidden="true"></i> Change Values</button-->
+          <button (click)="open(contentTwo)" class='btn btn-sm btn-primary'>
+            <i class="fa fa-edit" aria-hidden="true"></i>
+            Change Values
+          </button>
         </span>
         <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
             <span class="toa-epp-widget">
