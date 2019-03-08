@@ -1,15 +1,5 @@
 <div class="row">
   <div class="col-6">
-    <h2>{{_fy| FY}} Organizational TOA Breakdown</h2>
-    <ag-grid-angular #entrytable class="ag-theme-balham sub-toa"
-      [gridOptions]="agoptions"
-      [toolPanelSuppressSideButtons]="true"
-      [suppressDragLeaveHidesColumns]="true"
-      [pinnedBottomRowData]="pinneddata"
-      (gridReady)="onGridReady($event)">
-    </ag-grid-angular>
-  </div>
-  <div class="col-6">
       <h2>Baseline BA/Blin Breakdown</h2>
     <google-chart [data]='pechartdata' (chartSelect)='selectTree($event)'></google-chart>
   </div>
