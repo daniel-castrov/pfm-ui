@@ -29,7 +29,7 @@
 
       <div *roles="'POM_Manager'" class="dropdown-divider"></div>
 
-      <a *menuRolesOk="'update-toa'" class="dropdown-item" href="#" routerLink="/create-new-pom">Update TOAs</a>
+      <a *menuRolesOk="'update-toa'" class="dropdown-item" href="#" routerLink="/update-pom-toas">Update TOAs</a>
       <a *menuRolesNotNow="'update-toa'" class="dropdown-item" disabled>Update TOAs</a>
 
       <a *menuRolesOk="'worksheet-management'" class="dropdown-item" href="#" routerLink="{{ pomStatus == 'OPEN' ? '/worksheet-management' : '/worksheet-viewing'}}">Worksheet Mgmt</a>
