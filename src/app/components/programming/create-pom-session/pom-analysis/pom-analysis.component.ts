@@ -55,13 +55,9 @@ export class PomAnalysisComponent {
   @Input() set pb(p: Budget) {
     this._pb = p;
 
-    console.log('set pb to:')
-    console.log(p);
-
     if (p) {
       this.prsvc.programRequests(this.pb.finalPbId).then(ps => {
         this.pbprs = ps;
-        console.log('got some stuff');
         this.regraph();
       });
     }
@@ -99,93 +95,18 @@ export class PomAnalysisComponent {
   }
 
   constructor(private prsvc: ProgramAndPrService) {
-    var my: PomAnalysisComponent = this;
-    var numbersOnly = function (p): boolean {
-      var oldval = p.oldValue;
-      var cleaned: string = p.newValue.replace(/[^0-9]/g, '');
-      var val: number = Number.parseInt(cleaned);
-
-      p.data.amount = val;
-      p.data.sum += (val - oldval);
-
-      my.generateOrgChart();
-      my.resetPinned();
-
-
-      console.log(my.pinneddata);
-
-      my.changes.emit({
-        year: my.fy,
-        orgid: p.data.orgid,
-        amount: val,
-        sum: my.pinneddata[0].amount
-      });
-      return true;
-    }
-
-    this.agoptions = <GridOptions>{
-      gridAutoHeight: true,
-      suppressDragLeaveHidesColumns: true,
-      suppressMovableColumns: true,
-      rowData: [],
-      columnDefs: [
-        {
-          headerName: 'Organization',
-          suppressMenu: true,
-          field: 'orgid',
-          editable: false,
-          valueGetter: p => (this.orgmap.has(p.data.orgid)
-              ? this.orgmap.get(p.data.orgid)
-              : p.data.orgid),
-          cellRenderer: params => '<b>' + params.value + '</b>',
-          cellClassRules: {
-            'ag-cell-footer-sum': params => {
-              return params.data.orgid == 'Delta'
-            }
-          }
-        },
-        {
-          headerValueGetter: () => ('FY' + (this.fy ? this.fy - 2000 : 0)),
-          suppressMenu: true,
-          field: 'amount',
-          editable: p => (!(this.readonly || p.data === this.pinneddata)),
-          valueSetter: p => numbersOnly(p),
-          cellRenderer: params => this.negativeNumberRenderer(params),
-          cellClassRules: {
-            'ag-cell-edit': p => (!(this.readonly || p.data === this.pinneddata)),
-            'ag-cell-footer-sum': p => (p.data.orgid == 'Delta')
-          }
-        },
-        {
-          headerValueGetter: () => `FY${this.pom.fy - 2000}-FY${this.pom.fy + 4 - 2000}`,
-          suppressMenu: true,
-          field: 'sum',
-          editable: false,
-          cellRenderer: params => '<i>' + this.negativeNumberRenderer(params) + '</i>',
-          cellClassRules: {
-            'ag-cell-footer-sum': params => {
-              return params.data.orgid == 'Delta'
-            }
-          }
-        }
-      ]
-    };
   }
 
   regraph() {
-    console.log( 'regraph')
     if (this._fy && this._pom && this._orgmap) {
-      console.log( '\thave fy, pom, & orgmap')
-      this.generateTableRows();
       this.generateOrgChart();
     }
     if (this.pbprs) {
-      console.log( '\thave pbprs')
       this.generateTreeMap();
     }
   }
 
-  generateTableRows() {
+  generateTableRows(): RowData[] {
     var newrows: RowData[] = [];
     Object.getOwnPropertyNames(this.pom.orgToas).forEach(orgid => {
       var toamap: Map<number, number> = new Map<number, number>();
@@ -210,37 +131,7 @@ export class PomAnalysisComponent {
       });
     });
 
-    if (this.agoptions.api) {
-      this.agoptions.api.setRowData(newrows);
-      this.agoptions.api.refreshHeader();
-      this.resetPinned();
-    }
-  }
-
-  resetPinned() {
-    if (!this.agoptions.api) {
-      return;
-    }
-
-    var tablesum: number = 0;
-    var yearsum: number = 0;
-    this.agoptions.api.forEachNode(rownode => {
-      yearsum += rownode.data.amount;
-      tablesum += rownode.data.sum;
-    });
-
-    var totalsum: number = 0;
-    this.commtoa.forEach((val, year) => {
-      if (year >= this.pom.fy && year < this.pom.fy + 5) {
-        totalsum += val;
-      }
-    });
-
-    this.pinneddata = [{
-      orgid: 'Delta',
-      amount: this.commtoa.get(this.fy) - yearsum,
-      sum: totalsum - tablesum
-    }];
+    return newrows;
   }
 
   generateTreeMap() {
@@ -295,16 +186,13 @@ export class PomAnalysisComponent {
   }
 
   generateOrgChart() {
-    if (!this.agoptions.api) {
-      return;
-    }
-
+    var rows: RowData[] = this.generateTableRows();
     var subdata: [any[]] = [['Organization', this.fy + ' TOA', { role: 'annotation' }]];
     var totalalloc: number = 0;
 
-    this.agoptions.api.forEachNode(row => {
-      var orgname: string = this.orgmap.get(row.data.orgid);
-      var amt: number = row.data.amount;
+    rows.forEach(row => {
+      var orgname: string = this.orgmap.get(row.orgid);
+      var amt: number = row.amount;
       subdata.push([orgname, amt, amt]);
       totalalloc += amt;
     });

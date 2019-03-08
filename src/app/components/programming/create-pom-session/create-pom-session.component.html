@@ -156,9 +156,21 @@
             </div>
           </div>
         </div>
-
     </div>
-
+    <div class="row" *ngIf='selectedyear'>
+      <div class="col-12 agtoatable">
+        <app-pom-analysis
+          [fy]='selectedyear'
+          [pb]='budget'
+          [pom]='pomData'
+          [orgmap]='orgMap'
+          [commdata]='yeartoas'
+          [baseline]='analysis_baseline'
+          [readonly]='(pomIsCreated||pomIsOpen)'
+          (changes)='onAnalysis($event)'
+        ></app-pom-analysis>
+      </div>
+    </div>
 
       <div class="row mt-3">
         <div class="col-2">
