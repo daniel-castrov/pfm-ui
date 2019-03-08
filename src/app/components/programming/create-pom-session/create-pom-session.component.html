@@ -144,10 +144,7 @@
           <i class="fa fa-bar-chart" aria-hidden="true"> </i>
 
           <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
-          <button (click)="open(contentTwo)" class='btn btn-sm btn-primary'>
-            <i class="fa fa-edit" aria-hidden="true"></i>
-            Change Values
-          </button>
+
         </span>
         <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
             <span class="toa-epp-widget">
@@ -183,7 +180,7 @@
         </div>
 
     </div>
-    <div class="row" *ngIf='selectedyear'>
+    <!-- <div class="row" *ngIf='selectedyear'>
         <div class="col-12 agtoatable">
           <app-pom-analysis
             [fy]='selectedyear'
@@ -196,7 +193,7 @@
             (changes)='onAnalysis($event)'
           ></app-pom-analysis>
         </div>
-      </div>
+      </div> -->
 
       <div class="row mt-3">
         <div class="col-2">

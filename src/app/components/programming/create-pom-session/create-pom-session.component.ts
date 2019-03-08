@@ -284,17 +284,7 @@ export class CreatePomSessionComponent implements OnInit {
         this.setInitialGridValues(this.fy, poms, samplepom);
         this.setDeltaRow(this.fy);
 
-        this.rowsOrgs.forEach(obj => {
 
-          var orgname: string = this.orgMap.get(obj.orgid);
-          var orgid = obj.orgid;
-          this.subOrgName.push({ key: orgid, value: orgname });
-
-        });
-        // this.subOrgName.push({ key: orgid, value: orgname });
-        // this.subOrgName.push("id" : this.orgid);
-        console.log(this.rowsOrgs);
-        console.log(this.subOrgName);
       });
     });
   }
@@ -679,22 +669,10 @@ export class CreatePomSessionComponent implements OnInit {
   chartready() {
     //this.addAction(this.comchart.wrapper.getChart());
   }
-  tooltipChangeSubToa(tooltipval) {
-    // this.tooltipSubToaID = tooltipval['key'];
-    this.tooltipSubToa = tooltipval.value;
-    // console.log(this.tooltipSubToaID);
 
-  }
-  tooltipSubOrgSubmit(c) {
-    this.changedToaVal = true;
 
-    this.resetSubchart(this.subOrgVal, this.tooltipSubToa);
-    c('close modal');
+  resetSubchart() {
 
-  }
-
-  resetSubchart(toaVal?, subOrg?: Number) {
-    console.log(toaVal, subOrg);
     var charty: [any[]] = [[
       'Organization',
       // 'Baseline',
@@ -703,22 +681,8 @@ export class CreatePomSessionComponent implements OnInit {
       // { role: 'style' },
       { role: 'tooltip', p: { html: true } }
     ]];
-    var newSubOrgVal: number = Number.parseInt(toaVal);
 
 
-    if (toaVal) {
-
-      var subOrgString = subOrg;
-      console.log(subOrgString);
-
-
-
-
-      var orgIdArray = this.rowsOrgs.find(x => x.orgid === subOrgString);
-      orgIdArray[this.selectedyear] = Number.parseInt(toaVal)
-
-
-    }
 
     this.rowsOrgs.forEach(obj => {
       var orgname: string = this.orgMap.get(obj.orgid);
