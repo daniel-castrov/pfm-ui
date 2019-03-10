@@ -29,6 +29,8 @@ export class ChargesComponent implements OnInit {
   private showotherT: boolean = true;
   private fileid: string;
   private isUploading: boolean;
+  private hasAppropriation: boolean = false;
+
   private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
     var okays: boolean[] = [];
     x.forEach(elw => {
@@ -45,18 +47,20 @@ export class ChargesComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(data => {
       forkJoin([
+        this.exesvc.hasAppropriation(data.phaseId),
         this.exesvc.getById(data.phaseId),
         this.exesvc.getExecutionDropdowns(),
         this.exesvc.getExecutionLinesByPhase(data.phaseId)
       ]).subscribe(d2 => {
-        this.phase = d2[0].result;
-        if (!d2[2].result.some(el => !el.appropriated)) {
+        this.phase = d2[1].result;
+        this.hasAppropriation = d2[0].result;
+        if (this.hasAppropriation) {
           this.types.set('EXE_OUSDC_ACTION', 'OUSD(C) Action');
         } else {
           this.types.set('EXE_APPROPRIATION_ACTION', 'Appropriation Action');
         }
         this.types.set('EXE_CONGRESSIONAL_ACTION', 'Congressional Action');
-        this.allsubtypes = d2[1].result.filter(x => this.types.has(x.type));
+        this.allsubtypes = d2[2].result.filter(x => this.types.has(x.type));
 
         this.type = 'EXE_CONGRESSIONAL_ACTION';
         this.updatedropdowns();
@@ -92,6 +96,21 @@ export class ChargesComponent implements OnInit {
     this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
     this.etype = this.subtypes[0];
     this.updatedropdowns2();
+    if (this.type === 'EXE_CONGRESSIONAL_ACTION'){
+      if (this.hasAppropriation) {
+        if (this.phase.status === 'OPEN') {
+          this.subtypes = this.subtypes.filter(st => st.subtype !== 'CRA_CONGRESSIONAL_DIRECTED_TRANSGER')
+        } else {
+          this.subtypes = this.subtypes.filter(st => st.subtype === 'CRA_CONGRESSIONAL_RESCISSION')
+        }
+      } else {
+        if (this.phase.status === 'OPEN') {
+          this.subtypes = this.subtypes.filter(st => st.subtype !== 'CRA_CONGRESSIONAL_RESCISSION')
+        } else {
+          this.subtypes = this.subtypes.filter(st => st.subtype === 'CRA_CONGRESSIONAL_DIRECTED_TRANSGER')
+        }
+      }
+    }
   }
 
   updatedropdowns2() {

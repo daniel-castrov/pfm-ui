@@ -1,8 +1,9 @@
-import {Budget, BudgetService, Execution, ExecutionService, Pom} from './../generated';
+import {Budget, BudgetService, Execution, Pom} from './../generated';
 import {UserUtils} from './user.utils';
 import {Injectable} from '@angular/core';
 import {CurrentPhase} from "./current-phase.service";
 import {ElevationService} from "./elevation.component";
+import {ExecutionCreationService} from "../components/execution/create-execution-phase/execution-creation.service";
 
 export enum AuthorizationResult {
   Ok,     // authorized
@@ -23,7 +24,7 @@ export class Authorization {
                private userUtils: UserUtils,
                private currentPhase: CurrentPhase,
                private budgetService: BudgetService,
-               private executionService: ExecutionService) {}
+               private executionCreationService: ExecutionCreationService ) {}
 
   forUrl(url: string): Promise<AuthorizationResult> {
     if(this[url]) {
@@ -179,38 +180,61 @@ export class Authorization {
   }
 
   async 'create-new-execution'(): Promise<AuthorizationResult> {
-    let budgets : Budget[] = (await this.budgetService.getAll().toPromise()).result;
-    let executions: Execution[] = (await this.executionService.getAll().toPromise()).result;
-    var existingExeYears: Set<number> = new Set<number>();
-    executions.forEach((exe: Execution) => {
-      existingExeYears.add(exe.fy);
-    });
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
-      if (executions.length == 0 && budgets.length > 0) {
-        return AuthorizationResult.Ok;
-      } else {
-        budgets.forEach((budget: Budget) => {
-          if (!existingExeYears.has(budget.fy)) {
-            return AuthorizationResult.Ok;
-          }
-        });
-      }
+      const budgetsReadyForExecutionPhase = (await this.executionCreationService.getBudgetsReadyForExecutionPhaseCreation()) as Budget[];
+      if( budgetsReadyForExecutionPhase.length > 0) return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
 
   async 'funds-update'(): Promise<AuthorizationResult> {
-    return this['open-execution-phase']();
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'ufr-request'(): Promise<AuthorizationResult> {
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
   }
 
   async 'program-update'(): Promise<AuthorizationResult> {
-    return this['open-execution-phase']();
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
   }
 
   async 'import-execution-data'(): Promise<AuthorizationResult> {
-    return this['open-execution-phase']();
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
   }
 
   async 'open-execution-phase'(): Promise<AuthorizationResult> {
