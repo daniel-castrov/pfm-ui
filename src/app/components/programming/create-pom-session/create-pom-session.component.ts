@@ -669,7 +669,7 @@ export class CreatePomSessionComponent implements OnInit {
           },
         },
 
-        selectionMode: 'multiple',
+        //selectionMode: 'multiple',
         aggregationTarget: 'auto',
 
         tooltip: {
