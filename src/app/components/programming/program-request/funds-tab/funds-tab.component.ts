@@ -493,8 +493,8 @@ export class FundsTabComponent implements OnChanges {
           rowSpan: params => { return this.rowSpanCount(params) }
         },
         {
-          headerName: 'OpAgency',
-          headerTooltip: 'OpAgency',
+          headerName: 'OA',
+          headerTooltip: 'OA',
           field: 'fundingLine.opAgency',
           hide: true,
           maxWidth: 65,

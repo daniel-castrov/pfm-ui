@@ -63,7 +63,7 @@ export class OpenExecutionComponent implements OnInit {
           field: 'item'
         },
         {
-          headerName: "OpAgency",
+          headerName: "OA",
           filter: 'agTextColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'opAgency',

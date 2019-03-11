@@ -198,8 +198,8 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'opAgency',
-          headerTooltip: 'opAgency',
+          headerName: 'OA',
+          headerTooltip: 'OA',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
           width: 80,

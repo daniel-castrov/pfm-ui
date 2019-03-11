@@ -581,8 +581,8 @@ export class UfrApprovalDetailComponent implements OnInit {
             cellClass: 'funding-line-default'
           },
           {
-            headerName: 'OpAgency',
-            headerTooltip: 'OpAgency',
+            headerName: 'OA',
+            headerTooltip: 'OA',
             field: 'fundingLine.opAgency',
             cellClass: 'funding-line-default',
             hide: true
