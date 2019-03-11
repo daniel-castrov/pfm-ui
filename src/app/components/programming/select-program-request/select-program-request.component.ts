@@ -220,7 +220,7 @@ export class SelectProgramRequestComponent implements OnInit {
     rowdata.push( row );
 
     row= new Object();
-    row["id"] = "Unallocated PRs";
+    row["id"] = "Unallocated";
     sum = 0;
     for (let year: number = by; year < by + 5; year++) {
       let currentFyToa = 0
