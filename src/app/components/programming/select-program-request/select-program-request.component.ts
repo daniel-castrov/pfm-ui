@@ -117,7 +117,7 @@ export class SelectProgramRequestComponent implements OnInit {
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
-        series: {0: {color: 'green'}, 1: {color: 'blue'}, 2: {color: '#FF4500'}, 3: {color: 'red'}},
+        series: {0: {color: '#55c57a'}, 1: {color: '#008af3'}, 2: {color: '#cf3fbe'}, 3: {color: '#d70f37'}},
       }
     };
   }
@@ -133,7 +133,7 @@ export class SelectProgramRequestComponent implements OnInit {
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
-        series: {0: {color: 'green'}, 1: {color: 'blue'}, 2: {color: '#FF4500'}, 3: {color: 'red'}},
+        series: {0: {color: '#55c57a'}, 1: {color: '#008af3'}, 2: {color: '#cf3fbe'}, 3: {color: '#d70f37'}},
       }
     };
     this.charty = [[
