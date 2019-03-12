@@ -246,6 +246,4 @@ export class Authorization {
     }
     return AuthorizationResult.Never;
   }
-
-
 }
