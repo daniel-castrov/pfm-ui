@@ -3651,10 +3651,6 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/R2Data"
-      r2Adata:
-        type: "array"
-        items:
-          $ref: "#/definitions/R2AData"
   R2Data:
     type: "object"
     properties:
@@ -3668,12 +3664,14 @@ definitions:
         type: "string"
       techincalChange:
         type: "string"
-  R2AData:
+      items:
+        type: "array"
+        items:
+          $ref: "#/definitions/Item"
+  Item:
     type: "object"
     properties:
-      programElement:
-        type: "string"
-      item:
+      itemName:
         type: "string"
       missionDescription:
         type: "string"      
