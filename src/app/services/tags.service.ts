@@ -23,7 +23,8 @@ export enum TagType {
   BA = 'BA',
   ACQUISITION_TYPE = 'Acquisition Type',
   REASON_CODE = 'Reason Code',
-  ITEM = 'Item'
+  ITEM = 'Item',
+  PROGRAM_ELEMENT = 'Program Element'
 }
 
 @Injectable()
@@ -52,6 +53,12 @@ export class TagsService {
         }));
       return CacheService.caching(tagType, resultGetter);
     }
+  }
+
+  name(tagType: TagType, abbreviation: string): Observable<string> {
+    return this.tags(tagType)
+        .map(tags => tags.find(tag => tag.abbr === abbreviation))
+        .map(tag => tag.name);
   }
 
   private tagAbbreviations(tagType: TagType, noCaching?: boolean): Promise<string[]> {
