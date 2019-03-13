@@ -198,8 +198,8 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'opAgency',
-          headerTooltip: 'opAgency',
+          headerName: 'OA',
+          headerTooltip: 'OA',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
           width: 80,
@@ -315,8 +315,8 @@ export class FundsUpdateComponent implements OnInit {
           suppressSizeToFit:true
         },
         {
-          headerName: 'Withheld',
-          headerTooltip: 'Withheld',
+          headerName: 'Withhold',
+          headerTooltip: 'Withhold',
           field: 'withheld',
           valueFormatter: params => { return this.currencyFormatter(params) },
           width: 104,

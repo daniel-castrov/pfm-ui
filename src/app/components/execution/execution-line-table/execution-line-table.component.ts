@@ -286,7 +286,7 @@ export class ExecutionLineTableComponent implements OnInit {
           pinnedRowCellRenderer: p => ''
         },
         {
-          headerName: 'Withheld',
+          headerName: 'Withhold',
           filter: 'agNumberColumnFilter',
           type: 'numericColumn',
           field: 'line.withheld',
