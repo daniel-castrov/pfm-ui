@@ -672,6 +672,16 @@ paths:
       operationId: "getFinalLatest"
       produces:
         - "application/json"
+  /pb/{id}:
+    get:
+      tags:
+        - "PB"
+      operationId: "getById"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
   /pb/budget/{budgetId}:
     get:
       tags:
@@ -699,6 +709,16 @@ paths:
 # END PB
 ##############################################################################
 # START BES
+  /bes/{id}:
+    get:
+      tags:
+        - "BES"
+      operationId: "getById"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
   /bes/budget/{budgetId}:
     get:
       tags:

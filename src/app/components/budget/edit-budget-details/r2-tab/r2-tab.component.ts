@@ -12,13 +12,12 @@ export class R2TabComponent implements OnChanges {
 
   pes: string[];
   selectedPE: string;
-  r2data: R2Data
+  r2data: R2Data;
 
   selChgSumSection: string;
   changeSummSections = [ "Funding", "Schedule", "Technical"];
 
-  constructor() { 
-  }
+  constructor() {}
 
   clearData(){
     this.r2data={};

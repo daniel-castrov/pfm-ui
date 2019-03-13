@@ -5,13 +5,13 @@
       <table class="readOnly">
         <tr class="borderBottom">
           <td colspan="10">
-            <span class="title">Exhibit R-2, RDT&E Budget Item Justification: BES 2019 Chemical and Biological Defense Program</span>
+            <span class="title">Exhibit R-2, RDT&E Budget Item Justification: FY {{fy}} Chemical and Biological Defense Program</span>
             <span></span>
             <span data-bind="text: exhibit"></span>
           </td>
           <td colspan="3" class="borderBottom">
             <span class="title">Date: </span>
-            <span class="date">September 2017</span>
+            <span class="date">{{now | date:'MMMM yyyy'}}</span>
           </td>
         </tr>
         <tr class="borderRightBottom alignLeft">
@@ -25,20 +25,20 @@
           </td>
         </tr>
         <tr class="borderRightBottom borderBottomBold alignCenter">
-            <th>COST ($ in Millions)</th>
-            <th>Prior Years</th>
-            <th>FY 2017</th>
-            <th>FY 2018</th>
-            <th>FY 2019 Base</th>
-            <th>FY 2019 OCO</th>
-            <th>FY 2019 Total</th>
-            <th>FY 2020</th>
-            <th>FY 2021</th>
-            <th>FY 2022</th>
-            <th>FY 2023</th>
-            <th>Cost To Complete</th>
-            <th class="borderBottom">Total Cost</th>
-        </tr>
+        <th>COST ($ in Millions)</th>
+        <th>Prior Years</th>
+        <th>FY {{fy-2}}</th>
+        <th>FY {{fy-1}}</th>
+        <th>FY {{fy}} Base</th>
+        <th>FY {{fy}} OCO</th>
+        <th>FY {{fy}} Total</th>
+        <th>FY {{fy+1}}</th>
+        <th>FY {{fy+2}}</th>
+        <th>FY {{fy+3}}</th>
+        <th>FY {{fy+4}}</th>
+        <th>Cost To Complete</th>
+        <th class="borderBottom">Total Cost</th>
+      </tr>
         <tr class="alignRight borderRightBottom">
             <td class="alignLeft borderRightBottom">Total Program Element</td>
             <td>-</td>
