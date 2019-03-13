@@ -82,8 +82,8 @@ export class OeUpdateComponent implements OnInit {
           maxWidth: 92
         },
         {
-          headerName: 'OpAgency',
-          headerTooltip: 'OpAgency',
+          headerName: 'OA',
+          headerTooltip: 'OA',
           field: 'el.opAgency',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92

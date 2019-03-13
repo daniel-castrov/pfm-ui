@@ -305,8 +305,8 @@ export class UfrFundsComponent implements OnChanges {
             onCellValueChanged: params => this.onFundingLineValueChanged(params)
           },
           {
-            headerName: 'OpAgency',
-            headerTooltip: 'OpAgency',
+            headerName: 'OA',
+            headerTooltip: 'OA',
             field: 'fundingLine.opAgency',
             cellClass: 'funding-line-default',
             hide: true
