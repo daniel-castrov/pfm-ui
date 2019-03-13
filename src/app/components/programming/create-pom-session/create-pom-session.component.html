@@ -11,13 +11,13 @@
         <div class="col-12">
           <div class="h5 mb-2">
             <ng-container *ngIf="!(pomIsCreated || pomIsOpen) ">
-              <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy| FY}}</span>
+              <span class="h5 mr-sm-2 mb-2">Create POM Session for {{fy|FY:'POM'}}</span>
             </ng-container>
             <ng-container *ngIf="pomIsCreated" >
-                <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs for {{fy| FY}}</span>
+                <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs for {{fy|FY:'POM'}}</span>
             </ng-container>
             <ng-container *ngIf="pomIsOpen">
-              <span class="h5 mr-sm-2 mb-2">POM Session for {{fy| FY}}</span>
+              <span class="h5 mr-sm-2 mb-2">POM Session for {{fy|FY:'POM'}}</span>
             </ng-container>
           </div>
         </div>
