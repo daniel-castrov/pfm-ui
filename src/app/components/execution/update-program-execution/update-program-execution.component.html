@@ -31,19 +31,19 @@
       <div class="col-md-6 col-lg-2">
          <span class="form-group">
            <label class="mr-2">TOA:</label>
-           <span class="font-weight-bold">{{current.line.toa}}</span>
+           <span class="font-weight-bold">{{ currencyFormatter(current.line.toa) }}</span>
          </span>
        </div>
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
          <label class="mr-2">Released:</label>
-         <span class="font-weight-bold">{{current.line.released}}</span>
+         <span class="font-weight-bold">{{ currencyFormatter(current.line.released) }}</span>
        </span>
       </div>
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
           <label class="mr-2">Withheld:</label>
-          <span class="font-weight-bold">{{current.line.withheld}}</span>
+          <span class="font-weight-bold">{{ currencyFormatter(current.line.withheld) }}</span>
         </span>
       </div>
     </div>

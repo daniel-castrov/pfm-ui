@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core'
-import {ExecutionService} from '../../../generated/api/execution.service'
-import {Execution} from '../../../generated/model/execution'
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router'
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ExecutionService} from '../../../generated/api/execution.service';
+import {Execution} from '../../../generated/model/execution';
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
+import {FormatterUtil} from '../../../utils/formatterUtil';
 import {ExecutionDropDown, ExecutionEventData, ExecutionLine, ProgramsService} from '../../../generated';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
@@ -94,6 +95,12 @@ export class UpdateProgramExecutionComponent implements OnInit {
         });
       });
     });
+  }
+
+  currencyFormatter(x:number) :string {
+    
+    let r:string = FormatterUtil.currencyFormatter(x, 2, false);
+    return r;
   }
 
   submit() {
