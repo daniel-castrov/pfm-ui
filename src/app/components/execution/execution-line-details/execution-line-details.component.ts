@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Execution, ExecutionDropDown, ExecutionEvent, ExecutionService, ProgramsService} from '../../../generated';
 import {ActivatedRoute, UrlSegment} from '../../../../../node_modules/@angular/router';
 import {forkJoin} from '../../../../../node_modules/rxjs/observable/forkJoin';
+import {FormatterUtil} from '../../../utils/formatterUtil';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
 import {GridOptions} from 'ag-grid';
 import {AgGridNg2} from 'ag-grid-angular';
@@ -111,6 +112,12 @@ export class ExecutionLineDetailsComponent implements OnInit {
       maximumFractionDigits: 2
     });
     return usdFormate.format(value.value);
+  }
+
+  currencyFormat(x:number) :string {
+    
+    let r:string = FormatterUtil.currencyFormatter(x, 2, false);
+    return r;
   }
 
 
