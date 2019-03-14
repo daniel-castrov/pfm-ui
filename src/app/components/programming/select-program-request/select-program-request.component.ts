@@ -21,8 +21,8 @@ export class SelectProgramRequestComponent implements OnInit {
 
   private currentCommunityId: string;
   public pom: Pom;
-  public pomPrograms: Program[];
-  public pbPrograms: Program[];
+  public pomPrograms: Program[] = [];
+  public pbPrograms: Program[] = [];
   public thereAreOutstandingPRs: boolean;
   private chartdata;
   private charty;
