@@ -821,20 +821,21 @@ export class FundsTabComponent implements OnChanges {
   }
 
   private async getPBData(): Promise<Program> {
-    const budget = await this.currentPhase.budget().toPromise();
+
     let name;
     if (this.pr.type === ProgramType.GENERIC) {
       name = this.parentPr.shortName;
     } else {
       name = this.pr.shortName;
     }
-    this.budgetFy = budget.fy;
+    
+    this.budgetFy = this.pom.fy-1;
 
     if (!name) {
       return;
     }
 
-    const pbPrograms: Program[] = (await this.pbService.getFinalLatest().toPromise()).result;
+    const pbPrograms: Program[] = (await this.pbService.getFinalByYear(this.pom.fy-1).toPromise()).result;
     const pbPr: Program = pbPrograms.find(program => program.shortName === name);
 
     if (!pbPr) {

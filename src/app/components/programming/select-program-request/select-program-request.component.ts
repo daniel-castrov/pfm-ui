@@ -29,8 +29,8 @@ export class SelectProgramRequestComponent implements OnInit {
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
-    this.initPbPrs();
-    this.reloadPrs();
+    (await this.reloadPrs());
+    this.initPbPrs( this.pom.fy-1 );
   }
 
   async reloadPrs() {
@@ -46,8 +46,8 @@ export class SelectProgramRequestComponent implements OnInit {
     });
   }
 
-  async initPbPrs() {
-    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
+  async initPbPrs(year:number) {
+    this.pbPrograms = ( await this.pbService.getFinalByYear( year ).toPromise() ).result;
   }
 
   onDeletePr() {
