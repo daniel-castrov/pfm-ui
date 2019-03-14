@@ -1,0 +1,75 @@
+fieldset {
+  padding: 20px;
+  min-height: 70px;
+}
+
+.card-container {
+
+    ul {
+      padding-top: 20px;
+      margin-left: -20px;
+    }
+  
+    ul > li {
+      list-style: none;
+      padding: 4px 0;
+    }
+  
+    ul > li > span i.fa:hover {
+      color: #ccc;
+    }
+  
+   ul > li > span i.fa {
+      color: #24527b;
+      cursor: pointer;
+      font-size: 25px;
+      margin-right: 5px;
+    }
+
+  }
+  
+  select {
+    height: 30px;
+    font-weight: 400;
+    height: 30px;
+    text-align: center;
+    white-space: nowrap;
+    color: #000;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 0 12px 2px 12px;
+    line-height: 1.5;
+    padding: 0.375rem 0.75rem;
+    font-size: 14px;
+    border-radius: 0.25rem;
+    margin: 0 5px;
+    &:hover {
+        opacity: .7;
+    }
+  }
+
+  .table-budget {
+
+    width: 100%; 
+    margin-left: -10px;
+    margin-top: 10px;
+
+     tr {
+        padding: 10px;
+      }
+      
+     tr:nth-child(odd)  {
+        // background-color: #f5f5f5;
+      }
+      
+     td {
+        padding:10px 0 5px 5px;
+      }
+  }
+  
+  

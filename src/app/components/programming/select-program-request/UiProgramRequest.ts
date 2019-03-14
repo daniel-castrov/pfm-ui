@@ -27,5 +27,6 @@ export class UiProgramRequest {
 export enum PhaseType {
   POM = 'POM',
   PB = 'PB',
+  EXE = 'EXE',
   DELTA = 'Delta'
 }

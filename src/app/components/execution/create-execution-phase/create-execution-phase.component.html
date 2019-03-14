@@ -1,4 +1,4 @@
-<j-header></j-header>
+<app-header></app-header>
 <div class="row main-content">
   <div class="col-12">
     <div class="row">
@@ -6,14 +6,14 @@
         <span class="h5 mr-2">Create Execution Phase FY</span>
         <span>
           <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="budget">
-            <option *ngFor="let budg of yearpblkp | mapAsList" [value]="budg.value">{{budg.key}}</option>
+            <option *ngFor="let budget of budgetsReadyForExecutionPhaseCreation" [ngValue]="budget">{{budget.fy}}</option>
            </select>
          </span>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-4">
-        <div class="h6">Upload DoD Goals by selecting local Excel file:</div>
+        <div class="h6">Upload OUSD Goals by selecting local Excel file:</div>
         <div class="input-group">
           <input type="text" class="form-control form-input mr-1" placeholder="Choose file" name="uploadname" [ngModel]="fileToUpload?.name" readonly>
           <span class="input-group-btn">
@@ -31,8 +31,8 @@
       <div class="col-8">
         <div class="h6">Progress Report:</div>
         <fieldset class="mb-3">
-            <div *ngIf="submitted" class="loader"></div>
-          {{message}}
+          <div *ngIf="spinner" class="loader"></div>
+          {{error}}
         </fieldset>
       </div>
     </div>

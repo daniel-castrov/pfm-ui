@@ -42,7 +42,7 @@ export class EventsModalComponent {
 
     for(let wre of worksheetRowEvents) {
       let user = (await this.userService.getByCn(wre.userCN).toPromise()).result;
-      let date = new Date(wre.timestamp);
+      let date = new Date(wre.timestamp.year, wre.timestamp.monthValue-1, wre.timestamp.dayOfMonth);
       let dataRow = {
         date: date,
         user: user.firstName + ' ' + user.lastName,

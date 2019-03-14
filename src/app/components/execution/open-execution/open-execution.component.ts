@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { Execution, ExecutionService, ExecutionLine } from '../../../generated';
-import { Notify } from '../../../utils/Notify'
-import { UserUtils } from '../../../services/user.utils'
-import { AgGridNg2 } from 'ag-grid-angular';
-import { GridOptions } from 'ag-grid';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { SpendPlanService } from '../../../generated';
-import { SpendPlan } from '../../../generated';
-import { Observable } from 'rxjs';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Execution, ExecutionLine, ExecutionService, SpendPlan, SpendPlanService} from '../../../generated';
+import {Notify} from '../../../utils/Notify'
+import {UserUtils} from '../../../services/user.utils'
+import {AgGridNg2} from 'ag-grid-angular';
+import {GridOptions} from 'ag-grid';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {Router} from "@angular/router";
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 
 @Component({
   selector: 'app-open-execution',
@@ -16,16 +14,19 @@ import { Observable } from 'rxjs';
   styleUrls: ['./open-execution.component.scss']
 })
 export class OpenExecutionComponent implements OnInit {
+  @ViewChild(AppHeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   private phases: Execution[];
   private phase: Execution;
   private agOptions: GridOptions;
   private exelines: ExecutionLine[];
   private spendplans: Map<string, SpendPlan> = new Map<string, SpendPlan>();
-  
-  constructor(private exesvc: ExecutionService, private spsvc: SpendPlanService,
-    private userutils: UserUtils) {
-    
+
+  constructor(private exesvc: ExecutionService,
+              private spsvc: SpendPlanService,
+              private userutils: UserUtils,
+              private router:Router) {
+
     var my: OpenExecutionComponent = this;
 
     this.agOptions = <GridOptions>{
@@ -44,7 +45,7 @@ export class OpenExecutionComponent implements OnInit {
           field: 'programName'
         },
         {
-          headerName: "Appn.",
+          headerName: "APPN",
           filter: 'agTextColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'appropriation'
@@ -62,7 +63,7 @@ export class OpenExecutionComponent implements OnInit {
           field: 'item'
         },
         {
-          headerName: "OpAgency",
+          headerName: "OA",
           filter: 'agTextColumnFilter',
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'opAgency',
@@ -91,7 +92,7 @@ export class OpenExecutionComponent implements OnInit {
 
   ngOnInit() {
     this.userutils.user().subscribe(user => {
-      this.exesvc.getByCommunityId(user.currentCommunityId, Execution.StatusEnum.CREATED).subscribe(exes => {
+      this.exesvc.getAll(Execution.StatusEnum.CREATED).subscribe(exes => {
         this.phases = exes.result;
         if (this.phases.length > 0) {
           this.phase = this.phases[0];
@@ -140,7 +141,7 @@ export class OpenExecutionComponent implements OnInit {
   }
 
   openExe() {
-    this.exesvc.openExecution(this.phase.id).subscribe(d => { 
+    this.exesvc.openExecution(this.phase.id).subscribe(d => {
       if (d.error) {
         Notify.error(d.error);
       }
@@ -149,8 +150,11 @@ export class OpenExecutionComponent implements OnInit {
         delete this.phase;
         if (this.phases.length > 0) {
           this.phase = this.phases[0];
+        } else {
+          this.router.navigate(['/home']);
         }
         this.updatetable();
+        this.header.refresh();
         Notify.success('Execution Phase opened');
       }
     });
@@ -158,7 +162,7 @@ export class OpenExecutionComponent implements OnInit {
 
   demoCreatePlans() {
     // create spend plans for everybody without a spend plan, then open the phase
-    this.exelines.forEach(el => { 
+    this.exelines.forEach(el => {
       if (!this.spendplans.has(el.id)) {
         this.spsvc.createSpendPlan(el.id, {
           type: SpendPlan.TypeEnum.BASELINE

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateBudgetComponent } from './create-budget.component';
 
-describe('BudgetScenariosComponent', () => {
+describe('CopyBudgetComponent', () => {
   let component: CreateBudgetComponent;
   let fixture: ComponentFixture<CreateBudgetComponent>;
 

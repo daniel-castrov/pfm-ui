@@ -1,24 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { CommunityWithRolesAndOrgs } from './CommunityWithRolesAndOrgs';
-
-
-// Generated
-import { User } from '../../../generated/model/user';
-import { RestResult } from '../../../generated/model/restResult';
-import { CommunityService } from '../../../generated/api/community.service';
-import { OrganizationService } from '../../../generated/api/organization.service';
-import { Organization } from '../../../generated/model/organization';
-import { Community } from '../../../generated/model/community';
-import { UserService } from '../../../generated/api/user.service';
-import { Role } from '../../../generated/model/role';
-import { RoleService } from '../../../generated/api/role.service';
-import { UserRoleResource } from '../../../generated/model/userRoleResource';
-import { UserRoleResourceService } from '../../../generated/api/userRoleResource.service';
+import {Component} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {CommunityWithRolesAndOrgs} from './CommunityWithRolesAndOrgs';
+import {User} from '../../../generated/model/user';
+import {RestResult} from '../../../generated/model/restResult';
+import {CommunityService} from '../../../generated/api/community.service';
+import {OrganizationService} from '../../../generated/api/organization.service';
+import {Organization} from '../../../generated/model/organization';
+import {Community} from '../../../generated/model/community';
+import {UserService} from '../../../generated/api/user.service';
+import {Role} from '../../../generated/model/role';
+import {RoleService} from '../../../generated/api/role.service';
+import {UserRoleResource} from '../../../generated/model/userRoleResource';
+import {UserRoleResourceService} from '../../../generated/api/userRoleResource.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -26,8 +20,6 @@ import { UserRoleResourceService } from '../../../generated/api/userRoleResource
   styleUrls: ['./manage-users.component.scss']
 })
 export class ManageUsersComponent {
-
-  @ViewChild(HeaderComponent) header;
 
   // This is the id of the user we are interested in ... the targetUser
   private userid: string;

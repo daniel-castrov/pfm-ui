@@ -13,6 +13,7 @@ tags:
 # PHASES
 - name: "POM"
 - name: "PB"
+- name: "BES"
 - name: "Budget"
 - name: "Execution"
 # PROGRAMS AND UFRS
@@ -24,6 +25,8 @@ tags:
 - name: "OandE"
 - name: "SpendPlan"
 - name: "Snapshots"
+# BUDGET
+- name: "RdteData"
 # USERS AND ROLES
 - name: "MyDetails"
 - name: "Stranger"
@@ -447,11 +450,6 @@ paths:
         required: true
         type: "integer"
       - in: "query"
-        name: "model"
-        description: "the PB to use as a model"
-        required: false
-        type: "string"
-      - in: "query"
         name: "useepp"
         description: "Use Epp data"
         required: false
@@ -483,23 +481,13 @@ paths:
         description: "the year"
         required: true
         type: "integer"
-  /pom/community/{communityId}:
+  /pom:
     get:
       tags:
       - "POM"
-      summary: "Fetches all existing POMs for this community"
-      description: "Gets the POM information"
-      operationId: "getByCommunityId"
-      consumes:
-      - "application/json"
+      operationId: "getAll"
       produces:
       - "application/json"
-      parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
     put:
       tags:
       - "POM"
@@ -663,7 +651,7 @@ paths:
     get:
       tags:
         - "Budget"
-      operationId: "getBudgets"
+      operationId: "getAll"
   /budget/year/{fy}:
     post:
       tags:
@@ -673,35 +661,75 @@ paths:
         - in: "path"
           name: "fy"
           required: true
-          type: "string"
+          type: "number"
 # STOP BUDGET
 ##############################################################################
 # START PB
-  /pb/final:
-    get:
-      tags:
-      - "PB"
-      operationId: "getFinal"
-      produces:
-      - "application/json"
   /pb/final/latest:
     get:
       tags:
-      - "PB"
+        - "PB"
       operationId: "getFinalLatest"
       produces:
-      - "application/json"
+        - "application/json"
+  /pb/budget/{budgetId}:
+    get:
+      tags:
+        - "PB"
+      operationId: "getByBudget"
+      parameters:
+        - in: "path"
+          name: "budgetId"
+          required: true
+          type: "string"
+  /pb/from/{containerId}/name/{name}:
+    post:
+      tags:
+        - "PB"
+      operationId: "createFrom"
+      parameters:
+        - in: "path"
+          name: "containerId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "name"
+          required: true
+          type: "string"
 # END PB
 ##############################################################################
-# START EXECUTION
-  /execution/community/{communityId}:
+# START BES
+  /bes/budget/{budgetId}:
     get:
-      operationId: "getByCommunityId"
+      tags:
+        - "BES"
+      operationId: "getByBudget"
       parameters:
-      - name: "communityId"
-        in: "path"
-        required: true
-        type: "string"
+        - in: "path"
+          name: "budgetId"
+          required: true
+          type: "string"
+  /bes/from/{containerId}/name/{name}:
+    post:
+      tags:
+        - "BES"
+      operationId: "createFrom"
+      parameters:
+        - in: "path"
+          name: "containerId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "name"
+          required: true
+          type: "string"
+# END BES
+##############################################################################
+# START EXECUTION
+  /execution:
+    get:
+      operationId: "getAll"
+      parameters:
       - name: "status"
         in: "query"
         required: false
@@ -755,7 +783,7 @@ paths:
         type: "string"
       produces:
       - "application/json"
-  /execution/community/{communityId}/year/{year}:
+  /execution/year/{year}:
     post:
       tags:
       - "Execution"
@@ -774,20 +802,10 @@ paths:
                   format: binary
       parameters:
       - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
-      - in: "path"
         name: "year"
         description: "the year"
         required: true
         type: "integer"
-      - in: "query"
-        name: "model"
-        description: "the PB to use as a model"
-        required: false
-        type: "string"
       - in: "formData"
         name: "file"
         description: "the file to upload"
@@ -1817,6 +1835,35 @@ paths:
           type: array
           items:
             $ref: "#/definitions/OandEMonthly"
+  /oande/upload:
+    post:
+      tags:
+      - "OandE"
+      summary: "Imports a GFEBS or DAI export file"
+      description: "Imports a file to update Execution"
+      operationId: "upload"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  type: string
+                  format: binary
+      parameters:
+      - in: "formData"
+        name: "file"
+        description: "the file to upload"
+        required: true
+        type: "file"
+      - in: "query"
+        name: "type"
+        description: "the type of file being uploaded (GFEBS or DAI)"
+        required: true
+        type: "string"
+
 # STOP O&E
 ##############################################################################
 # START BUDGETFUNDINGLINES
@@ -1837,6 +1884,88 @@ paths:
           schema:
             $ref: "#/definitions/RestResult"
 # STOP BUDGETFUNDINGLINES
+##############################################################################
+# START RDTEDATA
+  /rdtedata/{id}:
+    get:
+      tags:
+      - "RdteData"
+      operationId: "getById"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
+  /rdtedata/containerId/{id}:
+    get:
+      tags:
+      - "RdteData"
+      operationId: "getByContainerId"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: "string"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/RestResult"
+  /rdtedata:
+    post:
+      tags:
+      - "RdteData"
+      operationId: "create"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/RdteData"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "new RdteData"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "RDTE data couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+    put:
+      tags:
+      - "RdteData"
+      operationId: "update"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/RdteData"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "updated RdteData"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "RDTE data couldn't be updated."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+# STOP RDTEDATA
 ##############################################################################
 # START PRCHANGENOTIFICATION
   /prChangeNotifications:
@@ -3055,6 +3184,21 @@ definitions:
     type: "object"
     additionalProperties:
       type: "string"
+  Timestamp:
+    type: "object"
+    properties:
+      dayOfMonth:
+        type: number
+      dayOfWeek:
+        type: "string"
+      dayOfYear:
+        type: number
+      month:
+        type: "string"
+      monthValue:
+        type: number
+      year:
+        type: number
 #
 ###########################
 ###       PHASES       ####
@@ -3096,10 +3240,16 @@ definitions:
         type: "string"
       status:
         enum: [OPEN, CLOSED]
-      finalBesId:
+      finalProcBesId:
         type: "string"
-      finalPbId:
+      finalRdteBesId:
         type: "string"
+      finalProcPbId:
+        type: "string"
+      finalRdtePbId:
+        type: "string"
+  BudgetType:
+    enum: [RDT&E, PROC]
   PB:
     type: "object"
     properties:
@@ -3107,8 +3257,21 @@ definitions:
         type: "string"
       budgetId:
         type: "string"
-      name: 
+      name:
         type: "string"
+      appropriation:
+        $ref: "#/definitions/Appropriation"
+  BES:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      budgetId:
+        type: "string"
+      name:
+        type: "string"
+      appropriation:
+        $ref: "#/definitions/Appropriation"
   Execution:
     type: "object"
     properties:
@@ -3119,7 +3282,7 @@ definitions:
       fy:
         type: "integer"
       status:
-        enum: [CREATED, OPEN, LOCKED]
+        enum: [CREATED, OPEN, LOCKED, CLOSED]
       osdObligationGoals:
         type: "object"
         $ref: "#/definitions/OSDGoalPlan"
@@ -3144,6 +3307,8 @@ definitions:
     enum: [APPROVED, PARTIALLY_APPROVED, DISAPPROVED, YEAR_OF_EXECUTION, DEFERRED, ISSUE_PAPER]
   ServiceBranch:
     enum: [USA, USN, USAF, USMC, USNG, SOCOM]
+  Appropriation:
+    enum: [PROC, RDTE]
   #
   Program:
     type: "object"
@@ -3357,7 +3522,8 @@ definitions:
       userCN:
         type: "string"
       timestamp:
-        type: "integer"
+        type: "object"
+        $ref: "#/definitions/Timestamp"
       success:
         type: "boolean"
 #
@@ -3453,6 +3619,70 @@ definitions:
         $ref: "#/definitions/IntMap"
 #
 ###########################
+###       BUDGET       ####
+###########################
+#
+  RdteData:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      containerId:
+        type: "string"
+      submitted:
+        type: "boolean"
+      fileArea:
+        type: "string"
+      logoName:
+        type: "string"
+      logoId:
+        type: "string"
+      overviewName:
+        type: "string"
+      overviewId:
+        type: "string"
+      r1Name:
+        type: "string"
+      r1Id:
+        type: "string"
+      toc:
+        $ref: "#/definitions/StringMap"
+      r2data:
+        type: "array"
+        items:
+          $ref: "#/definitions/R2Data"
+      r2Adata:
+        type: "array"
+        items:
+          $ref: "#/definitions/R2AData"
+  R2Data:
+    type: "object"
+    properties:
+      programElement:
+        type: "string"
+      missionDescription:
+        type: "string"
+      fundingChange:
+        type: "string"
+      scheduleChange:
+        type: "string"
+      techincalChange:
+        type: "string"
+  R2AData:
+    type: "object"
+    properties:
+      programElement:
+        type: "string"
+      item:
+        type: "string"
+      missionDescription:
+        type: "string"      
+      relatedItems:
+        type: "array"
+        items:
+          type: "string"
+#
+###########################
 ###    EXECUTION       ####
 ###########################
 #
@@ -3544,7 +3774,8 @@ definitions:
       userCN:
         type: "string"
       timestamp:
-        type: "number"
+        type: "object"
+        $ref: "#/definitions/Timestamp"
   ExecutionEventData:
     type: "object"
     properties:
@@ -3707,7 +3938,8 @@ definitions:
       userCN:
         type: "string"
       timestamp:
-        type: "integer"
+        type: "object"
+        $ref: "#/definitions/Timestamp"
   WorksheetEvent:
     type: "object"
     properties:

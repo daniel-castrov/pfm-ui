@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../header/header.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-r-forms',
@@ -7,8 +6,6 @@ import { HeaderComponent } from '../../header/header.component';
   styleUrls: ['./r-forms.component.scss']
 })
 export class RFormsComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header;
 
   constructor() { }
 

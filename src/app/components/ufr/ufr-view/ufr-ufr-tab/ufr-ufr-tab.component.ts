@@ -1,7 +1,6 @@
 import {TagsService, TagType} from './../../../../services/tags.service';
-import {CycleUtils} from './../../../../services/cycle.utils';
 import {Component, Input, OnInit} from '@angular/core';
-import {Disposition, Tag, UFR, UfrStatus} from '../../../../generated';
+import {Disposition, POMService, Tag, UFR, UfrStatus} from '../../../../generated';
 
 
 @Component({
@@ -19,7 +18,7 @@ export class UfrUfrTabComponent implements OnInit {
   private cycles: {}[];
   private capabilities: Tag[];
 
-  constructor( private cycleUtils: CycleUtils,
+  constructor( private pomService: POMService,
                private tagsService: TagsService ) {}
 
   ngOnInit() {
@@ -28,7 +27,7 @@ export class UfrUfrTabComponent implements OnInit {
   }
 
   private async initCycles() {
-    this.cycles = (await this.cycleUtils.poms().toPromise())
+    this.cycles = (await this.pomService.getAll().toPromise()).result
                       .map( pom => ({ display: 'POM ' + (pom.fy-2000),
                                       pomid: pom.id }) );
   }

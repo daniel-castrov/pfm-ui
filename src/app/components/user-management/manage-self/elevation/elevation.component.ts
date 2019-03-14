@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { HeaderComponent } from '../../../header/header.component';
-import { ElevationService } from '../../../../services/elevation.component';
+import {Component, Input} from '@angular/core';
+import {ElevationService} from '../../../../services/elevation.component';
+import {AppHeaderComponent} from "../../../header/app-header/app-header.component";
 
 @Component({
   selector: 'j-elevation',
@@ -9,7 +9,7 @@ import { ElevationService } from '../../../../services/elevation.component';
 })
 export class ElevationComponent {
 
-  @Input() header: HeaderComponent;
+  @Input() header: AppHeaderComponent;
 
   constructor(private elevationService: ElevationService) {}
 

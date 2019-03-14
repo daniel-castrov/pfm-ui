@@ -1,16 +1,13 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core'
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component'
-import { Router } from '@angular/router'
-import { ExecutionService, Execution, MyDetailsService, ExecutionLine } from '../../../generated'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ProgramsService } from '../../../generated/api/programs.service';
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
-import { EventDetailsCellRendererComponent } from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
-import { AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
+import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Router} from '@angular/router'
+import {Execution, ExecutionLine, ExecutionService, MyDetailsService} from '../../../generated'
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ProgramsService} from '../../../generated/api/programs.service';
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {EventDetailsCellRendererComponent} from '../../renderers/event-details-cell-renderer/event-details-cell-renderer.component';
+import {AutoValuesService} from '../../programming/program-request/funds-tab/AutoValues.service'
 
 @Component({
   selector: 'funds-update',
@@ -20,7 +17,6 @@ import { AutoValuesService} from '../../programming/program-request/funds-tab/Au
 })
 
 export class FundsUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private exephases: Execution[];
@@ -40,8 +36,9 @@ export class FundsUpdateComponent implements OnInit {
   private funds: number;
   private menuTabs = ['filterMenuTab'];
   private hasAppropriation: boolean = false;
+  private hasReleased: boolean = false;
   private agOptions: GridOptions;
-
+  containerStyle = {width: '100%'};
   constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
     private progsvc: ProgramsService, private autovalues: AutoValuesService,
     private router: Router) {
@@ -53,7 +50,7 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     var programLinkEnabled = function (params): boolean {
-      return (params.data.id && 0 !== params.data.released );
+      return (params.data.id);
     };
 
     var saveIfPossible = function(p){
@@ -86,9 +83,12 @@ export class FundsUpdateComponent implements OnInit {
         route: '/update-program-execution',
         enabled: programLinkEnabled
       },
+      defaultColDef: {
+        resizable: false
+      },
       columnDefs: [
         {
-          width: 40,
+          width: 50,
           headerName: "View",
           headerTooltip: 'View',
           filter: 'agTextColumnFilter',
@@ -96,6 +96,7 @@ export class FundsUpdateComponent implements OnInit {
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'ag-clickable'],
           field: 'programName',
+          suppressSizeToFit:true
         },
         {
           headerName: "Program",
@@ -116,14 +117,15 @@ export class FundsUpdateComponent implements OnInit {
             }
             return { component: editor };
           },
-          valueSetter: p => { 
+          valueSetter: p => {
             p.data.programName = p.newValue;
             saveIfPossible(p);
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
-          headerName: 'Appn.',
+          headerName: 'APPN',
           headerTooltip: 'Appropriation',
           filter: 'agTextColumnFilter',
           field: 'appropriation',
@@ -138,7 +140,8 @@ export class FundsUpdateComponent implements OnInit {
             delete p.data.blin;
             delete p.data.programElement;
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'BA/BLIN',
@@ -167,7 +170,8 @@ export class FundsUpdateComponent implements OnInit {
               saveIfPossible(p);
             });
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'Item',
@@ -190,14 +194,15 @@ export class FundsUpdateComponent implements OnInit {
               });
             }
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
-          headerName: 'opAgency',
-          headerTooltip: 'opAgency',
+          headerName: 'OA',
+          headerTooltip: 'OA',
           filter: 'agTextColumnFilter',
           field: 'opAgency',
-          width: 60,
+          width: 80,
           menuTabs: this.menuTabs,
           cellClass: ['ag-cell-light-grey', 'text-center'],
           editable: p => (!p.data.id),
@@ -207,16 +212,18 @@ export class FundsUpdateComponent implements OnInit {
             p.data.opAgency = p.newValue;
             saveIfPossible(p);
             return true;
-          }
+          },
+          suppressSizeToFit:true
         },
         {
           headerName: 'PE',
           headerTooltip: 'PE',
           filter: 'agTextColumnFilter',
           field: 'programElement',
-          width: 120,
+          width: 100,
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey', 'text-center']
+          cellClass: ['ag-cell-light-grey', 'text-center'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Initial Funds',
@@ -227,7 +234,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-light-green', 'text-right']
+          cellClass: ['ag-cell-light-green', 'text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'CRA',
@@ -237,7 +245,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Realigned',
@@ -247,27 +256,30 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
-          headerName: 'Appr. Actions',
-          headerTooltip: 'Appr. Actions',
+          headerName: 'APPN Action',
+          headerTooltip: 'Appropriation Action',
           field: 'apprTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'OUSD(C) Actions',
           headerTooltip: 'OUSD(C) Actions',
           field: 'ousdcTotal',
           valueFormatter: params => {return this.currencyFormatter(params)},
-          width: 104,
+          width: 115,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'BTR',
@@ -277,7 +289,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-white','text-right']
+          cellClass: ['ag-cell-white','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'TOA',
@@ -287,7 +300,8 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-dark-green','text-right']
+          cellClass: ['ag-cell-dark-green','text-right'],
+          suppressSizeToFit:true
         },
         {
           headerName: 'Released',
@@ -297,17 +311,19 @@ export class FundsUpdateComponent implements OnInit {
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-dark-green','text-right']
+          cellClass: ['ag-cell-dark-green','text-right'],
+          suppressSizeToFit:true
         },
         {
-          headerName: 'Withheld',
-          headerTooltip: 'Withheld',
+          headerName: 'Withhold',
+          headerTooltip: 'Withhold',
           field: 'withheld',
           valueFormatter: params => { return this.currencyFormatter(params) },
           width: 104,
           suppressSorting: false,
           suppressMenu: true,
-          cellClass: ['ag-cell-dark-green', 'text-right']
+          cellClass: ['ag-cell-dark-green', 'text-right'],
+          suppressSizeToFit:true
         }
       ]
     };
@@ -317,8 +333,8 @@ export class FundsUpdateComponent implements OnInit {
     var my: FundsUpdateComponent = this;
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
-        my.exesvc.getByCommunityId(deets.result.currentCommunityId),
-        //my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED')
+        my.exesvc.getAll(),
+        //my.exesvc.getAll('CREATED')
       ]).subscribe(data => {
         my.exephases = data[0].result;
         if (my.exephases.length > 0) {
@@ -348,6 +364,8 @@ export class FundsUpdateComponent implements OnInit {
       else {
         this.agOptions.api.hideOverlay();
       }
+
+      this.hasReleased = data[0].result.some(el => el.released > 0);
       this.refreshFilterDropdowns();
 
       this.hasAppropriation = data[1].result;
@@ -355,6 +373,28 @@ export class FundsUpdateComponent implements OnInit {
       this.agGrid.api.sizeColumnsToFit();
       this.agGrid.api.refreshHeader();
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.sizeColumnsToFit(this.agGrid);
+  }
+
+  sizeColumnsToFit(params) {
+    let totalColsWidth = 0;
+    let allColumns = params.columnApi.getAllDisplayedColumns();
+    for (var i = 0; i < allColumns.length; i++) {
+      let column = allColumns[i];
+      totalColsWidth += column.actualWidth;
+    }
+    if (totalColsWidth > window.innerWidth) {
+      totalColsWidth = window.innerWidth;
+      totalColsWidth-= 55;
+    } else {
+      totalColsWidth+= 22.5; //this an additional width to cover for the vertical button on the right
+    }
+
+    this.containerStyle = {width: totalColsWidth + 'px'}
   }
 
   currencyFormatter(value) {
@@ -416,7 +456,7 @@ export class FundsUpdateComponent implements OnInit {
     });
 
     this.programs = [];
-    programset.forEach(s => { 
+    programset.forEach(s => {
       this.programs.push(s);
     });
     this.programs.push( 'Other');
@@ -425,7 +465,7 @@ export class FundsUpdateComponent implements OnInit {
     this.items.sort();
     this.blins.sort();
     this.opAgencies.sort();
-    this.programs.sort((a, b) => { 
+    this.programs.sort((a, b) => {
       if ('Other' === a) {
         return -1;
       } else if ('Other' === b) {

@@ -3,25 +3,25 @@
 <ng-template #emptycell>
   <td></td>
 </ng-template>
-<j-header></j-header>
+<app-header></app-header>
 
-<div class="container-fluid create-pom-session-wrapper">
-  <div class="row main-content" *ngIf="header.isAuthenticated && community && fy">
+<div class="container-fluid">
+  <div class="row main-content" *ngIf="fy">
     <div class="col-12">
       <div class="row">
         <div class="col-12">
           <div class="h5 mb-2 welcome-header">
             <ng-container *ngIf="!(pomIsCreated || pomIsOpen) ">
               <span class="h5 mr-sm-2 mb-2">Create POM Session</span>
-              <p>{{fy| FY}}</p>
+              <p>{{fy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsCreated" >
                 <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs</span>
-                <p>{{fy| FY}}</p>
+                <p>{{fy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsOpen">
               <span class="h5 mr-sm-2 mb-2">POM Session</span>
-              <p>{{fy| FY}}</p>
+              <p>{{fy| FY:'POM'}}</p>
             </ng-container>
           </div>
         </div>
@@ -182,7 +182,7 @@
       <div class="col-12 agtoatable">
         <app-pom-analysis
           [fy]='selectedyear'
-          [pb]='budget'
+          [budget]='budget'
           [pom]='pomData'
           [orgmap]='orgMap'
           [commdata]='yeartoas'

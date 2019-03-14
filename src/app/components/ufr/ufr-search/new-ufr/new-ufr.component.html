@@ -10,7 +10,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" (click)="setCreateNewUfrMode('Previously Funded Program')">Previously Funded Program</a>
-                  <a class="dropdown-item" (click)="setCreateNewUfrMode('Program Request')">Program Request</a>
+                  <a class="dropdown-item" *ngIf="phaseType === 'POM'" (click)="setCreateNewUfrMode('Program Request')">Program Request</a>
                   <a class="dropdown-item" (click)="setCreateNewUfrMode('New Increment')">New Increment</a>
                   <a class="dropdown-item" (click)="setCreateNewUfrMode('New FoS')">New FoS</a>
                   <a class="dropdown-item" (click)="setCreateNewUfrMode('New Program')">New Program</a>
@@ -31,7 +31,7 @@
             </div>
           </td>
           <td>
-            <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="!createNewUfrMode || createNewUfrMode=='Select an option'">
+            <button class="btn btn-primary pull-right" type="button" (click)="next()" [disabled]="nextDisbaled()">
               <span class="icon-pad">Next</span>
               <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
             </button>

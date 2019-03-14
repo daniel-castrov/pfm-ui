@@ -22,7 +22,8 @@ export enum TagType {
   BLIN = 'BLIN',
   BA = 'BA',
   ACQUISITION_TYPE = 'Acquisition Type',
-  REASON_CODE = 'Reason Code'
+  REASON_CODE = 'Reason Code',
+  ITEM = 'Item'
 }
 
 @Injectable()

@@ -1,5 +1,4 @@
 import {AfterContentChecked, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {HeaderComponent} from '../../../components/header/header.component';
 import {Pom, Worksheet} from "../../../generated";
 import {GridToaComponent} from "./../update-pom-session/grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./../update-pom-session/events-modal/events-modal.component";
@@ -13,7 +12,6 @@ import {ReasonCodeComponent} from "./../update-pom-session/reason-code/reason-co
 })
 export class ViewPomSessionComponent implements AfterContentChecked {
 
-  @ViewChild(HeaderComponent) header;
   @ViewChild(WorksheetComponent) worksheetComponent: WorksheetComponent;
   @ViewChild(GridToaComponent) gridToaComponent: GridToaComponent;
   @ViewChild(EventsModalComponent) eventsModalComponent: EventsModalComponent;

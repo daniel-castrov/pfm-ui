@@ -1,9 +1,8 @@
-import {Budget, BudgetService, Pom, POMService, RestResult, User} from "../generated";
+import {Budget, BudgetService, Execution, ExecutionService, Pom, POMService, RestResult} from "../generated";
 import {Observable} from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map'
 import {TemporaryCaching} from "./caching";
-import {UserUtils} from "./user.utils";
 import {Subject} from "rxjs";
 
 /**
@@ -12,18 +11,16 @@ import {Subject} from "rxjs";
 @Injectable()
 export class CurrentPhase {
 
-  constructor( private userUtils: UserUtils,
-               private pomService: POMService,
-               private budgetService: BudgetService ) {}
-
+  constructor( private pomService: POMService,
+               private budgetService: BudgetService,
+               private executionService: ExecutionService) {}
 
   @TemporaryCaching('currentPOM')
   pom(): Observable<Pom> {
     const subject = new Subject();
     (async () => {
       let poms: Pom[];
-      const user: User = await this.userUtils.user().toPromise();
-      poms = await this.pomService.getByCommunityId(user.currentCommunityId)
+      poms = await this.pomService.getAll()
         .map( (response: RestResult) => response.result ).toPromise();
       poms = poms.sort( (a:Pom, b:Pom) => b.fy-a.fy );
       subject.next(poms[0]);
@@ -37,10 +34,24 @@ export class CurrentPhase {
     const subject = new Subject();
     (async () => {
       let budgets: Budget[];
-      budgets = await this.budgetService.getBudgets()
+      budgets = await this.budgetService.getAll()
         .map( (response: RestResult) => response.result ).toPromise();
       budgets = budgets.sort( (a:Budget, b:Budget) => b.fy-a.fy );
       subject.next(budgets[0]);
+      subject.complete();
+    })();
+    return subject;
+  }
+
+  @TemporaryCaching('currentExecution')
+  execution(): Observable<Execution> {
+    const subject = new Subject();
+    (async () => {
+      let executions: Execution[];
+      executions = await this.executionService.getAll()
+        .map( (response: RestResult) => response.result ).toPromise();
+      executions = executions.sort( (a:Execution, b:Execution) => b.fy-a.fy );
+      subject.next(executions[0]);
       subject.complete();
     })();
     return subject;
