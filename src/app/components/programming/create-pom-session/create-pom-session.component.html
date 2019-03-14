@@ -1,5 +1,3 @@
-
-
 <ng-template #emptycell>
   <td></td>
 </ng-template>
@@ -15,9 +13,9 @@
               <span class="h5 mr-sm-2 mb-2">Create POM Session</span>
               <p>{{fy| FY:'POM'}}</p>
             </ng-container>
-            <ng-container *ngIf="pomIsCreated" >
-                <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs</span>
-                <p>{{fy| FY:'POM'}}</p>
+            <ng-container *ngIf="pomIsCreated">
+              <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs</span>
+              <p>{{fy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsOpen">
               <span class="h5 mr-sm-2 mb-2">POM Session</span>
@@ -26,26 +24,26 @@
           </div>
         </div>
       </div>
-      <div class= "card-container">
-      <div class="row">
-        <div class="col-12">
-          <span class="font-weight-bold toa-table-title-1"><i class="fa fa-bar-chart" aria-hidden="true"></i> {{community.abbreviation}} Community TOA ($K)</span>
-          <!-- <p class="text-muted graph-text-muted">Note: Clicking on each bar will allow you to see more and edit information.</p> -->
-          <span class="toa-reload-widget">
-            <button class="btn btn-sm btn-secondary" (click)="reload()">
-              <i class="fa fa-refresh" aria-hidden="true"></i>
-              Reset
-            </button>
-            <div class="comchart-input-value">
+      <div class="card-container">
+        <div class="row">
+          <div class="col-12">
+            <span class="font-weight-bold toa-table-title-1"><i class="fa fa-bar-chart" aria-hidden="true"></i>
+              {{community.abbreviation}} Community TOA ($K)</span>
+            <!-- <p class="text-muted graph-text-muted">Note: Clicking on each bar will allow you to see more and edit information.</p> -->
+            <span class="toa-reload-widget">
+              <button class="btn btn-sm btn-secondary" (click)="myinit()">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+                Reset
+              </button>
+              <div class="comchart-input-value">
                 <button (click)="open(content)" class='btn btn-sm btn-primary'>
                   <i class="fa fa-edit" aria-hidden="true"></i> Change Values
                 </button>
               </div>
-
-          </span>
+            </span>
+          </div>
         </div>
-      </div>
-      <ng-template #content let-modal let-c="close">
+        <ng-template #content let-modal let-c="close">
           <div class=" toa-tooltip-modal modal-header">
             <h4 class="modal-title" id="modal-basic-title">Edit Community TOA values</h4>
 
@@ -57,95 +55,83 @@
             <div class="toa-modal-input-wrapper">
               <form #f="ngForm">
                 <div class="form-group">
-                    <label for="sel1">Select Year:</label>
-                    <select class="form-control toa-select-edit" (change)="tooltipChangeYear($event.target)" >
-                        <option selected></option>
-                        <option *ngFor = "let year of years" [value] = "year">{{year}}</option>
+                  <label for="sel1">Select Year:</label>
+                  <select class="form-control toa-select-edit" [(ngModel)]='toayear' name="yearselector">
+                    <option selected></option>
+                    <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
 
-                    </select>
-                    <input name="first" [(ngModel)]="fyTOAVal"  [value] = "fyComToolVal" type="number" class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
-                  </div>
-                  </form>
+                  </select>
+                  <input name="first" [(ngModel)]="toaForYear" type="number"
+                    class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
+                </div>
+              </form>
 
-              <button (click)='tooltipToaSubmit(c)' class='tooltip-toa-submit btn-primary' [disabled]="!f.valid">Submit</button>
+              <button (click)='submitValue(c)' class='tooltip-toa-submit btn-primary'
+                [disabled]="!f.valid">Submit</button>
+            </div>
+          </div>
+
+        </ng-template>
+
+        <div class="row mb-2">
+          <div class="col-12">
+            <div class="bar-chart-google">
+              <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
+              </google-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-container" *ngIf='selectedyear'>
+        <ng-template #contentTwo let-modal let-c="close">
+          <div class=" toa-tooltip-modal modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Edit Organization sub-TOA values</h4>
+
+            <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class=" toa-tooltip-modal modal-body">
+            <div class="toa-modal-input-wrapper">
+              <div class="form-group">
+                <label for="sel1">Select Organization:</label>
+                <select class="form-control toa-select-edit" [(ngModel)]='subOrgId'>
+                  <option></option>
+                  <option *ngFor="let subtoa of suborgMap|mapAsList" [ngValue]="subtoa.key">{{subtoa.value}}</option>
+                </select>
+                <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit"
+                  aria-label="Text input with dropdown button" type="number">
+              </div>
+
+              <button (click)="c('Close click')" class='tooltip-toa-submit btn-primary'>Submit</button>
             </div>
           </div>
 
         </ng-template>
 
 
-      <!-- <div class="row mb-2">
-        <div class="col-12">
-          <div class="agtoatable">
-            <ag-grid-angular #agGridComm class="ag-theme-balham set-toa"
-              [gridOptions]="gridOptionsCommunity"
-              [rowData]="rowsCommunity"
-              [toolPanelSuppressSideButtons]="true"
-              [suppressDragLeaveHidesColumns]="true"
-              [pinnedTopRowData]="pinnedRowCommunityBaseline"
-              (gridReady)="onGridReadyCom($event)">
-            </ag-grid-angular>
+        <div class="row">
+          <!-- <div class="sub-toa-separator"></div> -->
+          <div class="col-12">
+
           </div>
         </div>
-      </div> -->
+        <div class="row" *ngIf='selectedyear'>
+          <h2 class="sub-toa-h2"><i class="fa fa-square"></i> For {{selectedyear | FY}}:</h2>
 
-      <div class="row mb-2">
-        <div class="col-12">
-          <div class="bar-chart-google">
-            <google-chart #comchart
-              [data]='chartdata'
-              (chartSelect)='select($event)'
-              id="ge"
-            >
-          </google-chart>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class= "card-container" *ngIf='selectedyear'>
-        <ng-template #contentTwo let-modal let-c="close">
-            <div class=" toa-tooltip-modal modal-header">
-              <h4 class="modal-title" id="modal-basic-title">Edit Organization sub-TOA values</h4>
-
-              <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
-                <span aria-hidden="true">&times;</span>
+          <span class="toa-reload-widget">
+            <div class="comchart-input-value">
+              <button (click)="open(contentTwo)" class='btn btn-sm btn-primary'>
+                <i class="fa fa-edit" aria-hidden="true"></i> Change Values
               </button>
             </div>
-            <div class=" toa-tooltip-modal modal-body">
-              <div class="toa-modal-input-wrapper">
+          </span>
 
-
-                      <div class="form-group">
-                          <label for="sel1">Select Year:</label>
-                          <select class="form-control toa-select-edit"  (change)="tooltipChangeSubToa($event.target)">
-                            <option></option>
-                            <option *ngFor = "let subtoa of subOrgName" [value] = "subtoa.key">{{subtoa.value}}</option>
-                            </select>
-                          <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit" aria-label="Text input with dropdown button">
-                        </div>
-
-                <button (click)='tooltipSubOrgSubmit(c)' class='tooltip-toa-submit btn-primary'>Submit</button>
-              </div>
-            </div>
-
-          </ng-template>
-
-
-      <div class="row">
-        <!-- <div class="sub-toa-separator"></div> -->
-        <div class="col-12">
-
-        </div>
-      </div>
-      <div class="row" *ngIf='selectedyear'>
-        <h2 class="sub-toa-h2"><i class="fa fa-square"></i> For {{selectedyear | FY}}:</h2>
-        <span class="font-weight-bold toa-table-title-2">
-          <i class="fa fa-bar-chart" aria-hidden="true"> </i>
-
-          <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
-
-        </span>
-        <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
+          <span class="font-weight-bold toa-table-title-2">
+            <i class="fa fa-bar-chart" aria-hidden="true"> </i>
+            <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
+          </span>
+          <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
             <span class="toa-epp-widget">
               <span>
                 <label>Use EPP Data:</label>
@@ -153,45 +139,31 @@
               <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
             </span>
           </ng-container> -->
-        <div class="comchart-second-wrapper">
-          <google-chart #comchartSecond
-          [data]='subchartdata'
-          (chartSelect)='selectSub($event)'
-        >
-      </google-chart>
-    </div>
+          <div class="comchart-second-wrapper">
+            <google-chart #comchartSecond [data]='subchartdata' (chartSelect)='selectSub($event)'>
+            </google-chart>
+          </div>
 
-      </div>
+        </div>
 
-      <div class="row">
+        <div class="row">
           <div class="col-12">
             <div>
-              <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable sub-toa"
-                [gridOptions]="gridOptionsOrgs"
-                [rowData]="rowsOrgs"
-                [toolPanelSuppressSideButtons]="true"
-                [suppressDragLeaveHidesColumns]="true"
-                [pinnedBottomRowData]="pinnedRowOrgsDelta"
-                (gridReady)="onGridReadyOrgs($event)">
+              <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable sub-toa" [gridOptions]="gridOptionsOrgs"
+                [rowData]="rowsOrgs" [toolPanelSuppressSideButtons]="true" [suppressDragLeaveHidesColumns]="true"
+                [pinnedBottomRowData]="pinnedRowOrgsDelta" (gridReady)="onGridReadyOrgs($event)">
               </ag-grid-angular>
             </div>
           </div>
         </div>
-    </div>
-    <div class="row" *ngIf='selectedyear'>
-      <div class="col-12 agtoatable">
-        <app-pom-analysis
-          [fy]='selectedyear'
-          [budget]='budget'
-          [pom]='pomData'
-          [orgmap]='orgMap'
-          [commdata]='yeartoas'
-          [baseline]='analysis_baseline'
-          [readonly]='(pomIsCreated||pomIsOpen)'
-          (changes)='onAnalysis($event)'
-        ></app-pom-analysis>
       </div>
-    </div>
+      <div class="row" *ngIf='selectedyear'>
+        <div class="col-12 agtoatable">
+          <app-pom-analysis [fy]='selectedyear' [budget]='budget' [pom]='pomData' [orgmap]='orgMap'
+            [commdata]='yeartoas' [baseline]='analysis_baseline' [readonly]='(pomIsCreated||pomIsOpen)'
+            (changes)='onAnalysis($event)'></app-pom-analysis>
+        </div>
+      </div>
 
       <div class="row mt-3">
         <div class="col-2">
@@ -199,12 +171,11 @@
             <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
           </ng-container>
           <ng-container *ngIf="pomIsCreated">
-            <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="toaConfirmationDialog.open()">Update TOAs</button>
-            <confirmation-dialog
-              #toaConfirmationDialog
+            <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="toaConfirmationDialog.open()">Update
+              TOAs</button>
+            <confirmation-dialog #toaConfirmationDialog
               confirmationMessage='<p>Clicking <u>Continue</u> will update all TOAs for the current POM Session
-                      and revert any currently <strong>"Submitted"</strong> Program Requests to the <strong>"Saved"</strong> state.</p>'
-              title="Caution"
+                      and revert any currently <strong>"Submitted"</strong> Program Requests to the <strong>"Saved"</strong> state.</p>' title="Caution"
               (okEvent)="updatePom()"></confirmation-dialog>
           </ng-container>
           <ng-container *ngIf="pomIsOpen">
