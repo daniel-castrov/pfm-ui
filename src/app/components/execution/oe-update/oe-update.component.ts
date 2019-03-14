@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core'
 import {Router} from '@angular/router'
 import {GridOptions} from 'ag-grid';
 import {AgGridNg2} from 'ag-grid-angular';
+import {FormatterUtil} from "../../../utils/formatterUtil";
 import {
   Execution,
   ExecutionLine,
@@ -101,7 +102,7 @@ export class OeUpdateComponent implements OnInit {
           field: 'el.toa',
           cellClass: ['ag-cell-light-green'],
           type: 'numericColumn',
-          valueFormatter: p => p.value.toFixed(2),
+          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
           maxWidth: 92
         },
         {
@@ -110,7 +111,7 @@ export class OeUpdateComponent implements OnInit {
           field: 'el.released',
           cellClass: ['ag-cell-white'],
           type: 'numericColumn',
-          valueFormatter: p => p.value.toFixed(2),
+          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
           maxWidth: 92
         },
         {
@@ -118,7 +119,7 @@ export class OeUpdateComponent implements OnInit {
           headerTooltip: 'Obligated',
           field: 'obligated',
           cellClass: ['ag-cell-white'],
-          valueFormatter: p => p.value.toFixed(2),
+          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
           type: 'numericColumn',
           maxWidth: 92
         },
@@ -126,7 +127,7 @@ export class OeUpdateComponent implements OnInit {
           headerName: 'Expensed',
           headerTooltip: 'Expensed',
           field: 'expensed',
-          valueFormatter: p => p.value.toFixed(2),
+          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
           type: 'numericColumn',
           cellClass: ['ag-cell-white'],
           maxWidth: 92
