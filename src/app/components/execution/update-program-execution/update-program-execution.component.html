@@ -82,14 +82,15 @@
     </div>
     <div class="row mb-3">
       <div class="col-12">
-        <div id="update-program-execution" class="table-editable">
+        <div id="update-program-execution">
           <app-execution-line-table
           [fromIsSource]="fromIsSource"
           [phase]="phase"
           [exelinefilter]="linefilter"
           [exevalidator]="validator"
           [exeprogramfilter]="programfilter"
-          [updatelines]="updatelines"></app-execution-line-table>
+          [updatelines]="updatelines">
+        </app-execution-line-table>
         </div>
       </div>
     </div>

@@ -26,11 +26,11 @@ export class ActualsCellRendererComponent implements ICellRendererAngularComp {
 
     if (pct && row > 1) {
       this.value = (0 === param.data.toa[monthidx]
-        ? 0
-        : param.value / param.data.toa[monthidx] * 100).toFixed(2);
+        ? 0 + '%'
+        : (param.value / param.data.toa[monthidx] * 100).toFixed(2) + '%');
     }
     else {
-      this.value = (param.value ? param.value : 0).toFixed(2);
+      this.value = '$' + (param.value ? param.value : 0).toFixed(2);
     }
   }
 
