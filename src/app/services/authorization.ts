@@ -1,8 +1,9 @@
-import {Budget, Pom} from './../generated';
+import {Budget, BudgetService, Execution, Pom} from './../generated';
 import {UserUtils} from './user.utils';
 import {Injectable} from '@angular/core';
 import {CurrentPhase} from "./current-phase.service";
 import {ElevationService} from "./elevation.component";
+import {ExecutionCreationService} from "../components/execution/create-execution-phase/execution-creation.service";
 
 export enum AuthorizationResult {
   Ok,     // authorized
@@ -21,13 +22,15 @@ export class Authorization {
 
   constructor( public elevationService: ElevationService,
                private userUtils: UserUtils,
-               private currentPhase: CurrentPhase ) {}
+               private currentPhase: CurrentPhase,
+               private budgetService: BudgetService,
+               private executionCreationService: ExecutionCreationService ) {}
 
   forUrl(url: string): Promise<AuthorizationResult> {
     if(this[url]) {
       return this[url]();
     } else {
-      console.warn('Authorization requested for a URL that is not set up for authorization');
+      console.warn('Authorization requested for a URL that is not set up for authorization: ' + url );
       return Promise.resolve(AuthorizationResult.Ok);
     }
   }
@@ -144,31 +147,103 @@ export class Authorization {
       const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
       if ([Pom.StatusEnum.CLOSED, Pom.StatusEnum.RECONCILIATION].includes( pom.status) )
-        if( Budget.StatusEnum.CLOSED == budget && budget.status )
-          if(pom.fy == budget.fy+1)
+        if( Budget.StatusEnum.CLOSED === budget.status )
+          if(pom.fy === budget.fy+1)
             return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
 
-  async 'budget-scenarios'(): Promise<AuthorizationResult> {
+  async 'copy-budget'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
+      const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
-      if( Budget.StatusEnum.CLOSED == budget && budget.status )
-        return AuthorizationResult.Ok;
+      if( Budget.StatusEnum.OPEN === budget.status )
+        if(pom.fy === budget.fy)
+          return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
 
-  async 'edit-budget-scenario'(): Promise<AuthorizationResult> {
+  async 'edit-budget-details'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
+      const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
-        return AuthorizationResult.Ok;
+      if( Budget.StatusEnum.OPEN === budget.status )
+        if(pom.fy === budget.fy)
+          return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
 
+  async 'create-new-execution'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      const budgetsReadyForExecutionPhase = (await this.executionCreationService.getBudgetsReadyForExecutionPhaseCreation()) as Budget[];
+      if( budgetsReadyForExecutionPhase.length > 0) return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
 
+  async 'funds-update'(): Promise<AuthorizationResult> {
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'ufr-request'(): Promise<AuthorizationResult> {
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'program-update'(): Promise<AuthorizationResult> {
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'import-execution-data'(): Promise<AuthorizationResult> {
+    if (await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && (Execution.StatusEnum.CREATED == execution.status || Execution.StatusEnum.OPEN == execution.status)) {
+        return AuthorizationResult.Ok
+      } else {
+        return AuthorizationResult.NotNow;
+      }
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'open-execution-phase'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      let execution = (await this.currentPhase.execution().toPromise())
+      if (execution && Execution.StatusEnum.CREATED == execution.status) return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
 }

@@ -2,7 +2,7 @@
     {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
 
-<j-header></j-header>
+<app-header></app-header>
 <div class="row main-content">
   <div class="col-12">
     <div class="row">
@@ -30,20 +30,20 @@
     <div class="row mb-3">
       <div class="col-md-6 col-lg-2">
          <span class="form-group">
-           <label class="mr-2">Toa:</label>
-           <span class="font-weight-bold">{{current.line.toa}}</span>
+           <label class="mr-2">TOA:</label>
+           <span class="font-weight-bold">{{ currencyFormatter(current.line.toa) }}</span>
          </span>
        </div>
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
          <label class="mr-2">Released:</label>
-         <span class="font-weight-bold">{{current.line.released}}</span>
+         <span class="font-weight-bold">{{ currencyFormatter(current.line.released) }}</span>
        </span>
       </div>
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
-          <label class="mr-2">Withheld:</label>
-          <span class="font-weight-bold">{{current.line.withheld}}</span>
+          <label class="mr-2">Withhold:</label>
+          <span class="font-weight-bold">{{ currencyFormatter(current.line.withheld) }}</span>
         </span>
       </div>
     </div>
@@ -101,12 +101,13 @@
         </span>
      </div>
    </div>
-   <div class="row mb-3">
-     <div class="col">
-       <span class="form-group">
-         <label class="mb-1">Attach File:</label>
+   <div class="row mb-2">
+    <div class="col-12">
+      <fieldset class="file-upload">
+       <legend>Attach File:</legend>
          <file-upload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
-       </span>
-     </div>
-   </div>
+      </fieldset>
+    </div>
+    </div>
+  </div>
 </div>

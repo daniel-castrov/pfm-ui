@@ -130,7 +130,7 @@ export class WorksheetComponent implements OnChanges {
         cellClass: ['funding-line-default', 'text-left']
       },
       {
-        headerName: 'Appn',
+        headerName: 'APPN',
         headerTooltip: 'Appropriation',
         field: 'fundingLine.appropriation',
         suppressMenu: true,
@@ -151,8 +151,8 @@ export class WorksheetComponent implements OnChanges {
         cellClass: ['funding-line-default', 'text-left']
       },
       {
-        headerName: 'OpAgency',
-        headerTooltip: 'OpAgency',
+        headerName: 'OA',
+        headerTooltip: 'OA',
         field: 'fundingLine.opAgency',
         hide: true,
         suppressMenu: true,

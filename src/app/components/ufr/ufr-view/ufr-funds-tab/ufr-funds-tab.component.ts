@@ -60,24 +60,21 @@ export class UfrFundsComponent implements OnChanges {
               private tagsService: TagsService,
               private rolesvc: RolesPermissionsService) {}
 
-  ngOnChanges() {
-    this.pomService.getById(this.ufr.containerId).subscribe(pom => {
-      this.pom =  pom.result;
-      this.columnKeys = [
-        this.pom.fy - 3,
-        this.pom.fy -2,
-        this.pom.fy - 1,
-        this.pom.fy,
-        this.pom.fy + 1,
-        this.pom.fy + 2,
-        this.pom.fy + 3,
-        this.pom.fy + 4];
-      this.generateColumns();
-      this.initDataRows();
-      this.agGridCurrentFunding.api.sizeColumnsToFit();
-      this.agGridProposedChanges.api.sizeColumnsToFit();
-      this.agGridRevisedPrograms.api.sizeColumnsToFit();
-    });
+ async ngOnChanges() {
+    this.columnKeys = [
+      this.fy - 3,
+      this.fy -2,
+      this.fy - 1,
+      this.fy,
+      this.fy + 1,
+      this.fy + 2,
+      this.fy + 3,
+      this.fy + 4];
+    await this.generateColumns();
+    this.initDataRows();
+    this.agGridCurrentFunding.api.sizeColumnsToFit();
+    this.agGridProposedChanges.api.sizeColumnsToFit();
+    this.agGridRevisedPrograms.api.sizeColumnsToFit();
     this.ismgr = false;
     this.rolesvc.getRoles().subscribe(data => {
       this.ismgr = (data.result.includes('POM_Manager'));
@@ -248,7 +245,7 @@ export class UfrFundsComponent implements OnChanges {
           cellClass: 'funding-line-default'
         },
           {
-            headerName: 'Appn',
+            headerName: 'APPN',
             headerTooltip: 'Appropriation',
             field: 'fundingLine.appropriation',
             suppressToolPanel: true,
@@ -308,8 +305,8 @@ export class UfrFundsComponent implements OnChanges {
             onCellValueChanged: params => this.onFundingLineValueChanged(params)
           },
           {
-            headerName: 'OpAgency',
-            headerTooltip: 'OpAgency',
+            headerName: 'OA',
+            headerTooltip: 'OA',
             field: 'fundingLine.opAgency',
             cellClass: 'funding-line-default',
             hide: true
@@ -343,17 +340,17 @@ export class UfrFundsComponent implements OnChanges {
       cellClass:['text-right'],
       cellClassRules: {
         'ag-cell-edit': params => {
-          return this.isAmountEditable(params, this.pom.fy)
+          return this.isAmountEditable(params, this.fy)
         },
         'text-right': params => {
-          return this.isAmountEditable(params, this.pom.fy)
+          return this.isAmountEditable(params, this.fy)
         },
         'delta-row': params => {
           return params.data.phaseType === PhaseType.DELTA;
         }
       },
       editable: params => {
-        return this.isAmountEditable(params, this.pom.fy)
+        return this.isAmountEditable(params, this.fy)
       },
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params)}
     };
@@ -364,35 +361,35 @@ export class UfrFundsComponent implements OnChanges {
     let subHeader;
     let cellClass = [];
     switch (Number(key)) {
-      case (this.pom.fy + 4):
+      case (this.fy + 4):
         subHeader = 'BY+4';
         cellClass = ['text-right'];
         break;
-      case this.pom.fy + 3:
+      case this.fy + 3:
         subHeader = 'BY+3';
         cellClass = ['text-right'];
         break;
-      case this.pom.fy + 2:
+      case this.fy + 2:
         subHeader = 'BY+2';
         cellClass = ['text-right'];
         break;
-      case this.pom.fy + 1:
+      case this.fy + 1:
         subHeader = 'BY+1';
         cellClass = ['text-right'];
         break;
-      case this.pom.fy:
+      case this.fy:
         subHeader = 'BY';
         cellClass = ['text-right'];
         break;
-      case this.pom.fy - 1:
+      case this.fy - 1:
         subHeader = 'CY';
         cellClass = ['ag-cell-white', 'text-right'];
         break;
-      case this.pom.fy - 2:
+      case this.fy - 2:
         subHeader = 'PY';
         cellClass = ['ag-cell-white', 'text-right'];
         break;
-      case this.pom.fy - 3:
+      case this.fy - 3:
         subHeader = 'PY-1';
         cellClass = ['ag-cell-white', 'text-right'];
         break;
@@ -433,7 +430,7 @@ export class UfrFundsComponent implements OnChanges {
   getTotal(pr, columnKeys): number {
     let result = 0;
     columnKeys.forEach(year => {
-      if(year >= this.pom.fy) {
+      if(year >= this.fy) {
         let amount = pr.fundingLine.funds[year];
         result += isNaN(amount)? 0 : amount;
       }
@@ -491,7 +488,7 @@ export class UfrFundsComponent implements OnChanges {
   }
 
   isAmountEditable(params, key): boolean{
-    return key >= this.pom.fy && params.data.editable && !this.readonly;
+    return key >= this.fy && params.data.editable && !this.readonly;
   }
 
   private async loadDropdownOptions() {
@@ -550,7 +547,7 @@ export class UfrFundsComponent implements OnChanges {
 
   onFundingLineValueChanged(params) {
     let pomNode = params.node.data;
-    if (params.colDef.headerName === 'Appn') {
+    if (params.colDef.headerName === 'APPN') {
       this.filterBlins(params.data.fundingLine.appropriation);
       params.data.fundingLine.item = null;
       params.data.fundingLine.baOrBlin = null;

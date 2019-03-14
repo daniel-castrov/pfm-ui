@@ -1,23 +1,35 @@
-import { UserUtils } from '../../../../services/user.utils';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { AgGridNg2 } from "ag-grid-angular";
+import {UserUtils} from '../../../../services/user.utils';
+import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {AgGridNg2} from "ag-grid-angular";
 import {
-  ProgramsService, OrganizationService, Organization, User, UFRsService, UFR, UFRFilter,
-  UfrStatus, Program, Pom, Execution, ExecutionService
+  Execution,
+  ExecutionService,
+  Organization,
+  OrganizationService,
+  Program,
+  ProgramsService,
+  UFR,
+  UFRFilter,
+  UFRsService,
+  User
 } from '../../../../generated';
-import { ProgramAndPrService } from "../../../../services/program-and-pr.service";
-import { SimpleLinkCellRendererComponent, SimpleLink } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
-import {CycleUtils} from "../../../../services/cycle.utils";
+import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
+import {
+  SimpleLink,
+  SimpleLinkCellRendererComponent
+} from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
 import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
+import {CurrentPhase} from "../../../../services/current-phase.service";
+import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
 
 @Component({
   selector: 'all-ufrs',
   templateUrl: './all-ufrs.component.html',
   styleUrls: ['./all-ufrs.component.scss']
 })
-export class AllUfrsComponent implements OnInit {
+export class AllUfrsComponent implements OnChanges {
 
   @Input() private mapCycleIdToFy: Map<string, string>;
 
@@ -27,7 +39,6 @@ export class AllUfrsComponent implements OnInit {
   private user: User;
   private orgMap: any[] = []
   private filtertext;
-  private fy: number;
 
   // agGrid
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -37,6 +48,8 @@ export class AllUfrsComponent implements OnInit {
 
   @Input() urlPath;
   @Input() ufrFilter: UFRFilter;
+  @Input() phaseType: PhaseType;
+  @Input() fy: number;
 
   private frameworkComponents:any = {
     simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent
@@ -48,10 +61,10 @@ export class AllUfrsComponent implements OnInit {
                private orgSvc: OrganizationService,
                private router: Router,
                private programAndPrService: ProgramAndPrService,
-               private cycleUtils: CycleUtils,
+               private currentPhase: CurrentPhase,
                private exeService: ExecutionService) {}
 
-  async ngOnInit() {
+  async ngOnChanges() {
 
     this.user = await this.userUtils.user().toPromise();
     await this.initProgrammyIdToFullName();
@@ -60,13 +73,6 @@ export class AllUfrsComponent implements OnInit {
     organizations.forEach(org => {
       this.orgMap[org.id] = org.abbreviation;
     });
-    if(!this.urlPath) {
-      let execution = (await this.exeService.getByCommunityId(this.user.currentCommunityId, Execution.StatusEnum.CREATED).toPromise()).result;
-      this.fy = execution[0].fy
-    } else {
-      let pom = (await this.cycleUtils.currentPom().toPromise());
-      this.fy = pom.fy
-    }
 
     this.setAgGridColDefs();
     this.populateRowData();
@@ -246,7 +252,7 @@ export class AllUfrsComponent implements OnInit {
       }
 
       let row = {
-        "UFR #": new SimpleLink( this.urlPath, ufr.id, this.ufrNumber(ufr) ),
+        "UFR #": new SimpleLink( this.urlPath + '/' + this.phaseType.toLowerCase(), ufr.id, this.ufrNumber(ufr) ),
         "UFR Name": ufr.ufrName,
         "Prog Id": progId,
         "Status": ufr.ufrStatus,

@@ -1,0 +1,86 @@
+<j-header></j-header>
+<div class="row main-content">
+  <div class="col-12">
+    <div class="row mb-4">
+      <div class="col-7">
+        <span class="h5">Execution Phase - Import Actuals</span>
+      </div>
+      <div class="col-5">
+        <span class="pull-right">
+          <button class="btn btn-primary" (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Import</button>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <fieldset>
+          <legend>GFEBS</legend>            
+          <div class="row">
+            <div class="col-4">
+              <label>Select location of the GFEBS to be uploaded:</label>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-4">
+              <div class="input-group">
+                <input type="text" 
+                  class="form-control form-input mr-1" 
+                  placeholder="Choose file"
+                  name="uploadname"
+                  [ngModel]="gfebsfile?.name" 
+                  readonly>
+                  <span class="input-group-btn">
+                    <span class="btn btn-secondary btn-file">
+                      Browse… 
+                      <input type="file" 
+                      name="file" accept="*.xlsx" 
+                      (change)="handleFileInput($event.target.files, 'GFEBS')">
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <import-acutals-table [data]='oldgfebs'></import-acutals-table>
+              </div>
+            </div>
+          </fieldset>
+    
+          <fieldset>
+            <legend>DAI</legend>
+            <div class="row">
+              <div class="col-4">
+                <label>Select location of the DAI to be uploaded:</label>
+              </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-4">
+                <div class="input-group">
+                  <input type="text" 
+                    class="form-control form-input mr-1" 
+                    placeholder="Choose file"
+                    name="uploadname"
+                    [ngModel]="daifile?.name" 
+                    readonly>
+                    <span class="input-group-btn">
+                      <span class="btn btn-secondary btn-file">
+                        Browse… 
+                        <input type="file" 
+                        name="file" accept="*.xlsx" 
+                        (change)="handleFileInput($event.target.files, 'DAI')">
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+             <div class="row">
+               <div class="col-12">
+                <import-acutals-table [data]='olddai'></import-acutals-table>
+               </div>
+             </div>
+            </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>

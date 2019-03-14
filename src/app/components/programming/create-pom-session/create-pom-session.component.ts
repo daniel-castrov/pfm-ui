@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { GridOptions, ColDef } from 'ag-grid';
-import { HeaderComponent } from '../../header/header.component';
 import { UserUtils } from '../../../services/user.utils';
 import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
 import { ProgramAndPrService } from '../../../services/program-and-pr.service';
@@ -16,7 +15,8 @@ import {
   Pom,
   POMService,
   Program,
-  TOA
+  TOA,
+  PBService
 } from '../../../generated';
 import { Notify } from "../../../utils/Notify";
 import { CurrentPhase } from "../../../services/current-phase.service";
@@ -29,8 +29,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class CreatePomSessionComponent implements OnInit {
-
-  @ViewChild(HeaderComponent) header: HeaderComponent;
   @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
   @ViewChild(GoogleChartComponent) comchartTwo: GoogleChartComponent;
   @ViewChild('content') content: ElementRef;
@@ -74,6 +72,7 @@ export class CreatePomSessionComponent implements OnInit {
   tooltipSubToaID;
   fyComToolVal;
 
+
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
     private pomsvc: POMService,
@@ -82,7 +81,8 @@ export class CreatePomSessionComponent implements OnInit {
     private router: Router,
     private globalsvc: UserUtils,
     private programAndPrService: ProgramAndPrService,
-    private modalService: NgbModal) {
+    private pbService: PBService,
+    private modalService: NgbModal){
 
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -221,17 +221,11 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   // a callback for determining if a ROW is editable
-  private shouldEdit(params) {
-    if (this.pomIsOpen) {
-      if (params.data.orgid === this.community.abbreviation + ' TOA') {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-
-    return params.node.rowPinned ? false : true;
+  private shouldEdit ( params ){
+    if ( this.pomIsOpen ) {
+      if ( params.data.orgid === this.community.abbreviation+' TOA' )  return true;
+      else return false;
+    } else return params.node.rowPinned ? false : true;
   }
 
   // helper for currency formatting
@@ -247,10 +241,10 @@ export class CreatePomSessionComponent implements OnInit {
 
     this.globalsvc.user().subscribe(user => {
       forkJoin([this.communityService.getById(user.currentCommunityId),
-      this.orgsvc.getByCommunityId(user.currentCommunityId),
-      this.pomsvc.getByCommunityId(user.currentCommunityId),
-      this.currentPhase.budget(),
-      this.pomsvc.getToaSamples(user.currentCommunityId)
+        this.orgsvc.getByCommunityId(user.currentCommunityId),
+        this.pomsvc.getAll(),
+        this.currentPhase.budget(),
+        this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
 
         this.rowsCommunity = [];
@@ -359,7 +353,6 @@ export class CreatePomSessionComponent implements OnInit {
       }
     });
 
-
     this.originalFyplus4[this.community.id] = this.rowsCommunity[0][this.fy + 4];
     this.rowsOrgs.forEach(rowww => {
       this.originalFyplus4[rowww["orgid"]] = rowww[fy + 4];
@@ -420,33 +413,32 @@ export class CreatePomSessionComponent implements OnInit {
     }
   }
 
-  private getEppData() {
-
+  async getEppData() {
     forkJoin([
       this.eppsvc.getByCommunityId(this.community.id),
       this.programAndPrService.programsByCommunity(this.community.id),
-      this.programAndPrService.programRequests(this.budget.id),
+      this.pbService.getFinalLatest()
     ]).subscribe(data => {
 
       let alleppData: any[] = data[0].result;
       let programs: Program[] = data[1];
-      let prs: Program[] = data[2];
+      let prs:Program[] = data[2].result;
 
-      let fls: string[] = [];
-      prs.forEach(pr => {
-        if (pr.type != "GENERIC") {
-          pr.fundingLines.forEach(fl => {
-            let flId: string = pr.shortName + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
-            fls.push(flId);
+      let fls:string[] = [];
+      prs.forEach( pr => {
+        if ( pr.type != "GENERIC" ){
+          pr.fundingLines.forEach( fl => {
+            let flId:string = pr.shortName + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
+            fls.push( flId );
           });
         }
       });
 
-      let eppData: any[] = [];
-      let eppYear: number = this.fy + 4;
-      alleppData.forEach(epp => {
-        let eppId: string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
-        if (epp.fySums[eppYear] > 0 && fls.includes(eppId)) {
+      let eppData:any[] = [];
+      let eppYear:number = this.fy+4;
+      alleppData.forEach( epp => {
+        let eppId:string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
+        if ( epp.fySums[eppYear] > 0 && fls.includes(eppId) ){
           eppData.push(epp);
         }
       });
@@ -492,7 +484,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted = true;
     var transfer: Pom = this.buildTransfer();
 
-    this.pomsvc.createPom(this.community.id, this.fy, transfer, this.budget.finalPbId, this.useEpp).subscribe(
+    this.pomsvc.createPom( this.community.id, this.fy, transfer, this.useEpp  ).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);

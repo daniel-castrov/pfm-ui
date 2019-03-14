@@ -1,5 +1,4 @@
 import { UfrUfrTabComponent } from './components/ufr/ufr-view/ufr-ufr-tab/ufr-ufr-tab.component';
-import { CycleUtils } from './services/cycle.utils';
 import { AllUfrsComponent } from './components/ufr/ufr-search/all-ufrs/all-ufrs.component';
 import { TagsService } from './services/tags.service';
 import { UserUtils } from './services/user.utils';
@@ -27,7 +26,7 @@ import { environment } from '../environments/environment'
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 
-// COMPONENTS 
+// COMPONENTS
 import { AboutComponent } from './components/about/about.component';
 import { AboutPrivateComponent } from './components/about-private/about-private.component';
 import { AccessChangeApprovalComponent } from './components/user-management/approval-role/role-approval.component';
@@ -49,7 +48,7 @@ import { FilterComponent } from './components/filter/filter.component';
 import { FundsTabComponent } from './components/programming/program-request/funds-tab/funds-tab.component';
 import { FundsUpdateComponent } from './components/execution/funds-update/funds-update.component';
 import { GraphsTabComponent } from './components/execution/graphs-tab/graphs-tab.component';
-import { HeaderComponent } from './components/header/header.component';
+import { JHeaderComponent } from './components/header/j-header/j-header.component';
 import { HeaderStrangerComponent } from './components/header/header-stranger/header-stranger.component';
 import { HeaderUserComponent } from './components/header/header-user/header-user.component';
 import { HomeComponent } from './components/home/home.component';
@@ -63,7 +62,7 @@ import { ManageUsersComponent } from './components/user-management/manage-users/
 import { MyCommunitiesComponent } from './components/user-management/my-communities/my-communities.component';
 import { MyRolesComponent } from './components/user-management/my-roles/my-roles.component';
 import { NoAccessComponent } from './components/error/no-access/no-access.component';
-import { NoAccessInterceptor } from './components/interceptors/noAccessInterceptor.component';
+import { ErrorHandlingInterceptor } from './components/interceptors/errror-handling-interceptor.component';
 import { NotFoundComponent } from './components/error/not-found/not-found.component';
 import { NotImplementedComponent }  from './components/not-implmented/not-implemented.component';
 import { OeUpdateComponent } from './components/execution/oe-update/oe-update.component';
@@ -122,6 +121,7 @@ import { ElevationService } from './services/elevation.component';
 import { HeaderOpenComponent } from './components/header/header-open/header-open.component';
 import { POMService } from './generated/api/pOM.service';
 import { BudgetService } from './generated/api/budget.service';
+import { RdteDataService } from './generated/api/rdteData.service';
 import { PRService } from './generated/api/pR.service';
 import { PBService } from './generated/api/pB.service';
 import { UFRsService } from './generated/api/uFRs.service';
@@ -148,7 +148,8 @@ import {
   OandEService,
   SpendPlanService,
   BudgetFundingLinesService,
-  PrChangeNotificationsService
+  PrChangeNotificationsService,
+  BESService
 } from './generated';
 import { AutoValuesService } from './components/programming/program-request/funds-tab/AutoValues.service';
 import { ExecutionLineTableComponent } from './components/execution/execution-line-table/execution-line-table.component';
@@ -222,13 +223,20 @@ import {Authorization} from "./services/authorization";
 import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
 import {CreateBudgetComponent} from "./components/budget/create-budget/create-budget.component";
 import {UfrYoeSummaryComponent} from "./components/ufr/ufr-yoe/ufr-yoe-summary.component";
-import {BudgetScenariosComponent} from "./components/budget/budget-scenarios/budget-scenarios.component";
-import { EditBudgetScenarioComponent } from './components/budget/edit-budget-scenario/edit-budget-scenario.component';
-import { TitleTabComponent } from './components/budget/edit-budget-scenario/title-tab/title-tab.component';
-import { OverviewTabComponent } from './components/budget/edit-budget-scenario/overview-tab/overview-tab.component';
-import { R1TabComponent } from './components/budget/edit-budget-scenario/r1-tab/r1-tab.component';
-import { ScenarioSelectorComponent } from './components/budget/edit-budget-scenario/scenario-selector/scenario-selector.component';
 import { FundingRateRenderer } from './components/renderers/funding-rate-renderer/funding-rate-renderer.component';
+import {CopyBudgetComponent} from "./components/budget/copy-budget/copy-budget.component";
+import { EditBudgetDetailsComponent } from './components/budget/edit-budget-details/edit-budget-details.component';
+import { TitleTabComponent } from './components/budget/edit-budget-details/title-tab/title-tab.component';
+import { OverviewTabComponent } from './components/budget/edit-budget-details/overview-tab/overview-tab.component';
+import { R1TabComponent } from './components/budget/edit-budget-details/r1-tab/r1-tab.component';
+import { ScenarioSelectorComponent } from './components/budget/edit-budget-details/scenario-selector/scenario-selector.component';
+import {ServerErrorComponent} from "./components/error/server-error/server-error.component";
+import { R2TabComponent } from './components/budget/edit-budget-details/r2-tab/r2-tab.component';
+import { R2aTabComponent } from './components/budget/edit-budget-details/r2a-tab/r2a-tab.component';
+import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
+import {AppHeaderComponent} from "./components/header/app-header/app-header.component";
+import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
+import {ExecutionCreationService} from "./components/execution/create-execution-phase/execution-creation.service";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -247,11 +255,12 @@ const appRoutes: Routes = [
   {path:'community-leave/:requestId', component:CommunityLeaveComponent},
   {path:'contact', component:ContactComponent},
   {path:'create-execution-phase', component:CreateExecutionPhaseComponent},
+  {path:'import-execution-data', component:ImportActualsComponent},
   {path:'create-new-pom', component: CreatePomSessionComponent},
   {path:'update-pom-toas', component: CreatePomSessionComponent},
   {path:'filter', component:FilterComponent},
   {path:'funds-update', component:FundsUpdateComponent},
-  {path:'header', component:HeaderComponent},
+  {path:'header', component:JHeaderComponent},
   {path:'home', component:HomeComponent},
   {path:'manage-communities', component:ManageCommunitiesComponent},
   {path:'manage-users/:id', component:ManageUsersComponent},
@@ -259,6 +268,7 @@ const appRoutes: Routes = [
   {path:'my-roles', component:MyRolesComponent},
   {path:'no-access', component:NoAccessComponent},
   {path:'not-found', component:NotFoundComponent},
+  {path:'server-error', component:ServerErrorComponent},
   {path:'not-implemented', component:NotImplementedComponent},
   {path:'oe-update', component:OeUpdateComponent},
   {path:'open-execution', component: OpenExecutionComponent},
@@ -298,18 +308,18 @@ const appRoutes: Routes = [
   {path:'ufr-search', component: UfrSearchComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-approval-summary', component: UfrApprovalSummaryComponent, canActivate:[CanActivateAuth]},
   {path:'ufr-yoe-summary', component: UfrYoeSummaryComponent, canActivate:[CanActivateAuth]},
-  {path:'ufr-approval-detail/:id', component: UfrApprovalDetailComponent},
-  {path:'ufr-view/:id', component: UfrViewComponent},
-  {path:'ufr-view/create/:ufr', component: UfrViewComponent},
+  {path:'ufr-approval-detail/:phaseType/:id', component: UfrApprovalDetailComponent},
+  {path:'ufr-view/:phaseType/:id', component: UfrViewComponent},
+  {path:'ufr-view/:phaseType', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent, canActivate:[CanActivateAuth]},
   {path:'worksheet-viewing', component: WorksheetViewingComponent, canActivate:[CanActivateAuth]},
   {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
   {path:'library', component: LibraryComponent},
   {path:'create-budget', component: CreateBudgetComponent, canActivate:[CanActivateAuth]},
-  {path:'budget-scenarios', component: BudgetScenariosComponent, canActivate:[CanActivateAuth]},
-  {path:'edit-budget-scenario', component: EditBudgetScenarioComponent, canActivate:[CanActivateAuth]}
-  
+  {path:'copy-budget', component: CopyBudgetComponent, canActivate:[CanActivateAuth]},
+  {path:'edit-budget-details', component: EditBudgetDetailsComponent, canActivate:[CanActivateAuth]}
+
 
 ];
 
@@ -340,12 +350,15 @@ const appRoutes: Routes = [
     FundsUpdateComponent,
     FyPipe,
     GraphsTabComponent,
-    HeaderComponent,
+    JHeaderComponent,
+    AppHeaderComponent,
     HeaderOpenComponent,
     HeaderStrangerComponent,
     HeaderUserComponent,
     HomeComponent,
     IdAndNameComponent,
+    ImportActualsComponent,
+    ImportAcutalsTableComponent,
     JustificationTabComponent,
     LoginComponent,
     MamageCommunityDetailsComponent,
@@ -362,6 +375,7 @@ const appRoutes: Routes = [
     NoCurrentCommunityMessageComponent,
     NoAccessComponent,
     NotFoundComponent,
+    ServerErrorComponent,
     NotImplementedComponent,
     OeUpdateComponent,
     OnlyDigitsDirective,
@@ -477,12 +491,14 @@ const appRoutes: Routes = [
     PrChangeNotificationsComponent,
     PomAnalysisComponent,
     CreateBudgetComponent,
-    BudgetScenariosComponent,
-    EditBudgetScenarioComponent,
+    CopyBudgetComponent,
+    EditBudgetDetailsComponent,
     TitleTabComponent,
     OverviewTabComponent,
     R1TabComponent,
-    ScenarioSelectorComponent
+    ScenarioSelectorComponent,
+    R2TabComponent,
+    R2aTabComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -549,13 +565,14 @@ const appRoutes: Routes = [
     ProgramsService,
     UserUtils,
     CurrentPhase,
-    CycleUtils,
     RequestsService,
     POMService,
     BudgetService,
+    RdteDataService,
     WorksheetService,
     PRService,
     PBService,
+    BESService,
     UFRsService,
     EppService,
     ExecutionService,
@@ -567,8 +584,9 @@ const appRoutes: Routes = [
     PrChangeNotificationsService,
     CanActivateAuth,
     Authorization,
+    ExecutionCreationService,
     { provide: BASE_PATH, useValue: environment.apiUrl },
-    { provide: HTTP_INTERCEPTORS, useClass: NoAccessInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

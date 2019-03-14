@@ -1,15 +1,25 @@
-import {Component, Input, ViewEncapsulation, OnInit} from '@angular/core';
-import { Program, FundingLine, POMService, PBService, PRService, Pom, IntMap, Variant, ServiceBranch, User, PB, RolesPermissionsService} from '../../../../generated'
-import { UserUtils } from '../../../../services/user.utils';
-import { Notify } from '../../../../utils/Notify';
+import {Component, Input, OnInit} from '@angular/core';
+import {
+  FundingLine,
+  IntMap,
+  PBService,
+  Pom,
+  POMService,
+  Program,
+  PRService,
+  RolesPermissionsService,
+  ServiceBranch,
+  User,
+  Variant
+} from '../../../../generated'
+import {UserUtils} from '../../../../services/user.utils';
+import {Notify} from '../../../../utils/Notify';
 
 import {DataRow} from "./DataRow";
 import {PhaseType} from "../../select-program-request/UiProgramRequest";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {ColumnApi, GridApi} from "ag-grid";
 import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import {GridType} from "../funds-tab/GridType";
-import {NameUtils} from "../../../../utils/NameUtils";
 
 @Component({
   selector: 'variants-tab',
@@ -93,8 +103,8 @@ export class VariantsTabComponent implements OnInit {
 
   async initDataRows(){
 
-    const pb = (await this.pbService.getFinalLatest().toPromise()).result;
-    const pbPr: Program = (await this.prService.getByContainerAndName(pb.id, NameUtils.urlEncode(this.current.shortName)).toPromise()).result;
+    const pbPrograms: Program[] = (await this.pbService.getFinalLatest().toPromise()).result;
+    const pbPr: Program = pbPrograms.find(program => program.shortName === name);
 
     this.fund.variants.forEach(variant => {
       let data: Array<DataRow> = [];

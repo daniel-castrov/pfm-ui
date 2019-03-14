@@ -1,4 +1,4 @@
-<j-header></j-header>
+<app-header></app-header>
 <ng-template #updateidline let-line="line">
   {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
@@ -17,20 +17,20 @@
     <div class="row mb-3">
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
-          <label class="mr-2">Toa:</label>
-          <span class="font-weight-bold">{{current.line.toa}}</span>
+          <label class="mr-2">TOA:</label>
+          <span class="font-weight-bold">{{ currencyFormat(current.line.toa) }}</span>
         </span>
       </div>
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
           <label class="mr-2">Released:</label>
-          <span class="font-weight-bold">{{current.line.released}}</span>
+          <span class="font-weight-bold">{{ currencyFormat(current.line.released) }}</span>
         </span>
       </div>
       <div class="col-md-6 col-lg-2">
         <span class="form-group">
-          <label class="mr-2">Withheld:</label>
-          <span class="font-weight-bold">{{current.line.withheld}}</span>
+          <label class="mr-2">Withhold:</label>
+          <span class="font-weight-bold">{{ currencyFormat(current.line.withheld) }}</span>
         </span>
       </div>
     </div>

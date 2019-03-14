@@ -1,14 +1,14 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Request } from '../../../services/request';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { Injectables } from '../../../services/injectables';
-import { RequestsService } from '../../../services/requests.service';
-import { AgGridNg2 } from 'ag-grid-angular';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Request} from '../../../services/request';
+import {Injectables} from '../../../services/injectables';
+import {RequestsService} from '../../../services/requests.service';
+import {AgGridNg2} from 'ag-grid-angular';
 import {PrChangeNotification, PrChangeNotificationsService, RolesPermissionsService} from "../../../generated";
-import { Notify } from '../../../utils/Notify';
-import {FormatterUtil} from "../../../utils/formatterUtil";
+import {Notify} from '../../../utils/Notify';
+import {AppHeaderComponent} from "../../header/app-header/app-header.component";
+
+class HeaderComponent {
+}
 
 @Component({
   selector: 'approve-requests',
@@ -17,7 +17,7 @@ import {FormatterUtil} from "../../../utils/formatterUtil";
 })
 export class ApproveRequestsComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header: HeaderComponent;
+  @ViewChild(AppHeaderComponent) header: AppHeaderComponent;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   requests: Request[];

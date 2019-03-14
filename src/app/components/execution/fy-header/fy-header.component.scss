@@ -21,9 +21,20 @@ $yellow: #fec001;
   margin: 3px 6px;
   border-radius: 50%;
   border: none;
+
   &:hover {
     opacity: .5;
- }
+  }
+  &:disabled { 
+    // disabled buttons and cursor behavior
+    opacity: .5;
+    cursor: not-allowed;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+  &:disabled:hover {
+      opacity: .5;
+      transform: translateY(0);
+    }
 
   .fa {
     color: $white;
@@ -34,5 +45,6 @@ $yellow: #fec001;
       opacity: .9;
     }
   }
-}
+}  
+
 

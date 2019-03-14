@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import { Router } from '@angular/router'
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component'
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-
-import { ExecutionService, Execution, MyDetailsService, ExecutionLine, OandEMonthly, OandEService } from '../../../generated'
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ProgramsService } from '../../../generated/api/programs.service';
-import { ProgramCellRendererComponent } from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {Component, OnInit, ViewChild} from '@angular/core'
+import {Router} from '@angular/router'
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
+import {
+  Execution,
+  ExecutionLine,
+  ExecutionService,
+  MyDetailsService,
+  OandEMonthly,
+  OandEService
+} from '../../../generated'
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ProgramsService} from '../../../generated/api/programs.service';
+import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
 
 
 @Component({
@@ -19,7 +22,6 @@ import { ProgramCellRendererComponent } from '../../renderers/program-cell-rende
 })
 
 export class OeUpdateComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private programs: Map<string, string> = new Map<string, string>();
@@ -59,7 +61,7 @@ export class OeUpdateComponent implements OnInit {
           cellClass: ['ag-cell-light-grey', 'ag-link'],
         },
         {
-          headerName: 'Appn.',
+          headerName: 'APPN',
           headerTooltip: 'Appropriation',
           field: 'el.appropriation',
           cellClass: ['ag-cell-light-grey'],
@@ -80,8 +82,8 @@ export class OeUpdateComponent implements OnInit {
           maxWidth: 92
         },
         {
-          headerName: 'OpAgency',
-          headerTooltip: 'OpAgency',
+          headerName: 'OA',
+          headerTooltip: 'OA',
           field: 'el.opAgency',
           cellClass: ['ag-cell-light-grey'],
           maxWidth: 92
@@ -153,8 +155,8 @@ export class OeUpdateComponent implements OnInit {
     my.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
         my.progsvc.getIdNameMap(),
-        my.exesvc.getByCommunityId(deets.result.currentCommunityId),
-        //my.exesvc.getByCommunityId(deets.result.currentCommunityId, 'CREATED'),
+        my.exesvc.getAll(),
+        //my.exesvc.getAll('CREATED'),
       ]).subscribe(data => {
         my.programs = new Map<string, string>();
         Object.getOwnPropertyNames(data[0].result).forEach(mrid => {

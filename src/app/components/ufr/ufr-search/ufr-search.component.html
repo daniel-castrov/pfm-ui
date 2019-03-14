@@ -1,28 +1,32 @@
-<j-header></j-header>
+<app-header></app-header>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="header.isAuthenticated">
+  <div class="row main-content">
     <div class="col-md-12">
       <div class="row">
         <div class="col-12 mb-2">
-          <span class="h5 mr-sm-4">Summary of Unfunded Requirements Requests:</span>
+          <span class="h5 mr-sm-4">Summary of Unfunded Requirements Requests for {{pom.fy|FY:'POM'}}</span>
         </div>
       </div>
-      <div class="row">
+      <div *ngIf="pom?.status !== 'RECONCILIATION'"  class="row">
         <div class="col-6">
-          <new-ufr></new-ufr>
+          <new-ufr [phaseType]="PhaseType.POM" [containerId]="pom?.id"></new-ufr>
         </div>
         <div class="col-6">
           <div class="filter-columns pull-right">
-            <input id="filtertestbox" type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
-              [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+             <input  type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
+               [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
           </div>
         </div>
-
       </div>
-      <br/>
+      <div *ngIf="pom?.status === 'RECONCILIATION'"  class="row mb-2">
+        <div class="col-3">
+          <input type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
+                 [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+        </div>
+      </div>
       <div class="row">
         <div class="col-12">
-          <all-ufrs #allufrs [urlPath]="'ufr-view'" [ufrFilter]="ufrFilter" [mapCycleIdToFy]="mapCycleIdToFy"></all-ufrs>
+          <all-ufrs #allufrs [phaseType]="PhaseType.POM" [fy]="pom?.fy" [urlPath]="'ufr-view'" [ufrFilter]="ufrFilter" [mapCycleIdToFy]="mapCycleIdToFy"></all-ufrs>
         </div>
       </div>
     </div>

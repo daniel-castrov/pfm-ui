@@ -1,12 +1,11 @@
-import { CycleUtils } from './../../../services/cycle.utils';
-import { NewProgramComponent } from './new-program-request/new-program-request.component';
-import { ProgramAndPrService } from '../../../services/program-and-pr.service';
-import { UserUtils } from '../../../services/user.utils';
-import { POMService } from '../../../generated/api/pOM.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {Pom, RestResult, Program, Budget, ProgramStatus} from '../../../generated';
+import {NewProgramComponent} from './new-program-request/new-program-request.component';
+import {ProgramAndPrService} from '../../../services/program-and-pr.service';
+import {UserUtils} from '../../../services/user.utils';
+import {POMService} from '../../../generated/api/pOM.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import { PBService, Pom, Program, RestResult, ProgramStatus} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
-import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
+import { GoogleChartComponent } from 'ng2-google-charts';
 import { UiProgramRequest } from './UiProgramRequest';
 
 import {CurrentPhase} from "../../../services/current-phase.service";
@@ -17,15 +16,14 @@ import {CurrentPhase} from "../../../services/current-phase.service";
   styleUrls: ['./select-program-request.component.scss']
 })
 export class SelectProgramRequestComponent implements OnInit {
-
   @ViewChild(NewProgramComponent) newProgramComponent: NewProgramComponent;
+  @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
+
   private currentCommunityId: string;
   public pom: Pom;
-  public pomPrograms: Program[];
-  public budget: Budget;
-  public pbPrograms: Program[];
+  public pomPrograms: Program[] = [];
+  public pbPrograms: Program[] = [];
   public thereAreOutstandingPRs: boolean;
-  @ViewChild(GoogleChartComponent) comchart: GoogleChartComponent;
   private chartdata;
   private charty;
   private rowsData: any[];
@@ -34,7 +32,7 @@ export class SelectProgramRequestComponent implements OnInit {
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private cycleUtils: CycleUtils) {}
+              private pbService: PBService ) {}
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -52,15 +50,14 @@ export class SelectProgramRequestComponent implements OnInit {
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
-      this.pom = await this.cycleUtils.currentPom().toPromise();
+      this.pom = await this.currentPhase.pom().toPromise();
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
       resolve();
     });
   }
 
   async initPbPrs() {
-    this.budget = await this.currentPhase.budget().toPromise();
-    this.pbPrograms = (await this.programAndPrService.programRequests(this.budget.finalPbId));
+    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
   }
 
   onDeletePr() {

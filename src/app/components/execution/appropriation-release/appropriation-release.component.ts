@@ -1,16 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import * as $ from 'jquery';
-
-// Other Components
-import { HeaderComponent } from '../../header/header.component';
-import { ExecutionService } from '../../../generated/api/execution.service'
-import { Execution } from '../../../generated/model/execution';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ExecutionEventData, ExecutionDropDown, ExecutionLine } from '../../../generated';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
-import { ExecutionLineFilter } from '../model/execution-line-filter';
-import { ExecutionLineTableComponent } from '../execution-line-table/execution-line-table.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ExecutionService} from '../../../generated/api/execution.service'
+import {Execution} from '../../../generated/model/execution';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ExecutionDropDown, ExecutionEventData, ExecutionLine} from '../../../generated';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
+import {ExecutionLineFilter} from '../model/execution-line-filter';
+import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
 
 declare const $: any;
 declare const jQuery: any;
@@ -22,7 +18,6 @@ declare const jQuery: any;
 })
 
 export class AppropriationReleaseComponent implements OnInit {
-  @ViewChild(HeaderComponent) header;
   @ViewChild(ExecutionLineTableComponent) table;
   private updatelines: ExecutionLineWrapper[] = [];
   private phase: Execution;

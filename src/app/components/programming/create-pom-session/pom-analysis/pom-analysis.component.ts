@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Pom, PRService, Program, Budget } from '../../../../generated';
+import { Pom, PRService, Program, Budget, PBService } from '../../../../generated';
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
@@ -14,7 +14,7 @@ export class PomAnalysisComponent {
   @ViewChild('entrytable') private agGrid: AgGridNg2;
 
   private _fy: number;
-  private _pb: Budget;
+  private _budget: Budget;
   private _pom: Pom;
   private _baseline: boolean = true;
   private _orgmap: Map<string, string> = new Map<string, string>();
@@ -52,12 +52,12 @@ export class PomAnalysisComponent {
     this.regraph();
   }
 
-  @Input() set pb(p: Budget) {
-    this._pb = p;
+  @Input() set budget(p: Budget) {
+    this._budget = p;
 
     if (p) {
-      this.prsvc.programRequests(this.pb.finalPbId).then(ps => {
-        this.pbprs = ps;
+      this.pbsvc.getFinalLatest().subscribe( ps => {
+        this.pbprs = ps.result;
         this.regraph();
       });
     }
@@ -78,8 +78,8 @@ export class PomAnalysisComponent {
     return this._fy;
   }
 
-  get pb(): Budget {
-    return this._pb;
+  get budget(): Budget {
+    return this._budget;
   }
 
   get pom(): Pom {
@@ -94,7 +94,7 @@ export class PomAnalysisComponent {
     return this._baseline;
   }
 
-  constructor(private prsvc: ProgramAndPrService) {
+  constructor(private prsvc: ProgramAndPrService, private pbsvc: PBService) {
   }
 
   regraph() {

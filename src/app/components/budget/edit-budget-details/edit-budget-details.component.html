@@ -1,0 +1,29 @@
+<app-header></app-header>
+<div class="container-fluid">
+   <div class="row main-content mb-2">
+      <div class="col-12">
+        <scenario-selector [parent]="this"></scenario-selector>
+      </div>
+    </div>
+    <div *ngIf="selectedScenario" class="row  main-content">
+      <div class="col-12">
+        <tabset class="program-tab-style" role="tablist">
+          <tab heading="Title" id="tab1" role="tablist" active="true">
+            <title-tab [rdteData]="rdteData"></title-tab>
+          </tab>
+          <tab heading="TOC/Overview" id="tab2" role="tablist">
+            <overview-tab [rdteData]="rdteData"></overview-tab>
+          </tab>
+          <tab heading="R-1" id="tab3">
+            <r1-tab [rdteData]="rdteData"></r1-tab>
+          </tab>
+          <tab heading="R-2" id="tab3">
+            <r2-tab [rdteData]="rdteData"></r2-tab>
+          </tab>
+          <tab heading="R-2A" id="tab3">
+            <r2a-tab [rdteData]="rdteData"></r2a-tab>
+          </tab>
+        </tabset>
+      </div>
+    </div>  
+</div>

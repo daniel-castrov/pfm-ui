@@ -9,6 +9,11 @@ $medium-grey: #dddddd;
 $dark-grey: #848282;
 $dark-green: #61bb69;
 
+
+.ag-cell-label-container{
+  background: #24527b;
+}
+
 fieldset {
   padding: 20px;
   min-height: 70px;
@@ -48,6 +53,14 @@ fieldset {
       opacity: .9;
     }
   }
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item:disabled {
+  cursor: not-allowed;
 }
 
 .dropdown-width {

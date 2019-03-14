@@ -1,15 +1,13 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ExecutionService, ProgramsService, ExecutionEvent, ExecutionLine, ExecutionDropDown, Execution, ExecutionEventData } from '../../../generated';
-import { ActivatedRoute, UrlSegment } from '../../../../../node_modules/@angular/router';
-import { forkJoin } from '../../../../../node_modules/rxjs/observable/forkJoin';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Execution, ExecutionDropDown, ExecutionEvent, ExecutionService, ProgramsService} from '../../../generated';
+import {ActivatedRoute, UrlSegment} from '../../../../../node_modules/@angular/router';
+import {forkJoin} from '../../../../../node_modules/rxjs/observable/forkJoin';
+import {FormatterUtil} from '../../../utils/formatterUtil';
+import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
+import {GridOptions} from 'ag-grid';
+import {AgGridNg2} from 'ag-grid-angular';
 
-// Other Components
-import { HeaderComponent } from '../../header/header.component'
-import { ExecutionLineWrapper } from '../model/execution-line-wrapper';
-import { GridOptions } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-
-import { TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component'
+import {TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component'
 
 @Component({
   selector: 'app-execution-line-details',
@@ -19,7 +17,6 @@ import { TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-d
 })
 export class ExecutionLineDetailsComponent implements OnInit {
 
-  @ViewChild(HeaderComponent) header;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
 
   private current: ExecutionLineWrapper;
@@ -117,6 +114,12 @@ export class ExecutionLineDetailsComponent implements OnInit {
     return usdFormate.format(value.value);
   }
 
+  currencyFormat(x:number) :string {
+    
+    let r:string = FormatterUtil.currencyFormatter(x, 2, false);
+    return r;
+  }
+
 
   ngOnInit() {
     var my: ExecutionLineDetailsComponent = this;
@@ -165,7 +168,7 @@ export class ExecutionLineDetailsComponent implements OnInit {
           }
 
           evarr.push({
-            date: new Date(x.timestamp),
+            date: new Date(x.timestamp.year, x.timestamp.monthValue-1, x.timestamp.dayOfMonth),
             category: x.eventType,
             type: my.dropdowns.filter(dd => dd.subtype === x.value.type)[0].name,
             amt: amt,

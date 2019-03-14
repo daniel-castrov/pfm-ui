@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-6">
+    <label>Select Logo:</label>
+ 
+    <file-upload [isImageThumbnail]="true"
+      [imagePath]="logoImagePath"
+      [area]="rdteData.fileArea"
+      [disabled]='readonly'
+      (fileUploadEvent)="onlogoUploaded($event)">
+    </file-upload>
+  </div>
+</div>
