@@ -39,6 +39,12 @@
                 <button (click)="open(content)" class='btn btn-sm btn-primary'>
                   <i class="fa fa-edit" aria-hidden="true"></i> Change Values
                 </button>
+                <button (click)="scroll(-1)" class='btn btn-sm btn-primary'>
+                  <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                </button>
+                <button (click)="scroll(1)" class='btn btn-sm btn-primary'>
+                  <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </button>
               </div>
             </span>
           </div>
@@ -58,7 +64,7 @@
                   <label for="sel1">Select Year:</label>
                   <select class="form-control toa-select-edit" [(ngModel)]='toayear' name="yearselector">
                     <option selected></option>
-                    <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+                    <option *ngFor="let year of pomyears" [ngValue]="year">{{year}}</option>
 
                   </select>
                   <input name="first" [(ngModel)]="toaForYear" type="number"
@@ -97,7 +103,7 @@
                 <label for="sel1">Select Organization:</label>
                 <select class="form-control toa-select-edit" [(ngModel)]='subOrgId'>
                   <option></option>
-                  <option *ngFor="let subtoa of suborgMap|mapAsList" [ngValue]="subtoa.key">{{subtoa.value}}</option>
+                  <option *ngFor="let subtoa of toaorgs|mapAsList" [ngValue]="subtoa.key">{{subtoa.value}}</option>
                 </select>
                 <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit"
                   aria-label="Text input with dropdown button" type="number">
@@ -151,9 +157,14 @@
       </div>
       <div class="row" *ngIf='selectedyear'>
         <div class="col-12 agtoatable">
-          <app-pom-analysis [fy]='selectedyear' [budget]='budget' [pom]='pomData' [orgmap]='orgMap'
-            [commdata]='yeartoas' [baseline]='analysis_baseline' [readonly]='(pomIsCreated||pomIsOpen)'
-            (changes)='onAnalysis($event)'></app-pom-analysis>
+          <app-pom-analysis [fy]='selectedyear' 
+          [budget]='budget' 
+          [pom]='pomData' 
+          [orgmap]='orgMap'
+          [commdata]='yeartoas' 
+          [baseline]='analysis_baseline' 
+          [readonly]='(pomIsCreated||pomIsOpen)'
+          (changes)='onAnalysis($event)'></app-pom-analysis>
         </div>
       </div>
 

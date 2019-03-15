@@ -16,10 +16,10 @@ import {
   POMService,
   Program,
   TOA,
-  PBService
+  PBService,
+  BudgetService
 } from '../../../generated';
 import { Notify } from "../../../utils/Notify";
-import { CurrentPhase } from "../../../services/current-phase.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -36,9 +36,12 @@ export class CreatePomSessionComponent implements OnInit {
   private fy: number;
   private community: Community;
   private orgs: Organization[];
+  private toaorgs: Map<string,string> = new Map<string,string>();
   private budget: Budget;
+  // year->budget info mapping
+  private budgets: Map<number, Budget> = new Map<number, Budget>();
 
-  private orgMap: Map<string, string>;
+  private orgMap: Map<string, string> = new Map<string, string>();
   private originalFyplus4;
 
   private pomIsCreated: boolean;
@@ -47,32 +50,30 @@ export class CreatePomSessionComponent implements OnInit {
   private useEpp: boolean;
   private submitted: boolean;
 
-  private gridOptionsCommunity: GridOptions;
-  private rowsCommunity;
-  private rowsOrgs;
-
   private chartdata;
   private subchartdata;
   private pomData;
   private selectedyear: number;
   private analysis_baseline: boolean = true;
-  private yeartoas: any;
   
   private toayear: number;
-  private years: number[] = [];
+  private pomyears: number[] = [];
+  private scrollstartyear: number;
   private subOrgId: string;
   private pinnedRowCommunityBaseline: any[];
   private subchartIsBar: boolean = true;
 
+  private toainfo: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
+
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
     private pomsvc: POMService,
-    private currentPhase: CurrentPhase,
     private eppsvc: EppService,
     private router: Router,
     private globalsvc: UserUtils,
     private programAndPrService: ProgramAndPrService,
-    private pbService: PBService,
+    private pbsvc: PBService,
+    private budgetService: BudgetService,
     private modalService: NgbModal) {
 
     this.chartdata = {
@@ -89,32 +90,22 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.gridOptionsCommunity = {};
     this.myinit();
   }
 
   @Input() set toaForYear(val: number) {
-    this.rowsCommunity[0][this.toayear] = val;
+    if (this.toainfo.has(this.toayear)) {
+      this.toainfo.get(this.toayear).community.amount = val;
+    }
     this.resetCharts();
   }
 
   get toaForYear(): number {
-    return this.rowsCommunity[0][this.toayear];
-  }
-
-  // Initialize both grids
-  private initGrids(fy: number) {
-
-    this.gridOptionsCommunity = {
-      columnDefs: this.setAgGridColDefs("Community", fy),
-      gridAutoHeight: true,
-      suppressDragLeaveHidesColumns: true,
-      suppressMovableColumns: true,
-      onCellValueChanged: params => this.setDeltaRow(fy),
+    if (!this.toayear) {
+      return 0;
     }
+    return ( this.toainfo.get(this.toayear).community.amount || 0 );
   }
-
-
 
   open(content, toaAmt) {
     this.modalService.open(content, { centered: true, backdrop: false, backdropClass: 'tooltip-modal-backdrop', windowClass: 'tooltip-modal' }).result.then((result) => {
@@ -122,72 +113,6 @@ export class CreatePomSessionComponent implements OnInit {
     }, (reason) => {
 
     });
-  }
-  // Set similar column definitions for both grids
-  private setAgGridColDefs(column1Name: string, fy: number): any {
-
-    let colDefs = [];
-
-    var numbersOnly = function (p): boolean {
-      var myfy: number = Number.parseInt(p.colDef.field);
-      var raw = p.newValue;
-      var cleaned: string = p.newValue.replace(/[^0-9]/g, '');
-      var val: number = Number.parseInt(cleaned);
-      p.data[myfy] = val;
-      return true;
-    }
-
-    colDefs.push(
-      {
-        headerName: column1Name,
-        suppressMenu: true,
-        field: 'orgid',
-        width: 178,
-        editable: false,
-        valueGetter: params => this.orgName(params.data.orgid),
-        cellRenderer: params => '<strong>' + params.value + '</strong>',
-        cellClassRules: {
-          'ag-cell-footer-sum': params => {
-            return params.data.orgid == 'Delta'
-          }
-        }
-      });
-
-    for (var i = 0; i < 5; i++) {
-      colDefs.push(
-        {
-          headerName: "FY" + (fy + i - 2000),
-          type: "numericColumn",
-          suppressMenu: true,
-          field: (fy + i).toString(),
-          cellRenderer: params => this.negativeNumberRenderer(params),
-          valueSetter: p => numbersOnly(p),
-          cellClassRules: {
-            'ag-cell-edit': params => this.shouldEdit(params),
-            'ag-cell-footer-sum': params => {
-              return params.data.orgid == 'Delta'
-            }
-          }
-        });
-    }
-    colDefs.push(
-      {
-        headerName: "FY" + (fy - 2000) + "-" + "FY" + (fy + 4 - 2000),
-        type: "numericColumn",
-        suppressMenu: true,
-        field: 'total',
-        width: 120,
-        editable: false,
-        valueGetter: params => this.rowTotal(params.data, fy),
-        cellRenderer: params => '<i>' + this.negativeNumberRenderer(params) + '</i>',
-        cellClassRules: {
-          'ag-cell-footer-sum': params => {
-            return params.data.orgid == 'Delta'
-          }
-        }
-      });
-
-    return colDefs;
   }
 
   // A valueGetter for totaling a row
@@ -201,29 +126,7 @@ export class CreatePomSessionComponent implements OnInit {
 
   // A valueGetter for looking up an org name
   private orgName(id: string) {
-    if (null == this.orgMap.get(id)) {
-      return id;
-    } else {
-      return this.orgMap.get(id);
-    }
-  }
-
-  // a sinple CellRenderrer for negative numbers
-  private negativeNumberRenderer(params) {
-
-    if (params.value < 0) {
-      return '<span style="color: red;">' + this.formatCurrency(params) + '</span>';
-    } else {
-      return this.formatCurrency(params);
-    }
-  }
-
-  // a callback for determining if a ROW is editable
-  private shouldEdit(params) {
-    if (this.pomIsOpen) {
-      if (params.data.orgid === this.community.abbreviation + ' TOA') return true;
-      else return false;
-    } else return params.node.rowPinned ? false : true;
+    return ( this.orgMap.get(id) || id );
   }
 
   // helper for currency formatting
@@ -238,16 +141,15 @@ export class CreatePomSessionComponent implements OnInit {
   private myinit() {
     this.globalsvc.user().subscribe(user => {
       forkJoin([this.communityService.getById(user.currentCommunityId),
-      this.orgsvc.getByCommunityId(user.currentCommunityId),
-      this.pomsvc.getAll(),
-      this.currentPhase.budget(),
-      this.pomsvc.getToaSamples(user.currentCommunityId)
+        this.orgsvc.getByCommunityId(user.currentCommunityId),
+        this.pomsvc.getAll(),
+        this.budgetService.getAll(),
+        this.pomsvc.getToaSamples(user.currentCommunityId)
       ]).subscribe(data => {
 
-        this.rowsCommunity = [];
         this.orgs = [];
-        this.rowsOrgs = [];
-        this.orgMap = new Map<string, string>();
+        this.orgMap.clear();
+        this.budgets.clear();
         this.originalFyplus4 = {};
         this.pomIsCreated = false;
         this.pomIsOpen = false;
@@ -258,20 +160,28 @@ export class CreatePomSessionComponent implements OnInit {
         this.community = data[0].result;
         this.orgs = data[1].result;
         var poms: Pom[] = data[2].result;
-        this.budget = data[3];
+
+        var maxyear = Number.MIN_SAFE_INTEGER;
+        data[3].result.forEach(b => {
+          if (b.fy > maxyear) {
+            maxyear = b.fy;
+          }
+          this.budgets.set(b.fy, b);
+        });
+        this.budget = this.budgets.get(maxyear);
         var samplepom: Pom = data[4].result;
         this.fy = this.budget.fy + 1;
+        this.scrollstartyear = this.fy;
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
-        // console.log(this.orgMap);
-        this.years = [];
-        for (let i = 0; i < 5; i++) {
-          this.years.push(this.fy + i);
 
+        this.pomyears = [];
+        for (let i = 0; i < 5; i++) {
+          this.pomyears.push(this.fy + i);
         }
 
-        this.initGrids(this.fy);
+        console.log(this.budgets);
+
         this.setInitialGridValues(this.fy, poms, samplepom);
-        this.setDeltaRow(this.fy);
       });
     });
   }
@@ -300,176 +210,66 @@ export class CreatePomSessionComponent implements OnInit {
       : currentPom);
     this.pomData.fy = this.fy;
 
-    // BaseLine
-    let row = {}
-    row["orgid"] = this.community.abbreviation + " Baseline";
+    console.log(this.pomData);
+    this.toaorgs.clear();
+    var orgset: Set<string> = new Set<string>();
 
-    samplepom.communityToas.forEach((toa: TOA) => {
-      row[toa.year] = toa.amount;
-    });
-    for (i = 0; i < 5; i++) {
-      if (row[fy + i] == undefined) row[fy + i] = 0;
-    }
-    this.pinnedRowCommunityBaseline = [row];
-
-    // Community Toas
-    row = {}
-    row["orgid"] = this.community.abbreviation + " TOA";
-    this.pomData.communityToas.forEach((toa: TOA) => {
-      row[toa.year] = toa.amount;
-    });
-    for (i = 0; i < 5; i++) {
-      if (row[fy + i] == undefined) row[fy + i] = 0;
-    }
-    this.rowsCommunity = [row];
-
-    // Org TOAs
-    Object.keys(this.pomData.orgToas).forEach(key => {
-      var toamap: Map<number, number> = new Map<number, number>();
-
-      row = {};
-      let total = 0;
-      row["orgid"] = key;
-      this.pomData.orgToas[key].forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;
+    this.pomData.communityToas.filter(x => x.year >= fy).forEach(x => { 
+      this.toainfo.set(x.year, {
+        year: x.year,
+        community: {
+          amount: x.amount,
+          baseline: x.amount
+        },
+        orgs: new Map<string, AmountAndBaseline>()        
       });
-      this.rowsOrgs.push(row);
-    });
-    this.rowsOrgs.forEach(roww => {
-      for (i = 0; i < 5; i++) {
-        if (roww[fy + i] == undefined) {
-          roww[fy + i] = 0;
-        }
-
-      }
     });
 
-    this.originalFyplus4[this.community.id] = this.rowsCommunity[0][this.fy + 4];
-    this.rowsOrgs.forEach(rowww => {
-      this.originalFyplus4[rowww["orgid"]] = rowww[fy + 4];
-    });
+    this.toainfo.forEach((toadata, year) => {
+      Object.getOwnPropertyNames(this.pomData.orgToas).forEach(orgid => {
+        orgset.add(orgid);
 
-    this.resetCharts();
-  }
-
-  // Compute and set the bottom 'pinned' row.
-  private setDeltaRow(fy: number) {
-
-    this.tooMuchToa = false;
-
-    let i: number;
-    let deltaRow = {};
-    for (i = 0; i < 5; i++) {
-      deltaRow[fy + i] = this.rowsCommunity[0][fy + i];
-    }
-
-    this.rowsOrgs.forEach(row => {
-      for (i = 0; i < 5; i++) {
-        deltaRow[fy + i] = deltaRow[fy + i] - row[fy + i]
-        if (deltaRow[fy + i] < 0) {
-          this.tooMuchToa = true;
-        }
-      }
-    });
-    if (this.tooMuchToa) {
-      Notify.error('Organizational TOA(s) exceeds Community TOA');
-    }
-    deltaRow["orgid"] = "Delta";
-
-    this.yeartoas = Object.assign({}, this.rowsCommunity[0]);
-    this.resetCharts();
-  }
-
-  private useEppData() {
-
-    this.useEpp = !this.useEpp;
-
-    // This only effects FY + 4 Data
-    if (this.useEpp == true) {
-      // show the FY + 4 data from the epp data
-      this.getEppData();
-    } else {
-      // replace all values in fy+4 with the original fy+4 data
-      this.rowsCommunity[0][this.fy + 4] = this.originalFyplus4[this.community.id];
-
-      this.rowsOrgs.forEach(row => {
-        row[this.fy + 4] = this.originalFyplus4[row["orgid"]]
+        this.pomData.orgToas[orgid].filter(y => y.year == year).forEach(y => {
+          toadata.orgs.set(orgid, {
+            amount: y.amount,
+            baseline: y.amount
+          });
+        });
       });
-      this.setDeltaRow(this.fy);
+    });
 
-      // refresh both grids
-      this.gridOptionsCommunity.api.refreshCells();
-    }
-  }
+    // make sure we always have the POM's 5 year data
+    for (i = 0; i < 5; i++) {
+      if (!this.toainfo.has(fy + i)) {
+        this.toainfo.set(fy + i, {
+          year: fy + i,
+          community: {
+            amount: 0,
+            baseline: 0
+          },
+          orgs: new Map<string, AmountAndBaseline>()
+        });
+      }
 
-  async getEppData() {
-    forkJoin([
-      this.eppsvc.getByCommunityId(this.community.id),
-      this.programAndPrService.programsByCommunity(this.community.id),
-      this.pbService.getFinalLatest()
-    ]).subscribe(data => {
+      // make sure everyone has the same organizations
+      orgset.forEach(orgid => {
+        this.toaorgs.set(orgid, this.orgName(orgid));
 
-      let alleppData: any[] = data[0].result;
-      let programs: Program[] = data[1];
-      let prs: Program[] = data[2].result;
-
-      let fls: string[] = [];
-      prs.forEach(pr => {
-        if (pr.type != "GENERIC") {
-          pr.fundingLines.forEach(fl => {
-            let flId: string = pr.shortName + fl.appropriation + fl.baOrBlin + fl.item + fl.opAgency;
-            fls.push(flId);
+        if (!this.toainfo.get(fy + i).orgs.has(orgid)) {
+          this.toainfo.get(fy + i).orgs.set(orgid, {
+            amount: 0,
+            baseline: 0
           });
         }
       });
+    }
 
-      let eppData: any[] = [];
-      let eppYear: number = this.fy + 4;
-      alleppData.forEach(epp => {
-        let eppId: string = epp.shortName + epp.appropriation + epp.blin + epp.item + epp.opAgency;
-        if (epp.fySums[eppYear] > 0 && fls.includes(eppId)) {
-          eppData.push(epp);
-        }
-      });
+    console.log(this.toainfo);
 
-      let eppOrgToa = {};
-      this.orgs.forEach(org => {
-        eppOrgToa[org.id] = 0;
-      });
-
-      eppData.forEach(epp => {
-        let amount = 0;
-        if (epp.fySums[eppYear]) {
-          amount = epp.fySums[eppYear];
-        }
-        let index = programs.findIndex(program => program.shortName === epp.shortName);
-        if (index > 0) {
-          eppOrgToa[programs[index].organizationId] += amount;
-        }
-      });
-
-      let total = 0;
-      this.orgs.forEach(org => {
-        for (var j = 0; j < this.rowsOrgs.length; j++) {
-          let row = this.rowsOrgs[j];
-          if (row["orgid"] == org.id) {
-            row[this.fy + 4] = eppOrgToa[org.id];
-            total += eppOrgToa[org.id];
-            break;
-          }
-        }
-      });
-      this.rowsCommunity[0][this.fy + 4] = total;
-      this.setDeltaRow(this.fy);
-
-      // refresh both grids
-      this.gridOptionsCommunity.api.refreshCells();
-      this.resetCharts();
-    });
+    this.resetCharts();
   }
 
   private submitNewPom() {
-
     this.submitted = true;
     var transfer: Pom = this.buildTransfer();
 
@@ -482,7 +282,6 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   private updatePom() {
-
     this.submitted = true;
     var transfer: Pom = this.buildTransfer();
 
@@ -495,49 +294,32 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   private buildTransfer(): Pom {
+    return null;
 
-    var toas: TOA[] = [];
-    for (var i = 0; i < 5; i++) {
-      toas.push(
-        { year: this.fy + i, amount: this.rowsCommunity[0][this.fy + i] }
-      );
-    }
+    // var toas: TOA[] = [];
+    // for (var i = 0; i < 5; i++) {
+    //   toas.push(
+    //     { year: this.fy + i, amount: this.rowsCommunity[0][this.fy + i] }
+    //   );
+    // }
 
-    var otoas: { [key: string]: TOA[]; } = {};
-    this.rowsOrgs.forEach(row => {
-      var tlist: TOA[] = [];
-      for (var i = 0; i < 5; i++) {
-        tlist.push(
-          { year: this.fy + i, amount: row[this.fy + i] }
-        );
-      }
-      otoas[row["orgid"]] = tlist;
-    });
+    // var otoas: { [key: string]: TOA[]; } = {};
+    // this.rowsOrgs.forEach(row => {
+    //   var tlist: TOA[] = [];
+    //   for (var i = 0; i < 5; i++) {
+    //     tlist.push(
+    //       { year: this.fy + i, amount: row[this.fy + i] }
+    //     );
+    //   }
+    //   otoas[row["orgid"]] = tlist;
+    // });
 
-    var transfer: Pom = {
-      communityToas: toas,
-      orgToas: otoas,
-      fy: this.fy
-    };
-    return transfer;
-  }
-
-  onGridReadyCom(params) {
-    params.api.sizeColumnsToFit();
-    window.addEventListener("resize", function () {
-      setTimeout(() => {
-        params.api.sizeColumnsToFit();
-      });
-    });
-  }
-
-  onGridReadyOrgs(params) {
-    params.api.sizeColumnsToFit();
-    window.addEventListener("resize", function () {
-      setTimeout(() => {
-        params.api.sizeColumnsToFit();
-      });
-    });
+    // var transfer: Pom = {
+    //   communityToas: toas,
+    //   orgToas: otoas,
+    //   fy: this.fy
+    // };
+    // return transfer;
   }
 
   submitValue(c) {
@@ -546,18 +328,16 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   resetCharts() {
+    console.log('resetCharts from: ' + this.scrollstartyear);
+
     var yeartoas: Map<number, number> = new Map<number, number>();
 
     var totaltoa: number = 0;
     var totalvals: number = 0;
 
     for (var i = 0; i < 5; i++) {
-      var newamt: number = ('string' === typeof this.rowsCommunity[0][this.fy + i]
-        ? Number.parseInt(this.rowsCommunity[0][this.fy + i])
-        : this.rowsCommunity[0][this.fy + i]);
-
+      var newamt: number = this.toainfo.get(this.scrollstartyear + i).community.amount;
       yeartoas.set(this.fy + i, newamt);
-
       if (newamt > 0) {
         totaltoa += newamt;
         totalvals += 1;
@@ -576,24 +356,26 @@ export class CreatePomSessionComponent implements OnInit {
 
     var baseavg: number = Math.ceil(totaltoa / totalvals);
     for (var i = 0; i < 5; i++) {
-      var newamt = yeartoas.get(this.fy + i);
-      var baseamt: number = this.pinnedRowCommunityBaseline[0][this.fy + i];
+      var toainfo: OneYearToaData = this.toainfo.get(this.scrollstartyear + i);
+
+      var newamt = toainfo.community.amount;
+      var baseamt: number = toainfo.community.baseline;
 
       var lastamt = (0 === newamt ? baseavg : newamt);
-      var pctdiff: number = (i < 1 ? 0 : (lastamt - yeartoas.get(this.fy + i - 1)) / lastamt);
+      var pctdiff: number = (i < 1 ? 0 : (lastamt - this.toainfo.get(this.scrollstartyear + i - 1).community.amount) / lastamt);
 
       charty.push([
-        (this.fy + i).toString(),
+        (this.scrollstartyear + i).toString(),
         (0 === newamt ? baseavg : newamt),
-        (0 === newamt ? baseavg + ' (est.)' : newamt.toLocaleString()),
+        (0 === newamt ? baseavg.toLocaleString() + ' (est.)' : newamt.toLocaleString()),
         ("<div class='tool-tip-container'>" +
-          "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
+          "<p class='tooltip-fy'>FY" + (this.scrollstartyear + i - 2000) +
           "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
           newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>"),
         pctdiff,
         //(pctdiff * 100).toFixed(1) + '%',
         ("<div class='tool-tip-container'>" +
-          "<p class='tooltip-fy'>FY" + (this.fy + i - 2000) +
+          "<p class='tooltip-fy'>FY" + (this.scrollstartyear + i - 2000) +
           "</p><h3 class='tooltip-h3'>Change Since FY" + (this.fy + i - 2001) + ":<br> " + "<span>" +
           (pctdiff > 0 ? '+' : '') + (pctdiff * 100).toFixed(2).toLocaleString() + "%</span></h3></div>"),
       ]);
@@ -645,7 +427,6 @@ export class CreatePomSessionComponent implements OnInit {
       this.selectedyear = this.fy + event.row;
       this.toayear = this.selectedyear;
       this.analysis_baseline = (1 === event.column);
-      this.yeartoas = Object.assign({}, this.rowsCommunity[0]);
       this.resetSubchart();
     }
   }
@@ -673,15 +454,6 @@ export class CreatePomSessionComponent implements OnInit {
     //this.addAction(this.comchart.wrapper.getChart());
   }
 
-  @Input() get suborgMap(): Map<string, string> {
-    var map: Map<string, string> = new Map<string, string>();
-    this.rowsOrgs.forEach(item => { 
-      map.set(item.orgid, this.orgMap.get(item.orgid));
-    });
-
-    return map;
-  }
-
   resetSubchart() {
     var charty: [any[]] = [[
       'Organization',
@@ -692,17 +464,11 @@ export class CreatePomSessionComponent implements OnInit {
       { role: 'tooltip', p: { html: true } }
     ]];
 
-    this.rowsOrgs.forEach(obj => {
-      var orgname: string = this.orgMap.get(obj.orgid);
+    this.toainfo.get(this.selectedyear).orgs.forEach( (amt, orgid)=>{
+      var orgname: string = this.orgName(orgid);
 
-      // this.subOrgName.push(orgname);
-      // orgIdPair.orgname = this.orgMap.get(obj.orgid);
-
-      var value = obj[this.selectedyear];
-      var prevs = this.pomData.orgToas[obj.orgid]
-        .filter(yramt => yramt.year == this.selectedyear)
-        .map(yramt => yramt.amount);
-      var baseamt = (prevs.length > 0 ? prevs[0] : 0);
+      var value = amt.amount;
+      var baseamt = amt.baseline;
       charty.push([orgname,
         value,
         value,
@@ -715,7 +481,6 @@ export class CreatePomSessionComponent implements OnInit {
 
     var options = {
       title: 'Organizational sub-TOA',
-      // colors: ['red'],
       vAxis: {
         minValue: 5
       },
@@ -744,42 +509,104 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   onAnalysis(event) {
-    this.rowsOrgs.forEach(obj => {
-      if (obj.orgid === event.orgid) {
-        obj[event.year] = event.amount;
-      }
-    });
+    // this.rowsOrgs.forEach(obj => {
+    //   if (obj.orgid === event.orgid) {
+    //     obj[event.year] = event.amount;
+    //   }
+    // });
 
-    var newpomdata: Pom = Object.assign({}, this.pomData);
+    // var newpomdata: Pom = Object.assign({}, this.pomData);
 
-    var found: boolean = false;
-    newpomdata.orgToas[event.orgid].forEach(toa => {
-      if (toa.year === event.year) {
-        toa.amount = event.amount;
-        found = true;
-      }
-    });
-    if (!found) {
-      newpomdata.orgToas[event.orgid].push({
-        year: event.year,
-        amount: event.amount
-      });
-    }
-    this.pomData = newpomdata;
-
-    this.setDeltaRow(event.year);
+    // var found: boolean = false;
+    // newpomdata.orgToas[event.orgid].forEach(toa => {
+    //   if (toa.year === event.year) {
+    //     toa.amount = event.amount;
+    //     found = true;
+    //   }
+    // });
+    // if (!found) {
+    //   newpomdata.orgToas[event.orgid].push({
+    //     year: event.year,
+    //     amount: event.amount
+    //   });
+    // }
+    // this.pomData = newpomdata;
   }
 
-  @Input() set subOrgVal(val: number) {   
-    this.rowsOrgs.filter(x => x.orgid === this.subOrgId)[0][this.selectedyear] = val;
-    this.resetSubchart();
+  @Input() set subOrgVal(val: number) {
+    if (this.toainfo.has(this.selectedyear)) {
+      this.toainfo.get(this.selectedyear).orgs.get(this.subOrgId).amount = val;
+      this.resetSubchart();
+    }
   }
 
   get subOrgVal(): number {
-    if ('undefined' === typeof this.subOrgId) {
+    if ('undefined' === typeof this.subOrgId || !this.toainfo.get(this.selectedyear).orgs.has(this.subOrgId)) {
       return 0;
     }
 
-    return this.rowsOrgs.filter(x => x.orgid === this.subOrgId)[0][this.selectedyear];
+    return this.toainfo.get(this.selectedyear).orgs.get(this.subOrgId).amount;
   }
+
+  scroll(years: number) {
+    if (this.scrollstartyear + years <= this.fy) {
+      this.scrollstartyear += years;
+
+      var reset: boolean = true;
+      if (this.scrollstartyear < this.fy && !this.toainfo.has(this.scrollstartyear)) {
+        reset = false;
+        this.fetchMoreData(this.scrollstartyear);
+      }
+
+      if (reset) {
+        this.resetCharts();
+      }
+    }
+  }
+
+  fetchMoreData(year: number) {
+    this.pbsvc.getFinalByYear(year).subscribe(ps => {
+      var pbs: Program[] = ps.result;
+      var toadata: OneYearToaData = {
+        year: year,
+        community: {
+          amount: 0,
+          baseline: 0
+        },
+        orgs: new Map<string, AmountAndBaseline>()
+      };
+
+      pbs.forEach(prog => { 
+        var orgid = prog.organizationId;
+        if (!toadata.orgs.has(orgid)) {
+          toadata.orgs.set(orgid, {
+            amount: 0,
+            baseline: 0
+          });
+        }
+
+        prog.fundingLines.forEach(fl => { 
+          toadata.orgs.get(orgid).amount += fl.funds[year];
+          toadata.orgs.get(orgid).baseline += fl.funds[year];
+          toadata.community.amount += fl.funds[year];
+          toadata.community.baseline += fl.funds[year];
+        });
+      });
+
+      this.toainfo.set(year, toadata);
+
+      this.resetCharts();
+    });
+  }
+}
+
+interface AmountAndBaseline {
+  amount: number,
+  baseline: number
+}
+
+interface OneYearToaData {
+  year: number,
+  community: AmountAndBaseline,
+  orgs:Map<string, AmountAndBaseline> // org id-> toa data
 }
