@@ -21,8 +21,8 @@ export class SelectProgramRequestComponent implements OnInit {
 
   private currentCommunityId: string;
   public pom: Pom;
-  public pomPrograms: Program[] = [];
-  public pbPrograms: Program[] = [];
+  public pomPrograms: Program[];
+  public pbPrograms: Program[];
   public thereAreOutstandingPRs: boolean;
   private chartdata;
   private charty;
@@ -36,28 +36,30 @@ export class SelectProgramRequestComponent implements OnInit {
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
-    this.initPbPrs();
-    this.reloadPrs();
+    this.pom = await this.currentPhase.pom().toPromise();
+    await this.initPbPrs(this.pom.fy - 1);
+    await this.reloadPrs();
   }
-  
+
   async reloadPrs() {
     await this.initPomPrs();
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
     const by: number = this.pom.fy;
+
     await this.initChart();
     await this.loadChart(by);
   }
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
-      this.pom = await this.currentPhase.pom().toPromise();
+      //this.pom = await this.currentPhase.pom().toPromise();
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
       resolve();
     });
   }
 
-  async initPbPrs() {
-    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
+  async initPbPrs(year:number) {
+    this.pbPrograms = (await this.pbService.getFinalByYear(year).toPromise()).result;
   }
 
   onDeletePr() {

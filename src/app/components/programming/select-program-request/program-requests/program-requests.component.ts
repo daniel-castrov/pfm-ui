@@ -1,5 +1,5 @@
 import {Router} from '@angular/router';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {PRService} from '../../../../generated/api/pR.service';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
 import {AgGridNg2} from "ag-grid-angular";
@@ -15,7 +15,7 @@ import { FundingRateRenderer } from '../../../renderers/funding-rate-renderer/fu
   templateUrl: './program-requests.component.html',
   styleUrls: ['./program-requests.component.scss']
 })
-export class ProgramsComponent implements OnChanges, OnInit {
+export class ProgramsComponent implements OnChanges {
 
   @Input() private pomPrograms: Program[];
   @Input() private pbPrograms: Program[];
@@ -50,17 +50,13 @@ export class ProgramsComponent implements OnChanges, OnInit {
 
   constructor( private prService: PRService,
                private router: Router,
-               private currentPhase: CurrentPhase,
                private programRequestPageMode: ProgramRequestPageModeService ) {
     this.context = { componentParent: this };
   }
 
-  async ngOnInit() {
-      this.pbFy = (await this.currentPhase.budget().toPromise()).fy;
-  }
-
   ngOnChanges() {
     if (this.pomPrograms && this.pbPrograms && this.pomFy) {
+      this.pbFy = this.pomFy - 1;
       let rowData = []
       this.pomPrograms.forEach(prOne => {
         let program = new UiProgramRequest(prOne);

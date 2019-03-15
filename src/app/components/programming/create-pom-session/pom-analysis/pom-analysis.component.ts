@@ -56,7 +56,7 @@ export class PomAnalysisComponent {
     this._budget = p;
 
     if (p) {
-      this.pbsvc.getFinalLatest().subscribe( ps => {
+      this.pbsvc.getFinalByYear(p.fy).subscribe( ps => {
         this.pbprs = ps.result;
         this.regraph();
       });

@@ -103,7 +103,8 @@ export class VariantsTabComponent implements OnInit {
 
   async initDataRows(){
 
-    const pbPrograms: Program[] = (await this.pbService.getFinalLatest().toPromise()).result;
+    const pbPrograms: Program[] = (await this.pbService.getFinalByYear( this.pom.fy-1 ).toPromise()).result;
+    
     const pbPr: Program = pbPrograms.find(program => program.shortName === name);
 
     this.fund.variants.forEach(variant => {
