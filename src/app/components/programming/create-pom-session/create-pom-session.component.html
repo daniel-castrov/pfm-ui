@@ -128,9 +128,12 @@
           </span>
 
           <span class="font-weight-bold toa-table-title-2">
-            <i class="fa fa-bar-chart" aria-hidden="true"> </i>
+            <i class="fa fa-bar-chart" aria-hidden="true" (click)='toggleSubchart()'> </i>
+            <i class="fa fa-pie-chart" aria-hidden="true" (click)='toggleSubchart()'> </i>
             <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
           </span>
+
+
           <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
             <span class="toa-epp-widget">
               <span>
@@ -140,21 +143,10 @@
             </span>
           </ng-container> -->
           <div class="comchart-second-wrapper">
-            <google-chart #comchartSecond [data]='subchartdata' (chartSelect)='selectSub($event)'>
+            <google-chart #comchartSecond [data]='subchartdata' (chartSelect)='subselect($event)'>
             </google-chart>
           </div>
 
-        </div>
-
-        <div class="row">
-          <div class="col-12">
-            <div>
-              <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable sub-toa" [gridOptions]="gridOptionsOrgs"
-                [rowData]="rowsOrgs" [toolPanelSuppressSideButtons]="true" [suppressDragLeaveHidesColumns]="true"
-                [pinnedBottomRowData]="pinnedRowOrgsDelta" (gridReady)="onGridReadyOrgs($event)">
-              </ag-grid-angular>
-            </div>
-          </div>
         </div>
       </div>
       <div class="row" *ngIf='selectedyear'>

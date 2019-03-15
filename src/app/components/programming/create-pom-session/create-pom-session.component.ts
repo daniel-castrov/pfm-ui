@@ -62,6 +62,7 @@ export class CreatePomSessionComponent implements OnInit {
   private years: number[] = [];
   private subOrgId: string;
   private pinnedRowCommunityBaseline: any[];
+  private subchartIsBar: boolean = true;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -638,13 +639,34 @@ export class CreatePomSessionComponent implements OnInit {
   select(event: ChartSelectEvent) {
     if ('deselect' === event.message) {
       delete this.selectedyear;
+      delete this.toayear;
     }
     else if ('select' === event.message) {
       this.selectedyear = this.fy + event.row;
+      this.toayear = this.selectedyear;
       this.analysis_baseline = (1 === event.column);
       this.yeartoas = Object.assign({}, this.rowsCommunity[0]);
       this.resetSubchart();
     }
+  }
+
+  subselect(event: ChartSelectEvent) {
+    if ('deselect' === event.message) {
+      delete this.subOrgId;
+    }
+    else if ('select' === event.message) {
+      // figure out orgid from org name (reverse of orgMap)
+      this.orgMap.forEach((name, id) => { 
+        if (name === event.selectedRowValues[0]) {
+          this.subOrgId = id;
+        }
+      });
+    }
+  }
+
+  toggleSubchart() {
+    this.subchartIsBar = !this.subchartIsBar;
+    this.resetSubchart();
   }
 
   chartready() {
@@ -690,27 +712,34 @@ export class CreatePomSessionComponent implements OnInit {
           value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
     });
-    this.subchartdata = {
-      chartType: 'ColumnChart',
-      dataTable: charty,
-      options: {
-        title: 'Organizational sub-TOA',
-        // colors: ['red'],
-        vAxis: {
-          minValue: 5
-        },
-        tooltip: {
-          isHtml: true,
-          trigger: 'focus'
-        },
-        colors: ['#24527b'],
-        height: 500,
-        animation: {
-          'startup': true,
-          duration: 600,
-          easing: 'inAndOut'
-        }
+
+    var options = {
+      title: 'Organizational sub-TOA',
+      // colors: ['red'],
+      vAxis: {
+        minValue: 5
+      },
+      tooltip: {
+        isHtml: true,
+        trigger: 'focus'
+      },
+      colors: ['#24527b'],
+      height: 500,
+      animation: {
+        'startup': true,
+        duration: 600,
+        easing: 'inAndOut'
       }
+    };
+
+    if (!this.subchartIsBar) {
+      delete options.colors;
+    }
+
+    this.subchartdata = {
+      chartType: ( this.subchartIsBar ? 'ColumnChart' : 'PieChart' ),
+      dataTable: charty,
+      options: options
     };
   }
 
@@ -739,10 +768,6 @@ export class CreatePomSessionComponent implements OnInit {
     this.pomData = newpomdata;
 
     this.setDeltaRow(event.year);
-  }
-
-  selectSub($event) {
-    // do nothing (yet!)
   }
 
   @Input() set subOrgVal(val: number) {   
