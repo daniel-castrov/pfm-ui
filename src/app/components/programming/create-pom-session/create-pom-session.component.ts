@@ -294,32 +294,36 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   private buildTransfer(): Pom {
-    return null;
+    console.log(this.pomData);
+    var toas: TOA[] = [];
+    for (var i = 0; i < 5; i++) {
+      var toadata: OneYearToaData = this.toainfo.get(this.fy + i);
+      toas.push(
+         { year: this.fy + i, amount: toadata.community.amount }
+       );
+     }
 
-    // var toas: TOA[] = [];
-    // for (var i = 0; i < 5; i++) {
-    //   toas.push(
-    //     { year: this.fy + i, amount: this.rowsCommunity[0][this.fy + i] }
-    //   );
-    // }
+    var otoas: { [key: string]: TOA[]; } = {};
+    this.toaorgs.forEach((name,orgid)=>{
+      var tlist: TOA[] = [];
+       for (var i = 0; i < 5; i++) {
+         var toadata: OneYearToaData = this.toainfo.get(this.fy + i);
+         tlist.push(
+           { year: this.fy + i, amount: toadata.orgs.get(orgid).amount }
+         );
+       }
+       otoas[orgid] = tlist;
+     });
 
-    // var otoas: { [key: string]: TOA[]; } = {};
-    // this.rowsOrgs.forEach(row => {
-    //   var tlist: TOA[] = [];
-    //   for (var i = 0; i < 5; i++) {
-    //     tlist.push(
-    //       { year: this.fy + i, amount: row[this.fy + i] }
-    //     );
-    //   }
-    //   otoas[row["orgid"]] = tlist;
-    // });
+    var transfer: Pom = {
+      communityToas: toas,
+      orgToas: otoas,
+      fy: this.fy
+    };
 
-    // var transfer: Pom = {
-    //   communityToas: toas,
-    //   orgToas: otoas,
-    //   fy: this.fy
-    // };
-    // return transfer;
+    console.log(transfer);
+
+    return transfer;
   }
 
   submitValue(c) {
@@ -367,6 +371,9 @@ export class CreatePomSessionComponent implements OnInit {
       charty.push([
         (this.scrollstartyear + i).toString(),
         (0 === newamt ? baseavg : newamt),
+
+        // FIXME: this seems to break on Update TOA
+
         (0 === newamt ? baseavg.toLocaleString() + ' (est.)' : newamt.toLocaleString()),
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.scrollstartyear + i - 2000) +
