@@ -12,7 +12,7 @@ export enum TagType {
   MANAGER = 'Manager',
   PRIMARY_CAPABILITY = 'Primary Capability',
   CORE_CAPABILITY_AREA = 'Core Capability Area',
-  SECOMDARY_CAPABILITY = 'Secondary Capability',
+  SECONDARY_CAPABILITY = 'Secondary Capability',
   FUNCTIONAL_AREA = 'Functional Area',
   MEDICAL_CATEGORY = 'Medical Category',
   DASD_CBD = 'DASD CBD',
