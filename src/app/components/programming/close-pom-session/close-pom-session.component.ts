@@ -43,7 +43,7 @@ export class ClosePomSessionComponent implements OnInit {
       this.pom = (await this.pomService.getReconciliation(user.currentCommunityId).toPromise()).result as Pom;
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
 
-      await this.initPbPrs();
+      await this.initPbPrs( this.pom.fy-1 );
 
       this.by = this.pom.fy;
       this.allPrsSubmitted = true;
@@ -56,8 +56,8 @@ export class ClosePomSessionComponent implements OnInit {
     });
   }
 
-  async initPbPrs() {
-    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
+  async initPbPrs( year:number ) {
+    this.pbPrograms = (await this.pbService.getFinalByYear( year ).toPromise()).result;
   }
 
   closePom( event ) {

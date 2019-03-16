@@ -37,7 +37,7 @@ export class OpenPomSessionComponent implements OnInit {
       Notify.error('No POM Session in the "CREATED" state was found');
     } else {
 
-      await this.initPbPrs();
+      await this.initPbPrs( this.pom.fy-1 );
 
       this.allPrsSubmitted = true;
       for ( var i = 0; i< this.pomPrograms.length; i++ ){
@@ -67,8 +67,8 @@ export class OpenPomSessionComponent implements OnInit {
     });
   }
 
-  async initPbPrs() {
-    this.pbPrograms = (await this.pbService.getFinalLatest().toPromise()).result;
+  async initPbPrs( year:number ) {
+    this.pbPrograms = (await this.pbService.getFinalByYear(year).toPromise()).result;
   }
 
   openPom( event ) {

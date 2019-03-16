@@ -107,7 +107,7 @@ export class FundsUpdateComponent implements OnInit {
           filter: 'agTextColumnFilter',
           cellRenderer: 'programCellRendererComponent',
           menuTabs: this.menuTabs,
-          cellClass: ['ag-cell-light-grey', 'ag-clickable'],
+          cellClass: ['ag-cell-light-grey', 'ag-link'],
           editable: p => (!p.data.id),
           cellEditorParams: params => ({ values: my.programs }),
           cellEditorSelector: p => {

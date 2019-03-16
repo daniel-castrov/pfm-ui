@@ -672,6 +672,16 @@ paths:
       operationId: "getFinalLatest"
       produces:
         - "application/json"
+  /pb/final/year/{year}:
+    get:
+      tags:
+        - "PB"
+      operationId: "getFinalByYear"
+      parameters:
+        - in: "path"
+          name: "year"
+          required: true
+          type: "integer"
   /pb/{id}:
     get:
       tags:

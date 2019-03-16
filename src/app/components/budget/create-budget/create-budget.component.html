@@ -4,19 +4,19 @@
     <div class="col-12">
       <div class="row mb-2">
         <div class="col-12">
-          <span class="h5">Create Budget Phase for FY</span>
+          <span class="h5">Create Budget Phase for {{nextBudgetYear|FY}}</span>
         </div>
       </div>      
       <div class="row">
         <div class="col-12">
-          <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget FY{{nextBudgetYear-2000}}</button>
+          <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget {{nextBudgetYear|FY}}</button>
         </div>
       </div>
       <div class="row mb-1">
         <div class="col-12">
           <div class="h6">Budget Being Created From:</div>
           <fieldset class="mb-3">
-            POM FY{{(poms||["dummy"])[0].fy-2000}}
+            POM {{(poms||["dummy"])[0].fy|FY}}
           </fieldset>
         </div>
       </div>
@@ -27,7 +27,7 @@
           <div class="card-body">            
             <table class="table-budget">
               <tr *ngFor="let budget of budgets">
-                <td>Budget FY{{budget.fy-2000}}</td>
+                <td>Budget {{budget.fy|FY}}</td>
               </tr>
             </table>
             </div>  
@@ -41,7 +41,7 @@
             <div class="card-body">            
               <table class="table-budget">
                 <tr *ngFor="let pom of poms">
-                  <td>POM FY{{pom.fy-2000}}</td>
+                  <td>POM {{pom.fy|FY}}</td>
                 </tr>
               </table>
             </div>  
