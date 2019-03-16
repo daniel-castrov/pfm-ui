@@ -58,7 +58,7 @@ export class TagsService {
   name(tagType: TagType, abbreviation: string): Observable<string> {
     return this.tags(tagType)
         .map(tags => tags.find(tag => tag.abbr === abbreviation))
-        .map(tag => tag.name);
+        .map(tag => tag && tag.name);
   }
 
   private tagAbbreviations(tagType: TagType, noCaching?: boolean): Promise<string[]> {

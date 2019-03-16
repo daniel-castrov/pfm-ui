@@ -54,8 +54,8 @@
             <td>Continuing</td>
             <td>Continuing</td>
         </tr>
-        <tr class="alignRight borderRightBottom">
-          <td class="alignLeft borderRightBottom">LF1: CHEMICAL/BIOLOGICAL DEFENSE - LIFE SCIENCES (BASIC RESEARCH)</td>
+        <tr *ngFor="let item of items" class="alignRight borderRightBottom">
+          <td class="alignLeft borderRightBottom">{{item}}: {{itemName(item)|async}}</td>
           <td>-</td>
           <td>60.855</td>
           <td>71.654</td>
@@ -68,21 +68,6 @@
           <td>68.806</td>
           <td>Continuing</td>
           <td>Continuing</td>
-        </tr>
-        <tr class="alignRight borderRightBottom borderBottomBold">
-            <td class="alignLeft borderRightBottom">PS1: CHEM/BIO DEFENSE - PHYSICAL SCIENCES (BASIC RESEARCH)</td>
-            <td>-</td>
-            <td>70.450</td>
-            <td>73.212</td>
-            <td>71.624</td>
-            <td>-</td>
-            <td>71.624</td>
-            <td>73.597</td>
-            <td>79.610</td>
-            <td>81.898</td>
-            <td>79.798</td>
-            <td>Continuing</td>
-            <td class="borderBottom">Continuing</td>
         </tr>
       </table>
       <table class="borderTop">

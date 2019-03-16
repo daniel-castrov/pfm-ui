@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {BES, BudgetService, PB, Program, PRService} from "../../../../generated";
+import {BES, BudgetService, PB, Program, PRService, R2Data, RdteData, RdteDataService} from "../../../../generated";
 import {ScenarioService} from "../../../../services/scenario.service";
 import {TagsService, TagType} from "../../../../services/tags.service";
 import {Observable} from "rxjs";
@@ -20,22 +20,22 @@ export class R2Component implements OnInit {
   now = new Date();
   fls: FL[];
   ba: string;
+  items: string[];
 
   constructor( private route: ActivatedRoute,
                private scenarioService: ScenarioService,
                private budgetService: BudgetService,
                public tagsService: TagsService,
-               private prService: PRService ) {}
+               private prService: PRService,
+               private rdteDataService: RdteDataService) {}
 
   async ngOnInit() {
-    const scenarioId = this.route.snapshot.params['scenarioId'];
     this.programElement = this.route.snapshot.params['programElement'];
-    this.scenario = await this.scenarioService.scenario(scenarioId);
-    const budgets = (await this.budgetService.getAll().toPromise()).result;
-    this.fy = budgets.find(budget => budget.id == this.scenario.budgetId).fy;
+    this.scenario = await this.getScenario();
+    this.fy = await this.getFY();
     this.fls = await this.getFLs();
-    const flWithPE = this.fls.find(fl => fl.programElement === this.programElement);
-    this.ba = flWithPE && flWithPE.baOrBlin;
+    this.ba = await this.getBA();
+    this.items = await this.getItems();
   }
 
   peName(): Observable<string> {
@@ -48,6 +48,16 @@ export class R2Component implements OnInit {
     return this.tagsService.name(TagType.BA, this.ba);
   }
 
+  itemName(abbreviation: string): Observable<string> {
+    if(!this.ba) return;
+    return this.tagsService.name(TagType.ITEM, abbreviation);
+  }
+
+  private async getScenario(): Promise<BES|PB> {
+    const scenarioId = this.route.snapshot.params['scenarioId'];
+    return await this.scenarioService.scenario(scenarioId);
+  }
+
   private async getFLs(): Promise<FL[]> {
     const result: FL[] = [];
     const programs:Program[] = (await this.prService.getByContainer(this.scenario.id).toPromise()).result;
@@ -57,4 +67,21 @@ export class R2Component implements OnInit {
     return result;
   }
 
+  private async getFY(): Promise<number> {
+    const budgets = (await this.budgetService.getAll().toPromise()).result;
+    return budgets.find(budget => budget.id == this.scenario.budgetId).fy;
+  }
+
+  private async getBA(): Promise<string> {
+    const flWithPE = this.fls.find(fl => fl.programElement === this.programElement);
+    return flWithPE && flWithPE.baOrBlin;
+  }
+
+  private async getItems(): Promise<string[]> {
+    const result: string[] = [];
+    const rdteData: RdteData = (await this.rdteDataService.getByContainerId(this.scenario.id).toPromise()).result;
+    const r2data: R2Data = rdteData.r2data.find(r2data => r2data.programElement === this.programElement);
+    r2data.items.forEach(item => result.push(item.itemName));
+    return result;
+  }
 }
