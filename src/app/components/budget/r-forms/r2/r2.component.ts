@@ -1,10 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {BES, BudgetService, PB, Program, PRService, R2Data, RdteData, RdteDataService} from "../../../../generated";
+import {
+  BES,
+  BudgetService,
+  FundingLine,
+  PB,
+  Program,
+  PRService,
+  R2Data,
+  RdteData,
+  RdteDataService
+} from "../../../../generated";
 import {ScenarioService} from "../../../../services/scenario.service";
 import {TagsService, TagType} from "../../../../services/tags.service";
 import {Observable} from "rxjs";
-import {FL} from "./FL";
 
 @Component({
   selector: 'r2',
@@ -18,7 +27,7 @@ export class R2Component implements OnInit {
 
   fy: number;
   now = new Date();
-  fls: FL[];
+  fls: FundingLine[];
   ba: string;
   items: string[];
 
@@ -58,11 +67,11 @@ export class R2Component implements OnInit {
     return await this.scenarioService.scenario(scenarioId);
   }
 
-  private async getFLs(): Promise<FL[]> {
-    const result: FL[] = [];
+  private async getFLs(): Promise<FundingLine[]> {
+    const result: FundingLine[] = [];
     const programs:Program[] = (await this.prService.getByContainer(this.scenario.id).toPromise()).result;
     programs.forEach(program => program.fundingLines.forEach(fundingLine => {
-      result.push({name:program.shortName, ...fundingLine});
+      result.push(fundingLine);
     }));
     return result;
   }
@@ -92,6 +101,7 @@ export class R2Component implements OnInit {
       .map(fl => fl.funds[year])
       .reduce((a,b)=>a+b,0);
   }
+
   private totalForPeAndYear(programElement, year): number {
     if(!this.fls) return;
     return this.fls
