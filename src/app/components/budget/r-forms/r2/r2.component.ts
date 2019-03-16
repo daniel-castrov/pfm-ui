@@ -86,12 +86,14 @@ export class R2Component implements OnInit {
   }
 
   private totalForItemAndYear(item, year): number {
+    if(!this.fls) return;
     return this.fls
       .filter(fl => fl.item === item)
       .map(fl => fl.funds[year])
       .reduce((a,b)=>a+b,0);
   }
   private totalForPeAndYear(programElement, year): number {
+    if(!this.fls) return;
     return this.fls
       .filter(fl => fl.programElement === programElement)
       .map(fl => fl.funds[year])
