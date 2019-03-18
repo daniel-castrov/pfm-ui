@@ -188,7 +188,9 @@ export class PomAnalysisComponent {
     });
 
     // add an "unallocated" pie wedge, too (if we can!)
-    var maxtoa: number = this._toainfo.get(this.fy).community.amount || 0;
+    var maxtoa: number = (this._toainfo.has(this.fy)
+      ? this._toainfo.get(this.fy).community.amount
+      : 0);
 
     if (totalalloc < maxtoa) {
       subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);

@@ -33,9 +33,12 @@ export class CreatePomSessionComponent implements OnInit {
   @ViewChild(GoogleChartComponent) comchartTwo: GoogleChartComponent;
   @ViewChild('content') content: ElementRef;
 
+  private YEARSTOSHOW: number = 5; // this is really a constant
+  private BUDGETHORIZON: number = 5; // this is really a constant
   private pomfy: number;
   private community: Community;
   private orgs: Organization[];
+  // org id->org name only for orgs in a toa (not all orgs)
   private toaorgs: Map<string,string> = new Map<string,string>();
   private budget: Budget;
   // year->budget info mapping
@@ -56,7 +59,6 @@ export class CreatePomSessionComponent implements OnInit {
   private analysis_baseline: boolean = true;
   
   private toayear: number;
-  private pomyears: number[] = [];
   private scrollstartyear: number;
   private subOrgId: string;
   private pinnedRowCommunityBaseline: any[];
@@ -93,17 +95,17 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   @Input() set toaForYear(val: number) {
-    if (this.toainfo.has(this.toayear)) {
-      this.toainfo.get(this.toayear).community.amount = val;
-    }
+    var data: OneYearToaData = this.getToaDataOrBlank(this.toayear);
+    data.community.amount = val;
+    this.toainfo.set(this.toayear, data);
     this.resetCharts();
   }
 
   get toaForYear(): number {
-    if (!(this.toayear || this.toainfo.has(this.toayear))) {
+    if (!this.toayear ){
       return 0;
     }
-    return ( this.toainfo.get(this.toayear).community.amount || 0 );
+    return this.getToaDataOrBlank(this.toayear).community.amount;
   }
 
   open(content, toaAmt) {
@@ -112,15 +114,6 @@ export class CreatePomSessionComponent implements OnInit {
     }, (reason) => {
 
     });
-  }
-
-  // A valueGetter for totaling a row
-  private rowTotal(data, fy: number) {
-    let total: number = 0;
-    for (var i = 0; i < 5; i++) {
-      total += parseInt(data[fy + i], 10);
-    }
-    return total;
   }
 
   // A valueGetter for looking up an org name
@@ -172,14 +165,29 @@ export class CreatePomSessionComponent implements OnInit {
         this.scrollstartyear = this.pomfy;
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
 
-        this.pomyears = [];
-        for (let i = 0; i < 5; i++) {
-          this.pomyears.push(this.pomfy + i);
-        }
-
         this.setInitialGridValues(this.pomfy, poms, samplepom);
       });
     });
+  }
+
+  @Input() get pomyears(): number[] {
+    if (this.pomfy) {
+      // we want to have all years from pomfy to our max TOA year,
+      var maxtoayear: number = this.pomfy;
+      this.toainfo.forEach((x, year) => {
+        if (year > maxtoayear) {
+          maxtoayear = year;
+        }
+      });
+      maxtoayear = Math.max(maxtoayear, this.scrollstartyear + this.BUDGETHORIZON - 1);
+
+      var newpomyears: number[] = [];
+      for (var y = this.pomfy; y <= maxtoayear; y++) {
+        newpomyears.push(y);
+      }
+      return newpomyears;
+    }
+    return [];
   }
 
   private setInitialGridValues(fy: number, poms: Pom[], samplepom: Pom) {
@@ -217,7 +225,7 @@ export class CreatePomSessionComponent implements OnInit {
           amount: x.amount,
           baseline: x.amount
         },
-        orgs: new Map<string, AmountAndBaseline>()        
+        orgs: new Map<string, AmountAndBaseline>()
       });
     });
 
@@ -235,7 +243,7 @@ export class CreatePomSessionComponent implements OnInit {
     });
 
     // make sure we always have the POM's 5 year data
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < this.YEARSTOSHOW; i++) {
       if (!this.toainfo.has(fy + i)) {
         this.toainfo.set(fy + i, {
           year: fy + i,
@@ -289,7 +297,7 @@ export class CreatePomSessionComponent implements OnInit {
 
   private buildTransfer(): Pom {
     var toas: TOA[] = [];
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < this.YEARSTOSHOW; i++) {
       var toadata: OneYearToaData = this.toainfo.get(this.pomfy + i);
       toas.push(
          { year: this.pomfy + i, amount: toadata.community.amount }
@@ -299,7 +307,7 @@ export class CreatePomSessionComponent implements OnInit {
     var otoas: { [key: string]: TOA[]; } = {};
     this.toaorgs.forEach((name,orgid)=>{
       var tlist: TOA[] = [];
-       for (var i = 0; i < 5; i++) {
+       for (var i = 0; i < this.YEARSTOSHOW; i++) {
          var toadata: OneYearToaData = this.toainfo.get(this.pomfy + i);
          tlist.push(
            { year: this.pomfy + i, amount: toadata.orgs.get(orgid).amount }
@@ -323,14 +331,31 @@ export class CreatePomSessionComponent implements OnInit {
     c('close modal');
   }
 
+  getToaDataOrBlank(year: number): OneYearToaData {
+    var orgmap: Map<string, AmountAndBaseline> = new Map<string, AmountAndBaseline>();
+    this.toaorgs.forEach((name, orgid) => { 
+      orgmap.set(orgid, { amount: 0, baseline: 0 });
+    });
+
+    return this.toainfo.get(year) || {
+        year: year,
+        community: {
+          amount: 0,
+          baseline: 0
+        },
+        orgs: orgmap
+    };
+  }
+
   resetCharts() {
     var yeartoas: Map<number, number> = new Map<number, number>();
 
     var totaltoa: number = 0;
     var totalvals: number = 0;
 
-    for (var i = 0; i < 5; i++) {
-      var newamt: number = this.toainfo.get(this.scrollstartyear + i).community.amount;
+    for (var i = 0; i < this.YEARSTOSHOW; i++) {
+      var toadata: OneYearToaData = this.getToaDataOrBlank(this.scrollstartyear + i);
+      var newamt: number = toadata.community.amount;
       yeartoas.set(this.scrollstartyear + i, newamt);
       if (newamt > 0) {
         totaltoa += newamt;
@@ -350,14 +375,22 @@ export class CreatePomSessionComponent implements OnInit {
     ]];
 
     var baseavg: number = Math.ceil(totaltoa / totalvals);
-    for (var i = 0; i < 5; i++) {
-      var toainfo: OneYearToaData = this.toainfo.get(this.scrollstartyear + i);
+    for (var i = 0; i < this.YEARSTOSHOW; i++) {
+      var toadata: OneYearToaData = this.getToaDataOrBlank(this.scrollstartyear + i);
 
-      var newamt = toainfo.community.amount;
-      var baseamt: number = toainfo.community.baseline;
+      var newamt = toadata.community.amount || 0;
+      var baseamt: number = toadata.community.baseline || 0;
 
       var lastamt = (0 === newamt ? baseavg : newamt);
-      var pctdiff: number = (i < 1 ? 0 : (lastamt - this.toainfo.get(this.scrollstartyear + i - 1).community.amount) / lastamt);
+      var pctdiff: number = (i < 1 ? 0 : (lastamt - this.getToaDataOrBlank(this.scrollstartyear + i - 1).community.amount) / lastamt);
+
+      var color: string = '#24527b';
+      if (this.scrollstartyear + i < this.pomfy) {
+        color = '#277b24';
+      }
+      if (this.scrollstartyear + i >= this.pomfy + this.BUDGETHORIZON ) {
+        color = '#a2aeb9';
+      }
 
       charty.push([
         // YEAR
@@ -372,13 +405,13 @@ export class CreatePomSessionComponent implements OnInit {
           (this.scrollstartyear + i < this.pomfy ? ' (Budget)' : '') + "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
           newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>"),
         // STYLE (color)
-        (this.scrollstartyear + i < this.pomfy ? '#277b24' : '#24527b'),
+        color,
         // YOY %
         pctdiff,
         // YOY TOOLTIP
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.scrollstartyear + i - 2000) +
-          "</p><h3 class='tooltip-h3'>Change Since FY" + (this.pomfy + i - 2001) + ":<br> " + "<span>" +
+          "</p><h3 class='tooltip-h3'>Change Since FY" + (this.scrollstartyear + i - 2001) + ":<br> " + "<span>" +
           (pctdiff > 0 ? '+' : '') + (pctdiff * 100).toFixed(2).toLocaleString() + "%</span></h3></div>"),
       ]);
     }
@@ -466,7 +499,8 @@ export class CreatePomSessionComponent implements OnInit {
       { role: 'tooltip', p: { html: true } }
     ]];
 
-    this.toainfo.get(this.selectedyear).orgs.forEach( (amt, orgid)=>{
+    var toadata: OneYearToaData = this.getToaDataOrBlank(this.selectedyear);
+    toadata.orgs.forEach( (amt, orgid)=>{
       var orgname: string = this.orgName(orgid);
 
       var value = amt.amount;
@@ -551,18 +585,18 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   scroll(years: number) {
-    if (this.scrollstartyear + years <= this.pomfy) {
-      this.scrollstartyear += years;
+    this.scrollstartyear += years;
+    var reset: boolean = true;
 
-      var reset: boolean = true;
-      if (this.scrollstartyear < this.pomfy && !this.toainfo.has(this.scrollstartyear)) {
-        reset = false;
-        this.fetchMoreData(this.scrollstartyear);
-      }
+    // if we don't have the data we need to scroll, get it
+    if (!this.toainfo.has(this.scrollstartyear) && this.scrollstartyear < this.pomfy ) {
+      // if it's a year in the past, then fetch the data from the budget of that year
+      reset = false;
+      this.fetchMoreData(this.scrollstartyear);
+    }
 
-      if (reset) {
-        this.resetCharts();
-      }
+    if (reset) {
+      this.resetCharts();
     }
   }
 
