@@ -93,7 +93,6 @@ export class ChargesComponent implements OnInit {
   }
 
   updatedropdowns() {
-    console.log("Hello1");
     this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
     this.etype = this.subtypes[0];
     this.updatedropdowns2();
