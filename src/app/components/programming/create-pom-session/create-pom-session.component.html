@@ -4,22 +4,22 @@
 <app-header></app-header>
 
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="fy">
+  <div class="row main-content" *ngIf="pomfy">
     <div class="col-12">
       <div class="row">
         <div class="col-12">
           <div class="h5 mb-2 welcome-header">
             <ng-container *ngIf="!(pomIsCreated || pomIsOpen) ">
               <span class="h5 mr-sm-2 mb-2">Create POM Session</span>
-              <p>{{fy| FY:'POM'}}</p>
+              <p>{{pomfy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsCreated">
               <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs</span>
-              <p>{{fy| FY:'POM'}}</p>
+              <p>{{pomfy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsOpen">
               <span class="h5 mr-sm-2 mb-2">POM Session</span>
-              <p>{{fy| FY:'POM'}}</p>
+              <p>{{pomfy| FY:'POM'}}</p>
             </ng-container>
           </div>
         </div>
@@ -157,13 +157,15 @@
       </div>
       <div class="row" *ngIf='selectedyear'>
         <div class="col-12 agtoatable">
-          <app-pom-analysis [fy]='selectedyear' 
-          [pom]='pomData' 
-          [orgmap]='orgMap'
-          [commdata]='yeartoas' 
-          [baseline]='analysis_baseline' 
-          [readonly]='(pomIsCreated||pomIsOpen)'
-          (changes)='onAnalysis($event)'></app-pom-analysis>
+          <app-pom-analysis 
+            [fy]='selectedyear' 
+            [pomfy]='pomfy' 
+            [pom]='pomData' 
+            [orgmap]='orgMap'
+            [toainfo]='toainfo'
+            [baseline]='analysis_baseline' 
+            [readonly]='(pomIsCreated||pomIsOpen)'
+            (changes)='onAnalysis($event)'></app-pom-analysis>
         </div>
       </div>
 

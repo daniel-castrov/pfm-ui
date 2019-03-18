@@ -3,6 +3,8 @@ import { Pom, PRService, Program, Budget, PBService } from '../../../../generate
 import { GridOptions } from 'ag-grid';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
+import { OneYearToaData } from '../create-pom-session.component';
+import { getPluralCase } from '@angular/common/src/i18n/localization';
 
 
 @Component({
@@ -14,11 +16,10 @@ export class PomAnalysisComponent {
   @ViewChild('entrytable') private agGrid: AgGridNg2;
 
   private _fy: number;
-  private _budget: Budget;
   private _pom: Pom;
   private _baseline: boolean = true;
   private _orgmap: Map<string, string> = new Map<string, string>();
-  private commtoa: Map<number,number> = new Map<number,number>();
+  private _toainfo: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
   private pechartdata;
   private bardata;
   private pbprs: Program[];
@@ -26,7 +27,7 @@ export class PomAnalysisComponent {
   private pinneddata: RowData[] = [{ orgid: 'Delta', amount: -1, sum: -1 }];
   private treeBreadcrumbs: string;
   private treechartdata;
-
+  @Input() private pomfy: number;
   @Input() private readonly: boolean = true;
   @Output() changes: EventEmitter<any> = new EventEmitter<any>();
 
@@ -40,27 +41,10 @@ export class PomAnalysisComponent {
     this.regraph();
   }
 
-  @Input() set commdata(t: any) {
-    this.commtoa.clear();
-    Object.getOwnPropertyNames(t).forEach(v => {
-      var year = parseInt(v) || -1;
-      if (year > 0) {
-        this.commtoa.set(year, t[year]);
-      }
-    });
-
+  @Input() set toainfo(t: any) {
+    this._toainfo = t;
+    
     this.regraph();
-  }
-
-  @Input() set budget(p: Budget) {
-    this._budget = p;
-
-    if (p) {
-      this.pbsvc.getFinalByYear(p.fy).subscribe( ps => {
-        this.pbprs = ps.result;
-        this.regraph();
-      });
-    }
   }
 
   @Input() set pom(p: Pom) {
@@ -70,16 +54,12 @@ export class PomAnalysisComponent {
 
   @Input() set fy(year: number) {
     this._fy = year;
-
+    delete this.pbprs;
     this.regraph();
   }
 
   get fy(): number {
     return this._fy;
-  }
-
-  get budget(): Budget {
-    return this._budget;
   }
 
   get pom(): Pom {
@@ -101,8 +81,18 @@ export class PomAnalysisComponent {
     if (this._fy && this._pom && this._orgmap) {
       this.generateOrgChart();
     }
+
     if (this.pbprs) {
       this.generateTreeMap();
+    }
+    else if (this._fy && this.pomfy) {
+      // if we're dealing with the current pom year, get the PRs from 
+      // last year's budget. else just use the old budget year
+      var budgetyear = (this._fy < this.pomfy ? this._fy : this.pomfy - 1);
+      this.pbsvc.getFinalByYear(budgetyear).subscribe(ps => {
+        this.pbprs = ps.result;
+        this.generateTreeMap();
+      });
     }
   }
 
@@ -198,7 +188,7 @@ export class PomAnalysisComponent {
     });
 
     // add an "unallocated" pie wedge, too (if we can!)
-    var maxtoa: number = this.commtoa.get(this.fy) || 0;
+    var maxtoa: number = this._toainfo.get(this.fy).community.amount || 0;
 
     if (totalalloc < maxtoa) {
       subdata.push(['Unallocated', maxtoa - totalalloc, maxtoa - totalalloc]);
