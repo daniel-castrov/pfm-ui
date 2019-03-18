@@ -101,7 +101,7 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   get toaForYear(): number {
-    if (!this.toayear) {
+    if (!(this.toayear || this.toainfo.has(this.toayear))) {
       return 0;
     }
     return ( this.toainfo.get(this.toayear).community.amount || 0 );
@@ -210,7 +210,6 @@ export class CreatePomSessionComponent implements OnInit {
       : currentPom);
     this.pomData.fy = this.fy;
 
-    console.log(this.pomData);
     this.toaorgs.clear();
     var orgset: Set<string> = new Set<string>();
 
@@ -264,8 +263,6 @@ export class CreatePomSessionComponent implements OnInit {
       });
     }
 
-    console.log(this.toainfo);
-
     this.resetCharts();
   }
 
@@ -294,7 +291,6 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   private buildTransfer(): Pom {
-    console.log(this.pomData);
     var toas: TOA[] = [];
     for (var i = 0; i < 5; i++) {
       var toadata: OneYearToaData = this.toainfo.get(this.fy + i);
@@ -316,12 +312,11 @@ export class CreatePomSessionComponent implements OnInit {
      });
 
     var transfer: Pom = {
+      communityId: this.community.id,
       communityToas: toas,
       orgToas: otoas,
       fy: this.fy
     };
-
-    console.log(transfer);
 
     return transfer;
   }
@@ -332,8 +327,6 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   resetCharts() {
-    console.log('resetCharts from: ' + this.scrollstartyear);
-
     var yeartoas: Map<number, number> = new Map<number, number>();
 
     var totaltoa: number = 0;
@@ -353,6 +346,7 @@ export class CreatePomSessionComponent implements OnInit {
       'TOA',
       { role: 'annotation' },
       { role: 'tooltip', p: { html: true } },
+      { role: 'style' },
       'YoY %',
       //{ role: 'annotation' },
       { role: 'tooltip', p: { html: true } },
@@ -369,18 +363,23 @@ export class CreatePomSessionComponent implements OnInit {
       var pctdiff: number = (i < 1 ? 0 : (lastamt - this.toainfo.get(this.scrollstartyear + i - 1).community.amount) / lastamt);
 
       charty.push([
+        // YEAR
         (this.scrollstartyear + i).toString(),
+        // TOA
         (0 === newamt ? baseavg : newamt),
-
-        // FIXME: this seems to break on Update TOA
-
+        // ANNOTATION
         (0 === newamt ? baseavg.toLocaleString() + ' (est.)' : newamt.toLocaleString()),
+        // TOOLTIP
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.scrollstartyear + i - 2000) +
-          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
+          (this.scrollstartyear + i < this.fy ? ' (Budget)' : '') + "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span>" +
           newamt.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span>" + baseamt.toLocaleString() + "</span></h3></div>"),
+        
+        // STYLE (color)
+        (this.scrollstartyear + i < this.fy ? '#277b24' : '#24527b'),
+        // YOY %
         pctdiff,
-        //(pctdiff * 100).toFixed(1) + '%',
+        // YOY TOOLTIP
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.scrollstartyear + i - 2000) +
           "</p><h3 class='tooltip-h3'>Change Since FY" + (this.fy + i - 2001) + ":<br> " + "<span>" +
