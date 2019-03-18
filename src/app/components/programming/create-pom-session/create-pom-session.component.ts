@@ -121,6 +121,7 @@ export class CreatePomSessionComponent implements OnInit {
           suppressMenu: true,
           field: (fy+ i).toString(),
           cellRenderer: params => this.negativeNumberRenderer(params),
+          editable: params => this.shouldEdit(params),
           cellEditor: "numericCellEditor",
           cellClassRules: {
           'ag-cell-edit': params =>this.shouldEdit(params),
@@ -453,7 +454,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted=true;
     var transfer:Pom = this.buildTransfer();
 
-    this.pomsvc.updateCurrentPom( this.community.id, transfer ).subscribe(
+    this.pomsvc.updateCurrentPom( transfer ).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);
