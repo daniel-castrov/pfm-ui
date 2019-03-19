@@ -4,22 +4,22 @@
 <app-header></app-header>
 
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="fy">
+  <div class="row main-content" *ngIf="pomfy">
     <div class="col-12">
       <div class="row">
         <div class="col-12">
           <div class="h5 mb-2 welcome-header">
             <ng-container *ngIf="!(pomIsCreated || pomIsOpen) ">
               <span class="h5 mr-sm-2 mb-2">Create POM Session</span>
-              <p>{{fy| FY:'POM'}}</p>
+              <p>{{pomfy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsCreated">
               <span class="h5 mr-sm-2 mb-2">Update POM Session TOAs</span>
-              <p>{{fy| FY:'POM'}}</p>
+              <p>{{pomfy| FY:'POM'}}</p>
             </ng-container>
             <ng-container *ngIf="pomIsOpen">
               <span class="h5 mr-sm-2 mb-2">POM Session</span>
-              <p>{{fy| FY:'POM'}}</p>
+              <p>{{pomfy| FY:'POM'}}</p>
             </ng-container>
           </div>
         </div>
@@ -38,6 +38,12 @@
               <div class="comchart-input-value">
                 <button (click)="open(content)" class='btn btn-sm btn-primary'>
                   <i class="fa fa-edit" aria-hidden="true"></i> Change Values
+                </button>
+                <button (click)="scroll(-1)" class='btn btn-sm btn-primary'>
+                  <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                </button>
+                <button (click)="scroll(1)" class='btn btn-sm btn-primary'>
+                  <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </button>
               </div>
             </span>
@@ -58,7 +64,7 @@
                   <label for="sel1">Select Year:</label>
                   <select class="form-control toa-select-edit" [(ngModel)]='toayear' name="yearselector">
                     <option selected></option>
-                    <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+                    <option *ngFor="let year of pomyears" [ngValue]="year">{{year}}</option>
 
                   </select>
                   <input name="first" [(ngModel)]="toaForYear" type="number"
@@ -97,7 +103,7 @@
                 <label for="sel1">Select Organization:</label>
                 <select class="form-control toa-select-edit" [(ngModel)]='subOrgId'>
                   <option></option>
-                  <option *ngFor="let subtoa of suborgMap|mapAsList" [ngValue]="subtoa.key">{{subtoa.value}}</option>
+                  <option *ngFor="let subtoa of toaorgs|mapAsList" [ngValue]="subtoa.key">{{subtoa.value}}</option>
                 </select>
                 <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit"
                   aria-label="Text input with dropdown button" type="number">
@@ -128,9 +134,12 @@
           </span>
 
           <span class="font-weight-bold toa-table-title-2">
-            <i class="fa fa-bar-chart" aria-hidden="true"> </i>
+            <i class="fa fa-bar-chart" aria-hidden="true" (click)='toggleSubchart()'> </i>
+            <i class="fa fa-pie-chart" aria-hidden="true" (click)='toggleSubchart()'> </i>
             <span *ngIf="!pomIsOpen">Set</span> Organization's sub-TOA ($K)
           </span>
+
+
           <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
             <span class="toa-epp-widget">
               <span>
@@ -140,27 +149,22 @@
             </span>
           </ng-container> -->
           <div class="comchart-second-wrapper">
-            <google-chart #comchartSecond [data]='subchartdata' (chartSelect)='selectSub($event)'>
+            <google-chart #comchartSecond [data]='subchartdata' (chartSelect)='subselect($event)'>
             </google-chart>
           </div>
 
         </div>
-
-        <div class="row">
-          <div class="col-12">
-            <div>
-              <ag-grid-angular #agGridOrgs class="ag-theme-balham agtoatable sub-toa" [gridOptions]="gridOptionsOrgs"
-                [rowData]="rowsOrgs" [toolPanelSuppressSideButtons]="true" [suppressDragLeaveHidesColumns]="true"
-                [pinnedBottomRowData]="pinnedRowOrgsDelta" (gridReady)="onGridReadyOrgs($event)">
-              </ag-grid-angular>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="row" *ngIf='selectedyear'>
         <div class="col-12 agtoatable">
-          <app-pom-analysis [fy]='selectedyear' [budget]='budget' [pom]='pomData' [orgmap]='orgMap'
-            [commdata]='yeartoas' [baseline]='analysis_baseline' [readonly]='(pomIsCreated||pomIsOpen)'
+          <app-pom-analysis 
+            [fy]='selectedyear' 
+            [pomfy]='pomfy' 
+            [pom]='pomData' 
+            [orgmap]='orgMap'
+            [toainfo]='toainfo'
+            [baseline]='analysis_baseline' 
+            [readonly]='(pomIsCreated||pomIsOpen)'
             (changes)='onAnalysis($event)'></app-pom-analysis>
         </div>
       </div>
