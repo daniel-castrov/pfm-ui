@@ -48,6 +48,10 @@
               </div>
             </span>
           </div>
+          <div class="bar-chart-google">
+            <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
+            </google-chart>
+          </div>
         </div>
         <ng-template #content let-modal let-c="close">
           <div class=" toa-tooltip-modal modal-header">
@@ -79,14 +83,7 @@
 
         </ng-template>
 
-        <div class="row mb-2">
-          <div class="col-12">
-            <div class="bar-chart-google">
-              <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
-              </google-chart>
-            </div>
-          </div>
-        </div>
+
       </div>
       <div class="card-container" *ngIf='selectedyear'>
         <ng-template #contentTwo let-modal let-c="close">
