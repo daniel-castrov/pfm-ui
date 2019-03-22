@@ -1,5 +1,5 @@
-import { Component, OnChanges, Input } from '@angular/core';
-import { RdteData, R2Data } from '../../../../generated';
+import {Component, Input, OnChanges} from '@angular/core';
+import {R2Data, RdteData} from '../../../../generated';
 
 @Component({
   selector: 'r2-tab',
@@ -12,32 +12,28 @@ export class R2TabComponent implements OnChanges {
 
   pes: string[];
   selectedPE: string;
-  r2data:R2Data
+  r2data: R2Data;
 
   selChgSumSection: string;
-  changeSummSections: string[];
-  constructor() { 
-  }
+  changeSummSections = [ "Funding", "Schedule", "Technical"];
+
+  constructor() {}
 
   clearData(){
-    this.r2data={}; 
+    this.r2data={};
     this.selectedPE=null;
   }
+
   ngOnChanges() {
     if (this.rdteData && this.rdteData.r2data){
-      this.init();
+      this.pes = [];
+      this.rdteData.r2data.forEach(r2 => this.pes.push(r2.programElement));
+      this.pes.sort();
     }
-  }
-
-  async init(){
-    this.pes=[];
-    this.rdteData.r2data.forEach( r2 => this.pes.push(r2.programElement) ); 
-    this.pes.sort();
   }
 
   onPESelected(){
     this.r2data = this.rdteData.r2data.find( data =>  data.programElement == this.selectedPE  );
-    this.changeSummSections = [ "Funding", "Schedule", "Technical"];
   }
 
 }

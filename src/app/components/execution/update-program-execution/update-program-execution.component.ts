@@ -231,6 +231,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   updatedropdowns2() {
+    this.other = undefined;
     this.showtaginput = ('BTR_UFR' === this.etype.subtype
       || 'BTR_OTHER' === this.etype.subtype
       || 'REALIGNMENT_UFR' === this.etype.subtype

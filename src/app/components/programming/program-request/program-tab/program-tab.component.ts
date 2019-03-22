@@ -20,7 +20,7 @@ export class ProgramTabComponent implements OnChanges {
      TagType.MANAGER,
      TagType.PRIMARY_CAPABILITY,
      TagType.CORE_CAPABILITY_AREA,
-     TagType.SECOMDARY_CAPABILITY,
+     TagType.SECONDARY_CAPABILITY,
      TagType.FUNCTIONAL_AREA,
      TagType.MEDICAL_CATEGORY,
      TagType.DASD_CBD,

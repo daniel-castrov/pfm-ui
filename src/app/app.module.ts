@@ -237,6 +237,7 @@ import { ImportActualsComponent } from './components/execution/import-actuals/im
 import {AppHeaderComponent} from "./components/header/app-header/app-header.component";
 import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
 import {ExecutionCreationService} from "./components/execution/create-execution-phase/execution-creation.service";
+import {ScenarioService} from "app/services/scenario.service";
 
 // ROUTES
 const appRoutes: Routes = [
@@ -279,7 +280,7 @@ const appRoutes: Routes = [
   {path:'p5a', component:P5aComponent},
   {path:'p21', component:P21Component},
   {path:'r-forms', component:RFormsComponent},
-  {path:'r2', component:R2Component},
+  {path:'r2/:scenarioId/:programElement', component:R2Component},
   {path:'r2A', component:R2AComponent},
   {path:'r3', component:R3Component},
   {path:'r4', component:R4Component},
@@ -564,6 +565,7 @@ const appRoutes: Routes = [
     UserRoleResourceService,
     ProgramsService,
     UserUtils,
+    ScenarioService,
     CurrentPhase,
     RequestsService,
     POMService,

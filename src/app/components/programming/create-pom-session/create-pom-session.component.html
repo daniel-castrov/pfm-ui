@@ -176,29 +176,29 @@
                   (changes)='onAnalysis($event)'></app-pom-analysis>
               </div>
             </div>
-
-          <div class="row">
-            <div class="col-2">
-            <ng-container *ngIf="!pomIsCreated && !pomIsOpen">
-              <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
-            </ng-container>
-            <ng-container *ngIf="pomIsCreated">
-              <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="toaConfirmationDialog.open()">Update
-                TOAs</button>
-              <confirmation-dialog #toaConfirmationDialog
-                confirmationMessage='<p>Clicking <u>Continue</u> will update all TOAs for the current POM Session
-                        and revert any currently <strong>"Submitted"</strong> Program Requests to the <strong>"Saved"</strong> state.</p>' title="Caution"
-                (okEvent)="updatePom()"></confirmation-dialog>
-            </ng-container>
-            <ng-container *ngIf="pomIsOpen">
-              <button class="btn btn-primary" (click)="updatePom()">Update Community TOA</button>
-            </ng-container>
-          </div>
-          <div class="col-auto">
-            <div *ngIf="submitted" class="loader"></div>
-          </div>
-        </div>
       </div>
+                <div class="row">
+                  <div class="col-2">
+                    <ng-container *ngIf="!pomIsCreated && !pomIsOpen">
+                      <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="submitNewPom()">Create POM</button>
+                    </ng-container>
+                    <ng-container *ngIf="pomIsCreated">
+                      <button [disabled]="tooMuchToa" class="btn btn-primary" (click)="toaConfirmationDialog.open()">Update
+                        TOAs</button>
+                      <confirmation-dialog #toaConfirmationDialog
+                        confirmationMessage='<p>Clicking <u>Continue</u> will update all TOAs for the current POM Session
+                                        and revert any currently <strong>"Submitted"</strong> Program Requests to the <strong>"Saved"</strong> state.</p>' title="Caution"
+                        (okEvent)="updatePom()"></confirmation-dialog>
+                    </ng-container>
+                    <ng-container *ngIf="pomIsOpen">
+                      <button class="btn btn-primary" (click)="updatePom()">Update Community TOA</button>
+                    </ng-container>
+                  </div>
+                  <div class="col-auto">
+                    <div *ngIf="submitted" class="loader"></div>
+                  </div>
+                </div>
+
     </div>
   </div>
 </div>

@@ -491,22 +491,10 @@ paths:
     put:
       tags:
       - "POM"
-      summary: "Updates currently CREATED POM session"
-      description: "Updates TOA values for a Community and its organizations"
       operationId: "updateCurrentPom"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
       parameters:
-      - in: "path"
-        name: "communityId"
-        description: "The community id"
-        required: true
-        type: "string"
       - in: "body"
         name: "body"
-        description: "a POM object"
         required: true
         schema:
           $ref: "#/definitions/Pom"
@@ -682,6 +670,16 @@ paths:
           name: "year"
           required: true
           type: "integer"
+  /pb/{id}:
+    get:
+      tags:
+        - "PB"
+      operationId: "getById"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
   /pb/budget/{budgetId}:
     get:
       tags:
@@ -709,6 +707,16 @@ paths:
 # END PB
 ##############################################################################
 # START BES
+  /bes/{id}:
+    get:
+      tags:
+        - "BES"
+      operationId: "getById"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
   /bes/budget/{budgetId}:
     get:
       tags:
@@ -3661,10 +3669,6 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/R2Data"
-      r2Adata:
-        type: "array"
-        items:
-          $ref: "#/definitions/R2AData"
   R2Data:
     type: "object"
     properties:
@@ -3678,12 +3682,14 @@ definitions:
         type: "string"
       techincalChange:
         type: "string"
-  R2AData:
+      items:
+        type: "array"
+        items:
+          $ref: "#/definitions/Item"
+  Item:
     type: "object"
     properties:
-      programElement:
-        type: "string"
-      item:
+      itemName:
         type: "string"
       missionDescription:
         type: "string"      

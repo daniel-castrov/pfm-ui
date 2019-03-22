@@ -287,7 +287,7 @@ export class CreatePomSessionComponent implements OnInit {
     this.submitted = true;
     var transfer: Pom = this.buildTransfer();
 
-    this.pomsvc.updateCurrentPom(this.community.id, transfer).subscribe(
+    this.pomsvc.updateCurrentPom(transfer).subscribe(
       (data) => {
         if (data.result) {
           this.router.navigate(['/home']);

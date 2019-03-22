@@ -115,22 +115,28 @@ export class ChargesComponent implements OnInit {
 
   updatedropdowns2() {
     if ('EXE_CONGRESSIONAL_ACTION' === this.etype.type) {
+      this.other = undefined;
       this.showotherN = false;
       this.showotherT = false;
     }
     else if ('EXE_OUSDC_ACTION' === this.etype.type) {
+      this.other = undefined;
       this.showotherN = false;
       this.showotherT = true;
     }
     else { // EXE_APPROPRIATION_ACTION
       // appropriation action is sometimes an N and sometimes a T
+
       this.showotherN = (this.etype.subtype === 'APPR_SECTION' || this.etype.subtype === 'APPR_FFRDC');
       this.showotherT = !this.showotherN;
 
       if (!this.other) {
         this.other = '1';
+      } else {
+        this.other = undefined;
       }
     }
+
   }
 
   onUploading(event) {
