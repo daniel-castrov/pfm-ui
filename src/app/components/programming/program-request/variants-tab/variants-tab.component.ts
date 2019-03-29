@@ -103,7 +103,7 @@ export class VariantsTabComponent implements OnInit {
 
   async initDataRows(){
 
-    const pbPrograms: Program[] = (await this.pbService.getFinalByYear( this.pom.fy-1 ).toPromise()).result;
+    const pbPrograms: Program[] = (await this.pbService.getFinalByYear( this.pomFy-1 ).toPromise()).result;
     
     const pbPr: Program = pbPrograms.find(program => program.shortName === name);
 
@@ -200,7 +200,8 @@ export class VariantsTabComponent implements OnInit {
   }
 
   generateColumns() {
-    this.pomService.getById(this.current.containerId).subscribe(pom => {
+    console.log(this.current);
+    this.pomService.getByWorkspaceId(this.current.containerId).subscribe(pom => {
       this.pomStatus = pom.result.status;
       this.pomFy = pom.result.fy;
       this.years = [this.pomFy-3, this.pomFy-2, this.pomFy-1, this.pomFy, this.pomFy + 1, this.pomFy + 2, this.pomFy + 3, this.pomFy + 4];

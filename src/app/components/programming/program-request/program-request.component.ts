@@ -50,7 +50,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.pom = (await this.pomService.getById(this.pr.containerId).toPromise()).result;
+    this.pom = (await this.pomService.getByWorkspaceId(this.pr.containerId).toPromise()).result;
     this.prs = (await this.prService.getByContainer(this.pr.containerId).toPromise()).result;
 
     this.ismgr = false;

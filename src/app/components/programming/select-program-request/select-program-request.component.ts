@@ -53,7 +53,8 @@ export class SelectProgramRequestComponent implements OnInit {
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
       //this.pom = await this.currentPhase.pom().toPromise();
-      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
+      console.log(this.pom);
+      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.workspaceId));
       resolve();
     });
   }
@@ -104,7 +105,7 @@ export class SelectProgramRequestComponent implements OnInit {
           )
         }
       }
-      this.charty.push(bar)
+      this.charty.push(bar);
     }
     this.chartdata = {
       chartType: 'ColumnChart',
