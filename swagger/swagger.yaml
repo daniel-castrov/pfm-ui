@@ -25,6 +25,7 @@ tags:
 - name: "OandE"
 - name: "SpendPlan"
 - name: "Snapshots"
+- name: "Workspace"
 # BUDGET
 - name: "RdteData"
 # USERS AND ROLES
@@ -630,6 +631,21 @@ paths:
       parameters:
       - in: "path"
         name: "pomId"
+        required: true
+        type: "string"
+  /pom/workspace/{wkspId}:
+    get:
+      tags:
+      - "POM"
+      summary: "Get a pom by workspace id"
+      description: "Get a pom by workspace id"
+      operationId: "getByWorkspaceId"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "wkspId"
+        description: "The workspace id"
         required: true
         type: "string"
 # STOP POM
@@ -3148,6 +3164,151 @@ paths:
         required: true
         type: "string"
 # STOP ASSIGNROLEREQUEST
+##############################################################################
+# START WORKSPACE
+  /workspaces:
+    get:
+      tags:
+      - "Workspace"
+      summary: "Get all Workspaces"
+      description: "Get all the Workspaces"
+      operationId: "getAll"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "A list of Workspaces"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden/not authorized"
+        500:
+          description: "An unexpected error occured."
+    post:
+      tags:
+      - "Workspace"
+      summary: "Creates a Workspace"
+      description: "Adds a Workspace."
+      operationId: "create"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Workspace"
+        required: true
+        schema:
+          $ref: "#/definitions/Workspace"
+      responses:
+        200:
+          description: "The newly created Workspace"
+          schema:
+            $ref: "#/definitions/RestResult"
+        400:
+          description: "Workspace couldn't be created."
+        403:
+          description: "Forbidden"
+        500:
+          description: "An unexpected error occured."
+  /workspaces/{workspaceId}:
+    get:
+      tags:
+      - "Workspace"
+      summary: "Gets a Workspace"
+      description: "Get a Workspace identified via its id"
+      operationId: "getById"
+      parameters:
+      - name: "workspaceId"
+        in: "path"
+        description: "Workspace id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a Workspace"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Workspace does not exist."
+        500:
+          description: "An unexpected error occurred."
+    put:
+      tags:
+      - "Workspace"
+      summary: "Update a Workspace"
+      description: "Update a Workspace"
+      operationId: "update"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a Workspace"
+        required: true
+        schema:
+          $ref: "#/definitions/Workspace"
+      responses:
+        204:
+          description: "Successfully updated Workspace"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Workspace does not exist."
+        500:
+          description: "An unexpected error occured."
+  /workspaces/phases/{phaseId}:
+    get:
+      tags:
+      - "Workspace"
+      summary: "Gets a Workspace by Phase id"
+      description: "Get a Workspace by phase id"
+      operationId: "getByPhaseId"
+      parameters:
+      - name: "phaseId"
+        in: "path"
+        description: "Phase id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "a Workspace"
+          schema:
+            $ref: "#/definitions/RestResult"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Workspace for phase does not exist."
+        500:
+          description: "An unexpected error occurred."
+  /workspaces/{workspaceId}/duplicated:
+    put:
+      tags:
+      - "Workspace"
+      summary: "Duplicate a Workspace"
+      description: "Duplicate a Workspace"
+      operationId: "duplicate"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "workspaceId"
+        in: "path"
+        description: "workspace id"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "Successfully duplicated Workspace"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Workspace does not exist."
+        500:
+          description: "An unexpected error occured."
+# STOP WORKSPACE
 
 
 
@@ -3544,6 +3705,15 @@ definitions:
         $ref: "#/definitions/Timestamp"
       success:
         type: "boolean"
+  Workspace:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      phaseId:
+        type: "string"
 #
 ###########################
 ###  MORE PROGRAM STUFF ###
