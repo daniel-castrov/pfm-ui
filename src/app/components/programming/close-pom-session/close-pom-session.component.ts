@@ -41,7 +41,7 @@ export class ClosePomSessionComponent implements OnInit {
       this.currentCommunityId = user.currentCommunityId;
 
       this.pom = (await this.pomService.getReconciliation(user.currentCommunityId).toPromise()).result as Pom;
-      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.id));
+      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.workspaceId));
 
       await this.initPbPrs( this.pom.fy-1 );
 

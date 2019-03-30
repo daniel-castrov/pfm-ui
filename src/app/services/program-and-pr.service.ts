@@ -26,13 +26,13 @@ export class ProgramAndPrService {
     return this.sort(programs);
   }
 
-  async programRequests(phaseId: string): Promise<Program[]> {
-    const prs: Program[] = (await this.prService.getByContainer(phaseId).toPromise()).result;
+  async programRequests(containerId: string): Promise<Program[]> {
+    const prs: Program[] = (await this.prService.getByContainer(containerId).toPromise()).result;
     return this.sort(prs);
   }
 
-  async programRequest(phaseId: string, prId: string): Promise<Program> {
-    const prs: Program[] = await this.programRequests(phaseId);
+  async programRequest(containerId: string, prId: string): Promise<Program> {
+    const prs: Program[] = await this.programRequests(containerId);
     return prs.find( pr => pr.id == prId);
   }
 
@@ -53,18 +53,18 @@ export class ProgramAndPrService {
     return this.sort(programs.concat(prsWithoutPrograms));
   }
 
-  async programsPlusPrsMinusSubprograms(phaseId: string): Promise<Program[]> {
-    const progOrPrs = await this.programsPlusPrs(phaseId);
+  async programsPlusPrsMinusSubprograms(containerId: string): Promise<Program[]> {
+    const progOrPrs = await this.programsPlusPrs(containerId);
     return progOrPrs.filter( progOrPr => progOrPr.type != ProgramType.GENERIC );
   }
 
-  async prsMinusGenericSubprograms(phaseId: string): Promise<Program[]> {
-    const prs = await this.programRequests(phaseId);
+  async prsMinusGenericSubprograms(containerId: string): Promise<Program[]> {
+    const prs = await this.programRequests(containerId);
     return prs.filter( progOrPr => progOrPr.type != ProgramType.GENERIC );
   }
 
-  async programsMunisPrs(allPrograms: Program[], pomId: string): Promise<Program[]> {
-    const prs: Program[] = await this.programRequests(pomId);
+  async programsMunisPrs(allPrograms: Program[], containerId: string): Promise<Program[]> {
+    const prs: Program[] = await this.programRequests(containerId);
 
     const prNames: Set<string> = new Set();
     prs.forEach( pr => prNames.add(pr.shortName));

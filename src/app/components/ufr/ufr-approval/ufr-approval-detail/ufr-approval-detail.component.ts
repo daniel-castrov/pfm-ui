@@ -742,7 +742,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   }
 
   async initPom(){
-    this.pom = (await this.pomService.getById(this.ufr.containerId).toPromise()).result;
+    this.pom = (await this.pomService.getByWorkspaceId(this.ufr.containerId).toPromise()).result;
     this.columnKeys = [
       this.pom.fy - 3,
       this.pom.fy -2,
@@ -783,7 +783,7 @@ export class UfrApprovalDetailComponent implements OnInit {
     } else if( this.ufr.shortyType == ShortyType.PR ||
       this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
       this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
-      this.shorty = await this.programAndPrService.programRequest(this.pom.id, this.ufr.shortyId);
+      this.shorty = await this.programAndPrService.programRequest(this.pom.workspaceId, this.ufr.shortyId);
     } else { // this.ufr.shortyType == ShortyType.NEW_PROGRAM
       // leave this.shorty null
     }

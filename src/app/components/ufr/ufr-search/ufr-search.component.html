@@ -9,7 +9,7 @@
       </div>
       <div *ngIf="pom?.status !== 'RECONCILIATION'"  class="row">
         <div class="col-6">
-          <new-ufr [phaseType]="PhaseType.POM" [containerId]="pom?.id"></new-ufr>
+          <new-ufr [phaseType]="PhaseType.POM" [containerId]="pom?.workspaceId"></new-ufr>
         </div>
         <div class="col-6">
           <div class="filter-columns pull-right">

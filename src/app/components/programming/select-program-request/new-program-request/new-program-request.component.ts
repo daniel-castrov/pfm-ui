@@ -13,7 +13,7 @@ import {UserUtils} from '../../../../services/user.utils';
 export class NewProgramComponent implements OnInit {
 
   addNewPrForMode: AddNewPrForMode;
-  @Input() pomId: string;
+  @Input() containerId: string;
   allPrograms: Program[];
   selectableProgramsOrPrs: Program[];
   selectedProgramOrPr: Program = null;
@@ -36,16 +36,16 @@ export class NewProgramComponent implements OnInit {
     this.addNewPrForMode = selection;
     switch(this.addNewPrForMode) {
       case 'Previously Funded Program':
-        this.selectableProgramsOrPrs = await this.programAndPrService.programsMunisPrs(this.allPrograms, this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programsMunisPrs(this.allPrograms, this.containerId);
         this.initialSelectOption = 'Program';
         break;
       case 'New FoS':
       case 'New Increment':
-        this.selectableProgramsOrPrs = await this.programAndPrService.programsPlusPrsMinusSubprograms(this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programsPlusPrsMinusSubprograms(this.containerId);
         this.initialSelectOption = 'Program';
         break;
       case 'New Subprogram':
-        this.selectableProgramsOrPrs = await this.programAndPrService.programRequests(this.pomId);
+        this.selectableProgramsOrPrs = await this.programAndPrService.programRequests(this.containerId);
         this.initialSelectOption = 'Program Request';
         break;
     }
@@ -60,7 +60,7 @@ export class NewProgramComponent implements OnInit {
 
   async next() {
     this.programRequestPageMode.set( this.addNewPrForMode,
-                                     this.pomId,
+                                     this.containerId,
                                      this.selectedProgramOrPr,
                                      this.toProgramType(this.addNewPrForMode) );
     this.router.navigate(['/program-request']);

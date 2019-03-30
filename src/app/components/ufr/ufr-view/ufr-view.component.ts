@@ -68,7 +68,7 @@ export class UfrViewComponent implements OnInit {
       this.fy = this.execution.fy;
 
     } else {
-      this.pom = (await this.pomService.getById(this.ufr.containerId).toPromise()).result;
+      this.pom = (await this.pomService.getByWorkspaceId(this.ufr.containerId).toPromise()).result;
       this.fy = this.pom.fy;
     }
     this.initShorty();
@@ -82,7 +82,7 @@ export class UfrViewComponent implements OnInit {
     } else if( this.ufr.shortyType == ShortyType.PR ||
                this.ufr.shortyType == ShortyType.NEW_INCREMENT_FOR_PR ||
                this.ufr.shortyType == ShortyType.NEW_FOS_FOR_PR ) {
-      this.shorty = await this.programAndPrService.programRequest(this.pom.id, this.ufr.shortyId);
+      this.shorty = await this.programAndPrService.programRequest(this.pom.workspaceId, this.ufr.shortyId);
     } else { // this.ufr.shortyType == ShortyType.NEW_PROGRAM
       // leave this.shorty null
     }
