@@ -200,7 +200,6 @@ export class VariantsTabComponent implements OnInit {
   }
 
   generateColumns() {
-    console.log(this.current);
     this.pomService.getByWorkspaceId(this.current.containerId).subscribe(pom => {
       this.pomStatus = pom.result.status;
       this.pomFy = pom.result.fy;
