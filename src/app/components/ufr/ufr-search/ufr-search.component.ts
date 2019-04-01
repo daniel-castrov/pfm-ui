@@ -86,5 +86,8 @@ export class UfrSearchComponent implements OnInit, DoCheck {
     phases.forEach((cycle: Cycle) => {
       this.cycles.push(cycle.phase + ' ' + (cycle.fy - 2000));
     });
+
+    console.log(this.cycles);
+    console.log(this.mapCycleIdToFy);
   }
 }

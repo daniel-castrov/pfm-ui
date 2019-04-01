@@ -289,6 +289,7 @@ export class AllUfrsComponent implements OnChanges {
   }
 
   private ufrNumber(ufr: UFR): string {
+    console.log(this.mapCycleIdToFy);
     // the value stored in this.mapCycleIdToFy looks like this: 'POM 2017'
     const fullFy = +this.mapCycleIdToFy.get(ufr.containerId).slice(-4);
     const shortFy = fullFy - 2000;

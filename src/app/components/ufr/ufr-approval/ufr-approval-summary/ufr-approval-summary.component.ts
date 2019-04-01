@@ -45,7 +45,7 @@ export class UfrApprovalSummaryComponent implements OnInit, DoCheck {
 
   private initCyclesAndEditable(poms: Pom[]) {
     poms.forEach((pom: Pom) => {
-      this.mapCycleIdToFy.set(pom.id, 'POM ' + pom.fy);
+      this.mapCycleIdToFy.set(pom.workspaceId, 'POM ' + pom.fy);
     });
   }
 }

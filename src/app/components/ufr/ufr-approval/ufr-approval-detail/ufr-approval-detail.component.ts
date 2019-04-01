@@ -745,7 +745,7 @@ export class UfrApprovalDetailComponent implements OnInit {
     this.pom = (await this.pomService.getByWorkspaceId(this.ufr.containerId).toPromise()).result;
     this.columnKeys = [
       this.pom.fy - 3,
-      this.pom.fy -2,
+      this.pom.fy - 2,
       this.pom.fy - 1,
       this.pom.fy,
       this.pom.fy + 1,

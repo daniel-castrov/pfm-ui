@@ -190,7 +190,7 @@ export class BesRdteComponent implements OnInit {
   async initBudgetFundingLines() {
     const user: User = await this.userUtils.user().toPromise();
     const pom = (await this.pomService.getOpen(user.currentCommunityId).toPromise()).result as Pom;
-    this.budgetFundingLines = (await this.budgetFundingLinesService.getByPomId(pom.id).toPromise()).result;
+    this.budgetFundingLines = (await this.budgetFundingLinesService.getByPomWorkspaceId(pom.workspaceId).toPromise()).result;
   }
 
   itemsForBa(ba: string): Item[] {
