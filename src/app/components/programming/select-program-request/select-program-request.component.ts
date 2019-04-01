@@ -53,7 +53,6 @@ export class SelectProgramRequestComponent implements OnInit {
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
       //this.pom = await this.currentPhase.pom().toPromise();
-      console.log(this.pom);
       this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.workspaceId));
       resolve();
     });
