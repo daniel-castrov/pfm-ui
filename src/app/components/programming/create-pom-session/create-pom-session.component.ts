@@ -500,20 +500,24 @@ export class CreatePomSessionComponent implements OnInit {
     ]];
 
     var toadata: OneYearToaData = this.getToaDataOrBlank(this.selectedyear);
+    var unallocated: number = toadata.community.amount;
     toadata.orgs.forEach( (amt, orgid)=>{
       var orgname: string = this.orgName(orgid);
 
-      var value = amt.amount;
-      var baseamt = amt.baseline;
+      var value = amt.amount || 0;
+      var baseamt = amt.baseline || 0;
       charty.push([orgname,
         value,
         value,
         ("<div class='tool-tip-container'>" +
           "<p class='tooltip-fy'>FY" + (this.selectedyear - 2000) +
-          "</p><h3 class='tooltip-h3'>TOA:<br> " + "<span class='toa'>" +
+          "</p><h3 class='tooltip-h3'>TOA:<br> <span class='toa'>" +
           value.toLocaleString() + "</span></h3><h3 class='tooltip-h3'>Baseline: <span class='base'>" + baseamt.toLocaleString() + "</span></h3></div>")
       ]);
+      unallocated -= value;
     });
+
+    this.tooMuchToa = (unallocated < 0);
 
     var options = {
       title: 'Organizational sub-TOA',
@@ -535,6 +539,18 @@ export class CreatePomSessionComponent implements OnInit {
 
     if (!this.subchartIsBar) {
       delete options.colors;
+
+      // add a new row for unallocated money
+      if (unallocated > 0) {
+        charty.push(['Unallocated',
+          unallocated,
+          unallocated,
+          ("<div class='tool-tip-container'>" +
+            "<p class='tooltip-fy'>FY" + (this.selectedyear - 2000) +
+            "</p><h3 class='tooltip-h3'>Unallocated:<br> <span class='toa'>" +
+            unallocated.toLocaleString() + "</span></h3></div>")
+        ]);
+      }
     }
 
     this.subchartdata = {
