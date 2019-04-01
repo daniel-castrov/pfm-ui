@@ -232,6 +232,7 @@ export class AllUfrsComponent implements OnChanges {
     let ufrs: UFR[] = (await this.ufrsService.search(this.user.currentCommunityId, this.ufrFilter).toPromise()).result;
     let alldata: any[] = [];
     let progId:string, funcArea:string , orgid:string;
+
     ufrs.forEach(ufr => {
 
       if ( ufr.shortyId ){

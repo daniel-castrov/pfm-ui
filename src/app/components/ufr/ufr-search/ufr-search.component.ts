@@ -65,7 +65,7 @@ export class UfrSearchComponent implements OnInit, DoCheck {
 
     poms.forEach((pom: Pom) => {
       phases.push({ fy: pom.fy, phase: PhaseType.POM });
-      this.mapCycleIdToFy.set(pom.id, PhaseType.POM + ' ' + pom.fy);
+      this.mapCycleIdToFy.set(pom.workspaceId, PhaseType.POM + ' ' + pom.fy);
     });
 
     budgets.forEach(budget => {
