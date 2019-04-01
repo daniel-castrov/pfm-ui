@@ -111,8 +111,8 @@ export class SelectProgramRequestComponent implements OnInit {
       dataTable: this.charty,
       options: {
         title: 'Community TOA',
-        width: 600,
-        height: 400,
+        width: 720,
+        height: 160,
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,
@@ -127,8 +127,8 @@ export class SelectProgramRequestComponent implements OnInit {
       dataTable: [],
       options: {
         title: 'Community TOA',
-        width: 600,
-        height: 400,
+        width: 730,
+        height: 160,
         legend: { position: 'top', maxLines: 3 },
         bar: { groupWidth: '75%' },
         isStacked: true,

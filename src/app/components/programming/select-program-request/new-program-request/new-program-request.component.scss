@@ -14,6 +14,7 @@ $light-green: #ebf2de;
   min-height: 100px;
   max-height: 100px;
   height: 100px;
+  background-color: $white;
 }
 
 .dropdown-label {
@@ -24,3 +25,4 @@ $light-green: #ebf2de;
 .dropdown-item {
   cursor: pointer;
 }
+
