@@ -35,6 +35,9 @@
       <a *menuRolesOk="'worksheet-management'" class="dropdown-item" href="#" routerLink="{{ pomStatus == 'OPEN' ? '/worksheet-management' : '/worksheet-viewing'}}">Worksheet Mgmt</a>
       <a *menuRolesNotNow="'worksheet-management'" class="dropdown-item" disabled>Worksheet Mgmt</a>
 
+      <a *menuRolesOk="'workspace-management'" class="dropdown-item" href="#" routerLink="{{ pomStatus == 'OPEN' ? '/workspace-management' : '/workspace-viewing'}}">Workspace Mgmt</a>
+      <a *menuRolesNotNow="'workspace-management'" class="dropdown-item" disabled>Workspace Mgmt</a>
+
       <a *menuRolesOk="'ufr-approval-summary'" class="dropdown-item" href="#" routerLink="/ufr-approval-summary">UFR Approval</a>
       <a *menuRolesNotNow="'ufr-approval-summary'" class="dropdown-item" disabled>UFR Approval</a>
 

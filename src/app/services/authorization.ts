@@ -133,6 +133,24 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
+  async 'workspace-management'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
+      if (Pom.StatusEnum.OPEN == (await this.currentPhase.pom().toPromise()).status) return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'workspace-viewing'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
+      if (Pom.StatusEnum.RECONCILIATION == (await this.currentPhase.pom().toPromise()).status) return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
+
   async 'ufr-approval-summary'(): Promise<AuthorizationResult> {
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {

@@ -1,5 +1,5 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Pom, TOA, User, Worksheet, WorksheetRow} from "../../../../generated";
+import {Pom, TOA, User, Worksheet, WorksheetRow, Workspace} from "../../../../generated";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 
@@ -23,6 +23,7 @@ export class GridToaComponent {
   toaRowData;
   isToaExceeded = false;
   @Input() selectedWorksheet: Worksheet;
+  @Input() selectedWorkspace: Workspace;
 
   initToaDataRows(){
     let data: Array<any> = [];

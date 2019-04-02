@@ -3721,6 +3721,40 @@ definitions:
         type: "string"
       phaseId:
         type: "string"
+      version:
+        type: "integer"
+      notes:
+        type: "string"
+      createDate:
+        type: "integer"
+      lastUpdateDate:
+        type: "integer"
+      isFinal:
+        type: "boolean"
+      locked:
+        type: "boolean"
+      rows:
+        type: "array"
+        items:
+          $ref: "#/definitions/WorkspaceRow"
+  WorkspaceRow:
+    type: "object"
+    properties:
+      programRequestId:
+        type: "string"
+      programRequestFullname:
+        type: "string"
+      coreCapability:
+        type: "string"
+      appropriation:
+        type: "string"
+      baOrBlin:
+        type: "string"
+      item:
+        type: "string"
+      fundingLine:
+        type: "object"
+        $ref: "#/definitions/FundingLine"
 #
 ###########################
 ###  MORE PROGRAM STUFF ###

@@ -63,6 +63,65 @@
           </worksheet>
         </div>
       </div>
+      
+      <!-- Update POM Session for Workspace -->
+      <div class="row">
+        <div class="col-5">
+          <workspace-selector [parent]="this">
+          </workspace-selector>
+        </div>
+        <div *ngIf="selectedWorkspace" class="col-4">
+          <reason-code>
+          </reason-code>
+        </div>
+        <div class="col-3">
+          <span *ngIf="selectedWorkspace" class="pom-controls pull-right">
+            <update-button [workspaceComponent]="workspaceComponent"
+                            [selectedWorkspace]="selectedWorkspace"
+                            [reasonCodeComponent]="reasonCodeComponent">
+            </update-button>
+          </span>
+        </div>
+      </div>
+      <div *ngIf="selectedWorkspace" class="row">
+        <div class="col-5">
+          <bulk-changes [workspaceComponent]="workspaceComponent"
+                        [columnKeys]="columnKeys"
+                        [gridToaComponent]="gridToaComponent">
+          </bulk-changes>
+        </div>
+        <div class="col-7 mt-3">
+          <grid-toa [selectedWorkspace]="selectedWorkspace"
+                    [pom]="pom"
+                    [columnKeys]="columnKeys">
+          </grid-toa>
+        </div>
+      </div>
+      <div *ngIf="selectedWorkspace" class="row mb-3">
+        <div class="col-6 align-column">
+          <div class="row">
+            <div class="col-auto">
+              <grid-rows [agGrid]="workspaceComponent?.agGrid">
+              </grid-rows>
+            </div>
+            <div class="col-auto">
+              <filter-text [workspaceComponent]="workspaceComponent">
+              </filter-text>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedWorkspace" class="row">
+        <div class="col-12">
+          <workspace [selectedWorkspace]="selectedWorkspace"
+                      [columnKeys]="columnKeys"
+                      [gridToaComponent]="gridToaComponent"
+                      [eventsModalComponent]="eventsModalComponent"
+                      [pom]="pom">
+          </workspace>
+        </div>
+      </div>
+      <!-- Update POM Session for Workspace - End -->
     </div>
   </div>
 </div>
@@ -70,3 +129,9 @@
               [columnKeys]="columnKeys"
               [pom]="pom">
 </events-modal>
+<!-- Update POM Session for Workspace -->
+<events-modal [selectedWorkspace]="selectedWorkspace"
+              [columnKeys]="columnKeys"
+              [pom]="pom">
+</events-modal>
+<!-- Update POM Session for Workspace - End -->

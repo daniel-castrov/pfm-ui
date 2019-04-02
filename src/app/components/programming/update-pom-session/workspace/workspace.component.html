@@ -1,0 +1,30 @@
+<div>
+  <ag-grid-angular #agGrid
+                   class="ag-theme-balham group-header-white"
+                   [gridAutoHeight]="true"
+                   [toolPanelSuppressSideButtons]="true"
+                   [suppressMovableColumns]="true"
+                   [suppressRowTransform]="true"
+                   [showToolPanel]="false"
+                   [enableSorting]="true"
+                   [enableFilter]="true"
+                   [components]="components"
+                   [rowSelection]="rowSelection"
+                   [frameworkComponents]="frameworkComponents"
+                   [context]="context"
+                   [rowMultiSelectWithClick]="true"
+                   (rowSelected)="onRowSelected($event)"
+                   [rowData]="rowData"
+                   [singleClickEdit]="true"
+                   [stopEditingWhenGridLosesFocus]="true"
+                   [isExternalFilterPresent]="isExternalFilterPresent"
+                   [doesExternalFilterPass]="doesExternalFilterPass"
+                   [getRowNodeId]="getRowNodeId"
+                   [pagination]="true"
+                   [paginationPageSize]="15"
+                   (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+                   [suppressPaginationPanel]="true"
+                   (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+</div>
+<ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

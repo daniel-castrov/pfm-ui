@@ -176,6 +176,7 @@ import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
 import {NameUpdatingRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-updating-renderer.component";
 import {WorksheetService} from "./generated/api/worksheet.service";
+import {WorkspaceService} from "./generated/api/workspace.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
 import { BesRdteComponent } from './components/budget/bes-rdte/bes-rdte.component';
 import { BesProcComponent } from './components/budget/bes-proc/bes-proc.component';
@@ -238,6 +239,20 @@ import {AppHeaderComponent} from "./components/header/app-header/app-header.comp
 import { ImportAcutalsTableComponent } from './components/execution/import-acutals-table/import-acutals-table.component';
 import {ExecutionCreationService} from "./components/execution/create-execution-phase/execution-creation.service";
 import {ScenarioService} from "app/services/scenario.service";
+import { WorkspaceViewingComponent } from './components/programming/pom-workspace/workspace-viewing/workspace-viewing.component';
+import { NameDisplayRendererComponent } from './components/programming/pom-workspace/workspace-viewing/name-display-renderer.component';
+import { WorkspaceComponent } from './components/programming/update-pom-session/workspace/workspace.component';
+import { WorkspaceSelectorComponent } from './components/programming/update-pom-session/workspace-selector/workspace-selector.component';
+import { WorkspaceManagementComponent } from './components/programming/pom-workspace/workspace-management/workspace-management.component';
+import { DuplicaterComponent } from './components/programming/pom-workspace/workspace-management/duplicater/duplicater.component';
+import { ExporterComponent } from './components/programming/pom-workspace/workspace-management/exporter/exporter.component';
+import { ImporterComponent } from './components/programming/pom-workspace/workspace-management/importer/importer.component';
+import { RenamerComponent } from './components/programming/pom-workspace/workspace-management/renamer/renamer.component';
+import { UnlockerComponent } from './components/programming/pom-workspace/workspace-management/unlocker/unlocker.component';
+import { WorkspaceStateService } from './components/programming/pom-workspace/workspace-management/workspace-state.service';
+import { WorkspaceCheckboxRendererComponent } from './components/programming/pom-workspace/workspace-management/workspace-checkbox-renderer.component';
+import { WorkspaceSelectedComponent } from './components/programming/view-pom-session/workspace-selected/workspace-selected.component';
+import { WorkspaceNameUpdatingRendererComponent } from './components/programming/pom-workspace/workspace-management/workspace-name-updating-renderer.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -314,6 +329,7 @@ const appRoutes: Routes = [
   {path:'ufr-view/:phaseType', component: UfrViewComponent},
   {path:'withhold/:phaseId', component: WithholdComponent},
   {path:'worksheet-management', component: WorksheetManagementComponent, canActivate:[CanActivateAuth]},
+  {path:'workspace-management', component: WorkspaceManagementComponent, canActivate:[CanActivateAuth]},
   {path:'worksheet-viewing', component: WorksheetViewingComponent, canActivate:[CanActivateAuth]},
   {path:'create-new-pom', component: CreatePomSessionComponent , canActivate:[CanActivateAuth]},
   {path:'library', component: LibraryComponent},
@@ -499,7 +515,20 @@ const appRoutes: Routes = [
     R1TabComponent,
     ScenarioSelectorComponent,
     R2TabComponent,
-    R2aTabComponent
+    R2aTabComponent,
+    WorkspaceViewingComponent,
+    NameDisplayRendererComponent,
+    WorkspaceComponent,
+    WorkspaceSelectorComponent,
+    WorkspaceManagementComponent,
+    DuplicaterComponent,
+    ExporterComponent,
+    ImporterComponent,
+    RenamerComponent,
+    UnlockerComponent,
+    WorkspaceCheckboxRendererComponent,
+    WorkspaceSelectedComponent,
+    WorkspaceNameUpdatingRendererComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -511,9 +540,12 @@ const appRoutes: Routes = [
     DeleteRenderer,
     FundingRateRenderer,
     CheckboxRendererComponent,
+    WorkspaceCheckboxRendererComponent,
     CheckboxCellRenderer,
     NameUpdatingRendererComponent,
+    WorkspaceNameUpdatingRendererComponent,
     NameViewingRendererComponent,
+    NameDisplayRendererComponent,
     ViewSiblingsRenderer,
     ViewEventsRenderer,
     ValueChangeRenderer,
@@ -572,6 +604,7 @@ const appRoutes: Routes = [
     BudgetService,
     RdteDataService,
     WorksheetService,
+    WorkspaceService,
     PRService,
     PBService,
     BESService,
@@ -581,6 +614,7 @@ const appRoutes: Routes = [
     OandEService,
     LibraryService,
     StateService,
+    WorkspaceStateService,
     SpendPlanService,
     BudgetFundingLinesService,
     PrChangeNotificationsService,

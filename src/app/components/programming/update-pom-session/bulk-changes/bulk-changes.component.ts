@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {WorksheetComponent} from "../worksheet/worksheet.component";
 import {GridToaComponent} from "../grid-toa/grid-toa.component";
 import {RowNode} from "ag-grid";
+import { WorkspaceComponent } from '../workspace/workspace.component';
 
 @Component({
   selector: 'bulk-changes',
@@ -11,6 +12,7 @@ import {RowNode} from "ag-grid";
 export class BulkChangesComponent {
 
   @Input() worksheetComponent: WorksheetComponent;
+  @Input() workspaceComponent: WorkspaceComponent;
   @Input() columnKeys;
   @Input() gridToaComponent: GridToaComponent;
   bulkType: string;

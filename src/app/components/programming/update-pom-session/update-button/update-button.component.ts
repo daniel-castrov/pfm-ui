@@ -1,10 +1,11 @@
 import {Component, Input} from '@angular/core';
-import {Worksheet, WorksheetEvent, WorksheetService} from "../../../../generated";
+import {Worksheet, WorksheetEvent, WorksheetService, Workspace} from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
 import {WorksheetComponent} from "./../worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./../reason-code/reason-code.component";
 import {RowNode} from "ag-grid";
+import { WorkspaceComponent } from '../workspace/workspace.component';
 
 
 @Component({
@@ -15,8 +16,10 @@ import {RowNode} from "ag-grid";
 export class UpdateButtonComponent {
 
   @Input() private worksheetComponent: WorksheetComponent;
+  @Input() private workspaceComponent: WorkspaceComponent;
   @Input() private reasonCodeComponent: ReasonCodeComponent;
   @Input() selectedWorksheet: Worksheet;
+  @Input() selectedWorkspace: Workspace;
 
   constructor( private worksheetService: WorksheetService ) {}
 

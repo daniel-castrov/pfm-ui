@@ -21,6 +21,7 @@ export class EventsModalComponent {
 
   @Input() pom: Pom;
   @Input() selectedWorksheet;
+  @Input() selectedWorkspace;
   eventsColumnDefs;
   detailCellRendererParams;
   @Input() columnKeys;
