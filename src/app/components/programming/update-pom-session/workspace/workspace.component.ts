@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Pom, Worksheet, WorkspaceRow, Workspace} from "../../../../generated";
+import {Pom, Worksheet, WorkspaceRow, Workspace, WorkspaceService, ProgramsService} from "../../../../generated";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {CellEditor} from "../../../../utils/CellEditor";
@@ -8,6 +8,7 @@ import {ViewEventsRenderer} from "../../../renderers/view-events-renderer/view-e
 import {CheckboxCellRenderer} from "../../../renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 import {GridToaComponent} from "./../grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./../events-modal/events-modal.component";
+import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
 
 @Component({
   selector: 'workspace',
@@ -37,6 +38,10 @@ export class WorkspaceComponent implements OnChanges {
   context = { parentComponent: this, eventsModalComponent: null };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
+  constructor(private prsvc: ProgramAndPrService) {
+    
+  }
+
   ngOnChanges() {
     if (this.eventsModalComponent) {
       this.context = {...this.context, eventsModalComponent: this.eventsModalComponent};
@@ -55,21 +60,26 @@ export class WorkspaceComponent implements OnChanges {
 
   initDataRows(){
     let data: Array<any> = [];
-    this.selectedWorkspace.rows.forEach((value: WorkspaceRow) => {
-      let row = {
-        id: value.fundingLine.id,
-        coreCapability: value.coreCapability,
-        programId: value.programRequestFullname,
-        fundingLine: value.fundingLine,
-        modified: false,
-        notes: '',
-        anchored: false
-      };
-      data.push(row);
+    console.log(this.selectedWorkspace);
+    this.prsvc.programRequests(this.selectedWorkspace.id).then(d => {
+      d.forEach(program => {
+        program.fundingLines.forEach(value => {
+          let row = {
+            id: value.id,
+            coreCapability: program.coreCapability,
+            programId: program.longName,
+            fundingLine: value,
+            modified: false,
+            notes: '',
+            anchored: false
+          };
+          data.push(row);
+        });
+      });
+      this.rowData = data;
+      this.agGrid.api.sizeColumnsToFit();
+      this.generateUnmodifiedFundingLines();
     });
-    this.rowData = data;
-    this.agGrid.api.sizeColumnsToFit();
-    this.generateUnmodifiedFundingLines();
   }
 
   generateUnmodifiedFundingLines() {
