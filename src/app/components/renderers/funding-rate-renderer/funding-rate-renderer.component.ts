@@ -16,19 +16,21 @@ export class FundingRateRenderer implements ICellRendererAngularComp {
 
   agInit(param) {
     let data: UiProgramRequest = param.data
-    if(data.totalFundsPB && data.totalFundsPB.hasOwnProperty(param.year)) {
-      if(param.value > data.totalFundsPB[param.year]) {
-        this.rate = 'MORE'
-      } else if(param.value < data.totalFundsPB[param.year]) {
-        this.rate = 'LESS'
-      } else {
-        this.rate = 'EQUAL'
-      }
+    var lastpb: number = (data.totalFundsPB && data.totalFundsPB.hasOwnProperty(param.year)
+      ? data.totalFundsPB[param.year]
+      : 0);
+    if (param.value > lastpb) {
+      this.rate = 'MORE'
+    } else if (param.value < lastpb) {
+      this.rate = 'LESS'
     } else {
       this.rate = 'EQUAL'
     }
+
     this.value = this.currencyFormatter(param.value);
-    this.rateAmount = 'PB'+(param.fy - 1).toString().replace('20', '')+': '+this.currencyFormatter(data.totalFundsPB[param.year]);
+
+    this.rateAmount = 'PB' + (param.fy - 1).toString().replace('20', '') + ': '
+      + (lastpb > 0 ? this.currencyFormatter(lastpb) : 'not funded');
   }
 
   refresh(): boolean {

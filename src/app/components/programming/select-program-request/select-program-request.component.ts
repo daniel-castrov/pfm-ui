@@ -58,7 +58,7 @@ export class SelectProgramRequestComponent implements OnInit {
     });
   }
 
-  async initPbPrs(year:number) {
+  async initPbPrs(year: number) {
     this.pbPrograms = (await this.pbService.getFinalByYear(year).toPromise()).result;
   }
 
