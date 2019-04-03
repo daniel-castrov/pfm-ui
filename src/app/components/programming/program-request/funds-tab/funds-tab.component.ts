@@ -748,7 +748,6 @@ export class FundsTabComponent implements OnChanges {
   isEditable(params): boolean {
     return params.data.programId !== 'Total Funds Request' &&
       params.data.fundingLine.userCreated === true &&
-      params.data.phaseType === PhaseType.PB &&
       params.data.gridType === GridType.CURRENT_PR &&
       ( this.ismgr || this.isEditableInReconciliation() );
   }
