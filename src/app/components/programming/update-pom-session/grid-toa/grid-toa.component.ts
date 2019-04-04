@@ -2,6 +2,7 @@ import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Pom, TOA, User, Worksheet, WorksheetRow, Workspace} from "../../../../generated";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
+import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
 
 
 @Component({
@@ -22,8 +23,11 @@ export class GridToaComponent {
   rowData;
   toaRowData;
   isToaExceeded = false;
-  @Input() selectedWorksheet: Worksheet;
   @Input() selectedWorkspace: Workspace;
+
+  constructor(private prsvc: ProgramAndPrService) {
+    
+  }
 
   initToaDataRows(){
     let data: Array<any> = [];
@@ -39,12 +43,16 @@ export class GridToaComponent {
     this.columnKeys.forEach((year: number) => {
       resourcedFunds[year] = 0;
     });
-    this.selectedWorksheet.rows.forEach((value: WorksheetRow) => {
-      this.columnKeys.forEach((year: number) => {
-        if(year >= this.pom.fy) {
-          let amount = value.fundingLine.funds[year];
-          resourcedFunds[year] += isNaN(amount)? 0 : amount;
-        }
+    this.prsvc.programRequests(this.selectedWorkspace.id).then(d => { 
+      d.forEach(value => { 
+        this.columnKeys.forEach((year: number) => {
+          if (year >= this.pom.fy) {
+            value.fundingLines.forEach(fl => { 
+              var amt: number = fl.funds[year] || 0;
+              resourcedFunds[year] += amt;
+            });
+          }
+        });
       });
     });
 

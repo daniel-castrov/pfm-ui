@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Pom, Worksheet, WorkspaceRow, Workspace, WorkspaceService, ProgramsService} from "../../../../generated";
+import {Pom, Worksheet, WorkspaceRow, Workspace, WorkspaceService, ProgramsService, Program} from "../../../../generated";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {CellEditor} from "../../../../utils/CellEditor";
@@ -37,6 +37,7 @@ export class WorkspaceComponent implements OnChanges {
   @Input() gridToaComponent: GridToaComponent;
   context = { parentComponent: this, eventsModalComponent: null };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
+  private wkspPrs: Program[];
 
   constructor(private prsvc: ProgramAndPrService) {
     
@@ -62,7 +63,8 @@ export class WorkspaceComponent implements OnChanges {
     let data: Array<any> = [];
     console.log(this.selectedWorkspace);
     this.prsvc.programRequests(this.selectedWorkspace.id).then(d => {
-      d.forEach(program => {
+      this.wkspPrs = d;
+      this.wkspPrs.forEach(program => {
         program.fundingLines.forEach(value => {
           let row = {
             id: value.id,
@@ -84,13 +86,15 @@ export class WorkspaceComponent implements OnChanges {
 
   generateUnmodifiedFundingLines() {
     let data: Array<any> = [];
-    this.selectedWorkspace.rows.forEach((value: WorkspaceRow) => {
-      let workspace = JSON.parse(JSON.stringify(value));
-      let row = {
-        programId: workspace.programRequest,
-        fundingLine: workspace.fundingLine
-      };
-      data.push(row);
+    this.wkspPrs.forEach( pr => {
+      let prCopy = Object.assign({}, pr);
+      pr.fundingLines.forEach(fl => { 
+        let row = {
+          programId: prCopy,
+          fundingLine: fl
+        };
+        data.push(row);
+      });
     });
     this.unmodifiedFundingLines = data;
   }

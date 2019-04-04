@@ -19,8 +19,8 @@ export class BulkChangesComponent {
   bulkAmount: number;
 
   applyBulkChange() {
-    this.worksheetComponent.agGrid.api.forEachNodeAfterFilterAndSort((rowNode: RowNode) => {
-      if (rowNode.rowIndex <= this.worksheetComponent.agGrid.api.getLastDisplayedRow()) {
+    this.workspaceComponent.agGrid.api.forEachNodeAfterFilterAndSort((rowNode: RowNode) => {
+      if (rowNode.rowIndex <= this.workspaceComponent.agGrid.api.getLastDisplayedRow()) {
         this.columnKeys.forEach(year => {
           let additionalAmount = 0;
           if (this.bulkType === 'percentage') {
@@ -28,7 +28,7 @@ export class BulkChangesComponent {
           } else {
             additionalAmount = this.bulkAmount;
           }
-          rowNode.data.fundingLine.funds[year] = (isNaN(rowNode.data.fundingLine.funds[year])? 0 : rowNode.data.fundingLine.funds[year]) + additionalAmount;
+          rowNode.data.fundingLine.funds[year] = (isNaN(rowNode.data.fundingLine.funds[year]) ? 0 : rowNode.data.fundingLine.funds[year]) + additionalAmount;
           rowNode.data.modified = true;
           rowNode.setSelected(true);
           if (rowNode.data.fundingLine.funds[year] < 0) {
@@ -37,8 +37,9 @@ export class BulkChangesComponent {
         });
       }
     });
+    
 
-    this.worksheetComponent.topPinnedData.forEach(row => {
+    this.workspaceComponent.topPinnedData.forEach(row => {
       this.columnKeys.forEach(year => {
         let additionalAmount = 0;
         if (this.bulkType === 'percentage') {
@@ -55,7 +56,7 @@ export class BulkChangesComponent {
     });
 
     this.bulkAmount = null;
-    this.worksheetComponent.agGrid.api.redrawRows();
+    this.workspaceComponent.agGrid.api.redrawRows();
     this.gridToaComponent.initToaDataRows();
   }
 

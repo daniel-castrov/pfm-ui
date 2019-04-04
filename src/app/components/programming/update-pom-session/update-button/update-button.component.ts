@@ -23,8 +23,8 @@ export class UpdateButtonComponent {
 
   constructor( private worksheetService: WorksheetService ) {}
 
-  update()  {
-    let modifiedRows: RowNode [] = this.worksheetComponent.agGrid.api.getSelectedNodes();
+  update() {
+    let modifiedRows: RowNode [] = this.workspaceComponent.agGrid.api.getSelectedNodes();
     if (modifiedRows.length === 0) {
       Notify.error('No changes detected.')
       return;
@@ -36,14 +36,14 @@ export class UpdateButtonComponent {
     }
 
     let updateData: RowUpdateEventData [] = [];
-    this.worksheetComponent.agGrid.api.getSelectedNodes().forEach(node => {
+    this.workspaceComponent.agGrid.api.getSelectedNodes().forEach(node => {
       let modifiedRow: RowUpdateEventData = {};
       modifiedRow.notes = node.data.notes;
       modifiedRow.newFundingLine = node.data.fundingLine;
-      modifiedRow.previousFundingLine = this.worksheetComponent.unmodifiedFundingLines.find(ufl =>
+      modifiedRow.previousFundingLine = this.workspaceComponent.unmodifiedFundingLines.find(ufl =>
         ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
       modifiedRow.reasonCode = this.reasonCodeComponent.reasonCode;
-      modifiedRow.worksheetId = this.selectedWorksheet.id;
+      modifiedRow.worksheetId = this.workspaceComponent.selectedWorkspace.id;
       modifiedRow.programId = node.data.programId
       modifiedRow.fundingLineId = node.data.fundingLine.id;
       updateData.push(modifiedRow);
@@ -53,15 +53,15 @@ export class UpdateButtonComponent {
       node.data.notes = '';
     });
     this.reasonCodeComponent.reasonCode = null;
-    this.worksheetComponent.agGrid.api.refreshCells();
-    let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorksheet};
+    this.workspaceComponent.agGrid.api.refreshCells();
+    let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorkspace};
     this.worksheetService.updateRows(body).subscribe(response => {
       if (!response.error) {
-        this.worksheetComponent.generateUnmodifiedFundingLines();
+        this.workspaceComponent.generateUnmodifiedFundingLines();
         this.reasonCodeComponent.ngOnInit();
-        Notify.success('Worksheet updated successfully');
+        Notify.success('Workspace updated successfully');
       } else {
-        Notify.error('Something went wrong while trying to update the worksheet');
+        Notify.error('Something went wrong while trying to update the workspace');
         console.log(response.error);
       }
     });
