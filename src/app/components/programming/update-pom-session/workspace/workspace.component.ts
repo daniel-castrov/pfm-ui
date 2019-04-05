@@ -85,9 +85,10 @@ export class WorkspaceComponent implements OnChanges {
   }
 
   generateUnmodifiedFundingLines() {
+    console.log('storing unmodified versions');
     let data: Array<any> = [];
     this.wkspPrs.forEach( pr => {
-      let prCopy = Object.assign({}, pr);
+      let prCopy = JSON.parse(JSON.stringify(pr));
       prCopy.fundingLines.forEach(fl => { 
         let row = {
           programId: prCopy,

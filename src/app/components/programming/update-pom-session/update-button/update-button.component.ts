@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Worksheet, WorksheetEvent, WorksheetService, Workspace} from "../../../../generated";
+import { Worksheet, WorksheetEvent, Workspace, WorkspaceService } from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
 import {WorksheetComponent} from "./../worksheet/worksheet.component";
@@ -21,7 +21,7 @@ export class UpdateButtonComponent {
   @Input() selectedWorksheet: Worksheet;
   @Input() selectedWorkspace: Workspace;
 
-  constructor( private worksheetService: WorksheetService ) {}
+  constructor( private workspaceService: WorkspaceService ) {}
 
   update() {
     let modifiedRows: RowNode [] = this.workspaceComponent.agGrid.api.getSelectedNodes();
@@ -42,11 +42,14 @@ export class UpdateButtonComponent {
       modifiedRow.newFundingLine = node.data.fundingLine;
       modifiedRow.previousFundingLine = this.workspaceComponent.unmodifiedFundingLines.find(ufl =>
         ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
+      console.log(modifiedRow.previousFundingLine);
       modifiedRow.reasonCode = this.reasonCodeComponent.reasonCode;
       modifiedRow.worksheetId = this.workspaceComponent.selectedWorkspace.id;
       modifiedRow.programId = node.data.programId
       modifiedRow.fundingLineId = node.data.fundingLine.id;
       updateData.push(modifiedRow);
+
+      console.log(modifiedRow);
 
       node.data.modified = false;
       node.setSelected(false);
@@ -55,9 +58,9 @@ export class UpdateButtonComponent {
     this.reasonCodeComponent.reasonCode = null;
     this.workspaceComponent.agGrid.api.refreshCells();
     let body: WorksheetEvent = {rowUpdateEvents: updateData, worksheet: this.selectedWorkspace};
-    this.worksheetService.updateRows(body).subscribe(response => {
+    this.workspaceService.updateEvents(this.workspaceComponent.selectedWorkspace.id, updateData).subscribe(response => { 
       if (!response.error) {
-        this.workspaceComponent.generateUnmodifiedFundingLines();
+        this.workspaceComponent.initDataRows();
         this.reasonCodeComponent.ngOnInit();
         Notify.success('Workspace updated successfully');
       } else {

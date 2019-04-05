@@ -13,7 +13,7 @@ export class FilterTextComponent {
   filterText: string;
 
   onFilterTextBoxChanged() {
-    this.worksheetComponent.agGrid.gridOptions.api.setQuickFilter( this.filterText );
+    this.workspaceComponent.agGrid.gridOptions.api.setQuickFilter( this.filterText );
   }
 
 }
