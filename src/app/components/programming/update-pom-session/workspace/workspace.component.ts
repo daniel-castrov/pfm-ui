@@ -88,7 +88,7 @@ export class WorkspaceComponent implements OnChanges {
     let data: Array<any> = [];
     this.wkspPrs.forEach( pr => {
       let prCopy = Object.assign({}, pr);
-      pr.fundingLines.forEach(fl => { 
+      prCopy.fundingLines.forEach(fl => { 
         let row = {
           programId: prCopy,
           fundingLine: fl

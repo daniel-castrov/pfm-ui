@@ -3313,6 +3313,70 @@ paths:
           description: "The Workspace does not exist."
         500:
           description: "An unexpected error occured."
+  /workspaces/{workspaceId}/createRows:
+    post:
+      tags:
+      - "Workspace"
+      summary: "Create Workspace PRs"
+      description: "Create Workspace PRs"
+      operationId: "createEvents"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "workspaceId"
+        in: "path"
+        description: "workspace id"
+        required: true
+        type: "string"
+      - name: rows
+        in: "body"
+        description: "The event rows to create"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/RowUpdateEventData"
+      responses:
+        204:
+          description: "Successfully created Workspace PRs"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Workspace does not exist."
+        500:
+          description: "An unexpected error occured."
+  /workspaces/{workspaceId}/updateRows:
+    post:
+      tags:
+      - "Workspace"
+      summary: "update PRs in Workspace"
+      description: "Update a Workspace"
+      operationId: "updateEvents"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "workspaceId"
+        in: "path"
+        description: "workspace id"
+        required: true
+        type: "string"
+      - name: rows
+        in: "body"
+        description: "The event rows to update"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/RowUpdateEventData"
+      responses:
+        204:
+          description: "Successfully updated Workspace PRs"
+        403:
+          description: "Forbidden"
+        404:
+          description: "The Workspace does not exist."
+        500:
+          description: "An unexpected error occured."
 # STOP WORKSPACE
 
 
