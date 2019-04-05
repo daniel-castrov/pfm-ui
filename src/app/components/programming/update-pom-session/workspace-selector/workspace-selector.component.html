@@ -3,7 +3,7 @@
     <div class="form-group inline-name">
       <select [(ngModel)]="parent.selectedWorkspace" (change)="onWorkspaceSelected()" class="form-control-sm worksheet-width">
         <option value="undefined" disabled selected>Select Workspace</option>
-        <option *ngFor="let w of parent.workspaces" [ngValue]="w">{{w.name + ' ' + w.version}}</option>
+        <option *ngFor="let w of parent.workspaces" [ngValue]="w">{{w.name}}</option>
       </select>
     </div>
   </div>

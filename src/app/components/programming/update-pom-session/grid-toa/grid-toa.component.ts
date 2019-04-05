@@ -1,5 +1,5 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Pom, TOA, User, Worksheet, WorksheetRow, Workspace} from "../../../../generated";
+import {Pom, TOA, User, Worksheet, WorksheetRow, Workspace, ProgramType} from "../../../../generated";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
@@ -43,34 +43,32 @@ export class GridToaComponent {
     this.columnKeys.forEach((year: number) => {
       resourcedFunds[year] = 0;
     });
-    this.prsvc.programRequests(this.selectedWorkspace.id).then(d => { 
-      d.forEach(value => { 
-        this.columnKeys.forEach((year: number) => {
-          if (year >= this.pom.fy) {
-            value.fundingLines.forEach(fl => { 
-              var amt: number = fl.funds[year] || 0;
-              resourcedFunds[year] += amt;
-            });
-          }
+    this.prsvc.programRequests(this.selectedWorkspace.id).then(d => {
+      d.filter(program => ProgramType.GENERIC != program.type).forEach(program => {
+        this.columnKeys.filter(year => year >= this.pom.fy).forEach(year => {
+          program.fundingLines.forEach(fl => {
+            var amt: number = fl.funds[year] || 0;
+            resourcedFunds[year] += amt;
+          });
         });
       });
+
+      let resourcedRow = { description: 'Total Resourced', funds: resourcedFunds, modified: false };
+      data.push(resourcedRow);
+
+      let deltaFunds = [];
+      this.columnKeys.forEach((year: number) => {
+        deltaFunds[year] = allocatedFunds[year] - resourcedFunds[year];
+      });
+
+      this.isToaExceeded = deltaFunds.some(value => value < 0);
+
+      let deltaRow = { description: 'Delta', funds: deltaFunds };
+      data.push(deltaRow);
+
+      this.toaRowData = data;
+      this.agGridToa.api.sizeColumnsToFit();
     });
-
-    let resourcedRow = {description: 'Total Resourced', funds: resourcedFunds, modified: false};
-    data.push(resourcedRow);
-
-    let deltaFunds = [];
-    this.columnKeys.forEach((year: number) => {
-      deltaFunds[year] = allocatedFunds[year] - resourcedFunds[year];
-    });
-
-    this.isToaExceeded = deltaFunds.some(value => value < 0);
-
-    let deltaRow = {description: 'Delta', funds: deltaFunds};
-    data.push(deltaRow);
-
-    this.toaRowData = data;
-    this.agGridToa.api.sizeColumnsToFit();
   }
 
   generateToaColumns() {

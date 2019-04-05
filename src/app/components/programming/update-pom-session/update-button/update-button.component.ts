@@ -6,6 +6,7 @@ import {WorksheetComponent} from "./../worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./../reason-code/reason-code.component";
 import {RowNode} from "ag-grid";
 import { WorkspaceComponent } from '../workspace/workspace.component';
+import { GridToaComponent } from '../grid-toa/grid-toa.component';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { WorkspaceComponent } from '../workspace/workspace.component';
 })
 export class UpdateButtonComponent {
 
-  @Input() private worksheetComponent: WorksheetComponent;
+  @Input() private gridToaComponent: GridToaComponent;
   @Input() private workspaceComponent: WorkspaceComponent;
   @Input() private reasonCodeComponent: ReasonCodeComponent;
   @Input() selectedWorksheet: Worksheet;
@@ -61,6 +62,7 @@ export class UpdateButtonComponent {
       if (!response.error) {
         this.workspaceComponent.initDataRows();
         this.reasonCodeComponent.ngOnInit();
+        this.gridToaComponent.initToaDataRows();
         Notify.success('Workspace updated successfully');
       } else {
         Notify.error('Something went wrong while trying to update the workspace');
