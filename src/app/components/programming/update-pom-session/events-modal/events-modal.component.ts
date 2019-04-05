@@ -1,5 +1,5 @@
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Pom, RowUpdateEvent, User, UserService, WorksheetService} from "../../../../generated";
+import {Pom, RowUpdateEvent, User, UserService, WorksheetService, WorkspaceService} from "../../../../generated";
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import {Notify} from "../../../../utils/Notify";
@@ -32,14 +32,15 @@ export class EventsModalComponent {
     checkboxCellRenderer: CheckboxCellRenderer};
   context = { parentComponent: this };
 
-  constructor( private worksheetService: WorksheetService,
+  constructor( private workspaceService: WorkspaceService,
                private userService: UserService ) {}
 
 
-  async viewEvents(params){
+  async viewEvents(params) {
+    console.log(params);
     let data: Array<any> = [];
-    let worksheetRowEvents : RowUpdateEvent[] = (await this.worksheetService.getWorksheetRowEvents(
-      this.selectedWorksheet.id, params.data.fundingLine.id).toPromise()).result;
+    let worksheetRowEvents : RowUpdateEvent[] = (await this.workspaceService.getEvents(
+      this.selectedWorkspace.id, params.data.fundingLine.id).toPromise()).result;
 
     for(let wre of worksheetRowEvents) {
       let user = (await this.userService.getByCn(wre.userCN).toPromise()).result;

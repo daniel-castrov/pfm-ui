@@ -61,7 +61,6 @@ export class WorkspaceComponent implements OnChanges {
 
   initDataRows(){
     let data: Array<any> = [];
-    console.log(this.selectedWorkspace);
     this.prsvc.programRequests(this.selectedWorkspace.id).then(d => {
       this.wkspPrs = d;
       this.wkspPrs.forEach(program => {
@@ -69,7 +68,7 @@ export class WorkspaceComponent implements OnChanges {
           let row = {
             id: value.id,
             coreCapability: program.coreCapability,
-            programId: program.longName,
+            programId: program.shortName,
             fundingLine: value,
             modified: false,
             notes: '',
@@ -85,7 +84,6 @@ export class WorkspaceComponent implements OnChanges {
   }
 
   generateUnmodifiedFundingLines() {
-    console.log('storing unmodified versions');
     let data: Array<any> = [];
     this.wkspPrs.forEach( pr => {
       let prCopy = JSON.parse(JSON.stringify(pr));

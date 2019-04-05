@@ -42,7 +42,6 @@ export class UpdateButtonComponent {
       modifiedRow.newFundingLine = node.data.fundingLine;
       modifiedRow.previousFundingLine = this.workspaceComponent.unmodifiedFundingLines.find(ufl =>
         ufl.fundingLine.id === node.data.fundingLine.id).fundingLine;
-      console.log(modifiedRow.previousFundingLine);
       modifiedRow.reasonCode = this.reasonCodeComponent.reasonCode;
       modifiedRow.worksheetId = this.workspaceComponent.selectedWorkspace.id;
       modifiedRow.programId = node.data.programId
