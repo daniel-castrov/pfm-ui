@@ -5,10 +5,12 @@ import {POMService} from '../../../generated/api/pOM.service';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { PBService, Pom, Program, RestResult, ProgramStatus} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
-import { GoogleChartComponent } from 'ng2-google-charts';
+import { GoogleChartComponent, ChartSelectEvent } from 'ng2-google-charts';
 import { UiProgramRequest } from './UiProgramRequest';
+import  * as _ from 'lodash';
 
 import {CurrentPhase} from "../../../services/current-phase.service";
+import { filter } from 'rxjs/operator/filter';
 
 @Component({
   selector: 'app-select-program-request',
@@ -24,15 +26,21 @@ export class SelectProgramRequestComponent implements OnInit {
   public pomPrograms: Program[];
   public pbPrograms: Program[];
   public thereAreOutstandingPRs: boolean;
+  private charTitle = "";
   private chartdata;
   private charty;
   private rowsData: any[];
+  private filterIds: string[];
+  private filters;
+  private selectedFilter;
 
   constructor(private pomService: POMService,
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
-              private pbService: PBService ) {}
+              private pbService: PBService ) {
+                this.initChart();
+              }
 
   async ngOnInit() {
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
@@ -46,8 +54,9 @@ export class SelectProgramRequestComponent implements OnInit {
     this.thereAreOutstandingPRs = this.pomPrograms.filter(pr => pr.programStatus === 'OUTSTANDING').length > 0;
     const by: number = this.pom.fy;
 
-    await this.initChart();
-    await this.loadChart(by);
+    //await this.initChart();
+    await this.loadChart(by, "");
+    await this.selectDistinctFilterIds(this.selectedFilter);
   }
 
   initPomPrs(): Promise<void> {
@@ -77,7 +86,81 @@ export class SelectProgramRequestComponent implements OnInit {
     } 
   }
 
-  async loadChart(by:number) {
+  
+  selectDistinctFilterIds(selectedFilter: String) {
+    switch(selectedFilter) {
+      case 'Org' : {
+        this.filterIds = _.uniq(_.map(this.pomPrograms, 'organizationId'));
+        break;
+      }
+      case 'BA' : {
+        this.filterIds = _.uniq(_.map(this.pomPrograms[13].fundingLines, 'baOrBlin'));
+        break;
+      }
+      case 'PRstat' : {
+        this.filterIds = _.uniq(_.map(this.pomPrograms, 'programStatus'));
+        break;
+      }
+      default: {
+        this.filterIds = [];
+        break;
+      }
+    }
+  }
+  select(event: ChartSelectEvent) {
+    if ('select' === event.message) {
+      let filterId = ""
+      this.initPomPrs();
+      if(this.filterIds.length>0) {
+        filterId = this.filterIds.pop();
+        this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
+        this.reloadChart(filterId); 
+      } else {
+        this.selectDistinctFilterIds(this.selectedFilter);
+        this.reloadChart("");
+      }  
+    }
+    if ('deselect' === event.message) {
+      this.reloadPrs();
+    }
+  }
+  reloadChart(title: String) {
+    this.charty = [];
+    this.initChart();
+    this.loadChart(this.pom.fy, title);
+  }
+  onFilterChange(newFilter) {
+    this.selectedFilter = newFilter;
+    this.selectDistinctFilterIds(this.selectedFilter);
+    let filterId = ""
+    this.initPomPrs();
+    console.log(this.pomPrograms)
+    if(this.filterIds.length>0) {
+      filterId = this.filterIds.pop();
+      this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
+      this.reloadChart(filterId); 
+    } else {
+      this.selectDistinctFilterIds(this.selectedFilter);
+      this.reloadChart("");
+    }
+  }
+  applyFilter(pr: Program, selectedFilter: String, filterId: String): boolean {
+    switch(selectedFilter) {
+      case 'Org' : return pr.organizationId===filterId;
+      case 'BA' : return pr.fundingLines[0].baOrBlin===filterId;
+      case 'PRstat' : return pr.programStatus===filterId;
+      default: return false;
+    }
+  }
+  getChartTitle(selectedFilter: String): String {
+    switch(selectedFilter) {
+      case 'Org' : return "Organization";
+      case 'BA' : return "BA";
+      case 'PRstat' : return "PRstat";
+      default: return "Community TOA";
+    }
+  }
+  async loadChart(by:number, title: String) {
     this.populateRowData(by);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
@@ -110,7 +193,7 @@ export class SelectProgramRequestComponent implements OnInit {
       chartType: 'ColumnChart',
       dataTable: this.charty,
       options: {
-        title: 'Community TOA',
+        title: this.getChartTitle(this.selectedFilter) + ' ' + title,
         width: 720,
         height: 160,
         legend: { position: 'top', maxLines: 3 },
@@ -122,11 +205,12 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   async initChart() {
+    this.filters = 'All Org BA PRstat'.split(' ');
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
       options: {
-        title: 'Community TOA',
+        title: this.getChartTitle(this.selectedFilter),
         width: 730,
         height: 160,
         legend: { position: 'top', maxLines: 3 },
