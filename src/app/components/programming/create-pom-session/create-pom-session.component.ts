@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { GridOptions, ColDef } from 'ag-grid';
 import { UserUtils } from '../../../services/user.utils';
-import { ChartSelectEvent, GoogleChartComponent, ChartMouseOutEvent, ChartMouseOverEvent } from 'ng2-google-charts';
+import { ChartSelectEvent, GoogleChartComponent} from 'ng2-google-charts';
 import { ProgramAndPrService } from '../../../services/program-and-pr.service';
 import {
   Budget,
@@ -19,7 +18,6 @@ import {
   PBService,
   BudgetService
 } from '../../../generated';
-import { Notify } from "../../../utils/Notify";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -60,11 +58,10 @@ export class CreatePomSessionComponent implements OnInit {
   
   private toayear: number;
   private scrollstartyear: number;
-  private subOrgId: string;
-  private pinnedRowCommunityBaseline: any[];
   private subchartIsBar: boolean = true;
 
   private toainfo: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
+  private suborgdata: OneYearToaData;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -106,6 +103,10 @@ export class CreatePomSessionComponent implements OnInit {
       return 0;
     }
     return this.getToaDataOrBlank(this.toayear).community.amount;
+  }
+
+  @Input() get selectedtoainfo(): OneYearToaData {
+    return this.toainfo.get(this.selectedyear);
   }
 
   open(content, toaAmt) {
@@ -331,6 +332,17 @@ export class CreatePomSessionComponent implements OnInit {
     c('close modal');
   }
 
+  onSuborgData(x) {
+    this.suborgdata = x;
+  }
+
+  submitOrgValue(c) {
+    this.toainfo.set(this.selectedyear, this.suborgdata);
+    c('close modal');
+    this.resetSubchart();
+  }
+
+
   getToaDataOrBlank(year: number): OneYearToaData {
     var orgmap: Map<string, AmountAndBaseline> = new Map<string, AmountAndBaseline>();
     this.toaorgs.forEach((name, orgid) => { 
@@ -468,15 +480,8 @@ export class CreatePomSessionComponent implements OnInit {
 
   subselect(event: ChartSelectEvent) {
     if ('deselect' === event.message) {
-      delete this.subOrgId;
     }
     else if ('select' === event.message) {
-      // figure out orgid from org name (reverse of orgMap)
-      this.orgMap.forEach((name, id) => { 
-        if (name === event.selectedRowValues[0]) {
-          this.subOrgId = id;
-        }
-      });
     }
   }
 
@@ -583,21 +588,6 @@ export class CreatePomSessionComponent implements OnInit {
     //   });
     // }
     // this.pomData = newpomdata;
-  }
-
-  @Input() set subOrgVal(val: number) {
-    if (this.toainfo.has(this.selectedyear)) {
-      this.toainfo.get(this.selectedyear).orgs.get(this.subOrgId).amount = val;
-      this.resetSubchart();
-    }
-  }
-
-  get subOrgVal(): number {
-    if ('undefined' === typeof this.subOrgId || !this.toainfo.get(this.selectedyear).orgs.has(this.subOrgId)) {
-      return 0;
-    }
-
-    return this.toainfo.get(this.selectedyear).orgs.get(this.subOrgId).amount;
   }
 
   scroll(years: number) {

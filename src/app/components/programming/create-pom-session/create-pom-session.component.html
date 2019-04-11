@@ -56,14 +56,13 @@
         </div>
       </div>
 
-        
           <div class="row mb-2">
-              <div class="col-12">
-            <div class="bar-chart-google">
-              <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
-              </google-chart>
-             </div>
+            <div class="col-12">
+              <div class="bar-chart-google">
+                <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
+                </google-chart>
               </div>
+            </div>
           </div>
           <ng-template #content let-modal let-c="close">
               <div class=" toa-tooltip-modal modal-header">
@@ -125,36 +124,20 @@
           </div>
         </div>
         <ng-template #contentTwo let-modal let-c="close">
-            <div class=" toa-tooltip-modal modal-header">
-              <h4 class="modal-title" id="modal-basic-title">Edit Organization sub-TOA values</h4>
-              <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
-                <span aria-hidden="true">&times;</span>
-              </button>
+          <div class="toa-tooltip-modal modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Edit Organization sub-TOA values</h4>
+            <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toa-tooltip-modal modal-body">
+            <div class="toa-modal-input-wrapper">
+              <app-organization-toa (valuesChange)='onSuborgData($event)' [toainfo]='selectedtoainfo' [orgmap]='toaorgs'></app-organization-toa>  
+              <button (click)="submitOrgValue(c)" class='tooltip-toa-submit btn-primary'>Submit</button>
             </div>
-            <div class=" toa-tooltip-modal modal-body">
-              <div class="toa-modal-input-wrapper">
-                <div class="form-group">
-                  <label for="sel1">Select Organization:</label>
-                  <select class="form-control toa-select-edit" [(ngModel)]='subOrgId'>
-                    <option></option>
-                    <option *ngFor="let subtoa of toaorgs|mapAsList" [ngValue]="subtoa.key">{{subtoa.value}}</option>
-                  </select>
-                  <input type="text" [(ngModel)]="subOrgVal" class="form-control toa-input-edit"
-                    aria-label="Text input with dropdown button" type="number">
-                </div>
-  
-                <button (click)="c('Close click')" class='tooltip-toa-submit btn-primary'>Submit</button>
-              </div>
-            </div>
-          </ng-template>
-          <!-- <ng-container *ngIf="!(pomIsCreated||pomIsOpen)">
-            <span class="toa-epp-widget">
-              <span>
-                <label>Use EPP Data:</label>
-              </span>
-              <toggle-button [includeHandleStatus]="true" (onChangeEvent)="useEppData()"></toggle-button>
-            </span>
-          </ng-container> -->
+          </div>
+        </ng-template>
+
           <div class="row mb-3">
             <div class="col-12">
               <div class="comchart-second-wrapper">
