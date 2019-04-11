@@ -1,0 +1,30 @@
+.org-names {
+    font-size: 14px !important;
+    text-align: right !important;
+    float:right;
+    padding-top: 2px;
+  }
+
+.toa-currency  {
+    text-align: right !important;
+    float: right !important;
+}
+
+.lock-currency {
+
+    &.fa {
+        border:none;
+        cursor: pointer;
+        background: transparent;
+    }
+
+    .fa-unlock,
+    .fa-lock {
+
+        opacity: .9;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
