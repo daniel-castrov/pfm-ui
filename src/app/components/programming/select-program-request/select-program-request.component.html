@@ -20,13 +20,13 @@
       </div>
       <div class="col-lg-7 col-md-12">
         <div class="bar-chart pull-right">
-          <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)">
-              <option [value]="i" *ngFor="let i of filters">{{i}}</option>
-          </select>
           <google-chart #comchart
-                        [data]='chartdata'
-                        (chartSelect)='select($event)'
+          [data]='chartdata'
+          (chartSelect)='select($event)'
           ></google-chart>
+          <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <option [value]="i" *ngFor="let i of filters" class="dropdown-item" type="button">{{i}}</option>
+          </select>
         </div>
         <!--j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom-->
       </div>
