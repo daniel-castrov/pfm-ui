@@ -6,7 +6,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { PBService, Pom, Program, RestResult, ProgramStatus, OrganizationService} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import { GoogleChartComponent, ChartSelectEvent } from 'ng2-google-charts';
-import { UiProgramRequest } from './UiProgramRequest';
+import { UiProgramRequest, FilterCriteria } from './UiProgramRequest';
 import  * as _ from 'lodash';
 
 import {CurrentPhase} from "../../../services/current-phase.service";
@@ -31,8 +31,8 @@ export class SelectProgramRequestComponent implements OnInit {
   private charty;
   private rowsData: any[];
   private filterIds: string[];
-  private filters;
-  private selectedFilter;
+  private filters: FilterCriteria[];
+  private selectedFilter: FilterCriteria;
   private orgMap: Map<string, string> = new Map<string, string>();
 
   constructor(private orgsvc: OrganizationService,
@@ -41,7 +41,8 @@ export class SelectProgramRequestComponent implements OnInit {
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
               private pbService: PBService ) {
-                this.selectedFilter = 'All';
+                this.filters = [FilterCriteria.ALL, FilterCriteria.ORG, FilterCriteria.BA, FilterCriteria.PR_STAT];
+                this.selectedFilter = FilterCriteria.ALL;
                 this.initChart();
               }
 
@@ -91,17 +92,23 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   
-  selectDistinctFilterIds(selectedFilter: string) {
+  selectDistinctFilterIds(selectedFilter: FilterCriteria) {
     switch(selectedFilter) {
-      case 'Org' : {
+      case FilterCriteria.ORG : {
         this.filterIds = _.uniq(_.map(this.pomPrograms, 'organizationId'));
         break;
       }
-      case 'BA' : {
-        this.filterIds = _.uniq(_.map(this.pomPrograms[13].fundingLines, 'baOrBlin'));
+      case FilterCriteria.BA : {
+        let allBALines = [];
+        this.pomPrograms.forEach(pr => {
+          pr.fundingLines.forEach(fl => {
+            allBALines.push(fl.baOrBlin);
+          })
+        });
+        this.filterIds = _.uniq(allBALines);
         break;
       }
-      case 'PRstat' : {
+      case FilterCriteria.PR_STAT : {
         this.filterIds = _.uniq(_.map(this.pomPrograms, 'programStatus'));
         break;
       }
@@ -113,14 +120,14 @@ export class SelectProgramRequestComponent implements OnInit {
   }
   select(event: ChartSelectEvent) {
     if ('select' === event.message) {
-      let filterId = ""
+      let filterId = "";
       this.initPomPrs();
       if(this.filterIds.length>0) {
         filterId = this.filterIds.pop();
         this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
         this.reloadChart(filterId);
       } else {
-        this.selectDistinctFilterIds(this.selectedFilter = 'All');
+        this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
         this.reloadChart("");
       }  
     }
@@ -133,33 +140,33 @@ export class SelectProgramRequestComponent implements OnInit {
     this.initChart();
     this.loadChart(this.pom.fy, title);
   }
-  onFilterChange(newFilter) {
+  onFilterChange(newFilter: FilterCriteria) {
     this.selectedFilter = newFilter;
     this.selectDistinctFilterIds(this.selectedFilter);
-    let filterId = ""
+    let filterId = "";
     this.initPomPrs();
     if(this.filterIds.length>0) {
       filterId = this.filterIds.pop();
       this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
       this.reloadChart(filterId);
     } else {
-      this.selectDistinctFilterIds(this.selectedFilter = 'All');
+      this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
       this.reloadChart("");
     }
   }
-  applyFilter(pr: Program, selectedFilter: string, filterId: string): boolean {
+  applyFilter(pr: Program, selectedFilter: FilterCriteria, filterId: string): boolean {
     switch(selectedFilter) {
-      case 'Org' : return pr.organizationId===filterId;
-      case 'BA' : return pr.fundingLines[0].baOrBlin===filterId;
-      case 'PRstat' : return pr.programStatus===filterId;
+      case FilterCriteria.ORG : return pr.organizationId===filterId;
+      case FilterCriteria.BA : return pr.fundingLines[0].baOrBlin===filterId;
+      case FilterCriteria.PR_STAT : return pr.programStatus===filterId;
       default: return false;
     }
   }
-  getChartTitle(selectedFilter: string, title: string): string {
+  getChartTitle(selectedFilter: FilterCriteria, title: string): string {
     switch(selectedFilter) {
-      case 'Org' : return "Organization " +  this.orgMap.get(title) || title;
-      case 'BA' : return "BA " + title;
-      case 'PRstat' : return "PRstat " + title;
+      case FilterCriteria.ORG : return "Organization " +  this.orgMap.get(title) || title;
+      case FilterCriteria.BA : return "BA " + title;
+      case FilterCriteria.PR_STAT : return "PRstat " + title;
       default: return "Community TOA";
     }
   }
@@ -208,7 +215,6 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   async initChart() {
-    this.filters = 'All Org BA PRstat'.split(' ');
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: [],
@@ -352,6 +358,5 @@ export class SelectProgramRequestComponent implements OnInit {
         orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
       });
     });
-    console.log(this.orgMap)
   }
 }

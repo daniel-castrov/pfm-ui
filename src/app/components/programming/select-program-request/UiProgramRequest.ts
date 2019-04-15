@@ -30,3 +30,10 @@ export enum PhaseType {
   EXE = 'EXE',
   DELTA = 'Delta'
 }
+
+export enum FilterCriteria {
+  ALL = 'All',
+  ORG = 'Organization',
+  BA = 'BA line',
+  PR_STAT = 'Program Status'
+}

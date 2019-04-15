@@ -24,8 +24,8 @@
           [data]='chartdata'
           (chartSelect)='select($event)'
           ></google-chart>
-          <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <option [value]="i" *ngFor="let i of filters" class="dropdown-item" type="button">{{i}}</option>
+          <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)" class="selectpicker">
+            <option [value]="i" *ngFor="let i of filters" class="optionpicker">{{i}}</option>
           </select>
         </div>
         <!--j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom-->
