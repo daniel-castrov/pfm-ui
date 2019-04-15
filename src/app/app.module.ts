@@ -253,6 +253,7 @@ import { WorkspaceStateService } from './components/programming/pom-workspace/wo
 import { WorkspaceCheckboxRendererComponent } from './components/programming/pom-workspace/workspace-management/workspace-checkbox-renderer.component';
 import { WorkspaceSelectedComponent } from './components/programming/view-pom-session/workspace-selected/workspace-selected.component';
 import { WorkspaceNameUpdatingRendererComponent } from './components/programming/pom-workspace/workspace-management/workspace-name-updating-renderer.component';
+import { OrganizationToaComponent } from './components/programming/create-pom-session/organization-toa/organization-toa.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -528,7 +529,8 @@ const appRoutes: Routes = [
     UnlockerComponent,
     WorkspaceCheckboxRendererComponent,
     WorkspaceSelectedComponent,
-    WorkspaceNameUpdatingRendererComponent
+    WorkspaceNameUpdatingRendererComponent,
+    OrganizationToaComponent
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

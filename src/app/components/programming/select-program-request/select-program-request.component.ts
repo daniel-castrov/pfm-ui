@@ -3,7 +3,7 @@ import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {UserUtils} from '../../../services/user.utils';
 import {POMService} from '../../../generated/api/pOM.service';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { PBService, Pom, Program, RestResult, ProgramStatus} from '../../../generated';
+import { PBService, Pom, Program, RestResult, ProgramStatus, OrganizationService} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import { GoogleChartComponent, ChartSelectEvent } from 'ng2-google-charts';
 import { UiProgramRequest } from './UiProgramRequest';
@@ -33,8 +33,10 @@ export class SelectProgramRequestComponent implements OnInit {
   private filterIds: string[];
   private filters;
   private selectedFilter;
+  private orgMap: Map<string, string> = new Map<string, string>();
 
-  constructor(private pomService: POMService,
+  constructor(private orgsvc: OrganizationService,
+              private pomService: POMService,
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
@@ -43,6 +45,7 @@ export class SelectProgramRequestComponent implements OnInit {
               }
 
   async ngOnInit() {
+    await this.populatreOrgMap();
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
     this.pom = await this.currentPhase.pom().toPromise();
     await this.initPbPrs(this.pom.fy - 1);
@@ -87,7 +90,7 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   
-  selectDistinctFilterIds(selectedFilter: String) {
+  selectDistinctFilterIds(selectedFilter: string) {
     switch(selectedFilter) {
       case 'Org' : {
         this.filterIds = _.uniq(_.map(this.pomPrograms, 'organizationId'));
@@ -114,9 +117,9 @@ export class SelectProgramRequestComponent implements OnInit {
       if(this.filterIds.length>0) {
         filterId = this.filterIds.pop();
         this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
-        this.reloadChart(filterId); 
+        this.reloadChart(filterId);
       } else {
-        this.selectDistinctFilterIds(this.selectedFilter);
+        this.selectDistinctFilterIds(this.selectedFilter = 'All');
         this.reloadChart("");
       }  
     }
@@ -124,7 +127,7 @@ export class SelectProgramRequestComponent implements OnInit {
       this.reloadPrs();
     }
   }
-  reloadChart(title: String) {
+  reloadChart(title: string) {
     this.charty = [];
     this.initChart();
     this.loadChart(this.pom.fy, title);
@@ -134,17 +137,16 @@ export class SelectProgramRequestComponent implements OnInit {
     this.selectDistinctFilterIds(this.selectedFilter);
     let filterId = ""
     this.initPomPrs();
-    console.log(this.pomPrograms)
     if(this.filterIds.length>0) {
       filterId = this.filterIds.pop();
       this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
-      this.reloadChart(filterId); 
+      this.reloadChart(filterId);
     } else {
-      this.selectDistinctFilterIds(this.selectedFilter);
+      this.selectDistinctFilterIds(this.selectedFilter = 'All');
       this.reloadChart("");
     }
   }
-  applyFilter(pr: Program, selectedFilter: String, filterId: String): boolean {
+  applyFilter(pr: Program, selectedFilter: string, filterId: string): boolean {
     switch(selectedFilter) {
       case 'Org' : return pr.organizationId===filterId;
       case 'BA' : return pr.fundingLines[0].baOrBlin===filterId;
@@ -152,15 +154,15 @@ export class SelectProgramRequestComponent implements OnInit {
       default: return false;
     }
   }
-  getChartTitle(selectedFilter: String): String {
+  getChartTitle(selectedFilter: string, title: string): string {
     switch(selectedFilter) {
-      case 'Org' : return "Organization";
-      case 'BA' : return "BA";
-      case 'PRstat' : return "PRstat";
+      case 'Org' : return "Organization " +  this.orgMap.get(title) || title;
+      case 'BA' : return "BA " + title;
+      case 'PRstat' : return "PRstat " + title;
       default: return "Community TOA";
     }
   }
-  async loadChart(by:number, title: String) {
+  async loadChart(by:number, title: string) {
     this.populateRowData(by);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
@@ -193,7 +195,7 @@ export class SelectProgramRequestComponent implements OnInit {
       chartType: 'ColumnChart',
       dataTable: this.charty,
       options: {
-        title: this.getChartTitle(this.selectedFilter) + ' ' + title,
+        title: this.getChartTitle(this.selectedFilter, title),
         width: 720,
         height: 160,
         legend: { position: 'top', maxLines: 3 },
@@ -210,7 +212,7 @@ export class SelectProgramRequestComponent implements OnInit {
       chartType: 'ColumnChart',
       dataTable: [],
       options: {
-        title: this.getChartTitle(this.selectedFilter),
+        title: this.getChartTitle(this.selectedFilter, ""),
         width: 730,
         height: 160,
         legend: { position: 'top', maxLines: 3 },
@@ -310,7 +312,7 @@ export class SelectProgramRequestComponent implements OnInit {
       let toaDifference = 0
       let prSubmitted = 0
       let prPlanned = 0
-      rowdata.forEach((row: {year: String, id: String}) =>{
+      rowdata.forEach((row: {year: string, id: string}) =>{
         if(row.id == "POM " + (by-2000) + " TOA") currentFyToa = row[year]
         if(row.id == 'PRs Planned') prPlanned = row[year]
         if(row.id == 'PRs Submitted') prSubmitted = row[year]
@@ -337,5 +339,18 @@ export class SelectProgramRequestComponent implements OnInit {
       maximumFractionDigits: 0
     });
     return usdFormat.format(value);
+  }
+
+  private async populatreOrgMap() {
+    this.userUtils.user().subscribe(user => {
+      this.orgsvc.getByCommunityId(user.currentCommunityId).subscribe(data => {
+
+        let orgs = [];
+        this.orgMap.clear();
+        orgs = data.result;
+        orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
+      });
+    });
+    console.log(this.orgMap)
   }
 }
