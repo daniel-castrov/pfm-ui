@@ -41,6 +41,7 @@ export class SelectProgramRequestComponent implements OnInit {
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
               private pbService: PBService ) {
+                this.selectedFilter = 'All';
                 this.initChart();
               }
 
