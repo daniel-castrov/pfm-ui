@@ -99,7 +99,13 @@ export class SelectProgramRequestComponent implements OnInit {
         break;
       }
       case FilterCriteria.BA : {
-        this.filterIds = _.uniq(_.map(this.pomPrograms[13].fundingLines, 'baOrBlin'));
+        let allBALines = [];
+        this.pomPrograms.forEach(pr => {
+          pr.fundingLines.forEach(fl => {
+            allBALines.push(fl.baOrBlin);
+          })
+        });
+        this.filterIds = _.uniq(allBALines);
         break;
       }
       case FilterCriteria.PR_STAT : {
@@ -114,7 +120,7 @@ export class SelectProgramRequestComponent implements OnInit {
   }
   select(event: ChartSelectEvent) {
     if ('select' === event.message) {
-      let filterId = ""
+      let filterId = "";
       this.initPomPrs();
       if(this.filterIds.length>0) {
         filterId = this.filterIds.pop();
@@ -137,7 +143,7 @@ export class SelectProgramRequestComponent implements OnInit {
   onFilterChange(newFilter: FilterCriteria) {
     this.selectedFilter = newFilter;
     this.selectDistinctFilterIds(this.selectedFilter);
-    let filterId = ""
+    let filterId = "";
     this.initPomPrs();
     if(this.filterIds.length>0) {
       filterId = this.filterIds.pop();
@@ -352,6 +358,5 @@ export class SelectProgramRequestComponent implements OnInit {
         orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
       });
     });
-    console.log(this.orgMap)
   }
 }
