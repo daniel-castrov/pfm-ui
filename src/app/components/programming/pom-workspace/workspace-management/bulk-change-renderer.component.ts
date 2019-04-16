@@ -5,7 +5,7 @@ import {ICellRendererParams} from "ag-grid/dist/lib/rendering/cellRenderers/iCel
 // *ngIf="params.value.id" below is needed to address some case where RouterLink somehow tries to render the link before params.value.id is initialized
 @Component({
   template: `<a [class]="params.value.locked? 'isDisabled': ''" *ngIf="params.value.id" [routerLink]="params.value.locked? [] : ['/update-pom-session',params.value.id]">
-              <span class="worksheet-lock btn btn-primary">
+              <span class="worksheet-lock">
                 <i class="fa fa-bolt" aria-hidden="true"> </i>
               </span>
             </a>`

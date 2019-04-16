@@ -41,7 +41,7 @@ export class WorkspaceManagementComponent implements OnInit {
 
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: WorkspaceCheckboxRendererComponent},
                    {headerName: 'Workspace Name', field: 'workspace', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
-                   {headerName: 'Bulk Change', field: 'workspace', maxWidth: 90, cellRendererFramework: BulkChangeRendererComponent},
+                   {headerName: 'Bulk Change', field: 'workspace', maxWidth: 100, cellRendererFramework: BulkChangeRendererComponent},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
                    {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]
     };
