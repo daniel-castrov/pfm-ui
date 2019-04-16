@@ -27,9 +27,6 @@ export class OrganizationToaComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.toainfo);
-    console.log(this.orgmap);
-
     var newlims: OrgLimits[] = [];
     this.toainfo.orgs.forEach((amt, orgid) => { 
       newlims.push({
@@ -71,22 +68,21 @@ export class OrganizationToaComponent implements OnInit {
 
     // if we have locked values, then our maxvals must be reduced
     // so that we cannot allocate already-locked money
-    this.limits.forEach(lim => { 
+    this.limits.forEach(lim => {
       var lockedmoney: number = this.limits
         .filter(l => l !== lim)
         .filter(l => l.locked)
         .map(l => l.currval).reduce((p, c) => p + c, 0);
       lim.maxval = this.toainfo.community.amount - lockedmoney;
     });
-    
-    if (changer) { // don't emit anything during init
-      this.limits.forEach(lim => {
-        this.toainfo.orgs.get(lim.orgid).amount = lim.currval;
-      });
 
-      // tell the world we have some new values
-      this.valuesChange.emit(this.toainfo);
-    }
+    this.limits.forEach(lim => {
+      this.toainfo.orgs.get(lim.orgid).amount = lim.currval;
+    });
+
+    // tell the world we have some new values
+    console.log(this.toainfo);
+    this.valuesChange.emit(this.toainfo);
   }
 
   toggleLock(lim: OrgLimits) {

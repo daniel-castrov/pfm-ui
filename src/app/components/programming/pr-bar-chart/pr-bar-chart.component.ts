@@ -58,7 +58,7 @@ export class PrBarChartComponent implements OnInit {
   private refresh() {
     if (this._pom && this._pbPrs && this._pomPrs) {
       this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
-      this.reloadChart("", this.pomPrs, this.pbPrs);
+      this.reloadChart("Community TOA", this.pomPrs, this.pbPrs);
     }
   }
 
@@ -73,7 +73,7 @@ export class PrBarChartComponent implements OnInit {
       this.reloadChart(filterId, pomPrsToChart, pbPrsToChart );
     } else {
       this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
-      this.reloadChart("", this.pomPrs, this.pbPrs );
+      this.reloadChart("Community TOA", this.pomPrs, this.pbPrs );
     }
   }
 
@@ -153,7 +153,9 @@ export class PrBarChartComponent implements OnInit {
       { type: 'string', role: 'tooltip' },
     ]];
 
-    var skipUnallocated = ('Community TOA' !== filterId);
+    var skipUnallocated = ('Community TOA' !== filterId );
+
+    console.log(filterId + ' ' + skipUnallocated);
     var by: number = this.pom.fy;
 
     var rowdata: any[] = [];
