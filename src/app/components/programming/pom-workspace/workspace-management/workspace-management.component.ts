@@ -12,6 +12,7 @@ import { NameUpdatingRendererComponent } from '../../pom-worksheet/worksheet-man
 import { WorkspaceStateService, Operation } from './workspace-state.service';
 import { IOperation } from './operation.interface';
 import { WorkspaceCheckboxRendererComponent } from './workspace-checkbox-renderer.component';
+import { BulkChangeRendererComponent } from './bulk-change-renderer.component';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class WorkspaceManagementComponent implements OnInit {
 
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: WorkspaceCheckboxRendererComponent},
                    {headerName: 'Workspace Name', field: 'workspace', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
-                   {headerName: 'Number', field: 'number', maxWidth: 90},
+                   {headerName: 'Bulk Change', field: 'workspace', maxWidth: 90, cellRendererFramework: BulkChangeRendererComponent},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},
                    {headerName: 'Last Updated', field: 'lastUpdatedOn', width: 140, filter: "agDateColumnFilter"}]
     };

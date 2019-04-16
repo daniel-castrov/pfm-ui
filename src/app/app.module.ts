@@ -175,6 +175,7 @@ import {RenameComponent} from "./components/programming/pom-worksheet/worksheet-
 import {ExportComponent} from "./components/programming/pom-worksheet/worksheet-management/export/export.component";
 import {ImportComponent} from "./components/programming/pom-worksheet/worksheet-management/import/import.component";
 import {NameUpdatingRendererComponent} from "./components/programming/pom-worksheet/worksheet-management/name-updating-renderer.component";
+import {BulkChangeRendererComponent} from "./components/programming/pom-workspace/workspace-management/bulk-change-renderer.component";
 import {WorksheetService} from "./generated/api/worksheet.service";
 import {WorkspaceService} from "./generated/api/workspace.service";
 import {StateService} from "./components/programming/pom-worksheet/worksheet-management/state.service";
@@ -459,6 +460,7 @@ const appRoutes: Routes = [
     CheckboxRendererComponent,
     CheckboxCellRenderer,
     NameUpdatingRendererComponent,
+    BulkChangeRendererComponent,
     NameViewingRendererComponent,
     SummaryProgramCellRenderer,
     AgGridPaginationComponent,
@@ -546,6 +548,7 @@ const appRoutes: Routes = [
     WorkspaceCheckboxRendererComponent,
     CheckboxCellRenderer,
     NameUpdatingRendererComponent,
+    BulkChangeRendererComponent,
     WorkspaceNameUpdatingRendererComponent,
     NameViewingRendererComponent,
     NameDisplayRendererComponent,
