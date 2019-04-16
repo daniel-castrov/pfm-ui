@@ -30,16 +30,12 @@
         </div>
       </div>
       <div class="col-lg-7 col-md-12">
-        <div class="bar-chart pull-right">
-          <google-chart #comchart
-          [data]='chartdata'
-          (chartSelect)='select($event)'
-          ></google-chart>
-          <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)" class="selectpicker">
-            <option [value]="i" *ngFor="let i of filters" class="optionpicker">{{i}}</option>
-          </select>
-        </div>
-        <!--j-pom [pomPrograms]="pomPrograms" [pbPrograms]="pbPrograms" [pom]="pom"></j-pom-->
+        <app-pr-bar-chart class="bar-chart pull-right" 
+          [pomPrs]='pomPrograms'
+          [pbPrs]='pbPrograms'
+          [pom]='pom'
+          [orgmap]='orgMap'
+        ></app-pr-bar-chart>
       </div>
     </div>
     <div class="row">
