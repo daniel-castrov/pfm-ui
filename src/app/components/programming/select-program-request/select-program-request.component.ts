@@ -2,7 +2,7 @@ import {NewProgramComponent} from './new-program-request/new-program-request.com
 import {ProgramAndPrService} from '../../../services/program-and-pr.service';
 import {UserUtils} from '../../../services/user.utils';
 import {POMService} from '../../../generated/api/pOM.service';
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, Input} from '@angular/core';
 import { PBService, Pom, Program, RestResult, ProgramStatus, OrganizationService} from '../../../generated';
 import {Notify} from "../../../utils/Notify";
 import { GoogleChartComponent, ChartSelectEvent } from 'ng2-google-charts';
@@ -11,6 +11,9 @@ import  * as _ from 'lodash';
 
 import {CurrentPhase} from "../../../services/current-phase.service";
 import { filter } from 'rxjs/operator/filter';
+import { ActivatedRoute } from '@angular/router';
+import { WorkspaceService } from '../../../generated';
+import { Workspace } from '../../../generated';
 
 @Component({
   selector: 'app-select-program-request',
@@ -34,12 +37,16 @@ export class SelectProgramRequestComponent implements OnInit {
   private filters: FilterCriteria[];
   private selectedFilter: FilterCriteria;
   private orgMap: Map<string, string> = new Map<string, string>();
+  private _currworkspace: Workspace;
+  private workspaces: Workspace[];
 
   constructor(private orgsvc: OrganizationService,
               private pomService: POMService,
               private currentPhase: CurrentPhase,
               private programAndPrService: ProgramAndPrService,
               private userUtils: UserUtils,
+              private activatedRoute: ActivatedRoute,
+              private wkspsvc: WorkspaceService,
               private pbService: PBService ) {
                 this.filters = [FilterCriteria.ALL, FilterCriteria.ORG, FilterCriteria.BA, FilterCriteria.PR_STAT];
                 this.selectedFilter = FilterCriteria.ALL;
@@ -49,9 +56,19 @@ export class SelectProgramRequestComponent implements OnInit {
   async ngOnInit() {
     await this.populatreOrgMap();
     this.currentCommunityId = (await this.userUtils.user().toPromise()).currentCommunityId;
-    this.pom = await this.currentPhase.pom().toPromise();
+    await this.resolvePomAndWorkspaces();
     await this.initPbPrs(this.pom.fy - 1);
-    await this.reloadPrs();
+    //await this.reloadPrs();
+  }
+
+  @Input() set currworkspace(w: Workspace) {
+    this._currworkspace = w;
+    this.initChart();
+    this.reloadPrs();
+  }
+
+  get currworkspace(): Workspace {
+    return this._currworkspace;
   }
 
   async reloadPrs() {
@@ -66,8 +83,8 @@ export class SelectProgramRequestComponent implements OnInit {
 
   initPomPrs(): Promise<void> {
     return new Promise(async (resolve) => {
-      //this.pom = await this.currentPhase.pom().toPromise();
-      this.pomPrograms = (await this.programAndPrService.programRequests(this.pom.workspaceId));
+      delete this.pomPrograms;
+      this.pomPrograms = (await this.programAndPrService.programRequests(this.currworkspace.id));
       resolve();
     });
   }
@@ -135,25 +152,29 @@ export class SelectProgramRequestComponent implements OnInit {
       this.reloadPrs();
     }
   }
+
   reloadChart(title: string) {
     this.charty = [];
     this.initChart();
     this.loadChart(this.pom.fy, title);
   }
+
   onFilterChange(newFilter: FilterCriteria) {
     this.selectedFilter = newFilter;
     this.selectDistinctFilterIds(this.selectedFilter);
     let filterId = "";
-    this.initPomPrs();
-    if(this.filterIds.length>0) {
-      filterId = this.filterIds.pop();
-      this.pomPrograms = this.pomPrograms.filter(pr=> this.applyFilter(pr, this.selectedFilter, filterId));
-      this.reloadChart(filterId);
-    } else {
-      this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
-      this.reloadChart("");
-    }
+    this.initPomPrs().then(() => { 
+      if (this.filterIds.length > 0) {
+        filterId = this.filterIds.pop();
+        this.pomPrograms = this.pomPrograms.filter(pr => this.applyFilter(pr, this.selectedFilter, filterId));
+        this.reloadChart(filterId);
+      } else {
+        this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
+        this.reloadChart("");
+      }
+    });
   }
+
   applyFilter(pr: Program, selectedFilter: FilterCriteria, filterId: string): boolean {
     switch(selectedFilter) {
       case FilterCriteria.ORG : return pr.organizationId===filterId;
@@ -162,6 +183,7 @@ export class SelectProgramRequestComponent implements OnInit {
       default: return false;
     }
   }
+
   getChartTitle(selectedFilter: FilterCriteria, title: string): string {
     switch(selectedFilter) {
       case FilterCriteria.ORG : return "Organization " +  this.orgMap.get(title) || title;
@@ -170,6 +192,7 @@ export class SelectProgramRequestComponent implements OnInit {
       default: return "Community TOA";
     }
   }
+
   async loadChart(by:number, title: string) {
     this.populateRowData(by, 'Community TOA' !== title);
     const communityToas = this.pom.communityToas
@@ -200,6 +223,7 @@ export class SelectProgramRequestComponent implements OnInit {
       }
       this.charty.push(bar);
     }
+
     this.chartdata = {
       chartType: 'ColumnChart',
       dataTable: this.charty,
@@ -241,9 +265,9 @@ export class SelectProgramRequestComponent implements OnInit {
       { type: 'string', role: 'tooltip'},
     ]];
   }
-  private populateRowData(by: number, skipUnallocated: boolean = false) {
 
-    let rowdata:any[] = [];
+  private populateRowData(by: number, skipUnallocated: boolean = false) {
+    let rowdata: any[] = [];
     let row = new Object();
     let sum;
 
@@ -335,6 +359,9 @@ export class SelectProgramRequestComponent implements OnInit {
   }
 
   private aggregateToas(prs: Program[], year: number): number {
+    if (!prs) {
+      return 0;
+    }
     return prs.map(pr => new UiProgramRequest(pr).getToa(year)).reduce((a, b) => a + b, 0);
   }
 
@@ -356,6 +383,48 @@ export class SelectProgramRequestComponent implements OnInit {
         this.orgMap.clear();
         orgs = data.result;
         orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
+      });
+    });
+  }
+
+  private async resolvePomAndWorkspaces(): Promise<void> {
+    // if we get a workspaceId as part of the route, fetch that workspace, and
+    // set the pom according to the workspace.
+    // if we don't get a workspaceId in the route, then fetch the current pom
+    // and set the workspace based on the pom.
+
+    var workspaceId;
+    return new Promise<void>((resolve, reject) => {
+      this.activatedRoute.params.subscribe(params => { 
+        if (params.workspaceId) {
+          workspaceId = params.workspaceId;
+          this.pomService.getByWorkspaceId(params.workspaceId).subscribe(d => { 
+            if (d.error) {
+              reject(d.error);
+            }
+            this.pom = d.result;
+            resolve();
+          });
+        }
+        else {
+          this.currentPhase.pom().subscribe(p => { 
+            this.pom = p;
+            workspaceId = p.workspaceId;
+            resolve();
+          });
+        }
+      });
+    }).then(() => { 
+      return new Promise<void>((resolve, reject) => { 
+        this.wkspsvc.getByPhaseId(this.pom.id).subscribe(d => { 
+          if (d.error) {
+            reject(d.error);
+          }
+
+          this.workspaces = d.result;
+          this.currworkspace = this.workspaces.filter(wksp => wksp.id === workspaceId)[0];
+          resolve();
+        });
       });
     });
   }

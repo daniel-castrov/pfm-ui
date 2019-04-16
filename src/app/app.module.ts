@@ -310,6 +310,7 @@ const appRoutes: Routes = [
   {path:'roles/:commid/:roleid/:userid', component:ManageRolesComponent},
   {path:'role-approve/:assignDrop/:requestId', component:AccessChangeApprovalComponent},
   {path:'set-epp', component: SetEppComponent},
+  {path:'select-program-request/:workspaceId', component:SelectProgramRequestComponent, canActivate:[CanActivateAuth]},
   {path:'select-program-request', component:SelectProgramRequestComponent, canActivate:[CanActivateAuth]},
   {path:'spend-plan-update', component:SpendPlansTabComponent},
   {path:'user/:id', component:ManageSelfComponent},

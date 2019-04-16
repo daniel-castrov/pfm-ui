@@ -16,7 +16,18 @@
     </div>
     <div class="row">
       <div class="col-lg-5 col-md-12">
-        <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+        <div class="row">
+          <div class="col-12">
+            <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+          </div>
+        </div>
+        <div class="row" *ngIf="workspaces?.length>1">
+          <div class="col-12">
+            <select [(ngModel)]='currworkspace'>
+              <option *ngFor="let wksp of workspaces" [ngValue]='wksp'>{{wksp.name}}</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div class="col-lg-7 col-md-12">
         <div class="bar-chart pull-right">
