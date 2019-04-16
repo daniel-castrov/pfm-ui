@@ -171,7 +171,7 @@ export class SelectProgramRequestComponent implements OnInit {
     }
   }
   async loadChart(by:number, title: string) {
-    this.populateRowData(by);
+    this.populateRowData(by, 'Community TOA' !== title);
     const communityToas = this.pom.communityToas
     for(let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString()
@@ -179,6 +179,7 @@ export class SelectProgramRequestComponent implements OnInit {
       bar.push(prop)
       let totalPrevious = ''
       let totalCurrent = ''
+
       for(let j = 0; j < this.rowsData.length; j++) {
         if(this.rowsData[j]['id'] == 'PB '+(by-2000-1)) {
           totalPrevious = this.rowsData[j]['id'] + ': ' + this.formatCurrency(this.rowsData[j][prop])
@@ -240,7 +241,7 @@ export class SelectProgramRequestComponent implements OnInit {
       { type: 'string', role: 'tooltip'},
     ]];
   }
-  private populateRowData(by: number) {
+  private populateRowData(by: number, skipUnallocated: boolean = false) {
 
     let rowdata:any[] = [];
     let row = new Object();
@@ -319,18 +320,17 @@ export class SelectProgramRequestComponent implements OnInit {
       let toaDifference = 0
       let prSubmitted = 0
       let prPlanned = 0
-      rowdata.forEach((row: {year: string, id: string}) =>{
-        if(row.id == "POM " + (by-2000) + " TOA") currentFyToa = row[year]
-        if(row.id == 'PRs Planned') prPlanned = row[year]
-        if(row.id == 'PRs Submitted') prSubmitted = row[year]
-        if(row.id == 'TOA Difference') toaDifference = row[year]
+      rowdata.forEach((row: { year: string, id: string }) => {
+        if (row.id == "POM " + (by - 2000) + " TOA") currentFyToa = row[year]
+        if (row.id == 'PRs Planned') prPlanned = row[year]
+        if (row.id == 'PRs Submitted') prSubmitted = row[year]
+        if (row.id == 'TOA Difference') toaDifference = row[year]
       });
-      row[year]  = currentFyToa - toaDifference - prPlanned - prSubmitted
+      row[year] = (skipUnallocated ? 0 : currentFyToa - toaDifference - prPlanned - prSubmitted);
       sum += row[year];
     }
     row["total"] = sum;
     rowdata.push( row );
-
     this.rowsData = rowdata;
   }
 
