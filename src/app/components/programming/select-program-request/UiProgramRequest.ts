@@ -12,7 +12,8 @@ export class UiProgramRequest {
   get shortName():string {return this.pr.shortName}
   get longName():string {return this.pr.longName}
   get fundingLines():FundingLine[] {return this.pr.fundingLines}
-  get bulkOrigin():boolean {return this.pr.bulkOrigin}
+  get bulkOrigin(): boolean { return this.pr.bulkOrigin }
+  get organizationId(): string { return this.pr.organizationId }
   getToa(year:number): number {
     if(this.pr.type == ProgramType.GENERIC) {
       return 0;

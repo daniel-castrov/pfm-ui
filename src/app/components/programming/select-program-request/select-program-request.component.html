@@ -42,6 +42,7 @@
       <div class="col-12">
         <program-requests [pomPrograms]="pomPrograms"
                                [pbPrograms]="pbPrograms"
+                               [orgMap]='orgMap'
                                [pomFy]="pom?.fy"
                                [reviewOnly]="false"
                                (deleted)="onDeletePr()">

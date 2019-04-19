@@ -20,6 +20,7 @@ export class ProgramsComponent implements OnChanges {
   @Input() private pomPrograms: Program[];
   @Input() private pbPrograms: Program[];
   @Input() private pomFy: number;
+  @Input() private orgMap: Map<string, string>;
   @Input() private reviewOnly: boolean;
   @Output() deleted: EventEmitter<any> = new EventEmitter();
 
@@ -148,7 +149,7 @@ export class ProgramsComponent implements OnChanges {
           },
           {
             headerName: 'Cycle',
-            menuTabs: this.menuTabs,
+            //menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
             width: 100,
             suppressSorting: true,
@@ -160,7 +161,20 @@ export class ProgramsComponent implements OnChanges {
                 return params.data.phaseType + (this.pomFy - 2000);
               }
             }
-          }]
+          },
+          {
+            headerName: 'Organization',
+            menuTabs: this.menuTabs,
+            filter: 'agTextColumnFilter',
+            width: 100,
+            
+            suppressSorting: true,
+            cellClass: ['ag-cell-white'],
+            hide: true,
+            valueGetter: params => ( this.orgMap ? this.orgMap.get(params.data.organizationId): '...' ),
+            field: 'organizationId'
+          },
+        ]
       }
     ];
 
