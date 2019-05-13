@@ -90,6 +90,15 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
+  async 'update-pom-toas'(): Promise<AuthorizationResult> {
+    if (this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if (await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
+      if (Pom.StatusEnum.CREATED == (await this.currentPhase.pom().toPromise()).status) return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
+
   async 'lock-pom-session'(): Promise<AuthorizationResult> {
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
