@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Observable} from 'rxjs';
 import {Notify} from '../../../utils/Notify';
 import {Community} from '../../../generated/model/community';
 import {CommunityService} from '../../../generated/api/community.service';
@@ -9,7 +8,8 @@ import {LeaveCommunityRequest} from '../../../generated/model/leaveCommunityRequ
 import {RestResult} from '../../../generated/model/restResult';
 import {User} from '../../../generated/model/user';
 import {UserService} from '../../../generated/api/user.service';
-import {AppHeaderComponent} from "../../header/app-header/app-header.component";
+import {AppHeaderComponent} from '../../header/app-header/app-header.component';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 
 @Component({
@@ -64,7 +64,7 @@ export class CommunityLeaveComponent implements OnInit {
 
         // get the community and user that the request if for,
         // and all the communities the user is a member of 
-        Observable.forkJoin([
+        forkJoin([
           this.communityService.getById(this.leaveCommunityRequest.communityId),
           this.userService.getById(this.leaveCommunityRequest.userId),
           this.communityService.getByUserIdAndRoleName(this.leaveCommunityRequest.userId, "User")

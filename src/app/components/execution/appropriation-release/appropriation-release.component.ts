@@ -3,13 +3,11 @@ import {ExecutionService} from '../../../generated/api/execution.service'
 import {Execution} from '../../../generated/model/execution';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ExecutionDropDown, ExecutionEventData, ExecutionLine} from '../../../generated';
-import {forkJoin} from 'rxjs/observable/forkJoin';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
 import {ExecutionLineFilter} from '../model/execution-line-filter';
 import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
 
-declare const $: any;
-declare const jQuery: any;
 
 @Component({
   selector: 'appropriation-release',
@@ -37,7 +35,7 @@ export class AppropriationReleaseComponent implements OnInit {
     private router: Router) {}
 
   ngOnInit() {
-    this.progfilter = function (exeline: ExecutionLine): boolean {
+    this.progfilter = (exeline: ExecutionLine): boolean => {
       return !(exeline.appropriated);
     };
 
@@ -89,7 +87,7 @@ export class AppropriationReleaseComponent implements OnInit {
 
     this.exesvc.getExecutionLinesByPhase(this.phase.id).subscribe(data => {
       this.updatelines = [];
-      data.result.filter(z => this.progfilter(z) ).forEach(x => { 
+      data.result.filter(z => this.progfilter(z) ).forEach(x => {
         this.updatelines.push({
           line: x,
           amt: ( 'CRA' === this.etype.name ? 0 : x.toa - x.withheld - x.released )

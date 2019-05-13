@@ -1,0 +1,100 @@
+  <!-- Info -->
+  <p class="role-controls">
+    <span class="role-controls" *ngIf="isNewUserRole && !isRequest">New role - <strong>{{selectedRole.name}}</strong> for <strong>{{selectedUserName}}</strong>.</span>
+    <span class="role-controls" *ngIf="isNewUserRole && isRequest">New request for the <strong>{{selectedRole.name}}</strong> role.</span>
+    <span class="role-controls" *ngIf="!isNewUserRole && !isRequest">The <strong>{{selectedRole.name}}</strong> role has already been assiged to <strong>{{selectedUserName}}</strong>.</span>
+    <span class="role-controls" *ngIf="!isNewUserRole && isRequest">The <strong>{{selectedRole.name}}</strong> role has already been assiged to <strong>{{selectedUserName}}</strong>.</span>
+  </p>
+
+  <!-- Delete existing -->
+  <div *ngIf="!isNewUserRole">
+    <fieldset>
+      <legend>
+        <span *ngIf="!isRequest">Remove a Role</span>
+        <span *ngIf="isRequest">Drop Role Request</span>
+      </legend>
+      <p>
+        <span class="role-controls" *ngIf="!isRequest">Take the <strong>{{selectedRole.name}}</strong> role away from <strong>{{selectedUserName}}</strong>.</span>
+        <span class="role-controls" *ngIf="isRequest">Request to drop the <strong>{{selectedRole.name}}</strong> role.</span>
+      </p>
+      <div class="controls pull-right">
+        <button class="btn btn-primary" (click)="removeRole()">
+          <span>{{dropButtonText}}</span>
+        </button>
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- Some UserRoleResources can be modified -->
+  <fieldset *ngIf="!isStarOnlyRole && !isOrgBased && isNewUserRole">
+    <legend>
+      <span *ngIf="isNewUserRole && !isRequest">Assign a Role</span>
+      <span *ngIf="isNewUserRole && isRequest">Request a Role.</span>
+      <span *ngIf="!isNewUserRole  && !isRequest">Modify a Role</span>
+      <span *ngIf="!isNewUserRole  && isRequest">Request a Role change</span>
+    </legend>
+    <p>
+      <span class="role-controls" *ngIf="!isRequest">Select Programs to access for the <strong>{{selectedRole.name}}</strong> for <strong>{{selectedUserName}}</strong>.</span>
+      <span class="role-controls" *ngIf="isRequest">Request access to selected Programs for the <strong>{{selectedRole.name}}</strong> role</span>
+    </p>
+
+    <div class="filter-programs">
+      <label>Filter Available Programs</label>
+      <select name="orgSelector" class="form-control-sm dropdown-width"
+              [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
+        <option value=""></option>
+        <option *ngFor="let org of organizations" [ngValue]="org">
+          {{ org.abbreviation }}
+        </option>
+      </select>
+    </div>
+    <div class="program-options">
+      <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display"
+                 [sort]="keepSorted"
+                 [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
+      </dual-list>
+    </div>
+    <br/>
+
+    <div class="controls pull-right">
+      <button class="btn btn-primary" (click)="addRole()">
+        <span>{{addButtonText}}</span>
+      </button>
+    </div>
+  </fieldset>
+
+  <!-- Some UserRoleResources CANNOT be modified -->
+  <fieldset *ngIf="isStarOnlyRole && isNewUserRole">
+    <legend>
+      <span *ngIf="!isRequest">Assign a Role</span>
+      <span *ngIf="isRequest">Request a Role</span>
+    </legend>
+    <p class="role-controls" *ngIf="isStarOnlyRole">
+      Resources for the <strong>{{selectedRole.name}}</strong> role are predefined and cannot be modified.
+    </p>
+    <div class="controls pull-right">
+      <button class="btn btn-primary" (click)="addRole()">
+        <span>{{addButtonText}}</span>
+      </button>
+    </div>
+  </fieldset>
+
+  <!-- Some UserRoleResources are based only on an Organizations -->
+  <fieldset *ngIf="isOrgBased && isNewUserRole">
+    <legend>
+      <span *ngIf="!isRequest">Assign a Role</span>
+      <span *ngIf="isRequest">Request a Role</span>
+    </legend>
+    <p class="role-controls">
+      <span *ngIf="!isRequest">Allow</span>
+      <span *ngIf="isRequest">Request</span>
+      <strong>{{selectedUserName}}</strong> access all Programs in the
+      <strong>{{selectedOrganization?.abbreviation}}</strong> Organization for the
+      <strong>{{selectedRole.name}}</strong> role.
+    </p>
+    <div class="controls pull-right">
+      <button class="btn btn-primary" (click)="addRole()" [disabled]="!selectedOrganization">
+        <span *ngIf="isNewUserRole===true">{{addButtonText}}</span>
+      </button>
+    </div>
+  </fieldset>

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { R2aTabComponent } from './r2a-tab.component';
+import { RoleBuilderComponent } from './role-builder.component';
 
-describe('R2aTabComponent', () => {
-  let component: R2aTabComponent;
-  let fixture: ComponentFixture<R2aTabComponent>;
+describe('RoleBuilderComponent', () => {
+  let component: RoleBuilderComponent;
+  let fixture: ComponentFixture<RoleBuilderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ R2aTabComponent ]
+      declarations: [ RoleBuilderComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(R2aTabComponent);
+    fixture = TestBed.createComponent(RoleBuilderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

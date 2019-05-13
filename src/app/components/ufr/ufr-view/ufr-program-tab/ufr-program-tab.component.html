@@ -9,7 +9,7 @@
       <!-- we have an tagname set, but check that we have a recognized value -->
       <option *ngIf="!tagNames.has(tagname) || (tagNames.has(tagname) && !tagNames.get(tagname).has(ufr[property]))" [ngValue]="ufr[property] ">{{ufr[property]}} (Unknown value)</option>
     </ng-container>
-    <option *ngFor="let t of tagsService.tags(tagname) | async" [ngValue]="t.abbr" >
+    <option *ngFor="let t of tagsUtils.tags(tagname) | async" [ngValue]="t.abbr" >
       <span *ngIf="tagname=='Lead Component'">{{t.abbr}}</span>
       <span *ngIf="tagname!='Lead Component'">{{t.name}}</span>
     </option>

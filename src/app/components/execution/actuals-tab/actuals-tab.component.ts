@@ -1,15 +1,13 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core'
-import { Observable } from 'rxjs';
-
-// Other Components
-import { GridOptions, CellEditingStartedEvent, CellEditingStoppedEvent } from 'ag-grid';
-import { AgGridNg2 } from 'ag-grid-angular';
-import {FormatterUtil} from "../../../utils/formatterUtil";
-import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OandEService, OSDGoalPlan } from '../../../generated';
-import { ActualsCellRendererComponent } from '../actuals-cell-renderer/actuals-cell-renderer.component';
-import { OandETools, ToaAndReleased } from '../model/oande-tools';
-import { Notify } from '../../../utils/Notify';
-import { FyHeaderComponent } from '../fy-header/fy-header.component';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs';
+import {GridOptions} from 'ag-grid-community';
+import {AgGridNg2} from 'ag-grid-angular';
+import {Execution, ExecutionEvent, ExecutionLine, LibraryService, OandEMonthly, OandEService, OSDGoalPlan} from '../../../generated';
+import {ActualsCellRendererComponent} from '../actuals-cell-renderer/actuals-cell-renderer.component';
+import {OandETools, ToaAndReleased} from '../model/oande-tools';
+import {Notify} from '../../../utils/Notify';
+import {FyHeaderComponent} from '../fy-header/fy-header.component';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 declare const $: any;
 
@@ -43,6 +41,8 @@ export class ActualsTabComponent implements OnInit {
   explanation: string;
   fixtime: number = 1;
   private maxmonths: number = 0;
+  private latestGfebsAsOf:string;
+  private latestDaiAsOf:string;
 
   get readonly(): boolean {
     return (this._exe
@@ -110,7 +110,7 @@ export class ActualsTabComponent implements OnInit {
     return this._deltas;
   }
 
-  constructor(private oandesvc: OandEService) {
+  constructor(private oandesvc: OandEService, private librarysvc: LibraryService) {
     var my: ActualsTabComponent = this;
 
     var editrows: Set<number> = new Set<number>([2, 4, 8, 12]);
@@ -473,6 +473,30 @@ export class ActualsTabComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    forkJoin([
+      this.librarysvc.getByKeyAndValue("area", "gfebs"),
+      this.librarysvc.getByKeyAndValue("area", "dai"),
+
+    ]).subscribe(data => {
+      this.latestGfebsAsOf = this.getLatestAsOf(data[0].result);
+      this.latestDaiAsOf = this.getLatestAsOf(data[1].result);
+    });
+
+  }
+
+  getLatestAsOf( filesmetadata:any ){
+    let latest:string = "";
+    filesmetadata.forEach( fmd  => {
+      if ( fmd.metadata.asof > latest ) {
+        latest=fmd.metadata.asof;
+      }
+    });
+
+    if (latest !=""){
+      return latest;
+    }
+    return null;
   }
 
   /**

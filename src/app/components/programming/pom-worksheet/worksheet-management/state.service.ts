@@ -5,7 +5,9 @@ export enum Operation {
   DUPLICATE=1,RENAME,EXPORT,IMPORT,UNLOCK
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class StateService {
 
   selectedRowIndex: number;

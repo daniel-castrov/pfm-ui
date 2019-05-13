@@ -1,19 +1,22 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
 import {
-  BES,
   BudgetService,
   FundingLine,
-  PB,
+  LockPosition,
+  LockPositionDetails,
+  LockPositionService,
+  PresidentialBudget,
   Program,
-  PRService,
+  ProgramService,
   R2Data,
-  RdteData,
-  RdteDataService
-} from "../../../../generated";
-import {ScenarioService} from "../../../../services/scenario.service";
-import {TagsService, TagType} from "../../../../services/tags.service";
-import {Observable} from "rxjs";
+  RdteBudgetData,
+  RdteBudgetDataService,
+  Tag
+} from '../../../../generated';
+import {ScenarioService} from '../../../../services/scenario.service';
+import {TagsUtils, TagType} from '../../../../services/tags-utils.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'r2',
@@ -22,76 +25,79 @@ import {Observable} from "rxjs";
 })
 export class R2Component implements OnInit {
 
-  scenario: PB | BES;
+  PresidentialBudget = PresidentialBudget;
+
   programElement: string;
 
   fy: number;
   now = new Date();
-  fls: FundingLine[];
+  fls: FundingLine[] = [];
   ba: string;
-  items: string[];
+  r2Data: R2Data;
+  lockPositionDetails: LockPositionDetails;
+  executionTransactionTags: Tag[]; // 'None' is not included
 
   constructor( private route: ActivatedRoute,
                private scenarioService: ScenarioService,
                private budgetService: BudgetService,
-               public tagsService: TagsService,
-               private prService: PRService,
-               private rdteDataService: RdteDataService) {}
+               public tagsUtils: TagsUtils,
+               private programService: ProgramService,
+               private rdteBudgetDataService: RdteBudgetDataService,
+               private lockPositionService: LockPositionService ) {}
 
   async ngOnInit() {
+    this.initExecutionTransactionTags();
     this.programElement = this.route.snapshot.params['programElement'];
-    this.scenario = await this.getScenario();
-    this.fy = await this.getFY();
-    this.fls = await this.getFLs();
-    this.ba = await this.getBA();
-    this.items = await this.getItems();
+    const scenarioId = this.route.snapshot.params['scenarioId'];
+    this.initR2DataAndItems(scenarioId);
+    this.initFLsAndBA(scenarioId);
+    this.initLockPositionDetails(scenarioId);
+    this.initFY(scenarioId);
+  }
+
+  private async initExecutionTransactionTags() {
+    this.executionTransactionTags = await this.tagsUtils.tags(TagType.EXECUTION_TRANSACTION, true, false).toPromise();
+    this.executionTransactionTags = this.executionTransactionTags.filter(tag => tag.abbr !== 'NONE');
+  }
+
+  private async initR2DataAndItems(scenarioId: string) {
+    const rdteBudgetData: RdteBudgetData = (await this.rdteBudgetDataService.getByContainerId(scenarioId).toPromise()).result;
+    this.r2Data = rdteBudgetData.r2Data.find(r2data => r2data.programElement === this.programElement);
+  }
+
+  private async initFLsAndBA(scenarioId: string) {
+    const programs:Program[] = (await this.programService.getByContainer(scenarioId).toPromise()).result;
+    programs.forEach(program => program.fundingLines.forEach(fundingLine => {
+      this.fls.push(fundingLine);
+    }));
+    const flWithPE = this.fls.find(fl => fl.programElement === this.programElement);
+    this.ba = flWithPE && flWithPE.baOrBlin;
+  }
+
+  private async initLockPositionDetails(scenarioId: string) {
+    const lockPosition: LockPosition = (await this.lockPositionService.getLatestForScenario(scenarioId).toPromise()).result;
+    this.lockPositionDetails = lockPosition.mapPeToDetails[this.programElement];
+  }
+
+  private async initFY(scenarioId: string) {
+    const scenario = await this.scenarioService.scenario(scenarioId);
+    const budgets = (await this.budgetService.getAll().toPromise()).result;
+    this.fy = budgets.find(budget => budget.id == scenario.budgetId).fy;
   }
 
   peName(): Observable<string> {
     if(!this.programElement) return;
-    return this.tagsService.name(TagType.PROGRAM_ELEMENT, this.programElement);
+    return this.tagsUtils.name(TagType.PROGRAM_ELEMENT, this.programElement);
   }
 
   baName(): Observable<string> {
     if(!this.ba) return;
-    return this.tagsService.name(TagType.BA, this.ba);
+    return this.tagsUtils.name(TagType.BA, this.ba);
   }
 
   itemName(abbreviation: string): Observable<string> {
     if(!this.ba) return;
-    return this.tagsService.name(TagType.ITEM, abbreviation);
-  }
-
-  private async getScenario(): Promise<BES|PB> {
-    const scenarioId = this.route.snapshot.params['scenarioId'];
-    return await this.scenarioService.scenario(scenarioId);
-  }
-
-  private async getFLs(): Promise<FundingLine[]> {
-    const result: FundingLine[] = [];
-    const programs:Program[] = (await this.prService.getByContainer(this.scenario.id).toPromise()).result;
-    programs.forEach(program => program.fundingLines.forEach(fundingLine => {
-      result.push(fundingLine);
-    }));
-    return result;
-  }
-
-  private async getFY(): Promise<number> {
-    const budgets = (await this.budgetService.getAll().toPromise()).result;
-    return budgets.find(budget => budget.id == this.scenario.budgetId).fy;
-  }
-
-  private async getBA(): Promise<string> {
-    const flWithPE = this.fls.find(fl => fl.programElement === this.programElement);
-    return flWithPE && flWithPE.baOrBlin;
-  }
-
-  private async getItems(): Promise<string[]> {
-    const result: string[] = [];
-    const rdteData: RdteData = (await this.rdteDataService.getByContainerId(this.scenario.id).toPromise()).result;
-    const r2data: R2Data = rdteData.r2data.find(r2data => r2data.programElement === this.programElement);
-    r2data.items.forEach(item => result.push(item.itemName));
-    return result;
+    return this.tagsUtils.name(TagType.ITEM, abbreviation);
   }
 
   private totalForItemAndYear(item, year): number {
@@ -109,4 +115,18 @@ export class R2Component implements OnInit {
       .map(fl => fl.funds[year])
       .reduce((a,b)=>a+b,0);
   }
+
+  private totalAdjustmentsFor(year: string): number {
+    if(!this.executionTransactionTags) return 0;
+    if(!this.lockPositionDetails) return 0;
+    return this.executionTransactionTags
+      .map(tag => this.lockPositionDetails.adjustments[tag.abbr][year].calculated || this.lockPositionDetails.adjustments[tag.abbr][year].adjusted)
+      .reduce((a,b)=>a+b,0);
+  }
+
+  private getValueOrNA(value:string) :string {
+    if ( !value || value.trim() == "" ) return "N/A";
+    return value;
+  }
+
 }

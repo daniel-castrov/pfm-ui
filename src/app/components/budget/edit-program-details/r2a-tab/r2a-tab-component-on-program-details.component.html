@@ -1,0 +1,27 @@
+<div class="row mb-4">
+  <div class="col-10">
+    <span class="mr-2">
+      <select [(ngModel)]="selectedSection" class="form-control-sm">
+        <option value="null" disabled selected>Select a Section</option>
+        <option ngValue="a">Section A: Mission Description</option>
+        <option ngValue="b">Section B: Accomplishment/Planned</option>
+        <option ngValue="d">Section D: Acquisition Strategy</option>
+        <option ngValue="e">Section E: Performance Metrics</option>
+      </select>
+    </span>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <section-a #sectionA *ngIf="selectedSection === 'a'" [r2AData]="r2AData" ></section-a>
+  </div>
+  <div class="col-12">
+    <section-b #sectionB *ngIf="selectedSection === 'b'" [r2AData]="r2AData" ></section-b>
+  </div>
+  <div class="col-12">
+    <section-d #sectionD *ngIf="selectedSection === 'd'" [r2AData]="r2AData" ></section-d>
+  </div>
+  <div class="col-12">
+    <section-e #sectionE *ngIf="selectedSection === 'e'" [r2AData]="r2AData" ></section-e>
+  </div>
+</div>

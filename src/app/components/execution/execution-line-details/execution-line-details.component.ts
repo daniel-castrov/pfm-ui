@@ -1,13 +1,13 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Execution, ExecutionDropDown, ExecutionEvent, ExecutionService, ProgramsService} from '../../../generated';
+import {Execution, ExecutionDropDown, ExecutionEvent, ExecutionService, MRDBService} from '../../../generated';
 import {ActivatedRoute, UrlSegment} from '../../../../../node_modules/@angular/router';
-import {forkJoin} from '../../../../../node_modules/rxjs/observable/forkJoin';
 import {FormatterUtil} from '../../../utils/formatterUtil';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
-import {GridOptions} from 'ag-grid';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
 
-import {TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component'
+import {TransferFromToDetailsCellRendererComponent} from '../transfer-from-to-details-cell-renderer/transfer-from-to-details-cell-renderer.component';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-execution-line-details',
@@ -27,7 +27,7 @@ export class ExecutionLineDetailsComponent implements OnInit {
   
   private agOptions: GridOptions;
 
-  constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
+  constructor(private exesvc: ExecutionService, private mrdbService: MRDBService,
     private route: ActivatedRoute) {
     
     var agcomps: any = {
@@ -130,7 +130,7 @@ export class ExecutionLineDetailsComponent implements OnInit {
         my.exesvc.getExecutionLineById(exelineid),
         my.exesvc.getExecutionDropdowns(),
         my.exesvc.getExecutionEventsByExecutionLine(exelineid),
-        my.progsvc.getIdNameMap(),
+        my.mrdbService.getIdNameMap(),
       ]).subscribe(data => {
         my.current = {
           line: data[0].result

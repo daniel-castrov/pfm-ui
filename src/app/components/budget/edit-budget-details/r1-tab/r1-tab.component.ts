@@ -1,6 +1,6 @@
-import { Component, OnChanges, Input } from '@angular/core';
-import { RdteData, LibraryService } from '../../../../generated';
-import { Notify } from '../../../../utils/Notify';
+import {Component, Input, OnChanges} from '@angular/core';
+import {LibraryService, RdteBudgetData} from '../../../../generated';
+import {Notify} from '../../../../utils/Notify';
 
 @Component({
   selector: 'r1-tab',
@@ -9,7 +9,7 @@ import { Notify } from '../../../../utils/Notify';
 })
 export class R1TabComponent implements OnChanges {
 
-  @Input() rdteData: RdteData;
+  @Input() rdteBudgetData: RdteBudgetData;
 
   constructor(private libraryService:LibraryService) { }
 
@@ -18,10 +18,10 @@ export class R1TabComponent implements OnChanges {
 
   r1HandleFileInput(files: FileList) {
     let r1FileToUpload:File = files.item(0);
-    this.libraryService.uploadFile(r1FileToUpload, this.rdteData.fileArea).subscribe(response => {
+    this.libraryService.uploadFile(r1FileToUpload, this.rdteBudgetData.fileArea).subscribe(response => {
       if (response.result) {
-        this.rdteData.r1Id=response.result.id;
-        this.rdteData.r1Name=r1FileToUpload.name;
+        this.rdteBudgetData.r1Id=response.result.id;
+        this.rdteBudgetData.r1Name=r1FileToUpload.name;
       } else if (response.error) {
         Notify.error( "Something went wrong with the overview file upload" + response.error );
       } else {

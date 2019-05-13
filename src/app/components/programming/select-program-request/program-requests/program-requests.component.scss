@@ -46,3 +46,10 @@ fieldset {
   display: inline-block;
   width: 70px;
 }
+
+.ag-theme-balham .ag-header-cell-label {
+  display: grid !important;
+  text-align: center !important;
+  padding-right: 2px !important;
+  margin: 0 auto !important;
+}

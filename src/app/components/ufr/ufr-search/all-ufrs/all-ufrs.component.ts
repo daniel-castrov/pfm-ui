@@ -1,28 +1,16 @@
 import {UserUtils} from '../../../../services/user.utils';
-import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AgGridNg2} from "ag-grid-angular";
-import {
-  Execution,
-  ExecutionService,
-  Organization,
-  OrganizationService,
-  Program,
-  ProgramsService,
-  UFR,
-  UFRFilter,
-  UFRsService,
-  User
-} from '../../../../generated';
-import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
+import {AgGridNg2} from 'ag-grid-angular';
+import {Organization, OrganizationService, Program, UFR, UFRFilter, UFRsService, User} from '../../../../generated';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
 import {
   SimpleLink,
   SimpleLinkCellRendererComponent
 } from '../../../renderers/simple-link-cell-renderer/simple-link-cell-renderer.component';
-import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
-import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {CurrentPhase} from "../../../../services/current-phase.service";
-import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
+import {FundingLinesUtils} from '../../../../utils/FundingLinesUtils';
+import {FormatterUtil} from '../../../../utils/formatterUtil';
+import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 
 @Component({
   selector: 'all-ufrs',
@@ -57,12 +45,9 @@ export class AllUfrsComponent implements OnChanges {
 
   constructor( private ufrsService: UFRsService,
                private userUtils: UserUtils,
-               private programsService: ProgramsService,
                private orgSvc: OrganizationService,
                private router: Router,
-               private programAndPrService: ProgramAndPrService,
-               private currentPhase: CurrentPhase,
-               private exeService: ExecutionService) {}
+               private programAndPrService: ProgramAndPrService) {}
 
   async ngOnChanges() {
 

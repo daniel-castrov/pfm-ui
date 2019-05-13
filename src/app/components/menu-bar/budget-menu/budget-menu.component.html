@@ -1,7 +1,12 @@
-<div *ngIf="!elevationService.elevatedBoolean && roles?.includes('Budget_Manager') ; else disabledBudgetMenu">
+<div *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu">
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="dropdownbes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Budget</a>
     <div class="dropdown-menu" aria-labelledby="dropdownbes">
+
+      <a *menuRolesOk="'edit-program-details'" class="dropdown-item" routerLink="/edit-program-details">Edit Program Details</a>
+      <a *menuRolesNotNow="'edit-program-details'" class="dropdown-item" disabled>Edit Program Details</a>
+
+      <div class="dropdown-divider"></div>
 
       <a *menuRolesOk="'create-budget'" class="dropdown-item" routerLink="/create-budget">Create Budget Phase</a>
       <a *menuRolesNotNow="'create-budget'" class="dropdown-item" disabled>Create Budget Phase</a>
@@ -11,13 +16,15 @@
 
       <a *menuRolesOk="'edit-budget-details'" class="dropdown-item" routerLink="/edit-budget-details">Edit Budget Details</a>
       <a *menuRolesNotNow="'edit-budget-details'" class="dropdown-item" disabled>Edit Budget Details</a>
-
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#" routerLink="/bes-rdte">RDT&E Data</a>
-      <a class="dropdown-item" href="#" routerLink="/bes-proc">Proc Data</a>
+      <a *menuRolesOk="'lock-position'" class="dropdown-item" routerLink="/lock-position">Lock Position</a>
+      <a *menuRolesNotNow="'lock-position'" class="dropdown-item" disabled>Lock Position</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="#" routerLink="/r-forms">RDT&E Exhibits</a>
       <a class="dropdown-item" href="#" routerLink="/p-forms">Proc Exhibits</a>
+
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" disabled>RDT&E Tree Data</a>
     </div>
   </li>
 

@@ -5,7 +5,9 @@ import { CreateUserRequestService } from '../generated/api/createUserRequest.ser
 import { AssignRoleRequestService } from '../generated/api/assignRoleRequest.service';
 import { DropRoleRequestService } from '../generated/api/dropRoleRequest.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class Injectables {
 
     static joinCommunityRequestService: JoinCommunityRequestService;

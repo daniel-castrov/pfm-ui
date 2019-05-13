@@ -96,7 +96,7 @@ export class WorksheetComponent implements OnChanges {
           suppressToolPanel: true,
           cellRenderer: 'checkboxCellRenderer',
           cellClass: ['funding-line-default'],
-          headerClass: 'header-without-filter',
+          headerClass: 'no-filter-header',
           maxWidth: 50,
           minWidth: 50,
           suppressMenu: true
@@ -109,7 +109,7 @@ export class WorksheetComponent implements OnChanges {
         suppressToolPanel: true,
         cellRenderer: 'viewEventsRenderer',
         cellClass: ['funding-line-default'],
-        headerClass: 'header-without-filter',
+        headerClass: 'no-filter-header',
         maxWidth: 80,
         minWidth: 80,
         suppressMenu: true
@@ -200,7 +200,7 @@ export class WorksheetComponent implements OnChanges {
               suppressToolPanel: true,
               cellEditor: 'numericCellEditor',
               cellClass: ['text-right', this.readonly ? '' : 'ag-cell-edit'],
-              headerClass: 'header-without-filter',
+              headerClass: 'no-filter-header',
               editable: !this.readonly,
               valueFormatter: params => {
                 return FormatterUtil.currencyFormatter(params, 0, true)
@@ -221,7 +221,7 @@ export class WorksheetComponent implements OnChanges {
       maxWidth: 100,
       minWidth: 100,
       cellClass: ['ag-cell-white','text-right'],
-      headerClass: 'header-without-filter',
+      headerClass: 'no-filter-header',
       valueGetter: params => {return this.getTotal(params.data, this.columnKeys)},
       valueFormatter: params => {return FormatterUtil.currencyFormatter(params, 0, true)}
     };

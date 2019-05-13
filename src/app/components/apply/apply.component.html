@@ -26,8 +26,8 @@
           <span [hidden]="!createUserRequestLastName.errors?.minlength" class="invalid-feedback">*Last Name must be at least 2 characters</span>
         </span>
         <div class="form-group nda" *ngIf="stranger?.contractor">
-          <span *ngIf="!ndaSatisfied">*If you are a contractor please <a *ngIf="!ndaSatisfied" class="nda-not-valid" data-toggle="modal" href="#myModal">click here</a> to sign the NDA.</span>
-          <a *ngIf="ndaSatisfied">The NDA has been signed.</a>
+          <span *ngIf="!ndaSatisfied" class="mr-2">*If you are a contractor please <a *ngIf="!ndaSatisfied" class="nda-not-valid" data-toggle="modal" href="#myModal">click here</a> to sign the NDA.</span>
+          <a *ngIf="ndaSatisfied" class="mr-2">The NDA has been signed.</a>
           <span *ngIf="!ndaSatisfied">
             <i class="fa fa-exclamation-triangle nda-not-valid" aria-hidden="true"></i>
           </span>
@@ -46,7 +46,7 @@
                   <h4 class="modal-title">JICAP NON-DISCLOSURE CERTIFICATION</h4>
                   <pre class="nda-message">{{ndaText}}</pre>
                   <input type="checkbox" [checked]="ndaSatisfied" (change)="ndaSatisfied= !ndaSatisfied" name="ndaSatisfied" class="checkbox" required>
-                  <strong>I agree to the terms and conditions of this Non-Disclosure Agreement</strong>
+                  <span class="font-weight-bold mr-2">I agree to the terms and conditions of this Non-Disclosure Agreement</span>
                   <span class="controls mb-2">
                     <span>
                       <button class="btn btn-primary btn" data-dismiss="modal">I Agree</button>

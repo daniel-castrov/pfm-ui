@@ -2,9 +2,8 @@ import {Component, Input} from '@angular/core';
 import { Worksheet, WorksheetEvent, Workspace, WorkspaceService } from "../../../../generated";
 import {Notify} from "../../../../utils/Notify";
 import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
-import {WorksheetComponent} from "./../worksheet/worksheet.component";
 import {ReasonCodeComponent} from "./../reason-code/reason-code.component";
-import {RowNode} from "ag-grid";
+import {RowNode} from "ag-grid-community";
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { GridToaComponent } from '../grid-toa/grid-toa.component';
 

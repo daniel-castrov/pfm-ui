@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UfrTabComponent } from './ufr-tab.component';
+import { UfrUfrTabComponent } from './ufr-ufr-tab.component';
 
 describe('UfrTabComponent', () => {
-  let component: UfrTabComponent;
-  let fixture: ComponentFixture<UfrTabComponent>;
+  let component: UfrUfrTabComponent;
+  let fixture: ComponentFixture<UfrUfrTabComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UfrTabComponent ]
+      declarations: [ UfrUfrTabComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UfrTabComponent);
+    fixture = TestBed.createComponent(UfrUfrTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

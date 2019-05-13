@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 
-import { OandEMonthly, ExecutionLine, Execution, ExecutionEvent, OSDGoalPlan } from '../../../generated';
-import { OandETools, ToaAndReleased } from '../model/oande-tools';
+import {Execution, ExecutionEvent, ExecutionLine, OandEMonthly, OSDGoalPlan} from '../../../generated';
+import {OandETools, ToaAndReleased} from '../model/oande-tools';
 
 import * as d3 from 'd3';
-import 'rxjs/add/operator/takeUntil';
 
 @Component({
     selector: 'graphs-tab',

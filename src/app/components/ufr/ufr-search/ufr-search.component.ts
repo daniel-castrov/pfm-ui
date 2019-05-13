@@ -1,21 +1,11 @@
 import {AllUfrsComponent} from './all-ufrs/all-ufrs.component';
 import {UserUtils} from '../../../services/user.utils';
 import {ChangeDetectorRef, Component, DoCheck, OnInit, ViewChild} from '@angular/core';
-import {forkJoin} from "rxjs/observable/forkJoin";
-import {
-  Budget,
-  BudgetService,
-  ExecutionService,
-  Pom,
-  POMService,
-  RestResult,
-  UFRFilter,
-  UfrStatus,
-  User
-} from '../../../generated';
+import {Budget, BudgetService, ExecutionService, Pom, POMService, RestResult, UFRFilter, UfrStatus, User} from '../../../generated';
 import {Cycle} from '../cycle';
-import {CurrentPhase} from "../../../services/current-phase.service";
-import {PhaseType} from "../../programming/select-program-request/UiProgramRequest";
+import {CurrentPhase} from '../../../services/current-phase.service';
+import {PhaseType} from '../../programming/select-program-request/UiProgramRequest';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-ufr-search',

@@ -1,19 +1,20 @@
-import {Component, OnInit, ViewChild} from '@angular/core'
-import {Router} from '@angular/router'
-import {GridOptions} from 'ag-grid';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
-import {FormatterUtil} from "../../../utils/formatterUtil";
+import {FormatterUtil} from '../../../utils/formatterUtil';
 import {
   Execution,
   ExecutionLine,
   ExecutionService,
+  LibraryService,
+  MRDBService,
   MyDetailsService,
   OandEMonthly,
   OandEService
-} from '../../../generated'
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {ProgramsService} from '../../../generated/api/programs.service';
+} from '../../../generated';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {ProgramCellRendererComponent} from '../../renderers/program-cell-renderer/program-cell-renderer.component';
+import {SessionUtil} from '../../../utils/SessionUtil';
 
 
 @Component({
@@ -23,7 +24,7 @@ import {ProgramCellRendererComponent} from '../../renderers/program-cell-rendere
 })
 
 export class OeUpdateComponent implements OnInit {
-  @ViewChild("agGrid") private agGrid: AgGridNg2;
+  @ViewChild('agGrid') private agGrid: AgGridNg2;
 
   private programs: Map<string, string> = new Map<string, string>();
   private datalines: OandEExecutionRow[];
@@ -31,12 +32,16 @@ export class OeUpdateComponent implements OnInit {
   private selectedexe: Execution;
   private hasAppropriation: boolean;
   private agOptions: GridOptions;
+  private latestGfebsAsOf:string;
+  private latestDaiAsOf:string;
 
-  constructor(private exesvc: ExecutionService, private usersvc: MyDetailsService,
-    private progsvc: ProgramsService, private oandesvc:OandEService, private router: Router) {
-    var my: OeUpdateComponent = this;
+  constructor(private exesvc: ExecutionService,
+              private usersvc: MyDetailsService,
+              private mrdbService: MRDBService,
+              private oandesvc: OandEService,
+              private librarysvc: LibraryService) {
 
-    var agcomps: any = {
+    const agcomps: any = {
       programCellRendererComponent: ProgramCellRendererComponent
     };
 
@@ -102,7 +107,7 @@ export class OeUpdateComponent implements OnInit {
           field: 'el.toa',
           cellClass: ['ag-cell-light-green'],
           type: 'numericColumn',
-          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
+          valueFormatter: params => FormatterUtil.currencyFormatter(params, 2, false),
           maxWidth: 92
         },
         {
@@ -111,7 +116,7 @@ export class OeUpdateComponent implements OnInit {
           field: 'el.released',
           cellClass: ['ag-cell-white'],
           type: 'numericColumn',
-          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
+          valueFormatter: params => FormatterUtil.currencyFormatter(params, 2, false),
           maxWidth: 92
         },
         {
@@ -119,15 +124,15 @@ export class OeUpdateComponent implements OnInit {
           headerTooltip: 'Obligated',
           field: 'obligated',
           cellClass: ['ag-cell-white'],
-          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
+          valueFormatter: params => FormatterUtil.currencyFormatter(params, 2, false),
           type: 'numericColumn',
           maxWidth: 92
         },
         {
-          headerName: 'Expensed',
-          headerTooltip: 'Expensed',
+          headerName: 'Expended',
+          headerTooltip: 'Expended',
           field: 'expensed',
-          valueFormatter: params => { return FormatterUtil.currencyFormatter(params, 2, false) },
+          valueFormatter: params => FormatterUtil.currencyFormatter(params, 2, false),
           type: 'numericColumn',
           cellClass: ['ag-cell-white'],
           maxWidth: 92
@@ -152,25 +157,49 @@ export class OeUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-    var my: OeUpdateComponent = this;
-    my.usersvc.getCurrentUser().subscribe(deets => {
+    this.usersvc.getCurrentUser().subscribe(deets => {
       forkJoin([
-        my.progsvc.getIdNameMap(),
-        my.exesvc.getAll(),
-        //my.exesvc.getAll('CREATED'),
+        this.mrdbService.getIdNameMap(),
+        this.exesvc.getAll(),
+        this.librarysvc.getByKeyAndValue("area", "gfebs"),
+        this.librarysvc.getByKeyAndValue("area", "dai"),
+
       ]).subscribe(data => {
-        my.programs = new Map<string, string>();
+        this.programs = new Map<string, string>();
         Object.getOwnPropertyNames(data[0].result).forEach(mrid => {
-          my.programs.set(mrid, data[0].result[mrid]);
+          this.programs.set(mrid, data[0].result[mrid]);
         });
 
-        my.exephases = data[1].result;
-        my.selectedexe = my.exephases[0];
-        my.fetchLines();
+        this.exephases = data[1].result;
+        if (SessionUtil.get('execution')) {
+          this.selectedexe = this.exephases.find(e => e.fy === SessionUtil.get('execution').fy);
+        } else {
+          this.selectedexe = this.exephases[0];
+          SessionUtil.set('execution', this.selectedexe);
+        }
+        this.fetchLines();
+        this.latestGfebsAsOf = this.getLatestAsOf(data[2].result);
+        this.latestDaiAsOf = this.getLatestAsOf(data[3].result);
       });
     });
 
+
   }
+
+  getLatestAsOf( filesmetadata:any ){
+    let latest:string = "";
+    filesmetadata.forEach( fmd  => {
+      if ( fmd.metadata.asof > latest ) {
+        latest=fmd.metadata.asof;
+      }
+    });
+
+    if (latest !=""){
+      return latest;
+    }
+    return null;
+  }
+
 
   fetchLines() {
     this.agOptions.api.showLoadingOverlay();
@@ -186,15 +215,14 @@ export class OeUpdateComponent implements OnInit {
       this.oandesvc.getByPhaseId(this.selectedexe.id)
     ]).subscribe(data => {
       this.hasAppropriation = data[0].result;
-      if (0 == data[1].result.length) {
+      if (0 === data[1].result.length) {
         this.agOptions.api.showNoRowsOverlay();
-      }
-      else {
+      } else {
         this.agOptions.api.hideOverlay();
 
-        var newdata: OandEExecutionRow[] = [];
+        const newData: OandEExecutionRow[] = [];
         data[1].result.forEach((el: ExecutionLine) => {
-          var wrap: OandEExecutionRow = {
+          const wrap: OandEExecutionRow = {
             id: el.id,
             programName: el.programName,
             exe: this.selectedexe,
@@ -214,26 +242,27 @@ export class OeUpdateComponent implements OnInit {
               wrap.obligated += oe.obligated;
               wrap.expensed += oe.expensed;
 
-              var oeupd: Date = new Date(oe.lastUpdated);
+              const oeupd: Date = new Date(oe.lastUpdated);
               if (oeupd > wrap.lastupd) {
                 wrap.lastupd = oeupd;
               }
             });
 
-          newdata.push(wrap);
+          newData.push(wrap);
         });
 
-        this.datalines = newdata;
+        this.datalines = newData;
       }
 
       this.agGrid.api.sizeColumnsToFit();
       this.agGrid.api.refreshHeader();
     });
+    SessionUtil.set('execution', this.selectedexe);
   }
 
 
   onPageSizeChanged(event) {
-    var selectedValue = Number(event.target.value);
+    const selectedValue = Number(event.target.value);
     this.agGrid.api.paginationSetPageSize(selectedValue);
     this.agGrid.api.sizeColumnsToFit();
   }
@@ -242,7 +271,7 @@ export class OeUpdateComponent implements OnInit {
     setTimeout(() => {
       params.api.sizeColumnsToFit();
     }, 500);
-    window.addEventListener("resize", function() {
+    window.addEventListener('resize', () => {
       setTimeout(() => {
         params.api.sizeColumnsToFit();
       });
@@ -251,13 +280,13 @@ export class OeUpdateComponent implements OnInit {
 }
 
 interface OandEExecutionRow {
-  programName: string,
-  id: string,
-  exe: Execution,
-  el: ExecutionLine,
-  expensed: number,
-  obligated: number,
-  accruals: number,
-  committed: number,
-  lastupd?: Date
+  programName: string;
+  id: string;
+  exe: Execution;
+  el: ExecutionLine;
+  expensed: number;
+  obligated: number;
+  accruals: number;
+  committed: number;
+  lastupd?: Date;
 }

@@ -1,13 +1,17 @@
 <div class="row">
   <div class="col-auto">
     <button [disabled]="isDisabledAddFundingLines || readonly"  class="btn btn-primary mb-3"  (click)="addRow()">
-      <span class="icon-pad">Add Funding Line</span>
+      <span class="mr-2">
+        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      </span>
+      <span>Add Funding Line</span>
     </button>
   </div>
 </div>
 
 <ag-grid-angular #agGridCurrentFunding
   class="ag-theme-balham pr-funds-tab group-header-white"
+  [sideBar]="sideBar"
   [rowData]="currentFunding"
   [toolPanelSuppressPivotMode]="true"
   [toolPanelSuppressRowGroups]="true"
@@ -30,6 +34,7 @@
 <ag-grid-angular #agGridProposedChanges
                  id="agGridProposedChanges"
                  class="ag-theme-balham pr-funds-tab group-header-white separator"
+                 [sideBar]="sideBar"
                  [gridAutoHeight]="true"
                  [toolPanelSuppressPivotMode]="true"
                  [toolPanelSuppressRowGroups]="true"
@@ -60,6 +65,7 @@
   #agGridRevisedPrograms
   id="agGridRevisedPrograms"
   class="ag-theme-balham pr-funds-tab group-header-white separator"
+  [sideBar]="sideBar"
   [rowData]="revisedPrograms"
   [suppressRowTransform]="true"
   [suppressMovableColumns]="true"

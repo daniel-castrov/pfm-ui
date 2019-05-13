@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {WorksheetComponent} from "../worksheet/worksheet.component";
 import {GridToaComponent} from "../grid-toa/grid-toa.component";
-import {RowNode} from "ag-grid";
+import {RowNode} from "ag-grid-community";
 import { WorkspaceComponent } from '../workspace/workspace.component';
 
 @Component({

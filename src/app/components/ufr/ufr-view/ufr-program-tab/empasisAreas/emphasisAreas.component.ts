@@ -1,4 +1,4 @@
-import {TagsService, TagType} from './../../../../../services/tags.service';
+import {TagsUtils, TagType} from '../../../../../services/tags-utils.service';
 import {Component, Input, OnChanges} from '@angular/core';
 import {Program, Tag, UFR} from '../../../../../generated';
 
@@ -18,11 +18,11 @@ export class EmphasisAreasComponent implements OnChanges {
   @Input() disabled: boolean;
   tagsWithPercent: TagWithPercent[];
 
-  constructor( private tagsService: TagsService ) {}
+  constructor( private tagsUtils: TagsUtils ) {}
 
   async ngOnChanges() {
-    if(this.ufrOrPr && this.ufrOrPr.emphases) {
-      const tags: Tag[] = await this.tagsService.tags(TagType.EMPHASIS_AREA).toPromise();
+    if(this.ufrOrPr) {
+      const tags: Tag[] = await this.tagsUtils.tags(TagType.EMPHASIS_AREA).toPromise();
       this.tagsWithPercent = tags.map(tag => {
         return {...tag, percent: this.percentFromUfrOrPr(tag.abbr)}
       });
@@ -30,9 +30,13 @@ export class EmphasisAreasComponent implements OnChanges {
   }
 
   percentFromUfrOrPr(abbr: string): number {
-    const area:string = this.ufrOrPr.emphases.find( area =>  area.substring(0, area.indexOf(',')) == abbr);
-    if(area) {
-      return +area.substring(area.indexOf(',')+1);
+    if ( this.ufrOrPr.emphases ) {
+      const area: string = this.ufrOrPr.emphases.find(area => area.substring(0, area.indexOf(',')) == abbr);
+      if (area) {
+        return +area.substring(area.indexOf(',') + 1);
+      } else {
+        return 0;
+      }
     } else {
       return 0;
     }

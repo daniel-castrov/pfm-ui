@@ -3,12 +3,13 @@ import {ExecutionService} from '../../../generated/api/execution.service';
 import {Execution} from '../../../generated/model/execution';
 import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import {FormatterUtil} from '../../../utils/formatterUtil';
-import {ExecutionDropDown, ExecutionEventData, ExecutionLine, ProgramsService} from '../../../generated';
-import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ExecutionDropDown, ExecutionEventData, ExecutionLine} from '../../../generated';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
 import {ExecutionLineFilter} from '../model/execution-line-filter';
 import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
 import {ExecutionTableValidator} from '../model/execution-table-validator';
+import StatusEnum = Execution.StatusEnum;
 
 @Component({
   selector: 'update-program-execution',
@@ -17,7 +18,7 @@ import {ExecutionTableValidator} from '../model/execution-table-validator';
 })
 export class UpdateProgramExecutionComponent implements OnInit {
   @ViewChild(ExecutionLineTableComponent) table;
-  private current: ExecutionLineWrapper = { line: {} };
+  private current: ExecutionLineWrapper = {line: {}};
   private phase: Execution;
   private updatelines: ExecutionLineWrapper[] = [];
 
@@ -26,7 +27,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private subtypes: ExecutionDropDown[];
   private etype: ExecutionDropDown;
   private type: string;
-  private fromIsSource: boolean = true;
+  private fromIsSource = true;
   private linefilter: ExecutionLineFilter;
   private programfilter: ExecutionLineFilter;
   private validator: ExecutionTableValidator;
@@ -36,11 +37,12 @@ export class UpdateProgramExecutionComponent implements OnInit {
   private isUploading: boolean;
   private fileid;
 
-  constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
-    private route: ActivatedRoute, private router: Router) {
+  constructor(private exesvc: ExecutionService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
-  changeFromIsSource( event) {
+  changeFromIsSource(event) {
     this.fromIsSource = ('0: true' === event.target.value);
     this.table.setAvailablePrograms(this.fromIsSource);
     this.table.recheckValidity();
@@ -48,63 +50,61 @@ export class UpdateProgramExecutionComponent implements OnInit {
   }
 
   ngOnInit() {
-    var my: UpdateProgramExecutionComponent = this;
     this.route.url.subscribe((segments: UrlSegment[]) => {
-      var exelineid = segments[segments.length - 1].path;
+      const exelineid = segments[segments.length - 1].path;
 
       forkJoin([
-        my.exesvc.getExecutionLineById(exelineid),
-        my.exesvc.getExecutionDropdowns(),
+        this.exesvc.getExecutionLineById(exelineid),
+        this.exesvc.getExecutionDropdowns(),
       ]).subscribe(data => {
-        my.current = {
+        this.current = {
           line: data[0].result
         };
 
-        my.programfilter = function (el: ExecutionLine) {
-          if (my.current.line.id !== el.id) {
-            return (my.fromIsSource ? true : el.released > 0);
+        this.programfilter = (el: ExecutionLine) => {
+          if (this.current.line.id !== el.id) {
+            return (this.fromIsSource ? true : el.released > 0);
           }
           return false;
         };
 
-        my.exesvc.getById(my.current.line.phaseId).subscribe(d2 => {
-          my.phase = d2.result;
-        });
-
-        my.exesvc.hasAppropriation(my.current.line.phaseId).subscribe(d => {
-          if (this.current.line.released) {
-            if (d.result) {
-              // has appropriation, so only BTR and REALIGNMENTS are possible
-              this.types.set('EXE_BTR', 'BTR');
+        this.exesvc.getById(this.current.line.phaseId).subscribe(d2 => {
+          this.phase = d2.result;
+          this.exesvc.hasAppropriation(this.current.line.phaseId).subscribe(d => {
+            if (this.phase.status === StatusEnum.CREATED) {
+              this.types.set('EXE_FM_DIRECTED_ALIGNMENT', 'FM Directed Alignment');
+            }
+            if (this.current.line.released) {
+              if (d.result) {
+                // has appropriation, so only BTR and REALIGNMENTS are possible
+                this.types.set('EXE_BTR', 'BTR');
+              } else {
+                this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
+              }
               this.types.set('EXE_REALIGNMENT', 'Realignment');
             }
-            else {
-              this.types.set('EXE_REDISTRIBUTION', 'Redistribution');
-            }
-          }
-          this.types.set('EXE_FM_DIRECTED_ALIGNMENT', 'FM Directed Alignment');
-          this.allsubtypes = data[1].result.filter(x => this.types.has(x.type));
-          var first = true;
-          this.types.forEach((val, key) => {
-            if (first) {
-              this.type = key;
-              this.updatedropdowns();
-            }
-            first = false;
+            this.allsubtypes = data[1].result.filter(x => this.types.has(x.type));
+            let first = true;
+            this.types.forEach((val, key) => {
+              if (first) {
+                this.type = key;
+                this.updatedropdowns();
+              }
+              first = false;
+            });
           });
         });
       });
     });
   }
 
-  currencyFormatter(x:number) :string {
-    
-    let r:string = FormatterUtil.currencyFormatter(x, 2, false);
+  currencyFormatter(x: number): string {
+    const r: string = FormatterUtil.currencyFormatter(x, 2, false);
     return r;
   }
 
   submit() {
-    var et: ExecutionEventData = {
+    const et: ExecutionEventData = {
       fromId: this.current.line.id,
       fromIsSource: this.fromIsSource,
       toIdAmtLkp: {},
@@ -132,93 +132,94 @@ export class UpdateProgramExecutionComponent implements OnInit {
 
   updatedropdowns() {
     let validationAmount: number;
-    this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
-    this.etype = this.subtypes[0];
-    var my: UpdateProgramExecutionComponent = this;
+    this.subtypes = this.allsubtypes.filter(x => (x.type === this.type));
     if ('EXE_BTR' === this.type) {
-      validationAmount = my.current.line.released;
+      validationAmount = this.current.line.released;
       // BTR-- only between same PE
-      this.linefilter = function (x: ExecutionLine): boolean {
-        if (x.programElement === my.current.line.programElement) {
+      this.linefilter = (x: ExecutionLine): boolean => {
+        if (x.programElement === this.current.line.programElement) {
           return true;
         }
         return false;
       };
-    }
-    else if ('EXE_REALIGNMENT' === this.type) {
-      validationAmount = my.current.line.released;
+    } else if ('EXE_REALIGNMENT' === this.type) {
+      validationAmount = this.current.line.released;
+      if (!this.current.line.appropriated) {
+        this.subtypes = this.subtypes.filter(st => st.subtype === 'REALIGNMENT_REALIGNMENT');
+      }
       // realignment-- only between same blin as current
-      this.linefilter = function (x: ExecutionLine): boolean {
-        if (x.blin === my.current.line.blin){
+      this.linefilter = (x: ExecutionLine): boolean => {
+        if (x.blin === this.current.line.blin) {
           return true;
         }
         return false;
       };
-    }
-    else if ('EXE_REDISTRIBUTION' === this.type) {
-      validationAmount = my.current.line.released;
+    } else if ('EXE_REDISTRIBUTION' === this.type) {
+      validationAmount = this.current.line.released;
       // redistributions can do whatever
-      this.linefilter = function (x: ExecutionLine): boolean {
+      this.linefilter = (x: ExecutionLine): boolean => {
         return true;
       };
-    }
-    else if ('EXE_FM_DIRECTED_ALIGNMENT' === this.type) {
-      validationAmount = my.current.line.toa;
-      this.linefilter = function (x: ExecutionLine): boolean {
+    } else if ('EXE_FM_DIRECTED_ALIGNMENT' === this.type) {
+      validationAmount = this.current.line.toa;
+      this.linefilter = (x: ExecutionLine): boolean => {
         if (x.appropriation === 'PROC') {
-          if (x.blin === my.current.line.blin){
-            return true
+          if (x.blin === this.current.line.blin) {
+            return true;
           }
         } else {
-          if (x.programElement === my.current.line.programElement) {
+          if (x.programElement === this.current.line.programElement) {
             return true;
           }
         }
         return false;
       };
     }
-    my.validator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-      var total: number = 0;
+    this.etype = this.subtypes[0];
+    this.validator = (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] => {
+      let total = 0;
 
       x.forEach(elw => {
         total += (elw.amt ? elw.amt : 0);
       });
+      let validInput = true;
+      if (this.etype.inputValue === 'POSITIVE') {
+        validInput = total >= 0;
+      }
+      if (this.etype.inputValue === 'NEGATIVE') {
+        validInput = total <= 0;
+      }
 
-      var okays: boolean[] = [];
+      const okays: boolean[] = [];
 
       if (totalamt) {
         // check the total against all the rows
         x.forEach(elw => {
-          if (my.fromIsSource) {
-            okays.push(total <= validationAmount);
-          }
-          else {
+          if (this.fromIsSource) {
+            okays.push(total <= validationAmount && validInput);
+          } else {
             // our values are the source, so make sure they have enough money
 
-            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released ) {
-              okays.push( elw.line.released!==0 ? elw.amt <= elw.line.released : false );
-            }
-            else {
-              okays.push(true);
+            if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released) {
+              okays.push((elw.line.released !== 0 ? elw.amt <= elw.line.released : false) && validInput);
+            } else {
+              okays.push(validInput);
             }
           }
         });
-      }
-      else {
+      } else {
         // checking individual lines
         // check to make sure we have enough money to spread around
         x.forEach(elw => {
-          if (my.fromIsSource) {
+          if (this.fromIsSource) {
             // if fromIsSource, there's nothing to check
-            okays.push(elw.amt <= validationAmount);
-          }
-          else {
+            okays.push(elw.amt <= validationAmount && validInput);
+          } else {
             // if we're the source, make sure we have enough money
             if (elw.amt && elw.line && 'undefined' !== typeof elw.line.released) {
-              okays.push(elw.line.released !== 0 ? elw.amt <= elw.line.released : false);
-            }
-            else {
-              okays.push(true);
+              okays.push((elw.line.released !== 0 ? elw.amt <= elw.line.released : false) && validInput);
+            } else {
+              okays.push(validInput);
             }
           }
         });
@@ -226,7 +227,7 @@ export class UpdateProgramExecutionComponent implements OnInit {
       return okays;
     };
 
-    this.updatelines = this.updatelines.filter(elw => my.linefilter(elw.line));
+    this.updatelines = this.updatelines.filter(elw => this.linefilter(elw.line));
     this.updatedropdowns2();
   }
 

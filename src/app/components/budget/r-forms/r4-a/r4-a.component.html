@@ -1,3 +1,4 @@
+<r4></r4>
 <div class="row main-content mt-2">
 <div class="col-12">
     <div class="h5 mb-2">R-4A</div>
@@ -6,25 +7,25 @@
         <tr class="readOnly borderBottom borderRight">
             <td colspan="12">
               <span class="title">Exhibit R-4A, RDT&amp;E Project Cost Analysis: </span>
-              <span>PB 2018 Chemical and Biological Defense Program</span>
+              <span>PB {{fy}} Chemical and Biological Defense Program</span>
             </td>
             <td colspan="4" class="borderBottom">
               <span class="title">Date: </span>
-              <span class="date">Dec 2018</span>
+              <span class="date">February {{fy-1}}</span>
             </td>
         </tr>
         <tr class="readOnly borderBottomBold borderRight">
           <td colspan="6">
               <div class="title">Appropriation/Budget Activity</div>
-              <div>0400/5</div>
+              <div>0400/{{ba}}</div>
           </td>
           <td colspan="5">
             <div class="title">R-1 Program Element (Number/Name)</div>
-            <div>PE 0604384BP/CHEMICAL/BIOLOGICAL DEFENSE (EMD)</div>
+            <div>PE {{pe}}/{{peName()|async}}</div>
           </td>
           <td colspan="5">
               <div class="title">Project (Number/Name)</div>
-              <div>IP5 INDIVIDUAL PROTECTION (EMD)</div>
+              <div>{{item}} {{itemName()|async}}</div>
           </td>
         </tr>
         <tr class="readOnly alignCenter borderRightBottom">
@@ -46,41 +47,14 @@
           <th>Quarter</th>
           <th>Year</th>
         </tr>
-        <tr class="alignRight borderBottom">
+        <tr *ngFor="let r4 of r4Preview" class="alignRight borderBottom">
           <td colspan="12" class="alignLeft maxWidthText borderRight">
-              JSAM TA - MS C Low Rate Initial Production (LRIP)
+            {{r4.eventName}}
           </td>
-          <td class="cell borderRightBottom alignCenter">2</td>
-          <td class="cell borderRightBottom alignCenter">2016</td>
-          <td class="cell borderRightBottom alignCenter">2</td>
-          <td class="cell borderRight alignCenter">2018</td>
-        </tr>
-        <tr class="alignRight borderBottom">
-          <td colspan="12" class="alignLeft maxWidthText borderRight">
-              JSAM TA - Aircraft Platform Integration/Operational Testing
-          </td>
-          <td class="cell borderRightBottom alignCenter">2</td>
-          <td class="cell borderRightBottom alignCenter">2016</td>
-          <td class="cell borderRightBottom alignCenter">2</td>
-          <td class="cell borderRight alignCenter">2019</td>
-        </tr>
-        <tr class="alignRight borderBottom">
-          <td colspan="12" class="alignLeft maxWidthText borderRight">
-              SAM TA - Initial Operational Capability
-          </td>
-          <td class="cell borderRightBottom alignCenter">1</td>
-          <td class="cell borderRightBottom alignCenter">2018</td>
-          <td class="cell borderRightBottom alignCenter">4</td>
-          <td class="cell borderRight alignCenter">2018</td>
-        </tr>
-        <tr class="alignRight borderBottom">
-          <td colspan="12" class="alignLeft maxWidthText borderRight">
-              JSAM TA - Full Rate Production (FRP)
-          </td>
-          <td class="cell borderRightBottom alignCenter">3</td>
-          <td class="cell borderRightBottom alignCenter">2018</td>
-          <td class="cell borderRightBottom alignCenter">1</td>
-          <td class="cell borderRight alignCenter">2022</td>
+          <td class="cell borderRightBottom alignCenter">{{r4.startQuarter}}</td>
+          <td class="cell borderRightBottom alignCenter">{{r4.startYear}}</td>
+          <td class="cell borderRightBottom alignCenter">{{r4.endQuarter}}</td>
+          <td class="cell borderRight alignCenter">{{r4.endYear}}</td>
         </tr>
       </table>
     </div>

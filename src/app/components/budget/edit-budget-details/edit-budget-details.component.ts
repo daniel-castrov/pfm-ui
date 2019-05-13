@@ -1,47 +1,50 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
-
-import {JHeaderComponent} from '../../header/j-header/j-header.component';
-import {BES, PB, RdteData, RdteDataService} from '../../../generated';
-import { Notify } from '../../../utils/Notify';
-
-import { TitleTabComponent } from './title-tab/title-tab.component';
-import { OverviewTabComponent } from './overview-tab/overview-tab.component';
-import { R1TabComponent } from './r1-tab/r1-tab.component';
-import { R2TabComponent } from './r2-tab/r2-tab.component';
-import { R2aTabComponent } from './r2a-tab/r2a-tab.component';
+import {Component, ViewChild} from '@angular/core';
+import {BES, PB, RdteBudgetData, RdteBudgetDataService} from '../../../generated';
+import {R2TabComponent} from './r2-tab/r2-tab.component';
+import {R2aTabComponentOnBudgetDetails} from './r2a-tab/r2a-tab-component-on-budget-details.component';
+import {Notify} from '../../../utils/Notify';
+import {Selection} from '../edit-program-details/program-selector/program-and-item-selector.component';
 
 @Component({
   selector: 'edit-budget-details',
   templateUrl: './edit-budget-details.component.html',
   styleUrls: ['./edit-budget-details.component.scss']
 })
-export class EditBudgetDetailsComponent implements AfterContentChecked {
+export class EditBudgetDetailsComponent {
 
-  @ViewChild( JHeaderComponent ) header;
-  @ViewChild( TitleTabComponent ) titleTabComponent: TitleTabComponent;
-  @ViewChild( OverviewTabComponent ) overviewTabComponent: OverviewTabComponent;
-  @ViewChild( R1TabComponent) r1TabComponent: R1TabComponent;
   @ViewChild( R2TabComponent ) r2TabComponent: R2TabComponent;
-  @ViewChild( R2aTabComponent ) r2aTabComponent: R2aTabComponent;
+  @ViewChild( R2aTabComponentOnBudgetDetails ) r2aTabComponent: R2aTabComponentOnBudgetDetails;
 
-  selectedScenario: BES | PB;
-  rdteData: RdteData;
+  rdteBudgetData: RdteBudgetData;
+  selection: Selection;
 
-  constructor(
-    private cd: ChangeDetectorRef,
-    private rdteDataService: RdteDataService) {}
+  constructor( private rdteBudgetDataService: RdteBudgetDataService ) {}
 
-  ngAfterContentChecked() {
-    this.cd.detectChanges();
+  async onScenarioChanged(selectedScenario: BES | PB) {
+    this.rdteBudgetData = (await this.rdteBudgetDataService.getByContainerId( selectedScenario.id ).toPromise()).result;
+    if ( !(this.rdteBudgetData && this.rdteBudgetData.id) ) {
+      this.rdteBudgetData.containerId = selectedScenario.id;
+    }
+    this.clearTabData();
   }
 
-  async save(){
-    this.rdteData.submitted=false;
-    if ( this.rdteData.id ){
-      (await this.rdteDataService.update( this.rdteData ).toPromise()).result;
+  clearTabData(){
+    if ( this.r2TabComponent ){
+      this.r2TabComponent.clearData();
+    }
+    if ( this.r2aTabComponent ){
+      this.r2aTabComponent.cleardata();
+    }
+  }
+
+  async onSave(){
+    this.rdteBudgetData.submitted=false;
+    if ( this.rdteBudgetData.id ){
+      await this.rdteBudgetDataService.update( this.rdteBudgetData ).toPromise();
     } else {
-      (await this.rdteDataService.create( this.rdteData ).toPromise()).result;
+      await this.rdteBudgetDataService.create( this.rdteBudgetData ).toPromise();
     }
     Notify.success( "Budget Details saved successfully" );
   }
+
 }

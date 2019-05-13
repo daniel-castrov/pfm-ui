@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {GridOptions} from 'ag-grid';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
 import {UserUtils} from '../../../../services/user.utils';
 import {Pom, POMService, User, Workspace, WorkspaceService} from '../../../../generated';

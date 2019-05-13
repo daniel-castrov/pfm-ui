@@ -21,7 +21,9 @@ import {DropRoleRequestService} from '../generated/api/dropRoleRequest.service';
 import {UserUtils} from "./user.utils";
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RequestsService {
 
   constructor(

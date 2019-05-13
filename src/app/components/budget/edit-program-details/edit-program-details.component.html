@@ -1,0 +1,38 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row main-content mb-4">
+    <div class="col-12">
+      <scenario-selector (scenarioChanged)="scenarioId=$event.id">Program</scenario-selector>
+    </div>
+  </div>
+  <div class="row main-content mb-2">
+    <div class="col-9">
+      <program-and-item-selector *ngIf="scenarioId" [containerId]="scenarioId" (itemSelected)="onItemSelected($event)" (itemUnselected)="onItemUnselected()"></program-and-item-selector>
+    </div>
+    <div class="col-3">
+      <div class="pull-right" *ngIf="rdteProgramData">
+        <button type="submit" class="btn btn-primary mr-2" (click)="onSave()" [disabled]="!rdteProgramData || !hasPermissions">Save</button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="!rdteProgramData || !hasPermissions">Submit</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rdteProgramData" class="row  main-content">
+    <div class="col-12">
+      <tabset class="program-tab-style" role="tablist">
+        <tab heading="R-2A" id="tab2a">
+          <r2a-tab-on-program-details [r2AData]="bpi?.r2AData"></r2a-tab-on-program-details>
+        </tab>
+        <ng-container *ngIf=containsR3Data()>
+          <tab heading="R-3" id="tab3">
+            <r3-tab [r3Data]="bpi?.r3Data"></r3-tab>
+          </tab>
+        </ng-container>
+        <ng-container *ngIf=containsR4Data()>
+          <tab heading="R-4A" id="tab4">
+            <r4a-tab [bpi]="bpi"></r4a-tab>
+          </tab>
+        </ng-container>
+      </tabset>
+    </div>
+  </div>
+</div>

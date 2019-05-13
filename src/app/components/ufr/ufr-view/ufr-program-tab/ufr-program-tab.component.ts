@@ -1,20 +1,11 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {
-  FileResponse,
-  LibraryService,
-  POMService,
-  Program,
-  ProgramsService,
-  ShortyType,
-  Tag,
-  UFR
-} from '../../../../generated';
-import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
-import {DomSanitizer} from "@angular/platform-browser";
-import {TagsService, TagType} from "../../../../services/tags.service";
-import {forkJoin} from 'rxjs/observable/forkJoin';
-import {Observable} from "rxjs";
-import {NameUtils} from "../../../../utils/NameUtils";
+import {FileResponse, LibraryService, POMService, Program, ShortyType, Tag, TagsService, UFR} from '../../../../generated';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {TagsUtils, TagType} from '../../../../services/tags-utils.service';
+import {Observable} from 'rxjs';
+import {NameUtils} from '../../../../utils/NameUtils';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'ufr-program-tab',
@@ -31,12 +22,12 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   readonly fileArea = 'ufr';
   imagePath: string;
 
-  constructor( private programService: ProgramsService,
+  constructor( private tagsService: TagsService,
                private pomService: POMService,
                private programAndPrService: ProgramAndPrService,
                private libraryService: LibraryService,
                private sanitization: DomSanitizer,
-               private tagsService: TagsService ) {}
+               private tagsUtils: TagsUtils ) {}
 
   ngOnInit() {
     this.initTagNames();
@@ -55,8 +46,8 @@ export class UfrProgramComponent implements OnInit, OnChanges {
   }
 
   private async initTagNames() {
-    const tagNames = (await this.programService.getTagtypes().toPromise()).result as string[];
-    const observables: Observable<Tag[]>[] = tagNames.map( (tagType: TagType) => this.tagsService.tags(tagType) );
+    const tagNames = (await this.tagsService.getTagtypes().toPromise()).result as string[];
+    const observables: Observable<Tag[]>[] = tagNames.map( (tagType: TagType) => this.tagsUtils.tags(tagType) );
     const tags = await forkJoin(...observables).toPromise() as Tag[][];
     tagNames.forEach((tagName, idx) => {
       this.tagNames.set(tagName, new Map<string, string>());

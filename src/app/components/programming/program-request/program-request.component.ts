@@ -4,21 +4,12 @@ import {ProgramStatus} from '../../../generated/model/programStatus';
 import {ProgramType} from '../../../generated/model/programType';
 import {IdAndNameComponent} from './id-and-name/id-and-name.component';
 import {Program} from '../../../generated/model/program';
-import {PRService} from '../../../generated/api/pR.service';
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {AddNewPrForMode, ProgramRequestPageModeService} from './page-mode.service';
-import {FundsTabComponent} from "./funds-tab/funds-tab.component";
-import {VariantsTabComponent} from "./variants-tab/variants-tab.component";
-import {
-  Organization,
-  OrganizationService,
-  Pom,
-  POMService,
-  RestResult,
-  RolesPermissionsService,
-  User
-} from '../../../generated';
-import {Notify} from "../../../utils/Notify";
+import {FundsTabComponent} from './funds-tab/funds-tab.component';
+import {VariantsTabComponent} from './variants-tab/variants-tab.component';
+import {Organization, OrganizationService, Pom, POMService, ProgramService, RolesPermissionsService, User} from '../../../generated';
+import {Notify} from '../../../utils/Notify';
 import {UserUtils} from '../../../services/user.utils';
 import {Validation} from './funds-tab/Validation';
 
@@ -38,7 +29,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
   @ViewChild(FundsTabComponent) private fundsTabComponent: FundsTabComponent;
   @ViewChild(VariantsTabComponent) private variantsTabComponent: VariantsTabComponent;
 
-  constructor( private prService: PRService,
+  constructor( private programService: ProgramService,
                private userUtils: UserUtils,
                public programRequestPageMode: ProgramRequestPageModeService,
                private changeDetectorRef: ChangeDetectorRef,
@@ -50,8 +41,8 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     await this.initPr();
-    this.pom = (await this.pomService.getByWorkspaceId(this.pr.containerId).toPromise()).result;
-    this.prs = (await this.prService.getByContainer(this.pr.containerId).toPromise()).result;
+    this.pom = (await this.pomService.getById(this.pr.containerId).toPromise()).result;
+    this.prs = (await this.programService.getByContainer(this.pr.containerId).toPromise()).result;
 
     this.ismgr = false;
     this.rolesvc.getRoles().subscribe(data => {
@@ -65,7 +56,7 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
   private async initPr() {
     if (this.programRequestPageMode.prId) { // PR is in edit mode
-      this.pr = (await this.prService.getById(this.programRequestPageMode.prId).toPromise()).result;
+      this.pr = (await this.programService.getById(this.programRequestPageMode.prId).toPromise()).result;
     } else { // PR is in create mode
       this.initPrFields();
       if (!this.pr.leadComponent) {
@@ -141,22 +132,22 @@ export class ProgramRequestComponent implements OnInit, AfterViewInit {
       if(this.pr.id) {
         let oldStatus = this.pr.programStatus;
         this.pr.programStatus = programStatus;
-        let data:RestResult = (await this.prService.save(this.pr.id, this.pr).toPromise());
-        if (data.error) {
-          this.pr.programStatus = oldStatus;
-          Notify.error('Program request failed to save.\n' + data.error);
-        } else {
+        try {
+          let result:Program = (await this.programService.save(this.pr.id, this.pr).toPromise()).result;
           if (this.pr.programStatus === ProgramStatus.SAVED) {
             Notify.success('Program request saved successfully')
           } else {
             Notify.success('Program request submitted successfully')
           }
-          this.pr = data.result;
+          this.pr = result;
+        } catch (e){
+          this.pr.programStatus = oldStatus;
         }
       } else {
-        this.pr = (await this.prService.create(this.pr).toPromise()).result;
+        this.pr = (await this.programService.create(this.pr).toPromise()).result;
         Notify.success('Program request created successfully')
       }
+      
     }
   }
 

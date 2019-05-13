@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {
   Disposition,
   FundingLine,
   Pom,
   POMService,
   Program,
-  ProgramsService,
-  PRService,
+  ProgramService,
   ShortyType,
   UFR,
   UfrEvent,
@@ -18,15 +17,15 @@ import {
   WorksheetEvent,
   WorksheetRow,
   WorksheetService
-} from '../../../../generated'
-import {ProgramAndPrService} from "../../../../services/program-and-pr.service";
-import {ActivatedRoute} from "@angular/router";
-import {DataRow} from "../../ufr-view/ufr-funds-tab/DataRow";
-import {GridType} from "../../../programming/program-request/funds-tab/GridType";
-import {AgGridNg2} from "ag-grid-angular";
-import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {Notify} from "../../../../utils/Notify";
-import {RowUpdateEventData} from "../../../../generated/model/rowUpdateEventData";
+} from '../../../../generated';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
+import {ActivatedRoute} from '@angular/router';
+import {DataRow} from '../../ufr-view/ufr-funds-tab/DataRow';
+import {GridType} from '../../../programming/program-request/funds-tab/GridType';
+import {AgGridNg2} from 'ag-grid-angular';
+import {FormatterUtil} from '../../../../utils/formatterUtil';
+import {Notify} from '../../../../utils/Notify';
+import {RowUpdateEventData} from '../../../../generated/model/rowUpdateEventData';
 
 declare const $: any;
 
@@ -81,8 +80,7 @@ export class UfrApprovalDetailComponent implements OnInit {
   constructor(private programAndPrService: ProgramAndPrService,
               private worksheetService: WorksheetService,
               private pomService: POMService,
-              private programService: ProgramsService,
-              private prService: PRService,
+              private programService: ProgramService,
               private route: ActivatedRoute,
               private ufrService: UFRsService,
               private userService: UserService) {}
@@ -134,7 +132,7 @@ export class UfrApprovalDetailComponent implements OnInit {
             this.ufr.shortyType === ShortyType.NEW_FOS_FOR_MRDB_PROGRAM ||
             this.ufr.shortyType === ShortyType.MRDB_PROGRAM ||
             this.ufr.shortyType === ShortyType.NEW_PROGRAM) {
-            let pr =  (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: null}).toPromise()).result;
+            let pr =  (await this.programService.createFromUfr({ufr: this.ufr, fundingLines: null}).toPromise()).result;
             pr.fundingLines.forEach(async fl => {
               this.worksheets.forEach(async ws => {
                 let row =ws.rows.find(r  => r.fundingLine.id === fl.id);
@@ -210,7 +208,7 @@ export class UfrApprovalDetailComponent implements OnInit {
           partiallyApprovedFL.push(dr.fundingLine);
         }
       });
-      let pr = (await this.prService.createFromUfr({ufr: this.ufr, fundingLines: partiallyApprovedFL}).toPromise()).result;
+      let pr = (await this.programService.createFromUfr({ufr: this.ufr, fundingLines: partiallyApprovedFL}).toPromise()).result;
       pr.fundingLines.forEach(async fl => {
         this.worksheets.forEach(async ws => {
           let row =ws.rows.find(r  => r.fundingLine.id === fl.id);

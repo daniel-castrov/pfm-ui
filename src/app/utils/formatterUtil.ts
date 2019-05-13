@@ -10,6 +10,14 @@ export class FormatterUtil {
     return unique;
   }
 
+  public static hasDuplicates (array, property) {
+    const valueArr = array.map(item => item[property]);
+    const isDuplicate = valueArr.some((item, idx) => {
+      return valueArr.indexOf(item) !== idx;
+    });
+    return isDuplicate;
+  }
+
   public static currencyFormatter(value, decimalDigits?, round?) {
     if(!decimalDigits){
       decimalDigits = 0;
@@ -53,4 +61,16 @@ export class FormatterUtil {
     let parsedDate = Date.parse(params.value);
     return this.datePipe.transform(parsedDate, dateFormat);
   }
+
+  public static dateFormatter2(date: Date, format: string){
+    return this.datePipe.transform(date, format);
+  }
+
+  public static percentageFormatter( value: number, decimalDigits?: number){
+    if(!decimalDigits){
+      decimalDigits = 0;
+    }
+    return (value * 100).toFixed(decimalDigits) + "%";
+  }
+
 }

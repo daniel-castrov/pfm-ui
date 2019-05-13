@@ -183,12 +183,6 @@ export class UfrViewComponent implements OnInit {
       || this.ufr.ufrStatus == UfrStatus.ARCHIVED;
   }
 
-  public fundsTabSelected() {
-    if (this.ufrFundsComponent){
-      this.ufrFundsComponent.sizeColumnsToFit(null);
-    }
-  }
-
   ufrType(): string {
     if(this.ufr.shortyType == ShortyType.MRDB_PROGRAM) return ` ${this.shorty ? this.shorty.shortName : ''} program`;
     if(this.ufr.shortyType == ShortyType.PR) return " a program request";

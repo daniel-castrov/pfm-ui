@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {R2Data, RdteData} from '../../../../generated';
+import {LockPositionService, R2Data, RdteBudgetData} from '../../../../generated';
 
 @Component({
   selector: 'r2-tab',
@@ -8,32 +8,34 @@ import {R2Data, RdteData} from '../../../../generated';
 })
 export class R2TabComponent implements OnChanges {
 
-  @Input() rdteData: RdteData;
+  @Input() rdteBudgetData: RdteBudgetData;
 
   pes: string[];
   selectedPE: string;
-  r2data: R2Data;
+  r2Data: R2Data;
+  lockPositionExists: boolean;
 
   selChgSumSection: string;
   changeSummSections = [ "Funding", "Schedule", "Technical"];
 
-  constructor() {}
+  constructor(private lockPositionService: LockPositionService) {}
 
-  clearData(){
-    this.r2data={};
+  clearData() {
+    this.r2Data={};
     this.selectedPE=null;
   }
 
   ngOnChanges() {
-    if (this.rdteData && this.rdteData.r2data){
+    if (this.rdteBudgetData && this.rdteBudgetData.r2Data){
       this.pes = [];
-      this.rdteData.r2data.forEach(r2 => this.pes.push(r2.programElement));
+      this.rdteBudgetData.r2Data.forEach(r2Data => this.pes.push(r2Data.programElement));
       this.pes.sort();
     }
   }
 
-  onPESelected(){
-    this.r2data = this.rdteData.r2data.find( data =>  data.programElement == this.selectedPE  );
+  async onPESelected() {
+    this.r2Data = this.rdteBudgetData.r2Data.find(r2Data => r2Data.programElement == this.selectedPE );
+    this.lockPositionExists = (await this.lockPositionService.getLatestForScenario(this.rdteBudgetData.containerId).toPromise()).result != null;
   }
 
 }

@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 // Other Components
-import { GridOptions } from 'ag-grid';
+import { GridOptions } from 'ag-grid-community';
 import { AgGridNg2 } from 'ag-grid-angular';
 import { FileMetadata, LibraryService, FileResponse } from '../../../generated';
 import { LibraryViewCellRenderer } from '../../renderers/library-view-cell-renderer/library-view-cell-renderer.component';
 
 @Component({
-  selector: 'import-acutals-table',
-  templateUrl: './import-acutals-table.component.html',
-  styleUrls: ['./import-acutals-table.component.scss']
+  selector: 'import-actuals-table',
+  templateUrl: './import-actuals-table.component.html',
+  styleUrls: ['./import-actuals-table.component.scss']
 })
-export class ImportAcutalsTableComponent implements OnInit {
+export class ImportActualsTableComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() data: FileMetadata[];
   private agOptions: GridOptions;

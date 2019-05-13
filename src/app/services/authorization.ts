@@ -17,7 +17,9 @@ export enum AuthorizationResult {
  *
  * ToDo: Rename this class to reflect the above.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class Authorization {
 
   constructor( public elevationService: ElevationService,
@@ -43,7 +45,7 @@ export class Authorization {
     }
     if(await this.userUtils.hasAnyOfTheseRoles('Funds_Requestor').toPromise()) {
       if ([Pom.StatusEnum.CREATED, Pom.StatusEnum.OPEN, Pom.StatusEnum.RECONCILIATION].includes((await this.currentPhase.pom().toPromise()).status) ) return AuthorizationResult.Ok;
-      return AuthorizationResult.Never;
+      return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
@@ -56,7 +58,7 @@ export class Authorization {
     }
     if(await this.userUtils.hasAnyOfTheseRoles('Funds_Requestor').toPromise()) {
       if ([Pom.StatusEnum.CREATED, Pom.StatusEnum.OPEN, Pom.StatusEnum.RECONCILIATION].includes((await this.currentPhase.pom().toPromise()).status) ) return AuthorizationResult.Ok;
-      return AuthorizationResult.Never;
+      return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;
   }
@@ -173,6 +175,18 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
+  async 'lock-position'(): Promise<AuthorizationResult> {
+    if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
+      const pom = (await this.currentPhase.pom().toPromise());
+      const budget = (await this.currentPhase.budget().toPromise());
+      if( Budget.StatusEnum.OPEN === budget.status )
+        if(pom.fy === budget.fy)
+          return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
+
   async 'copy-budget'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
       const pom = (await this.currentPhase.pom().toPromise());
@@ -187,6 +201,18 @@ export class Authorization {
 
   async 'edit-budget-details'(): Promise<AuthorizationResult> {
     if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
+      const pom = (await this.currentPhase.pom().toPromise());
+      const budget = (await this.currentPhase.budget().toPromise());
+      if( Budget.StatusEnum.OPEN === budget.status )
+        if(pom.fy === budget.fy)
+          return AuthorizationResult.Ok;
+      return AuthorizationResult.NotNow;
+    }
+    return AuthorizationResult.Never;
+  }
+
+  async 'edit-program-details'(): Promise<AuthorizationResult> {
+    if(await this.userUtils.hasAnyOfTheseRoles('Program_Manager', 'Budget_Manager').toPromise()) {
       const pom = (await this.currentPhase.pom().toPromise());
       const budget = (await this.currentPhase.budget().toPromise());
       if( Budget.StatusEnum.OPEN === budget.status )
@@ -264,4 +290,13 @@ export class Authorization {
     }
     return AuthorizationResult.Never;
   }
+
+  async 'create-new-program-mrdb'(): Promise<AuthorizationResult> {
+    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
+    if(await this.userUtils.hasAnyOfTheseRoles('Execution_Manager').toPromise()) {
+      return AuthorizationResult.Ok;
+    }
+    return AuthorizationResult.Never;
+  }
+
 }

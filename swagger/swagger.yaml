@@ -10,6 +10,7 @@ tags:
 - name: "Community"
 - name: "Organization"
 - name: "Library"
+- name: "Property"
 # PHASES
 - name: "POM"
 - name: "PB"
@@ -17,8 +18,9 @@ tags:
 - name: "Budget"
 - name: "Execution"
 # PROGRAMS AND UFRS
-- name: "PR"
-- name: "Programs"
+- name: "Program"
+- name: "MRDB"
+- name: "Tags"
 - name: "UFRs"
 - name: "Epp"
 - name: "Worksheet"
@@ -27,7 +29,8 @@ tags:
 - name: "Snapshots"
 - name: "Workspace"
 # BUDGET
-- name: "RdteData"
+- name: "RdteBudgetData"
+- name: "LockPosition"
 # USERS AND ROLES
 - name: "MyDetails"
 - name: "Stranger"
@@ -374,6 +377,26 @@ paths:
       operationId: "getAll"
       produces:
       - "application/json"
+  /library/filemetadata/key/{key}/value/{value}:
+    get:
+      tags:
+        - "Library"
+      summary: "Get all from a particular file area"
+      description: "Get all the documents in the library that contain a certain key/value"
+      operationId: "getByKeyAndValue"
+      parameters:
+        - in: "path"
+          name: "key"
+          description: "the key"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "value"
+          description: "the value"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
   /library/uploadFile:
     post:
       tags:
@@ -420,6 +443,37 @@ paths:
       produces:
       - "application/json"
 # END LIBRARY
+##############################################################################
+  # START PROPERTY
+  /property/r2a-bullet-title/ba/{ba}/item/{item}:
+    get:
+      tags:
+        - "Property"
+      operationId: "getR2aBulletTitles"
+      parameters:
+        - in: "path"
+          name: "ba"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "item"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+  /property/type/{type}:
+    get:
+      tags:
+        - "Property"
+      operationId: "getByPropertyType"
+      parameters:
+        - in: "path"
+          name: "type"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+# END PROPERTY
 ##############################################################################
 #
 ##############################################################################
@@ -668,6 +722,86 @@ paths:
           type: "number"
 # STOP BUDGET
 ##############################################################################
+# START LOCK POSITION
+##############################################################################
+  /lockPosition/extract/programElement/{programElement}:
+    post:
+      tags:
+      - "LockPosition"
+      operationId: "extract"
+      parameters:
+      - in: "path"
+        name: "programElement"
+        description: "The program element"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "lp"
+        required: true
+        schema:
+          $ref: "#/definitions/LockPosition"
+  /lockPosition:
+    post:
+      tags:
+      - "LockPosition"
+      operationId: "lock"
+      parameters:
+      - in: "body"
+        name: "lp"
+        required: true
+        schema:
+          $ref: "#/definitions/LockPosition"
+  /lockPosition/events/phase/{phaseId}/scenario/{scenarioId}:
+    get:
+      tags:
+      - "LockPosition"
+      summary: "Gets all lock position events"
+      description: "Gets all lockposition events"
+      operationId: "getEvents"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "phaseId"
+        description: "The phase id"
+        required: true
+        type: "string"
+      - in: "path"
+        name: "scenarioId"
+        description: "The scenario id"
+        required: true
+        type: "string"
+  /lockPosition/programElements/appropriation/{appropriation}:
+    get:
+      tags:
+      - "LockPosition"
+      summary: "Gets all program elements in the MRDB"
+      description: "Gets all program elements in the MRDB"
+      operationId: "getProgramElements"
+      parameters:
+        - in: "path"
+          name: "appropriation"
+          description: "The appropriation type"
+          required: true
+          type: "string"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+  /lockPosition/latest/scenario/{scenarioId}:
+    get:
+      tags:
+        - "LockPosition"
+      operationId: "getLatestForScenario"
+      parameters:
+        - in: "path"
+          name: "scenarioId"
+          required: true
+          type: "string"
+##############################################################################
+# STOP LOCK POSITION
 # START PB
   /pb/final/latest:
     get:
@@ -851,7 +985,7 @@ paths:
   /tagtypes:
     get:
       tags:
-      - "Programs"
+      - "Tags"
       operationId: "getTagtypes"
       summary: "Gets all type names"
       description: "Returns a collection of type names"
@@ -860,7 +994,7 @@ paths:
   /tags/type/{type}:
     get:
       tags:
-      - "Programs"
+      - "Tags"
       operationId: "getTagsByType"
       parameters:
       - name: "type"
@@ -874,7 +1008,7 @@ paths:
   /tags/type/{type}/name/{name}:
     get:
       tags:
-      - "Programs"
+      - "Tags"
       operationId: "getTagsByName"
       parameters:
       - name: "type"
@@ -891,11 +1025,11 @@ paths:
       - "application/json"
 # END TAGS
 ##############################################################################
-# START PR
-  /pr/container/{containerId}:
+# START PROGRAM
+  /program/container/{containerId}:
     get:
       tags:
-      - "PR"
+      - "Program"
       operationId: "getByContainer"
       produces:
       - "application/json"
@@ -904,10 +1038,10 @@ paths:
         name: "containerId"
         required: true
         type: "string"
-  /pr/{id}:
+  /program/{id}:
     get:
       tags:
-      - "PR"
+      - "Program"
       operationId: "getById"
       produces:
       - "application/json"
@@ -918,7 +1052,7 @@ paths:
         type: "string"
     put:
       tags:
-      - "PR"
+      - "Program"
       operationId: "save"
       parameters:
       - in: "path"
@@ -932,24 +1066,24 @@ paths:
           $ref: "#/definitions/Program"
     delete:
       tags:
-      - "PR"
+      - "Program"
       operationId: "remove"
       parameters:
       - in: "path"
         name: "id"
         required: true
         type: "string"
-  /pr/poms:
+  /program/poms:
     get:
       tags:
-      - "PR"
+      - "Program"
       operationId: "getPrsForAllPoms"
       produces:
       - "application/json"
-  /pr:
+  /program:
     post:
       tags:
-      - "PR"
+      - "Program"
       operationId: "create"
       produces:
       - "application/json"
@@ -959,10 +1093,10 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/Program"
-  /pr/createFromUfr:
+  /program/createFromUfr:
     post:
       tags:
-      - "PR"
+      - "Program"
       operationId: "createFromUfr"
       produces:
       - "application/json"
@@ -972,10 +1106,10 @@ paths:
         required: true
         schema:
           type: "object"
-  /pr/container/{containerId}/program/{shortname}:
+  /program/container/{containerId}/program/{shortname}:
     get:
       tags:
-      - "PR"
+      - "Program"
       operationId: "getByContainerAndName"
       produces:
       - "application/json"
@@ -988,10 +1122,10 @@ paths:
         name: "shortname"
         required: true
         type: "string"
-  /pr/container/{containerId}/name/{shortname}/children:
+  /program/container/{containerId}/name/{shortname}/children:
     get:
       tags:
-        - "PR"
+        - "Program"
       operationId: "getChildrenContainerIdAndName"
       produces:
         - "application/json"
@@ -1004,13 +1138,13 @@ paths:
           name: "shortname"
           required: true
           type: "string"
-# STOP PR
+# STOP PROGRAM
 ##############################################################################
-# START PROGRAMS
-  /programs/{mrId}:
+# START MRDB
+  /mrdb/{mrId}:
     get:
       tags:
-        - "Programs"
+        - "MRDB"
       operationId: "getProgramById"
       parameters:
         - name: "mrId"
@@ -1021,10 +1155,10 @@ paths:
       description: "Returns a given program"
       produces:
         - "application/json"
-  /programs/name/{shortname}:
+  /mrdb/name/{shortname}:
     get:
       tags:
-        - "Programs"
+        - "MRDB"
       operationId: "getByName"
       parameters:
         - name: "shortname"
@@ -1034,19 +1168,19 @@ paths:
       summary: "Get one program"
       produces:
         - "application/json"
-  /programs/fullnamemap:
+  /mrdb/fullnamemap:
       get:
         tags:
-        - "Programs"
+        - "MRDB"
         operationId: "getIdNameMap"
         summary: "Get a mapping of mrId-to-full (short)name"
         description: "Returns a mapping"
         produces:
         - "application/json"
-  /programs/{mrId}/fullname:
+  /mrdb/{mrId}/fullname:
     get:
       tags:
-      - "Programs"
+      - "MRDB"
       operationId: "getFullName"
       parameters:
       - name: "mrId"
@@ -1071,10 +1205,10 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /programs/{mrId}/ancestors:
+  /mrdb/{mrId}/ancestors:
     get:
       tags:
-      - "Programs"
+      - "MRDB"
       operationId: "getAncestors"
       parameters:
       - name: "mrId"
@@ -1094,10 +1228,10 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /programs:
+  /mrdb:
     get:
       tags:
-      - "Programs"
+      - "MRDB"
       operationId: "getAll"
       summary: "Get all programs"
       description: "Returns all programs"
@@ -1112,10 +1246,22 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-  /programs/community/{communityId}:
+    post:
+      tags:
+        - "MRDB"
+      operationId: "create"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Program"
+  /mrdb/community/{communityId}:
     get:
       tags:
-      - "Programs"
+      - "MRDB"
       operationId: "getProgramsByCommunity"
       parameters:
       - name: "communityId"
@@ -1138,7 +1284,7 @@ paths:
   /exports:
     get:
       tags:
-      - "Programs"
+      - "MRDB"
       operationId: "getExportYears"
       summary: "Get all export years"
       description: "Returns all years we an export"
@@ -1156,7 +1302,7 @@ paths:
   /search:
     post:
       tags:
-      - "Programs"
+      - "MRDB"
       operationId: "search"
       summary: "Search programs based on criteria"
       description: "Returns a collection of programs that meet the criteria"
@@ -1178,7 +1324,7 @@ paths:
           description: "Forbidden/not authorized"
         500:
           description: "An unexpected error occured."
-# STOP PROGRAMS
+# STOP MRDB
 ##############################################################################
 # START UFRs
   /ufr/{ufrId}:
@@ -1374,8 +1520,6 @@ paths:
       tags:
       - "Epp"
       operationId: "importFile"
-      summary: "Imports EPP spreadsheet"
-      description: "This option allows POM managers to upload a EPP spreadsheet into the system"
       consumes:
         - multipart/form-data
       requestBody:
@@ -1389,20 +1533,8 @@ paths:
       parameters:
       - in: "formData"
         name: "file"
-        description: "The EPP spreadsheet file"
         required: true
         type: file
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "A collection of Programs"
-          schema:
-            $ref: "#/definitions/RestResult"
-        403:
-          description: "Forbidden/not authorized"
-        500:
-          description: "An unexpected error occured."
   /epp:
     get:
       tags:
@@ -1766,17 +1898,13 @@ paths:
         type: "string"
       - in: "body"
         name: "body"
-        description: "a Spend Plan"
         required: true
         schema:
           $ref: "#/definitions/SpendPlan"
       tags:
       - "SpendPlan"
-      summary: "Create a new Spend Plan for this execution line"
-      produces:
-      - "application/json"
     put:
-      operationId: "UpdateSpendPlan"
+      operationId: "createOrUpdateSpendPlan"
       parameters:
       - name: "exelineid"
         in: "path"
@@ -1784,15 +1912,11 @@ paths:
         type: "string"
       - in: "body"
         name: "body"
-        description: "a Spend Plan"
         required: true
         schema:
           $ref: "#/definitions/SpendPlan"
       tags:
       - "SpendPlan"
-      summary: "Updates an existing Spend Plan for this execution line"
-      produces:
-      - "application/json"
   /spendplans/execution/{exeid}:
     get:
       operationId: "getByExecutionPhaseId"
@@ -1897,6 +2021,12 @@ paths:
         description: "the type of file being uploaded (GFEBS or DAI)"
         required: true
         type: "string"
+      - in: "query"
+        name: "asof"
+        description: "the 'as of' date"
+        required: false
+        type: "string"
+
 
 # STOP O&E
 ##############################################################################
@@ -1919,87 +2049,83 @@ paths:
             $ref: "#/definitions/RestResult"
 # STOP BUDGETFUNDINGLINES
 ##############################################################################
-# START RDTEDATA
-  /rdtedata/{id}:
+# START RDTEBUDGETDATA
+  /rdteBudgetData/{id}:
     get:
       tags:
-      - "RdteData"
+      - "RdteBudgetData"
       operationId: "getById"
       parameters:
       - in: "path"
         name: "id"
         required: true
         type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-  /rdtedata/containerId/{id}:
+  /rdteBudgetData/containerId/{containerId}:
     get:
       tags:
-      - "RdteData"
+      - "RdteBudgetData"
       operationId: "getByContainerId"
       parameters:
       - in: "path"
-        name: "id"
+        name: "containerId"
         required: true
         type: "string"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          schema:
-            $ref: "#/definitions/RestResult"
-  /rdtedata:
+  /rdteBudgetData:
     post:
       tags:
-      - "RdteData"
+      - "RdteBudgetData"
       operationId: "create"
       parameters:
       - in: "body"
-        name: "body"
+        name: "rdteBudgetData"
         required: true
         schema:
-          $ref: "#/definitions/RdteData"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "new RdteData"
-          schema:
-            $ref: "#/definitions/RestResult"
-        400:
-          description: "RDTE data couldn't be created."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
+          $ref: "#/definitions/RdteBudgetData"
     put:
       tags:
-      - "RdteData"
+      - "RdteBudgetData"
       operationId: "update"
       parameters:
       - in: "body"
-        name: "body"
+        name: "rdteBudgetData"
         required: true
         schema:
-          $ref: "#/definitions/RdteData"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "updated RdteData"
+          $ref: "#/definitions/RdteBudgetData"
+# STOP RDTEBUDGETDATA
+##############################################################################
+# START RDTEPROGRAMDATA
+  /rdteProgramData/program/{programId}:
+    get:
+      tags:
+        - "RdteProgramData"
+      operationId: "getByProgramId"
+      parameters:
+        - in: "path"
+          name: "programId"
+          required: true
+          type: "string"
+  /rdteProgramData:
+    post:
+      tags:
+        - "RdteProgramData"
+      operationId: "create"
+      parameters:
+        - in: "body"
+          name: "rdteProgramData"
+          required: true
           schema:
-            $ref: "#/definitions/RestResult"
-        400:
-          description: "RDTE data couldn't be updated."
-        403:
-          description: "Forbidden"
-        500:
-          description: "An unexpected error occured."
-# STOP RDTEDATA
+            $ref: "#/definitions/RdteProgramData"
+    put:
+      tags:
+        - "RdteProgramData"
+      operationId: "update"
+      parameters:
+        - in: "body"
+          name: "rdteProgramData"
+          required: true
+          schema:
+            $ref: "#/definitions/RdteProgramData"
+# STOP RDTEPROGRAMDATA
 ##############################################################################
 # START PRCHANGENOTIFICATION
   /prChangeNotifications:
@@ -3477,6 +3603,66 @@ definitions:
         type: number
 #
 ###########################
+###   PROPERTIES       ####
+###########################
+#
+  PropertyType:
+    enum: [R2A_BULLET_TITLE, R3_CATEGORY, R3_CONTRACT_TYPE, R3_CONTRACTOR, R3_COST_CATEGORY, R4A_MILESTONE]
+#
+  R2ABulletTitle:
+    type: "object"
+    properties:
+      ba:
+        type: "string"
+      item:
+        type: "string"
+      titles:
+        type: "array"
+        items:
+          type: "string"
+  R3Category:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      label:
+        type: "string"
+  R3Contractor:
+    type: "object"
+    properties:
+      activity:
+        type: "string"
+      city:
+        type: "string"
+      state:
+        type: "string"
+  R3ContractType:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      label:
+        type: "string"
+  R3CostCategory:
+    type: "object"
+    properties:
+      category:
+        type: "string"
+      code:
+        type: "string"
+      label:
+        type: "string"
+  R4Milestone:
+    type: "object"
+    properties:
+      required:
+        type: "boolean"
+      code:
+        type: "string"
+      label:
+        type: "string"
+#
+###########################
 ###       PHASES       ####
 ###########################
 #
@@ -3943,7 +4129,7 @@ definitions:
 ###       BUDGET       ####
 ###########################
 #
-  RdteData:
+  RdteBudgetData:
     type: "object"
     properties:
       id:
@@ -3968,10 +4154,14 @@ definitions:
         type: "string"
       toc:
         $ref: "#/definitions/StringMap"
-      r2data:
+      r2Data:
         type: "array"
         items:
           $ref: "#/definitions/R2Data"
+      r2AData:
+        type: "array"
+        items:
+          $ref: "#/definitions/R2ABudgetData"
   R2Data:
     type: "object"
     properties:
@@ -3985,21 +4175,153 @@ definitions:
         type: "string"
       techincalChange:
         type: "string"
-      items:
-        type: "array"
-        items:
-          $ref: "#/definitions/Item"
-  Item:
+  R2ABudgetData:
     type: "object"
     properties:
-      itemName:
+      ba:
+        type: "string"
+      pe:
+        type: "string"
+      item:
         type: "string"
       missionDescription:
-        type: "string"      
+        type: "string"
       relatedItems:
         type: "array"
         items:
           type: "string"
+  RdteProgramData:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      programId:
+        type: "string"
+      submitted:
+        type: "boolean"
+      bpis:
+        type: "array"
+        items:
+          $ref: "#/definitions/BPI"
+  BPI:
+    type: "object"
+    properties:
+      ba:
+        type: "string"
+      pe:
+        type: "string"
+      item:
+        type: "string"
+      r2AData:
+          $ref: "#/definitions/R2AProgramData"
+      r3Data:
+        $ref: "#/definitions/R3Data"
+      r4Data:
+        type: "array"
+        items:
+          $ref: "#/definitions/R4Data"
+  R2AProgramData:
+    type: "object"
+    properties:
+      missionDescription:
+        type: "string"
+      bullets:
+        type: "array"
+        items:
+          $ref: "#/definitions/Bullet"
+      acquisitionStrategyTitle:
+        type: "string"
+      acquisitionStrategyContent:
+        type: "string"
+      performanceMetricsTitle:
+        type: "string"
+      performanceMetricsContent:
+        type: "string"
+  R4Data:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      containerId:
+        type: "string"
+      eventName:
+        type: "string"
+      startYear:
+        type: "number"
+      startQuarter:
+        type: "number"
+      endYear:
+        type: "number"
+      endQuarter:
+        type: "number"
+  R3Data:
+    type: "object"
+    properties:
+      entries:
+        type: "array"
+        items:
+          $ref: "#/definitions/R3Entry"
+      remarks:
+        type: "string"
+  R3Entry:
+    type: "object"
+    properties:
+      group:
+        type: "string"
+      costCategoryItem:
+        type: "string"
+      itemDescription:
+        type: "string"
+      contractMethodAndType:
+        type: "string"
+      performingActivityAndLocation:
+        type: "string"
+      priorYears:
+        type: "number"
+      pyCost:
+        type: "number"
+      pyAwardDate:
+        $ref: "#/definitions/NgbDate"
+      cyCost:
+        type: "number"
+      cyAwardDate:
+        $ref: "#/definitions/NgbDate"
+      byCost:
+        type: "number"
+      byAwardDate:
+        $ref: "#/definitions/NgbDate"
+  NgbDate:
+    type: "object"
+    properties:
+      year:
+        type: "number"
+      month:
+        type: "number"
+      day:
+        type: "number"
+  Bullet:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      accomplishmentsPY:
+        type: "string"
+      plansCY:
+        type: "string"
+      plansBY:
+        type: "string"
+      increaseDecreaseStatement:
+        type: "string"
+      fundsPY:
+        type: "number"
+      fundsCY:
+        type: "number"
+      fundsBY:
+        type: "number"
 #
 ###########################
 ###    EXECUTION       ####
@@ -4080,6 +4402,12 @@ definitions:
         type: "string"
       subtype:
         type: "string"
+      inputValue:
+        type: "string"
+      impact:
+        type: "array"
+        items:
+          type: "string"
   ExecutionEvent:
     type: "object"
     properties:
@@ -4168,6 +4496,8 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/SpendPlanMonthly"
+      submitted:
+        type: "boolean"
   BudgetFundingLine:
     type: "object"
     properties:
@@ -4380,6 +4710,8 @@ definitions:
         type: "string"
       result:
         type: "object"
+  RoleResourceType:
+    enum: [PROGRAM_SHORTNAME, COMMUNITY_ID, ORGANIZATION_ID, MIXED_ID, STAR_ONLY]
   Role:
     type: "object"
     properties:
@@ -4391,6 +4723,8 @@ definitions:
         type: "string"
       communityId:
         type: "string"
+      resourceType:
+        $ref: "#/definitions/RoleResourceType"
   Status:
     type: "string"
   UserRoleResource:
@@ -4530,6 +4864,63 @@ definitions:
         type: "string"
       roleName:
         type: "string"
+  LockPosition:
+    type: "object"
+    properties:
+      scenarioType:
+        type: "string"
+      scenarioId:
+        type: "string"
+      asOfPy:
+        type: "string"
+      asOfCy:
+        type: "string"
+      notes:
+        type: "string"
+      dateCreated:
+        type: "string"
+      mapPeToDetails:
+        type: "object"
+        additionalProperties:
+          $ref: "#/definitions/LockPositionDetails"
+  LockPositionDetails:
+    type: "object"
+    properties:
+      adjustments:
+        type: "object"
+        additionalProperties:
+          $ref: "#/definitions/AdjustmentDetail"
+      summary:
+        type: "object"
+        additionalProperties:
+          $ref: "#/definitions/SummaryDetail"
+  SummaryDetail:
+    type: "object"
+    properties:
+      py:
+        type: "number"
+      cy:
+        type: "number"
+      by:
+        type: "number"
+  AdjustmentDetail:
+    type: "object"
+    properties:
+      py:
+        $ref: "#/definitions/ChangeSummary"
+      cy:
+        $ref: "#/definitions/ChangeSummary"
+  ChangeSummary:
+    type: "object"
+    properties:
+      calculated:
+        type: "number"
+      adjusted:
+        type: "number"
+  PresidentialBudget:
+    enum: [PREVIOUS, CURRENT]
+  ExecutionTransactionTag:
+    enum: [CONGRESSIONAL_GENERAL_REDUCTIONS, CONGRESSIONAL_DIRECTED_REDUCTIONS, CONGRESSIONAL_RESCISSIONS, CONGRESSIONAL_ADDS, CONGRESSIONAL_DIRECTED_TRANSFERS, REPROGRAMMINGS, SBIR_STTR_TRANSFERS, OTHER_ADJUSTMENTS]
 #
 #################################################################
 #############      END MODEL  DEFINITONS      ###################

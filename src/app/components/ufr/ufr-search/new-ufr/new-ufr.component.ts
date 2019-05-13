@@ -1,14 +1,21 @@
-import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
+import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
 import {Component, Input, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {
-  UFRsService, ShortyType, ProgramsService, PRService, Program, User, Organization, OrganizationService
+  MRDBService,
+  Organization,
+  OrganizationService,
+  Program,
+  ProgramService,
+  ShortyType,
+  UFRsService,
+  User
 } from '../../../../generated';
-import { UFR } from '../../../../generated/model/uFR';
-import { FundingLine } from '../../../../generated/model/fundingLine';
-import { UserUtils } from '../../../../services/user.utils';
-import {CurrentPhase} from "../../../../services/current-phase.service";
-import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
+import {UFR} from '../../../../generated/model/uFR';
+import {FundingLine} from '../../../../generated/model/fundingLine';
+import {UserUtils} from '../../../../services/user.utils';
+import {CurrentPhase} from '../../../../services/current-phase.service';
+import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 
 
 enum CreateNewUfrMode {
@@ -39,8 +46,8 @@ export class NewUfrComponent implements OnInit {
                private programAndPrService: ProgramAndPrService,
                private ufrService: UFRsService,
                private currentPhase: CurrentPhase,
-               private programsService: ProgramsService,
-               private prService: PRService,
+               private mrdbService: MRDBService,
+               private programService: ProgramService,
                private orgService: OrganizationService,
                private userUtils: UserUtils ) {}
 
@@ -174,12 +181,12 @@ export class NewUfrComponent implements OnInit {
   }
 
   private async initFromShortyProgram(ufr: UFR, includeNames: boolean) {
-    const shorty = (await this.programsService.getProgramById(ufr.shortyId).toPromise()).result as Program;
+    const shorty = (await this.mrdbService.getProgramById(ufr.shortyId).toPromise()).result as Program;
     this.initFromShorty(ufr, shorty, includeNames);
   }
 
   private async initFromShortyPR(ufr: UFR, includeNames: boolean) {
-    const shorty = (await this.prService.getById(ufr.shortyId).toPromise()).result as Program;
+    const shorty = (await this.programService.getById(ufr.shortyId).toPromise()).result as Program;
     this.initFromShorty(ufr, shorty, includeNames);
   }
 

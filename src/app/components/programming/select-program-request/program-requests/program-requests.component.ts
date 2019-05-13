@@ -1,11 +1,10 @@
 import {Router} from '@angular/router';
 import {Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
-import {PRService} from '../../../../generated/api/pR.service';
 import {ProgramRequestPageModeService} from '../../program-request/page-mode.service';
 import {AgGridNg2} from "ag-grid-angular";
 import {SummaryProgramCellRenderer} from "../../../renderers/event-column/summary-program-cell-renderer.component";
 import {PhaseType, UiProgramRequest} from "../UiProgramRequest";
-import {Program, ProgramType} from "../../../../generated";
+import {Program, ProgramService, ProgramType} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
 import {CurrentPhase} from "../../../../services/current-phase.service";
 import { FundingRateRenderer } from '../../../renderers/funding-rate-renderer/funding-rate-renderer.component';
@@ -32,6 +31,7 @@ export class ProgramsComponent implements OnChanges {
   private menuTabs = ['filterMenuTab'];
   autoGroupColumnDef = {
     headerName: "Program",
+    resizable: true,
     cellStyle: { backgroundColor: "#eae9e9" },
     menuTabs: this.menuTabs,
     filter: 'agTextColumnFilter',
@@ -49,7 +49,7 @@ export class ProgramsComponent implements OnChanges {
     fundingRateRenderer: FundingRateRenderer,
   };
 
-  constructor( private prService: PRService,
+  constructor( private programService: ProgramService,
                private router: Router,
                private programRequestPageMode: ProgramRequestPageModeService ) {
     this.context = { componentParent: this };
@@ -100,7 +100,7 @@ export class ProgramsComponent implements OnChanges {
       }); */
       this.sortObjects(rowData, ['shortName', 'phaseType']);
       this.rowData = rowData;
-      this.defineColumns(this.rowData);
+      this.defineColumns();
     }
     setTimeout(() => {
       this.agGrid.api.sizeColumnsToFit()
@@ -131,27 +131,30 @@ export class ProgramsComponent implements OnChanges {
     this.agGrid.api.onGroupExpandedOrCollapsed();
   }
 
-  defineColumns(programRequests) {
+  defineColumns() {
     this.columnDefs = [
       {
         headerName: 'Funds in $K',
+        cellClass: ['text-center'],
         children: [
           {
             headerName: 'Status',
             menuTabs: this.menuTabs,
+            resizable: true,
             filter: 'agTextColumnFilter',
-            suppressSorting: true,
+            suppressSorting: true, 
             valueGetter: params => this.getStatus(params),
             cellClass: params => this.getStatusClass(params),
             cellStyle: { backgroundColor: "#eae9e9" },
             cellRenderer: 'summaryProgramCellRenderer',
-            width: 120
+            minWidth: 115
           },
           {
             headerName: 'Cycle',
             //menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            width: 100,
+            minWidth: 86,
+            resizable: true,
             suppressSorting: true,
             cellClass: ['ag-cell-white'],
             valueGetter: params => {
@@ -230,6 +233,9 @@ export class ProgramsComponent implements OnChanges {
         let columnKey = year.toString().replace('20', 'FY')
         let renderer = cellClass.indexOf('ag-cell-white')==-1 ? 'fundingRateRenderer' : undefined
         let colDef = {
+          defaultColDef: {
+            resizable: true
+           },
           headerName: subHeader,
           type: "numericColumn",
           children: [{
@@ -242,7 +248,8 @@ export class ProgramsComponent implements OnChanges {
             },
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            maxWidth: 104,
+            minWidth: 102,
+            resizable: true,
             cellClass: cellClass,
             cellClassRules: {
               'by': params => { return year >= this.pomFy && params.data.phaseType === PhaseType.POM }
@@ -260,10 +267,14 @@ export class ProgramsComponent implements OnChanges {
 
     let totalColDef = {
       headerName: 'FYDP Total',
+      defaultColDef: {
+        resizable: true
+       },
       headerTooltip: 'Future Years Defense Program Total',
       menuTabs: this.menuTabs,
       filter: "agNumberColumnFilter",
-      maxWidth: 104,
+      minWidth: 102,
+      resizable: true,
       type: "numericColumn",
       valueGetter: params => { return this.getTotal(params.data, columnKeys) },
       valueFormatter: params => { return this.currencyFormatter(params) }
@@ -298,7 +309,7 @@ export class ProgramsComponent implements OnChanges {
   }
 
   delete() {
-    this.prService.remove(this.idToDelete).toPromise();
+    this.programService.remove(this.idToDelete).toPromise();
     this.deleted.emit();
   }
 
@@ -308,7 +319,7 @@ export class ProgramsComponent implements OnChanges {
   }
 
   getStatus(params) {
-    if (params.data.phaseType == PhaseType.POM) {
+    if ( params.data && params.data.phaseType == PhaseType.POM) {
       return params.data.state;
     } else {
       return '';
@@ -316,7 +327,7 @@ export class ProgramsComponent implements OnChanges {
   }
 
   getStatusClass(params) {
-    if (params.data.state === 'OUTSTANDING') {
+    if (params.data && params.data.state === 'OUTSTANDING') {
       return 'text-danger';
     }
     return 'text-primary';

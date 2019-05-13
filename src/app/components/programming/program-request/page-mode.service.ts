@@ -10,7 +10,9 @@ export enum AddNewPrForMode {
   A_NEW_PROGRAM = 'New Program'
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProgramRequestPageModeService {
 
   private _initialized: boolean;

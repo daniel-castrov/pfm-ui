@@ -1,11 +1,11 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
-import {FundingLine, IntMap, POMService, UFR, User, Variant, ServiceBranch } from '../../../../generated'
+import {Component, Input} from '@angular/core';
+import {FundingLine, IntMap, POMService, ServiceBranch, UFR, User, Variant} from '../../../../generated';
 import {UserUtils} from '../../../../services/user.utils';
-import {DataRow} from "./DataRow";
+import {DataRow} from './DataRow';
 import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
-import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {ColumnApi, GridApi} from "ag-grid";
-import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
+import {FormatterUtil} from '../../../../utils/formatterUtil';
+import {ColumnApi, GridApi} from 'ag-grid-community';
+import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
 import {Notify} from '../../../../utils/Notify';
 
 @Component({

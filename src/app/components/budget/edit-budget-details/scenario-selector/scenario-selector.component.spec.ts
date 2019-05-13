@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ScenarioSelectorComponent } from './scenario-selector.component';
 
-describe('ScenarioSelectorComponent', () => {
+describe('ScenarioSelectorOnProgramDetailsComponent', () => {
   let component: ScenarioSelectorComponent;
   let fixture: ComponentFixture<ScenarioSelectorComponent>;
 

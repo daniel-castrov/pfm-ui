@@ -10,7 +10,7 @@
   </div>
   <div class="col-2">
     <div class="pull-right">
-      <a routerLink="/r2/{{rdteData.containerId}}/{{selectedPE}}"><button class="btn btn-primary" [disabled]="!selectedPE">Preview</button></a>
+      <a routerLink="/r2/{{rdteBudgetData.containerId}}/{{selectedPE}}" target="_blank"><button class="btn btn-primary" [disabled]="!selectedPE || !lockPositionExists">Preview</button></a>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
     <div class="col-12">
       <label class="mb-2">Please enter "Mission Description and Budget Item Justification"</label>
       <div class="form-group">
-        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="missionDescription" [(ngModel)]="r2data.missionDescription"></textarea>
+        <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="missionDescription" [(ngModel)]="r2Data.missionDescription"></textarea>
       </div>
     </div>
   </div>
@@ -37,17 +37,17 @@
         </select>
         <ng-container *ngIf="selChgSumSection == 'Funding'">
             <div class="form-group">
-              <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="fundingChange" [(ngModel)]="r2data.fundingChange"></textarea>
+              <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="fundingChange" [(ngModel)]="r2Data.fundingChange"></textarea>
             </div>
           </ng-container>
           <ng-container *ngIf="selChgSumSection == 'Schedule'">
             <div class="form-group">
-              <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="scheduleChange" [(ngModel)]="r2data.scheduleChange"></textarea>
+              <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="scheduleChange" [(ngModel)]="r2Data.scheduleChange"></textarea>
             </div>
           </ng-container>
           <ng-container *ngIf="selChgSumSection=='Technical'">
             <div class="form-group">
-              <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="techincalChange" [(ngModel)]="r2data.techincalChange"></textarea>
+              <textarea [disabled]='readonly' cols="50" rows="4" wrap="physical" class="form-control" name="techincalChange" [(ngModel)]="r2Data.techincalChange"></textarea>
             </div>
           </ng-container>
       </fieldset>

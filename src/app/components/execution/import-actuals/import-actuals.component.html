@@ -7,80 +7,173 @@
       </div>
       <div class="col-5">
         <span class="pull-right">
-          <button class="btn btn-primary" (click)='upload()' [disabled]='!(gfebsfile || daifile)'>Import</button>
+          <button class="btn btn-primary" (click)='upload()'
+                  [disabled]='!pageValid()'>Import</button>
         </span>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
         <fieldset>
-          <legend>GFEBS</legend>            
+          <legend>GFEBS</legend>
           <div class="row">
             <div class="col-4">
-              <label>Select location of the GFEBS to be uploaded:</label>
+              <div class="row">
+                <div class="col-12">
+                  <label>Select location of the GFEBS to be uploaded:</label>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="input-group">
+                    <input type="text"
+                           class="form-control form-input mr-1"
+                           placeholder="Choose file"
+                           name="uploadname1"
+                           [ngModel]="gfebsfile?.name"
+                           readonly>
+                    <span class="input-group-btn">
+                        <span class="btn btn-secondary btn-file">
+                          Browse…
+                          <input type="file"
+                                 name="file" accept="*.xlsx"
+                                 (change)="handleFileInput($event.target.files, 'GFEBS')">
+                        </span>
+                      </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label>Select Date to apply this GFEBS file to</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <input class="form-control date-input"
+                         [disabled]='!gfebsfile'
+                         placeholder="mm/dd/yyyy"
+                         #c1="ngModel"
+                         (dateSelect)="onGfebsAsOfSelection(c1)"
+                         (focusout)="onGfebsAsOfSelection(c1)"
+                         [(ngModel)]="gfebsAsOfSelection"
+                         ngbDatepicker
+                         #d1="ngbDatepicker"
+                         [minDate]="{year: today.getFullYear(), month: 1, day: 1}"
+                         [maxDate]="{year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate()}">
+                </div>
+                <div class="col-4">
+                  <button class="calendar-button" (click)="d1.toggle()" type="button" [disabled]='!gfebsfile'>
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </div>
+                <div *ngIf="c1.invalid" class="col-auto align-self-center">{{c1.status}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <import-actuals-table [data]='oldgfebs'></import-actuals-table>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>DAI CONTROL</legend>
+          <div class="row">
+            <div class="col-4">
+              <label>Select location of the DAI CONTROL to be uploaded:</label>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-4">
               <div class="input-group">
-                <input type="text" 
-                  class="form-control form-input mr-1" 
-                  placeholder="Choose file"
-                  name="uploadname"
-                  [ngModel]="gfebsfile?.name" 
-                  readonly>
-                  <span class="input-group-btn">
+                <input type="text" class="form-control form-input mr-1" placeholder="Choose file" name="uploadname2"
+                       [ngModel]="ctrlfile?.name" readonly>
+                <span class="input-group-btn">
                     <span class="btn btn-secondary btn-file">
-                      Browse… 
-                      <input type="file" 
-                      name="file" accept="*.xlsx" 
-                      (change)="handleFileInput($event.target.files, 'GFEBS')">
+                      Browse…
+                      <input type="file" name="file" accept="*.xlsx"
+                             (change)="handleFileInput($event.target.files, 'DAI-CONTROL')">
                     </span>
                   </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <import-actuals-table [data]='oldctrl'></import-actuals-table>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>DAI</legend>
+          <div class="row">
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label>Select location of the DAI to be uploaded:</label>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <import-acutals-table [data]='oldgfebs'></import-acutals-table>
-              </div>
-            </div>
-          </fieldset>
-    
-          <fieldset>
-            <legend>DAI</legend>
-            <div class="row">
-              <div class="col-4">
-                <label>Select location of the DAI to be uploaded:</label>
-              </div>
-            </div>
-            <div class="row mb-4">
-              <div class="col-4">
-                <div class="input-group">
-                  <input type="text" 
-                    class="form-control form-input mr-1" 
-                    placeholder="Choose file"
-                    name="uploadname"
-                    [ngModel]="daifile?.name" 
-                    readonly>
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="input-group">
+                    <input type="text"
+                           class="form-control form-input mr-1"
+                           placeholder="Choose file"
+                           name="uploadname3"
+                           [ngModel]="daifile?.name"
+                           readonly>
                     <span class="input-group-btn">
-                      <span class="btn btn-secondary btn-file">
-                        Browse… 
-                        <input type="file" 
-                        name="file" accept="*.xlsx" 
-                        (change)="handleFileInput($event.target.files, 'DAI')">
-                      </span>
-                    </span>
+                          <span class="btn btn-secondary btn-file">
+                            Browse…
+                            <input type="file"
+                                   name="file" accept="*.xlsx"
+                                   (change)="handleFileInput($event.target.files, 'DAI')">
+                          </span>
+                        </span>
                   </div>
                 </div>
               </div>
-             <div class="row">
-               <div class="col-12">
-                <import-acutals-table [data]='olddai'></import-acutals-table>
-               </div>
-             </div>
-            </fieldset>
-        </div>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-12">
+                  <label>Select Date to apply this DAI file to</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <input class="form-control date-input"
+                         placeholder="mm/dd/yyyy"
+                         #c2="ngModel"
+                         (dateSelect)="onDaiAsOfSelection(c2)"
+                         (focusout)="onDaiAsOfSelection(c2)"
+                         [(ngModel)]="daiAsOfSelection"
+                         ngbDatepicker
+                         #d2="ngbDatepicker"
+                         [minDate]="{year: today.getFullYear(), month: 1, day: 1}"
+                         [maxDate]="{year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate()}">
+                </div>
+                <div class="col-4">
+                  <button class="calendar-button" (click)="d2.toggle()" type="button">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </div>
+                <div *ngIf="c2.invalid" class="col-auto align-self-center">{{c2.status}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <import-actuals-table [data]='olddai'></import-actuals-table>
+            </div>
+          </div>
+        </fieldset>
       </div>
     </div>
   </div>
+</div>

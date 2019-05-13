@@ -1,7 +1,7 @@
-import { Component, OnChanges, Input, ViewChild } from '@angular/core';
-import { AgGridNg2 } from "ag-grid-angular"; 
-import { RdteData, LibraryService } from '../../../../generated';
-import { Notify } from '../../../../utils/Notify';
+import {Component, Input, OnChanges, ViewChild} from '@angular/core';
+import {AgGridNg2} from 'ag-grid-angular';
+import {LibraryService, RdteBudgetData} from '../../../../generated';
+import {Notify} from '../../../../utils/Notify';
 
 @Component({
   selector: 'overview-tab',
@@ -10,7 +10,7 @@ import { Notify } from '../../../../utils/Notify';
 })
 export class OverviewTabComponent implements OnChanges {
 
-  @Input() rdteData: RdteData;
+  @Input() rdteBudgetData: RdteBudgetData;
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   rowsData: any[]=[];
@@ -19,17 +19,17 @@ export class OverviewTabComponent implements OnChanges {
   constructor( private libraryService:LibraryService ) { }
 
   ngOnChanges() {
-    if ( this.rdteData && this.rdteData.toc ){  
+    if ( this.rdteBudgetData && this.rdteBudgetData.toc ){
       this.initGrid();
     }
   }
 
   ovHandleFileInput(files: FileList) {
     let ovFileToUpload:File = files.item(0);
-    this.libraryService.uploadFile(ovFileToUpload, this.rdteData.fileArea).subscribe(response => {
+    this.libraryService.uploadFile(ovFileToUpload, this.rdteBudgetData.fileArea).subscribe(response => {
       if (response.result) {
-        this.rdteData.overviewId = response.result.id;
-        this.rdteData.overviewName = ovFileToUpload.name;
+        this.rdteBudgetData.overviewId = response.result.id;
+        this.rdteBudgetData.overviewName = ovFileToUpload.name;
       } else if (response.error) {
         Notify.error( "Something went wrong with the overview file upload" + response.error );
       } else {
@@ -82,17 +82,17 @@ export class OverviewTabComponent implements OnChanges {
 
       let rowdata:any[] = [];
 
-      Object.keys(this.rdteData.toc).forEach(key => {
+      Object.keys(this.rdteBudgetData.toc).forEach(key => {
         let row = new Object();
         row["pe"] = key;
-        row["lineItem"] =  this.rdteData.toc[key];
+        row["lineItem"] =  this.rdteBudgetData.toc[key];
         rowdata.push(row);
       });
       this.rowsData = rowdata;
     }
 
     private onValueChanged(params){
-      this.rdteData.toc[ params.data.pe ] = params.data.lineItem;
+      this.rdteBudgetData.toc[ params.data.pe ] = params.data.lineItem;
     }
 
 }

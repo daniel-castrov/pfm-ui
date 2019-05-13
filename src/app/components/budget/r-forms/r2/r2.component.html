@@ -42,14 +42,14 @@
         <tr class="alignRight borderRightBottom">
             <td class="alignLeft borderRightBottom">Total Program Element</td>
             <td>-</td>
-            <td>{{totalForPeAndYear(programElement, fy-2)}}</td>
-            <td>{{totalForPeAndYear(programElement, fy-1)}}</td>
-            <td>{{totalForPeAndYear(programElement, fy)}}</td>
+            <td>{{totalForPeAndYear(programElement, fy-2) | form }}</td>
+            <td>{{totalForPeAndYear(programElement, fy-1) | form }}</td>
+            <td>{{totalForPeAndYear(programElement, fy  ) | form }}</td>
             <td>-</td>
-            <td>{{totalForPeAndYear(programElement, fy)}}</td>
-            <td>{{totalForPeAndYear(programElement, fy+1)}}/td>
-            <td>{{totalForPeAndYear(programElement, fy+2)}}</td>
-            <td>{{totalForPeAndYear(programElement, fy-3)}}</td>
+            <td>{{totalForPeAndYear(programElement, fy  ) | form }}</td>
+            <td>{{totalForPeAndYear(programElement, fy+1) | form }}</td>
+            <td>{{totalForPeAndYear(programElement, fy+2) | form }}</td>
+            <td>{{totalForPeAndYear(programElement, fy-3) | form }}</td>
             <td></td>
             <td>Continuing</td>
             <td>Continuing</td>
@@ -57,15 +57,15 @@
         <tr *ngFor="let item of items" class="alignRight borderRightBottom">
           <td class="alignLeft borderRightBottom">{{item}}: {{itemName(item)|async}}</td>
           <td>-</td>
-          <td>{{totalForItemAndYear(item, fy-2)}}</td>
-          <td>{{totalForItemAndYear(item, fy-1)}}</td>
-          <td>{{totalForItemAndYear(item, fy)}}</td>
+          <td>{{totalForItemAndYear(item, fy-2) | form }}</td>
+          <td>{{totalForItemAndYear(item, fy-1) | form }}</td>
+          <td>{{totalForItemAndYear(item, fy  ) | form }}</td>
           <td>-</td>
-          <td>{{totalForItemAndYear(item, fy)}}</td>
-          <td>{{totalForItemAndYear(item, fy+1)}}</td>
-          <td>{{totalForItemAndYear(item, fy+2)}}</td>
-          <td>{{totalForItemAndYear(item, fy+3)}}</td>
-          <td>{{totalForItemAndYear(item, fy+4)}}</td>
+          <td>{{totalForItemAndYear(item, fy  ) | form }}</td>
+          <td>{{totalForItemAndYear(item, fy+1) | form }}</td>
+          <td>{{totalForItemAndYear(item, fy+2) | form }}</td>
+          <td>{{totalForItemAndYear(item, fy+3) | form }}</td>
+          <td>{{totalForItemAndYear(item, fy+4) | form }}</td>
           <td>Continuing</td>
           <td>Continuing</td>
         </tr>
@@ -78,23 +78,7 @@
           </tr>
           <tr>
             <td>
-              <p>Advances fundamental knowledge and promotes theoretical and experimental research in life and physical sciences</p>
-              <p>The projects within this BA reflect the research areas of Life Sciences (LF1) (e.g. microbiology, biochemistry, pathogenic mechanisms, cell and molecular biology,
-                  immunology, nanoscale science, and information science) which focus on fundamental efforts to understand living systems' response to biological or chemical agents, to
-                  support detection, diagnostics, protection, and medical treatment.
-              </p>
-              <p>The projects within this BA also include efforts in Physical Sciences (PS1) (e.g. chemistry, physics, materials science, nanotechnologies, nanoscale science, and
-              environmental science) which focus on fundamental scientific phenomena. These support investigation of physical and chemical properties and interactions for
-              enhanced functionalities important to detection, diagnostics, protection, and decontamination.
-              </p>
-              <p>BA1 also supports the DoD Science, Technology, Engineering, and Math (STEM) Strategic Plan to attract, inspire, and develop exceptional STEM talent across the
-              education continuum to enrich our current and future DoD workforce to meet defense technological challenges. This includes the Joint Science and Technology Institute
-              (JSTI) which is a 2-week residential program for high school students and teachers who conduct a research project from a STEM field with a DoD scientist. In addition,
-              the National Research Council Research Associateship Program and the Military Internship Program provide unique opportunities for talented scientists and engineers,
-              and promising midshipmen/cadets, to conduct research at DoD service laboratories on projects that are of interest to the Chemical and Biological Defense Program
-              Enterprise in an effort to develop the future DoD workforce.</p>
-              <p>The projects in this PE are placed in BA1 because they are basic research efforts directed towards non-specific or non-unique military applications. Basic research
-                technological breakthroughs support applied research (PE 0602384BP) activities.</p>
+              {{r2Data?.missionDescription}}
             </td>
           </tr>
       </table>
@@ -103,109 +87,53 @@
           <th colspan="8">
             <span class="title">B. Program Change Summary ($ in Millions)</span>
           </th>
-          <th class="alignCenter">FY 2017</th>
-          <th class="alignCenter">FY 2018</th>
-          <th class="alignCenter">FY 2019 Base</th>
-          <th class="alignCenter">FY 2019 OCO</th>
-          <th class="alignCenter">FY 2019 Total</th>
+          <th class="alignCenter">FY {{fy-2}}</th>
+          <th class="alignCenter">FY {{fy-1}}</th>
+          <th class="alignCenter">FY {{fy}} Base</th>
+          <th class="alignCenter">FY {{fy}} OCO</th>
+          <th class="alignCenter">FY {{fy}} Total</th>
         </tr>
         <tr class="noBorder">
           <td colspan="8">Previous President's Budget</td>
-          <td class="alignRight">188.715</td>
-          <td class="alignRight">201.053</td>
-          <td class="alignRight">194.578 </td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].py | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].cy | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].by | form }}</td>
           <td class="alignRight">-</td>
-          <td class="alignRight">194.578</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].by | form }}</td>
         </tr>
 
         <tr class="noBorder">
           <td colspan="8">Current President's Budget</td>
-          <td class="alignRight">184.766</td>
-          <td class="alignRight">201.053</td>
-          <td class="alignRight">194.478</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].py | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].cy | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].by | form }}</td>
           <td class="alignRight">-</td>
-          <td class="alignRight">194.478</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].by | form }}</td>
         </tr>
 
         <tr class="noBorder">
           <td colspan="8">Total Adjustments</td>
-          <td class="alignRight">-3.949</td>
-          <td class="alignRight">0.000</td>
-          <td class="alignRight">-0.100</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].py - lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].py | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].cy - lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].cy | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].by - lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].by | form }}</td>
           <td class="alignRight">-</td>
-          <td class="alignRight">-0.100</td>
+          <td class="alignRight">{{lockPositionDetails?.summary[PresidentialBudget.CURRENT].by - lockPositionDetails?.summary[PresidentialBudget.PREVIOUS].by | form }}</td>
         </tr>
 
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Congressional General Reductions</td>
-          <td class="alignRight">5.000</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
+        <tr class="noBorder" *ngFor="let tag of executionTransactionTags">
+          <td colspan="8" class="alignRight">{{tag.name}}</td>
+          <td class="alignRight">{{lockPositionDetails?.adjustments[tag.abbr].py.adjusted | form }}</td>
+          <td class="alignRight">{{lockPositionDetails?.adjustments[tag.abbr].cy.adjusted | form }}</td>
           <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Congressional Directed Reductions</td>
-          <td class="alignRight">0.000</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Congressional Rescissions</td>
-          <td class="alignRight">-4.576</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Congressional Adds</td>
-          <td class="alignRight">-4.373</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Congressional Direct Transers</td>
-          <td class="alignRight">0.000</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Reprogramming</td>
-          <td class="alignRight">0.000</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">SBIR/STTR Transfer</td>
-          <td class="alignRight">0.000</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight"></td>
-          <td class="alignRight"></td>
-        </tr>
-        <tr class="noBorder">
-          <td colspan="8" class="alignRight">Other Adjustments</td>
-          <td class="alignRight">0.000</td>
-          <td class="alignRight">-</td>
-          <td class="alignRight">-</td>
           <td class="alignRight"></td>
           <td class="alignRight"></td>
         </tr>
         <tr class="noBorder">
           <td colspan="13">
             <div class="title">Change Summary Explanation</div>
-            <div>Funding: N/A</div>
-            <div>Schedule: N/A</div>
-            <div>Technical: N/A</div>
+            <div>Funding: {{ getValueOrNA(r2Data?.fundingChange) }}</div>
+            <div>Schedule: {{ getValueOrNA(r2Data?.scheduleChange) }}</div>
+            <div>Technical: {{ getValueOrNA(r2Data?.techincalChange) }}</div>
           </td>
         </tr>
       </table>

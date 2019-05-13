@@ -1,15 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core'
-import {ActivatedRoute, UrlSegment} from '@angular/router'
-import {
-  Execution,
-  ExecutionLine,
-  ExecutionService,
-  OandEMonthly,
-  OandEService,
-  ProgramsService
-} from '../../../generated';
-import {forkJoin} from 'rxjs/observable/forkJoin';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {Execution, ExecutionLine, ExecutionService, OandEMonthly, OandEService} from '../../../generated';
 import {ActualsTabComponent} from '../actuals-tab/actuals-tab.component';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'program-execution-line',
@@ -26,8 +19,9 @@ export class ProgramExecutionLineComponent implements OnInit {
   private showPercentages: boolean = true;
   private hash: string;
 
-  constructor(private exesvc: ExecutionService, private progsvc: ProgramsService,
-    private oandesvc: OandEService, private route: ActivatedRoute) { }
+  constructor(private exesvc: ExecutionService,
+              private oandesvc: OandEService,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     var my: ProgramExecutionLineComponent = this;

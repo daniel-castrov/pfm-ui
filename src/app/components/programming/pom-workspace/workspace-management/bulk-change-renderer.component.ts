@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
-import {ICellRendererParams} from "ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer";
+import {ICellRendererParams} from "ag-grid-community/dist/lib/rendering/cellRenderers/iCellRenderer";
 
 // *ngIf="params.value.id" below is needed to address some case where RouterLink somehow tries to render the link before params.value.id is initialized
 @Component({

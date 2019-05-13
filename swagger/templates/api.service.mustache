@@ -14,7 +14,7 @@ import { Response, ResponseContentType }                     from '@angular/http
 import { CustomQueryEncoderHelper }                          from '../encoder';
 {{/useHttpClient}}
 
-import { Observable }                                        from 'rxjs/Observable';
+import { Observable }                                        from 'rxjs';
 {{^useHttpClient}}
 import '../rxjs-operators';
 {{/useHttpClient}}
@@ -36,7 +36,9 @@ import { {{classname}}Interface }                            from './{{classname
  * {{&description}}
  */
 {{/description}}
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 {{#withInterfaces}}
 export class {{classname}} implements {{classname}}Interface {
 {{/withInterfaces}}
@@ -244,7 +246,7 @@ export class {{classname}} {
 {{#hasFormParams}}
         const canConsumeForm = this.canConsumeForm(consumes);
 
-        let formParams: { append(param: string, value: any): void; };
+        let formParams: { append(param: string, value: any); };
         let useForm = false;
         let convertFormParamsToString = false;
 {{#formParams}}

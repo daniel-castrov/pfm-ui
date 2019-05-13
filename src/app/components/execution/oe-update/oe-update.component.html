@@ -24,6 +24,15 @@
           </select>
         </span>
       </div>
+
+      <div class="col-10">
+        <div class="pull-right">
+          <span *ngIf ="latestGfebsAsOf">GFEBS Execution data as of date: {{latestGfebsAsOf | date}}</span>
+          <br/>
+          <span *ngIf ="latestDaiAsOf">DAI Execution data as of date: {{latestDaiAsOf | date}}</span>
+        </div>
+      </div>
+
     </div>
     <div class="row mb-3">
       <div class="col-12">
@@ -41,54 +50,6 @@
             (gridReady) = "onGridReady($event)">
           </ag-grid-angular>
         <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <fieldset>
-          <legend>Import O&amp;E Update</legend>
-          <div class="row">
-            <div class="col-12">
-              <table class="fieldset-table">
-                <thead>
-                  <tr>
-                    <th>
-                      <label class="mb-1">O&amp;O Data</label>
-                    </th>
-                    <th>
-                      <label class="mb-1">Type</label>
-                    </th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <span class="form-group">
-                          <select class="form-control-sm">
-                            <option>Enter/Select Program</option>
-                          </select>
-                        </span>
-                    </td>
-                    <td>
-                      <span class="form-group">
-                        <select class="form-control-sm">
-                          <option>DAI</option>
-                        </select>
-                      </span>
-                    </td>
-                    <td>
-                      <button class="btn btn-primary" (click)="addline()">
-                        <i class="fa fa-download icon-pad" aria-hidden="true"></i>
-                      Import
-                     </button>
-                   </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </fieldset>
       </div>
     </div>
   </div>

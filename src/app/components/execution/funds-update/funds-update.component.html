@@ -32,9 +32,9 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <button class="dropdown-item" type="button" (click)="addline()">Add Execution Line</button>
-                <button class="dropdown-item" type="button" [routerLink]="['/charges', selectedexe?.id]" [disabled]="!selectedexe || !hasReleased">Action</button>
-                <button class="dropdown-item" type="button" [routerLink]="['/appropriation-release', selectedexe?.id]" [disabled]='!selectedexe'>Release</button>
-                <button class="dropdown-item" type="button" [routerLink]="['/withhold', selectedexe?.id]" [disabled]='!selectedexe || !hasReleased'>Withhold</button>
+                <button class="dropdown-item" type="button" [routerLink]="['/charges', selectedexe?.id]" [disabled]="!selectedexe || selectedexe?.status !== 'OPEN'">Action</button>
+                <button class="dropdown-item" type="button" [routerLink]="['/appropriation-release', selectedexe?.id]" [disabled]="!selectedexe || selectedexe?.status !== 'OPEN'">Release</button>
+                <button class="dropdown-item" type="button" [routerLink]="['/withhold', selectedexe?.id]" [disabled]="!selectedexe || selectedexe?.status !== 'OPEN' || !hasReleased">Withhold</button>
               </div>
             </div>
           </span>

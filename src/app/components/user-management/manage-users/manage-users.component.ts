@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Observable} from 'rxjs';
 import {CommunityWithRolesAndOrgs} from './CommunityWithRolesAndOrgs';
 import {User} from '../../../generated/model/user';
 import {RestResult} from '../../../generated/model/restResult';
@@ -13,6 +12,7 @@ import {Role} from '../../../generated/model/role';
 import {RoleService} from '../../../generated/api/role.service';
 import {UserRoleResource} from '../../../generated/model/userRoleResource';
 import {UserRoleResourceService} from '../../../generated/api/userRoleResource.service';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-manage-users',
@@ -75,7 +75,7 @@ export class ManageUsersComponent {
   }
 
   private initTargetUserData(): void {
-    Observable.forkJoin([
+    forkJoin([
       this.userService.getById(this.userid),
       this.communityService.getAll(),
     ]).subscribe(data => {
@@ -88,7 +88,7 @@ export class ManageUsersComponent {
       
       for (let comm of allCommunities) {
 
-        Observable.forkJoin([
+        forkJoin([
         this.roleService.getByUserIdAndCommunityId(this.targetUser.id, comm.id),
         this.organizationService.getByCommunityId(comm.id)
         ]).subscribe(data => {

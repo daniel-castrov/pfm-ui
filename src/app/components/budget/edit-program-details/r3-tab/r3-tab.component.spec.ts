@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImportAcutalsTableComponent } from './import-acutals-table.component';
+import { R3TabComponent } from './r3-tab.component';
 
-describe('ImportAcutalsTableComponent', () => {
-  let component: ImportAcutalsTableComponent;
-  let fixture: ComponentFixture<ImportAcutalsTableComponent>;
+describe('R3TabComponent', () => {
+  let component: R3TabComponent;
+  let fixture: ComponentFixture<R3TabComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImportAcutalsTableComponent ]
+      declarations: [ R3TabComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImportAcutalsTableComponent);
+    fixture = TestBed.createComponent(R3TabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

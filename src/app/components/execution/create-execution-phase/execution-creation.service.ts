@@ -2,7 +2,9 @@ import {Injectable} from "@angular/core";
 import {join} from "../../../utils/join";
 import {Budget, BudgetService, Execution, ExecutionService} from "../../../generated";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ExecutionCreationService {
 
   constructor( private executionService: ExecutionService,

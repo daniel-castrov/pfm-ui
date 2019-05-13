@@ -1,5 +1,12 @@
 <div class="row mb-3">
-  <div class="col-12">
+  <div class="col-10">
+    <div class="pull-right">
+      <span *ngIf ="latestGfebsAsOf">GFEBS Execution data as of date: {{latestGfebsAsOf | date}}</span>
+      <br/>
+      <span *ngIf ="latestDaiAsOf">DAI Execution data as of date: {{latestDaiAsOf | date}}</span>
+    </div>
+  </div>
+  <div class="col-2">
     <div class="pull-right program-controls">
       <button class="btn btn-primary" (click)="save()" [disabled]='readonly'>Submit</button>
     </div>

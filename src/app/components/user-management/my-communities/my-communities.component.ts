@@ -1,10 +1,10 @@
 import {JoinCommunityRequestService} from '../../../generated/api/joinCommunityRequest.service';
 import {LeaveCommunityRequestService} from '../../../generated/api/leaveCommunityRequest.service';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Observable} from 'rxjs';
 import {Community, CommunityService, User} from '../../../generated';
 import {MyDetailsService} from '../../../generated/api/myDetails.service';
-import {AppHeaderComponent} from "../../header/app-header/app-header.component";
+import {AppHeaderComponent} from '../../header/app-header/app-header.component';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-request-community',
@@ -30,7 +30,7 @@ export class MyCommunitiesComponent implements OnInit {
   }
 
   public ngOnInit() {
-    Observable.forkJoin([
+    forkJoin([
       this.communityService.getAll(),
       this.myDetailsService.getCurrentUser()
     ]).subscribe(data => {

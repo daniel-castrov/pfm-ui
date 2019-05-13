@@ -1,16 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core'
-import {ExecutionService} from '../../../generated/api/execution.service'
-import {Execution} from '../../../generated/model/execution'
-import {ActivatedRoute, Router} from '@angular/router'
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ExecutionService} from '../../../generated/api/execution.service';
+import {Execution} from '../../../generated/model/execution';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ExecutionDropDown, ExecutionEventData, ExecutionLine} from '../../../generated';
-import {forkJoin} from 'rxjs/observable/forkJoin';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
 import {ExecutionLineFilter} from '../model/execution-line-filter';
 import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
 import {ExecutionTableValidator} from '../model/execution-table-validator';
-
-declare const $: any;
-declare const jQuery: any;
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'withhold',
@@ -25,21 +22,38 @@ export class WithholdComponent implements OnInit {
   private reason: string;
   private etype: ExecutionDropDown;
   private other: string;
-  private isUploading: boolean = false;
+  private isUploading = false;
   private subtypes: ExecutionDropDown[];
   private fileid: string;
   private linefilter: ExecutionLineFilter = function (x: ExecutionLine): boolean {
     return ( x.released > 0 );
   };
-  private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] { 
-    var okays: boolean[] = [];
+  private validator: ExecutionTableValidator = (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] => {
+    const okays: boolean[] = [];
+    const positiveImpact: boolean[] = [];
     x.forEach(elw => {
-      okays.push(elw.amt != 0 && elw.line && elw.line.released
-        ? elw.amt <= elw.line.released
-        : true);
+      if (elw.line.programName !== 'totals-row') {
+        this.etype.impact.forEach(v => {
+          if (v === 'TOA') {
+            const result = elw.line.toa + elw.amt;
+            positiveImpact.push(result >= 0);
+          }
+          if (v === 'RELEASED') {
+            const result = elw.line.released - elw.amt;
+            positiveImpact.push(result >= 0);
+          }
+          if (v === 'WITHHOLD') {
+            const result = elw.line.withheld + elw.amt;
+            positiveImpact.push(result >= 0);
+          }
+        });
+        okays.push(elw.amt !== 0 && elw.line
+          ? !positiveImpact.some(v => v === false)
+          : true);
+      }
     });
     return okays;
-  };
+  }
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
     private router: Router ) { }
@@ -72,7 +86,7 @@ export class WithholdComponent implements OnInit {
       et.fileId = this.fileid;
     }
 
-    this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => { 
+    this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => {
         this.router.navigate(['/funds-update']);
       });
   }

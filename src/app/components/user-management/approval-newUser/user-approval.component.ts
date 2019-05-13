@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Observable} from 'rxjs';
 import {CommunityService} from '../../../generated/api/community.service';
 import {OrganizationService} from '../../../generated/api/organization.service';
 import {CreateUserRequest} from '../../../generated/model/createUserRequest';
 import {CreateUserRequestService} from '../../../generated/api/createUserRequest.service';
 import {RestResult} from '../../../generated/model/restResult';
-import {AppHeaderComponent} from "../../header/app-header/app-header.component";
+import {AppHeaderComponent} from '../../header/app-header/app-header.component';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-user-approval',
@@ -53,7 +53,7 @@ export class UserApprovalComponent implements OnInit {
           return;
         }
         // get the community and organizationthat this request if for
-        Observable.forkJoin([
+        forkJoin([
           this.communityService.getById(this.createUserRequest.communityId),
           this.orgService.getById(this.createUserRequest.organizationId)
         ]).subscribe( data => {

@@ -1,11 +1,9 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Pom, PRService, Program, Budget, PBService } from '../../../../generated';
-import { GridOptions } from 'ag-grid';
+import { Pom, Program, PBService } from '../../../../generated';
+import { GridOptions } from "ag-grid-community";
 import { AgGridNg2 } from 'ag-grid-angular';
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
 import { OneYearToaData } from '../create-pom-session.component';
-import { getPluralCase } from '@angular/common/src/i18n/localization';
-
 
 @Component({
   selector: 'app-pom-analysis',

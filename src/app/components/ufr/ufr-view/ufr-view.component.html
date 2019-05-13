@@ -4,7 +4,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-8" id="program-request">
-          <div class="h5 mb-4">UFR Request for {{pom?.fy|FY:'POM' }}: {{ ufrNumber }}{{ufrType()}}</div>
+          <div *ngIf="fy" class="h5 mb-4">UFR Request for {{fy | FY: (pom? 'POM': 'FY') }}: {{ ufrNumber }}{{ufrType()}}</div>
         </div>
         <div class="col-lg-4 col-md-6">
           <div class="pull-right mb-2" aria-label="breadcrumb">
@@ -39,7 +39,7 @@
           <tab heading="Program" id="tab2">
             <ufr-program-tab [readonly]="readonly()" [ufr]="ufr" [shorty]="shorty" [editable]="canedit" role="tabpanel"></ufr-program-tab>
           </tab>
-          <tab (select)="fundsTabSelected()" heading="Funds" active="true" id="tab3">
+          <tab heading="Funds" active="true" id="tab3">
             <ufr-funds-tab [readonly]="readonly()" [ufr]="ufr" [fy]="fy" [editable]="canedit" role="tabpanel"></ufr-funds-tab>
           </tab>
           <tab heading="Variants" id="tab4">

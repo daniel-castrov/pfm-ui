@@ -1,6 +1,6 @@
-import { Component, OnChanges, Input } from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import { FileResponse, RdteData, LibraryService } from '../../../../generated';
+import {FileResponse, LibraryService, RdteBudgetData} from '../../../../generated';
 
 @Component({
   selector: 'title-tab',
@@ -9,7 +9,7 @@ import { FileResponse, RdteData, LibraryService } from '../../../../generated';
 })
 export class TitleTabComponent implements OnChanges {
 
-  @Input() rdteData: RdteData;
+  @Input() rdteBudgetData: RdteBudgetData;
   
   logoImagePath: string;
   
@@ -20,8 +20,8 @@ export class TitleTabComponent implements OnChanges {
   ngOnChanges() {
 
     // Load the image if it exists
-    if (this.rdteData && this.rdteData.logoId && this.rdteData.fileArea) {
-      this.libraryService.downloadFile(this.rdteData.logoId, this.rdteData.fileArea).subscribe(response => {
+    if (this.rdteBudgetData && this.rdteBudgetData.logoId && this.rdteBudgetData.fileArea) {
+      this.libraryService.downloadFile(this.rdteBudgetData.logoId, this.rdteBudgetData.fileArea).subscribe(response => {
         if (response.result) {
           let fileResponse = response.result as FileResponse;
           let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
@@ -36,7 +36,7 @@ export class TitleTabComponent implements OnChanges {
   onlogoUploaded(fileResponse: FileResponse){
     let imagePath = 'data:'+ fileResponse.contentType +';base64,'  + fileResponse.content;
     this.logoImagePath = this.sanitization.bypassSecurityTrustResourceUrl(imagePath) as string;
-    this.rdteData.logoId=fileResponse.id;
+    this.rdteBudgetData.logoId=fileResponse.id;
   }
 
 }

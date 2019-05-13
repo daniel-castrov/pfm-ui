@@ -18,7 +18,8 @@
       </div>
       <div class="col-6">
         <div class="pull-right program-controls mb-2">
-          <button class="btn btn-primary" (click)="save()" [disabled]="!submitable || ( ruleObgBelowTOA.size + ruleExpBelowObg.size > 0)">Submit</button>
+          <button class="btn btn-primary" (click)="save(false)" [disabled]="!savable    || ( ruleObgBelowTOA.size + ruleExpBelowObg.size > 0)">Save</button>
+          <button class="btn btn-primary" (click)="save(true )" [disabled]="!submitable || ( ruleObgBelowTOA.size + ruleExpBelowObg.size > 0)">Submit</button>
         </div>
       </div>
     </div>

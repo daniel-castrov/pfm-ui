@@ -1,14 +1,16 @@
 import {Budget, BudgetService, Execution, ExecutionService, Pom, POMService, RestResult} from "../generated";
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import 'rxjs/add/operator/map'
 import {TemporaryCaching} from "./caching";
 import {Subject} from "rxjs";
+import {map} from 'rxjs/operators';
 
 /**
  * Caching, performant service for the current phases/session.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CurrentPhase {
 
   constructor( private pomService: POMService,
@@ -21,7 +23,7 @@ export class CurrentPhase {
     (async () => {
       let poms: Pom[];
       poms = await this.pomService.getAll()
-        .map( (response: RestResult) => response.result ).toPromise();
+        .pipe(map( (response: RestResult) => response.result )).toPromise();
       poms = poms.sort( (a:Pom, b:Pom) => b.fy-a.fy );
       subject.next(poms[0]);
       subject.complete();
@@ -35,7 +37,7 @@ export class CurrentPhase {
     (async () => {
       let budgets: Budget[];
       budgets = await this.budgetService.getAll()
-        .map( (response: RestResult) => response.result ).toPromise();
+        .pipe(map( (response: RestResult) => response.result )).toPromise();
       budgets = budgets.sort( (a:Budget, b:Budget) => b.fy-a.fy );
       subject.next(budgets[0]);
       subject.complete();
@@ -49,7 +51,7 @@ export class CurrentPhase {
     (async () => {
       let executions: Execution[];
       executions = await this.executionService.getAll()
-        .map( (response: RestResult) => response.result ).toPromise();
+        .pipe(map( (response: RestResult) => response.result )).toPromise();
       executions = executions.sort( (a:Execution, b:Execution) => b.fy-a.fy );
       subject.next(executions[0]);
       subject.complete();

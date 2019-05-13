@@ -75,87 +75,17 @@
             <p class="role-controls" >A request is pending for the role selected.</p>
         </div>
 
-        <div *ngIf="isVisible">
-
-          <!-- Info -->
-          <div>
-            <p class="role-controls" >
-              <span *ngIf="isNewUserRole">
-                  New request for the <strong>{{selectedRole.name}}</strong> role.
-              </span>
-              <span *ngIf="!isNewUserRole">
-                You are currently a <strong>{{selectedRole.name}}</strong>.
-              </span>
-            </p>
+          <div *ngIf="isVisible">
+            <app-role-builder
+              [allroles]="roles"
+              [selectedCommunity]="myCommunity"
+              [selectedRole]="selectedRole"
+              [selectedUser]="currentUser"
+              [isRequest]=true
+              (okAddRoleRequest)="addRequest($event)"
+              (okDropRoleRequest)="dropRequest($event)">
+            </app-role-builder>
           </div>
-
-          <!-- Delete existing -->
-          <div *ngIf="!isNewUserRole">
-              <p class="role-controls">
-                Request to drop the <strong>{{selectedRole.name}}</strong> role.
-              </p>
-              <div class="controls pull-right">
-                <button class="btn btn-primary" (click)="createDropRequest()">
-                  <span>Submit Request</span>
-                </button>
-              </div>
-          </div>
-
-          <!-- Some UserRoleResources can be modified -->
-          <div *ngIf="canChangeResources && !isOrgBased">
-            <div>
-                <p class="role-controls">
-                Request access to selected Programs for the <strong>{{selectedRole.name}}</strong> role
-              </p>
-            </div>
-            <div class="filter-programs">
-              <label>Filter Available Programs</label>
-              <select name="orgSelector" class="form-control-sm dropdown-width"
-                [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
-                <option value=""></option>
-                <option *ngFor="let org of organizations" [ngValue]="org">
-                  {{ org.abbreviation }}
-                </option>
-              </select>
-            </div>
-            <div class="program-options">
-              <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
-                [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
-              </dual-list>
-            </div>
-            <br/>
-            <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="createAssignRequest()">
-                <span>Submit Request</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Some UserRoleResources CANNOT be modified -->
-          <div *ngIf="isNewUserRole && !canChangeResources && !isOrgBased">
-            <p class="role-controls" *ngIf="!canChangeResources">
-              Resources for the <strong>{{selectedRole.name}}</strong> role are predefined and cannot be modified.
-            </p>
-            <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="createAssignRequest()">
-                <span>Submit Request</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Some UserRoleResources are based only on an Organizations -->
-          <div  *ngIf="isNewUserRole && isOrgBased">
-            <p class="role-controls">
-              Request access to all Programs in the <strong>{{myOrganization.abbreviation}}</strong> Organization for the <strong>{{selectedRole.name}}</strong> role.
-            </p>
-            <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="createAssignRequest()">
-                <span>Submit Request</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
 
       </fieldset>
 

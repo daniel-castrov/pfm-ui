@@ -2,7 +2,9 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
 import {Authorization, AuthorizationResult} from "../services/authorization";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CanActivateAuth {
 
   constructor( private authorization: Authorization, private router: Router ) {}

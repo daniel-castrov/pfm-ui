@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
-import { ICellRendererParams } from "ag-grid";
+import {Component} from '@angular/core';
+import {ICellRendererAngularComp} from 'ag-grid-angular';
+import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
   template: `<input type="checkbox" class="form-check-input" (click)="onChange($event)" [checked]="params.value"/>`

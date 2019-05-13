@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import 'rxjs/add/operator/map'
-import {BES, BESService, PB, PBService} from "../generated";
+import {BES, BESService, PB, PBService} from '../generated';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ScenarioService {
 
   constructor( private besService: BESService,

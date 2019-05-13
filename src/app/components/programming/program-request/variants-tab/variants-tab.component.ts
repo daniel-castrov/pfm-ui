@@ -6,20 +6,19 @@ import {
   Pom,
   POMService,
   Program,
-  PRService,
   RolesPermissionsService,
   ServiceBranch,
   User,
   Variant
-} from '../../../../generated'
+} from '../../../../generated';
 import {UserUtils} from '../../../../services/user.utils';
 import {Notify} from '../../../../utils/Notify';
 
-import {DataRow} from "./DataRow";
-import {PhaseType} from "../../select-program-request/UiProgramRequest";
-import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {ColumnApi, GridApi} from "ag-grid";
-import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
+import {DataRow} from './DataRow';
+import {PhaseType} from '../../select-program-request/UiProgramRequest';
+import {FormatterUtil} from '../../../../utils/formatterUtil';
+import {ColumnApi, GridApi} from 'ag-grid-community';
+import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
 
 @Component({
   selector: 'variants-tab',
@@ -54,7 +53,6 @@ export class VariantsTabComponent implements OnInit {
 
   constructor(private pomService: POMService,
     private pbService: PBService,
-    private prService: PRService,
     private globalsService: UserUtils,
     private rolesvc:RolesPermissionsService
   ) { }

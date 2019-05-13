@@ -1,4 +1,4 @@
-import {TagsService, TagType} from './../../../../services/tags.service';
+import {TagsUtils, TagType} from '../../../../services/tags-utils.service';
 import {Component, Input, OnInit} from '@angular/core';
 import {Disposition, POMService, Tag, UFR, UfrStatus} from '../../../../generated';
 
@@ -19,7 +19,7 @@ export class UfrUfrTabComponent implements OnInit {
   private capabilities: Tag[];
 
   constructor( private pomService: POMService,
-               private tagsService: TagsService ) {}
+               private tagsUtils: TagsUtils ) {}
 
   ngOnInit() {
     this.initCycles();
@@ -33,7 +33,7 @@ export class UfrUfrTabComponent implements OnInit {
   }
 
   private async initCapabilities() {
-    this.capabilities = await this.tagsService.tags(TagType.CORE_CAPABILITY_AREA).toPromise();
+    this.capabilities = await this.tagsUtils.tags(TagType.CORE_CAPABILITY_AREA).toPromise();
   }
 
   invalid(): boolean {

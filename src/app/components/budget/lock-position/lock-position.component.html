@@ -1,0 +1,136 @@
+<app-header></app-header>
+<div class="row ml-3 mr-3 mb-5 h-100">
+  <div class="col-auto align-self-center">
+    <span class="h5">Set Lock Position for FY{{fy}} Budget:</span>
+  </div>
+  <div class="col-auto align-self-center">
+    <select [(ngModel)]="scenarioSelected" (change)="loadEvents()" class="form-control-sm">
+      <option value="null" disabled selected>Select a budget instance</option>
+      <option *ngFor="let scenario of scenarios" [ngValue]="scenario">{{scenario.display}}</option>
+    </select>
+  </div>
+  <div class="col-auto align-self-center">
+    Creation date {{today | date:'MM/dd/yyyy'}}
+  </div>
+  <div class="col-auto align-self-center">
+    <button *ngIf="!lockPosition"
+            [disabled]="!(cyDateSelected && pyDateSelected && scenarioSelected && isCyDateValid && isPyDateValid)"
+            class="btn btn-primary"
+            (click)="extract()">Extract</button>
+    <button *ngIf="lockPosition" [disabled]="peVisited.size !== programElements.length" class="btn btn-primary" (click)="lock()">Lock</button>
+  </div>
+</div>
+<ng-container *ngIf="!lockPosition">
+  <div class="row ml-5 mr-5 mb-1">
+    <div class="col-auto align-self-center">
+      <span>Set FY{{py}} Lock position as of</span>
+    </div>
+    <input class="form-control date-input"
+           placeholder="mm/dd/yyyy"
+           #c="ngModel"
+           (dateSelect)="onPyDateSelection(c)"
+           (focusout)="onPyDateSelection(c)"
+           [(ngModel)]="pyDateSelected"
+           ngbDatepicker
+           #d="ngbDatepicker"
+           [minDate]="{year: today.getFullYear(), month: 1, day: 1}"
+           [maxDate]="{year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate()}">
+    <div class="input-group-append">
+      <button class="calendar-button" (click)="d.toggle()" type="button">
+        <i class="fa fa-calendar"></i>
+      </button>
+    </div>
+    <div *ngIf="c.invalid" class="col-auto align-self-center">{{c.status}}</div>
+  </div>
+  <div class="row ml-5 mr-5">
+    <div class="col-auto align-self-center">Set FY{{cy}} Lock position as of</div>
+    <input class="form-control date-input"
+           placeholder="mm/dd/yyyy"
+           #c2="ngModel"
+           (dateSelect)="onCyDateSelection(c2)"
+           (focusout)="onCyDateSelection(c2)"
+           [(ngModel)]="cyDateSelected"
+           ngbDatepicker
+           #d2="ngbDatepicker"
+           [minDate]="{year: today.getFullYear(), month: 1, day: 1}"
+           [maxDate]="{year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate()}">
+    <div class="input-group-append">
+      <button class="calendar-button" (click)="d2.toggle()" type="button">
+        <i class="fa fa-calendar"></i>
+      </button>
+    </div>
+    <div *ngIf="c2.invalid"  class="col-auto align-self-center">{{c2.status}}</div>
+  </div>
+  <div *ngIf="previousLocks?.length > 0" class="row ml-3 mr-3 mt-5">
+    <table class="event-table">
+      <thead>
+        <tr>
+          <th>FY{{py}} as of date</th>
+          <th>FY{{cy}} as of date</th>
+          <th>Creation Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lock of previousLocks">
+          <td class="w-33">{{lock.asOfPy}}</td>
+          <td class="w-33">{{lock.asOfCy}}</td>
+          <td class="w-33">{{lock.dateCreated}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<ng-container *ngIf="lockPosition">
+  <div class="row m-3">
+    <div class="col-12">
+      <textarea cols="50" rows="4" wrap="physical" [(ngModel)]="lockPosition.notes" class="form-control text-area"
+                placeholder="Enter notes for this lock position..."></textarea>
+    </div>
+  </div>
+  <div class="row m-3">
+    <fieldset style="width: 100%;">
+      <legend>Validate Lock Position Change Summary</legend>
+      <select [(ngModel)]="programElementSelected" (change)="onProgramElementChange()" class="form-control-sm mb-3">
+        <option value="null" disabled selected>Select a budget instance</option>
+        <option *ngFor="let programElement of programElements">{{programElement}}</option>
+      </select>
+      <ag-grid-angular #agGridSummary
+                       class="ag-theme-balham mb-4"
+                       [rowData]="summaryData"
+                       [pinnedBottomRowData]="totalSummaryRow"
+                       [enableSorting]="false"
+                       [enableFilter]="false"
+                       [toolPanelSuppressSideButtons]="true"
+                       [suppressMovableColumns]="true"
+                       [suppressRowTransform]="true"
+                       [singleClickEdit]="true"
+                       (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                       (columnVisible)="sizeColumnsToFit($event)"
+                       (rowDataChanged)="sizeColumnsToFit($event)"
+                       [columnDefs]="summaryColumnDefs"
+                       (gridReady)="onGridReady($event)"
+                       (columnValueChanged)="sizeColumnsToFit($event)"
+                       [gridAutoHeight]="true">
+      </ag-grid-angular>
+
+      <ag-grid-angular #agGridAdjustments
+                       class="ag-theme-balham"
+                       [rowData]="adjustmentsData"
+                       [pinnedBottomRowData]="totalAdjustmentRow"
+                       [enableSorting]="false"
+                       [enableFilter]="false"
+                       [toolPanelSuppressSideButtons]="true"
+                       [suppressMovableColumns]="true"
+                       [suppressRowTransform]="true"
+                       [singleClickEdit]="true"
+                       (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
+                       (columnVisible)="sizeColumnsToFit($event)"
+                       (rowDataChanged)="sizeColumnsToFit($event)"
+                       [columnDefs]="adjustmentsColumnDefs"
+                       (gridReady)="onGridReady($event)"
+                       (columnValueChanged)="sizeColumnsToFit($event)"
+                       [gridAutoHeight]="true">
+      </ag-grid-angular>
+    </fieldset>
+  </div>
+</ng-container>

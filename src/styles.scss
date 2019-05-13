@@ -1,8 +1,8 @@
 @import 'variables';
 @import '../node_modules/font-awesome/scss/font-awesome.scss';
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import "~ag-grid/dist/styles/ag-grid.css";
-@import "~ag-grid/dist/styles/ag-theme-balham.css";
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -273,7 +273,7 @@ accordion-group .acordion-icon:hover  {
 /* global buttons */
 .btn,
 .btn:visited {
-  margin: 0 5px;
+  margin: 0 10px 10px 0px !important;
   text-decoration: none;
   transition: all .2s;
   border: none;
@@ -489,6 +489,17 @@ tab {
       font-weight: 500;
   }
 }
+ngb-tabset {
+  
+  .tab-content {
+    padding: 30px 15px;
+    width: 100%;
+    margin-bottom: 10px;
+    border: 1px #ccc solid;
+    border-top: none;
+    color: #000;
+  }  
+}
 
 // fieldset tables for form elements
 
@@ -581,6 +592,10 @@ tab {
   }
 }
 
+.no-filter-header > .ag-cell-label-container > .ag-header-cell-label {
+  width: 100% !important;
+}
+
 .ag-cell-light-green {
   background-color: $light-green;
   color: $black;
@@ -646,6 +661,14 @@ tab {
   color: $black;
 }
 
+.ag-cell-white-select {
+  background-color: $white;
+  color: $black;
+  &:hover {
+    background-color: $blue-select;
+  }
+}
+
 .ag-cell-yellow {
   background-color: $yellow;
   color: $black;
@@ -704,6 +727,14 @@ tab {
     }
 }
 
+// hack for dropdown width in R4-A ag-grid 
+
+.r4a-grid {
+  .ag-theme-balham .ag-rich-select .ag-rich-select-list {
+   width: 400px;
+  }
+}
+
 //hack for top header of actuals tables
 // hack for top header of PR table
 
@@ -719,6 +750,14 @@ tab {
   width: 100%;
 }
 
+.ag-root.ag-unselectable.ag-layout-auto-height {
+  z-index: 1;
+}
+
+.ag-cell-popup-editing {
+  position: relative;
+}
+
 .ag-theme-balham .ag-header-cell-label .ag-header-cell-text,
 .ag-header-cell,
 .ag-header-group-cell,
@@ -728,6 +767,7 @@ tab {
   padding-left: 2px !important;
   padding-right: 2px !important;
   text-align: center !important;
+  margin: 0 auto !important;
 }
 
 .ag-header-group-cell-label {
@@ -739,6 +779,12 @@ tab {
   display: grid !important;
   text-align: center !important;
   padding-right: 2px !important;
+  margin: 0 auto !important;
+}
+
+// fix for blue header positions
+.ag-theme-balham .ag-numeric-header .ag-header-cell-label {
+  float: none !important;
 }
 
 // fix for extra row space under Set TOA for CBDP Community ($K) table

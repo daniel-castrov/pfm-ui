@@ -3,8 +3,8 @@ import {Execution, ExecutionLine, ExecutionService, SpendPlan, SpendPlanService}
 import {Notify} from '../../../utils/Notify'
 import {UserUtils} from '../../../services/user.utils'
 import {AgGridNg2} from 'ag-grid-angular';
-import {GridOptions} from 'ag-grid';
-import {forkJoin} from 'rxjs/observable/forkJoin';
+import {GridOptions} from 'ag-grid-community';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {Router} from "@angular/router";
 import {AppHeaderComponent} from "../../header/app-header/app-header.component";
 

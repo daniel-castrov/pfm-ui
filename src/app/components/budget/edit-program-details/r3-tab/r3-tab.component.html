@@ -1,0 +1,9 @@
+<div class="row mb-4">
+  <div class="col-12">
+    <span class="mr-2">
+      <r3-summary [entries]="r3Data?.entries"></r3-summary>
+      <r3-entries [entries]="r3Data?.entries" (cellChanged)="refresh()"></r3-entries>
+      <r3-remarks [r3Data]="r3Data"></r3-remarks>
+    </span>
+  </div>
+</div>

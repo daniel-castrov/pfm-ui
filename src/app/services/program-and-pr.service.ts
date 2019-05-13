@@ -1,18 +1,18 @@
-import {PRService} from './../generated/api/pR.service';
 import {Program} from './../generated/model/program';
-import {ProgramsService} from './../generated/api/programs.service';
 import {Injectable} from '@angular/core';
-import {ProgramType} from "../generated";
+import {MRDBService, ProgramService, ProgramType} from '../generated';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProgramAndPrService {
 
-  constructor( private programsService: ProgramsService,
-               private prService: PRService ) {}
+  constructor( private mrdbService: MRDBService,
+               private programService: ProgramService ) {}
 
   async programs(): Promise<Program[]> {
-    const programs: Program[] = (await this.programsService.getAll().toPromise()).result;
+    const programs: Program[] = (await this.mrdbService.getAll().toPromise()).result;
     return this.sort(programs);
   }
 
@@ -22,12 +22,12 @@ export class ProgramAndPrService {
   }
 
   async programsByCommunity(communityId:string): Promise<Program[]> {
-    const programs: Program[] = (await this.programsService.getProgramsByCommunity(communityId).toPromise()).result;
+    const programs: Program[] = (await this.mrdbService.getProgramsByCommunity(communityId).toPromise()).result;
     return this.sort(programs);
   }
 
   async programRequests(containerId: string): Promise<Program[]> {
-    const prs: Program[] = (await this.prService.getByContainer(containerId).toPromise()).result;
+    const prs: Program[] = (await this.programService.getByContainer(containerId).toPromise()).result;
     return this.sort(prs);
   }
 
@@ -37,7 +37,7 @@ export class ProgramAndPrService {
   }
 
   async allProgramRequests(): Promise<Program[]> {
-    const prs: Program[] = (await this.prService.getPrsForAllPoms().toPromise()).result;
+    const prs: Program[] = (await this.programService.getPrsForAllPoms().toPromise()).result;
     return this.sort(prs);
   }
 

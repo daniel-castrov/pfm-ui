@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core'
-import {GridOptions} from 'ag-grid';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
 import {FormatterUtil} from "../../../utils/formatterUtil";
 import {
@@ -505,12 +505,24 @@ export class SpendPlansTabComponent implements OnInit {
     });
   }
 
+  get savable(): boolean {
+    var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
+    var ok: boolean = !plan.submitted;
+
+    // also, we can't submit for "After Appropriation" until we have been appropriated
+    if (!this.showBaseline) {
+      ok = ok && this.exeline.appropriated;
+    }
+
+    return ok;
+  }
+
   @Input() get submitable(): boolean {
     // basically, we can submit a plan if our toggle is on that plan,
     // and we don't already have an id for it (it's already been saved)
 
     var plan: SpendPlan = this.plans[this.showBaseline ? 0 : 1];
-    var ok: boolean = !plan.hasOwnProperty('id');
+    var ok: boolean = !plan.submitted;
 
     // also, we can't submit for "After Appropriation" until we have been appropriated
     if (!this.showBaseline) {
@@ -553,7 +565,7 @@ export class SpendPlansTabComponent implements OnInit {
       if (this.submitable) {
         label = 'Create ' + label;
 
-        if (!this.showBaseline) {
+        if (!this.showBaseline && !this.plans[1].id) {
           this.plans[1] = this.createAfterAppropriationTemplatePlan();
           plan = this.plans[1];
         }
@@ -637,8 +649,9 @@ export class SpendPlansTabComponent implements OnInit {
     this.refreshTableData();
   }
 
-  save() {
+  save(submit: boolean) {
     var newplan: SpendPlan = {
+      submitted: submit,
       monthlies: []
     };
 
@@ -659,26 +672,21 @@ export class SpendPlansTabComponent implements OnInit {
       newplan.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
     }
 
-    this.plansvc.createSpendPlan(this.exeline.id, newplan).subscribe(d => {
-      if (d.error) {
-        Notify.error(d.error);
-      }
-      else {
-        var plan: SpendPlan = d.result;
-        this.plans[this.showBaseline ? 0 : 1] = plan;
+    this.plansvc.createOrUpdateSpendPlan(this.exeline.id, newplan).subscribe(d => {
+      var plan: SpendPlan = d.result;
+      this.plans[this.showBaseline ? 0 : 1] = plan;
 
-        // if this was the baseline that just got saved,
-        // set the values for the after appropriation plan
-        // (just for convenience)
-        if (this.showBaseline) {
-          var sp: SpendPlan = Object.assign({}, plan);
-          delete sp.id;
-          sp.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
-          this.plans[1] = sp;
-        }
-        Notify.success('Spend Plan saved');
-        this.refreshTableData();
+      // if this was the baseline that just got saved,
+      // set the values for the after appropriation plan
+      // (just for convenience)
+      if (this.showBaseline) {
+        var sp: SpendPlan = Object.assign({}, plan);
+        delete sp.id;
+        sp.type = SpendPlan.TypeEnum.AFTERAPPROPRIATION;
+        this.plans[1] = sp;
       }
+      Notify.success('Spend Plan saved');
+      this.refreshTableData();
     });
   }
 

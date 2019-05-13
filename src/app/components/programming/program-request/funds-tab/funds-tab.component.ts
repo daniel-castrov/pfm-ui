@@ -1,33 +1,32 @@
-import {TagsService} from '../../../../services/tags.service';
+import {TagsUtils} from '../../../../services/tags-utils.service';
 import {Program} from '../../../../generated/model/program';
 import {ProgramType} from '../../../../generated/model/programType';
 import {PRUtils} from '../../../../services/pr.utils.service';
 import {AutoValuesService} from './AutoValues.service';
 import {UserUtils} from '../../../../services/user.utils';
-import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
+import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core';
 import {
   Appropriation,
   FundingLine,
   IntMap,
   PBService,
   Pom,
-  ProgramsService,
+  ProgramService,
   ProgramStatus,
-  PRService,
   RolesPermissionsService
-} from '../../../../generated'
-import {AgGridNg2} from "ag-grid-angular";
-import {DataRow} from "./DataRow";
-import {PhaseType} from "../../select-program-request/UiProgramRequest";
-import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import {Validation} from "./Validation";
-import {Notify} from "../../../../utils/Notify";
-import {ViewSiblingsRenderer} from "../../../renderers/view-siblings-renderer/view-siblings-renderer.component";
-import {GridType} from "./GridType";
-import {CellEditor} from "../../../../utils/CellEditor";
-import {NameUtils} from "../../../../utils/NameUtils";
-import {CurrentPhase} from "../../../../services/current-phase.service";
+} from '../../../../generated';
+import {AgGridNg2} from 'ag-grid-angular';
+import {DataRow} from './DataRow';
+import {PhaseType} from '../../select-program-request/UiProgramRequest';
+import {FormatterUtil} from '../../../../utils/formatterUtil';
+import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
+import {Validation} from './Validation';
+import {Notify} from '../../../../utils/Notify';
+import {ViewSiblingsRenderer} from '../../../renderers/view-siblings-renderer/view-siblings-renderer.component';
+import {GridType} from './GridType';
+import {CellEditor} from '../../../../utils/CellEditor';
+import {NameUtils} from '../../../../utils/NameUtils';
+import {CurrentPhase} from '../../../../services/current-phase.service';
 
 @Component({
   selector: 'funds-tab',
@@ -75,12 +74,11 @@ export class FundsTabComponent implements OnChanges {
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
   constructor(private currentPhase: CurrentPhase,
-    private prService: PRService,
+    private programService: ProgramService,
     private pbService: PBService,
     private globalsService: UserUtils,
-    private tagsService: TagsService,
+    private tagsUtils: TagsUtils,
     private autoValuesService: AutoValuesService,
-    private programsService: ProgramsService,
     private rolesvc: RolesPermissionsService ) { }
 
   async ngOnChanges() {
@@ -89,7 +87,7 @@ export class FundsTabComponent implements OnChanges {
     }
     if (this.agGrid && this.agGrid.api.getDisplayedRowCount() === 0) {
       if (this.pr.type === ProgramType.GENERIC) {
-        this.parentPr = (await this.prService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+        this.parentPr = (await this.programService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       }
 
       if( this.pom ){
@@ -116,7 +114,7 @@ export class FundsTabComponent implements OnChanges {
 
   async loadExistingFundingLines() {
     if (this.pr.type === this.ProgramType.GENERIC) {
-      const prParent: Program = (await this.prService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
+      const prParent: Program = (await this.programService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       if (prParent) {
         prParent.fundingLines.forEach(fundingLine => {
           let isDuplicate = this.pr.fundingLines.some(fl => fl.appropriation === fundingLine.appropriation &&
@@ -155,7 +153,7 @@ export class FundsTabComponent implements OnChanges {
 
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
-    this.prService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
+    this.programService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
       response.result.forEach(subprogram => {
         if (this.pr.id !== subprogram.id) {
           subprogram.fundingLines.forEach(fundingLine => {
@@ -495,6 +493,7 @@ export class FundsTabComponent implements OnChanges {
         {
           headerName: 'OA',
           headerTooltip: 'OA',
+          colId: 'OA',
           field: 'fundingLine.opAgency',
           hide: true,
           maxWidth: 65,
@@ -794,7 +793,7 @@ export class FundsTabComponent implements OnChanges {
       if (this.pr.type !== ProgramType.GENERIC) {
         columnsCount--;
       }
-      if (!this.agGrid.columnApi.getColumn('fundingLine.opAgency').isVisible()) {
+      if (!this.agGrid.columnApi.getColumn('OA').isVisible()) {
         columnsCount--;
       }
       return columnsCount;
@@ -814,10 +813,10 @@ export class FundsTabComponent implements OnChanges {
 
 
   private async loadDropdownOptions() {
-    this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-    this.functionalAreas = await this.tagsService.tagAbbreviationsForFunctionalArea()
-    let blins = await this.tagsService.tagAbbreviationsForBlin();
-    let bas = await this.tagsService.tagAbbreviationsForBa();
+    this.appropriations = await this.tagsUtils.tagAbbreviationsForAppropriation();
+    this.functionalAreas = await this.tagsUtils.tagAbbreviationsForFunctionalArea()
+    let blins = await this.tagsUtils.tagAbbreviationsForBlin();
+    let bas = await this.tagsUtils.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
   }
 
@@ -936,7 +935,7 @@ export class FundsTabComponent implements OnChanges {
   delete(index) {
     let selectedFundingLine = this.data[index + 1].fundingLine;
     let isDeletable = true;
-    this.prService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
+    this.programService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.urlEncode(this.pr.shortName)).subscribe(data => {
       let subPrograms: Program[] = data.result;
       isDeletable = !subPrograms.some(sp => sp.fundingLines.some(fl => fl.appropriation === selectedFundingLine.appropriation &&
         fl.baOrBlin === selectedFundingLine.baOrBlin &&

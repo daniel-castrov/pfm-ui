@@ -10,8 +10,7 @@ declare const $: any;
 @Component({
   selector: 'set-epp',
   templateUrl: './set-epp.component.html',
-  styleUrls: ['./set-epp.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./set-epp.component.scss']
 })
 
 export class SetEppComponent implements OnInit {

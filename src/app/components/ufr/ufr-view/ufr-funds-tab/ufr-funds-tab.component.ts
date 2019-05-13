@@ -1,23 +1,32 @@
-import {TagsService, TagType} from '../../../../services/tags.service';
-import {Component, Input, OnChanges, ViewChild, ViewEncapsulation} from '@angular/core'
-import {FundingLine, PBService, Pom, POMService, ProgramsService, PRService, RolesPermissionsService, ShortyType, UFR} from '../../../../generated'
-import {FormatterUtil} from "../../../../utils/formatterUtil";
-import {AgGridNg2} from "ag-grid-angular";
-import {DeleteRenderer} from "../../../renderers/delete-renderer/delete-renderer.component";
-import {AutoValuesService} from "../../../programming/program-request/funds-tab/AutoValues.service";
-import {DataRow} from "./DataRow";
+import {TagsUtils} from '../../../../services/tags-utils.service';
+import {Component, Input, OnChanges, ViewChild} from '@angular/core';
+import {
+  FundingLine,
+  MRDBService,
+  PBService,
+  Pom,
+  POMService,
+  ProgramService,
+  RolesPermissionsService,
+  ShortyType,
+  UFR
+} from '../../../../generated';
+import {FormatterUtil} from '../../../../utils/formatterUtil';
+import {AgGridNg2} from 'ag-grid-angular';
+import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
+import {AutoValuesService} from '../../../programming/program-request/funds-tab/AutoValues.service';
+import {DataRow} from './DataRow';
 import {PRUtils} from '../../../../services/pr.utils.service';
-import {FundingLinesUtils} from "../../../../utils/FundingLinesUtils";
-import {Validation} from "../../../programming/program-request/funds-tab/Validation";
-import {Notify} from "../../../../utils/Notify";
-import {PhaseType} from "../../../programming/select-program-request/UiProgramRequest";
-import {GridType} from "../../../programming/program-request/funds-tab/GridType";
+import {FundingLinesUtils} from '../../../../utils/FundingLinesUtils';
+import {Validation} from '../../../programming/program-request/funds-tab/Validation';
+import {Notify} from '../../../../utils/Notify';
+import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
+import {GridType} from '../../../programming/program-request/funds-tab/GridType';
 
 @Component({
   selector: 'ufr-funds-tab',
   templateUrl: './ufr-funds-tab.component.html',
-  styleUrls: ['./ufr-funds-tab.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./ufr-funds-tab.component.scss']
 })
 export class UfrFundsComponent implements OnChanges {
   @Input() ufr: UFR;
@@ -52,12 +61,23 @@ export class UfrFundsComponent implements OnChanges {
   overlayNoRowsTemplate = '<div style="margin-top: 30px;">No Rows To Show</div>'
   components = { numericCellEditor: this.getNumericCellEditor() };
 
+  sideBar = {
+    toolPanels: [
+      {
+        id: 'columns',
+        labelDefault: 'Columns',
+        toolPanel: 'agColumnsToolPanel',
+      }
+    ],
+    hiddenByDefault: false
+  }
+
   constructor(private pomService: POMService,
               private pbService: PBService,
-              private prService: PRService,
-              private programService: ProgramsService,
+              private programService: ProgramService,
+              private mrdbService: MRDBService,
               private autoValuesService: AutoValuesService,
-              private tagsService: TagsService,
+              private tagsUtils: TagsUtils,
               private rolesvc: RolesPermissionsService) {}
 
  async ngOnChanges() {
@@ -85,7 +105,7 @@ export class UfrFundsComponent implements OnChanges {
   initCurrentFunding() {
     let data: Array<DataRow> = [];
     if (this.ufr.shortyType === ShortyType.MRDB_PROGRAM) {
-      this.programService.getProgramById(this.ufr.shortyId).subscribe(pr => {
+      this.mrdbService.getProgramById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
         pr.result.fundingLines.forEach(fundingLine => {
           let pomRow: DataRow = {fundingLine: fundingLine,
@@ -97,7 +117,7 @@ export class UfrFundsComponent implements OnChanges {
         this.initRevisedChanges();
       });
     } else if (this.ufr.shortyType === ShortyType.PR) {
-      this.prService.getById(this.ufr.shortyId).subscribe(pr => {
+      this.programService.getById(this.ufr.shortyId).subscribe(pr => {
         this.shorty = pr.result;
         pr.result.fundingLines.forEach(fundingLine => {
           let pomRow: DataRow = {fundingLine: fundingLine,
@@ -492,10 +512,10 @@ export class UfrFundsComponent implements OnChanges {
   }
 
   private async loadDropdownOptions() {
-    this.appropriations = await this.tagsService.tagAbbreviationsForAppropriation();
-    this.functionalAreas = await this.tagsService.tagAbbreviationsForFunctionalArea()
-    let blins = await this.tagsService.tagAbbreviationsForBlin();
-    let bas = await this.tagsService.tagAbbreviationsForBa();
+    this.appropriations = await this.tagsUtils.tagAbbreviationsForAppropriation();
+    this.functionalAreas = await this.tagsUtils.tagAbbreviationsForFunctionalArea()
+    let blins = await this.tagsUtils.tagAbbreviationsForBlin();
+    let bas = await this.tagsUtils.tagAbbreviationsForBa();
     this.baOrBlins = blins.concat(bas);
     this.isDisabledAddFundingLines = !this.canAddMoreFundingLines();
   }

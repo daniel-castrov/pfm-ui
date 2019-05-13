@@ -49,103 +49,26 @@
             </select>
           </span>
         </div>
+
         <!-- Get the selectedUserRoleResource -->
         <div class="col-2">
           <div class="controls mt-4">
-            <button class="btn btn-primary" [disabled]="!okNext()" (click)="getURR()">Next</button>
+            <button class="btn btn-primary" [disabled]="!okNext()" (click)="next()">Next</button>
           </div>
         </div>
       </div>
 
-      <div *ngIf="isVisible">
-        <!-- Info -->
-        <p class="role-controls" >
-          <span class="role-controls" *ngIf="isNewUserRole">
-            New role - <strong>{{selectedRole.name}}</strong> for <strong>{{selectedUserName}}</strong>.
-          </span>
-          <span class="role-controls" *ngIf="!isNewUserRole">
-            The <strong>{{selectedRole.name}}</strong> role has already been assiged to <strong>{{selectedUserName}}</strong>.
-          </span>
-        </p>
-
-        <!-- Delete existing -->
-        <div *ngIf="!isNewUserRole">
-          <fieldset>
-            <legend>Remove a Role</legend>
-            <p class="role-controls">
-              Take the <strong>{{selectedRole.name}}</strong> role away from <strong>{{selectedUserName}}</strong>.
-            </p>
-            <div class="controls pull-right">
-              <button class="btn btn-primary" (click)="commitUnassign()">
-                <span>Remove</span>
-              </button>
-            </div>
-          </fieldset>
-        </div>
-
-        <!-- Some UserRoleResources can be modified -->
-        <fieldset *ngIf="canChangeResources && !isOrgBased">
-          <legend>
-            <span *ngIf="isNewUserRole===true">Assign</span>
-            <span *ngIf="isNewUserRole===false">Modify</span>
-            a Role
-          </legend>
-          <p class="role-controls">
-              Select Programs to access for the <strong>{{selectedRole.name}}</strong> for <strong>{{selectedUserName}}</strong>.
-            </p>
-          <div class="filter-programs">
-            <label>Filter Available Programs</label>
-            <select name="orgSelector" class="form-control-sm dropdown-width"
-              [(ngModel)]="selectedOrganization" (change)="filterByOrg()">
-              <option value=""></option>
-              <option *ngFor="let org of organizations" [ngValue]="org">
-                {{ org.abbreviation }}
-              </option>
-            </select>
-          </div>  
-          <div class="program-options">
-            <dual-list [source]="filteredAvailablePrograms" [(destination)]="assignedPrograms" [key]="key" [display]="display" [sort]="keepSorted"
-              [filter]="filter" height="265px" [format]="format" [disabled]="disabled">
-            </dual-list>
-          </div>
-          <br/>
-          <div class="controls pull-right">
-            <button class="btn btn-primary" (click)="commit()">
-              <span *ngIf="isNewUserRole===true">Assign</span>
-              <span *ngIf="isNewUserRole===false">Modify</span>
-            </button>
-          </div>
-        </fieldset>
-
-        <!-- Some UserRoleResources CANNOT be modified -->
-        <fieldset *ngIf="!canChangeResources && isNewUserRole && !isOrgBased">
-          <legend>Assign a Role</legend>
-          <p class="role-controls" *ngIf="!canChangeResources">
-            Resources for the <strong>{{selectedRole.name}}</strong> role are predefined and cannot be modified.
-          </p>
-          <div class="controls pull-right">
-            <button class="btn btn-primary" (click)="commit()">
-              <span>Assign</span>
-            </button>
-          </div>
-        </fieldset>
-
-        <!-- Some UserRoleResources are based only on an Organizations -->
-        <fieldset *ngIf="isOrgBased && isNewUserRole">
-          <legend>
-            <span>Assign a Role</span>
-          </legend>
-          <p class="role-controls" *ngIf="!canChangeResources">
-              Allow <strong>{{selectedUserName}}</strong> access all Programs in the <strong>{{selectedOrganization?.abbreviation}}</strong> Organization for the <strong>{{selectedRole.name}}</strong> role.
-          </p>
-          <div class="controls pull-right">
-            <button class="btn btn-primary" (click)="commit()" [disabled]="!selectedOrganization">
-              <span *ngIf="isNewUserRole===true">Assign</span>
-            </button>
-          </div>
-        </fieldset>
-
+      <div *ngIf="showRoleBuilder">
+        <app-role-builder
+          [allroles]="roles"
+          [selectedCommunity]="selectedCommunity"
+          [selectedRole]="selectedRole"
+          [selectedUser]="selectedUser"
+          (isRequest)=false
+          (okUrr)="okUrr($event)">
+        </app-role-builder>
       </div>
+
     </div>
   </div>
 </div>

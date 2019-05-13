@@ -1,9 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, Subject} from 'rxjs';
-import {merge} from 'rxjs/observable/merge';
+import {merge, Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {TagsService} from "../../../../services/tags.service";
+import {TagsUtils} from '../../../../services/tags-utils.service';
 
 @Component({
   selector: 'reason-code',
@@ -28,7 +27,7 @@ export class ReasonCodeComponent implements OnInit {
     );
   };
 
-  constructor( private tagService: TagsService ) {}
+  constructor( private tagService: TagsUtils ) {}
 
   ngOnInit() {
     this.tagService.tagAbbreviationsForReasonCode().then(tags => {

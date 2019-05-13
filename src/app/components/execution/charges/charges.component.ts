@@ -1,9 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core'
-import {ExecutionService} from '../../../generated/api/execution.service'
-import {Execution} from '../../../generated/model/execution'
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ExecutionService} from '../../../generated/api/execution.service';
+import {Execution} from '../../../generated/model/execution';
 import {ExecutionDropDown, ExecutionEventData} from '../../../generated';
-import {ActivatedRoute, Router} from '@angular/router'
-import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ActivatedRoute, Router} from '@angular/router';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 import {ExecutionLineWrapper} from '../model/execution-line-wrapper';
 import {ExecutionTableValidator} from '../model/execution-table-validator';
 import {ExecutionLineTableComponent} from '../execution-line-table/execution-line-table.component';
@@ -25,24 +25,50 @@ export class ChargesComponent implements OnInit {
   private subtypes: ExecutionDropDown[];
   private etype: ExecutionDropDown;
   private type: string;
-  private showotherN: boolean = true;
-  private showotherT: boolean = true;
+  private showotherN = true;
+  private showotherT = true;
   private fileid: string;
   private isUploading: boolean;
-  private hasAppropriation: boolean = false;
+  private hasAppropriation = false;
 
-  private validator: ExecutionTableValidator = function (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] {
-    var okays: boolean[] = [];
+  private validator: ExecutionTableValidator = (x: ExecutionLineWrapper[], totalamt: boolean): boolean[] => {
+    const okays: boolean[] = [];
     x.forEach(elw => {
-      okays.push(elw.amt != 0 && elw.line && elw.line.released
-        ? elw.amt <= elw.line.released
-        : true);
-    });
+        if (elw.line.programName !== 'totals-row') {
+          let validInput = true;
+          const positiveImpact: boolean[] = [];
+          if (this.etype.inputValue === 'POSITIVE') {
+            validInput = elw.amt >= 0;
+          }
+          if (this.etype.inputValue === 'NEGATIVE') {
+            validInput = elw.amt <= 0;
+          }
+          this.etype.impact.forEach(v => {
+            if (v === 'TOA') {
+              const result = elw.line.toa + elw.amt;
+              positiveImpact.push(result >= 0);
+            }
+            if (v === 'RELEASED') {
+              const result = elw.line.released + elw.amt;
+              positiveImpact.push(result >= 0);
+            }
+            if (v === 'WITHHOLD') {
+              const result = elw.line.withheld + elw.amt;
+              positiveImpact.push(result >= 0);
+            }
+          });
+          okays.push(elw.amt !== 0 && elw.line
+            ? validInput && !positiveImpact.some(v => v === false)
+            : true);
+        }
+      }
+    );
     return okays;
-  };
+  }
 
   constructor(private exesvc: ExecutionService, private route: ActivatedRoute,
-    private router: Router ) { }
+              private router: Router) {
+  }
 
   ngOnInit() {
     this.route.params.subscribe(data => {
@@ -69,7 +95,7 @@ export class ChargesComponent implements OnInit {
   }
 
   submit() {
-    var et: ExecutionEventData = {
+    const et: ExecutionEventData = {
       toIdAmtLkp: {},
       type: this.etype.subtype,
       reason: this.reason
@@ -88,29 +114,19 @@ export class ChargesComponent implements OnInit {
     }
 
     this.exesvc.createExecutionEvent(this.phase.id, et).subscribe(d => {
-        this.router.navigate(['/funds-update']);
+      this.router.navigate(['/funds-update']);
     });
   }
 
   updatedropdowns() {
-    this.subtypes = this.allsubtypes.filter(x => (x.type == this.type));
-    this.etype = this.subtypes[0];
-    this.updatedropdowns2();
-    if (this.type === 'EXE_CONGRESSIONAL_ACTION'){
-      if (this.hasAppropriation) {
-        if (this.phase.status === 'OPEN') {
-          this.subtypes = this.subtypes.filter(st => st.subtype !== 'CRA_CONGRESSIONAL_DIRECTED_TRANSGER')
-        } else {
-          this.subtypes = this.subtypes.filter(st => st.subtype === 'CRA_CONGRESSIONAL_RESCISSION')
-        }
-      } else {
-        if (this.phase.status === 'OPEN') {
-          this.subtypes = this.subtypes.filter(st => st.subtype !== 'CRA_CONGRESSIONAL_RESCISSION')
-        } else {
-          this.subtypes = this.subtypes.filter(st => st.subtype === 'CRA_CONGRESSIONAL_DIRECTED_TRANSGER')
-        }
+    this.subtypes = this.allsubtypes.filter(x => (x.type === this.type));
+    if (this.type === 'EXE_CONGRESSIONAL_ACTION') {
+      if (!this.hasAppropriation) {
+        this.subtypes = this.subtypes.filter(st => st.subtype !== 'CRA_CONGRESSIONAL_RESCISSION');
       }
     }
+    this.etype = this.subtypes[0];
+    this.updatedropdowns2();
   }
 
   updatedropdowns2() {
@@ -118,13 +134,11 @@ export class ChargesComponent implements OnInit {
       this.other = undefined;
       this.showotherN = false;
       this.showotherT = false;
-    }
-    else if ('EXE_OUSDC_ACTION' === this.etype.type) {
+    } else if ('EXE_OUSDC_ACTION' === this.etype.type) {
       this.other = undefined;
       this.showotherN = false;
       this.showotherT = true;
-    }
-    else { // EXE_APPROPRIATION_ACTION
+    } else { // EXE_APPROPRIATION_ACTION
       // appropriation action is sometimes an N and sometimes a T
 
       this.showotherN = (this.etype.subtype === 'APPR_SECTION' || this.etype.subtype === 'APPR_FFRDC');

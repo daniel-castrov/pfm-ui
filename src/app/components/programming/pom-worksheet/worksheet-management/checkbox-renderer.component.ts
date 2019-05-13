@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
-import {ICellRendererParams} from "ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer";
+import {ICellRendererParams} from "ag-grid-community/dist/lib/rendering/cellRenderers/iCellRenderer";
 import {StateService} from "./state.service";
 
 @Component({

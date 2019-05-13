@@ -24,8 +24,14 @@ export class LibraryComponent implements OnInit {
 
   constructor(private libraryService: LibraryService) {}
 
-  ngOnInit() {
-    this.columnDefs = [
+  async ngOnInit() {
+    this.columnDefs = this.getColumnDefs();
+    this.data = (await this.libraryService.getAll().toPromise() ).result
+    this.agGrid.api.sizeColumnsToFit();
+  }
+
+  getColumnDefs(): any{
+    let coldefs= [
       {
         headerName: 'File Area',
         filter: 'agTextColumnFilter',
@@ -79,10 +85,7 @@ export class LibraryComponent implements OnInit {
         cellStyle: {'text-align': 'center'}
       }
     ];
-    this.libraryService.getAll().subscribe(data => {
-      this.data = data.result;
-      this.agGrid.api.sizeColumnsToFit();
-    })
+    return coldefs;
   }
 
   onGridReady(params) {

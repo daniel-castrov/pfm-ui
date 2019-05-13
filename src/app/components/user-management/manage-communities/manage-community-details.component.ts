@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {Observable} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AbstractControl, FormControl, ValidationErrors, Validators} from '@angular/forms';
 import {User} from '../../../generated/model/user';
@@ -8,11 +7,12 @@ import {CommunityService} from '../../../generated/api/community.service';
 import {Community} from '../../../generated/model/community';
 import {Organization} from '../../../generated/model/organization';
 import {UserService} from '../../../generated/api/user.service';
-import {Role} from '../../../generated/model/role'
+import {Role} from '../../../generated/model/role';
 import {RoleService} from '../../../generated/api/role.service';
-import {UserRoleResource} from '../../../generated/model/userRoleResource'
+import {UserRoleResource} from '../../../generated/model/userRoleResource';
 import {UserRoleResourceService} from '../../../generated/api/userRoleResource.service';
 import {OrganizationService} from '../../../generated/api/organization.service';
+import {forkJoin} from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-manage-community-details',
@@ -61,7 +61,7 @@ export class MamageCommunityDetailsComponent {
 
     let result: RestResult;
 
-    Observable.forkJoin([
+    forkJoin([
       this.communityService.getById(this.communityid),
       this.userService.getByCommunityIdAndRoleName(this.communityid,"User_Approver"),
       this.organizationService.getByCommunityId(this.communityid)
