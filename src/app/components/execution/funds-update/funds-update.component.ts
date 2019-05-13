@@ -75,7 +75,6 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     this.agOptions = <GridOptions>{
-      enableSorting: true,
       enableFilter: true,
       gridAutoHeight: true,
       pagination: true,
@@ -87,7 +86,8 @@ export class FundsUpdateComponent implements OnInit {
         enabled: programLinkEnabled
       },
       defaultColDef: {
-        resizable: false
+        resizable: false,
+        sorting: true
       },
       columnDefs: [
         {

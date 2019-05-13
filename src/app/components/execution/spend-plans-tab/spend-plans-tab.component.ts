@@ -209,7 +209,6 @@ export class SpendPlansTabComponent implements OnInit {
 
     this.agOptions = <GridOptions>{
       enableColResize: true,
-      enableSorting: false,
       enableFilter: false,
       gridAutoHeight: true,
       pagination: true,

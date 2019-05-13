@@ -217,7 +217,7 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     this.agOptions = <GridOptions>{
-      enableSorting: true,
+      defaultColDef: { sorting: true },
       enableFilter: true,
       gridAutoHeight: true,
       pagination: true,

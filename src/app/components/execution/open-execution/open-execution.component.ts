@@ -30,7 +30,7 @@ export class OpenExecutionComponent implements OnInit {
     var my: OpenExecutionComponent = this;
 
     this.agOptions = <GridOptions>{
-      enableSorting: true,
+      defaultColDef: { sorting: true },
       enableFilter: true,
       gridAutoHeight: true,
       pagination: true,

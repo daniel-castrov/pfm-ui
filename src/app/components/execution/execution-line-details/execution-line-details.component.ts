@@ -37,7 +37,7 @@ export class ExecutionLineDetailsComponent implements OnInit {
     var my: ExecutionLineDetailsComponent = this;
 
     this.agOptions = <GridOptions>{
-      enableSorting: true,
+      defaultColDef: { sorting: true },
       enableFilter: true,
       gridAutoHeight: true,
       pagination: true,
