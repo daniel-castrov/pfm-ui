@@ -51,35 +51,11 @@
                 }
               ]
             },
-            "dev1": {
+            "dev": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev1.ts"
-                }
-              ]
-            },
-            "dev2": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev2.ts"
-                }
-              ]
-            },
-            "demo1": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.demo1.ts"
-                }
-              ]
-            },
-            "demo2": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.demo2.ts"
+                  "with": "src/environments/environment.pfmdev.ts"
                 }
               ]
             }
@@ -94,17 +70,8 @@
             "production": {
               "browserTarget": "jscbis-angular:build:production"
             },
-            "dev1": {
-              "browserTarget": "jscbis-angular:build:dev1"
-            },
-            "dev2": {
-              "browserTarget": "jscbis-angular:build:dev2"
-            },
-            "demo1": {
-              "browserTarget": "jscbis-angular:build:demo1"
-            },
-            "demo2": {
-              "browserTarget": "jscbis-angular:build:demo2"
+            "dev": {
+              "browserTarget": "jscbis-angular:build:dev"
             }
           }
         },
