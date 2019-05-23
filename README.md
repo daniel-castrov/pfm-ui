@@ -1,4 +1,4 @@
-## JSCBIS Angular Client - User Interface
+## PFM Angular Client - User Interface
 
 ### Directions for developers working with this angular-cli app
 
@@ -8,19 +8,21 @@ You will need the following things properly installed on your computer.
 
 * [Node.js](https://nodejs.org/)
 
-We recommend installing Node.js through https://nodejs.org/en/
+We recommend installing Node.js via NVM at https://github.com/nvm-sh/nvm
 
+The system is tested on Node v10.15.3
+ 
 #### Installation
 
-* `git clone git@bitbucket.org:pexchange/jscbis.git`
-* change into the directory `cd client`
-* `swagger-codegen.sh`
+* `git clone git@bitbucket.org:pexchange/pfm-ui.git`
+* change into the directory `cd pfm-ui`
+* `./swagger-codegen.sh`
 * `npm install`
-* `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* `npm run-script ng s -- -c dev` to use the AWS backend. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-# JSCBIS Angular Client
+# PFM Angular Client
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.1.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
 
 ## Code scaffolding
 
@@ -42,3 +44,7 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+# Certificates
+PFM currently enforces bi-directional authentication via certificates. There are a number of certificates available in the `support/certificates` directory. Please install
+all of these into Chrome or Chromium to access the system. "Bill Andrew" (contractor3) and "Beth Carrie" (gov3) are the most useful certificates.
