@@ -5,5 +5,5 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'https://pfmdev1.pxalphaproject.com/jscbis'
+    apiUrl: 'https://pfmdev1.pxalphaproject.com/pfm-server'
 };

@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:8445/jscbis'
+  apiUrl: 'https://localhost:8445/pfm-server'
 };

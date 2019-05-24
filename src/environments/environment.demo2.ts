@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://ec2-54-227-108-156.compute-1.amazonaws.com:8445/jscbis',
+  apiUrl: 'https://ec2-54-227-108-156.compute-1.amazonaws.com:8445/pfm-server',
 };
