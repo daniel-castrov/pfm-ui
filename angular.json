@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "jscbis-angular": {
+    "pfm-angular": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -55,7 +55,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.pfmdev.ts"
+                  "with": "src/environments/environment.dev.ts"
                 }
               ]
             }
@@ -64,21 +64,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "jscbis-angular:build"
+            "browserTarget": "pfm-angular:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "jscbis-angular:build:production"
+              "browserTarget": "pfm-angular:build:production"
             },
             "dev": {
-              "browserTarget": "jscbis-angular:build:dev"
+              "browserTarget": "pfm-angular:build:dev"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "jscbis-angular:build"
+            "browserTarget": "pfm-angular:build"
           }
         },
         "test": {
@@ -120,7 +120,7 @@
         }
       }
     },
-    "jscbis-angular-e2e": {
+    "pfm-angular-e2e": {
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -129,7 +129,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "jscbis-angular:serve"
+            "devServerTarget": "pfm-angular:serve"
           }
         },
         "lint": {
@@ -146,7 +146,7 @@
       }
     }
   },
-  "defaultProject": "jscbis-angular",
+  "defaultProject": "pfm-angular",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
