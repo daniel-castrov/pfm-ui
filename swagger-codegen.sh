@@ -5,4 +5,5 @@ java -jar swagger/bin/swagger-codegen-cli-2.3.1.jar \
     -i swagger/swagger.yaml \
     -o src/app/generated \
     --lang typescript-angular \
-    --template-dir swagger/templates
+    --template-dir swagger/templates \
+    -c swagger/swagger-codegen.options
