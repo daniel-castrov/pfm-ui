@@ -1,17 +1,7 @@
 <ag-grid-angular #agGrid
   class="ag-theme-balham import-actuals-table"
+  domLayout="autoHeight"
   [gridOptions]="agOptions"
-  [enableSorting]="true"
-  [pivotMode]="false"
-  [enableFilter]="true"
-  [gridAutoHeight]="true"
   [rowData]="data" 
-  [columnDefs]="columnDefs"
-  [enableColResize]="true"
-  [toolPanelSuppressSideButtons]="true"
-  [suppressDragLeaveHidesColumns]="true"
-  [suppressMovableColumns]="true"
-  [frameworkComponents]="frameworkComponents"
-  [context]="context"
   (gridReady) = "onGridReady($event)">
 </ag-grid-angular>

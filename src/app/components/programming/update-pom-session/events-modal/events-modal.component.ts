@@ -6,6 +6,7 @@ import {Notify} from "../../../../utils/Notify";
 import {ValueChangeRenderer} from "../../../renderers/value-change-renderer/value-change-renderer.component";
 import {ViewEventsRenderer} from "../../../renderers/view-events-renderer/view-events-renderer.component";
 import {CheckboxCellRenderer} from "../../../renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
+import { GridOptions } from 'ag-grid-community';
 
 declare const $: any;
 
@@ -31,9 +32,23 @@ export class EventsModalComponent {
     viewEventsRenderer: ViewEventsRenderer,
     checkboxCellRenderer: CheckboxCellRenderer};
   context = { parentComponent: this };
+  private agOptions: GridOptions;
 
   constructor( private workspaceService: WorkspaceService,
-               private userService: UserService ) {}
+               private userService: UserService ) {
+    this.agOptions= <GridOptions>{
+      defaultColDef:{
+        sortable: true,
+        filter: true        
+      },
+      pagination: true,
+      paginationPageSize: 15,
+      masterDetail: true,
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      suppressPaginationPanel: true,      
+    }
+  }
 
 
   async viewEvents(params) {
@@ -106,7 +121,6 @@ export class EventsModalComponent {
         let colDef = {
           headerName: columnKey,
           colId: key,
-          suppressToolPanel: true,
           cellRenderer: 'valueChangeRenderer',
           cellClass: ['funding-line-default']
         };
@@ -120,7 +134,6 @@ export class EventsModalComponent {
         frameworkComponents: this.frameworkComponents,
         context: this.context,
         gridAutoHeight: true,
-        toolPanelSuppressSideButtons: true,
         onGridReady(params) {
           params.api.sizeColumnsToFit();
         }

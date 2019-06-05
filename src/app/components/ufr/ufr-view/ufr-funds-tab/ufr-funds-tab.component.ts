@@ -22,6 +22,7 @@ import {Validation} from '../../../programming/program-request/funds-tab/Validat
 import {Notify} from '../../../../utils/Notify';
 import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 import {GridType} from '../../../programming/program-request/funds-tab/GridType';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'ufr-funds-tab',
@@ -45,6 +46,8 @@ export class UfrFundsComponent implements OnChanges {
   private columnKeys;
   private shorty: any;
   private ismgr: boolean = false;
+  private agOptions: GridOptions;
+  private agOptionsProposedChanges: GridOptions;
 
   defaultColumnDefs = [];
   currentFundingColumnDefs = [];
@@ -67,10 +70,18 @@ export class UfrFundsComponent implements OnChanges {
         id: 'columns',
         labelDefault: 'Columns',
         toolPanel: 'agColumnsToolPanel',
+        toolPanelParams: {
+          suppressRowGroups: true,
+          suppressValues: true,
+          suppressPivotMode: true,
+          suppressPivots: true,
+          suppressColumnFilter: true,
+          suppressColumnSelectAll: true
+        }
       }
     ],
     hiddenByDefault: false
-  }
+  };
 
   constructor(private pomService: POMService,
               private pbService: PBService,
@@ -78,7 +89,22 @@ export class UfrFundsComponent implements OnChanges {
               private mrdbService: MRDBService,
               private autoValuesService: AutoValuesService,
               private tagsUtils: TagsUtils,
-              private rolesvc: RolesPermissionsService) {}
+              private rolesvc: RolesPermissionsService) {
+    this.agOptions = <GridOptions>{           
+      suppressMovableColumns: true,
+      suppressRowTransform: true
+    }                  
+
+    this.agOptionsProposedChanges = <GridOptions>{
+      defaultColDef: {
+        filter: false
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true
+    }
+  }
 
  async ngOnChanges() {
     this.columnKeys = [

@@ -8,6 +8,7 @@ import {Program, ProgramService, ProgramType} from "../../../../generated";
 import {NameUtils} from "../../../../utils/NameUtils";
 import {CurrentPhase} from "../../../../services/current-phase.service";
 import { FundingRateRenderer } from '../../../renderers/funding-rate-renderer/funding-rate-renderer.component';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'program-requests',
@@ -28,6 +29,7 @@ export class ProgramsComponent implements OnChanges {
   // used only during PR deletion
   private idToDelete: string;
   public nameToDelete: string;
+  private agOptions: GridOptions;
   private menuTabs = ['filterMenuTab'];
   autoGroupColumnDef = {
     headerName: "Program",
@@ -40,19 +42,29 @@ export class ProgramsComponent implements OnChanges {
 
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   rowData = [];
-  context: any;
   columnDefs = [];
   groupDefaultExpanded = -1;
-
-  frameworkComponents = {
-    summaryProgramCellRenderer: SummaryProgramCellRenderer,
-    fundingRateRenderer: FundingRateRenderer,
-  };
 
   constructor( private programService: ProgramService,
                private router: Router,
                private programRequestPageMode: ProgramRequestPageModeService ) {
-    this.context = { componentParent: this };
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        sortable: true
+      },
+      pivotMode: false,
+      pagination: true,
+      paginationPageSize: 20,
+      suppressRowTransform: true,
+      suppressPaginationPanel: true,
+      suppressMovableColumns: true,
+      treeData: true,
+      frameworkComponents: {
+        summaryProgramCellRenderer: SummaryProgramCellRenderer,
+        fundingRateRenderer: FundingRateRenderer
+      },
+      context: { componentParent: this}
+    }
   }
 
   ngOnChanges() {
@@ -142,7 +154,7 @@ export class ProgramsComponent implements OnChanges {
             menuTabs: this.menuTabs,
             resizable: true,
             filter: 'agTextColumnFilter',
-            suppressSorting: true, 
+            sortable: false, 
             valueGetter: params => this.getStatus(params),
             cellClass: params => this.getStatusClass(params),
             cellStyle: { backgroundColor: "#eae9e9" },
@@ -155,7 +167,7 @@ export class ProgramsComponent implements OnChanges {
             filter: 'agTextColumnFilter',
             minWidth: 86,
             resizable: true,
-            suppressSorting: true,
+            sortable: false,
             cellClass: ['ag-cell-white'],
             valueGetter: params => {
               if (params.data.phaseType == PhaseType.PB) {
@@ -169,9 +181,8 @@ export class ProgramsComponent implements OnChanges {
             headerName: 'Organization',
             menuTabs: this.menuTabs,
             filter: 'agTextColumnFilter',
-            width: 100,
-            
-            suppressSorting: true,
+            width: 100,            
+            sortable: false,
             cellClass: ['ag-cell-white'],
             hide: true,
             valueGetter: params => ( this.orgMap ? this.orgMap.get(params.data.organizationId): '...' ),

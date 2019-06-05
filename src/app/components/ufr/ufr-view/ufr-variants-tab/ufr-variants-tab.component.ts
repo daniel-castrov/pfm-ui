@@ -4,7 +4,7 @@ import {UserUtils} from '../../../../services/user.utils';
 import {DataRow} from './DataRow';
 import {PhaseType} from '../../../programming/select-program-request/UiProgramRequest';
 import {FormatterUtil} from '../../../../utils/formatterUtil';
-import {ColumnApi, GridApi} from 'ag-grid-community';
+import {ColumnApi, GridApi, GridOptions} from 'ag-grid-community';
 import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
 import {Notify} from '../../../../utils/Notify';
 
@@ -37,9 +37,21 @@ export class UfrVariantsTabComponent {
   isVariantsTabValid: any[] = [];
   frameworkComponents = {deleteRenderer: DeleteRenderer};
   context = {parentComponent: this};
+  private agOptions: GridOptions;
 
   constructor( private pomService: POMService,
-               private globalsService: UserUtils ) { }
+               private globalsService: UserUtils ) { 
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: true,
+        sortable: true
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true
+    }
+  }
 
   ngOnChanges(){
     if(!this.ufr.containerId) return; // the parent has not completed it's ngOnInit()

@@ -33,16 +33,9 @@
           </div>
         </div>
         <ag-grid-angular id="variant-table" class="ag-theme-balham group-header-white "
-                         [gridAutoHeight]="true"
-                         [toolPanelSuppressSideButtons]="true"
-                         [suppressMovableColumns]="true"
-                         [suppressRowTransform]="true"
-                         [showToolPanel]="false"
-                         [enableSorting]="true"
-                         [enableFilter]="true"
+                         domLayout="autoHeight"
+                         [gridOptions]="agOptions"                        
                          [columnDefs]="columnDefs"
-                         [singleClickEdit]="true"
-                         [stopEditingWhenGridLosesFocus]="true"
                          [frameworkComponents]="frameworkComponents"
                          [context]="context"
                          (gridReady)="onGridReady($event, variant)">

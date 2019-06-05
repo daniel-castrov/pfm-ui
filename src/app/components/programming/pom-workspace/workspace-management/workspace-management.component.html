@@ -22,17 +22,9 @@
           <ag-grid-angular
             #agGrid class="ag-theme-balham"
             id="myGrid"
-            [enableColResize]="true"
-            [enableFilter]="false"
-            [gridAutoHeight]="true"
-            [gridOptions]="agOptions"
-            [toolPanelSuppressSideButtons]="true"
-            [pagination]="true"
-            [paginationPageSize]="6"
+            domLayout="autoHeight"
+            [gridOptions]="agOptions"                     
             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
-            [suppressPaginationPanel]="true"
             (gridReady)="onGridReady($event)" >
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

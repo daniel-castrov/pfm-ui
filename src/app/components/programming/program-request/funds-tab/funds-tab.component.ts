@@ -27,6 +27,7 @@ import {GridType} from './GridType';
 import {CellEditor} from '../../../../utils/CellEditor';
 import {NameUtils} from '../../../../utils/NameUtils';
 import {CurrentPhase} from '../../../../services/current-phase.service';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'funds-tab',
@@ -56,9 +57,10 @@ export class FundsTabComponent implements OnChanges {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
+  private agOptions: GridOptions;
+  private agOptionsInformation: GridOptions;
   ProgramType = ProgramType;
   columnDefs = [];
-  defaultColumnDefs = { editable: false };
   data;
   parentData;
   siblingsData;
@@ -68,8 +70,6 @@ export class FundsTabComponent implements OnChanges {
   pinnedSiblingsBottomData;
   existingFundingLines: FundingLine[] = [];
   selectedFundingLine: FundingLine = null;
-  frameworkComponents = { deleteRenderer: DeleteRenderer, viewSiblingsRenderer: ViewSiblingsRenderer };
-  context = { parentComponent: this };
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
 
@@ -79,7 +79,39 @@ export class FundsTabComponent implements OnChanges {
     private globalsService: UserUtils,
     private tagsUtils: TagsUtils,
     private autoValuesService: AutoValuesService,
-    private rolesvc: RolesPermissionsService ) { }
+    private rolesvc: RolesPermissionsService ) {
+      this.agOptions = <GridOptions>{
+        defaultColDef: {
+          sortable: true,
+          filter: true
+        },
+        suppressMovableColumns: true,
+        suppressRowTransform: true,
+        singleClickEdit: true,
+        stopEditingWhenGridLosesFocus: true,
+        frameworkComponents: { 
+          deleteRenderer: DeleteRenderer, 
+          viewSiblingsRenderer: ViewSiblingsRenderer 
+        },
+        context: { parentComponent: this }
+      }
+      this.agOptionsInformation = <GridOptions>{
+        defaultColDef: {
+          sortable: true,
+          filter: false,
+          editable: false
+        },
+        suppressMovableColumns: true,
+        suppressRowTransform: true,
+        singleClickEdit: true,
+        stopEditingWhenGridLosesFocus: true,
+        frameworkComponents: { 
+          deleteRenderer: DeleteRenderer, 
+          viewSiblingsRenderer: ViewSiblingsRenderer 
+        },
+        context: { parentComponent: this }
+      }
+     }
 
   async ngOnChanges() {
     if (!this.pr.containerId) {

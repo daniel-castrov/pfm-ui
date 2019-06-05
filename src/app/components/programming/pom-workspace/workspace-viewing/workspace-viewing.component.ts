@@ -23,8 +23,16 @@ export class WorkspaceViewingComponent implements OnInit {
                private workspaceService: WorkspaceService,
                private userUtils: UserUtils ) {
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        filter: false
+      },
+      pagination: true,
+      paginationPageSize: 6,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
       columnDefs: [{headerName: 'Workspace Name', field: 'workspace', minWidth: 450, cellRendererFramework: NameDisplayRendererComponent},
                    {headerName: 'Number', field: 'number', maxWidth: 90},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},

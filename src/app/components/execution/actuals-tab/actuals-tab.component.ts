@@ -205,6 +205,13 @@ export class ActualsTabComponent implements OnInit {
     var cssright: Set<number> = new Set<number>([3, 5, 6, 7, 9, 10, 11, 13]);
 
     this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: false,
+        resizable: true
+      },
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
       rowData: this.rows,
       frameworkComponents: agcomps,
       context: {

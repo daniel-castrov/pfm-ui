@@ -28,19 +28,12 @@
         <div class="row">
           <div class="col-12">
             <ag-grid-angular #agGrid
-                             class="ag-theme-balham"
-                             [enableSorting]="true"
-                             [enableFilter]="true"
-                             [gridAutoHeight]="true"
+                             class="ag-theme-balham"     
+                             domLayout="autoHeight"                   
+                             [gridOptions]="agOptions"
                              [rowData]="data"
                              [columnDefs]="columnDefs"
-                             [toolPanelSuppressSideButtons]="true"
-                             [suppressDragLeaveHidesColumns]="true"
-                             [pagination]="true"
-                             [paginationPageSize]="15"
-                             [suppressMovableColumns]="true"
-                             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-                             [suppressPaginationPanel]="true">
+                             (paginationChanged)="agGridPagination.onPaginationChanged($event)">
             </ag-grid-angular>
             <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
         </div>

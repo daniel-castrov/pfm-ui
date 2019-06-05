@@ -208,16 +208,16 @@ export class SpendPlansTabComponent implements OnInit {
     var csslightorange: Set<number> = new Set<number>([14, 15]);
 
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-      enableFilter: false,
-      gridAutoHeight: true,
+      defaultColDef: {
+        resizable: true,
+        filter: false
+      },
       pagination: true,
       paginationPageSize: 30,
       suppressPaginationPanel: true,
-      toolPanelSuppressSideButtons: true,
-      frameworkComponents: { fyheader: FyHeaderComponent },
       suppressDragLeaveHidesColumns: true,
       suppressMovableColumns: true,
+      frameworkComponents: { fyheader: FyHeaderComponent },
       columnDefs: [{
         headerValueGetter: getHeaderValue1,
         headerName: 'RDT&E',

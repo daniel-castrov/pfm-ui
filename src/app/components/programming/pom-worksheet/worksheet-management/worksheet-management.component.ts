@@ -34,8 +34,16 @@ export class WorksheetManagementComponent implements OnInit {
                public stateService: StateService,
                private userUtils: UserUtils ) {
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        filter: false
+      },
+      pagination: true,
+      paginationPageSize: 6,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,      
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
                    {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
                    {headerName: 'Number', field: 'number', maxWidth: 90},

@@ -37,15 +37,10 @@
     <div class="row mb-3">
       <div class="col-12">
         <ag-grid-angular #agGrid class="ag-theme-balham"
+            domLayout="autoHeight"
             [gridOptions]="agOptions"
             [rowData]="datalines"
-            [rowSelection]="'single'"
-            [toolPanelSuppressSideButtons]="true"
-            [pagination]="true"
-            [paginationPageSize]="20"
-            [enableColResize]="true"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
+            [rowSelection]="'single'"          
             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
             (gridReady) = "onGridReady($event)">
           </ag-grid-angular>
