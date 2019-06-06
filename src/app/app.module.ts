@@ -143,16 +143,13 @@ import { ReasonCodeComponent } from './components/programming/update-pom-session
 import { BulkChangesComponent } from './components/programming/update-pom-session/bulk-changes/bulk-changes.component';
 import { FilterTextComponent } from './components/programming/update-pom-session/filter-text/filter-text.component';
 import { UpdateButtonComponent } from './components/programming/update-pom-session/update-button/update-button.component';
-import { LockButtonComponent } from './components/programming/lock-pom-session/lock-button/lock-button.component';
 import { WorksheetSelectorComponent } from './components/programming/update-pom-session/worksheet-selector/worksheet-selector.component';
-import { LockPomSessionComponent } from './components/programming/lock-pom-session/lock-pom-session.component';
 import { WorksheetViewingComponent } from './components/programming/pom-worksheet/worksheet-viewing/worksheet-viewing.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { NameViewingRendererComponent } from './components/programming/pom-worksheet/worksheet-viewing/name-viewing-renderer.component';
 import { ViewPomSessionComponent } from './components/programming/view-pom-session/view-pom-session.component';
 import { WorksheetSelectedComponent } from './components/programming/view-pom-session/worksheet-selected/worksheet-selected.component';
 import { GridRowsComponent } from './components/ag-grid/grid-rows/grid-rows.component';
-import { LockedWorksheetsComponent } from './components/programming/lock-pom-session/locked-worksheets/locked-worksheets.component';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { PlanningMenuComponent } from './components/menu-bar/planning-menu/planning-menu.component';
 import { ProgrammingMenuComponent } from './components/menu-bar/programming-menu/programming-menu.component';
@@ -180,7 +177,6 @@ import { R2aTabComponentOnBudgetDetails } from './components/budget/edit-budget-
 import { ImportActualsComponent } from './components/execution/import-actuals/import-actuals.component';
 import { AppHeaderComponent } from './components/header/app-header/app-header.component';
 import { ImportActualsTableComponent } from './components/execution/import-actuals-table/import-actuals-table.component';
-import { LockPositionComponent } from './components/budget/lock-position/lock-position.component';
 import { DatepickerModule } from 'ngx-bootstrap';
 import { CustomNgbDateParserFormatter } from './utils/CustomNgbParserFormatter';
 import { FormPipe } from './pipes/form.pipe';
@@ -282,7 +278,6 @@ const appRoutes: Routes = [
   { path: 'user/:id', component: ManageSelfComponent },
   { path: 'update-pom-session/:id', component: UpdatePomSessionComponent, canActivate: [CanActivateAuth] },
   { path: 'update-pom-session', component: UpdatePomSessionComponent, canActivate: [CanActivateAuth] },
-  { path: 'lock-pom-session', component: LockPomSessionComponent, canActivate: [CanActivateAuth] },
   { path: 'open-pom-session', component: OpenPomSessionComponent, canActivate: [CanActivateAuth] },
   { path: 'view-pom-session/:id', component: ViewPomSessionComponent },
   { path: 'close-pom-session', component: ClosePomSessionComponent, canActivate: [CanActivateAuth] },
@@ -305,8 +300,6 @@ const appRoutes: Routes = [
   { path: 'copy-budget', component: CopyBudgetComponent, canActivate: [CanActivateAuth] },
   { path: 'edit-budget-details', component: EditBudgetDetailsComponent, canActivate: [CanActivateAuth] },
   { path: 'edit-program-details', component: EditProgramDetailsComponent, canActivate: [CanActivateAuth] },
-  { path: 'lock-position', component: LockPositionComponent, canActivate: [CanActivateAuth] },
-
   { path: 'workspace-management', component: WorkspaceManagementComponent, canActivate: [CanActivateAuth] },
 
 
@@ -406,8 +399,7 @@ const appRoutes: Routes = [
     UfrFundsComponent,
     UfrUfrTabComponent,
     UfrJustificationComponent,
-    UpdatePomSessionComponent,
-    LockPomSessionComponent,
+    UpdatePomSessionComponent,    
     OpenPomSessionComponent,
     ViewPomSessionComponent,
     ClosePomSessionComponent,
@@ -462,13 +454,11 @@ const appRoutes: Routes = [
     ReasonCodeComponent,
     BulkChangesComponent,
     FilterTextComponent,
-    UpdateButtonComponent,
-    LockButtonComponent,
+    UpdateButtonComponent,    
     WorksheetSelectorComponent,
     WorksheetSelectedComponent,
     ConfirmationDialogComponent,
     GridRowsComponent,
-    LockedWorksheetsComponent,
     MenuBarComponent,
     PlanningMenuComponent,
     ProgrammingMenuComponent,
@@ -493,7 +483,6 @@ const appRoutes: Routes = [
     R3TabComponent,
     R3EntriesComponent,
     ProgramAndItemSelectorComponent,
-    LockPositionComponent,
     SectionAComponent,
     SectionBComponent,
     SectionDComponent,
