@@ -73,7 +73,6 @@ export class UfrApprovalDetailComponent implements OnInit {
   UfrStatus = UfrStatus;
 
   worksheets: Worksheet[];
-  isDispositionAvailable;
   components = { numericCellEditor: this.getNumericCellEditor() };
 
 
@@ -120,7 +119,6 @@ export class UfrApprovalDetailComponent implements OnInit {
   determineDispositionAvailability(){
     this.worksheetService.getByPomId(this.pom.id).subscribe(response => {
       this.worksheets = response.result;
-      this.isDispositionAvailable = !this.worksheets.some(ws => ws.locked);
     });
   }
 

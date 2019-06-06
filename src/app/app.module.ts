@@ -130,7 +130,6 @@ import { BesProcComponent } from './components/budget/bes-proc/bes-proc.componen
 import { UfrApprovalSummaryComponent } from './components/ufr/ufr-approval/ufr-approval-summary/ufr-approval-summary.component';
 import { FyHeaderComponent } from './components/execution/fy-header/fy-header.component';
 import { UfrApprovalDetailComponent } from './components/ufr/ufr-approval/ufr-approval-detail/ufr-approval-detail.component';
-import { UnlockComponent } from './components/programming/pom-worksheet/worksheet-management/unlock/unlock.component';
 import { OpenExecutionComponent } from './components/execution/open-execution/open-execution.component';
 import { ViewEventsRenderer } from './components/renderers/view-events-renderer/view-events-renderer.component';
 import { ValueChangeRenderer } from './components/renderers/value-change-renderer/value-change-renderer.component';
@@ -208,7 +207,6 @@ import { DuplicaterComponent } from './components/programming/pom-workspace/work
 import { ExporterComponent } from './components/programming/pom-workspace/workspace-management/exporter/exporter.component';
 import { ImporterComponent } from './components/programming/pom-workspace/workspace-management/importer/importer.component';
 import { RenamerComponent } from './components/programming/pom-workspace/workspace-management/renamer/renamer.component';
-import { UnlockerComponent } from './components/programming/pom-workspace/workspace-management/unlocker/unlocker.component';
 
 import { OrganizationToaComponent } from './components/programming/create-pom-session/organization-toa/organization-toa.component';
 import { PrBarChartComponent } from './components/programming/pr-bar-chart/pr-bar-chart.component';
@@ -439,7 +437,6 @@ const appRoutes: Routes = [
     RenameComponent,
     ExportComponent,
     ImportComponent,
-    UnlockComponent,
     ActualsCellRendererComponent,
     BesRdteComponent,
     BesProcComponent,
@@ -504,7 +501,6 @@ const appRoutes: Routes = [
     ExporterComponent,
     ImporterComponent,
     RenamerComponent,
-    UnlockerComponent,
     OrganizationToaComponent,
     PrBarChartComponent,
     PomAnalysisComponent,

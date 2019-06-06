@@ -33,7 +33,7 @@ export class WorkspaceSelectorComponent implements OnInit {
           this.parent.pom.fy + 3,
           this.parent.pom.fy + 4];
         this.workspaceService.getByPhaseId(pom.result.id).subscribe( workspaces => {
-          this.parent.workspaces = workspaces.result.filter(workspace => !workspace.locked);
+          this.parent.workspaces = workspaces.result;
           this.parent.selectedWorkspace = this.parent.workspaces.find(workspace => workspace.id === workspaceId);
           if (this.parent.selectedWorkspace !== undefined) {
             this.onWorkspaceSelected();
