@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import {LicenseManager} from "ag-grid-enterprise/main";
 
-LicenseManager.setLicenseKey("pExchange,_LLC_JSCBIS_3Devs3_August_2019__MTU2NDc4NjgwMDAwMA==1b97cc91a7cc9d4a42a9816ea46e7e04");
+LicenseManager.setLicenseKey("pExchange,_LLC_PFM_3Devs3_August_2019__MTU2NDc4NjgwMDAwMA==1b97cc91a7cc9d4a42a9816ea46e7e04");
 
 if (environment.production) {
   enableProdMode();

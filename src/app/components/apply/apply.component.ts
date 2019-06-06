@@ -77,7 +77,7 @@ export class ApplyComponent implements OnInit {
 
       this.formsubmitted = true;
 
-      Notify.success("Your application to join JICAP has been submitted. Please check your email for the status of your request.");
+      Notify.success("Your application to join PFM has been submitted. Please check your email for the status of your request.");
     } else {
       Notify.error("An error occured. Unable to submit New User Request Form");
     }
