@@ -33,7 +33,7 @@ export class WorksheetSelectorComponent implements OnInit {
           this.parent.pom.fy + 3,
           this.parent.pom.fy + 4];
         this.worksheetService.getByPomId(pom.result.id).subscribe( worksheets => {
-          this.parent.worksheets = worksheets.result.filter(worksheet => !worksheet.locked);
+          this.parent.worksheets = worksheets.result;
           this.parent.selectedWorksheet = this.parent.worksheets.find(worksheet => worksheet.id === worksheetId);
           if (this.parent.selectedWorksheet !== undefined) {
             this.onWorksheetSelected();
