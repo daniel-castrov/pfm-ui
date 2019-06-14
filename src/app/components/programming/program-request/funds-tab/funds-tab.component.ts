@@ -78,7 +78,7 @@ export class FundsTabComponent implements OnChanges {
   values: any = [];
   tempObj: any= {};
   tempArr: any=[];
-  tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number; tooltip : any }; };
+  tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number;}; };
 
   constructor(private currentPhase: CurrentPhase,
     private programService: ProgramService,
@@ -244,7 +244,7 @@ export class FundsTabComponent implements OnChanges {
       var label = [];
       label[0]='year';
       for(let i=0;i<this.fundingLineData[0].value.length;i++){
-        label.push(this.fundingLineData[0].value[i].baOrBlin+'-'+this.fundingLineData[0].value[i].item+'-'+this.fundingLineData[0].value[i].appropriation)
+        label.push(this.fundingLineData[0].value[i].baOrBlin)
       }
       for (var key in this.fundingLineData[0].value) {
         if (key == '0') {
@@ -276,7 +276,6 @@ export class FundsTabComponent implements OnChanges {
           title: 'Funding Line Chart',
           width: 800,
           height: 400,
-          tooltip: { isHtml: true },  
         }
       }
       this.pr.fundingLines.forEach(fundingLine => {
