@@ -35,8 +35,15 @@ export class WorkspaceManagementComponent implements OnInit {
                public stateService: WorkspaceStateService,
                private userUtils: UserUtils ) {
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-
+      defaultColDef:{
+        resizable: true,
+        filter: false
+      },
+      pagination: true,
+      paginationPageSize: 6,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: WorkspaceCheckboxRendererComponent},
                    {headerName: 'Workspace Name', field: 'workspace', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
                    {headerName: 'Bulk Change', field: 'workspace', maxWidth: 100, cellRendererFramework: BulkChangeRendererComponent},

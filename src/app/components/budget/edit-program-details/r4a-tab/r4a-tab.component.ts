@@ -3,6 +3,7 @@ import {R4Data, PropertyService, PropertyType, BPI} from '../../../../generated'
 import {AgGridNg2} from 'ag-grid-angular';
 import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
 import {FormatterUtil} from '../../../../utils/formatterUtil';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'r4a-tab',
@@ -23,16 +24,12 @@ export class R4aTabComponent implements OnChanges {
   rowData = [];
   selectedRow;
   gridSequence;
-  frameworkComponents = {deleteRenderer: DeleteRenderer};
-  context = {
-    parentComponent: this,
-    deleteHidden: false
-  };
   fy: number;
   startYs: number[];
   endYs: number[];
   endQs: number[];
   events: string[];
+  agOptions: GridOptions;
 
   constructor(private propertyService: PropertyService) {
     this.initYears(parseInt(Date().substring(11, 15)));
@@ -43,6 +40,24 @@ export class R4aTabComponent implements OnChanges {
         response.result.forEach(event => this.events.push(event.code + '-' + event.label));
       }
     });
+
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: false,
+        suppressMenu: true,
+        editable: true,
+        resizable: false,
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      suppressPaginationPanel: true,
+      singleClickEdit: true,
+      frameworkComponents: { deleteRenderer: DeleteRenderer },
+      context: {
+        parentComponent: this,
+        deleteHidden: false
+      }
+    }
   }
 
   async ngOnChanges() {
@@ -56,12 +71,6 @@ export class R4aTabComponent implements OnChanges {
 
 
   initColumnDefs() {
-
-    this.defaultColDef = {
-      suppressMenu: true,
-      editable: true,
-      resizable: false,
-    }
 
     const columnDefs = [
       {

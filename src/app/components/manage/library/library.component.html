@@ -22,19 +22,11 @@
           </div>
           <ag-grid-angular #agGrid
                            class="ag-theme-balham"
-                           [enableFilter]="true"
-                           [gridAutoHeight]="true"
+                           domLayout="autoHeight"
+                           [gridOptions]="agOptions"
                            [rowData]="data"
                            [columnDefs]="columnDefs"
-                           [pagination]="true"
-                           [paginationPageSize]="15"
                            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-                           [suppressPaginationPanel]="true"
-                           [suppressMovableColumns]="true"
-                           [toolPanelSuppressSideButtons]="true"
-                           [suppressDragLeaveHidesColumns]="true"
-                           [frameworkComponents]="frameworkComponents"
-                           [context]="context"
                            (gridReady)="onGridReady($event)">
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

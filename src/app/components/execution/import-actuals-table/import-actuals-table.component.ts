@@ -15,38 +15,47 @@ export class ImportActualsTableComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   @Input() data: FileMetadata[];
   private agOptions: GridOptions;
-  private frameworkComponents = { lvcr: LibraryViewCellRenderer };
-  private context = { parentComponent: this };
-
-  private columnDefs = [
-    {
-      headerName: 'Date',
-      field: 'metadata.IngestDate'
-    },
-    {
-      headerName: 'File',
-      field: 'metadata.Name'
-    },
-    {
-      headerName: 'Status',
-      field: 'metadata.status'
-    },
-    {
-      headerName: 'Uploaded by',
-      field: 'metadata.creator'
-    },
-    {
-      headerName: 'Action',
-      width: 30,
-      field: 'metadata.id',
-      autoHeight: true,
-      cellRenderer: 'lvcr',
-      suppressMenu: true,
-      cellStyle: { 'text-align': 'center' }
-    }
-  ];
 
   constructor( private library: LibraryService ) { 
+    this.agOptions = <GridOptions>{
+      defaultColDef: { 
+        sortable: true,
+        resizable: true,
+        filter: true
+      },
+      pivotMode: false,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      frameworkComponents: { lvcr: LibraryViewCellRenderer },
+      context: { parentComponent: this },
+      columnDefs: [
+        {
+          headerName: 'Date',
+          field: 'metadata.IngestDate'
+        },
+        {
+          headerName: 'File',
+          field: 'metadata.Name'
+        },
+        {
+          headerName: 'Status',
+          field: 'metadata.status'
+        },
+        {
+          headerName: 'Uploaded by',
+          field: 'metadata.creator'
+        },
+        {
+          headerName: 'Action',
+          width: 30,
+          field: 'metadata.id',
+          autoHeight: true,
+          cellRenderer: 'lvcr',
+          suppressMenu: true,
+          cellStyle: { 'text-align': 'center' }
+        }
+      ]
+    }
   }
 
   ngOnInit() { }

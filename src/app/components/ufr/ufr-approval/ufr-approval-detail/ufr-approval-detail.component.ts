@@ -26,6 +26,7 @@ import {AgGridNg2} from 'ag-grid-angular';
 import {FormatterUtil} from '../../../../utils/formatterUtil';
 import {Notify} from '../../../../utils/Notify';
 import {RowUpdateEventData} from '../../../../generated/model/rowUpdateEventData';
+import { GridOptions } from 'ag-grid-community';
 
 declare const $: any;
 
@@ -74,7 +75,27 @@ export class UfrApprovalDetailComponent implements OnInit {
 
   worksheets: Worksheet[];
   components = { numericCellEditor: this.getNumericCellEditor() };
+  private agOptions: GridOptions;
+  private agOptionsProposedChanges: GridOptions;
 
+  sideBar = {
+    toolPanels: [
+      {
+        id: 'columns',
+        labelDefault: 'Columns',
+        toolPanel: 'agColumnsToolPanel',
+        toolPanelParams: {
+          suppressRowGroups: true,
+          suppressValues: true,
+          suppressPivotMode: true,
+          suppressPivots: true,
+          suppressColumnFilter: true,
+          suppressColumnSelectAll: true
+        }
+      }
+    ],
+    defaultToolPanel: 'columns'
+  }
 
   constructor(private programAndPrService: ProgramAndPrService,
               private worksheetService: WorksheetService,
@@ -82,7 +103,23 @@ export class UfrApprovalDetailComponent implements OnInit {
               private programService: ProgramService,
               private route: ActivatedRoute,
               private ufrService: UFRsService,
-              private userService: UserService) {}
+              private userService: UserService) {
+    this.agOptions = <GridOptions>{      
+      sideBar: this.sideBar,
+      suppressMovableColumns: true
+    }
+
+    this.agOptionsProposedChanges = <GridOptions>{
+      defaultColDef: {
+        filter: false
+      },
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true,
+      sideBar: false
+    }
+
+  }
 
   async ngOnInit() {
     let ufrId;

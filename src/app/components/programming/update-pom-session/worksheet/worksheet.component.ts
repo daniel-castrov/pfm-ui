@@ -8,6 +8,7 @@ import {ViewEventsRenderer} from "../../../renderers/view-events-renderer/view-e
 import {CheckboxCellRenderer} from "../../../renderers/anchor-checkbox-renderer/checkbox-cell-renderer.component";
 import {GridToaComponent} from "./../grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./../events-modal/events-modal.component";
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'worksheet',
@@ -28,18 +29,41 @@ export class WorksheetComponent implements OnChanges {
   rowSelection = 'multiple';
   @Input() selectedWorksheet: Worksheet;
   unmodifiedFundingLines: any[];
-  frameworkComponents = {
-    valueChangeRenderer: ValueChangeRenderer,
-    viewEventsRenderer: ViewEventsRenderer,
-    checkboxCellRenderer: CheckboxCellRenderer};
+  
   @Input() eventsModalComponent: EventsModalComponent;
   @Input() gridToaComponent: GridToaComponent;
-  context = { parentComponent: this, eventsModalComponent: null };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
+  private agOptions: GridOptions;
+
+  constructor(){
+    this.agOptions= <GridOptions>{
+      defaultColDef:{
+        sortable: true,
+        filter: true
+      },
+      pagination: true,
+      paginationPageSize: 15,
+      suppressPaginationPanel: true,
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      rowMultiSelectWithClick: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true,
+      frameworkComponents: {
+        valueChangeRenderer: ValueChangeRenderer,
+        viewEventsRenderer: ViewEventsRenderer,
+        checkboxCellRenderer: CheckboxCellRenderer
+      },
+      context: { 
+        parentComponent: this, 
+        eventsModalComponent: null 
+      }
+    }
+  }
 
   ngOnChanges() {
     if (this.eventsModalComponent) {
-      this.context = {...this.context, eventsModalComponent: this.eventsModalComponent};
+      this.agOptions.context = {...this.agOptions.context, eventsModalComponent: this.eventsModalComponent};
     }
   }
 

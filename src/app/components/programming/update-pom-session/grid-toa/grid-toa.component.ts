@@ -3,6 +3,7 @@ import {Pom, TOA, User, Worksheet, WorksheetRow, Workspace, ProgramType} from ".
 import {FormatterUtil} from "../../../../utils/formatterUtil";
 import {AgGridNg2} from "ag-grid-angular";
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
+import { GridOptions } from 'ag-grid-community';
 
 
 @Component({
@@ -23,10 +24,14 @@ export class GridToaComponent {
   rowData;
   toaRowData;
   isToaExceeded = false;
+  private agOptions: GridOptions;
   @Input() selectedWorkspace: Workspace;
 
   constructor(private prsvc: ProgramAndPrService) {
-    
+    this.agOptions= <GridOptions>{
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true
+    }    
   }
 
   initToaDataRows(){
@@ -61,7 +66,7 @@ export class GridToaComponent {
         deltaFunds[year] = allocatedFunds[year] - resourcedFunds[year];
       });
 
-      this.isToaExceeded = deltaFunds.some(value => value < 0);
+      this.isToaExceeded = deltaFunds.some(value => value < 0);      
 
       let deltaRow = { description: 'Delta', funds: deltaFunds };
       data.push(deltaRow);

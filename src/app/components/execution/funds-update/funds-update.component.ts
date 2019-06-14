@@ -75,11 +75,11 @@ export class FundsUpdateComponent implements OnInit {
     };
 
     this.agOptions = <GridOptions>{
-      enableFilter: true,
-      gridAutoHeight: true,
       pagination: true,
       paginationPageSize: 20,
       suppressPaginationPanel: true,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
       frameworkComponents: agcomps,
       context: {
         route: '/update-program-execution',

@@ -15,21 +15,12 @@
   <div class="col-9">
     <ag-grid-angular #agGrid
                      class="ag-theme-balham r4a-grid"
+                     domLayout="autoHeight"
+                     [gridOptions]="agOptions"
                      [columnDefs]="columnDefs"
                      [rowData]="rowData"
-                     [gridAutoHeight]="true"
-                     [enableFilter]="false"
-                     [showToolPanel]="false"
-                     [toolPanelSuppressSideButtons]="true"
-                     [suppressMovableColumns]="true"
-                     [suppressRowTransform]="true"
-                     [suppressPaginationPanel]="true"
                      [rowSelection]="'single'"
-                     [singleClickEdit]="true"
                      (selectionChanged)="onSelectionChanged($event)"
-                     [frameworkComponents]="frameworkComponents"
-                     [context]="context"
-                     [defaultColDef]="defaultColDef"
                      (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>

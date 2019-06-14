@@ -10,20 +10,13 @@
   <div class="col-8">
     <ag-grid-angular #agGrid
                      class="ag-theme-balham"
+                     domLayout="autoHeight"
+                     [gridOptions]="agOptions"
                      [columnDefs]="columnDefs"
-                     [rowData]="rowData"
-                     [gridAutoHeight]="true"
-                     [enableFilter]="false"
-                     [showToolPanel]="false"
-                     [toolPanelSuppressSideButtons]="true"
-                     [suppressMovableColumns]="true"
-                     [suppressRowTransform]="true"
-                     [suppressPaginationPanel]="true"
+                     [rowData]="rowData"                     
                      [rowSelection]="'single'"
-                     (selectionChanged)="onSelectionChanged($event)"
-                     [frameworkComponents]="frameworkComponents"
                      [components]="components"
-                     [context]="context"
+                     (selectionChanged)="onSelectionChanged($event)"                     
                      (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>
