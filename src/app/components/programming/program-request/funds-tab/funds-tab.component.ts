@@ -72,6 +72,13 @@ export class FundsTabComponent implements OnChanges {
   context = { parentComponent: this };
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
+  LineChartData: Program;
+  payloadData: { type: string; value: any; }[];
+  fundingLineData: any = [];
+  values: any = [];
+  tempObj: any= {};
+  tempArr: any=[];
+  tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number;}; };
 
   constructor(private currentPhase: CurrentPhase,
     private programService: ProgramService,
@@ -154,41 +161,41 @@ export class FundsTabComponent implements OnChanges {
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
     this.programService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
-      response.result.forEach(subprogram => {
-        if (this.pr.id !== subprogram.id) {
-          subprogram.fundingLines.forEach(fundingLine => {
-            if (selectedFundingLine.appropriation === fundingLine.appropriation &&
-              selectedFundingLine.opAgency === fundingLine.opAgency &&
-              selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
-              selectedFundingLine.item === fundingLine.item) {
-              let pomRow: DataRow = {
-                programId: subprogram.shortName,
-                gridType: GridType.SIBLINGS,
-                fundingLine: fundingLine,
-                phaseType: PhaseType.POM
+        response.result.forEach(subprogram => {
+          if (this.pr.id !== subprogram.id) {
+            subprogram.fundingLines.forEach(fundingLine => {
+              if (selectedFundingLine.appropriation === fundingLine.appropriation &&
+                selectedFundingLine.opAgency === fundingLine.opAgency &&
+                selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
+                selectedFundingLine.item === fundingLine.item) {
+                let pomRow: DataRow = {
+                  programId: subprogram.shortName,
+                  gridType: GridType.SIBLINGS,
+                  fundingLine: fundingLine,
+                  phaseType: PhaseType.POM
+                }
+                data.push(pomRow);
               }
-              data.push(pomRow);
-            }
-          });
-        }
-      });
-      this.siblingsData = data;
-      this.initSiblingsPinnedBottomRows();
-
-      setTimeout(() => {
-        if (this.data.some(row => row.fundingLine.userCreated === true)) {
-          this.agGridParent.columnApi.setColumnVisible('delete', true);
-          if(this.agGridSiblings){
-            this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+            });
           }
-        }
-        if (this.agGridSiblings) {
-          this.agGridSiblings.api.sizeColumnsToFit();
-        }
-        this.agGridParent.api.sizeColumnsToFit();
-        this.agGrid.api.sizeColumnsToFit();
-      }, 700);
-    });
+        });
+        this.siblingsData = data;
+        this.initSiblingsPinnedBottomRows();
+
+        setTimeout(() => {
+          if (this.data.some(row => row.fundingLine.userCreated === true)) {
+            this.agGridParent.columnApi.setColumnVisible('delete', true);
+            if(this.agGridSiblings){
+              this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+            }
+          }
+          if (this.agGridSiblings) {
+            this.agGridSiblings.api.sizeColumnsToFit();
+          }
+          this.agGridParent.api.sizeColumnsToFit();
+          this.agGrid.api.sizeColumnsToFit();
+        }, 700);
+      });
   }
 
   initSiblingsPinnedBottomRows() {
@@ -227,6 +234,50 @@ export class FundsTabComponent implements OnChanges {
     let data: Array<DataRow> = [];
     this.getPBData().then(value => {
       this.pbPr = value;
+      this.LineChartData = this.pbPr
+      console.log("final line chart data", this.pbPr);
+      this.payloadData = Object.keys(this.LineChartData).map(key => ({ type: key, value: this.LineChartData[key] }));
+      console.log('convert object', this.payloadData);
+
+      this.fundingLineData = this.payloadData.filter(fundingData => fundingData.type == 'fundingLines');
+      console.log('overall data', this.fundingLineData);
+      var label = [];
+      label[0]='year';
+      for(let i=0;i<this.fundingLineData[0].value.length;i++){
+        label.push(this.fundingLineData[0].value[i].baOrBlin)
+      }
+      for (var key in this.fundingLineData[0].value) {
+        if (key == '0') {
+          for (var key1 in this.fundingLineData[0].value[key].funds) {
+            this.tempObj[key1] = [];
+            this.tempObj[key1].push(key1);
+            this.tempObj[key1].push(this.fundingLineData[0].value[key].funds[key1]);
+          }
+        }
+        else {
+          for (var key1 in this.fundingLineData[0].value[key].funds) {
+            this.tempObj[key1].push(this.fundingLineData[0].value[key].funds[key1]);
+          }
+        }
+      }
+      for(var tKey in this.tempObj) {
+        this.tempArr.push(this.tempObj[tKey]);
+      }
+      this.tempArr.unshift(label);
+      console.log('label',label);
+      console.log("Created final array is =", this.tempArr);
+      console.log("Created object is =", this.tempObj);
+
+      //Funding line chart
+      this.tooltipChart = {
+        chartType: 'LineChart',
+        dataTable: this.tempArr,
+        options: {
+          title: 'Funding Line Chart',
+          width: 800,
+          height: 400,
+        }
+      }
       this.pr.fundingLines.forEach(fundingLine => {
         let pomRow: DataRow = {
           programId: this.pr.shortName,
@@ -828,7 +879,7 @@ export class FundsTabComponent implements OnChanges {
     } else {
       name = this.pr.shortName;
     }
-    
+
     this.budgetFy = this.pom.fy-1;
 
     if (!name) {
