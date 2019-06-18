@@ -76,9 +76,10 @@ export class FundsTabComponent implements OnChanges {
   payloadData: { type: string; value: any; }[];
   fundingLineData: any = [];
   values: any = [];
-  tempObj: any= {};
-  tempArr: any=[];
+  fundObj: any= {};
+  fundArr: any=[];
   tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number;}; };
+  fundData : any = [];
 
   constructor(private currentPhase: CurrentPhase,
     private programService: ProgramService,
@@ -266,50 +267,6 @@ export class FundsTabComponent implements OnChanges {
     let data: Array<DataRow> = [];
     this.getPBData().then(value => {
       this.pbPr = value;
-      this.LineChartData = this.pbPr
-      console.log("final line chart data", this.pbPr);
-      this.payloadData = Object.keys(this.LineChartData).map(key => ({ type: key, value: this.LineChartData[key] }));
-      console.log('convert object', this.payloadData);
-
-      this.fundingLineData = this.payloadData.filter(fundingData => fundingData.type == 'fundingLines');
-      console.log('overall data', this.fundingLineData);
-      var label = [];
-      label[0]='year';
-      for(let i=0;i<this.fundingLineData[0].value.length;i++){
-        label.push(this.fundingLineData[0].value[i].baOrBlin)
-      }
-      for (var key in this.fundingLineData[0].value) {
-        if (key == '0') {
-          for (var key1 in this.fundingLineData[0].value[key].funds) {
-            this.tempObj[key1] = [];
-            this.tempObj[key1].push(key1);
-            this.tempObj[key1].push(this.fundingLineData[0].value[key].funds[key1]);
-          }
-        }
-        else {
-          for (var key1 in this.fundingLineData[0].value[key].funds) {
-            this.tempObj[key1].push(this.fundingLineData[0].value[key].funds[key1]);
-          }
-        }
-      }
-      for(var tKey in this.tempObj) {
-        this.tempArr.push(this.tempObj[tKey]);
-      }
-      this.tempArr.unshift(label);
-      console.log('label',label);
-      console.log("Created final array is =", this.tempArr);
-      console.log("Created object is =", this.tempObj);
-
-      //Funding line chart
-      this.tooltipChart = {
-        chartType: 'LineChart',
-        dataTable: this.tempArr,
-        options: {
-          title: 'Funding Line Chart',
-          width: 800,
-          height: 400,
-        }
-      }
       this.pr.fundingLines.forEach(fundingLine => {
         let pomRow: DataRow = {
           programId: this.pr.shortName,
@@ -344,6 +301,48 @@ export class FundsTabComponent implements OnChanges {
       });
       this.generateColumns();
       this.data = data;
+      this.fundingLineData = this.data;
+      this.fundData =[];
+      for(let i=0; i<this.fundingLineData.length;i++){
+        this.fundData.push(this.fundingLineData[i].fundingLine);
+      }
+      var label = [];
+      label[0]='year';
+      this.fundArr = [];
+      this.fundObj = [];
+      for(let i=0;i<this.fundData.length;i++){
+        label.push(this.fundData[i].baOrBlin)
+      }
+      for (var key in this.fundData) {
+        if (key == '0') {
+          for (var key1 in this.fundData[key].funds) {
+            this.fundObj[key1] = [];
+            this.fundObj[key1].push(key1);
+            this.fundObj[key1].push(this.fundData[key].funds[key1]);
+          }
+        }
+        else {
+          for (var key1 in this.fundData[key].funds) {
+            this.fundObj[key1].push(this.fundData[key].funds[key1]);
+          }
+        }
+      }
+      for(var tKey in this.fundObj) {
+        this.fundArr.push(this.fundObj[tKey]);
+      }
+      this.fundArr.unshift(label);
+      this.fundArr.splice(1,1)
+         //Funding line chart
+         this.tooltipChart = {
+          chartType: 'LineChart',
+          dataTable: this.fundArr,
+          options: {
+            title: 'Funding Line Chart',
+            width: 800,
+            height: 400,
+          }
+        }
+
       this.loadDropdownOptions();
       this.initPinnedBottomRows();
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
