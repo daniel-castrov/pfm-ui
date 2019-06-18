@@ -212,7 +212,8 @@ import { OrganizationToaComponent } from './components/programming/create-pom-se
 import { PrBarChartComponent } from './components/programming/pr-bar-chart/pr-bar-chart.component';
 import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
 import { FundingRateRenderer } from './components/renderers/funding-rate-renderer/funding-rate-renderer.component';
-
+import {MaterialModule} from './components/menu-bar/material.module';
+import 'hammerjs';
 // ROUTES
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -547,7 +548,8 @@ const appRoutes: Routes = [
     NgbDatepickerModule.forRoot(),
     DatepickerModule.forRoot(),
     AgGridModule.withComponents([]),
-    Ng2GoogleChartsModule
+    Ng2GoogleChartsModule,
+    MaterialModule
   ],
   providers: [
     // Starting from version 6 the Angular folks recommend that singleton services are self-registering, i.e.

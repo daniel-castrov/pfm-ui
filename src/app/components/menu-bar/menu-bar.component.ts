@@ -13,16 +13,35 @@ import {AdminMenuComponent} from "./admin-menu/admin-menu.component";
 import {ManageMenuComponent} from "./manage-menu/manage-menu.component";
 import {UserActionsComponent} from "./user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./pr-change-notofications/pr-change-notifications.component";
+import { onMainContentChange ,onSideNavChange, animateText} from './animation/animation';
+import { MatSidenav, } from '@angular/material';
 
+interface Page {
+  link: string;
+  name: string;
+  icon: string;
+}
 @Component({
   selector: 'menu-bar',
   templateUrl: './menu-bar.component.html',
-  styleUrls: ['./menu-bar.component.scss']
+  styleUrls: ['./menu-bar.component.scss'],
+  animations: [ onMainContentChange,onSideNavChange, animateText ]
 })
 export class MenuBarComponent implements OnInit {
 
   @Input() authUser: AuthUser;
   pomStatus: Pom.StatusEnum;
+  public onSideNavChange: boolean;
+  @Input() sidenav: MatSidenav
+  
+    public sideNavState: boolean = false;
+    public linkText: boolean = false;
+  
+    public pages: Page[] = [
+      {name: 'Inbox', link:'some-link', icon: 'inbox'},
+      {name: 'Starred', link:'some-link', icon: 'star'},
+      {name: 'Send email', link:'some-link', icon: 'send'},
+    ]
 
   @ViewChild(ReportsMenuComponent) reportsMenuComponent: ReportsMenuComponent;
   @ViewChild(ProgrammingMenuComponent) programmingMenuComponent: ProgrammingMenuComponent;
@@ -45,6 +64,15 @@ export class MenuBarComponent implements OnInit {
         this.pomStatus = p.status;
       });
     });
+  }
+
+  onSinenavToggle() {
+    this.sideNavState = !this.sideNavState
+    
+    setTimeout(() => {
+      this.linkText = this.sideNavState;
+    }, 200)
+    // this._sidenavService.sideNavState$.next(this.sideNavState)
   }
 
   refresh() {
