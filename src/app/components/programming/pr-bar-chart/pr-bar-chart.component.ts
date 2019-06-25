@@ -23,7 +23,7 @@ export class PrBarChartComponent implements OnInit {
   private filterIds: string[];
   private filters: FilterCriteria[] = [FilterCriteria.ALL, FilterCriteria.ORG, FilterCriteria.BA, FilterCriteria.PR_STAT];
   private selectedFilter = FilterCriteria.ALL;
-  private selectTreeFilter : any = FilterCriteria.ALL;
+  private selectTreeFilter: any = FilterCriteria.ALL;
   private chartdata: any;
   private treedata: any;
 
@@ -78,7 +78,6 @@ export class PrBarChartComponent implements OnInit {
       var pomPrsToChart = this.pomPrs.filter(pr => this.applyFilter(pr, this.selectedFilter, filterId));
       var pbPrsToChart = this.pbPrs.filter(pr => this.applyFilter(pr, this.selectedFilter, filterId));
       this.reloadChart(filterId, pomPrsToChart, pbPrsToChart);
-      console.log(pomPrsToChart, "pomPrsToChart");
     } else {
       this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
       this.reloadChart("Community TOA", this.pomPrs, this.pbPrs);
@@ -105,9 +104,10 @@ export class PrBarChartComponent implements OnInit {
   getTreeChartTitle(selectTreeFilter: FilterCriteria, title: string): any {
     switch (selectTreeFilter) {
       case FilterCriteria.ORG:
+        var orgN = [];
         for (let i = 0; i < title.length; i++)
-          this.orgName.push("Organization " + this.orgmap.get(title[i]));
-        return this.orgName;
+          orgN.push("Organization " + this.orgmap.get(title[i]));
+        return orgN;
       case FilterCriteria.BA: return "BA " + title;
       case FilterCriteria.PR_STAT: return "PRstat " + title;
       default: return "Community TOA";
@@ -173,6 +173,7 @@ export class PrBarChartComponent implements OnInit {
       'Unallocated',
       { type: 'string', role: 'tooltip' },
     ]];
+console.log(pomprs,"sjjsjsj");
 
     var skipUnallocated = ('Community TOA' !== filterId);
 
@@ -296,6 +297,7 @@ export class PrBarChartComponent implements OnInit {
       }
       charty.push(bar);
     }
+    console.log(charty,"column");
 
     return charty;
   }
@@ -374,39 +376,39 @@ export class PrBarChartComponent implements OnInit {
   }
 
   reloadTreeChart(filterId: any, pomprs: Program[], pbprs: Program[]) {
+  this.orgName = this.getTreeChartTitle(this.selectTreeFilter, filterId),
     this.treedata = {
       chartType: 'TreeMap',
       dataTable: this.generateTreeMap(filterId, pomprs, pbprs),
       options: {
-        title: this.getTreeChartTitle(this.selectTreeFilter, filterId),
         width: 730,
-        height: 160,
+        height: 400,
         legend: { position: 'top', maxLines: 3 },
-        bar: { groupWidth: '75%' },
-        isStacked: true,
-        series: { 0: { color: '#55c57a' }, 1: { color: '#008af3' }, 2: { color: '#cf3fbe' }, 3: { color: '#d70f37' } },
-      }
+        // generateTooltip: this.showStaticTooltip
+     }
     };
   }
-
+  // private showStaticTooltip() {
+  //   // var all = this.pom.communityToas;
+  //   return '<div style="background:#fd9; padding:10px; border-style:solid">' +
+  //          'Read more about the <a href="http://en.wikipedia.org/wiki/Kingdom_(biology)">kingdoms of life</a>.</div>';
+  // }
   private generateTreeMap(filterId: string, pomprs: Program[], pbprss: Program[]): any[] {
     var charty: any[] = [["Years", "Parent", "Funds", "Color"], ["Year", null, 0, 0]];
-
+   console.log(pomprs,"pomprs");
+   console.log(pbprss,"pbprss");
+   
+   
     var skipUnallocated = ('Community TOA' !== filterId);
 
     console.log(filterId + ' ' + skipUnallocated);
-    console.log(pomprs, 'pomPrs');
-    console.log(pbprss, 'pbrs');
-
-
     var by: number = this.pom.fy;
 
     var rowdata: any[] = [];
     let row = new Object();
     let sum;
- 
+
     row = new Object();
-    // row["id"] = "POM " + (by - 2000) + " TOA";
     sum = 0;
     let toas: any[] = []
     console.log(this.pom.communityToas, "all");
@@ -420,76 +422,15 @@ export class PrBarChartComponent implements OnInit {
         this.pom.orgToas[key].forEach((toa) => toas.push(toa));
       });
     }
-    
-  
-
-    console.log(toas, "org");
-
     let allocatedToas: { [year: number]: number } = {};
     toas.forEach((toa) => {
       allocatedToas[toa.year] = toa.amount;
       row[toa.year] = toa.amount;
       sum += row[toa.year];
     });
-
     row["total"] = sum;
     rowdata.push(row);
-    console.log(rowdata, 'rowdata');
-    console.log(this.orgName, 'Org Name');
-
-    // row = new Object();
-    // row["id"] = "PRs Submitted";
-    // let submittedPRs = pomprs.filter((pr: Program) => pr.programStatus == ProgramStatus.SUBMITTED);
-    // sum = 0;
-    // for (let year: number = by; year < by + 5; year++) {
-    //   row[year] = this.aggregateToas(submittedPRs, year);
-    //   sum += row[year];
-    // }
-    // row["total"] = sum;
-    // rowdata.push(row);
-
-    // row = new Object();
-    // row["id"] = "PRs Planned";
-    // let plannedPRs = pomprs.filter((pr: Program) => pr.programStatus == ProgramStatus.SAVED);
-    // sum = 0;
-    // for (let year: number = by; year < by + 5; year++) {
-    //   row[year] = this.aggregateToas(plannedPRs, year);
-    //   sum += row[year];
-    // }
-    // row["total"] = sum;
-    // rowdata.push(row);
-
-    // row = new Object();
-    // row["id"] = "TOA Difference";
-    // let outstandingPrs = pomprs.filter((pr: Program) => pr.programStatus == ProgramStatus.OUTSTANDING);
-    // sum = 0;
-    // for (let year: number = by; year < by + 5; year++) {
-    //   row[year] = this.aggregateToas(outstandingPrs, year);
-    //   sum += row[year];
-    // }
-    // row["total"] = sum;
-    // rowdata.push(row);
-
-    // row = new Object();
-    // row["id"] = "Unallocated";
-    // sum = 0;
-    // for (let year: number = by; year < by + 5; year++) {
-    //   let currentFyToa = 0
-    //   let toaDifference = 0
-    //   let prSubmitted = 0
-    //   let prPlanned = 0
-    //   rowdata.forEach((row: { year: string, id: string }) => {
-    //     if (row.id == "POM " + (by - 2000) + " TOA") currentFyToa = row[year]
-    //     if (row.id == 'PRs Planned') prPlanned = row[year]
-    //     if (row.id == 'PRs Submitted') prSubmitted = row[year]
-    //     if (row.id == 'TOA Difference') toaDifference = row[year]
-    //   });
-    //   row[year] = (skipUnallocated ? 0 : currentFyToa - toaDifference - prPlanned - prSubmitted);
-    //   sum += row[year];
-    // }
-    // row["total"] = sum;
-    // rowdata.push(row);
-
+    var colour =1 ;
     const communityToas = this.pom.communityToas;
     for (let i = 0; i < communityToas.length; i++) {
       let prop = communityToas[i].year.toString();
@@ -498,102 +439,120 @@ export class PrBarChartComponent implements OnInit {
       bar.push(prop);
       bar.push("Year");
       bar.push(amt);
-      bar.push(0);
-
-      //   let totalPrevious = ''
-      //   let totalCurrent = ''
-
-      //   for (let j = 0; j < rowdata.length; j++) {
-      //     if (rowdata[j]['id'] == 'PB ' + (by - 2000 - 1)) {
-      //       totalPrevious = rowdata[j]['id'] + ': ' + this.formatCurrency(rowdata[j][prop])
-      //     }
-      //     else if (rowdata[j]['id'] == 'POM ' + (by - 2000) + ' TOA') {
-      //       totalCurrent = rowdata[j]['id'] + ': ' + this.formatCurrency(rowdata[j][prop])
-      //     }
-      //     if (!(rowdata[j]['id'] == 'PB ' + (by - 2000 - 1) || rowdata[j]['id'] == 'POM ' + (by - 2000) + ' TOA')) {
-      //       bar.push(rowdata[j][prop])
-      //     }
-      //   }
+      bar.push(colour);
+      colour++;
       charty.push(bar);
     }
 
-    if(this.selectTreeFilter == 'Organization'){
-    var orgs = this.pom.orgToas;
-    console.log(orgs, "orgsdata")
-    row = new Object();
-    // row["id"] = "POM " + (by - 2000) + " TOA";
-    sum = 1;
-    for (let i = 0; i < filterId.length; i++) {
+    if (this.selectTreeFilter == 'Organization') {
+      var orgs = this.pom.orgToas;
+      console.log(orgs, "orgsdata")
+      row = new Object();
+      var colour = 1;
+      for (let i = 0; i < filterId.length; i++) {
 
-      console.log(orgs[filterId[i]]);
-      var orgList = orgs[filterId[i]];
-      if (skipUnallocated) {
-        console.log(orgList, orgList.length, "ok");
-        for (let j = 0; j < orgList.length; j++) {
-          let bar = [];
-          bar.push(orgList[j].year.toString() + "-" + this.orgName[i]);
-          bar.push(orgList[j].year.toString());
-          bar.push(orgList[j].amount);
-          bar.push(sum);
-          charty.push(bar);
-          sum++;
+        console.log(orgs[filterId[i]]);
+        var orgList = orgs[filterId[i]];
+        if (skipUnallocated) {
+          for (let j = 0; j < orgList.length; j++) {
+            let bar = [];
+            bar.push(orgList[j].year.toString() + "-" + this.orgName[i]);
+            bar.push(orgList[j].year.toString());
+            bar.push(orgList[j].amount);
+            bar.push(colour);
+            charty.push(bar);
+            colour++;
+          }
         }
       }
     }
-  }
-  if(this.selectTreeFilter == "BA line"){
-    var pbprs = [];
-    var finalBLine : any =[];
-    for(let h=0; h<pbprss.length;h++){
-      finalBLine = pbprss[h]
-      for(let j=0;j<finalBLine.length;j++)
-      pbprs.push(finalBLine[j]);
-    }
-   
-    console.log('ba',pbprs)
-    var pbprsData: any = {};
-    for (let key in pbprs) {
-      for (let key1 in pbprs[key].fundingLines) {
-        if (pbprsData[pbprs[key].fundingLines[key1].baOrBlin]) {
-          for (let key2 in pbprs[key].fundingLines[key1].funds) {
-          if(pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2]) {
-            pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2]+=pbprs[key].fundingLines[key1].funds[key2];
+    if (this.selectTreeFilter == "BA line") {
+      var pbprs = [];
+      var finalBLine: any = [];
+      for (let h = 0; h < pbprss.length; h++) {
+        finalBLine = pbprss[h]
+        for (let j = 0; j < finalBLine.length; j++)
+          pbprs.push(finalBLine[j]);
+      }
+
+      var colour = 1;
+      var pbprsData: any = {};
+      for (let key in pbprs) {
+        for (let key1 in pbprs[key].fundingLines) {
+          if (pbprsData[pbprs[key].fundingLines[key1].baOrBlin]) {
+            for (let key2 in pbprs[key].fundingLines[key1].funds) {
+              if (pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2]) {
+                pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] += pbprs[key].fundingLines[key1].funds[key2];
+              }
+              else {
+                pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = pbprs[key].fundingLines[key1].funds[key2];
+              }
+            }
           }
           else {
-            // pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = [];
-            pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2]=pbprs[key].fundingLines[key1].funds[key2];
-          }
+            pbprsData[pbprs[key].fundingLines[key1].baOrBlin] = {};
+            for (let key2 in pbprs[key].fundingLines[key1].funds) {
+              pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = (pbprs[key].fundingLines[key1].funds[key2]);
+            }
           }
         }
-        else {
-          pbprsData[pbprs[key].fundingLines[key1].baOrBlin] = {};
-          for (let key2 in pbprs[key].fundingLines[key1].funds) {
-            // pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = [];
-            pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = (pbprs[key].fundingLines[key1].funds[key2]);
+      }
+      for (let val in pbprsData) {
+        for (let val2 in pbprsData[val]) {
+          if (parseInt(val2) >= by) {
+            let bar = [];
+            bar.push(val + "-" + val2);
+            bar.push(val2.toString());
+            bar.push(pbprsData[val][val2]);
+            bar.push(colour);
+            colour++;
+            charty.push(bar);
           }
         }
       }
     }
-    for(let val in pbprsData){
-      console.log(pbprsData[val],val,"value");
-      for(let val2 in pbprsData[val]){
-        if(parseInt(val2) >= by){
-      console.log(val2 ,pbprsData[val][val2],"value2");
-      let bar = [];
-        bar.push(val+"-"+val2);
-        bar.push(val2.toString());
-        bar.push(pbprsData[val][val2]);
-        bar.push(0);
-        charty.push(bar);
+
+    if (this.selectTreeFilter == "Program Status") {
+      var pbprsData: any = {};
+      var colour = 1;
+      var pmprsData = pomprs[0]
+      for (let key in pmprsData) {        
+        for (let key1 in pmprsData[key].fundingLines) {
+          if (pbprsData[pmprsData[key].programStatus]) {
+            for (let key2 in pmprsData[key].fundingLines[key1].funds) {
+              
+              if (pbprsData[pmprsData[key].programStatus][key2]) {
+                pbprsData[pmprsData[key].programStatus][key2] += pmprsData[key].fundingLines[key1].funds[key2];
+              }
+              else {
+                pbprsData[pmprsData[key].programStatus][key2] = pmprsData[key].fundingLines[key1].funds[key2];
+              }
+            }
+          }
+          else {
+            pbprsData[pmprsData[key].programStatus] = {};
+            for (let key2 in pmprsData[key].fundingLines[key1].funds) {
+              pbprsData[pmprsData[key].programStatus][key2] = (pmprsData[key].fundingLines[key1].funds[key2]);
+            }
+          }
+        }
+      }
+      for (let val in pbprsData) {
+        for (let val2 in pbprsData[val]) {
+          if (parseInt(val2) >= by) {
+            let bar = [];
+            bar.push(val + "-" + val2);
+            bar.push(val2.toString());
+            bar.push(pbprsData[val][val2]);
+            bar.push(colour);
+            colour++;
+            charty.push(bar);
+          }
         }
       }
     }
-  }
-console.log("Created array = ", pbprsData);
-
-
-    console.log(charty);
-
+    console.log(charty ,"Tree Map");
+    
     return charty;
   }
 
