@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:8445/pfm-server'
+  apiUrl: "https://pfmdev1.pxalphaproject.com/pfm-server"
 };
