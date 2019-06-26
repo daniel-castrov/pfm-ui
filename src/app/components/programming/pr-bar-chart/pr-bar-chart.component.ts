@@ -22,8 +22,10 @@ export class PrBarChartComponent implements OnInit {
 
   private filterIds: string[];
   private filters: FilterCriteria[] = [FilterCriteria.ALL, FilterCriteria.ORG, FilterCriteria.BA, FilterCriteria.PR_STAT];
+  private filtersTreeMap: FilterCriteria[] = [FilterCriteria.ORG, FilterCriteria.BA, FilterCriteria.PR_STAT];
+
   private selectedFilter = FilterCriteria.ALL;
-  private selectTreeFilter: any = FilterCriteria.ALL;
+  private selectTreeFilter: any = FilterCriteria.ORG;
   private chartdata: any;
   private treedata: any;
 
@@ -63,8 +65,9 @@ export class PrBarChartComponent implements OnInit {
   private refresh() {
     if (this._pom && this._pbPrs && this._pomPrs) {
       this.selectDistinctFilterIds(this.selectedFilter = FilterCriteria.ALL);
+      this.selectDistinctTreeFilterIds(this.selectedFilter = FilterCriteria.ALL);
       this.reloadChart("Community TOA", this.pomPrs, this.pbPrs);
-      this.reloadTreeChart("Community TOA", this.pomPrs, this.pbPrs);
+      this.reloadTreeChart(this.filterIds, this.pomPrs, this.pbPrs);
 
     }
   }
@@ -108,13 +111,17 @@ export class PrBarChartComponent implements OnInit {
         for (let i = 0; i < title.length; i++)
           orgN.push("Organization " + this.orgmap.get(title[i]));
         return orgN;
+        case FilterCriteria.ALL:
+          var orgN = [];
+          for (let i = 0; i < title.length; i++)
+            orgN.push("Organization " + this.orgmap.get(title[i]));
+          return orgN;
       case FilterCriteria.BA: return "BA " + title;
       case FilterCriteria.PR_STAT: return "PRstat " + title;
       default: return "Community TOA";
     }
   }
   selectDistinctFilterIds(selectedFilter: FilterCriteria) {
-    debugger;
     switch (selectedFilter) {
       case FilterCriteria.ORG: {
         this.filterIds = _.uniq(_.map(this.pomPrs, 'organizationId'));
@@ -142,6 +149,40 @@ export class PrBarChartComponent implements OnInit {
 
     this.filterIds.sort();
   }
+
+  selectDistinctTreeFilterIds(selectedFilter: FilterCriteria) {
+    switch (selectedFilter) {
+      case FilterCriteria.ORG: {
+        this.filterIds = _.uniq(_.map(this.pomPrs, 'organizationId'));
+        break;
+      }
+      case FilterCriteria.ALL: {
+        this.filterIds = _.uniq(_.map(this.pomPrs, 'organizationId'));
+        break;
+      }
+      case FilterCriteria.BA: {
+        let allBALines = [];
+        this.pomPrs.forEach(pr => {
+          pr.fundingLines.forEach(fl => {
+            allBALines.push(fl.baOrBlin);
+          })
+        });
+        this.filterIds = _.uniq(allBALines);
+        break;
+      }
+      case FilterCriteria.PR_STAT: {
+        this.filterIds = _.uniq(_.map(this.pomPrs, 'programStatus'));
+        break;
+      }
+      default: {
+        this.filterIds = [];
+        break;
+      }
+    }
+
+    this.filterIds.sort();
+  }
+  
 
   reloadChart(filterId: string, pomprs: Program[], pbprs: Program[]) {
     console.log(this.getChartTitle(this.selectedFilter, filterId), 'title');
@@ -336,7 +377,7 @@ console.log(pomprs,"sjjsjsj");
     this.selectTreeFilter = newFilter;
     var pomPrsToChart = [];
     var pbPrsToChart = [];
-    this.selectDistinctFilterIds(this.selectTreeFilter);
+    this.selectDistinctTreeFilterIds(this.selectTreeFilter);
     // let filterId = "";
     console.log(this.filterIds, 'ff');
 
@@ -351,8 +392,8 @@ console.log(pomprs,"sjjsjsj");
 
     }
     else {
-      this.selectDistinctFilterIds(this.selectTreeFilter = FilterCriteria.ALL);
-      this.reloadTreeChart("Community TOA", this.pomPrs, this.pbPrs);
+      this.selectDistinctTreeFilterIds(this.selectTreeFilter = FilterCriteria.ALL);
+      this.reloadTreeChart(this.filterIds, this.pomPrs, this.pbPrs);
     }
   }
 
@@ -369,8 +410,8 @@ console.log(pomprs,"sjjsjsj");
         this.reloadTreeChart(this.filterIds, pomPrsToChart, pbPrsToChart);
 
       } else {
-        this.selectDistinctFilterIds(this.selectTreeFilter = FilterCriteria.ALL);
-        this.reloadTreeChart("", this.pomPrs, this.pbPrs);
+        this.selectDistinctTreeFilterIds(this.selectTreeFilter = FilterCriteria.ALL);
+        this.reloadTreeChart(this.filterIds, this.pomPrs, this.pbPrs);
       }
     }
   }
@@ -431,39 +472,41 @@ console.log(pomprs,"sjjsjsj");
     row["total"] = sum;
     rowdata.push(row);
     var colour =1 ;
-    const communityToas = this.pom.communityToas;
-    for (let i = 0; i < communityToas.length; i++) {
-      let prop = communityToas[i].year.toString();
-      let amt = communityToas[i].amount;
-      let bar: any[] = []
-      bar.push(prop);
-      bar.push("Year");
-      bar.push(amt);
-      bar.push(colour);
-      colour++;
-      charty.push(bar);
-    }
+    // const communityToas = this.pom.communityToas;
+    // for (let i = 0; i < communityToas.length; i++) {
+    //   let prop = communityToas[i].year.toString();
+    //   let amt = communityToas[i].amount;
+    //   let bar: any[] = []
+    //   bar.push(prop);
+    //   bar.push("Year");
+    //   bar.push(amt);
+    //   bar.push(colour);
+    //   colour++;
+    //   charty.push(bar);
+    // }
 
-    if (this.selectTreeFilter == 'Organization') {
+    if (this.selectTreeFilter == 'Organization' || this.selectTreeFilter == 'All') {
       var orgs = this.pom.orgToas;
       console.log(orgs, "orgsdata")
       row = new Object();
       var colour = 1;
       for (let i = 0; i < filterId.length; i++) {
 
-        console.log(orgs[filterId[i]]);
+        console.log(orgs[filterId[i]],filterId[i]);
         var orgList = orgs[filterId[i]];
+        var sumOrgAmount=0
         if (skipUnallocated) {
           for (let j = 0; j < orgList.length; j++) {
-            let bar = [];
-            bar.push(orgList[j].year.toString() + "-" + this.orgName[i]);
-            bar.push(orgList[j].year.toString());
-            bar.push(orgList[j].amount);
+            sumOrgAmount +=(orgList[j].amount);
+          }
+        }
+        let bar = [];
+            bar.push(this.orgName[i]);
+            bar.push("Year");
+            bar.push(sumOrgAmount);
             bar.push(colour);
             charty.push(bar);
             colour++;
-          }
-        }
       }
     }
     if (this.selectTreeFilter == "BA line") {
@@ -481,34 +524,33 @@ console.log(pomprs,"sjjsjsj");
         for (let key1 in pbprs[key].fundingLines) {
           if (pbprsData[pbprs[key].fundingLines[key1].baOrBlin]) {
             for (let key2 in pbprs[key].fundingLines[key1].funds) {
-              if (pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2]) {
-                pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] += pbprs[key].fundingLines[key1].funds[key2];
+              if (parseInt(key2) >= by) {
+                pbprsData[pbprs[key].fundingLines[key1].baOrBlin] += pbprs[key].fundingLines[key1].funds[key2];
               }
-              else {
-                pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = pbprs[key].fundingLines[key1].funds[key2];
               }
-            }
           }
           else {
             pbprsData[pbprs[key].fundingLines[key1].baOrBlin] = {};
             for (let key2 in pbprs[key].fundingLines[key1].funds) {
-              pbprsData[pbprs[key].fundingLines[key1].baOrBlin][key2] = (pbprs[key].fundingLines[key1].funds[key2]);
+              if (parseInt(key2) >= by) {
+              pbprsData[pbprs[key].fundingLines[key1].baOrBlin] = (pbprs[key].fundingLines[key1].funds[key2]);
+              }
             }
           }
         }
       }
+      console.log("PBSSSS" ,pbprsData );
+      
       for (let val in pbprsData) {
-        for (let val2 in pbprsData[val]) {
-          if (parseInt(val2) >= by) {
+        console.log(val,"vaaalll");
             let bar = [];
-            bar.push(val + "-" + val2);
-            bar.push(val2.toString());
-            bar.push(pbprsData[val][val2]);
+            bar.push(val);
+            bar.push("Year");
+            bar.push(pbprsData[val]);
             bar.push(colour);
             colour++;
             charty.push(bar);
-          }
-        }
+
       }
     }
 
@@ -520,37 +562,34 @@ console.log(pomprs,"sjjsjsj");
         for (let key1 in pmprsData[key].fundingLines) {
           if (pbprsData[pmprsData[key].programStatus]) {
             for (let key2 in pmprsData[key].fundingLines[key1].funds) {
-              
-              if (pbprsData[pmprsData[key].programStatus][key2]) {
-                pbprsData[pmprsData[key].programStatus][key2] += pmprsData[key].fundingLines[key1].funds[key2];
+              if (parseInt(key2) >= by) {
+                pbprsData[pmprsData[key].programStatus] += pmprsData[key].fundingLines[key1].funds[key2];
               }
-              else {
-                pbprsData[pmprsData[key].programStatus][key2] = pmprsData[key].fundingLines[key1].funds[key2];
               }
-            }
           }
           else {
             pbprsData[pmprsData[key].programStatus] = {};
+            var totalProgm = 0;
             for (let key2 in pmprsData[key].fundingLines[key1].funds) {
-              pbprsData[pmprsData[key].programStatus][key2] = (pmprsData[key].fundingLines[key1].funds[key2]);
+              if (parseInt(key2) >= by)
+              totalProgm += pmprsData[key].fundingLines[key1].funds[key2];
             }
+            pbprsData[pmprsData[key].programStatus] = totalProgm;
           }
         }
       }
-      for (let val in pbprsData) {
-        for (let val2 in pbprsData[val]) {
-          if (parseInt(val2) >= by) {
+      console.log("PBSSSS" ,pbprsData );
+
+        for (let val in pbprsData) {
             let bar = [];
-            bar.push(val + "-" + val2);
-            bar.push(val2.toString());
-            bar.push(pbprsData[val][val2]);
+            bar.push(val);
+            bar.push("Year");
+            bar.push(pbprsData[val]);
             bar.push(colour);
             colour++;
             charty.push(bar);
           }
         }
-      }
-    }
     console.log(charty ,"Tree Map");
     
     return charty;
