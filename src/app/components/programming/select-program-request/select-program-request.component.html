@@ -30,23 +30,26 @@
         </div>
       </div>
       <div class="col-lg-7 col-md-12">
+          Message: {{ message }}
         <app-pr-bar-chart class="bar-chart pull-right" 
           [pomPrs]='pomPrograms'
           [pbPrs]='pbPrograms'
           [pom]='pom'
           [orgmap]='orgMap'
+          (messageEvent)="receiveMessage($event)"
         ></app-pr-bar-chart>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
-        <program-requests [pomPrograms]="pomPrograms"
-                               [pbPrograms]="pbPrograms"
+        <program-requests [pomPrograms]="pomPrograms1"
+                               [pbPrograms]="pbPrograms1"
                                [orgMap]='orgMap'
                                [pomFy]="pom?.fy"
                                [reviewOnly]="false"
                                (deleted)="onDeletePr()">
         </program-requests>
+        
       </div>
     </div>
   </div>
