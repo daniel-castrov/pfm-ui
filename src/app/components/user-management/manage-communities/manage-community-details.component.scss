@@ -6,7 +6,9 @@ $light-blue: #dbe8f7;
 $light-grey: #f7f7f7;
 $medium-grey: #dddddd;
 $dark-grey: #848282;
-
+.single-row{
+  display: flex;
+}
 .community-list {
 
   margin-left: -42px;

@@ -1,47 +1,50 @@
 <app-header></app-header>
-
-<div class="row main-content">
-  <div class="col-12">
-
-    <div class="row mb-4">
-      <div class="col-12">
-        <span class="h5">Create New Unfunded Program</span>
-      </div>
-    </div>
-
-    <div class="row mb-4">
-      <div class="col-9">
-        <span class="form-group mr-3">
-          <label class="mr-1" for="id">*Program ID:</label>
-          <input id="id" [formControl]="shortname" type="text" class="form-control forminput shortname" [(ngModel)]="pr.shortName" aria-label="short name">
-        </span>
-        <span class="form-group mr-3">
-          <label class="mr-1" for="name">*Program Name:</label>
-          <input id="name"  [formControl]="longname" type="text" class="form-control forminput longname mr-2" [(ngModel)]="pr.longName" aria-label="short name">
-        </span>
-        <span class="form-group">
-          <label class="mr-1">Program Type:</label>
-          <span class="type" type="text" class="shortname mr-2">Program</span>
-        </span>
-        <div class="text-danger" *ngIf="!shortname.pristine && shortname.invalid && shortname.errors.required">Program ID is required</div>
-        <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program ID already exists</div>
-        <div class="text-danger" *ngIf="!longname.pristine && longname.invalid && longname.errors.required">Program Name is required</div>
-        <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program Name already exists</div>
-      </div>
-      <div class="col-lg-3">
-        <div class="pull-right">
-          <button class="btn btn-success" (click)="submit()" [disabled]="isNotSubmittable()">Submit</button>
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar> 
+  <div class="row main-content">
+    <div class="col-12">
+  
+      <div class="row mb-4">
+        <div class="col-12">
+          <span class="h5">Create New Unfunded Program</span>
         </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-12">
-        <fieldset>
-          <program-tab [pr]="pr" role="tabpanel" [pom]="pom"></program-tab>
-        </fieldset>
+  
+      <div class="row mb-4">
+        <div class="col-9">
+          <span class="form-group mr-3">
+            <label class="mr-1" for="id">*Program ID:</label>
+            <input id="id" [formControl]="shortname" type="text" class="form-control forminput shortname" [(ngModel)]="pr.shortName" aria-label="short name">
+          </span>
+          <span class="form-group mr-3">
+            <label class="mr-1" for="name">*Program Name:</label>
+            <input id="name"  [formControl]="longname" type="text" class="form-control forminput longname mr-2" [(ngModel)]="pr.longName" aria-label="short name">
+          </span>
+          <span class="form-group">
+            <label class="mr-1">Program Type:</label>
+            <span class="type" type="text" class="shortname mr-2">Program</span>
+          </span>
+          <div class="text-danger" *ngIf="!shortname.pristine && shortname.invalid && shortname.errors.required">Program ID is required</div>
+          <div class="text-danger" *ngIf="shortname.invalid && shortname.errors.alreadyExists">Program ID already exists</div>
+          <div class="text-danger" *ngIf="!longname.pristine && longname.invalid && longname.errors.required">Program Name is required</div>
+          <div class="text-danger" *ngIf="longname.invalid && longname.errors.alreadyExists">Program Name already exists</div>
+        </div>
+        <div class="col-lg-3">
+          <div class="pull-right">
+            <button class="btn btn-success" (click)="submit()" [disabled]="isNotSubmittable()">Submit</button>
+          </div>
+        </div>
       </div>
+  
+      <div class="row">
+        <div class="col-lg-12">
+          <fieldset>
+            <program-tab [pr]="pr" role="tabpanel" [pom]="pom"></program-tab>
+          </fieldset>
+        </div>
+      </div>
+  
     </div>
-
   </div>
 </div>
+

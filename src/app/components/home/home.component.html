@@ -1,4 +1,6 @@
 <j-header></j-header>
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
 <div class="row main-content" *ngIf="header.authUser">
   <div class="error" *ngFor="let error of resultError">{{error}}</div>
   <div class="col-lg-6 col-sm-12">
@@ -31,4 +33,5 @@
         <i class="fa fa-plus" aria-hidden="true"></i> Add Link</span>
     </div>
   </div>
+</div>
 </div>

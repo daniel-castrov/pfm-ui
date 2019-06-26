@@ -1,15 +1,18 @@
 <header-open></header-open>
-<div class="row main-content">
-  <div class="col-4">
-  </div>
-  <div class="col-4">
-    <div class="login-info">
-      <p>Proceed to PFM</p>
-      <button type="button" class="btn btn-primary" (click)="onLoginClick()">
-        PFM
-      </button>
-    </div>
-  </div>
-  <div class="col-4">
-  </div>
+<div style="display: flex">
+    <app-sidebar-menu></app-sidebar-menu>
+      <div class="row main-content">
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+          <div class="login-info">
+            <p>Proceed to PFM</p>
+            <button type="button" class="btn btn-primary" (click)="onLoginClick()">
+              PFM
+            </button>
+          </div>
+        </div>
+        <div class="col-4">
+        </div>
+      </div>
 </div>
