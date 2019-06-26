@@ -1,6 +1,7 @@
 import {UserUtils} from '../../../../services/user.utils';
 import {Component, Input, OnChanges, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
 import {Organization, OrganizationService, Program, UFR, UFRFilter, UFRsService, User} from '../../../../generated';
 import {ProgramAndPrService} from '../../../../services/program-and-pr.service';
@@ -33,6 +34,7 @@ export class AllUfrsComponent implements OnChanges {
   private rowData: any[];
   private colDefs;
   private menuTabs = ['filterMenuTab'];
+  private agOptions: GridOptions;
 
   @Input() urlPath;
   @Input() ufrFilter: UFRFilter;
@@ -47,7 +49,21 @@ export class AllUfrsComponent implements OnChanges {
                private userUtils: UserUtils,
                private orgSvc: OrganizationService,
                private router: Router,
-               private programAndPrService: ProgramAndPrService) {}
+               private programAndPrService: ProgramAndPrService) {
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: true,
+        sortable: true
+      },
+      frameworkComponents: { simpleLinkCellRendererComponent: SimpleLinkCellRendererComponent },
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
+      suppressRowTransform: true,      
+      pagination: true,
+      paginationPageSize: 20,
+      pivotMode: false
+    }               
+  }
 
   async ngOnChanges() {
 

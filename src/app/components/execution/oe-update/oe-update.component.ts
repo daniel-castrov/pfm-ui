@@ -46,12 +46,15 @@ export class OeUpdateComponent implements OnInit {
     };
 
     this.agOptions = <GridOptions>{
-      defaultColDef: { sorting: true },
-      enableFilter: true,
-      gridAutoHeight: true,
+      defaultColDef: { 
+        sorting: true,
+        resizable: true
+      },
       pagination: true,
-      paginationPageSize: 30,
+      paginationPageSize: 20,
       suppressPaginationPanel: true,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
       frameworkComponents: agcomps,
       context: {
         route: '/program-execution-line',

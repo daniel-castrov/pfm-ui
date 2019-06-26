@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
 import {FileMetadata, FileResponse, LibraryService} from "../../../generated";
 import {LibraryViewCellRenderer} from "../../renderers/library-view-cell-renderer/library-view-cell-renderer.component";
@@ -18,11 +19,23 @@ export class LibraryComponent implements OnInit {
 
   data: Array<FileMetadata>;
   columnDefs= [];
-  frameworkComponents = {libraryViewCellRenderer: LibraryViewCellRenderer};
-  context = {parentComponent: this};
   menuTabs = ['filterMenuTab'];
+  agOptions: GridOptions;
 
-  constructor(private libraryService: LibraryService) {}
+  constructor(private libraryService: LibraryService) {
+    this.agOptions = <GridOptions>{
+      defaultColDef:{
+        filter: true
+      },
+      pagination: true,
+      paginationPageSize: 15,
+      suppressPaginationPanel: true,
+      suppressMovableColumns: true,
+      suppressDragLeaveHidesColumns: true,
+      frameworkComponents: {libraryViewCellRenderer: LibraryViewCellRenderer},
+      context: {parentComponent: this}
+    }
+  }
 
   async ngOnInit() {
     this.columnDefs = this.getColumnDefs();

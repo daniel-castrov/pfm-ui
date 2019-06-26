@@ -217,12 +217,17 @@ export class ExecutionLineTableComponent implements OnInit {
     }
 
     this.agOptions = <GridOptions>{
-      defaultColDef: { sorting: true },
-      enableFilter: true,
-      gridAutoHeight: true,
+      defaultColDef: { 
+        sorting: true,
+        resizable: true,
+        filter: true
+       },
       pagination: true,
       paginationPageSize: 30,
       suppressPaginationPanel: true,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      singleClickEdit: true,
       frameworkComponents: agcomps,
       onFilterModified: ev => {
         my.refreshpins();

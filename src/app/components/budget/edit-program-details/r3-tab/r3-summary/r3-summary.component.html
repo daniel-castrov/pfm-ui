@@ -3,13 +3,11 @@
   <div class="col-lg-6 col-md-12"></div>
   <div class="col-lg-6 col-md-12">
     <ag-grid-angular #agGrid class="ag-theme-balham"
+                     domLayout="autoHeight"
+                     [gridOptions]="agOptions"
                      [columnDefs]="colDefs"
                      [rowData]="rowsData"
                      [pinnedBottomRowData]="deltaRow"
-                     [gridAutoHeight]="true"
-                     [toolPanelSuppressSideButtons]="true"
-                     [suppressDragLeaveHidesColumns]="true"
-                     [suppressMovableColumns]="true"
                      (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>

@@ -17,7 +17,7 @@ import {Notify} from '../../../../utils/Notify';
 import {DataRow} from './DataRow';
 import {PhaseType} from '../../select-program-request/UiProgramRequest';
 import {FormatterUtil} from '../../../../utils/formatterUtil';
-import {ColumnApi, GridApi} from 'ag-grid-community';
+import {ColumnApi, GridApi, GridOptions} from 'ag-grid-community';
 import {DeleteRenderer} from '../../../renderers/delete-renderer/delete-renderer.component';
 
 @Component({
@@ -48,14 +48,26 @@ export class VariantsTabComponent implements OnInit {
   gridApi: Map<string, GridApi> = new Map();
   columnApi: Map<string, ColumnApi> = new Map();
   isVariantsTabValid: any[] = [];
-  frameworkComponents = {deleteRenderer: DeleteRenderer};
-  context = {parentComponent: this};
+  private agOptions: GridOptions;
 
   constructor(private pomService: POMService,
     private pbService: PBService,
     private globalsService: UserUtils,
     private rolesvc:RolesPermissionsService
-  ) { }
+  ) {
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: true,
+        sortable: true
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true,
+      context: {parentComponent: this},
+      frameworkComponents: {deleteRenderer: DeleteRenderer}
+    }
+  }
 
   ngOnChanges(){
     if(!this.current.containerId) return; // the parent has not completed it's ngOnInit()

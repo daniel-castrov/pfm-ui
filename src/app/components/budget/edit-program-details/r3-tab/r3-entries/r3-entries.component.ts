@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Budget, R3Contractor, R3ContractType, R3CostCategory, R3Entry} from '../../../../../generated';
+import {GridOptions} from 'ag-grid-community';
 import {AgGridNg2} from 'ag-grid-angular';
 import {DeleteRenderer} from '../../../../renderers/delete-renderer/delete-renderer.component';
 import {PropertyUtils} from '../../../../../utils/property-utils';
@@ -23,17 +24,36 @@ export class R3EntriesComponent implements OnInit {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   columnDefs: any[];
   by;
-  frameworkComponents = {deleteRenderer: DeleteRenderer, dateEditor: DateEditorComponent};
-  context = {
-    parentComponent: this,
-    deleteHidden: false
-  };
   components = { numericCellEditor: CellEditor.getNumericCellEditor(), dateRenderer: (params)=>this.dateRenderer(params)};
-  defaultColDef = { suppressMenu: true, editable: true, cellClass: 'ag-cell-edit' };
+  agOptions: GridOptions;
 
   constructor( private propertyUtils: PropertyUtils,
                private currentPhase: CurrentPhase,
-               private dateParser: NgbDateParserFormatter) {}
+               private dateParser: NgbDateParserFormatter) {
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: false,
+        uppressMenu: true, 
+        editable: true, 
+        cellClass: 'ag-cell-edit'
+      },
+      domLayout: 'normal',
+      animateRows: true,
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      suppressPaginationPanel: true,
+      stopEditingWhenGridLosesFocus: true,
+      singleClickEdit: true,
+      frameworkComponents: {
+        deleteRenderer: DeleteRenderer, 
+        dateEditor: DateEditorComponent
+      },
+      context: {
+        parentComponent: this,
+        deleteHidden: false
+      }
+    }                
+  }
 
   async ngOnInit() {
     const [r3CostCategories, r3ContractTypes, r3Contractors, budget] = await forkJoin(

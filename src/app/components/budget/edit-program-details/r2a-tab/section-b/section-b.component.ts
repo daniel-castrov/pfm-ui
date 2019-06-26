@@ -11,6 +11,7 @@ import {CurrentPhase} from '../../../../../services/current-phase.service';
 import {SummaryDetail} from '../../../../../generated/model/summaryDetail';
 import {RdteProgramContextService} from '../../rdte-program-context.service';
 import {CellEditor} from '../../../../../utils/CellEditor';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'section-b',
@@ -33,21 +34,31 @@ export class SectionBComponent implements OnChanges {
   py;
   cy;
   explanations;
-  frameworkComponents = {deleteRenderer: DeleteRenderer};
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
   form: FormGroup;
   summaryDetail: SummaryDetail;
   delta: any = {};
-  context = {
-    parentComponent: this,
-    deleteHidden: false
-  };
   program;
   item;
+  agOptions: GridOptions;
+
   constructor(private propertyService: PropertyService,
               private currentPhase: CurrentPhase,
               private lockPositionService: LockPositionService,
               private rdteProgramContextService: RdteProgramContextService ) {
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        filter: false
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      suppressPaginationPanel: true,
+      context: {
+        parentComponent: this,
+        deleteHidden: false
+      },
+      frameworkComponents: { deleteRenderer: DeleteRenderer }
+    }
   }
 
   async ngOnChanges() {

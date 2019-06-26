@@ -23,8 +23,16 @@ export class WorksheetViewingComponent implements OnInit {
                private worksheetService: WorksheetService,
                private userUtils: UserUtils ) {
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-
+      defaultColDef:{
+        sortable: true,
+        resizable: true,
+        filter: false
+      },
+      pagination: true,
+      paginationPageSize: 6,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
       columnDefs: [{headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameViewingRendererComponent},
                    {headerName: 'Number', field: 'number', maxWidth: 90},
                    {headerName: 'Created', field: 'createdOn', width: 140, filter: "agDateColumnFilter"},

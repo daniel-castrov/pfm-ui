@@ -3,6 +3,7 @@ import { AgGridNg2 } from "ag-grid-angular";
 import { UiProgramRequest } from '../UiProgramRequest';
 import { Pom } from '../../../../generated/model/pom';
 import {Program} from "../../../../generated";
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'j-pom',
@@ -19,6 +20,14 @@ export class PomComponent implements OnChanges {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   rowsData: any[];
   colDefs;
+  private agOptions: GridOptions;
+
+  constructor(){
+    this.agOptions = <GridOptions>{
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true
+    }
+  }
 
   ngOnChanges() {
 

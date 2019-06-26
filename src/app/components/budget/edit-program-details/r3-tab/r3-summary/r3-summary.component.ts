@@ -9,6 +9,7 @@ import {CurrentPhase} from '../../../../../services/current-phase.service';
 import {Notify} from '../../../../../utils/Notify';
 import {AgGridNg2} from 'ag-grid-angular';
 import {FormatterUtil} from '../../../../../utils/formatterUtil';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'r3-summary',
@@ -25,9 +26,14 @@ export class R3SummaryComponent implements OnChanges {
   rowsData: any[];
   deltaRow: any[];
   colDefs;
+  agOptions: GridOptions;
 
   constructor(private rdteProgramContextService: RdteProgramContextService,
               private currentPhase: CurrentPhase) {
+    this.agOptions = <GridOptions>{
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true
+    }
   }
 
   async ngOnChanges() {

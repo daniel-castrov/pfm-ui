@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, ViewChild} from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
 import {LibraryService, RdteBudgetData} from '../../../../generated';
 import {Notify} from '../../../../utils/Notify';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'overview-tab',
@@ -15,8 +16,14 @@ export class OverviewTabComponent implements OnChanges {
   @ViewChild("agGrid") private agGrid: AgGridNg2;
   rowsData: any[]=[];
   colDefs;
+  private agOptions: GridOptions;
 
-  constructor( private libraryService:LibraryService ) { }
+  constructor( private libraryService:LibraryService ) { 
+    this.agOptions = <GridOptions>{
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true
+    }
+  }
 
   ngOnChanges() {
     if ( this.rdteBudgetData && this.rdteBudgetData.toc ){

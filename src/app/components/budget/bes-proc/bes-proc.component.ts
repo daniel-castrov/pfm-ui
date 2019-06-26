@@ -1,5 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {AgGridNg2} from 'ag-grid-angular';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'bes-proc',
@@ -12,35 +13,41 @@ export class BesProcComponent  {
 
   private gridApi;
   private gridColumnApi;
-  private columnDefs;
   private rowData;
   private groupDefaultExpanded;
   private getTreeHierarchy;
   private autoGroupColumnDef;
+  private agOptions: GridOptions;
 
   items: any[] = [];
 
   constructor() {
-
-    this.columnDefs = [
-      {
+    this.agOptions = <GridOptions>{
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
+      treeData: true,
+      animateRows: true,    
+      columnDefs: [
+        {
         field: "form",
         headerName: "Form",
         maxWidth: 120,
-      },
-      {
-        field: "status",
-        headerName: "Status",
-        maxWidth: 120,
-      },
-      {
-        field: "PE",
-        maxWidth: 120,
-      },
-      {
-        field: "desc",
-      },
-    ];
+        },
+        {
+          field: "status",
+          headerName: "Status",
+          maxWidth: 120,
+        },
+        {
+          field: "PE",
+          maxWidth: 120,
+        },
+        {
+          field: "desc",
+        }
+      ]
+    }    
 
     this.initRowData();
 

@@ -26,6 +26,7 @@
     <div class="row mb-3">
       <div class="col-12">
           <ag-grid-angular #agGrid class="ag-theme-balham" id="myGrid"
+            domLayout="autoHeight"
             [gridOptions]="agOptions"
             [rowData]="rowData"
             (gridReady)="onGridReady($event)"

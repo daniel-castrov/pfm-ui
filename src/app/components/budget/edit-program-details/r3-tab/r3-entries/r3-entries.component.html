@@ -13,23 +13,11 @@
   <div class="col-12">
     <ag-grid-angular #agGrid
                      class="ag-theme-balham height-350"
+                     [gridOptions]="agOptions"
                      [columnDefs]="columnDefs"
-                     [defaultColDef]="defaultColDef"
                      [rowData]="entries"
-                     [gridAutoHeight]="false"
-                     [enableFilter]="false"
-                     [showToolPanel]="false"
-                     [animateRows]="true"
-                     [toolPanelSuppressSideButtons]="true"
-                     [suppressMovableColumns]="true"
-                     [suppressRowTransform]="true"
-                     [suppressPaginationPanel]="true"
-                     [stopEditingWhenGridLosesFocus]="true"
                      [rowSelection]="'single'"
-                     [singleClickEdit]="true"
-                     [frameworkComponents]="frameworkComponents"
-                     [components]="components"
-                     [context]="context">
+                     [components]="components">
     </ag-grid-angular>
   </div>
 </div>

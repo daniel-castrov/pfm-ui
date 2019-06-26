@@ -1,28 +1,13 @@
 
 <ag-grid-angular #agGrid 
   class="ag-theme-balham"
+  domLayout="autoHeight"
+  [gridOptions]="agOptions"
   [columnDefs]="colDefs"
-  [rowData]="rowData"
-  [gridAutoHeight]="true"
-  [enableSorting]="true"
-  [enableFilter]="true"
-  [showToolPanel]="false"
-  [toolPanelSuppressPivotMode]="true"
-  [toolPanelSuppressRowGroups]="true"
-  [toolPanelSuppressValues]="true"
-  [toolPanelSuppressPivots]="true"
-  [toolPanelSuppressColumnFilter]="true"
-  [toolPanelSuppressColumnSelectAll]="true"
-  [suppressMovableColumns]="true"
-  [suppressRowTransform]="true"
+  [rowData]="rowData"  
   (toolPanelVisibleChanged)="onToolPanelVisibleChanged($event)"
   (columnVisible)="onColumnVisible($event)"
-  [pivotMode]="false"
-  [pagination]="true"
-  [paginationPageSize]="20"
   (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-  [suppressPaginationPanel]="true"
-  [frameworkComponents]="frameworkComponents"
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
