@@ -218,6 +218,7 @@ import { OrganizationToaComponent } from './components/programming/create-pom-se
 import { PrBarChartComponent } from './components/programming/pr-bar-chart/pr-bar-chart.component';
 import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
 import { FundingRateRenderer } from './components/renderers/funding-rate-renderer/funding-rate-renderer.component';
+import { PrTreeChartComponent } from './components/programming/pr-tree-chart/pr-tree-chart.component';
 
 // ROUTES
 const appRoutes: Routes = [
@@ -520,6 +521,7 @@ const appRoutes: Routes = [
     PrBarChartComponent,
     PomAnalysisComponent,
     FundingRateRenderer,
+    PrTreeChartComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,

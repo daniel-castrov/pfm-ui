@@ -27,8 +27,8 @@ export class SelectProgramRequestComponent implements OnInit {
   public pom: Pom;
   public pomPrograms: Program[];
   public pbPrograms: Program[];
-  public pomPrograms1: Program[];
-  public pbPrograms1: Program[];
+  public pomProgramsUpdatedData: Program[];
+  public pbProgramsUpdatedData: Program[];
   public thereAreOutstandingPRs: boolean;
   private charTitle = "";
   private chartdata;
@@ -79,14 +79,14 @@ export class SelectProgramRequestComponent implements OnInit {
     return new Promise(async (resolve) => {
       delete this.pomPrograms;
       this.pomPrograms = (await this.programAndPrService.programRequests(this.currworkspace.id));
-      this.pomPrograms1 = this.pomPrograms;
+      this.pomProgramsUpdatedData = this.pomPrograms;
       resolve();
     });
   }
 
   async initPbPrs(year: number) {
     this.pbPrograms = (await this.pbService.getFinalByYear(year).toPromise()).result;
-    this.pbPrograms1 = this.pbPrograms;
+    this.pbProgramsUpdatedData = this.pbPrograms;
   }
 
   onDeletePr() {
@@ -158,8 +158,8 @@ export class SelectProgramRequestComponent implements OnInit {
     });
   }
 
-  receiveMessage(pomData) {
-    this.pomPrograms1=pomData.pom;
-    this.pbPrograms1=pomData.pb;
+  receiveUpdatedData(pomData) {
+    this.pomProgramsUpdatedData=pomData.pom;
+    this.pbProgramsUpdatedData=pomData.pb;
   }
 }
