@@ -3,6 +3,9 @@
   margin: auto 0;
   padding: 0;
 }
+.single-row{
+  display: flex;
+}
 
 .card-header {
   float: left;

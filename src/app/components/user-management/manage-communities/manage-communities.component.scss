@@ -6,7 +6,9 @@ $light-blue: #dbe8f7;
 $light-grey: #f7f7f7;
 $medium-grey: #dddddd;
 $dark-grey: #848282;
-
+.single-row{
+  display: flex;
+}
 select {
   margin: 0px 5px 4px 0 !important;
   padding: 2px 6px;

@@ -1,9 +1,8 @@
 <app-header></app-header>
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-
-      <div class="row mb-3">
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+      <div class="row main-content">
         <div class="col-12">
 
           <ag-grid-angular #agGrid
@@ -21,5 +20,5 @@
         </div>
       </div>
     </div>
-  </div>
+    
 </div>

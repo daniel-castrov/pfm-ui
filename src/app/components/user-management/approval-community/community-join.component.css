@@ -25,7 +25,9 @@
   color: #fff;
   margin-bottom: 5px;
 }
-
+.single-row{
+  display: flex;
+}
 .message {
   margin-left: 30rem
 }

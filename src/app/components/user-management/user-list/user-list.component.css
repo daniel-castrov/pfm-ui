@@ -1,4 +1,6 @@
-
+.single-row{
+  display: flex;
+}
 .card-header {
   float: left;
   margin-bottom: 0 !important;

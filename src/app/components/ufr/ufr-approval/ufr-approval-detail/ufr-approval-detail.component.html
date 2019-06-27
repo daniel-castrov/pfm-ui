@@ -1,108 +1,111 @@
 <app-header></app-header>
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
 <div class="container-fluid">
-  <div class="row main-content" *ngIf="ufr">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-8">
-          <div class="h5">Approve UFR {{requestNumber}}: {{ufr.ufrName}}</div>
-        </div>
-        <div class="col-4">
-          <div class="pull-right mb-4" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">
-                  <span>
-                    <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-                  </span>
-                  <span>
-                    <a href="#" routerLink="/ufr-approval-summary">back to UFR Approval Summary</a>
-                  </span>
-                </li>
-              </ol>
+    <div class="row main-content" *ngIf="ufr">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-8">
+            <div class="h5">Approve UFR {{requestNumber}}: {{ufr.ufrName}}</div>
           </div>
-        </div>
-      </div>
-      <div class="row mb-5">
-        <div class="col-6">
-          <a class="pull-left prev-link {{previousUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{previousUfrId? '/ufr-approval-detail/' + previousUfrId : ''}}">
-            <i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous UFR
-          </a>
-        </div>
-
-        <div class="col-6">
-          <a class="pull-right next-link  {{nextUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{nextUfrId? '/ufr-approval-detail/' + nextUfrId : ''}}">
-            Next UFR <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <div class="col-7">
-          <div class="row">
-            <div class="col-2">
-              <label class="mr-1">Program ID: </label>
-            </div>
-            <div class="col-10">
-              <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
-                <span class="mr-1 text-truncate" *ngIf="shorty?.shortName">{{shorty.shortName}}</span>
-              </ng-container>
-              <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
-                                             ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR' ||
-                                             ufr.shortyType=='NEW_PROGRAM'">
-                <span class="mr-1 text-truncate" *ngIf="ufr.shortName">{{ufr.shortName}}</span>
-              </ng-container>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-2">
-              <label class="mr-1">CCA: </label>
-            </div>
-            <div class="col-10">
-              <span class="mr-1 text-truncate">{{ufr.coreCapability}}</span>
+          <div class="col-4">
+            <div class="pull-right mb-4" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <span>
+                      <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                    </span>
+                    <span>
+                      <a href="#" routerLink="/ufr-approval-summary">back to UFR Approval Summary</a>
+                    </span>
+                  </li>
+                </ol>
             </div>
           </div>
         </div>
-        <div class="col-5">
-          <div class="row">
-            <div class="col-4">
-              <label class="select-label" *ngIf="ufr.ufrStatus !== UfrStatus.SUBMITTED" for="status">Status: </label>
-              <select id="status"
-                      [disabled]="ufr.ufrStatus !== UfrStatus.SUBMITTED"
-                      [(ngModel)]="ufr.ufrStatus"
-                      (change)="updateUfr('status')"
-                      class="form-control">
-                <option hidden [value]="UfrStatus.SUBMITTED">Status</option>
-                <option [value]="UfrStatus.VALID">Valid</option>
-                <option [value]="UfrStatus.INVALID">Invalid</option>
-                <option [value]="UfrStatus.WITHDRAWN">Withdrawn</option>
-              </select>
+        <div class="row mb-5">
+          <div class="col-6">
+            <a class="pull-left prev-link {{previousUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{previousUfrId? '/ufr-approval-detail/' + previousUfrId : ''}}">
+              <i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous UFR
+            </a>
+          </div>
+  
+          <div class="col-6">
+            <a class="pull-right next-link  {{nextUfrId? '' : 'disabled-style'}}" href="#" routerLink="{{nextUfrId? '/ufr-approval-detail/' + nextUfrId : ''}}">
+              Next UFR <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-7">
+            <div class="row">
+              <div class="col-2">
+                <label class="mr-1">Program ID: </label>
+              </div>
+              <div class="col-10">
+                <ng-container *ngIf="ufr.shortyType=='MRDB_PROGRAM' || ufr.shortyType=='PR'">
+                  <span class="mr-1 text-truncate" *ngIf="shorty?.shortName">{{shorty.shortName}}</span>
+                </ng-container>
+                <ng-container *ngIf="ufr.shortyType=='NEW_INCREMENT_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_INCREMENT_FOR_PR' ||
+                                               ufr.shortyType=='NEW_FOS_FOR_MRDB_PROGRAM' || ufr.shortyType=='NEW_FOS_FOR_PR' ||
+                                               ufr.shortyType=='NEW_PROGRAM'">
+                  <span class="mr-1 text-truncate" *ngIf="ufr.shortName">{{ufr.shortName}}</span>
+                </ng-container>
+              </div>
             </div>
-            <div class="col-4">
-              <label class="select-label" *ngIf="ufr.priority" for="status">Priority: </label>
-              <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
-                      [disabled]="ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER"
-                      [(ngModel)]="ufr.priority"
-                      (change)="updateUfr('priority')"
-                      class="form-control">
-                <option hidden value="null">Priority</option>
-                <option *ngFor="let index of [1,2,3,4,5,6,7,8,9,10]">{{index}}</option>
-              </select>
+            <div class="row">
+              <div class="col-2">
+                <label class="mr-1">CCA: </label>
+              </div>
+              <div class="col-10">
+                <span class="mr-1 text-truncate">{{ufr.coreCapability}}</span>
+              </div>
             </div>
-            <div *ngIf="pom" class="col-4">
-              <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
-              <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
-                      [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER)
-                       || pom.status !== 'OPEN'
-                       || !ufr.priority"
-                      [(ngModel)]="ufr.disposition"
-                      (change)="updateUfr('disposition')"
-                      class="form-control">
-                <option hidden value="null">Disposition</option>
-                <option [value]="Disposition.APPROVED">Approved</option>
-                <option [value]="Disposition.PARTIALLY_APPROVED">Partially approved</option>
-                <option [value]="Disposition.DEFERRED">Deferred to future POM</option>
-                <option [value]="Disposition.YEAR_OF_EXECUTION">Deferred to YOE</option>
-                <option [value]="Disposition.ISSUE_PAPER">Issue Paper</option>
-                <option [value]="Disposition.DISAPPROVED">Disapproved</option>
-              </select>
+          </div>
+          <div class="col-5">
+            <div class="row">
+              <div class="col-4">
+                <label class="select-label" *ngIf="ufr.ufrStatus !== UfrStatus.SUBMITTED" for="status">Status: </label>
+                <select id="status"
+                        [disabled]="ufr.ufrStatus !== UfrStatus.SUBMITTED"
+                        [(ngModel)]="ufr.ufrStatus"
+                        (change)="updateUfr('status')"
+                        class="form-control">
+                  <option hidden [value]="UfrStatus.SUBMITTED">Status</option>
+                  <option [value]="UfrStatus.VALID">Valid</option>
+                  <option [value]="UfrStatus.INVALID">Invalid</option>
+                  <option [value]="UfrStatus.WITHDRAWN">Withdrawn</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label class="select-label" *ngIf="ufr.priority" for="status">Priority: </label>
+                <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
+                        [disabled]="ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER"
+                        [(ngModel)]="ufr.priority"
+                        (change)="updateUfr('priority')"
+                        class="form-control">
+                  <option hidden value="null">Priority</option>
+                  <option *ngFor="let index of [1,2,3,4,5,6,7,8,9,10]">{{index}}</option>
+                </select>
+              </div>
+              <div *ngIf="pom" class="col-4">
+                <label class="select-label" *ngIf="ufr.disposition" for="status">Disposition: </label>
+                <select *ngIf="ufr.ufrStatus === UfrStatus.VALID"
+                        [disabled]="(ufr.disposition && ufr.disposition !== Disposition.ISSUE_PAPER)
+                         || pom.status !== 'OPEN'
+                         || !ufr.priority"
+                        [(ngModel)]="ufr.disposition"
+                        (change)="updateUfr('disposition')"
+                        class="form-control">
+                  <option hidden value="null">Disposition</option>
+                  <option [value]="Disposition.APPROVED">Approved</option>
+                  <option [value]="Disposition.PARTIALLY_APPROVED">Partially approved</option>
+                  <option [value]="Disposition.DEFERRED">Deferred to future POM</option>
+                  <option [value]="Disposition.YEAR_OF_EXECUTION">Deferred to YOE</option>
+                  <option [value]="Disposition.ISSUE_PAPER">Issue Paper</option>
+                  <option [value]="Disposition.DISAPPROVED">Disapproved</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -175,22 +178,51 @@
             <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.justification" class="form-control" id="rationale" name="rationale"></textarea>
           </div>
         </div>
-        <div class="col-4">
-          <label class="mb-2">Milestone Impact:</label>
-          <div class="form-group mr-4">
-            <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.milestoneImpact" class="form-control" id="impact-1" name="impact-1"></textarea>
+        <div class="row mb-3">
+          <div class="col-12">
+            <label>Transaction History:</label>
+            <ag-grid-angular
+              #agGridTransactions
+              id="agGridTransactions"
+              class="ag-theme-balham"
+              [rowData]="transactions"
+              [suppressMovableColumns]="true"
+              [toolPanelSuppressSideButtons]="true"
+              (gridReady)="onGridReady($event)"
+              [pagination]="true"
+              [paginationPageSize]="5"
+              (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+              [suppressPaginationPanel]="true"
+              [gridAutoHeight]="true">
+            </ag-grid-angular>
+            <ag-grid-pagination #agGridPagination [agGrid]="agGridTransactions"></ag-grid-pagination>
           </div>
         </div>
-        <div class="col-4">
-          <label class="mb-2">Impact if not funded:</label>
-          <div class="form-group">
-            <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.impactN" class="form-control" id="impact-2" name="impact-2"></textarea>
+        <div class="row mb-2">
+          <div class="col-4">
+            <label class="mb-2">Rationale:</label>
+            <div class="form-group mr-4">
+              <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.justification" class="form-control" id="rationale" name="rationale"></textarea>
+            </div>
+          </div>
+          <div class="col-4">
+            <label class="mb-2">Milestone Impact:</label>
+            <div class="form-group mr-4">
+              <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.milestoneImpact" class="form-control" id="impact-1" name="impact-1"></textarea>
+            </div>
+          </div>
+          <div class="col-4">
+            <label class="mb-2">Impact if not funded:</label>
+            <div class="form-group">
+              <textarea disabled cols="50" rows="4" wrap="physical" [(ngModel)]="ufr.impactN" class="form-control" id="impact-2" name="impact-2"></textarea>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <!-- Modal Dialog -->
 <div id="partial-approval" class="modal fade in">
   <div class="modal-dialog">

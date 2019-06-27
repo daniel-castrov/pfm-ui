@@ -212,7 +212,10 @@ import { OrganizationToaComponent } from './components/programming/create-pom-se
 import { PrBarChartComponent } from './components/programming/pr-bar-chart/pr-bar-chart.component';
 import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
 import { FundingRateRenderer } from './components/renderers/funding-rate-renderer/funding-rate-renderer.component';
-
+import {MaterialModule} from './components/menu-bar/material.module';
+import 'hammerjs';
+import { SidenavService } from './components/menu-bar/service/service';
+import { SidebarMenuComponent } from "./components/header/sidebar-menu/SidebarMenuComponent";
 // ROUTES
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -262,7 +265,7 @@ const appRoutes: Routes = [
 
   { path: 'select-program-request/:workspaceId', component: SelectProgramRequestComponent, canActivate: [CanActivateAuth] },
   { path: 'select-program-request', component: SelectProgramRequestComponent, canActivate: [CanActivateAuth] },
-
+  { path : 'menu-bar',component : MenuBarComponent},
   { path: 'planning', component: PlanningComponent },
   { path: 'program-execution-line/:elid', component: ProgramExecutionLineComponent },
   { path: 'program-request', component: ProgramRequestComponent },
@@ -299,8 +302,6 @@ const appRoutes: Routes = [
   { path: 'edit-budget-details', component: EditBudgetDetailsComponent, canActivate: [CanActivateAuth] },
   { path: 'edit-program-details', component: EditProgramDetailsComponent, canActivate: [CanActivateAuth] },
   { path: 'workspace-management', component: WorkspaceManagementComponent, canActivate: [CanActivateAuth] },
-
-
 ];
 
 @NgModule({
@@ -505,6 +506,7 @@ const appRoutes: Routes = [
     PrBarChartComponent,
     PomAnalysisComponent,
     FundingRateRenderer,
+    SidebarMenuComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -547,7 +549,8 @@ const appRoutes: Routes = [
     NgbDatepickerModule.forRoot(),
     DatepickerModule.forRoot(),
     AgGridModule.withComponents([]),
-    Ng2GoogleChartsModule
+    Ng2GoogleChartsModule,
+    MaterialModule
   ],
   providers: [
     // Starting from version 6 the Angular folks recommend that singleton services are self-registering, i.e.
@@ -558,7 +561,8 @@ const appRoutes: Routes = [
     //  instead of being listed here. List here only if they cannot self-register for whatever reason.
     { provide: BASE_PATH, useValue: environment.apiUrl },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
-    { provide: NgbDateParserFormatter, useFactory: () => new CustomNgbDateParserFormatter('MM/dd/yyyy h:mm:ss a') }
+    { provide: NgbDateParserFormatter, useFactory: () => new CustomNgbDateParserFormatter('MM/dd/yyyy h:mm:ss a') },
+    SidenavService,
   ],
   bootstrap: [AppComponent]
 })

@@ -1,35 +1,39 @@
 <app-header></app-header>
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
 <div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-lg-12 mb-4">
-          <span class="h5 mr-2">Summary of Unfunded Requirements Requests for Execution Phase FY </span>
-          <span>
-          <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedExecution" (change)="onExecutionSelection()">
-            <option *ngFor="let execution of executionPhases" [ngValue]="execution">{{execution.fy}}</option>
-           </select>
-         </span>
-        </div>
-      </div>
-      <ng-container *ngIf="selectedExecution">
-        <div class="row mb-4">
-          <div class="col-6">
-            <new-ufr [phaseType]="PhaseType.EXE" [containerId]="selectedExecution.id"></new-ufr>
+    <div class="row main-content">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-lg-12 mb-4">
+            <span class="h5 mr-2">Summary of Unfunded Requirements Requests for Execution Phase FY </span>
+            <span>
+            <select class="form-control-sm dropdown-year-width mb-2" [(ngModel)]="selectedExecution" (change)="onExecutionSelection()">
+              <option *ngFor="let execution of executionPhases" [ngValue]="execution">{{execution.fy}}</option>
+             </select>
+           </span>
           </div>
-          <div class="col-6">
-            <div class="filter-columns pull-right">
-              <input id="filtertestbox" type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
-                     [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+        </div>
+        <ng-container *ngIf="selectedExecution">
+          <div class="row mb-4">
+            <div class="col-6">
+              <new-ufr [phaseType]="PhaseType.EXE" [containerId]="selectedExecution.id"></new-ufr>
+            </div>
+            <div class="col-6">
+              <div class="filter-columns pull-right">
+                <input id="filtertestbox" type="text"  class="form-control forminput filter" placeholder="Filter all columns ..."
+                       [(ngModel)] = "allufrs.filtertext"  (input)="allufrs.onFilterTextBoxChanged()" />
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <all-ufrs #allufrs [phaseType]="PhaseType.EXE" [fy]="selectedExecution.fy" urlPath="ufr-view" [ufrFilter]="ufrFilter" [mapCycleIdToFy]="mapCycleIdToFy"></all-ufrs>
+          <div class="row">
+            <div class="col-12">
+              <all-ufrs #allufrs [phaseType]="PhaseType.EXE" [fy]="selectedExecution.fy" urlPath="ufr-view" [ufrFilter]="ufrFilter" [mapCycleIdToFy]="mapCycleIdToFy"></all-ufrs>
+            </div>
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
+      </div>
     </div>
   </div>
+  
 </div>
