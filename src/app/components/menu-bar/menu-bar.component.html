@@ -28,27 +28,26 @@
               <mat-sidenav #leftSidenav mode="side" opened>
                   <div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'">
                       <div fxLayout="column" fxLayoutGap="10px" style="height: 100%;">
-                  
                         <mat-nav-list>
                           <div mat-list-item class="flex">
-                              <mat-icon [matMenuTriggerFor]="menu1" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu1" style="padding-right:5px;">
+                              <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu1" style="padding-right:5px;">
                                   <i class="fa fa-clock-o" aria-hidden="true"></i>
                               </mat-icon>
                               <div [@animateText]="linkText ? 'show' : 'hide'">
                                   <div
                                       *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu">
-                                      <button mat-button [matMenuTriggerFor]="menu1"> Planning</button>
+                                      <button mat-button [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"> Planning</button>
                                   </div>
                               </div>
-                              <mat-menu #menu1="matMenu" apppermission="POM:edit">
+                              <mat-menu #menu1="matMenu" [overlapTrigger]="false" apppermission="POM:edit" >
                                   <div class="arrow-left"></div>  
                                 <button mat-menu-item>
-                                      <a class="dropdown-item" routerLink="/set-epp">Import EPP Data</a>
+                                      <a class="dropdown-item enable-menu" routerLink="/set-epp">Import EPP Data</a>
                                   </button>
                               </mat-menu>
                               <ng-template #disabledPlanningMenu1>
                                   <mat-icon>
-                                      <i class="fa fa-database gray" aria-hidden="true"></i>
+                                      <i class="fa fa-clock-o gray" aria-hidden="true"></i>
                                   </mat-icon>
                               </ng-template>
                               <ng-template #disabledPlanningMenu>
@@ -56,85 +55,84 @@
                               </ng-template>
                           </div>
                         </mat-nav-list>
-      
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
-                                      <mat-icon [matMenuTriggerFor]="menu2"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu2"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu1" style="padding-right:5px;">
                                           <i class="fa fa-hourglass-end" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
                                               *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu">
-                                              <button mat-button [matMenuTriggerFor]="menu2">Programming</button>
+                                              <button mat-button [matMenuTriggerFor]="menu2" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Programming</button>
                                           </div>
                                       </div>
                                       <mat-menu #menu2="matMenu">
                                         <div class="arrow-left"></div>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'select-program-request'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'select-program-request'" class="dropdown-item enable-menu"  href="#"
                                                   routerLink="/select-program-request">Program Request</a>
-                                              <a *menuRolesNotNow="'select-program-request'" class="dropdown-item"
+                                              <a *menuRolesNotNow="'select-program-request'" class="dropdown-item disable-menu" 
                                                   disabled>Program Request</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'ufr-search'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'ufr-search'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/ufr-search">UFR Request</a>
-                                              <a *menuRolesNotNow="'ufr-search'" class="dropdown-item" disabled>UFR
+                                              <a *menuRolesNotNow="'ufr-search'" class="dropdown-item disable-menu" disabled>UFR
                                                   Request</a>
                                               <div *roles="'POM_Manager'" class="dropdown-divider"></div>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'create-new-pom'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'create-new-pom'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/create-new-pom">Create
                                                   POM Session</a>
-                                              <a *menuRolesNotNow="'create-new-pom'" class="dropdown-item" disabled>Create POM
+                                              <a *menuRolesNotNow="'create-new-pom'" class="dropdown-item disable-menu"  disabled>Create POM
                                                   Session</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'open-pom-session'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'open-pom-session'" class="dropdown-item enable-menu"  href="#"
                                                   routerLink="/open-pom-session">Open POM Session</a>
-                                              <a *menuRolesNotNow="'open-pom-session'" class="dropdown-item" disabled>Open POM
+                                              <a *menuRolesNotNow="'open-pom-session'" class="dropdown-item disable-menu" disabled>Open POM
                                                   Session</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'update-pom-session'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'update-pom-session'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/update-pom-session">Update POM Session</a>
-                                              <a *menuRolesNotNow="'update-pom-session'" class="dropdown-item" disabled>Update
+                                              <a *menuRolesNotNow="'update-pom-session'" class="dropdown-item disable-menu" disabled>Update
                                                   POM Session</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'close-pom-session'" class="dropdown-item"
+                                              <a *menuRolesOk="'close-pom-session'" class="dropdown-item enable-menu"
                                                   routerLink="/close-pom-session">Close POM
                                                   Session</a>
-                                              <a *menuRolesNotNow="'close-pom-session'" class="dropdown-item" disabled>Close
+                                              <a *menuRolesNotNow="'close-pom-session'" class="dropdown-item disable-menu" disabled>Close
                                                   POM Session</a>
                                               <div *roles="'POM_Manager'" class="dropdown-divider"></div>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'update-toa'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'update-toa'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/update-pom-toas">Update
                                                   TOAs</a>
-                                              <a *menuRolesNotNow="'update-toa'" class="dropdown-item" disabled>Update
+                                              <a *menuRolesNotNow="'update-toa'" class="dropdown-item disable-menu" disabled>Update
                                                   TOAs</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'workspace-management'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'workspace-management'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="{{ pomStatus == 'OPEN' ? '/workspace-management' : '/workspace-viewing'}}">Workspace
                                                   Mgmt</a>
-                                              <a *menuRolesNotNow="'workspace-management'" class="dropdown-item"
+                                              <a *menuRolesNotNow="'workspace-management'" class="dropdown-item disable-menu"
                                                   disabled>Workspace Mgmt</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'ufr-approval-summary'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'ufr-approval-summary'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/ufr-approval-summary">UFR Approval</a>
-                                              <a *menuRolesNotNow="'ufr-approval-summary'" class="dropdown-item" disabled>UFR
+                                              <a *menuRolesNotNow="'ufr-approval-summary'" class="dropdown-item disable-menu" disabled>UFR
                                                   Approval</a>
                                           </button>
                                       </mat-menu>
                                       <ng-template #disabledProgrammingMenu1>
                                           <mat-icon>
-                                              <i class="fa fa-database gray" aria-hidden="true"></i>
+                                              <i class="fa fa-hourglass-end gray" aria-hidden="true"></i>
                                           </mat-icon>
                                       </ng-template>
                                       <ng-template #disabledProgrammingMenu>
@@ -146,47 +144,47 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
-                                      <mat-icon [matMenuTriggerFor]="menu3" *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu1" style="padding-right:5px;">
                                           <i class="fa fa-database" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
                                               *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu">
-                                              <button mat-button [matMenuTriggerFor]="menu3">Budget</button>
+                                              <button mat-button [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Budget</button>
                                           </div>
                                       </div>
                                       <mat-menu #menu3="matMenu">
                                           <div class="arrow-left"></div>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'edit-program-details'" class="dropdown-item"
+                                              <a *menuRolesOk="'edit-program-details'" class="dropdown-item enable-menu"
                                                   routerLink="/edit-program-details">Edit
                                                   Program Details</a>
                                               <a *menuRolesNotNow="'edit-program-details'" class="dropdown-item" disabled>Edit
                                                   Program
                                                   Details</a></button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'create-budget'" class="dropdown-item"
+                                              <a *menuRolesOk="'create-budget'" class="dropdown-item enable-menu"
                                                   routerLink="/create-budget">Create Budget
                                                   Phase</a>
                                               <a *menuRolesNotNow="'create-budget'" class="dropdown-item" disabled>Create
                                                   Budget Phase</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'copy-budget'" class="dropdown-item"
+                                              <a *menuRolesOk="'copy-budget'" class="dropdown-item enable-menu"
                                                   routerLink="/copy-budget">Copy Budget</a>
                                               <a *menuRolesNotNow="'copy-budget'" class="dropdown-item" disabled>Copy
                                                   Budget</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'edit-budget-details'" class="dropdown-item"
+                                              <a *menuRolesOk="'edit-budget-details'" class="dropdown-item enable-menu"
                                                   routerLink="/edit-budget-details">Edit
                                                   Budget Details</a>
                                               <a *menuRolesNotNow="'edit-budget-details'" class="dropdown-item" disabled>Edit
                                                   Budget Details</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a class="dropdown-item" href="#" routerLink="/r-forms">RDT&E Exhibits</a>
-                                              <a class="dropdown-item" href="#" routerLink="/p-forms">Proc Exhibits</a>
+                                              <a class="dropdown-item enable-menu" href="#" routerLink="/r-forms">RDT&E Exhibits</a>
+                                              <a class="dropdown-item enable-menu" href="#" routerLink="/p-forms">Proc Exhibits</a>
                                           </button>
                                           <button mat-menu-item>
                                               <a class="dropdown-item" disabled>RDT&E Tree Data</a>
@@ -206,57 +204,56 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
-                                      <mat-icon [matMenuTriggerFor]="menu4" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu1" style="padding-right:5px;">
                                           <i class="fa fa-globe" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
                                               *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu">
-                                              <button mat-button [matMenuTriggerFor]="menu4"> Execution</button>
+                                              <button mat-button [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"> Execution</button>
                                           </div>
                                       </div>
                                       <mat-menu #menu4="matMenu">
                                           <div class="arrow-left"></div>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'funds-update'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'funds-update'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/funds-update">Funds
                                                   Update</a>
-                                              <a *menuRolesNotNow="'funds-update'" class="dropdown-item" disabled>Funds
+                                              <a *menuRolesNotNow="'funds-update'" class="dropdown-item gary" disabled>Funds
                                                   Update</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'program-update'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'program-update'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/oe-update">Program
                                                   Update</a>
-                                              <a *menuRolesNotNow="'program-update'" class="dropdown-item" disabled>Program
-                                                  Update</a>
-                                              <div *roles="'Execution_Manager'" class="dropdown-divider"></div>
+                                              <a *menuRolesNotNow="'program-update'" class="dropdown-item gary" disabled>Program
+                                                  Update
+                                                </a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'create-new-execution'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'create-new-execution'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/create-execution-phase">Create Execution Phase</a>
-                                              <a *menuRolesNotNow="'create-new-execution'" class="dropdown-item"
+                                              <a *menuRolesNotNow="'create-new-execution'" class="dropdown-item gary"
                                                   disabled>Create Execution Phase</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'open-execution-phase'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'open-execution-phase'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/open-execution">Open
                                                   Execution Phase</a>
-                                              <a *menuRolesNotNow="'open-execution-phase'" class="dropdown-item" disabled>Open
+                                              <a *menuRolesNotNow="'open-execution-phase'" class="dropdown-item gary" disabled>Open
                                                   Execution Phase</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <div class="dropdown-divider"></div>
-                                              <a *menuRolesOk="'import-execution-data'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'import-execution-data'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/import-execution-data">Import Actuals</a>
-                                              <a *menuRolesNotNow="'import-execution-data'" class="dropdown-item"
+                                              <a *menuRolesNotNow="'import-execution-data'" class="dropdown-item gary"
                                                   disabled>Import Actuals</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *menuRolesOk="'ufr-request'" class="dropdown-item" href="#"
+                                              <a *menuRolesOk="'ufr-request'" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/ufr-yoe-summary">UFR
                                                   Request</a>
-                                              <a *menuRolesNotNow="'ufr-request'" class="dropdown-item" disabled>UFR
+                                              <a *menuRolesNotNow="'ufr-request'" class="dropdown-item gary" disabled>UFR
                                                   Request</a>
                                           </button>
                                       </mat-menu>
@@ -275,19 +272,19 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
-                                      <mat-icon [matMenuTriggerFor]="menu5"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu1" style="padding-right:5px;">
-                                          <i aria-hidden="true"></i>
+                                      <mat-icon [matMenuTriggerFor]="menu5" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu1" style="padding-right:5px;">
+                                            <i class="fa fa-area-chart" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
                                               *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu">
-                                              <button mat-button [matMenuTriggerFor]="menu5">Reports</button>
+                                              <button mat-button [matMenuTriggerFor]="menu5"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Reports</button>
                                           </div>
                                       </div>
                                       <mat-menu #menu5="matMenu">
                                           <div class="arrow-left"></div>
                                           <button mat-menu-item>
-                                              <a class="dropdown-item" disabled>R1</a>
+                                              <a class="dropdown-item " disabled>R1</a>
                                           </button>
                                           <button mat-menu-item>
                                               <a class="dropdown-item" disabled>R2</a>
@@ -304,7 +301,7 @@
                                       </mat-menu>
                                       <ng-template #disabledReportsMenu1 >
                                           <mat-icon >
-                                              <i class="fa fa-clock-o gray" aria-hidden="true" ></i>
+                                                <i class="fa fa-area-chart" aria-hidden="true"></i>
                                           </mat-icon>
                                       </ng-template>
                                       <ng-template #disabledReportsMenu>
@@ -312,41 +309,40 @@
                                       </ng-template>
                                   </div>
                               </mat-nav-list>
-      
                           </div>
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
-                                      <mat-icon [matMenuTriggerFor]="menu6" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Execution_Manager') || roles?.includes('Budget_Manager')  ); else disableManageMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu6" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Execution_Manager') || roles?.includes('Budget_Manager')  ); else disableManageMenu1" style="padding-right:5px;">
                                           <i class="fa fa-th-list" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
                                               *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Execution_Manager') || roles?.includes('Budget_Manager')  ); else disableManageMenu">
-                                              <button mat-button [matMenuTriggerFor]="menu6">Manage</button>
+                                              <button mat-button [matMenuTriggerFor]="menu6"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Manage</button>
                                           </div>
                                       </div>
                                       <mat-menu #menu6="matMenu">
                                           <div class="arrow-left"></div>
                                           <button mat-menu-item>
                                               <div *roles="'Planning_Manager_No_Such_Role'">
-                                                  <p class="menu-section-label">Planning</p>
+                                                  <p class="menu-section-label enable-menu">Planning</p>
                                                   <a class="dropdown-item" disabled>Manage Planning</a>
                                               </div>
       
                                               <div *roles="'POM_Manager'">
-                                                  <p class="menu-section-label">Programming</p>
+                                                  <p class="menu-section-label enable-menu">Programming</p>
                                                   <a class="dropdown-item" disabled>Manage Programming</a>
                                               </div>
       
                                               <div *roles="'Budget_Manager'">
-                                                  <p class="menu-section-label">Budget</p>
+                                                  <p class="menu-section-label enable-menu">Budget</p>
                                                   <a class="dropdown-item" disabled>Manage Budgeting</a>
                                               </div>
       
                                               <div *roles="'Execution_Manager'">
-                                                  <p class="menu-section-label">Execution</p>
-                                                  <a *menuRolesOk="'create-new-program-mrdb'" class="dropdown-item" href="#"
+                                                  <p class="menu-section-label enable-menu">Execution</p>
+                                                  <a *menuRolesOk="'create-new-program-mrdb'" class="dropdown-item enable-menu" href="#"
                                                       routerLink="/create-mrdb-program">Create Unfunded Program</a>
                                                   <a *menuRolesNotNow="'create-new-program-mrdb'" class="dropdown-item"
                                                       disabled>Create Unfunded Program</a>
@@ -368,31 +364,31 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
-                                      <mat-icon [matMenuTriggerFor]="menu7" *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu7" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu1" style="padding-right:5px;">
                                           <i class="fa fa-user-secret" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
                                               *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu">
-                                              <button mat-button [matMenuTriggerFor]="menu7">Admin</button>
+                                              <button mat-button [matMenuTriggerFor]="menu7"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Admin</button>
                                           </div>
                                       </div>
                                       <mat-menu #menu7="matMenu">
                                           <div class="arrow-left"></div>
                                           <button mat-menu-item>
-                                              <a *ngIf="roles?.includes('User_Approver')" class="dropdown-item" href="#"
+                                              <a *ngIf="roles?.includes('User_Approver')" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/approve-requests">Approve Requests</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#"
+                                              <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/manage-communities">Manage Communities</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#"
+                                              <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/user-list">Manage Users</a>
                                           </button>
                                           <button mat-menu-item>
-                                              <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item" href="#"
+                                              <a *ngIf="elevationService.elevatedBoolean" class="dropdown-item enable-menu" href="#"
                                                   routerLink="/roles">Manage Roles</a>
                                           </button>
                                       </mat-menu>

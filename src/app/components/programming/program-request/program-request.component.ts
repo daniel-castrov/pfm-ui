@@ -20,7 +20,7 @@ import {Validation} from './funds-tab/Validation';
 })
 export class ProgramRequestComponent implements OnInit, AfterViewInit {
 
-  public pr: any = {};
+  public pr: Program = {};
   public prs: Program[];
   public pom: Pom;
   private ismgr: boolean;

@@ -61,7 +61,12 @@ ul.navbar-nav>li.nav-item:last-child {
 //   cursor: disable;
 //   cursor: not-allowed;
 // }
-
+.enable-menu{
+color: #212529 !important;
+}
+.disable-menu{
+  color: #ccc !important;
+}
 .gray{
   opacity: 0.5;
 }

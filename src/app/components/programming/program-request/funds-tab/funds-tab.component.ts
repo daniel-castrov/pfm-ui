@@ -338,7 +338,7 @@ export class FundsTabComponent implements OnChanges {
           dataTable: this.fundArr,
           options: {
             title: 'Funding Line Chart',
-            width: 800,
+            width: 630,
             height: 400,
           }
         }

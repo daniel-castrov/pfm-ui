@@ -14,7 +14,7 @@ import {ManageMenuComponent} from "./manage-menu/manage-menu.component";
 import {UserActionsComponent} from "./user-actions/user-actions.component";
 import {PrChangeNotificationsComponent} from "./pr-change-notofications/pr-change-notifications.component";
 import { onMainContentChange ,onSideNavChange, animateText} from './animation/animation';
-import { MatSidenav, } from '@angular/material';
+import { MatSidenav, MatMenuTrigger, } from '@angular/material';
 import { UserUtils } from '../../services/user.utils';
 import { SidenavService } from './service/service';
 
@@ -65,7 +65,18 @@ export class MenuBarComponent implements OnInit {
       });
     });
     this.roles = await this.userUtils.roles().toPromise();
+   
   }
+
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+
+  openMyMenu() {
+    this.trigger.toggleMenu();
+  } 
+  closeMyMenu() {
+    this.trigger.closeMenu();
+    console.log('close')
+  }  
 
   onSinenavToggle() {
     this.sideNavState = !this.sideNavState
