@@ -205,8 +205,8 @@ export class PrTreeChartComponent implements OnInit {
         chartType: 'TreeMap',
         dataTable: this.generateTreeMap(filterId, pomprs, pbprs),
         options: {
-          width: 800,
-          height: 500,
+          width: 700,
+          height: 350,
           legend: { po8ition: 'top', maxLines: 3 },
         }
       };
@@ -214,6 +214,9 @@ export class PrTreeChartComponent implements OnInit {
   private generateTreeMap(filterId: string, pomprs: Program[], pbprss: Program[]): any[] {
     var charty: any[] = [];
     var skipUnallocated = ('Community TOA' !== filterId);
+console.log(pomprs);
+console.log(pbprss);
+
 
     console.log(filterId + ' ' + skipUnallocated);
     var by: number = this.pom.fy;
