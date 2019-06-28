@@ -508,11 +508,8 @@ const appRoutes: Routes = [
     PrBarChartComponent,
     PomAnalysisComponent,
     FundingRateRenderer,
-<<<<<<< HEAD
     PrTreeChartComponent,
-=======
     SidebarMenuComponent,
->>>>>>> develop
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
