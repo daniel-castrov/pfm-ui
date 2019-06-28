@@ -4,6 +4,7 @@ import {AgGridNg2} from 'ag-grid-angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EppService} from '../../../generated/api/epp.service';
 import {UserUtils} from '../../../services/user.utils';
+import { GridOptions } from 'ag-grid-community';
 
 declare const $: any;
 
@@ -22,6 +23,7 @@ export class SetEppComponent implements OnInit {
   data = [];
   communityId:string;
   menuTabs = ['filterMenuTab'];
+  agOptions: GridOptions;
 
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild("agGrid") private agGrid: AgGridNg2;
@@ -30,6 +32,15 @@ export class SetEppComponent implements OnInit {
               private eppService: EppService,
               private globalsSvc:UserUtils) {
     this.createForm();
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        sortable: true
+      },    
+      pagination: true,
+      paginationPageSize: 15,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true
+    }
   }
 
   ngOnInit() {

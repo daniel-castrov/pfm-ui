@@ -22,12 +22,8 @@
 </ng-container>
 
 <ag-grid-angular #agGrid class="ag-theme-balham"
+  domLayout="autoHeight"
   [gridOptions]="agOptions"
-  [enableColResize]="true"
-  [toolPanelSuppressSideButtons]="true"
-  [suppressDragLeaveHidesColumns]="true"
-  [suppressMovableColumns]="true"
-  [singleClickEdit]="true"
   (paginationChanged)="agGridPagination.onPaginationChanged($event)"
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>

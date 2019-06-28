@@ -1,74 +1,77 @@
 <app-header></app-header>
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
 <div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-      <div class="row mb-4">
-        <div class="col-12">
-          <span class="h5 mr-3">Manage Roles</span>
-        </div>
-      </div>
-
-      <!-- Get the Community, Role, and User-->
-      <div class="row mb-4">
-        <!-- Get the selectedCommunity -->
-        <div class="col-3 mb-2 role-controls">
-          <label>Select Community</label>
-          <span class="form-group">
-            <select name="communitySelector" class="form-control-sm dropdown-width"
-              [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
-              <option value=""></option>
-              <option *ngFor="let comm of communities" [ngValue]="comm" [(selected)]="comm.id === paramCommunityId">
-                {{ comm.name }}
-              </option>
-            </select>
-          </span>
-        </div>
-        <!-- Get the selectedRole -->
-        <div class="col-3 mb-2 role-controls">
-          <label>Select Role</label>
-          <span class="form-group">
-            <select name="roleSelector" class="form-control-sm dropdown-width"
-              [(ngModel)]="selectedRole" (change)="clear()">
-              <option value=""></option>
-              <option *ngFor="let r of roles" [ngValue]="r">
-                {{ r.name }}
-              </option>
-            </select>
-          </span>
-        </div>
-        <!-- Get the selectedUser -->
-        <div class="col-3 role-controls">
-          <label>Select User</label>
-          <span class="form-group">
-            <select name="userSelector" class="form-control-sm dropdown-width"
-              [(ngModel)]="selectedUser" (change)="clear()">
-              <option value=""></option>
-              <option *ngFor="let u of users" [ngValue]="u">
-                {{ u.firstName }} {{ u.middleInitial }} {{ u.lastName }}
-              </option>
-            </select>
-          </span>
-        </div>
-
-        <!-- Get the selectedUserRoleResource -->
-        <div class="col-2">
-          <div class="controls mt-4">
-            <button class="btn btn-primary" [disabled]="!okNext()" (click)="next()">Next</button>
+    <div class="row main-content">
+      <div class="col-12">
+        <div class="row mb-4">
+          <div class="col-12">
+            <span class="h5 mr-3">Manage Roles</span>
           </div>
         </div>
+  
+        <!-- Get the Community, Role, and User-->
+        <div class="row mb-4">
+          <!-- Get the selectedCommunity -->
+          <div class="col-3 mb-2 role-controls">
+            <label>Select Community</label>
+            <span class="form-group">
+              <select name="communitySelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedCommunity" (change)="getRolesAndUsers()">
+                <option value=""></option>
+                <option *ngFor="let comm of communities" [ngValue]="comm" [(selected)]="comm.id === paramCommunityId">
+                  {{ comm.name }}
+                </option>
+              </select>
+            </span>
+          </div>
+          <!-- Get the selectedRole -->
+          <div class="col-3 mb-2 role-controls">
+            <label>Select Role</label>
+            <span class="form-group">
+              <select name="roleSelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedRole" (change)="clear()">
+                <option value=""></option>
+                <option *ngFor="let r of roles" [ngValue]="r">
+                  {{ r.name }}
+                </option>
+              </select>
+            </span>
+          </div>
+          <!-- Get the selectedUser -->
+          <div class="col-3 role-controls">
+            <label>Select User</label>
+            <span class="form-group">
+              <select name="userSelector" class="form-control-sm dropdown-width"
+                [(ngModel)]="selectedUser" (change)="clear()">
+                <option value=""></option>
+                <option *ngFor="let u of users" [ngValue]="u">
+                  {{ u.firstName }} {{ u.middleInitial }} {{ u.lastName }}
+                </option>
+              </select>
+            </span>
+          </div>
+  
+          <!-- Get the selectedUserRoleResource -->
+          <div class="col-2">
+            <div class="controls mt-4">
+              <button class="btn btn-primary" [disabled]="!okNext()" (click)="next()">Next</button>
+            </div>
+          </div>
+        </div>
+  
+        <div *ngIf="showRoleBuilder">
+          <app-role-builder
+            [allroles]="roles"
+            [selectedCommunity]="selectedCommunity"
+            [selectedRole]="selectedRole"
+            [selectedUser]="selectedUser"
+            (isRequest)=false
+            (okUrr)="okUrr($event)">
+          </app-role-builder>
+        </div>
+  
       </div>
-
-      <div *ngIf="showRoleBuilder">
-        <app-role-builder
-          [allroles]="roles"
-          [selectedCommunity]="selectedCommunity"
-          [selectedRole]="selectedRole"
-          [selectedUser]="selectedUser"
-          (isRequest)=false
-          (okUrr)="okUrr($event)">
-        </app-role-builder>
-      </div>
-
     </div>
-  </div>
+  </div>  
 </div>

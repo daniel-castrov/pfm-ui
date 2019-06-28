@@ -14,7 +14,6 @@
             <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()"                             > Rename    </button></li>
             <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()"                             > Export    </button></li>
             <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"    [disabled]="!importComponent?.importableWorksheets?.length" > Import    </button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.UNLOCK)"    [disabled]="!importComponent?.importableWorksheets?.length" > Unlock    </button></li>
           </ul>
         </div>
       </div>
@@ -23,18 +22,9 @@
           <ag-grid-angular
             #agGrid class="ag-theme-balham"
             id="myGrid"
-            [enableSorting]="true"
-            [enableColResize]="true"
-            [enableFilter]="false"
-            [gridAutoHeight]="true"
+            domLayout="autoHeight"
             [gridOptions]="agOptions"
-            [toolPanelSuppressSideButtons]="true"
-            [pagination]="true"
-            [paginationPageSize]="6"
             (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
-            [suppressPaginationPanel]="true"
             (gridReady)="onGridReady($event)" >
           </ag-grid-angular>
           <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
@@ -48,7 +38,6 @@
           <rename    #rename    [hidden]="stateService.operation!=stateService.Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
           <export    #export    [hidden]="stateService.operation!=stateService.Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
           <import    #import    [hidden]="stateService.operation!=stateService.Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
-          <unlock    #unlock    [hidden]="stateService.operation!=stateService.Operation.UNLOCK"    (operationOver)="onOperationOver()" ></unlock>
 
         </div>
       </div>

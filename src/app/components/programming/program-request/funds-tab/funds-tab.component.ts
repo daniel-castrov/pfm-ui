@@ -27,6 +27,7 @@ import {GridType} from './GridType';
 import {CellEditor} from '../../../../utils/CellEditor';
 import {NameUtils} from '../../../../utils/NameUtils';
 import {CurrentPhase} from '../../../../services/current-phase.service';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'funds-tab',
@@ -56,9 +57,10 @@ export class FundsTabComponent implements OnChanges {
   private baOrBlins: string[] = [];
   private filteredBlins: string[] = [];
   private columnKeys;
+  private agOptions: GridOptions;
+  private agOptionsInformation: GridOptions;
   ProgramType = ProgramType;
   columnDefs = [];
-  defaultColumnDefs = { editable: false };
   data;
   parentData;
   siblingsData;
@@ -68,10 +70,16 @@ export class FundsTabComponent implements OnChanges {
   pinnedSiblingsBottomData;
   existingFundingLines: FundingLine[] = [];
   selectedFundingLine: FundingLine = null;
-  frameworkComponents = { deleteRenderer: DeleteRenderer, viewSiblingsRenderer: ViewSiblingsRenderer };
-  context = { parentComponent: this };
   overlayNoRowsTemplate = '<div style="margin-top: -30px;">No Rows To Show</div>';
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
+  LineChartData: Program;
+  payloadData: { type: string; value: any; }[];
+  fundingLineData: any = [];
+  values: any = [];
+  fundObj: any= {};
+  fundArr: any=[];
+  tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number;}; };
+  fundData : any = [];
 
   constructor(private currentPhase: CurrentPhase,
     private programService: ProgramService,
@@ -79,7 +87,39 @@ export class FundsTabComponent implements OnChanges {
     private globalsService: UserUtils,
     private tagsUtils: TagsUtils,
     private autoValuesService: AutoValuesService,
-    private rolesvc: RolesPermissionsService ) { }
+    private rolesvc: RolesPermissionsService ) {
+      this.agOptions = <GridOptions>{
+        defaultColDef: {
+          sortable: true,
+          filter: true
+        },
+        suppressMovableColumns: true,
+        suppressRowTransform: true,
+        singleClickEdit: true,
+        stopEditingWhenGridLosesFocus: true,
+        frameworkComponents: { 
+          deleteRenderer: DeleteRenderer, 
+          viewSiblingsRenderer: ViewSiblingsRenderer 
+        },
+        context: { parentComponent: this }
+      }
+      this.agOptionsInformation = <GridOptions>{
+        defaultColDef: {
+          sortable: true,
+          filter: false,
+          editable: false
+        },
+        suppressMovableColumns: true,
+        suppressRowTransform: true,
+        singleClickEdit: true,
+        stopEditingWhenGridLosesFocus: true,
+        frameworkComponents: { 
+          deleteRenderer: DeleteRenderer, 
+          viewSiblingsRenderer: ViewSiblingsRenderer 
+        },
+        context: { parentComponent: this }
+      }
+     }
 
   async ngOnChanges() {
     if (!this.pr.containerId) {
@@ -154,41 +194,41 @@ export class FundsTabComponent implements OnChanges {
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
     this.programService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
-      response.result.forEach(subprogram => {
-        if (this.pr.id !== subprogram.id) {
-          subprogram.fundingLines.forEach(fundingLine => {
-            if (selectedFundingLine.appropriation === fundingLine.appropriation &&
-              selectedFundingLine.opAgency === fundingLine.opAgency &&
-              selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
-              selectedFundingLine.item === fundingLine.item) {
-              let pomRow: DataRow = {
-                programId: subprogram.shortName,
-                gridType: GridType.SIBLINGS,
-                fundingLine: fundingLine,
-                phaseType: PhaseType.POM
+        response.result.forEach(subprogram => {
+          if (this.pr.id !== subprogram.id) {
+            subprogram.fundingLines.forEach(fundingLine => {
+              if (selectedFundingLine.appropriation === fundingLine.appropriation &&
+                selectedFundingLine.opAgency === fundingLine.opAgency &&
+                selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
+                selectedFundingLine.item === fundingLine.item) {
+                let pomRow: DataRow = {
+                  programId: subprogram.shortName,
+                  gridType: GridType.SIBLINGS,
+                  fundingLine: fundingLine,
+                  phaseType: PhaseType.POM
+                }
+                data.push(pomRow);
               }
-              data.push(pomRow);
-            }
-          });
-        }
-      });
-      this.siblingsData = data;
-      this.initSiblingsPinnedBottomRows();
-
-      setTimeout(() => {
-        if (this.data.some(row => row.fundingLine.userCreated === true)) {
-          this.agGridParent.columnApi.setColumnVisible('delete', true);
-          if(this.agGridSiblings){
-            this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+            });
           }
-        }
-        if (this.agGridSiblings) {
-          this.agGridSiblings.api.sizeColumnsToFit();
-        }
-        this.agGridParent.api.sizeColumnsToFit();
-        this.agGrid.api.sizeColumnsToFit();
-      }, 700);
-    });
+        });
+        this.siblingsData = data;
+        this.initSiblingsPinnedBottomRows();
+
+        setTimeout(() => {
+          if (this.data.some(row => row.fundingLine.userCreated === true)) {
+            this.agGridParent.columnApi.setColumnVisible('delete', true);
+            if(this.agGridSiblings){
+              this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+            }
+          }
+          if (this.agGridSiblings) {
+            this.agGridSiblings.api.sizeColumnsToFit();
+          }
+          this.agGridParent.api.sizeColumnsToFit();
+          this.agGrid.api.sizeColumnsToFit();
+        }, 700);
+      });
   }
 
   initSiblingsPinnedBottomRows() {
@@ -261,6 +301,48 @@ export class FundsTabComponent implements OnChanges {
       });
       this.generateColumns();
       this.data = data;
+      this.fundingLineData = this.data;
+      this.fundData =[];
+      for(let i=0; i<this.fundingLineData.length;i++){
+        this.fundData.push(this.fundingLineData[i].fundingLine);
+      }
+      var label = [];
+      label[0]='year';
+      this.fundArr = [];
+      this.fundObj = [];
+      for(let i=0;i<this.fundData.length;i++){
+        label.push(this.fundData[i].baOrBlin)
+      }
+      for (var key in this.fundData) {
+        if (key == '0') {
+          for (var key1 in this.fundData[key].funds) {
+            this.fundObj[key1] = [];
+            this.fundObj[key1].push(key1);
+            this.fundObj[key1].push(this.fundData[key].funds[key1]);
+          }
+        }
+        else {
+          for (var key1 in this.fundData[key].funds) {
+            this.fundObj[key1].push(this.fundData[key].funds[key1]);
+          }
+        }
+      }
+      for(var tKey in this.fundObj) {
+        this.fundArr.push(this.fundObj[tKey]);
+      }
+      this.fundArr.unshift(label);
+      this.fundArr.splice(1,1)
+         //Funding line chart
+         this.tooltipChart = {
+          chartType: 'LineChart',
+          dataTable: this.fundArr,
+          options: {
+            title: 'Funding Line Chart',
+            width: 630,
+            height: 400,
+          }
+        }
+
       this.loadDropdownOptions();
       this.initPinnedBottomRows();
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
@@ -828,7 +910,7 @@ export class FundsTabComponent implements OnChanges {
     } else {
       name = this.pr.shortName;
     }
-    
+
     this.budgetFy = this.pom.fy-1;
 
     if (!name) {

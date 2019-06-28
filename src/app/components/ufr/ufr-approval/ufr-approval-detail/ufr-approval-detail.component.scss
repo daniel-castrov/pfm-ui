@@ -8,7 +8,9 @@ $medium-grey: #dddddd;
 $dark-grey: #848282;
 
 fieldset { padding: 20px;}
-
+.single-row{
+  display: flex;
+}
 .dropdown-width {
   width: 95%;
 }

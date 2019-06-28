@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {WorksheetManagementComponent} from "../worksheet-management.component";
 
 
-describe('UnlockComponent', () => {
+describe('WorksheetManagementComponent', () => {
   let component: WorksheetManagementComponent;
   let fixture: ComponentFixture<WorksheetManagementComponent>;
 

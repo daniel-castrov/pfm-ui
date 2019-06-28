@@ -99,15 +99,6 @@ export class Authorization {
     return AuthorizationResult.Never;
   }
 
-  async 'lock-pom-session'(): Promise<AuthorizationResult> {
-    if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
-    if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
-      if (Pom.StatusEnum.OPEN == (await this.currentPhase.pom().toPromise()).status) return AuthorizationResult.Ok;
-      return AuthorizationResult.NotNow;
-    }
-    return AuthorizationResult.Never;
-  }
-
   async 'close-pom-session'(): Promise<AuthorizationResult> {
     if(this.elevationService.elevatedBoolean) return AuthorizationResult.NotNow;
     if(await this.userUtils.hasAnyOfTheseRoles('POM_Manager').toPromise()) {
@@ -179,18 +170,6 @@ export class Authorization {
         if( Budget.StatusEnum.CLOSED === budget.status )
           if(pom.fy === budget.fy+1)
             return AuthorizationResult.Ok;
-      return AuthorizationResult.NotNow;
-    }
-    return AuthorizationResult.Never;
-  }
-
-  async 'lock-position'(): Promise<AuthorizationResult> {
-    if(await this.userUtils.hasAnyOfTheseRoles('Budget_Manager').toPromise()) {
-      const pom = (await this.currentPhase.pom().toPromise());
-      const budget = (await this.currentPhase.budget().toPromise());
-      if( Budget.StatusEnum.OPEN === budget.status )
-        if(pom.fy === budget.fy)
-          return AuthorizationResult.Ok;
       return AuthorizationResult.NotNow;
     }
     return AuthorizationResult.Never;

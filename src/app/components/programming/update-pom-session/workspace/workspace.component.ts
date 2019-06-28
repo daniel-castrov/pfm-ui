@@ -9,6 +9,7 @@ import {CheckboxCellRenderer} from "../../../renderers/anchor-checkbox-renderer/
 import {GridToaComponent} from "./../grid-toa/grid-toa.component";
 import {EventsModalComponent} from "./../events-modal/events-modal.component";
 import { ProgramAndPrService } from '../../../../services/program-and-pr.service';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'workspace',
@@ -29,23 +30,42 @@ export class WorkspaceComponent implements OnChanges {
   rowSelection = 'multiple';
   @Input() selectedWorkspace: Workspace;
   unmodifiedFundingLines: any[];
-  frameworkComponents = {
-    valueChangeRenderer: ValueChangeRenderer,
-    viewEventsRenderer: ViewEventsRenderer,
-    checkboxCellRenderer: CheckboxCellRenderer};
+ 
   @Input() eventsModalComponent: EventsModalComponent;
   @Input() gridToaComponent: GridToaComponent;
-  context = { parentComponent: this, eventsModalComponent: null };
   components = { numericCellEditor: CellEditor.getNumericCellEditor() };
   private wkspPrs: Program[];
+  private agOptions: GridOptions;
 
   constructor(private prsvc: ProgramAndPrService) {
-    
+    this.agOptions= <GridOptions>{
+      defaultColDef:{
+        sortable: true,
+        filter: true
+      },
+      pagination: true,
+      paginationPageSize: 15,
+      suppressPaginationPanel: true,
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true,
+      rowMultiSelectWithClick: true,
+      frameworkComponents: {
+        valueChangeRenderer: ValueChangeRenderer,
+        viewEventsRenderer: ViewEventsRenderer,
+        checkboxCellRenderer: CheckboxCellRenderer
+      },
+      context: { 
+        parentComponent: this, 
+        eventsModalComponent: null 
+      }
+    }
   }
 
   ngOnChanges() {
     if (this.eventsModalComponent) {
-      this.context = {...this.context, eventsModalComponent: this.eventsModalComponent};
+      this.agOptions.context = {...this.agOptions.context, eventsModalComponent: this.eventsModalComponent};
     }
   }
 

@@ -1,7 +1,9 @@
 $white: #ffffff;
 $light-grey: #f7f7f7;
 $black: #000000;
-
+.single-row{
+  display: flex;
+}
 fieldset {
   padding: 20px;
 }

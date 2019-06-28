@@ -1,29 +1,16 @@
 <div>
   <ag-grid-angular #agGrid
                    class="ag-theme-balham group-header-white"
-                   [gridAutoHeight]="true"
-                   [toolPanelSuppressSideButtons]="true"
-                   [suppressMovableColumns]="true"
-                   [suppressRowTransform]="true"
-                   [showToolPanel]="false"
-                   [enableSorting]="true"
-                   [enableFilter]="true"
+                   domLayout="autoHeight"
+                   [gridOptions]="agOptions"
                    [components]="components"
-                   [rowSelection]="rowSelection"
-                   [frameworkComponents]="frameworkComponents"
-                   [context]="context"
-                   [rowMultiSelectWithClick]="true"
-                   (rowSelected)="onRowSelected($event)"
+                   [rowSelection]="rowSelection"                  
                    [rowData]="rowData"
-                   [singleClickEdit]="true"
-                   [stopEditingWhenGridLosesFocus]="true"
                    [isExternalFilterPresent]="isExternalFilterPresent"
                    [doesExternalFilterPass]="doesExternalFilterPass"
                    [getRowNodeId]="getRowNodeId"
-                   [pagination]="true"
-                   [paginationPageSize]="15"
+                   (rowSelected)="onRowSelected($event)"
                    (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-                   [suppressPaginationPanel]="true"
                    (gridReady)="onGridReady($event)">
   </ag-grid-angular>
 </div>

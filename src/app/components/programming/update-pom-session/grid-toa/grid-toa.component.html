@@ -1,9 +1,7 @@
 <ag-grid-angular #agGridToa
                  class="ag-theme-balham"
+                 domLayout="autoHeight"
+                 [gridOptions]="agOptions"
                  [rowData]="toaRowData"
-                 [gridAutoHeight]="true"
-                 [toolPanelSuppressSideButtons]="true"
-                 [suppressDragLeaveHidesColumns]="true"
-                 [suppressMovableColumns]="true"
                  (gridReady)="onGridReady($event)">
 </ag-grid-angular>

@@ -1,23 +1,16 @@
 <app-header></app-header>
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-
-      <div class="row mb-3">
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+      <div class="row main-content">
         <div class="col-12">
 
           <ag-grid-angular #agGrid
             class="ag-theme-balham"
             id="mygrid"
-            [gridAutoHeight]="true"
+            domLayout="autoHeight"
+            [gridOptions]="agOptions"            
             [rowData]="rowData"
-            [columnDefs]="columnDefs"
-            [toolPanelSuppressSideButtons]="true"
-            [suppressDragLeaveHidesColumns]="true"
-            [suppressMovableColumns]="true"
-            [suppressPaginationPanel]="true"
-            [treeData]="true"
-            [animateRows]="true"
             [groupDefaultExpanded]="groupDefaultExpanded"
             [getDataPath]="getTreeHierarchy"
             [autoGroupColumnDef]="autoGroupColumnDef"
@@ -27,5 +20,5 @@
         </div>
       </div>
     </div>
-  </div>
+    
 </div>

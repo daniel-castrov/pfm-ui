@@ -17,7 +17,7 @@ export class ImporterComponent extends IOperation {
   constructor( stateService: WorkspaceStateService, private workspaceService: WorksheetService ) {super(stateService);}
 
   init() {
-    this.importableWorkspaces = this.stateService.workspaces.filter(workspace => workspace.locked);
+    this.importableWorkspaces = this.stateService.workspaces;
     this.selectedImportableWorkspace = this.importableWorkspaces[0] ? this.importableWorkspaces[0] : null;
   }
 

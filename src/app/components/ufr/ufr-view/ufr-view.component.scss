@@ -10,7 +10,9 @@
   content: "";
   clear: both;
 }
-
+.single-row{
+  display: flex;
+}
 .breadcrumb {
   background-color: #ffffff;
   padding: 0;

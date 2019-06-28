@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {BudgetFundingLine, BudgetFundingLinesService, Pom, POMService, User} from "../../../generated";
 import {UserUtils} from "../../../services/user.utils";
 import {Item} from "./Item";
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'bes-rdte',
@@ -19,13 +20,36 @@ export class BesRdteComponent implements OnInit {
     cellRendererParams: { suppressCount: true }
   };
   private budgetFundingLines: BudgetFundingLine[];
+  private agOptions: GridOptions;
 
   constructor( private userUtils: UserUtils,
                private pomService: POMService,
                private budgetFundingLinesService: BudgetFundingLinesService ) {
-    this.columnDefs = [{field: "form",headerName: "Form",maxWidth: 120},
-                       {field: "responsible",headerName: "Responsible",maxWidth: 120},
-                       {field: "desc",headerName: "Description"}];
+    this.agOptions = <GridOptions>{
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
+      pagination: true,
+      paginationPageSize: 500,
+      treeData: true,
+      animateRows: true,     
+      columnDefs: [
+        {
+          field: "form",
+          headerName: "Form",
+          maxWidth: 120
+        },
+        {
+          field: "responsible",
+          headerName: "Responsible",
+          maxWidth: 120
+        },
+        {
+          field: "desc",
+          headerName: "Description"
+        }
+      ]
+    }
   }
 
   async ngOnInit() {

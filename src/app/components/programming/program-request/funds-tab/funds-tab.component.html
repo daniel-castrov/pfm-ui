@@ -7,6 +7,10 @@
       <span>Add a new funding line</span>
     </button>
   </div>
+  <!-- Line Chart -->
+  <div>
+    <google-chart [data]="tooltipChart"></google-chart>
+  </div>
   <div *ngIf="pr.type === ProgramType.GENERIC" class="col-auto">
     <div class="dropdown-label">
       <select [(ngModel)]="selectedFundingLine" class="form-control-sm" name="dummy">
@@ -24,26 +28,12 @@
 <ag-grid-angular #agGrid
                  *ngIf="pr.type !== ProgramType.GENERIC"
                  class="ag-theme-balham pr-funds-tab group-header-white"
-                 [gridAutoHeight]="true"
-                 [toolPanelSuppressPivotMode]="true"
-                 [toolPanelSuppressRowGroups]="true"
-                 [toolPanelSuppressValues]="true"
-                 [toolPanelSuppressPivots]="true"
-                 [toolPanelSuppressColumnFilter]="true"
-                 [toolPanelSuppressColumnSelectAll]="true"
-                 [suppressMovableColumns]="true"
-                 [suppressRowTransform]="true"
+                 domLayout="autoHeight"
+                 [gridOptions]="agOptions"
                  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-                 [showToolPanel]="false"
-                 [enableSorting]="true"
-                 [enableFilter]="true"
                  [rowData]="data"
-                 [singleClickEdit]="true"
-                 [pinnedBottomRowData]="pinnedBottomData"
-                 [frameworkComponents]="frameworkComponents"
+                 [pinnedBottomRowData]="pinnedBottomData"        
                  [components]="components"
-                 [context]="context"
-                 [stopEditingWhenGridLosesFocus]="true"
                  (columnVisible)="sizeColumnsToFit($event)"
                  (toolPanelVisibleChanged)="sizeColumnsToFit($event)"
                  (gridReady)="onGridReady($event)"
@@ -53,21 +43,12 @@
   <legend>{{pr.shortName}} funding lines</legend>
   <ag-grid-angular #agGrid
                    class="ag-theme-balham pr-funds-tab group-header-white"
-                   [gridAutoHeight]="true"
-                   [toolPanelSuppressSideButtons]="true"
-                   [suppressMovableColumns]="true"
-                   [suppressRowTransform]="true"
-                   [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-                   [showToolPanel]="false"
-                   [enableSorting]="true"
-                   [enableFilter]="true"
-                   [rowData]="data"
-                   [singleClickEdit]="true"
-                   [pinnedBottomRowData]="pinnedBottomData"
-                   [frameworkComponents]="frameworkComponents"
-                   [components]="components"
-                   [context]="context"
-                   [stopEditingWhenGridLosesFocus]="true"
+                   domLayout="autoHeight"
+                   [gridOptions]="agOptions"
+                   [overlayNoRowsTemplate]="overlayNoRowsTemplate"                   
+                   [rowData]="data"                   
+                   [pinnedBottomRowData]="pinnedBottomData" 
+                   [components]="components"                  
                    (columnVisible)="sizeColumnsToFit($event)"
                    (gridReady)="onGridReady($event)"
                    (cellEditingStarted)="onCellEditingStarted($event)">
@@ -81,20 +62,12 @@
   </button>
   <ag-grid-angular #agGridParent
                    *ngIf="parentData"
-                   class="ag-theme-balham pr-funds-tab group-header-white"
-                   [gridAutoHeight]="true"
-                   [toolPanelSuppressSideButtons]="true"
-                   [suppressMovableColumns]="true"
-                   [suppressRowTransform]="true"
+                   class="ag-theme-balham pr-funds-tab group-header-white" 
+                   domLayout="autoHeight"
+                   [gridOptions]="ngOptionsInformation"                 
                    [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-                   [showToolPanel]="false"
-                   [enableFilter]="false"
-                   [defaultColDef]="defaultColumnDefs"
                    [rowData]="parentData"
-                   [singleClickEdit]="true"
-                   [frameworkComponents]="frameworkComponents"
                    [components]="components"
-                   [context]="context"
                    (columnVisible)="sizeColumnsToFit($event)"
                    (gridReady)="onParentGridReady($event)">
   </ag-grid-angular>
@@ -107,21 +80,13 @@
   </button>
   <ag-grid-angular #agGridSiblings
                    *ngIf="siblingsData?.length > 0"
-                   class="ag-theme-balham pr-funds-tab group-header-white"
-                   [gridAutoHeight]="true"
-                   [toolPanelSuppressSideButtons]="true"
-                   [suppressMovableColumns]="true"
-                   [suppressRowTransform]="true"
+                   class="ag-theme-balham pr-funds-tab group-header-white"  
+                   domLayout="autoHeight"
+                   [gridOptions]="ngOptionsInformation"             
                    [overlayNoRowsTemplate]="overlayNoRowsTemplate"
-                   [showToolPanel]="false"
-                   [enableFilter]="false"
-                   [defaultColDef]="defaultColumnDefs"
                    [rowData]="siblingsData"
                    [pinnedBottomRowData]="pinnedSiblingsBottomData"
-                   [singleClickEdit]="true"
-                   [frameworkComponents]="frameworkComponents"
                    [components]="components"
-                   [context]="context"
                    (columnVisible)="sizeColumnsToFit($event)"
                    (gridReady)="onSiblingsGridReady($event)">
   </ag-grid-angular>

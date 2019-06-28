@@ -11,26 +11,14 @@
 </div>
 <ag-grid-angular #agGrid
                  class="ag-theme-balham group-header-white"
-                 [showToolPanel]="false"
-                 [enableSorting]="true"
-                 [pivotMode]="false"
-                 [enableFilter]="true"
-                 [gridAutoHeight]="true"
+                 domLayout="autoHeight"
+                 [gridOptions]="agOptions"                                                  
                  [rowData]="rowData"
-                 [columnDefs]="columnDefs"
-                 [pagination]="true"
-                 [paginationPageSize]="20"
-                 (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-                 [suppressRowTransform]="true"
-                 [suppressPaginationPanel]="true"
-                 [toolPanelSuppressSideButtons]="true"
-                 [suppressMovableColumns]="true"
-                 [treeData]="true"
-                 [getDataPath]="getDataPath"
-                 [autoGroupColumnDef]="autoGroupColumnDef"
-                 [groupDefaultExpanded]="groupDefaultExpanded"
-                 [frameworkComponents]="frameworkComponents"
-                 [context]="context"
+                 [columnDefs]="columnDefs"                                  
+                 [getDataPath]="getDataPath"                 
+                 [groupDefaultExpanded]="groupDefaultExpanded"    
+                 [autoGroupColumnDef]="autoGroupColumnDef"                              
+                 (paginationChanged)="agGridPagination.onPaginationChanged($event)"                                                                  
                  (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>

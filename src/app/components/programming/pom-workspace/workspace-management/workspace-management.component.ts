@@ -7,7 +7,6 @@ import {DuplicaterComponent} from "./duplicater/duplicater.component";
 import {RenamerComponent} from "./renamer/renamer.component";
 import {ExporterComponent} from "./exporter/exporter.component";
 import {ImporterComponent} from "./importer/importer.component";
-import {UnlockerComponent} from "./unlocker/unlocker.component";
 import { NameUpdatingRendererComponent } from '../../pom-worksheet/worksheet-management/name-updating-renderer.component';
 import { WorkspaceStateService, Operation } from './workspace-state.service';
 import { IOperation } from './operation.interface';
@@ -27,7 +26,6 @@ export class WorkspaceManagementComponent implements OnInit {
   @ViewChild("renamer") private renameComponent: RenamerComponent;
   @ViewChild("importer") private importComponent: ImporterComponent;
   @ViewChild("exporter") private exportComponent: ExporterComponent;
-  @ViewChild("unlocker") private unlockComponent: UnlockerComponent;
 
   private agOptions: GridOptions;
   pom: Pom;
@@ -37,8 +35,15 @@ export class WorkspaceManagementComponent implements OnInit {
                public stateService: WorkspaceStateService,
                private userUtils: UserUtils ) {
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-
+      defaultColDef:{
+        resizable: true,
+        filter: false
+      },
+      pagination: true,
+      paginationPageSize: 6,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: WorkspaceCheckboxRendererComponent},
                    {headerName: 'Workspace Name', field: 'workspace', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
                    {headerName: 'Bulk Change', field: 'workspace', maxWidth: 100, cellRendererFramework: BulkChangeRendererComponent},
@@ -99,8 +104,7 @@ export class WorkspaceManagementComponent implements OnInit {
     const operationComponents = [this.duplicateComponent,
                                  this.renameComponent,
                                  this.importComponent,
-                                 this.exportComponent,
-                                 this.unlockComponent] as IOperation[];
+                                 this.exportComponent] as IOperation[];
     operationComponents.forEach(operation => operation.init());
   }
 

@@ -11,7 +11,6 @@ import {RenameComponent} from "./rename/rename.component";
 import {ExportComponent} from "./export/export.component";
 import {ImportComponent} from "./import/import.component";
 import {OperationBase} from "./operartion.base";
-import {UnlockComponent} from "./unlock/unlock.component";
 
 
 @Component({
@@ -26,7 +25,6 @@ export class WorksheetManagementComponent implements OnInit {
   @ViewChild("rename") private renameComponent: RenameComponent;
   @ViewChild("import") private importComponent: ImportComponent;
   @ViewChild("export") private exportComponent: ExportComponent;
-  @ViewChild("unlock") private unlockComponent: UnlockComponent;
 
   private agOptions: GridOptions;
   pom: Pom;
@@ -36,8 +34,16 @@ export class WorksheetManagementComponent implements OnInit {
                public stateService: StateService,
                private userUtils: UserUtils ) {
     this.agOptions = <GridOptions>{
-      enableColResize: true,
-
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        filter: false
+      },
+      pagination: true,
+      paginationPageSize: 6,
+      suppressDragLeaveHidesColumns: true,
+      suppressMovableColumns: true,
+      suppressPaginationPanel: true,      
       columnDefs: [{headerName: '', field: 'checkbox', maxWidth: 35, cellRendererFramework: CheckboxRendererComponent},
                    {headerName: 'Worksheet Name', field: 'worksheet', minWidth: 450, cellRendererFramework: NameUpdatingRendererComponent},
                    {headerName: 'Number', field: 'number', maxWidth: 90},
@@ -98,8 +104,7 @@ export class WorksheetManagementComponent implements OnInit {
     const operationComponents = [this.duplicateComponent,
                                  this.renameComponent,
                                  this.importComponent,
-                                 this.exportComponent,
-                                 this.unlockComponent] as OperationBase[];
+                                 this.exportComponent] as OperationBase[];
     operationComponents.forEach(operation => operation.init());
   }
 
