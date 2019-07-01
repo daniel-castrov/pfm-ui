@@ -1,71 +1,57 @@
 <app-header></app-header>
 <div class="single-row">
-  <menu-bar [authUser]="authUser"></menu-bar>
-  <div class="row main-content">
-    <div class="col-12">
-      <div class="row mb-4">
-        <div class="col-lg-7 col-md-12">
-          <span class="h5">Summary of Program Requests for {{pom?.fy|FY:'POM'}}</span>
-        </div>
-        <div class="col-lg-5 col-md-12">
-          <span class="pull-right">
-            <button class="btn btn-primary" (click)=submit() >For Demo Only - Submit All</button>
-          </span>
-          <span class="pull-right">
-            <button class="btn btn-primary" (click)=submit() [disabled]="thereAreOutstandingPRs">Submit All</button>
-          </span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-5 col-md-12">
-          <div class="row">
-            <div class="col-12">
-              <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+    <menu-bar [authUser]="authUser"></menu-bar>
+    <div class="row main-content">
+        <div class="col-12">
+            <div class="row mb-4">
+                <div class="col-lg-7 col-md-12">
+                    <span class="h5">Summary of Program Requests for {{pom?.fy|FY:'POM'}}</span>
+                </div>
+                <div class="col-lg-5 col-md-12">
+                    <span class="pull-right">
+                        <button class="btn btn-primary" (click)=submit()>For Demo Only - Submit All</button>
+                    </span>
+                    <span class="pull-right">
+                        <button class="btn btn-primary" (click)=submit() [disabled]="thereAreOutstandingPRs">Submit
+                            All</button>
+                    </span>
+                </div>
             </div>
-          </div>
-          <div class="row" *ngIf="workspaces?.length>1">
-            <div class="col-12">
-              <select [(ngModel)]='currworkspace'>
-                <option *ngFor="let wksp of workspaces" [ngValue]='wksp'>{{wksp.name}}</option>
-              </select>
+            <div class="row">
+                <div class="col-lg-5 col-md-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="workspaces?.length>1">
+                        <div class="col-12">
+                            <select [(ngModel)]='currworkspace'>
+                                <option *ngFor="let wksp of workspaces" [ngValue]='wksp'>{{wksp.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12">
+                    <app-pr-bar-chart class="bar-chart pull-right" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms'
+                        [pom]='pom' [orgmap]='orgMap'></app-pr-bar-chart>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="col-lg-7 col-md-12">
-        <app-pr-bar-chart class="bar-chart pull-right" 
-          [pomPrs]='pomPrograms'
-          [pbPrs]='pbPrograms'
-          [pom]='pom'
-          [orgmap]='orgMap'
-        ></app-pr-bar-chart>
-      </div>
-    </div>
+
+        <div class="col-12" style="padding-top: 20px">
+            <app-pr-tree-chart style="display: flex;justify-content: center;text-align: center;" [pomPrs]='pomPrograms'
+                [pbPrs]='pbPrograms' [pom]='pom' [orgmap]='orgMap' (updatedDataEvent)="receiveUpdatedData($event)">
+            </app-pr-tree-chart>
+        </div>
 
 
-      <div class="col-12" style="padding-top: 20px">
-      <app-pr-tree-chart  style="display: flex;justify-content: center;text-align: center;"
-        [pomPrs]='pomPrograms'
-        [pbPrs]='pbPrograms'
-        [pom]='pom'
-        [orgmap]='orgMap'
-        (updatedDataEvent)="receiveUpdatedData($event)"
-      ></app-pr-tree-chart>
+        <div class="col-12">
+            <program-requests [pomPrograms]="pomProgramsUpdatedData" [pbPrograms]="pbProgramsUpdatedData"
+                [orgMap]='orgMap' [pomFy]="pom?.fy" [reviewOnly]="false" (deleted)="onDeletePr()">
+            </program-requests>
+        </div>
 
     </div>
-    
-    <div class="row">
-      <div class="col-12">
-        <program-requests [pomPrograms]="pomProgramsUpdatedData"
-                               [pbPrograms]="pbProgramsUpdatedData"
-                               [orgMap]='orgMap'
-                               [pomFy]="pom?.fy"
-                               [reviewOnly]="false"
-                               (deleted)="onDeletePr()">
-        </program-requests>
-        
-      </div>
-    </div>
-  </div>
-  
+
 </div>
