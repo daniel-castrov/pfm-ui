@@ -2,7 +2,8 @@
   <td></td>
 </ng-template>
 <app-header></app-header>
-
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
 <div class="container-fluid">
   <div class="row main-content" *ngIf="pomfy">
     <div class="col-12">
@@ -184,4 +185,5 @@
 
     </div>
   </div>
+</div>
 </div>

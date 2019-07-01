@@ -1,34 +1,37 @@
 <app-header></app-header>
-<div class="container-fluid">
-   <div class="row main-content mb-4">
-      <div class="col-9">
-        <scenario-selector (scenarioChanged)="onScenarioChanged($event)">Budget</scenario-selector>
-      </div>
-      <div class="col-3">
-         <div class="pull-right" *ngIf="rdteBudgetData">
-            <button class="btn btn-primary" (click)="onSave()">Save</button>
-         </div>
-      </div>
-    </div>
-    <div *ngIf="rdteBudgetData" class="row  main-content">
-      <div class="col-12">
-        <tabset class="program-tab-style" role="tablist">
-          <tab heading="Title" id="tab1" role="tablist" active="true">
-            <title-tab [rdteBudgetData]="rdteBudgetData"></title-tab>
-          </tab>
-          <tab heading="TOC/Overview" id="tab2" role="tablist">
-            <overview-tab [rdteBudgetData]="rdteBudgetData"></overview-tab>
-          </tab>
-          <tab heading="R-1" id="tab3">
-            <r1-tab [rdteBudgetData]="rdteBudgetData"></r1-tab>
-          </tab>
-          <tab heading="R-2" id="tab3">
-            <r2-tab [rdteBudgetData]="rdteBudgetData"></r2-tab>
-          </tab>
-          <tab heading="R-2A" id="tab3">
-            <r2a-tab-on-budget-details [rdteBudgetData]="rdteBudgetData"></r2a-tab-on-budget-details>
-          </tab>
-        </tabset>
-      </div>
-    </div>  
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+    <div class="row main-content mb-4">
+       <div class="col-9">
+         <scenario-selector (scenarioChanged)="onScenarioChanged($event)">Budget</scenario-selector>
+       </div>
+       <div class="col-3">
+          <div class="pull-right" *ngIf="rdteBudgetData">
+             <button class="btn btn-primary" (click)="onSave()">Save</button>
+          </div>
+       </div>
+     </div>
+     <div *ngIf="rdteBudgetData" class="row  main-content">
+       <div class="col-12">
+         <tabset class="program-tab-style" role="tablist">
+           <tab heading="Title" id="tab1" role="tablist" active="true">
+             <title-tab [rdteBudgetData]="rdteBudgetData"></title-tab>
+           </tab>
+           <tab heading="TOC/Overview" id="tab2" role="tablist">
+             <overview-tab [rdteBudgetData]="rdteBudgetData"></overview-tab>
+           </tab>
+           <tab heading="R-1" id="tab3">
+             <r1-tab [rdteBudgetData]="rdteBudgetData"></r1-tab>
+           </tab>
+           <tab heading="R-2" id="tab3">
+             <r2-tab [rdteBudgetData]="rdteBudgetData"></r2-tab>
+           </tab>
+           <tab heading="R-2A" id="tab3">
+             <r2a-tab-on-budget-details [rdteBudgetData]="rdteBudgetData"></r2a-tab-on-budget-details>
+           </tab>
+         </tabset>
+       </div>
+     </div>  
+ </div> 
 </div>

@@ -8,9 +8,12 @@
     </button>
   </div>
   <!-- Line Chart -->
-  <div>
+  <!-- <div>
     <google-chart [data]="tooltipChart"></google-chart>
-  </div>
+  </div> -->
+    <div class="chartAreaWrapper">
+      <google-chart [data]="tooltipChart"></google-chart>
+    </div>
   <div *ngIf="pr.type === ProgramType.GENERIC" class="col-auto">
     <div class="dropdown-label">
       <select [(ngModel)]="selectedFundingLine" class="form-control-sm" name="dummy">

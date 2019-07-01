@@ -162,3 +162,9 @@ fieldset {
     border-top: 3px solid  #7b8389 !important;
   }
 }
+
+.chartAreaWrapper {
+  width: 360px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
