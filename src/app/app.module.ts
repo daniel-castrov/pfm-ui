@@ -212,6 +212,8 @@ import { OrganizationToaComponent } from './components/programming/create-pom-se
 import { PrBarChartComponent } from './components/programming/pr-bar-chart/pr-bar-chart.component';
 import { PomAnalysisComponent } from './components/programming/create-pom-session/pom-analysis/pom-analysis.component';
 import { FundingRateRenderer } from './components/renderers/funding-rate-renderer/funding-rate-renderer.component';
+import { PrTreeChartComponent } from './components/programming/pr-tree-chart/pr-tree-chart.component';
+
 import {MaterialModule} from './components/menu-bar/material.module';
 import 'hammerjs';
 import { SidenavService } from './components/menu-bar/service/service';
@@ -506,6 +508,7 @@ const appRoutes: Routes = [
     PrBarChartComponent,
     PomAnalysisComponent,
     FundingRateRenderer,
+    PrTreeChartComponent,
     SidebarMenuComponent,
   ],
   entryComponents: [
