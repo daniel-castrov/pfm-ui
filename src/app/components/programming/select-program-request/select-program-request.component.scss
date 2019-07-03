@@ -20,7 +20,10 @@ fieldset {
   border: $chart-border;
   text-align: center;
 }
-
+.tree-chart {
+  padding-top: 5px;
+  text-align: center;
+}
 .selectpicker {
   color: #fff;
   background-color: #6c757d;
