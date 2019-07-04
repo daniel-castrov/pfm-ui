@@ -162,9 +162,20 @@ fieldset {
     border-top: 3px solid  #7b8389 !important;
   }
 }
-
-.chartAreaWrapper {
-  width: 360px;
-  overflow-x: scroll;
-  overflow-y: hidden;
+.left-arrow{
+  padding-left: 153px;
+  padding-top: 111px;
 }
+.right-arrow{
+  padding-left: 39px;
+  padding-top: 111px;
+}
+.arrow-btn {
+  padding-right: 10px;
+}
+
+// .chartAreaWrapper {
+//   width: 360px;
+//   overflow-x: scroll;
+//   overflow-y: hidden;
+// }

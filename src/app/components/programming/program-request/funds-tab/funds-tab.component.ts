@@ -51,6 +51,7 @@ export class FundsTabComponent implements OnChanges {
   private pbPr: Program;
   private ismgr: boolean = false;
   private fieldedits: boolean = false;
+  private year : number = 5;
 
   private appropriations: string[] = [];
   private functionalAreas: string[] = [];
@@ -80,6 +81,15 @@ export class FundsTabComponent implements OnChanges {
   fundArr: any=[];
   tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number;}; };
   fundData : any = [];
+  years: any;
+  getYear: any=[];
+  label: any[];
+  pbPrograms: any=[];
+  item : any = [];
+  temp : any=[];
+  fundObj1: any=[];
+  fundArr1: any=[];
+  prevYear: any =[];
 
   constructor(private currentPhase: CurrentPhase,
     private programService: ProgramService,
@@ -301,17 +311,49 @@ export class FundsTabComponent implements OnChanges {
       });
       this.generateColumns();
       this.data = data;
+      // console.log("buget data",this.data);
+      // console.log("2014",this.pbPr.fundingLines);
+      this.temp=[];
+      this.temp = this.pbPr.fundingLines;
+      this.fundArr1 = [];
+      this.fundObj1= [];
+
+      for (var key in this.temp) {
+        if (key == '0') {
+          for (var key1 in this.temp[key].funds) {
+            this.fundObj1[key1] = [];
+            this.fundObj1[key1].push(key1);
+            this.fundObj1[key1].push(this.temp[key].funds[key1]);
+          }
+        }
+        else {
+          for (var key1 in this.temp[key].funds) {
+            this.fundObj1[key1].push(this.temp[key].funds[key1]);
+          }
+        }
+      }
+      let tempObj = Object.keys(this.fundObj1);
+
+     
+      this.prevYear = this.fundObj1[tempObj[0]];
+
+      for(var tKey in this.fundObj1) {
+        this.fundArr1.push(this.fundObj1[tKey]);
+      }
+    
+
+      
       this.fundingLineData = this.data;
       this.fundData =[];
       for(let i=0; i<this.fundingLineData.length;i++){
         this.fundData.push(this.fundingLineData[i].fundingLine);
       }
-      var label = [];
-      label[0]='year';
+      this.label = [];
+      this.label[0]='year';
       this.fundArr = [];
       this.fundObj = [];
       for(let i=0;i<this.fundData.length;i++){
-        label.push(this.fundData[i].baOrBlin)
+        this.label.push(this.fundData[i].baOrBlin)
       }
       for (var key in this.fundData) {
         if (key == '0') {
@@ -327,21 +369,41 @@ export class FundsTabComponent implements OnChanges {
           }
         }
       }
+      this.fundObj.unshift( this.prevYear);
+
       for(var tKey in this.fundObj) {
         this.fundArr.push(this.fundObj[tKey]);
       }
-      this.fundArr.unshift(label);
-      this.fundArr.splice(1,1)
-         //Funding line chart
-         this.tooltipChart = {
-          chartType: 'LineChart',
-          dataTable: this.fundArr,
-          options: {
-            title: 'Funding Line Chart',
-            width: 630,
-            height: 400,
-          }
+      // this.years =   this.fundArr;
+      this.fundArr.unshift(this.label);
+
+      this.c = 6;
+      var count = this.c;
+      // console.log("forw c1",this.c);
+      var flag =0;
+      this.getYear=[];
+      this.getYear[0] = this.fundArr[0];
+  
+      if(this.c == 0){
+        this.c = 6;
+         count = this.c;
+      }
+      for(let i=this.c;i<this.fundArr.length && flag < 5;i++){
+          this.getYear.push(this.fundArr[i]);
+          count++;
+          flag++;
+          this.c=count;
+      }
+      // console.log("temp array", this.getYear);
+      this.tooltipChart = {
+        chartType: 'LineChart',
+        dataTable:  this.getYear,
+        options: {
+          title: 'Funding Line Chart',
+          width: 700,
+          height: 250,
         }
+      }
 
       this.loadDropdownOptions();
       this.initPinnedBottomRows();
@@ -350,6 +412,71 @@ export class FundsTabComponent implements OnChanges {
       }
       this.agGrid.api.sizeColumnsToFit();
     });
+  }
+
+  back(){
+    this.c = this.c - 6;
+    var count = this.c ;
+    var flag =0;
+    this.getYear=[];
+    this.label = [];
+    if(this.c == 0){
+      this.c =1;
+    }
+      for(let i=this.c;i>0 && flag < 5;i--){
+          this.getYear.push(this.fundArr[i]);
+          count--;
+          flag++;
+          this.c=count;
+      }
+    var sortYear = [];
+    sortYear[0] = this.fundArr[0];
+       this.getYear.sort();
+       for(let h=0; h<this.getYear.length;h++){
+        sortYear.push(this.getYear[h]);
+      
+       }
+      
+       this.getYear=sortYear;
+      // console.log("back array", this.getYear);
+      this.tooltipChart = {
+        chartType: 'LineChart',
+        dataTable:  this.getYear,
+        options: {
+          title: 'Funding Line Chart',
+          width: 700,
+          height: 250,
+        }
+      }
+  }
+  c=6;
+  forword(){
+    var count = this.c;
+    var flag =0;
+    this.getYear=[];
+    this.getYear[0] = this.fundArr[0];
+
+    if(this.c == 0){
+      this.c = 6;
+       count = this.c;
+    }
+    for(let i=this.c;i<this.fundArr.length && flag < 5;i++){
+        this.getYear.push(this.fundArr[i]);
+        count++;
+        flag++;
+        this.c=count;
+    }
+  
+    // console.log("temp array", this.getYear);
+    this.tooltipChart = {
+      chartType: 'LineChart',
+      dataTable:  this.getYear,
+      options: {
+        title: 'Funding Line Chart',
+        width: 700,
+        height: 250,
+      }
+    }
   }
 
   addParentFundingLine() {
@@ -912,14 +1039,17 @@ export class FundsTabComponent implements OnChanges {
     }
 
     this.budgetFy = this.pom.fy-1;
-
+//  console.log()
     if (!name) {
       return;
     }
 
-    const pbPrograms: Program[] = (await this.pbService.getFinalByYear(this.pom.fy-1).toPromise()).result;
+    const pbPrograms: Program[] = (await this.pbService.getFinalByYear(this.pom.fy-3).toPromise()).result;
+    this.pbPrograms = pbPrograms;
+    // console.log('budget year', this.pbPrograms);
+   
     const pbPr: Program = pbPrograms.find(program => program.shortName === name);
-
+    // console.log('budget year1 ',pbPr);
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
     }
