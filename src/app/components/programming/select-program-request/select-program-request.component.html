@@ -18,38 +18,46 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
-        </div>
-      </div>
-      <div class="row" *ngIf="workspaces?.length>1">
-        <div class="col-12">
-          <select [(ngModel)]='currworkspace'>
-            <option *ngFor="let wksp of workspaces" [ngValue]='wksp'>{{wksp.name}}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    
-        <div style="display: flex">
-          <div>
-            <app-pr-tree-chart class="pull-left tree-chart" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
-              [orgmap]='orgMap' (updatedDataEvent)="receiveUpdatedData($event)">
-            </app-pr-tree-chart>
+        <div class="col-7">
+            <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+            <program-requests [pomPrograms]="pomProgramsUpdatedData" [pbPrograms]="pbProgramsUpdatedData" [orgMap]='orgMap'
+              [pomFy]="pom?.fy" [reviewOnly]="false" (deleted)="onDeletePr()">
+            </program-requests>
           </div>
-          <div>
+          <div class="col-5">
             <app-pr-bar-chart class="bar-chart pull-right" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
-              [orgmap]='orgMap'></app-pr-bar-chart>
+              [orgmap]='orgMap'>
+            </app-pr-bar-chart>
+            <div class="mt-2 pull-right">
+              <app-pr-tree-chart class="pull-left tree-chart" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
+                [orgmap]='orgMap' (updatedDataEvent)="receiveUpdatedData($event)">
+              </app-pr-tree-chart>
+              </div>
           </div>
         </div>
-   
-
-    <div class="col-12">
-      <program-requests [pomPrograms]="pomProgramsUpdatedData" [pbPrograms]="pbProgramsUpdatedData" [orgMap]='orgMap'
-        [pomFy]="pom?.fy" [reviewOnly]="false" (deleted)="onDeletePr()">
-      </program-requests>
-    </div>
-
+        <div class="row" *ngIf="workspaces?.length>1">
+          <div class="col-12">
+            <select [(ngModel)]='currworkspace'>
+              <option *ngFor="let wksp of workspaces" [ngValue]='wksp'>{{wksp.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row main-content">
+        <div class="col-12">
+          <tabset class="program-tab-style" role="tablist">
+            <tab heading="Schedule" id="tab1" role="tablist">
+              Schedule
+            </tab>
+            <tab heading="Scope" id="tab2" active="true">
+              Scope
+            </tab>
+            <tab heading="Assets" id="tab3">
+              Assets
+            </tab>
+          </tabset>
+        </div>
+      </div>
   </div>
 </div>
+

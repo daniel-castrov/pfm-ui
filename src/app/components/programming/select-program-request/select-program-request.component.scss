@@ -16,12 +16,12 @@ fieldset {
 }
 
 .bar-chart {
-  padding-top: 5px;
+  padding: 5px 0;
   border: $chart-border;
   text-align: center;
 }
 .tree-chart {
-  padding-top: 5px;
+  padding: 5px 0 5px 0;
   text-align: center;
 }
 .selectpicker {
@@ -39,5 +39,5 @@ fieldset {
   padding: 0.375rem 0.75rem;
 }
 .main-content{
-  padding-top: 20px;
+  padding-top: 0;
 }
