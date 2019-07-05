@@ -94,16 +94,27 @@ p {
   height: calc(100vh - 100px); 
   background: #efefef;
 }
-.flex{
+.flex {
   display:flex;
   align-items: center;
   justify-content: flex-start;
   padding-left: 17px; 
-  padding-top: 10px
+  padding-top: 10px;
+
+  .fa {
+    color: #42526E;
+    cursor: pointer;
+
+    .fa:hover {
+      color: #999FAA;
+    }
+  }
 }
+
 .menu-section-label{
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
 .arrow-left {
   width: 0; 
   height: 0; 
@@ -112,6 +123,6 @@ p {
   position: absolute;
   left: -10px;
   top: 1px;
-  border-right:10px solid #80808057;; 
+  border-right:10px solid #80808057;
   background-color: #fff;
 }

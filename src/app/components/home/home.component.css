@@ -1,7 +1,6 @@
 .main-content {
   width: 100%;
-  margin: auto 0;
-  padding: 0;
+  padding: 20px 0;
 }
 .single-row{
   display: flex;
