@@ -18,21 +18,25 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-7">
-            <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+          <div class="col-8">
+              <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
             <program-requests [pomPrograms]="pomProgramsUpdatedData" [pbPrograms]="pbProgramsUpdatedData" [orgMap]='orgMap'
               [pomFy]="pom?.fy" [reviewOnly]="false" (deleted)="onDeletePr()">
             </program-requests>
           </div>
-          <div class="col-5">
-            <app-pr-bar-chart class="bar-chart pull-right" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
+          <div class="col-4">
+            <app-pr-bar-chart class="bar-chart mt-4 pull-right" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
               [orgmap]='orgMap'>
             </app-pr-bar-chart>
-            <div class="mt-2 pull-right">
-              <app-pr-tree-chart class="pull-left tree-chart" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
+            <div class="mt-6">
+              <app-pr-tree-chart class="pull-right mt-4 tree-chart" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
                 [orgmap]='orgMap' (updatedDataEvent)="receiveUpdatedData($event)">
               </app-pr-tree-chart>
-              </div>
+            </div>
           </div>
         </div>
         <div class="row" *ngIf="workspaces?.length>1">

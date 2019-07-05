@@ -16,13 +16,16 @@ fieldset {
 }
 
 .bar-chart {
-  padding: 5px 0;
+  padding: 20px 0;
   border: $chart-border;
   text-align: center;
+  width: 100%;
+  margin-top: 37px !important;
 }
 .tree-chart {
-  padding: 5px 0 5px 0;
+  padding: 10px 0 5px 0;
   text-align: center;
+  width: 100%;
 }
 .selectpicker {
   color: #fff;
