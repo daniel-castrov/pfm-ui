@@ -205,9 +205,9 @@ export class PrTreeChartComponent implements OnInit {
         chartType: 'TreeMap',
         dataTable: this.generateTreeMap(filterId, pomprs, pbprs),
         options: {
-          width: 700,
-          height: 350,
-          legend: { po8ition: 'top', maxLines: 3 },
+          width: 540,
+          height: 210,
+          legend: { position: 'top', maxLines: 3 },
         }
       };
   }
