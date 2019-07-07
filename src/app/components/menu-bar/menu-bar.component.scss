@@ -1,3 +1,6 @@
+$primary-color: #25527a;
+$dark-grey:     #848282;
+
 .navbar {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   // background-color: #23527c !important;
@@ -100,19 +103,33 @@ p {
   justify-content: flex-start;
   padding-left: 17px; 
   padding-top: 10px;
+  }
 
-  .fa {
-    color: #42526E;
-    cursor: pointer;
-
-    .fa:hover {
-      color: #999FAA;
+.mat-list-item,
+.mat-icon,
+.mat-icon-button {
+    color: $primary-color;
+    font-size: 24px;
+    margin-left: 4px;
+    cursor: pointer !important;
+    
+    &:hover {
+      color: $dark-grey;
     }
   }
-}
 
+.mat-icon-button,
+.mat-button {
+  color: $primary-color;
+  font-size: 18px;
+  cursor: pointer !important;
+}
+  
 .menu-section-label{
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: $primary-color;
+  cursor: pointer !important;
+  margin-top: 12px;
 }
 
 .arrow-left {
