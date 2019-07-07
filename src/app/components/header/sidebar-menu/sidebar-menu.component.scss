@@ -102,7 +102,7 @@ $dark-grey:     #848282;
 .mat-icon,
 .mat-icon-button {
     color: $primary-color;
-    font-size: 24px;
+    font-size: 20px;
     margin-left: 4px;
     cursor: pointer !important;
     
@@ -114,7 +114,6 @@ $dark-grey:     #848282;
 .mat-icon-button,
 .mat-button {
   color: $primary-color;
-  font-size: 18px;
-  margin-top: 10px;
+  font-size: 18px;  margin-top: 8px;
   cursor: pointer !important;
 }
