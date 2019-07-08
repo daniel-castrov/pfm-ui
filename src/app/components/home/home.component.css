@@ -1,7 +1,10 @@
 .main-content {
   width: 100%;
   padding: 20px 0;
+  margin-top: 20px;
+
 }
+
 .single-row{
   display: flex;
 }
