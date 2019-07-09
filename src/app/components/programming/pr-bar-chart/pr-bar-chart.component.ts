@@ -130,10 +130,10 @@ export class PrBarChartComponent implements OnInit {
       dataTable: this.generateChartTable( filterId, pomprs, pbprs ),
       options: {
         title: this.getChartTitle(this.selectedFilter, filterId ),
-        width: 550,
-        height: 190,
+        width: 620,
+        height: 200,
         legend: { position: 'top', maxLines: 6 },
-        bar: { groupWidth: '60%' },
+        bar: { groupWidth: '65%' },
         isStacked: true,
         series: { 0: { color: '#55c57a' }, 1: { color: '#008af3' }, 2: { color: '#cf3fbe' }, 3: { color: '#d70f37' } },
       }
