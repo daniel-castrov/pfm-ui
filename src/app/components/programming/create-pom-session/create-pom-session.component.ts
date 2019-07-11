@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { UserUtils } from '../../../services/user.utils';
@@ -19,6 +19,7 @@ import {
   BudgetService
 } from '../../../generated';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommunityModalComponent } from './community-modal/community-modal.component';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -62,6 +63,8 @@ export class CreatePomSessionComponent implements OnInit {
 
   private toainfo: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
   private suborgdata: OneYearToaData;
+  yearData: Map<number, OneYearToaData>;
+  @Output() data = new EventEmitter<any>();
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -95,15 +98,26 @@ export class CreatePomSessionComponent implements OnInit {
     var data: OneYearToaData = this.getToaDataOrBlank(this.toayear);
     data.community.amount = val;
     this.toainfo.set(this.toayear, data);
+     console.log('year',this.toayear);
     this.resetCharts();
   }
 
+  open1() {
+    const modalRef = this.modalService.open(CommunityModalComponent);
+    modalRef.componentInstance.title = 'About';
+    // this.sendData();
+  }
+sendData(){
+    this.data.emit(this.toainfo);
+    console.log('emit data',this.toainfo);
+  }
   get toaForYear(): number {
     if (!this.toayear ){
       return 0;
     }
     return this.getToaDataOrBlank(this.toayear).community.amount;
   }
+ 
 
   @Input() get selectedtoainfo(): OneYearToaData {
     return this.toainfo.get(this.selectedyear);
@@ -169,9 +183,14 @@ export class CreatePomSessionComponent implements OnInit {
         this.setInitialGridValues(this.pomfy, poms, samplepom);
       });
     });
+    // console.log('for', this.toainfo);
+    // this.yearData = this.toainfo;
+    console.log('for',this.yearData);
   }
-
-  @Input() get pomyears(): number[] {
+  
+  @Input() get pomyears(): number[] { 
+    this.yearData = this.toainfo;
+    console.log('data',this.yearData);
     if (this.pomfy) {
       // we want to have all years from pomfy to our max TOA year,
       var maxtoayear: number = this.pomfy;
@@ -180,8 +199,9 @@ export class CreatePomSessionComponent implements OnInit {
           maxtoayear = year;
         }
       });
+      // console.log('data',this.toainfo);
       maxtoayear = Math.max(maxtoayear, this.scrollstartyear + this.BUDGETHORIZON - 1);
-
+      
       var newpomyears: number[] = [];
       for (var y = this.pomfy; y <= maxtoayear; y++) {
         newpomyears.push(y);
@@ -191,6 +211,7 @@ export class CreatePomSessionComponent implements OnInit {
     return [];
   }
 
+  
   private setInitialGridValues(fy: number, poms: Pom[], samplepom: Pom) {
     let i: number;
 
