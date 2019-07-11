@@ -28,10 +28,10 @@
               <mat-sidenav #leftSidenav mode="side" opened>
                   <div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'">
                       <div fxLayout="column" fxLayoutGap="10px" style="height: 100%;">
-                        <mat-nav-list>
+                        <!-- <mat-nav-list>
                           <div mat-list-item class="flex">
                               <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu1" style="padding-right:5px;">
-                                  <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                  <i class="fa fa-clock-o"  title="Planning" aria-hidden="true"></i>
                               </mat-icon>
                               <div [@animateText]="linkText ? 'show' : 'hide'">
                                   <div
@@ -45,21 +45,21 @@
                                       <a class="dropdown-item enable-menu" routerLink="/set-epp">Import EPP Data</a>
                                   </button>
                               </mat-menu>
-                              <ng-template #disabledPlanningMenu1>
+                            <ng-template #disabledPlanningMenu1>
                                   <mat-icon>
-                                      <i class="fa fa-clock-o gray" aria-hidden="true"></i>
+                                      <ui class="fa fa-clock-o gray" aria-hidden="true"></ui>
                                   </mat-icon>
                               </ng-template>
                               <ng-template #disabledPlanningMenu>
                                   <button mat-button disabled> Planning</button>
                               </ng-template>
                           </div>
-                        </mat-nav-list>
+                        </mat-nav-list> -->
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
                                       <mat-icon [matMenuTriggerFor]="menu2"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu1" style="padding-right:5px;">
-                                          <i class="fa fa-hourglass-end" aria-hidden="true"></i>
+                                          <i class="fa fa-hourglass-end" title="Program Request" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
@@ -145,7 +145,7 @@
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
                                       <mat-icon [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu1" style="padding-right:5px;">
-                                          <i class="fa fa-database" aria-hidden="true"></i>
+                                          <i class="fa fa-database" title="Budget"  aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
@@ -205,7 +205,7 @@
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
                                       <mat-icon [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu1" style="padding-right:5px;">
-                                          <i class="fa fa-globe" aria-hidden="true"></i>
+                                          <i class="fa fa-globe"  title="Execution" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
@@ -273,7 +273,7 @@
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
                                       <mat-icon [matMenuTriggerFor]="menu5" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu1" style="padding-right:5px;">
-                                            <i class="fa fa-area-chart" aria-hidden="true"></i>
+                                            <i class="fa fa-area-chart" title="Reports" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
@@ -314,7 +314,7 @@
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
                                       <mat-icon [matMenuTriggerFor]="menu6" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Execution_Manager') || roles?.includes('Budget_Manager')  ); else disableManageMenu1" style="padding-right:5px;">
-                                          <i class="fa fa-th-list" aria-hidden="true"></i>
+                                          <i class="fa fa-th-list" title="Manage" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div
@@ -365,7 +365,7 @@
                               <mat-nav-list>
                                   <div mat-list-item class="flex">
                                       <mat-icon [matMenuTriggerFor]="menu7" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu1" style="padding-right:5px;">
-                                          <i class="fa fa-user-secret" aria-hidden="true"></i>
+                                          <i class="fa fa-user-secret"  title="Admin" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
                                           <div

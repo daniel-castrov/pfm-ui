@@ -16,23 +16,24 @@ body {
   background: -moz-linear-gradient(#325F96, #083361);
   background: linear-gradient(#325F96, #083361);
   color: #fff;
-  height: 96px;
+  height: 80px;
 }
 
 .header-items {
-  margin-top: -10px;
+  margin-top: -25px;
 }
 
 .dod-logo {
   float: left;
-  padding: 10px 0 0 0;
+  padding: 5px 0 0 0;
   cursor: pointer;
+  margin-left: -6px;
 }
 
 .header-title {
   float: left;
   margin: 10px 0 5px 14px;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 
@@ -40,14 +41,14 @@ body {
 
   .header {
     color: #fff;
-    height: 96px;
+    height: 79px;
   }
 }
 
 .sub-title {
   float: left;
   margin-left: 89px;
-  font-size: 15px;
+  font-size: 14px;
   color: #708CA7;
   font-style: italic;
 }
