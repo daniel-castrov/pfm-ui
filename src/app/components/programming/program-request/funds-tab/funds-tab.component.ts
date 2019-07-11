@@ -713,24 +713,25 @@ export class FundsTabComponent implements OnChanges {
           },
           rowSpan: params => { return this.rowSpanCount(params) }
         },
-        {
-          headerName: 'Cycle',
-          headerTooltip: 'Cycle',
-          field: 'phaseType',
-          maxWidth: 80,
-          minWidth: 80,
-          suppressMenu: true,
-          suppressToolPanel: true,
-          cellClassRules: {
-            'font-weight-bold ag-medium-gray-cell': params => {
-              return this.colSpanCount(params) > 1
-            },
-            'delta-row': params => {
-              return params.data.phaseType === PhaseType.DELTA;
-            }
-          },
-          cellRenderer: 'viewSiblingsRenderer'
-        }]
+        // {
+        //   headerName: 'Cycle',
+        //   headerTooltip: 'Cycle',
+        //   field: 'phaseType',
+        //   maxWidth: 80,
+        //   minWidth: 80,
+        //   suppressMenu: true,
+        //   suppressToolPanel: true,
+        //   cellClassRules: {
+        //     'font-weight-bold ag-medium-gray-cell': params => {
+        //       return this.colSpanCount(params) > 1
+        //     },
+        //     'delta-row': params => {
+        //       return params.data.phaseType === PhaseType.DELTA;
+        //     }
+        //   },
+        //   cellRenderer: 'viewSiblingsRenderer'
+        // }
+      ]
       }
     ];
 
