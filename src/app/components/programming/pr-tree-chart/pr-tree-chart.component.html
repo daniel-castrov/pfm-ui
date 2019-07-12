@@ -1,0 +1,9 @@
+<google-chart #treechart 
+  [data]='treedata'
+  (chartSelect)='selectTree($event)'
+></google-chart>
+<select [(ngModel)]="selectTreeFilter" class="mt-2" (ngModelChange)="onFilterChangeForTreeMap($event)" class="selectpicker">
+  <option [value]="i" *ngFor="let i of filtersTreeMap" class="optionpicker">{{i}}</option>
+</select>
+
+

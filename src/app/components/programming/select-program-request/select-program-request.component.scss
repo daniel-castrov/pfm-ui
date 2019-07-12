@@ -6,8 +6,8 @@ $light-blue: #dbe8f7;
 $light-grey: #eae9e9;
 $dark-grey: #848282;
 $light-green: #ebf2de;
-.single-row
-{
+
+.single-row  {
   display: flex;
 }
 
@@ -16,11 +16,17 @@ fieldset {
 }
 
 .bar-chart {
-  padding-top: 5px;
+  padding: 10px 0;
   border: $chart-border;
   text-align: center;
+  width: 100%;
+  margin-top: 35px !important;
 }
-
+.tree-chart {
+  padding: 10px 0 5px 0;
+  text-align: center;
+  width: 100%;
+}
 .selectpicker {
   color: #fff;
   background-color: #6c757d;
