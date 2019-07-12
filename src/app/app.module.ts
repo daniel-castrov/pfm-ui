@@ -219,6 +219,7 @@ import 'hammerjs';
 import { SidenavService } from './components/menu-bar/service/service';
 import { SidebarMenuComponent } from "./components/header/sidebar-menu/SidebarMenuComponent";
 import { CommunityModalComponent } from './components/programming/create-pom-session/community-modal/community-modal.component';
+import { CreatePomSessionService } from './components/programming/create-pom-session/create-pom-session.service'
 // ROUTES
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -570,6 +571,7 @@ const appRoutes: Routes = [
     { provide: NgbDateParserFormatter, useFactory: () => new CustomNgbDateParserFormatter('MM/dd/yyyy h:mm:ss a') },
     SidenavService,
     NgbActiveModal,
+    CreatePomSessionService
   ],
   bootstrap: [AppComponent]
 })
