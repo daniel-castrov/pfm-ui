@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 })
 export class CreateMrdbProgramComponent implements OnInit {
 
-  public pr: Program = {};
+  public pr: any = {};
   public pom: Pom = {};
 
   private invalidShortNames: Set<string>;

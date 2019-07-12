@@ -18,7 +18,6 @@ export class SidebarMenuComponent implements OnInit {
     constructor( 
       private service : SidenavService,) {
        this.service.sideNavState$.subscribe( res => {
-         console.log(res)
          this.onSideNavChange = res;
        })
       }

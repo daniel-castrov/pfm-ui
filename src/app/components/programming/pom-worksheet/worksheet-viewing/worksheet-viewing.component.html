@@ -1,25 +1,28 @@
 <app-header></app-header>
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-6" id="update-pom-session">
-          <div class="h5 mb-4">POM {{pom?.fy}} - Worksheet Viewing </div>
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+    <div class="row main-content">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6" id="update-pom-session">
+            <div class="h5 mb-4">POM {{pom?.fy}} - Worksheet Viewing </div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <ag-grid-angular
-            #agGrid class="ag-theme-balham"
-            id="myGrid"
-            domLayout="autoHeight"
-            [gridOptions]="agOptions"           
-            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            (gridReady)="onGridReady($event)" >
-          </ag-grid-angular>
-          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        <div class="row">
+          <div class="col-12">
+            <ag-grid-angular
+              #agGrid class="ag-theme-balham"
+              id="myGrid"
+              domLayout="autoHeight"
+              [gridOptions]="agOptions"           
+              (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+              (gridReady)="onGridReady($event)" >
+            </ag-grid-angular>
+            <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </div>  
 </div>

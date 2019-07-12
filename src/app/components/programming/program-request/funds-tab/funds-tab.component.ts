@@ -51,6 +51,7 @@ export class FundsTabComponent implements OnChanges {
   private pbPr: Program;
   private ismgr: boolean = false;
   private fieldedits: boolean = false;
+  private year: number = 5;
 
   private appropriations: string[] = [];
   private functionalAreas: string[] = [];
@@ -76,10 +77,19 @@ export class FundsTabComponent implements OnChanges {
   payloadData: { type: string; value: any; }[];
   fundingLineData: any = [];
   values: any = [];
-  fundObj: any= {};
-  fundArr: any=[];
-  tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number;}; };
-  fundData : any = [];
+  fundObj: any = {};
+  fundArr: any = [];
+  tooltipChart: { chartType: string; dataTable: any[]; options: { title: string; width: number; height: number; }; };
+  fundData: any = [];
+  years: any;
+  getYear: any = [];
+  label: any[];
+  pbPrograms: any = [];
+  item: any = [];
+  temp: any = [];
+  fundObj1: any = [];
+  fundArr1: any = [];
+  prevYear: any = [];
 
   constructor(private currentPhase: CurrentPhase,
     private programService: ProgramService,
@@ -87,39 +97,39 @@ export class FundsTabComponent implements OnChanges {
     private globalsService: UserUtils,
     private tagsUtils: TagsUtils,
     private autoValuesService: AutoValuesService,
-    private rolesvc: RolesPermissionsService ) {
-      this.agOptions = <GridOptions>{
-        defaultColDef: {
-          sortable: true,
-          filter: true
-        },
-        suppressMovableColumns: true,
-        suppressRowTransform: true,
-        singleClickEdit: true,
-        stopEditingWhenGridLosesFocus: true,
-        frameworkComponents: { 
-          deleteRenderer: DeleteRenderer, 
-          viewSiblingsRenderer: ViewSiblingsRenderer 
-        },
-        context: { parentComponent: this }
-      }
-      this.agOptionsInformation = <GridOptions>{
-        defaultColDef: {
-          sortable: true,
-          filter: false,
-          editable: false
-        },
-        suppressMovableColumns: true,
-        suppressRowTransform: true,
-        singleClickEdit: true,
-        stopEditingWhenGridLosesFocus: true,
-        frameworkComponents: { 
-          deleteRenderer: DeleteRenderer, 
-          viewSiblingsRenderer: ViewSiblingsRenderer 
-        },
-        context: { parentComponent: this }
-      }
-     }
+    private rolesvc: RolesPermissionsService) {
+    this.agOptions = <GridOptions>{
+      defaultColDef: {
+        sortable: true,
+        filter: true
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true,
+      frameworkComponents: {
+        deleteRenderer: DeleteRenderer,
+        viewSiblingsRenderer: ViewSiblingsRenderer
+      },
+      context: { parentComponent: this }
+    }
+    this.agOptionsInformation = <GridOptions>{
+      defaultColDef: {
+        sortable: true,
+        filter: false,
+        editable: false
+      },
+      suppressMovableColumns: true,
+      suppressRowTransform: true,
+      singleClickEdit: true,
+      stopEditingWhenGridLosesFocus: true,
+      frameworkComponents: {
+        deleteRenderer: DeleteRenderer,
+        viewSiblingsRenderer: ViewSiblingsRenderer
+      },
+      context: { parentComponent: this }
+    }
+  }
 
   async ngOnChanges() {
     if (!this.pr.containerId) {
@@ -130,7 +140,7 @@ export class FundsTabComponent implements OnChanges {
         this.parentPr = (await this.programService.getByContainerAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).toPromise()).result;
       }
 
-      if( this.pom ){
+      if(this.pom){
         this.pomFy = this.pom.fy;
         this.columnKeys = [
           this.pomFy - 3,
@@ -194,41 +204,41 @@ export class FundsTabComponent implements OnChanges {
   async initSiblingsDataRows(selectedFundingLine: FundingLine) {
     let data: Array<DataRow> = [];
     this.programService.getChildrenContainerIdAndName(this.pr.containerId, NameUtils.getUrlEncodedParentName(this.pr.shortName)).subscribe(response => {
-        response.result.forEach(subprogram => {
-          if (this.pr.id !== subprogram.id) {
-            subprogram.fundingLines.forEach(fundingLine => {
-              if (selectedFundingLine.appropriation === fundingLine.appropriation &&
-                selectedFundingLine.opAgency === fundingLine.opAgency &&
-                selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
-                selectedFundingLine.item === fundingLine.item) {
-                let pomRow: DataRow = {
-                  programId: subprogram.shortName,
-                  gridType: GridType.SIBLINGS,
-                  fundingLine: fundingLine,
-                  phaseType: PhaseType.POM
-                }
-                data.push(pomRow);
+      response.result.forEach(subprogram => {
+        if (this.pr.id !== subprogram.id) {
+          subprogram.fundingLines.forEach(fundingLine => {
+            if (selectedFundingLine.appropriation === fundingLine.appropriation &&
+              selectedFundingLine.opAgency === fundingLine.opAgency &&
+              selectedFundingLine.baOrBlin === fundingLine.baOrBlin &&
+              selectedFundingLine.item === fundingLine.item) {
+              let pomRow: DataRow = {
+                programId: subprogram.shortName,
+                gridType: GridType.SIBLINGS,
+                fundingLine: fundingLine,
+                phaseType: PhaseType.POM
               }
-            });
-          }
-        });
-        this.siblingsData = data;
-        this.initSiblingsPinnedBottomRows();
-
-        setTimeout(() => {
-          if (this.data.some(row => row.fundingLine.userCreated === true)) {
-            this.agGridParent.columnApi.setColumnVisible('delete', true);
-            if(this.agGridSiblings){
-              this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+              data.push(pomRow);
             }
-          }
-          if (this.agGridSiblings) {
-            this.agGridSiblings.api.sizeColumnsToFit();
-          }
-          this.agGridParent.api.sizeColumnsToFit();
-          this.agGrid.api.sizeColumnsToFit();
-        }, 700);
+          });
+        }
       });
+      this.siblingsData = data;
+      this.initSiblingsPinnedBottomRows();
+
+      setTimeout(() => {
+        if (this.data.some(row => row.fundingLine.userCreated === true)) {
+          this.agGridParent.columnApi.setColumnVisible('delete', true);
+          if(this.agGridSiblings){
+            this.agGridSiblings.columnApi.setColumnVisible('delete', true);
+          }
+        }
+        if (this.agGridSiblings) {
+          this.agGridSiblings.api.sizeColumnsToFit();
+        }
+        this.agGridParent.api.sizeColumnsToFit();
+        this.agGrid.api.sizeColumnsToFit();
+      }, 700);
+    });
   }
 
   initSiblingsPinnedBottomRows() {
@@ -301,17 +311,49 @@ export class FundsTabComponent implements OnChanges {
       });
       this.generateColumns();
       this.data = data;
+      // console.log("buget data",this.data);
+      // console.log("2014",this.pbPr.fundingLines);
+      this.temp=[];
+      this.temp = this.pbPr.fundingLines;
+      this.fundArr1 = [];
+      this.fundObj1 = [];
+
+      for (var key in this.temp) {
+        if (key == '0') {
+          for (var key1 in this.temp[key].funds) {
+            this.fundObj1[key1] = [];
+            this.fundObj1[key1].push(key1);
+            this.fundObj1[key1].push(this.temp[key].funds[key1]);
+          }
+        }
+        else {
+          for (var key1 in this.temp[key].funds) {
+            this.fundObj1[key1].push(this.temp[key].funds[key1]);
+          }
+        }
+      }
+      let tempObj = Object.keys(this.fundObj1);
+
+
+      this.prevYear = this.fundObj1[tempObj[0]];
+
+      for (var tKey in this.fundObj1) {
+        this.fundArr1.push(this.fundObj1[tKey]);
+      }
+
+
+
       this.fundingLineData = this.data;
-      this.fundData =[];
-      for(let i=0; i<this.fundingLineData.length;i++){
+      this.fundData = [];
+      for (let i = 0; i < this.fundingLineData.length; i++) {
         this.fundData.push(this.fundingLineData[i].fundingLine);
       }
-      var label = [];
-      label[0]='year';
+      this.label = [];
+      this.label[0] = 'year';
       this.fundArr = [];
       this.fundObj = [];
-      for(let i=0;i<this.fundData.length;i++){
-        label.push(this.fundData[i].baOrBlin)
+      for (let i = 0; i < this.fundData.length; i++) {
+        this.label.push(this.fundData[i].baOrBlin)
       }
       for (var key in this.fundData) {
         if (key == '0') {
@@ -327,22 +369,41 @@ export class FundsTabComponent implements OnChanges {
           }
         }
       }
-      for(var tKey in this.fundObj) {
+      this.fundObj.unshift(this.prevYear);
+
+      for (var tKey in this.fundObj) {
         this.fundArr.push(this.fundObj[tKey]);
       }
-      this.fundArr.unshift(label);
-      this.fundArr.splice(1,1)
-         //Funding line chart
-         this.tooltipChart = {
-          chartType: 'LineChart',
-          dataTable: this.fundArr,
-          options: {
-            title: 'Funding Line Chart',
-            width: 630,
-            height: 400,
-          }
-        }
+      // this.years =   this.fundArr;
+      this.fundArr.unshift(this.label);
 
+      // on page load
+      this.yearCount = 6;
+      var count = this.yearCount;
+      var flag = 0;
+      this.getYear = [];
+      this.getYear[0] = this.fundArr[0];
+
+      if (this.yearCount == 0) {
+        this.yearCount = 6;
+        count = this.yearCount;
+      }
+      for (let i = this.yearCount; i < this.fundArr.length && flag <= 5; i++) {
+        this.getYear.push(this.fundArr[i]);
+        count++;
+        flag++;
+        this.yearCount = count;
+      }
+      // console.log("temp array", this.getYear);
+      this.tooltipChart = {
+        chartType: 'LineChart',
+        dataTable: this.getYear,
+        options: {
+          title: 'Funding Line Chart',
+          width: 700,
+          height: 250,
+        }
+      }
       this.loadDropdownOptions();
       this.initPinnedBottomRows();
       if (this.data.some(row => row.fundingLine.userCreated === true)) {
@@ -350,6 +411,105 @@ export class FundsTabComponent implements OnChanges {
       }
       this.agGrid.api.sizeColumnsToFit();
     });
+  }
+  checkYear = 11;
+  backcount = 0;
+  forwordCount = 0;
+  backYear;
+  back() {
+    this.forwordCount = 0;  
+    if(this.backcount == 0)
+    this.yearCount = this.checkYear-6;
+    else if(!this.backYear)
+    this.yearCount = this.checkYear;
+    else if(this.backYear)
+    this.yearCount = this.checkYear-2;
+    this.backYear =false;
+  // console.log("this.year",this.yearCount);
+  
+    this.backcount++;
+    var back = this.yearCount;
+    // console.log("back c", this.yearCount)
+    var count = this.yearCount;
+    var flag = 0;
+    this.getYear = [];
+    this.label = [];
+    if (this.yearCount == 0) {
+      this.yearCount = 1;
+    }
+    for (let i = this.yearCount; i < this.fundArr.length && flag < 5; i++) {
+      this.getYear.push(this.fundArr[i]);
+      count--;
+      flag++;
+      this.checkYear = count;
+    }
+    // console.log('tttttttt', this.checkYear);
+    back -= 1;
+    this.checkYear = back;
+    // console.log('t1', this.checkYear);
+
+    var sortYear = [];
+    sortYear[0] = this.fundArr[0];
+    this.getYear.sort();
+    for (let h = 0; h < this.getYear.length; h++) {
+      sortYear.push(this.getYear[h]);
+
+    }
+
+    this.getYear = sortYear;
+    // console.log("back array", this.getYear);
+    this.tooltipChart = {
+      chartType: 'LineChart',
+      dataTable: this.getYear,
+      options: {
+        title: 'Funding Line Chart',
+        width: 700,
+        height: 250,
+      }
+    }
+  }
+  
+  yearCount;
+  forword() {
+    // console.log("this.checkYear",this.checkYear);
+    this.backYear= true;
+    if (this.forwordCount == 0)
+      this.yearCount = this.checkYear + 2;
+    else
+      this.yearCount = this.checkYear;
+    // console.log('forw c', this.yearCount);
+    // if(this.forwordCount == 0)
+    this.forwordCount++;
+    var forw = this.yearCount;
+    var count = this.yearCount;
+    // console.log('forw count', count);
+    var flag = 0;
+    this.getYear = [];
+    this.getYear[0] = this.fundArr[0];
+
+    if (this.yearCount == 0) {
+      this.yearCount = 1;
+      count = this.yearCount;
+    }
+    for (let i = this.yearCount; i < this.fundArr.length && flag < 5; i++) {
+      this.getYear.push(this.fundArr[i]);
+      count++;
+      flag++;
+      this.yearCount = count;
+    }
+    forw++;
+    this.checkYear = forw;
+    // console.log("fore", this.checkYear);
+    // console.log("temp array", this.getYear);
+    this.tooltipChart = {
+      chartType: 'LineChart',
+      dataTable: this.getYear,
+      options: {
+        title: 'Funding Line Chart',
+        width: 700,
+        height: 250,
+      }
+    }
   }
 
   addParentFundingLine() {
@@ -831,7 +991,7 @@ export class FundsTabComponent implements OnChanges {
     return params.data.programId !== 'Total Funds Request' &&
       params.data.fundingLine.userCreated === true &&
       params.data.gridType === GridType.CURRENT_PR &&
-      ( this.ismgr || this.isEditableInReconciliation() );
+      (this.ismgr || this.isEditableInReconciliation());
   }
 
   isAmountEditable(params, key): boolean {
@@ -912,15 +1072,18 @@ export class FundsTabComponent implements OnChanges {
       name = this.pr.shortName;
     }
 
-    this.budgetFy = this.pom.fy-1;
-
+    this.budgetFy = this.pom.fy - 1;
+    //  console.log()
     if (!name) {
       return;
     }
 
-    const pbPrograms: Program[] = (await this.pbService.getFinalByYear(this.pom.fy-1).toPromise()).result;
-    const pbPr: Program = pbPrograms.find(program => program.shortName === name);
+    const pbPrograms: Program[] = (await this.pbService.getFinalByYear(this.pom.fy - 3).toPromise()).result;
+    this.pbPrograms = pbPrograms;
+    // console.log('budget year', this.pbPrograms);
 
+    const pbPr: Program = pbPrograms.find(program => program.shortName === name);
+    // console.log('budget year1 ',pbPr);
     if (!pbPr) {
       return; // there is no PB PR is the PR is created from the "Program of Record" or like "New Program"
     }
@@ -1190,10 +1353,10 @@ export class FundsTabComponent implements OnChanges {
     return hasEmptyFields;
   }
 
-  flHaveIncorrectBa(): Boolean{
+  flHaveIncorrectBa(): Boolean {
     let duplicatesExist = false;
     let result = [];
-    this.pr.fundingLines.forEach(function(fl, index) {
+    this.pr.fundingLines.forEach(function (fl, index) {
       if (!result[fl.baOrBlin]) {
         result[fl.baOrBlin] = index;
       } else {
