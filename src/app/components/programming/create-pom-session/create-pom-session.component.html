@@ -29,7 +29,7 @@
             <div class="col-6">
               <span class="chart chart-title-1">
                 <i class="fa fa-bar-chart" aria-hidden="true"></i>
-              {{community.abbreviation}} Community TOA ($K)
+              {{community.abbreviation}} TOA ($K)
             </span>
           </div>
           <!-- <p class="text-muted graph-text-muted">Note: Clicking on each bar will allow you to see more and edit information.</p> -->
@@ -41,10 +41,12 @@
                 Reset
               </button>
               <div class="comchart-input-value">
-                <button (click)="open(content)" class='btn btn-sm btn-primary'>
+                <!-- <button (click)="open(content)" class='btn btn-sm btn-primary'>
                   <i class="fa fa-edit" aria-hidden="true"></i> Change Values
+                </button> -->
+                <button  class='btn btn-sm btn-primary' (click)="open1()">
+                    <i class="fa fa-edit" aria-hidden="true"></i> Change Values
                 </button>
-                <button class="btn btn-lg btn-outline-primary" (click)="open1()">modal</button>
                 <button (click)="scroll(-1)" class='btn btn-sm btn-primary'>
                   <i class="fa fa-angle-double-left" aria-hidden="true"></i>
                 </button>
@@ -56,7 +58,7 @@
           </div>
         </div>
       </div>
-          <div class="row mb-2">
+            <div *ngIf="!hide">
             <div class="col-12">
               <div class="bar-chart-google">
                 <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
@@ -64,6 +66,19 @@
               </div>
             </div>
           </div>
+          <div class="row" *ngIf="hide">
+              <div class="col-6">
+                <div class="bar-chart-google">
+                  <google-chart #comchart [data]='chartdata' (chartSelect)='select($event)' id="ge">
+                  </google-chart>
+                </div>
+              </div>
+              <div class="col-6">
+                  <app-community-modal (updatedDataEvent)="receiveUpdatedData($event)"></app-community-modal>
+                </div>
+            </div>
+            
+         
           <ng-template #content let-modal let-c="close">
               <div class=" toa-tooltip-modal modal-header">
                 <h4 class="modal-title" id="modal-basic-title">Edit Community TOA values</h4>
@@ -84,7 +99,7 @@
                         class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
                     </div>
                   </form>
-                  <button (click)='submitValue(c)' class='tooltip-toa-submit btn btn-primary'
+                  <button (click)="submitValue(c)" class='tooltip-toa-submit btn btn-primary'
                     [disabled]="!f.valid">Submit</button>
                 </div>
               </div>

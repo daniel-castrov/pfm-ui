@@ -2,28 +2,24 @@
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">Edit Community TOA values</h5>
-      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
     </div>
     <div class="modal-body">
-      <!-- <h4>body</h4> -->
+     
       <div class=" toa-tooltip-modal modal-body">
           <div class="toa-modal-input-wrapper">
-            <form #f="ngForm">
+            <form #f="ngForm">  
               <div class="form-group">
                 <label for="sel1">Select Year:</label>
                 <select class="form-control toa-select-edit" [(ngModel)]='toayear' name="yearselector">
-                  <option selected></option>
-                  <option *ngFor="let year of pomyears" [ngValue]="year">{{year}}</option>
+                  <option selected disabled>Select year</option>
+                  <option *ngFor="let year of newpomyears" [ngValue]="year">{{year}}</option>
                 </select>
                 <input name="first" [(ngModel)]="toaForYear" type="number"
                   class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
               </div>
             </form>
-            <button (click)='submitValue(c)' class='tooltip-toa-submit btn btn-primary'
+            <button (click)="submitValue(c);closeModal();" class='tooltip-toa-submit btn btn-primary'
               [disabled]="!f.valid">Submit</button>
-              <app-create-pom-session (data)="receiveUpdatedData($event)"></app-create-pom-session>
           </div>
         </div>
     </div>
