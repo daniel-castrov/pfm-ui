@@ -4,9 +4,13 @@ $black: #000000;
 $grey-border: 1px solid #7b8389;
 $light-blue: #dbe8f7;
 $light-grey: #eae9e9;
-$medium-grey: #dddddd;
-$dark-grey: #848282;
+$medium-grey: #7b8389;
+$dark-grey: #777777;
 $color-black: #000;
+
+label {
+  color: $dark-grey;
+}
 
 .main-content {
   width: 100%;
@@ -44,7 +48,7 @@ $color-black: #000;
 }
 
 .card {
-  color: #000;
+
   border-radius: 4px;
   margin-bottom: 20px;
   overflow: hidden;
@@ -54,7 +58,7 @@ $color-black: #000;
  
   .header {
     padding: 10px 10px 0;
-    color: #7c7c7c;
+
     font-weight: 300;
     font-size: 22px;
     padding: 5px;
@@ -62,26 +66,38 @@ $color-black: #000;
 
   .title {
     margin: 0;
-    color: #7c7c7c;
+    color: $dark-grey;
     font-size: 16px;
     font-weight: 400;
   }
 
   .content {
     padding: 5px;
-    font-size: 16px;
-    color: #7c7c7c;
+    font-size: 14px;
+    color: $dark-grey;
+  }
+
+  .user-admin-controls {
+    .fa {
+      color: $medium-grey;
+      font-size: 14px;
+      &:hover {
+        color: $dark-grey;
+      }
+    }
   }
 
   ul {
     list-style: none !important;
     width: 90%;
     margin: 0;
-    
+    margin: 0 0 0 -20px;
 
-      list-style: none !important;
-      text-align: left;
-      margin: 0 0 0 -20px;
+    li {
+    list-style: none !important;
+    text-align: left;
+    margin: 0 0 0 -20px;
+    color: $dark-grey;
   
       &:not(:last-child) {
         border-bottom: 1px solid $white;
@@ -142,17 +158,17 @@ $color-black: #000;
  
   .radio,
   .checkbox{
-       position: relative;
-       height: 20px;
-       display: block;
-       width: 20px;
-       padding: 0px 0px;
-       margin: 0px 5px;
-       text-align: center;
+    position: relative;
+    height: 41px;
+    display: block;
+    width: 0;
+    padding: 0;
+    margin: 0;
+    text-align: center;
        
-       .icons{
-           left: 5px;
-       }
+      .icons{
+          left: 5px;
+      }
   }
 
   .text-info {
@@ -224,8 +240,6 @@ $color-black: #000;
 
 .status {
   font-size: 12px;
-  margin-left: 20px;
-  font-style: italic;
 
   &.green {
     color: #0d7a16;
@@ -241,86 +255,5 @@ $color-black: #000;
   margin-left: 20;
   font-style: italic;
   color: #a9a9a9;
+  }
 }
-
-
-
-// .heading {
-//   font-size: 1rem;
-//   text-transform: uppercase;
-//   color: $color-black;
-// }
-
-// .heading-span {
-//   font-size: 1rem;
-//   font-family: inherit;
-//   color: inherit;
-//   margin: 0 auto;
-//   font-weight: 300;
-//   padding: 4px 10px;
-//   border-radius: 2px;
-//   width: 94%;
-//   background-color: rbga($white, 0.6);
-//   // border: none;
-//   // border-bottom: 3px solid transparent;
-//   display: block;
-
-//   &-blue {
-//       border-bottom: 3px solid $primary-color;
-//   }
-// }
-
-
-//  .card-header {
-//   float: left;
-//   height: 40px;
-//   width: 100%;
-//   border-radius: 5px 5px 0 0;
-//   padding: 0px 20px;
-//   font-size: 1rem;
-//   line-height: 2.4rem;
-// }
-
-// .card-container {
-//   height: 200px;
-//   width: 100%;
-//   margin-bottom: 10px;
-//   overflow: auto;
-//   color: #000;
-//   padding: 10px;
-// }
-
-// .add-link {
-//   padding: 10px;
-//   color: #000;
-//   font-size: 12px;
-//   font-weight: bold;
-//   float: right;
-//   clear: both;
-//   cursor: pointer;
-// }
-
-// .add-link:hover {
-//   text-decoration: none;
-// }
-
-// .add-link > i {
-//   font-size: .8rem;
-//   font-weight: bold;
-//   cursor: pointer;
-// }
-
-// ul.card-container-list {
-//   padding: 10px;
-//   margin: 10px;
-//   color: #000;
-//   font-size: .9rem;
-//   font-weight: normal;
-//   list-style: none;
-// }
-
-// .card-container-list > a {
-//   font-size: .9rem;
-//   font-weight: normal;
-//   cursor: pointer;
-// }

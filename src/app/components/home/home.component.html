@@ -8,7 +8,12 @@
         <div class="col-12">
           <div class="card">
             <div class="header">
-                <h4 class="title">Welcome back <strong> {{ header.authUser.fullName }}</strong></h4>
+                <h4 class="title d-inline">Welcome back 
+                  <strong> {{ header.authUser.fullName }}</strong>
+                </h4>
+                <span class="d-inline pull-right user-admin-controls" title="User Admin">
+                    <i class="fa fa-gavel" aria-hidden="true"></i>
+                  </span>
             </div>
           </div>
         </div>
@@ -99,9 +104,9 @@
                         </div>
                       </td>
                         <td>Approve/Deny POM Request 
-                          <span class="status red">
+                          <div class="status red">
                           Pending
-                        </span>
+                        </div>
                       </td>
                         <td class="td-actions text-right">
                           <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
@@ -122,9 +127,9 @@
                         </td>
                         <td>
                             Update User Roles
-                            <span class="status green">
+                            <div class="status green">
                             In Progress
-                          </span>
+                          </div>
                         </td>
                         <td class="td-actions text-right">
                           <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
@@ -144,9 +149,9 @@
                         </td>
                         <td>
                             Update Community Roles
-                            <span class="status red">
+                            <div class="status red">
                             Pending
-                          </span>
+                          </div>
                         </td>
                       <td class="td-actions text-right">
                         <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
@@ -166,9 +171,9 @@
                         </div>
                       </td>
                       <td> Review Open POM Sessions
-                          <span class="status green">
+                          <div class="status green">
                           In Progress
-                        </span>
+                          </div>
                       </td>
                       <td class="td-actions text-right">
                         <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
@@ -188,9 +193,9 @@
                         </td>
                         <td>
                             Approve Budget Phase
-                          <span class="status green">
+                          <div class="status green">
                             In Progress
-                          </span>
+                          </div>
                         </td>
                           <td class="td-actions text-right">
                             <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
