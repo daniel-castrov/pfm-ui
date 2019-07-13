@@ -72,136 +72,144 @@
           </div> 
         </div>
         <div class="row">
-            <div class="col-5">
-              <div class="card">
+            <div class="col-4">
+                <div class="card">
                   <div class="header">
-                    <h5 class="title"> My To Do List 
-                    </h5> 
+                    <h5 class="title"> Baseline BA/Blin Breakdown for {{fy|FY}}</h5> 
                   </div>
                   <div class="content">
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <div class="checkbox">
-                                    <input id="checkbox1" type="checkbox">
-                                    <label for="checkbox1">
-                                    </label>
-                                </div>
-                          </td>
-                            <td>Approve/Deny POM Request 
-                              <span class="status red">
-                              Pending
-                            </span>
-                          </td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <div class="checkbox">
-                                      <input id="checkbox2" type="checkbox" checked>
-                                      <label for="checkbox2">
-                                      </label>
-                                  </div>
-                              </td>
-                              <td>
-                                  Update User Roles
-                                  <span class="status green">
-                                  In Progress
-                                </span>
-                              </td>
-                              <td class="td-actions text-right">
-                                  <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                      <i class="fa fa-edit"></i>
-                                  </button>
-                                  <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                      <i class="fa fa-times"></i>
-                                  </button>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                                <div class="checkbox">
-                                    <input id="checkbox3" type="checkbox" checked>
-                                    <label for="checkbox3"></label>
-                                </div>
-                            </td>
-                            <td>
-                                Update Community Roles
-                                <span class="status red">
-                                Pending
-                              </span>
-                            </td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <div class="checkbox">
-                                      <input id="checkbox4" type="checkbox">
-                                      <label for="checkbox4">
-                                      </label>
-                                  </div>
-                              </td>
-                              <td> Review Open POM Sessions
-                                  <span class="status green">
-                                  In Progress
-                                </span>
-                              </td>
-                              <td class="td-actions text-right">
-                                  <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                      <i class="fa fa-edit"></i>
-                                  </button>
-                                  <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                      <i class="fa fa-times"></i>
-                                  </button>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <div class="checkbox">
-                                      <input id="checkbox5" type="checkbox" >
-                                      <label for="checkbox5">
-                                          </label>
-                                  </div>
-                              </td>
-                              <td>
-                                  Approve BUdget Phase
-                                  <span class="status green">
-                                  In Progress
-                                </span>
-                              </td>
-                                  <td class="td-actions text-right">
-                                      <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                          <i class="fa fa-edit"></i>
-                                      </button>
-                                      <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                          <i class="fa fa-times"></i>
-                                      </button>
-                                  </td>
-                              </tr>
-                          </tbody>
-                        </table>   
+              
+                    <google-chart [data]='pechartdata' (chartSelect)='selectTree($event)'></google-chart> </div>
                 </div>
-                <div class="footer">
-                    <hr>
-                    <div class="stats">
-                        <i class="fa fa-history mr-1"></i> Updated 2 days ago
-                    </div>
-                  </div>
+              </div>
+            <div class="col-4">
+            <div class="card">
+                <div class="header">
+                  <h5 class="title"> My To Do List 
+                  </h5> 
+                </div>
+                <div class="content">
+                  <table class="table">
+                    <tbody>
+                    <tr>
+                      <td>
+                        <div class="checkbox">
+                          <input id="checkbox1" type="checkbox">
+                          <label for="checkbox1"></label>
+                        </div>
+                      </td>
+                        <td>Approve/Deny POM Request 
+                          <span class="status red">
+                          Pending
+                        </span>
+                      </td>
+                        <td class="td-actions text-right">
+                          <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                              <i class="fa fa-edit"></i>
+                          </button>
+                          <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                              <i class="fa fa-times"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <div class="checkbox">
+                                <input id="checkbox2" type="checkbox" checked>
+                                <label for="checkbox2">
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            Update User Roles
+                            <span class="status green">
+                            In Progress
+                          </span>
+                        </td>
+                        <td class="td-actions text-right">
+                          <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                              <i class="fa fa-edit"></i>
+                          </button>
+                          <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                              <i class="fa fa-times"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="checkbox">
+                            <input id="checkbox3" type="checkbox" checked>
+                            <label for="checkbox3"></label>
+                          </div>
+                        </td>
+                        <td>
+                            Update Community Roles
+                            <span class="status red">
+                            Pending
+                          </span>
+                        </td>
+                      <td class="td-actions text-right">
+                        <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="checkbox">
+                            <input id="checkbox4" type="checkbox">
+                            <label for="checkbox4">
+                            </label>
+                        </div>
+                      </td>
+                      <td> Review Open POM Sessions
+                          <span class="status green">
+                          In Progress
+                        </span>
+                      </td>
+                      <td class="td-actions text-right">
+                        <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="checkbox">
+                          <input id="checkbox5" type="checkbox" >
+                          <label for="checkbox5"></label>
+                        </div>
+                        </td>
+                        <td>
+                            Approve Budget Phase
+                          <span class="status green">
+                            In Progress
+                          </span>
+                        </td>
+                          <td class="td-actions text-right">
+                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                              <i class="fa fa-times"></i>
+                            </button>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>   
+              </div>
+             <div class="footer">
+              <hr>
+            <div class="stats">
+                <i class="fa fa-history mr-1"></i> Updated 2 days ago
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-4">
