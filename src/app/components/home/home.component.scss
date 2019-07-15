@@ -77,6 +77,26 @@ label {
     color: $dark-grey;
     max-height: 310px;
     overflow-x: auto;
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: $medium-grey;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: $medium-grey;
+    }
   }
 
   .user-admin-controls {
