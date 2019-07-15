@@ -67,7 +67,7 @@ export class CreatePomSessionComponent implements OnInit {
   yearData: Map<number, OneYearToaData>;
   @Output() data = new EventEmitter<any>();
   hide : boolean = false;
-
+  hide1 : boolean = false;
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -108,6 +108,12 @@ export class CreatePomSessionComponent implements OnInit {
 
   open1() {
     this.hide = true;
+  }
+  openModal(){
+    this.hide1 = true;
+  }
+  closeModal(){
+    this.hide1 = false;
   }
   
 sendData(){
@@ -362,9 +368,8 @@ sendData(){
     this.suborgdata = x;
   }
 
-  submitOrgValue(c) {
+  submitOrgValue() {
     this.toainfo.set(this.selectedyear, this.suborgdata);
-    c('close modal');
     this.resetSubchart();
   }
 
