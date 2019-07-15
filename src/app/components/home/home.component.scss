@@ -75,6 +75,8 @@ label {
     padding: 5px;
     font-size: 14px;
     color: $dark-grey;
+    max-height: 310px;
+    overflow-x: auto;
   }
 
   .user-admin-controls {
@@ -159,7 +161,7 @@ label {
   .radio,
   .checkbox{
     position: relative;
-    height: 40px;
+    height: 4px;
     display: block;
     width: 0;
     padding: 0;
