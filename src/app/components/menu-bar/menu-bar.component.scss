@@ -120,9 +120,10 @@ mat-menu {
     cursor: pointer !important;
     
     
-    &:hover,
-    &:focus {
+    &:hover{
       color: $dark-grey;
+    }
+    &:focus {
       outline: 1px solid $light-grey;
     }
   }
