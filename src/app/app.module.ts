@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbDateParserFormatter, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbDatepickerModule, NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -218,6 +218,8 @@ import {MaterialModule} from './components/menu-bar/material.module';
 import 'hammerjs';
 import { SidenavService } from './components/menu-bar/service/service';
 import { SidebarMenuComponent } from "./components/header/sidebar-menu/SidebarMenuComponent";
+import { CommunityModalComponent } from './components/programming/create-pom-session/community-modal/community-modal.component';
+import { CreatePomSessionService } from './components/programming/create-pom-session/create-pom-session.service'
 // ROUTES
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -510,6 +512,7 @@ const appRoutes: Routes = [
     FundingRateRenderer,
     PrTreeChartComponent,
     SidebarMenuComponent,
+    CommunityModalComponent,
   ],
   entryComponents: [
     SimpleLinkCellRendererComponent,
@@ -531,6 +534,7 @@ const appRoutes: Routes = [
     ConfirmationDialogComponent,
     DateEditorComponent,
     FundingRateRenderer,
+    CommunityModalComponent,
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -566,6 +570,8 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
     { provide: NgbDateParserFormatter, useFactory: () => new CustomNgbDateParserFormatter('MM/dd/yyyy h:mm:ss a') },
     SidenavService,
+    NgbActiveModal,
+    CreatePomSessionService,
   ],
   bootstrap: [AppComponent]
 })

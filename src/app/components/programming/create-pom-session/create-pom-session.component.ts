@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { UserUtils } from '../../../services/user.utils';
@@ -19,6 +19,9 @@ import {
   BudgetService
 } from '../../../generated';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreatePomSessionService } from './create-pom-session.service';
+//import { CommunityModalComponent } from './community-modal/community-modal.component';
+// import { CreatePomSessionService } from './create-pom-session.service';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -62,6 +65,14 @@ export class CreatePomSessionComponent implements OnInit {
 
   private toainfo: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
   private suborgdata: OneYearToaData;
+  yearData: Map<number, OneYearToaData>;
+  @Output() data = new EventEmitter<any>();
+  hide : boolean = false;
+  hide1 : boolean =false;
+  amount: any;
+  payloadYear: any;
+  screenw : any;
+
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -72,7 +83,8 @@ export class CreatePomSessionComponent implements OnInit {
     private programAndPrService: ProgramAndPrService,
     private pbsvc: PBService,
     private budgetService: BudgetService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    private createPomSessionService: CreatePomSessionService) {
 
     this.chartdata = {
       chartType: 'ColumnChart',
@@ -86,26 +98,57 @@ export class CreatePomSessionComponent implements OnInit {
     };
 
   }
-
+  // var ddd = window.innerWidth;
   ngOnInit() {
     this.myinit();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    event.target.innerWidth;
+    this.resetCharts();
+    this.resetSubchart();
+    console.log("width", event.target.innerWidth);
+  }
+
   @Input() set toaForYear(val: number) {
+    console.log('value',val);
     var data: OneYearToaData = this.getToaDataOrBlank(this.toayear);
     data.community.amount = val;
     this.toainfo.set(this.toayear, data);
+     console.log('year',this.toayear);
     this.resetCharts();
-  }
+  } 
+  // val=this.amount;
+  // console.log('value',val);
+  // this.toayear1 = this.payloadYear
+  // var data: OneYearToaData = this.getToaDataOrBlank(this.toayear1);
+  // console.log('yyyyy',this.toayear);
 
+  open1() {
+    this.hide = true;
+  }
+  openModal(){
+    this.hide1 = true;
+  }
+  closeModal(){
+    this.hide1 = false;
+  }
+  
+sendData(){
+    this.data.emit(this.toainfo);
+    console.log('emit data',this.toainfo);
+  }
   get toaForYear(): number {
     if (!this.toayear ){
       return 0;
     }
     return this.getToaDataOrBlank(this.toayear).community.amount;
   }
+ 
 
   @Input() get selectedtoainfo(): OneYearToaData {
+    console.log('this.toainfo.get(this.selectedyear)',this.toainfo.get(this.selectedyear))
     return this.toainfo.get(this.selectedyear);
   }
 
@@ -117,6 +160,19 @@ export class CreatePomSessionComponent implements OnInit {
     });
   }
 
+  receiveUpdatedData(hide) {
+    this.hide = hide;
+  }
+  receiveUpdatedData1(payload) {
+    this.amount = payload.amount;
+    this.payloadYear = payload.year;
+    console.log('payload data111',payload);
+    var data: OneYearToaData = this.getToaDataOrBlank(this.payloadYear);
+    data.community.amount = this.amount;
+    this.toainfo.set(this.payloadYear, data);
+     console.log('year',this.payloadYear);
+    this.resetCharts();
+  }
   // A valueGetter for looking up an org name
   private orgName(id: string) {
     return ( this.orgMap.get(id) || id );
@@ -164,14 +220,17 @@ export class CreatePomSessionComponent implements OnInit {
         var samplepom: Pom = data[4].result;
         this.pomfy = this.budget.fy + 1;
         this.scrollstartyear = this.pomfy;
+        this.createPomSessionService.setCurrentYear(this.pomfy,this.scrollstartyear);
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
 
         this.setInitialGridValues(this.pomfy, poms, samplepom);
       });
     });
+    this.createPomSessionService.setYears(this.toainfo);
   }
-
-  @Input() get pomyears(): number[] {
+  
+  @Input() get pomyears(): number[] { 
+    this.yearData = this.toainfo;
     if (this.pomfy) {
       // we want to have all years from pomfy to our max TOA year,
       var maxtoayear: number = this.pomfy;
@@ -180,8 +239,9 @@ export class CreatePomSessionComponent implements OnInit {
           maxtoayear = year;
         }
       });
+      // console.log('data',this.toainfo);
       maxtoayear = Math.max(maxtoayear, this.scrollstartyear + this.BUDGETHORIZON - 1);
-
+      
       var newpomyears: number[] = [];
       for (var y = this.pomfy; y <= maxtoayear; y++) {
         newpomyears.push(y);
@@ -191,6 +251,7 @@ export class CreatePomSessionComponent implements OnInit {
     return [];
   }
 
+  
   private setInitialGridValues(fy: number, poms: Pom[], samplepom: Pom) {
     let i: number;
 
@@ -327,18 +388,16 @@ export class CreatePomSessionComponent implements OnInit {
     return transfer;
   }
 
-  submitValue(c) {
+  submitValue() {
     this.resetCharts();
-    c('close modal');
   }
 
   onSuborgData(x) {
     this.suborgdata = x;
   }
 
-  submitOrgValue(c) {
+  submitOrgValue() {
     this.toainfo.set(this.selectedyear, this.suborgdata);
-    c('close modal');
     this.resetSubchart();
   }
 
@@ -369,6 +428,8 @@ export class CreatePomSessionComponent implements OnInit {
       var toadata: OneYearToaData = this.getToaDataOrBlank(this.scrollstartyear + i);
       var newamt: number = toadata.community.amount;
       yeartoas.set(this.scrollstartyear + i, newamt);
+      this.createPomSessionService.setCurrentYear(this.pomfy,this.scrollstartyear);
+    
       if (newamt > 0) {
         totaltoa += newamt;
         totalvals += 1;

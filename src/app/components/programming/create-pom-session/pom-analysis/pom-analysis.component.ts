@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter, HostListener } from '@angular/core';
 import { Pom, Program, PBService } from '../../../../generated';
 import { GridOptions } from "ag-grid-community";
 import { AgGridNg2 } from 'ag-grid-angular';
@@ -122,6 +122,13 @@ export class PomAnalysisComponent {
     return newrows;
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    event.target.innerWidth;
+    this.generateTreeMap();
+    this.generateOrgChart();
+    // console.log("width", event.target.innerWidth);
+  }
   generateTreeMap() {
     var pemap: Map<string, number> = new Map<string, number>();
     var childparentmap: Map<string, string> = new Map<string, string>();
