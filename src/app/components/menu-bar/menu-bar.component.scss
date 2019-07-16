@@ -118,10 +118,12 @@ mat-menu {
     font-size: 18px;
     margin-left: 4px;
     cursor: pointer !important;
-    outline: 1px solid $light-grey;
     
-    &:hover {
+    
+    &:hover,
+    &:focus {
       color: $dark-grey;
+      outline: 1px solid $light-grey;
     }
   }
 
