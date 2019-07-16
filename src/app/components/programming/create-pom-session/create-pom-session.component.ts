@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { UserUtils } from '../../../services/user.utils';
@@ -71,6 +71,7 @@ export class CreatePomSessionComponent implements OnInit {
   hide1 : boolean =false;
   amount: any;
   payloadYear: any;
+  screenw : any;
 
 
   constructor(private communityService: CommunityService,
@@ -100,6 +101,14 @@ export class CreatePomSessionComponent implements OnInit {
   // var ddd = window.innerWidth;
   ngOnInit() {
     this.myinit();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    event.target.innerWidth;
+    this.resetCharts();
+    this.resetSubchart();
+    console.log("width", event.target.innerWidth);
   }
 
   @Input() set toaForYear(val: number) {
