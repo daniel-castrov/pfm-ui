@@ -67,7 +67,10 @@ export class CreatePomSessionComponent implements OnInit {
   yearData: Map<number, OneYearToaData>;
   @Output() data = new EventEmitter<any>();
   hide : boolean = false;
-  hide1 : boolean = false;
+  hide1 : boolean =false;
+  amount: any;
+  payloadYear: any;
+
 
   constructor(private communityService: CommunityService,
     private orgsvc: OrganizationService,
@@ -99,21 +102,22 @@ export class CreatePomSessionComponent implements OnInit {
   }
 
   @Input() set toaForYear(val: number) {
+    console.log('value',val);
     var data: OneYearToaData = this.getToaDataOrBlank(this.toayear);
     data.community.amount = val;
     this.toainfo.set(this.toayear, data);
      console.log('year',this.toayear);
     this.resetCharts();
-  }
+  } 
+  // val=this.amount;
+  // console.log('value',val);
+  // this.toayear1 = this.payloadYear
+  // var data: OneYearToaData = this.getToaDataOrBlank(this.toayear1);
+  // console.log('yyyyy',this.toayear);
+
 
   open1() {
     this.hide = true;
-  }
-  openModal(){
-    this.hide1 = true;
-  }
-  closeModal(){
-    this.hide1 = false;
   }
   
 sendData(){
@@ -129,7 +133,6 @@ sendData(){
  
 
   @Input() get selectedtoainfo(): OneYearToaData {
-    console.log('this.toainfo.get(this.selectedyear)',this.toainfo.get(this.selectedyear))
     return this.toainfo.get(this.selectedyear);
   }
 
@@ -143,6 +146,16 @@ sendData(){
 
   receiveUpdatedData(hide) {
     this.hide = hide;
+  }
+  receiveUpdatedData1(payload) {
+    this.amount = payload.amount;
+    this.payloadYear = payload.year;
+    console.log('payload data',payload);
+    var data: OneYearToaData = this.getToaDataOrBlank(this.payloadYear);
+    data.community.amount = this.amount;
+    this.toainfo.set(this.payloadYear, data);
+     console.log('year',this.payloadYear);
+    this.resetCharts();
   }
   // A valueGetter for looking up an org name
   private orgName(id: string) {
@@ -368,8 +381,9 @@ sendData(){
     this.suborgdata = x;
   }
 
-  submitOrgValue() {
+  submitOrgValue(c) {
     this.toainfo.set(this.selectedyear, this.suborgdata);
+    c('close modal');
     this.resetSubchart();
   }
 
