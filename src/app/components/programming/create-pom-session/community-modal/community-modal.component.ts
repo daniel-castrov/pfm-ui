@@ -1,8 +1,9 @@
 import { Component, OnInit, Input,OnChanges, Output, EventEmitter } from '@angular/core';
 
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreatePomSessionService } from '../create-pom-session.service';
+
 import { OneYearToaData, AmountAndBaseline } from '../create-pom-session.component';
+import { CreatePomSessionService } from '../create-pom-session.service';
 
 
 @Component({
@@ -23,8 +24,6 @@ export class CommunityModalComponent implements OnInit {
   scrollstartyear:number;
   // hide : boolean = flase;
   @Output() updatedDataEvent = new EventEmitter<string>();
-  @Output() updatedDataEvent1 = new EventEmitter<string>();
-  payload : any;
 
 
   constructor(
@@ -47,7 +46,6 @@ export class CommunityModalComponent implements OnInit {
           maxtoayear = year;
         }
       });
-
       maxtoayear = Math.max(maxtoayear, this.scrollstartyear + this.BUDGETHORIZON - 1);
 
       for (var y = this.pomfy; y <= maxtoayear; y++) {
@@ -66,8 +64,8 @@ export class CommunityModalComponent implements OnInit {
   closeModal(){
     var hide = false;
     this.sendUpdatedData(hide);
-  }
 
+  }
   getToaDataOrBlank(year: number): OneYearToaData {
     var orgmap: Map<string, AmountAndBaseline> = new Map<string, AmountAndBaseline>();
     this.toaorgs.forEach((name, orgid) => { 
@@ -85,26 +83,12 @@ export class CommunityModalComponent implements OnInit {
   }
 
   set toaForYear(val: number) {
-    var amount = val;
     var data: OneYearToaData = this.getToaDataOrBlank(this.toayear);
-    this.payload = {'amount':val,'year': this.toayear}
-     console.log("data",this.payload)
     data.community.amount = val;
     this.pomYears.set(this.toayear, data);
      console.log('year',this.toayear);
-     var year = this.toayear;
-     
-     this.sendUpdatedData1(this.payload);
     this.resetCharts();
   }
-
-  
-
-  sendUpdatedData1(pomData) {
-    this.updatedDataEvent1.emit(pomData)
-  }
-
-
 
   get toaForYear(): number {
     if (!this.toayear ){

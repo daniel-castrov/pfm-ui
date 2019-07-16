@@ -571,7 +571,7 @@ const appRoutes: Routes = [
     { provide: NgbDateParserFormatter, useFactory: () => new CustomNgbDateParserFormatter('MM/dd/yyyy h:mm:ss a') },
     SidenavService,
     NgbActiveModal,
-    CreatePomSessionService
+    CreatePomSessionService,
   ],
   bootstrap: [AppComponent]
 })
