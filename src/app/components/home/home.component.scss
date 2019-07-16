@@ -7,6 +7,7 @@ $light-grey: #eae9e9;
 $medium-grey: #7b8389;
 $dark-grey: #777777;
 $color-black: #000;
+$charcoal: #333;
 
 label {
   color: $dark-grey;
@@ -58,9 +59,7 @@ label {
  
   .header {
     padding: 10px 10px 0;
-
     font-weight: 300;
-    font-size: 22px;
     padding: 5px;
   }
 
@@ -102,7 +101,9 @@ label {
   .user-admin-controls {
     .fa {
       color: $medium-grey;
-      font-size: 14px;
+      font-size: 16px;
+      line-height: 16px;
+      padding: 2px;
       &:hover {
         color: $dark-grey;
       }
@@ -181,9 +182,10 @@ label {
   .radio,
   .checkbox{
     position: relative;
-    height: 4px;
+    height: 40px;
     display: block;
     width: 0;
+    color: $dark-grey;
     padding: 0;
     margin: 0;
     text-align: center;
@@ -225,7 +227,6 @@ label {
   
    > thead > tr > th{
        font-size: 12px;
-       color: #f4f5f7;
        font-weight: normal;
        padding-bottom: 5px;
    }
