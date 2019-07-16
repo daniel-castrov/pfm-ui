@@ -1,259 +1,262 @@
 <app-header></app-header>
-<div class="container-fluid">
-  <div class="row main-content">
-  <!-- <div class="row main-content"> -->
-    <div class="col-lg-11">
-      <tabset>
-        <tab heading="Build" id="tab1">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="card-header">POM Hierarchy</div>
-              <div class="programming-container">
-                Model
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+    <div class="row main-content">
+    <!-- <div class="row main-content"> -->
+      <div class="col-lg-11">
+        <tabset>
+          <tab heading="Build" id="tab1">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card-header">POM Hierarchy</div>
+                <div class="programming-container">
+                  Model
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card-header">Selection</div>
+                <div class="programming-container">
+                  <form>
+                    <div class="form-group">
+                      <input type="text" class="form-control forminput" name="Name" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                      <label>Role</label>
+                      <select>
+                        <option>Fund Requestor</option>
+                        <option>Fund Approver</option>
+                        <option>POM Manager</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control forminput" name="organization" placeholder="Organization">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control forminput" name="subToa" placeholder="Sub TOA">
+                    </div>
+                    <table class="pom-table">
+                      <thead>
+                        <tr>
+                          <th>Programs Assigned</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <td>Subtotal</td>
+                          <td>$12,000</td>
+                        </tr>
+                      </tfoot>
+                      <tbody>
+                        <tr>
+                          <td colspan="2">
+                            <div class="scrollit">
+                              <table>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 1</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 2</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 3</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 4</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 5</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 6</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 7</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 8</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 9</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 10</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 11</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 12</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 13</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 14</span>
+                                  </td>
+                                  <td>$80</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <label>
+                                       <input type="checkbox" value="">
+                                    </label>
+                                    <span>Program 15</span>
+                                  </td>
+                                  <td>$100</td>
+                                </tr>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="controls">
+                      <button class="btn btn-default" (click)="applyForm.form.reset()">Close</button>
+                      <button class="btn btn-danger">Remove</button>
+                      <button class="btn btn-primary">Add</button>
+                      <button class="btn btn-success">Save</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="card-header">Selection</div>
-              <div class="programming-container">
-                <form>
-                  <div class="form-group">
-                    <input type="text" class="form-control forminput" name="Name" placeholder="Name">
-                  </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <select>
-                      <option>Fund Requestor</option>
-                      <option>Fund Approver</option>
-                      <option>POM Manager</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <input type="text" class="form-control forminput" name="organization" placeholder="Organization">
-                  </div>
-                  <div class="form-group">
-                    <input type="text" class="form-control forminput" name="subToa" placeholder="Sub TOA">
-                  </div>
-                  <table class="pom-table">
-                    <thead>
-                      <tr>
-                        <th>Programs Assigned</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tfoot>
-                      <tr>
-                        <td>Subtotal</td>
-                        <td>$12,000</td>
-                      </tr>
-                    </tfoot>
-                    <tbody>
-                      <tr>
-                        <td colspan="2">
-                          <div class="scrollit">
-                            <table>
-                              <tr>
-                                <td>
-                                  <label>
-                    							   <input type="checkbox" value="">
-                    						  </label>
-                                  <span>Program 1</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 2</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 3</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 4</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 5</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 6</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 7</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 8</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 9</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 10</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 11</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 12</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 13</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 14</span>
-                                </td>
-                                <td>$80</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label>
-                                     <input type="checkbox" value="">
-                                  </label>
-                                  <span>Program 15</span>
-                                </td>
-                                <td>$100</td>
-                              </tr>
-                            </table>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="controls">
-                    <button class="btn btn-default" (click)="applyForm.form.reset()">Close</button>
-                    <button class="btn btn-danger">Remove</button>
-                    <button class="btn btn-primary">Add</button>
-                    <button class="btn btn-success">Save</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </tab>
-        <tab heading="Verify" id="tab2">
-          <div class="row col-md-12">
-           <div class="panel panel-primary filterable">
-             <div class="panel-heading">
-               <div class="pull-right">
-                 <button class="btn btn-primary btn btn-filter">
-                     <span><i class="fa fa-filter" aria-hidden="true"></i></span>
-                     Filter Items
-                  </button>
+          </tab>
+          <tab heading="Verify" id="tab2">
+            <div class="row col-md-12">
+             <div class="panel panel-primary filterable">
+               <div class="panel-heading">
+                 <div class="pull-right">
+                   <button class="btn btn-primary btn btn-filter">
+                       <span><i class="fa fa-filter" aria-hidden="true"></i></span>
+                       Filter Items
+                    </button>
+                 </div>
                </div>
-             </div>
-             <table class="table">
-               <thead>
-                 <tr class="filters">
-                   <th><input type="text" class="form-control" placeholder="Program ID" disabled></th>
-                   <th><input type="text" class="form-control" placeholder="Organization" disabled></th>
-                   <th><input type="text" class="form-control" placeholder="Name" disabled></th>
-                   <th><input type="text" class="form-control" placeholder="Role" disabled></th>
-                 </tr>
-               </thead>
-               <tbody>
-                   <tr>
-                     <td>Item 1</td>
-                     <td>Item 1</td>
-                     <td>Item 1</td>
-                    <td>Item 1</td>
+               <table class="table">
+                 <thead>
+                   <tr class="filters">
+                     <th><input type="text" class="form-control" placeholder="Program ID" disabled></th>
+                     <th><input type="text" class="form-control" placeholder="Organization" disabled></th>
+                     <th><input type="text" class="form-control" placeholder="Name" disabled></th>
+                     <th><input type="text" class="form-control" placeholder="Role" disabled></th>
                    </tr>
-                   <tr>
-                     <td>Item 2</td>
-                     <td>Item 2</td>
-                     <td>Item 2</td>
-                     <td>Item 2</td>
-                   </tr>
-                   <tr>
-                     <td>Item 3</td>
-                     <td>Item 3</td>
-                     <td>Item 3</td>
-                     <td>Item 3</td>
-                   </tr>
-                   <tr>
-                     <td>Item 4</td>
-                     <td>Item 4</td>
-                     <td>Item 4</td>
-                     <td>Item 4</td>
-                   </tr>
-               </tbody>
-              </table>
+                 </thead>
+                 <tbody>
+                     <tr>
+                       <td>Item 1</td>
+                       <td>Item 1</td>
+                       <td>Item 1</td>
+                      <td>Item 1</td>
+                     </tr>
+                     <tr>
+                       <td>Item 2</td>
+                       <td>Item 2</td>
+                       <td>Item 2</td>
+                       <td>Item 2</td>
+                     </tr>
+                     <tr>
+                       <td>Item 3</td>
+                       <td>Item 3</td>
+                       <td>Item 3</td>
+                       <td>Item 3</td>
+                     </tr>
+                     <tr>
+                       <td>Item 4</td>
+                       <td>Item 4</td>
+                       <td>Item 4</td>
+                       <td>Item 4</td>
+                     </tr>
+                 </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </tab>
-      </tabset>
+          </tab>
+        </tabset>
+      </div>
     </div>
-  </div>
+  </div>  
 </div>

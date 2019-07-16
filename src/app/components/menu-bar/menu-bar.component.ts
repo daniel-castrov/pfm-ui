@@ -52,7 +52,6 @@ export class MenuBarComponent implements OnInit {
                private userUtils: UserUtils,
                private service : SidenavService,) {
                 this.service.sideNavState$.subscribe( res => {
-                  console.log(res)
                   this.onSideNavChange = res;
                 })
                }
@@ -67,16 +66,6 @@ export class MenuBarComponent implements OnInit {
     this.roles = await this.userUtils.roles().toPromise();
    
   }
-
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-
-  openMyMenu() {
-    this.trigger.toggleMenu();
-  } 
-  closeMyMenu() {
-    this.trigger.closeMenu();
-    console.log('close')
-  }  
 
   onSinenavToggle() {
     this.sideNavState = !this.sideNavState

@@ -5,10 +5,10 @@
     <div class="row main-content" *ngIf="programRequestPageMode.initialized">
       <div class="col-12">
         <div class="row">
-          <div class="col-3">
+          <div class="col-9">
             <id-and-name [pr]="pr" [pom]="pom"></id-and-name>
           </div>
-          <div class="col-lg-3">
+              <div class="col-lg-3">
             <div class="pull-right mb-2" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item active" aria-current="page">
@@ -46,6 +46,15 @@
             </tab>
             <tab heading="Justification" id="tab4">
               <justification-tab [pr]="pr" role="tabpanel" [pom]="pom"></justification-tab>
+            </tab>
+            <tab heading="Schedule" id="tab5">
+              Schedule
+            </tab>
+            <tab heading="Scope" id="tab6">
+              Scope
+            </tab>
+            <tab heading="Assets" id="tab7">
+              Assets
             </tab>
           </tabset>
         </div>

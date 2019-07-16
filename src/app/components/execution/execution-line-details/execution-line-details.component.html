@@ -2,49 +2,52 @@
 <ng-template #updateidline let-line="line">
   {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
-
-<div class="row main-content" *ngIf="current">
-  <div class="col-12">
-    <div class="row">
-      <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">{{phase?.fy|FY}} - </span>
-        <span class="h5 form-group">
-          <span class="mr-2">{{current.line.programName}}</span>
-          <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container>
-        </span>
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="row main-content" *ngIf="current">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-md-7 col-sm-12 mb-4">
+          <span class="h5 mr-2">{{phase?.fy|FY}} - </span>
+          <span class="h5 form-group">
+            <span class="mr-2">{{current.line.programName}}</span>
+            <ng-container *ngTemplateOutlet="updateidline;context:{line:current.line}"></ng-container>
+          </span>
+        </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-md-6 col-lg-2">
-        <span class="form-group">
-          <label class="mr-2">TOA:</label>
-          <span class="font-weight-bold">{{ currencyFormat(current.line.toa) }}</span>
-        </span>
+      <div class="row mb-3">
+        <div class="col-md-6 col-lg-2">
+          <span class="form-group">
+            <label class="mr-2">TOA:</label>
+            <span class="font-weight-bold">{{ currencyFormat(current.line.toa) }}</span>
+          </span>
+        </div>
+        <div class="col-md-6 col-lg-2">
+          <span class="form-group">
+            <label class="mr-2">Released:</label>
+            <span class="font-weight-bold">{{ currencyFormat(current.line.released) }}</span>
+          </span>
+        </div>
+        <div class="col-md-6 col-lg-2">
+          <span class="form-group">
+            <label class="mr-2">Withhold:</label>
+            <span class="font-weight-bold">{{ currencyFormat(current.line.withheld) }}</span>
+          </span>
+        </div>
       </div>
-      <div class="col-md-6 col-lg-2">
-        <span class="form-group">
-          <label class="mr-2">Released:</label>
-          <span class="font-weight-bold">{{ currencyFormat(current.line.released) }}</span>
-        </span>
+  
+      <div class="row">
+        <div class="col-12">
+          <ag-grid-angular #agGrid class="ag-theme-balham"
+              domLayout="autoHeight"
+              [gridOptions]="agOptions"
+              [rowData]="eventlist"
+              (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+              (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+            <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        </div>
       </div>
-      <div class="col-md-6 col-lg-2">
-        <span class="form-group">
-          <label class="mr-2">Withhold:</label>
-          <span class="font-weight-bold">{{ currencyFormat(current.line.withheld) }}</span>
-        </span>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <ag-grid-angular #agGrid class="ag-theme-balham"
-            domLayout="autoHeight"
-            [gridOptions]="agOptions"
-            [rowData]="eventlist"
-            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            (gridReady)="onGridReady($event)">
-          </ag-grid-angular>
-          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
-      </div>
-    </div>
+  </div>
+  </div>  
 </div>

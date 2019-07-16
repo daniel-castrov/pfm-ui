@@ -1,53 +1,56 @@
 <app-header></app-header>
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-      <div class="row mb-2">
-        <div class="col-12">
-          <span class="h5">Create Budget Phase for {{nextBudgetYear|FY}}</span>
-        </div>
-      </div>      
-      <div class="row">
-        <div class="col-12">
-          <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget {{nextBudgetYear|FY}}</button>
-        </div>
-      </div>
-      <div class="row mb-1">
-        <div class="col-12">
-          <div class="h6">Budget Being Created From:</div>
-          <fieldset class="mb-3">
-            POM {{(poms||["dummy"])[0].fy|FY}}
-          </fieldset>
-        </div>
-      </div>
-      <div class="row mb-2">
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+    <div class="row main-content">
       <div class="col-12">
-        <div class="card-container">
-          <div class="card-header">Existing Budget Phases:</div>
-          <div class="card-body">            
-            <table class="table-budget">
-              <tr *ngFor="let budget of budgets">
-                <td>Budget {{budget.fy|FY}}</td>
-              </tr>
-            </table>
-            </div>  
+        <div class="row mb-2">
+          <div class="col-12">
+            <span class="h5">Create Budget Phase for {{nextBudgetYear|FY}}</span>
+          </div>
+        </div>      
+        <div class="row">
+          <div class="col-12">
+            <button (click)="createBudget()" class="btn btn-primary pull-right">Create budget {{nextBudgetYear|FY}}</button>
           </div>
         </div>
-      </div>
-      <div class="row">
+        <div class="row mb-1">
+          <div class="col-12">
+            <div class="h6">Budget Being Created From:</div>
+            <fieldset class="mb-3">
+              POM {{(poms||["dummy"])[0].fy|FY}}
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mb-2">
         <div class="col-12">
           <div class="card-container">
-            <div class="card-header">Existing POM phases:</div>
+            <div class="card-header">Existing Budget Phases:</div>
             <div class="card-body">            
               <table class="table-budget">
-                <tr *ngFor="let pom of poms">
-                  <td>POM {{pom.fy|FY}}</td>
+                <tr *ngFor="let budget of budgets">
+                  <td>Budget {{budget.fy|FY}}</td>
                 </tr>
               </table>
-            </div>  
+              </div>  
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="card-container">
+              <div class="card-header">Existing POM phases:</div>
+              <div class="card-body">            
+                <table class="table-budget">
+                  <tr *ngFor="let pom of poms">
+                    <td>POM {{pom.fy|FY}}</td>
+                  </tr>
+                </table>
+              </div>  
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div>  
 </div>

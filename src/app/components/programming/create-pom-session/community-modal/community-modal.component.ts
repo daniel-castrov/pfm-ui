@@ -24,6 +24,10 @@ export class CommunityModalComponent implements OnInit {
   scrollstartyear:number;
   // hide : boolean = flase;
   @Output() updatedDataEvent = new EventEmitter<string>();
+  payload: {};
+  // updatedDataEvent1: any;
+  @Output() updatedDataEvent1 = new EventEmitter<object>();
+  
 
 
   constructor(
@@ -34,6 +38,7 @@ export class CommunityModalComponent implements OnInit {
   ngOnInit() {
     this.pomYears = this.createPomSessionService.getYears();
     var currentYear_ScrollStart = this.createPomSessionService.getCurrentYear();
+    // this.payload = {'year':this.pomYears,}
     console.log(currentYear_ScrollStart,"currentYear_ScrollStart")
     this.pomfy = parseInt(currentYear_ScrollStart.split(",")[0]);
     this.scrollstartyear = parseInt(currentYear_ScrollStart.split(",")[1]);
@@ -58,14 +63,20 @@ export class CommunityModalComponent implements OnInit {
   }
   
   sendUpdatedData(pomData) {
-    this.updatedDataEvent.emit(pomData)
+    console.log('pom data',pomData);
+    this.updatedDataEvent.emit(pomData);
+  }
+  sendUpdatedData1(payload) {
+    console.log('pom payload',payload);
+    this.updatedDataEvent1.emit(payload);
   }
 
   closeModal(){
     var hide = false;
+    this.sendUpdatedData1(this.payload);
     this.sendUpdatedData(hide);
-
   }
+
   getToaDataOrBlank(year: number): OneYearToaData {
     var orgmap: Map<string, AmountAndBaseline> = new Map<string, AmountAndBaseline>();
     this.toaorgs.forEach((name, orgid) => { 
@@ -87,6 +98,13 @@ export class CommunityModalComponent implements OnInit {
     data.community.amount = val;
     this.pomYears.set(this.toayear, data);
      console.log('year',this.toayear);
+     console.log('amout',val);
+     this.payload = {
+       'year':this.toayear,
+       'amount':this.toaForYear
+      };
+     console.log("payload",this.payload);
+
     this.resetCharts();
   }
 
@@ -97,7 +115,7 @@ export class CommunityModalComponent implements OnInit {
     return this.getToaDataOrBlank(this.toayear).community.amount;
   }
 
-  submitValue(c) {
+  submitValue() {
     this.resetCharts();
   }
 

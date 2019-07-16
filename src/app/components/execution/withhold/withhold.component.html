@@ -1,63 +1,66 @@
 <app-header></app-header>
-<div class="row main-content">
-  <div class="col-12">
-    <div class="row">
-      <div class="col-md-7 col-sm-12 mb-4">
-        <span class="h5 mr-2">{{phase?.fy|FY}} - Withhold to Program Execution Line(s)</span>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-8">
-      </div>
-      <div class="col-4">
-        <button class="btn btn-success pull-right" (click)="submit()" [disabled]="!table.tableok || isUploading">Withhold</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6 col-lg-2">
-        <div class="form-group">
-          <label class="mr2">Select Event Type:</label>
-          <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
-            <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
-          </select>
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="row main-content">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-md-7 col-sm-12 mb-4">
+          <span class="h5 mr-2">{{phase?.fy|FY}} - Withhold to Program Execution Line(s)</span>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 col-lg-6">
-        <div class="form-group">
-          <label class="mr-2">Event Long Name:</label>
-          <span class="font-weight-bold">{{etype?.description}}</span>
+      <div class="row mb-3">
+        <div class="col-8">
+        </div>
+        <div class="col-4">
+          <button class="btn btn-success pull-right" (click)="submit()" [disabled]="!table.tableok || isUploading">Withhold</button>
         </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-12">
-        <div id="charges-execution-lines" class="table-editable">
-          <app-execution-line-table
-            [phase]="phase"
-            [updatelines]="updatelines"
-            [exevalidator]="validator"
-            [exelinefilter]="linefilter">
-          </app-execution-line-table>
+      <div class="row">
+        <div class="col-md-6 col-lg-2">
+          <div class="form-group">
+            <label class="mr2">Select Event Type:</label>
+            <select class="form-control-sm dropdown-width" [(ngModel)]="etype">
+              <option *ngFor="let t of subtypes" [ngValue]="t">{{t.name}}</option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-12">
-        <span class="form-group">
-          <label class="mb-1">Notes:</label>
-          <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
-        </span>
-     </div>
-   </div>
-   <div class="row mb-2">
-      <div class="col-12">
-        <fieldset class="file-upload">
-         <legend>Attach File:</legend>
-         <file-upload #fileupload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
-        </fieldset>
+      <div class="row">
+        <div class="col-md-12 col-lg-6">
+          <div class="form-group">
+            <label class="mr-2">Event Long Name:</label>
+            <span class="font-weight-bold">{{etype?.description}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div id="charges-execution-lines" class="table-editable">
+            <app-execution-line-table
+              [phase]="phase"
+              [updatelines]="updatelines"
+              [exevalidator]="validator"
+              [exelinefilter]="linefilter">
+            </app-execution-line-table>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <span class="form-group">
+            <label class="mb-1">Notes:</label>
+            <textarea cols="30" rows="5" wrap="physical" class="form-control" [(ngModel)]="reason"></textarea>
+          </span>
        </div>
-   </div>
-  </div>
+     </div>
+     <div class="row mb-2">
+        <div class="col-12">
+          <fieldset class="file-upload">
+           <legend>Attach File:</legend>
+           <file-upload #fileupload [area]="'execution'" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+          </fieldset>
+         </div>
+     </div>
+    </div>
+  </div>  
 </div>

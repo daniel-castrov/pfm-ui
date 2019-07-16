@@ -1,16 +1,38 @@
 <div class="row">
-  <div *ngIf="pr.type !== ProgramType.GENERIC" class="col-auto">
-    <button class="btn btn-primary mb-3" (click)="addRow()" [disabled]='!addFundingLineOk()'>
-      <span class="mr-2">
-        <i class="fa fa-plus-circle" aria-hidden="true"></i>
-      </span>
-      <span>Add a new funding line</span>
-    </button>
+  <div class="col-sm-12">
+      <div *ngIf="pr.type !== ProgramType.GENERIC" class="col-auto">
+          <button class="btn btn-primary mb-3" (click)="addRow()" [disabled]='!addFundingLineOk()'>
+            <span class="mr-2">
+              <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </span>
+            <span>Add a new funding line</span>
+          </button>
+          <button class="btn btn-primary" (click)="back()" [disabled]="checkYear == 0 ? 'disabled' : ''"><i class="fa fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-primary arrow-btn" (click)="forword()"  [disabled]="yearCount == fundArr.length  ? 'disabled' : ''"><i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
   </div>
   <!-- Line Chart -->
-  <div>
+ <!-- <div class="row">
+  <div class="col-md-2 left-arrow">
+    <button class="arrow-btn btn btn-primary" (click)="back()" [disabled]="c == 0 ? 'disabled' : ''"><i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="col-md-8">
     <google-chart [data]="tooltipChart"></google-chart>
   </div>
+  <div class="col-md-2 right-arrow">
+    <button class="btn btn-primary" (click)="forword()"  [disabled]="c == fundArr.length  ? 'disabled' : ''"><i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+ </div> -->
+ <!-- <div class="row">
+   
+ </div> -->
+ <div style="padding-left: 120px">
+    <google-chart [data]="tooltipChart"></google-chart>
+ </div>
   <div *ngIf="pr.type === ProgramType.GENERIC" class="col-auto">
     <div class="dropdown-label">
       <select [(ngModel)]="selectedFundingLine" class="form-control-sm" name="dummy">

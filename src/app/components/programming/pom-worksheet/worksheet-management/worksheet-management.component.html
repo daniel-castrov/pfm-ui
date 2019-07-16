@@ -1,46 +1,49 @@
 <app-header></app-header>
-<div class="container-fluid">
-  <div class="row main-content">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-6" id="update-pom-session">
-          <div class="h5 mb-4">Worksheet Management for {{pom?.fy|FY:'POM'}}</div>
+<div style="display: flex">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="container-fluid">
+    <div class="row main-content">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6" id="update-pom-session">
+            <div class="h5 mb-4">Worksheet Management for {{pom?.fy|FY:'POM'}}</div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-9">
-          <ul class="worksheet-controls mb-3">
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()"                             > Duplicate </button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()"                             > Rename    </button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()"                             > Export    </button></li>
-            <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"    [disabled]="!importComponent?.importableWorksheets?.length" > Import    </button></li>
-          </ul>
+        <div class="row">
+          <div class="col-9">
+            <ul class="worksheet-controls mb-3">
+              <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.DUPLICATE)" [disabled]="isRowNotSelected()"                             > Duplicate </button></li>
+              <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.RENAME)"    [disabled]="isRowNotSelected()"                             > Rename    </button></li>
+              <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.EXPORT)"    [disabled]="isRowNotSelected()"                             > Export    </button></li>
+              <li><button class="btn btn-primary" (click)="startOperation(stateService.Operation.IMPORT)"    [disabled]="!importComponent?.importableWorksheets?.length" > Import    </button></li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <ag-grid-angular
-            #agGrid class="ag-theme-balham"
-            id="myGrid"
-            domLayout="autoHeight"
-            [gridOptions]="agOptions"
-            (paginationChanged)="agGridPagination.onPaginationChanged($event)"
-            (gridReady)="onGridReady($event)" >
-          </ag-grid-angular>
-          <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+        <div class="row">
+          <div class="col-12">
+            <ag-grid-angular
+              #agGrid class="ag-theme-balham"
+              id="myGrid"
+              domLayout="autoHeight"
+              [gridOptions]="agOptions"
+              (paginationChanged)="agGridPagination.onPaginationChanged($event)"
+              (gridReady)="onGridReady($event)" >
+            </ag-grid-angular>
+            <ag-grid-pagination #agGridPagination [agGrid]="agGrid"></ag-grid-pagination>
+          </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-
-          <duplicate #duplicate [hidden]="stateService.operation!=stateService.Operation.DUPLICATE" (operationOver)="onOperationOver()" ></duplicate>
-          <rename    #rename    [hidden]="stateService.operation!=stateService.Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
-          <export    #export    [hidden]="stateService.operation!=stateService.Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
-          <import    #import    [hidden]="stateService.operation!=stateService.Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
-
+  
+        <div class="row">
+          <div class="col-12">
+  
+            <duplicate #duplicate [hidden]="stateService.operation!=stateService.Operation.DUPLICATE" (operationOver)="onOperationOver()" ></duplicate>
+            <rename    #rename    [hidden]="stateService.operation!=stateService.Operation.RENAME"    (operationOver)="onOperationOver()" ></rename>
+            <export    #export    [hidden]="stateService.operation!=stateService.Operation.EXPORT"    (operationOver)="onOperationOver()" ></export>
+            <import    #import    [hidden]="stateService.operation!=stateService.Operation.IMPORT"    (operationOver)="onOperationOver()" ></import>
+  
+          </div>
         </div>
-      </div>
-
+  
+    </div>
   </div>
 </div>

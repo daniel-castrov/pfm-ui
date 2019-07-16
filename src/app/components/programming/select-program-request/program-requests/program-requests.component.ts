@@ -161,22 +161,22 @@ export class ProgramsComponent implements OnChanges {
             cellRenderer: 'summaryProgramCellRenderer',
             minWidth: 115
           },
-          {
-            headerName: 'Cycle',
-            //menuTabs: this.menuTabs,
-            filter: 'agTextColumnFilter',
-            minWidth: 86,
-            resizable: true,
-            sortable: false,
-            cellClass: ['ag-cell-white'],
-            valueGetter: params => {
-              if (params.data.phaseType == PhaseType.PB) {
-                return params.data.phaseType + (this.pbFy - 2000);
-              } else {
-                return params.data.phaseType + (this.pomFy - 2000);
-              }
-            }
-          },
+          // {
+          //   headerName: 'Cycle',
+          //   //menuTabs: this.menuTabs,
+          //   filter: 'agTextColumnFilter',
+          //   minWidth: 86,
+          //   resizable: true,
+          //   sortable: false,
+          //   cellClass: ['ag-cell-white'],
+          //   valueGetter: params => {
+          //     if (params.data.phaseType == PhaseType.PB) {
+          //       return params.data.phaseType + (this.pbFy - 2000);
+          //     } else {
+          //       return params.data.phaseType + (this.pomFy - 2000);
+          //     }
+          //   }
+          // },
           {
             headerName: 'Organization',
             menuTabs: this.menuTabs,

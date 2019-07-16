@@ -74,7 +74,7 @@
             </div>
           </div>
           <div class="col-6">
-            <app-community-modal (updatedDataEvent)="receiveUpdatedData($event)"></app-community-modal>
+            <app-community-modal (updatedDataEvent1)="receiveUpdatedData1($event)" (updatedDataEvent)="receiveUpdatedData($event)"></app-community-modal>
           </div>
         </div>
         <ng-template #content let-modal let-c="close">

@@ -19,8 +19,9 @@ import {
   BudgetService
 } from '../../../generated';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CommunityModalComponent } from './community-modal/community-modal.component';
 import { CreatePomSessionService } from './create-pom-session.service';
+//import { CommunityModalComponent } from './community-modal/community-modal.component';
+// import { CreatePomSessionService } from './create-pom-session.service';
 
 @Component({
   selector: 'app-create-pom-session',
@@ -96,7 +97,7 @@ export class CreatePomSessionComponent implements OnInit {
     };
 
   }
-
+  // var ddd = window.innerWidth;
   ngOnInit() {
     this.myinit();
   }
@@ -115,9 +116,14 @@ export class CreatePomSessionComponent implements OnInit {
   // var data: OneYearToaData = this.getToaDataOrBlank(this.toayear1);
   // console.log('yyyyy',this.toayear);
 
-
   open1() {
     this.hide = true;
+  }
+  openModal(){
+    this.hide1 = true;
+  }
+  closeModal(){
+    this.hide1 = false;
   }
   
 sendData(){
@@ -133,6 +139,7 @@ sendData(){
  
 
   @Input() get selectedtoainfo(): OneYearToaData {
+    console.log('this.toainfo.get(this.selectedyear)',this.toainfo.get(this.selectedyear))
     return this.toainfo.get(this.selectedyear);
   }
 
@@ -150,7 +157,7 @@ sendData(){
   receiveUpdatedData1(payload) {
     this.amount = payload.amount;
     this.payloadYear = payload.year;
-    console.log('payload data',payload);
+    console.log('payload data111',payload);
     var data: OneYearToaData = this.getToaDataOrBlank(this.payloadYear);
     data.community.amount = this.amount;
     this.toainfo.set(this.payloadYear, data);
@@ -372,18 +379,16 @@ sendData(){
     return transfer;
   }
 
-  submitValue(c) {
+  submitValue() {
     this.resetCharts();
-    c('close modal');
   }
 
   onSuborgData(x) {
     this.suborgdata = x;
   }
 
-  submitOrgValue(c) {
+  submitOrgValue() {
     this.toainfo.set(this.selectedyear, this.suborgdata);
-    c('close modal');
     this.resetSubchart();
   }
 
