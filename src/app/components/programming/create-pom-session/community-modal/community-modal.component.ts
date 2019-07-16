@@ -73,7 +73,7 @@ export class CommunityModalComponent implements OnInit {
 
   closeModal(){
     var hide = false;
-    this.sendUpdatedData1(this.payload);
+   
     this.sendUpdatedData(hide);
   }
 
@@ -116,6 +116,7 @@ export class CommunityModalComponent implements OnInit {
   }
 
   submitValue() {
+    this.sendUpdatedData1(this.payload);
     this.resetCharts();
   }
 
