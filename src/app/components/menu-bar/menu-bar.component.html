@@ -27,7 +27,7 @@
           <mat-sidenav-container class="sidenav-container">
               <mat-sidenav #leftSidenav mode="side" opened>
                   <div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'">
-                      <div fxLayout="column" fxLayoutGap="10px" style="height: 100%;">
+                      <div fxLayout="column" fxLayoutGap="10px">
                         <!-- <mat-nav-list>
                           <div mat-list-item class="flex">
                               <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu1" style="padding-right:5px;">
@@ -55,6 +55,27 @@
                               </ng-template>
                           </div>
                         </mat-nav-list> -->
+                        <div>
+                          <mat-nav-list>
+                            <div mat-list-item class="flex">
+                                <mat-icon [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home" title="Dashboard" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu" style="padding-right:5px;">
+                                    <i class="fa fa-tachometer"  title="Dashboard" aria-hidden="true"></i>
+                                </mat-icon>
+                                <div [@animateText]="linkText ? 'show' : 'hide'">
+                                    <div
+                                        *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu">
+                                        <button mat-button [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home"> Dashboard</button>
+                                    </div>
+                                </div>
+                                <mat-menu #menu1="matMenu" [overlapTrigger]="false" apppermission="POM:edit" >
+                                    <div class="arrow-left"></div>  
+                                    <button mat-menu-item>
+                                        <a class="dropdown-item enable-menu" routerLink="/home">Dashboard</a>
+                                    </button>
+                                </mat-menu>
+                              </div>
+                          </mat-nav-list>
+                        </div>
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="flex">

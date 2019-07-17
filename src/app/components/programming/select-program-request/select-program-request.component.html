@@ -3,7 +3,7 @@
   <menu-bar [authUser]="authUser"></menu-bar>
   <div class="row main-content">
     <div class="col-12">
-      <div class="row mb-4">
+      <div class="row mb-3">
         <div class="col-lg-7 col-md-12">
           <span class="h5">Summary of Program Requests for {{pom?.fy|FY:'POM'}}</span>
         </div>
@@ -17,11 +17,6 @@
           </span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
-        </div>
-      </div>
       <div class="row" *ngIf="workspaces?.length>1">
         <div class="col-12">
           <select [(ngModel)]='currworkspace'>
@@ -29,27 +24,34 @@
           </select>
         </div>
       </div>
-    </div>
-
-    
-        <div style="display: flex">
-          <div>
-            <app-pr-tree-chart class="pull-left tree-chart" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
-              [orgmap]='orgMap' (updatedDataEvent)="receiveUpdatedData($event)">
-            </app-pr-tree-chart>
-          </div>
-          <div>
-            <app-pr-bar-chart class="bar-chart pull-right" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
-              [orgmap]='orgMap'></app-pr-bar-chart>
+      <div class="row mb-2">
+        <div class="col-7">
+          <app-pr-tree-chart class="pull-left tree-chart" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
+            [orgmap]='orgMap' (updatedDataEvent)="receiveUpdatedData($event)">
+          </app-pr-tree-chart>
+        </div>
+        <div class="col-5">
+          <app-pr-bar-chart class="bar-chart pull-right" [pomPrs]='pomPrograms' [pbPrs]='pbPrograms' [pom]='pom'
+            [orgmap]='orgMap'></app-pr-bar-chart>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-9">
+          <new-program-request [containerId]="pom?.workspaceId"></new-program-request>
+        </div>
+        <div class="col-3">
+          <div class="mt-5 pull-right">
+            <grid-rows [agGrid]="workspaceComponent?.agGrid">
+            </grid-rows>
           </div>
         </div>
-   
-
-    <div class="col-12">
-      <program-requests [pomPrograms]="pomProgramsUpdatedData" [pbPrograms]="pbProgramsUpdatedData" [orgMap]='orgMap'
-        [pomFy]="pom?.fy" [reviewOnly]="false" (deleted)="onDeletePr()">
-      </program-requests>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <program-requests [pomPrograms]="pomProgramsUpdatedData" [pbPrograms]="pbProgramsUpdatedData" [orgMap]='orgMap'
+            [pomFy]="pom?.fy" [reviewOnly]="false" (deleted)="onDeletePr()">
+          </program-requests>
+        </div>
     </div>
-
   </div>
 </div>
