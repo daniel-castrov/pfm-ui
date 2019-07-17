@@ -13,15 +13,16 @@ import { CreatePomSessionService } from '../create-pom-session.service';
 })
 
 export class CommunityModalComponent implements OnInit {
+  
   pomYears: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
   pomfy: number;
   newpomyears: number[] = [];
   private BUDGETHORIZON: number = 5; // this is really a constant
   private YEARSTOSHOW: number = 5; // this is really a constant
   private toaorgs: Map<string,string> = new Map<string,string>();
-  private toayear: number;
   private chartdata;
   scrollstartyear:number;
+  @Input() toayear:number;
   // hide : boolean = flase;
   @Output() updatedDataEvent = new EventEmitter<string>();
   payload: {};
@@ -36,13 +37,16 @@ export class CommunityModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+   this.myInit();
+  }
+  myInit(){
     this.pomYears = this.createPomSessionService.getYears();
     var currentYear_ScrollStart = this.createPomSessionService.getCurrentYear();
     // this.payload = {'year':this.pomYears,}
     console.log(currentYear_ScrollStart,"currentYear_ScrollStart")
     this.pomfy = parseInt(currentYear_ScrollStart.split(",")[0]);
     this.scrollstartyear = parseInt(currentYear_ScrollStart.split(",")[1]);
-
+    console.log('pomfy',this.pomfy);
     if (this.pomfy) {
       // we want to have all years from pomfy to our max TOA year,
       var maxtoayear: number = this.pomfy;
@@ -59,6 +63,7 @@ export class CommunityModalComponent implements OnInit {
       return this.newpomyears;
     }
     return [];
+
 
   }
   

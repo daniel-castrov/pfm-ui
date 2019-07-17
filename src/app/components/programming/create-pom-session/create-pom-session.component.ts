@@ -534,6 +534,7 @@ sendData(){
     else if ('select' === event.message) {
       this.selectedyear = this.scrollstartyear + event.row;
       this.toayear = this.selectedyear;
+      this.createPomSessionService.setCurrentYear(this.toayear,this.scrollstartyear);
       this.analysis_baseline = (1 === event.column);
       this.resetSubchart();
     }
