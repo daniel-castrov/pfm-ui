@@ -384,30 +384,29 @@ export class FundsTabComponent implements OnChanges {
       this.fundArr.unshift(this.label);
 
       // on page load
-      this.yearCount = 6;
+      this.yearCount = 1;
       var count = this.yearCount;
       var flag = 0;
       this.getYear = [];
       this.getYear[0] = this.fundArr[0];
 
       if (this.yearCount == 0) {
-        this.yearCount = 6;
+        this.yearCount = 1;
         count = this.yearCount;
       }
-      for (let i = this.yearCount; i < this.fundArr.length && flag <= 5; i++) {
+      for (let i = this.yearCount; i < this.fundArr.length && flag <= 9; i++) {
         this.getYear.push(this.fundArr[i]);
         count++;
         flag++;
         this.yearCount = count;
       }
-
       this.tooltipChart = {
         chartType: 'LineChart',
         dataTable: this.getYear,
         options: {
           title: 'Funding Line Chart',
-          width: 900,
-          height: 250,
+          width: 1100,
+          height: 300,
           hAxis: {
             textStyle: {
               color: 'black',
@@ -442,15 +441,15 @@ export class FundsTabComponent implements OnChanges {
       }
     }, 100)
   }
-  checkYear = 11;
+  checkYear = this.fundArr.length;
   backcount = 0;
   forwordCount = 0;
   backYear;
   // back button
   back() {
     this.forwordCount = 0;
-    if (this.backcount == 0)
-      this.yearCount = this.checkYear - 6;
+    if (this.backcount == 0 && !this.backYear)
+      this.yearCount = this.checkYear - 11;
     else if (!this.backYear)
       this.yearCount = this.checkYear;
     else if (this.backYear)
@@ -468,7 +467,7 @@ export class FundsTabComponent implements OnChanges {
     if (this.yearCount == 0) {
       this.yearCount = 1;
     }
-    for (let i = this.yearCount; i < this.fundArr.length && flag < 5; i++) {
+    for (let i = this.yearCount; i < this.fundArr.length && flag <= 9; i++) {
       this.getYear.push(this.fundArr[i]);
       count--;
       flag++;
@@ -493,8 +492,8 @@ export class FundsTabComponent implements OnChanges {
       dataTable: this.getYear,
       options: {
         title: 'Funding Line Chart',
-        width: 900,
-        height: 250,
+        width: 1100,
+        height: 300,
         hAxis: {
           textStyle: {
             color: 'black',
@@ -532,7 +531,7 @@ export class FundsTabComponent implements OnChanges {
       this.yearCount = 1;
       count = this.yearCount;
     }
-    for (let i = this.yearCount; i < this.fundArr.length && flag < 5; i++) {
+    for (let i = this.yearCount; i < this.fundArr.length && flag <= 9; i++) {
       this.getYear.push(this.fundArr[i]);
       count++;
       flag++;
@@ -550,8 +549,8 @@ export class FundsTabComponent implements OnChanges {
       dataTable: this.getYear,
       options: {
         title: 'Funding Line Chart',
-        width: 900,
-        height: 250,
+        width: 1100,
+        height: 300,
         hAxis: {
           textStyle: {
             color: 'black',

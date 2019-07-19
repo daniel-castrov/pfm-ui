@@ -58,13 +58,13 @@
                         <div>
                           <mat-nav-list>
                             <div mat-list-item class="flex">
-                                <mat-icon [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home" title="Dashboard" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu" style="padding-right:5px;">
+                                <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home" title="Dashboard" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu" style="padding-right:5px;">
                                     <i class="fa fa-tachometer"  title="Dashboard" aria-hidden="true"></i>
                                 </mat-icon>
                                 <div [@animateText]="linkText ? 'show' : 'hide'">
                                     <div
                                         *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu">
-                                        <button mat-button [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home"> Dashboard</button>
+                                        <button mat-button [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home"> Dashboard</button>
                                     </div>
                                 </div>
                                 <mat-menu #menu1="matMenu" [overlapTrigger]="false" apppermission="POM:edit" >
