@@ -20,6 +20,7 @@ import {
 } from '../../../generated';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreatePomSessionService } from './create-pom-session.service';
+import { TemplateParseResult } from '@angular/compiler';
 //import { CommunityModalComponent } from './community-modal/community-modal.component';
 // import { CreatePomSessionService } from './create-pom-session.service';
 
@@ -72,6 +73,8 @@ export class CreatePomSessionComponent implements OnInit {
   amount: any;
   payloadYear: any;
   screenw : any;
+  scrollLastYear: number;
+  updateYearsOnScroll: any=[];
 
 
   constructor(private communityService: CommunityService,
@@ -188,6 +191,7 @@ sendData(){
 
   // Init and fetch all
   private myinit() {
+    
     this.globalsvc.user().subscribe(user => {
       forkJoin([this.communityService.getById(user.currentCommunityId),
         this.orgsvc.getByCommunityId(user.currentCommunityId),
@@ -220,12 +224,17 @@ sendData(){
         var samplepom: Pom = data[4].result;
         this.pomfy = this.budget.fy + 1;
         this.scrollstartyear = this.pomfy;
+        debugger;
+    for(let yr = this.pomfy ;yr<this.pomfy+5;yr++){
+      this.updateYearsOnScroll.push(yr);
+    }
         this.createPomSessionService.setCurrentYear(this.pomfy,this.scrollstartyear);
         this.orgs.forEach(org => this.orgMap.set(org.id, org.abbreviation));
 
         this.setInitialGridValues(this.pomfy, poms, samplepom);
       });
     });
+  
     this.createPomSessionService.setYears(this.toainfo);
   }
   
@@ -663,6 +672,11 @@ sendData(){
       this.fetchMoreData(this.scrollstartyear);
     }
 
+    this.updateYearsOnScroll=[];
+this.scrollLastYear=this.scrollstartyear+4;
+for(let i=this.pomfy;i<=this.scrollLastYear;i++){
+  this.updateYearsOnScroll.push(i);
+}
     if (reset) {
       this.resetCharts();
     }
