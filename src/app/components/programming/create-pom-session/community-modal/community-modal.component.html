@@ -15,14 +15,14 @@
                 <label for="sel1">Select Year:</label>
                 <select class="form-control toa-select-edit" [(ngModel)]='toayear' name="yearselector">
                   <option selected disabled>Select year</option>
-                  <option *ngFor="let year of newpomyears" [ngValue]="year">{{year}}</option>
+                  <option *ngFor="let year of updateYearsOnScroll" [ngValue]="year">{{year}}</option>
                 </select>
                 <input name="first" [(ngModel)]="toaForYear" type="number"
                   class="form-control toa-input-edit" aria-label="Input for Community TOA tooltip">
               </div>
             </form>
             <button (click)="submitValue();closeModal();" class='tooltip-toa-submit btn btn-primary'
-              [disabled]="!f.valid">Set</button>
+              [disabled]="!f.valid">Apply</button>
           </div>
         </div>
     </div>

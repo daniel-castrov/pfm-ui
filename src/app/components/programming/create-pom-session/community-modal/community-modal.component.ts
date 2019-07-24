@@ -15,14 +15,17 @@ import { CreatePomSessionService } from '../create-pom-session.service';
 export class CommunityModalComponent implements OnInit {
   pomYears: Map<number, OneYearToaData> = new Map<number, OneYearToaData>();
   pomfy: number;
-  newpomyears: number[] = [];
+
   private BUDGETHORIZON: number = 5; // this is really a constant
   private YEARSTOSHOW: number = 5; // this is really a constant
   private toaorgs: Map<string,string> = new Map<string,string>();
-  private toayear: number;
+ 
   private chartdata;
-  scrollstartyear:number;
+  private scrollstartyear:number;
   // hide : boolean = flase;
+newpomyears: number[] = [];
+@Input() private updateYearsOnScroll:number[];
+  @Input() private toayear: number;
   @Output() updatedDataEvent = new EventEmitter<string>();
   payload: {};
   // updatedDataEvent1: any;
@@ -73,7 +76,6 @@ export class CommunityModalComponent implements OnInit {
 
   closeModal(){
     var hide = false;
-   
     this.sendUpdatedData(hide);
   }
 

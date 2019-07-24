@@ -75,7 +75,7 @@
               </div>
             </div>
             <div class="col-6">
-              <app-community-modal (updatedDataEvent1)="receiveUpdatedData1($event)" (updatedDataEvent)="receiveUpdatedData($event)"></app-community-modal>
+              <app-community-modal [updateYearsOnScroll] ="updateYearsOnScroll" [toayear]="toayear" (updatedDataEvent1)="receiveUpdatedData1($event)" (updatedDataEvent)="receiveUpdatedData($event)"></app-community-modal>
             </div>
           </div>
           <ng-template #content let-modal let-c="close">
@@ -185,7 +185,7 @@
                         <app-organization-toa (valuesChange)='onSuborgData($event)' [toainfo]='selectedtoainfo'
                           [orgmap]='toaorgs'></app-organization-toa>
                         <button (click)="submitOrgValue();closeModal()"
-                          class="mt-2 tooltip-toa-submit btn btn-primary">Set</button>
+                          class="mt-2 tooltip-toa-submit btn btn-primary">Apply</button>
                       </div>
                     </div>
                   </div>
