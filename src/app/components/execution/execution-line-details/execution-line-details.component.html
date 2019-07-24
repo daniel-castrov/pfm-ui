@@ -2,7 +2,7 @@
 <ng-template #updateidline let-line="line">
   {{line.appropriation}}/{{line.blin}}/{{line.item}}/{{line.opAgency}}
 </ng-template>
-<div style="display: flex">
+<div class="single-row">
   <menu-bar [authUser]="authUser"></menu-bar>
   <div class="row main-content" *ngIf="current">
     <div class="col-12">
