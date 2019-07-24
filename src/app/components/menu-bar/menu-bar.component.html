@@ -30,7 +30,7 @@
                       <div fxLayout="column" fxLayoutGap="10px">
                         <!-- <mat-nav-list>
                           <div mat-list-item class="side-menu-coontainer">
-                              <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu1" style="padding-right:5px;">
+                              <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledPlanningMenu1">
                                   <i class="fa fa-clock-o"  title="Planning" aria-hidden="true"></i>
                               </mat-icon>
                               <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -58,7 +58,7 @@
                         <div>
                           <mat-nav-list>
                             <div mat-list-item class="side-menu-coontainer">
-                                <mat-icon [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home" title="Dashboard" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu" style="padding-right:5px;">
+                                <mat-icon [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home" title="Dashboard" *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu">
                                     <i class="fa fa-tachometer"  title="Dashboard" aria-hidden="true"></i>
                                 </mat-icon>
                                 <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -79,7 +79,7 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="side-menu-coontainer">
-                                      <mat-icon [matMenuTriggerFor]="menu2"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu2"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Funds_Requestor') ); else disabledProgrammingMenu1">
                                           <i class="fa fa-hourglass-end" title="Program Request" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -165,7 +165,7 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="side-menu-coontainer">
-                                      <mat-icon [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && (roles?.includes('Budget_Manager') || roles?.includes('Program_Manager')) ; else disabledBudgetMenu1">
                                           <i class="fa fa-database" title="Budget"  aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -225,7 +225,7 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="side-menu-coontainer">
-                                      <mat-icon [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('Execution_Manager') || roles?.includes('Execution_Reporter')); else disabledExecutionMenu1">
                                           <i class="fa fa-globe"  title="Execution" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -293,7 +293,7 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="side-menu-coontainer">
-                                      <mat-icon [matMenuTriggerFor]="menu5" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu5" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('Program_Manager') ); else disabledReportsMenu1">
                                             <i class="fa fa-area-chart" title="Reports" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -334,7 +334,7 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="side-menu-coontainer">
-                                      <mat-icon [matMenuTriggerFor]="menu6" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Execution_Manager') || roles?.includes('Budget_Manager')  ); else disableManageMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu6" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') || roles?.includes('Execution_Manager') || roles?.includes('Budget_Manager')  ); else disableManageMenu1">
                                           <i class="fa fa-th-list" title="Manage" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -385,7 +385,7 @@
                           <div>
                               <mat-nav-list>
                                   <div mat-list-item class="side-menu-coontainer">
-                                      <mat-icon [matMenuTriggerFor]="menu7" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu1" style="padding-right:5px;">
+                                      <mat-icon [matMenuTriggerFor]="menu7" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevationService.elevatedBoolean || ( roles?.includes('User_Approver') ); else disableAdminMenu1">
                                           <i class="fa fa-user-secret"  title="Admin" aria-hidden="true"></i>
                                       </mat-icon>
                                       <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -424,7 +424,7 @@
                                   </div>
                               </mat-nav-list>
                           </div>
-                          <div fxLayout="row" fxLayoutAlign="end center" style="padding: 0px 10px;padding-top: 90px; ">
+                          <div fxLayout="row" fxLayoutAlign="end center" class="side-nav-menu">
                             <button mat-icon-button (click)="onSinenavToggle()" >
                                 <mat-icon *ngIf="sideNavState" >
                                     <i class="fa fa-arrow-left" aria-hidden="true"></i>

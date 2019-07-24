@@ -90,6 +90,10 @@ color: #212529 !important;
   border-radius: 50%;
 }
 
+.side-nav-menu {
+  padding: 0px 10px;
+  padding-top: 50px; 
+}
 
 .main_content {
   width:100%; 
@@ -128,6 +132,10 @@ color: #212529 !important;
       outline: 1px solid #fafafa;
     }
   }
+
+.mat-icon {
+  width: 20px;
+} 
 
 .mat-icon-button,
 .mat-button {
