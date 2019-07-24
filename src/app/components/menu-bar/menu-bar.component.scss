@@ -89,14 +89,7 @@ color: #212529 !important;
   object-fit: cover;
   border-radius: 50%;
 }
-p {
-  font-family: Lato;
-}
 
-mat-menu {
-  margin-top: -20px;
-  margin-left: 20px;
-}
 
 .main_content {
   width:100%; 
@@ -110,7 +103,14 @@ mat-menu {
   justify-content: flex-start;
   padding-left: 17px; 
   padding-top: 10px;
+
+  .mat-menu {
+    margin-left: 20px;
+    margin-top: -20px;
   }
+  
+}
+
 
 .mat-list-item,
 .mat-icon,
@@ -138,11 +138,9 @@ mat-menu {
   outline: 1px solid $light-grey;
 }
   
-.menu-section-label{
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: $primary-color;
+.menu-section-label {
+  color: $primary-color !important;
   cursor: pointer !important;
-  margin-top: 12px;
 }
 
 .arrow-left {
