@@ -64,7 +64,7 @@
                                 <div [@animateText]="linkText ? 'show' : 'hide'">
                                     <div
                                         *ngIf="!elevationService.elevatedBoolean && ( roles?.includes('POM_Manager') ); else disabledDashboardMenu">
-                                        <button mat-button [matMenuTriggerFor]="menu10" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home"> Dashboard</button>
+                                        <button mat-button [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home"> Dashboard</button>
                                     </div>
                                 </div>
                                 <mat-menu #menu1="matMenu" [overlapTrigger]="false" apppermission="POM:edit" >
