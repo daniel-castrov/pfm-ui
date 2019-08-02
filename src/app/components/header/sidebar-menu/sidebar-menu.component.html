@@ -4,8 +4,8 @@
               <div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'">
                   <div fxLayout="column" fxLayoutGap="10px" style="height: 100%;">
                     <mat-nav-list>
-                      <div mat-list-item class="side-menu-coontainer">
-                          <mat-icon [matMenuTriggerFor]="menu1" style="padding-right:5px;">
+                        <div mat-list-item class="side-menu-container">
+                          <mat-icon [matMenuTriggerFor]="menu1">
                               <i class="fa fa-info-circle" aria-hidden="true"></i>
                           </mat-icon>
                           <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -21,7 +21,7 @@
                       </div>
                     </mat-nav-list>
                     <mat-nav-list>
-                        <div mat-list-item class="side-menu-coontainer">
+                        <div mat-list-item class="side-menu-container">
                             <mat-icon [matMenuTriggerFor]="menu2">
                                 <i class="fa fa-phone-square" aria-hidden="true"></i>
                             </mat-icon>
@@ -30,7 +30,7 @@
                                     <button mat-button [matMenuTriggerFor]="menu2">Contact</button>
                                 </div>
                             </div>
-                            <mat-menu #menu2="matMenu" style="padding-top: 0px;">
+                            <mat-menu #menu2="matMenu">
                                 <button mat-menu-item>
                                     <a class="nav-link" href="#" routerLink="/contact">Contact Us</a>
                                 </button>
