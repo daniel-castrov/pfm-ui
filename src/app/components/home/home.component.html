@@ -1,0 +1,470 @@
+<j-header></j-header>
+<div class="single-row">
+  <menu-bar [authUser]="authUser"></menu-bar>
+  <div class="row main-content" *ngIf="header.authUser">
+    <div class="error" *ngFor="let error of resultError">{{error}}</div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="card parent-card">
+            <div class="header">
+                <h4 class="title d-inline">Welcome back
+                  <strong> {{ header.authUser.fullName }}</strong>
+                </h4>
+                <span class="d-inline pull-right user-admin-controls" title="User Admin">
+                    <a routerLink="/user/self"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+                  </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card parent-card">
+              <div class="header">
+                <h5 class="title d-inline"> Latest News
+                </h5>
+                <span class="d-inline pull-right user-admin-controls" title="Build Tool">
+                    <i class="fa fa-gavel" aria-hidden="true"></i>
+                  </span>
+              </div>
+              <div class="row no-gutters content">
+                  <div class="col-5">
+                    <ul>
+                      <li>
+                        <span class="mr-2">
+                            <i class="fa fa-star pink" aria-hidden="true"></i>
+                        </span>
+                        <label>
+                            Deadline for Budget September 30, 2020
+                        </label>
+                    </li>
+                    <li>
+                        <span class="mr-2">
+                            <i class="fa fa-star green" aria-hidden="true"></i>
+                        </span>
+                        <label>
+                            Memorial Day weekend shut down - PFM will be inaccessible
+                        </label>
+                    </li>
+                    </ul>
+                  </div>
+                  <div class="col-6">
+                      <ul>
+                        <li>
+                          <span class="mr-2">
+                              <i class="fa fa-star blue" aria-hidden="true"></i>
+                          </span>
+                          <label>
+                              Deadline for Execution Phase September 30, 2020
+                          </label>
+                      </li>
+                      <li>
+                          <span class="mr-2">
+                              <i class="fa fa-star indigo" aria-hidden="true"></i>
+                          </span>
+                          <label>
+                              System Maintenance on June 30th 21:00 EDT
+                          </label>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="fa fa-history mr-1"></i> Updated 3 minutes ago
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card parent-card">
+
+            <div class="header">
+              <h5 class="title d-inline"> Dashboard
+              </h5>
+              <span class="d-inline pull-right user-admin-controls" title="Edit Tool">
+                <div style="cursor: pointer;" (click)="openDashboardModal(content)">
+                  <i class="fa fa-gavel" aria-hidden="true"></i>
+                </div>
+              </span>
+            </div>
+
+
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="card border-assigned mb-3" style="max-width: 20rem;">
+                    <div class="card-body bg-assigned text-white">
+                      <i class="fa fa-clipboard fa-4x"  title="Assigned" aria-hidden="true"></i>
+                      <div style="float: right; text-align: right">
+                        <h2 class="card-title">0</h2>
+                        <p class="card-text">Assigned to you</p>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-assigned" style="cursor: pointer;" (click)="toggleControls('assigned')">
+                        View Details
+                        <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
+                          <i class="fa fa-arrow-circle-right fa-lg color-assigned" title="Arrow" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="card border-outstanding mb-3" style="max-width: 20rem;">
+                    <div class="card-body bg-outstanding text-white">
+                      <i class="fa fa-folder-open fa-4x"  title="Outstanding" aria-hidden="true"></i>
+                        <div style="float: right; text-align: right">
+                          <h2 class="card-title">0</h2>
+                          <p class="card-text">Your outstanding requests</p>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-outstanding" style="cursor: pointer;" (click)="toggleControls('outstanding')">
+                      View Details
+                      <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
+                        <i class="fa fa-arrow-circle-right fa-lg color-outstanding" title="Arrow" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="card border-completed mb-3" style="max-width: 20rem;">
+                    <div class="card-body bg-completed text-white">
+                      <i class="fa fa-check-square fa-4x" title="Completed" aria-hidden="true"></i>
+                      <div style="float: right; text-align: right">
+                        <h2 class="card-title">0</h2>
+                        <p class="card-text">Completed (Past 30 Days)</p>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-completed" style="cursor: pointer;" (click)="toggleControls('completed')">
+                      View Details
+                      <div style="display: table-cell; vertical-align: middle; align-items: center; float: right; text-align: right;">
+                        <i class="fa fa-arrow-circle-right fa-lg color-completed" title="Arrow" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div [hidden] = "showControl!=='assigned'" style = "transition: .8s;">
+              <div class="card border-assigned">
+                <div class="card-body">
+                  <h5 class="card-title">Assigned to you:</h5>
+                  <p class="card-text">These pop-ups can be done with a nicer, animated style via css tweaks</p>
+                  <p class="card-text">We can also change the 'arrow' icon above to point downward when this is open.</p>
+                  <p class="card-text">We can also make them lay over other components or push them down like this.</p>
+                  <p class="card-text">We can also consider making these open a modal instead.</p>
+                </div>
+              </div>
+            </div>
+            <div [hidden] = "showControl!=='outstanding'">
+              <div class="card border-outstanding">
+                <div class="card-body">
+                  <h5 class="card-title">Your outstanding requests:</h5>
+                  <p class="card-text">Blah</p>
+                  <p class="card-text">Blah</p>
+                  <p class="card-text">Blah</p>
+                </div>
+              </div>
+            </div>
+            <div [hidden] = "showControl!=='completed'">
+              <div class="card border-completed">
+                <div class="card-body">
+                  <h5 class="card-title">Completed (Past 30 Days):</h5>
+                  <p class="card-text">Blah</p>
+                  <p class="card-text">Blah</p>
+                  <p class="card-text">Blah</p>
+                </div>
+              </div>
+            </div>
+
+            <br/>
+
+            <app-dashboard #dashboard></app-dashboard>
+
+
+          </div>
+        </div>
+      </div>
+
+
+        <div class="row">
+          <div class="col-4">
+            <div class="card parent-card">
+              <div class="header">
+                <h5 class="title"> Baseline BA/Blin Breakdown for {{fy|FY}}</h5>
+              </div>
+              <div class="content">
+                <google-chart [data]='pechartdata'></google-chart>
+              </div>
+              <div class="footer">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-check mr-1" aria-hidden="true"></i> Data information certified
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card parent-card">
+                <div class="header">
+                  <h5 class="title"> My To Do List
+                  </h5>
+                </div>
+                <div class="content">
+                  <table class="table">
+                    <tbody>
+                    <tr>
+                      <td>
+                        <div class="checkbox">
+                          <input id="checkbox1" type="checkbox">
+                          <label for="checkbox1"></label>
+                        </div>
+                      </td>
+                        <td>Approve/Deny POM Request
+                          <div class="status red">
+                          Pending
+                        </div>
+                      </td>
+                        <td class="td-actions text-right">
+                          <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                              <i class="fa fa-edit"></i>
+                          </button>
+                          <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                              <i class="fa fa-times"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <div class="checkbox">
+                                <input id="checkbox2" type="checkbox" checked>
+                                <label for="checkbox2">
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            Update User Roles
+                            <div class="status green">
+                            In Progress
+                          </div>
+                        </td>
+                        <td class="td-actions text-right">
+                          <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                              <i class="fa fa-edit"></i>
+                          </button>
+                          <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                              <i class="fa fa-times"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="checkbox">
+                            <input id="checkbox3" type="checkbox" checked>
+                            <label for="checkbox3"></label>
+                          </div>
+                        </td>
+                        <td>
+                            Update Community Roles
+                            <div class="status red">
+                            Pending
+                          </div>
+                        </td>
+                      <td class="td-actions text-right">
+                        <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="checkbox">
+                            <input id="checkbox4" type="checkbox">
+                            <label for="checkbox4">
+                            </label>
+                        </div>
+                      </td>
+                      <td> Review Open POM Sessions
+                          <div class="status green">
+                          In Progress
+                          </div>
+                      </td>
+                      <td class="td-actions text-right">
+                        <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="checkbox">
+                          <input id="checkbox5" type="checkbox" >
+                          <label for="checkbox5"></label>
+                        </div>
+                        </td>
+                        <td>
+                            Approve Budget Phase
+                          <div class="status green">
+                            In Progress
+                          </div>
+                        </td>
+                          <td class="td-actions text-right">
+                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
+                              <i class="fa fa-times"></i>
+                            </button>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
+             <div class="footer">
+              <hr>
+            <div class="stats">
+                <i class="fa fa-history mr-1"></i> Updated 2 days ago
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="col-4">
+        <div class="card parent-card">
+          <div class="header">
+            <h5 class="title"> My Current Activity
+            </h5>
+          </div>
+          <div class="content">
+            <table class="table">
+                <tbody>
+                <tr>
+                  <td>Saved Budget Phase
+                  <div class="time-stamp">
+                    Updated:  7/10/2019 2:30 pm
+                  </div>
+                </td>
+                </tr>
+                <tr>
+                  <td>
+                    Saved POM Session
+                    <div class="time-stamp">
+                    Updated:  7/9/2019 2:30 pm
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                        Update Community Roles
+                    <div class="time-stamp">
+                            Updated:  7/8/2019 12:30 pm
+                    </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      User Role Updates
+                      <div class="time-stamp">
+                            Updated:  7/6/2019 9:30 am
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                    Closed POM Session
+                    <div class="time-stamp">
+                        Updated:  7/3/2019 7:30 am
+                  </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="footer">
+          <hr>
+          <div class="stats">
+              <i class="fa fa-history mr-1"></i> Updated 10 minutes ago
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+<!-- Modal to add widgets to dashboard -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Available Widgets:</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+      <div *ngFor="let s of widgets.controls; let j=index" style="margin: 20px auto;">
+
+        <div class="row" style="margin: 20px auto;">
+          <div class="column" style="width: 10%;">
+            <input type="checkbox" [formControl]="s"/>
+          </div>
+          <div class="column" style="width: 20%;">
+            {{widgetList[j].name}}
+          </div>
+          <div class="column" style="width: 70%;">
+
+            <!-- TODO - find a cleaner way to iterate through the widgets-->
+            <div *ngIf="j===0">
+              <app-demo-widget-one dragDisabled="true"></app-demo-widget-one>
+            </div>
+            <div *ngIf="j===1">
+              <app-demo-widget-two dragDisabled="true"></app-demo-widget-two>
+            </div>
+            <div *ngIf="j===2">
+              <app-demo-widget-three dragDisabled="true"></app-demo-widget-three>
+            </div>
+            <div *ngIf="j===3">
+              <app-demo-widget-four dragDisabled="true"></app-demo-widget-four>
+            </div>
+            <div *ngIf="j===4">
+              <app-demo-widget-pom-phase-funding dragDisabled="true"></app-demo-widget-pom-phase-funding>
+            </div>
+
+            </div>
+        </div>
+
+      </div>
+      <button type="submit">
+        Submit
+      </button>
+    </form>
+
+
+  </div>
+<!--  <div class="modal-footer">-->
+<!--    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>-->
+<!--  </div>-->
+</ng-template>
+
+
