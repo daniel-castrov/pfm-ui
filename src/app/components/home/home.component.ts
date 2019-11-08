@@ -35,7 +35,7 @@ export class HomeComponent {
     private rolesvc: RolesPermissionsService) {
 
     this.rolesvc.getRoles().subscribe(data => {
-      if(data.result.includes('POM_Manager') || data.result.includes("Funds_Requstor")){
+      if(data.result.includes('POM_Manager') || data.result.includes("Funds_Requstor") || data.result.includes("Budget_Manager")){
         this.widgetList.push({name:'Funding by BA for POM Phase', selected: false, id: 'asdf5'});
       }
       this.form = this.formBuilder.group({
