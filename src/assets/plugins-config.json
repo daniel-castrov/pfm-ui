@@ -1,0 +1,41 @@
+{
+  "budget-demo": {
+    "name": "BudgetDemo",
+    "path": "/assets/plugins/budget-demo.js",
+    "deps": ["shared", "budget-core"]
+  },
+  "budget": {
+    "name": "Budget",
+    "path": "/assets/plugins/budget.js",
+    "deps": ["shared", "budget-core"]
+  },
+  "budget-core": {
+    "name": "Budget Core",
+    "path": "/assets/plugins/budget-core.js",
+    "deps": ["shared"]
+  },
+  "planning": {
+    "name": "Planning",
+    "path": "/assets/plugins/planning.js",
+    "deps": ["shared", "planning-core"]
+  },
+  "planning-core": {
+    "name": "Planning Core",
+    "path": "/assets/plugins/planning-core.js",
+    "deps": ["shared"]
+  },
+  "programming": {
+    "name": "Programming",
+    "path": "/assets/plugins/programming.js",
+    "deps": ["shared", "programming-core"]
+  },
+  "programming-core": {
+    "name": "Programming Core",
+    "path": "/assets/plugins/programming-core.js",
+    "deps": ["shared"]
+  },
+  "shared": {
+    "name": "Shared",
+    "path": "/assets/plugins/shared.js"
+  }
+}

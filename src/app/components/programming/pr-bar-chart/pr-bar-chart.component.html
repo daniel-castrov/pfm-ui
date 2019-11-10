@@ -1,8 +1,0 @@
-
-<google-chart #comchart
-  [data]='chartdata'
-  (chartSelect)='select($event)'
-></google-chart>
-<select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)" class="selectpicker">
-  <option [value]="i" *ngFor="let i of filters" class="optionpicker">{{i}}</option>
-</select>

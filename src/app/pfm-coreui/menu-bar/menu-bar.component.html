@@ -1,0 +1,403 @@
+<!-- TODO, notice this could easily be data-driven-->
+<ng-container *ngIf="!isUserSignedIn || !role">
+    <mat-nav-list>
+        <div mat-list-item class="side-menu-container">
+            <mat-icon [matMenuTriggerFor]="menu1">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+            </mat-icon>
+            <div [@animateText]="linkText ? 'show' : 'hide'">
+                <div>
+                    <button mat-button [matMenuTriggerFor]="menu1">About</button>
+                </div>
+            </div>
+            <mat-menu #menu1="matMenu">
+                <button mat-menu-item>
+                    <a class="nav-link" href="#" routerLink="/about">About</a>
+                </button>
+            </mat-menu>
+        </div>
+    </mat-nav-list>
+    <mat-nav-list>
+        <div mat-list-item class="side-menu-container">
+            <mat-icon [matMenuTriggerFor]="menu2">
+                <i class="fa fa-phone-square" aria-hidden="true"></i>
+            </mat-icon>
+            <div [@animateText]="linkText ? 'show' : 'hide'">
+                <div>
+                    <button mat-button [matMenuTriggerFor]="menu2">Contact</button>
+                </div>
+            </div>
+            <mat-menu #menu2="matMenu">
+                <button mat-menu-item>
+                    <a class="nav-link" href="#" routerLink="/contact">Contact Us</a>
+                </button>
+            </mat-menu>
+        </div>
+    </mat-nav-list>
+</ng-container>
+
+<ng-container *ngIf="role && isUserSignedIn">
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home" title="Dashboard" *ngIf="!elevated && role.isPOM_Manager; else disabledDashboardMenu">
+                    <i class="fa fa-tachometer"  title="Dashboard" aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div
+                            *ngIf="!elevatedBoolean && ( role.isPOM_Manager ); else disabledDashboardMenu">
+                        <button mat-button [matMenuTriggerFor]="menu1" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()" routerLink="/home"> Dashboard</button>
+                    </div>
+                    <ng-template #disabledDashboardMenu>
+                        <button mat-button disabled>Dashboard</button>
+                    </ng-template>
+                </div>
+                <mat-menu #menu1="matMenu" [overlapTrigger]="false" apppermission="POM:edit" >
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <a class="dropdown-item enable-menu" routerLink="/home">Dashboard</a>
+                    </button>
+                </mat-menu>
+            </div>
+        </mat-nav-list>
+    </div>
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu2"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevatedBoolean && (role.isPOM_Manager || role.isFunds_Requestor); else disabledProgrammingMenu1">
+                    <i class="fa fa-hourglass-end" title="Program Request" aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div
+                            *ngIf="!elevatedBoolean && ( role.isPOM_Manager || role.isFunds_Requestor); else disabledProgrammingMenu">
+                        <button mat-button [matMenuTriggerFor]="menu2" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Programming</button>
+                    </div>
+                </div>
+                <mat-menu #menu2="matMenu">
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <a *rolesOk="'select-program-request'" class="dropdown-item enable-menu"  href="#"
+                           routerLink="/select-program-request">Program Request</a>
+                        <a *rolesNotNow="'select-program-request'" class="dropdown-item disable-menu"
+                           disabled>Program Request</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'ufr-search'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/ufr-search">UFR Request</a>
+                        <a *rolesNotNow="'ufr-search'" class="dropdown-item disable-menu" disabled>UFR
+                            Request</a>
+                        <div *ngIf="role.isPOM_Manager" class="dropdown-divider"></div>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'create-new-pom'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/create-new-pom">Create
+                            POM Session</a>
+                        <a *rolesNotNow="'create-new-pom'" class="dropdown-item disable-menu"  disabled>Create POM
+                            Session</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'open-pom-session'" class="dropdown-item enable-menu"  href="#"
+                           routerLink="/open-pom-session">Open POM Session</a>
+                        <a *rolesNotNow="'open-pom-session'" class="dropdown-item disable-menu" disabled>Open POM
+                            Session</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'update-pom-session'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/update-pom-session">Update POM Session</a>
+                        <a *rolesNotNow="'update-pom-session'" class="dropdown-item disable-menu" disabled>Update
+                            POM Session</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'close-pom-session'" class="dropdown-item enable-menu"
+                           routerLink="/close-pom-session">Close POM
+                            Session</a>
+                        <a *rolesNotNow="'close-pom-session'" class="dropdown-item disable-menu" disabled>Close
+                            POM Session</a>
+                        <div *ngIf="role.isPOM_Manager" class="dropdown-divider"></div>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'update-toa'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/update-pom-toas">Update
+                            TOAs</a>
+                        <a *rolesNotNow="'update-toa'" class="dropdown-item disable-menu" disabled>Update
+                            TOAs</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'workspace-management'" class="dropdown-item enable-menu" href="#"
+                           routerLink="{{ pomStatus == 'OPEN' ? '/workspace-management' : '/workspace-viewing'}}">Workspace
+                            Mgmt</a>
+                        <a *rolesNotNow="'workspace-management'" class="dropdown-item disable-menu"
+                           disabled>Workspace Mgmt</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'ufr-approval-summary'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/ufr-approval-summary">UFR Approval</a>
+                        <a *rolesNotNow="'ufr-approval-summary'" class="dropdown-item disable-menu" disabled>UFR
+                            Approval</a>
+                    </button>
+                </mat-menu>
+                <ng-template #disabledProgrammingMenu1>
+                    <mat-icon>
+                        <i class="fa fa-hourglass-end gray" aria-hidden="true"></i>
+                    </mat-icon>
+                </ng-template>
+                <ng-template #disabledProgrammingMenu>
+                    <button mat-button disabled>Programming</button>
+                </ng-template>
+            </div>
+        </mat-nav-list>
+    </div>
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevatedBoolean && (role.isBudget_Manager || role.isProgram_Manager) ; else disabledBudgetMenu1">
+                    <i class="fa fa-database" title="Budget"  aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div
+                            *ngIf="!elevatedBoolean && (role.isBudget_Manager || role.isProgram_Manager); else disabledBudgetMenu">
+                        <button mat-button [matMenuTriggerFor]="menu3" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Budget</button>
+                    </div>
+                </div>
+                <mat-menu #menu3="matMenu">
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <a *rolesOk="'edit-program-details'" class="dropdown-item enable-menu"
+                           routerLink="/edit-program-details">Edit
+                            Program Details</a>
+                        <a *rolesNotNow="'edit-program-details'" class="dropdown-item" disabled>Edit
+                            Program
+                            Details</a></button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'create-budget'" class="dropdown-item enable-menu"
+                           routerLink="/create-budget">Create Budget
+                            Phase</a>
+                        <a *rolesNotNow="'create-budget'" class="dropdown-item" disabled>Create
+                            Budget Phase</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'copy-budget'" class="dropdown-item enable-menu"
+                           routerLink="/copy-budget">Copy Budget</a>
+                        <a *rolesNotNow="'copy-budget'" class="dropdown-item" disabled>Copy
+                            Budget</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'edit-budget-details'" class="dropdown-item enable-menu"
+                           routerLink="/edit-budget-details">Edit
+                            Budget Details</a>
+                        <a *rolesNotNow="'edit-budget-details'" class="dropdown-item" disabled>Edit
+                            Budget Details</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/r-forms">RDT&E Exhibits</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/p-forms">Proc Exhibits</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a class="dropdown-item" disabled>RDT&E Tree Data</a>
+                    </button>
+                </mat-menu>
+                <ng-template #disabledBudgetMenu1>
+                    <mat-icon>
+                        <i class="fa fa-database gray" aria-hidden="true"></i>
+                    </mat-icon>
+                </ng-template>
+                <ng-template #disabledBudgetMenu>
+                    <button mat-button disabled> Budget</button>
+                </ng-template>
+            </div>
+        </mat-nav-list>
+    </div>
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevatedBoolean && (role.isExecution_Manager || role.isExecution_Reporter); else disabledExecutionMenu1">
+                    <i class="fa fa-globe"  title="Execution" aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div
+                            *ngIf="!elevatedBoolean && (role.isExecution_Manager || role.isExecution_Reporter); else disabledExecutionMenu">
+                        <button mat-button [matMenuTriggerFor]="menu4"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"> Execution</button>
+                    </div>
+                </div>
+                <mat-menu #menu4="matMenu">
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <a *rolesOk="'funds-update'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/funds-update">Funds
+                            Update</a>
+                        <a *rolesNotNow="'funds-update'" class="dropdown-item gary" disabled>Funds
+                            Update</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'program-update'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/oe-update">Program
+                            Update</a>
+                        <a *rolesNotNow="'program-update'" class="dropdown-item gary" disabled>Program
+                            Update
+                        </a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'create-new-execution'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/create-execution-phase">Create Execution Phase</a>
+                        <a *rolesNotNow="'create-new-execution'" class="dropdown-item gary"
+                           disabled>Create Execution Phase</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'open-execution-phase'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/open-execution">Open
+                            Execution Phase</a>
+                        <a *rolesNotNow="'open-execution-phase'" class="dropdown-item gary" disabled>Open
+                            Execution Phase</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'import-execution-data'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/import-execution-data">Import Actuals</a>
+                        <a *rolesNotNow="'import-execution-data'" class="dropdown-item gary"
+                           disabled>Import Actuals</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *rolesOk="'ufr-request'" class="dropdown-item enable-menu" href="#"
+                           routerLink="/ufr-yoe-summary">UFR
+                            Request</a>
+                        <a *rolesNotNow="'ufr-request'" class="dropdown-item gary" disabled>UFR
+                            Request</a>
+                    </button>
+                </mat-menu>
+                <ng-template #disabledExecutionMenu1>
+                    <mat-icon >
+                        <i class="fa fa-globe gray" aria-hidden="true"></i>
+                    </mat-icon>
+                </ng-template>
+                <ng-template #disabledExecutionMenu>
+                    <button mat-button disabled> Execution</button>
+                </ng-template>
+            </div>
+        </mat-nav-list>
+    </div>
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu5" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevatedBoolean || role.isProgram_Manager; else disabledReportsMenu1">
+                    <i class="fa fa-area-chart" title="Reports" aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div *ngIf="elevatedBoolean || role.isProgram_Manager; else disabledReportsMenu">
+                        <button mat-button [matMenuTriggerFor]="menu5"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Reports</button>
+                    </div>
+                </div>
+                <mat-menu #menu5="matMenu">
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <a class="dropdown-item " disabled>R1</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a class="dropdown-item" disabled>R2</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a class="dropdown-item" disabled>P1</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a class="dropdown-item" disabled>P1</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a class="dropdown-item" disabled>P2</a>
+                    </button>
+                </mat-menu>
+                <ng-template #disabledReportsMenu1 >
+                    <mat-icon >
+                        <i class="fa fa-area-chart gray" aria-hidden="true"></i>
+                    </mat-icon>
+                </ng-template>
+                <ng-template #disabledReportsMenu>
+                    <button mat-button disabled> Reports</button>
+                </ng-template>
+            </div>
+        </mat-nav-list>
+    </div>
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu6" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="!elevatedBoolean && (role.isPOM_Manager || role.isExecution_Manager || role.isBudget_Manager); else disableManageMenu1">
+                    <i class="fa fa-th-list" title="Manage" aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div *ngIf="!elevatedBoolean && (role.isPOM_Manager || role.isExecution_Manager || role.isBudget_Manager); else disableManageMenu">
+                        <button mat-button [matMenuTriggerFor]="menu6"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Manage</button>
+                    </div>
+                </div>
+                <mat-menu #menu6="matMenu">
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <div *ngIf="role.isPOM_Manager">
+                            <p class="menu-section-label enable-menu">Programming</p>
+                            <a class="dropdown-item" disabled>Manage Programming</a>
+                        </div>
+
+                        <div *ngIf="role.isBudget_Manager">
+                            <p class="menu-section-label enable-menu">Budget</p>
+                            <a class="dropdown-item" disabled>Manage Budgeting</a>
+                        </div>
+
+                        <div *ngIf="role.isExecution_Manager">
+                            <p class="menu-section-label enable-menu">Execution</p>
+                            <a *rolesOk="'create-new-program-mrdb'" class="dropdown-item enable-menu" href="#"
+                               routerLink="/create-mrdb-program">Create Unfunded Program</a>
+                            <a *rolesNotNow="'create-new-program-mrdb'" class="dropdown-item"
+                               disabled>Create Unfunded Program</a>
+                        </div>
+                    </button>
+                </mat-menu>
+                <ng-template #disableManageMenu1>
+                    <mat-icon>
+                        <i class="fa fa-th-list gray" aria-hidden="true"></i>
+                    </mat-icon>
+                </ng-template>
+                <ng-template #disableManageMenu>
+                    <button mat-button disabled> Manage</button>
+                </ng-template>
+            </div>
+        </mat-nav-list>
+    </div>
+    <div>
+        <mat-nav-list>
+            <div mat-list-item class="side-menu-container">
+                <mat-icon [matMenuTriggerFor]="menu7" #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()"  *ngIf="elevatedBoolean || ( role.isUser_Approver ); else disableAdminMenu1">
+                    <i class="fa fa-user-secret"  title="Admin" aria-hidden="true"></i>
+                </mat-icon>
+                <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <div
+                            *ngIf="elevatedBoolean || role.isUser_Approver; else disableAdminMenu">
+                        <button mat-button [matMenuTriggerFor]="menu7"  #menuTrigger="matMenuTrigger" (mouseover)="menuTrigger.openMenu()">Admin</button>
+                    </div>
+                </div>
+                <mat-menu #menu7="matMenu">
+                    <div class="arrow-left"></div>
+                    <button mat-menu-item>
+                        <a *ngIf="role.isUser_Approver" class="dropdown-item enable-menu" href="#"
+                           routerLink="/approve-requests">Approve Requests</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *ngIf="elevatedBoolean" class="dropdown-item enable-menu" href="#"
+                           routerLink="/manage-communities">Manage Communities</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *ngIf="elevatedBoolean" class="dropdown-item enable-menu" href="#"
+                           routerLink="/user-list">Manage Users</a>
+                    </button>
+                    <button mat-menu-item>
+                        <a *ngIf="elevatedBoolean" class="dropdown-item enable-menu" href="#"
+                           routerLink="/roles">Manage Roles</a>
+                    </button>
+                </mat-menu>
+                <ng-template #disableAdminMenu1>
+                    <mat-icon>
+                        <i class="fa fa-user-secret gray" aria-hidden="true"></i>
+                    </mat-icon>
+                </ng-template>
+                <ng-template #disableAdminMenu>
+                    <button mat-button disabled> Admin</button>
+                </ng-template>
+            </div>
+        </mat-nav-list>
+    </div>
+</ng-container>

@@ -1,0 +1,40 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../../../src/environments/environment';
+import { Observable } from 'rxjs';
+
+/** single place for all services calls to funnel thru
+ *   from here we can easily add in metrics/error-handling ect..without using interceptors.
+ * **/
+@Injectable({
+  providedIn: 'root'
+})
+export class BaseRestService {
+
+  protected baseURL:string;
+  protected headers:HttpHeaders;
+
+  constructor(protected httpClient:HttpClient) {
+    this.baseURL = environment.apiUrl;
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json; charset=utf-8');
+    this.headers = headers;
+  }
+
+  protected get(resource:string):Observable<Object>{
+    return this.httpClient.get(this.baseURL + "/" + resource, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  }
+
+  protected post(resource:string, data:any):Observable<Object>{
+    return this.httpClient.post(this.baseURL + "/" + resource, data, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  }
+
+  protected put(resource:string, data:any):Observable<Object>{
+    return this.httpClient.put(this.baseURL + "/" + resource, data, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  }
+
+  //majority of callers will only want the response content - but some may need access to response-headers, ect...
+  protected getFullResponse(resource:string):Observable<Object>{
+    return this.httpClient.get(this.baseURL + "/" + resource, {observe: "response", headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  }
+}

@@ -1,23 +1,51 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "importHelpers": true,
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "inlineSourceMap": true,
+    "importHelpers": true,
     "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
-      "es2017",
+      "es2018",
       "dom"
     ],
-    "module": "es2015",
-    "baseUrl": "./"
+    "paths": {
+      "shared": [
+        "dist/shared"
+      ],
+      "shared/*": [
+        "dist/shared/*"
+      ],
+      "rxjs": [
+        "./node_modules/rxjs"
+      ],
+      "budget-core": [
+        "dist/budget-core"
+      ],
+      "budget-core/*": [
+        "dist/budget-core/*"
+      ],
+      "planning-core": [
+        "dist/planning-core"
+      ],
+      "planning-core/*": [
+        "dist/planning-core/*"
+      ],
+      "programming-core": [
+        "dist/programming-core"
+      ],
+      "programming-core/*": [
+        "dist/programming-core/*"
+      ]
+    }
   }
 }

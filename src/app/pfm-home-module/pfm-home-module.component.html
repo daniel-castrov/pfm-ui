@@ -1,0 +1,16 @@
+<div class="box">
+    <span class="title">Demo Dialogs and Toast Messages</span>
+    <div class="row">
+        <button type="button" class="btn btn-primary" (click)="displayInfo()">Info</button>
+        <button type="button" class="btn btn-primary" (click)="displayError()">Error</button>
+        <button type="button" class="btn btn-primary" (click)="displayDebug()">Debug</button>
+        <button type="button" class="btn btn-primary" (click)="displayToastInfo()">Toast Info</button>
+        <button type="button" class="btn btn-primary" (click)="displayToastError()">Toast Error</button>
+    </div>
+
+</div>
+<ng-container *ngIf="appModel.userDetails">
+    <div>
+        {{appModel.userDetails | json}}
+    </div>
+</ng-container>

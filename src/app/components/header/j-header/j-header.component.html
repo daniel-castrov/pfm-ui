@@ -1,5 +1,0 @@
-<header-open *ngIf="!isAuthenticated || authUser && !authUser?.currentCommunity"></header-open>
-
-<header-stranger *ngIf="isAuthenticated && !authUser"></header-stranger>
-
-<header-user [authUser]="authUser" *ngIf="authUser"></header-user>

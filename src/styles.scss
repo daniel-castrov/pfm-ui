@@ -1,8 +1,5 @@
 @import 'variables';
 @import '../node_modules/font-awesome/scss/font-awesome.scss';
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import "~ag-grid-community/dist/styles/ag-grid.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -14,8 +11,8 @@ body {
 a,
 a:active,
 a:visited {
-color:  #23527c;
-text-decoration: none;
+  color:  #23527c;
+  text-decoration: none;
 }
 
 .text-primary{
@@ -23,9 +20,9 @@ text-decoration: none;
 }
 
 a:hover {
-opacity: .8;
-color:  #23527c;
-text-decoration: none;
+  opacity: .8;
+  color:  #23527c;
+  text-decoration: none;
 }
 
 // fieldset
@@ -42,7 +39,7 @@ legend {
   margin: -5px;
   padding: 5px;
   width: max-content;
-  }
+}
 
 fieldset {
   display: block;
@@ -75,9 +72,9 @@ hr {
 }
 
 .h5 {
-    font-size: 24px;
-    padding-bottom: 10px;
-    margin: 0;
+  font-size: 24px;
+  padding-bottom: 10px;
+  margin: 0;
 }
 
 .primary-label {
@@ -131,138 +128,6 @@ accordion-group .acordion-icon:hover  {
   border-bottom-left-radius: 4px;
 }
 
-.alert-success-group {
-  padding: 10px;
-  background-color: #d4edda;
-  margin-bottom: 10px;
-  border-radius: 6px;
-}
-
-.alert {
-  color: $black !important;
-  width: 100%;
-  min-width: 450px !important;
-  background-color: $white !important;
-  border-radius: 0 !important;
-  margin-left: -260px !important;
-
-  p {
-     padding-left: 40px;
-     padding-right: 10px;
-  }
-
-  &.alert-success  {
-   border: 2px solid #49a635 !important;
-
-   > .fa {
-       font-size: 24px;
-       color: $white;
-       background-color: #49a635 !important;
-       position: absolute;
-       top: 0;
-       left: 0;
-       display: inline-flex;
-       height: 100%;
-       padding: 10px;
-       min-width: 50px;
-       // vertical-align: middle;
-     }
-
-     > .btn {
-       background-color: #237d10 !important;
-     }
-  }
-
-  &.alert-info {
-   border: 2px solid #de8001 !important;
-
-   > .fa {
-       font-size: 24px;
-       color: $white;
-       background-color: #de8001 !important;
-       position: absolute;
-       top: 0;
-       left: 0;
-       display: inline-flex;
-       height: 100%;
-       padding: 10px;
-       text-align: center;
-       min-width: 50px;
-     }
-
-    > .btn {
-        background-color: #a86101 !important;
-      }
-    }
-
-    &.alert-primary {
-     border: 2px solid #2574cd !important;
-
-     > .fa {
-         font-size: 24px;
-         color: $white;
-         background-color: #2574cd !important;
-         position: absolute;
-         top: 0;
-         left: 0;
-         display: inline-flex;
-         display: inline-flex;
-         height: 100%;
-         padding: 10px;
-         min-width: 50px;
-         text-align: center;
-       }
-
-      > .btn {
-          background-color: #a86101 !important;
-      }
-    }
-
-    &.alert-secondary {
-     border: 2px solid #665b5b !important;
-
-     > .fa {
-         font-size: 24px;
-         color: $white;
-         background-color: #665b5b !important;
-         position: absolute;
-         top: 0;
-         left: 0;
-         display: inline-flex;
-         height: 100%;
-         padding: 10px;
-         min-width: 50px;
-         text-align: center;
-       }
-
-      > .btn {
-          background-color: #a86101 !important;
-      }
-    }
-
-  &.alert-danger {
-   border: 2px solid #ff0000 !important;
-
-   > .fa {
-       font-size: 25px;
-       color: $white;
-       background-color: #ff0000 !important;
-       position: absolute;
-       top: 0;
-       left: 0;
-       display: inline-flex;
-       height: 100%;
-       padding: 10px;
-       padding-left: 18px;
-       min-width: 50px;
-       text-align: center;
-     }
-
-    > .btn {
-      background-color: #b60707 s!important;
-    }
-  }
-}
 
 /* icons */
 
@@ -297,12 +162,12 @@ accordion-group .acordion-icon:hover  {
 }
 
 .btn-group .btn {
-    border-radius: 0;
-    margin-left: -1px;
+  border-radius: 0;
+  margin-left: -1px;
 }
 .btn-group .btn:last-child {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 .btn-group .form-horizontal .btn[type="submit"] {
   border-top-left-radius: 4px;
@@ -362,7 +227,7 @@ accordion-group .acordion-icon:hover  {
 }
 
 .btn-card-header:hover{
-    opacity: .7;
+  opacity: .7;
 }
 
 .btn-card-header > a {
@@ -472,25 +337,25 @@ tab {
     border-bottom: 1px solid #ced4da !important;
   }
   > .nav-tabs .nav-link.active,
-    .nav-tabs .nav-item.show .nav-link {
-      color: #fff;
-      background-color: #616161;
-      border-radius: 0rem;
-      border: none !important;
-      font-weight: 500;
-      border: 1px solid #ddd;
+  .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #616161;
+    border-radius: 0rem;
+    border: none !important;
+    font-weight: 500;
+    border: 1px solid #ddd;
   }
   > .nav-tabs .nav-link,
-    .nav-tabs .nav-item.show .nav-link {
-      color: #616161;
-      background-color: #f1f1f1;
-      border-radius: 0rem;
-      border: none !important;
-      font-weight: 500;
+  .nav-tabs .nav-item.show .nav-link {
+    color: #616161;
+    background-color: #f1f1f1;
+    border-radius: 0rem;
+    border: none !important;
+    font-weight: 500;
   }
 }
 ngb-tabset {
-  
+
   .tab-content {
     padding: 30px 15px;
     width: 100%;
@@ -498,17 +363,17 @@ ngb-tabset {
     border: 1px #ccc solid;
     border-top: none;
     color: #000;
-  }  
+  }
 }
 
 // fieldset tables for form elements
 
 .fieldset-table {
 
- thead {
+  thead {
 
-   margin: 0;
-   padding: 0;
+    margin: 0;
+    padding: 0;
 
     tr {
       margin: 0 5px;
@@ -550,9 +415,9 @@ ngb-tabset {
 }
 
 .ag-header-cell-label {
-   text-align: center !important;
-   flex-direction: row !important;
- }
+  text-align: center !important;
+  flex-direction: row !important;
+}
 .ag-row-odd {
   background: #ccc !important;
 }
@@ -707,31 +572,31 @@ ngb-tabset {
 
   .ag-header-group-cell-no-group,
   .ag-header-group-cell {
-      text-align: center !important;
+    text-align: center !important;
+    background-color: $white !important;
+
+    &.ag-header-group-cell-with-group {
       background-color: $white !important;
-
-      &.ag-header-group-cell-with-group {
-        background-color: $white !important;
-      }
-
-      .ag-header-group-text {
-          color: $black !important;
-          text-align: center !important;
-      }
     }
 
     .ag-header-group-text {
-        color: $black !important;
-        text-align: center !important;
-        font-style: italic;
+      color: $black !important;
+      text-align: center !important;
     }
+  }
+
+  .ag-header-group-text {
+    color: $black !important;
+    text-align: center !important;
+    font-style: italic;
+  }
 }
 
 // hack for dropdown width in R4-A ag-grid 
 
 .r4a-grid {
   .ag-theme-balham .ag-rich-select .ag-rich-select-list {
-   width: 400px;
+    width: 400px;
   }
 }
 
@@ -740,9 +605,9 @@ ngb-tabset {
 
 .actuals-table {
 
-   .ag-header-group-cell-label span {
-     text-align: center;
-     width: 100%;
+  .ag-header-group-cell-label span {
+    text-align: center;
+    width: 100%;
   }
 }
 
@@ -790,7 +655,7 @@ ngb-tabset {
 // fix for extra row space under Set TOA for CBDP Community ($K) table
 
 .set-toa {
- .ag-root-wrapper-body {
+  .ag-root-wrapper-body {
     height: 89px;
   }
 }
@@ -868,7 +733,7 @@ ngb-tabset {
 
   .borderBottomBold,
   .borderBottomBold td {
-      border-bottom: 3px solid #000;
+    border-bottom: 3px solid #000;
   }
 
   .borderRight,
@@ -948,8 +813,8 @@ ngb-tabset {
   }
 
   .thin-col {
-   width: 30px;
-   text-align: center;
+    width: 30px;
+    text-align: center;
   }
 
 }
@@ -969,29 +834,29 @@ button {
 
 input[type=radio] {
   -ms-transform: scale(1) !important;
-   -webkit-transform: scale(1) !important;
-   transform: scale(1) !important;
+  -webkit-transform: scale(1) !important;
+  transform: scale(1) !important;
 }
 
 
 input[type=checkbox] {
   -ms-transform: scale(1.2) !important;
-   -webkit-transform: scale(1.2) !important;
-   transform: scale(1.2) !important;
+  -webkit-transform: scale(1.2) !important;
+  transform: scale(1.2) !important;
 }
 
 @supports (zoom:1) {
-	input[type="radio"],
+  input[type="radio"],
   input[type=checkbox]{
-	zoom: 1;
-	}
+    zoom: 1;
+  }
 }
 
 @supports not (zoom:1) {
-	input[type="radio"],
+  input[type="radio"],
   input[type=checkbox]{
-		transform: scale(1);
-	}
+    transform: scale(1);
+  }
 }
 h3.tooltip-h3 {
   font-size: 1rem;
@@ -1010,3 +875,5 @@ h3.tooltip-h3 {
 .single-row {
   display: flex;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

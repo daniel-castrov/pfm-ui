@@ -1,1 +1,26 @@
-<router-outlet></router-outlet>
+<pfm-dialog-manager></pfm-dialog-manager>
+<app-app-header></app-app-header>
+<mat-sidenav-container class="sidenav_container">
+    <mat-sidenav #leftSidenav mode="side" opened>
+        <div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'">
+            <div fxLayout="column" fxLayoutGap="10px">
+                <pfm-menu-bar [isUserSignedIn]="appModel.isUserSignedIn" [role]="appModel.userDetails.userRole" [elevatedBoolean]="appModel.elevated" [linkText]="sideNavState"></pfm-menu-bar>
+                <div fxLayout="row" fxLayoutAlign="end center" class="side-nav-menu">
+                    <button mat-icon-button (click)="onSidenavToggle()" >
+                        <mat-icon *ngIf="sideNavState" >
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        </mat-icon>
+                        <mat-icon *ngIf="!sideNavState">
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content [@onMainContentChange]="sideNavState ? 'open': 'close'">
+        <div class="main_content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
