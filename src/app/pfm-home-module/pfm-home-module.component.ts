@@ -5,7 +5,7 @@ import { DialogService } from '../pfm-coreui/services/dialog.service';
 @Component({
   selector: 'app-pfm-home-module',
   templateUrl: './pfm-home-module.component.html',
-  styleUrls: ['./pfm-home-module.component.css']
+  styleUrls: ['./pfm-home-module.component.scss']
 })
 export class PfmHomeModuleComponent implements OnInit {
 
