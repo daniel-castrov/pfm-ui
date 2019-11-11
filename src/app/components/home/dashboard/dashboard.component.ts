@@ -14,6 +14,7 @@ import {DemoWidgetTwoComponent} from "./widgets/demo-widget-two/demo-widget-two.
 import {DemoWidgetThreeComponent} from "./widgets/demo-widget-three/demo-widget-three.component";
 import {DemoWidgetFourComponent} from "./widgets/demo-widget-four/demo-widget-four.component";
 import {DemoWidgetPOMPhaseFundingComponent} from "./widgets/demo-widget-pom-phase-funding/demo-widget-pom-phase-funding.component";
+import {DemoWidgetPrStatusComponent} from "./widgets/demo-widget-pr-status/demo-widget-pr-status.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -81,6 +82,9 @@ export class DashboardComponent implements AfterViewInit{
     }
     if(id === 'asdf5'){
       return DemoWidgetPOMPhaseFundingComponent;
+    }
+    if(id === 'asdf6'){
+      return DemoWidgetPrStatusComponent;
     }
     //TODO - should do some kind of error condition here, or ?  This mechanism should be revisited.
     return null;

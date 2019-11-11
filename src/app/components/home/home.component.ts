@@ -33,16 +33,17 @@ export class HomeComponent {
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private rolesvc: RolesPermissionsService) {
-
     this.rolesvc.getRoles().subscribe(data => {
       if(data.result.includes('POM_Manager') || data.result.includes("Funds_Requstor") || data.result.includes("Budget_Manager")){
         this.widgetList.push({name:'Funding by BA for POM Phase', selected: false, id: 'asdf5'});
+      }
+      if(data.result.includes('POM_Manager')){
+        this.widgetList.push({name:'PR Status', selected: false, id: 'asdf6'});
       }
       this.form = this.formBuilder.group({
         widgets: this.buildWidgets()
       });    
     });
-    
   }
 
   get widgets() {
