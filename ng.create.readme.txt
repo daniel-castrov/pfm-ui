@@ -1,0 +1,20 @@
+#
+##use this pattern to create new components for the HomeModule
+#
+ng g component pfm-home-module/welcome-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-welcome-pod --style=scss
+ng g component pfm-home-module/latest-news-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-latest-news-pod --style=scss
+ng g component pfm-home-module/baseline-breakdown-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-baseline-breakdown-pod --style=scss
+ng g component pfm-home-module/my-todo-list-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-my-todo-list-pod --style=scss
+ng g component pfm-home-module/my-current-activity-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-my-current-activity-pod --style=scss
+ng g component pfm-home-module/dashboard-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-dashboard-pod --style=scss
+ng g component pfm-home-module/dialog-demo-pod --module pfm-home-module/pfm-home-module.module --export=false --prefix=pfm --selector=pfm-dialog-demo-pod --style=scss
+
+#
+##use this pattern to create new (none-lazy-loaded:that-does-not-have-routes) modules for the PFM Application
+#
+ng g module pfm-dashabord-module --route=false
+ng g component pfm-dashabord-module/dashboard --module pfm-dashabord-module/pfm-dashabord-module.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-dashboard --style=scss
+ng g component pfm-dashabord-module/widgets/demo-widget-one --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-one --style=scss
+ng g component pfm-dashabord-module/widgets/demo-widget-two --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-two --style=scss
+ng g component pfm-dashabord-module/widgets/demo-widget-three --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-three --style=scss
+ng g component pfm-dashabord-module/widgets/demo-widget-four --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-four --style=scss

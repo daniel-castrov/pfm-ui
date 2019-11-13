@@ -1,296 +1,30 @@
-<div class="box">
-    <span class="title">Demo Dialogs and Toast Messages</span>
-    <div class="row">
-        <button type="button" class="btn btn-primary" (click)="displayInfo()">Info</button>
-        <button type="button" class="btn btn-primary" (click)="displayError()">Error</button>
-        <button type="button" class="btn btn-primary" (click)="displayDebug()">Debug</button>
-        <button type="button" class="btn btn-primary" (click)="displayToastInfo()">Toast Info</button>
-        <button type="button" class="btn btn-primary" (click)="displayToastError()">Toast Error</button>
+<div class="row">
+    <div class="col-12">
+        <pfm-dialog-demo-pod></pfm-dialog-demo-pod>
     </div>
 </div>
 
 <div class="row">
     <div class="col-12">
-        <div class="card parent-card">
-            <div class="header">
-                <h4 class="title d-inline">Welcome back
-                    <strong> {{ appModel.userDetails.fullName }}</strong>
-                </h4>
-                <span class="d-inline pull-right user-admin-controls" title="User Admin">
-                    <a routerLink="/user/self"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
-                  </span>
-            </div>
-        </div>
+        <pfm-welcome-pod [fullName]="appModel.userDetails.fullName"></pfm-welcome-pod>
     </div>
 </div>
 
 <div class="row">
     <div class="col-12">
-        <div class="card parent-card">
-            <div class="header">
-                <h5 class="title d-inline"> Latest News
-                </h5>
-                <span class="d-inline pull-right user-admin-controls" title="Build Tool">
-                    <i class="fa fa-gavel" aria-hidden="true"></i>
-                  </span>
-            </div>
-            <div class="row no-gutters content">
-                <div class="col-5">
-                    <ul>
-                        <li>
-                        <span class="mr-2">
-                            <i class="fa fa-star pink" aria-hidden="true"></i>
-                        </span>
-                            <label>
-                                Deadline for Budget September 30, 2020
-                            </label>
-                        </li>
-                        <li>
-                        <span class="mr-2">
-                            <i class="fa fa-star green" aria-hidden="true"></i>
-                        </span>
-                            <label>
-                                Memorial Day weekend shut down - PFM will be inaccessible
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6">
-                    <ul>
-                        <li>
-                          <span class="mr-2">
-                              <i class="fa fa-star blue" aria-hidden="true"></i>
-                          </span>
-                            <label>
-                                Deadline for Execution Phase September 30, 2020
-                            </label>
-                        </li>
-                        <li>
-                          <span class="mr-2">
-                              <i class="fa fa-star indigo" aria-hidden="true"></i>
-                          </span>
-                            <label>
-                                System Maintenance on June 30th 21:00 EDT
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-history mr-1"></i> Updated 3 minutes ago
-                </div>
-            </div>
-        </div>
+        <pfm-latest-news-pod></pfm-latest-news-pod>
     </div>
 </div>
 
 <div class="row">
     <div class="col-4">
-        <div class="card parent-card">
-            <div class="header">
-                <h5 class="title"> Baseline BA/Blin Breakdown for 2019</h5>
-            </div>
-            <div class="content">
-                <!--<google-chart [data]='pechartdata'></google-chart>-->
-            </div>
-            <div class="footer">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-check mr-1" aria-hidden="true"></i> Data information certified
-                </div>
-            </div>
-        </div>
+        <pfm-baseline-breakdown-pod></pfm-baseline-breakdown-pod>
     </div>
     <div class="col-4">
-        <div class="card parent-card">
-            <div class="header">
-                <h5 class="title"> My To Do List
-                </h5>
-            </div>
-            <div class="content">
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div class="checkbox">
-                                <input id="checkbox1" type="checkbox">
-                                <label for="checkbox1"></label>
-                            </div>
-                        </td>
-                        <td>Approve/Deny POM Request
-                            <div class="status red">
-                                Pending
-                            </div>
-                        </td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="checkbox">
-                                <input id="checkbox2" type="checkbox" checked>
-                                <label for="checkbox2">
-                                </label>
-                            </div>
-                        </td>
-                        <td>
-                            Update User Roles
-                            <div class="status green">
-                                In Progress
-                            </div>
-                        </td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="checkbox">
-                                <input id="checkbox3" type="checkbox" checked>
-                                <label for="checkbox3"></label>
-                            </div>
-                        </td>
-                        <td>
-                            Update Community Roles
-                            <div class="status red">
-                                Pending
-                            </div>
-                        </td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="checkbox">
-                                <input id="checkbox4" type="checkbox">
-                                <label for="checkbox4">
-                                </label>
-                            </div>
-                        </td>
-                        <td> Review Open POM Sessions
-                            <div class="status green">
-                                In Progress
-                            </div>
-                        </td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="checkbox">
-                                <input id="checkbox5" type="checkbox" >
-                                <label for="checkbox5"></label>
-                            </div>
-                        </td>
-                        <td>
-                            Approve Budget Phase
-                            <div class="status green">
-                                In Progress
-                            </div>
-                        </td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task" class="btn text-info btn-simple btn-xs">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn text-danger btn-simple btn-xs">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="footer">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-history mr-1"></i> Updated 2 days ago
-                </div>
-            </div>
-        </div>
+        <pfm-my-todo-list-pod></pfm-my-todo-list-pod>
     </div>
     <div class="col-4">
-        <div class="card parent-card">
-            <div class="header">
-                <h5 class="title"> My Current Activity
-                </h5>
-            </div>
-            <div class="content">
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <td>Saved Budget Phase
-                            <div class="time-stamp">
-                                Updated:  7/10/2019 2:30 pm
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Saved POM Session
-                            <div class="time-stamp">
-                                Updated:  7/9/2019 2:30 pm
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Update Community Roles
-                            <div class="time-stamp">
-                                Updated:  7/8/2019 12:30 pm
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            User Role Updates
-                            <div class="time-stamp">
-                                Updated:  7/6/2019 9:30 am
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Closed POM Session
-                            <div class="time-stamp">
-                                Updated:  7/3/2019 7:30 am
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="footer">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-history mr-1"></i> Updated 10 minutes ago
-                </div>
-            </div>
-        </div>
+        <pfm-my-current-activity-pod></pfm-my-current-activity-pod>
     </div>
 </div>
 

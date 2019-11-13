@@ -1,0 +1,280 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$medium-grey: #7b8389;
+$dark-grey: #777777;
+$color-black: #000;
+$charcoal: #333;
+
+$assigned-color: #6FB567;
+$outstanding-color: #E5AE60;
+$completed-color: #4A77B1;
+
+.bg-assigned {
+  background-color: $assigned-color;
+}
+.bg-outstanding {
+  background-color: $outstanding-color;
+}
+.bg-completed {
+  background-color: $completed-color;
+}
+.border-assigned {
+  border-color: $assigned-color;
+}
+.border-outstanding {
+  border-color: $outstanding-color;
+}
+.border-completed {
+  border-color: $completed-color;
+}
+.color-assigned {
+  color: $assigned-color;
+}
+.color-outstanding {
+  color: $outstanding-color;
+}
+.color-completed {
+  color: $completed-color;
+}
+
+
+label {
+  color: $dark-grey;
+}
+
+.parent-card {
+  border-radius: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 0 0 1px rgba(63,63,68,.1);
+  padding: 10px;
+  border: none;
+
+  .header {
+    padding: 10px 10px 0;
+    font-weight: 300;
+    padding: 5px;
+  }
+
+  .title {
+    margin: 0;
+    color: $dark-grey;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .content {
+    padding: 5px;
+    font-size: 14px;
+    color: $dark-grey;
+    max-height: 390px;
+    overflow-x: auto;
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: $medium-grey;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: $medium-grey;
+    }
+  }
+
+  .user-admin-controls {
+    .fa {
+      color: $medium-grey;
+      font-size: 16px;
+      line-height: 16px;
+      padding: 2px;
+      &:hover {
+        color: $dark-grey;
+      }
+    }
+  }
+
+  ul {
+    list-style: none !important;
+    width: 90%;
+    margin: 0;
+    margin: 0 0 0 -20px;
+
+    li {
+      list-style: none !important;
+      text-align: left;
+      margin: 0 0 0 -20px;
+      color: $dark-grey;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $white;
+      }
+    }
+  }
+
+  .footer{
+    padding: 0;
+    background-color: transparent;
+    font-size: 12px;
+    line-height: 20px;
+
+    .legend{
+      padding: 5px 0;
+    }
+
+    hr{
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .stats{
+    color: #a9a9a9;
+  }
+
+  .footer div {
+    display: inline-block;
+  }
+
+  .author{
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .author i{
+    font-size: 1rem;;
+  }
+
+  .framework {
+    padding: 0 5px;
+    list-style: none;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+
+    li:first-child {
+      font-weight:700;
+    }
+
+    li:last-child {
+      border-bottom: 1px solid $light-grey;
+    }
+  }
+
+  .table {
+
+    .radio,
+    .checkbox{
+      position: relative;
+      height: 40px;
+      display: block;
+      width: 0;
+      color: $dark-grey;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+
+      .icons{
+        left: 5px;
+      }
+    }
+
+    .text-info {
+      color: $primary-color !important;
+      opacity: .8;
+      &:hover {
+        opacity: 1;
+      }
+    }
+    .text-danger {
+      color: red;
+      opacity: .8;
+      &:hover {
+        opacity: 1;
+      }
+
+      .fa {
+        font-size: 14px;
+        margin-bottom: 3px;
+
+      }
+    }
+    > thead > tr > th,
+    > tbody > tr > th,
+    > tfoot > tr > th,
+    > thead > tr > td,
+    > tbody > tr > td,
+    > tfoot > tr > td{
+      padding: 12px 8px;
+      vertical-align: middle;
+    }
+
+    > thead > tr > th{
+      font-size: 12px;
+      font-weight: normal;
+      padding-bottom: 5px;
+    }
+
+    .td-actions .btn {
+      opacity: .7;
+      border-radius: 20px !important;
+
+      &.btn-xs{
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+    }
+    .td-actions{
+      min-width: 90px;
+    }
+
+    > tbody > tr {
+      position: relative;
+
+      &:hover{
+        .td-actions .btn {
+          opacity: 1;
+        }
+      }
+
+      td {
+        border-bottom: #f4f5f7;
+        -webkit-font-smoothing: antialiased;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .status {
+    font-size: 12px;
+
+    &.green {
+      color: #0d7a16;
+    }
+
+    &.red {
+      color: #fb3f4b;
+    }
+  }
+
+  .time-stamp {
+    font-size: 12px;
+    margin-left: 20px;
+    font-style: italic;
+    color: #a9a9a9;
+  }
+}
+
