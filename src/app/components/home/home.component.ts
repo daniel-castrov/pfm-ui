@@ -7,11 +7,8 @@ import {
   ViewChildren,
   ViewContainerRef
 } from '@angular/core';
-import { JHeaderComponent } from '../header/j-header/j-header.component';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import {DashboardComponent} from "./dashboard/dashboard.component";
-import { RolesPermissionsService } from '../../generated';
 
 @Component({
   selector: 'app-home',
@@ -30,10 +27,8 @@ export class HomeComponent {
     ];
 
   constructor(
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private rolesvc: RolesPermissionsService) {
-    this.rolesvc.getRoles().subscribe(data => {
+    private formBuilder: FormBuilder) {
+    /*this.rolesvc.getRoles().subscribe(data => {
       if(data.result.includes('POM_Manager') || data.result.includes("Funds_Requstor") || data.result.includes("Budget_Manager")){
         this.widgetList.push({name:'Funding by BA for POM Phase', selected: false, id: 'asdf5'});
       }
@@ -43,7 +38,7 @@ export class HomeComponent {
       this.form = this.formBuilder.group({
         widgets: this.buildWidgets()
       });    
-    });
+    });*/
   }
 
   get widgets() {
@@ -57,10 +52,6 @@ export class HomeComponent {
     return this.formBuilder.array(arr);
   }
 
-  @ViewChild(JHeaderComponent) header: JHeaderComponent;
-
-  @ViewChild('dashboard') dashboard: DashboardComponent;
-
 
   showControl = 'none';
   toggleControls(theControl) {
@@ -73,7 +64,7 @@ export class HomeComponent {
   }
 
   openDashboardModal(content) {
-    this.modalReference = this.modalService.open(content, { size: 'lg' });
+    //this.modalReference = this.modalService.open(content, { size: 'lg' });
   }
 
   submit(value){
@@ -90,9 +81,7 @@ export class HomeComponent {
     //console.log(f);
     //TODO - something like this may be best handled via emitting an event (or some other mechanism).
 
-    this.dashboard.addComponents(f.widgets);
-
-    this.modalReference.close();
+    //this.modalReference.close();
   }
 
 }

@@ -420,48 +420,8 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body"></div>
 
-    <form [formGroup]="form" (ngSubmit)="submit(form.value)">
-      <div *ngFor="let s of widgets.controls; let j=index" style="margin: 20px auto;">
-
-        <div class="row" style="margin: 20px auto;">
-          <div class="column" style="width: 10%;">
-            <input type="checkbox" [formControl]="s"/>
-          </div>
-          <div class="column" style="width: 20%;">
-            {{widgetList[j].name}}
-          </div>
-          <div class="column" style="width: 70%;">
-
-            <!-- TODO - find a cleaner way to iterate through the widgets-->
-            <div *ngIf="j===0">
-              <app-demo-widget-one dragDisabled="true"></app-demo-widget-one>
-            </div>
-            <div *ngIf="j===1">
-              <app-demo-widget-two dragDisabled="true"></app-demo-widget-two>
-            </div>
-            <div *ngIf="j===2">
-              <app-demo-widget-three dragDisabled="true"></app-demo-widget-three>
-            </div>
-            <div *ngIf="j===3">
-              <app-demo-widget-four dragDisabled="true"></app-demo-widget-four>
-            </div>
-            <div *ngIf="j===4">
-              <app-demo-widget-pom-phase-funding dragDisabled="true"></app-demo-widget-pom-phase-funding>
-            </div>
-            <div *ngIf="j===5">
-              <app-demo-widget-pr-status dragDisabled="true"></app-demo-widget-pr-status>
-            </div>
-
-            </div>
-        </div>
-
-      </div>
-      <button type="submit">
-        Submit
-      </button>
-    </form>
 
 
   </div>
