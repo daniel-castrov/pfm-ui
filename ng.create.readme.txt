@@ -12,9 +12,9 @@ ng g component pfm-home-module/dialog-demo-pod --module pfm-home-module/pfm-home
 #
 ##use this pattern to create new (none-lazy-loaded:that-does-not-have-routes) modules for the PFM Application
 #
-ng g module pfm-dashabord-module --route=false
-ng g component pfm-dashabord-module/dashboard --module pfm-dashabord-module/pfm-dashabord-module.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-dashboard --style=scss
-ng g component pfm-dashabord-module/widgets/demo-widget-one --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-one --style=scss
-ng g component pfm-dashabord-module/widgets/demo-widget-two --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-two --style=scss
-ng g component pfm-dashabord-module/widgets/demo-widget-three --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-three --style=scss
-ng g component pfm-dashabord-module/widgets/demo-widget-four --module pfm-dashabord-module/pfm-dashabord-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-four --style=scss
+ng g module pfm-dashboard-module --route=false
+ng g component pfm-dashboard-module/dashboard --module pfm-dashboard-module/pfm-dashboard-module.module --entryComponent=true --export=false --prefix=pfm --selector=pfm-dashboard --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-one --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-one --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-two --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-two --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-three --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-three --style=scss
+ng g component pfm-dashboard-module/widgets/demo-widget-four --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-four --style=scss
