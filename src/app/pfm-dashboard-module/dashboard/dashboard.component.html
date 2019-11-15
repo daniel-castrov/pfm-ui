@@ -1,6 +1,7 @@
 <div class="dashboard-container">
 
     <div class="dashboard-left" cdkDropList #widgetDisplayList="cdkDropList" [cdkDropListData]="widgetComponentsList" (cdkDropListDropped)="drop($event)">
+        <span>Drag Widgets Here</span>
         <div class="example-box" *ngFor="let item of widgetComponentsList">
             <ng-container [ngSwitch]="item">
                 <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
@@ -8,7 +9,6 @@
                 <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'">></app-demo-widget-mission-funding-priority>
                 <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'">></app-demo-widget-mission-funding-money>
             </ng-container>
-
         </div>
     </div>
 
