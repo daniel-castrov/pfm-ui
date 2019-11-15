@@ -24,7 +24,6 @@ import { MaterialModule } from './material.module';
   declarations: [AppComponent],
   imports: [
     HttpClientModule,
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserTransferStateModule,
     AppRoutingModule,
     MaterialModule,

@@ -11,13 +11,15 @@ import { MyTodoListPodComponent } from './my-todo-list-pod/my-todo-list-pod.comp
 import { MyCurrentActivityPodComponent } from './my-current-activity-pod/my-current-activity-pod.component';
 import { DialogDemoPodComponent } from './dialog-demo-pod/dialog-demo-pod.component';
 import { DashboardPodComponent } from './dashboard-pod/dashboard-pod.component';
+import { PfmDashabordModuleModule } from '../pfm-dashboard-module/pfm-dashboard-module.module';
 
 @NgModule({
   declarations: [PfmHomeModuleComponent, WelcomePodComponent, LatestNewsPodComponent, BaselineBreakdownPodComponent, MyTodoListPodComponent, MyCurrentActivityPodComponent, DialogDemoPodComponent, DashboardPodComponent],
   imports: [
     CommonModule,
     PfmHomeModuleRoutingModule,
-    PfmCoreuiModule
+    PfmCoreuiModule,
+    PfmDashabordModuleModule
   ]
 })
 export class PfmHomeModuleModule { }

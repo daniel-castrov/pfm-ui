@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DemoWidgetOneComponent } from './widgets/demo-widget-one/demo-widget-one.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DemoWidgetTwoComponent } from './widgets/demo-widget-two/demo-widget-two.component';
-import { DemoWidgetThreeComponent } from './widgets/demo-widget-three/demo-widget-three.component';
-import { DemoWidgetFourComponent } from './widgets/demo-widget-four/demo-widget-four.component';
 import { DemoWidgetMissionFundingPriorityComponent } from './widgets/demo-widget-mission-funding-priority/demo-widget-mission-funding-priority.component';
 import { DemoWidgetMissionFundingMoneyComponent } from './widgets/demo-widget-mission-funding-money/demo-widget-mission-funding-money.component';
-
-
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { MaterialModule } from '../material.module';
+import { DemoWidgetPOMPhaseFundingComponent } from './widgets/demo-widget-pom-phase-funding/demo-widget-pom-phase-funding.component';
+import { DemoWidgetPrStatusComponent } from './widgets/demo-widget-pr-status/demo-widget-pr-status.component';
 
 @NgModule({
-  declarations: [DemoWidgetOneComponent, DashboardComponent, DemoWidgetTwoComponent, DemoWidgetThreeComponent, DemoWidgetFourComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],
+  declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
   imports: [
-    CommonModule
+    CommonModule, Ng2GoogleChartsModule, MaterialModule
   ],
-  entryComponents: [DashboardComponent]
+  exports: [DashboardComponent],
+  entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent]
 })
 export class PfmDashabordModuleModule { }
