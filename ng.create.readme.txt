@@ -18,3 +18,8 @@ ng g component pfm-dashboard-module/widgets/demo-widget-one --module pfm-dashboa
 ng g component pfm-dashboard-module/widgets/demo-widget-two --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-two --style=scss
 ng g component pfm-dashboard-module/widgets/demo-widget-three --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-three --style=scss
 ng g component pfm-dashboard-module/widgets/demo-widget-four --module pfm-dashboard-module/pfm-dashboard-module.module --export=false --prefix=pfm --selector=pfm-dashboard-widget-four --style=scss
+
+#
+##use this pattern to add now core ui components to PFM
+#
+ng g component pfm-coreui/card --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-card --style=scss

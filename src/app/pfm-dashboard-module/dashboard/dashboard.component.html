@@ -1,22 +1,100 @@
-<div class="dashboard-container">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'assigned'" [type]="'assigned'" [cardTitle]="'0'" [cardText]="'Assigned to you'" [cardActionText]="'View details'"></pfm-card>
+        </div>
+        <div class="col-sm-4">
+            <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'outstanding'" [type]="'outstanding'" [cardTitle]="'0'" [cardText]="'Your outstanding requests'" [cardActionText]="'View details'"></pfm-card>
+        </div>
+        <div class="col-sm-4">
+            <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'completed'" [type]="'completed'" [cardTitle]="'0'" [cardText]="'Completed (Past 30 Days)'" [cardActionText]="'View details'"></pfm-card>
+        </div>
+    </div>
+    <ng-container *ngIf="selectedCardType === 'assigned'">
+        <div class="card border-assigned">
+            <div class="card-body">
+                <h5 class="card-title">Assigned to you:</h5>
+                <p class="card-text">These pop-ups can be done with a nicer, animated style via css tweaks</p>
+                <p class="card-text">We can also change the 'arrow' icon above to point downward when this is open.</p>
+                <p class="card-text">We can also make them lay over other components or push them down like this.</p>
+                <p class="card-text">We can also consider making these open a modal instead.</p>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="selectedCardType === 'outstanding'">
+        <div class="card border-outstanding">
+            <div class="card-body">
+                <h5 class="card-title">Your outstanding requests:</h5>
+                <p class="card-text">Blah</p>
+                <p class="card-text">Blah</p>
+                <p class="card-text">Blah</p>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="selectedCardType === 'completed'">
+        <div class="card border-completed">
+            <div class="card-body">
+                <h5 class="card-title">Completed (Past 30 Days):</h5>
+                <p class="card-text">Blah</p>
+                <p class="card-text">Blah</p>
+                <p class="card-text">Blah</p>
+            </div>
+        </div>
+    </ng-container>
+</div>
 
-    <div class="dashboard-left" cdkDropList #widgetDisplayList="cdkDropList" [cdkDropListData]="widgetComponentsList" (cdkDropListDropped)="drop($event)">
-        <span>Drag Widgets Here</span>
-        <div class="example-box" *ngFor="let item of widgetComponentsList">
-            <ng-container [ngSwitch]="item">
-                <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
-                <app-demo-widget-pom-phase-funding *ngSwitchCase="'POM Phase Funding'">></app-demo-widget-pom-phase-funding>
-                <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'">></app-demo-widget-mission-funding-priority>
-                <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'">></app-demo-widget-mission-funding-money>
+<div class="dashboard-container">
+    <div class="dashboard-left">
+        <div class="example-box">
+            <ng-container *ngFor="let widget of widgetList">
+                <ng-container *ngIf="widget.selected">
+                    <ng-container [ngSwitch]="widget.title">
+                        <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
+                        <app-demo-widget-pom-phase-funding *ngSwitchCase="'POM Phase Funding'">></app-demo-widget-pom-phase-funding>
+                        <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'">></app-demo-widget-mission-funding-priority>
+                        <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'">></app-demo-widget-mission-funding-money>
+                    </ng-container>
+                </ng-container>
             </ng-container>
         </div>
     </div>
+</div>
 
-    <div class="dashboard-rigth">
-        <h2>Widgets</h2>
-        <div cdkDropList [cdkDropListData]="widgetList" [cdkDropListConnectedTo]="[widgetDisplayList]" class="example-list">
-            <div class="example-box" *ngFor="let item of widgetList" cdkDrag>
-                {{item}}
+
+<div class="modal" tabindex="-1" role="dialog" *ngIf="showDialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Available Widgets:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onDialogClose()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div style="margin: 20px auto;">
+                        <div class="row" style="margin: 20px auto;" *ngFor="let widget of widgetList">
+                            <div class="column" style="width: 10%;">
+                                <input [name]="widget.id" type="checkbox" [(ngModel)]="widget.selected"/>
+                            </div>
+                            <div class="column" style="width: 20%;">
+                                {{widget.title}}
+                            </div>
+                            <div class="column" style="width: 70%;">
+                                <ng-container [ngSwitch]="widget.title">
+                                    <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
+                                    <app-demo-widget-pom-phase-funding *ngSwitchCase="'POM Phase Funding'"></app-demo-widget-pom-phase-funding>
+                                    <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'"></app-demo-widget-mission-funding-priority>
+                                    <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'"></app-demo-widget-mission-funding-money>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-primary" (click)="onDialogClose()">Save changes</button>-->
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDialogClose()">Done</button>
             </div>
         </div>
     </div>

@@ -8,12 +8,13 @@ import { MaterialModule } from '../material.module';
 import { BusyComponent } from './busy/busy.component';
 import { SharedModule } from '../../../projects/shared/src/lib/shared.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
-  declarations: [AppHeaderComponent, MenuBarComponent, DialogManagerComponent, BusyComponent],
+  declarations: [AppHeaderComponent, MenuBarComponent, DialogManagerComponent, BusyComponent, CardComponent],
   imports: [
     CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, SharedModule
   ],
-  exports: [AppHeaderComponent, MenuBarComponent, DialogManagerComponent, BusyComponent]
+  exports: [AppHeaderComponent, MenuBarComponent, DialogManagerComponent, BusyComponent, CardComponent]
 })
 export class PfmCoreuiModule { }

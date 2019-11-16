@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardPodComponent implements OnInit {
 
+  showDialog:boolean;
+
   constructor() { }
 
   ngOnInit() {

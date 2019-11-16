@@ -1,4 +1,14 @@
+.modal{
+  display: block;
+}
+.modal-content{
+  width: 800px;
+}
 
+.modal-body{
+  height: 600px;
+  overflow-y: scroll;
+}
 
 .dashboard-container{
   margin: 0 25px 25px 0;
@@ -13,6 +23,7 @@
   border-width: 2px;
   padding: 12px;
   margin: 20px;
+  height: 600px;
 }
 
 .dashboard-right{

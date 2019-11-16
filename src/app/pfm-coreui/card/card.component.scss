@@ -1,0 +1,31 @@
+$assigned-color: #6FB567;
+$outstanding-color: #E5AE60;
+$completed-color: #4A77B1;
+
+.bg-assigned {
+  background-color: $assigned-color;
+}
+.bg-outstanding {
+  background-color: $outstanding-color;
+}
+.bg-completed {
+  background-color: $completed-color;
+}
+.border-assigned {
+  border-color: $assigned-color;
+}
+.border-outstanding {
+  border-color: $outstanding-color;
+}
+.border-completed {
+  border-color: $completed-color;
+}
+.color-assigned {
+  color: $assigned-color;
+}
+.color-outstanding {
+  color: $outstanding-color;
+}
+.color-completed {
+  color: $completed-color;
+}
