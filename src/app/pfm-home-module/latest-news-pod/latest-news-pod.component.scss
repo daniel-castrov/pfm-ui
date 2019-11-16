@@ -13,6 +13,9 @@ $assigned-color: #6FB567;
 $outstanding-color: #E5AE60;
 $completed-color: #4A77B1;
 
+.fa:hover{
+  cursor: pointer;
+}
 .bg-assigned {
   background-color: $assigned-color;
 }
