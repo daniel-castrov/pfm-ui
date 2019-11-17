@@ -23,3 +23,5 @@ ng g component pfm-dashboard-module/widgets/demo-widget-four --module pfm-dashbo
 ##use this pattern to add now core ui components to PFM
 #
 ng g component pfm-coreui/card --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-card --style=scss
+
+

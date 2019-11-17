@@ -1,4 +1,4 @@
-<div class="container">
+<div class="ccontainer column">
     <div class="row">
         <div class="col-sm-4">
             <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'assigned'" [type]="'assigned'" [cardTitle]="'0'" [cardText]="'Assigned to you'" [cardActionText]="'View details'"></pfm-card>
@@ -99,3 +99,5 @@
         </div>
     </div>
 </div>
+
+<pfm-busy [busy]="busy"></pfm-busy>

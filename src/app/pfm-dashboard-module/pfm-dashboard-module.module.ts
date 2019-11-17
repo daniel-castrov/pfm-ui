@@ -9,6 +9,8 @@ import { DemoWidgetPOMPhaseFundingComponent } from './widgets/demo-widget-pom-ph
 import { DemoWidgetPrStatusComponent } from './widgets/demo-widget-pr-status/demo-widget-pr-status.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { FormsModule } from '@angular/forms';
+import { DashboardService } from './services/dashboard.service';
+import { DashboardMockService } from './services/dashboard.mock.service';
 
 @NgModule({
   declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
@@ -16,6 +18,7 @@ import { FormsModule } from '@angular/forms';
     CommonModule, FormsModule, Ng2GoogleChartsModule, MaterialModule, PfmCoreuiModule
   ],
   exports: [DashboardComponent],
-  entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent]
+  entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],
+  providers: [DashboardService, DashboardMockService]//TODO - see notes in DashboardMockService
 })
 export class PfmDashabordModuleModule { }
