@@ -6,15 +6,11 @@ import { PfmHomeModuleComponent } from './pfm-home-module.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { WelcomePodComponent } from './welcome-pod/welcome-pod.component';
 import { LatestNewsPodComponent } from './latest-news-pod/latest-news-pod.component';
-import { BaselineBreakdownPodComponent } from './baseline-breakdown-pod/baseline-breakdown-pod.component';
-import { MyTodoListPodComponent } from './my-todo-list-pod/my-todo-list-pod.component';
-import { MyCurrentActivityPodComponent } from './my-current-activity-pod/my-current-activity-pod.component';
-import { DialogDemoPodComponent } from './dialog-demo-pod/dialog-demo-pod.component';
 import { DashboardPodComponent } from './dashboard-pod/dashboard-pod.component';
 import { PfmDashabordModuleModule } from '../pfm-dashboard-module/pfm-dashboard-module.module';
 
 @NgModule({
-  declarations: [PfmHomeModuleComponent, WelcomePodComponent, LatestNewsPodComponent, BaselineBreakdownPodComponent, MyTodoListPodComponent, MyCurrentActivityPodComponent, DialogDemoPodComponent, DashboardPodComponent],
+  declarations: [PfmHomeModuleComponent, WelcomePodComponent, LatestNewsPodComponent, DashboardPodComponent],
   imports: [
     CommonModule,
     PfmHomeModuleRoutingModule,
