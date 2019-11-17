@@ -8,14 +8,19 @@ import { WelcomePodComponent } from './welcome-pod/welcome-pod.component';
 import { LatestNewsPodComponent } from './latest-news-pod/latest-news-pod.component';
 import { DashboardPodComponent } from './dashboard-pod/dashboard-pod.component';
 import { PfmDashabordModuleModule } from '../pfm-dashboard-module/pfm-dashboard-module.module';
+import { PfmHomeService } from './services/pfm-home-service';
+import { PfmHomeMockService } from './services/pfm-home-mock.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [PfmHomeModuleComponent, WelcomePodComponent, LatestNewsPodComponent, DashboardPodComponent],
   imports: [
     CommonModule,
+    HttpClientModule,
     PfmHomeModuleRoutingModule,
     PfmCoreuiModule,
     PfmDashabordModuleModule
-  ]
+  ],
+  providers: [PfmHomeService, PfmHomeMockService]
 })
 export class PfmHomeModuleModule { }

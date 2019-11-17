@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NewsItem } from '../models/NewsItem';
 
 @Component({
   selector: 'pfm-latest-news-pod',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./latest-news-pod.component.scss']
 })
 export class LatestNewsPodComponent implements OnInit {
+
+  @Input() newsList:NewsItem[];
 
   constructor() { }
 

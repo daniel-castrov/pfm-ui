@@ -37,7 +37,8 @@ export class UserRole {
     if(roles.indexOf("User") !== -1){
       this.isUser = true;
     }
-    /*
+
+    //TODO - just for testing
     this.isExecution_Manager = true;
     this.isBudget_Manager = true;
     this.isPOM_Manager = true;
@@ -46,6 +47,6 @@ export class UserRole {
     this.isAdmin = true;
     this.isExecution_Reporter = true;
     this.isUser_Approver = true;
-    */
+
   }
 }
