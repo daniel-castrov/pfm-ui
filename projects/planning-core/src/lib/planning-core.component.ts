@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
   template: `
     <p>
       planning-core works!
+      
     </p>
   `,
   styles: []
