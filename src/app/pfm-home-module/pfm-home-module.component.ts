@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppModel } from '../../../projects/shared/src/lib/models/AppModel';
+import { AppModel } from '../pfm-common-models/AppModel';
 import { DialogService } from '../pfm-coreui/services/dialog.service';
 import { PfmHomeService } from './services/pfm-home-service';
 import { PfmHomeMockService } from './services/pfm-home-mock.service';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BaseRestService } from '../../../../projects/shared/src/lib/services/base-rest.service';
+import { BaseRestService } from '../../services/base-rest.service';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -6,14 +6,13 @@ import { RouterModule } from '@angular/router';
 import { DialogManagerComponent } from './dialog-manager/dialog-manager.component';
 import { MaterialModule } from '../material.module';
 import { BusyComponent } from './busy/busy.component';
-import { SharedModule } from '../../../projects/shared/src/lib/shared.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { CardComponent } from './card/card.component';
 
 @NgModule({
   declarations: [AppHeaderComponent, MenuBarComponent, DialogManagerComponent, BusyComponent, CardComponent],
   imports: [
-    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, SharedModule
+    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule
   ],
   exports: [AppHeaderComponent, MenuBarComponent, DialogManagerComponent, BusyComponent, CardComponent]
 })

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SigninService } from '../services/signin.service';
 import { Router } from '@angular/router';
-import { AppModel } from '../../../../projects/shared/src/lib/models/AppModel';
-import { UserDetailsModel } from '../../../../projects/shared/src/lib/models/UserDetailsModel';
-import { UserRole } from '../../../../projects/shared/src/lib/models/UserRole';
+import { AppModel } from '../../pfm-common-models/AppModel';
+import { UserDetailsModel } from '../../pfm-common-models/UserDetailsModel';
+import { UserRole } from '../../pfm-common-models/UserRole';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { CommunityModel } from '../../../../projects/shared/src/lib/models/CommunityModel';
+import { CommunityModel } from '../../pfm-common-models/CommunityModel';
 
 @Component({
   selector: 'app-signin',

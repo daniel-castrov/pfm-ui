@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BaseRestService } from '../../../../projects/shared/src/lib/services/base-rest.service';
+import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WidgetPreference } from '../models/WidgetPreference';

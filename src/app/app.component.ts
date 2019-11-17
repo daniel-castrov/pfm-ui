@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AppModel } from '../../projects/shared/src/lib/models/AppModel';
+import { AppModel } from './pfm-common-models/AppModel';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { onMainContentChange, onSideNavChange } from './pfm-coreui/menu-bar/animation';
-import { UserRole } from '../../projects/shared/src/lib/models/UserRole';
-import { UserDetailsModel } from '../../projects/shared/src/lib/models/UserDetailsModel';
+import { UserRole } from './pfm-common-models/UserRole';
+import { UserDetailsModel } from './pfm-common-models/UserDetailsModel';
 import { Router } from '@angular/router';
 
 @Component({

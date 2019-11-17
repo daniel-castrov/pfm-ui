@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppModel } from '../../../../projects/shared/src/lib/models/AppModel';
+import { AppModel } from '../../pfm-common-models/AppModel';
 import { Router } from '@angular/router';
 
 @Component({

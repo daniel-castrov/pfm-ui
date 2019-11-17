@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserRole } from '../../../../projects/shared/src/lib/models/UserRole';
+import { UserRole } from '../../pfm-common-models/UserRole';
 import { animateText } from './animation';
 import { MenuBarItem } from '../models/MenuBarItem';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
@@ -20,6 +20,7 @@ export class MenuBarComponent implements OnInit {
   //TODO - notice that this can be data-driven from a service, example below
   @Input() menuBarItems:MenuBarItem[];
 
+  overlapTriggerFlag:boolean = false;
   isDashboardSelected:boolean;
   isPlanningSelected:boolean;
 
@@ -38,7 +39,6 @@ export class MenuBarComponent implements OnInit {
           this.isPlanningSelected = false;
           this.isDashboardSelected = true;
         }
-        console.info(JSON.stringify(event));
       }
     });
   }

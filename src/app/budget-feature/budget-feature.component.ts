@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PluginLoaderService } from '../services/plugin-loader/plugin-loader.service';
-import { AppModel } from '../../../projects/shared/src/lib/models/AppModel';
+import { AppModel } from '../pfm-common-models/AppModel';
 
 @Component({
   selector: 'app-budget-feature',

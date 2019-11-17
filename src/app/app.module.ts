@@ -13,7 +13,7 @@ import { TransferStateService } from './services/transfer-state.service';
 import { AppRoutingModule } from './app-routing.module';
 import { PfmCoreuiModule } from './pfm-coreui/pfm-coreui.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppModel } from '../../projects/shared/src/lib/models/AppModel';
+import { AppModel } from './pfm-common-models/AppModel';
 import { PfmAuthModuleModule } from './pfm-auth-module/pfm-auth-module.module';
 import { DialogService } from './pfm-coreui/services/dialog.service';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
