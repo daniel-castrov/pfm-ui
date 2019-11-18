@@ -7,7 +7,7 @@ import { PlanningService } from './planning-service';
 @Injectable({
   providedIn: 'root'
 })
-export class PlanningServicesImpl extends BaseRestService implements PlanningService{
+export class PlanningServicesImpl extends PlanningService{
 
   constructor(protected httpClient:HttpClient){
     super(httpClient);
@@ -15,5 +15,9 @@ export class PlanningServicesImpl extends BaseRestService implements PlanningSer
 
   getAvailableCreatePlanningYears():Observable<Object>{
     return this.get("getAvailableCreatePlanningYears");
+  }
+
+  getAvailableOpenPlanningYears():Observable<Object>{
+    return this.get("getAvailableOpenPlanningYears");
   }
 }

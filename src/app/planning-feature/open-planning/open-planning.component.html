@@ -1,1 +1,11 @@
-<h3>Open Planning</h3>
+<div class="main">
+    <h3>Open Planning Phase</h3>
+    <pfm-primary-button [label]="'Open Planning Phase'" [name]="id" [id]="id" (onClick)="onOpenPlanningPhase()"></pfm-primary-button>
+</div>
+
+<ng-container *ngIf="availableYears">
+    <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+</ng-container>
+
+
+<pfm-busy [busy]="busy"></pfm-busy>

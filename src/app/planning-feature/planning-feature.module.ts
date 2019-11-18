@@ -11,12 +11,14 @@ import { ClosePlanningComponent } from './close-planning/close-planning.componen
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { PlanningService } from './services/planning-service';
 import { PlanningServiceMock } from './services/planning-service-mock';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
   declarations: [PlanningFeatureComponent, CreatePlanningComponent, OpenPlanningComponent, MissionPrioritiesComponent, LockPlanningComponent, ClosePlanningComponent],
   imports: [
     CommonModule,
+    HttpClientModule,
     PfmCoreuiModule,
     PlanningFeatureRoutingModule
   ],
