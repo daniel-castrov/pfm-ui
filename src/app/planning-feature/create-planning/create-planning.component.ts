@@ -13,7 +13,7 @@ export class CreatePlanningComponent implements OnInit {
   constructor(private injector: Injector, private pluginLoader: PluginLoaderService) { }
 
   ngOnInit() {
-    this.loadPlugin("planning");
+    this.loadPlugin("planning-create");
   }
 
   loadPlugin(pluginName: string) {

@@ -7,19 +7,19 @@
     "build": "ng build",
     "lint": "ng lint",
     "postinstall": "tsc -p builders/tsconfig.builders.json",
-    "build:shared": "ng build shared && ng build --project plugins --prod --modulePath=shared#SharedModule --pluginName=shared  --outputPath=./src/assets/plugins",
-    "build:budget-core": "ng build budget-core && ng build --project plugins --prod --modulePath=budget-core#BudgetCoreModule --pluginName=budget-core  --outputPath=./src/assets/plugins",
-    "build:planning-core": "ng build planning-core && ng build --project plugins --prod --modulePath=planning-core#PlanningCoreModule --pluginName=planning-core  --outputPath=./src/assets/plugins",
-    "build:programming-core": "ng build programming-core && ng build --project plugins --prod --modulePath=programming-core#ProgrammingCoreModule --pluginName=programming-core  --outputPath=./src/assets/plugins",
-    "build:budget": "ng build --project plugins --prod --modulePath=./budget/budget.module#BudgetModule --pluginName=budget --sharedLibs=shared --outputPath=./src/assets/plugins",
-    "build:budget-demo": "ng build --project plugins --prod --modulePath=./budget-demo/budget-demo.module#BudgetDemoModule --pluginName=budget-demo --sharedLibs=shared --outputPath=./src/assets/plugins",
-    "build:planning": "ng build --project plugins --prod --modulePath=./planning/planning.module#PlanningModule --pluginName=planning --sharedLibs=shared --outputPath=./src/assets/plugins ",
-    "build:programming": "ng build --project plugins --prod --modulePath=./programming/programming.module#ProgrammingModule --pluginName=programming --sharedLibs=shared --outputPath=./src/assets/plugins ",
-    "build:plugins": "npm run build:shared && npm run build:budget-core && npm run build:budget-demo && npm run build:planning-core && npm run build:programming-core && npm run build:budget && npm run build:planning && npm run build:programming",
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
-    "build:client-and-server-bundles": "ng build --prod && ng run angular-plugin-architecture:server:production"
+    "build:client-and-server-bundles": "ng build --prod && ng run angular-plugin-architecture:server:production",
+
+
+    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins",
+    "build:planning-open": "ng build --project plugins --prod --modulePath=./app/planning/open-planning/open-planning.module#OpenPlanningModule --pluginName=planning-open --outputPath=./src/assets/plugins",
+    "build:planning-close": "ng build --project plugins --prod --modulePath=./app/planning/close-planning/close-planning.module#ClosePlanningModule --pluginName=planning-close --outputPath=./src/assets/plugins",
+    "build:planning-lock": "ng build --project plugins --prod --modulePath=./app/planning/lock-planning/lock-planning.module#LockPlanningModule --pluginName=planning-lock --outputPath=./src/assets/plugins",
+    "build:planning-mission-priorites": "ng build --project plugins --prod --modulePath=./app/planning/mission-priorities/mission-priorities.module#MissionPrioritiesModule --pluginName=planning-mission-priorities --outputPath=./src/assets/plugins",
+    "build:plugins": "npm run build:planning-create && npm run build:planning-open && npm run build:planning-close && npm run build:planning-lock && npm run build:planning-mission-priorites"
+
   },
   "private": true,
   "dependencies": {

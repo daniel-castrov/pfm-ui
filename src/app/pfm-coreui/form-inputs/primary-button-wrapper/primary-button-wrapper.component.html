@@ -1,0 +1,9 @@
+<div class="form-group">
+  <div>
+    <button class="btn-primary" type="button" id="{{id}}" name="{{fieldName}}" (click)="handleClick($event)">{{inputLabel}}</button>
+  </div>
+  <div *ngIf="errorExists()" aria-required="true" class="form-alert alert-danger">
+    {{errorMessage}}
+  </div>
+</div>
+

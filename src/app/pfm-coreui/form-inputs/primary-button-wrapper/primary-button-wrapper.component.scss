@@ -1,0 +1,13 @@
+$white: #ffffff;
+$primary-color: #25527a;
+
+.btn-primary {
+    &:hover {
+      opacity: 1;
+    }
+    color: $white;
+    background-color: $primary-color !important;
+    border-color: #23527c !important;
+    opacity: .9;
+    border-radius: 0.25rem;
+  }

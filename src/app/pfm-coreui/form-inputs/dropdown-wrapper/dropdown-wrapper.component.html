@@ -1,0 +1,9 @@
+<div class="form-group">
+  <label for="{{id}}">{{inputLabel}}</label>
+  <select required id="{{id}}" name="{{fieldName}}" [(ngModel)]="dataModel[fieldName]">
+    <option *ngFor="let option of dropdownOptions" value="{{option}}">{{option}}</option>"
+  </select>
+  <div *ngIf="errorExists()" aria-required="true" class="form-alert alert-danger">
+    {{errorMessage}}
+  </div>
+</div>

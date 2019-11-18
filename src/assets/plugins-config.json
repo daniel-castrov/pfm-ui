@@ -1,41 +1,22 @@
 {
-  "budget-demo": {
-    "name": "BudgetDemo",
-    "path": "/assets/plugins/budget-demo.js",
-    "deps": ["shared", "budget-core"]
+  "planning-create": {
+    "name": "PlanningCreate",
+    "path": "/assets/plugins/planning-create.js"
   },
-  "budget": {
-    "name": "Budget",
-    "path": "/assets/plugins/budget.js",
-    "deps": ["shared", "budget-core"]
+  "planning-open": {
+    "name": "PlanningOpen",
+    "path": "/assets/plugins/planning-open.js"
   },
-  "budget-core": {
-    "name": "Budget Core",
-    "path": "/assets/plugins/budget-core.js",
-    "deps": ["shared"]
+  "planning-close": {
+    "name": "PlanningClose",
+    "path": "/assets/plugins/planning-close.js"
   },
-  "planning": {
-    "name": "Planning",
-    "path": "/assets/plugins/planning.js",
-    "deps": ["shared", "planning-core"]
+  "planning-lock": {
+    "name": "PlanningLock",
+    "path": "/assets/plugins/planning-lock.js"
   },
-  "planning-core": {
-    "name": "Planning Core",
-    "path": "/assets/plugins/planning-core.js",
-    "deps": ["shared"]
-  },
-  "programming": {
-    "name": "Programming",
-    "path": "/assets/plugins/programming.js",
-    "deps": ["shared", "programming-core"]
-  },
-  "programming-core": {
-    "name": "Programming Core",
-    "path": "/assets/plugins/programming-core.js",
-    "deps": ["shared"]
-  },
-  "shared": {
-    "name": "Shared",
-    "path": "/assets/plugins/shared.js"
+  "planning-mission-priorities": {
+    "name": "PlanningMissionPriorities",
+    "path": "/assets/plugins/planning-mission-priorities.js"
   }
 }
