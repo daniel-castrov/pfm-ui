@@ -25,6 +25,12 @@ ng g component pfm-dashboard-module/widgets/demo-widget-four --module pfm-dashbo
 ng g component pfm-coreui/card --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-card --style=scss
 
 
+
+
+##
+####ignore the below samples - these will be used a little later for dynamicly loading customized screens without an application/client release
+##
+
 #1, for planning, create components in the planning-feature.module, this are boiler plates that load the external plugin
 ng g component planning-feature/create-planning --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss
 ng g component planning-feature/open-planning --module planning-feature/planning-feature.module --export=false --prefix=pfm --selector=pfm-planning --style=scss

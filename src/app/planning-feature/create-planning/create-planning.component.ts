@@ -1,5 +1,4 @@
-import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PluginLoaderService } from '../../services/plugin-loader/plugin-loader.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'pfm-planning',
@@ -8,22 +7,10 @@ import { PluginLoaderService } from '../../services/plugin-loader/plugin-loader.
 })
 export class CreatePlanningComponent implements OnInit {
 
-  @ViewChild('targetRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
-
-  constructor(private injector: Injector, private pluginLoader: PluginLoaderService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.loadPlugin("planning-create");
+
   }
 
-  loadPlugin(pluginName: string) {
-    this.pluginLoader.load(pluginName).then(moduleFactory => {
-      const moduleRef = moduleFactory.create(this.injector);
-      const entryComponent = (moduleFactory.moduleType as any).entry;
-      const compFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(
-        entryComponent
-      );
-      this.vcRef.createComponent(compFactory);
-    });
-  }
 }
