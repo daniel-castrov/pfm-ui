@@ -15,4 +15,9 @@ export class PlanningServiceMock extends PlanningService{
   getAvailableOpenPlanningYears():Observable<Object>{
     return of([2021, 2023]);
   }
+
+  getMissionPrioritiesYears():Observable<Object>{
+    return of([2021, 2022, 2023]);
+  }
+
 }

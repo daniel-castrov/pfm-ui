@@ -1,1 +1,17 @@
-<h3>Mission Priorities</h3>
+<div class="main">
+    <h3>Mission Priorities
+        <ng-container *ngIf="selectedYear">
+            <span>Opened</span>
+        </ng-container>
+    </h3>
+</div>
+
+<ng-container *ngIf="availableYears">
+    <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [label]="'For'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+</ng-container>
+
+<ng-container *ngIf="selectedYear">
+<span>Data Grid For {{selectedYear}} goes here</span>
+</ng-container>
+
+<pfm-busy [busy]="busy"></pfm-busy>

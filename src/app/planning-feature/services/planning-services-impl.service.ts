@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PlanningService } from './planning-service';
@@ -19,5 +18,9 @@ export class PlanningServicesImpl extends PlanningService{
 
   getAvailableOpenPlanningYears():Observable<Object>{
     return this.get("getAvailableOpenPlanningYears");
+  }
+
+  getMissionPrioritiesYears():Observable<Object>{
+    return this.get("getMissionPrioritiesYears");
   }
 }
