@@ -18,7 +18,21 @@ export class MissionPrioritiesComponent implements OnInit {
   availableYears:ListItem[];
   selectedYear:string;
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService) { }
+  columns:any[];
+  rows:any[];
+
+  constructor(private planningService:PlanningService, private dialogService:DialogService) {
+    this.columns = [
+      {headerName: 'Priority', field: 'priority' },
+      {headerName: 'Mission Title', field: 'missionTitle' },
+      {headerName: 'Mission Description', field: 'missionDescription'},
+      {headerName: 'Attachments', field: 'attachments' },
+      {headerName: 'Actions', field: 'actions' }
+    ];
+
+    this.rows = [
+    ];
+  }
 
   yearSelected(year:string):void{
     this.selectedYear = year;

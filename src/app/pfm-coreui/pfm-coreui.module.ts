@@ -24,6 +24,8 @@ import { RadioButtonInputComponent } from './form-inputs/radio-button-input/radi
 import { FormsModule } from '@angular/forms';
 import { PrimaryButtonComponent } from './form-inputs/primary-button-input/primary-button.component';
 import { DropdownComponent } from './form-inputs/dropdown/dropdown.component';
+import { DatagridComponent } from './datagrid/datagrid.component';
+import { AgGridModule } from '@ag-grid-community/angular';
 
 @NgModule({
   declarations: [
@@ -46,10 +48,11 @@ import { DropdownComponent } from './form-inputs/dropdown/dropdown.component';
     DropdownComponent,
     PrimaryButtonComponent,
     SecondaryButtonInputComponent,
-    RadioButtonInputComponent
+    RadioButtonInputComponent,
+    DatagridComponent
   ],
   imports: [
-    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, FormsModule
+    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, FormsModule, AgGridModule.withComponents([])
   ],
   exports: [
     AppHeaderComponent,
@@ -67,7 +70,8 @@ import { DropdownComponent } from './form-inputs/dropdown/dropdown.component';
     DropdownComponent,
     PrimaryButtonComponent,
     SecondaryButtonInputComponent,
-    RadioButtonInputComponent
+    RadioButtonInputComponent,
+    DatagridComponent
   ]
 })
 export class PfmCoreuiModule { }

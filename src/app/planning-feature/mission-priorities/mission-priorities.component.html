@@ -11,7 +11,9 @@
 </ng-container>
 
 <ng-container *ngIf="selectedYear">
-<span>Data Grid For {{selectedYear}} goes here</span>
+    <div class="grid-container">
+        <pfm-datagrid [columns]="columns" [rows]="rows"></pfm-datagrid>
+    </div>
 </ng-container>
 
 <pfm-busy [busy]="busy"></pfm-busy>
