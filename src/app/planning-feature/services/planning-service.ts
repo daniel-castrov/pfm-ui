@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-export interface PlanningService {
+export abstract class PlanningService {
 
-  getAvailableCreatePlanningYears():Observable<Object>;
+  abstract getAvailableCreatePlanningYears():Observable<Object>;
 }

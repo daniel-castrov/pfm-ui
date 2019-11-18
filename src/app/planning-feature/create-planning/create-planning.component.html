@@ -2,3 +2,10 @@
     <h3>Create Planning Phase</h3>
     <pfm-primary-button [label]="'Create Planning Phase'" [name]="id" [id]="id" (onClick)="onCreatePlanningPhase()"></pfm-primary-button>
 </div>
+
+<ng-container *ngIf="availableYears">
+    <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+</ng-container>
+
+
+<pfm-busy [busy]="busy"></pfm-busy>

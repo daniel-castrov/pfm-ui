@@ -9,6 +9,8 @@ import { MissionPrioritiesComponent } from './mission-priorities/mission-priorit
 import { LockPlanningComponent } from './lock-planning/lock-planning.component';
 import { ClosePlanningComponent } from './close-planning/close-planning.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
+import { PlanningService } from './services/planning-service';
+import { PlanningServiceMock } from './services/planning-service-mock';
 
 
 @NgModule({
@@ -17,6 +19,7 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
     CommonModule,
     PfmCoreuiModule,
     PlanningFeatureRoutingModule
-  ]
+  ],
+  providers: [{provide: PlanningService, useClass: PlanningServiceMock}]
 })
 export class PlanningFeatureModule { }

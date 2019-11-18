@@ -12,7 +12,6 @@ import { InputWrapperComponent } from './form-inputs/input-wrapper/input-wrapper
 import { RadioButtonWrapperComponent } from './form-inputs/radio-button-wrapper/radio-button-wrapper.component';
 import { PasswordWrapperComponent } from './form-inputs/password-wrapper/password-wrapper.component';
 import { SecondaryButtonWrapperComponent } from './form-inputs/secondary-button-wrapper/secondary-button-wrapper.component';
-import { DropdownWrapperComponent } from './form-inputs/dropdown-wrapper/dropdown-wrapper.component';
 import { PhoneInputComponent } from './form-inputs/phone-input/phone-input.component';
 import { FirstnameInputComponent } from './form-inputs/firstname-input/firstname-input.component';
 import { ZipcodeInputComponent } from './form-inputs/zipcode-input/zipcode-input.component';
@@ -20,11 +19,11 @@ import { UsernameInputComponent } from './form-inputs/username-input/username-in
 import { PasswordInputComponent } from './form-inputs/password-input/password-input.component';
 import { EmailInputComponent } from './form-inputs/email-input/email-input.component';
 import { LastnameInputComponent } from './form-inputs/lastname-input/lastname-input.component';
-import { DropdownInputComponent } from './form-inputs/dropdown-input/dropdown-input.component';
 import { SecondaryButtonInputComponent } from './form-inputs/secondary-button-input/secondary-button-input.component';
 import { RadioButtonInputComponent } from './form-inputs/radio-button-input/radio-button-input.component';
 import { FormsModule } from '@angular/forms';
 import { PrimaryButtonComponent } from './form-inputs/primary-button-input/primary-button.component';
+import { DropdownComponent } from './form-inputs/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +31,6 @@ import { PrimaryButtonComponent } from './form-inputs/primary-button-input/prima
     RadioButtonWrapperComponent,
     PasswordWrapperComponent,
     SecondaryButtonWrapperComponent,
-    DropdownWrapperComponent,
     AppHeaderComponent,
     MenuBarComponent,
     DialogManagerComponent,
@@ -45,7 +43,7 @@ import { PrimaryButtonComponent } from './form-inputs/primary-button-input/prima
     PasswordInputComponent,
     EmailInputComponent,
     LastnameInputComponent,
-    DropdownInputComponent,
+    DropdownComponent,
     PrimaryButtonComponent,
     SecondaryButtonInputComponent,
     RadioButtonInputComponent
@@ -66,7 +64,7 @@ import { PrimaryButtonComponent } from './form-inputs/primary-button-input/prima
     PasswordInputComponent,
     EmailInputComponent,
     LastnameInputComponent,
-    DropdownInputComponent,
+    DropdownComponent,
     PrimaryButtonComponent,
     SecondaryButtonInputComponent,
     RadioButtonInputComponent
