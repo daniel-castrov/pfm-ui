@@ -12,7 +12,6 @@ import { InputWrapperComponent } from './form-inputs/input-wrapper/input-wrapper
 import { RadioButtonWrapperComponent } from './form-inputs/radio-button-wrapper/radio-button-wrapper.component';
 import { PasswordWrapperComponent } from './form-inputs/password-wrapper/password-wrapper.component';
 import { SecondaryButtonWrapperComponent } from './form-inputs/secondary-button-wrapper/secondary-button-wrapper.component';
-import { PrimaryButtonWrapperComponent } from './form-inputs/primary-button-wrapper/primary-button-wrapper.component';
 import { DropdownWrapperComponent } from './form-inputs/dropdown-wrapper/dropdown-wrapper.component';
 import { PhoneInputComponent } from './form-inputs/phone-input/phone-input.component';
 import { FirstnameInputComponent } from './form-inputs/firstname-input/firstname-input.component';
@@ -22,10 +21,10 @@ import { PasswordInputComponent } from './form-inputs/password-input/password-in
 import { EmailInputComponent } from './form-inputs/email-input/email-input.component';
 import { LastnameInputComponent } from './form-inputs/lastname-input/lastname-input.component';
 import { DropdownInputComponent } from './form-inputs/dropdown-input/dropdown-input.component';
-import { PrimaryButtonInputComponent } from './form-inputs/primary-button-input/primary-button-input.component';
 import { SecondaryButtonInputComponent } from './form-inputs/secondary-button-input/secondary-button-input.component';
 import { RadioButtonInputComponent } from './form-inputs/radio-button-input/radio-button-input.component';
 import { FormsModule } from '@angular/forms';
+import { PrimaryButtonComponent } from './form-inputs/primary-button-input/primary-button.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +32,6 @@ import { FormsModule } from '@angular/forms';
     RadioButtonWrapperComponent,
     PasswordWrapperComponent,
     SecondaryButtonWrapperComponent,
-    PrimaryButtonWrapperComponent,
     DropdownWrapperComponent,
     AppHeaderComponent,
     MenuBarComponent,
@@ -48,7 +46,7 @@ import { FormsModule } from '@angular/forms';
     EmailInputComponent,
     LastnameInputComponent,
     DropdownInputComponent,
-    PrimaryButtonInputComponent,
+    PrimaryButtonComponent,
     SecondaryButtonInputComponent,
     RadioButtonInputComponent
   ],
@@ -69,7 +67,7 @@ import { FormsModule } from '@angular/forms';
     EmailInputComponent,
     LastnameInputComponent,
     DropdownInputComponent,
-    PrimaryButtonInputComponent,
+    PrimaryButtonComponent,
     SecondaryButtonInputComponent,
     RadioButtonInputComponent
   ]

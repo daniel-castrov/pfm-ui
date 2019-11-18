@@ -15,7 +15,7 @@ module.exports = {
     minimize: false
   },
   output: {
-    // Puts the output at the root of the dist folder
+    // Puts the onClick at the root of the dist folder
     path: path.join(__dirname, 'dist'),
     filename: '[name].js'
   },

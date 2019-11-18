@@ -7,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreatePlanningComponent implements OnInit {
 
+  id:string = 'create-planning-component';
   constructor() { }
+
+  onCreatePlanningPhase():void{
+
+  }
 
   ngOnInit() {
 

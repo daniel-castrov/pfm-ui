@@ -8,12 +8,14 @@ import { OpenPlanningComponent } from './open-planning/open-planning.component';
 import { MissionPrioritiesComponent } from './mission-priorities/mission-priorities.component';
 import { LockPlanningComponent } from './lock-planning/lock-planning.component';
 import { ClosePlanningComponent } from './close-planning/close-planning.component';
+import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 
 
 @NgModule({
   declarations: [PlanningFeatureComponent, CreatePlanningComponent, OpenPlanningComponent, MissionPrioritiesComponent, LockPlanningComponent, ClosePlanningComponent],
   imports: [
     CommonModule,
+    PfmCoreuiModule,
     PlanningFeatureRoutingModule
   ]
 })
