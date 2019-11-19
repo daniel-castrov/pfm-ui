@@ -1,7 +1,7 @@
 <pfm-dialog-manager></pfm-dialog-manager>
 <pfm-app-header></pfm-app-header>
 <mat-sidenav-container class="sidenav_container">
-    <mat-sidenav #leftSidenav mode="side" opened>
+    <mat-sidenav #leftSidenav mode="side" opened class="sidenav_container">
         <div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'">
             <div fxLayout="column" fxLayoutGap="10px">
                 <pfm-menu-bar [isUserSignedIn]="appModel.isUserSignedIn" [role]="appModel.userDetails.userRole" [elevatedBoolean]="appModel.elevated" [linkText]="sideNavState"></pfm-menu-bar>
