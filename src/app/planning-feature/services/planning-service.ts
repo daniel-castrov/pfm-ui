@@ -11,4 +11,5 @@ export abstract class PlanningService extends BaseRestService{
   abstract getAvailableCreatePlanningYears():Observable<Object>;
   abstract getAvailableOpenPlanningYears():Observable<Object>;
   abstract getMissionPrioritiesYears():Observable<Object>;
+  abstract getMissionPriorities(year:string):Observable<Object>;
 }

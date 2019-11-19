@@ -26,6 +26,8 @@ import { PrimaryButtonComponent } from './form-inputs/primary-button-input/prima
 import { DropdownComponent } from './form-inputs/dropdown/dropdown.component';
 import { DatagridComponent } from './datagrid/datagrid.component';
 import { AgGridModule } from '@ag-grid-community/angular';
+import { ActionCellRendererComponent } from './datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
+import { AttachmentCellRendererComponent } from './datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -49,10 +51,12 @@ import { AgGridModule } from '@ag-grid-community/angular';
     PrimaryButtonComponent,
     SecondaryButtonInputComponent,
     RadioButtonInputComponent,
-    DatagridComponent
+    DatagridComponent,
+    ActionCellRendererComponent,
+    AttachmentCellRendererComponent
   ],
   imports: [
-    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, FormsModule, AgGridModule.withComponents([])
+    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, FormsModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent])
   ],
   exports: [
     AppHeaderComponent,
@@ -71,7 +75,9 @@ import { AgGridModule } from '@ag-grid-community/angular';
     PrimaryButtonComponent,
     SecondaryButtonInputComponent,
     RadioButtonInputComponent,
-    DatagridComponent
+    DatagridComponent,
+    ActionCellRendererComponent,
+    AttachmentCellRendererComponent
   ]
 })
 export class PfmCoreuiModule { }

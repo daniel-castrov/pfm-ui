@@ -1,0 +1,17 @@
+<div>
+    <ng-container *ngIf="data.canEdit">
+        <fa name="edit"></fa>
+    </ng-container>
+
+    <ng-container *ngIf="data.canDelete">
+        <fa name="trash"></fa>
+    </ng-container>
+
+    <ng-container *ngIf="data.canUpload">
+        <fa name="upload"></fa>
+    </ng-container>
+
+    <ng-container *ngIf="data.canSave">
+        <fa name="save"></fa>
+    </ng-container>
+</div>

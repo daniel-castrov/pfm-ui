@@ -23,4 +23,8 @@ export class PlanningServicesImpl extends PlanningService{
   getMissionPrioritiesYears():Observable<Object>{
     return this.get("getMissionPrioritiesYears");
   }
+
+  getMissionPriorities(year:string):Observable<Object>{
+    return this.get("getMissionPriorities?year=" + year);
+  }
 }

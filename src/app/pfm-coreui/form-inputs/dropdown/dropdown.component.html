@@ -1,10 +1,7 @@
 <div class="form-group">
-    <ng-container *ngIf="label">
-        <label [for]="id">{{label}}</label>
-    </ng-container>
 
     <mat-form-field>
-        <mat-label [id]="id">{{prompt}}</mat-label>
+        <mat-label *ngIf="!selectedItem" [id]="id">{{prompt}}</mat-label>
         <mat-select [disabled]="disabled" [(value)]="selectedItem" (selectionChange)="handleSelectionChanged()">
             <mat-option>None</mat-option>
             <ng-container *ngFor="let option of options">
