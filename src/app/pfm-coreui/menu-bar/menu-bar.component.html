@@ -35,8 +35,8 @@
 </ng-container>
 
 <ng-container *ngIf="role && isUserSignedIn">
-    <mat-nav-list [matMenuTriggerFor]="dashboardMenu" #dashboardMenuTrigger="matMenuTrigger" (mouseover)="dashboardMenuTrigger.openMenu()">
-        <div [class.active]="isDashboardSelected"  mat-list-item class="side-menu-container">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="dashboardMenu" #dashboardMenuTrigger="matMenuTrigger" (mouseover)="dashboardMenuTrigger.openMenu()">
+        <div mat-list-item class="side-menu-container">
             <mat-icon routerLink="/home" title="Dashboard">
                 <i class="fa fa-tachometer"  title="Dashboard" aria-hidden="true"></i>
             </mat-icon>
@@ -49,14 +49,14 @@
                 <div (mouseout)="dashboardMenuTrigger.closeMenu()">
                     <div class="arrow-left"></div>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/home">Dashboard</a>
+                        <a class="dropdown-item enable-menu" routerLink="/home" routerLinkActive="active-link">Dashboard</a>
                     </button>
                 </div>
             </mat-menu>
         </div>
     </mat-nav-list>
-    <mat-nav-list [matMenuTriggerFor]="planningMenu"  #planningMenuTrigger="matMenuTrigger" (mouseover)="planningMenuTrigger.openMenu()">
-        <div [class.active]="isPlanningSelected" mat-list-item class="side-menu-container">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="planningMenu"  #planningMenuTrigger="matMenuTrigger" (mouseover)="planningMenuTrigger.openMenu()">
+        <div mat-list-item class="side-menu-container">
             <mat-icon>
                 <i class="fa fa-hourglass-end" title="Program Request" aria-hidden="true"></i>
             </mat-icon>
@@ -69,27 +69,27 @@
                 <div (mouseleave)="planningMenuTrigger.closeMenu()">
                     <div class="arrow-left"></div>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/create-planning">Create Planning Phase</a>
+                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/create-planning" routerLinkActive="active-link">Create Planning Phase</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/open-planning">Open Planning Phase</a>
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/mission-priorities">Mission Priorities</a>
+                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/open-planning" routerLinkActive="active-link">Open Planning Phase</a>
                     </button>
                     <div class="dropdown-divider"></div>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/planning/lock-planning">Lock Planning Phase</a>
+                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/mission-priorities" routerLinkActive="active-link">Mission Priorities</a>
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button mat-menu-item>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/planning/lock-planning" routerLinkActive="active-link">Lock Planning Phase</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/planning/close-planning">Close Planning Phase</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/planning/close-planning" routerLinkActive="active-link">Close Planning Phase</a>
                     </button>
                 </div>
             </mat-menu>
         </div>
     </mat-nav-list>
-    <mat-nav-list  [matMenuTriggerFor]="budgetMenu" #budgetMenuTrigger="matMenuTrigger" (mouseover)="budgetMenuTrigger.openMenu()">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="budgetMenu" #budgetMenuTrigger="matMenuTrigger" (mouseover)="budgetMenuTrigger.openMenu()">
         <div mat-list-item class="side-menu-container">
             <mat-icon>
                 <i class="fa fa-database" title="Budget"  aria-hidden="true"></i>
@@ -103,20 +103,20 @@
                 <div (mouseleave)="budgetMenuTrigger.closeMenu()">
                     <div class="arrow-left"></div>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/edit-program-details">Edit Program Details</a>
+                        <a class="dropdown-item enable-menu" routerLink="/edit-program-details" routerLinkActive="active-link">Edit Program Details</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/create-budget">Create Budget Phase</a>
+                        <a class="dropdown-item enable-menu" routerLink="/create-budget" routerLinkActive="active-link">Create Budget Phase</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/copy-budget">Copy Budget</a>
+                        <a class="dropdown-item enable-menu" routerLink="/copy-budget" routerLinkActive="active-link">Copy Budget</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/edit-budget-details">Edit Budget Details</a>
+                        <a class="dropdown-item enable-menu" routerLink="/edit-budget-details" routerLinkActive="active-link">Edit Budget Details</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/r-forms">RDT&E Exhibits</a>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/p-forms">Proc Exhibits</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/r-forms" routerLinkActive="active-link">RDT&E Exhibits</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/p-forms" routerLinkActive="active-link">Proc Exhibits</a>
                     </button>
                     <button mat-menu-item>
                         <a class="dropdown-item" disabled>RDT&E Tree Data</a>
@@ -125,7 +125,7 @@
             </mat-menu>
         </div>
     </mat-nav-list>
-    <mat-nav-list [matMenuTriggerFor]="executionMenu"  #executionMenuTrigger="matMenuTrigger" (mouseover)="executionMenuTrigger.openMenu()">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="executionMenu"  #executionMenuTrigger="matMenuTrigger" (mouseover)="executionMenuTrigger.openMenu()">
         <div mat-list-item class="side-menu-container">
             <mat-icon>
                 <i class="fa fa-globe"  title="Execution" aria-hidden="true"></i>
@@ -139,28 +139,28 @@
                 <div (mouseleave)="executionMenuTrigger.closeMenu()">
                     <div class="arrow-left"></div>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/funds-update">Funds Update</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/funds-update" routerLinkActive="active-link">Funds Update</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/oe-update">Program Update</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/oe-update" routerLinkActive="active-link">Program Update</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/create-execution-phase">Create Execution Phase</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/create-execution-phase" routerLinkActive="active-link">Create Execution Phase</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/open-execution">Open Execution Phase</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/open-execution" routerLinkActive="active-link">Open Execution Phase</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/import-execution-data">Import Actuals</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/import-execution-data" routerLinkActive="active-link">Import Actuals</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/ufr-yoe-summary">UFR Request</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/ufr-yoe-summary" routerLinkActive="active-link">UFR Request</a>
                     </button>
                 </div>
             </mat-menu>
         </div>
     </mat-nav-list>
-    <mat-nav-list  [matMenuTriggerFor]="reportsMenu" #reportsMenuTrigger="matMenuTrigger" (mouseover)="reportsMenuTrigger.openMenu()">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="reportsMenu" #reportsMenuTrigger="matMenuTrigger" (mouseover)="reportsMenuTrigger.openMenu()">
         <div mat-list-item class="side-menu-container">
             <mat-icon>
                 <i class="fa fa-area-chart" title="Reports" aria-hidden="true"></i>
@@ -192,7 +192,7 @@
             </mat-menu>
         </div>
     </mat-nav-list>
-    <mat-nav-list [matMenuTriggerFor]="manageMenu" #manageMenuTrigger="matMenuTrigger" (mouseover)="manageMenuTrigger.openMenu()">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="manageMenu" #manageMenuTrigger="matMenuTrigger" (mouseover)="manageMenuTrigger.openMenu()">
         <div mat-list-item class="side-menu-container">
             <mat-icon>
                 <i class="fa fa-th-list" title="Manage" aria-hidden="true"></i>
@@ -225,7 +225,7 @@
             </mat-menu>
         </div>
     </mat-nav-list>
-    <mat-nav-list [matMenuTriggerFor]="adminMenu" #adminMenuTrigger="matMenuTrigger" (mouseover)="adminMenuTrigger.openMenu()">
+    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="adminMenu" #adminMenuTrigger="matMenuTrigger" (mouseover)="adminMenuTrigger.openMenu()">
         <div mat-list-item class="side-menu-container">
             <mat-icon>
                 <i class="fa fa-user-secret"  title="Admin" aria-hidden="true"></i>
@@ -239,16 +239,16 @@
                 <div (mouseleave)="adminMenuTrigger.closeMenu()">
                     <div class="arrow-left"></div>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/approve-requests">Approve Requests</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/approve-requests" routerLinkActive="active-link">Approve Requests</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/manage-communities">Manage Communities</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/manage-communities" routerLinkActive="active-link">Manage Communities</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/user-list">Manage Users</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/user-list" routerLinkActive="active-link">Manage Users</a>
                     </button>
                     <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/roles">Manage Roles</a>
+                        <a class="dropdown-item enable-menu" href="#" routerLink="/roles" routerLinkActive="active-link">Manage Roles</a>
                     </button>
                 </div>
             </mat-menu>

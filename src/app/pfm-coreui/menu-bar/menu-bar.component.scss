@@ -119,6 +119,7 @@ ul.navbar-nav>li.nav-item:last-child {
 .mat-menu {
     margin-left: 20px;
     margin-top: -20px;
+    
 }
 
 }
@@ -169,4 +170,12 @@ ul.navbar-nav>li.nav-item:last-child {
     top: 1px;
     border-right:10px solid #80808057;
     background-color: #fff;
+}
+
+.active-link{   
+    background-color: #2E719E;
+}
+
+::ng-deep .mat-menu-content{
+    background: #BBCED7;
 }
