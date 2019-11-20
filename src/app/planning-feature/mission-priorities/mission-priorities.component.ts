@@ -6,6 +6,7 @@ import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { MissionPriority } from '../models/MissionPriority';
 import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
+import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 
 @Component({
   selector: 'pfm-planning',
@@ -35,6 +36,10 @@ export class MissionPrioritiesComponent implements OnInit {
       {headerName: 'Actions', field: 'actions', width: 350, cellRendererFramework: ActionCellRendererComponent, resizable: true  }
     ];
 
+  }
+
+  handleCellAction(cellAction:DataGridMessage):void{
+    this.dialogService.displayDebug(cellAction);
   }
 
   editOfMissionTitle(event:any):void{

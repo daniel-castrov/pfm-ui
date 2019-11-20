@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ListItem } from '../../../../planning-feature/models/ListItem';
+import { DatagridMbService } from '../../../services/datagrid-mb.service';
 
 @Component({
   selector: 'pfm-attachment-cell-renderer',
@@ -13,7 +14,7 @@ export class AttachmentCellRendererComponent implements OnInit {
 
   list:ListItem[];
 
-  constructor(){}
+  constructor(private datagridMBService:DatagridMbService){}
 
   agInit(params) {
     this.params = params;

@@ -1,17 +1,26 @@
 <div>
     <ng-container *ngIf="data.canEdit">
-        <fa name="edit" title="Edit"></fa>
+        <div (click)="onSelected('edit')">
+            <fa name="edit" title="Edit"></fa>
+        </div>
+
     </ng-container>
 
     <ng-container *ngIf="data.canDelete">
-        <fa name="trash" title="Delete"></fa>
+        <div (click)="onSelected('delete')">
+            <fa name="trash" title="Delete"></fa>
+        </div>
     </ng-container>
 
     <ng-container *ngIf="data.canUpload">
-        <fa name="upload" title="Upload"></fa>
+        <div (click)="onSelected('upload')">
+            <fa name="upload" title="Upload"></fa>
+        </div>
     </ng-container>
 
     <ng-container *ngIf="data.canSave">
-        <fa name="save" title="Save"></fa>
+        <div (click)="onSelected('save')">
+            <fa name="save" title="Save"></fa>
+        </div>
     </ng-container>
 </div>
