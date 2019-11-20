@@ -26,7 +26,9 @@ export class MissionPrioritiesComponent implements OnInit {
 
   constructor(private planningService:PlanningService, private dialogService:DialogService) {
     this.columns = [
-      {headerName: 'Priority', field: 'priority', width: 100, resizable: true,type: "numericColumn"},
+      {headerName: 'Priority', field: 'priority', width: 100, resizable: true,valueGetter: function(params) {
+        return params.node.rowIndex + 1;
+      }},
       {headerName: 'Mission Title', field: 'title', width: 250, resizable: true, editable: true , onCellValueChanged: (params)=>{this.editOfMissionTitle(params)}},
       {headerName: 'Mission Description', field: 'description', width: 450,resizable: true, editable: true, onCellValueChanged: (params)=>{this.editOfMissionDescription(params)}},
       {headerName: 'Attachments', field: 'attachments', width: 350, cellRendererFramework: AttachmentCellRendererComponent , resizable: true},
