@@ -1,4 +1,3 @@
-<pfm-dialog-manager></pfm-dialog-manager>
 <pfm-app-header></pfm-app-header>
 <mat-sidenav-container class="sidenav_container">
     <mat-sidenav #leftSidenav mode="side" opened class="sidenav_container">
@@ -20,6 +19,7 @@
     </mat-sidenav>
     <mat-sidenav-content [@onMainContentChange]="sideNavState ? 'open': 'close'">
         <div class="main_content">
+            <pfm-dialog-manager></pfm-dialog-manager>
             <router-outlet></router-outlet>
         </div>
     </mat-sidenav-content>
