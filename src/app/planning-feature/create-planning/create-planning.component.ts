@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { UserRole } from '../../pfm-common-models/UserRole';
 import { ListItem } from '../models/ListItem';
-import { InputWrapperComponent } from '../../pfm-coreui/form-inputs/input-wrapper/input-wrapper.component';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
+import { TextInputComponent } from '../../pfm-coreui/form-inputs/text-input/text-input.component';
+import { PasswordInputComponent } from '../../pfm-coreui/form-inputs/password-input/password-input.component';
+import { ZipcodeInputComponent } from '../../pfm-coreui/form-inputs/zipcode-input/zipcode-input.component';
+import { EmailInputComponent } from '../../pfm-coreui/form-inputs/email-input/email-input.component';
+import { PhoneInputComponent } from '../../pfm-coreui/form-inputs/phone-input/phone-input.component';
 
 @Component({
   selector: 'pfm-planning',
@@ -30,7 +33,6 @@ export class CreatePlanningComponent implements OnInit {
     if(this.yearDropDown.isValid()){
       this.dialogService.displayError("not implemented");
     }
-
   }
 
   ngOnInit() {

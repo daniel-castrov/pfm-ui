@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PasswordWrapperComponent } from './password-wrapper.component';
+import { TextInputComponent } from './input-wrapper.component';
 
-describe('PasswordWrapperComponent', () => {
-  let component: PasswordWrapperComponent;
-  let fixture: ComponentFixture<PasswordWrapperComponent>;
+describe('TextInputComponent', () => {
+  let component: TextInputComponent;
+  let fixture: ComponentFixture<TextInputComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PasswordWrapperComponent ]
+      declarations: [ TextInputComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PasswordWrapperComponent);
+    fixture = TestBed.createComponent(TextInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

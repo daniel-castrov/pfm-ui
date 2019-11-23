@@ -7,6 +7,8 @@ import { MissionPriority } from '../models/MissionPriority';
 import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
+import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-editor/text-cell-editor.component';
+import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 
 @Component({
   selector: 'pfm-planning',
@@ -30,24 +32,31 @@ export class MissionPrioritiesComponent implements OnInit {
       {headerName: 'Priority', field: 'priority', width: 100, resizable: true,valueGetter: function(params) {
         return params.node.rowIndex + 1;
       }},
-      {headerName: 'Mission Title', field: 'title', width: 250, resizable: true, editable: true , onCellValueChanged: (params)=>{this.editOfMissionTitle(params)}},
-      {headerName: 'Mission Description', field: 'description', width: 450,resizable: true, editable: true, onCellValueChanged: (params)=>{this.editOfMissionDescription(params)}},
-      {headerName: 'Attachments', field: 'attachments', width: 350, cellRendererFramework: AttachmentCellRendererComponent , resizable: true},
-      {headerName: 'Actions', field: 'actions', width: 350, cellRendererFramework: ActionCellRendererComponent, resizable: true  }
+      {headerName: 'Mission Title', field: 'title', width: 250, editable:true, onCellValueChanged: (params)=>{this.editOfMissionTitle(params)}, cellRendererFramework: TextCellRendererComponent, cellEditorFramework: TextCellEditorComponent},
+      {headerName: 'Mission Description', field: 'description', width: 450, editable: true, onCellValueChanged: (params)=>{this.editOfMissionDescription(params)}},
+      {headerName: 'Attachments', field: 'attachments', width: 250, cellRendererFramework: AttachmentCellRendererComponent},
+      {headerName: 'Actions', field: 'actions', width: 250, cellRendererFramework: ActionCellRendererComponent}
     ];
 
   }
 
   handleCellAction(cellAction:DataGridMessage):void{
-    this.dialogService.displayDebug(cellAction);
+    //this.dialogService.displayDebug(cellAction);
   }
 
   editOfMissionTitle(event:any):void{
-    this.dialogService.displayInfo("title new value:" + event.newValue);
+    //this.missionData[event.rowIndex].missionData = event.oldValue;
+
+    this.missionData[event.params.rowIndex][event.params.column.colId] = event.newValue;
+
+    let update:any = {
+      'update': [this.missionData[event.params.rowIndex]]
+    }
+    event.params.api.updateRowData(update);
   }
 
   editOfMissionDescription(event:any):void{
-    this.dialogService.displayInfo("desc new value:" + event.newValue);
+    //this.dialogService.displayInfo("desc new value:" + event.newValue);
   }
 
   yearSelected(year:string):void{
@@ -58,6 +67,7 @@ export class MissionPrioritiesComponent implements OnInit {
       resp => {
         this.busy = false;
         this.missionData = (resp as any);
+
       },
       error =>{
         this.busy = false;

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { InputWrapperComponent } from '../input-wrapper/input-wrapper.component';
+import { TextInputComponent } from '../text-input/text-input.component';
 
 @Component({
   selector: 'pfm-email-input',
@@ -7,34 +7,41 @@ import { InputWrapperComponent } from '../input-wrapper/input-wrapper.component'
   styleUrls: ['./email-input.component.scss']
 })
 export class EmailInputComponent implements OnInit {
-
-  @ViewChild(InputWrapperComponent, {static: false}) inputComponent: InputWrapperComponent;
-
-  @Input() dataModel:any;
+  @ViewChild(TextInputComponent, {static: false}) textInput: TextInputComponent;
   @Input() id:string;
+  @Input() dataModel:any;
   @Input() fieldName:string;
-  @Input() enabled:boolean = true;
+  @Input() label:string = "Email";
+  @Input() disabled:boolean;
+  @Input() required:boolean;
+  @Input() isCellRenderer:boolean;
+  maxSize:number = 250;
 
   isValidFlag:boolean;
   errorMessage:string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
 
-  isValid(): boolean {
+  //If the input is enabled, check if it is empty. If it is not empty, return true
+  isValid(): boolean{
+    this.isValidFlag = this.textInput.isValid();
+    this.errorMessage = undefined;
 
-      this.isValidFlag = this.inputComponent.isValid();
-      this.errorMessage = "";
-
-      if(this.dataModel[this.fieldName] && this.dataModel[this.fieldName].length > 100){
-          this.isValidFlag = false;
-          this.errorMessage = "Email cannot be longer than 100 characters"
+    if(this.isValidFlag && this.dataModel && this.dataModel[this.fieldName]){
+      if(this.dataModel[this.fieldName].indexOf('@') === -1){//TODO - add in more rules/regex to verify it is a valid email address
+        this.isValidFlag = true;
+        this.errorMessage = "Value is not a valid email";
       }
+    }
 
+    return this.isValidFlag;
+  }
 
-      return this.isValidFlag;
+  errorExists(){
+    return (this.errorMessage == undefined ? false : true );
   }
 
 }

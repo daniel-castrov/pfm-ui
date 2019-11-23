@@ -27,6 +27,8 @@ ng g component pfm-coreui/datagrid --module pfm-coreui/pfm-coreui.module --expor
 
 ng g component pfm-coreui/datagrid/renderers/action-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-action-cell-renderer --style=scss
 ng g component pfm-coreui/datagrid/renderers/attachment-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-attachment-cell-renderer --style=scss
+ng g component pfm-coreui/datagrid/renderers/text-cell-editor --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=text-cell-editor --style=scss
+ng g component pfm-coreui/datagrid/renderers/text-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=text-cell-renderer --style=scss
 
 
 

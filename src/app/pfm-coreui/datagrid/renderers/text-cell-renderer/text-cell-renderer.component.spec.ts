@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UsernameInputComponent } from './username-input.component';
+import { TextCellRendererComponent } from './text-cell-renderer.component';
 
-describe('UsernameInputComponent', () => {
-  let component: UsernameInputComponent;
-  let fixture: ComponentFixture<UsernameInputComponent>;
+describe('TextCellRendererComponent', () => {
+  let component: TextCellRendererComponent;
+  let fixture: ComponentFixture<TextCellRendererComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UsernameInputComponent ]
+      declarations: [ TextCellRendererComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UsernameInputComponent);
+    fixture = TestBed.createComponent(TextCellRendererComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LastnameInputComponent } from './lastname-input.component';
+import { SecondaryButtonComponent } from './secondary-button-input.component';
 
-describe('LastnameInputComponent', () => {
-  let component: LastnameInputComponent;
-  let fixture: ComponentFixture<LastnameInputComponent>;
+describe('SecondaryButtonComponent', () => {
+  let component: SecondaryButtonComponent;
+  let fixture: ComponentFixture<SecondaryButtonComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LastnameInputComponent ]
+      declarations: [ SecondaryButtonComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LastnameInputComponent);
+    fixture = TestBed.createComponent(SecondaryButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

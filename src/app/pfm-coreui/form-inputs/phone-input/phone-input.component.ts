@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { InputWrapperComponent } from '../input-wrapper/input-wrapper.component';
+import { RadioButtonWrapperComponent } from '../radio-button-wrapper/radio-button-wrapper.component';
+import { TextInputComponent } from '../text-input/text-input.component';
 
 @Component({
   selector: 'pfm-phone-input',
@@ -7,35 +8,40 @@ import { InputWrapperComponent } from '../input-wrapper/input-wrapper.component'
   styleUrls: ['./phone-input.component.scss']
 })
 export class PhoneInputComponent implements OnInit {
-
-  @ViewChild(InputWrapperComponent, {static: false}) inputComponent: InputWrapperComponent;
-
-  @Input() dataModel:any;
+  @ViewChild(TextInputComponent, {static: false}) textInput: TextInputComponent;
   @Input() id:string;
+  @Input() dataModel:any;
   @Input() fieldName:string;
-  @Input() enabled:boolean = true;
+  @Input() label:string = "Phone Number";
+  @Input() disabled:boolean;
+  @Input() required:boolean;
+  @Input() isCellRenderer:boolean;
+  maxSize:number = 15;
 
+  phoneRegex = /^[0-9()-]+$/;
   isValidFlag:boolean;
   errorMessage:string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
 
-  isValid(): boolean {
+  //If the input is enabled, check if it is empty. If it is not empty, return true
+  isValid(): boolean{
+    this.isValidFlag = this.textInput.isValid();
+    this.errorMessage = undefined;
 
-      this.isValidFlag = this.inputComponent.isValid();
-      this.errorMessage = "";
-
-      if(this.dataModel[this.fieldName] && (this.dataModel[this.fieldName].length !== 7 && this.dataModel[this.fieldName].length !== 10)){
-          this.isValidFlag = false;
-          this.errorMessage = "Phone number must be either 7 or 10 digits long"
+    if(this.isValidFlag && this.dataModel && this.dataModel[this.fieldName]){
+      if(this.phoneRegex.test(this.dataModel[this.fieldName].search())){
+        this.isValidFlag = false;
+        this.errorMessage = "Please enter a valid phone number";
       }
+    }
 
-
-      return this.isValidFlag;
+    return this.isValidFlag;
   }
+
 
 }
 

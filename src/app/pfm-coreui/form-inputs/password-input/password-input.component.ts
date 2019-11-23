@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { InputWrapperComponent } from '../input-wrapper/input-wrapper.component';
+import { TextInputComponent } from '../text-input/text-input.component';
 
 @Component({
   selector: 'pfm-password-input',
@@ -7,33 +7,34 @@ import { InputWrapperComponent } from '../input-wrapper/input-wrapper.component'
   styleUrls: ['./password-input.component.scss']
 })
 export class PasswordInputComponent implements OnInit {
-
-  @ViewChild(InputWrapperComponent, {static: false}) inputComponent: InputWrapperComponent;
-
-  @Input() dataModel:any;
+  @ViewChild(TextInputComponent, {static: false}) textInput: TextInputComponent;
   @Input() id:string;
+  @Input() dataModel:any;
   @Input() fieldName:string;
-  @Input() enabled:boolean = true;
+  @Input() label:string = "Password";
+  @Input() disabled:boolean;
+  @Input() required:boolean;
+  @Input() isCellRenderer:boolean;
+  maxSize:number = 250;
 
   isValidFlag:boolean;
   errorMessage:string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
 
-  isValid(): any {
+  //If the input is enabled, check if it is empty. If it is not empty, return true
+  isValid(): boolean{
+    this.isValidFlag = this.textInput.isValid();
+    this.errorMessage = undefined;
 
-      this.isValidFlag = this.inputComponent.isValid();
-      this.errorMessage = "";
+    return this.isValidFlag;
+  }
 
-      if(this.dataModel[this.fieldName] && (this.dataModel[this.fieldName].length > 20 || this.dataModel[this.fieldName].length < 8)){
-          this.isValidFlag = false;
-          this.errorMessage = "The password must be between 8 and 20 characters long"
-      }
-
-      return this.isValidFlag;
+  errorExists(){
+    return (this.errorMessage == undefined ? false : true );
   }
 
 }

@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {AllCommunityModules} from '@ag-grid-community/all-modules';
+import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-community/all-modules';
 
-import '@ag-grid-community/all-modules/dist/styles/ag-grid.css'
-import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
-import { DialogService } from '../services/dialog.service';
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
 
@@ -18,30 +15,35 @@ export class DatagridComponent implements OnInit {
   @Input() rows:any;
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
 
-  gridReady:boolean;
-  gridOptions:any;
-  modules = AllCommunityModules;
+  public defaultColDef: any;
+  public modules: Module[] = AllCommunityModules;
+  public api: GridApi;
+  public columnApi: ColumnApi;
 
   constructor(private datagridMBService:DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
       this.onCellAction.emit(message);
     });
+
+    this.defaultColDef = {
+      resizable: true,
+      sortable: true,
+      filter: true,
+    };
+  }
+
+  public onModelUpdated() {
+    console.log('onModelUpdated');
+  }
+
+  public onGridReady(params) {
+    console.log('onGridReady');
+    this.api = params.api;
+    this.columnApi = params.columnApi;
+    this.api.sizeColumnsToFit();
   }
 
   ngOnInit() {
-    this.gridOptions = {
-      defaultColDef: {
-        width: 100,
-        sortable: true,
-        resizable: true
-      },
-      rowHeight: 50,
-      rowSelection: 'single',
-      columnDefs: this.columns,
-      rowData: this.rows,
-    };
-
-    this.gridReady = true;
   }
 
 }

@@ -8,8 +8,8 @@ import { Component, OnInit, EventEmitter, Output, ViewChild, Input } from '@angu
 export class PrimaryButtonComponent {
   
   @Input() id:string;
-  @Input() label:string;
-  @Input() name:string;
+  @Input() label:string = "Primary";
+  @Input() name:string = "primary";
   @Input() disabled:boolean;
 
   @Output() onClick = new EventEmitter<MouseEvent>();

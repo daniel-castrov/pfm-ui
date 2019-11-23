@@ -1,4 +1,6 @@
 @import 'variables';
+@import "~@ag-grid-community/all-modules/dist/styles/ag-grid.css";
+@import "~@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css";
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -370,11 +372,33 @@ ngb-tabset {
 
 
 //ag-grid customization starts here
-
+.ag-header{
+  background: #24527b;
+  color: white;
+  text-align: center !important;
+}
 .ag-header-container {
   background: #24527b;
   color: white;
   text-align: center !important;
+}
+
+.ag-header-cell:hover{
+  cursor: default;
+}
+
+.ag-header-cell-resize{
+  background-color: white;
+  width: 5px;  
+}
+
+.ag-header-cell-resize:hover{
+  cursor: col-resize;
+}
+
+
+.ag-icon{
+  color: white !important;
 }
 
 .ag-header-cell-label {
@@ -393,6 +417,8 @@ ngb-tabset {
 .ag-cell {
   border: 0px !important;
   border-right: 1px solid #7b8389 !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 .row-span {

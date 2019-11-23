@@ -23,7 +23,6 @@ export class ActionCellRendererComponent implements OnInit {
     message.rowData = this.data;
     message.messageType = "cell-renderer";
     this.datagridMBService.sendMessage(message);
-
   }
 
   agInit(params) {

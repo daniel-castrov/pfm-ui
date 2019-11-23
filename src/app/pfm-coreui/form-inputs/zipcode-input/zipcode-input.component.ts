@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {InputWrapperComponent} from '../input-wrapper/input-wrapper.component';
 import { ValidatedComponent } from '../../models/validated-component';
+import { TextInputComponent } from '../text-input/text-input.component';
 
 @Component({
   selector: 'pfm-zipcode-input',
@@ -8,34 +8,36 @@ import { ValidatedComponent } from '../../models/validated-component';
   styleUrls: ['./zipcode-input.component.scss']
 })
 export class ZipcodeInputComponent implements OnInit, ValidatedComponent{
+  @ViewChild(TextInputComponent, {static: false}) textInput: TextInputComponent;
+  @Input() id:string;
+  @Input() dataModel:any;
+  @Input() fieldName:string;
+  @Input() label:string = "Zip Code";
+  @Input() disabled:boolean;
+  @Input() required:boolean;
+  @Input() isCellRenderer:boolean;
+  maxSize:number = 6;
 
-    @ViewChild(InputWrapperComponent, {static: false}) inputComponent: InputWrapperComponent;
+  isValidFlag:boolean;
+  errorMessage:string;
 
-    @Input() dataModel:any;
-    @Input() id:string;
-    @Input() fieldName:string;
-    @Input() enabled:boolean = true;
-
-    isValidFlag:boolean;
-    errorMessage:string;
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
 
-    isValid(): boolean {
+  //If the input is enabled, check if it is empty. If it is not empty, return true
+  isValid(): boolean{
+    this.isValidFlag = this.textInput.isValid();
+    this.errorMessage = undefined;
 
-        this.isValidFlag = this.inputComponent.isValid();
-        this.errorMessage = "";
-
-        if(this.dataModel[this.fieldName] && this.dataModel[this.fieldName].length !== 5){
-            this.isValidFlag = false;
-            this.errorMessage = "The zip code must be 5 digits"
-        }
-
-
-        return this.isValidFlag;
+    if(this.isValidFlag && this.dataModel && this.dataModel[this.fieldName]){
+      if(this.dataModel[this.fieldName].indexOf('a') !== -1){//TODO use a reg ex to only allow numbers
+        this.isValidFlag = false;
+        this.errorMessage = "Please enter a valid zip code";
+      }
     }
 
+    return this.isValidFlag;
+  }
 }
