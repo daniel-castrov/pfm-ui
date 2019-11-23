@@ -49,7 +49,6 @@ export class DashboardComponent implements OnInit{
       data => {
         this.busy = false;
         this.widgetPreferences = (data as any).result;
-        this.dialogService.displayToastInfo("got dashboard widget data");
       },
       error => {
         this.busy = false;
