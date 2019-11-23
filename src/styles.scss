@@ -63,6 +63,16 @@ fieldset {
 }
 
 /* misc styling */
+.custom-tooltip-error .tooltip-inner {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #721c24;
+  border-width: 1px;
+  border-style: solid;
+}
+.custom-tooltip-error .arrow::before {
+  border-top-color: #721c24;
+}
 
 .menu-display-container{
   margin: 0px;

@@ -11,7 +11,16 @@
 <ng-container *ngIf="isCellRenderer">
     <div [class.ag-input-wrapper]="getErroMessage() === undefined" [class.ag-input-wrapper-error]="getErroMessage() !== undefined" role="presentation">
         <ng-container *ngIf="isReadOnly">
-            <span id="{{id}}" [class.alert-danger]="getErroMessage() !== undefined">{{dataModel[fieldName]}}</span>
+
+            <ng-container *ngIf="getErroMessage()">
+                <span  [closeDelay]="9999999" tooltipClass="custom-tooltip-error" placement="top" ngbTooltip="{{getErroMessage()}}" container="body"  id="{{id}}" [class.alert-danger]="getErroMessage() !== undefined">{{dataModel[fieldName]}}</span>
+            </ng-container>
+
+            <ng-container *ngIf="!getErroMessage()">
+                <span id="{{id}}" [class.alert-danger]="getErroMessage() !== undefined">{{dataModel[fieldName]}}</span>
+            </ng-container>
+
+
         </ng-container>
 
         <ng-container *ngIf=!isReadOnly>
