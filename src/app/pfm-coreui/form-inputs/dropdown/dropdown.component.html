@@ -1,15 +1,18 @@
-<div class="form-group">
+<div class="pfm-select" style="width: 200px;">
 
-    <mat-form-field>
-        <mat-label *ngIf="!selectedItem" [id]="id">{{prompt}}</mat-label>
-        <mat-select [disabled]="disabled" [(value)]="selectedItem" (selectionChange)="handleSelectionChanged()">
-            <mat-option>None</mat-option>
-            <ng-container *ngFor="let option of options">
-                <mat-option [value]="option[fieldName]">{{option[fieldLabel]}}</mat-option>
-            </ng-container>
-        </mat-select>
-        <div *ngIf="errorExists()" aria-required="true" class="form-alert alert-danger">
-            {{errorMessage}}
-        </div>
-    </mat-form-field>
+    <ng-container *ngIf="!isCellRenderer">
+        <label for="{{id}}">For: </label>
+    </ng-container>
+
+
+    <select
+            (ngModelChange)="handleSelectionChanged($event)"
+            [name]="id"
+            [id]="id"
+            class="form-control"
+            [(ngModel)]="selectedItem">
+        <option disabled value="{{prompt}}">{{prompt}}</option>
+        <option value="">None</option>
+        <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
+    </select>
 </div>

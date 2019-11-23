@@ -16,7 +16,8 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() fieldLabel:string;
   @Input() options:any[];
   @Input() prompt:string = "Please select";
-  @Output() onSelectionChanged:EventEmitter<string> = new EventEmitter<string>();
+  @Input() isCellRenderer:boolean;
+  @Output() onSelectionChanged:EventEmitter<any> = new EventEmitter<any>();
 
   selectedItem:string;
 
@@ -25,9 +26,11 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
 
   constructor() { }
 
-  handleSelectionChanged():void{
+  handleSelectionChanged(selectedItem):void{
+    this.selectedItem = selectedItem;
+    let item:any = this.updateIsChecked();
     setTimeout(()=>{
-      this.onSelectionChanged.emit(this.selectedItem);
+      this.onSelectionChanged.emit(item);
     });
   }
 
@@ -48,7 +51,27 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   }
 
   ngOnInit(){
+    if(this.options && this.fieldName){
+      for(let option of this.options){
+        if(option.isSelected){
+          this.selectedItem = option[this.fieldName];
+        }
+      }
+      if(!this.selectedItem){
+        this.selectedItem = this.prompt;
+      }
+    }
+  }
 
+  private updateIsChecked():any{
+    let item:any = undefined;
+    for(let option of this.options){
+      option.isSelected = this.selectedItem == option[this.fieldName];
+      if(option.isSelected){
+        item = option;
+      }
+    }
+    return item;
   }
 
 }

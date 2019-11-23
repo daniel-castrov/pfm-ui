@@ -29,13 +29,41 @@ export class MissionPrioritiesComponent implements OnInit {
 
   constructor(private planningService:PlanningService, private dialogService:DialogService) {
     this.columns = [
-      {headerName: 'Priority', field: 'priority', width: 100, resizable: true,valueGetter: function(params) {
-        return params.node.rowIndex + 1;
-      }},
-      {headerName: 'Mission Title', field: 'title', width: 250, editable:true, onCellValueChanged: (params)=>{this.editOfMissionTitle(params)}, cellRendererFramework: TextCellRendererComponent, cellEditorFramework: TextCellEditorComponent},
-      {headerName: 'Mission Description', field: 'description', width: 450, editable: true, onCellValueChanged: (params)=>{this.editOfMissionDescription(params)}},
-      {headerName: 'Attachments', field: 'attachments', width: 250, cellRendererFramework: AttachmentCellRendererComponent},
-      {headerName: 'Actions', field: 'actions', width: 250, cellRendererFramework: ActionCellRendererComponent}
+      {
+        headerName: 'Priority',
+        field: 'priority',
+        width: 100,
+        resizable: true,
+        valueGetter: function(params) {return params.node.rowIndex + 1;}
+      },
+      {
+        headerName: 'Mission Title',
+        field: 'title',
+        editable:true,
+        cellRendererFramework: TextCellRendererComponent,
+        cellEditorFramework: TextCellEditorComponent,
+        cellRendererParams: {'maxSize': 50},
+        cellEditorParams: {'maxSize': 50}
+      },
+      {
+        headerName: 'Mission Description',
+        field: 'description',
+        editable: true,
+        cellRendererFramework: TextCellRendererComponent,
+        cellEditorFramework: TextCellEditorComponent,
+        cellRendererParams: {'maxSize': 150},
+        cellEditorParams: {'maxSize': 150}
+      },
+      {
+        headerName: 'Attachments',
+        field: 'attachments',
+        cellRendererFramework: AttachmentCellRendererComponent
+      },
+      {
+        headerName: 'Actions',
+        field: 'actions',
+        cellRendererFramework: ActionCellRendererComponent
+      }
     ];
 
   }
@@ -44,39 +72,24 @@ export class MissionPrioritiesComponent implements OnInit {
     //this.dialogService.displayDebug(cellAction);
   }
 
-  editOfMissionTitle(event:any):void{
-    //this.missionData[event.rowIndex].missionData = event.oldValue;
+  yearSelected(item:any):void{
+    this.selectedYear = item ? item.name : undefined;
+    if(this.selectedYear){
+      this.busy = true;
+      this.planningService.getMissionPriorities(this.selectedYear).subscribe(
+        resp => {
+          this.busy = false;
+          this.missionData = (resp as any);
 
-    this.missionData[event.params.rowIndex][event.params.column.colId] = event.newValue;
-
-    let update:any = {
-      'update': [this.missionData[event.params.rowIndex]]
+        },
+        error =>{
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
     }
-    event.params.api.updateRowData(update);
-  }
-
-  editOfMissionDescription(event:any):void{
-    //this.dialogService.displayInfo("desc new value:" + event.newValue);
-  }
-
-  yearSelected(year:string):void{
-    this.selectedYear = year;
-
-    this.busy = true;
-    this.planningService.getMissionPriorities(this.selectedYear).subscribe(
-      resp => {
-        this.busy = false;
-        this.missionData = (resp as any);
-
-      },
-      error =>{
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      });
   }
 
   onOpenPlanningPhase():void{
-
     if(this.yearDropDown.isValid()){
       this.dialogService.displayError("not implemented");
     }

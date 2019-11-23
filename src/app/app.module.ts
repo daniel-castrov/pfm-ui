@@ -18,7 +18,6 @@ import { PfmAuthModuleModule } from './pfm-auth-module/pfm-auth-module.module';
 import { DialogService } from './pfm-coreui/services/dialog.service';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { AuthGuard } from './pfm-auth-module/services/auth-guard';
-import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +25,6 @@ import { MaterialModule } from './material.module';
     HttpClientModule,
     BrowserTransferStateModule,
     AppRoutingModule,
-    MaterialModule,
     PfmCoreuiModule,
     PfmAuthModuleModule,
     BrowserAnimationsModule

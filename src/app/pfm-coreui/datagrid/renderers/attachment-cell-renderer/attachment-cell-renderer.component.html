@@ -1,1 +1,1 @@
-<pfm-dropdown [options]="list" [id]="'render'" [fieldLabel]="'name'" [fieldName]="'name'"></pfm-dropdown>
+<pfm-dropdown (onSelectionChanged)="handleSelectionChanged($event)" [isCellRenderer]="true" [options]="list" [id]="'render'" [fieldLabel]="'name'" [fieldName]="'name'"></pfm-dropdown>

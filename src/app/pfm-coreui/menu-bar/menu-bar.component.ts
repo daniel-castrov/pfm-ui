@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserRole } from '../../pfm-common-models/UserRole';
 import { animateText } from './animation';
 import { MenuBarItem } from '../models/MenuBarItem';
@@ -16,15 +16,58 @@ export class MenuBarComponent implements OnInit {
   @Input() role:UserRole;
   @Input() elevatedBoolean;
   @Input() isUserSignedIn:boolean;
-
-  //TODO - notice that this can be data-driven from a service, example below
   @Input() menuBarItems:MenuBarItem[];
+  @Output() onMenuToogle:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  overlapTriggerFlag:boolean = false;
+  isOpen:boolean;
   isDashboardSelected:boolean;
   isPlanningSelected:boolean;
+  isBudgetSelected:boolean;
+  isExecutionSelected:boolean;
+  isReportsSelected:boolean;
+  isManageSelected:boolean;
+  isAdminSelected:boolean;
+  selectedItem:string;
 
   constructor(private router: Router) {
+
+  }
+
+  onSelect(name:string):void{
+    this.selectedItem = name;
+    if(name){
+      this.isDashboardSelected = false;
+      this.isPlanningSelected = false;
+      this.isBudgetSelected = false;
+      this.isExecutionSelected = false;
+      this.isReportsSelected = false;
+      this.isManageSelected = false;
+      this.isAdminSelected = false;
+
+      if(name === 'Dashboard'){
+        this.isDashboardSelected = true;
+      }
+      else if(name === 'Planning'){
+        this.isPlanningSelected = true;
+      }
+      else if(name === 'Budget'){
+        this.isBudgetSelected = true;
+      }
+      else if(name === 'Reports'){
+        this.isReportsSelected = true;
+      }
+      else if(name === 'Manage'){
+        this.isManageSelected = true;
+      }
+      else if(name === 'Admin'){
+        this.isAdminSelected = true;
+      }
+    }
+  }
+
+  toogleMenu() {
+    this.isOpen = !this.isOpen;
+    this.onMenuToogle.emit(this.isOpen);
 
   }
 

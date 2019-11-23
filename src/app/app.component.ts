@@ -16,14 +16,12 @@ export class AppComponent implements OnInit {
 
   sideNavState:boolean;
   linkText:boolean;
+  isSideMenuOpen:boolean;
 
   constructor(public appModel:AppModel, private authService:AuthorizationService, private router:Router) {}
 
-  onSidenavToggle(){
-    this.sideNavState = !this.sideNavState;
-    setTimeout(()=>{
-      this.linkText = this.sideNavState;
-    }, 200);
+  onMenuToogle(newValue):void{
+    this.isSideMenuOpen = newValue;
   }
 
   ngOnInit() {

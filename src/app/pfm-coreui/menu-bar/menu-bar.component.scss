@@ -1,181 +1,126 @@
-$primary-color: #25527a;
-$dark-grey:     #848282;
-$light-grey:    #eae9e9;
+/* The side navigation menu */
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 64px; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  left: 0;
+  background-color: #bbced7;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
 
-//::ng-deep.mat-menu-panel {
-//  transform: translate(32px, -32px);
-//}
+.menu-toggle{
+  color: #25527a;
+  font-size: 18px;
+  margin-left: 4px;
+  cursor: pointer!important;
+}
+
+ul{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+
+}
+li{
+  list-style: none;
+  display: flex;
+  color: #25527a;
+  width: 100%;
+  justify-content: center;
+  height: 50px;
+  align-items: center;
+}
+
+li:hover{
+  cursor: pointer!important;
+  background-color: #2e719e;
+  color: white;
+}
+
+li:hover > .menu-item fa {
+  color: white;
+}
 
 .active{
-  background: lightblue;
+  background-color: #2e719e;
+  color: white;
 }
 
-.navbar {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-// background-color: #23527c !important;
-    padding: 0 10px;
-    margin-bottom: 1.4rem;
+.inner-menu-divider{
+  height: 0;
+  overflow: hidden;
+  border-top: 1px solid #e9ecef;
 }
 
-.navbar-dark .navbar-nav .nav-link {
-    color: #fff;
-    font-size: 14px;
+.inner-menu-item{
+  padding: 10px;
 }
 
-.navbar {
-    padding: 0rem;
+.inner-menu-item:hover{
+  background-color: #2e719e;
+  color: white;
 }
 
-ul.navbar-nav>li.nav-item:first-child {
-    border-right: 1px solid rgba(92, 124, 152, 0.36);
+.menu-item{
+  display: flex;
 }
 
-ul.navbar-nav>li.nav-item:last-child {
-    border-right: none;
+span{
+  padding-left: 8px;
+  width:120px;
+  padding-top: 2px;
 }
 
-.navbar-dark .navbar-nav .nav-link.disabled {
-
-    color: #708CA7 !important;
-    text-decoration: none;
-    cursor: disable;
-    cursor: not-allowed;
+fa{
+  color: #25527a;
+  font-size: 18px;
+  margin-left: 4px;
 }
 
-// .navbar {
-   //   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-   //   background-color: #23527c !important;
-   //   padding: 0 10px;
-   //   margin-bottom: 1.4rem;
-   // }
-
-// .navbar-dark .navbar-nav .nav-link {
-   //   color: #fff;
-   //   font-size: 14px;
-   // }
-
-// .navbar {
-   //   padding: 0rem;
-   // }
-
-// ul.navbar-nav>li.nav-item:first-child {
-   //   border-right: 1px solid rgba(92, 124, 152, 0.36);
-   // }
-
-// ul.navbar-nav>li.nav-item:last-child {
-   //   border-right: none;
-   // }
-
-// .navbar-dark .navbar-nav .nav-link.disabled {
-
-   //   color: #708CA7 !important;
-   //   text-decoration: none;
-   //   cursor: disable;
-   //   cursor: not-allowed;
-   // }
-.enable-menu{
-    color: #212529 !important;
-}
-.disable-menu{
-    color: #ccc !important;
-}
-.gray{
-    opacity: 0.5;
-}
-.black{
-    color: black;
+fa:hover{
+  color:white;
 }
 
-.sidenav_container {
-    min-width: 60px;
-    height: calc(100vh - 200px);
+span{
+  display: none;
+}
+.open{
+  width: 200px;
 }
 
-.jim {
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50%;
+.open span{
+  display: block;
 }
 
-.side-nav-menu {
-    padding: 0px 10px;
-    padding-top: 50px;
+.inner-menu{
+  display: flex;
+  flex-direction: column;
+  background-color: #bbced7;
 }
 
-.main_content {
-    width:100%;
-    height: calc(100vh - 100px);
-    background: #efefef;
+.menu-display-container{
+  border: 0;
 }
 
-.side-menu-container {
-    display:flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 17px;
-    padding-top: 10px;
-
-.mat-menu {
-    margin-left: 20px;
-    margin-top: -20px;
-    
+.menu-display-container .arrow::after {
+  display: none;
 }
 
+::ng-deep .popover-body{
+  padding: 0;
 }
 
 
-.mat-list-item,
-.mat-icon,
-.mat-icon-button {
-    color: $primary-color;
-    font-size: 18px;
-    margin-left: 4px;
-    cursor: pointer !important;
-
-
-&:hover{
-     color: $dark-grey;
- }
-&:focus {
-     outline: 1px solid #fafafa;
- }
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
 }
 
-.mat-icon {
-    width: 20px;
-}
-
-.mat-icon-button,
-.mat-button {
-    color: $primary-color;
-    font-size: 16px;
-    cursor: pointer !important;
-    margin-top: 6px;
-    outline: 1px solid $light-grey;
-}
-
-.menu-section-label {
-    color: $primary-color !important;
-    cursor: pointer !important;
-}
-
-.arrow-left {
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    position: absolute;
-    left: -10px;
-    top: 1px;
-    border-right:10px solid #80808057;
-    background-color: #fff;
-}
-
-.active-link{   
-    background-color: #2E719E;
-}
-
-::ng-deep .mat-menu-content{
-    background: #BBCED7;
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
 }

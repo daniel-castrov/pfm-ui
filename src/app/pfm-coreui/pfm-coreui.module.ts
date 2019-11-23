@@ -4,7 +4,6 @@ import { AppHeaderComponent } from './app-header/app-header.component';
 import { MenuBarComponent } from './menu-bar/menu-bar.component';
 import { RouterModule } from '@angular/router';
 import { DialogManagerComponent } from './dialog-manager/dialog-manager.component';
-import { MaterialModule } from '../material.module';
 import { BusyComponent } from './busy/busy.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { CardComponent } from './card/card.component';
@@ -25,6 +24,7 @@ import { TextInputComponent } from './form-inputs/text-input/text-input.componen
 import { SecondaryButtonComponent } from './form-inputs/secondary-button-input/secondary-button.component';
 import { TextCellEditorComponent } from './datagrid/renderers/text-cell-editor/text-cell-editor.component';
 import { TextCellRendererComponent } from './datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -50,7 +50,7 @@ import { TextCellRendererComponent } from './datagrid/renderers/text-cell-render
     TextCellRendererComponent
   ],
   imports: [
-    CommonModule, RouterModule, MaterialModule, AngularFontAwesomeModule, FormsModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent])
+    CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent])
   ],
   exports: [
     AppHeaderComponent,

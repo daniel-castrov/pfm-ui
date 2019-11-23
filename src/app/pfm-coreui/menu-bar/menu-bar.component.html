@@ -1,257 +1,116 @@
-<!-- TODO, notice this could easily be data-driven-->
-<ng-container *ngIf="!isUserSignedIn || !role">
-    <mat-nav-list mat-list-item class="side-menu-container" [matMenuTriggerFor]="aboutMenu">
-        <mat-icon>
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-        </mat-icon>
-        <div [@animateText]="linkText ? 'show' : 'hide'">
-            <div>
-                <button mat-button>About</button>
-            </div>
-        </div>
-        <mat-menu #aboutMenu="matMenu" ov>
-            <button mat-menu-item>
-                <a class="nav-link" href="#" routerLink="/about">About</a>
-            </button>
-        </mat-menu>
-    </mat-nav-list>
-    <mat-nav-list>
-        <div mat-list-item class="side-menu-container">
-            <mat-icon [matMenuTriggerFor]="contactusMenu">
-                <i class="fa fa-phone-square" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button [matMenuTriggerFor]="contactusMenu">Contact</button>
+<ul id="mySidenav" class="sidenav" [class.open]="isOpen">
+    <li (click)="onSelect('Dashboard')" [class.active]="isDashboardSelected" container="body" [ngbPopover]="popContentDashboard" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="tachometer"></fa>
+            <span>Dashboard</span>
+            <ng-template #popContentDashboard>
+                <div class="inner-menu">
+                    <a class="inner-menu-item"  href="#" routerLink="/home" routerLinkActive="active-link">Dashboard</a>
                 </div>
-            </div>
-            <mat-menu #contactusMenu="matMenu">
-                <button mat-menu-item>
-                    <a class="nav-link" href="#" routerLink="/contact">Contact Us</a>
-                </button>
-            </mat-menu>
+            </ng-template>
         </div>
-    </mat-nav-list>
-</ng-container>
+    </li>
+    <li (click)="onSelect('Planning')" [class.active]="isPlanningSelected" container="body" [ngbPopover]="popContentPlanning" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="hourglass-end"></fa>
+            <span>Planning</span>
+            <ng-template #popContentPlanning>
+                <div class="inner-menu">
+                    <a class="inner-menu-item"  href="#" routerLink="/planning/create-planning" routerLinkActive="active-link">Create Planning Phase</a>
+                    <a class="inner-menu-item"  href="#" routerLink="/planning/open-planning" routerLinkActive="active-link">Open Planning Phase</a>
+                    <div class="inner-menu-divider"></div>
+                    <a class="inner-menu-item"  href="#" routerLink="/planning/mission-priorities" routerLinkActive="active-link">Mission Priorities</a>
+                    <div class="inner-menu-divider"></div>
+                    <a class="inner-menu-item" href="#" routerLink="/planning/lock-planning" routerLinkActive="active-link">Lock Planning Phase</a>
+                    <a class="inner-menu-item" href="#" routerLink="/planning/close-planning" routerLinkActive="active-link">Close Planning Phase</a>
+                </div>
+            </ng-template>
+        </div>
+    </li>
+    <li (click)="onSelect('Budget')" [class.active]="isBudgetSelected" container="body" [ngbPopover]="popContentBudget" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="database"></fa>
+            <span>Budget</span>
+            <ng-template #popContentBudget>
+                <div class="inner-menu">
+                    <a class="inner-menu-item" routerLink="/edit-program-details" routerLinkActive="active-link">Edit Program Details</a>
+                    <a class="inner-menu-item" routerLink="/create-budget" routerLinkActive="active-link">Create Budget Phase</a>
+                    <a class="inner-menu-item" routerLink="/copy-budget" routerLinkActive="active-link">Copy Budget</a>
+                    <a class="inner-menu-item" routerLink="/edit-budget-details" routerLinkActive="active-link">Edit Budget Details</a>
+                    <a class="inner-menu-item" href="#" routerLink="/r-forms" routerLinkActive="active-link">RDT&E Exhibits</a>
+                    <a class="inner-menu-item" href="#" routerLink="/p-forms" routerLinkActive="active-link">Proc Exhibits</a>
+                    <a class="inner-menu-item" disabled>RDT&E Tree Data</a>
+                </div>
+            </ng-template>
+        </div>
+    </li>
+    <li (click)="onSelect('Execution')" [class.active]="isExecutionSelected" container="body" [ngbPopover]="popContentExecution" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="globe"></fa>
+            <span>Execution</span>
+            <ng-template #popContentExecution>
+                <div class="inner-menu">
+                    <a class="inner-menu-item" href="#" routerLink="/funds-update" routerLinkActive="active-link">Funds Update</a>
+                    <a class="inner-menu-item" href="#" routerLink="/oe-update" routerLinkActive="active-link">Program Update</a>
+                    <a class="inner-menu-item" href="#" routerLink="/create-execution-phase" routerLinkActive="active-link">Create Execution Phase</a>
+                    <a class="inner-menu-item" href="#" routerLink="/open-execution" routerLinkActive="active-link">Open Execution Phase</a>
+                    <a class="inner-menu-item" href="#" routerLink="/import-execution-data" routerLinkActive="active-link">Import Actuals</a>
+                    <a class="inner-menu-item" href="#" routerLink="/ufr-yoe-summary" routerLinkActive="active-link">UFR Request</a>
+                </div>
+            </ng-template>
+        </div>
+    </li>
+    <li (click)="onSelect('Reports')" [class.active]="isReportsSelected" container="body" [ngbPopover]="popContentReports" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="area-chart"></fa>
+            <span>Reports</span>
+            <ng-template #popContentReports>
+                <div class="inner-menu">
+                    <a class="inner-menu-item " disabled>R1</a>
+                    <a class="inner-menu-item" disabled>R2</a>
+                    <a class="inner-menu-item" disabled>P1</a>
+                    <a class="inner-menu-item" disabled>P1</a>
+                    <a class="inner-menu-item" disabled>P2</a>
+                </div>
+            </ng-template>
+        </div>
+    </li>
+    <li (click)="onSelect('Manage')" [class.active]="isManageSelected" container="body" [ngbPopover]="popContentManage" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="th-list"></fa>
+            <span>Manage</span>
+            <ng-template #popContentManage>
+                <div class="inner-menu">
+                    <a class="inner-menu-item" disabled>Manage Programming</a>
+                    <a class="inner-menu-item" disabled>Manage Budgeting</a>
+                    <a class="inner-menu-item" disabled>Execution</a>
+                    <a class="inner-menu-item" href="#" routerLink="/create-mrdb-program">Create Unfunded Program</a>
+                </div>
+            </ng-template>
+        </div>
+    </li>
+    <li (click)="onSelect('Admin')" [class.active]="isAdminSelected" container="body" [ngbPopover]="popContentAdmin" popoverClass="menu-display-container">
+        <div class="menu-item">
+            <fa name="user-secret"></fa>
+            <span>Admin</span>
+            <ng-template #popContentAdmin>
+                <div class="inner-menu">
+                    <a class="inner-menu-item" href="#" routerLink="/approve-requests" routerLinkActive="active-link">Approve Requests</a>
+                    <a class="inner-menu-item" href="#" routerLink="/manage-communities" routerLinkActive="active-link">Manage Communities</a>
+                    <a class="inner-menu-item" href="#" routerLink="/user-list" routerLinkActive="active-link">Manage Users</a>
+                    <a class="inner-menu-item" href="#" routerLink="/roles" routerLinkActive="active-link">Manage Roles</a>
+                </div>
+            </ng-template>
+        </div>
+    </li>
 
-<ng-container *ngIf="role && isUserSignedIn">
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="dashboardMenu" #dashboardMenuTrigger="matMenuTrigger" (mouseover)="dashboardMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon routerLink="/home" title="Dashboard">
-                <i class="fa fa-tachometer"  title="Dashboard" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'" >
-                <div>
-                    <button mat-button routerLink="/home"> Dashboard</button>
-                </div>
-            </div>
-            <mat-menu #dashboardMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseout)="dashboardMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/home" routerLinkActive="active-link">Dashboard</a>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="planningMenu"  #planningMenuTrigger="matMenuTrigger" (mouseover)="planningMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon>
-                <i class="fa fa-hourglass-end" title="Program Request" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button>Planning</button>
-                </div>
-            </div>
-            <mat-menu #planningMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseleave)="planningMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/create-planning" routerLinkActive="active-link">Create Planning Phase</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/open-planning" routerLinkActive="active-link">Open Planning Phase</a>
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu"  href="#" routerLink="/planning/mission-priorities" routerLinkActive="active-link">Mission Priorities</a>
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/planning/lock-planning" routerLinkActive="active-link">Lock Planning Phase</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/planning/close-planning" routerLinkActive="active-link">Close Planning Phase</a>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="budgetMenu" #budgetMenuTrigger="matMenuTrigger" (mouseover)="budgetMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon>
-                <i class="fa fa-database" title="Budget"  aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button>Budget</button>
-                </div>
-            </div>
-            <mat-menu #budgetMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseleave)="budgetMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/edit-program-details" routerLinkActive="active-link">Edit Program Details</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/create-budget" routerLinkActive="active-link">Create Budget Phase</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/copy-budget" routerLinkActive="active-link">Copy Budget</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" routerLink="/edit-budget-details" routerLinkActive="active-link">Edit Budget Details</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/r-forms" routerLinkActive="active-link">RDT&E Exhibits</a>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/p-forms" routerLinkActive="active-link">Proc Exhibits</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item" disabled>RDT&E Tree Data</a>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="executionMenu"  #executionMenuTrigger="matMenuTrigger" (mouseover)="executionMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon>
-                <i class="fa fa-globe"  title="Execution" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button> Execution</button>
-                </div>
-            </div>
-            <mat-menu #executionMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseleave)="executionMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/funds-update" routerLinkActive="active-link">Funds Update</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/oe-update" routerLinkActive="active-link">Program Update</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/create-execution-phase" routerLinkActive="active-link">Create Execution Phase</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/open-execution" routerLinkActive="active-link">Open Execution Phase</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/import-execution-data" routerLinkActive="active-link">Import Actuals</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/ufr-yoe-summary" routerLinkActive="active-link">UFR Request</a>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="reportsMenu" #reportsMenuTrigger="matMenuTrigger" (mouseover)="reportsMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon>
-                <i class="fa fa-area-chart" title="Reports" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button>Reports</button>
-                </div>
-            </div>
-            <mat-menu #reportsMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseleave)="reportsMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item " disabled>R1</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item" disabled>R2</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item" disabled>P1</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item" disabled>P1</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item" disabled>P2</a>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="manageMenu" #manageMenuTrigger="matMenuTrigger" (mouseover)="manageMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon>
-                <i class="fa fa-th-list" title="Manage" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button>Manage</button>
-                </div>
-            </div>
-            <mat-menu #manageMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseleave)="manageMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <div>
-                            <p class="menu-section-label enable-menu">Programming</p>
-                            <a class="dropdown-item" disabled>Manage Programming</a>
-                        </div>
+    <li class="menu-toggle menu-item" (click)="toogleMenu()">
+        <ng-container *ngIf="isOpen">
+            <fa name="arrow-left"></fa>
+        </ng-container>
+        <ng-container *ngIf="!isOpen">
+            <fa name="arrow-right"></fa>
+        </ng-container>
+    </li>
+</ul>
 
-                        <div>
-                            <p class="menu-section-label enable-menu">Budget</p>
-                            <a class="dropdown-item" disabled>Manage Budgeting</a>
-                        </div>
-
-                        <div>
-                            <p class="menu-section-label enable-menu">Execution</p>
-                            <a class="dropdown-item enable-menu" href="#" routerLink="/create-mrdb-program">Create Unfunded Program</a>
-                        </div>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-    <mat-nav-list routerLinkActive="active-link" [matMenuTriggerFor]="adminMenu" #adminMenuTrigger="matMenuTrigger" (mouseover)="adminMenuTrigger.openMenu()">
-        <div mat-list-item class="side-menu-container">
-            <mat-icon>
-                <i class="fa fa-user-secret"  title="Admin" aria-hidden="true"></i>
-            </mat-icon>
-            <div [@animateText]="linkText ? 'show' : 'hide'">
-                <div>
-                    <button mat-button>Admin</button>
-                </div>
-            </div>
-            <mat-menu #adminMenu="matMenu" [overlapTrigger]="overlapTriggerFlag">
-                <div (mouseleave)="adminMenuTrigger.closeMenu()">
-                    <div class="arrow-left"></div>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/approve-requests" routerLinkActive="active-link">Approve Requests</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/manage-communities" routerLinkActive="active-link">Manage Communities</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/user-list" routerLinkActive="active-link">Manage Users</a>
-                    </button>
-                    <button mat-menu-item>
-                        <a class="dropdown-item enable-menu" href="#" routerLink="/roles" routerLinkActive="active-link">Manage Roles</a>
-                    </button>
-                </div>
-            </mat-menu>
-        </div>
-    </mat-nav-list>
-</ng-container>
