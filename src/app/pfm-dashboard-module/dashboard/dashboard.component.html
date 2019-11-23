@@ -44,21 +44,19 @@
     </ng-container>
 </div>
 
-<div class="dashboard-container">
-    <div class="dashboard-left">
+<div class="dashboard-container" droppable>
         <div class="example-box">
             <ng-container *ngFor="let widget of widgetList">
                 <ng-container *ngIf="widget.selected">
-                    <ng-container [ngSwitch]="widget.title">
+                    <div draggable [ngSwitch]="widget.title">
                         <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
                         <app-demo-widget-pom-phase-funding *ngSwitchCase="'POM Phase Funding'">></app-demo-widget-pom-phase-funding>
                         <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'">></app-demo-widget-mission-funding-priority>
                         <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'">></app-demo-widget-mission-funding-money>
-                    </ng-container>
+                    </div>
                 </ng-container>
             </ng-container>
         </div>
-    </div>
 </div>
 
 

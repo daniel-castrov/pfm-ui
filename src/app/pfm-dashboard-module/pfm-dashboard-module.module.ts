@@ -10,11 +10,12 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { FormsModule } from '@angular/forms';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardMockService } from './services/dashboard.mock.service';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 @NgModule({
   declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
   imports: [
-    CommonModule, FormsModule, Ng2GoogleChartsModule, PfmCoreuiModule
+    CommonModule, FormsModule, Ng2GoogleChartsModule, NgDragDropModule.forRoot(), PfmCoreuiModule
   ],
   exports: [DashboardComponent],
   entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],
