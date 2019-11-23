@@ -3,6 +3,9 @@ import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-communit
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
+import { ListItem } from '../../planning-feature/models/ListItem';
+import { MissionAction } from '../../planning-feature/models/MissionAction';
+import { MissionPrioritiesComponent } from '../../planning-feature/mission-priorities/mission-priorities.component';
 
 @Component({
   selector: 'pfm-datagrid',
@@ -13,7 +16,9 @@ export class DatagridComponent implements OnInit {
 
   @Input() columns:any;
   @Input() rows:any;
+  @Input() showAddRow:boolean;
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
+  @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
 
   public defaultColDef: any;
   public modules: Module[] = AllCommunityModules;
@@ -30,6 +35,10 @@ export class DatagridComponent implements OnInit {
       sortable: true,
       filter: true,
     };
+  }
+
+  public addNewRow():void{
+      this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
   }
 
   public onModelUpdated() {

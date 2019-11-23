@@ -1,4 +1,10 @@
 <div class="pfm-datagrid">
+    <div class="add-row-container">
+        <div (click)="addNewRow()">
+            <fa name="plus"></fa>
+            <fa name="caret-down"></fa>
+        </div>
+    </div>
     <ag-grid-angular  style="width: 100%; height: 100%;"
                       [columnDefs]="columns"
                       [rowData]="rows"

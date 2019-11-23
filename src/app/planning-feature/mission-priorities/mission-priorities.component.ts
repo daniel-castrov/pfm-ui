@@ -9,6 +9,7 @@ import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/rende
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-editor/text-cell-editor.component';
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
+import { MissionAction } from '../models/MissionAction';
 
 @Component({
   selector: 'pfm-planning',
@@ -68,6 +69,19 @@ export class MissionPrioritiesComponent implements OnInit {
       }
     ];
 
+  }
+
+  onAddNewRow(event:any):void{
+    if(event.action === "add-single-row"){
+      let mp:MissionPriority = new MissionPriority();
+      mp.attachments = [];
+      mp.actions = new MissionAction();
+      mp.actions.canEdit = true;
+      mp.actions.canSave = true;
+      mp.actions.canDelete = true;
+      mp.actions.canUpload = true;
+      event.gridApi.updateRowData({add: [mp]});
+    }
   }
 
   handleCellAction(cellAction:DataGridMessage):void{
