@@ -9,7 +9,7 @@ import { TextInputComponent } from '../../../form-inputs/text-input/text-input.c
 })
 export class TextCellEditorComponent implements ICellEditorAngularComp, AfterViewInit{
   @ViewChild(TextInputComponent, {static: false}) input: TextInputComponent;
-  private params: any;
+  public params: any;
   public id:string;
 
   agInit(params: any): void {

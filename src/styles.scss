@@ -316,14 +316,18 @@ tab {
   cursor: col-resize;
 }
 
+.ag-icon{
+  color: white !important;
+}
 
 .ag-icon-grip{
   color: #24527b !important;
 }
 
-.ag-icon{
-  color: white !important;
+.ag-icon-grip:hover{
+  cursor: pointer;
 }
+
 
 .ag-header-cell-label {
   text-align: center !important;

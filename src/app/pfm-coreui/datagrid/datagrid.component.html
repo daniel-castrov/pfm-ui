@@ -1,12 +1,9 @@
 <div class="pfm-datagrid">
     <ag-grid-angular  style="width: 100%; height: 100%;"
-                      [domLayout]="autoHeight"
                       [columnDefs]="columns"
                       [rowData]="rows"
-
                       [rowDragManaged]="true"
                       [defaultColDef]="defaultColDef"
-                      [frameworkComponents]="frameworkComponents"
                       [modules]="modules"
                       suppressRowClickSelection
                       rowSelection="single"
