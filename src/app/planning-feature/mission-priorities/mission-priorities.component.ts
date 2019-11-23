@@ -34,6 +34,8 @@ export class MissionPrioritiesComponent implements OnInit {
         field: 'priority',
         width: 100,
         resizable: true,
+        rowDrag: true,
+        rowDragManaged: true,
         valueGetter: function(params) {return params.node.rowIndex + 1;}
       },
       {

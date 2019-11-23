@@ -1,6 +1,7 @@
 @import 'variables';
 @import "~@ag-grid-community/all-modules/dist/styles/ag-grid.css";
 @import "~@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css";
+@import "~@ag-grid-community/all-modules/dist/styles/webfont/agGridBalhamFont.scss";
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -315,6 +316,10 @@ tab {
   cursor: col-resize;
 }
 
+
+.ag-icon-grip{
+  color: #24527b !important;
+}
 
 .ag-icon{
   color: white !important;
