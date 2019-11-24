@@ -1,13 +1,13 @@
 
 <div class="ccontainer column">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 d-flex justify-content-center">
             <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'assigned'" [type]="'assigned'" [cardTitle]="'0'" [cardText]="'Assigned to you'" [cardActionText]="'View details'"></pfm-card>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 d-flex justify-content-center">
             <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'outstanding'" [type]="'outstanding'" [cardTitle]="'0'" [cardText]="'Your outstanding requests'" [cardActionText]="'View details'"></pfm-card>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 d-flex justify-content-center">
             <pfm-card (onToggle)="onCardSelected($event)" [expanded]="selectedCardType === 'completed'" [type]="'completed'" [cardTitle]="'0'" [cardText]="'Completed (Past 30 Days)'" [cardActionText]="'View details'"></pfm-card>
         </div>
     </div>
