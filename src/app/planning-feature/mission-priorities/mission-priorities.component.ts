@@ -10,6 +10,7 @@ import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-editor/text-cell-editor.component';
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
+import {GridApi} from '@ag-grid-community/all-modules';
 
 @Component({
   selector: 'pfm-planning',
@@ -20,6 +21,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
+  gridApi:GridApi;
   id:string = 'mission-priorities-component';
   busy:boolean;
   availableYears:ListItem[];
@@ -69,6 +71,10 @@ export class MissionPrioritiesComponent implements OnInit {
       }
     ];
 
+  }
+
+  onGridIsReady(gridApi:GridApi):void{
+    this.gridApi = gridApi;
   }
 
   onAddNewRow(event:any):void{
