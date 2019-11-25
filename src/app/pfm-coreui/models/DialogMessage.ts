@@ -7,4 +7,6 @@ export class DialogMessage {
 	labelForOk:string = "OK";
 	labelForCancel:string = "Cancel";
 	//TODO - add in the callbacks for ok/cancel
+	okCallBack:any;
+	cancelCallBack:any;
 }

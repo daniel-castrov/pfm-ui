@@ -27,9 +27,16 @@
                 <div class="modal-content">
                     <div class="modal-header" [class.error]="activeMessage.type === 'ERROR'">
                         <h5 class="modal-title">{{activeMessage.title}}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onDialogClose()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <ng-container *ngIf="activeMessage.type !== 'CONFIRMATION'">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onDialogClose()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="activeMessage.type === 'CONFIRMATION'">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onDialogCancel()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </ng-container>
                     </div>
                     <div class="modal-body">
                         <ng-container *ngIf="activeMessage.type === 'DEBUG'">
@@ -41,8 +48,15 @@
 
                     </div>
                     <div class="modal-footer">
+                        <ng-container *ngIf="activeMessage.type !== 'CONFIRMATION'">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onDialogClose()">{{activeMessage.labelForOk}}</button>
+                        </ng-container>
+                        <ng-container *ngIf="activeMessage.type === 'CONFIRMATION'">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDialogOk()">{{activeMessage.labelForOk}}</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onDialogCancel()">{{activeMessage.labelForCancel}}</button>
+                        </ng-container>
                         <!--<button type="button" class="btn btn-primary" (click)="onDialogClose()">Save changes</button>-->
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onDialogClose()">{{activeMessage.labelForOk}}</button>
+                        
                     </div>
                 </div>
             </div>

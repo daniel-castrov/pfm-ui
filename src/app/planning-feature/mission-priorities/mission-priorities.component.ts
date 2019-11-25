@@ -11,6 +11,7 @@ import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/tex
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
 import { MissionAttachment } from '../models/MissionAttachment';
+import {GridApi} from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 
 @Component({
@@ -22,6 +23,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
+  gridApi:GridApi;
   id:string = 'mission-priorities-component';
   busy:boolean;
   availableYears: ListItem[];
@@ -73,7 +75,11 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
-  handleCellAction(cellAction:DataGridMessage, event:any):void{
+  onGridIsReady(gridApi:GridApi):void{
+    this.gridApi = gridApi;
+  }
+
+  handleCellAction(cellAction:DataGridMessage):void{
     //this.dialogService.displayDebug(cellAction);
     switch(cellAction.message){
       case "save": {
@@ -91,9 +97,9 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "delete": {
-        console.log("delete");
+        console.log("delete-row");
         console.log(cellAction.rowIndex);
-        this.deleteRow(cellAction.rowIndex, event);
+        this.deleteRow(cellAction.rowIndex, cellAction.rowData);
         break;
       }
     }
@@ -205,7 +211,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
-  private editRow(rowId:number, event:any){
+  private editRow(rowId:number){
     //edit mode
     this.editMode(rowId);
 
@@ -215,21 +221,24 @@ export class MissionPrioritiesComponent implements OnInit {
     this.saveRow(rowId , this.missionData[rowId], event)
   }
 
-  deleteRow(rowId:number, event:any){
+  deleteRow(rowId:number, data:any){
     //confirmation message
+    this.dialogService.displayConfirmation("Are you sure you want to delete this row?", "Delete Confirmation", 
+    ()=>{
+      //delete row
+      console.log(this.missionData.splice(rowId, 1));
 
-    //event.gridOptions.api.updateRowData({ remove: [this.missionData[rowId]]})
-
-    //delete row
-    console.log(this.missionData.splice(rowId, 1));
-
-    //update priority
-    for (let i = rowId; i < this.missionData.length; i++){
-      this.missionData[i].priority= this.missionData[i].priority + 1;
-    }
+      //update priority
+      for (let i = rowId; i < this.missionData.length; i++){
+        this.missionData[i].priority= this.missionData[i].priority + 1;
+      }
     
-    //update view
-    event.gridApi.setRowData(this.missionData);
+      //update view
+      this.gridApi.setRowData(this.missionData);
+    }, 
+    ()=>{
+      console.log("Cancel Worked!");
+    });
   }
 
   private deleteAttatchment(rowId:number, attatchmentId:number, event:any){

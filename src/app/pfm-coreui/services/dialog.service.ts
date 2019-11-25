@@ -55,4 +55,14 @@ export class DialogService {
 		message.isToast = true;
 		this.sendMessage(message);
 	}
+
+	displayConfirmation(text:string, title:string, okCallBack:any, cancelCallBack:any):void{
+		let message:DialogMessage = new DialogMessage();
+		message.type = "CONFIRMATION";
+		message.title = title;
+		message.body = text;
+		message.okCallBack = okCallBack;
+		message.cancelCallBack = cancelCallBack;
+		this.sendMessage(message);
+	}
 }

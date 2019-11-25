@@ -19,6 +19,7 @@ export class DatagridComponent implements OnInit {
   @Input() showAddRow:boolean;
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
+  @Output() onGridIsReady:EventEmitter<GridApi> = new EventEmitter<GridApi>();
 
   public defaultColDef: any;
   public modules: Module[] = AllCommunityModules;
@@ -50,6 +51,7 @@ export class DatagridComponent implements OnInit {
     this.api = params.api;
     this.columnApi = params.columnApi;
     this.api.sizeColumnsToFit();
+    this.onGridIsReady.emit(this.api);
   }
 
   ngOnInit() {

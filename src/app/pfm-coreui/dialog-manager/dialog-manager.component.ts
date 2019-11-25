@@ -42,6 +42,18 @@ export class DialogManagerComponent {
 		this.handleDialogMessageChange();
 	}
 
+	onDialogOk():void{
+		this.activeMessage.okCallBack();
+		this.activeMessage = undefined;
+		this.handleDialogMessageChange();
+	}
+
+	onDialogCancel():void{
+		this.activeMessage.cancelCallBack();
+		this.activeMessage = undefined;
+		this.handleDialogMessageChange();
+	}
+
 	private handleDialogMessageChange(){
 		if(!this.activeMessage && this.messageList.length > 0){
 			this.activeMessage = this.messageList.pop();

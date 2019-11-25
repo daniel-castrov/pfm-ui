@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
 import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-community/all-modules';
+import { ListItem } from 'src/app/planning-feature/models/ListItem';
 
 @Component({
   selector: 'pfm-action-cell-renderer',
@@ -10,43 +11,13 @@ import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-communit
 })
 export class ActionCellRendererComponent implements OnInit {
 
-  @Output() onDeleteRowEvent:EventEmitter<any> = new EventEmitter<any>();
-  @Output() onEditRowEvent:EventEmitter<any> = new EventEmitter<any>();
-  @Output() onSaveRowEvent:EventEmitter<any> = new EventEmitter<any>();
-  @Output() onUploadAttatchmentEvent:EventEmitter<any> = new EventEmitter<any>();
-  @Output() onDeleteAttatchmentEvent:EventEmitter<any> = new EventEmitter<any>();
-
   data: any;
   params: any;
   public api: GridApi;
   public columnApi: ColumnApi;
+  public options:ListItem[];
 
   constructor(private datagridMBService:DatagridMbService){}
-
-  public deleteRow(action:string):void{
-    this.onSelected(action);
-    this.onDeleteRowEvent.emit({gridApi: this.api, action: 'delete-row'});
-  }
-
-  public editRow(action:string):void{
-    this.onSelected(action);
-    this.onEditRowEvent.emit({gridApi: this.api, action: 'edit-row'});
-  }
-
-  public saveRow(action:string):void{
-    this.onSelected(action);
-    this.onSaveRowEvent.emit({gridApi: this.api, action: 'save-row'});
-  }
-
-  public uploadAttatchment(action:string):void{
-    this.onSelected(action);
-    this.onUploadAttatchmentEvent.emit({gridApi: this.api, action: 'upload-attatchment'});
-  }
-
-  public deleteAttatchment(action:string):void{
-    this.onSelected(action);
-    this.onDeleteAttatchmentEvent.emit({gridApi: this.api, action: 'delete-attatchment'});
-  }
 
   onSelected(action:string):void{
     let message:DataGridMessage = new DataGridMessage();
@@ -59,10 +30,32 @@ export class ActionCellRendererComponent implements OnInit {
     this.datagridMBService.sendMessage(message);
   }
 
+  handleDelete(item:ListItem):void{
+    if(item){
+      if(item.id === "delete-row"){
+        this.onSelected(item.id);
+      }
+      else if (item.id === "delete-attatcments"){
+        this.onSelected(item.id);
+      }
+    }
+  }
+
   agInit(params) {
     this.params = params;
     this.data =  params.value;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    let item:ListItem = new ListItem();
+    item.name = "Delete Row";
+    item.value = "delete-row";
+    item.id = "delete-row";
+    let item2:ListItem = new ListItem();
+    item2.name = "Delete Attatchment(s)";
+    item2.value = "delete-attatchments";
+    item2.id = "delete-attatchments";
+    this.options = [item, item2];
+  }
+
 }
