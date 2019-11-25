@@ -10,6 +10,8 @@ import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-editor/text-cell-editor.component';
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
+import { MissionAttachment } from '../models/MissionAttachment';
+import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 
 @Component({
   selector: 'pfm-planning',
@@ -22,7 +24,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   id:string = 'mission-priorities-component';
   busy:boolean;
-  availableYears:ListItem[];
+  availableYears: ListItem[];
   selectedYear:string;
   missionData:MissionPriority[];
 
@@ -71,6 +73,32 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
+  handleCellAction(cellAction:DataGridMessage, event:any):void{
+    //this.dialogService.displayDebug(cellAction);
+    switch(cellAction.message){
+      case "save": {
+        console.log("save");
+        //this.saveRow(cellAction.rowIndex, event);
+        break;
+      }
+      case "edit": {
+        console.log("edit");
+        //this.editRow(cellAction.rowIndex, event)
+        break;
+      }
+      case "upload": {
+        console.log("upload");
+        break;
+      }
+      case "delete": {
+        console.log("delete");
+        console.log(cellAction.rowIndex);
+        this.deleteRow(cellAction.rowIndex, event);
+        break;
+      }
+    }
+  }
+
   onAddNewRow(event:any):void{
     if(event.action === "add-single-row"){
       let mp:MissionPriority = new MissionPriority();
@@ -82,11 +110,13 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.actions.canUpload = true;
       event.gridApi.updateRowData({add: [mp]});
     }
+    if(event.action === "add-rows-from-year"){
+      //get rows
+      //push onto mission data
+      //update grid
+    }
   }
 
-  handleCellAction(cellAction:DataGridMessage):void{
-    //this.dialogService.displayDebug(cellAction);
-  }
 
   yearSelected(item:any):void{
     this.selectedYear = item ? item.name : undefined;
@@ -136,4 +166,79 @@ export class MissionPrioritiesComponent implements OnInit {
     }
     return items;
   }
+
+  private editMode(rowId:number){
+    //toggle actions
+    this.missionData[rowId].actions.canUpload = true;
+    this.missionData[rowId].actions.canSave = true;
+    this.missionData[rowId].actions.canEdit = false;
+  }
+
+  private viewMode(rowId:number){
+    //toggle actions
+    this.missionData[rowId].actions.canUpload = false;
+    this.missionData[rowId].actions.canSave = false;
+    this.missionData[rowId].actions.canEdit = true;
+  }
+
+  private saveRow(rowId:number, row:MissionPriority, event:any){
+    //check columns Title max 45 chars, description max 200 chars
+    if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
+      //save data
+      if (rowId >= this.missionData.length){
+        this.missionData.push(row);
+      }
+      else {
+        this.missionData[rowId] = row;
+      }
+
+      //return to view mode
+      this.viewMode(rowId);
+
+      //update view
+      event.gridApi.setRowData(this.missionData);
+    }
+    else {
+      //error message
+
+    }
+
+  }
+
+  private editRow(rowId:number, event:any){
+    //edit mode
+    this.editMode(rowId);
+
+    //edit the title and description
+
+    //save the row
+    this.saveRow(rowId , this.missionData[rowId], event)
+  }
+
+  deleteRow(rowId:number, event:any){
+    //confirmation message
+
+    //event.gridOptions.api.updateRowData({ remove: [this.missionData[rowId]]})
+
+    //delete row
+    console.log(this.missionData.splice(rowId, 1));
+
+    //update priority
+    for (let i = rowId; i < this.missionData.length; i++){
+      this.missionData[i].priority= this.missionData[i].priority + 1;
+    }
+    
+    //update view
+    event.gridApi.setRowData(this.missionData);
+  }
+
+  private deleteAttatchment(rowId:number, attatchmentId:number, event:any){
+    //confirmation message
+
+    //delete attatchment
+    this.missionData[rowId].attachments.slice(attatchmentId, 1)
+
+    //update row
+  }
+
 }

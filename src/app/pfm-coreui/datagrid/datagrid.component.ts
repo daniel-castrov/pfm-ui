@@ -38,7 +38,7 @@ export class DatagridComponent implements OnInit {
   }
 
   public addNewRow():void{
-      this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
+    this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
   }
 
   public onModelUpdated() {
