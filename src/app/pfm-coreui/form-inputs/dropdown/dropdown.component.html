@@ -1,17 +1,30 @@
-<div class="pfm-select" style="width: 200px;">
+<ng-container *ngIf="!isCellRenderer">
+    <div class="pfm-select" style="width: 200px;">
+            <label for="{{id}}">For: </label>
+        <select
+                (ngModelChange)="handleSelectionChanged($event)"
+                [name]="id"
+                [id]="id"
+                class="form-control"
+                [(ngModel)]="selectedItem">
+            <option disabled value="{{prompt}}">{{prompt}}</option>
+            <option value="">None</option>
+            <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
+        </select>
+    </div>
+</ng-container>
 
-    <ng-container *ngIf="!isCellRenderer">
-        <label for="{{id}}">For: </label>
-    </ng-container>
-
-    <select
-            (ngModelChange)="handleSelectionChanged($event)"
-            [name]="id"
-            [id]="id"
-            class="form-control"
-            [(ngModel)]="selectedItem">
-        <option disabled value="{{prompt}}">{{prompt}}</option>
-        <option value="">None</option>
-        <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
-    </select>
-</div>
+<ng-container *ngIf="isCellRenderer">
+    <div [id]="id" ngbDropdown container="body" class="d-inline-block">
+        <span class="icon-dropown" *ngIf="iconName">
+            <fa [name]="iconName" [title]="title" ngbDropdownToggle></fa>
+        </span>
+        <div class="icon-select" ngbDropdownMenu>
+            <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(prompt)">{{prompt}}</span>
+            <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(undefined)">None</span>
+            <ng-container *ngFor="let option of options">
+                <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(option[fieldLabel])">{{ option[fieldLabel] }}</span>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>

@@ -17,6 +17,8 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() options:any[];
   @Input() prompt:string = "Please select";
   @Input() isCellRenderer:boolean;
+  @Input() iconName:string;
+  @Input() title:string;
   @Output() onSelectionChanged:EventEmitter<any> = new EventEmitter<any>();
 
   selectedItem:string;

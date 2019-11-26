@@ -7,13 +7,7 @@
     </ng-container>
 
     <ng-container *ngIf="data.canDelete">
-        <div>
-            <fa name="trash" title="Delete"></fa>
-            <fa name="caret-down"></fa>
-            <ng-container>
-                <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [label]="" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
-            </ng-container>
-        </div>
+        <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [isCellRenderer]="true" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
     </ng-container>
 
     <ng-container *ngIf="data.canUpload">
