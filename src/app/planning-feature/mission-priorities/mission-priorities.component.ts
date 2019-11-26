@@ -96,10 +96,15 @@ export class MissionPrioritiesComponent implements OnInit {
         console.log("upload");
         break;
       }
-      case "delete": {
+      case "delete-row": {
         console.log("delete-row");
         console.log(cellAction.rowIndex);
         this.deleteRow(cellAction.rowIndex, cellAction.rowData);
+        break;
+      }
+      case "delete-attatchments": {
+        console.log("delete-attatchments");
+        console.log(cellAction.rowIndex);
         break;
       }
     }
