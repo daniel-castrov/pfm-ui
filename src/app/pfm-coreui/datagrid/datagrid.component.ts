@@ -20,6 +20,7 @@ export class DatagridComponent implements OnInit {
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
   @Output() onGridIsReady:EventEmitter<GridApi> = new EventEmitter<GridApi>();
+  @Output() onColumnIsReady:EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   public defaultColDef: any;
   public modules: Module[] = AllCommunityModules;
@@ -52,6 +53,7 @@ export class DatagridComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.api.sizeColumnsToFit();
     this.onGridIsReady.emit(this.api);
+    this.onColumnIsReady.emit(this.columnApi);
   }
 
   ngOnInit() {

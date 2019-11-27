@@ -34,8 +34,8 @@ export class PlanningServiceMock extends PlanningService{
       data.actions = new MissionAction();
       data.actions.canDelete = true;
       data.actions.canEdit = true;
-      data.actions.canUpload = true;
-      data.actions.canSave = true;
+      data.actions.canUpload = false;
+      data.actions.canSave = false;
 
       data.attachments = [];
       let ma:MissionAttachment = new MissionAttachment();

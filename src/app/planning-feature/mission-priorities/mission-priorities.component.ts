@@ -11,7 +11,7 @@ import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/tex
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
 import { MissionAttachment } from '../models/MissionAttachment';
-import {GridApi} from '@ag-grid-community/all-modules';
+import { GridApi, ColumnApi } from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 
 @Component({
@@ -24,6 +24,7 @@ export class MissionPrioritiesComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
   gridApi:GridApi;
+  columnApi:ColumnApi;
   id:string = 'mission-priorities-component';
   busy:boolean;
   availableYears: ListItem[];
@@ -79,17 +80,21 @@ export class MissionPrioritiesComponent implements OnInit {
     this.gridApi = gridApi;
   }
 
+  onColumnIsReady(columnApi:ColumnApi):void{
+    this.columnApi = columnApi;
+  }
+
   handleCellAction(cellAction:DataGridMessage):void{
     //this.dialogService.displayDebug(cellAction);
     switch(cellAction.message){
       case "save": {
         console.log("save");
-        //this.saveRow(cellAction.rowIndex, event);
+        this.saveRow(cellAction.rowIndex);
         break;
       }
       case "edit": {
         console.log("edit");
-        //this.editRow(cellAction.rowIndex, event)
+        this.editRow(cellAction.rowIndex)
         break;
       }
       case "upload": {
@@ -97,8 +102,6 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "delete-row": {
-        console.log("delete-row");
-        console.log(cellAction.rowIndex);
         this.deleteRow(cellAction.rowIndex, cellAction.rowData);
         break;
       }
@@ -119,6 +122,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.actions.canSave = true;
       mp.actions.canDelete = true;
       mp.actions.canUpload = true;
+      mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
       event.gridApi.updateRowData({add: [mp]});
     }
     if(event.action === "add-rows-from-year"){
@@ -187,31 +191,34 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private viewMode(rowId:number){
     //toggle actions
+    this.gridApi.stopEditing();
     this.missionData[rowId].actions.canUpload = false;
     this.missionData[rowId].actions.canSave = false;
     this.missionData[rowId].actions.canEdit = true;
   }
 
-  private saveRow(rowId:number, row:MissionPriority, event:any){
+  private saveRow(rowId:number){
     //check columns Title max 45 chars, description max 200 chars
+    let row:MissionPriority = this.missionData[rowId];
     if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
-      //save data
-      if (rowId >= this.missionData.length){
-        this.missionData.push(row);
-      }
-      else {
-        this.missionData[rowId] = row;
-      }
-
+      this.missionData[rowId] = row;
       //return to view mode
       this.viewMode(rowId);
-
       //update view
-      event.gridApi.setRowData(this.missionData);
+      this.gridApi.setRowData(this.missionData);
     }
-    else {
+    else if (row.title.length === 0){
       //error message
-
+      this.dialogService.displayError('The Title is empty');
+    }
+    else if (row.description.length === 0){
+      this.dialogService.displayError('The Description is empty');
+    }
+    else if (row.title.length >= 45){
+      this.dialogService.displayError('The Title is longer than the max of 45 characters');
+    }
+    else if (row.description.length >= 200){
+      this.dialogService.displayError('The Description is longer than the max of 200 characters');
     }
 
   }
@@ -221,14 +228,15 @@ export class MissionPrioritiesComponent implements OnInit {
     this.editMode(rowId);
 
     //edit the title and description
-
-    //save the row
-    this.saveRow(rowId , this.missionData[rowId], event)
+    this.gridApi.startEditingCell({
+      rowIndex: rowId,
+      colKey: 'title'
+    });
   }
 
   deleteRow(rowId:number, data:any){
     //confirmation message
-    this.dialogService.displayConfirmation("Are you sure you want to delete this row?", "Delete Confirmation", 
+    this.dialogService.displayConfirmation("Are you sure you want to delete this row?", "Delete Confirmation",
     ()=>{
       //delete row
       console.log(this.missionData.splice(rowId, 1));
@@ -237,20 +245,20 @@ export class MissionPrioritiesComponent implements OnInit {
       for (let i = rowId; i < this.missionData.length; i++){
         this.missionData[i].priority= this.missionData[i].priority + 1;
       }
-    
+
       //update view
       this.gridApi.setRowData(this.missionData);
-    }, 
+    },
     ()=>{
       console.log("Cancel Worked!");
     });
   }
 
-  private deleteAttatchment(rowId:number, attatchmentId:number, event:any){
-    //confirmation message
+  private deleteAttatchment(rowId:number, attatchmentsId:any, event:any){
+    //confirmation/selection message
 
-    //delete attatchment
-    this.missionData[rowId].attachments.slice(attatchmentId, 1)
+    //delete attatchment(s)
+    //this.missionData[rowId].attachments.slice(attatchmentId, 1);
 
     //update row
   }

@@ -3,11 +3,18 @@
         <div (click)="onSelected('edit')">
             <fa name="edit" title="Edit"></fa>
         </div>
+    </ng-container>
 
+    <ng-container *ngIf="data.canSave">
+        <div (click)="onSelected('save')">
+            <fa name="save" title="Save"></fa>
+        </div>
     </ng-container>
 
     <ng-container *ngIf="data.canDelete">
-        <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [isCellRenderer]="true" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
+        <div>
+            <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [isCellRenderer]="true" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
+        </div>
     </ng-container>
 
     <ng-container *ngIf="data.canUpload">
@@ -16,9 +23,5 @@
         </div>
     </ng-container>
 
-    <ng-container *ngIf="data.canSave">
-        <div (click)="onSelected('save')">
-            <fa name="save" title="Save"></fa>
-        </div>
-    </ng-container>
+
 </div>
