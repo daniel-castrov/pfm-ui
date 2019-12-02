@@ -38,7 +38,8 @@ export class MissionPrioritiesComponent implements OnInit {
       {
         headerName: 'Priority',
         field: 'priority',
-        width: 50,
+        maxWidth: 75,
+        minWidth: 75,
         resizable: true,
         rowDrag: true,
         rowDragManaged: true,
@@ -65,13 +66,15 @@ export class MissionPrioritiesComponent implements OnInit {
       {
         headerName: 'Attachments',
         field: 'attachments',
-        width: 75,
+        maxWidth: 225,
+        minWidth: 225,
         cellRendererFramework: AttachmentCellRendererComponent
       },
       {
         headerName: 'Actions',
         field: 'actions',
-        width: 75,
+        maxWidth: 175,
+        minWidth: 175,
         cellRendererFramework: ActionCellRendererComponent
       }
     ];
