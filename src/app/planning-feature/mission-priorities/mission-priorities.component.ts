@@ -121,14 +121,18 @@ export class MissionPrioritiesComponent implements OnInit {
   onAddNewRow(event:any):void{
     if(event.action === "add-single-row"){
       let mp:MissionPriority = new MissionPriority();
+      mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
+      mp.title = "";
+      mp.description = "";
       mp.attachments = [];
       mp.actions = new MissionAction();
       mp.actions.canEdit = false;
       mp.actions.canSave = true;
       mp.actions.canDelete = true;
       mp.actions.canUpload = true;
-      mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
-      event.gridApi.updateRowData({add: [mp]});
+      this.gridApi.updateRowData({add: [mp]});
+      this.missionData.push(mp);
+      console.log(this.missionData);
     }
     else if(event.action === "add-rows-from-year"){
       // get rows
