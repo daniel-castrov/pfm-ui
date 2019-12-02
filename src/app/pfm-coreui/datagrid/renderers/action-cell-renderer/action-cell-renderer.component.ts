@@ -16,6 +16,7 @@ export class ActionCellRendererComponent implements OnInit {
   public api: GridApi;
   public columnApi: ColumnApi;
   public options:ListItem[];
+  disabled: boolean = false;
 
   constructor(private datagridMBService:DatagridMbService){}
 
@@ -57,6 +58,18 @@ export class ActionCellRendererComponent implements OnInit {
     item2.value = "delete-attatchments";
     item2.id = "delete-attatchments";
     this.options = [item, item2];
+  }
+
+  disable(){
+    this.disabled = true;
+  }
+
+  enable(){
+    this.disabled = false;
+  }
+
+  refresh(){
+    console.log("refreshed");
   }
 
 }

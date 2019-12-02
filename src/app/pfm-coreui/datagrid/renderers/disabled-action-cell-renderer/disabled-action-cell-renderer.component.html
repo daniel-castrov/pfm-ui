@@ -1,0 +1,26 @@
+<div *ngIf="!disabled">
+    <ng-container *ngIf="data.canEdit">
+        <div>
+            <fa name="edit" title="Edit"></fa>
+        </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="data.canDelete">
+        <div>
+            <fa name="trash" title="Delete"></fa>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.canUpload">
+        <div>
+            <fa name="upload" title="Upload"></fa>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.canSave">
+        <div>
+            <fa name="save" title="Save"></fa>
+        </div>
+    </ng-container>
+</div>
