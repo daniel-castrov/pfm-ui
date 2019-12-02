@@ -204,6 +204,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private saveRow(rowId:number){
+
     //check columns Title max 45 chars, description max 200 chars
     let row:MissionPriority = this.missionData[rowId];
     if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
@@ -213,19 +214,31 @@ export class MissionPrioritiesComponent implements OnInit {
       //update view
       this.gridApi.setRowData(this.missionData);
     }
-    else if (row.title.length === 0){
-      this.dialogService.displayError('The Title is empty');
+    else{
+      let error:string = "";
+      let isError:boolean = false;
+      if (row.title.length === 0){
+        error = error + 'The Title is empty. ';
+        isError = true;
+      }
+      if (row.description.length === 0){
+        error = error + 'The Description is empty. ';
+        console.log(error);
+        isError = true;
+        console.log(isError);
+      }
+      if (row.title.length >= 45){
+        error = error + 'The Title is longer than the max of 45 characters. ';
+        isError = true;
+      }
+      if (row.description.length >= 200){
+        error = error + 'The Description is longer than the max of 200 characters';
+        isError = true;
+      }
+      if (isError){
+        this.dialogService.displayError(error);
+      }
     }
-    else if (row.description.length === 0){
-      this.dialogService.displayError('The Description is empty');
-    }
-    else if (row.title.length >= 45){
-      this.dialogService.displayError('The Title is longer than the max of 45 characters');
-    }
-    else if (row.description.length >= 200){
-      this.dialogService.displayError('The Description is longer than the max of 200 characters');
-    }
-
   }
 
   private editRow(rowId:number){
