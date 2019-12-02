@@ -38,7 +38,7 @@ export class MissionPrioritiesComponent implements OnInit {
       {
         headerName: 'Priority',
         field: 'priority',
-        width: 100,
+        width: 50,
         resizable: true,
         rowDrag: true,
         rowDragManaged: true,
@@ -65,11 +65,13 @@ export class MissionPrioritiesComponent implements OnInit {
       {
         headerName: 'Attachments',
         field: 'attachments',
+        width: 75,
         cellRendererFramework: AttachmentCellRendererComponent
       },
       {
         headerName: 'Actions',
         field: 'actions',
+        width: 75,
         cellRendererFramework: ActionCellRendererComponent
       }
     ];
@@ -118,7 +120,7 @@ export class MissionPrioritiesComponent implements OnInit {
       let mp:MissionPriority = new MissionPriority();
       mp.attachments = [];
       mp.actions = new MissionAction();
-      mp.actions.canEdit = true;
+      mp.actions.canEdit = false;
       mp.actions.canSave = true;
       mp.actions.canDelete = true;
       mp.actions.canUpload = true;
