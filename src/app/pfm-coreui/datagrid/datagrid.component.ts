@@ -26,6 +26,7 @@ export class DatagridComponent implements OnInit {
   public modules: Module[] = AllCommunityModules;
   public api: GridApi;
   public columnApi: ColumnApi;
+  public options:ListItem[];
 
   constructor(private datagridMBService:DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
@@ -43,6 +44,17 @@ export class DatagridComponent implements OnInit {
     this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
   }
 
+  public handleAdd(item:ListItem):void{
+    if(item){
+      if(item.id === "add-row"){
+        this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
+      }
+      else if (item.id === "add-year"){
+        // stub for adding multiple rows from another year.
+      }
+    }
+  }
+
   public onModelUpdated() {
     console.log('onModelUpdated');
   }
@@ -57,6 +69,16 @@ export class DatagridComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Populate dropdown options
+    let item:ListItem = new ListItem();
+    item.name = "Add Row";
+    item.value = "add-row";
+    item.id = "add-row";
+    let item2:ListItem = new ListItem();
+    item2.name = "Add Year";
+    item2.value = "add-year";
+    item2.id = "add-year";
+    this.options = [item, item2];
   }
 
 }

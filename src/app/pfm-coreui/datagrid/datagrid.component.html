@@ -1,8 +1,7 @@
 <div class="pfm-datagrid">
     <div class="add-row-container">
-        <div (click)="addNewRow()">
-            <fa name="plus"></fa>
-            <fa name="caret-down"></fa>
+        <div>
+            <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [isIconDropdown]="true" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
     </div>
     <ag-grid-angular  style="width: 100%; height: 100%;"

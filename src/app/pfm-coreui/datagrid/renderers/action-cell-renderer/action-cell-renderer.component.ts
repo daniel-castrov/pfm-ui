@@ -47,6 +47,7 @@ export class ActionCellRendererComponent implements OnInit {
   }
 
   ngOnInit() {
+    // populate options
     let item:ListItem = new ListItem();
     item.name = "Delete Row";
     item.value = "delete-row";
