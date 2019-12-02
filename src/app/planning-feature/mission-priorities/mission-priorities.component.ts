@@ -125,10 +125,10 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
       event.gridApi.updateRowData({add: [mp]});
     }
-    if(event.action === "add-rows-from-year"){
-      //get rows
-      //push onto mission data
-      //update grid
+    else if(event.action === "add-rows-from-year"){
+      // get rows
+      // push onto mission data
+      // update grid
     }
   }
 
@@ -183,10 +183,11 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private editMode(rowId:number){
-    //toggle actions
+    // toggle actions
     this.missionData[rowId].actions.canUpload = true;
     this.missionData[rowId].actions.canSave = true;
     this.missionData[rowId].actions.canEdit = false;
+    // disable attatchments dropdown
   }
 
   private viewMode(rowId:number){
@@ -208,7 +209,6 @@ export class MissionPrioritiesComponent implements OnInit {
       this.gridApi.setRowData(this.missionData);
     }
     else if (row.title.length === 0){
-      //error message
       this.dialogService.displayError('The Title is empty');
     }
     else if (row.description.length === 0){
@@ -254,7 +254,7 @@ export class MissionPrioritiesComponent implements OnInit {
     });
   }
 
-  private deleteAttatchment(rowId:number, attatchmentsId:any, event:any){
+  private deleteAttatchment(rowId:number, attatchmentIds:[], event:any){
     //confirmation/selection message
 
     //delete attatchment(s)
