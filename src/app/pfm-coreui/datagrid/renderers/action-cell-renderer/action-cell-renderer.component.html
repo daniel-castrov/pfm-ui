@@ -1,27 +1,25 @@
 <div>
     <ng-container *ngIf="data.canEdit">
-        <div (click)="onSelected('edit')">
+        <div class = "action" (click)="onSelected('edit')">
             <fa name="edit" title="Edit"></fa>
         </div>
     </ng-container>
 
     <ng-container *ngIf="data.canSave">
-        <div (click)="onSelected('save')">
+        <div class = "action" (click)="onSelected('save')">
             <fa name="save" title="Save"></fa>
         </div>
     </ng-container>
 
     <ng-container *ngIf="data.canDelete">
-        <div>
+        <div class = "action">
             <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [isIconDropdown]="true" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
     </ng-container>
 
     <ng-container *ngIf="data.canUpload">
-        <div (click)="onSelected('upload')">
+        <div class = "action" (click)="onSelected('upload')">
             <fa name="upload" title="Upload"></fa>
         </div>
     </ng-container>
-
-
 </div>
