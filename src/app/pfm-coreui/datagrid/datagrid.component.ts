@@ -71,11 +71,11 @@ export class DatagridComponent implements OnInit {
   ngOnInit() {
     // Populate dropdown options
     let item:ListItem = new ListItem();
-    item.name = "Add Row";
+    item.name = "Add a new row";
     item.value = "add-row";
     item.id = "add-row";
     let item2:ListItem = new ListItem();
-    item2.name = "Add Year";
+    item2.name = "Add all rows from another year";
     item2.value = "add-year";
     item2.id = "add-year";
     this.options = [item, item2];

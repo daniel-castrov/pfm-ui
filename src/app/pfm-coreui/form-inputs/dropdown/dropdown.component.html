@@ -8,7 +8,6 @@
                 class="form-control"
                 [(ngModel)]="selectedItem">
             <option disabled value="{{prompt}}">{{prompt}}</option>
-            <option value="">None</option>
             <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
         </select>
     </div>
@@ -21,7 +20,6 @@
         </span>
         <div class="icon-select" ngbDropdownMenu>
             <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(prompt)">{{prompt}}</span>
-            <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(undefined)">None</span>
             <ng-container *ngFor="let option of options">
                 <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(option[fieldLabel])">{{ option[fieldLabel] }}</span>
             </ng-container>

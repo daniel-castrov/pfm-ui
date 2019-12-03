@@ -38,6 +38,7 @@ export class MissionPrioritiesComponent implements OnInit {
       {
         headerName: 'Priority',
         field: 'priority',
+        //type: 'numericColumn',
         maxWidth: 75,
         minWidth: 75,
         resizable: true,
@@ -132,7 +133,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.actions.canUpload = true;
       this.gridApi.updateRowData({add: [mp]});
       this.missionData.push(mp);
-      console.log(this.missionData);
+      this.editRow(mp.priority - 1);
     }
     else if(event.action === "add-rows-from-year"){
       // get rows

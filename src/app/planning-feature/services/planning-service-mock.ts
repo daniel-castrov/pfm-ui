@@ -26,9 +26,10 @@ export class PlanningServiceMock extends PlanningService{
   getMissionPriorities(year:string):Observable<Object>{
     let list:MissionPriority[] = [];
 
-    let emptyYear: string = 2023;
-    if (year !== emptyYear){
-      for(let i=0; i<10; i++){
+    let emptyYear: string = "2023";
+
+    if (year != emptyYear){
+      for(let i=0; i<25; i++){
         let data:MissionPriority = new MissionPriority();
         data.priority = i+1;
         data.title = "Enable Nuclear Deterrent for " + year;
