@@ -94,17 +94,15 @@ export class MissionPrioritiesComponent implements OnInit {
     //this.dialogService.displayDebug(cellAction);
     switch(cellAction.message){
       case "save": {
-        console.log("save");
         this.saveRow(cellAction.rowIndex);
         break;
       }
       case "edit": {
-        console.log("edit");
         this.editRow(cellAction.rowIndex)
         break;
       }
       case "upload": {
-        console.log("upload");
+        // stub
         break;
       }
       case "delete-row": {
@@ -112,8 +110,7 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "delete-attatchments": {
-        console.log("delete-attatchments");
-        console.log(cellAction.rowIndex);
+        // stub
         break;
       }
     }
@@ -212,6 +209,8 @@ export class MissionPrioritiesComponent implements OnInit {
 
     //check columns Title max 45 chars, description max 200 chars
     let row:MissionPriority = this.missionData[rowId];
+    let error:string = "";
+    let isError:boolean = false;
     if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
       this.missionData[rowId] = row;
       //return to view mode
@@ -220,17 +219,13 @@ export class MissionPrioritiesComponent implements OnInit {
       this.gridApi.setRowData(this.missionData);
     }
     else{
-      let error:string = "";
-      let isError:boolean = false;
       if (row.title.length === 0){
         error = error + 'The Title is empty. ';
         isError = true;
       }
       if (row.description.length === 0){
         error = error + 'The Description is empty. ';
-        console.log(error);
         isError = true;
-        console.log(isError);
       }
       if (row.title.length >= 45){
         error = error + 'The Title is longer than the max of 45 characters. ';
