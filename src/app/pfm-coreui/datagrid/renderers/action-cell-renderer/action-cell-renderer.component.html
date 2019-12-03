@@ -1,7 +1,7 @@
 <div>
     <ng-container *ngIf="data.canEdit">
         <div class = "action" (click)="onSelected('edit')">
-            <fa name="edit" title="Edit"></fa>
+            <fa name="pencil" title="Edit"></fa>
         </div>
     </ng-container>
 
@@ -13,7 +13,7 @@
 
     <ng-container *ngIf="data.canDelete">
         <div class = "action">
-            <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [isIconDropdown]="true" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
+            <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [type]="'iconDropdown'" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
     </ng-container>
 
