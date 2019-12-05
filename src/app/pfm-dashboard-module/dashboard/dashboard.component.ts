@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy{
   }
 
   removeWidget(item:any):void{
-    this.dialogService.displayConfirmation("Are you sure you want to remove this widget?", "Delete Confirmation",
+    this.dialogService.displayConfirmation("Are you sure you want to delete this widget from your dashboard?", "Delete Confirmation",
       ()=>{
         let widget = this.availableWidgetList.find(obj => obj.id == item.id);
         let dashboardItem = this.dashboard.find(obj => obj.id == item.id);
