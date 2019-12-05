@@ -1,13 +1,22 @@
 .pfm-datagrid{
   width: 100%;
   height: 100%;
+}
+
+.add-row-container{
+  display: flex;
+  justify-content: flex-end;
 
   border-width: 1px;
   border-color: black;
   border-style: solid;
 }
 
-.add-row-container{
-  display: flex;
-  justify-content: flex-end;
+.pfm-data {
+  width: 100%;
+  height: 100%;
+
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
 }

@@ -50,6 +50,8 @@ export class MissionPrioritiesComponent implements OnInit {
         headerName: 'Mission Title',
         field: 'title',
         editable:true,
+        maxWidth: 400,
+        minWidth: 400,
         cellRendererFramework: TextCellRendererComponent,
         cellEditorFramework: TextCellEditorComponent,
         cellRendererParams: {'maxSize': 50},
@@ -61,8 +63,8 @@ export class MissionPrioritiesComponent implements OnInit {
         editable: true,
         cellRendererFramework: TextCellRendererComponent,
         cellEditorFramework: TextCellEditorComponent,
-        cellRendererParams: {'maxSize': 150},
-        cellEditorParams: {'maxSize': 150}
+        cellRendererParams: {'maxSize': 200},
+        cellEditorParams: {'maxSize': 200}
       },
       {
         headerName: 'Attachments',
@@ -119,7 +121,12 @@ export class MissionPrioritiesComponent implements OnInit {
   onAddNewRow(event:any):void{
     if(event.action === "add-single-row"){
       let mp:MissionPriority = new MissionPriority();
-      mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
+      if (this.missionData.length === 0) {
+        mp.priority = 1;
+      }
+      else {
+        mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
+      }
       mp.title = "";
       mp.description = "";
       mp.attachments = [];
@@ -227,11 +234,11 @@ export class MissionPrioritiesComponent implements OnInit {
         error = error + 'The Description is empty. ';
         isError = true;
       }
-      if (row.title.length >= 45){
+      if (row.title.length > 45){
         error = error + 'The Title is longer than the max of 45 characters. ';
         isError = true;
       }
-      if (row.description.length >= 200){
+      if (row.description.length > 200){
         error = error + 'The Description is longer than the max of 200 characters';
         isError = true;
       }
@@ -246,6 +253,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.editMode(rowId);
 
     //edit the title and description
+    this.gridApi.setFocusedCell(rowId, 'title');
     this.gridApi.startEditingCell({
       rowIndex: rowId,
       colKey: 'title'

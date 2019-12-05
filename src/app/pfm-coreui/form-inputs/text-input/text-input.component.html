@@ -9,7 +9,7 @@
 </ng-container>
 
 <ng-container *ngIf="isCellRenderer">
-    <div [class.ag-input-wrapper]="getErroMessage() === undefined" [class.ag-input-wrapper-error]="getErroMessage() !== undefined" role="presentation">
+    <div class="text-wrap" [class.ag-input-wrapper]="getErroMessage() === undefined" [class.ag-input-wrapper-error]="getErroMessage() !== undefined" role="presentation">
         <ng-container *ngIf="isReadOnly">
 
             <ng-container *ngIf="getErroMessage()">
