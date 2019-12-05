@@ -27,6 +27,7 @@ export class MissionPrioritiesComponent implements OnInit {
   columnApi:ColumnApi;
   id:string = 'mission-priorities-component';
   busy:boolean;
+  actionInProgress:boolean = false;
   availableYears: ListItem[];
   selectedYear:string;
   missionData:MissionPriority[];
@@ -253,10 +254,10 @@ export class MissionPrioritiesComponent implements OnInit {
     this.editMode(rowId);
 
     //edit the title and description
-    this.gridApi.setFocusedCell(rowId, 'title');
+    this.gridApi.setFocusedCell(rowId, "title");
     this.gridApi.startEditingCell({
       rowIndex: rowId,
-      colKey: 'title'
+      colKey: "title"
     });
   }
 
