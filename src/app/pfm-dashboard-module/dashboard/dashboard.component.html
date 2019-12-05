@@ -73,18 +73,16 @@
                     <span (click)="removeWidget(widget)">
                         <fa name="trash" title="Delete"></fa>
                     </span>
-
                 </div>
                 <div class="widget-header-right" >
                     <fa name="arrows" title="Move"></fa>
                 </div>
             </div>
-
             <div class="gridster-item-content" [ngSwitch]="widget.id" >
-                    <app-demo-widget-pr-status *ngSwitchCase="'w1'"></app-demo-widget-pr-status>
-                    <app-demo-widget-pom-phase-funding *ngSwitchCase="'w2'">></app-demo-widget-pom-phase-funding>
-                    <app-demo-widget-mission-funding-priority *ngSwitchCase="'w3'">></app-demo-widget-mission-funding-priority>
-                    <app-demo-widget-mission-funding-money *ngSwitchCase="'w4'">></app-demo-widget-mission-funding-money>
+                    <app-demo-widget-pr-status *ngSwitchCase="'w4'"></app-demo-widget-pr-status>
+                    <app-demo-widget-pom-phase-funding *ngSwitchCase="'w3'"></app-demo-widget-pom-phase-funding>
+                    <app-demo-widget-mission-funding-priority *ngSwitchCase="'w2'"></app-demo-widget-mission-funding-priority>
+                    <app-demo-widget-mission-funding-money *ngSwitchCase="'w1'"></app-demo-widget-mission-funding-money>
             </div>
         </gridster-item>
     </gridster>

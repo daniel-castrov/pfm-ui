@@ -74,10 +74,10 @@ export class DashboardComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.options = {
-      minCols: 4,
-      maxCols: 4,
-      minRows: 4,
-      maxRows: 4,
+      minCols: 8,
+      maxCols: 8,
+      minRows: 8,
+      maxRows: 8,
       itemResizeCallback: ()=>{
         this.saveWidgetLayout();
       },
@@ -106,7 +106,10 @@ export class DashboardComponent implements OnInit, OnDestroy{
       let dashboardItem = this.dashboard.find(obj => obj.id == item.id);
 
       if(item.selected && !dashboardItem){
-        this.dashboard.push(item);
+        dashboardItem = {
+          x: 0, y: 0, cols: 3, rows: 3, id: item.id
+        }
+        this.dashboard.push(dashboardItem);
       }
       else if(!item.selected && dashboardItem){
         this.dashboard.splice(this.dashboard.indexOf(dashboardItem), 1);
