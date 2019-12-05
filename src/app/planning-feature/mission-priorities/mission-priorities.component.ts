@@ -50,6 +50,8 @@ export class MissionPrioritiesComponent implements OnInit {
         headerName: 'Mission Title',
         field: 'title',
         editable:true,
+        maxWidth: 400,
+        minWidth: 400,
         cellRendererFramework: TextCellRendererComponent,
         cellEditorFramework: TextCellEditorComponent,
         cellRendererParams: {'maxSize': 50},
@@ -61,8 +63,8 @@ export class MissionPrioritiesComponent implements OnInit {
         editable: true,
         cellRendererFramework: TextCellRendererComponent,
         cellEditorFramework: TextCellEditorComponent,
-        cellRendererParams: {'maxSize': 150},
-        cellEditorParams: {'maxSize': 150}
+        cellRendererParams: {'maxSize': 200},
+        cellEditorParams: {'maxSize': 200}
       },
       {
         headerName: 'Attachments',
@@ -227,11 +229,11 @@ export class MissionPrioritiesComponent implements OnInit {
         error = error + 'The Description is empty. ';
         isError = true;
       }
-      if (row.title.length >= 45){
+      if (row.title.length > 45){
         error = error + 'The Title is longer than the max of 45 characters. ';
         isError = true;
       }
-      if (row.description.length >= 200){
+      if (row.description.length > 200){
         error = error + 'The Description is longer than the max of 200 characters';
         isError = true;
       }

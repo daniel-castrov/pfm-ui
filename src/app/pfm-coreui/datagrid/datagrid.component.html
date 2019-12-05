@@ -4,18 +4,19 @@
             <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
     </div>
-    <ag-grid-angular  style="width: 100%; height: 100%;"
-                      [columnDefs]="columns"
-                      [rowData]="rows"
-                      [rowDragManaged]="true"
-                      [editType]="'fullRow'"
-                      [defaultColDef]="defaultColDef"
-                      [modules]="modules"
-                      suppressRowClickSelection
-                      rowSelection="single"
-                      [rowHeight]="50"
-                      (gridReady)="onGridReady($event)"
-                      (modelUpdated)="onModelUpdated()">
-    </ag-grid-angular>
-
+    <div class="pfm-data">
+        <ag-grid-angular  style="width: 100%; height: 100%;"
+                          [columnDefs]="columns"
+                          [rowData]="rows"
+                          [rowDragManaged]="true"
+                          [editType]="'fullRow'"
+                          [defaultColDef]="defaultColDef"
+                          [modules]="modules"
+                          suppressRowClickSelection
+                          rowSelection="single"
+                          [rowHeight]="50"
+                          (gridReady)="onGridReady($event)"
+                          (modelUpdated)="onModelUpdated()">
+        </ag-grid-angular>
+    </div>
 </div>
