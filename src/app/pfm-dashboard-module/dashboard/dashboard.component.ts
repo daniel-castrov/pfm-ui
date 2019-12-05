@@ -28,12 +28,18 @@ export class DashboardComponent implements OnInit, OnDestroy{
   }
 
   removeWidget(item:any):void{
-    let widget = this.availableWidgetList.find(obj => obj.id == item.id);
-    let dashboardItem = this.dashboard.find(obj => obj.id == item.id);
+    this.dialogService.displayConfirmation("Are you sure you want to remove this widget?", "Delete Confirmation",
+      ()=>{
+        let widget = this.availableWidgetList.find(obj => obj.id == item.id);
+        let dashboardItem = this.dashboard.find(obj => obj.id == item.id);
 
-    widget.selected = false;
-    this.dashboard.splice(this.dashboard.indexOf(dashboardItem), 1);
-    this.saveWidgetLayout();
+        widget.selected = false;
+        this.dashboard.splice(this.dashboard.indexOf(dashboardItem), 1);
+        this.saveWidgetLayout();
+      },
+      ()=>{
+        console.log("cancel");
+      });
   }
 
   onItemDropped(event:any):void{
