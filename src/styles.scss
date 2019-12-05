@@ -78,7 +78,20 @@ fieldset {
 .menu-display-container{
   margin: 0px;
   border-left: 0px;
-  left: -2px;
+  border: 0px;
+}
+
+.menu-display-container-open{
+  margin: 0px;
+  border-left: 0px;
+  left: 31px !important;
+  top: 25px !important;
+  border: 0px;
+}
+
+
+.menu-display-container-open .arrow {
+  display: none;
 }
 
 .menu-display-container .arrow {

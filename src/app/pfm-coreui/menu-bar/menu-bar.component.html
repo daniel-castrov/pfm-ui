@@ -1,109 +1,91 @@
 <ul id="mySidenav" class="sidenav" [class.open]="isOpen">
-    <li (click)="onSelect('Dashboard')" [class.active]="isDashboardSelected" container="body" [ngbPopover]="popContentDashboard" popoverClass="menu-display-container">
+    <li (click)="onSelect('Dashboard')" [class.active]="isDashboardSelected">
         <div class="menu-item">
             <fa name="tachometer"></fa>
-            <span>Dashboard</span>
-            <ng-template #popContentDashboard>
-                <div class="inner-menu">
-                    <a class="inner-menu-item"  href="#" routerLink="/home" routerLinkActive="active-link">Dashboard</a>
-                </div>
-            </ng-template>
-        </div>
-    </li>
-    <li (click)="onSelect('Planning')" [class.active]="isPlanningSelected" container="body" [ngbPopover]="popContentPlanning" popoverClass="menu-display-container">
-        <div class="menu-item">
-            <fa name="hourglass-end"></fa>
-            <span>Planning</span>
-            <ng-template #popContentPlanning>
-                <div class="inner-menu">
-                    <a class="inner-menu-item"  href="#" routerLink="/planning/create-planning" routerLinkActive="active-link">Create Planning Phase</a>
-                    <a class="inner-menu-item"  href="#" routerLink="/planning/open-planning" routerLinkActive="active-link">Open Planning Phase</a>
-                    <a class="inner-menu-item" href="#" routerLink="/planning/lock-planning" routerLinkActive="active-link">Lock Planning Phase</a>
-                    <a class="inner-menu-item" href="#" routerLink="/planning/close-planning" routerLinkActive="active-link">Close Planning Phase</a>
-                    <div class="inner-menu-divider"></div>
-                    <a class="inner-menu-item"  href="#" routerLink="/planning/mission-priorities" routerLinkActive="active-link">Mission Priorities</a>
-
-                </div>
-            </ng-template>
-        </div>
-    </li>
-    <li (click)="onSelect('Budget')" [class.active]="isBudgetSelected" container="body" [ngbPopover]="popContentBudget" popoverClass="menu-display-container">
-        <div class="menu-item">
-            <fa name="database"></fa>
-            <span>Budget</span>
-            <ng-template #popContentBudget>
-                <div class="inner-menu">
-                    <a class="inner-menu-item" routerLink="/edit-program-details" routerLinkActive="active-link">Edit Program Details</a>
-                    <a class="inner-menu-item" routerLink="/create-budget" routerLinkActive="active-link">Create Budget Phase</a>
-                    <a class="inner-menu-item" routerLink="/copy-budget" routerLinkActive="active-link">Copy Budget</a>
-                    <a class="inner-menu-item" routerLink="/edit-budget-details" routerLinkActive="active-link">Edit Budget Details</a>
-                    <a class="inner-menu-item" href="#" routerLink="/r-forms" routerLinkActive="active-link">RDT&E Exhibits</a>
-                    <a class="inner-menu-item" href="#" routerLink="/p-forms" routerLinkActive="active-link">Proc Exhibits</a>
-                    <a class="inner-menu-item" disabled>RDT&E Tree Data</a>
-                </div>
-            </ng-template>
-        </div>
-    </li>
-    <li (click)="onSelect('Execution')" [class.active]="isExecutionSelected" container="body" [ngbPopover]="popContentExecution" popoverClass="menu-display-container">
-        <div class="menu-item">
-            <fa name="globe"></fa>
-            <span>Execution</span>
-            <ng-template #popContentExecution>
-                <div class="inner-menu">
-                    <a class="inner-menu-item" href="#" routerLink="/funds-update" routerLinkActive="active-link">Funds Update</a>
-                    <a class="inner-menu-item" href="#" routerLink="/oe-update" routerLinkActive="active-link">Program Update</a>
-                    <a class="inner-menu-item" href="#" routerLink="/create-execution-phase" routerLinkActive="active-link">Create Execution Phase</a>
-                    <a class="inner-menu-item" href="#" routerLink="/open-execution" routerLinkActive="active-link">Open Execution Phase</a>
-                    <a class="inner-menu-item" href="#" routerLink="/import-execution-data" routerLinkActive="active-link">Import Actuals</a>
-                    <a class="inner-menu-item" href="#" routerLink="/ufr-yoe-summary" routerLinkActive="active-link">UFR Request</a>
-                </div>
-            </ng-template>
-        </div>
-    </li>
-    <li (click)="onSelect('Reports')" [class.active]="isReportsSelected" container="body" [ngbPopover]="popContentReports" popoverClass="menu-display-container">
-        <div class="menu-item">
-            <fa name="area-chart"></fa>
-            <span>Reports</span>
-            <ng-template #popContentReports>
-                <div class="inner-menu">
-                    <a class="inner-menu-item " disabled>R1</a>
-                    <a class="inner-menu-item" disabled>R2</a>
-                    <a class="inner-menu-item" disabled>P1</a>
-                    <a class="inner-menu-item" disabled>P1</a>
-                    <a class="inner-menu-item" disabled>P2</a>
-                </div>
-            </ng-template>
-        </div>
-    </li>
-    <li (click)="onSelect('Manage')" [class.active]="isManageSelected" container="body" [ngbPopover]="popContentManage" popoverClass="menu-display-container">
-        <div class="menu-item">
-            <fa name="th-list"></fa>
-            <span>Manage</span>
-            <ng-template #popContentManage>
-                <div class="inner-menu">
-                    <a class="inner-menu-item" disabled>Manage Programming</a>
-                    <a class="inner-menu-item" disabled>Manage Budgeting</a>
-                    <a class="inner-menu-item" disabled>Execution</a>
-                    <a class="inner-menu-item" href="#" routerLink="/create-mrdb-program">Create Unfunded Program</a>
-                </div>
-            </ng-template>
-        </div>
-    </li>
-    <li (click)="onSelect('Admin')" [class.active]="isAdminSelected" container="body" [ngbPopover]="popContentAdmin" popoverClass="menu-display-container">
-        <div class="menu-item">
-            <fa name="user-secret"></fa>
-            <span>Admin</span>
-            <ng-template #popContentAdmin>
-                <div class="inner-menu">
-                    <a class="inner-menu-item" href="#" routerLink="/approve-requests" routerLinkActive="active-link">Approve Requests</a>
-                    <a class="inner-menu-item" href="#" routerLink="/manage-communities" routerLinkActive="active-link">Manage Communities</a>
-                    <a class="inner-menu-item" href="#" routerLink="/user-list" routerLinkActive="active-link">Manage Users</a>
-                    <a class="inner-menu-item" href="#" routerLink="/roles" routerLinkActive="active-link">Manage Roles</a>
-                </div>
-            </ng-template>
+            <span><a class="inner-menu-item"  href="#" routerLink="/home" routerLinkActive="active-link">Dashboard</a></span>
         </div>
     </li>
 
+    <li (click)="onSelect('Planning')" [class.active]="isPlanningSelected" class="menu-item" container="body"  placement="right" [ngbPopover]="popContentPlanning" popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
+        <fa name="clock-o"></fa>
+        <span>Planning</span>
+        <ng-template #popContentPlanning>
+            <div class="inner-menu">
+                <a class="inner-menu-item"  href="#" routerLink="/planning/create-planning" routerLinkActive="active-link">Create Phase</a>
+                <a class="inner-menu-item"  href="#" routerLink="/planning/open-planning" routerLinkActive="active-link">Open Phase</a>
+                <a class="inner-menu-item"  href="#" routerLink="/planning/lock-planning" routerLinkActive="active-link">Lock Phase</a>
+                <a class="inner-menu-item"  href="#" routerLink="/planning/close-planning" routerLinkActive="active-link">Close Phase</a>
+                <div class="inner-menu-divider"></div>
+                <a class="inner-menu-item"  href="#" routerLink="/planning/mission-priorities" routerLinkActive="active-link">Mission Priorities</a>
+
+            </div>
+        </ng-template>
+    </li>
+
+
+    <li (click)="onSelect('Programming')" [class.active]="isProgrammingSelected" class="menu-item" placement="right"  container="body" [ngbPopover]="popContentProgramming" popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
+        <fa name="hourglass"></fa>
+        <span>Programming</span>
+        <ng-template #popContentProgramming>
+            <div class="inner-menu">
+                <a class="inner-menu-item"  href="#" routerLink="/programming/create-planning" routerLinkActive="active-link">Create Phase</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/open-planning" routerLinkActive="active-link">Open Phase</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/lock-planning" routerLinkActive="active-link">Lock Phase</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/close-phase" routerLinkActive="active-link">Close Phase</a>
+                <div class="inner-menu-divider"></div>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/toa" routerLinkActive="active-link">TOAs</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/program-requests" routerLinkActive="active-link">Program Requests</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/ufr-requests" routerLinkActive="active-link">UFR Requests</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/total-appropriation-priority" routerLinkActive="active-link">Total Appropriation Priority</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/program-requests-approvals" routerLinkActive="active-link">Program Requests Approvals</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/ufr-approvals" routerLinkActive="active-link">UFR Approvals</a>
+                <a class="inner-menu-item"  href="#" routerLink="/programming/workspace-management" routerLinkActive="active-link">Workspace Management</a>
+            </div>
+        </ng-template>
+    </li>
+    <li class="menu-item" (click)="onSelect('Budget')" [class.active]="isBudgetSelected">
+        <fa name="money"></fa>
+        <span>Budget</span>
+    </li>
+
+    <li placement="bottom-right" (click)="onSelect('Execution')" [class.active]="isExecutionSelected" class="menu-item"  container="body"  placement="right"  [ngbPopover]="popContentExecution" popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
+        <fa name="globe"></fa>
+        <span>Execution</span>
+        <ng-template #popContentExecution>
+            <div class="inner-menu">
+                <a class="inner-menu-item" href="#" routerLink="/execution/create-phase" routerLinkActive="active-link">Create Phase</a>
+                <a class="inner-menu-item" href="#" routerLink="/execution/open-phase" routerLinkActive="active-link">Open Phase</a>
+                <a class="inner-menu-item" href="#" routerLink="/execution/close-phase" routerLinkActive="active-link">Close Phase</a>
+                <div class="inner-menu-divider"></div>
+                <a class="inner-menu-item" href="#" routerLink="/execution/funds-update" routerLinkActive="active-link">Funds Update</a>
+                <a class="inner-menu-item" href="#" routerLink="/execution/program-update" routerLinkActive="active-link">Program Update</a>
+                <div class="inner-menu-divider"></div>
+                <a class="inner-menu-item" href="#" routerLink="/execution/import-actuals" routerLinkActive="active-link">Import Actuals</a>
+                <div class="inner-menu-divider"></div>
+                <a class="inner-menu-item" href="#" routerLink="/execution/ufr-request" routerLinkActive="active-link">UFR Request</a>
+            </div>
+        </ng-template>
+    </li>
+
+    <li class="menu-item" (click)="onSelect('Manage')" [class.active]="isManageSelected" container="body">
+        <fa name="sitemap"></fa>
+        <span>Manage</span>
+    </li>
+    <li class="menu-item" (click)="onSelect('Reports')" [class.active]="isReportsSelected" container="body">
+        <fa name="bar-chart"></fa>
+        <span>Analytics</span>
+    </li>
+    <li (click)="onSelect('Admin')" [class.active]="isAdminSelected" class="menu-item"  container="body"  placement="right"  [ngbPopover]="popContentAdmin" popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
+        <fa name="user-secret"></fa>
+        <span>Admin</span>
+        <ng-template #popContentAdmin>
+            <div class="inner-menu">
+                <a class="inner-menu-item" href="#" routerLink="/manage-communities" routerLinkActive="active-link">Manage Communities</a>
+                <a class="inner-menu-item" href="#" routerLink="/user-list" routerLinkActive="active-link">Manage Users</a>
+                <a class="inner-menu-item" href="#" routerLink="/roles" routerLinkActive="active-link">Manage Roles</a>
+            </div>
+        </ng-template>
+    </li>
     <li class="menu-toggle menu-item" (click)="toogleMenu()">
         <ng-container *ngIf="isOpen">
             <fa name="arrow-left"></fa>

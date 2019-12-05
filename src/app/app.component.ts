@@ -5,6 +5,7 @@ import { onMainContentChange, onSideNavChange } from './pfm-coreui/menu-bar/anim
 import { UserRole } from './pfm-common-models/UserRole';
 import { UserDetailsModel } from './pfm-common-models/UserDetailsModel';
 import { Router } from '@angular/router';
+import { MenuBarItem } from './pfm-coreui/models/MenuBarItem';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,10 @@ export class AppComponent implements OnInit {
       this.appModel.userDetails.userRole = new UserRole([""]);
       this.router.navigate(["signin"]);
     }
+  }
+
+  private buildSiteMenuItems():void{
+    let menuBarItems:MenuBarItem[] = [];
 
   }
 }

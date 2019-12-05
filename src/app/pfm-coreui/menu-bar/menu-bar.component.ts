@@ -22,6 +22,7 @@ export class MenuBarComponent implements OnInit {
   isOpen:boolean;
   isDashboardSelected:boolean;
   isPlanningSelected:boolean;
+  isProgrammingSelected
   isBudgetSelected:boolean;
   isExecutionSelected:boolean;
   isReportsSelected:boolean;
@@ -38,6 +39,7 @@ export class MenuBarComponent implements OnInit {
     if(name){
       this.isDashboardSelected = false;
       this.isPlanningSelected = false;
+      this.isProgrammingSelected = false;
       this.isBudgetSelected = false;
       this.isExecutionSelected = false;
       this.isReportsSelected = false;
@@ -49,6 +51,9 @@ export class MenuBarComponent implements OnInit {
       }
       else if(name === 'Planning'){
         this.isPlanningSelected = true;
+      }
+      else if(name === 'Programming'){
+        this.isProgrammingSelected = true;
       }
       else if(name === 'Budget'){
         this.isBudgetSelected = true;
