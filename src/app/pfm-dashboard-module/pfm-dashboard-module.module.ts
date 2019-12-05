@@ -10,12 +10,14 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { FormsModule } from '@angular/forms';
 import { DashboardService } from './services/dashboard.service';
 import { DashboardMockService } from './services/dashboard.mock.service';
-import { NgDragDropModule } from 'ng-drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { GridsterModule } from 'angular-gridster2';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
   declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
   imports: [
-    CommonModule, FormsModule, Ng2GoogleChartsModule, NgDragDropModule.forRoot(), PfmCoreuiModule
+    CommonModule, FormsModule, Ng2GoogleChartsModule, AngularFontAwesomeModule, Ng2GoogleChartsModule, DragDropModule, GridsterModule, PfmCoreuiModule
   ],
   exports: [DashboardComponent],
   entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],

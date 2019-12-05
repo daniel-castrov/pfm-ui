@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://cbdev1.ironparrot.com/jscbis'
+  apiUrl: 'https://pfmdev1.pxalphaproject.com/pfm-server'
 };

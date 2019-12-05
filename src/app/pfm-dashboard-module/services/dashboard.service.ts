@@ -14,6 +14,10 @@ export class DashboardService extends BaseRestService{
     super(httpClient);
   }
 
+  public getAvailableWidgets():Observable<Object>{//return a list of widget that the user as selected to be displayed, and their position
+    return this.get("getAvailableWidgets");
+  }
+
   public getWidgetPreferences():Observable<Object>{//return a list of widget that the user as selected to be displayed, and their position
     return this.get("getWidgetPreferences");
   }

@@ -44,21 +44,54 @@
     </ng-container>
 </div>
 
-<div class="dashboard-container" droppable>
-        <div class="example-box">
-            <ng-container *ngFor="let widget of widgetList">
-                <ng-container *ngIf="widget.selected">
-                    <div draggable [ngSwitch]="widget.title">
-                        <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
-                        <app-demo-widget-pom-phase-funding *ngSwitchCase="'POM Phase Funding'">></app-demo-widget-pom-phase-funding>
-                        <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'">></app-demo-widget-mission-funding-priority>
-                        <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'">></app-demo-widget-mission-funding-money>
+<!--
+<div class="dashboard-container" cdkDropList  (cdkDropListDropped)="onItemDropped($event)">
+    <ng-container *ngFor="let widget of availableWidgetList">
+        <ng-container *ngIf="widget.selected">
+                <div [ngSwitch]="widget.title" class="example-box" cdkDragBoundary=".dashboard-container" cdkDrag>
+                    <div class="example-handle" cdkDragHandle>
+                        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                        </svg>
                     </div>
-                </ng-container>
-            </ng-container>
-        </div>
+                    <app-demo-widget-pr-status *ngSwitchCase="'PR Status'"></app-demo-widget-pr-status>
+                    <app-demo-widget-pom-phase-funding *ngSwitchCase="'POM Phase Funding'">></app-demo-widget-pom-phase-funding>
+                    <app-demo-widget-mission-funding-priority *ngSwitchCase="'Mission Funding Priority'">></app-demo-widget-mission-funding-priority>
+                    <app-demo-widget-mission-funding-money *ngSwitchCase="'Mission Funding Money'">></app-demo-widget-mission-funding-money>
+                </div>
+        </ng-container>
+    </ng-container>
 </div>
+-->
+<div class="dashboard-container" cdkDropList  (cdkDropListDropped)="onItemDropped($event)">
+    <gridster [options]="options">
+        <gridster-item [item]="widget" *ngFor="let widget of dashboard">
 
+            <div class="widget-header">
+                <div class="widget-header-left" >
+                    <span (click)="removeWidget(widget)">
+                        <fa name="trash"></fa>
+                    </span>
+
+                </div>
+                <div class="widget-header-right" >
+                    <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="gridster-item-content" [ngSwitch]="widget.id" >
+                    <app-demo-widget-pr-status *ngSwitchCase="'w1'"></app-demo-widget-pr-status>
+                    <app-demo-widget-pom-phase-funding *ngSwitchCase="'w2'">></app-demo-widget-pom-phase-funding>
+                    <app-demo-widget-mission-funding-priority *ngSwitchCase="'w3'">></app-demo-widget-mission-funding-priority>
+                    <app-demo-widget-mission-funding-money *ngSwitchCase="'w4'">></app-demo-widget-mission-funding-money>
+            </div>
+        </gridster-item>
+    </gridster>
+</div>
 
 <div class="modal" tabindex="-1" role="dialog" *ngIf="showDialog">
     <div class="modal-dialog" role="document">
@@ -72,7 +105,7 @@
             <div class="modal-body">
                 <form>
                     <div style="margin: 20px auto;">
-                        <div class="row" style="margin: 20px auto;" *ngFor="let widget of widgetList">
+                        <div class="row" style="margin: 20px auto;" *ngFor="let widget of availableWidgetList">
                             <div class="column" style="width: 5%;">
                                 <input [name]="widget.id" type="checkbox" [(ngModel)]="widget.selected"/>
                             </div>
