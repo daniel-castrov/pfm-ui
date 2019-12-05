@@ -340,19 +340,24 @@ tab {
   cursor: pointer;
 }
 
-
 .ag-header-cell-label {
   text-align: center !important;
   flex-direction: row !important;
 }
 .ag-row-odd {
-  background: #ccc !important;
+  background: whitesmoke !important;
 }
 
 .ag-row {
   border: 0px !important;
   border-bottom: 1px solid #7b8389 !important;
 }
+
+.ag-row-hover{
+  background-color: lightgray !important;
+}
+
+
 
 .ag-cell {
   border: 0px !important;

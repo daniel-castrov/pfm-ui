@@ -42,7 +42,6 @@ export class MissionPrioritiesComponent implements OnInit {
         //type: 'numericColumn',
         maxWidth: 75,
         minWidth: 75,
-        resizable: true,
         rowDrag: true,
         rowDragManaged: true,
         valueGetter: function(params) {return params.node.rowIndex + 1;}
