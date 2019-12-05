@@ -121,7 +121,12 @@ export class MissionPrioritiesComponent implements OnInit {
   onAddNewRow(event:any):void{
     if(event.action === "add-single-row"){
       let mp:MissionPriority = new MissionPriority();
-      mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
+      if (this.missionData.length === 0) {
+        mp.priority = 1;
+      }
+      else {
+        mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
+      }
       mp.title = "";
       mp.description = "";
       mp.attachments = [];
@@ -248,6 +253,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.editMode(rowId);
 
     //edit the title and description
+    this.gridApi.setFocusedCell(rowId, 'title');
     this.gridApi.startEditingCell({
       rowIndex: rowId,
       colKey: 'title'

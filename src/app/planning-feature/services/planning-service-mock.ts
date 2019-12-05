@@ -25,6 +25,7 @@ export class PlanningServiceMock extends PlanningService{
 
   getMissionPriorities(year:string):Observable<Object> {
     let list: MissionPriority[] = [];
+    console.log(list);
 
     if (year != '2023') {
       for (let i = 0; i < 25; i++) {
