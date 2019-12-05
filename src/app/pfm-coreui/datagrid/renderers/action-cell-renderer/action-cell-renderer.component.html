@@ -12,7 +12,7 @@
     </ng-container>
 
     <ng-container *ngIf="data.canDelete">
-        <div class = "action">
+        <div class = "action" title="Delete">
             <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [type]="'iconDropdown'" [iconName]="'trash'" [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
     </ng-container>

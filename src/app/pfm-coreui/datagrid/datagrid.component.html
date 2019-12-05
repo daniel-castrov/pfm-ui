@@ -1,6 +1,6 @@
 <div class="pfm-datagrid">
     <div class="add-row-container">
-        <div>
+        <div title="Add">
             <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
     </div>
@@ -13,8 +13,8 @@
                           [suppressClickEdit]="true"
                           [defaultColDef]="defaultColDef"
                           [modules]="modules"
-                          suppressRowClickSelection
-                          rowSelection="single"
+                          [suppressRowClickSelection]="true"
+                          [rowSelection]="'single'"
                           [rowHeight]="50"
                           (gridReady)="onGridReady($event)"
                           (modelUpdated)="onModelUpdated()">

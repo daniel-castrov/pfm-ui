@@ -1,6 +1,6 @@
-<ng-container *ngIf='type == "yearDropdown"'>
+<ng-container *ngIf='type == "labelDropdown"'>
     <div class="pfm-select" style="width: 200px;">
-            <label for="{{id}}">For: </label>
+            <label>{{label}}</label>
         <select
                 (ngModelChange)="handleSelectionChanged($event)"
                 [name]="id"
@@ -15,7 +15,6 @@
 
 <ng-container *ngIf='type == "attatchmentDropdown"'>
     <div class="pfm-select" style="width: 200px;">
-        <label for="{{id}}"></label>
         <select
                 (ngModelChange)="handleSelectionChanged($event)"
                 [name]="id"
