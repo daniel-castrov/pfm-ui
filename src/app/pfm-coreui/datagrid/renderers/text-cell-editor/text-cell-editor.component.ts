@@ -27,6 +27,6 @@ export class TextCellEditorComponent implements ICellEditorAngularComp, AfterVie
       if(this.params.focusOnEditMode){
         this.input.setFocus();
       }
-    })
+    });
   }
 }
