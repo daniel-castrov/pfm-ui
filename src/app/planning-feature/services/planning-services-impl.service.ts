@@ -27,4 +27,8 @@ export class PlanningServicesImpl extends PlanningService{
   getMissionPriorities(year:string):Observable<Object>{
     return this.get("getMissionPriorities?year=" + year);
   }
+
+  openPOM():Observable<Object>{
+    return this.get("openPOM?year=");
+  }
 }
