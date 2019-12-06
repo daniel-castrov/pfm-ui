@@ -8,6 +8,7 @@ import { PasswordInputComponent } from '../../pfm-coreui/form-inputs/password-in
 import { ZipcodeInputComponent } from '../../pfm-coreui/form-inputs/zipcode-input/zipcode-input.component';
 import { EmailInputComponent } from '../../pfm-coreui/form-inputs/email-input/email-input.component';
 import { PhoneInputComponent } from '../../pfm-coreui/form-inputs/phone-input/phone-input.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pfm-planning',
@@ -22,16 +23,19 @@ export class CreatePlanningComponent implements OnInit {
   availableYears:ListItem[];
   selectedYear:string;
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService) { }
+  constructor(private planningService:PlanningService, private dialogService:DialogService, private router:Router) { }
 
   yearSelected(year:string):void{
     this.selectedYear = year;
   }
 
   onCreatePlanningPhase():void{
-
+    let year:any = this.selectedYear;
     if(this.yearDropDown.isValid()){
-      this.dialogService.displayError("not implemented");
+      this.planningService.openPOM().subscribe(resp => {
+      });
+      this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
+      this.router.navigate(["home"]);
     }
   }
 
