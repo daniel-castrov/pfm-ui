@@ -33,6 +33,9 @@ export class OpenPlanningComponent implements OnInit {
       this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
       this.router.navigate(["/planning/mission-priorities", {name: year.id}]);
     }
+    else{
+      this.dialogService.displayToastError(`Please select a year from the dropdown.`);
+    }
   }
 
   ngOnInit() {

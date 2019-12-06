@@ -37,6 +37,9 @@ export class CreatePlanningComponent implements OnInit {
       this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
       this.router.navigate(["home"]);
     }
+    else{
+      this.dialogService.displayToastError(`Please select a year from the dropdown.`);
+    }
   }
 
   ngOnInit() {
