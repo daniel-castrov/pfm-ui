@@ -1,6 +1,6 @@
 <ng-container *ngIf='type == "labelDropdown"'>
     <div class="pfm-select" style="width: 200px;">
-            <label>{{label}}</label>
+        <label>{{label}}</label>
         <select
                 (ngModelChange)="handleSelectionChanged($event)"
                 [name]="id"
