@@ -13,6 +13,7 @@ import { MissionAction } from '../models/MissionAction';
 import { MissionAttachment } from '../models/MissionAttachment';
 import { GridApi, ColumnApi } from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'pfm-planning',
@@ -34,7 +35,13 @@ export class MissionPrioritiesComponent implements OnInit {
 
   columns:any[];
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService) {
+  constructor(private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute) {
+    if (this.route.snapshot.params.name){
+      let year:any = this.route.snapshot.params.name;
+      console.log(this.route.snapshot.params.name);
+      this.selectedYear = year;
+      this.yearSelected({"name": year});
+    }
     this.columns = [
       {
         headerName: 'Priority',

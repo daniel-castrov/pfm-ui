@@ -3,6 +3,7 @@ import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class OpenPlanningComponent implements OnInit {
   availableYears:ListItem[];
   selectedYear:string;
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService) { }
+  constructor(private planningService:PlanningService, private dialogService:DialogService, private router:Router) { }
 
   yearSelected(year:string):void{
     this.selectedYear = year;
@@ -28,7 +29,9 @@ export class OpenPlanningComponent implements OnInit {
   onOpenPlanningPhase():void{
 
     if(this.yearDropDown.isValid()){
-      this.dialogService.displayError("not implemented");
+      let year:any = this.selectedYear;
+      this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
+      this.router.navigate(["/planning/mission-priorities", {name: year.id}]);
     }
   }
 
