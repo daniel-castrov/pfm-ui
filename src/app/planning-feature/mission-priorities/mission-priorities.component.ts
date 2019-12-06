@@ -271,10 +271,9 @@ export class MissionPrioritiesComponent implements OnInit {
       rowIndex: rowId,
       colKey: "title"
     });
-
   }
 
-  deleteRow(rowId:number, data:any){
+  private deleteRow(rowId:number, data:any){
     //confirmation message
     this.dialogService.displayConfirmation("Are you sure you want to delete this row?", "Delete Confirmation",
     ()=>{
