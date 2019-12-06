@@ -6,10 +6,6 @@
 .add-row-container{
   display: flex;
   justify-content: flex-end;
-
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
 }
 
 .pfm-data {
@@ -19,8 +15,4 @@
   border-width: 1px;
   border-color: black;
   border-style: solid;
-}
-
-.icon-select span.icon-option:hover {
-  background-color: blue;
 }
