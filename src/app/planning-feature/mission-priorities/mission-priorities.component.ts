@@ -55,7 +55,7 @@ export class MissionPrioritiesComponent implements OnInit {
         cellRendererFramework: TextCellRendererComponent,
         cellEditorFramework: TextCellEditorComponent,
         cellRendererParams: {'maxSize': 50},
-        cellEditorParams: {'maxSize': 50}
+        cellEditorParams: {'maxSize': 50, 'focusOnEditMode': true}
       },
       {
         headerName: 'Mission Description',
@@ -118,7 +118,7 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "upload": {
-        // stub
+        this.updateDocuments(cellAction.rowIndex);
         break;
       }
       case "delete-row": {
@@ -267,11 +267,11 @@ export class MissionPrioritiesComponent implements OnInit {
     this.editMode(rowId);
 
     //edit the title and description
-    this.gridApi.setFocusedCell(rowId, "title");
     this.gridApi.startEditingCell({
       rowIndex: rowId,
       colKey: "title"
     });
+
   }
 
   deleteRow(rowId:number, data:any){
@@ -292,6 +292,10 @@ export class MissionPrioritiesComponent implements OnInit {
     ()=>{
       console.log("Cancel Worked!");
     });
+  }
+
+  private updateDocuments(rowId:number):void{
+
   }
 
   private deleteAttatchment(rowId:number, attatchmentIds:[], event:any){

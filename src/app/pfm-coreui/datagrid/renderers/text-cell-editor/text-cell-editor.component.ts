@@ -24,7 +24,9 @@ export class TextCellEditorComponent implements ICellEditorAngularComp, AfterVie
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.input.setFocus();
+      if(this.params.focusOnEditMode){
+        this.input.setFocus();
+      }
     })
   }
 }
