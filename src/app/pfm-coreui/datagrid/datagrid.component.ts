@@ -20,6 +20,7 @@ export class DatagridComponent implements OnInit {
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
   @Output() onGridIsReady:EventEmitter<GridApi> = new EventEmitter<GridApi>();
+  @Output() onRowDragEndEvent:EventEmitter<any> = new EventEmitter<any>();
   @Output() onColumnIsReady:EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   public defaultColDef: any;
@@ -57,6 +58,10 @@ export class DatagridComponent implements OnInit {
 
   public onModelUpdated() {
     console.log('onModelUpdated');
+  }
+
+  onRowDragEnd(event:any):void{
+    this.onRowDragEndEvent.emit(event);
   }
 
   public onGridReady(params) {

@@ -18,6 +18,7 @@
                           [rowSelection]="'single'"
                           [rowHeight]="50"
                           (gridReady)="onGridReady($event)"
+                          (rowDragEnd)="onRowDragEnd($event)"
                           (modelUpdated)="onModelUpdated()">
         </ag-grid-angular>
     </div>

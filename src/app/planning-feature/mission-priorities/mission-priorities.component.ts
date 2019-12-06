@@ -84,6 +84,20 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
+  onRowDragEnd(event:any):void{
+    let newIndex:number = event.overIndex;
+    let oldIndex:number = event.node.data.priority - 1;
+
+    let temp:any[] = this.missionData.slice();
+
+    temp.splice(newIndex,0,temp.splice(oldIndex,1)[0]);
+    for(let i=0; i<temp.length; i++){
+      temp[i].priority = i + 1;
+    }
+    this.missionData = temp;
+    console.info(event);
+  }
+
   onGridIsReady(gridApi:GridApi):void{
     this.gridApi = gridApi;
   }
