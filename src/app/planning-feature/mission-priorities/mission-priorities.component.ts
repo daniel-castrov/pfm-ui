@@ -133,7 +133,8 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "delete-attatchments": {
-        // stub
+        console.log("delete-attatchments");
+        this.deleteAttatchments(cellAction.rowIndex);
         break;
       }
     }
@@ -304,13 +305,18 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
-  private deleteAttatchment(rowId:number, attatchmentIds:[], event:any){
+  private deleteAttatchments(rowId:number){
+    console.log(this.missionData[rowId].attachments);
     //confirmation/selection message
-
-    //delete attatchment(s)
-    //this.missionData[rowId].attachments.slice(attatchmentId, 1);
-
-    //update row
+    this.dialogService.displayRadioSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
+      () => {
+      // delete attatchment(s)
+      console.log("Ok worked");
+      //update row
+    },
+      () => {
+      // do nothing
+      console.log("Cancel Worked!");
+    });
   }
-
 }

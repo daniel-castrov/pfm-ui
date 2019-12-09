@@ -42,19 +42,22 @@
                         <ng-container *ngIf="activeMessage.type === 'DEBUG'">
                             <textarea>{{activeMessage.debug | json}}</textarea>
                         </ng-container>
-                        <ng-container *ngIf="activeMessage.type !== 'DEBUG'">
+                        <ng-container *ngIf="activeMessage.type === 'RADIOSELECTION'">
+                            <pfm-radio-button-input dataModel="attachments" id="2" fieldName="" inputLabel="" radioOptions=""></pfm-radio-button-input>
+                        </ng-container>
+                        <ng-container *ngIf="activeMessage.type !== 'DEBUG' && activeMessage.type !== 'RADIOSELECTION'">
                             <p>{{activeMessage.body}}</p>
                         </ng-container>
-
                     </div>
                     <div class="modal-footer">
-                        <ng-container *ngIf="activeMessage.type !== 'CONFIRMATION'">
+                        <ng-container *ngIf="activeMessage.type !== 'CONFIRMATION' && activeMessage.type !== 'RADIOSELECTION'">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onDialogClose()">{{activeMessage.labelForOk}}</button>
                         </ng-container>
-                        <ng-container *ngIf="activeMessage.type === 'CONFIRMATION'">
+                        <ng-container *ngIf="activeMessage.type === 'CONFIRMATION' || activeMessage.type === 'RADIOSELECTION'">
                             <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDialogOk()">{{activeMessage.labelForOk}}</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onDialogCancel()">{{activeMessage.labelForCancel}}</button>
                         </ng-container>
+
                         <!--<button type="button" class="btn btn-primary" (click)="onDialogClose()">Save changes</button>-->
                         
                     </div>

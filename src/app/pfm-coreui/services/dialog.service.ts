@@ -65,4 +65,14 @@ export class DialogService {
 		message.cancelCallBack = cancelCallBack;
 		this.sendMessage(message);
 	}
+
+	displayRadioSelection(text:string, title:string, attachments:any[], okCallBack:any, cancelCallBack:any){
+		let message:DialogMessage = new DialogMessage();
+		message.type = "RADIOSELECTION";
+		message.title = title;
+		message.body = text;
+		message.okCallBack = okCallBack;
+		message.cancelCallBack = cancelCallBack;
+		this.sendMessage(message);
+	}
 }
