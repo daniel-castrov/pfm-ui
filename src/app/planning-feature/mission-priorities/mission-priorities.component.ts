@@ -11,7 +11,7 @@ import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/tex
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
 import { MissionAttachment } from '../models/MissionAttachment';
-import { GridApi, ColumnApi } from '@ag-grid-community/all-modules';
+import { GridApi2, ColumnApi } from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 import { ActivatedRoute } from '@angular/router';
 import { DisabledActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
@@ -40,7 +40,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
   columns:any[];
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, 
+  constructor(private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute,
     private signInService:SigninService) {
     if (this.route.snapshot.params.name){
       let year:any = this.route.snapshot.params.name;
