@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
@@ -14,6 +14,8 @@ import { MissionAttachment } from '../models/MissionAttachment';
 import { GridApi, ColumnApi } from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 import { ActivatedRoute } from '@angular/router';
+import { DisabledActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
+import { SigninService } from '../../pfm-auth-module/services/signin.service';
 
 @Component({
   selector: 'pfm-planning',
@@ -32,16 +34,21 @@ export class MissionPrioritiesComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear:string;
   missionData:MissionPriority[];
+  POMLocked:boolean = false;
+  POMClosed:boolean = false;
+  POMManager:boolean = false;
 
   columns:any[];
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute) {
+  constructor(private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, 
+    private signInService:SigninService) {
     if (this.route.snapshot.params.name){
       let year:any = this.route.snapshot.params.name;
       console.log(this.route.snapshot.params.name);
       this.selectedYear = year;
       this.yearSelected({"name": year});
     }
+
     this.columns = [
       {
         headerName: 'Priority',
@@ -192,6 +199,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isPOMManager();
     this.busy = true;
     this.planningService.getMissionPrioritiesYears().subscribe(
       resp => {
@@ -282,8 +290,6 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private deleteRow(rowId:number, data:any){
     //confirmation message
-    this.dialogService.displayConfirmation("Are you sure you want to delete this row?", "Delete Confirmation",
-    ()=>{
       //delete row
       console.log(this.missionData.splice(rowId, 1));
 
@@ -294,10 +300,6 @@ export class MissionPrioritiesComponent implements OnInit {
 
       //update view
       this.gridApi.setRowData(this.missionData);
-    },
-    ()=>{
-      console.log("Cancel Worked!");
-    });
   }
 
   private updateDocuments(rowId:number):void{
@@ -316,5 +318,39 @@ export class MissionPrioritiesComponent implements OnInit {
       // do nothing
       console.log("Cancel Worked!");
     });
+  }
+
+  //check if current user has POM Manager role
+  isPOMManager(){
+    this.signInService.getUserRoles().subscribe(
+      resp  => {
+        let result: any = resp;
+        if(result.result.includes("POM_Manager")){
+          this.POMManager = true;
+        }        
+      },
+      error =>{
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
+    this.POMManager = false;
+  }
+
+  lockPlanningPhase(){
+    this.POMLocked = true;
+    //run service method to perform back-end locking of planning phase
+    this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully locked`);    
+    this.columns[4] = {
+      headerName: 'Actions',
+      field: 'actions',
+      cellRendererFramework: DisabledActionCellRendererComponent
+    };
+    this.gridApi.setColumnDefs(this.columns);
+  }
+
+  closePlanningPhase(){
+    this.POMClosed = true;
+    //run service method to perform back-end locking of planning phase
+    this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully closed`);
   }
 }

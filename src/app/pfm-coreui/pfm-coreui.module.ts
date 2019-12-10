@@ -25,6 +25,8 @@ import { SecondaryButtonComponent } from './form-inputs/secondary-button-input/s
 import { TextCellEditorComponent } from './datagrid/renderers/text-cell-editor/text-cell-editor.component';
 import { TextCellRendererComponent } from './datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DisabledActionCellRendererComponent } from './datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
+import { DisabledTextCellEditorComponent } from './datagrid/renderers/disabled-text-cell-editor/disabled-text-cell-editor.component';
 
 @NgModule({
   declarations: [
@@ -47,10 +49,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ActionCellRendererComponent,
     AttachmentCellRendererComponent,
     TextCellEditorComponent,
-    TextCellRendererComponent
+    TextCellRendererComponent,
+    DisabledActionCellRendererComponent,
+    DisabledTextCellEditorComponent
   ],
   imports: [
-    CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent])
+    CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent, DisabledActionCellRendererComponent, DisabledTextCellEditorComponent])
   ],
   exports: [
     AppHeaderComponent,
@@ -71,7 +75,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ActionCellRendererComponent,
     AttachmentCellRendererComponent,
     TextCellEditorComponent,
-    TextCellRendererComponent
+    TextCellRendererComponent,
+    DisabledActionCellRendererComponent
   ]
 })
 export class PfmCoreuiModule { }

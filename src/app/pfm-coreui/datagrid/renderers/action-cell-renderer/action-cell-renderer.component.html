@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!disabled">
     <ng-container *ngIf="data.canEdit">
         <div class = "action" (click)="onSelected('edit')">
             <fa name="pencil" title="Edit"></fa>

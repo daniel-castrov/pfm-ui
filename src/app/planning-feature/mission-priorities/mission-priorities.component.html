@@ -1,9 +1,25 @@
 <div class="main">
     <h3>Mission Priorities
-        <ng-container *ngIf="selectedYear">
-            <span>Opened</span>
+        <ng-container *ngIf="selectedYear && !POMLocked">
+            <span> - Opened</span>
+        </ng-container>
+        <ng-container *ngIf="POMLocked && !POMClosed">
+            <span> - Locked</span>
+        </ng-container>
+        <ng-container *ngIf="POMClosed">
+            <span> - Closed</span>
         </ng-container>
     </h3>
+    <div *ngIf="POMManager && selectedYear && !POMLocked">
+        <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
+            Lock Planning Phase
+        </button>
+    </div>
+    <div *ngIf="POMManager && POMLocked && !POMClosed">
+        <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
+            Close Planning Phase
+        </button>
+    </div>
 </div>
 
 <ng-container *ngIf="availableYears">
