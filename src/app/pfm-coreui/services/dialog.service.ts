@@ -68,9 +68,11 @@ export class DialogService {
 
 	displayRadioSelection(text:string, title:string, attachments:any[], okCallBack:any, cancelCallBack:any){
 		let message:DialogMessage = new DialogMessage();
-		message.type = "RADIOSELECTION";
+		message.type = "CHECKSELECTION";
 		message.title = title;
 		message.body = text;
+		console.log(attachments);
+		message.data = attachments;
 		message.okCallBack = okCallBack;
 		message.cancelCallBack = cancelCallBack;
 		this.sendMessage(message);
