@@ -67,7 +67,7 @@ export class DialogService {
 		this.sendMessage(message);
 	}
 
-	displayRadioSelection(text:string, title:string, attachments:any[], okCallBack:any, cancelCallBack:any){
+	displayCheckBoxSelection(text:string, title:string, attachments:any[], okCallBack:any, cancelCallBack:any){
 		let message:DialogMessage = new DialogMessage();
 		message.type = "CHECKSELECTION";
 		message.title = title;

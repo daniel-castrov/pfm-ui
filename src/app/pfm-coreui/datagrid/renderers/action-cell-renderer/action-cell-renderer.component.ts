@@ -54,9 +54,9 @@ export class ActionCellRendererComponent implements OnInit {
     item.value = "delete-row";
     item.id = "delete-row";
     let item2:ListItem = new ListItem();
-    item2.name = "Delete Attatchment(s)";
-    item2.value = "delete-attatchments";
-    item2.id = "delete-attatchments";
+    item2.name = "Delete Attachment(s)";
+    item2.value = "delete-attachments";
+    item2.id = "delete-attachments";
     this.options = [item, item2];
   }
 
