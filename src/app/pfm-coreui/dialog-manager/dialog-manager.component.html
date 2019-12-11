@@ -44,8 +44,9 @@
                         </ng-container>
                         <ng-container *ngIf="activeMessage.type === 'CHECKSELECTION'">
                             <form action="">
+                                <span>{{activeMessage|json}}</span>
                                 <div *ngFor="let attachment of activeMessage.data">
-                                    <input type="checkbox" name="attachment.name" value="attachment.name"> {{attachment.name}} <br>
+                                    <input type="checkbox" [(ngModel)]="attachment.selectedForDelete" [name]=attachment.name [value]=attachment.name> {{attachment.name}} <br>
                                 </div>
                             </form>
                         </ng-container>

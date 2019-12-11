@@ -45,7 +45,17 @@ export class PlanningServiceMock extends PlanningService{
         ma.name = "abc.doc";
         ma.type = "doc";
         ma.url = "http://google.com";
+        let test1: MissionAttachment = new MissionAttachment();
+        test1.name = "abcd.doc";
+        test1.type = "doc";
+        test1.url = "http://google.com";
+        let test2: MissionAttachment = new MissionAttachment();
+        test2.name = "abcde.doc";
+        test2.type = "doc";
+        test2.url = "http://google.com";
         data.attachments.push(ma);
+        data.attachments.push(test1);
+        data.attachments.push(test2);
         list.push(data);
       }
     }

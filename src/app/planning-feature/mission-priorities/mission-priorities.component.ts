@@ -11,7 +11,7 @@ import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/tex
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
 import { MissionAttachment } from '../models/MissionAttachment';
-import { GridApi2, ColumnApi } from '@ag-grid-community/all-modules';
+import { GridApi, ColumnApi } from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 import { ActivatedRoute } from '@angular/router';
 import { DisabledActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
@@ -256,7 +256,7 @@ export class MissionPrioritiesComponent implements OnInit {
     }
     else{
       if (row.title.length === 0){
-        error = error + 'The Title is empty. ';
+        error = 'The Title is empty. ';
         isError = true;
       }
       if (row.description.length === 0){
@@ -311,11 +311,19 @@ export class MissionPrioritiesComponent implements OnInit {
     this.dialogService.displayRadioSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
       () => {
       // delete attatchment(s)
+      for (let attachment of this.missionData[rowId].attachments){
+        if (attachment.selectedForDelete){
+          let index = this.missionData[rowId].attachments.indexOf(attachment);
+          this.missionData[rowId].attachments.splice(index, 1);
+          //refresh this row in grid
+        }
+      }
       console.log("Ok worked");
       //update row
     },
       () => {
-      // do nothing
+      // reset data JSON Serialize and Deserialize
+
       console.log("Cancel Worked!");
     });
   }

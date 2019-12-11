@@ -72,20 +72,6 @@ export class DialogService {
 		message.type = "CHECKSELECTION";
 		message.title = title;
 		message.body = text;
-
-		// for testing purposes
-		let test1: MissionAttachment = new MissionAttachment();
-		test1.name = "abcd.doc";
-		test1.type = "doc";
-		test1.url = "http://google.com";
-		let test2: MissionAttachment = new MissionAttachment();
-		test2.name = "abcde.doc";
-		test2.type = "doc";
-		test2.url = "http://google.com";
-
-		attachments.push(test1);
-		attachments.push(test2);
-		console.log(attachments);
 		message.data = attachments;
 		message.okCallBack = okCallBack;
 		message.cancelCallBack = cancelCallBack;
