@@ -12,6 +12,14 @@ export class PlanningServicesImpl extends PlanningService{
     super(httpClient);
   }
 
+  getAllPlanning():Observable<Object>{
+    return this.get("planning");
+  }
+
+  createMissionPriority(data:any):Observable<Object>{
+    return this.post("missionPriority", data);
+  }
+
   getAvailableCreatePlanningYears():Observable<Object>{
     return this.get("getAvailableCreatePlanningYears");
   }
@@ -31,4 +39,5 @@ export class PlanningServicesImpl extends PlanningService{
   openPOM():Observable<Object>{
     return this.get("openPOM?year=");
   }
+
 }

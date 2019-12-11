@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://pfmdev1.pxalphaproject.com/pfm-server'
+  //apiUrl: 'https://cbdev1.ironparrot.com/jscbis'
+  apiUrl: 'https://cbdev1.ironparrot.com/jscbis'
 };
 
 /*

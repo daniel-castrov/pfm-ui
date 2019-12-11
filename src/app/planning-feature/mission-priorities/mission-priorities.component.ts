@@ -100,13 +100,13 @@ export class MissionPrioritiesComponent implements OnInit {
 
   onRowDragEnd(event:any):void{
     let newIndex:number = event.overIndex;
-    let oldIndex:number = event.node.data.priority - 1;
+    let oldIndex:number = event.node.data.order - 1;
 
     let temp:any[] = this.missionData.slice();
 
     temp.splice(newIndex,0,temp.splice(oldIndex,1)[0]);
     for(let i=0; i<temp.length; i++){
-      temp[i].priority = i + 1;
+      temp[i].order = i + 1;
     }
     this.missionData = temp;
     console.info(event);
@@ -150,10 +150,10 @@ export class MissionPrioritiesComponent implements OnInit {
     if(event.action === "add-single-row"){
       let mp:MissionPriority = new MissionPriority();
       if (this.missionData.length === 0) {
-        mp.priority = 1;
+        mp.order = 1;
       }
       else {
-        mp.priority = this.missionData[this.missionData.length - 1].priority + 1;
+        mp.order = this.missionData[this.missionData.length - 1].order + 1;
       }
       mp.title = "";
       mp.description = "";
@@ -165,7 +165,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.actions.canUpload = true;
       this.gridApi.updateRowData({add: [mp]});
       this.missionData.push(mp);
-      this.editRow(mp.priority - 1);
+      this.editRow(mp.order - 1);
     }
     else if(event.action === "add-rows-from-year"){
       // get rows
@@ -251,8 +251,26 @@ export class MissionPrioritiesComponent implements OnInit {
       this.missionData[rowId] = row;
       //return to view mode
       this.viewMode(rowId);
-      //update view
-      this.gridApi.setRowData(this.missionData);
+
+      if(!this.missionData[rowId].id){
+        this.busy = true;
+        this.planningService.createMissionPriority(this.missionData[rowId]).subscribe(
+          resp => {
+            this.busy = false;
+            this.missionData = resp as any;
+
+            //update view
+            this.gridApi.setRowData(this.missionData);
+
+          },
+          error =>{
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+          });
+      }
+      this.busy = false;
+      this.dialogService.displayToastError("Not Implemented");
+
     }
     else{
       if (row.title.length === 0){
@@ -293,9 +311,9 @@ export class MissionPrioritiesComponent implements OnInit {
       //delete row
       console.log(this.missionData.splice(rowId, 1));
 
-      //update priority
+      //update order
       for (let i = rowId; i < this.missionData.length; i++){
-        this.missionData[i].priority= this.missionData[i].priority + 1;
+        this.missionData[i].order= this.missionData[i].order + 1;
       }
 
       //update view

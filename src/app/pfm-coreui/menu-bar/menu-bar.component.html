@@ -1,5 +1,5 @@
 <ul id="mySidenav" class="sidenav" [class.open]="isOpen">
-    <li (click)="onSelect('Dashboard')" [class.active]="isDashboardSelected">
+    <li (click)="onNavSelect('Dashboard', '/home')" [class.active]="isDashboardSelected">
         <div class="menu-item">
             <fa name="tachometer"></fa>
             <span><a class="inner-menu-item"  href="#" routerLink="/home" routerLinkActive="active-link">Dashboard</a></span>

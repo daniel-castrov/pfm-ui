@@ -12,6 +12,7 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { PlanningService } from './services/planning-service';
 import { PlanningServiceMock } from './services/planning-service-mock';
 import { HttpClientModule } from '@angular/common/http';
+import { PlanningServicesImpl } from './services/planning-services-impl.service';
 
 
 @NgModule({

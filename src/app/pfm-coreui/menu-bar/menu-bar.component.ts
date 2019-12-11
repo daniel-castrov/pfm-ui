@@ -34,6 +34,11 @@ export class MenuBarComponent implements OnInit {
 
   }
 
+  onNavSelect(name:string, url:string):void{
+    this.onSelect(name);
+    this.router.navigate([url]);
+  }
+
   onSelect(name:string):void{
     this.selectedItem = name;
     if(name){

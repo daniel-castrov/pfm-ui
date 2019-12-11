@@ -8,6 +8,9 @@ export abstract class PlanningService extends BaseRestService{
     super(httpClient);
   }
 
+  abstract getAllPlanning():Observable<Object>;
+  abstract createMissionPriority(data:any):Observable<Object>;
+
   abstract getAvailableCreatePlanningYears():Observable<Object>;
   abstract getAvailableOpenPlanningYears():Observable<Object>;
   abstract getMissionPrioritiesYears():Observable<Object>;

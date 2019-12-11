@@ -12,6 +12,14 @@ export class PlanningServiceMock extends PlanningService{
     super(null);
   }
 
+  getAllPlanning():Observable<Object>{
+    return this.get("planning");
+  }
+
+  createMissionPriority(data:any):Observable<Object>{
+    return of(data);
+  }
+
   getAvailableCreatePlanningYears():Observable<Object>{
     return of([2021, 2022, 2023]);
   }
@@ -31,7 +39,7 @@ export class PlanningServiceMock extends PlanningService{
     if (year != '2023') {
       for (let i = 0; i < 25; i++) {
         let data: MissionPriority = new MissionPriority();
-        data.priority = i + 1;
+        data.order = i + 1;
         data.title = this.sampleData[i] + year;
         data.description = this.sampleData[this.sampleData.length - 1 - i];
         data.actions = new MissionAction();
