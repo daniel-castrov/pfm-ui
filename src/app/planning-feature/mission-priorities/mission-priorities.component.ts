@@ -360,7 +360,7 @@ export class MissionPrioritiesComponent implements OnInit {
     });
   }
 
-  private deleteRow(rowId:number, data:any){
+  private deleteRow(rowId:number){
 
     this.busy = true;
 
