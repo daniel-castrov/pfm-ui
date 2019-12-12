@@ -1,1 +1,11 @@
 <h3>Close Planning</h3>
+
+<ng-container *ngIf="availableYears">
+    <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+</ng-container>
+
+<br>
+
+<button type="button" class="btn btn-primary" (click)="closePlanningPhase()" [disabled]="!selectedYear">
+    Close Planning Phase
+</button>

@@ -23,8 +23,6 @@ export class LockPlanningComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear:string;
   validInput:boolean = false;
-  POMLocked:boolean = false;
-  POMClosed:boolean = false;
   POMManager:boolean = false;
 
   constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, private signInService:SigninService) { }
@@ -46,8 +44,6 @@ export class LockPlanningComponent implements OnInit {
     this.planningService.lockPlanningPhase(planningData).subscribe(
       resp => {
         this.busy = false;
-        this.POMLocked = true;
-        //run service method to perform back-end locking of planning phase
         this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully locked`);  
         this.availableYears = this.availableYears.filter(obj => obj.id != this.selectedYear);
         },
