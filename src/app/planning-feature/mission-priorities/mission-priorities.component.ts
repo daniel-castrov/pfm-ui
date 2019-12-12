@@ -493,9 +493,24 @@ export class MissionPrioritiesComponent implements OnInit {
       });
   }
 
-  closePlanningPhase(){
-    this.POMClosed = true;
-    //run service method to perform back-end locking of planning phase
-    this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully closed`);
+  closePlanningPhase(){    
+    this.busy = true;
+    let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
+    this.planningService.closePlanningPhase(planningData).subscribe(
+      resp => {
+        this.busy = false;
+        this.POMClosed = true;
+        this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully closed`);
+        this.columns[4] = {
+          headerName: 'Actions',
+          field: 'actions',
+          cellRendererFramework: DisabledActionCellRendererComponent
+        };
+        this.gridApi.setColumnDefs(this.columns);
+      },
+      error =>{
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
   }
 }
