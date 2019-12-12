@@ -37,7 +37,7 @@ export class PlanningServicesImpl extends PlanningService{
   }
 
   updateMissionPriority(data:any):Observable<Object>{
-    return this.put("missionPriority", data);
+    return this.put("missionPriority/missionPriorities", data);
   }
 
   deleteMissionPriority(id:any):Observable<Object>{

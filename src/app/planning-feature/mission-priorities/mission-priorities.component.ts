@@ -273,6 +273,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.title = row.title;
       mp.description = row.description;
       mp.order = row.order;
+      mp.id = row.id;
       this.busy = true;
 
       if(!this.missionData[rowId].id){//create vs update
@@ -292,7 +293,7 @@ export class MissionPrioritiesComponent implements OnInit {
       }
       else{
 
-        this.planningService.updateMissionPriority(mp).subscribe(
+        this.planningService.updateMissionPriority([mp]).subscribe(
           resp => {
             this.busy = false;
 
@@ -393,15 +394,25 @@ export class MissionPrioritiesComponent implements OnInit {
 
 
   lockPlanningPhase(){
-    this.POMLocked = true;
-    //run service method to perform back-end locking of planning phase
-    this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully locked`);    
-    this.columns[4] = {
-      headerName: 'Actions',
-      field: 'actions',
-      cellRendererFramework: DisabledActionCellRendererComponent
-    };
-    this.gridApi.setColumnDefs(this.columns);
+    this.busy = true;
+    let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
+    this.planningService.lockPlanningPhase(planningData).subscribe(
+      resp => {
+        this.busy = false;
+        this.POMLocked = true;
+        //run service method to perform back-end locking of planning phase
+        this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully locked`);
+        this.columns[4] = {
+          headerName: 'Actions',
+          field: 'actions',
+          cellRendererFramework: DisabledActionCellRendererComponent
+        };
+        this.gridApi.setColumnDefs(this.columns);
+      },
+      error =>{
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
   }
 
   closePlanningPhase(){
