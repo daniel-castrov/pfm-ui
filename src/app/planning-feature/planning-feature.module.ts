@@ -23,6 +23,6 @@ import { PlanningServicesImpl } from './services/planning-services-impl.service'
     PfmCoreuiModule,
     PlanningFeatureRoutingModule
   ],
-  providers: [{provide: PlanningService, useClass: PlanningServiceMock}]
+  providers: [{provide: PlanningService, useClass: PlanningServicesImpl}]
 })
 export class PlanningFeatureModule { }

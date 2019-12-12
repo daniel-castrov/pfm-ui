@@ -9,11 +9,14 @@ export abstract class PlanningService extends BaseRestService{
   }
 
   abstract getAllPlanning():Observable<Object>;
+  abstract createPlanningPhase(data:any):Observable<Object>;
+  abstract openPlanningPhase(data:any):Observable<Object>;
+  abstract lockPlanningPhase(data:any):Observable<Object>;
+  abstract closePlanningPhase(data:any):Observable<Object>;
   abstract createMissionPriority(data:any):Observable<Object>;
+  abstract updateMissionPriority(data:any):Observable<Object>;
+  abstract deleteMissionPriority(data:any):Observable<Object>;
+  abstract getMissionPriorities(phaseId:string):Observable<Object>;
 
-  abstract getAvailableCreatePlanningYears():Observable<Object>;
-  abstract getAvailableOpenPlanningYears():Observable<Object>;
-  abstract getMissionPrioritiesYears():Observable<Object>;
-  abstract getMissionPriorities(year:string):Observable<Object>;
   abstract openPOM():Observable<Object>;
 }

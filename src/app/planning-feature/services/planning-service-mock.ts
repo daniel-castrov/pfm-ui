@@ -16,16 +16,37 @@ export class PlanningServiceMock extends PlanningService{
     return this.get("planning");
   }
 
+
+  createPlanningPhase(data:any):Observable<Object>{
+    return this.post("planning", data);
+  }
+
+  openPlanningPhase(data:any):Observable<Object>{
+    return this.put("planning/open", data);
+  }
+
+  lockPlanningPhase(data:any):Observable<Object>{
+    return this.put("planning/lock", data);
+  }
+
+  closePlanningPhase(data:any):Observable<Object>{
+    return this.put("planning/close", data);
+  }
+
   createMissionPriority(data:any):Observable<Object>{
+    return of(data);
+  }
+
+  updateMissionPriority(data:any):Observable<Object>{
+    return of(data);
+  }
+
+  deleteMissionPriority(data:any):Observable<Object>{
     return of(data);
   }
 
   getAvailableCreatePlanningYears():Observable<Object>{
     return of([2021, 2022, 2023]);
-  }
-
-  getAvailableOpenPlanningYears():Observable<Object>{
-    return of([2021, 2023]);
   }
 
   getMissionPrioritiesYears():Observable<Object>{

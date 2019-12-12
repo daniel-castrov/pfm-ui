@@ -16,24 +16,36 @@ export class PlanningServicesImpl extends PlanningService{
     return this.get("planning");
   }
 
+  createPlanningPhase(data:any):Observable<Object>{
+    return this.post("planning", data);
+  }
+
+  openPlanningPhase(data:any):Observable<Object>{
+    return this.put("planning/open", data);
+  }
+
+  lockPlanningPhase(data:any):Observable<Object>{
+    return this.put("planning/lock", data);
+  }
+
+  closePlanningPhase(data:any):Observable<Object>{
+    return this.put("planning/close", data);
+  }
+
   createMissionPriority(data:any):Observable<Object>{
     return this.post("missionPriority", data);
   }
 
-  getAvailableCreatePlanningYears():Observable<Object>{
-    return this.get("getAvailableCreatePlanningYears");
+  updateMissionPriority(data:any):Observable<Object>{
+    return this.put("missionPriority/missionPriorities", data);
   }
 
-  getAvailableOpenPlanningYears():Observable<Object>{
-    return this.get("getAvailableOpenPlanningYears");
+  deleteMissionPriority(id:any):Observable<Object>{
+    return this.delete("missionPriority/" + id);
   }
 
-  getMissionPrioritiesYears():Observable<Object>{
-    return this.get("getMissionPrioritiesYears");
-  }
-
-  getMissionPriorities(year:string):Observable<Object>{
-    return this.get("getMissionPriorities?year=" + year);
+  getMissionPriorities(phaseId:string):Observable<Object>{
+    return this.get("missionPriority/planningPhase/" + phaseId);
   }
 
   openPOM():Observable<Object>{

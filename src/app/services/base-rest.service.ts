@@ -33,6 +33,10 @@ export class BaseRestService {
     return this.httpClient.put(this.baseURL + "/" + resource, data, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
   }
 
+  protected delete(resource:string):Observable<Object>{
+    return this.httpClient.delete(this.baseURL + "/" + resource, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  }
+
   //majority of callers will only want the response content - but some may need access to response-headers, ect...
   protected getFullResponse(resource:string):Observable<Object>{
     return this.httpClient.get(this.baseURL + "/" + resource, {observe: "response", headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
