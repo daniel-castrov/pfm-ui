@@ -30,7 +30,7 @@
 
 <ng-container *ngIf="selectedYear">
     <div class="grid-container">
-        <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)" (onAddNewRowEvent)="onAddNewRow($event)" (onCellAction)="handleCellAction($event)" [showAddRow]="true" [columns]="columns" [rows]="missionData"></pfm-datagrid>
+        <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)" (onAddNewRowEvent)="onAddNewRow($event)" (onCellAction)="handleCellAction($event)" [showAddRow]="true" [columns]="columns" [rows]="missionData" [tabToNextCell]="tabToNextCell.bind(this)"></pfm-datagrid>
     </div>
 </ng-container>
 

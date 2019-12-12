@@ -11,7 +11,7 @@ import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/tex
 import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { MissionAction } from '../models/MissionAction';
 import { MissionAttachment } from '../models/MissionAttachment';
-import { GridApi, ColumnApi } from '@ag-grid-community/all-modules';
+import { GridApi, ColumnApi, RowNode, Column, CellPosition } from '@ag-grid-community/all-modules';
 import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 import { ActivatedRoute } from '@angular/router';
 import { DisabledActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
@@ -34,6 +34,7 @@ export class MissionPrioritiesComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear:string;
   missionData:MissionPriority[];
+  validInput:boolean = false;
   POMLocked:boolean = false;
   POMClosed:boolean = false;
   POMManager:boolean = false;
@@ -66,19 +67,21 @@ export class MissionPrioritiesComponent implements OnInit {
         editable:true,
         maxWidth: 400,
         minWidth: 400,
-        cellRendererFramework: TextCellRendererComponent,
-        cellEditorFramework: TextCellEditorComponent,
-        cellRendererParams: {'maxSize': 50},
-        cellEditorParams: {'maxSize': 50, 'focusOnEditMode': true}
+        onCellValueChanged: params => this.onValueChanged(params)
+        // cellRendererFramework: TextCellRendererComponent,
+        // cellEditorFramework: TextCellEditorComponent,
+        // cellRendererParams: {'maxSize': 50},
+        // cellEditorParams: {'maxSize': 50, 'focusOnEditMode': true}
       },
       {
         headerName: 'Mission Description',
         field: 'description',
         editable: true,
-        cellRendererFramework: TextCellRendererComponent,
-        cellEditorFramework: TextCellEditorComponent,
-        cellRendererParams: {'maxSize': 200},
-        cellEditorParams: {'maxSize': 200}
+        // cellRendererFramework: TextCellRendererComponent,
+        // cellEditorFramework: TextCellEditorComponent,
+        // cellRendererParams: {'maxSize': 200},
+        // cellEditorParams: {'maxSize': 200}
+        onCellValueChanged: params => this.onValueChanged(params)
       },
       {
         headerName: 'Attachments',
@@ -95,7 +98,7 @@ export class MissionPrioritiesComponent implements OnInit {
         cellRendererFramework: ActionCellRendererComponent
       }
     ];
-
+    this.tabToNextCell = this.tabToNextCell.bind(this);
   }
 
   onRowDragEnd(event:any):void{
@@ -136,11 +139,11 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "delete-row": {
-        this.deleteRow(cellAction.rowIndex, cellAction.rowData);
+        this.deleteRow(cellAction.rowIndex);
         break;
       }
-      case "delete-attatchments": {
-        this.deleteAttatchments(cellAction.rowIndex);
+      case "delete-attachments": {
+        this.deleteAttachments(cellAction.rowIndex);
         break;
       }
     }
@@ -231,6 +234,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.missionData[rowId].actions.canSave = true;
     this.missionData[rowId].actions.canEdit = false;
     // disable attatchments dropdown
+
   }
 
   private viewMode(rowId:number){
@@ -239,50 +243,58 @@ export class MissionPrioritiesComponent implements OnInit {
     this.missionData[rowId].actions.canUpload = false;
     this.missionData[rowId].actions.canSave = false;
     this.missionData[rowId].actions.canEdit = true;
+    // enable attatchments dropdown
+
   }
 
   private saveRow(rowId:number){
-
-    //check columns Title max 45 chars, description max 200 chars
-    let row:MissionPriority = this.missionData[rowId];
     let error:string = "";
     let isError:boolean = false;
+
+    //copy data
+    let row:MissionPriority = this.gridApi.getDisplayedRowAtIndex(rowId).data;
+    let copy = JSON.stringify(this.missionData[rowId]);
+    this.gridApi.stopEditing();
+    console.log(this.missionData[rowId]);
+    let test:MissionPriority = JSON.parse(copy);
+
+    //check columns Title max 45 chars, description max 200 chars
     if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
-      this.missionData[rowId] = row;
       //return to view mode
       this.viewMode(rowId);
+      this.gridApi.setRowData(this.missionData);
 
-      if(!this.missionData[rowId].id){
-        this.busy = true;
-        this.planningService.createMissionPriority(this.missionData[rowId]).subscribe(
-          resp => {
-            this.busy = false;
-            this.missionData = resp as any;
-
-            //update view
-            this.gridApi.setRowData(this.missionData);
-
-          },
-          error =>{
-            this.busy = false;
-            this.dialogService.displayDebug(error);
-          });
-      }
-      this.busy = false;
-      this.dialogService.displayToastError("Not Implemented");
+      // if(!this.missionData[rowId].id){
+      //   this.busy = true;
+      //   this.planningService.createMissionPriority(this.missionData[rowId]).subscribe(
+      //     resp => {
+      //       this.busy = false;
+      //       this.missionData = resp as any;
+      //
+      //       //update view
+      //       this.gridApi.setRowData(this.missionData);
+      //
+      //     },
+      //     error =>{
+      //       this.busy = false;
+      //       this.dialogService.displayDebug(error);
+      //     });
+      // }
+      // this.busy = false;
+      // this.dialogService.displayToastError("Not Implemented");
 
     }
     else{
       if (row.title.length === 0){
-        error = 'The Title is empty. ';
+        error = 'The Title is empty.                                           ';
         isError = true;
       }
       if (row.description.length === 0){
-        error = error + 'The Description is empty. ';
+        error = error + 'The Description is empty.                             ';
         isError = true;
       }
       if (row.title.length > 45){
-        error = error + 'The Title is longer than the max of 45 characters. ';
+        error = error + 'The Title is longer than the max of 45 characters.    ';
         isError = true;
       }
       if (row.description.length > 200){
@@ -292,6 +304,13 @@ export class MissionPrioritiesComponent implements OnInit {
       if (isError){
         this.dialogService.displayError(error);
       }
+      // deserialize save
+      row.title = test.title;
+      row.attachments = test.attachments;
+      row.description = test.description;
+      row.actions = test.actions;
+      row.order = test.order;
+      this.editRow(rowId);
     }
   }
 
@@ -306,7 +325,7 @@ export class MissionPrioritiesComponent implements OnInit {
     });
   }
 
-  private deleteRow(rowId:number, data:any){
+  private deleteRow(rowId:number){
     //confirmation message
       //delete row
       console.log(this.missionData.splice(rowId, 1));
@@ -324,9 +343,9 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
-  private deleteAttatchments(rowId:number){
+  private deleteAttachments(rowId:number){
     // confirmation/selection message
-    this.dialogService.displayRadioSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
+    this.dialogService.displayCheckBoxSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
       () => {
       // delete attatchment(s)
       for (let attachment of this.missionData[rowId].attachments){
@@ -344,6 +363,50 @@ export class MissionPrioritiesComponent implements OnInit {
 
       console.log("Cancel Worked!");
     });
+  }
+
+  // Overwrite tab functionality to tab back and forth from title and description
+  private tabToNextCell (params) {
+    let rowIndex = params.previousCellPosition.rowIndex;
+    let nextColumn:Column;
+    let nextCell:CellPosition = params.nextCellPosition;
+    console.log("init");
+    console.log(params);
+    // if the column is title
+    if (params.previousCellPosition.column.colId === "title" && params.backwards === true){
+      console.log("isTitle");
+      nextColumn = this.columnApi.getColumn("description");
+      nextCell = {
+        rowIndex: rowIndex,
+        column: nextColumn,
+        rowPinned: undefined
+      }
+      console.log(nextColumn);
+    }
+    else if (params.previousCellPosition.column.colId === "description" && params.backwards === false) {
+      console.log("isDescription");
+      nextColumn = this.columnApi.getColumn("title");
+      nextCell = {
+        rowIndex: rowIndex,
+        column: nextColumn,
+        rowPinned: undefined
+      }
+      console.log(nextColumn);
+    }
+    return nextCell;
+  }
+
+  // Watches when values change
+  private onValueChanged(params) {
+    console.log(params);
+
+    // check title
+
+    // check description
+
+    // generate error
+
+
   }
 
   //check if current user has POM Manager role
