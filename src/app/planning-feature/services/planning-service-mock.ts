@@ -92,8 +92,4 @@ export class PlanningServiceMock extends PlanningService{
     return of(list);
   }
 
-  openPOM(): Observable<Object>{
-    return of({"year": 2019});
-  }
-
 }

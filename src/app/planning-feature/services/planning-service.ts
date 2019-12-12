@@ -17,6 +17,4 @@ export abstract class PlanningService extends BaseRestService{
   abstract updateMissionPriority(data:any):Observable<Object>;
   abstract deleteMissionPriority(data:any):Observable<Object>;
   abstract getMissionPriorities(phaseId:string):Observable<Object>;
-
-  abstract openPOM():Observable<Object>;
 }

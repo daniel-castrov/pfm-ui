@@ -48,8 +48,4 @@ export class PlanningServicesImpl extends PlanningService{
     return this.get("missionPriority/planningPhase/" + phaseId);
   }
 
-  openPOM():Observable<Object>{
-    return this.get("openPOM?year=");
-  }
-
 }
