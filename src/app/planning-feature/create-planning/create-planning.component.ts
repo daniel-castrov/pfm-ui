@@ -38,7 +38,7 @@ export class CreatePlanningComponent implements OnInit {
 
       this.planningService.createPlanningPhase(planningData).subscribe(
           resp => {
-            this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
+            this.dialogService.displayToastInfo(`Planning phase for ${ year } successfully created.`);
             this.router.navigate(["home"]);
           },
           error =>{
