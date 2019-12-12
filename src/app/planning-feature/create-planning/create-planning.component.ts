@@ -9,6 +9,7 @@ import { ZipcodeInputComponent } from '../../pfm-coreui/form-inputs/zipcode-inpu
 import { EmailInputComponent } from '../../pfm-coreui/form-inputs/email-input/email-input.component';
 import { PhoneInputComponent } from '../../pfm-coreui/form-inputs/phone-input/phone-input.component';
 import { Router } from '@angular/router';
+import { AppModel } from '../../pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-planning',
@@ -23,19 +24,27 @@ export class CreatePlanningComponent implements OnInit {
   availableYears:ListItem[];
   selectedYear:string;
 
-  constructor(private planningService:PlanningService, private dialogService:DialogService, private router:Router) { }
+  constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private router:Router) { }
 
-  yearSelected(year:string):void{
-    this.selectedYear = year;
+  yearSelected(year:ListItem):void{
+    this.selectedYear = year.value;
   }
 
   onCreatePlanningPhase():void{
     let year:any = this.selectedYear;
     if(this.yearDropDown.isValid()){
-      this.planningService.openPOM().subscribe(resp => {
-      });
-      this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
-      this.router.navigate(["home"]);
+
+      let planningData = this.appModel.planningData.find( obj => obj.id === year + "_id");
+
+      this.planningService.createPlanningPhase(planningData).subscribe(
+          resp => {
+            this.dialogService.displayToastInfo(`Planning phase for ${ year.id } successfully created.`);
+            this.router.navigate(["home"]);
+          },
+          error =>{
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+        });
     }
     else{
       this.dialogService.displayToastError(`Please select a year from the dropdown.`);
@@ -43,17 +52,13 @@ export class CreatePlanningComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.busy = true;
-    this.planningService.getAvailableCreatePlanningYears().subscribe(
-      resp => {
-        this.busy = false;
-        let years:string[] = resp as any;
-        this.availableYears = this.toListItem(years);
-      },
-      error =>{
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      });
+    let years:string[] = [];
+    for(let item of this.appModel.planningData){
+      if(!item.state){
+        years.push(item.name);
+      }
+    }
+    this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years:string[]):ListItem[]{

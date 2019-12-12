@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserDetailsModel } from './UserDetailsModel';
+import { PlanningPhase } from '../planning-feature/models/PlanningPhase';
 
 @Injectable({
   providedIn: 'root'
@@ -9,4 +10,7 @@ export class AppModel {
   public isUserSignedIn:boolean;
   public elevated:boolean;
   public userDetails:UserDetailsModel;
+
+  public planningData:PlanningPhase[];
+  public selectedYear:string;
 }
