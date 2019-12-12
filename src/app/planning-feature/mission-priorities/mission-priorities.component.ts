@@ -177,7 +177,7 @@ export class MissionPrioritiesComponent implements OnInit {
       this.planningService.getMissionPriorities(planningData.id).subscribe(
         resp => {
           this.busy = false;
-          this.missionData = (resp.result as any);
+          this.missionData = (resp as any).result;
 
           if(this.missionData && this.missionData.length > 0){
             for(let item of this.missionData){

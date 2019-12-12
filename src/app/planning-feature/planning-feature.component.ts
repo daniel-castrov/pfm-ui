@@ -22,7 +22,7 @@ export class PlanningFeatureComponent implements OnInit {
     this.planningService.getAllPlanning().subscribe(
       resp => {
         this.busy = false;
-        this.processPlanningData(resp.result as any);
+        this.processPlanningData((resp as any).result);
         this.ready = true;
       },
       error =>{
