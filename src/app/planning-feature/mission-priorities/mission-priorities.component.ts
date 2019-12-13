@@ -149,7 +149,7 @@ export class MissionPrioritiesComponent implements OnInit {
         mp.order = 1;
       }
       else {
-        mp.order = this.missionData[this.missionData.length - 1].order + 1;
+        mp.order = this.missionData.length;
       }
       mp.title = "";
       mp.description = "";
@@ -272,7 +272,7 @@ export class MissionPrioritiesComponent implements OnInit {
     let isError:boolean = false;
 
     //copy data
-    let row:MissionPriority = this.gridApi.getDisplayedRowAtIndex(rowId).data;
+    let row:MissionPriority = this.missionData[rowId];
     let copy = JSON.stringify(this.missionData[rowId]);
     this.gridApi.stopEditing();
     console.log(this.missionData[rowId]);
@@ -280,14 +280,10 @@ export class MissionPrioritiesComponent implements OnInit {
 
     //check columns Title max 45 chars, description max 200 chars
     if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
-      //return to view mode
-      this.viewMode(rowId);
-      this.gridApi.setRowData(this.missionData);
-
       //get a reference to the planning data for the selected year
       let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
 
-      //service doesn't know about attacments or actions TODO split these out from the service models
+      //service doesn't know about attachments or actions TODO split these out from the service models
       let mp:MissionPriority = new MissionPriority();
       mp.planningPhaseId = planningData.id;
       mp.title = row.title;
@@ -302,10 +298,17 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
 
-            this.viewMode(rowId);
-            //update view
-            this.gridApi.setRowData(this.missionData);
+            this.missionData[rowId].actions = new MissionAction();
+            this.missionData[rowId].actions.canEdit = false;
+            this.missionData[rowId].actions.canSave = true;
+            this.missionData[rowId].actions.canDelete = true;
+            this.missionData[rowId].actions.canUpload = true;
 
+            //update view
+            console.log("new row");
+            console.log(this.missionData[rowId]);
+            this.viewMode(rowId);
+            this.gridApi.setRowData(this.missionData);
           },
           error =>{
             this.busy = false;
@@ -318,7 +321,16 @@ export class MissionPrioritiesComponent implements OnInit {
           resp => {
             this.busy = false;
 
+            this.missionData[rowId].actions = new MissionAction();
+            this.missionData[rowId].actions.canEdit = false;
+            this.missionData[rowId].actions.canSave = true;
+            this.missionData[rowId].actions.canDelete = true;
+            this.missionData[rowId].actions.canUpload = true;
+
             //update view
+            console.log("existing row");
+            console.log(this.missionData[rowId]);
+            this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
 
           },
@@ -330,15 +342,15 @@ export class MissionPrioritiesComponent implements OnInit {
     }
     else{
       if (row.title.length === 0){
-        error = 'The Title is empty.                                           ';
+        error = 'The Title is empty. ';
         isError = true;
       }
       if (row.description.length === 0){
-        error = error + 'The Description is empty.                             ';
+        error = error + 'The Description is empty. ';
         isError = true;
       }
       if (row.title.length > 45){
-        error = error + 'The Title is longer than the max of 45 characters.    ';
+        error = error + 'The Title is longer than the max of 45 characters. ';
         isError = true;
       }
       if (row.description.length > 200){
