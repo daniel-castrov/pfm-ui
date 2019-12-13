@@ -302,10 +302,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
 
-            this.missionData[rowId].actions = new MissionAction();
-            this.missionData[rowId].actions.canUpload = true;
-            this.missionData[rowId].actions.canSave = true;
-            this.missionData[rowId].actions.canEdit = false;
+            this.viewMode(rowId);
             //update view
             this.gridApi.setRowData(this.missionData);
 
