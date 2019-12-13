@@ -292,7 +292,7 @@ export class MissionPrioritiesComponent implements OnInit {
         this.planningService.createMissionPriority(mp).subscribe(
           resp => {
             this.busy = false;
-            this.missionData = resp as any;
+            this.missionData = (resp as any).result;
 
             //update view
             this.gridApi.setRowData(this.missionData);
