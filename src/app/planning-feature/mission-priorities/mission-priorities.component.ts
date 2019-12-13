@@ -159,9 +159,12 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.actions.canSave = true;
       mp.actions.canDelete = true;
       mp.actions.canUpload = true;
-      this.gridApi.updateRowData({add: [mp]});
       this.missionData.push(mp);
-      this.editRow(mp.order - 1);
+
+      this.gridApi.updateRowData({add: [mp]});
+
+     this.editRow(this.missionData.length - 1);//zero indexed
+
     }
     else if(event.action === "add-rows-from-year"){
       // get rows
@@ -241,7 +244,12 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private editMode(rowId:number){
+
     // toggle actions
+    console.info(rowId);
+    let json = JSON.stringify(this.missionData[rowId]);
+    console.info(json);
+
     this.missionData[rowId].actions.canUpload = true;
     this.missionData[rowId].actions.canSave = true;
     this.missionData[rowId].actions.canEdit = false;
