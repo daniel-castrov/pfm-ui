@@ -20,7 +20,8 @@
                 [name]="id"
                 [id]="id"
                 class="form-control"
-                [(ngModel)]="selectedItem">
+                [(ngModel)]="selectedItem"
+                [disabled]="attachmentsDisabled">
             <option disabled value="{{prompt}}">{{prompt}}</option>
             <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
         </select>
