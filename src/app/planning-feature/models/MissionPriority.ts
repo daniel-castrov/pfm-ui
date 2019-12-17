@@ -14,5 +14,6 @@ export class MissionPriority {
 
   //client side only
   public attachments:MissionAttachment[];
+  public attachmentsDisabled:boolean;
   public actions:MissionAction;
 }

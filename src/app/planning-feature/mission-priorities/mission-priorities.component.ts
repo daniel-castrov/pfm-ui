@@ -26,7 +26,6 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 export class MissionPrioritiesComponent implements OnInit {
 
   @ViewChild('secureUploadTemplate', {static: false}) private secureUploadTemplate: TemplateRef<any>;
-
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
   gridApi:GridApi;
@@ -37,12 +36,12 @@ export class MissionPrioritiesComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear:string;
   missionData:MissionPriority[];
-  validInput:boolean = false;
+  validInput:boolean = false; //using this for a different form of validation later
   POMLocked:boolean = false;
   POMClosed:boolean = false;
   POMManager:boolean = false;
   showUploadDialog:boolean;
-
+  selectedRowId:number;
   columns:any[];
 
   constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, private signInService:SigninService) {
@@ -120,7 +119,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   handleCellAction(cellAction:DataGridMessage):void{
-    //this.dialogService.displayDebug(cellAction);
+    console.log(cellAction);
     switch(cellAction.message){
       case "save": {
         this.saveRow(cellAction.rowIndex);
@@ -131,7 +130,7 @@ export class MissionPrioritiesComponent implements OnInit {
         break;
       }
       case "upload": {
-        this.updateDocuments(cellAction.rowIndex);
+        this.addAttachment(cellAction.rowIndex);
         break;
       }
       case "delete-row": {
@@ -153,10 +152,12 @@ export class MissionPrioritiesComponent implements OnInit {
       }
       else {
         mp.order = this.missionData.length;
+        console.log(mp.order);
       }
       mp.title = "";
       mp.description = "";
       mp.attachments = [];
+      mp.attachmentsDisabled = true;
       mp.actions = new MissionAction();
       mp.actions.canEdit = false;
       mp.actions.canSave = true;
@@ -164,9 +165,9 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.actions.canUpload = true;
       this.missionData.push(mp);
 
-      this.gridApi.updateRowData({add: [mp]});
+      this.gridApi.setRowData(this.missionData);
 
-     this.editRow(this.missionData.length - 1);//zero indexed
+      this.editRow(this.missionData.length - 1);//zero indexed
 
     }
     else if(event.action === "add-rows-from-year"){
@@ -193,6 +194,9 @@ export class MissionPrioritiesComponent implements OnInit {
               if(!item.attachments){
                 item.attachments = [];
               }
+              if(!item.attachmentsDisabled){
+                item.attachmentsDisabled = false;
+              }
               if(!item.actions){
                 item.actions = new MissionAction();
                 item.actions.canUpload = false;
@@ -211,15 +215,41 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
+  handleNewAttachments(newFiles:boolean):void{
+    this.showUploadDialog = false;
+    //TODO - how do we tie the uploaded files to this mission priority, seems like we need the attachments on the priority, and the areas/keys
+
+    if(newFiles){
+      //dialog message
+      //test attachment
+      let doc: MissionAttachment = new MissionAttachment();
+      if (this.missionData[this.selectedRowId].attachments.length === 0){
+        doc.name = "abc1.xlsx";
+        doc.type = "xlsx";
+        doc.url = "https://www.google.com/";
+        doc.selectedForDelete = false;
+        //doc.name
+      }
+      else {
+        doc.name = "abc" + (this.missionData[this.selectedRowId].attachments.length-1) + ".xlsx";
+        doc.type = "xlsx";
+        doc.url = "https://www.google.com/";
+        doc.selectedForDelete = false;
+      }
+
+      //add attachment
+      this.missionData[this.selectedRowId].attachments.push(doc);
+
+      //update data
+      this.gridApi.setRowData(this.missionData);
+    }
+
+  }
+
   onOpenPlanningPhase():void{
     if(this.yearDropDown.isValid()){
       this.dialogService.displayError("not implemented");
     }
-  }
-
-  handleNewAttachments(newFiles:boolean):void{
-    this.showUploadDialog = false;
-    //TODO - how do we tie the uploaded files to this mission priority, seems like we need the attachments on the priority, and the areas/keys
   }
 
   ngOnInit() {
@@ -237,6 +267,8 @@ export class MissionPrioritiesComponent implements OnInit {
       this.appModel.selectedYear = undefined;
       this.yearSelected({"name": this.selectedYear});
     }
+
+
   }
 
   private toListItem(years:string[]):ListItem[]{
@@ -252,17 +284,14 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private editMode(rowId:number){
-
     // toggle actions
-    console.info(rowId);
-    let json = JSON.stringify(this.missionData[rowId]);
-    console.info(json);
-
     this.missionData[rowId].actions.canUpload = true;
     this.missionData[rowId].actions.canSave = true;
     this.missionData[rowId].actions.canEdit = false;
     // disable attatchments dropdown
-
+    console.log("editmode");
+    this.missionData[rowId].attachmentsDisabled = true;
+    this.gridApi.setRowData(this.missionData);
   }
 
   private viewMode(rowId:number){
@@ -272,7 +301,8 @@ export class MissionPrioritiesComponent implements OnInit {
     this.missionData[rowId].actions.canSave = false;
     this.missionData[rowId].actions.canEdit = true;
     // enable attatchments dropdown
-
+    this.missionData[rowId].attachmentsDisabled = false;
+    this.gridApi.setRowData(this.missionData);
   }
 
   private saveRow(rowId:number){
@@ -283,7 +313,6 @@ export class MissionPrioritiesComponent implements OnInit {
     let row:MissionPriority = this.missionData[rowId];
     let copy = JSON.stringify(this.missionData[rowId]);
     this.gridApi.stopEditing();
-    console.log(this.missionData[rowId]);
     let test:MissionPriority = JSON.parse(copy);
 
     //check columns Title max 45 chars, description max 200 chars
@@ -313,8 +342,6 @@ export class MissionPrioritiesComponent implements OnInit {
             this.missionData[rowId].actions.canUpload = true;
 
             //update view
-            console.log("new row");
-            console.log(this.missionData[rowId]);
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
           },
@@ -329,15 +356,7 @@ export class MissionPrioritiesComponent implements OnInit {
           resp => {
             this.busy = false;
 
-            this.missionData[rowId].actions = new MissionAction();
-            this.missionData[rowId].actions.canEdit = false;
-            this.missionData[rowId].actions.canSave = true;
-            this.missionData[rowId].actions.canDelete = true;
-            this.missionData[rowId].actions.canUpload = true;
-
             //update view
-            console.log("existing row");
-            console.log(this.missionData[rowId]);
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
 
@@ -371,6 +390,7 @@ export class MissionPrioritiesComponent implements OnInit {
       // deserialize save
       row.title = test.title;
       row.attachments = test.attachments;
+      row.attachmentsDisabled = test.attachmentsDisabled;
       row.description = test.description;
       row.actions = test.actions;
       row.order = test.order;
@@ -411,76 +431,71 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         this.dialogService.displayDebug(error);
       });
-
   }
 
-  private updateDocuments(rowId:number):void{
+  private addAttachment(rowId:number):void{
+    this.selectedRowId = rowId;
     this.showUploadDialog = true;
   }
 
   private deleteAttachments(rowId:number){
+    let copy = JSON.stringify(this.missionData[rowId]);
+    let test:MissionPriority = JSON.parse(copy);
     // confirmation/selection message
     this.dialogService.displayCheckBoxSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
       () => {
-      // delete attatchment(s)
-      for (let attachment of this.missionData[rowId].attachments){
-        if (attachment.selectedForDelete){
-          let index = this.missionData[rowId].attachments.indexOf(attachment);
-          this.missionData[rowId].attachments.splice(index, 1);
-          //refresh this row in grid
+        // delete attatchment(s)
+        for (let attachment of this.missionData[rowId].attachments){
+          if (attachment.selectedForDelete){
+            let index = this.missionData[rowId].attachments.indexOf(attachment);
+            this.missionData[rowId].attachments.splice(index, 1);
+            //refresh this row in grid
+          }
         }
-      }
-      console.log("Ok worked");
-      //update row
-    },
+        console.log("Ok worked");
+        //update row
+      },
       () => {
-      // reset data JSON Serialize and Deserialize
-
-      console.log("Cancel Worked!");
-    });
+        // reset data JSON Serialize and Deserialize
+        this.missionData[rowId].attachments = JSON.parse(copy).attachments;
+        console.log("Cancel Worked!");
+      });
   }
-  
+
   // Overwrite tab functionality to tab back and forth from title and description
   private tabToNextCell (params) {
     let rowIndex = params.previousCellPosition.rowIndex;
     let nextColumn:Column;
     let nextCell:CellPosition = params.nextCellPosition;
-    console.log("init");
-    console.log(params);
     // if the column is title
     if (params.previousCellPosition.column.colId === "title" && params.backwards === true){
-      console.log("isTitle");
       nextColumn = this.columnApi.getColumn("description");
       nextCell = {
         rowIndex: rowIndex,
         column: nextColumn,
         rowPinned: undefined
       }
-      console.log(nextColumn);
     }
     else if (params.previousCellPosition.column.colId === "description" && params.backwards === false) {
-      console.log("isDescription");
       nextColumn = this.columnApi.getColumn("title");
       nextCell = {
         rowIndex: rowIndex,
         column: nextColumn,
         rowPinned: undefined
       }
-      console.log(nextColumn);
     }
     return nextCell;
   }
 
   // Watches when values change
   private onValueChanged(params) {
-    console.log(params);
+    //console.log(params);
 
     // check title
 
     // check description
 
     // generate error
-
 
   }
 
@@ -499,7 +514,7 @@ export class MissionPrioritiesComponent implements OnInit {
       });
   }
 
-  
+
   lockPlanningPhase(){
     this.busy = true;
     let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
@@ -522,7 +537,7 @@ export class MissionPrioritiesComponent implements OnInit {
       });
   }
 
-  closePlanningPhase(){    
+  closePlanningPhase(){
     this.busy = true;
     let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
     this.planningService.closePlanningPhase(planningData).subscribe(

@@ -19,6 +19,7 @@ export class DropdownComponent implements ValidatedComponent, OnInit {
   @Input() type:string = "labelDropdown";//default
   @Input() iconName:string;
   @Input() title:string;
+  @Input() attachmentsDisabled:boolean;
   @Output() onSelectionChanged:EventEmitter<any> = new EventEmitter<any>();
 
   selectedItem:string;

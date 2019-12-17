@@ -12,8 +12,8 @@ export class AttachmentCellRendererComponent implements OnInit {
 
   data: any;
   params: any;
-
   list:ListItem[];
+  attachmentsDisabled:boolean;
 
   constructor(private datagridMBService:DatagridMbService){}
 
@@ -40,6 +40,13 @@ export class AttachmentCellRendererComponent implements OnInit {
       item.id = x.name;
       this.list.push(item);
     }
+    console.log('attachmentRenderer');
+    this.attachmentsDisabled = this.params.data.attachmentsDisabled;
+    console.log(this.attachmentsDisabled);
+  }
+
+  ngOnChanges() {
+
   }
 
   ngOnInit() {}
