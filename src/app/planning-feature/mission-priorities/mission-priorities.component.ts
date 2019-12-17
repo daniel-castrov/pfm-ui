@@ -258,7 +258,7 @@ export class MissionPrioritiesComponent implements OnInit {
     // disable attatchments dropdown
     console.log("editmode");
     this.missionData[rowId].attachmentsDisabled = true;
-    console.log(this.missionData[rowId].attachmentsDisabled);
+    this.gridApi.setRowData(this.missionData);
   }
 
   private viewMode(rowId:number){
@@ -269,6 +269,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.missionData[rowId].actions.canEdit = true;
     // enable attatchments dropdown
     this.missionData[rowId].attachmentsDisabled = false;
+    this.gridApi.setRowData(this.missionData);
   }
 
   private saveRow(rowId:number){
