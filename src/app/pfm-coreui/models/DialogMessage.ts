@@ -1,3 +1,5 @@
+import { TemplateRef } from '@angular/core';
+
 export class DialogMessage {
 	type:string;//INFO, ERROR, DEBUG
 	title:string;//defaults based on type, Info, Error, Debug, not used for toast messages
@@ -10,4 +12,5 @@ export class DialogMessage {
 	//TODO - add in the callbacks for ok/cancel
 	okCallBack:any;
 	cancelCallBack:any;
+  customTemplate:TemplateRef<any>;
 }

@@ -26,6 +26,7 @@ import { TextCellEditorComponent } from './datagrid/renderers/text-cell-editor/t
 import { TextCellRendererComponent } from './datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DisabledActionCellRendererComponent } from './datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
+import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { DisabledActionCellRendererComponent } from './datagrid/renderers/disabl
     AttachmentCellRendererComponent,
     TextCellEditorComponent,
     TextCellRendererComponent,
-    DisabledActionCellRendererComponent
+    DisabledActionCellRendererComponent,
+    CustomDialogComponent
   ],
   imports: [
     CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent, DisabledActionCellRendererComponent])
@@ -74,7 +76,8 @@ import { DisabledActionCellRendererComponent } from './datagrid/renderers/disabl
     AttachmentCellRendererComponent,
     TextCellEditorComponent,
     TextCellRendererComponent,
-    DisabledActionCellRendererComponent
+    DisabledActionCellRendererComponent,
+    CustomDialogComponent
   ]
 })
 export class PfmCoreuiModule { }

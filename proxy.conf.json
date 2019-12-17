@@ -1,0 +1,10 @@
+{
+  "/uploadFile/*": {
+    "target": "https://pfmdev1.pxalphaproject.com/pfm-server/library/uploadFile?area=pf",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {"^/uploadFile" : ""}
+  }
+
+}

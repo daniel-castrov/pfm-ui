@@ -13,6 +13,8 @@ import { PlanningService } from './services/planning-service';
 import { PlanningServiceMock } from './services/planning-service-mock';
 import { HttpClientModule } from '@angular/common/http';
 import { PlanningServicesImpl } from './services/planning-services-impl.service';
+import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
+import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { PlanningServicesImpl } from './services/planning-services-impl.service'
     CommonModule,
     HttpClientModule,
     PfmCoreuiModule,
+    PfmSecureFileuploadModule,
+    PfmSecureFiledownloadModule,
     PlanningFeatureRoutingModule
   ],
   providers: [{provide: PlanningService, useClass: PlanningServicesImpl}]

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ViewChild, ComponentFactoryResolver, TemplateRef } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
@@ -25,6 +25,8 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 })
 export class MissionPrioritiesComponent implements OnInit {
 
+  @ViewChild('secureUploadTemplate', {static: false}) private secureUploadTemplate: TemplateRef<any>;
+
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
   gridApi:GridApi;
@@ -39,6 +41,7 @@ export class MissionPrioritiesComponent implements OnInit {
   POMLocked:boolean = false;
   POMClosed:boolean = false;
   POMManager:boolean = false;
+  showUploadDialog:boolean;
 
   columns:any[];
 
@@ -212,6 +215,11 @@ export class MissionPrioritiesComponent implements OnInit {
     if(this.yearDropDown.isValid()){
       this.dialogService.displayError("not implemented");
     }
+  }
+
+  handleNewAttachments(newFiles:boolean):void{
+    this.showUploadDialog = false;
+    //TODO - how do we tie the uploaded files to this mission priority, seems like we need the attachments on the priority, and the areas/keys
   }
 
   ngOnInit() {
@@ -407,7 +415,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private updateDocuments(rowId:number):void{
-
+    this.showUploadDialog = true;
   }
 
   private deleteAttachments(rowId:number){

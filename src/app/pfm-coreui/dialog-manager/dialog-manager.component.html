@@ -20,6 +20,7 @@
 
 </ng-container>
 
+
 <ng-container *ngIf="displayDialog && activeMessage">
     <ng-container>
         <div class="modal" tabindex="-1" role="dialog">
@@ -39,6 +40,11 @@
                         </ng-container>
                     </div>
                     <div class="modal-body">
+                        <ng-container *ngIf="activeMessage.type === 'DEBUG'">
+                            <span>before</span>
+                            <ng-container *ngTemplateOutlet="activeMessage.customTemplate"></ng-container>
+                            <span>after</span>
+                        </ng-container>
                         <ng-container *ngIf="activeMessage.type === 'DEBUG'">
                             <textarea>{{activeMessage.debug | json}}</textarea>
                         </ng-container>
@@ -71,3 +77,4 @@
         </div>
     </ng-container>
 </ng-container>
+

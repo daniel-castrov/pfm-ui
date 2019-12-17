@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {DialogMessage} from '../models/DialogMessage';
 import { MissionAttachment } from '../../planning-feature/models/MissionAttachment';
@@ -66,6 +66,14 @@ export class DialogService {
 		message.cancelCallBack = cancelCallBack;
 		this.sendMessage(message);
 	}
+
+	displayCustom(title:string, customTemplate:TemplateRef<any>){
+    let message:DialogMessage = new DialogMessage();
+    message.type = "CUSTOM";
+    message.title = title;
+    message.customTemplate = customTemplate;
+    this.sendMessage(message);
+  }
 
 	displayCheckBoxSelection(text:string, title:string, attachments:any[], okCallBack:any, cancelCallBack:any){
 		let message:DialogMessage = new DialogMessage();
