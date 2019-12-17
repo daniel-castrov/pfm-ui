@@ -404,12 +404,23 @@ export class MissionPrioritiesComponent implements OnInit {
   private addAttachment(rowId:number):void{
     //dialog message
 
+
     //test attachment
     let doc: MissionAttachment = new MissionAttachment();
-    doc.name = "abc.docx";
-    doc.selectedForDelete = false;
-    doc.type = "docx";
-    doc.url = "https://www.google.com/";
+    if (this.missionData[rowId].attachments.length === 0){
+      doc.name = "abc1.xlsx";
+      doc.type = "xlsx";
+      doc.url = "https://www.google.com/";
+      doc.selectedForDelete = false;
+      doc.name
+    }
+    else {
+      doc.name = "abc" + (this.missionData[rowId].attachments.length-1) + ".xlsx";
+      doc.type = "xlsx";
+      doc.url = "https://www.google.com/";
+      doc.selectedForDelete = false;
+    }
+
 
     //add attachment
     this.missionData[rowId].attachments.push(doc);
