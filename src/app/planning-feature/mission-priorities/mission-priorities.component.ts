@@ -25,7 +25,6 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 })
 export class MissionPrioritiesComponent implements OnInit {
 
-  @ViewChild('secureUploadTemplate', {static: false}) private secureUploadTemplate: TemplateRef<any>;
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
   gridApi:GridApi;

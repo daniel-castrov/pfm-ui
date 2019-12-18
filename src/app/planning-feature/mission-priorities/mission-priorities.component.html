@@ -37,27 +37,7 @@
 
 
 <ng-container *ngIf="showUploadDialog">
-    <pfm-custom-dialog [templateRef]="secureUploadTemplate"></pfm-custom-dialog>
-    <ng-template #secureUploadTemplate>
-        <div class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">File Upload</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="showUploadDialog = false;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <ng-container>
-                            <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-
+    <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
 </ng-container>
 
 <pfm-busy [busy]="busy"></pfm-busy>

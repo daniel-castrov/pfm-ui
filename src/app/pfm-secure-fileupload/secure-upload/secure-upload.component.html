@@ -1,51 +1,68 @@
+<pfm-custom-dialog [templateRef]="secureUploadTemplate"></pfm-custom-dialog>
 
-<div class="container">
-
-
-        <div class="mydropbox" *ngIf="!uploader || (uploader?.queue?.length === 0)">
-
-            <div ng2FileDrop
-                 [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
-                 (fileOver)="fileOverBase($event)"
-                 [uploader]="uploader"
-                 class="well my-drop-zone">
-                Drag/Drop {{uploadTypeDisplay}} here, or click "Choose {{uploadTypeDisplay}}"
-            </div>
-
-            <label for="file">Choose {{uploadTypeDisplay}}</label>
-            <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" multiple  /><br/>
-        </div>
-
-        <ng-container *ngIf="uploader?.queue?.length">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th width="50%">Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let item of uploader.queue">
-                    <td>{{ item?.file?.name }}</td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div>
-                <div>
-                    {{uploadTypeDisplay}} upload progress:
-                    <div class="progress" style="">
-                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
-                    <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-                        <fa name="upload"></fa> Upload
+<ng-template #secureUploadTemplate>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <div class="modal-body">
+                    <ng-container>
+                        <div class="container">
+                            <div class="mydropbox" *ngIf="!uploader || (uploader?.queue?.length === 0)">
+                                <div ng2FileDrop
+                                     [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+                                     (fileOver)="fileOverBase($event)"
+                                     [uploader]="uploader"
+                                     class="well my-drop-zone">
+                                    Drag/Drop {{uploadTypeDisplay}} here, or click "Choose {{uploadTypeDisplay}}"
+                                </div>
 
+
+
+                                <div class="modal-footer">
+                                    <label for="file">Choose {{uploadTypeDisplay}}</label>
+                                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" multiple  /><br/>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="uploader?.queue?.length">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th width="50%">Name</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let item of uploader.queue">
+                                        <td>{{ item?.file?.name }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div>
+                                    <div>
+                                        {{uploadTypeDisplay}} upload progress:
+                                        <div class="progress" style="">
+                                            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
+                                        <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                                            <fa name="upload"></fa> Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
             </div>
-        </ng-container>
-
-</div>
+        </div>
+    </div>
+</ng-template>

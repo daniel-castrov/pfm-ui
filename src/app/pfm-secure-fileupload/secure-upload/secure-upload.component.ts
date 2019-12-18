@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import { AppModel } from '../../pfm-common-models/AppModel';
 
@@ -8,6 +8,7 @@ import { AppModel } from '../../pfm-common-models/AppModel';
   styleUrls: ['./secure-upload.component.css']
 })
 export class SecureUploadComponent implements OnInit{
+  @ViewChild('secureUploadTemplate', {static: false}) private secureUploadTemplate: TemplateRef<any>;
 	@Input() uploadTypeDisplay:string = "Files";
 	@Output() onFilesUploaded:EventEmitter<boolean> = new EventEmitter<boolean>();
 

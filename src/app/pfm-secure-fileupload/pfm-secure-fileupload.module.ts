@@ -4,11 +4,12 @@ import {FileDownloadService} from '../pfm-secure-filedownload/services/file-down
 import { SecureUploadComponent } from './secure-upload/secure-upload.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {FileUploadModule} from 'ng2-file-upload';
+import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 
 @NgModule({
   declarations: [SecureUploadComponent],
   imports: [
-    CommonModule, FileUploadModule, AngularFontAwesomeModule
+    CommonModule, FileUploadModule, AngularFontAwesomeModule, PfmCoreuiModule
   ],
   exports: [SecureUploadComponent],
 	providers: []
