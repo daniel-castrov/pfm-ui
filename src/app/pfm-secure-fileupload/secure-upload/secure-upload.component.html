@@ -13,49 +13,45 @@
                 <div class="modal-body">
                     <ng-container>
                         <div class="container">
-                            <div class="mydropbox" *ngIf="!uploader || (uploader?.queue?.length === 0)">
-                                <div ng2FileDrop
-                                     [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
-                                     (fileOver)="fileOverBase($event)"
-                                     [uploader]="uploader"
-                                     class="well my-drop-zone">
-                                    Drag/Drop {{uploadTypeDisplay}} here, or click "Choose {{uploadTypeDisplay}}"
-                                </div>
 
+                            <div class="mydropbox" *ngIf="!uploader || (uploader?.queue?.length === 0)">
+
+                                <span>Specify location of document: (Excel files only)</span>
+                                <div class="mybox">
+                                    <input type="text" disabled>
+                                    <label for="file">Browse</label>
+
+                                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader"/><br/>
+                                </div>
 
 
                                 <div class="modal-footer">
-                                    <label for="file">Choose {{uploadTypeDisplay}}</label>
-                                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader" multiple  /><br/>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
-                                </div>
-                            </div>
-                            <ng-container *ngIf="uploader?.queue?.length">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th width="50%">Name</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr *ngFor="let item of uploader.queue">
-                                        <td>{{ item?.file?.name }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div>
-                                    <div>
-                                        {{uploadTypeDisplay}} upload progress:
-                                        <div class="progress" style="">
-                                            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
-                                        </div>
+                                    <div class="pull-left">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Upload</button>
                                     </div>
 
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
-                                        <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-                                            <fa name="upload"></fa> Upload
-                                        </button>
+                                    <div class="pull-right">
+                                    <pfm-cancel-cta (onCancelClicked)="cancel()"></pfm-cancel-cta>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ng-container *ngIf="uploader?.queue?.length">
+
+                                <span>Specify location of document: (Excel files only)</span>
+                                <div class="mybox">
+                                    <input type="text" value="{{uploader.queue[0].file.name}}" disabled>
+                                    <label for="file2">Browse</label>
+                                    <input [disabled]="busy" id="file2" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader"/><br/>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <div class="pull-left">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="busy = true;uploader.uploadAll()" [disabled]="busy || !uploader.getNotUploadedItems().length">Upload</button>
+                                    </div>
+
+                                    <div class="pull-right">
+                                        <pfm-cancel-cta [disabled]="busy" (onCancelClicked)="cancel()"></pfm-cancel-cta>
                                     </div>
                                 </div>
                             </ng-container>
@@ -66,3 +62,5 @@
         </div>
     </div>
 </ng-template>
+
+

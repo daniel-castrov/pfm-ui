@@ -12,6 +12,8 @@ export class SecureUploadComponent implements OnInit{
 	@Input() uploadTypeDisplay:string = "Files";
 	@Output() onFilesUploaded:EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  busy:boolean;
+
 	private url:string;
 	uploader:FileUploader;
 	hasBaseDropZoneOver:boolean;
