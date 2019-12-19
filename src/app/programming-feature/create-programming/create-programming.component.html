@@ -1,0 +1,27 @@
+
+<div class="table">
+  <div class="table-row">
+    <div style="width:70%;text-align:left">
+        <h3>Create Programming Phase for {{byYear}} </h3>
+    </div>
+    <div style="width:55%;text-align:right" text-align="center">
+        <a href="" style="color: #0000FF">Edit Year</a>
+  </div>
+</div>
+<div class="main">
+           <span>&nbsp;</span>
+</div>
+<div class="table">
+<div class="table-row">
+    <div class="rTableCellr">Baseline loaded from:</div>
+    <div class="rTableCell"><ng-container *ngIf="availableYears">
+                <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+            </ng-container>
+    </div>
+    
+</div>
+<div >
+        <input type="file" id="programFileUpload" style="display: none" />
+</div>
+<pfm-busy [busy]="busy"></pfm-busy>
+

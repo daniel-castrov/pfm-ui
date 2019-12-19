@@ -3,13 +3,21 @@ import { CommonModule } from '@angular/common';
 
 import { ProgrammingFeatureRoutingModule } from './programming-feature-routing.module';
 import { ProgrammingFeatureComponent } from './programming-feature.component';
+import { CreateProgrammingComponent } from './create-programming/create-programming.component';
+import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
+import { ProgrammingService } from '../../app/programming-feature/services/programming-service';
+import { ProgrammingServiceMock } from '../../app/programming-feature/services/programming-service-mock';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent],
+  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent],
   imports: [
     CommonModule,
+    HttpClientModule,
+    PfmCoreuiModule,
     ProgrammingFeatureRoutingModule
-  ]
+  ],
+  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
 })
 export class ProgrammingFeatureModule { }
