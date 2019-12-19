@@ -38,8 +38,8 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.byYear= (new Date()).getFullYear()+2;
-    let pbYear:any = (new Date()).getFullYear()+1;
+    this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
+    let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
     this.busy = true;
     this.programmingService.pBYearExists(pbYear).subscribe(
       resp => { 
