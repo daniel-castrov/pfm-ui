@@ -355,6 +355,8 @@ tab {
 .ag-row {
   border: 0px !important;
   border-bottom: 1px solid #7b8389 !important;
+  border-left: 1px solid #7b8389 !important;
+  border-right: 1px solid #7b8389 !important;
 }
 
 .ag-row-hover{
@@ -376,8 +378,8 @@ tab {
 
 .ag-root {
   border: none;
-  border-bottom: 1px solid #7b8389 !important;
-  border-left: 1px solid #7b8389 !important;
+  border-bottom: 0px solid #7b8389 !important;
+  border-left: 0px solid #7b8389 !important;
   border-top: 1px solid #7b8389 !important;
 }
 
