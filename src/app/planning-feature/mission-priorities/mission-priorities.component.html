@@ -1,15 +1,17 @@
 <div class="main">
-    <h3>Mission Priorities
-        <ng-container *ngIf="selectedYear && !POMLocked">
-            <span> - Opened</span>
-        </ng-container>
-        <ng-container *ngIf="POMLocked && !POMClosed">
-            <span> - Locked</span>
-        </ng-container>
-        <ng-container *ngIf="POMClosed">
-            <span> - Closed</span>
-        </ng-container>
-    </h3>
+    <div class="float-left">
+        <h3>Mission Priorities
+            <ng-container *ngIf="selectedYear && !POMLocked">
+                <span> - Opened</span>
+            </ng-container>
+            <ng-container *ngIf="POMLocked && !POMClosed">
+                <span> - Locked</span>
+            </ng-container>
+            <ng-container *ngIf="POMClosed">
+                <span> - Closed</span>
+            </ng-container>
+        </h3>
+    </div>
     <div *ngIf="POMManager && selectedYear && !POMLocked">
         <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
             Lock Planning Phase
@@ -23,8 +25,9 @@
 </div>
 
 <br>
+<br>
 
-<ng-container *ngIf="availableYears">
+<ng-container *ngIf="availableYears" class="float-left">
     <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
 </ng-container>
 

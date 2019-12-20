@@ -53,7 +53,9 @@ export class MissionPrioritiesComponent implements OnInit {
         minWidth: 75,
         rowDrag: true,
         rowDragManaged: true,
-        valueGetter: function(params) {return params.node.rowIndex + 1;}
+        valueGetter: function(params) {return params.node.rowIndex + 1;},
+        cellClass: "numeric-class",
+        cellStyle: { display: 'flex', 'align-items': 'right'}
       },
       {
         headerName: 'Mission Title',
@@ -61,7 +63,9 @@ export class MissionPrioritiesComponent implements OnInit {
         editable:true,
         maxWidth: 400,
         minWidth: 400,
-        onCellValueChanged: params => this.onValueChanged(params)
+        onCellValueChanged: params => this.onValueChanged(params),
+        cellClass: "text-class",
+        cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
         // cellRendererFramework: TextCellRendererComponent,
         // cellEditorFramework: TextCellEditorComponent,
         // cellRendererParams: {'maxSize': 50},
@@ -71,11 +75,13 @@ export class MissionPrioritiesComponent implements OnInit {
         headerName: 'Mission Description',
         field: 'description',
         editable: true,
+        onCellValueChanged: params => this.onValueChanged(params),
+        cellClass: "text-class",
+        cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
         // cellRendererFramework: TextCellRendererComponent,
         // cellEditorFramework: TextCellEditorComponent,
         // cellRendererParams: {'maxSize': 200},
         // cellEditorParams: {'maxSize': 200}
-        onCellValueChanged: params => this.onValueChanged(params)
       },
       {
         headerName: 'Attachments',
