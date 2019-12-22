@@ -7,6 +7,10 @@ import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 })
 export class CustomDialogComponent implements OnInit {
 
+  @Input() title:string;
+  @Input() body:TemplateRef<any>;
+  @Input() actions:TemplateRef<any>;
+
   @Input() templateRef:TemplateRef<any>;
 
   constructor() { }

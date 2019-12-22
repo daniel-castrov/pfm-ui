@@ -1,3 +1,27 @@
 <ng-container *ngIf="templateRef">
     <ng-container *ngTemplateOutlet="templateRef"></ng-container>
 </ng-container>
+
+<ng-container *ngIf="body && actions">
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{title}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ng-container *ngTemplateOutlet="body"></ng-container>
+                </div>
+
+                <div class="modal-footer">
+                    <ng-container *ngTemplateOutlet="actions"></ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+

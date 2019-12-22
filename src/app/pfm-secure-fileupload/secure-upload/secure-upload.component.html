@@ -1,66 +1,49 @@
-<pfm-custom-dialog [templateRef]="secureUploadTemplate"></pfm-custom-dialog>
+<pfm-custom-dialog [body]="body1" [actions]="actions1"></pfm-custom-dialog>
+<!--
+ *ngIf="!uploader || (uploader?.queue?.length === 0)"
+ -->
+<ng-template #body1>
+    <div class="container">
+        <div class="mydropbox">
+            <span>Specify location of document:</span>
+            <div class="mybox">
+                <ng-container *ngIf="uploader.queue && uploader.queue.length > 0">
+                    <input type="text" value="{{uploader.queue[0].file.name}}" disabled>
+                    <label for="file2">Browse</label>
+                    <input disabled id="file2" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader"/><br/>
+                </ng-container>
 
-<ng-template #secureUploadTemplate>
-    <div class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ng-container>
-                        <div class="container">
-
-                            <div class="mydropbox" *ngIf="!uploader || (uploader?.queue?.length === 0)">
-
-                                <span>Specify location of document: (Excel files only)</span>
-                                <div class="mybox">
-                                    <input type="text" disabled>
-                                    <label for="file">Browse</label>
-
-                                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader"/><br/>
-                                </div>
-
-
-                                <div class="modal-footer">
-                                    <div class="pull-left">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Upload</button>
-                                    </div>
-
-                                    <div class="pull-right">
-                                    <pfm-cancel-cta (onCancelClicked)="cancel()"></pfm-cancel-cta>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <ng-container *ngIf="uploader?.queue?.length">
-
-                                <span>Specify location of document:</span>
-                                <div class="mybox">
-                                    <input type="text" value="{{uploader.queue[0].file.name}}" disabled>
-                                    <label for="file2">Browse</label>
-                                    <input [disabled]="busy" id="file2" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader"/><br/>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <div class="pull-left">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="busy = true;uploader.uploadAll()" [disabled]="busy || !uploader.getNotUploadedItems().length">Upload</button>
-                                    </div>
-
-                                    <div class="pull-right">
-                                        <pfm-cancel-cta [disabled]="busy" (onCancelClicked)="cancel()"></pfm-cancel-cta>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </ng-container>
-                </div>
+                <ng-container *ngIf="!uploader || (uploader?.queue?.length === 0)">
+                    <input type="text" disabled>
+                    <label for="file">Browse</label>
+                    <input id="file" class="fileupload-input-hidden" type="file" ng2FileSelect [uploader]="uploader"/><br/>
+                </ng-container>
             </div>
         </div>
     </div>
+</ng-template>
+
+<ng-template #actions1>
+
+    <ng-container *ngIf="uploader.queue && uploader.queue.length > 0">
+        <div class="pull-left">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="busy = true;uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload</button>
+        </div>
+
+        <div class="pull-right">
+            <pfm-cancel-cta [disabled]="busy" (onCancelClicked)="cancel()"></pfm-cancel-cta>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!uploader || (uploader?.queue?.length === 0)">
+
+        <div class="pull-left">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Upload</button>
+        </div>
+
+        <div class="pull-right">
+            <pfm-cancel-cta (onCancelClicked)="cancel()"></pfm-cancel-cta>
+        </div>
+    </ng-container>
 </ng-template>
 
 
