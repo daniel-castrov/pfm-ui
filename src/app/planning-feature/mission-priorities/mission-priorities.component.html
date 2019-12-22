@@ -38,6 +38,26 @@
 </ng-container>
 
 
+<ng-container *ngIf="showDeleteAttachmentDialog">
+    <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="delteeAttachmentActions"></pfm-custom-dialog>
+
+    <ng-template #deleteAttachmentBody>
+        <span>{{activeMessage|json}}</span>
+        <div *ngFor="let attachment of selectedRow.attachments">
+            <input type="checkbox" [(ngModel)]="attachment.selectedForDelete" [name]="attachment.file.id" [value]="attachment.file.id"> {{attachment.file.name}} <br>
+        </div>
+    </ng-template>
+
+    <ng-template #delteeAttachmentActions>
+        <div class="pull-left">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showDeleteAttachmentDialog = false; onDeleteAttachments()">Delete</button>
+        </div>
+
+        <div class="pull-right">
+            <pfm-cancel-cta (onCancelClicked)="showDeleteAttachmentDialog = false"></pfm-cancel-cta>
+        </div>
+    </ng-template>
+</ng-container>
 
 <ng-container *ngIf="showUploadDialog">
     <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>

@@ -15,12 +15,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlanningServicesImpl } from './services/planning-services-impl.service';
 import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
 import { PfmSecureFiledownloadModule } from '../pfm-secure-filedownload/pfm-secure-filedownload.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [PlanningFeatureComponent, CreatePlanningComponent, OpenPlanningComponent, MissionPrioritiesComponent, LockPlanningComponent, ClosePlanningComponent],
   imports: [
     CommonModule,
+    FormsModule,
     HttpClientModule,
     PfmCoreuiModule,
     PfmSecureFileuploadModule,

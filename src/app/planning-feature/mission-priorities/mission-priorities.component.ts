@@ -31,6 +31,7 @@ export class MissionPrioritiesComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
   @ViewChild(SecureDownloadComponent, {static: false}) secureDownloadComponent: SecureDownloadComponent;
 
+  showDeleteAttachmentDialog:boolean;
 
   gridApi:GridApi;
   columnApi:ColumnApi;
@@ -46,6 +47,8 @@ export class MissionPrioritiesComponent implements OnInit {
   POMManager:boolean = false;
   showUploadDialog:boolean;
   selectedRowId:number;
+  selectedRow:MissionPriority;
+
   columns:any[];
 
   constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, private signInService:SigninService) {
@@ -447,8 +450,10 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private deleteAttachments(rowId:number){
-    let copy = JSON.stringify(this.missionData[rowId]);
-    let test:MissionPriority = JSON.parse(copy);
+    this.selectedRowId = rowId;
+     this.selectedRow = this.missionData[rowId];
+     this.showDeleteAttachmentDialog = true;
+    /*
     // confirmation/selection message
     this.dialogService.displayCheckBoxSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
       () => {
@@ -468,6 +473,20 @@ export class MissionPrioritiesComponent implements OnInit {
         this.missionData[rowId].attachments = JSON.parse(copy).attachments;
         console.log("Cancel Worked!");
       });
+      */
+  }
+
+  private onDeleteAttachments():void{
+    if(this.selectedRow){
+      for (let attachment of this.selectedRow.attachments){
+        if (attachment.selectedForDelete){
+          let index = this.selectedRow.attachments.indexOf(attachment);
+          this.selectedRow.attachments.splice(index, 1);
+          //refresh this row in grid
+        }
+      }
+      this.saveRow(this.selectedRowId);
+    }
   }
 
   // Overwrite tab functionality to tab back and forth from title and description
