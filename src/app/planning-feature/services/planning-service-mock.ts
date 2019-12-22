@@ -70,6 +70,7 @@ export class PlanningServiceMock extends PlanningService{
         data.actions.canSave = false;
 
         data.attachments = [];
+        /*TODO - MissionAttachment changed to match services: Attachment.ts
         let ma: MissionAttachment = new MissionAttachment();
         ma.name = "abc.doc";
         ma.type = "doc";
@@ -85,6 +86,7 @@ export class PlanningServiceMock extends PlanningService{
         data.attachments.push(ma);
         data.attachments.push(test1);
         data.attachments.push(test2);
+        */
         list.push(data);
       }
     }

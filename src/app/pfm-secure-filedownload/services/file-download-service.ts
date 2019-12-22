@@ -14,13 +14,8 @@ export class FileDownloadService {
 		let headers = new HttpHeaders();
 		headers = headers.set('Content-Type', 'application/json; charset=utf-8');
 		this.headers = headers;
+    this.baseURL = "https://pfmdev1.pxalphaproject.com/pfm-server/library/downloadFile/id/";
 
-		if (window.location.origin) {
-			this.baseURL = window.location.origin + '/hutsandshackuploadservice/fileupload';
-			if (window.location.port === '4200') {
-				this.baseURL = "/hutsandshackuploadservice/fileupload";/*for local dev, use the proxyconfig.json to point /api to the correct destination without CORS issues*/
-			}
-		}
 	}
 
 	public async downloadSecureResource(id: string): Promise<Blob> {

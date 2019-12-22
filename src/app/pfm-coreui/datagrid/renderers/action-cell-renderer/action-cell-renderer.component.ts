@@ -36,7 +36,7 @@ export class ActionCellRendererComponent implements OnInit {
       if(item.id === "delete-row"){
         this.onSelected(item.id);
       }
-      else if (item.id === "delete-attatchments"){
+      else if (item.id === "delete-attachments"){
         this.onSelected(item.id);
       }
     }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import {FileUploader} from 'ng2-file-upload';
+import { FileItem, FileUploader, ParsedResponseHeaders } from 'ng2-file-upload';
 import { AppModel } from '../../pfm-common-models/AppModel';
+import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 
 @Component({
   selector: 'pfm-secure-upload',
@@ -10,10 +11,10 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 export class SecureUploadComponent implements OnInit{
   @ViewChild('secureUploadTemplate', {static: false}) private secureUploadTemplate: TemplateRef<any>;
 	@Input() uploadTypeDisplay:string = "Files";
-	@Output() onFilesUploaded:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() onFilesUploaded:EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
 
   busy:boolean;
-
+  private fileMetaData:FileMetaData;
 	private url:string;
 	uploader:FileUploader;
 	hasBaseDropZoneOver:boolean;
@@ -28,7 +29,7 @@ export class SecureUploadComponent implements OnInit{
 	}
 
 	public cancel():void{
-	  this.onFilesUploaded.emit(false);
+	  this.onFilesUploaded.emit(null);
   }
 
 	ngOnInit(): void {
@@ -42,8 +43,13 @@ export class SecureUploadComponent implements OnInit{
 		this.hasBaseDropZoneOver = false;
 		this.response = '';
 		this.uploader.response.subscribe( res => this.response = res );
+		this.uploader.onSuccessItem = (item, response, status, headers)=>{
+      let data = JSON.parse(response); //success server response
+      this.fileMetaData = new FileMetaData();
+      this.fileMetaData = data.result;
+    },
 		this.uploader.onCompleteAll = ()=>{
-			this.onFilesUploaded.emit(true);
+			this.onFilesUploaded.emit(this.fileMetaData);
 		};
 	}
 

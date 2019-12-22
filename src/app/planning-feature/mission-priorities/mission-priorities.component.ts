@@ -17,6 +17,9 @@ import { ActivatedRoute } from '@angular/router';
 import { DisabledActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
 import { AppModel } from '../../pfm-common-models/AppModel';
+import { FileMetaData } from '../../pfm-common-models/FileMetaData';
+import { Attachment } from '../../pfm-common-models/Attachment';
+import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-download/secure-download.component';
 
 @Component({
   selector: 'pfm-planning',
@@ -26,6 +29,8 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 export class MissionPrioritiesComponent implements OnInit {
 
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
+  @ViewChild(SecureDownloadComponent, {static: false}) secureDownloadComponent: SecureDownloadComponent;
+
 
   gridApi:GridApi;
   columnApi:ColumnApi;
@@ -146,7 +151,16 @@ export class MissionPrioritiesComponent implements OnInit {
         this.deleteAttachments(cellAction.rowIndex);
         break;
       }
+      case "download-attachment":{
+        this.downloadAttachment(cellAction);
+      }
     }
+  }
+
+  private downloadAttachment(cellAction:DataGridMessage):void{
+    console.info(cellAction);
+
+    this.secureDownloadComponent.downloadFile(cellAction.rawData.file);
   }
 
   onAddNewRow(event:any):void{
@@ -220,35 +234,22 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
-  handleNewAttachments(newFiles:boolean):void{
+  handleNewAttachments(newFile:FileMetaData):void{
     this.showUploadDialog = false;
-    //TODO - how do we tie the uploaded files to this mission priority, seems like we need the attachments on the priority, and the areas/keys
 
-    if(newFiles){
-      //dialog message
-      //test attachment
-      let doc: MissionAttachment = new MissionAttachment();
-      if (this.missionData[this.selectedRowId].attachments.length === 0){
-        doc.name = "abc1.xlsx";
-        doc.type = "xlsx";
-        doc.url = "https://www.google.com/";
-        doc.selectedForDelete = false;
-        //doc.name
-      }
-      else {
-        doc.name = "abc" + (this.missionData[this.selectedRowId].attachments.length-1) + ".xlsx";
-        doc.type = "xlsx";
-        doc.url = "https://www.google.com/";
-        doc.selectedForDelete = false;
-      }
+    if(newFile){//undefined is returned for cancle/errors, so only proceed if we have a value
+
+      //wrap the FileMetaData in an Attachment object
+      let attachment:Attachment = new Attachment();
+      attachment.file = newFile;
+      attachment.mpId = this.missionData[this.selectedRowId].id;
 
       //add attachment
-      this.missionData[this.selectedRowId].attachments.push(doc);
+      this.missionData[this.selectedRowId].attachments.push(attachment);
 
       //update data
       this.gridApi.setRowData(this.missionData);
     }
-
   }
 
   onOpenPlanningPhase():void{
@@ -332,6 +333,8 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.description = row.description;
       mp.order = row.order;
       mp.id = row.id;
+      mp.attachments = row.attachments;
+
       this.busy = true;
 
       if(!this.missionData[rowId].id){//create vs update

@@ -21,9 +21,10 @@ export class AttachmentCellRendererComponent implements OnInit {
     let message:DataGridMessage = new DataGridMessage();
     message.rowIndex = this.params.rowIndex;
     message.columnIndex = -1;//not used - we know the column based on the action
-    message.message = data;
+    message.message = "download-attachment";
     message.rendererName = "AttachmentCellRendererComponent";
     message.rowData = this.data;
+    message.rawData = data.rawData;
     message.messageType = "cell-renderer";
     this.datagridMBService.sendMessage(message);
   }
@@ -35,9 +36,10 @@ export class AttachmentCellRendererComponent implements OnInit {
     this.list = [];
     for(let x of this.data){
       let item:ListItem = new ListItem();
-      item.name = x.name;
-      item.value = x.name;
-      item.id = x.name;
+      item.name = x.file.name;
+      item.value = x.file.name;
+      item.id = x.id;
+      item.rawData = x;
       this.list.push(item);
     }
     console.log('attachmentRenderer');

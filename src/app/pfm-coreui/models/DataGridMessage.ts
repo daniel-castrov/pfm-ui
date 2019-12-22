@@ -5,4 +5,5 @@ export class DataGridMessage {
   public rowIndex:number;
   public columnIndex:number;
   public rowData:any;
+  public rawData:any;
 }

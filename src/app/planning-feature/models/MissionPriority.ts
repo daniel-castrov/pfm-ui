@@ -1,5 +1,6 @@
 import { MissionAttachment } from './MissionAttachment';
 import { MissionAction } from './MissionAction';
+import { Attachment } from '../../pfm-common-models/Attachment';
 
 export class MissionPriority {
   public created:Date;
@@ -13,7 +14,7 @@ export class MissionPriority {
   public description:string;
 
   //client side only
-  public attachments:MissionAttachment[];
+  public attachments:Attachment[];
   public attachmentsDisabled:boolean;
   public actions:MissionAction;
 }

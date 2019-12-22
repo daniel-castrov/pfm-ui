@@ -1,5 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FileDownloadService} from '../services/file-download-service';
+import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 
 @Component({
   selector: 'pfm-secure-download',
@@ -13,8 +14,8 @@ export class SecureDownloadComponent {
 
 	constructor(private fileDownloadService:FileDownloadService) { }
 
-	public async downloadFile(item:any): Promise<void> {
-		const blob = await this.fileDownloadService.downloadSecureResource(item.fileHash)
+	public async downloadFile(item:FileMetaData): Promise<void> {
+		const blob = await this.fileDownloadService.downloadSecureResource(item.id)
 		const url = window.URL.createObjectURL(blob);
 
 		const link = this.downloadLink.nativeElement;

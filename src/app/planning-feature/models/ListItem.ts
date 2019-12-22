@@ -3,4 +3,6 @@ export class ListItem {
   public name:string;
   public value:string;
   public isSelected:boolean;
+
+  public rawData:any;
 }
