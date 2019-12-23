@@ -13,15 +13,20 @@
 </div>
 <div class="table">
 <div class="table-row">
-    <div class="rTableCellr">Baseline loaded from:</div>
+    <div class="rTableCellr" vertical-align="middle">Baseline loaded from:</div>
     <div class="rTableCell"><ng-container *ngIf="availableYears">
-                <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
-            </ng-container>
+      <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+  </ng-container>
     </div>
     
 </div>
 <div >
        <input type="file" id="programFileUpload" style="display: none" />
 </div>
+
+<ng-container *ngIf="showUploadDialog">
+  <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+</ng-container>
+
 <pfm-busy [busy]="busy"></pfm-busy>
 

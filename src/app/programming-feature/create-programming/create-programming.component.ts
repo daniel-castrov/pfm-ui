@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';
 
 
+
+
 @Component({
   selector: 'pfm-programming',
   templateUrl: './create-programming.component.html',
@@ -21,7 +23,7 @@ export class CreateProgrammingComponent implements OnInit {
   selectedYear:string;
   byYear:any;
   programYearSelected:any;
-
+  showUploadDialog:boolean;
 
   constructor(private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
     
@@ -30,9 +32,25 @@ export class CreateProgrammingComponent implements OnInit {
   yearSelected(year:string):void{
     this.selectedYear = year;
     this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
+    if(this.programYearSelected=="Spreadsheet"){
+      this.showUploadDialog = true;
+    }else{
+      this.showUploadDialog = false;
+    }
+    
     
    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   handleNewAttachments(selectedFile:Event):void{
+    this.showUploadDialog = false;
+    const target= event.target as HTMLInputElement;
+    const file: File = (target.files as FileList)[0];
+    let fileName = file.name;
+    this.validateFile(fileName);
+    console.log("File Attached" +fileName);
+   }
 
+  
   onCreateProgrammingPhase():void{
     let year:any = this.selectedYear;
   }
@@ -67,4 +85,21 @@ export class CreateProgrammingComponent implements OnInit {
     return items;
   }
 
+  validateFile(name: String) {
+    var ext = name.substring(name.lastIndexOf('.') + 1);
+    var res:boolean = ((ext==="xls") || (ext==="xlsx"));
+    if (res) {
+        console.log("File attached"+name);
+    }
+    else {
+      this.dialogService.displayError("File selected must be an Excel spreadsheet");
+    }
 }
+
+
+}
+
+interface HTMLInputEvent extends Event {
+  target: HTMLInputElement & EventTarget;
+}
+

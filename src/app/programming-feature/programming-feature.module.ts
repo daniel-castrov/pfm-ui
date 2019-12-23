@@ -8,7 +8,7 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
 import { ProgrammingService } from '../../app/programming-feature/services/programming-service';
 import { ProgrammingServiceMock } from '../../app/programming-feature/services/programming-service-mock';
 import { HttpClientModule } from '@angular/common/http';
-
+import { PfmSecureFileuploadModule } from '../pfm-secure-fileupload/pfm-secure-fileupload.module';
 
 @NgModule({
   declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent],
@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     HttpClientModule,
     PfmCoreuiModule,
+    PfmSecureFileuploadModule,
     ProgrammingFeatureRoutingModule
   ],
   providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
