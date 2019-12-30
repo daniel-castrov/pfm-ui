@@ -39,7 +39,7 @@
 
 
 <ng-container *ngIf="showDeleteAttachmentDialog">
-    <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="delteeAttachmentActions"></pfm-custom-dialog>
+    <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="delteeAttachmentActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
 
     <ng-template #deleteAttachmentBody>
         <span>{{activeMessage|json}}</span>

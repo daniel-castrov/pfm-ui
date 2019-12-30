@@ -479,15 +479,29 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private onDeleteAttachments():void{
-    if(this.selectedRow){
-      for (let attachment of this.selectedRow.attachments){
-        if (attachment.selectedForDelete){
-          let index = this.selectedRow.attachments.indexOf(attachment);
-          this.selectedRow.attachments.splice(index, 1);
-          //refresh this row in grid
-        }
+    let attachmentSelected:boolean = false;
+
+    for(let attachment of this.selectedRow.attachments) {
+      if(attachment.selectedForDelete === true){
+        attachmentSelected = true;
       }
-      this.saveRow(this.selectedRowId);
+    }
+
+    if (attachmentSelected){
+      if(this.selectedRow){
+        for (let attachment of this.selectedRow.attachments){
+          if (attachment.selectedForDelete){
+            let index = this.selectedRow.attachments.indexOf(attachment);
+            this.selectedRow.attachments.splice(index, 1);
+            //refresh this row in grid
+          }
+        }
+        this.dialogService.displayInfo("Attachment(s) successfully deleted from the mission.");
+        this.saveRow(this.selectedRowId);
+      }
+    }
+    else if (!attachmentSelected){
+      this.dialogService.displayError("Select one or more attachments.")
     }
   }
 
@@ -585,5 +599,9 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         this.dialogService.displayDebug(error);
       });
+  }
+
+  cancelDialog() {
+    this.showDeleteAttachmentDialog = false;
   }
 }
