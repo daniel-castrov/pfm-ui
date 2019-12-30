@@ -33,20 +33,26 @@ export class CreatePlanningComponent implements OnInit {
   onCreatePlanningPhase():void{
     let year:any = this.selectedYear;
     if(this.yearDropDown.isValid()){
-
+      this.busy = true;
       let planningData = this.appModel.planningData.find( obj => obj.id === year + "_id");
 
       this.planningService.createPlanningPhase(planningData).subscribe(
           resp => {
+            this.busy = false;
+
+            // Update shared model state
+            this.appModel.selectedYear = year;
+            planningData.state = 'CREATED';
+
             this.dialogService.displayToastInfo(`Planning phase for ${ year } successfully created.`);
-            this.router.navigate(["home"]);
+
+            this.router.navigate(['home']);
           },
           error =>{
             this.busy = false;
             this.dialogService.displayDebug(error);
         });
-    }
-    else{
+    } else{
       this.dialogService.displayToastError(`Please select a year from the dropdown.`);
     }
   }

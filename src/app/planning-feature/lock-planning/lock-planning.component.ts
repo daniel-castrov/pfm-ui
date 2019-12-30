@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GridApi, ColumnApi } from '@ag-grid-community/core';
 import { ListItem } from '../models/ListItem';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
+import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 
 @Component({
   selector: 'pfm-planning',
@@ -14,6 +15,7 @@ import { SigninService } from '../../pfm-auth-module/services/signin.service';
   styleUrls: ['./lock-planning.component.scss']
 })
 export class LockPlanningComponent implements OnInit {
+  @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
   gridApi:GridApi;
   columnApi:ColumnApi;
@@ -38,19 +40,27 @@ export class LockPlanningComponent implements OnInit {
     this.availableYears = this.toListItem(years);
   }
 
-  lockPlanningPhase(){    
+  lockPlanningPhase(){
     this.busy = true;
-    let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
-    this.planningService.lockPlanningPhase(planningData).subscribe(
-      resp => {
-        this.busy = false;
-        this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully locked`);  
-        this.availableYears = this.availableYears.filter(obj => obj.id != this.selectedYear);
-        },
-      error =>{
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      });
+    if(this.yearDropDown.isValid()) {
+      let planningData = this.appModel.planningData.find(obj => obj.id === this.selectedYear + "_id");
+      this.planningService.lockPlanningPhase(planningData).subscribe(
+          resp => {
+            this.busy = false;
+
+            // Update shared model state
+            this.appModel.selectedYear = this.selectedYear;
+            planningData.state = 'LOCKED';
+
+            this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully locked`);
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+          });
+    } else {
+      this.dialogService.displayToastError(`Please select a year from the dropdown.`);
+    }
   }
 
   private toListItem(years:string[]):ListItem[]{
