@@ -41,7 +41,7 @@ export class MissionPrioritiesComponent implements OnInit {
   availableYears: ListItem[];
   selectedYear:string;
   missionData:MissionPriority[];
-  validInput:boolean = false; //using this for a different form of validation later
+  validInput:boolean = false; // using this for a different form of validation later
   POMLocked:boolean = false;
   POMClosed:boolean = false;
   POMManager:boolean = false;
@@ -269,15 +269,14 @@ export class MissionPrioritiesComponent implements OnInit {
         years.push(item.name);
       }
     }
-    this.availableYears = this.toListItem(years);
 
-    if(this.appModel.selectedYear){//trigger a default selection
+    if (this.appModel.selectedYear) { // trigger a default selection
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
       this.yearSelected({"name": this.selectedYear});
     }
 
-
+    this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years:string[]):ListItem[]{
@@ -287,6 +286,9 @@ export class MissionPrioritiesComponent implements OnInit {
       item.id = year;
       item.name = year;
       item.value = year;
+      if (year === this.selectedYear) {
+        item.isSelected = true;
+      }
       items.push(item);
     }
     return items;

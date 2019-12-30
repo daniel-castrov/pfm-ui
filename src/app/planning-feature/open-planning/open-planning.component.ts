@@ -32,13 +32,18 @@ export class OpenPlanningComponent implements OnInit {
     if(this.yearDropDown.isValid()){
       this.busy = true;
       let year:any = this.selectedYear;
-      let planningData = this.appModel.planningData.find( obj => obj.id === year + "_id");
+      let planningData = this.appModel.planningData.find( obj => obj.id === year + '_id');
       this.planningService.openPlanningPhase(planningData).subscribe(
         resp => {
           this.busy = false;
-          this.appModel.selectedYear = year;//we can use the appModel to share state information between screens
+
+          // Update shared model state
+          this.appModel.selectedYear = year;
+          planningData.state = 'OPEN';
+
           this.dialogService.displayToastInfo(`Planning phase for ${ year } successfully opened.`);
-          this.router.navigate(["/planning/mission-priorities"]);
+
+          this.router.navigate(['/planning/mission-priorities']);
         },
         error =>{
           this.busy = false;
