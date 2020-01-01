@@ -1,4 +1,4 @@
-<pfm-custom-dialog [title]="'Upload'" [body]="body1" [actions]="actions1"></pfm-custom-dialog>
+<pfm-custom-dialog (onCancelDialog)="cancel()" [title]="'Upload'" [body]="body1" [actions]="actions1"></pfm-custom-dialog>
 
 <ng-template #body1>
     <div class="container">
