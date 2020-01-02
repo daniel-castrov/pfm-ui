@@ -58,6 +58,24 @@
     </ng-template>
 </ng-container>
 
+<ng-container *ngIf="showImportYearDialog">
+    <pfm-custom-dialog [title]="'Choose the year for Import'" [body]="importYearBody" [actions]="importYearActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
+
+    <ng-template #importYearBody>
+        <span>{{activeMessage|json}}</span>
+        <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+    </ng-template>
+
+    <ng-template #importYearActions>
+        <div class="pull-left">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showImportYearDialog = false; onImportYear()">Import</button>
+        </div>
+        <div class="pull-right">
+            <pfm-cancel-cta (onCancelClicked)="showImportYearDialog = false"></pfm-cancel-cta>
+        </div>
+    </ng-template>
+</ng-container>
+
 <ng-container *ngIf="showUploadDialog">
     <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
 </ng-container>

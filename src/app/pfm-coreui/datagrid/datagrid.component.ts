@@ -50,7 +50,7 @@ export class DatagridComponent implements OnInit {
         this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-single-row'});
       }
       else if (item.id === "add-year"){
-        // stub for adding multiple rows from another year.
+        this.onAddNewRowEvent.emit({gridApi: this.api, action: 'add-rows-from-year'});
       }
     }
   }

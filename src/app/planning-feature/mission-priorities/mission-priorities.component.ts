@@ -29,6 +29,7 @@ export class MissionPrioritiesComponent implements OnInit {
   @ViewChild(SecureDownloadComponent, {static: false}) secureDownloadComponent: SecureDownloadComponent;
 
   showDeleteAttachmentDialog:boolean;
+  showImportYearDialog:boolean;
 
   gridApi:GridApi;
   columnApi:ColumnApi;
@@ -188,12 +189,75 @@ export class MissionPrioritiesComponent implements OnInit {
       this.editRow(this.missionData.length - 1);
     }
     else if(event.action === "add-rows-from-year"){
+      // get available years
+      let years: ListItem[];
+      console.log(this.availableYears);
+      for (let i = 0; i < this.availableYears.length;i++){
+        if (this.availableYears[i].name !== this.selectedYear) {
+          years
+        }
+      }
+
+      // year selection dialog
+      this.showImportYearDialog = true;
+
+
       // get rows
+      // let importRows:MissionPriority[];
+      // if (importYear) {
+      //   let importData = this.appModel.planningData.find(obj => obj.id === importYear + '_id');
+      //
+      //   this.busy = true;
+      //   this.planningService.getMissionPriorities(importData.id).subscribe(
+      //     resp => {
+      //       this.busy = false;
+      //       const result = (resp as any).result;
+      //       if (result  instanceof Array) {
+      //         importRows = new Array(result.length);
+      //         for (const mp of result as Array<MissionPriority>) {
+      //           if (!mp.attachments) {
+      //             mp.attachments = [];
+      //           }
+      //           if (!mp.attachmentsDisabled) {
+      //             mp.attachmentsDisabled = false;
+      //           }
+      //           if (!mp.actions) {
+      //             mp.actions = new Action();
+      //             mp.actions.canUpload = false;
+      //             mp.actions.canSave = false;
+      //             mp.actions.canEdit = true;
+      //             mp.actions.canDelete = true;
+      //           }
+      //           importRows[mp.order - 1] = mp;
+      //         }
+      //       }
+      //     },
+      //     error => {
+      //       this.busy = false;
+      //       this.dialogService.displayDebug(error);
+      //     });
+      // }
+
       // push onto mission data
+      // for (let row of importRows) {
+      //
+      // }
+
       // update grid
+      this.gridApi.setRowData(this.missionData);
+
+      // save data
+
     }
   }
 
+  private importYearSelected(year: any){
+
+  }
+
+  private onImportYear(){
+
+  }
 
   yearSelected(year: any): void {
 
@@ -591,5 +655,6 @@ export class MissionPrioritiesComponent implements OnInit {
 
   cancelDialog() {
     this.showDeleteAttachmentDialog = false;
+    this.showImportYearDialog = false;
   }
 }
