@@ -5,6 +5,8 @@ import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { Router } from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';
+import { FileMetaData } from '../../pfm-common-models/FileMetaData';
+import { Attachment } from '../../pfm-common-models/Attachment';
 
 
 
@@ -41,21 +43,22 @@ export class CreateProgrammingComponent implements OnInit {
     
    }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-   handleNewAttachments(selectedFile:Event):void{
-    this.showUploadDialog = false;
-    const target= event.target as HTMLInputElement;
-    const file: File = (target.files as FileList)[0];
-    let fileName = file.name;
-    this.validateFile(fileName);
-    console.log("File Attached" +fileName);
-   }
+   handleNewAttachments(newFile:FileMetaData):void{
+      this.showUploadDialog = false;
+      if(newFile){
+        let attachment:Attachment = new Attachment();
+        attachment.file = newFile;
+      }else{
+        this.yearDropDown.selectedItem=this.yearDropDown.prompt;
+      }
+  }
 
-  
   onCreateProgrammingPhase():void{
     let year:any = this.selectedYear;
   }
 
   ngOnInit() {
+    console.log("in ngOninit");
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
     this.busy = true;
