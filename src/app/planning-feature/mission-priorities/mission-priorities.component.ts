@@ -47,6 +47,8 @@ export class MissionPrioritiesComponent implements OnInit {
   showUploadDialog:boolean;
   selectedRowId:number;
   selectedRow:MissionPriority;
+  selectedImportYear:string;
+  availableImportYears: ListItem[];
 
   columns:any[];
 
@@ -189,12 +191,10 @@ export class MissionPrioritiesComponent implements OnInit {
       this.editRow(this.missionData.length - 1);
     }
     else if(event.action === "add-rows-from-year"){
-      // get available years
-      let years: ListItem[];
-      console.log(this.availableYears);
+      this.availableImportYears = [];
       for (let i = 0; i < this.availableYears.length;i++){
         if (this.availableYears[i].name !== this.selectedYear) {
-          years
+          this.availableImportYears[this.availableImportYears.length] = this.availableYears[i];
         }
       }
 

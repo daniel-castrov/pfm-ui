@@ -63,7 +63,7 @@
 
     <ng-template #importYearBody>
         <span>{{activeMessage|json}}</span>
-        <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+        <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableImportYears"></pfm-dropdown>
     </ng-template>
 
     <ng-template #importYearActions>
