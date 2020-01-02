@@ -336,14 +336,14 @@ export class MissionPrioritiesComponent implements OnInit {
       }
     }
 
-    this.availableYears = this.toListItem(years);
-
     // trigger a default selection
     if (this.appModel.selectedYear) {
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
       this.yearSelected({name: this.selectedYear});
     }
+
+    this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years:string[]):ListItem[]{
@@ -387,19 +387,16 @@ export class MissionPrioritiesComponent implements OnInit {
     let error:string = "";
     let isError:boolean = false;
 
-    //copy data
-    let row:MissionPriority = this.missionData[rowId];
+    // Note stopEditing saves edits to model.  Since changes aren't saved to server if validation fails this is ok.
+    this.gridApi.stopEditing();
+    const row: MissionPriority = this.missionData[rowId];
 
-    //check columns Title max 45 chars, description max 200 chars
-    if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
-
-
-      this.gridApi.stopEditing();//don't stop edit until the validation check has occured
-
-      //get a reference to the planning data for the selected year
+    // Check columns Title max 45 chars, description max 200 chars
+    if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0) {
+      // Get a reference to the planning data for the selected year
       let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
 
-      // Backend service will handle attachments
+      // Backend service will handle attachments and modification information
       let mp:MissionPriority = new MissionPriority();
       mp.planningPhaseId = planningData.id;
       mp.title = row.title;
@@ -411,7 +408,7 @@ export class MissionPrioritiesComponent implements OnInit {
       this.busy = true;
 
       // Create or update? Check for presence of mp id
-      if(!this.missionData[rowId].id){
+      if(!row.id){
         this.planningService.createMissionPriority(mp).subscribe(
           resp => {
             this.busy = false;
@@ -431,15 +428,17 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             this.dialogService.displayDebug(error);
           });
-      } else{
+      } else {
+        // Ensure creation information is preserved
+        mp.createdBy = row.createdBy;
+        mp.created = row.created;
         this.planningService.updateMissionPriority([mp]).subscribe(
           resp => {
             this.busy = false;
 
-            //update view
+            // Update view
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
-
           },
           error =>{
             this.busy = false;
