@@ -223,7 +223,7 @@ export class MissionPrioritiesComponent implements OnInit {
                   mp.actions.canEdit = true;
                   mp.actions.canDelete = true;
                 }
-                this.missionData[mp.order] = mp;
+                this.missionData[mp.order - 1] = mp;
               }
             }
           },
