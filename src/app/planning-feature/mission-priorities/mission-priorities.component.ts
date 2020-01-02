@@ -16,6 +16,7 @@ import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
 import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-download/secure-download.component';
 import { Action } from '../../pfm-common-models/Action';
+import { PlanningPhase } from '../models/PlanningPhase';
 
 @Component({
   selector: 'pfm-planning',
@@ -36,6 +37,7 @@ export class MissionPrioritiesComponent implements OnInit {
   actionInProgress:boolean = false;
   availableYears: ListItem[];
   selectedYear:string;
+  selectedPlanningPhase:PlanningPhase;
   missionData:MissionPriority[];
   validInput:boolean = false; // using this for a different form of validation later
   POMLocked:boolean = false;
@@ -194,9 +196,13 @@ export class MissionPrioritiesComponent implements OnInit {
 
 
   yearSelected(year: any): void {
+
     this.selectedYear = year ? year.name : undefined;
+
     if (this.selectedYear) {
       let planningData = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
+
+      this.selectedPlanningPhase = planningData;
 
       this.busy = true;
       this.planningService.getMissionPriorities(planningData.id).subscribe(
@@ -257,11 +263,16 @@ export class MissionPrioritiesComponent implements OnInit {
   ngOnInit() {
     this.POMManager = this.appModel.userDetails.userRole.isPOM_Manager;
     let years:string[] = [];
+    let status:string[] = ["OPEN", "CREATED", "LOCKED", "CLOSED"];
     for(let item of this.appModel.planningData){
-      if(item.state === "OPEN"){
+      // Created, Opened, Locked or Closed.
+
+      if(status.indexOf(item.state) !== -1){
         years.push(item.name);
       }
     }
+
+    this.availableYears = this.toListItem(years);
 
     // trigger a default selection
     if (this.appModel.selectedYear) {
@@ -269,8 +280,6 @@ export class MissionPrioritiesComponent implements OnInit {
       this.appModel.selectedYear = undefined;
       this.yearSelected({name: this.selectedYear});
     }
-
-    this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years:string[]):ListItem[]{

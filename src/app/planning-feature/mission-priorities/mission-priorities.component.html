@@ -1,14 +1,13 @@
 <div class="main">
     <div class="float-left">
         <h3>Mission Priorities
-            <ng-container *ngIf="selectedYear && !POMLocked">
-                <span> - Opened</span>
-            </ng-container>
-            <ng-container *ngIf="POMLocked && !POMClosed">
-                <span> - Locked</span>
-            </ng-container>
-            <ng-container *ngIf="POMClosed">
-                <span> - Closed</span>
+            <ng-container *ngIf="selectedPlanningPhase">
+                <span> -
+                    <span *ngIf="selectedPlanningPhase.state === 'OPEN'">Opened</span>
+                    <span *ngIf="selectedPlanningPhase.state === 'LOCKED'">Locked</span>
+                    <span *ngIf="selectedPlanningPhase.state === 'CLOSED'">Closed</span>
+
+                </span>
             </ng-container>
         </h3>
     </div>
