@@ -35,6 +35,22 @@ ng g component pfm-coreui/datagrid/renderers/text-cell-renderer --module pfm-cor
 
 
 
+ng g component programming-feature/create-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/open-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/lock-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/close-programming --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+
+ng g component programming-feature/toa --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/requests --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/requests_approval --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/ufr_requests --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/ufr_requests_approval --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/total_appropriation_priority --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+ng g component programming-feature/work_space_management --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
+
+
+
+
 
 
 
