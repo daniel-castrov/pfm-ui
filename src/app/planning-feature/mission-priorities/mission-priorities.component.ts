@@ -320,12 +320,13 @@ export class MissionPrioritiesComponent implements OnInit {
 
     //copy data
     let row:MissionPriority = this.missionData[rowId];
-    let copy = JSON.stringify(this.missionData[rowId]);
-    this.gridApi.stopEditing();
-    let test:MissionPriority = JSON.parse(copy);
 
     //check columns Title max 45 chars, description max 200 chars
     if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
+
+
+      this.gridApi.stopEditing();//don't stop edit until the validation check has occured
+
       //get a reference to the planning data for the selected year
       let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
 
@@ -396,13 +397,7 @@ export class MissionPrioritiesComponent implements OnInit {
       if (isError){
         this.dialogService.displayError(error);
       }
-      // deserialize save
-      row.title = test.title;
-      row.attachments = test.attachments;
-      row.attachmentsDisabled = test.attachmentsDisabled;
-      row.description = test.description;
-      row.actions = test.actions;
-      row.order = test.order;
+
       this.editRow(rowId);
     }
   }
