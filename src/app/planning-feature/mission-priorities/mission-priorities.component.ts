@@ -171,10 +171,8 @@ export class MissionPrioritiesComponent implements OnInit {
       let mp:MissionPriority = new MissionPriority();
       if (this.missionData.length === 0) {
         mp.order = 1;
-      }
-      else {
-        mp.order = this.missionData.length;
-        console.log(mp.order);
+      } else {
+        mp.order = this.missionData.length + 1;
       }
       mp.title = "";
       mp.description = "";
@@ -189,8 +187,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
       this.gridApi.setRowData(this.missionData);
 
-      this.editRow(this.missionData.length - 1);//zero indexed
-
+      this.editRow(this.missionData.length - 1);
     }
     else if(event.action === "add-rows-from-year"){
       // get rows
@@ -200,40 +197,40 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
 
-  yearSelected(item:any):void{
-    this.selectedYear = item ? item.name : undefined;
-    if(this.selectedYear){
-      let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
+  yearSelected(year: any): void {
+    this.selectedYear = year ? year.name : undefined;
+    if (this.selectedYear) {
+      let planningData = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
 
       this.busy = true;
       this.planningService.getMissionPriorities(planningData.id).subscribe(
-        resp => {
-          this.busy = false;
-          this.missionData = (resp as any).result;
-
-          if(this.missionData && this.missionData.length > 0){
-            for(let item of this.missionData){
-              if(!item.attachments){
-                item.attachments = [];
-              }
-              if(!item.attachmentsDisabled){
-                item.attachmentsDisabled = false;
-              }
-              if(!item.actions){
-                item.actions = new MissionAction();
-                item.actions.canUpload = false;
-                item.actions.canSave = false;
-                item.actions.canEdit = true;
-                item.actions.canDelete = true;
+          resp => {
+            this.busy = false;
+            const result = (resp as any).result;
+            if (result  instanceof Array) {
+              this.missionData = new Array(result.length);
+              for (const mp of result as Array<MissionPriority>) {
+                if (!mp.attachments) {
+                  mp.attachments = [];
+                }
+                if (!mp.attachmentsDisabled) {
+                  mp.attachmentsDisabled = false;
+                }
+                if (!mp.actions) {
+                  mp.actions = new MissionAction();
+                  mp.actions.canUpload = false;
+                  mp.actions.canSave = false;
+                  mp.actions.canEdit = true;
+                  mp.actions.canDelete = true;
+                }
+                this.missionData[mp.order] = mp;
               }
             }
-          }
-
-        },
-        error =>{
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+          });
     }
   }
 
@@ -270,10 +267,11 @@ export class MissionPrioritiesComponent implements OnInit {
       }
     }
 
-    if (this.appModel.selectedYear) { // trigger a default selection
+    // trigger a default selection
+    if (this.appModel.selectedYear) {
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
-      this.yearSelected({"name": this.selectedYear});
+      this.yearSelected({name: this.selectedYear});
     }
 
     this.availableYears = this.toListItem(years);
@@ -331,7 +329,7 @@ export class MissionPrioritiesComponent implements OnInit {
       //get a reference to the planning data for the selected year
       let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
 
-      //service doesn't know about attachments or actions TODO split these out from the service models
+      // Backend service will handle attachments
       let mp:MissionPriority = new MissionPriority();
       mp.planningPhaseId = planningData.id;
       mp.title = row.title;
@@ -342,7 +340,8 @@ export class MissionPrioritiesComponent implements OnInit {
 
       this.busy = true;
 
-      if(!this.missionData[rowId].id){//create vs update
+      // Create or update? Check for presence of mp id
+      if(!this.missionData[rowId].id){
         this.planningService.createMissionPriority(mp).subscribe(
           resp => {
             this.busy = false;
@@ -362,9 +361,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             this.dialogService.displayDebug(error);
           });
-      }
-      else{
-
+      } else{
         this.planningService.updateMissionPriority([mp]).subscribe(
           resp => {
             this.busy = false;
@@ -379,8 +376,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.dialogService.displayDebug(error);
           });
       }
-    }
-    else{
+    } else {
       if (row.title.length === 0){
         error = 'The Title is empty. ';
         isError = true;
@@ -411,6 +407,18 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
+  private updateRows(beginRowId: number, endRowId?: number) {
+    this.busy = true;
+    this.planningService.updateMissionPriority(this.missionData.slice(beginRowId, endRowId)).subscribe(
+        resp => {
+          this.busy = false;
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
+  }
+
   private editRow(rowId:number){
     //edit mode
     this.editMode(rowId);
@@ -423,24 +431,25 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private deleteRow(rowId:number){
-
     this.busy = true;
 
-    let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
-    this.planningService.deleteMissionPriority(planningData.id).subscribe(
+    this.planningService.deleteMissionPriority(this.missionData[rowId].id).subscribe(
       resp => {
-        this.busy = false;
-        //confirmation message
-        //delete row
-        console.log(this.missionData.splice(rowId, 1));
-        //update order
+        this.missionData.splice(rowId, 1);
+
         for (let i = rowId; i < this.missionData.length; i++){
-          this.missionData[i].order= this.missionData[i].order + 1;
+          this.missionData[i].order = this.missionData[i].order - 1;
         }
-        //update view
+
+        // Update view
         this.gridApi.setRowData(this.missionData);
+
+        // Let service know about ordering changes
+        this.updateRows(rowId);
+
+        this.busy = false;
       },
-      error =>{
+      error => {
         this.busy = false;
         this.dialogService.displayDebug(error);
       });
@@ -455,27 +464,6 @@ export class MissionPrioritiesComponent implements OnInit {
     this.selectedRowId = rowId;
      this.selectedRow = this.missionData[rowId];
      this.showDeleteAttachmentDialog = true;
-    /*
-    // confirmation/selection message
-    this.dialogService.displayCheckBoxSelection("test", "Select Attachments to Delete", this.missionData[rowId].attachments,
-      () => {
-        // delete attatchment(s)
-        for (let attachment of this.missionData[rowId].attachments){
-          if (attachment.selectedForDelete){
-            let index = this.missionData[rowId].attachments.indexOf(attachment);
-            this.missionData[rowId].attachments.splice(index, 1);
-            //refresh this row in grid
-          }
-        }
-        console.log("Ok worked");
-        //update row
-      },
-      () => {
-        // reset data JSON Serialize and Deserialize
-        this.missionData[rowId].attachments = JSON.parse(copy).attachments;
-        console.log("Cancel Worked!");
-      });
-      */
   }
 
   private onDeleteAttachments():void{
@@ -484,6 +472,7 @@ export class MissionPrioritiesComponent implements OnInit {
     for(let attachment of this.selectedRow.attachments) {
       if(attachment.selectedForDelete === true){
         attachmentSelected = true;
+        break;
       }
     }
 
@@ -493,7 +482,6 @@ export class MissionPrioritiesComponent implements OnInit {
           if (attachment.selectedForDelete){
             let index = this.selectedRow.attachments.indexOf(attachment);
             this.selectedRow.attachments.splice(index, 1);
-            //refresh this row in grid
           }
         }
         this.dialogService.displayInfo("Attachment(s) successfully deleted from the mission.");
