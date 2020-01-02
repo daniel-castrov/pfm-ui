@@ -1,7 +1,6 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {DialogMessage} from '../models/DialogMessage';
-import { MissionAttachment } from '../../planning-feature/models/MissionAttachment';
 
 @Injectable({
   providedIn: 'root'

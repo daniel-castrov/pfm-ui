@@ -5,7 +5,7 @@ import { PlanningService } from '../services/planning-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ActivatedRoute } from '@angular/router';
 import { GridApi, ColumnApi } from '@ag-grid-community/core';
-import { ListItem } from '../models/ListItem';
+import { ListItem } from '../../pfm-common-models/ListItem';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
 import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 

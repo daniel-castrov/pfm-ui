@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ListItem } from '../../../../planning-feature/models/ListItem';
+import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
 

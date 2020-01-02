@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { ListItem } from '../models/ListItem';
+import { ListItem } from '../../pfm-common-models/ListItem';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { PlanningService } from '../services/planning-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';

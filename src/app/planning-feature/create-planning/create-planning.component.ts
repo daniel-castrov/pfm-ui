@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { ListItem } from '../models/ListItem';
+import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { TextInputComponent } from '../../pfm-coreui/form-inputs/text-input/text-input.component';
 import { PasswordInputComponent } from '../../pfm-coreui/form-inputs/password-input/password-input.component';

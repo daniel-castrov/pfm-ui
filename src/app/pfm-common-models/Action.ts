@@ -1,4 +1,4 @@
-export class MissionAction {
+export class Action {
   public canEdit:boolean;
   public canDelete:boolean;
   public canUpload:boolean;

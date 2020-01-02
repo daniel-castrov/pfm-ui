@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
-import { ListItem } from '../models/ListItem';
+import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { Router } from '@angular/router';

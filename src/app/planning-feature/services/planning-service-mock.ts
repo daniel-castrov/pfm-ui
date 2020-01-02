@@ -1,9 +1,7 @@
 import { PlanningService } from './planning-service';
 import { Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { MissionPriority } from '../models/MissionPriority';
-import { MissionAction } from '../models/MissionAction';
-import { MissionAttachment } from '../models/MissionAttachment';
+import { Action } from '../../pfm-common-models/Action';
 
 export class PlanningServiceMock extends PlanningService{
 
@@ -63,7 +61,7 @@ export class PlanningServiceMock extends PlanningService{
         data.order = i + 1;
         data.title = this.sampleData[i] + year;
         data.description = this.sampleData[this.sampleData.length - 1 - i];
-        data.actions = new MissionAction();
+        data.actions = new Action();
         data.actions.canDelete = true;
         data.actions.canEdit = true;
         data.actions.canUpload = false;

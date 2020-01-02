@@ -3,9 +3,7 @@ import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-communit
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
-import { ListItem } from '../../planning-feature/models/ListItem';
-import { MissionAction } from '../../planning-feature/models/MissionAction';
-import { MissionPrioritiesComponent } from '../../planning-feature/mission-priorities/mission-priorities.component';
+import { ListItem } from '../../pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-datagrid',

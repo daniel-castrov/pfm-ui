@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DatagridMbService } from '../../../services/datagrid-mb.service';
 import { DataGridMessage } from '../../../models/DataGridMessage';
 import {AllCommunityModules, ColumnApi, GridApi, Module} from '@ag-grid-community/all-modules';
-import { ListItem } from 'src/app/planning-feature/models/ListItem';
+import { ListItem } from 'src/app/pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-action-cell-renderer',

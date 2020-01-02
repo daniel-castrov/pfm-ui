@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProgrammingService } from '../../programming-feature/services/programming-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { ListItem } from '../../planning-feature/models/ListItem';
+import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { Router } from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';

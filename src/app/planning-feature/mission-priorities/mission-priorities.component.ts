@@ -1,18 +1,13 @@
 import { Component, OnInit, ViewChild, ComponentFactoryResolver, TemplateRef } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
-import { ListItem } from '../models/ListItem';
+import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { MissionPriority } from '../models/MissionPriority';
 import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
-import { TextCellEditorComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-editor/text-cell-editor.component';
-import { TextCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/text-cell-renderer/text-cell-renderer.component';
-import { MissionAction } from '../models/MissionAction';
-import { MissionAttachment } from '../models/MissionAttachment';
 import { GridApi, ColumnApi, RowNode, Column, CellPosition } from '@ag-grid-community/all-modules';
-import { DatagridComponent } from '../../pfm-coreui/datagrid/datagrid.component';
 import { ActivatedRoute } from '@angular/router';
 import { DisabledActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
 import { SigninService } from '../../pfm-auth-module/services/signin.service';
@@ -20,6 +15,7 @@ import { AppModel } from '../../pfm-common-models/AppModel';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
 import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-download/secure-download.component';
+import { Action } from '../../pfm-common-models/Action';
 
 @Component({
   selector: 'pfm-planning',
@@ -178,7 +174,7 @@ export class MissionPrioritiesComponent implements OnInit {
       mp.description = "";
       mp.attachments = [];
       mp.attachmentsDisabled = true;
-      mp.actions = new MissionAction();
+      mp.actions = new Action();
       mp.actions.canEdit = false;
       mp.actions.canSave = true;
       mp.actions.canDelete = true;
@@ -217,7 +213,7 @@ export class MissionPrioritiesComponent implements OnInit {
                   mp.attachmentsDisabled = false;
                 }
                 if (!mp.actions) {
-                  mp.actions = new MissionAction();
+                  mp.actions = new Action();
                   mp.actions.canUpload = false;
                   mp.actions.canSave = false;
                   mp.actions.canEdit = true;
@@ -348,7 +344,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
 
-            this.missionData[rowId].actions = new MissionAction();
+            this.missionData[rowId].actions = new Action();
             this.missionData[rowId].actions.canEdit = false;
             this.missionData[rowId].actions.canSave = true;
             this.missionData[rowId].actions.canDelete = true;
