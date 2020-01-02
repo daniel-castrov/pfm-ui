@@ -1,6 +1,4 @@
-<div>
-    <div class="plugins">
-        <ng-template #targetRef></ng-template>
-    </div>
-</div>
-<router-outlet></router-outlet>
+<ng-container *ngIf="ready">
+    <router-outlet></router-outlet>
+</ng-container>
+<pfm-busy [busy]="busy"></pfm-busy>

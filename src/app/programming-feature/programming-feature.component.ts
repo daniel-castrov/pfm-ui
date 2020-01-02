@@ -9,22 +9,13 @@ import { PluginLoaderService } from '../services/plugin-loader/plugin-loader.ser
 export class ProgrammingFeatureComponent implements OnInit {
 
 
-  @ViewChild('targetRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
+  busy:boolean;
+  ready:boolean = true;//TODO get the common data that is needed by all of the child routes
 
-  constructor(private injector: Injector, private pluginLoader: PluginLoaderService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.loadPlugin("programming");
+
   }
 
-  loadPlugin(pluginName: string) {
-    this.pluginLoader.load(pluginName).then(moduleFactory => {
-      const moduleRef = moduleFactory.create(this.injector);
-      const entryComponent = (moduleFactory.moduleType as any).entry;
-      const compFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(
-        entryComponent
-      );
-      this.vcRef.createComponent(compFactory);
-    });
-  }
 }
