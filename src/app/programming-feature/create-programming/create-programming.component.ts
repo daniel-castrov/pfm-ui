@@ -18,7 +18,7 @@ import { Attachment } from '../../pfm-common-models/Attachment';
 })
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
-
+  
   id:string = 'create-programming-component';
   busy:boolean;
   availableYears:ListItem[];
@@ -26,7 +26,7 @@ export class CreateProgrammingComponent implements OnInit {
   byYear:any;
   programYearSelected:any;
   showUploadDialog:boolean;
-
+  programBudgetData:boolean;
   constructor(private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
     
   }
@@ -38,6 +38,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.showUploadDialog = true;
     }else{
       this.showUploadDialog = false;
+      this.programBudgetData=true;
     }
     
     
@@ -48,6 +49,7 @@ export class CreateProgrammingComponent implements OnInit {
       if(newFile){
         let attachment:Attachment = new Attachment();
         attachment.file = newFile;
+        this.programBudgetData=true;
       }else{
         this.yearDropDown.selectedItem=this.yearDropDown.prompt;
       }
@@ -100,9 +102,5 @@ export class CreateProgrammingComponent implements OnInit {
 }
 
 
-}
-
-interface HTMLInputEvent extends Event {
-  target: HTMLInputElement & EventTarget;
 }
 
