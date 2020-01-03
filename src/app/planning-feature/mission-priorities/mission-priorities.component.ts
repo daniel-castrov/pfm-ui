@@ -229,7 +229,7 @@ export class MissionPrioritiesComponent implements OnInit {
         resp => {
           this.busy = false;
           const result = (resp as any).result;
-          if (result  instanceof Array) {
+          if (result instanceof Array && result.length !== 0) {
             let order = 1;
             if (this.missionData.length !== 0) {
               order = this.missionData.length;
@@ -252,7 +252,10 @@ export class MissionPrioritiesComponent implements OnInit {
               mp.order = order;
               this.missionData[this.missionData.length] = mp;
               order++;
+
             }
+
+            console.log(this.missionData);
 
             // Update Grid
             this.gridApi.setRowData(this.missionData);
