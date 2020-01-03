@@ -11,9 +11,9 @@ export class MissionPriority {
   public order:number;
   public title:string;
   public description:string;
+  public attachments:Attachment[];
 
   //client side only
-  public attachments:Attachment[];
   public attachmentsDisabled:boolean;
   public actions:Action;
 }

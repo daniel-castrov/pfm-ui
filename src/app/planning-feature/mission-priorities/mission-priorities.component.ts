@@ -110,18 +110,28 @@ export class MissionPrioritiesComponent implements OnInit {
     this.tabToNextCell = this.tabToNextCell.bind(this);
   }
 
-  onRowDragEnd(event:any):void{
-    let newIndex:number = event.overIndex;
-    let oldIndex:number = event.node.data.order - 1;
+  onRowDragEnd(event: any): void {
+    const newIndex: number = event.overIndex;
+    const oldIndex: number = event.node.data.order - 1;
 
-    let temp:any[] = this.missionData.slice();
-
-    temp.splice(newIndex,0,temp.splice(oldIndex,1)[0]);
-    for(let i=0; i<temp.length; i++){
-      temp[i].order = i + 1;
+    if (newIndex !== oldIndex) {
+      // Move mp to new position
+      this.missionData.splice(newIndex, 0, this.missionData.splice(oldIndex, 1)[0]);
+      // Update order in model and server
+      if (newIndex < oldIndex) {
+        for (let i = newIndex; i <= oldIndex; i++) {
+          this.missionData[i].order = i + 1;
+        }
+        this.updateRows(newIndex, oldIndex + 1);
+      } else {
+        for (let i = oldIndex; i <= newIndex; i++) {
+          this.missionData[i].order = i + 1;
+        }
+        this.updateRows(oldIndex, newIndex + 1);
+      }
+      // Let the grid know about the change
+      this.gridApi.setRowData(this.missionData);
     }
-    this.missionData = temp;
-    console.info(event);
   }
 
   onGridIsReady(gridApi:GridApi):void{
@@ -274,7 +284,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             const result = (resp as any).result;
             if (result  instanceof Array) {
-              this.missionData = new Array(result.length);
+              this.missionData = new Array<MissionPriority>(result.length);
               for (const mp of result as Array<MissionPriority>) {
                 if (!mp.attachments) {
                   mp.attachments = [];
@@ -336,14 +346,14 @@ export class MissionPrioritiesComponent implements OnInit {
       }
     }
 
-    this.availableYears = this.toListItem(years);
-
     // trigger a default selection
     if (this.appModel.selectedYear) {
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
       this.yearSelected({name: this.selectedYear});
     }
+
+    this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years:string[]):ListItem[]{
@@ -384,35 +394,27 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   private saveRow(rowId:number){
-    let error:string = "";
-    let isError:boolean = false;
+    let errorMsg = '';
+    let isError = false;
 
-    //copy data
-    let row:MissionPriority = this.missionData[rowId];
+    // Note stopEditing saves edits to model.  Since changes aren't saved to server if validation fails this is ok.
+    this.gridApi.stopEditing();
+    const row: MissionPriority = this.missionData[rowId];
 
-    //check columns Title max 45 chars, description max 200 chars
-    if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0){
-
-
-      this.gridApi.stopEditing();//don't stop edit until the validation check has occured
-
-      //get a reference to the planning data for the selected year
+    // Check columns Title max 45 chars, description max 200 chars
+    if(row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0) {
+      // Get a reference to the planning data for the selected year
       let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
 
-      // Backend service will handle attachments
-      let mp:MissionPriority = new MissionPriority();
-      mp.planningPhaseId = planningData.id;
-      mp.title = row.title;
-      mp.description = row.description;
-      mp.order = row.order;
-      mp.id = row.id;
-      mp.attachments = row.attachments;
+      // Convert to server mp
+      const serverMp: MissionPriority = this.convertToServerMP(row);
+      serverMp.planningPhaseId = planningData.id;
 
       this.busy = true;
 
       // Create or update? Check for presence of mp id
-      if(!this.missionData[rowId].id){
-        this.planningService.createMissionPriority(mp).subscribe(
+      if (!serverMp.id) {
+        this.planningService.createMissionPriority(serverMp).subscribe(
           resp => {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
@@ -423,7 +425,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.missionData[rowId].actions.canDelete = true;
             this.missionData[rowId].actions.canUpload = true;
 
-            //update view
+            // Update view
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
           },
@@ -431,15 +433,15 @@ export class MissionPrioritiesComponent implements OnInit {
             this.busy = false;
             this.dialogService.displayDebug(error);
           });
-      } else{
-        this.planningService.updateMissionPriority([mp]).subscribe(
+      } else {
+        // Ensure creation information is preserved
+        this.planningService.updateMissionPriority([serverMp]).subscribe(
           resp => {
             this.busy = false;
 
-            //update view
+            // Update view
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
-
           },
           error =>{
             this.busy = false;
@@ -448,23 +450,23 @@ export class MissionPrioritiesComponent implements OnInit {
       }
     } else {
       if (row.title.length === 0){
-        error = 'The Title is empty. ';
+        errorMsg = 'The Title is empty. ';
         isError = true;
       }
       if (row.description.length === 0){
-        error = error + 'The Description is empty. ';
+        errorMsg = errorMsg + 'The Description is empty. ';
         isError = true;
       }
       if (row.title.length > 45){
-        error = error + 'The Title is longer than the max of 45 characters. ';
+        errorMsg = errorMsg + 'The Title is longer than the max of 45 characters. ';
         isError = true;
       }
       if (row.description.length > 200){
-        error = error + 'The Description is longer than the max of 200 characters';
+        errorMsg = errorMsg + 'The Description is longer than the max of 200 characters';
         isError = true;
       }
       if (isError){
-        this.dialogService.displayError(error);
+        this.dialogService.displayError(errorMsg);
       }
 
       this.editRow(rowId);
@@ -473,14 +475,23 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private updateRows(beginRowId: number, endRowId?: number) {
     this.busy = true;
-    this.planningService.updateMissionPriority(this.missionData.slice(beginRowId, endRowId)).subscribe(
-        resp => {
-          this.busy = false;
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+    const clientMPs = this.missionData.slice(beginRowId, endRowId);
+    // Ensure there is something to update
+    if (clientMPs.length) {
+      // Create copies of updated mps with client only properties excluded, server doesn't know about them
+      const updateMps: MissionPriority[] = new Array<MissionPriority>();
+      for (const clientMP of clientMPs) {
+        updateMps.push(this.convertToServerMP(clientMP));
+      }
+      this.planningService.updateMissionPriority(updateMps).subscribe(
+          resp => {
+            this.busy = false;
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+          });
+    }
   }
 
   private editRow(rowId:number){
@@ -530,30 +541,23 @@ export class MissionPrioritiesComponent implements OnInit {
      this.showDeleteAttachmentDialog = true;
   }
 
-  private onDeleteAttachments():void{
-    let attachmentSelected:boolean = false;
+  private onDeleteAttachments(): void {
+    // Get number of attachments to check if any have been removed
+    const attachmentCount = this.selectedRow.attachments.length;
 
-    for(let attachment of this.selectedRow.attachments) {
-      if(attachment.selectedForDelete === true){
-        attachmentSelected = true;
-        break;
+    // Possibly removing items from array while iterating over it - do in reverse and things just work
+    for (let i = this.selectedRow.attachments.length - 1; i >= 0; --i) {
+      if (this.selectedRow.attachments[i].selectedForDelete === true) {
+        this.selectedRow.attachments.splice(i, 1);
       }
     }
 
-    if (attachmentSelected){
-      if(this.selectedRow){
-        for (let attachment of this.selectedRow.attachments){
-          if (attachment.selectedForDelete){
-            let index = this.selectedRow.attachments.indexOf(attachment);
-            this.selectedRow.attachments.splice(index, 1);
-          }
-        }
-        this.dialogService.displayInfo("Attachment(s) successfully deleted from the mission.");
-        this.saveRow(this.selectedRowId);
-      }
-    }
-    else if (!attachmentSelected){
-      this.dialogService.displayError("Select one or more attachments.")
+    // If the attachment count has changed update the server, otherwise notify the user to select an attachment
+    if (attachmentCount !== this.selectedRow.attachments.length) {
+      this.saveRow(this.selectedRowId);
+      this.dialogService.displayInfo('Attachment(s) successfully deleted from the mission.');
+    } else {
+      this.dialogService.displayError('Select one or more attachments.');
     }
   }
 
@@ -657,4 +661,21 @@ export class MissionPrioritiesComponent implements OnInit {
     this.showDeleteAttachmentDialog = false;
     this.showImportYearDialog = false;
   }
+
+  private convertToServerMP(clientMP: MissionPriority): MissionPriority {
+    // The server doesn't know anything about some client side properties of the MissionPriority.  Copy clientMP but
+    // exclude those properties that the server doesn't know anything about.
+    // Note - ignoring update properties due to server setting during call
+    const serverMP: MissionPriority = new MissionPriority();
+    serverMP.attachments = clientMP.attachments;
+    serverMP.created = clientMP.created;
+    serverMP.createdBy = clientMP.createdBy;
+    serverMP.description = clientMP.description;
+    serverMP.id = clientMP.id;
+    serverMP.order = clientMP.order;
+    serverMP.planningPhaseId = clientMP.planningPhaseId;
+    serverMP.title = clientMP.title;
+    return serverMP;
+  }
+
 }
