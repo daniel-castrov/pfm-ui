@@ -237,11 +237,10 @@ export class MissionPrioritiesComponent implements OnInit {
                   this.busy = false;
                   const result = (resp as any).result;
                   if (result instanceof Array && result.length !== 0) {
-                    let order = 1;
+                    let start = 1;
                     if (this.missionData.length !== 0) {
-                      order = this.missionData.length;
+                      start = this.missionData.length;
                     }
-                    let start = order;
                     for (const mp of result as Array<MissionPriority>) {
                       if (!mp.attachments) {
                         mp.attachments = [];
@@ -256,9 +255,8 @@ export class MissionPrioritiesComponent implements OnInit {
                         mp.actions.canEdit = true;
                         mp.actions.canDelete = true;
                       }
-                      mp.order = order;
+                      mp.order = mp.order + start;
                       this.missionData[this.missionData.length] = mp;
-                      order++;
                     }
 
                     // Update Grid
