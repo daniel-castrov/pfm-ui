@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import {TabsModule} from 'ngx-bootstrap/tabs';
 import { ProgrammingFeatureRoutingModule } from './programming-feature-routing.module';
 import { ProgrammingFeatureComponent } from './programming-feature.component';
 import { CreateProgrammingComponent } from './create-programming/create-programming.component';
@@ -27,6 +27,7 @@ import { WorkSpaceManagementComponent } from './work-space-management/work-space
     HttpClientModule,
     PfmCoreuiModule,
     PfmSecureFileuploadModule,
+    TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule
   ],
   providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
