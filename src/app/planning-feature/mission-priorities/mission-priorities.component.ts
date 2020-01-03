@@ -230,12 +230,12 @@ export class MissionPrioritiesComponent implements OnInit {
           this.busy = false;
           const result = (resp as any).result;
           if (result  instanceof Array) {
+            let order = 1;
+            if (this.missionData.length !== 0) {
+              order = this.missionData.length;
+            }
+            let start = order;
             for (const mp of result as Array<MissionPriority>) {
-              if (this.missionData.length === 0) {
-                mp.order = 1;
-              } else {
-                mp.order = this.missionData.length + 1;
-              }
               if (!mp.attachments) {
                 mp.attachments = [];
               }
@@ -249,17 +249,16 @@ export class MissionPrioritiesComponent implements OnInit {
                 mp.actions.canEdit = true;
                 mp.actions.canDelete = true;
               }
-              mp.order = this.missionData.length;
+              mp.order = order;
               this.missionData[this.missionData.length] = mp;
-              console.log(mp);
+              order++;
             }
 
             // Update Grid
             this.gridApi.setRowData(this.missionData);
 
             // Save to Database
-            this.updateRows(someRowNumber);
-            
+            this.updateRows(start);
           }
         },
         error => {
