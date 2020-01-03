@@ -108,18 +108,28 @@ export class MissionPrioritiesComponent implements OnInit {
     this.tabToNextCell = this.tabToNextCell.bind(this);
   }
 
-  onRowDragEnd(event:any):void{
-    let newIndex:number = event.overIndex;
-    let oldIndex:number = event.node.data.order - 1;
+  onRowDragEnd(event: any): void {
+    const newIndex: number = event.overIndex;
+    const oldIndex: number = event.node.data.order - 1;
 
-    let temp:any[] = this.missionData.slice();
-
-    temp.splice(newIndex,0,temp.splice(oldIndex,1)[0]);
-    for(let i=0; i<temp.length; i++){
-      temp[i].order = i + 1;
+    if (newIndex !== oldIndex) {
+      // Move mp to new position
+      this.missionData.splice(newIndex, 0, this.missionData.splice(oldIndex, 1)[0]);
+      // Update order in model and server
+      if (newIndex < oldIndex) {
+        for (let i = newIndex; i <= oldIndex; i++) {
+          this.missionData[i].order = i + 1;
+        }
+        this.updateRows(newIndex, oldIndex + 1);
+      } else {
+        for (let i = oldIndex; i <= newIndex; i++) {
+          this.missionData[i].order = i + 1;
+        }
+        this.updateRows(oldIndex, newIndex + 1);
+      }
+      // Let the grid know about the change
+      this.gridApi.setRowData(this.missionData);
     }
-    this.missionData = temp;
-    console.info(event);
   }
 
   onGridIsReady(gridApi:GridApi):void{
