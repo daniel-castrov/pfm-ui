@@ -222,49 +222,61 @@ export class MissionPrioritiesComponent implements OnInit {
 
     //import rows from selected year.
     if (this.selectedImportYear) {
-      let importData = this.appModel.planningData.find(obj => obj.id === this.selectedImportYear + '_id');
-
       this.busy = true;
-      this.planningService.cloneMissionPriorities(importData.id, null).subscribe(
-        resp => {
-          this.busy = false;
-          const result = (resp as any).result;
-          if (result  instanceof Array) {
-            let order = 1;
-            if (this.missionData.length !== 0) {
-              order = this.missionData.length;
+      const cloneIds: string[] = new Array<string>();
+      this.planningService.getMissionPriorities(this.selectedImportYear + '_id').subscribe(
+          resp => {
+            const result = (resp as any).result;
+            if (result  instanceof Array) {
+              for (const mp of result as Array<MissionPriority>) {
+                  cloneIds.push(mp.id);
+              }
             }
-            let start = order;
-            for (const mp of result as Array<MissionPriority>) {
-              if (!mp.attachments) {
-                mp.attachments = [];
-              }
-              if (!mp.attachmentsDisabled) {
-                mp.attachmentsDisabled = false;
-              }
-              if (!mp.actions) {
-                mp.actions = new Action();
-                mp.actions.canUpload = false;
-                mp.actions.canSave = false;
-                mp.actions.canEdit = true;
-                mp.actions.canDelete = true;
-              }
-              mp.order = order;
-              this.missionData[this.missionData.length] = mp;
-              order++;
-            }
+            this.planningService.cloneMissionPriorities(this.selectedPlanningPhase.id, cloneIds).subscribe(
+                resp => {
+                  this.busy = false;
+                  const result = (resp as any).result;
+                  if (result  instanceof Array) {
+                    let order = 1;
+                    if (this.missionData.length !== 0) {
+                      order = this.missionData.length;
+                    }
+                    let start = order;
+                    for (const mp of result as Array<MissionPriority>) {
+                      if (!mp.attachments) {
+                        mp.attachments = [];
+                      }
+                      if (!mp.attachmentsDisabled) {
+                        mp.attachmentsDisabled = false;
+                      }
+                      if (!mp.actions) {
+                        mp.actions = new Action();
+                        mp.actions.canUpload = false;
+                        mp.actions.canSave = false;
+                        mp.actions.canEdit = true;
+                        mp.actions.canDelete = true;
+                      }
+                      mp.order = order;
+                      this.missionData[this.missionData.length] = mp;
+                      order++;
+                    }
 
-            // Update Grid
-            this.gridApi.setRowData(this.missionData);
+                    // Update Grid
+                    this.gridApi.setRowData(this.missionData);
 
-            // Save to Database
-            this.updateRows(start);
-          }
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+                    // Save to Database
+                    this.updateRows(start);
+                  }
+                },
+                error => {
+                  this.busy = false;
+                  this.dialogService.displayDebug(error);
+                });
+          },
+      error => {
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
     }
   }
 
