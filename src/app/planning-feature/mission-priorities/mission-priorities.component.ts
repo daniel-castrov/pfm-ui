@@ -541,30 +541,23 @@ export class MissionPrioritiesComponent implements OnInit {
      this.showDeleteAttachmentDialog = true;
   }
 
-  private onDeleteAttachments():void{
-    let attachmentSelected:boolean = false;
+  private onDeleteAttachments(): void {
+    // Get number of attachments to check if any have been removed
+    const attachmentCount = this.selectedRow.attachments.length;
 
-    for(let attachment of this.selectedRow.attachments) {
-      if(attachment.selectedForDelete === true){
-        attachmentSelected = true;
-        break;
+    // Possibly removing items from array while iterating over it - do in reverse and things just work
+    for (let i = this.selectedRow.attachments.length - 1; i >= 0; --i) {
+      if (this.selectedRow.attachments[i].selectedForDelete === true) {
+        this.selectedRow.attachments.splice(i, 1);
       }
     }
 
-    if (attachmentSelected){
-      if(this.selectedRow){
-        for (let attachment of this.selectedRow.attachments){
-          if (attachment.selectedForDelete){
-            let index = this.selectedRow.attachments.indexOf(attachment);
-            this.selectedRow.attachments.splice(index, 1);
-          }
-        }
-        this.dialogService.displayInfo("Attachment(s) successfully deleted from the mission.");
-        this.saveRow(this.selectedRowId);
-      }
-    }
-    else if (!attachmentSelected){
-      this.dialogService.displayError("Select one or more attachments.")
+    // If the attachment count has changed update the server, otherwise notify the user to select an attachment
+    if (attachmentCount !== this.selectedRow.attachments.length) {
+      this.saveRow(this.selectedRowId);
+      this.dialogService.displayInfo('Attachment(s) successfully deleted from the mission.');
+    } else {
+      this.dialogService.displayError('Select one or more attachments.');
     }
   }
 
