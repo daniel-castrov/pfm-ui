@@ -225,7 +225,7 @@ export class MissionPrioritiesComponent implements OnInit {
       let importData = this.appModel.planningData.find(obj => obj.id === this.selectedImportYear + '_id');
 
       this.busy = true;
-      this.planningService.getMissionPriorities(importData.id).subscribe(
+      this.planningService.cloneMissionPriorities(null, importData.id).subscribe(
         resp => {
           this.busy = false;
           const result = (resp as any).result;
@@ -250,7 +250,6 @@ export class MissionPrioritiesComponent implements OnInit {
                 mp.actions.canDelete = true;
               }
               mp.order = this.missionData.length;
-              mp.id == null;
               this.missionData[this.missionData.length] = mp;
               console.log(mp);
             }
@@ -259,6 +258,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.gridApi.setRowData(this.missionData);
 
             // Save to Database
+            this.updateRows(someRowNumber);
             
           }
         },

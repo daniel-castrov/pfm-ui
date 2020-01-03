@@ -92,4 +92,7 @@ export class PlanningServiceMock extends PlanningService{
     return of(list);
   }
 
+  cloneMissionPriorities(data: any, phaseId:string):Observable<Object>{
+    return of(data);
+  }
 }
