@@ -17,14 +17,10 @@ import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.
 export class LockPlanningComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
 
-  gridApi:GridApi;
-  columnApi:ColumnApi;
   id:string = 'mission-priorities-component';
   busy:boolean;
-  actionInProgress:boolean = false;
   availableYears: ListItem[];
   selectedYear:string;
-  validInput:boolean = false;
   POMManager:boolean = false;
 
   constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, private signInService:SigninService) { }
@@ -46,13 +42,15 @@ export class LockPlanningComponent implements OnInit {
       let planningData = this.appModel.planningData.find(obj => obj.id === this.selectedYear + "_id");
       this.planningService.lockPlanningPhase(planningData).subscribe(
           resp => {
-            this.busy = false;
-
-            // Update shared model state
-            this.appModel.selectedYear = this.selectedYear;
-            planningData.state = 'LOCKED';
-
             this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully locked`);
+
+            // Update model state
+            planningData.state = 'LOCKED';
+            this.selectedYear = undefined;
+            this.yearDropDown.selectedItem = this.yearDropDown.prompt;
+            this.ngOnInit();
+
+            this.busy = false;
           },
           error => {
             this.busy = false;
