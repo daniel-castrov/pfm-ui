@@ -17,10 +17,8 @@ export class ClosePlanningComponent implements OnInit {
 
   id:string = 'mission-priorities-component';
   busy:boolean;
-  actionInProgress:boolean = false;
   availableYears: ListItem[];
   selectedYear:string;
-  validInput:boolean = false;
   POMManager:boolean = false;
 
   constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, private signInService:SigninService) { }
@@ -42,13 +40,15 @@ export class ClosePlanningComponent implements OnInit {
     let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
     this.planningService.closePlanningPhase(planningData).subscribe(
       resp => {
-        this.busy = false;
-
-        // Update shared model state
-        this.appModel.selectedYear = this.selectedYear;
-        planningData.state = 'CLOSED';
-
         this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully closed`);
+
+        // Update model state
+        planningData.state = 'CLOSED';
+        this.selectedYear = undefined;
+        this.yearDropDown.selectedItem = this.yearDropDown.prompt;
+        this.ngOnInit();
+
+        this.busy = false;
         },
       error =>{
         this.busy = false;
