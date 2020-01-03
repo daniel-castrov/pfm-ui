@@ -598,63 +598,42 @@ export class MissionPrioritiesComponent implements OnInit {
 
   }
 
-  //check if current user has POM Manager role
-  isPOMManager(){
-    this.signInService.getUserRoles().subscribe(
-      resp  => {
-        let result: any = resp;
-        if(result.result.includes("POM_Manager")){
-          this.POMManager = true;
-        }
-      },
-      error =>{
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      });
-  }
-
-
-  lockPlanningPhase(){
+  lockPlanningPhase() {
     this.busy = true;
-    let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
+    const planningData = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
     this.planningService.lockPlanningPhase(planningData).subscribe(
-      resp => {
-        this.busy = false;
-        this.POMLocked = true;
-        //run service method to perform back-end locking of planning phase
-        this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully locked`);
-        this.columns[4] = {
-          headerName: 'Actions',
-          field: 'actions',
-          cellRendererFramework: DisabledActionCellRendererComponent
-        };
-        this.gridApi.setColumnDefs(this.columns);
-      },
-      error =>{
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      });
+        resp => {
+          this.busy = false;
+
+          // Update model state
+          this.POMLocked = true;
+          planningData.state = 'LOCKED';
+
+          this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully locked`);
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
   }
 
-  closePlanningPhase(){
+  closePlanningPhase() {
     this.busy = true;
-    let planningData = this.appModel.planningData.find( obj => obj.id === this.selectedYear + "_id");
+    const planningData = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
     this.planningService.closePlanningPhase(planningData).subscribe(
-      resp => {
-        this.busy = false;
-        this.POMClosed = true;
-        this.dialogService.displayToastInfo(`Planning Phase for ${ this.selectedYear } successfully closed`);
-        this.columns[4] = {
-          headerName: 'Actions',
-          field: 'actions',
-          cellRendererFramework: DisabledActionCellRendererComponent
-        };
-        this.gridApi.setColumnDefs(this.columns);
-      },
-      error =>{
-        this.busy = false;
-        this.dialogService.displayDebug(error);
-      });
+        resp => {
+          this.busy = false;
+
+          // Update model state
+          this.POMClosed = true;
+          planningData.state = 'CLOSED';
+
+          this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully closed`);
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
   }
 
   cancelDialog() {
