@@ -210,63 +210,63 @@ export class MissionPrioritiesComponent implements OnInit {
 
       // year selection dialog
       this.showImportYearDialog = true;
-
-
-      // get rows
-      // let importRows:MissionPriority[];
-      // if (importYear) {
-      //   let importData = this.appModel.planningData.find(obj => obj.id === importYear + '_id');
-      //
-      //   this.busy = true;
-      //   this.planningService.getMissionPriorities(importData.id).subscribe(
-      //     resp => {
-      //       this.busy = false;
-      //       const result = (resp as any).result;
-      //       if (result  instanceof Array) {
-      //         importRows = new Array(result.length);
-      //         for (const mp of result as Array<MissionPriority>) {
-      //           if (!mp.attachments) {
-      //             mp.attachments = [];
-      //           }
-      //           if (!mp.attachmentsDisabled) {
-      //             mp.attachmentsDisabled = false;
-      //           }
-      //           if (!mp.actions) {
-      //             mp.actions = new Action();
-      //             mp.actions.canUpload = false;
-      //             mp.actions.canSave = false;
-      //             mp.actions.canEdit = true;
-      //             mp.actions.canDelete = true;
-      //           }
-      //           importRows[mp.order - 1] = mp;
-      //         }
-      //       }
-      //     },
-      //     error => {
-      //       this.busy = false;
-      //       this.dialogService.displayDebug(error);
-      //     });
-      // }
-
-      // push onto mission data
-      // for (let row of importRows) {
-      //
-      // }
-
-      // update grid
-      this.gridApi.setRowData(this.missionData);
-
-      // save data
-
     }
   }
 
-  private importYearSelected(year: any){
-
+  private importYearSelected(year: ListItem){
+    //update value
+    this.selectedImportYear = year.value;
   }
 
   private onImportYear(){
 
+    //import rows from selected year.
+    if (this.selectedImportYear) {
+      let importData = this.appModel.planningData.find(obj => obj.id === this.selectedImportYear + '_id');
+
+      this.busy = true;
+      this.planningService.getMissionPriorities(importData.id).subscribe(
+        resp => {
+          this.busy = false;
+          const result = (resp as any).result;
+          if (result  instanceof Array) {
+            for (const mp of result as Array<MissionPriority>) {
+              if (this.missionData.length === 0) {
+                mp.order = 1;
+              } else {
+                mp.order = this.missionData.length + 1;
+              }
+              if (!mp.attachments) {
+                mp.attachments = [];
+              }
+              if (!mp.attachmentsDisabled) {
+                mp.attachmentsDisabled = false;
+              }
+              if (!mp.actions) {
+                mp.actions = new Action();
+                mp.actions.canUpload = false;
+                mp.actions.canSave = false;
+                mp.actions.canEdit = true;
+                mp.actions.canDelete = true;
+              }
+              mp.order = this.missionData.length;
+              mp.id == null;
+              this.missionData[this.missionData.length] = mp;
+              console.log(mp);
+            }
+
+            // Update Grid
+            this.gridApi.setRowData(this.missionData);
+
+            // Save to Database
+            
+          }
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
+    }
   }
 
   yearSelected(year: any): void {

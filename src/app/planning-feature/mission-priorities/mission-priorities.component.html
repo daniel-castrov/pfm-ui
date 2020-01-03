@@ -62,7 +62,6 @@
     <pfm-custom-dialog [title]="'Choose the year for Import'" [body]="importYearBody" [actions]="importYearActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
 
     <ng-template #importYearBody>
-        <span>{{activeMessage|json}}</span>
         <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableImportYears"></pfm-dropdown>
     </ng-template>
 
