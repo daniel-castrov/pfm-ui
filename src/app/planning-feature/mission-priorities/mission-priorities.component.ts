@@ -225,7 +225,7 @@ export class MissionPrioritiesComponent implements OnInit {
       let importData = this.appModel.planningData.find(obj => obj.id === this.selectedImportYear + '_id');
 
       this.busy = true;
-      this.planningService.cloneMissionPriorities(null, importData.id).subscribe(
+      this.planningService.cloneMissionPriorities(importData.id, null).subscribe(
         resp => {
           this.busy = false;
           const result = (resp as any).result;

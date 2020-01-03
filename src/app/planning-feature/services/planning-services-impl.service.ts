@@ -48,7 +48,7 @@ export class PlanningServicesImpl extends PlanningService{
     return this.get("missionPriority/planningPhase/" + phaseId);
   }
 
-  cloneMissionPriorities(data: any, phaseId:string):Observable<Object>{
-    return this.post("/clone/planningPhase/" + phaseId, data);
+  cloneMissionPriorities(phaseId:string,data:any): Observable<Object>{
+    return this.post("missionPriority/clone/planningPhase/" + phaseId, data);
   }
 }
