@@ -236,7 +236,7 @@ export class MissionPrioritiesComponent implements OnInit {
                 resp => {
                   this.busy = false;
                   const result = (resp as any).result;
-                  if (result  instanceof Array) {
+                  if (result instanceof Array && result.length !== 0) {
                     let order = 1;
                     if (this.missionData.length !== 0) {
                       order = this.missionData.length;
