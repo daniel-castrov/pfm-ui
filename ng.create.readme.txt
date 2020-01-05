@@ -48,6 +48,10 @@ ng g component programming-feature/ufr_requests_approval --module programming-fe
 ng g component programming-feature/total_appropriation_priority --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
 ng g component programming-feature/work_space_management --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
 
+#sub components for programming-feature/requests
+ng g component programming-feature/requests/requests-summary-grid --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/requests-summary-org-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/requests-summary-toa-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
 
 
 

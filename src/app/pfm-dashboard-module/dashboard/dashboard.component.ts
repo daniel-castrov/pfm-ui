@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy{
   }
 
   saveWidgetLayout():void{
-    this.dashboardService.saveWidgetPreferences(this.dashboard).subscribe(
+    this.dashboardService.saveWidgetPreferences("dashboard-pref", this.dashboard).subscribe(
       data => {
       },
       error => {
@@ -94,6 +94,10 @@ export class DashboardComponent implements OnInit, OnDestroy{
     this.getPreferences();
   }
 
+  ngOnDestroy(){
+    this.saveWidgetLayout();
+  }
+
   private processAvailableWidgets():void{
     for(let item of this.dashboard){
       let widget = this.availableWidgetList.find(obj => obj.id == item.id);
@@ -119,7 +123,7 @@ export class DashboardComponent implements OnInit, OnDestroy{
 
   private getPreferences():void{
     this.busy = true;
-    this.dashboardService.getWidgetPreferences().subscribe(
+    this.dashboardService.getWidgetPreferences("dashboard-pref").subscribe(
       data => {
         this.busy = false;
         this.dashboard = data as any;
@@ -132,8 +136,6 @@ export class DashboardComponent implements OnInit, OnDestroy{
     );
   }
 
-  ngOnDestroy(){
-    this.saveWidgetLayout();
-  }
+
 
 }

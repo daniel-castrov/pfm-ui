@@ -17,7 +17,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 @NgModule({
   declarations: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent, DemoWidgetPOMPhaseFundingComponent, DemoWidgetPrStatusComponent],
   imports: [
-    CommonModule, FormsModule, Ng2GoogleChartsModule, AngularFontAwesomeModule, Ng2GoogleChartsModule, DragDropModule, GridsterModule, PfmCoreuiModule
+    CommonModule, FormsModule, Ng2GoogleChartsModule, AngularFontAwesomeModule, DragDropModule, GridsterModule, PfmCoreuiModule
   ],
   exports: [DashboardComponent],
   entryComponents: [DashboardComponent, DemoWidgetMissionFundingPriorityComponent, DemoWidgetMissionFundingMoneyComponent],
