@@ -42,6 +42,8 @@ export class MissionPrioritiesComponent implements OnInit {
   showUploadDialog:boolean;
   selectedRowId:number;
   selectedRow:MissionPriority;
+  selectedImportYear:string;
+  availableImportYears: ListItem[];
 
   columns:any[];
 
@@ -187,74 +189,68 @@ export class MissionPrioritiesComponent implements OnInit {
       this.editRow(this.missionData.length - 1);
     }
     else if(event.action === "add-rows-from-year"){
-      // get available years
-      let years: ListItem[];
-      console.log(this.availableYears);
+      this.availableImportYears = [];
       for (let i = 0; i < this.availableYears.length;i++){
         if (this.availableYears[i].name !== this.selectedYear) {
-          years
+          this.availableImportYears[this.availableImportYears.length] = this.availableYears[i];
         }
       }
 
       // year selection dialog
       this.showImportYearDialog = true;
-
-
-      // get rows
-      // let importRows:MissionPriority[];
-      // if (importYear) {
-      //   let importData = this.appModel.planningData.find(obj => obj.id === importYear + '_id');
-      //
-      //   this.busy = true;
-      //   this.planningService.getMissionPriorities(importData.id).subscribe(
-      //     resp => {
-      //       this.busy = false;
-      //       const result = (resp as any).result;
-      //       if (result  instanceof Array) {
-      //         importRows = new Array(result.length);
-      //         for (const mp of result as Array<MissionPriority>) {
-      //           if (!mp.attachments) {
-      //             mp.attachments = [];
-      //           }
-      //           if (!mp.attachmentsDisabled) {
-      //             mp.attachmentsDisabled = false;
-      //           }
-      //           if (!mp.actions) {
-      //             mp.actions = new Action();
-      //             mp.actions.canUpload = false;
-      //             mp.actions.canSave = false;
-      //             mp.actions.canEdit = true;
-      //             mp.actions.canDelete = true;
-      //           }
-      //           importRows[mp.order - 1] = mp;
-      //         }
-      //       }
-      //     },
-      //     error => {
-      //       this.busy = false;
-      //       this.dialogService.displayDebug(error);
-      //     });
-      // }
-
-      // push onto mission data
-      // for (let row of importRows) {
-      //
-      // }
-
-      // update grid
-      this.gridApi.setRowData(this.missionData);
-
-      // save data
-
     }
   }
 
-  private importYearSelected(year: any){
-
+  private importYearSelected(year: ListItem){
+    //update value
+    this.selectedImportYear = year.value;
   }
 
   private onImportYear(){
+    // import rows from selected year.
+    if (this.selectedImportYear) {
+      this.busy = true;
+      this.planningService.cloneMissionPriorities(this.selectedImportYear + '_id').subscribe(
+          resp => {
+            const result = (resp as any).result;
+            if (result instanceof Array && result.length !== 0) {
+              let start = 1;
+              if (this.missionData.length !== 0) {
+                start = this.missionData.length;
+              }
+              for (const mp of result as Array<MissionPriority>) {
+                if (!mp.attachments) {
+                  mp.attachments = [];
+                }
+                if (!mp.attachmentsDisabled) {
+                  mp.attachmentsDisabled = false;
+                }
+                if (!mp.actions) {
+                  mp.actions = new Action();
+                  mp.actions.canUpload = false;
+                  mp.actions.canSave = false;
+                  mp.actions.canEdit = true;
+                  mp.actions.canDelete = true;
+                }
+                mp.planningPhaseId = this.selectedPlanningPhase.id;
+                mp.order = mp.order + start;
+                this.missionData[this.missionData.length] = mp;
+              }
 
+              // Update Grid
+              this.gridApi.setRowData(this.missionData);
+
+              this.busy = false;
+
+              // Save to Database
+              this.updateRows(start - 1);
+            }
+          },
+          error => {
+            this.busy = false;
+            this.dialogService.displayDebug(error);
+          });
+    }
   }
 
   yearSelected(year: any): void {

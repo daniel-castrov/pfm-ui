@@ -42,9 +42,7 @@ export class AttachmentCellRendererComponent implements OnInit {
       item.rawData = x;
       this.list.push(item);
     }
-    console.log('attachmentRenderer');
     this.attachmentsDisabled = this.params.data.attachmentsDisabled;
-    console.log(this.attachmentsDisabled);
   }
 
   ngOnChanges() {
