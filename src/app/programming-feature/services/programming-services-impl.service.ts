@@ -12,6 +12,10 @@ export class ProgrammingServicesImpl extends ProgrammingService{
     super(httpClient);
   }
 
+  getRequestsForPom():Observable<Object>{
+    return this.getFullResponse("pom/sample/fromPB/year/");
+  }
+
   pBYearExists(year:string):Observable<Object>{
    
     return this.getFullResponse("pom/sample/fromPB/year/" + year + "/exists");
