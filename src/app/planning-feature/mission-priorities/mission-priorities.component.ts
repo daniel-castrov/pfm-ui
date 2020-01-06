@@ -243,7 +243,7 @@ export class MissionPrioritiesComponent implements OnInit {
               this.busy = false;
 
               // Save to Database
-              this.updateRows(start);
+              this.updateRows(start - 1);
             }
           },
           error => {
