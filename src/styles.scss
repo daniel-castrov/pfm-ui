@@ -306,8 +306,83 @@ tab {
   padding-left: 0;
 }
 
+.program-tab-style{
+  font-size: 14px;
+  padding: 0.3rem 1rem;
+  > .nav-tabs {
+    background-color: #f1f1f1;
+    border: 1px solid #ced4da;
+  }
+  > .nav-tabs .nav-item {
+    border-bottom: 1px solid #ced4da !important;
+  }
+  > .nav-tabs .nav-link.active,
+    .nav-tabs .nav-item.show .nav-link {
+      color: #fff;
+      background-color: #616161;
+      border-radius: 0;
+      border: none !important;
+      font-weight: 500;
+  }
+  > .nav-tabs .nav-link,
+    .nav-tabs .nav-item.show .nav-link {
+      color: #616161;
+      background-color: #f1f1f1;
+      border-radius: 0;
+      border: none !important;
+      font-weight: 500;
+  }
+}
+ngb-tabset {
+
+  .tab-content {
+    padding: 30px 15px;
+    width: 100%;
+    margin-bottom: 10px;
+    border: 1px #ccc solid;
+    border-top: none;
+    color: #000;
+  }
+}
+
+
+gridster{
+  background-color: whitesmoke;
+}
+
+gridster .gridster-column {
+  background-color: whitesmoke;
+}
+gridster .gridster-row {
+  background-color: whitesmoke;
+}
 
 //ag-grid customization starts here
+.pfm-datagrid-text{
+  display: flex;
+  align-items: center;
+  white-space: normal;
+}
+
+.pfm-datagrid-numeric-class{
+  display: flex;
+  align-items: center;
+  white-space: normal;
+  justify-content: flex-end;
+}
+
+.pfm-datagrid-text-underline{
+  text-decoration: underline;
+}
+
+.pfm-datagrid-warning{
+  color: #a94442;
+}
+
+.pfm-datagrid-greybg{
+  //background: lightgrey;
+}
+
 .ag-header{
   background: #24527b;
   color: white;

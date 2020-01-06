@@ -11,12 +11,12 @@
             </ng-container>
         </h3>
     </div>
-    <div *ngIf="POMManager && selectedYear && !POMLocked">
+    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
         <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
             Lock Planning Phase
         </button>
     </div>
-    <div *ngIf="POMManager && POMLocked && !POMClosed">
+    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
         <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
             Close Planning Phase
         </button>
