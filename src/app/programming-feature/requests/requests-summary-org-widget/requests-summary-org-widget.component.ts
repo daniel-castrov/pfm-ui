@@ -62,8 +62,26 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   private chartSelected(){
     //todo
+
+    //change to org
+
+    //change to ba line
+
+    //change to program status
   }
 
+  private chartOrganization(){
+
+  }
+
+  private chartBALine(){
+
+  }
+
+  private chartProgramStatus(){
+
+  }
+  
   private toListItem(years:string[]):ListItem[]{
     let items:ListItem[] = [];
     for(let year of years){
