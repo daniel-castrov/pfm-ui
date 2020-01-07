@@ -214,27 +214,12 @@ export class MissionPrioritiesComponent implements OnInit {
           resp => {
             const result = (resp as any).result;
             if (result instanceof Array && result.length !== 0) {
-              let start = 1;
-              if (this.missionData.length !== 0) {
-                start = this.missionData.length;
-              }
+              const orderBase = this.missionData.length;
               for (const mp of result as Array<MissionPriority>) {
-                if (!mp.attachments) {
-                  mp.attachments = [];
-                }
-                if (!mp.attachmentsDisabled) {
-                  mp.attachmentsDisabled = false;
-                }
-                if (!mp.actions) {
-                  mp.actions = new Action();
-                  mp.actions.canUpload = false;
-                  mp.actions.canSave = false;
-                  mp.actions.canEdit = true;
-                  mp.actions.canDelete = true;
-                }
+                this.initClientMP(mp);
                 mp.planningPhaseId = this.selectedPlanningPhase.id;
-                mp.order = mp.order + start;
-                this.missionData[this.missionData.length] = mp;
+                mp.order = mp.order + orderBase;
+                this.missionData[mp.order - 1] = mp;
               }
 
               // Update Grid
@@ -243,7 +228,7 @@ export class MissionPrioritiesComponent implements OnInit {
               this.busy = false;
 
               // Save to Database
-              this.updateRows(start - 1);
+              this.updateRows(orderBase);
             }
           },
           error => {
@@ -268,19 +253,7 @@ export class MissionPrioritiesComponent implements OnInit {
             if (result  instanceof Array) {
               this.missionData = new Array<MissionPriority>(result.length);
               for (const mp of result as Array<MissionPriority>) {
-                if (!mp.attachments) {
-                  mp.attachments = [];
-                }
-                if (!mp.attachmentsDisabled) {
-                  mp.attachmentsDisabled = false;
-                }
-                if (!mp.actions) {
-                  mp.actions = new Action();
-                  mp.actions.canUpload = false;
-                  mp.actions.canSave = false;
-                  mp.actions.canEdit = true;
-                  mp.actions.canDelete = true;
-                }
+                this.initClientMP(mp);
                 this.missionData[mp.order - 1] = mp;
               }
             }
@@ -319,7 +292,7 @@ export class MissionPrioritiesComponent implements OnInit {
   ngOnInit() {
     this.POMManager = this.appModel.userDetails.userRole.isPOM_Manager;
     const years: string[] = [];
-    const status: string[] = ['OPEN', 'LOCKED', 'CLOSED'];
+    const status: string[] = ['CREATED', 'OPEN', 'LOCKED', 'CLOSED'];
     for (const item of this.appModel.planningData){
       // Opened, Locked or Closed.
       if (status.indexOf(item.state) !== -1){
@@ -573,6 +546,23 @@ export class MissionPrioritiesComponent implements OnInit {
     // generate error
   }
 
+  openPlanningPhase() {
+    this.busy = true;
+    this.planningService.openPlanningPhase(this.selectedPlanningPhase).subscribe(
+        resp => {
+          this.busy = false;
+
+          // Update model state
+          this.selectedPlanningPhase.state = 'OPEN';
+
+          this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully opened`);
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
+  }
+
   lockPlanningPhase() {
     this.busy = true;
     this.planningService.lockPlanningPhase(this.selectedPlanningPhase).subscribe(
@@ -628,4 +618,19 @@ export class MissionPrioritiesComponent implements OnInit {
     return serverMP;
   }
 
+  private initClientMP(clientMP: MissionPriority): void {
+    if (!clientMP.attachments) {
+      clientMP.attachments = [];
+    }
+    if (!clientMP.attachmentsDisabled) {
+      clientMP.attachmentsDisabled = false;
+    }
+    if (!clientMP.actions) {
+      clientMP.actions = new Action();
+      clientMP.actions.canUpload = false;
+      clientMP.actions.canSave = false;
+      clientMP.actions.canEdit = true;
+      clientMP.actions.canDelete = true;
+    }
+  }
 }

@@ -40,8 +40,7 @@ export class CreatePlanningComponent implements OnInit {
           resp => {
             this.busy = false;
 
-            // Update shared model state
-            this.appModel.selectedYear = year;
+            // Update model state
             planningData.state = 'CREATED';
 
             this.dialogService.displayToastInfo(`Planning phase for ${ year } successfully created.`);
