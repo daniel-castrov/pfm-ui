@@ -1,3 +1,8 @@
-<ng-container *ngIf="chartReady">
-    <google-chart  [data]="treeMapChart"></google-chart>
+<ng-container *ngIf="chartReady" class="container">
+    <div class="chart">
+        <google-chart  [data]="treeMapChart"></google-chart>
+    </div>
+    <div class="dropdown">
+        <pfm-dropdown (onSelectionChanged)="chartSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableCharts"></pfm-dropdown>
+    </div>
 </ng-container>
