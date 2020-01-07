@@ -13,16 +13,22 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   chartReady:boolean;
 
-  public columnChart: any =  {
-    chartType: 'BarChart',
+  public treeMapChart: any =  {
+    chartType: 'TreeMap',
     dataTable: [
-      ['Organization', 'Health', 'Demands'],
-      ['JSTO-CBD', 100, 50],
-      ['JPEO-CBRND', 99, 48],
-      ['JSTO-CBD', 10, 0],
-      ['JRO-CBD', 0, 10],
-      ['PAIDO-CBD', 70, 0],
-      ['DUS..', 0, 60]
+      ['Program',  'Organization',   'Health',   'Demands'],
+      ['All',       null,             0,          0],
+      ['JSTO-CBD', 'All', 0, 0],
+      ['JPEO-CBRND', 'All', 0, 0],
+      ['JRO-CBD', 'All', 0, 0],
+      ['PAIDO-CBD', 'All', 0, 0],
+      ['DUS', 'All', 0, 0],
+      ['SPU',      'JSTO-CBD',     100,        50],
+      ['LDN',      'JSTO-CBD',     10,         0],
+      ['RUI',    'JPEO-CBRND',   99,         48],
+      ['PIP',       'JRO-CBD',      0,          10],
+      ['QPM',     'PAIDO-CBD',    70,         0],
+      ['WES',           'DUS',          0,          60]
     ],
     options: {
       title: 'Organization',
@@ -36,21 +42,24 @@ export class RequestsSummaryOrgWidgetComponent  {
     }
   };
 
-
   constructor() { }
 
   onResize(width:number, height:number):void{
     this.chartReady = false;
 
     console.info("RequestsSummaryOrgWidgetComponent", width, height);
-    console.info("Chart", this.columnChart.options.width, this.columnChart.options.height);
+    console.info("Chart", this.treeMapChart.options.width, this.treeMapChart.options.height);
 
-    this.columnChart.options.width = width;
-    this.columnChart.options.height = height;
+    this.treeMapChart.options.width = width;
+    this.treeMapChart.options.height = height;
 
     setTimeout(()=>{
       this.chartReady = true;
     }, 200);
+  }
+
+  ngOnInit() {
+
   }
 
 }
