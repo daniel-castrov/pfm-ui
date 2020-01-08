@@ -26,6 +26,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ProgrammingServicesImpl } from './services/programming-services-impl.service';
 
+
 @NgModule({
   declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent],
   imports: [
