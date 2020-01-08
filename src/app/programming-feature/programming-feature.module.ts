@@ -19,6 +19,7 @@ import { UfrRequestsComponent } from './ufr-requests/ufr-requests.component';
 import { UfrRequestsApprovalComponent } from './ufr-requests-approval/ufr-requests-approval.component';
 import { TotalAppropriationPriorityComponent } from './total-appropriation-priority/total-appropriation-priority.component';
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
+import { ProgrammingServicesImpl } from './services/programming-services-impl.service';
 
 @NgModule({
   declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent],
@@ -30,6 +31,6 @@ import { WorkSpaceManagementComponent } from './work-space-management/work-space
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule
   ],
-  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
+  providers: [{provide: ProgrammingService, useClass: ProgrammingServicesImpl}]
 })
 export class ProgrammingFeatureModule { }

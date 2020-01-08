@@ -12,6 +12,7 @@ import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { PomToasResponse, Pom,TOA } from '../models/POMToas';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
+import { Action } from 'src/app/pfm-common-models/Action';
 
 
 
@@ -32,12 +33,9 @@ export class CreateProgrammingComponent implements OnInit {
   showUploadDialog:boolean;
   programBudgetData:boolean;
   gridApi:GridApi;
+  orgGridApi:GridApi;
   columnApi:ColumnApi;
-  communityColumns:any[];
-  selectedRowId:number;
-  selectedRow:any;
-  orgName:any;
-  rowTotal:any;
+  communityColumns:any[]; 
   communityData:any;
   orgColumns:any;
   orgData:any;
@@ -95,6 +93,13 @@ export class CreateProgrammingComponent implements OnInit {
         row[toa.year] = toa.amount;
       });
       
+      let  actions = new Action();
+      actions.canDelete = false;
+      actions.canEdit = true;
+      actions.canSave = true;
+      actions.canUpload = false;
+
+      row["actions"] = actions;
       this.communityData.push(row);
 
       // Community Toas
@@ -106,8 +111,48 @@ export class CreateProgrammingComponent implements OnInit {
       let i:number;
       for (i = 0; i < 5; i++) {
         if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
-      }
+      }      
+
+      row["actions"] = actions;
       this.communityData.push(row);
+
+      this.communityData.forEach( row => {        
+        for (i = 0; i < 5; i++) {
+          if ( row[ fy+i ] == undefined ) {
+            row[ fy+i ] = 0;
+            }          
+          }       
+        });  
+
+      this.gridApi.setRowData(this.communityData);
+      this.gridApi.setColumnDefs(this.communityColumns);
+
+
+      // Org TOAs
+    Object.keys(pomData.orgToas).forEach(key => {
+      var toamap: Map<number, number> = new Map<number, number>();
+
+      row = {};
+      let total = 0;
+      row["orgid"] = key ;
+        pomData.orgToas[key].forEach( (toa:TOA) => {
+          row[toa.year] = toa.amount;
+        });
+
+        row["actions"] = actions;
+        this.orgData.push(row);
+      });
+      
+      this.orgData.forEach( row => {        
+      for (i = 0; i < 5; i++) {
+        if ( row[ fy+i ] == undefined ) {
+          row[ fy+i ] = 0;
+          }          
+        }       
+      });      
+
+      this.orgGridApi.setRowData(this.orgData);
+      this.orgGridApi.setColumnDefs(this.orgColumns);
   }
 
    handleNewAttachments(newFile:FileMetaData):void{
@@ -140,7 +185,10 @@ export class CreateProgrammingComponent implements OnInit {
     
       },
       error =>{
-                let years: string[] = ["Spreadsheet"];
+                this.busy = false;
+                let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2); // REmove this ....
+                let years: string[] = [pyear,"Spreadsheet"];
+                this.availableYears = this.toListItem(years);
                 console.log("in Program create Year does not exists");
       });
 
@@ -182,14 +230,8 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       editable: false,
       //rowDrag: true,
       //rowDragManaged: true,
-      valueGetter: function(params) {return params.node.rowIndex + 1;},
-      //cellRenderer: params => '<strong>'+params.value+'</strong>',
-      cellClass: "text-class",
-     /* cellClassRules: {
-      'ag-cell-footer-sum': params => {
-        return params.data.orgid == 'Delta'
-      }
-      }*/
+      cellRenderer: params => '<strong>'+params.value+'</strong>',
+      cellClass: "text-class",    
       cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
     
   });
@@ -201,16 +243,9 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
         suppressMenu: true,
         field: (fy+ i).toString(),
         //cellRenderer: params => this.negativeNumberRenderer(params),
-        editable: false,//params => this.shouldEdit(params),
-        cellClass: "numeric-class",
-      /*  cellClassRules: {
-          minWidth: 110,
-        'ag-cell-edit': params =>this.shouldEdit(params),
-        'ag-cell-footer-sum': params => {
-          return params.data.orgid == 'Delta'
-        }
-      }*/
-      cellStyle: { display: 'flex', 'align-items': 'right'}
+        editable: false,
+        cellClass: "numeric-class",      
+        cellStyle: { display: 'flex', 'align-items': 'right'}
     });
   }
   colDefs.push(
@@ -220,13 +255,8 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       field: 'total',
       minWidth: 110,
       editable: false,
-      valueGetter: params => 100,//this.rowTotal( params.data, fy ),
-     /* cellRenderer: params => '<i>'+this.negativeNumberRenderer(params)+'</i>',
-      cellClassRules: {
-      'ag-cell-footer-sum': params => {
-        return params.data.orgid == 'Delta'
-      }
-    }*/
+      valueGetter: params => this.rowTotal( params.data, fy ),
+
     cellClass: "numeric-class",
         cellStyle: { display: 'flex', 'align-items': 'right'}
   });
@@ -262,19 +292,32 @@ private negativeNumberRenderer( params ){
   return "$ " + str;
 }
 
+// A valueGetter for totaling a row
+private rowTotal( data, fy:number ){
+  let total:number=0;
+  for (var i = 0; i < 5; i++) {
+    total += parseInt(data[fy+i],10);
+  }
+  return total;
+}
+
 // a callback for determining if a ROW is editable
 private shouldEdit ( params ){
  return false;
 }
 
-onGridIsReady(params){
- /* params.api.sizeColumnsToFit();
-    window.addEventListener("resize", function() {
-      setTimeout(() => {
-        params.api.sizeColumnsToFit();
-      });
-    });*/
+onCommunityGridIsReady(gridApi:GridApi):void{
+  this.gridApi = gridApi;
 }
+
+onOrgGridIsReady(gridApi:GridApi):void{
+  this.orgGridApi = gridApi;
+}
+
+onColumnIsReady(columnApi:ColumnApi):void{
+  this.columnApi = columnApi;
+}
+
 onRowDragEnd(param){}
 
 }

@@ -15,7 +15,7 @@ export class ProgrammingServicesImpl extends ProgrammingService{
 
   pBYearExists(year:string):Observable<Object>{
    
-    return this.getFullResponse("pom/sample/fromPB/year/" + year + "/exists");
+    return this.get("pom/sample/fromPB/year/" + year + "/exists");
   }
 
   getPomFromPb():Observable<Object>{

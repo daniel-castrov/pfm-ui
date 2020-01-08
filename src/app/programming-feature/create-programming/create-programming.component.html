@@ -31,13 +31,13 @@
       <tab heading="Community" active="true">
         <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
         <div class="grid-container">
-          <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" ></pfm-datagrid>
+          <pfm-datagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  [showAddRow]="true" [columns]="communityColumns" [rows]="communityData" ></pfm-datagrid>
         </div>
       </tab>
       <tab heading="Organization">
         <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
         <div class="grid-container">
-          <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" ></pfm-datagrid>
+          <pfm-datagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" [showAddRow]="true" [columns]="orgColumns" [rows]="orgData" ></pfm-datagrid>
         </div>
       </tab>
     </tabset>
