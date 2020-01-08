@@ -22,7 +22,6 @@ export class Pom {
     constructor(){}
    
 }
-
 export class TOA {    
     year: number;
     amount: number;
