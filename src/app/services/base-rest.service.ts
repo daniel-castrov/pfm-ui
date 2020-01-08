@@ -22,7 +22,6 @@ export class BaseRestService {
   }
 
   protected get(resource:string):Observable<Object>{
-    //return this.httpClient.get(this.baseURL + "/" + resource);
     return this.httpClient.get(this.baseURL + "/" + resource, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
   }
 
