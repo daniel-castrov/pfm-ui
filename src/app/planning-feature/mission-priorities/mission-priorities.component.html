@@ -3,6 +3,7 @@
         <h3>Mission Priorities
             <ng-container *ngIf="selectedPlanningPhase">
                 <span> -
+                    <span *ngIf="selectedPlanningPhase.state === 'CREATED'">Created</span>
                     <span *ngIf="selectedPlanningPhase.state === 'OPEN'">Opened</span>
                     <span *ngIf="selectedPlanningPhase.state === 'LOCKED'">Locked</span>
                     <span *ngIf="selectedPlanningPhase.state === 'CLOSED'">Closed</span>
@@ -11,12 +12,17 @@
             </ng-container>
         </h3>
     </div>
-    <div *ngIf="POMManager && selectedYear && !POMLocked">
+    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'CREATED'">
+        <button type="button" class="btn btn-primary float-right" (click)="openPlanningPhase()">
+            Open Planning Phase
+        </button>
+    </div>
+    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
         <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
             Lock Planning Phase
         </button>
     </div>
-    <div *ngIf="POMManager && POMLocked && !POMClosed">
+    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
         <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
             Close Planning Phase
         </button>
@@ -30,7 +36,7 @@
     <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
 </ng-container>
 
-<ng-container *ngIf="selectedYear">
+<ng-container *ngIf="selectedPlanningPhase && selectedPlanningPhase.state !== 'CREATED'">
     <div class="grid-container">
         <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)" (onAddNewRowEvent)="onAddNewRow($event)" (onCellAction)="handleCellAction($event)" [showAddRow]="true" [columns]="columns" [rows]="missionData" [tabToNextCell]="tabToNextCell.bind(this)"></pfm-datagrid>
     </div>
@@ -62,8 +68,7 @@
     <pfm-custom-dialog [title]="'Choose the year for Import'" [body]="importYearBody" [actions]="importYearActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
 
     <ng-template #importYearBody>
-        <span>{{activeMessage|json}}</span>
-        <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+        <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableImportYears"></pfm-dropdown>
     </ng-template>
 
     <ng-template #importYearActions>

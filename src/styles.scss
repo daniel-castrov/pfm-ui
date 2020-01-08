@@ -345,7 +345,44 @@ ngb-tabset {
   }
 }
 
+
+gridster{
+  background-color: whitesmoke;
+}
+
+gridster .gridster-column {
+  background-color: whitesmoke;
+}
+gridster .gridster-row {
+  background-color: whitesmoke;
+}
+
 //ag-grid customization starts here
+.pfm-datagrid-text{
+  display: flex;
+  align-items: center;
+  white-space: normal;
+}
+
+.pfm-datagrid-numeric-class{
+  display: flex;
+  align-items: center;
+  white-space: normal;
+  justify-content: flex-end;
+}
+
+.pfm-datagrid-text-underline{
+  text-decoration: underline;
+}
+
+.pfm-datagrid-warning{
+  color: #a94442;
+}
+
+.pfm-datagrid-greybg{
+  //background: lightgrey;
+}
+
 .ag-header{
   background: #24527b;
   color: white;

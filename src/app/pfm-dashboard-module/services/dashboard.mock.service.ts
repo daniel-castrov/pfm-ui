@@ -18,19 +18,19 @@ export class DashboardMockService{
     return of(availableWidgetList);
   }
 
-  public getWidgetPreferences():Observable<Object>{//return a list of widget that the user as selected to be displayed, and their position
-    let json:string = localStorage.getItem("dashboard-pref");
+  public getWidgetPreferences(key:string):Observable<Object>{//return a list of widget that the user as selected to be displayed, and their position
+    let json:string = localStorage.getItem(key);
     if(json && json !== "undefined"){
-      let prefs:WidgetPreference[] = JSON.parse(json);
+      let prefs:any = JSON.parse(json);
       return of(prefs);
     }
     return of([]);
   }
 
-  public saveWidgetPreferences(wp:any[]):Observable<Object>{//save the widgets and their layout
+  public saveWidgetPreferences(key, wp:any):Observable<Object>{//save the widgets and their layout
 
     let json:string = JSON.stringify(wp);
-    localStorage.setItem("dashboard-pref", json);
+    localStorage.setItem(key, json);
 
     return of(wp);
   }

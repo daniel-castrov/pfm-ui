@@ -18,8 +18,7 @@ export class DemoWidgetMissionFundingMoneyComponent implements OnInit {
       ['Canada', 500, 1000],
       ['France', 600, 1100],
       ['RU', 800, 1000]
-    ],
-    options: {title: 'Countries'}
+    ]
   };
 
   constructor() { }
