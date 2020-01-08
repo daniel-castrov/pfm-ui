@@ -116,7 +116,14 @@ export class RequestsSummaryOrgWidgetComponent  {
       ['BA1', 'BA Line', 0, 0],
       ['BA3', 'BA Line', 0, 0],
       ['BA6', 'BA Line', 0, 0],
-
+      ['Test1', 'SA0001', 10, 100],
+      ['Test2', 'BA1', 20, 50],
+      ['Test3', 'BA2', 30, 10],
+      ['Test4', 'BA3', 40, 0],
+      ['Test5', 'BA4', 50, 40],
+      ['Test6', 'BA5', 5, 10],
+      ['Test7', 'BA6', 5, 10],
+      ['Test8', 'PHM001', 50, 10]
     ];
 
     //load data into chart
