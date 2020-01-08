@@ -59,20 +59,21 @@ export class RequestsSummaryOrgWidgetComponent  {
     this.availableCharts = this.toListItem(chartOptions);
   }
 
-  private chartSelected(chartType:string){
+  private chartSelected(chartType:any){
     //todo
+    console.log(chartType);
 
-    if (chartType === "Org") {
+    if (chartType.id === "Organization") {
       //change to org
-      //this.chartOrganization()
+      this.chartOrganization()
     }
-    else if (chartType === "Line") {
+    else if (chartType.id === "BA Line") {
       //change to ba line
-      //this.chartBALine()
+      this.chartBALine()
     }
-    else if (chartType = "") {
+    else if (chartType.id === "Program Status") {
       //change to program status
-      //this.chartProgramStatus()
+      this.chartProgramStatus()
     }
   }
 
@@ -80,14 +81,26 @@ export class RequestsSummaryOrgWidgetComponent  {
     //set up Organization tree structure
     let organizationTable = [
       ['Program', 'Organization', 'Health', 'Demands'],
-      ['Organization', null,  0,  0],
-      ['JSTO-CBD', 'Organization',  0,  0],
-      ['JPEO-CBRND', 'Organization',  0,  0],
-      ['JRO-CBD', 'Organization',  0, 0],
-      ['PAIDO-CBD', 'Organization',  0,  0],
-      ['DUS', 'Organization', 0, 0]
+      ['Organization', null, 0, 0],
+      ['JSTO-CBD', 'Organization', 0, 0],
+      ['JPEO-CBRND', 'Organization', 0, 0],
+      ['JRO-CBD', 'Organization', 0, 0],
+      ['PAIDO-CBD', 'Organization', 0, 0],
+      ['DUS', 'Organization', 0, 0],
+      ['SPU', 'JSTO-CBD', 100, 50],
+      ['LDN', 'JSTO-CBD', 10, 0],
+      ['RUI', 'JPEO-CBRND', 99, 48],
+      ['PIP', 'JRO-CBD', 10, 10],
+      ['QPM', 'PAIDO-CBD', 70, 0],
+      ['WES', 'DUS', 10, 60]
     ];
 
+    //load data into chart
+
+    //set data to chart
+    console.log(organizationTable);
+    this.treeMapChart.dataTable = organizationTable;
+    this.treeMapChart.component.draw()
   }
 
   private chartBALine(){
@@ -102,8 +115,16 @@ export class RequestsSummaryOrgWidgetComponent  {
       ['BA4', 'BA Line', 0, 0],
       ['BA1', 'BA Line', 0, 0],
       ['BA3', 'BA Line', 0, 0],
-      ['BA6', 'BA Line', 0, 0]
+      ['BA6', 'BA Line', 0, 0],
+
     ];
+
+    //load data into chart
+
+    //set data to chart
+    console.log(lineTable);
+    this.treeMapChart.dataTable = lineTable;
+    this.treeMapChart.component.draw()
   }
 
   private chartProgramStatus(){
@@ -111,8 +132,16 @@ export class RequestsSummaryOrgWidgetComponent  {
     let statusTable = [
       ['Program', 'Organization', 'Health', 'Demands'],
       ['Program Status', null,  0,  0],
-      ['OUTSTANDING', 'Program Status',  0,  0]
+      ['OUTSTANDING', 'Program Status',  0,  0],
+      ['Pfm', 'OUTSTANDING', 100, 100]
     ];
+
+    //load data into chart
+
+    //set data to chart
+    console.log(statusTable);
+    this.treeMapChart.dataTable = statusTable;
+    this.treeMapChart.component.draw()
   }
 
   private toListItem(years:string[]):ListItem[]{
