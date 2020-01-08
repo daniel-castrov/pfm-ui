@@ -47,7 +47,7 @@ export class RequestsSummaryOrgWidgetComponent  {
     console.info("Chart", this.treeMapChart.options.width, this.treeMapChart.options.height);
 
     this.treeMapChart.options.width = width;
-    this.treeMapChart.options.height = height;
+    this.treeMapChart.options.height = height - 40;
 
     setTimeout(()=>{
       this.chartReady = true;
