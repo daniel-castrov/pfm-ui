@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { ProgramRequestForPOM } from '../../models/ProgramRequestForPOM';
+import { ListItem } from '../../../pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',
@@ -12,30 +13,30 @@ export class RequestsSummaryOrgWidgetComponent  {
   @Input() griddata:ProgramRequestForPOM[];
 
   chartReady:boolean;
+  availableCharts: ListItem[];
 
-  public columnChart: any =  {
-    chartType: 'BarChart',
+  public treeMapChart: any =  {
+    chartType: 'TreeMap',
     dataTable: [
-      ['Organization', 'Health', 'Demands'],
-      ['JSTO-CBD', 100, 50],
-      ['JPEO-CBRND', 99, 48],
-      ['JSTO-CBD', 10, 0],
-      ['JRO-CBD', 0, 10],
-      ['PAIDO-CBD', 70, 0],
-      ['DUS..', 0, 60]
+      ['Program', 'Organization', 'Health', 'Demands'],
+      ['Organization', null,  0,  0],
+      ['JSTO-CBD', 'Organization',  0,  0],
+      ['JPEO-CBRND', 'Organization',  0,  0],
+      ['JRO-CBD', 'Organization',  0, 0],
+      ['PAIDO-CBD', 'Organization',  0,  0],
+      ['DUS', 'Organization', 0, 0],
+      ['SPU', 'JSTO-CBD', 100, 50],
+      ['LDN', 'JSTO-CBD', 10, 0],
+      ['RUI', 'JPEO-CBRND', 99, 48],
+      ['PIP', 'JRO-CBD', 10, 10],
+      ['QPM', 'PAIDO-CBD', 70, 0],
+      ['WES', 'DUS', 10, 60]
     ],
     options: {
-      title: 'Organization',
-      width: 100,
-      height: 100,
-      animation: {
-        duration: 1000,
-        easing: 'out',
-        startup: true
-      }
+      width: 200,
+      height: 200,
     }
   };
-
 
   constructor() { }
 
@@ -43,14 +44,86 @@ export class RequestsSummaryOrgWidgetComponent  {
     this.chartReady = false;
 
     console.info("RequestsSummaryOrgWidgetComponent", width, height);
-    console.info("Chart", this.columnChart.options.width, this.columnChart.options.height);
+    console.info("Chart", this.treeMapChart.options.width, this.treeMapChart.options.height);
 
-    this.columnChart.options.width = width;
-    this.columnChart.options.height = height;
+    this.treeMapChart.options.width = width;
+    this.treeMapChart.options.height = height;
 
     setTimeout(()=>{
       this.chartReady = true;
     }, 200);
   }
 
+  ngOnInit() {
+    let chartOptions: string[] = ['Organization', 'BA Line', 'Program Status'];
+    this.availableCharts = this.toListItem(chartOptions);
+  }
+
+  private chartSelected(chartType:string){
+    //todo
+
+    if (chartType === "Org") {
+      //change to org
+      //this.chartOrganization()
+    }
+    else if (chartType === "Line") {
+      //change to ba line
+      //this.chartBALine()
+    }
+    else if (chartType = "") {
+      //change to program status
+      //this.chartProgramStatus()
+    }
+  }
+
+  private chartOrganization(){
+    //set up Organization tree structure
+    let organizationTable = [
+      ['Program', 'Organization', 'Health', 'Demands'],
+      ['Organization', null,  0,  0],
+      ['JSTO-CBD', 'Organization',  0,  0],
+      ['JPEO-CBRND', 'Organization',  0,  0],
+      ['JRO-CBD', 'Organization',  0, 0],
+      ['PAIDO-CBD', 'Organization',  0,  0],
+      ['DUS', 'Organization', 0, 0]
+    ];
+
+  }
+
+  private chartBALine(){
+    //set up BA Line tree structure
+    let lineTable = [
+      ['Program', 'Organization', 'Health', 'Demands'],
+      ['BA Line', null,  0,  0],
+      ['SA0001', 'BA Line',  0,  0],
+      ['BA2', 'BA Line',  0,  0],
+      ['BA5', 'BA Line',  0, 0],
+      ['PHM001', 'BA Line',  0,  0],
+      ['BA4', 'BA Line', 0, 0],
+      ['BA1', 'BA Line', 0, 0],
+      ['BA3', 'BA Line', 0, 0],
+      ['BA6', 'BA Line', 0, 0]
+    ];
+  }
+
+  private chartProgramStatus(){
+    //set up Status tree structure
+    let statusTable = [
+      ['Program', 'Organization', 'Health', 'Demands'],
+      ['Program Status', null,  0,  0],
+      ['OUTSTANDING', 'Program Status',  0,  0]
+    ];
+  }
+
+  private toListItem(years:string[]):ListItem[]{
+    let items:ListItem[] = [];
+    for(let year of years){
+      let item:ListItem = new ListItem();
+      item.id = year;
+      item.name = year;
+      item.value = year;
+      items.push(item);
+    }
+    return items;
+  }
 }
