@@ -19,18 +19,24 @@ import { UfrRequestsComponent } from './ufr-requests/ufr-requests.component';
 import { UfrRequestsApprovalComponent } from './ufr-requests-approval/ufr-requests-approval.component';
 import { TotalAppropriationPriorityComponent } from './total-appropriation-priority/total-appropriation-priority.component';
 import { WorkSpaceManagementComponent } from './work-space-management/work-space-management.component';
-import { ProgrammingServicesImpl } from './services/programming-services-impl.service';
+import { RequestsSummaryGridComponent } from './requests/requests-summary-grid/requests-summary-grid.component';
+import { RequestsSummaryOrgWidgetComponent } from './requests/requests-summary-org-widget/requests-summary-org-widget.component';
+import { RequestsSummaryToaWidgetComponent } from './requests/requests-summary-toa-widget/requests-summary-toa-widget.component';
+import { GridsterModule } from 'angular-gridster2';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent],
+  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent],
   imports: [
     CommonModule,
     HttpClientModule,
+    GridsterModule,
+    Ng2GoogleChartsModule,
     PfmCoreuiModule,
     PfmSecureFileuploadModule,
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule
   ],
-  providers: [{provide: ProgrammingService, useClass: ProgrammingServicesImpl}]
+  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
 })
 export class ProgrammingFeatureModule { }
