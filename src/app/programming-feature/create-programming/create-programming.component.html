@@ -29,15 +29,21 @@
   <div class="col-20">
     <tabset destroyOnHide="true">
       <tab heading="Community" active="true">
-        
+        <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
+        <div class="grid-container">
+          <pfm-datagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  [showAddRow]="true" [columns]="communityColumns" [rows]="communityData" ></pfm-datagrid>
+        </div>
       </tab>
       <tab heading="Organization">
-        
+        <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
+        <div class="grid-container">
+          <pfm-datagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" [showAddRow]="true" [columns]="orgColumns" [rows]="orgData" ></pfm-datagrid>
+        </div>
       </tab>
-
     </tabset>
   </div>
 </div>
+
 
 <ng-container *ngIf="showUploadDialog">
   <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
