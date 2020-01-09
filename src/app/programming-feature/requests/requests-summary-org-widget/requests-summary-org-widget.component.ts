@@ -33,8 +33,8 @@ export class RequestsSummaryOrgWidgetComponent  {
       ['WES', 'DUS', 10, 60]
     ],
     options: {
-      width: 700,
-      height: 300,
+      width: 200,
+      height: 200,
       animation: {
         duration: 1000,
         easing: 'out',

@@ -17,10 +17,10 @@ import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
 })
 export class RequestsComponent implements OnInit {
   @ViewChild('toaWidetItem',  {static: false}) toaWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryToaWidgetComponent,  {static: false}) toaWidget: RequestsSummaryToaWidgetComponent
+  @ViewChild(RequestsSummaryToaWidgetComponent,  {static: false}) toaWidget: RequestsSummaryToaWidgetComponent;
 
   @ViewChild('orgWidetItem',  {static: false}) orgWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryOrgWidgetComponent,  {static: false}) orgWidget: RequestsSummaryOrgWidgetComponent
+  @ViewChild(RequestsSummaryOrgWidgetComponent,  {static: false}) orgWidget: RequestsSummaryOrgWidgetComponent;
 
   griddata:ProgramRequestForPOM[];
 
@@ -39,7 +39,6 @@ export class RequestsComponent implements OnInit {
       minRows: 8,
       maxRows: 8,
       itemResizeCallback: (event)=>{
-
         if(event.id === "toa-widget"){
           let w:any = this.toaWidgetItem;
           this.toaWidget.onResize(w.width, w.height);
@@ -63,7 +62,7 @@ export class RequestsComponent implements OnInit {
     };
 
     //defaults
-    this.dashboard = [{ x: 0, y: 0, cols: 3, rows: 3, id: "org-widget" }, { x: 0, y: 0, cols: 3, rows: 3, id: "toa-widget" }];
+    this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
 
     this.programmingService.getRequestsForPom().subscribe(
       resp => {

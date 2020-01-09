@@ -26,8 +26,8 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     ],
     options: {
       title: 'Community TOA',
-      width: 700,
-      height: 300,
+      width: 200,
+      height: 200,
       animation: {
         duration: 1000,
         easing: 'out',
