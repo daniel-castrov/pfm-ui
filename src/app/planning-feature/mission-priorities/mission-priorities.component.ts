@@ -102,27 +102,30 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   onRowDragEnd(event: any): void {
-    const newIndex: number = event.overIndex;
-    const oldIndex: number = event.node.data.order - 1;
+    // Ensure drag ended in grid before moving anything
+    if (event.overIndex >= 0) {
+      const newIndex: number = event.overIndex;
+      const oldIndex: number = event.node.data.order - 1;
 
-    if (newIndex !== oldIndex) {
-      // Move mp to new position
-      this.missionData.splice(newIndex, 0, this.missionData.splice(oldIndex, 1)[0]);
-      // Update order in model and server
-      if (newIndex < oldIndex) {
-        for (let i = newIndex; i <= oldIndex; i++) {
-          this.missionData[i].order = i + 1;
+      if (newIndex !== oldIndex) {
+        // Move mp to new position
+        this.missionData.splice(newIndex, 0, this.missionData.splice(oldIndex, 1)[0]);
+        // Update order in model and server
+        if (newIndex < oldIndex) {
+          for (let i = newIndex; i <= oldIndex; i++) {
+            this.missionData[i].order = i + 1;
+          }
+          this.updateRows(newIndex, oldIndex + 1);
+        } else {
+          for (let i = oldIndex; i <= newIndex; i++) {
+            this.missionData[i].order = i + 1;
+          }
+          this.updateRows(oldIndex, newIndex + 1);
         }
-        this.updateRows(newIndex, oldIndex + 1);
-      } else {
-        for (let i = oldIndex; i <= newIndex; i++) {
-          this.missionData[i].order = i + 1;
-        }
-        this.updateRows(oldIndex, newIndex + 1);
       }
-      // Let the grid know about the change
-      this.gridApi.setRowData(this.missionData);
     }
+    // Let the grid know about any changes
+    this.gridApi.setRowData(this.missionData);
   }
 
   onGridIsReady(gridApi:GridApi):void{
@@ -330,7 +333,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.missionData[rowId].actions.canUpload = true;
     this.missionData[rowId].actions.canSave = true;
     this.missionData[rowId].actions.canEdit = false;
-    // disable attatchments dropdown
+    // disable attachments dropdown
     this.missionData[rowId].attachmentsDisabled = true;
     this.gridApi.setRowData(this.missionData);
   }
