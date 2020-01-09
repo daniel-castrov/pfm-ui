@@ -33,8 +33,13 @@ export class RequestsSummaryOrgWidgetComponent  {
       ['WES', 'DUS', 10, 60]
     ],
     options: {
-      width: 200,
-      height: 200,
+      width: 700,
+      height: 300,
+      animation: {
+        duration: 1000,
+        easing: 'out',
+        startup: true
+      }
     }
   };
 
@@ -60,9 +65,6 @@ export class RequestsSummaryOrgWidgetComponent  {
   }
 
   private chartSelected(chartType:any){
-    //todo
-    console.log(chartType);
-
     if (chartType.id === "Organization") {
       //change to org
       this.chartOrganization()
@@ -98,7 +100,6 @@ export class RequestsSummaryOrgWidgetComponent  {
     //load data into chart
 
     //set data to chart
-    console.log(organizationTable);
     this.treeMapChart.dataTable = organizationTable;
     this.treeMapChart.component.draw()
   }
@@ -129,7 +130,6 @@ export class RequestsSummaryOrgWidgetComponent  {
     //load data into chart
 
     //set data to chart
-    console.log(lineTable);
     this.treeMapChart.dataTable = lineTable;
     this.treeMapChart.component.draw()
   }
@@ -146,7 +146,6 @@ export class RequestsSummaryOrgWidgetComponent  {
     //load data into chart
 
     //set data to chart
-    console.log(statusTable);
     this.treeMapChart.dataTable = statusTable;
     this.treeMapChart.component.draw()
   }
