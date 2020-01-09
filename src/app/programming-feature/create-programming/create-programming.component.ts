@@ -180,6 +180,8 @@ export class CreateProgrammingComponent implements OnInit {
     this.busy = true;
     this.programmingService.pBYearExists(pbYear).subscribe(
       resp => { 
+                let response:any = resp;
+                
                 this.busy = false;
                 let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2);
                 let years: string[] = [pyear, "Spreadsheet"];
@@ -187,11 +189,12 @@ export class CreateProgrammingComponent implements OnInit {
     
       },
       error =>{
+                let response:any = error ;
                 this.busy = false;
                 let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2); // REmove this ....
                 let years: string[] = [pyear,"Spreadsheet"];
                 this.availableYears = this.toListItem(years);
-                console.log("in Program create Year does not exists");
+                console.log(response.error);
       });
 
       
@@ -244,7 +247,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
         type: "numericColumn",
         suppressMenu: true,
         field: (fy+ i).toString(),
-        //cellRenderer: params => this.negativeNumberRenderer(params),
+        cellRenderer: params => this.negativeNumberRenderer(params),
         editable: false,
         cellClass: "numeric-class",      
         cellStyle: { display: 'flex', 'align-items': 'right'}
@@ -258,7 +261,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       minWidth: 110,
       editable: false,
       valueGetter: params => this.rowTotal( params.data, fy ),
-
+      cellRenderer: params => this.negativeNumberRenderer(params),
     cellClass: "numeric-class",
         cellStyle: { display: 'flex', 'align-items': 'right'}
   });
@@ -280,9 +283,9 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
 private negativeNumberRenderer( params ){
 
   if ( params.value < 0 ){
-    return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
+    return '<span style="color: red;">&nbsp;&nbsp;' + this.formatCurrency( params ) + '</span>';
   } else {
-    return this.formatCurrency( params );
+    return '<span> &nbsp;&nbsp;' + this.formatCurrency( params ) + '</span>';
   }
 }
 
