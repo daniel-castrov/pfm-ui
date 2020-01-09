@@ -14,6 +14,7 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   chartReady:boolean;
   availableCharts: ListItem[];
+  defaultChart: ListItem;
 
   public treeMapChart: any =  {
     chartType: 'TreeMap',
@@ -62,6 +63,7 @@ export class RequestsSummaryOrgWidgetComponent  {
   ngOnInit() {
     let chartOptions: string[] = ['Organization', 'BA Line', 'Program Status'];
     this.availableCharts = this.toListItem(chartOptions);
+    this.defaultChart = this.availableCharts[0];
   }
 
   private chartSelected(chartType:any){
