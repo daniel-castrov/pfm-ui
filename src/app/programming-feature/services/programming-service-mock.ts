@@ -3,7 +3,9 @@ import { Observable, of } from 'rxjs';
 import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
 import { HttpClient } from '@angular/common/http';
 import { ProgrammingAttachment } from '../models/ProgrammingAttachment';
-import { PomToasResponse } from '../models/POMToas';
+import { TOA } from '../models/TOA';
+import {Pom} from '../models/Pom';
+import {PomToasResponse} from '../models/PomToasResponse';
 
 
 export class ProgrammingServiceMock extends ProgrammingService{
