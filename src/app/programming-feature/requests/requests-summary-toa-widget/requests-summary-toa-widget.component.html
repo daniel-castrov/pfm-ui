@@ -1,3 +1,4 @@
 <ng-container *ngIf="chartReady">
     <google-chart  [data]="columnChart"></google-chart>
+    <pfm-dropdown (onSelectionChanged)="chartSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [defaultOption]="defaultChart" [options]="availableCharts"></pfm-dropdown>
 </ng-container>

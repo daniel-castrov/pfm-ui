@@ -69,15 +69,15 @@ export class RequestsSummaryOrgWidgetComponent  {
   private chartSelected(chartType:any){
     if (chartType.id === "Organization") {
       //change to org
-      this.chartOrganization()
+      this.chartOrganization();
     }
     else if (chartType.id === "BA Line") {
       //change to ba line
-      this.chartBALine()
+      this.chartBALine();
     }
     else if (chartType.id === "Program Status") {
       //change to program status
-      this.chartProgramStatus()
+      this.chartProgramStatus();
     }
   }
 
@@ -103,7 +103,7 @@ export class RequestsSummaryOrgWidgetComponent  {
 
     //set data to chart
     this.treeMapChart.dataTable = organizationTable;
-    this.treeMapChart.component.draw()
+    this.treeMapChart.component.draw();
   }
 
   private chartBALine(){
@@ -133,7 +133,7 @@ export class RequestsSummaryOrgWidgetComponent  {
 
     //set data to chart
     this.treeMapChart.dataTable = lineTable;
-    this.treeMapChart.component.draw()
+    this.treeMapChart.component.draw();
   }
 
   private chartProgramStatus(){
@@ -149,7 +149,7 @@ export class RequestsSummaryOrgWidgetComponent  {
 
     //set data to chart
     this.treeMapChart.dataTable = statusTable;
-    this.treeMapChart.component.draw()
+    this.treeMapChart.component.draw();
   }
 
   private toListItem(years:string[]):ListItem[]{
