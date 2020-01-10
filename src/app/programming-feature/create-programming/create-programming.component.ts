@@ -18,6 +18,7 @@ import {PomToasResponse} from '../models/PomToasResponse';
 import { Organization } from '../../pfm-common-models/Organization';
 
 
+
 @Component({
   selector: 'pfm-programming',
   templateUrl: './create-programming.component.html',
@@ -34,38 +35,33 @@ export class CreateProgrammingComponent implements OnInit {
   programYearSelected:any;
   showUploadDialog:boolean;
   programBudgetData:boolean;
-  gridApi:GridApi;
+  communityGridApi:GridApi;
   orgGridApi:GridApi;
+  subToasGridApi:GridApi;
   columnApi:ColumnApi;
+  subToaColumnApi:ColumnApi;
   communityColumns:any[]; 
   communityData:any;
   orgColumns:any;
   orgData:any;
-  private organizations: Organization[] = [];
-  private mapOrganizationIdToName: Map<string, string>;
-
+  subToasColumns:any;
+  subToasData:any;
+  
+  orgs:Array<Organization>;
   constructor(private appModel: AppModel,private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
-    //var selectedYear = appModel.selectedYear;
-    this.programmingService.getAllorganizations().subscribe(
-      resp => {
-        this.organizations = (resp as Organization[]);
-    },
-    error => {
-        console.log("Error in organizations list...");
-       // this.busy = false;
-    });
     
-    this.mapOrganizationIdToName = new Map<string, string>();
-    this.organizations.forEach( organization => this.mapOrganizationIdToName.set( organization.id, organization.abbreviation ) );
-  }
+    //var selectedYear = appModel.selectedYear;
+    this.subToasColumns =[];
+    this.subToasData = [];
 
-  // A valueGetter for looking up an org name
-  private orgName( id:string ){
-    if ( null == this.mapOrganizationIdToName.get(id) ){
-      return id;
-    } else {
-      return this.mapOrganizationIdToName.get(id);
-    }
+    programmingService.getAllorganizations().subscribe(
+      resp => {
+                this.orgs = (resp as any).result;               
+              },
+      error => {
+          this.orgs = [];
+          console.log(error);
+      });
   }
 
   yearSelected(year:string):void{
@@ -90,6 +86,7 @@ export class CreateProgrammingComponent implements OnInit {
      // set the column definitions to community adn Organization grid
      this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
      this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);
+     this.subToasColumns = this.setSubToasAgGridColDefs(selectedYear);
      
      //this.busy = true;
      this.programmingService.getPomFromPb().subscribe(
@@ -109,9 +106,11 @@ export class CreateProgrammingComponent implements OnInit {
    }
 
    loadGrids(pomData:Pom,fy:number){
+      let toarow = {};
+      this.subToasData = [];
       // BaseLine
       let row = {}
-      row["orgid"] = " Baseline";
+      row["orgid"] = "<strong><span>&nbsp;&nbsp;Baseline</span></strong>";
       pomData.communityToas.forEach(toa => {
         row[toa.year] = toa.amount;
       });
@@ -127,17 +126,23 @@ export class CreateProgrammingComponent implements OnInit {
 
       // Community Toas
       row = {}
-      row["orgid"] = " TOA";
+      row["orgid"] = "<strong><span>&nbsp;&nbsp;TOA</span></strong>";
+      toarow['orgid'] = "<strong><span>&nbsp;&nbsp;sub TOA </span></strong>";
       pomData.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;
+        row[toa.year] = toa.amount;        
       });
+      
       let i:number;
-      for (i = 0; i < 5; i++) {
+      for (i = 0; i < 5; i++) {         
         if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
+
+        toarow[fy+i] = row[ fy+i ] ;
       }      
 
       row["actions"] = actions;
+      
       this.communityData.push(row);
+      this.subToasData.push(toarow);
 
       this.communityData.forEach( row => {        
         for (i = 0; i < 5; i++) {
@@ -145,26 +150,22 @@ export class CreateProgrammingComponent implements OnInit {
             row[ fy+i ] = 0;
             }          
           }       
-        });  
-
-      this.gridApi.setRowData(this.communityData);
-      this.gridApi.setColumnDefs(this.communityColumns);
-
-
-      // Org TOAs
-    Object.keys(pomData.orgToas).forEach(key => {
-      var toamap: Map<number, number> = new Map<number, number>();
-      console.log("key is "+key );
-      console.log("key is "+this.orgName(key));
-      row = {};
-      let total = 0;
-      row["orgid"] = this.orgName(key) ;
-        pomData.orgToas[key].forEach( (toa:TOA) => {
-          row[toa.year] = toa.amount;
         });
+                
+
+      this.communityGridApi.setRowData(this.communityData);
+      this.communityGridApi.setColumnDefs(this.communityColumns);
+
+      // Org TOAs      
+     Object.keys(pomData.orgToas).reverse().forEach(key => {          
+          row = {};          
+          row['orgid'] = "<strong><span>&nbsp;&nbsp;" + this.getOrgName(key) +"</span></strong>";
+          pomData.orgToas[key].forEach( (toa:TOA) => {
+            row[toa.year] = toa.amount;          
+           });
 
         row["actions"] = actions;
-        this.orgData.push(row);
+        this.orgData.push(row);     
       });
       
       this.orgData.forEach( row => {        
@@ -175,10 +176,44 @@ export class CreateProgrammingComponent implements OnInit {
         }       
       });      
 
+      toarow = {};
+      toarow['orgid'] = "<strong><span>&nbsp;&nbsp;sub TOA actual</span></strong>";
+      for (i = 0; i < 5; i++) {
+        let total = 0;        
+        this.orgData.forEach(row => {
+          if ( row[ fy+i ] == undefined ) {
+            row[ fy+i ] = 0;
+            }
+          total = total + row[fy+i];
+        });
+        toarow[fy+1] = total;
+      }
+
+      this.subToasData.push(toarow);
+
+      toarow = {};
+      toarow['orgid'] = "<strong><span>&nbsp;&nbsp;Delta</span></strong>";
+      for (i = 0; i < 5; i++)
+      {
+        let delta = 0;
+        this.subToasData.forEach(row =>{
+            //row[fy+i]
+        })
+      }
+
       this.orgGridApi.setRowData(this.orgData);
       this.orgGridApi.setColumnDefs(this.orgColumns);
+
+
+      this.subToasGridApi.setColumnDefs(this.subToasColumns);
+      this.subToasGridApi.setRowData(this.subToasData);
   }
 
+  getOrgName(key):string{ 
+
+    let org = this.orgs.find(o => o.id === key);    
+    return '<span>&nbsp;&nbsp;' + org.abbreviation + '</span>';
+  }
    handleNewAttachments(newFile:FileMetaData):void{
       this.showUploadDialog = false;
       if(newFile){
@@ -255,9 +290,10 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       field: 'orgid',
       minWidth: 140,
       editable: false,
+      pinned:'left',
       //rowDrag: true,
       //rowDragManaged: true,
-      cellRenderer: params => '<strong>'+params.value+'</strong>',
+      cellRenderer: params => params.value,
       cellClass: "text-class",    
       cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
     
@@ -271,7 +307,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
         field: (fy+ i).toString(),
         cellRenderer: params => this.negativeNumberRenderer(params),
         editable: false,
-        cellClass: "numeric-class",      
+        cellClass: "pfm-datagrid-numeric-class",      
         cellStyle: { display: 'flex', 'align-items': 'right'}
     });
   }
@@ -284,8 +320,8 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       editable: false,
       valueGetter: params => this.rowTotal( params.data, fy ),
       cellRenderer: params => this.negativeNumberRenderer(params),
-    cellClass: "numeric-class",
-        cellStyle: { display: 'flex', 'align-items': 'right'}
+      cellClass: "pfm-datagrid-numeric-class",
+      cellStyle: { display: 'flex', 'align-items': 'right'}
   });
 
   colDefs.push(
@@ -301,13 +337,48 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
   return colDefs;
 }
 
+private setSubToasAgGridColDefs(fy:number): any {
+
+  let colDefs = [];
+
+  colDefs.push(
+    { headerName: "",
+      suppressMenu: true,
+      field: 'orgid',
+      minWidth: 140,
+      editable: false,
+      pinned:'left',
+      //rowDrag: true,
+      //rowDragManaged: true,
+      cellRenderer: params => params.value,
+      cellClass: "text-class",    
+      cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
+    
+  });
+
+  for (var i = 0; i < 5; i++) {
+    colDefs.push(
+      { headerName: "" ,
+        type: "numericColumn",
+        suppressMenu: true,
+        field: (fy+ i).toString(),
+        cellRenderer: params => this.negativeNumberRenderer(params),
+        editable: false,
+        cellClass: "pfm-datagrid-numeric-class",      
+        cellStyle: { display: 'flex', 'align-items': 'right'}
+    });
+  }
+  
+  return colDefs;
+}
+
 // a sinple CellRenderrer for negative numbers
 private negativeNumberRenderer( params ){
 
   if ( params.value < 0 ){
-    return '<span style="color: red;">&nbsp;&nbsp;' + this.formatCurrency( params ) + '</span>';
+    return '<span style="color: red;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span>';
   } else {
-    return '<span> &nbsp;&nbsp;' + this.formatCurrency( params ) + '</span>';
+    return '<strong><span style="color: #ADD8D6;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span></strong>';
   }
 }
 
@@ -334,7 +405,7 @@ private shouldEdit ( params ){
 }
 
 onCommunityGridIsReady(gridApi:GridApi):void{
-  this.gridApi = gridApi;
+  this.communityGridApi = gridApi;
 }
 
 onOrgGridIsReady(gridApi:GridApi):void{
@@ -345,6 +416,12 @@ onColumnIsReady(columnApi:ColumnApi):void{
   this.columnApi = columnApi;
 }
 
+onToasGridIsReady(gridApi:GridApi){
+  this.subToasGridApi = gridApi;
+}
+onToasColumnIsReady(columnApi:ColumnApi){
+  this.subToaColumnApi = columnApi;
+}
 onRowDragEnd(param){}
 
 }
