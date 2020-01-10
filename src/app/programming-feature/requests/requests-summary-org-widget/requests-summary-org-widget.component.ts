@@ -14,6 +14,7 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   chartReady:boolean;
   availableCharts: ListItem[];
+  defaultChart: ListItem;
 
   public treeMapChart: any =  {
     chartType: 'TreeMap',
@@ -35,6 +36,11 @@ export class RequestsSummaryOrgWidgetComponent  {
     options: {
       width: 200,
       height: 200,
+      animation: {
+        duration: 1000,
+        easing: 'out',
+        startup: true
+      }
     }
   };
 
@@ -57,23 +63,21 @@ export class RequestsSummaryOrgWidgetComponent  {
   ngOnInit() {
     let chartOptions: string[] = ['Organization', 'BA Line', 'Program Status'];
     this.availableCharts = this.toListItem(chartOptions);
+    this.defaultChart = this.availableCharts[0];
   }
 
   private chartSelected(chartType:any){
-    //todo
-    console.log(chartType);
-
     if (chartType.id === "Organization") {
       //change to org
-      this.chartOrganization()
+      this.chartOrganization();
     }
     else if (chartType.id === "BA Line") {
       //change to ba line
-      this.chartBALine()
+      this.chartBALine();
     }
     else if (chartType.id === "Program Status") {
       //change to program status
-      this.chartProgramStatus()
+      this.chartProgramStatus();
     }
   }
 
@@ -98,9 +102,8 @@ export class RequestsSummaryOrgWidgetComponent  {
     //load data into chart
 
     //set data to chart
-    console.log(organizationTable);
     this.treeMapChart.dataTable = organizationTable;
-    this.treeMapChart.component.draw()
+    this.treeMapChart.component.draw();
   }
 
   private chartBALine(){
@@ -129,9 +132,8 @@ export class RequestsSummaryOrgWidgetComponent  {
     //load data into chart
 
     //set data to chart
-    console.log(lineTable);
     this.treeMapChart.dataTable = lineTable;
-    this.treeMapChart.component.draw()
+    this.treeMapChart.component.draw();
   }
 
   private chartProgramStatus(){
@@ -146,9 +148,8 @@ export class RequestsSummaryOrgWidgetComponent  {
     //load data into chart
 
     //set data to chart
-    console.log(statusTable);
     this.treeMapChart.dataTable = statusTable;
-    this.treeMapChart.component.draw()
+    this.treeMapChart.component.draw();
   }
 
   private toListItem(years:string[]):ListItem[]{
