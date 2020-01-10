@@ -12,4 +12,6 @@ export abstract class ProgrammingService extends BaseRestService{
    abstract  getRequestsForPom():Observable<Object>;
    abstract pBYearExists(year:string):Observable<Object>;
    abstract getPomFromPb():Observable<Object>;
+   abstract  getAllorganizations():Observable<Object>;
+
 }

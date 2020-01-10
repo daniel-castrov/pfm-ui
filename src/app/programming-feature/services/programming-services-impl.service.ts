@@ -26,4 +26,8 @@ export class ProgrammingServicesImpl extends ProgrammingService{
     return this.get("pom/init/fromPB"); 
   }
  
+  getAllorganizations():Observable<Object>{
+    return this.get("organization"); 
+  }
+  
 }

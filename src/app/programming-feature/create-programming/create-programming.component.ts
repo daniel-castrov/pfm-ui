@@ -15,7 +15,7 @@ import { Action } from '../../pfm-common-models/Action';
 import { TOA } from '../models/TOA';
 import {Pom} from '../models/Pom';
 import {PomToasResponse} from '../models/PomToasResponse';
-
+import { Organization } from '../../pfm-common-models/Organization';
 
 
 @Component({
@@ -41,10 +41,31 @@ export class CreateProgrammingComponent implements OnInit {
   communityData:any;
   orgColumns:any;
   orgData:any;
+  private organizations: Organization[] = [];
+  private mapOrganizationIdToName: Map<string, string>;
+
   constructor(private appModel: AppModel,private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
-    
     //var selectedYear = appModel.selectedYear;
-  
+    this.programmingService.getAllorganizations().subscribe(
+      resp => {
+        this.organizations = (resp as Organization[]);
+    },
+    error => {
+        console.log("Error in organizations list...");
+       // this.busy = false;
+    });
+    
+    this.mapOrganizationIdToName = new Map<string, string>();
+    this.organizations.forEach( organization => this.mapOrganizationIdToName.set( organization.id, organization.abbreviation ) );
+  }
+
+  // A valueGetter for looking up an org name
+  private orgName( id:string ){
+    if ( null == this.mapOrganizationIdToName.get(id) ){
+      return id;
+    } else {
+      return this.mapOrganizationIdToName.get(id);
+    }
   }
 
   yearSelected(year:string):void{
@@ -133,10 +154,11 @@ export class CreateProgrammingComponent implements OnInit {
       // Org TOAs
     Object.keys(pomData.orgToas).forEach(key => {
       var toamap: Map<number, number> = new Map<number, number>();
-
+      console.log("key is "+key );
+      console.log("key is "+this.orgName(key));
       row = {};
       let total = 0;
-      row["orgid"] = key ;
+      row["orgid"] = this.orgName(key) ;
         pomData.orgToas[key].forEach( (toa:TOA) => {
           row[toa.year] = toa.amount;
         });
