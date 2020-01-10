@@ -1,11 +1,12 @@
 import { ProgrammingService } from './programming-service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, onErrorResumeNext } from 'rxjs';
 import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
 import { HttpClient } from '@angular/common/http';
 import { ProgrammingAttachment } from '../models/ProgrammingAttachment';
 import { TOA } from '../models/TOA';
 import {Pom} from '../models/Pom';
 import {PomToasResponse} from '../models/PomToasResponse';
+import { Organization } from '../../pfm-common-models/Organization';
 
 
 export class ProgrammingServiceMock extends ProgrammingService{
@@ -40,10 +41,27 @@ export class ProgrammingServiceMock extends ProgrammingService{
    }
 
    getPomFromPb(): Observable<Object> {
-    //var object = new PomToasResponse();
-    // return of(object);
-
-    return this.get("pom/init/fromPB");
+    let pomtoas:PomToasResponse = new PomToasResponse();
+    let pomObj:Pom = new Pom();
+    let toaObj:TOA = new TOA();
+    let year:number = 2020;
+    let amt:number = 10000;
+    for(let x=0; x<5; x++){
+      toaObj.year= year+x;
+      toaObj.amount=amt+x;
+      pomObj.communityToas.fill(toaObj);
+    }
+    return of(pomtoas); 
   }
 
+  getAllorganizations():Observable<Object>{
+    let data:Organization[] = [];
+    let org:Organization = new Organization();
+    org.id="5e1651b9ea2ae305c2af4473";
+    org.communityId="5e1651b9ea2ae305c2af4332";
+    org.abbreviation="JPEO-CBRND";
+    org.name="Joint Program Executive Office for Chemical, Biological, Radiological, and Nuclear Defense";
+    data.push(org);
+    return of(data);
+  }
 }

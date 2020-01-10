@@ -14,16 +14,20 @@ export class ProgrammingServicesImpl extends ProgrammingService{
   }
 
   getRequestsForPom():Observable<Object>{
-    return this.getFullResponse("pom/sample/fromPB/year/");
+    return this.get("pom/sample/fromPB/year/");
   }
 
   pBYearExists(year:string):Observable<Object>{
    
-    return this.get("pom/sample/fromPB/year/" + year + "/exists");
+    return this.get("pom/init/fromPB/year/" + year + "/exists");
   }
 
   getPomFromPb():Observable<Object>{
     return this.get("pom/init/fromPB"); 
   }
  
+  getAllorganizations():Observable<Object>{
+    return this.get("organization"); 
+  }
+  
 }
