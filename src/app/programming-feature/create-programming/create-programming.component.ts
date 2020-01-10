@@ -107,10 +107,11 @@ export class CreateProgrammingComponent implements OnInit {
 
    loadGrids(pomData:Pom,fy:number){
       let toarow = {};
+      let subtoarow = {};
       this.subToasData = [];
       // BaseLine
       let row = {}
-      row["orgid"] = "<strong><span>&nbsp;&nbsp;Baseline</span></strong>";
+      row["orgid"] = "<strong><span>Baseline</span></strong>";
       pomData.communityToas.forEach(toa => {
         row[toa.year] = toa.amount;
       });
@@ -126,8 +127,8 @@ export class CreateProgrammingComponent implements OnInit {
 
       // Community Toas
       row = {}
-      row["orgid"] = "<strong><span>&nbsp;&nbsp;TOA</span></strong>";
-      toarow['orgid'] = "<strong><span>&nbsp;&nbsp;sub TOA </span></strong>";
+      row["orgid"] = "<strong><span>TOA</span></strong>";
+      toarow['orgid'] = "<strong><span>sub TOA </span></strong>";
       pomData.communityToas.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;        
       });
@@ -143,6 +144,7 @@ export class CreateProgrammingComponent implements OnInit {
       
       this.communityData.push(row);
       this.subToasData.push(toarow);
+      
 
       this.communityData.forEach( row => {        
         for (i = 0; i < 5; i++) {
@@ -159,7 +161,7 @@ export class CreateProgrammingComponent implements OnInit {
       // Org TOAs      
      Object.keys(pomData.orgToas).reverse().forEach(key => {          
           row = {};          
-          row['orgid'] = "<strong><span>&nbsp;&nbsp;" + this.getOrgName(key) +"</span></strong>";
+          row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
           pomData.orgToas[key].forEach( (toa:TOA) => {
             row[toa.year] = toa.amount;          
            });
@@ -176,8 +178,8 @@ export class CreateProgrammingComponent implements OnInit {
         }       
       });      
 
-      toarow = {};
-      toarow['orgid'] = "<strong><span>&nbsp;&nbsp;sub TOA actual</span></strong>";
+      subtoarow = {};
+      subtoarow['orgid'] = "<strong><span>sub TOA actual</span></strong>";
       for (i = 0; i < 5; i++) {
         let total = 0;        
         this.orgData.forEach(row => {
@@ -186,13 +188,14 @@ export class CreateProgrammingComponent implements OnInit {
             }
           total = total + row[fy+i];
         });
-        toarow[fy+1] = total;
+        subtoarow[fy+1] = total;
       }
-
-      this.subToasData.push(toarow);
+      this.orgData.push(toarow);
+      this.orgData.push(subtoarow);
+      this.subToasData.push(subtoarow);
 
       toarow = {};
-      toarow['orgid'] = "<strong><span>&nbsp;&nbsp;Delta</span></strong>";
+      toarow['orgid'] = "<strong><span>Delta</span></strong>";
       for (i = 0; i < 5; i++)
       {
         let delta = 0;
@@ -212,7 +215,7 @@ export class CreateProgrammingComponent implements OnInit {
   getOrgName(key):string{ 
 
     let org = this.orgs.find(o => o.id === key);    
-    return '<span>&nbsp;&nbsp;' + org.abbreviation + '</span>';
+    return org.abbreviation;
   }
    handleNewAttachments(newFile:FileMetaData):void{
       this.showUploadDialog = false;
@@ -376,9 +379,9 @@ private setSubToasAgGridColDefs(fy:number): any {
 private negativeNumberRenderer( params ){
 
   if ( params.value < 0 ){
-    return '<span style="color: red;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span>';
+    return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
   } else {
-    return '<span style="color: black;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span>';
+    return '<span style="color: black;">' + this.formatCurrency( params ) + '</span>';
   }
 }
 
