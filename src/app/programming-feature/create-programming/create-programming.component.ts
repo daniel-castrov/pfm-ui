@@ -378,7 +378,7 @@ private negativeNumberRenderer( params ){
   if ( params.value < 0 ){
     return '<span style="color: red;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span>';
   } else {
-    return '<strong><span style="color: #ADD8D6;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span></strong>';
+    return '<span style="color: black;">' + this.formatCurrency( params ) + '&nbsp;&nbsp;</span>';
   }
 }
 
