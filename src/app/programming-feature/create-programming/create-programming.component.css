@@ -17,6 +17,13 @@
     text-align:right;
     width:55%;
 }
+.datagrid-numeric-class{
+    display: flex;
+    align-items: center;
+    white-space: normal;
+    justify-content: flex-end;
+    width:200px;
+  }
 .table-row {
     display:table-row;
     width:150px;

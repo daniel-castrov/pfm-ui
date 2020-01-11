@@ -64,4 +64,8 @@ export class ProgrammingServiceMock extends ProgrammingService{
     data.push(org);
     return of(data);
   }
+
+  getPomFromFile(fileId:string):Observable<Object>{
+    return this.get("pom/init/fromLibrary/id/" + fileId);
+  }
 }

@@ -9,9 +9,10 @@ export abstract class ProgrammingService extends BaseRestService{
     super(httpClient);
   }
 
-   abstract  getRequestsForPom():Observable<Object>;
+   abstract getRequestsForPom():Observable<Object>;
    abstract pBYearExists(year:string):Observable<Object>;
    abstract getPomFromPb():Observable<Object>;
-   abstract  getAllorganizations():Observable<Object>;
+   abstract getAllorganizations():Observable<Object>;
+   abstract getPomFromFile(fileId:string):Observable<Object>;
 
 }
