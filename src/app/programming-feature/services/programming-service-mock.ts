@@ -32,7 +32,7 @@ export class ProgrammingServiceMock extends ProgrammingService{
         data.push(pr);
     }
 
-    return of(data);
+    return of({result: data});
   }
 
   pBYearExists(): Observable<Object>{
