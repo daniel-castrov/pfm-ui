@@ -63,6 +63,19 @@ export class DatagridComponent implements OnInit {
     this.onRowDragEndEvent.emit(event);
   }
 
+  onCellClicked(event:any):void{
+    console.info(event);
+    let message:DataGridMessage = new DataGridMessage();
+
+    message.rowIndex = event.rowIndex;
+    message.columnId = event.column.colId;
+    message.message = "cellClicked";
+    message.rowData = event.data;
+    message.messageType = "grid-cell";
+
+    this.onCellAction.emit(message);
+  }
+
   public onGridReady(params) {
     console.log('onGridReady');
     this.api = params.api;

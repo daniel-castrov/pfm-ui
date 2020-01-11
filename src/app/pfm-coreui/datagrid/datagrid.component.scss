@@ -6,6 +6,10 @@
 .add-row-container{
   display: flex;
   justify-content: flex-end;
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: 0;
 }
 
 .pfm-data {

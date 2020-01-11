@@ -20,6 +20,7 @@
                           [rowHeight]="40"
                           (gridReady)="onGridReady($event)"
                           (rowDragEnd)="onRowDragEnd($event)"
+                          (cellClicked)="onCellClicked($event)"
                           (modelUpdated)="onModelUpdated()">
         </ag-grid-angular>
     </div>
