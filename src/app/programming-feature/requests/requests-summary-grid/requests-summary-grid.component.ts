@@ -31,10 +31,16 @@ export class RequestsSummaryGridComponent implements OnInit {
         cellClass: "pfm-datagrid-text pfm-datagrid-text-underline",
       },
       {
+        headerName: 'Assigned To',
+        field: 'assignedTo',
+        editable: false,
+        cellClass: "pfm-datagrid-text",
+      },
+      {
         headerName: 'Status',
         field: 'status',
         editable: false,
-        cellClass: "pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-text-underline",
+        cellClass: "pfm-datagrid-text pfm-datagrid-warning",
       },
     ];
     for(let i=16; i<19; i++){
