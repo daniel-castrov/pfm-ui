@@ -82,9 +82,7 @@ export class CreateProgrammingComponent implements OnInit {
    initGrids(selectedYear){
      // set the column definitions to community adn Organization grid
      this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
-     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);    
-     
-     //this.busy = true;        
+     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);                    
    }
 
    getPomFromPB(selectedYear:any){
@@ -157,7 +155,6 @@ export class CreateProgrammingComponent implements OnInit {
           }       
         });
                 
-
     //  this.communityGridApi.setRowData(this.communityData);
     //  this.communityGridApi.setColumnDefs(this.communityColumns);
 
@@ -365,7 +362,8 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
     {
       headerName: 'Actions',
       field: 'actions',      
-      minWidth: 100,
+      mWidth: 100,
+      maxWidth:100,
       cellRendererFramework: ActionCellRendererComponent
     }
   );
