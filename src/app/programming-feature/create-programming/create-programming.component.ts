@@ -37,22 +37,18 @@ export class CreateProgrammingComponent implements OnInit {
   programBudgetData:boolean;
   communityGridApi:GridApi;
   orgGridApi:GridApi;
-  subToasGridApi:GridApi;
-  columnApi:ColumnApi;
-  subToaColumnApi:ColumnApi;
+  columnApi:ColumnApi;  
   communityColumns:any[]; 
-  communityData:any;
-  orgColumns:any;
-  orgData:any;
-  subToasColumns:any;
-  subToasData:any;
+  communityData:any[];
+  orgColumns:any[];
+  orgData:any[];
+  subToasData:any[];
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
   constructor(private appModel: AppModel,private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
     
-    //var selectedYear = appModel.selectedYear;
-    this.subToasColumns =[];
+    //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
 
     programmingService.getAllorganizations().subscribe(
@@ -76,7 +72,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.showUploadDialog = false;
       this.programBudgetData=true;
       
-      var selectedYear = FormatterUtil.getCurrentFiscalYear()+1; 
+      var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1; 
       this.initGrids(selectedYear);
       this.getPomFromPB(selectedYear);
     }
@@ -92,19 +88,22 @@ export class CreateProgrammingComponent implements OnInit {
    }
 
    getPomFromPB(selectedYear:any){
+    this.busy = true;
       this.programmingService.getPomFromPb().subscribe(
         resp => {
-      // this.busy = false;
+          this.busy = false;
           var pom = (resp as PomToasResponse).result ;
           console.log("year..." + pom.fy);
           this.loadGrids(pom,selectedYear);
           
       },
       error => {
+        this.busy = false;
           console.log("Error in getting community and org toas...");
         // this.busy = false;
       });
    }
+   
    loadGrids(pomData:Pom,fy:number){
       let toarow = {};            
       let subtoarow = {};
@@ -132,7 +131,7 @@ export class CreateProgrammingComponent implements OnInit {
       // Community Toas
       row = {}      
       row["orgid"] = "<strong><span>TOA</span></strong>";
-      toarow['orgid'] = "<strong><span>sub TOA </span></strong>";
+      toarow['orgid'] = "<strong><span>sub TOA Total Goal</span></strong>";
       pomData.communityToas.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;        
       });
@@ -147,7 +146,7 @@ export class CreateProgrammingComponent implements OnInit {
       row["actions"] = actions;
       
       this.communityData.push(row);
-      toarow['orgid'] = "Sub TOA";
+      toarow['orgid'] = "sub TOA Total Goal";
       this.subToasData.push(toarow);
       
       this.communityData.forEach( row => {        
@@ -159,8 +158,8 @@ export class CreateProgrammingComponent implements OnInit {
         });
                 
 
-      this.communityGridApi.setRowData(this.communityData);
-      this.communityGridApi.setColumnDefs(this.communityColumns);
+    //  this.communityGridApi.setRowData(this.communityData);
+    //  this.communityGridApi.setColumnDefs(this.communityColumns);
 
       // Org TOAs      
      Object.keys(pomData.orgToas).reverse().forEach(key => {          
@@ -183,7 +182,7 @@ export class CreateProgrammingComponent implements OnInit {
       });      
 
       subtoarow = {};
-      subtoarow['orgid'] = "<strong><span>sub TOA actual</span></strong>";
+      subtoarow['orgid'] = "<strong><span>sub-TOA Total Actual</span></strong>";
       for (i = 0; i < 5; i++) {
         let total = 0;        
         this.orgData.forEach(row => {
@@ -208,7 +207,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.orgData.push(toarow);      
       this.orgData.push(subtoarow);
 
-      subtoarow['orgid'] = "Sub TOA Actuals";
+      subtoarow['orgid'] = "sub-TOA Total Actual";
       this.subToasData.push(subtoarow);
 
       let toaDeltarow = {};
@@ -222,12 +221,8 @@ export class CreateProgrammingComponent implements OnInit {
       toaDeltarow['orgid'] = "Delta";
       this.subToasData.push(toaDeltarow);
 
-      this.orgGridApi.setRowData(this.orgData);
-      this.orgGridApi.setColumnDefs(this.orgColumns);
-
-
-      this.subToasGridApi.setColumnDefs(this.subToasColumns);
-      this.subToasGridApi.setRowData(this.subToasData);
+     // this.orgGridApi.setRowData(this.orgData);
+     // this.orgGridApi.setColumnDefs(this.orgColumns);      
   }
 
   getOrgName(key):string{ 
@@ -253,15 +248,17 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   LoadPomFromFile(fileId:string){
+    this.busy = true;
     this.programmingService.getPomFromFile(fileId).subscribe(
       resp => {
-        // this.busy = false;
+        this.busy = false;
         var pom = (resp as PomToasResponse).result ;
         console.log("year..." + pom.fy);
-        this.initGrids(2021);
-        this.loadGrids(pom,2021);
+        this.initGrids(this.byYear);
+        this.loadGrids(pom,this.byYear);
       },
       error => {
+        this.busy = false;
         console.log(error);
       }
     );
@@ -284,9 +281,8 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error =>{
                 let response:any = error ;
-                this.busy = false;
-                let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2); // REmove this ....
-                let years: string[] = [pyear,"Spreadsheet"];
+                this.busy = false;                
+                let years: string[] = ["Spreadsheet"];
                 this.availableYears = this.toListItem(years);
                 console.log(response.error);
       });
@@ -427,12 +423,6 @@ onColumnIsReady(columnApi:ColumnApi):void{
   this.columnApi = columnApi;
 }
 
-onToasGridIsReady(gridApi:GridApi){
-  this.subToasGridApi = gridApi;
-}
-onToasColumnIsReady(columnApi:ColumnApi){
-  this.subToaColumnApi = columnApi;
-}
 onRowDragEnd(param){}
 
 }

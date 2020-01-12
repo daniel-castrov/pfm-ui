@@ -24,6 +24,11 @@
     justify-content: flex-end;
     width:200px;
   }
+  .add-row-container{
+    display: none !important;
+    justify-content: flex-end;
+  }
+  
 .table-row {
     display:table-row;
     width:150px;
