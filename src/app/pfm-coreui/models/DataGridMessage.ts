@@ -4,6 +4,7 @@ export class DataGridMessage {
   public rendererName:string;
   public rowIndex:number;
   public columnIndex:number;
+  public columnId:string
   public rowData:any;
   public rawData:any;
 }

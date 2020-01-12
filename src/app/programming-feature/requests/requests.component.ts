@@ -64,9 +64,12 @@ export class RequestsComponent implements OnInit {
     //defaults
     this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
 
+    //we have an issue with the services - for now use mocks, and see if we can define what will need to change
     this.programmingService.getRequestsForPom().subscribe(
       resp => {
-        this.griddata = resp as any;
+        let data = (resp as any).result;
+        console.log('getRequestsForPom');
+        this.griddata = data;
         this.getPreferences();
       },
       error =>{

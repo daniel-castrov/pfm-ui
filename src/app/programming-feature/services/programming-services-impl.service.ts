@@ -18,7 +18,6 @@ export class ProgrammingServicesImpl extends ProgrammingService{
   }
 
   pBYearExists(year:string):Observable<Object>{
-   
     return this.get("pom/init/fromPB/year/" + year + "/exists");
   }
 
