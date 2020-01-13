@@ -59,11 +59,11 @@ export class DatagridComponent implements OnInit {
     console.log('onModelUpdated');
   }
 
-  onRowDragEnd(event:any):void{
+  private onRowDragEnd(event:any):void{
     this.onRowDragEndEvent.emit(event);
   }
 
-  onCellClicked(event:any):void{
+  private onCellClicked(event:any):void{
     console.info(event);
     let message:DataGridMessage = new DataGridMessage();
 
@@ -83,6 +83,10 @@ export class DatagridComponent implements OnInit {
     this.api.sizeColumnsToFit();
     this.onGridIsReady.emit(this.api);
     this.onColumnIsReady.emit(this.columnApi);
+  }
+
+  private onGridSizeChanged(){
+    this.api.sizeColumnsToFit();
   }
 
   ngOnInit() {

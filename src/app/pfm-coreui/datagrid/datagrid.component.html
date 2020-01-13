@@ -21,7 +21,8 @@
                           (gridReady)="onGridReady($event)"
                           (rowDragEnd)="onRowDragEnd($event)"
                           (cellClicked)="onCellClicked($event)"
-                          (modelUpdated)="onModelUpdated()">
+                          (modelUpdated)="onModelUpdated()"
+                          (gridSizeChanged)="onGridSizeChanged($event)">
         </ag-grid-angular>
     </div>
 </div>
