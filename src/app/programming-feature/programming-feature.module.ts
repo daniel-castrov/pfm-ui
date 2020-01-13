@@ -39,6 +39,6 @@ import { ProgrammingServicesImpl } from './services/programming-services-impl.se
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule
   ],
-  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
+  providers: [{provide: ProgrammingService, useClass: ProgrammingServicesImpl}]
 })
 export class ProgrammingFeatureModule { }
