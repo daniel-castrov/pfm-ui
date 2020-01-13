@@ -27,14 +27,14 @@
 
 <div *ngIf="programBudgetData">
   <div class="col-20" >
-    <tabset destroyOnHide="true">
-      <tab heading="Community" active="true" style="width:99%;height:99%">
+    <tabset  class="program-tab-style" destroyOnHide="true">
+      <tab  heading="Community" active="true" style="width:100%;height:100%">
         <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
         <div class="grid-container">
           <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" ></pfm-displaydatagrid>
         </div>
-      </tab>
-      <tab heading="Organization"  style="width:99%;height:99%">
+      </tab >
+      <tab heading="Organization"  style="width:100%;height:100%">
         <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
         <!--<div style="height:300px;width:98%">-->
         <div class="grid-container">
