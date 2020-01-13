@@ -25,6 +25,8 @@ import { RequestsSummaryToaWidgetComponent } from './requests/requests-summary-t
 import { GridsterModule } from 'angular-gridster2';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ProgrammingServicesImpl } from './services/programming-services-impl.service';
+import {PomService} from './services/pom-service';
+import {PomServiceImpl} from './services/pom-service-impl.service';
 
 
 @NgModule({
@@ -39,6 +41,6 @@ import { ProgrammingServicesImpl } from './services/programming-services-impl.se
     TabsModule.forRoot(),
     ProgrammingFeatureRoutingModule
   ],
-  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock}]
+  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock},{provide: PomService, useClass: PomServiceImpl}]
 })
 export class ProgrammingFeatureModule { }

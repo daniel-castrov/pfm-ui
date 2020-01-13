@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProgrammingService } from '../../programming-feature/services/programming-service';
+import { PomService } from '../../programming-feature/services/pom-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
@@ -46,12 +46,12 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
-  constructor(private appModel: AppModel,private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
+  constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router) {
     
     //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
 
-    programmingService.getAllorganizations().subscribe(
+    pomService.getAllorganizations().subscribe(
       resp => {
                 this.orgs = (resp as any).result;               
               },
@@ -87,7 +87,7 @@ export class CreateProgrammingComponent implements OnInit {
 
    getPomFromPB(selectedYear:any){
     this.busy = true;
-      this.programmingService.getPomFromPb().subscribe(
+      this.pomService.getPomFromPb().subscribe(
         resp => {
           this.busy = false;
           var pom = (resp as PomToasResponse).result ;
@@ -245,7 +245,7 @@ export class CreateProgrammingComponent implements OnInit {
 
   LoadPomFromFile(fileId:string){
     this.busy = true;
-    this.programmingService.getPomFromFile(fileId).subscribe(
+    this.pomService.getPomFromFile(fileId).subscribe(
       resp => {
         this.busy = false;
         var pom = (resp as PomToasResponse).result ;
@@ -265,7 +265,7 @@ export class CreateProgrammingComponent implements OnInit {
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
     this.busy = true;
-    this.programmingService.pBYearExists(pbYear).subscribe(
+    this.pomService.pBYearExists(pbYear).subscribe(
       resp => { 
                 let response:any = resp;
                 
