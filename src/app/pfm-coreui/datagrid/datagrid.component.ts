@@ -59,11 +59,11 @@ export class DatagridComponent implements OnInit {
     console.log('onModelUpdated');
   }
 
-  private onRowDragEnd(event:any):void{
+  onRowDragEnd(event:any):void{
     this.onRowDragEndEvent.emit(event);
   }
 
-  private onCellClicked(event:any):void{
+  onCellClicked(event:any):void{
     console.info(event);
     let message:DataGridMessage = new DataGridMessage();
 
@@ -85,7 +85,7 @@ export class DatagridComponent implements OnInit {
     this.onColumnIsReady.emit(this.columnApi);
   }
 
-  private onGridSizeChanged(){
+  onGridSizeChanged(){
     this.api.sizeColumnsToFit();
   }
 
