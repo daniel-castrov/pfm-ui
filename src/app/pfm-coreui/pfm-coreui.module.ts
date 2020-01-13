@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { PrimaryButtonComponent } from './form-inputs/primary-button-input/primary-button.component';
 import { DropdownComponent } from './form-inputs/dropdown/dropdown.component';
 import { DatagridComponent } from './datagrid/datagrid.component';
+import { DisplaydatagridComponent } from './datagrid/renderers/displaydatagrid.component';
 import { AgGridModule } from '@ag-grid-community/angular';
 import { ActionCellRendererComponent } from './datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { AttachmentCellRendererComponent } from './datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
@@ -47,6 +48,7 @@ import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.componen
     SecondaryButtonComponent,
     RadioButtonInputComponent,
     DatagridComponent,
+    DisplaydatagridComponent,
     ActionCellRendererComponent,
     AttachmentCellRendererComponent,
     TextCellEditorComponent,
@@ -74,6 +76,7 @@ import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.componen
     SecondaryButtonComponent,
     RadioButtonInputComponent,
     DatagridComponent,
+    DisplaydatagridComponent,
     ActionCellRendererComponent,
     AttachmentCellRendererComponent,
     TextCellEditorComponent,
