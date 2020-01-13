@@ -123,7 +123,7 @@ export class CreateProgrammingComponent implements OnInit {
       actions.canSave = false;
       actions.canUpload = false;
 
-      row["actions"] = actions;
+      //row["actions"] = actions;
       this.communityData.push(row);
 
       // Community Toas
@@ -140,10 +140,9 @@ export class CreateProgrammingComponent implements OnInit {
 
         toarow[fy+i] = row[ fy+i ] ;
       }      
-
       row["actions"] = actions;
-      
       this.communityData.push(row);
+
       toarow['orgid'] = "sub TOA Total Goal";
       this.subToasData.push(toarow);
       
@@ -191,16 +190,16 @@ export class CreateProgrammingComponent implements OnInit {
         subtoarow[fy+i] = total;
       }
 
-      let rowspan = {};
-      rowspan['orgid'] ="";
+      //let rowspan = {};
+      //rowspan['orgid'] ="";
       this.tableHeaders = [];
       this.tableHeaders.push('orgid');
       for (i = 0; i < 5; i++){
-        rowspan[fy+ i] =  "";
+       // rowspan[fy+ i] =  "";
         this.tableHeaders.push((fy+i).toString());
       }
 
-      this.orgData.push(rowspan);
+      //this.orgData.push(rowspan);
       this.orgData.push(toarow);      
       this.orgData.push(subtoarow);
 
