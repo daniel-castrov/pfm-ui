@@ -37,21 +37,18 @@ export class CreateProgrammingComponent implements OnInit {
   programBudgetData:boolean;
   communityGridApi:GridApi;
   orgGridApi:GridApi;
-  subToasGridApi:GridApi;
-  columnApi:ColumnApi;
-  subToaColumnApi:ColumnApi;
+  columnApi:ColumnApi;  
   communityColumns:any[]; 
-  communityData:any;
-  orgColumns:any;
-  orgData:any;
-  subToasColumns:any;
-  subToasData:any;
-  
+  communityData:any[];
+  orgColumns:any[];
+  orgData:any[];
+  subToasData:any[];
+  tableHeaders:Array<string>;  
   orgs:Array<Organization>;
+  uploadedFileId:string;
   constructor(private appModel: AppModel,private programmingService:ProgrammingService, private dialogService:DialogService, private router:Router) { 
     
-    //var selectedYear = appModel.selectedYear;
-    this.subToasColumns =[];
+    //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
 
     programmingService.getAllorganizations().subscribe(
@@ -75,9 +72,9 @@ export class CreateProgrammingComponent implements OnInit {
       this.showUploadDialog = false;
       this.programBudgetData=true;
       
-      var selectedYear = FormatterUtil.getCurrentFiscalYear()+1; 
+      var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1; 
       this.initGrids(selectedYear);
-     
+      this.getPomFromPB(selectedYear);
     }
     
    }
@@ -85,30 +82,34 @@ export class CreateProgrammingComponent implements OnInit {
    initGrids(selectedYear){
      // set the column definitions to community adn Organization grid
      this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
-     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);
-     this.subToasColumns = this.setSubToasAgGridColDefs(selectedYear);
-     
-     //this.busy = true;
-     this.programmingService.getPomFromPb().subscribe(
+     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);                    
+   }
+
+   getPomFromPB(selectedYear:any){
+    this.busy = true;
+      this.programmingService.getPomFromPb().subscribe(
         resp => {
-       // this.busy = false;
+          this.busy = false;
           var pom = (resp as PomToasResponse).result ;
           console.log("year..." + pom.fy);
           this.loadGrids(pom,selectedYear);
           
       },
       error => {
+        this.busy = false;
           console.log("Error in getting community and org toas...");
-         // this.busy = false;
+        // this.busy = false;
       });
-     this.communityData = [];
-     this.orgData = [];
    }
-
+   
    loadGrids(pomData:Pom,fy:number){
-      let toarow = {};
+      let toarow = {};            
       let subtoarow = {};
-      this.subToasData = [];
+      this.subToasData = []; 
+
+      this.communityData = [];
+      this.orgData = [];
+
       // BaseLine
       let row = {}
       row["orgid"] = "<strong><span>Baseline</span></strong>";
@@ -119,16 +120,16 @@ export class CreateProgrammingComponent implements OnInit {
       let  actions = new Action();
       actions.canDelete = false;
       actions.canEdit = true;
-      actions.canSave = true;
+      actions.canSave = false;
       actions.canUpload = false;
 
       row["actions"] = actions;
       this.communityData.push(row);
 
       // Community Toas
-      row = {}
+      row = {}      
       row["orgid"] = "<strong><span>TOA</span></strong>";
-      toarow['orgid'] = "<strong><span>sub TOA </span></strong>";
+      toarow['orgid'] = "<strong><span>sub TOA Total Goal</span></strong>";
       pomData.communityToas.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;        
       });
@@ -143,9 +144,9 @@ export class CreateProgrammingComponent implements OnInit {
       row["actions"] = actions;
       
       this.communityData.push(row);
+      toarow['orgid'] = "sub TOA Total Goal";
       this.subToasData.push(toarow);
       
-
       this.communityData.forEach( row => {        
         for (i = 0; i < 5; i++) {
           if ( row[ fy+i ] == undefined ) {
@@ -154,9 +155,8 @@ export class CreateProgrammingComponent implements OnInit {
           }       
         });
                 
-
-      this.communityGridApi.setRowData(this.communityData);
-      this.communityGridApi.setColumnDefs(this.communityColumns);
+    //  this.communityGridApi.setRowData(this.communityData);
+    //  this.communityGridApi.setColumnDefs(this.communityColumns);
 
       // Org TOAs      
      Object.keys(pomData.orgToas).reverse().forEach(key => {          
@@ -179,7 +179,7 @@ export class CreateProgrammingComponent implements OnInit {
       });      
 
       subtoarow = {};
-      subtoarow['orgid'] = "<strong><span>sub TOA actual</span></strong>";
+      subtoarow['orgid'] = "<strong><span>sub-TOA Total Actual</span></strong>";
       for (i = 0; i < 5; i++) {
         let total = 0;        
         this.orgData.forEach(row => {
@@ -188,28 +188,38 @@ export class CreateProgrammingComponent implements OnInit {
             }
           total = total + row[fy+i];
         });
-        subtoarow[fy+1] = total;
+        subtoarow[fy+i] = total;
       }
-      this.orgData.push(toarow);
+
+      let rowspan = {};
+      rowspan['orgid'] ="";
+      this.tableHeaders = [];
+      this.tableHeaders.push('orgid');
+      for (i = 0; i < 5; i++){
+        rowspan[fy+ i] =  "";
+        this.tableHeaders.push((fy+i).toString());
+      }
+
+      this.orgData.push(rowspan);
+      this.orgData.push(toarow);      
       this.orgData.push(subtoarow);
+
+      subtoarow['orgid'] = "sub-TOA Total Actual";
       this.subToasData.push(subtoarow);
 
-      toarow = {};
-      toarow['orgid'] = "<strong><span>Delta</span></strong>";
+      let toaDeltarow = {};
+      toaDeltarow['orgid'] = "<strong><span>Delta</span></strong>";
       for (i = 0; i < 5; i++)
-      {
-        let delta = 0;
-        this.subToasData.forEach(row =>{
-            //row[fy+i]
-        })
+      {        
+        toaDeltarow[fy+i] = subtoarow[fy+i] - toarow[fy+i];
       }
+      
+      this.orgData.push(toaDeltarow);
+      toaDeltarow['orgid'] = "Delta";
+      this.subToasData.push(toaDeltarow);
 
-      this.orgGridApi.setRowData(this.orgData);
-      this.orgGridApi.setColumnDefs(this.orgColumns);
-
-
-      this.subToasGridApi.setColumnDefs(this.subToasColumns);
-      this.subToasGridApi.setRowData(this.subToasData);
+     // this.orgGridApi.setRowData(this.orgData);
+     // this.orgGridApi.setColumnDefs(this.orgColumns);      
   }
 
   getOrgName(key):string{ 
@@ -223,15 +233,33 @@ export class CreateProgrammingComponent implements OnInit {
         let attachment:Attachment = new Attachment();
         attachment.file = newFile;
         this.programBudgetData=true;
+        this.uploadedFileId = newFile.id;
+        this.LoadPomFromFile(newFile.id);
       }else{
         this.yearDropDown.selectedItem=this.yearDropDown.prompt;
-      }
+      }     
   }
 
   onCreateProgrammingPhase():void{
     let year:any = this.selectedYear;
   }
 
+  LoadPomFromFile(fileId:string){
+    this.busy = true;
+    this.programmingService.getPomFromFile(fileId).subscribe(
+      resp => {
+        this.busy = false;
+        var pom = (resp as PomToasResponse).result ;
+        console.log("year..." + pom.fy);
+        this.initGrids(this.byYear);
+        this.loadGrids(pom,this.byYear);
+      },
+      error => {
+        this.busy = false;
+        console.log(error);
+      }
+    );
+  }
   ngOnInit() {
     console.log("in ngOninit");
 
@@ -250,9 +278,8 @@ export class CreateProgrammingComponent implements OnInit {
       },
       error =>{
                 let response:any = error ;
-                this.busy = false;
-                let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2); // REmove this ....
-                let years: string[] = [pyear,"Spreadsheet"];
+                this.busy = false;                
+                let years: string[] = ["Spreadsheet"];
                 this.availableYears = this.toListItem(years);
                 console.log(response.error);
       });
@@ -291,14 +318,17 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
     { headerName: column1Name,
       suppressMenu: true,
       field: 'orgid',
-      minWidth: 140,
+      minWidth: 140,      
       editable: false,
       pinned:'left',
       //rowDrag: true,
       //rowDragManaged: true,
+      colSpan: function (params){        
+        return (params.value === '1')? 7 : 1;
+    },
       cellRenderer: params => params.value,
       cellClass: "text-class",    
-      cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
+      cellStyle: { display: 'flex', 'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal'}
     
   });
 
@@ -306,12 +336,13 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
     colDefs.push(
       { headerName: "FY" + (fy + i - 2000) ,
         type: "numericColumn",
+        minWidth: 110,        
         suppressMenu: true,
         field: (fy+ i).toString(),
         cellRenderer: params => this.negativeNumberRenderer(params),
         editable: false,
         cellClass: "pfm-datagrid-numeric-class",      
-        cellStyle: { display: 'flex', 'align-items': 'right'}
+        cellStyle: { display: 'flex','padding-right':'10px !important'}
     });
   }
   colDefs.push(
@@ -319,20 +350,20 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       type: "numericColumn",
       suppressMenu: true,
       field: 'total',
-      minWidth: 110,
+      minWidth: 110,     
       editable: false,
       valueGetter: params => this.rowTotal( params.data, fy ),
       cellRenderer: params => this.negativeNumberRenderer(params),
       cellClass: "pfm-datagrid-numeric-class",
-      cellStyle: { display: 'flex', 'align-items': 'right'}
-  });
+      cellStyle: { display: 'flex', 'padding-right':'10px !important'}
+  });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 
   colDefs.push(
     {
       headerName: 'Actions',
-      field: 'actions',
-      maxWidth: 175,
-      minWidth: 175,
+      field: 'actions',      
+      mWidth: 100,
+      maxWidth:100,
       cellRendererFramework: ActionCellRendererComponent
     }
   );
@@ -340,43 +371,11 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
   return colDefs;
 }
 
-private setSubToasAgGridColDefs(fy:number): any {
-
-  let colDefs = [];
-
-  colDefs.push(
-    { headerName: "",
-      suppressMenu: true,
-      field: 'orgid',
-      minWidth: 140,
-      editable: false,
-      pinned:'left',
-      //rowDrag: true,
-      //rowDragManaged: true,
-      cellRenderer: params => params.value,
-      cellClass: "text-class",    
-      cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
-    
-  });
-
-  for (var i = 0; i < 5; i++) {
-    colDefs.push(
-      { headerName: "" ,
-        type: "numericColumn",
-        suppressMenu: true,
-        field: (fy+ i).toString(),
-        cellRenderer: params => this.negativeNumberRenderer(params),
-        editable: false,
-        cellClass: "pfm-datagrid-numeric-class",      
-        cellStyle: { display: 'flex', 'align-items': 'right'}
-    });
-  }
-  
-  return colDefs;
-}
-
 // a sinple CellRenderrer for negative numbers
 private negativeNumberRenderer( params ){
+
+  if (params.value == "")
+    return params.value;
 
   if ( params.value < 0 ){
     return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
@@ -409,22 +408,19 @@ private shouldEdit ( params ){
 
 onCommunityGridIsReady(gridApi:GridApi):void{
   this.communityGridApi = gridApi;
+  gridApi.sizeColumnsToFit();
 }
 
 onOrgGridIsReady(gridApi:GridApi):void{
   this.orgGridApi = gridApi;
+
+  gridApi.sizeColumnsToFit();
 }
 
 onColumnIsReady(columnApi:ColumnApi):void{
   this.columnApi = columnApi;
 }
 
-onToasGridIsReady(gridApi:GridApi){
-  this.subToasGridApi = gridApi;
-}
-onToasColumnIsReady(columnApi:ColumnApi){
-  this.subToaColumnApi = columnApi;
-}
 onRowDragEnd(param){}
 
 }

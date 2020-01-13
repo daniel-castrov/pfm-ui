@@ -28,20 +28,31 @@
 <div *ngIf="programBudgetData">
   <div class="col-20" >
     <tabset destroyOnHide="true">
-      <tab heading="Community" active="true">
+      <tab heading="Community" active="true" style="width:99%;height:99%">
         <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
         <div class="grid-container">
-          <pfm-datagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  [showAddRow]="true" [columns]="communityColumns" [rows]="communityData" ></pfm-datagrid>
+          <pfm-datagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" ></pfm-datagrid>
         </div>
       </tab>
-      <tab heading="Organization">
+      <tab heading="Organization"  style="width:99%;height:99%">
         <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
-        
+        <!--<div style="height:300px;width:98%">-->
         <div class="grid-container">
           <pfm-datagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" ></pfm-datagrid>
         </div>
-         
-        
+      <!--</div>-->
+      <!--
+      <div style="float:left; height:100px;width:98%">
+        <table border="1px" style="width:80%;height:99%">          
+          <tr *ngFor="let row of subToasData" style="width:100%;height:30px;">
+            
+            <td *ngFor="let column of tableHeaders" style="width:100px;padding-left: 1px;padding-right:5px; text-align:right;">
+              <strong>${{row[column]}}</strong>
+            </td>
+            </tr>
+        </table>
+      </div>
+    -->
       </tab>
     </tabset>
   </div>

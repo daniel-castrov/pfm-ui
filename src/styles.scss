@@ -366,7 +366,7 @@ gridster .gridster-row {
 
 .pfm-datagrid-numeric-class{
   display: flex;
-  align-items: center;
+  align-items: right !important;
   white-space: normal;
   justify-content: flex-end;
 }
