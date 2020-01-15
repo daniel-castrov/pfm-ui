@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { PomService } from '../../programming-feature/services/pom-service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../pfm-common-models/ListItem';
@@ -16,6 +16,11 @@ import { TOA } from '../models/TOA';
 import {Pom} from '../models/Pom';
 import {PomToasResponse} from '../models/PomToasResponse';
 import { Organization } from '../../pfm-common-models/Organization';
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import { RequestsSummaryToaWidgetComponent } from '../requests/requests-summary-toa-widget/requests-summary-toa-widget.component';
+import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
+import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
+import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 
 
 
@@ -26,6 +31,9 @@ import { Organization } from '../../pfm-common-models/Organization';
 })
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
+
+  @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
+  @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
   
   id:string = 'create-programming-component';
   busy:boolean;
@@ -46,7 +54,10 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
-  constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router) {
+  options: GridsterConfig;
+  dashboard: Array<GridsterItem>;
+  griddata:ProgramRequestForPOM[];
+  constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router, private dashboardService:DashboardMockService) {
     
     //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
@@ -283,8 +294,66 @@ export class CreateProgrammingComponent implements OnInit {
                 console.log(response.error);
       });
 
-      
+    //initialize chart options
+    this.options = {
+      minCols: 8,
+      maxCols: 8,
+      minRows: 8,
+      maxRows: 8,
+      itemResizeCallback: (event)=>{
+        if(event.id === "community-graph"){
+          let w:any = this.communityGraphItem;
+          this.communityGraph.onResize(w.width, w.height);
+        }
+
+        this.saveWidgetLayout();
+      },
+      itemChangeCallback: ()=>{
+        this.saveWidgetLayout();
+      },
+      // draggable: {
+      //   enabled: true,
+      // },
+      // resizable: {
+      //   enabled: true,
+      // },
+    };
+
+    //defaults for Gridster
+    this.dashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: "community-graph" }];
  }
+
+  // load chart preferences
+  private getPreferences():void{
+    this.busy = true;
+    this.dashboardService.getWidgetPreferences("programming-requests-summary").subscribe(
+      data => {
+        this.busy = false;
+        if(data){
+          let list:Array<GridsterItem> = data as any;
+          if(list && list.length > 0){
+            this.dashboard = list;
+          }
+        }
+
+      },
+      error => {
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      }
+    );
+  }
+
+  // save chart preferences
+  private saveWidgetLayout():void{
+
+    this.dashboardService.saveWidgetPreferences("programming-requests-summary", this.dashboard).subscribe(
+      data => {
+      },
+      error => {
+
+      });
+  }
 
   private toListItem(years:string[]):ListItem[]{
     let items:ListItem[] = [];

@@ -27,10 +27,11 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { ProgrammingServicesImpl } from './services/programming-services-impl.service';
 import {PomService} from './services/pom-service';
 import {PomServiceImpl} from './services/pom-service-impl.service';
+import { CreateProgrammingCommunityGraphComponent } from './create-programming/create-programming-community-graph/create-programming-community-graph.component';
 
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent],
+  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent],
   imports: [
     CommonModule,
     HttpClientModule,

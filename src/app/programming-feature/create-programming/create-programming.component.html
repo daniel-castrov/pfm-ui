@@ -25,6 +25,18 @@
 
 <br><br>
 
+<div class="section-pods">
+  <gridster [options]="options">
+    <gridster-item #communityGraphItem [item]="dashboard[0]">
+      <div class="gridster-item-content">
+        <pfm-requests-summary-org-widget #communityGraph [griddata]="griddata"></pfm-requests-summary-org-widget>
+      </div>
+    </gridster-item>
+  </gridster>
+</div>
+
+<br><br>
+
 <div *ngIf="programBudgetData">
   <div class="col-20" >
     <tabset  class="program-tab-style" destroyOnHide="true">
