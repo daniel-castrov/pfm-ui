@@ -1,7 +1,7 @@
 import {Pom} from '../models/Pom';
 
-export class PomToasResponse {
+export class PomServiceResponse {
     error?: any;
     result: Pom;
-    constructor(){}
+    constructor() {}
 }

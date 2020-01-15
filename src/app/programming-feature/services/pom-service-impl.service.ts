@@ -21,12 +21,7 @@ export class PomServiceImpl extends PomService {
     return this.get('pom/init/fromPB');
   }
 
-  getAllorganizations(): Observable<Object> {
-    return this.get('organization');
-  }
-
   getPomFromFile(fileId: string): Observable<Object> {
     return this.get('pom/init/fromLibrary/id/' + fileId);
   }
-
 }
