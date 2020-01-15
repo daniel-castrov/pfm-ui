@@ -21,6 +21,7 @@ import { RequestsSummaryToaWidgetComponent } from '../requests/requests-summary-
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
 import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
+import { RequestsSummaryOrgWidgetComponent } from '../requests/requests-summary-org-widget/requests-summary-org-widget.component';
 
 
 
