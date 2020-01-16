@@ -1,3 +1,45 @@
+:host {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+     height: 100vh;
+ }
+
+.main{
+    display: flex;
+}
+
+.section-banner{
+    display: flex;
+    width: 100%;
+    height: 15%;
+}
+
+.section-tabs{
+    /*placeholder in case we need styles to add to this area it seems to work without any css*/
+}
+
+.section-tab{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+.section-chart{
+    display: flex;
+    margin: 0 auto;
+    width: 80%;
+    height: 40%;
+}
+
+.section-datagrid{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 40%;
+}
+
 .grid-container{
     width: 100%;
     height: calc(100vh);

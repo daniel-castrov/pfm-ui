@@ -26,12 +26,13 @@ import {OrganizationServiceImpl} from './services/organization-service-impl.serv
 import {OrganizationService} from './services/organization-service';
 import {PomService} from './services/pom-service';
 import {PomServiceImpl} from './services/pom-service-impl.service';
+import { CreateProgrammingCommunityGraphComponent } from './create-programming/create-programming-community-graph/create-programming-community-graph.component';
 import {ProgrammingService} from './services/programming-service';
 import {ProgrammingServiceMock} from './services/programming-service-mock';
 
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent],
+  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent],
   imports: [
     CommonModule,
     HttpClientModule,
