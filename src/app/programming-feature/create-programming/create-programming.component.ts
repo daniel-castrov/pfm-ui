@@ -46,8 +46,8 @@ export class CreateProgrammingComponent implements OnInit {
   orgs:Array<Organization>;
   uploadedFileId:string;
   loadBaseline:boolean;
-  constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router) {
-    
+  constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router) {
+
     //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
 
@@ -66,8 +66,7 @@ export class CreateProgrammingComponent implements OnInit {
     console.log("selected year "+ this.programYearSelected);
 
     this.loadBaseline = false;
-    if (this.programYearSelected != "undefined")
-    {
+    if (this.programYearSelected != "undefined") {
       this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?","Caution",
           () => {
             this.loadBaseline = true;
