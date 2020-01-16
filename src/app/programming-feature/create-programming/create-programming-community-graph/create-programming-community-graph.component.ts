@@ -9,7 +9,7 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
 })
 export class CreateProgrammingCommunityGraphComponent{
 
-  @Input() griddata:ProgramRequestForPOM[];
+  @Input() griddata:any[];
   chartReady:boolean;
 
   public columnChart: any =  {
@@ -26,9 +26,10 @@ export class CreateProgrammingCommunityGraphComponent{
       title: 'TOAs for Community',
       width: 200,
       height: 200,
-      vAxes: { 1: {gridlines: {color: 'transparent'}, format:"#%"},},
+      vAxes: { 0: {format: 'currency'}, 1: {gridlines: {color: 'transparent'}, format:"percent"}},
       seriesType: 'bars',
-      series: {1: {targetAxisIndex:1, type: 'line', color: 'black'}},
+      series: {0: {targetAxisIndex:0},
+               1: {targetAxisIndex:1, type: 'line', color: 'black'}},
       legend: {position:'none'},
       animation: {
         duration: 500,
@@ -45,8 +46,6 @@ export class CreateProgrammingCommunityGraphComponent{
 
   onResize(width:number, height:number):void{
     this.chartReady = false;
-    console.info("RequestsSummaryToaWidgetComponent", width, height);
-    console.info("Chart", this.columnChart.options.width, this.columnChart.options.height);
 
     this.columnChart.options.width = width;
     this.columnChart.options.height = height;
@@ -56,5 +55,9 @@ export class CreateProgrammingCommunityGraphComponent{
 
     }, 200);
 
+  }
+
+  redraw(){
+    //this.columnChart.component.draw();
   }
 }
