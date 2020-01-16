@@ -56,7 +56,7 @@ export class CreateProgrammingComponent implements OnInit {
   uploadedFileId:string;
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
-  griddata:ProgramRequestForPOM[];
+  griddata:any[];
   loadBaseline:boolean;
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
 
@@ -126,6 +126,7 @@ export class CreateProgrammingComponent implements OnInit {
           var pom = (resp as PomServiceResponse).result ;
           console.log("year..." + pom.fy);
           this.loadGrids(pom,selectedYear);
+          this.updateCommunityGraphData(pom, selectedYear);
           
       },
       error => {
@@ -136,6 +137,7 @@ export class CreateProgrammingComponent implements OnInit {
    }
    
    loadGrids(pomData:Pom,fy:number){
+      console.log(fy);
       let toarow = {};            
       let subtoarow = {};
       this.subToasData = []; 
@@ -186,6 +188,7 @@ export class CreateProgrammingComponent implements OnInit {
             }          
           }       
         });
+
                 
     //  this.communityGridApi.setRowData(this.communityData);
     //  this.communityGridApi.setColumnDefs(this.communityColumns);
@@ -292,6 +295,7 @@ export class CreateProgrammingComponent implements OnInit {
       }
     );
   }
+
   ngOnInit() {
     console.log("in ngOninit");
 
@@ -329,18 +333,11 @@ export class CreateProgrammingComponent implements OnInit {
           let w:any = this.communityGraphItem;
           this.communityGraph.onResize(w.width, w.height);
         }
-
         this.saveWidgetLayout();
       },
       itemChangeCallback: ()=>{
         this.saveWidgetLayout();
       },
-      // draggable: {
-      //   enabled: true,
-      // },
-      // resizable: {
-      //   enabled: true,
-      // },
     };
 
     //defaults for Gridster
@@ -461,6 +458,68 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
   );
 
   return colDefs;
+}
+
+//updates the community graph with grid data
+private updateCommunityGraphData(pomData:Pom,startYear:number){
+  // ['FY19', 540000, .53],
+  //   ['FY20', 545000, .54],
+  //   ['FY21', 510000, .50],
+  //   ['FY22', 490000, .51],
+  //   ['FY23', 461000, .49],
+
+
+  // build data
+  let startYearIndex:number;
+  let data: any[] = pomData.communityToas;
+  let length: number = data.length;
+
+  for(let i = 0; i < length; i++){
+    if (i===0){
+      data[i].percentageChange = 0;
+    }
+    else if (i >= data.length) {
+      // if year doesnt exist make one
+      let newYear: any = {};
+      newYear.year = data[i-1].year + 1;
+      newYear.amount = 0;
+      data[i] = newYear;
+      if (data[i-1].amount !== 0) {
+        data[i].percentageChange = ((data[i].amount - data[i-1].amount)/data[i-1].amount);
+      }
+      else {
+        data[i].percentageChange = 0;
+      }
+    }
+    else if (data[i] !== null) {
+      //calculate percent change
+      data[i].percentageChange = ((data[i].amount - data[i-1].amount)/data[i-1].amount);
+    }
+    // set start index
+    if(data[i].year === startYear){
+      startYearIndex = i;
+      if (startYearIndex + 5 > length) {
+        //add length to account for empty years
+        length = startYearIndex + 5;
+      }
+    }
+  }
+
+  console.log(data);
+
+  this.griddata = [
+    ['Fiscal Year', 'PRs Submitted', 'Average',],
+    ['FY' + (data[startYearIndex].year - 2000), data[startYearIndex].amount, data[startYearIndex].percentageChange],
+    ['FY'+ (data[startYearIndex+1].year - 2000), data[startYearIndex+1].amount, data[startYearIndex+1].percentageChange],
+    ['FY'+ (data[startYearIndex+2].year - 2000), data[startYearIndex+2].amount, data[startYearIndex+2].percentageChange],
+    ['FY'+ (data[startYearIndex+3].year - 2000), data[startYearIndex+3].amount, data[startYearIndex+3].percentageChange],
+    ['FY'+ (data[startYearIndex+4].year - 2000), data[startYearIndex+4].amount, data[startYearIndex+4].percentageChange],
+  ];
+
+  console.log(this.griddata);
+
+  this.communityGraph.columnChart.dataTable = this.griddata;
+  this.communityGraph.redraw();
 }
 
 // a sinple CellRenderrer for negative numbers
