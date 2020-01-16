@@ -46,6 +46,7 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
+  loadBaseline:boolean;
   constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router) {
     
     //var selectedYear = appModel.selectedYear;   
@@ -63,22 +64,44 @@ export class CreateProgrammingComponent implements OnInit {
 
   yearSelected(year:string):void{
     this.selectedYear = year;
-    console.log("selected year "+ this.selectedYear);
-    this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
     console.log("selected year "+ this.programYearSelected);
-    if(this.programYearSelected=="Spreadsheet"){
-      this.showUploadDialog = true;
-    }else{ // if it is PBYear 
-      this.showUploadDialog = false;
-      this.programBudgetData=true;
-      
-      var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1; 
-      this.initGrids(selectedYear);
-      this.getPomFromPB(selectedYear);
+    
+    this.loadBaseline = false;
+    if (this.programYearSelected != "undefined")
+    {
+      this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?","Caution",
+          () => { 
+            this.loadBaseline = true;
+            this.onSelectBaseLine();
+          }, () => {
+            this.loadBaseline = false;
+            this.yearDropDown.selectedItem = this.programYearSelected;
+          });
+    }else {
+      this.loadBaseline = true;
+    }
+    
+    if (this.loadBaseline) {
+      this.onSelectBaseLine();
     }
     
    }
-      
+  
+   onSelectBaseLine(){
+    this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
+      console.log("selected year "+ this.programYearSelected);    
+      if(this.programYearSelected=="Spreadsheet"){
+        this.showUploadDialog = true;
+      }else{ // if it is PBYear 
+        this.showUploadDialog = false;
+        this.programBudgetData=true;
+        
+        var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1; 
+        this.initGrids(selectedYear);
+        this.getPomFromPB(selectedYear);
+      }
+   }
+
    initGrids(selectedYear){
      // set the column definitions to community adn Organization grid
      this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
@@ -264,6 +287,8 @@ export class CreateProgrammingComponent implements OnInit {
 
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
+    
+    this.programYearSelected = "undefined";
     this.busy = true;
     this.pomService.pBYearExists(pbYear).subscribe(
       resp => { 
