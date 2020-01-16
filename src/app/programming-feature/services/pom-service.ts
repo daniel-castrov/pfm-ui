@@ -3,15 +3,13 @@ import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 
 
-export abstract class PomService extends BaseRestService{
+export abstract class PomService extends BaseRestService {
 
-  constructor(protected httpClient:HttpClient){
+  constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
 
-   abstract pBYearExists(year:string):Observable<Object>;
-   abstract getPomFromPb():Observable<Object>;
-   abstract getAllorganizations():Observable<Object>;
-   abstract getPomFromFile(fileId:string):Observable<Object>;
-
+    abstract pBYearExists(year: string): Observable<Object>;
+    abstract getPomFromPb(): Observable<Object>;
+    abstract getPomFromFile(fileId: string): Observable<Object>;
 }

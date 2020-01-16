@@ -1,5 +1,5 @@
-export class TOA {    
+export class TOA {
     year: number;
     amount: number;
-   constructor(){}
+   constructor() {}
 }
