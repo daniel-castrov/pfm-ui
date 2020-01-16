@@ -23,7 +23,7 @@ export class CreateProgrammingCommunityGraphComponent{
       ['FY23', 461000, 490000],
     ],
     options: {
-      title: 'Community',
+      title: 'TOAs for Community',
       width: 200,
       height: 200,
       seriesType: 'bars',

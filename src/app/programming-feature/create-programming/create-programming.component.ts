@@ -1,28 +1,27 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { PomService } from '../../programming-feature/services/pom-service';
-import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { ListItem } from '../../pfm-common-models/ListItem';
-import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { Router } from '@angular/router';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {PomService} from '../../programming-feature/services/pom-service';
+import {DialogService} from '../../pfm-coreui/services/dialog.service';
+import {ListItem} from '../../pfm-common-models/ListItem';
+import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
+import {Router} from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';
-import { FileMetaData } from '../../pfm-common-models/FileMetaData';
-import { Attachment } from '../../pfm-common-models/Attachment';
-import { GridApi, ColumnApi, RowNode, Column, CellPosition } from '@ag-grid-community/all-modules';
-import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
-import { AppModel } from '../../pfm-common-models/AppModel';
-import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { Action } from '../../pfm-common-models/Action';
-import { TOA } from '../models/TOA';
+import {FileMetaData} from '../../pfm-common-models/FileMetaData';
+import {Attachment} from '../../pfm-common-models/Attachment';
+import {ColumnApi, GridApi} from '@ag-grid-community/all-modules';
+import {AppModel} from '../../pfm-common-models/AppModel';
+import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
+import {Action} from '../../pfm-common-models/Action';
+import {TOA} from '../models/TOA';
 import {Pom} from '../models/Pom';
-import {PomToasResponse} from '../models/PomToasResponse';
-import { Organization } from '../../pfm-common-models/Organization';
+import {PomServiceResponse} from '../models/PomServiceResponse';
+import {Organization} from '../../pfm-common-models/Organization';
+import {OrganizationService} from '../services/organization-service';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { RequestsSummaryToaWidgetComponent } from '../requests/requests-summary-toa-widget/requests-summary-toa-widget.component';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
 import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { RequestsSummaryOrgWidgetComponent } from '../requests/requests-summary-org-widget/requests-summary-org-widget.component';
-
 
 
 @Component({
@@ -58,14 +57,15 @@ export class CreateProgrammingComponent implements OnInit {
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
   griddata:ProgramRequestForPOM[];
-  constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router, private dashboardService:DashboardMockService) {
-    
+  loadBaseline:boolean;
+  constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
+
     //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
 
-    pomService.getAllorganizations().subscribe(
+    organizationService.getAll().subscribe(
       resp => {
-                this.orgs = (resp as any).result;               
+                this.orgs = (resp as any).result;
               },
       error => {
           this.orgs = [];
@@ -75,22 +75,43 @@ export class CreateProgrammingComponent implements OnInit {
 
   yearSelected(year:string):void{
     this.selectedYear = year;
-    console.log("selected year "+ this.selectedYear);
-    this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
     console.log("selected year "+ this.programYearSelected);
-    if(this.programYearSelected=="Spreadsheet"){
-      this.showUploadDialog = true;
-    }else{ // if it is PBYear 
-      this.showUploadDialog = false;
-      this.programBudgetData=true;
-      
-      var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1; 
-      this.initGrids(selectedYear);
-      this.getPomFromPB(selectedYear);
+
+    this.loadBaseline = false;
+    if (this.programYearSelected != "undefined") {
+      this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?","Caution",
+          () => {
+            this.loadBaseline = true;
+            this.onSelectBaseLine();
+          }, () => {
+            this.loadBaseline = false;
+            this.yearDropDown.selectedItem = this.programYearSelected;
+          });
+    }else {
+      this.loadBaseline = true;
     }
-    
+
+    if (this.loadBaseline) {
+      this.onSelectBaseLine();
+    }
+
    }
-      
+
+   onSelectBaseLine(){
+    this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
+      console.log("selected year "+ this.programYearSelected);
+      if(this.programYearSelected=="Spreadsheet"){
+        this.showUploadDialog = true;
+      }else{ // if it is PBYear
+        this.showUploadDialog = false;
+        this.programBudgetData=true;
+
+        var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1;
+        this.initGrids(selectedYear);
+        this.getPomFromPB(selectedYear);
+      }
+   }
+
    initGrids(selectedYear){
      // set the column definitions to community adn Organization grid
      this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
@@ -102,7 +123,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.pomService.getPomFromPb().subscribe(
         resp => {
           this.busy = false;
-          var pom = (resp as PomToasResponse).result ;
+          var pom = (resp as PomServiceResponse).result ;
           console.log("year..." + pom.fy);
           this.loadGrids(pom,selectedYear);
           
@@ -260,7 +281,7 @@ export class CreateProgrammingComponent implements OnInit {
     this.pomService.getPomFromFile(fileId).subscribe(
       resp => {
         this.busy = false;
-        var pom = (resp as PomToasResponse).result ;
+        var pom = (resp as PomServiceResponse).result ;
         console.log("year..." + pom.fy);
         this.initGrids(this.byYear);
         this.loadGrids(pom,this.byYear);
@@ -276,6 +297,8 @@ export class CreateProgrammingComponent implements OnInit {
 
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
+
+    this.programYearSelected = "undefined";
     this.busy = true;
     this.pomService.pBYearExists(pbYear).subscribe(
       resp => { 

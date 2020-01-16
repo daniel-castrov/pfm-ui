@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { ProgrammingService } from './programming-service';
-
+import {OrganizationService} from './organization-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProgrammingServicesImpl extends ProgrammingService {
+export class OrganizationServiceImpl extends OrganizationService {
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
 
-  getRequestsForPom(pom): Observable<Object> {
-    return this.get('program/container/' + pom.workspaceId);
+  getAll(): Observable<Object> {
+    return this.get('organization');
   }
 }

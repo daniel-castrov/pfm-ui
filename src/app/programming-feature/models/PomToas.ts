@@ -1,7 +1,9 @@
+import {TOA} from './TOA';
+
 export class PomToasResponse {
     error?: any;
     result: Pom;
-    constructor(){}
+    constructor() {}
 }
 export class Pom {
     created?: any;
@@ -19,11 +21,6 @@ export class Pom {
     sourceType: string;
     communityToas: Array<TOA>;
     orgToas: { [key: string]: Array<TOA>; };
-    constructor(){}
-   
-}
-export class TOA {    
-    year: number;
-    amount: number;
-   constructor(){}
+
+    constructor() {}
 }

@@ -17,5 +17,4 @@ export class Pom {
     communityToas: Array<TOA>;
     orgToas: { [key: string]: Array<TOA>; };
     constructor(){}
-   
 }
