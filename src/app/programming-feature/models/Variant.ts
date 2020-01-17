@@ -1,4 +1,4 @@
-import { ServiceLine } from './serviceLine';
+import { ServiceLine } from './ServiceLine';
 
 export class Variant {
     shortName: string;
