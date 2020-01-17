@@ -3,7 +3,7 @@ import { ProgramRequestForPOM } from '../../models/ProgramRequestForPOM';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 
 @Component({
-  selector: 'pfm-prgramming-community-graph',
+  selector: 'pfm-programming-community-graph',
   templateUrl: './create-programming-community-graph.component.html',
   styleUrls: ['./create-programming-community-graph.component.scss']
 })

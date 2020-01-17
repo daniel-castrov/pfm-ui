@@ -23,6 +23,7 @@ import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { RequestsSummaryOrgWidgetComponent } from '../requests/requests-summary-org-widget/requests-summary-org-widget.component';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
+import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 
 @Component({
   selector: 'pfm-programming',
@@ -34,7 +35,9 @@ export class CreateProgrammingComponent implements OnInit {
   
   @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
-  
+  @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
+  @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
+
   id:string = 'create-programming-component';
   busy:boolean;
   availableYears:ListItem[];
@@ -55,9 +58,12 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
-  options: GridsterConfig;
-  dashboard: Array<GridsterItem>;
-  griddata:any[];
+  communityOptions: GridsterConfig;
+  communityDashboard: Array<GridsterItem>;
+  communityGridData:any[];
+  organizationOptions: GridsterConfig;
+  organizationDashboard: Array<GridsterItem>;
+  organizationGridData:any[];
   loadBaseline:boolean;
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
  
@@ -319,58 +325,99 @@ export class CreateProgrammingComponent implements OnInit {
                 console.log(response.error);
       });
       
-//initialize chart options
-this.options = {
-  minCols: 8,
-  maxCols: 8,
-  minRows: 8,
-  maxRows: 8,
-  itemResizeCallback: (event)=>{
-    if(event.id === "community-graph"){
-      let w:any = this.communityGraphItem;
-      this.communityGraph.onResize(w.width, w.height);
-    }
-    this.saveWidgetLayout();
-  },
-  itemChangeCallback: ()=>{
-    this.saveWidgetLayout();
-  },
-};
+    //initialize chart options
+    this.communityOptions = {
+      minCols: 8,
+      maxCols: 8,
+      minRows: 8,
+      maxRows: 8,
+      itemResizeCallback: (event) => {
+        if (event.id === 'community-graph') {
+          let w: any = this.communityGraphItem;
+          this.communityGraph.onResize(w.width, w.height);
+        }
+        this.saveWidgetLayout();
+      },
+      itemChangeCallback: () => {
+        this.saveWidgetLayout();
+      }
+    };
 
-//defaults for Gridster
-this.dashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: "community-graph" }];
+    this.organizationOptions = {
+      minCols: 8,
+      maxCols: 8,
+      minRows: 8,
+      maxRows: 8,
+      itemResizeCallback: (event) => {
+        if (event.id === 'organization-graph') {
+          let w: any = this.organizationGraphItem;
+          this.organizationGraph.onResize(w.width, w.height);
+        }
+        this.saveWidgetLayout();
+      },
+      itemChangeCallback: () => {
+        this.saveWidgetLayout();
+      }
+    };
+
+    //defaults for Gridster
+    this.communityDashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: 'community-graph' }];
+    this.organizationDashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: "organization-graph" }];
 }
 
 // load chart preferences
 private getPreferences():void{
-this.busy = true;
-this.dashboardService.getWidgetPreferences("programming-requests-summary").subscribe(
-  data => {
-    this.busy = false;
-    if(data){
-      let list:Array<GridsterItem> = data as any;
-      if(list && list.length > 0){
-        this.dashboard = list;
+  this.busy = true;
+  this.dashboardService.getWidgetPreferences('community-graph').subscribe(
+    data => {
+      this.busy = false;
+      if (data) {
+        let list: Array<GridsterItem> = data as any;
+        if (list && list.length > 0) {
+          this.communityDashboard = list;
+        }
       }
-    }
 
-  },
-  error => {
-    this.busy = false;
-    this.dialogService.displayDebug(error);
-  }
-);
+    },
+    error => {
+      this.busy = false;
+      this.dialogService.displayDebug(error);
+    }
+  );
+
+  this.dashboardService.getWidgetPreferences("organization-graph").subscribe(
+    data => {
+      this.busy = false;
+      if(data){
+        let list:Array<GridsterItem> = data as any;
+        if(list && list.length > 0){
+          this.organizationDashboard = list;
+        }
+      }
+
+    },
+    error => {
+      this.busy = false;
+      this.dialogService.displayDebug(error);
+    }
+  );
 }
 
 // save chart preferences
 private saveWidgetLayout():void{
 
-this.dashboardService.saveWidgetPreferences("programming-requests-summary", this.dashboard).subscribe(
-  data => {
-  },
-  error => {
+  this.dashboardService.saveWidgetPreferences('community-graph', this.communityDashboard).subscribe(
+    data => {
+    },
+    error => {
 
-  });
+    });
+  this.dashboardService.saveWidgetPreferences('organization-graph', this.communityDashboard).subscribe(
+    data => {
+    },
+    error => {
+
+    });
 }
 
   private toListItem(years:string[]):ListItem[]{
@@ -460,7 +507,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
 //updates the community graph with grid data
 private updateCommunityGraphData(startYear:number) {
   //populate griddata
-  this.griddata = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+  this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
   for (let i = 0; i < 5; i++){
     let year = 'FY' + (startYear + i - 2000);
     let amount = 0;
@@ -473,10 +520,10 @@ private updateCommunityGraphData(startYear:number) {
       let pastAmount = this.communityData[1][startYear + i - 1];
       change = ((amount - pastAmount) / pastAmount);
     }
-    this.griddata[i + 1] = [year, amount, change];
+    this.communityGridData[i + 1] = [year, amount, change];
   }
 
-  this.communityGraph.columnChart.dataTable = this.griddata;
+  this.communityGraph.columnChart.dataTable = this.communityGridData;
   this.communityGraph.columnChart.component.draw();
 }
 

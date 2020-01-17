@@ -29,11 +29,12 @@
     <tabset  class="program-tab-style" destroyOnHide="true">
       <tab  heading="Community" active="true" style="width:100%;height:100%">
         <div class="section-tab">
+
           <div class="section-chart">
-            <gridster [options]="options">
-              <gridster-item #communityGraphItem [item]="dashboard[0]">
+            <gridster [options]="communityOptions">
+              <gridster-item #communityGraphItem [item]="communityDashboard[0]">
                 <div class="gridster-item-content">
-                  <pfm-prgramming-community-graph #communityGraph [griddata]="griddata"></pfm-prgramming-community-graph>
+                  <pfm-programming-community-graph #communityGraph [griddata]="communityGridData"></pfm-programming-community-graph>
                 </div>
               </gridster-item>
             </gridster>
@@ -46,16 +47,31 @@
               </pfm-displaydatagrid>
             </div>
           </div>
+
         </div>
       </tab >
       <tab heading="Organization"  style="width:100%;height:100%">
         <div class="section-tab">
-          <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
-          <!--<div style="height:300px;width:98%">-->
-          <div class="grid-container">
-            <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >
-            </pfm-displaydatagrid> 
+
+          <div class="section-chart">
+            <gridster [options]="organizationOptions">
+              <gridster-item #organizationGraphItem [item]="organizationDashboard[0]">
+                <div class="gridster-item-content">
+                  <pfm-programming-organization-graph #organizationGraph [griddata]="organizationGridData"></pfm-programming-organization-graph>
+                </div>
+              </gridster-item>
+            </gridster>
           </div>
+
+          <div class="section-datagrid">
+            <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
+            <!--<div style="height:300px;width:98%">-->
+            <div class="grid-container">
+              <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >
+              </pfm-displaydatagrid>
+            </div>
+          </div>
+
         </div>
       <!--</div>-->
       <!--
