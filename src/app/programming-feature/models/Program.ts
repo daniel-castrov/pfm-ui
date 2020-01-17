@@ -1,5 +1,5 @@
 import {FundingLine} from './FundingLine';
-import {Milestone} from '../../generated';
+import {Milestone} from './Milestone';
 
 export class Program {
     created: any;
