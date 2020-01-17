@@ -42,7 +42,8 @@
           <div class="section-datagrid">
             <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
             <div class="grid-container">
-              <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" ></pfm-displaydatagrid>
+              <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" >
+              </pfm-displaydatagrid>
             </div>
           </div>
         </div>
@@ -52,7 +53,8 @@
           <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
           <!--<div style="height:300px;width:98%">-->
           <div class="grid-container">
-            <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" ></pfm-displaydatagrid>
+            <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >
+            </pfm-displaydatagrid> 
           </div>
         </div>
       <!--</div>-->
