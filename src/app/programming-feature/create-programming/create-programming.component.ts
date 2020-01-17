@@ -37,7 +37,8 @@ export class CreateProgrammingComponent implements OnInit {
   programBudgetData:boolean;
   communityGridApi:GridApi;
   orgGridApi:GridApi;
-  columnApi:ColumnApi;  
+  commColumnApi:ColumnApi;  
+  orgColumnApi:ColumnApi; 
   communityColumns:any[]; 
   communityData:any[];
   orgColumns:any[];
@@ -364,7 +365,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
         suppressMenu: true,
         field: (fy+ i).toString(),
         cellRenderer: params => this.negativeNumberRenderer(params),
-        editable: false,
+        editable: true,
         cellClass: "pfm-datagrid-numeric-class",      
         cellStyle: { display: 'flex','padding-right':'10px !important'}
     });
@@ -430,22 +431,91 @@ private shouldEdit ( params ){
  return false;
 }
 
+onTabChange(param){
+  console.log('tab change:'+ param.activeId);
+}
 onCommunityGridIsReady(gridApi:GridApi):void{
   this.communityGridApi = gridApi;
-  gridApi.sizeColumnsToFit();
+  //gridApi.sizeColumnsToFit();
 }
 
 onOrgGridIsReady(gridApi:GridApi):void{
   this.orgGridApi = gridApi;
 
-  gridApi.sizeColumnsToFit();
+  //gridApi.sizeColumnsToFit();
+}
+onCommunityColumnIsReady (columnApi:ColumnApi):void{
+  this.commColumnApi = columnApi;
 }
 
-onColumnIsReady(columnApi:ColumnApi):void{
-  this.columnApi = columnApi;
+onOrgColumnIsReady(columnApi:ColumnApi):void{
+  this.orgColumnApi = columnApi;
 }
 
 onRowDragEnd(param){}
+
+onCommunityGridCellAction(cellAction:DataGridMessage){
+  this.onCellAction(cellAction,"community");
+}
+
+onOrgGridCellAction(cellAction:DataGridMessage){
+  this.onCellAction(cellAction,"org");
+}
+
+onCellAction(cellAction:DataGridMessage,gridType:any):void{
+ 
+  switch(cellAction.message){
+    case "save": {      
+      this.onSaveRow(cellAction.rowIndex,gridType);
+      break;
+    }
+    case "edit": {
+      this.onEditRow(cellAction.rowIndex,gridType)
+      break;
+    }    
+  }
+}
+
+onSaveRow(rowId,gridType):void{
+  console.log('grid type :' + gridType);
+  let editAction = this.onSaveAction(rowId);
+  this.communityData[rowId].actions = editAction;
+  
+  this.communityGridApi.stopEditing();
+}
+
+onEditRow(rowId,gridId):void{
+  console.log('grid type :' + gridId);
+  let editAction = this.onEditAction(rowId,gridId);
+
+
+  this.communityGridApi.startEditingCell({
+    rowIndex:rowId,
+    colKey:"2022"
+  });
+}
+
+onEditAction(rowId:number,gridId):any{
+
+  let  actions = this.communityData[rowId]["actions"];
+  actions.canDelete = false;
+  actions.canEdit = false;
+  actions.canSave = true;
+  actions.canUpload = false;
+
+  return actions;
+}
+
+onSaveAction(rowId:number):any{
+
+  let  actions = this.communityData[rowId]["actions"];
+  actions.canDelete = false;
+  actions.canEdit = true;
+  actions.canSave = false;
+  actions.canUpload = false;
+  
+  return actions;
+}
 
 }
 
