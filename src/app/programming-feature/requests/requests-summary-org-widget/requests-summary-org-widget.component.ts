@@ -107,11 +107,11 @@ export class RequestsSummaryOrgWidgetComponent  {
     //set up BA Line tree structure
     let lineTable = [
       ['Program', 'Organization', 'Health', 'Demands'],
-      ['BA Line', null,  0,  0],
-      ['SA0001', 'BA Line',  0,  0],
-      ['BA2', 'BA Line',  0,  0],
-      ['BA5', 'BA Line',  0, 0],
-      ['PHM001', 'BA Line',  0,  0],
+      ['BA Line', null, 0, 0],
+      ['SA0001', 'BA Line', 0, 0],
+      ['BA2', 'BA Line', 0, 0],
+      ['BA5', 'BA Line', 0, 0],
+      ['PHM001', 'BA Line', 0, 0],
       ['BA4', 'BA Line', 0, 0],
       ['BA1', 'BA Line', 0, 0],
       ['BA3', 'BA Line', 0, 0],

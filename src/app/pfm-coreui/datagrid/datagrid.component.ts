@@ -14,7 +14,7 @@ export class DatagridComponent implements OnInit {
 
   @Input() columns:any;
   @Input() rows:any;
-  @Input() showAddRow:boolean;
+  @Input() showAddRow:boolean = false;
   @Input() tabToNextCell;
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
