@@ -1,5 +1,5 @@
-<div class="main section-banner">
-    <h3>Summary of Program Requests for POM19</h3>
+<div *ngIf="programmingModelReady" class="main section-banner">
+    <h3>Summary of Program Requests for POM{{ pomDisplayYear }}</h3>
     <pfm-primary-button [label]="'Submit All'"></pfm-primary-button>
 </div>
 
@@ -20,6 +20,6 @@
 
 </div>
 
-<div class="section-datagrid">
-    <pfm-requests-summary-grid [griddata]="griddata"></pfm-requests-summary-grid>
+<div *ngIf="programmingModelReady" class="section-datagrid">
+    <pfm-requests-summary-grid></pfm-requests-summary-grid>
 </div>
