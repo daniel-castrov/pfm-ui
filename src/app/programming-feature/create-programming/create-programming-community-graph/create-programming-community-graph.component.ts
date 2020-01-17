@@ -14,14 +14,7 @@ export class CreateProgrammingCommunityGraphComponent{
 
   public columnChart: any =  {
     chartType: 'ColumnChart',
-    dataTable: [
-      ['Fiscal Year', 'PRs Submitted', 'Average',],
-      ['FY19', 540000, .53],
-      ['FY20', 545000, .54],
-      ['FY21', 510000, .50],
-      ['FY22', 490000, .51],
-      ['FY23', 461000, .49],
-    ],
+    dataTable: [],
     options: {
       title: 'TOAs for Community',
       width: 200,
@@ -54,10 +47,5 @@ export class CreateProgrammingCommunityGraphComponent{
       this.chartReady = true;
 
     }, 200);
-
-  }
-
-  redraw(){
-    //this.columnChart.component.draw();
   }
 }

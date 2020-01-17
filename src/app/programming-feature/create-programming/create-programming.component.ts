@@ -127,8 +127,6 @@ export class CreateProgrammingComponent implements OnInit {
           var pom = (resp as PomServiceResponse).result ;
           console.log("year..." + pom.fy);
           this.loadGrids(pom,selectedYear);
-          this.updateCommunityGraphData(pom, selectedYear);
-          
       },
       error => {
         this.busy = false;
@@ -253,7 +251,8 @@ export class CreateProgrammingComponent implements OnInit {
       this.subToasData.push(toaDeltarow);
 
      // this.orgGridApi.setRowData(this.orgData);
-     // this.orgGridApi.setColumnDefs(this.orgColumns);      
+     // this.orgGridApi.setColumnDefs(this.orgColumns);
+     this.updateCommunityGraphData(fy);
   }
 
   getOrgName(key):string{ 
@@ -459,65 +458,26 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
 }
 
 //updates the community graph with grid data
-private updateCommunityGraphData(pomData:Pom,startYear:number){
-  // ['FY19', 540000, .53],
-  //   ['FY20', 545000, .54],
-  //   ['FY21', 510000, .50],
-  //   ['FY22', 490000, .51],
-  //   ['FY23', 461000, .49],
-
-
-  // build data
-  let startYearIndex:number;
-  let data: any[] = pomData.communityToas;
-  let length: number = data.length;
-
-  for(let i = 0; i < length; i++){
-    if (i===0){
-      data[i].percentageChange = 0;
+private updateCommunityGraphData(startYear:number) {
+  //populate griddata
+  this.griddata = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+  for (let i = 0; i < 5; i++){
+    let year = 'FY' + (startYear + i - 2000);
+    let amount = 0;
+    let change = 0;
+    //if there is a year
+    if (this.communityData[1][startYear + i]) {
+      amount = this.communityData[1][startYear + i];
     }
-    else if (i >= data.length) {
-      // if year doesnt exist make one
-      let newYear: any = {};
-      newYear.year = data[i-1].year + 1;
-      newYear.amount = 0;
-      data[i] = newYear;
-      if (data[i-1].amount !== 0) {
-        data[i].percentageChange = ((data[i].amount - data[i-1].amount)/data[i-1].amount);
-      }
-      else {
-        data[i].percentageChange = 0;
-      }
+    if (this.communityData[1][startYear + i - 1]){
+      let pastAmount = this.communityData[1][startYear + i - 1];
+      change = ((amount - pastAmount) / pastAmount);
     }
-    else if (data[i] !== null) {
-      //calculate percent change
-      data[i].percentageChange = ((data[i].amount - data[i-1].amount)/data[i-1].amount);
-    }
-    // set start index
-    if(data[i].year === startYear){
-      startYearIndex = i;
-      if (startYearIndex + 5 > length) {
-        //add length to account for empty years
-        length = startYearIndex + 5;
-      }
-    }
+    this.griddata[i + 1] = [year, amount, change];
   }
 
-  console.log(data);
-
-  this.griddata = [
-    ['Fiscal Year', 'PRs Submitted', 'Average',],
-    ['FY' + (data[startYearIndex].year - 2000), data[startYearIndex].amount, data[startYearIndex].percentageChange],
-    ['FY'+ (data[startYearIndex+1].year - 2000), data[startYearIndex+1].amount, data[startYearIndex+1].percentageChange],
-    ['FY'+ (data[startYearIndex+2].year - 2000), data[startYearIndex+2].amount, data[startYearIndex+2].percentageChange],
-    ['FY'+ (data[startYearIndex+3].year - 2000), data[startYearIndex+3].amount, data[startYearIndex+3].percentageChange],
-    ['FY'+ (data[startYearIndex+4].year - 2000), data[startYearIndex+4].amount, data[startYearIndex+4].percentageChange],
-  ];
-
-  console.log(this.griddata);
-
   this.communityGraph.columnChart.dataTable = this.griddata;
-  this.communityGraph.redraw();
+  this.communityGraph.columnChart.component.draw();
 }
 
 // a sinple CellRenderrer for negative numbers
