@@ -1,21 +1,23 @@
-import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { PluginLoaderService } from '../services/plugin-loader/plugin-loader.service';
+import {Component, Injector, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {ProgrammingModel} from './models/ProgrammingModel';
+import {PomService} from './services/pom-service';
+import {DialogService} from '../pfm-coreui/services/dialog.service';
+import {ProgrammingService} from './services/programming-service';
 
 @Component({
-  selector: 'app-programming-feature',
-  templateUrl: './programming-feature.component.html',
-  styleUrls: ['./programming-feature.component.css']
+    selector: 'app-programming-feature',
+    templateUrl: './programming-feature.component.html',
+    styleUrls: ['./programming-feature.component.css']
 })
 export class ProgrammingFeatureComponent implements OnInit {
 
+    busy: boolean;
+    ready = true;
 
-  busy:boolean;
-  ready:boolean = true;//TODO get the common data that is needed by all of the child routes
+    constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private dialogService: DialogService) {
+    }
 
-  constructor() { }
-
-  ngOnInit() {
-
-  }
+    ngOnInit() {
+    }
 
 }

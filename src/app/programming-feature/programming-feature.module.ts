@@ -28,22 +28,26 @@ import {PomService} from './services/pom-service';
 import {PomServiceImpl} from './services/pom-service-impl.service';
 import {ProgrammingService} from './services/programming-service';
 import {ProgrammingServiceMock} from './services/programming-service-mock';
+import {ProgrammingServiceImpl} from './services/programming-services-impl.service';
+import {ProgrammingModel} from './models/ProgrammingModel';
 
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    GridsterModule,
-    Ng2GoogleChartsModule,
-    PfmCoreuiModule,
-    PfmSecureFileuploadModule,
-    TabsModule.forRoot(),
-    ProgrammingFeatureRoutingModule
-  ],
-  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceMock},
-    {provide: PomService, useClass: PomServiceImpl},
-    {provide: OrganizationService, useClass: OrganizationServiceImpl}]
+    declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent],
+    imports: [
+        CommonModule,
+        HttpClientModule,
+        GridsterModule,
+        Ng2GoogleChartsModule,
+        PfmCoreuiModule,
+        PfmSecureFileuploadModule,
+        TabsModule.forRoot(),
+        ProgrammingFeatureRoutingModule
+    ],
+    providers: [{provide: ProgrammingService, useClass: ProgrammingServiceImpl},
+        {provide: PomService, useClass: PomServiceImpl},
+        {provide: OrganizationService, useClass: OrganizationServiceImpl},
+        ProgrammingModel]
 })
-export class ProgrammingFeatureModule { }
+export class ProgrammingFeatureModule {
+}

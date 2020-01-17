@@ -13,7 +13,6 @@ import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/a
 import {Action} from '../../pfm-common-models/Action';
 import {TOA} from '../models/TOA';
 import {Pom} from '../models/Pom';
-import {PomServiceResponse} from '../models/PomServiceResponse';
 import {Organization} from '../../pfm-common-models/Organization';
 import {OrganizationService} from '../services/organization-service';
 
@@ -111,8 +110,7 @@ export class CreateProgrammingComponent implements OnInit {
       this.pomService.getPomFromPb().subscribe(
         resp => {
           this.busy = false;
-          var pom = (resp as PomServiceResponse).result ;
-          console.log("year..." + pom.fy);
+          const pom = (resp as any).result ;
           this.loadGrids(pom,selectedYear);
           
       },
@@ -269,8 +267,7 @@ export class CreateProgrammingComponent implements OnInit {
     this.pomService.getPomFromFile(fileId).subscribe(
       resp => {
         this.busy = false;
-        var pom = (resp as PomServiceResponse).result ;
-        console.log("year..." + pom.fy);
+        const pom = (resp as any).result ;
         this.initGrids(this.byYear);
         this.loadGrids(pom,this.byYear);
       },

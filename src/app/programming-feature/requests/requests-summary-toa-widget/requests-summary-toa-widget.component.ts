@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
-import { ProgramRequestForPOM } from '../../models/ProgramRequestForPOM';
+import { ProgramSummary } from '../../models/ProgramSummary';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 
 @Component({
@@ -10,7 +10,7 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
 })
 export class RequestsSummaryToaWidgetComponent implements OnInit {
 
-  @Input() griddata:ProgramRequestForPOM[];
+  @Input() griddata:ProgramSummary[];
 
   chartReady:boolean;
   availableCharts: ListItem[];
@@ -45,8 +45,6 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   onResize(width:number, height:number):void{
     this.chartReady = false;
-    console.info("RequestsSummaryToaWidgetComponent", width, height);
-    console.info("Chart", this.columnChart.options.width, this.columnChart.options.height);
 
     this.columnChart.options.width = width;
     this.columnChart.options.height = height - 40;
