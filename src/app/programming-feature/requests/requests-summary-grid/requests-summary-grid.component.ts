@@ -1,142 +1,147 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { GridApi, ColumnApi, RowNode, Column, CellPosition } from '@ag-grid-community/all-modules';
-import { FormatterUtil } from '../../../util/formatterUtil';
-import { ProgrammingService } from '../../services/programming-service';
-import { DialogService } from '../../../pfm-coreui/services/dialog.service';
-import { ProgramRequestForPOM } from '../../models/ProgramRequestForPOM';
-import { DataGridMessage } from '../../../pfm-coreui/models/DataGridMessage';
+import {Component, Input, OnInit} from '@angular/core';
+import {GridApi, ColumnApi, RowNode, Column, CellPosition} from '@ag-grid-community/all-modules';
+import {DialogService} from '../../../pfm-coreui/services/dialog.service';
+import {DataGridMessage} from '../../../pfm-coreui/models/DataGridMessage';
+import {ProgrammingModel} from '../../models/ProgrammingModel';
+import {ProgramSummary} from '../../models/ProgramSummary';
 
 @Component({
-  selector: 'pfm-requests-summary-grid',
-  templateUrl: './requests-summary-grid.component.html',
-  styleUrls: ['./requests-summary-grid.component.scss']
+    selector: 'pfm-requests-summary-grid',
+    templateUrl: './requests-summary-grid.component.html',
+    styleUrls: ['./requests-summary-grid.component.scss']
 })
 export class RequestsSummaryGridComponent implements OnInit {
 
-  @Input() griddata:ProgramRequestForPOM[];
+    gridApi: GridApi;
+    columnApi: ColumnApi;
+    columns: any[];
+    gridMinYear: number;
+    gridMaxYear: number;
+    gridData: ProgramSummary[];
 
-  gridApi:GridApi;
-  columnApi:ColumnApi;
-  columns:any[];
+    id: string = 'requests-summary-component';
+    busy: boolean;
 
+    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel) {
+        this.columns = [
+            {
+                headerName: 'Program',
+                field: 'programName',
+                editable: false,
+                cellClass: 'pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg',
+            },
+            {
+                headerName: 'Assigned To',
+                field: 'assignedTo',
+                editable: false,
+                cellClass: 'pfm-datagrid-text pfm-datagrid-lightgreybg',
+            },
+            {
+                headerName: 'Status',
+                field: 'status',
+                editable: false,
+                cellClass: 'pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-lightgreybg',
+            },
+        ];
 
-  id:string = 'requests-summary-component';
-  busy:boolean;
-
-  constructor(private programmingService:ProgrammingService, private dialogService:DialogService) {
-    this.columns = [
-      {
-        headerName: 'Program',
-        field: 'programName',
-        editable:false,
-        cellClass: "pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg",
-      },
-      {
-        headerName: 'Assigned To',
-        field: 'assignedTo',
-        editable: false,
-        cellClass: "pfm-datagrid-text pfm-datagrid-lightgreybg",
-      },
-      {
-        headerName: 'Status',
-        field: 'status',
-        editable: false,
-        cellClass: "pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-lightgreybg",
-      },
-    ];
-    for(let i=16; i<19; i++){
-      this.columns.push(
-        {
-          headerName: 'FY' + i,
-          field: 'fy_' + i,
-          maxWidth: 100,
-          minWidth: 100,
-          rowDrag: false,
-          cellClass: "pfm-datagrid-numeric-class",
-          valueGetter(params) {
-            let value = "$" + (params.data[params.colDef.field]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
-            return value;
-          }
+        this.gridMinYear = this.programmingModel.pom.fy - 3;
+        this.gridMaxYear = this.programmingModel.pom.fy + 4;
+        for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+            let fyColumnHeaderName = i.toString();
+            fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
+            this.columns.push(
+                {
+                    headerName: fyColumnHeaderName,
+                    field: i.toString(),
+                    maxWidth: 100,
+                    minWidth: 100,
+                    rowDrag: false,
+                    cellClass: 'pfm-datagrid-numeric-class'
+                    + (i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : '',
+                    valueGetter(params) {
+                        return '$' + params.data.funds[params.colDef.field];
+                    }
+                }
+            );
         }
-      );
-    }
-    for(let i=19; i<24; i++){
-      this.columns.push(
-        {
-          headerName: 'FY' + i,
-          field: 'fy_' + i,
-          maxWidth: 100,
-          minWidth: 100,
-          rowDrag: false,
-          cellClass: "pfm-datagrid-numeric-class  pfm-datagrid-greybg",
-          valueGetter(params) {
-            let value = "$" + (params.data[params.colDef.field]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
-            return value;
-          }
+
+        this.columns.push(
+            {
+                headerName: 'FYDP Total',
+                field: 'fundsTotal',
+                maxWidth: 120,
+                minWidth: 120,
+                rowDrag: false,
+                cellClass: 'pfm-datagrid-numeric-class',
+                valueGetter(params) {
+                    return '$' + params.data[params.colDef.field];
+                },
+            }
+        );
+        this.gridData = [];
+        for (const program of this.programmingModel.programs) {
+            const ps = new ProgramSummary();
+            ps.programName = program.shortName;
+            ps.assignedTo = program.responsibleRoleId;
+            ps.status = program.programStatus;
+            ps.funds = {};
+            ps.fundsTotal = 0;
+            for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+                ps.funds[i] = 0;
+            }
+            for (const fundingLine of program.fundingLines) {
+                for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+                    if (fundingLine.funds[i]) {
+                        ps.funds[i] += fundingLine.funds[i];
+                        ps.fundsTotal += ps.funds[i];
+                    }
+                }
+            }
+            this.gridData.push(ps);
         }
-      );
     }
 
-    this.columns.push(
-      {
-        headerName: 'FYDP Total',
-        field: 'fydp_total',
-        maxWidth: 120,
-        minWidth: 120,
-        rowDrag: false,
-         cellClass: "pfm-datagrid-numeric-class",
-        valueGetter(params) {
-          let value = "$" + (params.data[params.colDef.field]).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
-          return value;
-          },
-      }
-    );
-  }
-
-  handleCellAction(cellAction:DataGridMessage):void{
-    switch(cellAction.message){
-      case "save": {
-        break;
-      }
-      case "edit": {
-        break;
-      }
-      case "upload": {
-        break;
-      }
-      case "delete-row": {
-        break;
-      }
-      case "delete-attachments": {
-        break;
-      }
-      case "download-attachment":{
-      }
-      case "cellClicked":{
-        this.onCellClicked(cellAction);
-      }
+    handleCellAction(cellAction: DataGridMessage): void {
+        switch (cellAction.message) {
+            case 'save': {
+                break;
+            }
+            case 'edit': {
+                break;
+            }
+            case 'upload': {
+                break;
+            }
+            case 'delete-row': {
+                break;
+            }
+            case 'delete-attachments': {
+                break;
+            }
+            case 'download-attachment': {
+            }
+            case 'cellClicked': {
+                this.onCellClicked(cellAction);
+            }
+        }
     }
-  }
 
-  onCellClicked(cellAction:DataGridMessage):void{
-    if(cellAction.columnId === "programName"){
-      //navigate to the program details
+    onCellClicked(cellAction: DataGridMessage): void {
+        if (cellAction.columnId === 'programName') {
+            //navigate to the program details
 
+        }
     }
-  }
 
-  onGridIsReady(gridApi:GridApi):void{
-    this.gridApi = gridApi;
+    onGridIsReady(gridApi: GridApi): void {
+        this.gridApi = gridApi;
+    }
 
-  }
+    onColumnIsReady(columnApi: ColumnApi): void {
+        this.columnApi = columnApi;
+    }
 
-  onColumnIsReady(columnApi:ColumnApi):void{
-    this.columnApi = columnApi;
-  }
-
-  ngOnInit() {
-
-
-  }
+    ngOnInit() {
+    }
 
 }

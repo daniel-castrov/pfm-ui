@@ -7,7 +7,7 @@ import { ProgrammingService } from './programming-service';
 @Injectable({
   providedIn: 'root'
 })
-export class ProgrammingServicesImpl extends ProgrammingService {
+export class ProgrammingServiceImpl extends ProgrammingService {
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);

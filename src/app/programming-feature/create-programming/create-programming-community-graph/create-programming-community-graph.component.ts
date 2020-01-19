@@ -1,6 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProgramRequestForPOM } from '../../models/ProgramRequestForPOM';
-import { ListItem } from '../../../pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-programming-community-graph',
