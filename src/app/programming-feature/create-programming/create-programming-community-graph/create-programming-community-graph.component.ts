@@ -17,8 +17,8 @@ export class CreateProgrammingCommunityGraphComponent{
     dataTable: [],
     options: {
       title: 'TOAs for Community',
-      width: 200,
-      height: 200,
+      width: 1200,
+      height: 290,
       vAxes: { 0: {format: 'currency'}, 1: {gridlines: {color: 'transparent'}, format:"percent"}},
       seriesType: 'bars',
       series: {0: {targetAxisIndex:0},
@@ -35,6 +35,7 @@ export class CreateProgrammingCommunityGraphComponent{
   constructor() { }
 
   ngOnInit() {
+    this.chartReady = true;
   }
 
   onResize(width:number, height:number):void{

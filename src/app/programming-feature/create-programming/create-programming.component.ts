@@ -327,100 +327,6 @@ export class CreateProgrammingComponent implements OnInit {
                 this.availableYears = this.toListItem(years);
                 console.log(response.error);
       });
-      
-    //initialize chart options
-    this.communityOptions = {
-      minCols: 8,
-      maxCols: 8,
-      minRows: 8,
-      maxRows: 8,
-      itemResizeCallback: (event) => {
-        if (event.id === 'community-graph') {
-          let w: any = this.communityGraphItem;
-          this.communityGraph.onResize(w.width, w.height);
-        }
-        this.saveWidgetLayout();
-      },
-      itemChangeCallback: () => {
-        this.saveWidgetLayout();
-      }
-    };
-
-    this.organizationOptions = {
-      minCols: 8,
-      maxCols: 8,
-      minRows: 8,
-      maxRows: 8,
-      itemResizeCallback: (event) => {
-        if (event.id === 'organization-graph') {
-          let w: any = this.organizationGraphItem;
-          this.organizationGraph.onResize(w.width, w.height);
-        }
-        this.saveWidgetLayout();
-      },
-      itemChangeCallback: () => {
-        this.saveWidgetLayout();
-      }
-    };
-
-    //defaults for Gridster
-    this.communityDashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: 'community-graph' }];
-    this.organizationDashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: "organization-graph" }];
-}
-
-// load chart preferences
-private getPreferences():void{
-  this.busy = true;
-  this.dashboardService.getWidgetPreferences('community-graph').subscribe(
-    data => {
-      this.busy = false;
-      if (data) {
-        let list: Array<GridsterItem> = data as any;
-        if (list && list.length > 0) {
-          this.communityDashboard = list;
-        }
-      }
-
-    },
-    error => {
-      this.busy = false;
-      this.dialogService.displayDebug(error);
-    }
-  );
-
-  this.dashboardService.getWidgetPreferences("organization-graph").subscribe(
-    data => {
-      this.busy = false;
-      if(data){
-        let list:Array<GridsterItem> = data as any;
-        if(list && list.length > 0){
-          this.organizationDashboard = list;
-        }
-      }
-
-    },
-    error => {
-      this.busy = false;
-      this.dialogService.displayDebug(error);
-    }
-  );
-}
-
-// save chart preferences
-private saveWidgetLayout():void{
-
-  this.dashboardService.saveWidgetPreferences('community-graph', this.communityDashboard).subscribe(
-    data => {
-    },
-    error => {
-
-    });
-  this.dashboardService.saveWidgetPreferences('organization-graph', this.communityDashboard).subscribe(
-    data => {
-    },
-    error => {
-
-    });
 }
 
   private toListItem(years:string[]):ListItem[]{
@@ -527,7 +433,9 @@ private updateCommunityGraphData(startYear:number) {
   }
 
   this.communityGraph.columnChart.dataTable = this.communityGridData;
+  this.communityGraph.chartReady=true;
   this.communityGraph.columnChart.component.draw();
+
 }
 
 // a sinple CellRenderrer for negative numbers
