@@ -42,6 +42,7 @@ export class CreateProgrammingComponent implements OnInit {
   busy:boolean;
   availableYears:ListItem[];
   selectedYear:string;
+  currentYear:number;
   byYear:any;
   programYearSelected:any;
   showUploadDialog:boolean;
@@ -258,7 +259,9 @@ export class CreateProgrammingComponent implements OnInit {
 
      // this.orgGridApi.setRowData(this.orgData);
      // this.orgGridApi.setColumnDefs(this.orgColumns);
+     this.currentYear = fy;
      this.updateCommunityGraphData(fy);
+
   }
 
   getOrgName(key):string{ 
@@ -514,7 +517,7 @@ private updateCommunityGraphData(startYear:number) {
     let change = 0;
     //if there is a year
     if (this.communityData[1][startYear + i]) {
-      amount = this.communityData[1][startYear + i];
+      amount = parseInt(this.communityData[1][startYear + i]);
     }
     if (this.communityData[1][startYear + i - 1]){
       let pastAmount = this.communityData[1][startYear + i - 1];
@@ -608,7 +611,8 @@ onSaveRow(rowId,gridType):void{
   console.log('grid type :' + gridType);
   let editAction = this.onSaveAction(rowId);
   this.communityData[rowId].actions = editAction;
-  
+
+  this.updateCommunityGraphData(this.currentYear);
   this.communityGridApi.stopEditing();
 }
 
