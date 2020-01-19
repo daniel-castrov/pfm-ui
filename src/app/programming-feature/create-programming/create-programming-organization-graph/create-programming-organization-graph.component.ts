@@ -1,27 +1,30 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'pfm-programming-community-graph',
-  templateUrl: './create-programming-community-graph.component.html',
-  styleUrls: ['./create-programming-community-graph.component.scss']
+  selector: 'pfm-programming-organization-graph',
+  templateUrl: './create-programming-organization-graph.component.html',
+  styleUrls: ['./create-programming-organization-graph.component.scss']
 })
-export class CreateProgrammingCommunityGraphComponent{
+export class CreateProgrammingOrganizationGraphComponent{
 
   @Input() griddata:any[];
   chartReady:boolean;
 
   public columnChart: any =  {
     chartType: 'ColumnChart',
-    dataTable: [],
+    dataTable: [
+      ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+      ['FY22', 7632, 7577, 128329, 10200, 335440,],
+      ['FY23', 7841, 8032, 128593, 10197, 334054,],
+      ['FY24', 0, 0, 0, 0, 0,],
+      ['FY25', 0, 0, 0, 0, 0,],
+      ['FY26', 0, 0, 0, 0, 0,],
+    ],
     options: {
-      title: 'TOAs for Community',
+      title: 'Sub-TOAs for Organizations',
       width: 1200,
       height: 290,
-      vAxes: { 0: {format: 'currency'}, 1: {gridlines: {color: 'transparent'}, format:"percent"}},
-      seriesType: 'bars',
-      series: {0: {targetAxisIndex:0},
-               1: {targetAxisIndex:1, type: 'line', color: 'black'}},
-      legend: {position:'none'},
+      isStacked: true,
       animation: {
         duration: 500,
         easing: 'out',

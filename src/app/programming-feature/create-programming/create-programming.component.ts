@@ -19,6 +19,7 @@ import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
+import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 
 @Component({
   selector: 'pfm-programming',
@@ -30,11 +31,14 @@ export class CreateProgrammingComponent implements OnInit {
   
   @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
-  
+  @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
+  @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
+
   id:string = 'create-programming-component';
   busy:boolean;
   availableYears:ListItem[];
   selectedYear:string;
+  currentYear:number;
   byYear:any;
   programYearSelected:any;
   showUploadDialog:boolean;
@@ -51,9 +55,12 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
-  options: GridsterConfig;
-  dashboard: Array<GridsterItem>;
-  griddata:any[];
+  communityOptions: GridsterConfig;
+  communityDashboard: Array<GridsterItem>;
+  communityGridData:any[];
+  organizationOptions: GridsterConfig;
+  organizationDashboard: Array<GridsterItem>;
+  organizationGridData:any[];
   loadBaseline:boolean;
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
  
@@ -247,7 +254,9 @@ export class CreateProgrammingComponent implements OnInit {
 
      // this.orgGridApi.setRowData(this.orgData);
      // this.orgGridApi.setColumnDefs(this.orgColumns);
+     this.currentYear = fy;
      this.updateCommunityGraphData(fy);
+
   }
 
   getOrgName(key):string{ 
@@ -312,59 +321,6 @@ export class CreateProgrammingComponent implements OnInit {
                 this.availableYears = this.toListItem(years);
                 console.log(response.error);
       });
-      
-//initialize chart options
-this.options = {
-  minCols: 8,
-  maxCols: 8,
-  minRows: 8,
-  maxRows: 8,
-  itemResizeCallback: (event)=>{
-    if(event.id === "community-graph"){
-      let w:any = this.communityGraphItem;
-      this.communityGraph.onResize(w.width, w.height);
-    }
-    this.saveWidgetLayout();
-  },
-  itemChangeCallback: ()=>{
-    this.saveWidgetLayout();
-  },
-};
-
-//defaults for Gridster
-this.dashboard = [{ x: 0, y: 0, cols: 8, rows: 8, id: "community-graph" }];
-}
-
-// load chart preferences
-private getPreferences():void{
-this.busy = true;
-this.dashboardService.getWidgetPreferences("programming-requests-summary").subscribe(
-  data => {
-    this.busy = false;
-    if(data){
-      let list:Array<GridsterItem> = data as any;
-      if(list && list.length > 0){
-        this.dashboard = list;
-      }
-    }
-
-  },
-  error => {
-    this.busy = false;
-    this.dialogService.displayDebug(error);
-  }
-);
-}
-
-// save chart preferences
-private saveWidgetLayout():void{
-
-this.dashboardService.saveWidgetPreferences("programming-requests-summary", this.dashboard).subscribe(
-  data => {
-  },
-  error => {
-
-  });
 }
 
   private toListItem(years:string[]):ListItem[]{
@@ -454,24 +410,26 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
 //updates the community graph with grid data
 private updateCommunityGraphData(startYear:number) {
   //populate griddata
-  this.griddata = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+  this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
   for (let i = 0; i < 5; i++){
     let year = 'FY' + (startYear + i - 2000);
     let amount = 0;
     let change = 0;
     //if there is a year
     if (this.communityData[1][startYear + i]) {
-      amount = this.communityData[1][startYear + i];
+      amount = parseInt(this.communityData[1][startYear + i]);
     }
     if (this.communityData[1][startYear + i - 1]){
       let pastAmount = this.communityData[1][startYear + i - 1];
       change = ((amount - pastAmount) / pastAmount);
     }
-    this.griddata[i + 1] = [year, amount, change];
+    this.communityGridData[i + 1] = [year, amount, change];
   }
 
-  this.communityGraph.columnChart.dataTable = this.griddata;
+  this.communityGraph.columnChart.dataTable = this.communityGridData;
+  this.communityGraph.chartReady=true;
   this.communityGraph.columnChart.component.draw();
+
 }
 
 // a sinple CellRenderrer for negative numbers
@@ -555,7 +513,8 @@ onSaveRow(rowId,gridType):void{
   console.log('grid type :' + gridType);
   let editAction = this.onSaveAction(rowId);
   this.communityData[rowId].actions = editAction;
-  
+
+  this.updateCommunityGraphData(this.currentYear);
   this.communityGridApi.stopEditing();
 }
 
