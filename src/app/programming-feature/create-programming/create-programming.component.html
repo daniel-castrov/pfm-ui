@@ -40,7 +40,7 @@
           </div>
 
           <div class="section-datagrid">
-            <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
+            <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span><pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'"></pfm-secondary-button></div>
             <div class="grid-container">
               <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" >
               </pfm-displaydatagrid>

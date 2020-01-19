@@ -45,6 +45,19 @@
     height: 40%;
 }
 
+.section-datagrid > div {
+    margin-top: 10px;
+}
+
+.section-datagrid > div > span {
+    margin-left: 15px;
+}
+
+.section-datagrid pfm-secondary-button {
+    float: right;
+    margin-right: 20px;
+}
+
 .grid-container{
     width: 100%;
     height: calc(60vh);
