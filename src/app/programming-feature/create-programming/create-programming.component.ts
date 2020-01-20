@@ -56,11 +56,7 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;
   orgs:Array<Organization>;
   uploadedFileId:string;
-  communityOptions: GridsterConfig;
-  communityDashboard: Array<GridsterItem>;
   communityGridData:any[];
-  organizationOptions: GridsterConfig;
-  organizationDashboard: Array<GridsterItem>;
   organizationGridData:any[];
   loadBaseline:boolean;
   gridAction:string;
@@ -238,7 +234,8 @@ export class CreateProgrammingComponent implements OnInit {
     // this.orgGridApi.setRowData(this.orgData);
     // this.orgGridApi.setColumnDefs(this.orgColumns);
     this.currentYear = fy;
-    this.updateCommunityGraphData(fy);
+    this.updateCommunityGraphData(this.currentYear);
+    this.updateOrganizationGraphData(this.currentYear);
 
   }
 
@@ -418,10 +415,60 @@ export class CreateProgrammingComponent implements OnInit {
       this.communityGridData[i + 1] = [year, amount, change];
     }
 
-    this.communityGraph.columnChart.dataTable = this.communityGridData;
-    this.communityGraph.chartReady=true;
-    this.communityGraph.columnChart.component.draw();
+    if(this.communityGraph.columnChart.dataTable.length != 0){
+      this.communityGraph.columnChart.dataTable = this.communityGridData;
+      this.communityGraph.chartReady=true;
+      this.communityGraph.columnChart.component.draw();
+    }
+    else {
+      this.communityGraph.columnChart.dataTable = this.communityGridData;
+      this.communityGraph.chartReady=true;
+    }
+  }
 
+  private updateOrganizationGraphData(startYear: number) {
+    this.organizationGridData = [
+      ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+      ['FY22', 7632, 7577, 128329, 10200, 335440,],
+      ['FY23', 7841, 8032, 128593, 10197, 334054,],
+      ['FY24', 0, 0, 0, 0, 0,],
+      ['FY25', 0, 0, 0, 0, 0,],
+      ['FY26', 0, 0, 0, 0, 0,],
+    ];
+    // this.organizationGridData = [
+    //   ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+    //   ['FY22', 0, 0, 0, 0, 0,],
+    //   ['FY23', 0, 0, 0, 0, 0,],
+    //   ['FY24', 0, 0, 0, 0, 0,],
+    //   ['FY25', 0, 0, 0, 0, 0,],
+    //   ['FY26', 0, 0, 0, 0, 0,],
+    // ];
+
+    // console.log(this.orgData);
+    //
+    // for (let i = 0; i < 6; i++){
+    //   if (i === 1){
+    //     this.organizationGraphData[0][0] = 'Fiscal Year';
+    //     for(let j = 0; j < 5; j++){
+    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
+    //     }
+    //   }
+    //   else {
+    //
+    //     for(let j = 0; j < 5; j++){
+    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
+    //     }
+    //   }
+    // }
+
+    if (this.organizationGraph.columnChart.dataTable.length != 0) {
+      this.organizationGraph.columnChart.dataTable = this.organizationGridData;
+      this.organizationGraph.chartReady = true;
+      this.organizationGraph.columnChart.component.draw();
+    } else {
+      this.organizationGraph.columnChart.dataTable = this.organizationGridData;
+      this.organizationGraph.chartReady = true;
+    }
   }
 
 // a sinple CellRenderrer for negative numbers
@@ -531,6 +578,8 @@ export class CreateProgrammingComponent implements OnInit {
       this.onCommunityToaChange(rowId);
     }
 
+    this.updateCommunityGraphData(this.currentYear);
+    this.updateOrganizationGraphData(this.currentYear);
   }
 
   onEditRow(rowId,gridType):void{
