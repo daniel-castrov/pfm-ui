@@ -56,8 +56,8 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;
   orgs:Array<Organization>;
   uploadedFileId:string;
-  communityGridData:any[];
-  organizationGridData:any[];
+  communityGridData:any[] = [[]];
+  organizationGridData:any[] = [[]];
   loadBaseline:boolean;
   gridAction:string;
   pom: Pom;
@@ -429,37 +429,34 @@ export class CreateProgrammingComponent implements OnInit {
   private updateOrganizationGraphData(startYear: number) {
     this.organizationGridData = [
       ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
-      ['FY22', 7632, 7577, 128329, 10200, 335440,],
-      ['FY23', 7841, 8032, 128593, 10197, 334054,],
+      ['FY22', 0, 0, 0, 0, 0,],
+      ['FY23', 0, 0, 0, 0, 0,],
       ['FY24', 0, 0, 0, 0, 0,],
       ['FY25', 0, 0, 0, 0, 0,],
       ['FY26', 0, 0, 0, 0, 0,],
     ];
-    // this.organizationGridData = [
-    //   ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
-    //   ['FY22', 0, 0, 0, 0, 0,],
-    //   ['FY23', 0, 0, 0, 0, 0,],
-    //   ['FY24', 0, 0, 0, 0, 0,],
-    //   ['FY25', 0, 0, 0, 0, 0,],
-    //   ['FY26', 0, 0, 0, 0, 0,],
-    // ];
 
-    // console.log(this.orgData);
-    //
-    // for (let i = 0; i < 6; i++){
-    //   if (i === 1){
-    //     this.organizationGraphData[0][0] = 'Fiscal Year';
-    //     for(let j = 0; j < 5; j++){
-    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
-    //     }
-    //   }
-    //   else {
-    //
-    //     for(let j = 0; j < 5; j++){
-    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
-    //     }
-    //   }
-    // }
+    console.log(this.orgData);
+    let numberOfRows = this.orgData.length;
+    for (let i = 0; i < numberOfRows - 2; i++){
+      //set years
+      if (i === 0){
+        this.organizationGridData[0][i] = 'Fiscal Year';
+        for(let j = 0; j < 5; j++){
+          this.organizationGridData[j+1][i] = 'FY' + (startYear + j - 2000);
+        }
+      }
+      //set data for each organization
+      else {
+        let organization: string = this.orgData[numberOfRows - 2 - i-1]['orgid'];
+        this.organizationGridData[0][i] = organization.substring(14, organization.length-16);
+        for(let j = 0; j < 5; j++){
+          this.organizationGridData[j+1][i] = parseInt(this.orgData[numberOfRows - 2 - i-1][startYear + j]);
+        }
+      }
+    }
+
+    console.log(this.organizationGridData);
 
     if (this.organizationGraph.columnChart.dataTable.length != 0) {
       this.organizationGraph.columnChart.dataTable = this.organizationGridData;
