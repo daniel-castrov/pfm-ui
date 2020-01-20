@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';
 import {FileMetaData} from '../../pfm-common-models/FileMetaData';
 import {Attachment} from '../../pfm-common-models/Attachment';
-import {ColumnApi, GridApi} from '@ag-grid-community/all-modules';
+import {ColumnApi, GridApi, Column, CellPosition } from '@ag-grid-community/all-modules';
 import {AppModel} from '../../pfm-common-models/AppModel';
 import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import {Action} from '../../pfm-common-models/Action';
@@ -29,7 +29,7 @@ import { CreateProgrammingOrganizationGraphComponent } from './create-programmin
 })
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
-  
+
   @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
   @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
@@ -46,227 +46,224 @@ export class CreateProgrammingComponent implements OnInit {
   programBudgetData:boolean;
   communityGridApi:GridApi;
   orgGridApi:GridApi;
-  commColumnApi:ColumnApi;  
-  orgColumnApi:ColumnApi; 
-  communityColumns:any[]; 
+  commColumnApi:ColumnApi;
+  orgColumnApi:ColumnApi;
+  communityColumns:any[];
   communityData:any[];
   orgColumns:any[];
   orgData:any[];
   subToasData:any[];
-  tableHeaders:Array<string>;  
+  tableHeaders:Array<string>;
   orgs:Array<Organization>;
   uploadedFileId:string;
-  communityOptions: GridsterConfig;
-  communityDashboard: Array<GridsterItem>;
   communityGridData:any[];
-  organizationOptions: GridsterConfig;
-  organizationDashboard: Array<GridsterItem>;
   organizationGridData:any[];
   loadBaseline:boolean;
   gridAction:string;
+  pom: Pom;
+
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
-    //var selectedYear = appModel.selectedYear;   
+    //var selectedYear = appModel.selectedYear;
     this.subToasData = [];
 
     organizationService.getAll().subscribe(
       resp => {
-                this.orgs = (resp as any).result;               
-              },
+        this.orgs = (resp as any).result;
+      },
       error => {
-          this.orgs = [];
-          console.log(error);
+        this.orgs = [];
+        console.log(error);
       });
   }
 
   yearSelected(year:string):void{
     this.selectedYear = year;
     console.log("selected year "+ this.programYearSelected);
-    
+
     this.loadBaseline = false;
     if (this.programYearSelected != "undefined") {
       this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?","Caution",
-          () => { 
-            this.loadBaseline = true;
-            this.onSelectBaseLine();
-          }, () => {
-            this.loadBaseline = false;
-            this.yearDropDown.selectedItem = this.programYearSelected;
-          });
+        () => {
+          this.loadBaseline = true;
+          this.onSelectBaseLine();
+        }, () => {
+          this.loadBaseline = false;
+          this.yearDropDown.selectedItem = this.programYearSelected;
+        });
     }else {
       this.loadBaseline = true;
     }
-    
+
     if (this.loadBaseline) {
       this.onSelectBaseLine();
     }
-    
-   }
-  
-   onSelectBaseLine(){
+
+  }
+
+  onSelectBaseLine(){
     this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
-      console.log("selected year "+ this.programYearSelected);    
-      if(this.programYearSelected=="Spreadsheet"){
-        this.showUploadDialog = true;
-      }else{ // if it is PBYear 
-        this.showUploadDialog = false;
-        this.programBudgetData=true;
-        
-        var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1; 
-        this.initGrids(selectedYear);
-        this.getPomFromPB(selectedYear);
-      }
-   }
+    console.log("selected year "+ this.programYearSelected);
+    if(this.programYearSelected=="Spreadsheet"){
+      this.showUploadDialog = true;
+    }else{ // if it is PBYear
+      this.showUploadDialog = false;
+      this.programBudgetData=true;
 
-   initGrids(selectedYear){
-     // set the column definitions to community adn Organization grid    
-     this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
-     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);                    
-   }
+      var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1;
+      this.initGrids(selectedYear);
+      this.getPomFromPB(selectedYear);
+    }
+  }
 
-   getPomFromPB(selectedYear:any){
+  initGrids(selectedYear){
+    // set the column definitions to community and Organization grid
+    this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
+    this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);
+  }
+
+  getPomFromPB(selectedYear:any){
     this.busy = true;
-      this.pomService.getPomFromPb().subscribe(
-        resp => {
-          this.busy = false;
-          const pom = (resp as any).result ;
-          this.loadGrids(pom,selectedYear);
+    this.pomService.getPomFromPb().subscribe(
+      resp => {
+        this.busy = false;
+        this.pom = (resp as any).result ;
+        this.loadGrids(selectedYear);
       },
       error => {
         this.busy = false;
-          console.log("Error in getting community and org toas...");
-        // this.busy = false;
+        console.log("Error in getting community and org toas...");
       });
-   }
-   
-   loadGrids(pomData:Pom,fy:number){
-      let toarow = {};            
-      let subtoarow = {};
-      this.subToasData = []; 
+  }
 
-      this.communityData = [];
-      this.orgData = [];
+  loadGrids(fy:number){
+    let toarow = {};
+    let subtoarow = {};
+    this.subToasData = [];
 
-      // BaseLine
-      let row = {}
-      row["orgid"] = "<strong><span>Baseline</span></strong>";
-      pomData.communityToas.forEach(toa => {
-        row[toa.year] = toa.amount;
-      });
-      
-      let  actions = this.getActions();
-      
-      //row["actions"] = actions;
-      this.communityData.push(row);
+    this.communityData = [];
+    this.orgData = [];
 
-      // Community Toas
-      row = {}      
-      row["orgid"] = "<strong><span>TOA</span></strong>";
-      toarow['orgid'] = "sub TOA Total Goal";
-      pomData.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;        
-      });
-      
-      let i:number;
-      for (i = 0; i < 5; i++) {         
-        if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
+    // BaseLine
+    let row = {}
+    row["orgid"] = "<strong><span>Baseline</span></strong>";
+    this.pom.communityToas.forEach(toa => {
+      row[toa.year] = toa.amount;
+    });
 
-        toarow[fy+i] = row[ fy+i ] ;
-      }      
-      row["Communityactions"] = actions;
-      this.communityData.push(row);
+    const actions = this.getActions();
+    this.communityData.push(row);
 
-      toarow['orgid'] = "sub TOA Total Goal";
-      this.subToasData.push(toarow);
-      
-      this.communityData.forEach( row => {        
-        for (i = 0; i < 5; i++) {
-          if ( row[ fy+i ] == undefined ) {
-            row[ fy+i ] = 0;
-            }          
-          }       
-        });
-                
-    //  this.communityGridApi.setRowData(this.communityData);
-    //  this.communityGridApi.setColumnDefs(this.communityColumns);
+    // Community Toas
+    row = {};
+    row["orgid"] = "<strong><span>TOA</span></strong>";
+    toarow['orgid'] = "sub TOA Total Goal";
+    this.pom.communityToas.forEach((toa: TOA) => {
+      row[toa.year] = toa.amount;
+    });
 
-      // Org TOAs      
-     Object.keys(pomData.orgToas).reverse().forEach(key => {          
-          row = {};          
-          row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
-          pomData.orgToas[key].forEach( (toa:TOA) => {
-            row[toa.year] = toa.amount;          
-           });
+    let i:number;
+    for (i = 0; i < 5; i++) {
+      if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
 
-        row["Organizationactions"] = this.getActions();
-        this.orgData.push(row);     
-      });
-      
-      this.orgData.forEach( row => {        
+      toarow[fy+i] = row[ fy+i ] ;
+    }
+    row["Communityactions"] = actions;
+    this.communityData.push(row);
+
+    toarow['orgid'] = "sub TOA Total Goal";
+    this.subToasData.push(toarow);
+
+    this.communityData.forEach( row => {
       for (i = 0; i < 5; i++) {
         if ( row[ fy+i ] == undefined ) {
           row[ fy+i ] = 0;
-          }          
-        }       
-      });      
-
-      subtoarow = {};
-      subtoarow = this.calculateSubToaTotals();      
-
-      this.tableHeaders = [];
-      this.tableHeaders.push('orgid');
-      for (i = 0; i < 5; i++){
-       // rowspan[fy+ i] =  "";
-        this.tableHeaders.push((fy+i).toString());
+        }
       }
+    });
 
-      //this.orgData.push(rowspan);
-      this.orgData.push(toarow);      
-      this.orgData.push(subtoarow);
+    //  this.communityGridApi.setRowData(this.communityData);
+    //  this.communityGridApi.setColumnDefs(this.communityColumns);
 
-      subtoarow['orgid'] = "sub-TOA Total Actual";
-      this.subToasData.push(subtoarow);
+    // Org TOAs
+    Object.keys(this.pom.orgToas).forEach(key => {
+      row = {};
+      row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
+      this.pom.orgToas[key].forEach( (toa:TOA) => {
+        row[toa.year] = toa.amount;
+      });
 
-      let toaDeltarow = {};
-      toaDeltarow = this.calculateDeltaRow(subtoarow,toarow);
-      
-      this.orgData.push(toaDeltarow);
-      toaDeltarow['orgid'] = "Delta";
-      this.subToasData.push(toaDeltarow);
+      row["Organizationactions"] = this.getActions();
+      this.orgData.push(row);
+    });
 
-      
-      //this.orgGridApi.setColumnDefs(this.orgColumns);      
-      //this.orgGridApi.setRowData(this.orgData);
-     // this.orgGridApi.setRowData(this.orgData);
-     // this.orgGridApi.setColumnDefs(this.orgColumns);
-     this.currentYear = fy;
-     this.updateCommunityGraphData(fy);
+    this.orgData.forEach( row => {
+      for (i = 0; i < 5; i++) {
+        if ( row[ fy+i ] == undefined ) {
+          row[ fy+i ] = 0;
+        }
+      }
+    });
+
+    subtoarow = {};
+    subtoarow = this.calculateSubToaTotals();
+
+    this.tableHeaders = [];
+    this.tableHeaders.push('orgid');
+    for (i = 0; i < 5; i++){
+      // rowspan[fy+ i] =  "";
+      this.tableHeaders.push((fy+i).toString());
+    }
+
+    //this.orgData.push(rowspan);
+    this.orgData.push(toarow);
+    this.orgData.push(subtoarow);
+
+    subtoarow['orgid'] = "sub-TOA Total Actual";
+    this.subToasData.push(subtoarow);
+
+    let toaDeltarow = {};
+    toaDeltarow = this.calculateDeltaRow(subtoarow,toarow);
+
+    this.orgData.push(toaDeltarow);
+    toaDeltarow['orgid'] = "Delta";
+    this.subToasData.push(toaDeltarow);
+
+
+    //this.orgGridApi.setColumnDefs(this.orgColumns);
+    //this.orgGridApi.setRowData(this.orgData);
+    // this.orgGridApi.setRowData(this.orgData);
+    // this.orgGridApi.setColumnDefs(this.orgColumns);
+    this.currentYear = fy;
+    this.updateCommunityGraphData(this.currentYear);
+    this.updateOrganizationGraphData(this.currentYear);
 
   }
 
   getActions():Action{
     let actions = new Action();
-      actions.canDelete = false;
-      actions.canEdit = true;
-      actions.canSave = false;
-      actions.canUpload = false;
+    actions.canDelete = false;
+    actions.canEdit = true;
+    actions.canSave = false;
+    actions.canUpload = false;
     return actions;
   }
-  getOrgName(key):string{ 
 
-    let org = this.orgs.find(o => o.id === key);    
+  getOrgName(key):string{
+    let org = this.orgs.find(o => o.id === key);
     return org.abbreviation;
   }
-   handleNewAttachments(newFile:FileMetaData):void{
-      this.showUploadDialog = false;
-      if(newFile){
-        let attachment:Attachment = new Attachment();
-        attachment.file = newFile;
-        this.programBudgetData=true;
-        this.uploadedFileId = newFile.id;
-        this.LoadPomFromFile(newFile.id);
-      }else{
-        this.yearDropDown.selectedItem=this.yearDropDown.prompt;
-      }     
+
+  handlePOMFile(newFile:FileMetaData):void{
+    this.showUploadDialog = false;
+    if(newFile){
+      let attachment:Attachment = new Attachment();
+      attachment.file = newFile;
+      this.programBudgetData=true;
+      this.uploadedFileId = newFile.id;
+      this.LoadPomFromFile(newFile.id);
+    }else{
+      this.yearDropDown.selectedItem=this.yearDropDown.prompt;
+    }
   }
 
   onCreateProgrammingPhase():void{
@@ -278,9 +275,9 @@ export class CreateProgrammingComponent implements OnInit {
     this.pomService.getPomFromFile(fileId).subscribe(
       resp => {
         this.busy = false;
-        const pom = (resp as any).result ;
+        this.pom = (resp as any).result ;
         this.initGrids(this.byYear);
-        this.loadGrids(pom,this.byYear);
+        this.loadGrids(this.byYear);
       },
       error => {
         this.busy = false;
@@ -293,27 +290,27 @@ export class CreateProgrammingComponent implements OnInit {
 
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
-    
+
     this.programYearSelected = "undefined";
     this.busy = true;
     this.pomService.pBYearExists(pbYear).subscribe(
-      resp => { 
-                let response:any = resp;
-                
-                this.busy = false;
-                let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2);
-                let years: string[] = [pyear, "Spreadsheet"];
-                this.availableYears = this.toListItem(years);
-    
+      resp => {
+        let response:any = resp;
+
+        this.busy = false;
+        let pyear ="PB" + FormatterUtil.pad((pbYear-2000),2);
+        let years: string[] = [pyear, "Spreadsheet"];
+        this.availableYears = this.toListItem(years);
+
       },
       error =>{
-                let response:any = error ;
-                this.busy = false;                
-                let years: string[] = ["Spreadsheet"];
-                this.availableYears = this.toListItem(years);
-                console.log(response.error);
+        let response:any = error ;
+        this.busy = false;
+        let years: string[] = ["Spreadsheet"];
+        this.availableYears = this.toListItem(years);
+        console.log(response.error);
       });
-}
+  }
 
   private toListItem(years:string[]):ListItem[]{
     let items:ListItem[] = [];
@@ -331,380 +328,450 @@ export class CreateProgrammingComponent implements OnInit {
     var ext = name.substring(name.lastIndexOf('.') + 1);
     var res:boolean = ((ext==="xls") || (ext==="xlsx"));
     if (res) {
-        console.log("File attached"+name);
+      console.log("File attached"+name);
     }
     else {
       this.dialogService.displayError("File selected must be an Excel spreadsheet");
     }
-}
-
-private setAgGridColDefs(column1Name:string, fy:number): any {
-
-  let colDefs = [];
-
-  colDefs.push(
-    { headerName: column1Name,
-      suppressMenu: true,
-      field: 'orgid',
-      minWidth: 140,      
-      editable: false,
-      pinned:'left',
-      //rowDrag: true,
-      //rowDragManaged: true,
-      colSpan: function (params){        
-        return (params.value === '1')? 7 : 1;
-    },
-      cellRenderer: params => params.value,
-      cellClass: "text-class",    
-      cellStyle: params => this.getOrgColorStyle(params),
-    
-  });
-
-  for (var i = 0; i < 5; i++) {
-    colDefs.push(
-      { headerName: "FY" + (fy + i - 2000) ,
-        type: "numericColumn",
-        minWidth: 110,        
-        suppressMenu: true,
-        field: (fy+ i).toString(),
-        cellRenderer: params => this.negativeNumberRenderer(params),
-        editable: true,
-        cellClass: "pfm-datagrid-numeric-class",      
-        cellStyle: { display: 'flex','padding-right':'10px !important'}
-    });
   }
-  colDefs.push(
-    { headerName: "FY" + (fy-2000) + "-"+ "FY" + (fy+4-2000),
-      type: "numericColumn",
-      suppressMenu: true,
-      field: 'total',
-      minWidth: 110,     
-      editable: false,
-      valueGetter: params => this.rowTotal( params.data, fy ),
-      cellRenderer: params => this.negativeNumberRenderer(params),
-      cellClass: "pfm-datagrid-numeric-class",
-      cellStyle: { display: 'flex', 'padding-right':'10px !important'}
-  });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 
-  colDefs.push(
-    {
-      headerName: 'Actions',
-      field: column1Name + 'actions',      
-      mWidth: 100,
-      maxWidth:100,
-      cellRendererFramework: ActionCellRendererComponent
+  private setAgGridColDefs(column1Name:string, fy:number): any {
+
+    let colDefs = [];
+
+    colDefs.push(
+      { headerName: column1Name,
+        suppressMenu: true,
+        field: 'orgid',
+        minWidth: 140,
+        editable: false,
+        pinned:'left',
+        //rowDrag: true,
+        //rowDragManaged: true,
+        colSpan: function (params){
+          return (params.value === '1')? 7 : 1;
+        },
+        cellRenderer: params => params.value,
+        cellClass: "text-class",
+        cellStyle: params => this.getOrgColorStyle(params),
+
+      });
+
+    for (var i = 0; i < 5; i++) {
+      colDefs.push(
+        { headerName: "FY" + (fy + i - 2000) ,
+          type: "numericColumn",
+          minWidth: 110,
+          suppressMenu: true,
+          field: (fy+ i).toString(),
+          cellRenderer: params => this.negativeNumberRenderer(params),
+          editable: true,
+          cellClass: "pfm-datagrid-numeric-class",
+          cellStyle: { display: 'flex','padding-right':'0px !important'}
+        });
     }
-  );
+    colDefs.push(
+      { headerName: "FY" + (fy-2000) + "-"+ "FY" + (fy+4-2000),
+        type: "numericColumn",
+        suppressMenu: true,
+        field: 'total',
+        minWidth: 110,
+        editable: false,
+        valueGetter: params => this.rowTotal( params.data, fy ),
+        cellRenderer: params => this.negativeNumberRenderer(params),
+        cellClass: "pfm-datagrid-numeric-class",
+        cellStyle: { display: 'flex', 'padding-right':'0px !important'}
+      });
 
-  return colDefs;
-}
+    colDefs.push(
+      {
+        headerName: 'Actions',
+        field: column1Name + 'actions',
+        mWidth: 100,
+        maxWidth:100,
+        cellRendererFramework: ActionCellRendererComponent
+      }
+    );
+
+    return colDefs;
+  }
 
 //updates the community graph with grid data
-private updateCommunityGraphData(startYear:number) {
-  //populate griddata
-  this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
-  for (let i = 0; i < 5; i++){
-    let year = 'FY' + (startYear + i - 2000);
-    let amount = 0;
-    let change = 0;
-    //if there is a year
-    if (this.communityData[1][startYear + i]) {
-      amount = parseInt(this.communityData[1][startYear + i]);
+  private updateCommunityGraphData(startYear:number) {
+    //populate griddata
+    this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+    for (let i = 0; i < 5; i++){
+      let year = 'FY' + (startYear + i - 2000);
+      let amount = 0;
+      let change = 0;
+      //if there is a year
+      if (this.communityData[1][startYear + i]) {
+        amount = parseInt(this.communityData[1][startYear + i]);
+      }
+      if (this.communityData[1][startYear + i - 1]){
+        let pastAmount = this.communityData[1][startYear + i - 1];
+        change = ((amount - pastAmount) / pastAmount);
+      }
+      this.communityGridData[i + 1] = [year, amount, change];
     }
-    if (this.communityData[1][startYear + i - 1]){
-      let pastAmount = this.communityData[1][startYear + i - 1];
-      change = ((amount - pastAmount) / pastAmount);
+
+    if(this.communityGraph.columnChart.dataTable.length != 0){
+      this.communityGraph.columnChart.dataTable = this.communityGridData;
+      this.communityGraph.chartReady=true;
+      this.communityGraph.columnChart.component.draw();
     }
-    this.communityGridData[i + 1] = [year, amount, change];
+    else {
+      this.communityGraph.columnChart.dataTable = this.communityGridData;
+      this.communityGraph.chartReady=true;
+    }
   }
 
-  this.communityGraph.columnChart.dataTable = this.communityGridData;
-  this.communityGraph.chartReady=true;
-  this.communityGraph.columnChart.component.draw();
+  private updateOrganizationGraphData(startYear: number) {
+    this.organizationGridData = [
+      ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+      ['FY22', 7632, 7577, 128329, 10200, 335440,],
+      ['FY23', 7841, 8032, 128593, 10197, 334054,],
+      ['FY24', 0, 0, 0, 0, 0,],
+      ['FY25', 0, 0, 0, 0, 0,],
+      ['FY26', 0, 0, 0, 0, 0,],
+    ];
+    // this.organizationGridData = [
+    //   ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+    //   ['FY22', 0, 0, 0, 0, 0,],
+    //   ['FY23', 0, 0, 0, 0, 0,],
+    //   ['FY24', 0, 0, 0, 0, 0,],
+    //   ['FY25', 0, 0, 0, 0, 0,],
+    //   ['FY26', 0, 0, 0, 0, 0,],
+    // ];
 
-}
+    // console.log(this.orgData);
+    //
+    // for (let i = 0; i < 6; i++){
+    //   if (i === 1){
+    //     this.organizationGraphData[0][0] = 'Fiscal Year';
+    //     for(let j = 0; j < 5; j++){
+    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
+    //     }
+    //   }
+    //   else {
+    //
+    //     for(let j = 0; j < 5; j++){
+    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
+    //     }
+    //   }
+    // }
+
+    if (this.organizationGraph.columnChart.dataTable.length != 0) {
+      this.organizationGraph.columnChart.dataTable = this.organizationGridData;
+      this.organizationGraph.chartReady = true;
+      this.organizationGraph.columnChart.component.draw();
+    } else {
+      this.organizationGraph.columnChart.dataTable = this.organizationGridData;
+      this.organizationGraph.chartReady = true;
+    }
+  }
 
 // a sinple CellRenderrer for negative numbers
-private negativeNumberRenderer( params ){
+  private negativeNumberRenderer( params ){
 
-  if (params.value == "")
-    return params.value;
+    if (params.value == "")
+      return params.value;
 
-  if ( params.value < 0 ){
-    return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
-  } else {
-    return '<span style="color: black;">' + this.formatCurrency( params ) + '</span>';
+    if ( params.value < 0 ){
+      return '<span style="color: red;">' + this.formatCurrency( params ) + '</span>';
+    } else {
+      return '<span style="color: black;">' + this.formatCurrency( params ) + '</span>';
+    }
   }
-}
 
- // helper for currency formatting
- private formatCurrency( params ) {
-  let str = Math.floor( params.value )
-    .toString()
-    .replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
-  return "$ " + str;
-}
+  // helper for currency formatting
+  private formatCurrency( params ) {
+    let str = Math.floor( params.value )
+      .toString()
+      .replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
+    return "$ " + str;
+  }
 
 // A valueGetter for totaling a row
-private rowTotal( data, fy:number ){
-  let total:number=0;
-  for (var i = 0; i < 5; i++) {
-    total += parseInt(data[fy+i],10);
+  private rowTotal( data, fy:number ){
+    let total:number=0;
+    for (var i = 0; i < 5; i++) {
+      total += parseInt(data[fy+i],10);
+    }
+    return total;
   }
-  return total;
-}
 
 // a callback for determining if a ROW is editable
-private shouldEdit ( params ){
- return false;
-}
+  private shouldEdit ( params ){
+    return false;
+  }
 
-onTabChange(param:NgbTabChangeEvent){
-  console.log('tab change:'+ param);
-}
-onCommunityGridIsReady(gridApi:GridApi):void{
-  this.communityGridApi = gridApi;
-  //gridApi.sizeColumnsToFit();
-}
+  onTabChange(param:NgbTabChangeEvent){
+    console.log('tab change:'+ param);
+  }
+  onCommunityGridIsReady(gridApi:GridApi):void{
+    this.communityGridApi = gridApi;
+    //gridApi.sizeColumnsToFit();
+  }
 
-onOrgGridIsReady(gridApi:GridApi):void{
-  this.orgGridApi = gridApi;
+  onOrgGridIsReady(gridApi:GridApi):void{
+    this.orgGridApi = gridApi;
 
-  //gridApi.sizeColumnsToFit();
-}
+    //gridApi.sizeColumnsToFit();
+  }
 
-onCommunityColumnIsReady (columnApi:ColumnApi):void{
-  this.commColumnApi = columnApi;
-}
+  onCommunityColumnIsReady (columnApi:ColumnApi):void{
+    this.commColumnApi = columnApi;
+  }
 
-onOrgColumnIsReady(columnApi:ColumnApi):void{
-  this.orgColumnApi = columnApi;
-}
+  onOrgColumnIsReady(columnApi:ColumnApi):void{
+    this.orgColumnApi = columnApi;
+  }
 
-onRowDragEnd(param){}
+  onRowDragEnd(param){}
 
-onCommunityGridCellAction(cellAction:DataGridMessage){
-  this.onCellAction(cellAction,"community");
-}
+  onCommunityGridCellAction(cellAction:DataGridMessage){
+    this.onCellAction(cellAction,"community");
+  }
 
-onOrgGridCellAction(cellAction:DataGridMessage){
-  this.onCellAction(cellAction,"org");
-}
+  onOrgGridCellAction(cellAction:DataGridMessage){
+    this.onCellAction(cellAction,"org");
+  }
 
-onCellAction(cellAction:DataGridMessage,gridType:any):void{
- 
-  switch(cellAction.message){
-    case "save": {      
-      this.onSaveRow(cellAction.rowIndex,gridType);
-      break;
+  onCellAction(cellAction:DataGridMessage,gridType:any):void{
+
+    switch(cellAction.message){
+      case "save": {
+        this.onSaveRow(cellAction.rowIndex,gridType);
+        break;
+      }
+      case "edit": {
+        this.onEditRow(cellAction.rowIndex,gridType)
+        break;
+      }
     }
-    case "edit": {
-      this.onEditRow(cellAction.rowIndex,gridType)
-      break;
-    }    
-  }
-}
-
-onSaveRow(rowId,gridType):void{
-  
-  let editAction = this.onSaveAction(rowId,gridType);
-  if (gridType == "org")
-  {
-    let fy = this.byYear;
-    this.orgData[rowId].actions = editAction;
-    this.orgGridApi.stopEditing();
-
-    // update subtotal row   
-    let subtoaRow = this.calculateSubToaTotals();
-    this.refreshOrgsTotalsRow(subtoaRow);
-  
-    // update delta row
-    let deltaRow = {};
-    deltaRow = this.calculateDeltaRow(subtoaRow,this.communityData[1]);
-    this.refreshDeltaRow(deltaRow);
-    
-    this.orgGridApi.setRowData(this.orgData);    
-  }
-  else {
-    this.communityData[rowId].actions = editAction;
-    this.communityGridApi.stopEditing();
-    this.onCommunityToaChange(rowId);
-  }
-  
-}
-
-onEditRow(rowId,gridType):void{
-  
-  let editAction = this.onEditAction(rowId,gridType);
-
-  if (gridType == "org"){
-    this.orgGridApi.startEditingCell({
-      rowIndex:rowId,
-      colKey:this.byYear
-    });   
-  }
-  else{
-    this.communityGridApi.startEditingCell({
-      rowIndex:rowId,
-      colKey:this.byYear
-    });
-  }
-}
-
-onEditAction(rowId:number,gridId):any{
-
-  let  actions = new Action();
-
-  if (gridId == "org"){
-    actions = this.orgData[rowId]["Organizationactions"];
-  }
-  else{
-    actions = this.communityData[rowId]["Communityactions"];
   }
 
-  actions.canDelete = false;
-  actions.canEdit = false;
-  actions.canSave = true;
-  actions.canUpload = false;
+  onSaveRow(rowId,gridType):void{
 
-  return actions;
-}
-
-onSaveAction(rowId:number,gridId:string):any{
-
-  let  actions = new Action();
-  if (gridId == "org"){
-    actions = this.orgData[rowId]["Organizationactions"];
-  }
-  else{
-    actions = this.communityData[rowId]["Communityactions"];
-  }
-
-  actions.canDelete = false;
-  actions.canEdit = true;
-  actions.canSave = false;
-  actions.canUpload = false;
-  
-  return actions;
-}
-
-onCommunityToaChange(rowId:number){
-  let fy = this.byYear;
-  let communityTOARow = this.communityData[rowId];
-  this.orgData.forEach( row => {
-    let rval = row['orgid'];
-    if (rval == 'sub TOA Total Goal')
+    let editAction = this.onSaveAction(rowId,gridType);
+    if (gridType == "org")
     {
-      for (let i = 0; i < 5; i++) {
-          row[ fy+i ] = communityTOARow[fy+i];
-        }      
-    }    
-  });
-  
-  let orgtotals = this.calculateSubToaTotals();
-  let deltarow = this.calculateDeltaRow(orgtotals,communityTOARow);
-  this.refreshDeltaRow(deltarow);
+      let fy = this.byYear;
+      this.orgData[rowId].actions = editAction;
+      this.orgGridApi.stopEditing();
 
-  this.orgGridApi.setRowData(this.orgData);
-  //toarow['orgid'] = "sub TOA Total Goal"
-}
+      // update subtotal row
+      let subtoaRow = this.calculateSubToaTotals();
+      this.refreshOrgsTotalsRow(subtoaRow);
 
-calculateSubToaTotals():any{
-  let subtoarow = {};
-  let fy = this.byYear;
+      // update delta row
+      let deltaRow = {};
+      deltaRow = this.calculateDeltaRow(subtoaRow,this.communityData[1]);
+      this.refreshDeltaRow(deltaRow);
 
-  subtoarow['orgid'] = "sub-TOA Total Actual";
-  for (let i = 0; i < 5; i++) {
-    let total:number = 0;        
-    this.orgData.forEach(row => {
-      if (row['Organizationactions'] != undefined)
+      this.orgGridApi.setRowData(this.orgData);
+    }
+    else {
+      this.communityData[rowId].actions = editAction;
+      this.communityGridApi.stopEditing();
+      this.onCommunityToaChange(rowId);
+    }
+
+    this.updateCommunityGraphData(this.currentYear);
+    this.updateOrganizationGraphData(this.currentYear);
+  }
+
+  onEditRow(rowId,gridType):void{
+
+    let editAction = this.onEditAction(rowId,gridType);
+
+    if (gridType == "org"){
+      this.orgGridApi.startEditingCell({
+        rowIndex:rowId,
+        colKey:this.byYear
+      });
+    }
+    else{
+      this.communityGridApi.startEditingCell({
+        rowIndex:rowId,
+        colKey:this.byYear
+      });
+    }
+  }
+
+  onEditAction(rowId:number,gridId):any{
+
+    let  actions = new Action();
+
+    if (gridId == "org"){
+      actions = this.orgData[rowId]["Organizationactions"];
+    }
+    else{
+      actions = this.communityData[rowId]["Communityactions"];
+    }
+
+    actions.canDelete = false;
+    actions.canEdit = false;
+    actions.canSave = true;
+    actions.canUpload = false;
+
+    return actions;
+  }
+
+  onSaveAction(rowId:number,gridId:string):any{
+
+    let  actions = new Action();
+    if (gridId == "org"){
+      actions = this.orgData[rowId]["Organizationactions"];
+    }
+    else{
+      actions = this.communityData[rowId]["Communityactions"];
+    }
+
+    actions.canDelete = false;
+    actions.canEdit = true;
+    actions.canSave = false;
+    actions.canUpload = false;
+
+    return actions;
+  }
+
+  onCommunityToaChange(rowId:number){
+    let fy = this.byYear;
+    let communityTOARow = this.communityData[rowId];
+    this.orgData.forEach( row => {
+      let rval = row['orgid'];
+      if (rval == 'sub TOA Total Goal')
       {
-        if ( row[ fy+i ] == undefined ) {
-          row[fy+i] = 0;
-          }
-        total = total + Number(row[fy+i]);
+        for (let i = 0; i < 5; i++) {
+          row[ fy+i ] = communityTOARow[fy+i];
+        }
       }
     });
-    subtoarow[fy+i] = total;
+
+    let orgtotals = this.calculateSubToaTotals();
+    let deltarow = this.calculateDeltaRow(orgtotals,communityTOARow);
+    this.refreshDeltaRow(deltarow);
+
+    this.orgGridApi.setRowData(this.orgData);
+    //toarow['orgid'] = "sub TOA Total Goal"
   }
 
-  // et the sub taotal row from the org data
-  //this.orgData.forEach(row => {})
- return subtoarow
-}
+  calculateSubToaTotals():any{
+    let subtoarow = {};
+    let fy = this.byYear;
 
-refreshOrgsTotalsRow(subtoaRow:any)
-{
-  let fy = this.byYear;
-  this.orgData.forEach(row => {
-    let rval = row['orgid'];
-    if (rval == 'sub-TOA Total Actual')
-    {
+    subtoarow['orgid'] = "sub-TOA Total Actual";
+    for (let i = 0; i < 5; i++) {
+      let total:number = 0;
+      this.orgData.forEach(row => {
+        if (row['Organizationactions'] != undefined)
+        {
+          if ( row[ fy+i ] == undefined ) {
+            row[fy+i] = 0;
+          }
+          total = total + Number(row[fy+i]);
+        }
+      });
+      subtoarow[fy+i] = total;
+    }
+
+    // et the sub taotal row from the org data
+    //this.orgData.forEach(row => {})
+    return subtoarow
+  }
+
+  refreshOrgsTotalsRow(subtoaRow:any)
+  {
+    let fy = this.byYear;
+    this.orgData.forEach(row => {
+      let rval = row['orgid'];
+      if (rval == 'sub-TOA Total Actual')
+      {
         for(let i = 0; i < 5; i ++)
         {
           row[fy + i] = subtoaRow[fy + i];
-        }         
-    }      
-  });
-}
-
-calculateDeltaRow(totalsrow:any,subtoasrow:any):any{
-
-  let toaDeltarow = {};
-
-  let fy = this.byYear;  
-  toaDeltarow['orgid'] = "Delta";
-  for (let i = 0; i < 5; i++)
-  {        
-    toaDeltarow[fy+i] = totalsrow[fy+i] - subtoasrow[fy+i];
+        }
+      }
+    });
   }
 
-  return toaDeltarow;
-}
+  calculateDeltaRow(totalsrow:any,subtoasrow:any):any{
 
-refreshDeltaRow(deltaRow:any){
-  let fy = this.byYear;
-  this.orgData.forEach(row => {
-    let rval = row['orgid'];
-    if (rval == 'Delta')
+    let toaDeltarow = {};
+
+    let fy = this.byYear;
+    toaDeltarow['orgid'] = "Delta";
+    for (let i = 0; i < 5; i++)
     {
+      toaDeltarow[fy+i] = totalsrow[fy+i] - subtoasrow[fy+i];
+    }
+
+    return toaDeltarow;
+  }
+
+  refreshDeltaRow(deltaRow:any){
+    let fy = this.byYear;
+    this.orgData.forEach(row => {
+      let rval = row['orgid'];
+      if (rval == 'Delta')
+      {
         for(let i = 0; i < 5; i ++)
         {
           row[fy + i] = deltaRow[fy + i];
-        }         
-    }      
-  });
-}
-
-getOrgColorStyle(param):any {
-  let orgcolors = []
-  orgcolors["PAIO"] ="#6d00c1";
-  orgcolors["DUSA"] ="#10A1B1";
-  orgcolors["JSTO"] ="#21D836";
-  orgcolors["JPEO"] ="#DE3C47";
-  orgcolors["JRO"] ="#0c1ec7";
-  
-  let  cellStyle = { display: 'flex', 'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:null};
-  let orgName:string = param.value;
-
-  if (orgName != undefined)
-  {
-    orgName = orgName.split('-')[0];
-    orgName = orgName.replace('<strong><span>','');
-    orgName = orgName.replace('</span></strong>','');
-    
-    console.log("orgname " + orgName);
-    if (orgcolors[orgName] != undefined)
-    {
-      let orgcolor:string = orgcolors[orgName];
-      cellStyle = { display: 'flex',  'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:orgcolor};
-    }
-    return cellStyle;
+        }
+      }
+    });
   }
 
-  return ;
-}
+  getOrgColorStyle(param):any {
+    let orgcolors = []
+    orgcolors["PAIO"] ="#dc3912";
+    orgcolors["DUSA"] ="#3366cc";
+    orgcolors["JSTO"] ="#ff9900";
+    orgcolors["JPEO"] ="#990099";
+    orgcolors["JRO"] ="#109618";
+
+    let  cellStyle = { display: 'flex', 'padding-left':'0px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:null};
+    let orgName:string = param.value;
+
+    if (orgName != undefined)
+    {
+      orgName = orgName.split('-')[0];
+      orgName = orgName.replace('<strong><span>','');
+      orgName = orgName.replace('</span></strong>','');
+
+      console.log("orgname " + orgName);
+      if (orgcolors[orgName] != undefined)
+      {
+        let orgcolor:string = orgcolors[orgName];
+        cellStyle = { display: 'flex',  'padding-left':'0px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:orgcolor};
+      }
+      return cellStyle;
+    }
+
+    return ;
+  }
+
+  private onTabToNextCell (params) {
+    let rowIndex = params.previousCellPosition.rowIndex;
+    let nextCell:CellPosition = params.nextCellPosition;
+
+    let firstColumn =  (this.byYear).toString();
+    let lastColumn =  (this.byYear + 4).toString();
+
+    if (params.previousCellPosition.column.colId === lastColumn){
+
+      let nextColumn:Column = this.commColumnApi.getColumn(firstColumn);
+      nextCell = {
+        rowIndex: rowIndex,
+        column: nextColumn,
+        rowPinned: undefined
+      }
+    }
+    return nextCell;
+  }
 
 
 }
-

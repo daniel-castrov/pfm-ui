@@ -31,13 +31,13 @@
         <div class="section-tab">
 
           <div class="section-chart">
-            <pfm-programming-community-graph #communityGraph [griddata]="communityGridData"></pfm-programming-community-graph>
+            <pfm-programming-community-graph #communityGraph [griddata]="communityGraphData"></pfm-programming-community-graph>
           </div>
 
           <div class="section-datagrid">
             <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span><pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'"></pfm-secondary-button></div>
             <div class="grid-container">
-              <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" >
+              <pfm-displaydatagrid [tabToNextCell]="onTabToNextCell.bind(this)" (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" >
               </pfm-displaydatagrid>
             </div>
           </div>
@@ -48,14 +48,14 @@
         <div class="section-tab">
 
           <div class="section-chart">
-            <pfm-programming-organization-graph #organizationGraph [griddata]="organizationGridData"></pfm-programming-organization-graph>
+            <pfm-programming-organization-graph #organizationGraph [griddata]="organizationGraphData"></pfm-programming-organization-graph>
           </div>
 
           <div class="section-datagrid">
             <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
             <!--<div style="height:300px;width:98%">-->
             <div class="grid-container">
-              <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >
+              <pfm-displaydatagrid [tabToNextCell]="onTabToNextCell.bind(this)" (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >
               </pfm-displaydatagrid>
             </div>
           </div>
@@ -81,7 +81,7 @@
 
 
 <ng-container *ngIf="showUploadDialog">
-  <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+  <pfm-secure-upload (onFilesUploaded)="handlePOMFile($event)"></pfm-secure-upload>
 </ng-container>
 <br><br>
 

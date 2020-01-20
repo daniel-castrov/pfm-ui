@@ -14,8 +14,8 @@ export class CreateProgrammingOrganizationGraphComponent{
     chartType: 'ColumnChart',
     dataTable: [
       ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
-      ['FY22', 7632, 7577, 128329, 10200, 335440,],
-      ['FY23', 7841, 8032, 128593, 10197, 334054,],
+      ['FY22', 0, 0, 0, 0, 0,],
+      ['FY23', 0, 0, 0, 0, 0,],
       ['FY24', 0, 0, 0, 0, 0,],
       ['FY25', 0, 0, 0, 0, 0,],
       ['FY26', 0, 0, 0, 0, 0,],
