@@ -32,9 +32,10 @@ import {ProgrammingServiceMock} from './services/programming-service-mock';
 import {ProgrammingServiceImpl} from './services/programming-services-impl.service';
 import {ProgrammingModel} from './models/ProgrammingModel';
 import { RequestsFundingLineGridComponent } from './requests/requests-funding-line-grid/requests-funding-line-grid.component';
+import { CreateProgrammingOrganizationGraphComponent } from './create-programming/create-programming-organization-graph/create-programming-organization-graph.component';
 
 @NgModule({
-    declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, RequestsFundingLineGridComponent],
+    declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent],
     imports: [
         CommonModule,
         HttpClientModule,
