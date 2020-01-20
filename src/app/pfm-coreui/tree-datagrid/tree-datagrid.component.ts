@@ -14,7 +14,7 @@ export class TreeDatagridComponent implements OnInit {
   //@Input() columns:any;
   @Input() fieldsToGroup:any[];
   @Input() fieldsToSum:any[];
-  @Input() fieldsToAverage:any[];//just to illistrate extending
+  @Input() fieldsToAverage:any[];//just to illistrate extending sum/average/max ect...
 
   @Input() rows:any[];
   @Input() showAddRow:boolean = false;
@@ -39,7 +39,7 @@ export class TreeDatagridComponent implements OnInit {
 
   handleCellAction(cellAction:DataGridMessage):void{
     switch(cellAction.message){
-      case "cellClicked":{
+      case "tree-row-expand":{
         if(cellAction.rowData.selected){
           cellAction.rowData.selected = false;
           this.handleTreeCollapse(cellAction);
@@ -51,12 +51,12 @@ export class TreeDatagridComponent implements OnInit {
         console.info(cellAction.rowData.selected);
       }
     }
-
     this.onCellAction.emit(cellAction);
   }
 
   ngOnInit() {
-    //this part won't change much - yet, maybe with the total/root node
+
+    //the grid should display all of the columns - so include the groupby and sumby columns
     this.columnsForGrid = [];
     for(let c of this.fieldsToGroup){
       this.columnsForGrid.push(c);
@@ -65,22 +65,24 @@ export class TreeDatagridComponent implements OnInit {
       this.columnsForGrid.push(c);
     }
 
-    //we will need a node for each of these, and they should have there children grouped under them
-    let nodes:string[] = ["alc", "majcom", "mbase", "nsn"];
-    let children:any[] = this.doWhile(0, nodes, this.rows);
-
-
-    //convert to flat grid - like expand all
-    this.rowsForGrid = [];
-    for(let c of children){
-      //this.addToFlatGrid(c, this.rowsForGrid);
-      this.rowsForGrid.push(c);
+    //get a list of columns names to group up the rows by
+    let nodes:string[] = [];
+    for(let f of this.fieldsToGroup){
+      nodes.push(f.field);
     }
 
+    //process the flat data into a tree
+    let children:any[] = this.doWhile(0, nodes, this.rows);
+
+    //push the top-level (grouped) children rows into the grid
+    this.rowsForGrid = [];
+    for(let c of children){
+      this.rowsForGrid.push(c);
+    }
   }
 
+  //recursive - group up the rows by the list of columns
   private doWhile(index:number, columns:string[], rows:any[]):any[]{
-
     if(index < columns.length){
       let d = "(" + index + " - " + columns[index] + ")";
       let children:any[] = this.convertToTreeGrid(index, columns[index], rows);
@@ -94,7 +96,7 @@ export class TreeDatagridComponent implements OnInit {
     }
   }
 
-
+  //group up rows by the give columnId, and sum the fields - place children under the tree-node
   private convertToTreeGrid(depth:number, columnId:string, rows:any[]):any[]{
 
     let summaryRows:any[] = [];
@@ -134,41 +136,28 @@ export class TreeDatagridComponent implements OnInit {
     return summaryRows;
   }
 
-  private addToFlatGrid(item, rows:any[]):void{
-    rows.push(item);
-    if(item.children && item.children.length > 0){
-      for(let c of item.children){
-        this.addToFlatGrid(c, rows);
-      }
-    }
-  }
-
+  //process tree expand - all direct children to the grid
   private handelTreeExpand(cellAction:DataGridMessage):void{
     console.info('expand');
-
     let index:number = this.rowsForGrid.indexOf(cellAction.rowData);
     for(let item of cellAction.rowData.children){
-
-      //blank out groups that are not part of the summary - columnId - so need the list of columns to group in here
-      //item.alc = "";
-      //item.majcom="";//to do, need to know which column
-      //item.mbase=""
-      //item.nsn = "";
       this.rowsForGrid.splice(index+1, 0, item);
     }
-
     this.gridApi.setRowData(this.rowsForGrid);
   }
 
+  //process tree collapse clicked - remove all descendents from the grid
   private handleTreeCollapse(cellAction:DataGridMessage):void{
     console.info('colapse');
     this.removeFromGrid(cellAction.rowData.children);
     this.gridApi.setRowData(this.rowsForGrid);
   }
 
+  //recursion - remove all children + grand... from the flat grid
   private removeFromGrid(items:any[]):void{
 
     for(let item of items){
+      item.selected = false;
       let index:number = this.rowsForGrid.indexOf(item);
 
       if(index > -1){

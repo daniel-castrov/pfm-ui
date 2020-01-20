@@ -1,13 +1,1 @@
-<ng-container *ngFor="let row of rowsForGrid">
-    <span>ID: {{row.id}}, </span>
-    <span>Depth: {{row.depth}}, </span>
-    <span>ALC: {{row.alc}}, </span>
-    <span>MAJ: {{row.majcom}}, </span>
-    <span>BASE: {{row.mbase}}, </span>
-    <span>NSN: {{row.nsn}}, </span>
-    <span>FY1: {{row.fy1}}</span>
-    <span>Children: {{row.children ? row.children.length : 'N/A'}}</span>
-    <hr>
-</ng-container>
-
 <pfm-datagrid (onGridIsReady)="handleGridIsReady($event)" (onColumnIsReady)="onColumnIsReady.emit($event)" (onCellAction)="handleCellAction($event)" [showAddRow]="true" [columns]="columnsForGrid" [rows]="rowsForGrid"></pfm-datagrid>
