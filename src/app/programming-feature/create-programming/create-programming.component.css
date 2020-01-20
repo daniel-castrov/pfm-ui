@@ -1,6 +1,66 @@
+:host {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+     height: 100vh;
+ }
+
+.main{
+    display: flex;
+}
+
+/**/
+.section-banner{
+    display: flex;
+    width: 100%;
+    height: 15%;
+}
+
+/*Tabs and tab contents*/
+.section-tabs{
+    /*placeholder in case we need styles to add to this area it seems to work without any css*/
+}
+
+/*A Single Tab*/
+.section-tab{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+/*All charts*/
+.section-chart{
+    display: flex;
+    margin: 0 auto;
+    width: 80%;
+    height: 40%;
+}
+
+/*All Data Grids*/
+.section-datagrid{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 40%;
+}
+
+.section-datagrid > div {
+    margin-top: 10px;
+}
+
+.section-datagrid > div > span {
+    margin-left: 15px;
+}
+
+.section-datagrid pfm-secondary-button {
+    float: right;
+    margin-right: 20px;
+}
+
 .grid-container{
     width: 100%;
-    height: calc(100vh);
+    height: calc(60vh);
   }
 
 .table {

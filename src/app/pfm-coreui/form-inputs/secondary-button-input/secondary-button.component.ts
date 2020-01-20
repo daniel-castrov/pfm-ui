@@ -9,6 +9,7 @@ export class SecondaryButtonComponent {
 
   @Input() id:string;
   @Input() label:string = "Secondary";
+  @Input() icon: string;
   @Input() name:string = "secondary";
   @Input() disabled:boolean;
 

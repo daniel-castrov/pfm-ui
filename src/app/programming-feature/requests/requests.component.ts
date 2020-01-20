@@ -3,12 +3,13 @@ import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DialogService } from '../../pfm-coreui/services/dialog.service';
 import { ProgrammingService } from '../services/programming-service';
-import { FormatterUtil } from '../../util/formatterUtil';
 import { RequestsSummaryToaWidgetComponent } from './requests-summary-toa-widget/requests-summary-toa-widget.component';
-import { SecureDownloadComponent } from '../../pfm-secure-filedownload/secure-download/secure-download.component';
 import { RequestsSummaryOrgWidgetComponent } from './requests-summary-org-widget/requests-summary-org-widget.component';
-import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { ProgramRequestForPOM } from '../models/ProgramRequestForPOM';
+import { ProgramSummary } from '../models/ProgramSummary';
+import {PomService} from '../services/pom-service';
+import {Pom} from '../models/Pom';
+import {Program} from '../models/Program';
+import {ProgrammingModel} from '../models/ProgrammingModel';
 
 @Component({
   selector: 'pfm-programming',
@@ -22,17 +23,39 @@ export class RequestsComponent implements OnInit {
   @ViewChild('orgWidetItem',  {static: false}) orgWidgetItem: ElementRef;
   @ViewChild(RequestsSummaryOrgWidgetComponent,  {static: false}) orgWidget: RequestsSummaryOrgWidgetComponent;
 
-  griddata:ProgramRequestForPOM[];
+  griddata:ProgramSummary[];
 
+  programmingModelReady: boolean;
+  pomDisplayYear: string;
   options: GridsterConfig;
   busy:boolean;
   dashboard: Array<GridsterItem>;
 
-  constructor(private programmingService:ProgrammingService, private dashboardService:DashboardMockService, private dialogService:DialogService) { }
+  constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private dashboardService: DashboardMockService, private dialogService: DialogService) {
+  }
 
   ngOnInit() {
     this.busy = true;
+    this.pomService.getLatestPom().subscribe(
+        resp => {
+          this.programmingModel.pom = (resp as any).result;
+          if (this.programmingModel.pom.status !== 'CLOSED') {
+            this.pomDisplayYear = this.programmingModel.pom.fy.toString();
+            this.pomDisplayYear = this.pomDisplayYear.substr(this.pomDisplayYear.length - 2);
+            this.programmingService.getRequestsForPom(this.programmingModel.pom).subscribe(
+                resp1 => {
+                  this.programmingModel.programs = (resp1 as any).result;
+                  this.busy = false;
+                  this.programmingModelReady = true;
+                },
+                error => {
 
+                });
+          }
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+        });
     this.options = {
       minCols: 8,
       maxCols: 8,
@@ -63,18 +86,6 @@ export class RequestsComponent implements OnInit {
 
     //defaults
     this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
-
-    //we have an issue with the services - for now use mocks, and see if we can define what will need to change
-    this.programmingService.getRequestsForPom().subscribe(
-      resp => {
-        let data = (resp as any).result;
-        console.log('getRequestsForPom');
-        this.griddata = data;
-        this.getPreferences();
-      },
-      error =>{
-        this.dialogService.displayDebug(error);
-      });
   }
 
   private getPreferences():void{

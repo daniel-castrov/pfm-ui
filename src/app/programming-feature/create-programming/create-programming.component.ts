@@ -1,24 +1,26 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PomService } from '../../programming-feature/services/pom-service';
-import { DialogService } from '../../pfm-coreui/services/dialog.service';
-import { ListItem } from '../../pfm-common-models/ListItem';
-import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import { Router } from '@angular/router';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {PomService} from '../../programming-feature/services/pom-service';
+import {DialogService} from '../../pfm-coreui/services/dialog.service';
+import {ListItem} from '../../pfm-common-models/ListItem';
+import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
+import {Router} from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';
-import { FileMetaData } from '../../pfm-common-models/FileMetaData';
-import { Attachment } from '../../pfm-common-models/Attachment';
-import { GridApi, ColumnApi, RowNode, Column, CellPosition } from '@ag-grid-community/all-modules';
-import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
-import { AppModel } from '../../pfm-common-models/AppModel';
-import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import { Action } from '../../pfm-common-models/Action';
-import { TOA } from '../models/TOA';
+import {FileMetaData} from '../../pfm-common-models/FileMetaData';
+import {Attachment} from '../../pfm-common-models/Attachment';
+import {ColumnApi, GridApi} from '@ag-grid-community/all-modules';
+import {AppModel} from '../../pfm-common-models/AppModel';
+import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
+import {Action} from '../../pfm-common-models/Action';
+import {TOA} from '../models/TOA';
 import {Pom} from '../models/Pom';
-import {PomToasResponse} from '../models/PomToasResponse';
-import { Organization } from '../../pfm-common-models/Organization';
 import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
-
-
+import {Organization} from '../../pfm-common-models/Organization';
+import {OrganizationService} from '../services/organization-service';
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
+import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
+import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
+import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 
 @Component({
   selector: 'pfm-programming',
@@ -28,10 +30,16 @@ import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
   
+  @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
+  @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
+  @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
+  @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
+
   id:string = 'create-programming-component';
   busy:boolean;
   availableYears:ListItem[];
   selectedYear:string;
+  currentYear:number;
   byYear:any;
   programYearSelected:any;
   showUploadDialog:boolean;
@@ -48,14 +56,19 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
+  communityOptions: GridsterConfig;
+  communityDashboard: Array<GridsterItem>;
+  communityGridData:any[];
+  organizationOptions: GridsterConfig;
+  organizationDashboard: Array<GridsterItem>;
+  organizationGridData:any[];
   loadBaseline:boolean;
   gridAction:string;
-  constructor(private appModel: AppModel, private pomService:PomService, private dialogService:DialogService, private router:Router) {
-    
+  constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
     //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
 
-    pomService.getAllorganizations().subscribe(
+    organizationService.getAll().subscribe(
       resp => {
                 this.orgs = (resp as any).result;               
               },
@@ -70,8 +83,7 @@ export class CreateProgrammingComponent implements OnInit {
     console.log("selected year "+ this.programYearSelected);
     
     this.loadBaseline = false;
-    if (this.programYearSelected != "undefined")
-    {
+    if (this.programYearSelected != "undefined") {
       this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?","Caution",
           () => { 
             this.loadBaseline = true;
@@ -116,10 +128,8 @@ export class CreateProgrammingComponent implements OnInit {
       this.pomService.getPomFromPb().subscribe(
         resp => {
           this.busy = false;
-          var pom = (resp as PomToasResponse).result ;
-          console.log("year..." + pom.fy);
+          const pom = (resp as any).result ;
           this.loadGrids(pom,selectedYear);
-          
       },
       error => {
         this.busy = false;
@@ -226,6 +236,11 @@ export class CreateProgrammingComponent implements OnInit {
       
       //this.orgGridApi.setColumnDefs(this.orgColumns);      
       //this.orgGridApi.setRowData(this.orgData);
+     // this.orgGridApi.setRowData(this.orgData);
+     // this.orgGridApi.setColumnDefs(this.orgColumns);
+     this.currentYear = fy;
+     this.updateCommunityGraphData(fy);
+
   }
 
   getActions():Action{
@@ -263,8 +278,7 @@ export class CreateProgrammingComponent implements OnInit {
     this.pomService.getPomFromFile(fileId).subscribe(
       resp => {
         this.busy = false;
-        var pom = (resp as PomToasResponse).result ;
-        console.log("year..." + pom.fy);
+        const pom = (resp as any).result ;
         this.initGrids(this.byYear);
         this.loadGrids(pom,this.byYear);
       },
@@ -299,9 +313,7 @@ export class CreateProgrammingComponent implements OnInit {
                 this.availableYears = this.toListItem(years);
                 console.log(response.error);
       });
-
-      
- }
+}
 
   private toListItem(years:string[]):ListItem[]{
     let items:ListItem[] = [];
@@ -387,6 +399,31 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
   return colDefs;
 }
 
+//updates the community graph with grid data
+private updateCommunityGraphData(startYear:number) {
+  //populate griddata
+  this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+  for (let i = 0; i < 5; i++){
+    let year = 'FY' + (startYear + i - 2000);
+    let amount = 0;
+    let change = 0;
+    //if there is a year
+    if (this.communityData[1][startYear + i]) {
+      amount = parseInt(this.communityData[1][startYear + i]);
+    }
+    if (this.communityData[1][startYear + i - 1]){
+      let pastAmount = this.communityData[1][startYear + i - 1];
+      change = ((amount - pastAmount) / pastAmount);
+    }
+    this.communityGridData[i + 1] = [year, amount, change];
+  }
+
+  this.communityGraph.columnChart.dataTable = this.communityGridData;
+  this.communityGraph.chartReady=true;
+  this.communityGraph.columnChart.component.draw();
+
+}
+
 // a sinple CellRenderrer for negative numbers
 private negativeNumberRenderer( params ){
 
@@ -435,6 +472,7 @@ onOrgGridIsReady(gridApi:GridApi):void{
 
   //gridApi.sizeColumnsToFit();
 }
+
 onCommunityColumnIsReady (columnApi:ColumnApi):void{
   this.commColumnApi = columnApi;
 }
@@ -446,30 +484,16 @@ onOrgColumnIsReady(columnApi:ColumnApi):void{
 onRowDragEnd(param){}
 
 onCommunityGridCellAction(cellAction:DataGridMessage){
-  this.onCellAction(cellAction);
+  this.onCellAction(cellAction,"community");
 }
 
 onOrgGridCellAction(cellAction:DataGridMessage){
-  this.onCellAction(cellAction);
+  this.onCellAction(cellAction,"org");
 }
 
-onCellAction(cellAction:DataGridMessage):void{
+onCellAction(cellAction:DataGridMessage,gridType:any):void{
  
-  let gridType:string;
-  if(cellAction.columnId == undefined){ 
-      this.gridAction = cellAction.message;
-      return;
-  }
-  console.log(cellAction.columnId);
-  console.log(cellAction.columnIndex);
-  if ( cellAction.columnId === "Organizationactions"){
-      gridType = "org";  
-  }
-  else {
-      gridType = "community";
-  }
- 
-  switch(this.gridAction){
+  switch(cellAction.message){
     case "save": {      
       this.onSaveRow(cellAction.rowIndex,gridType);
       break;
@@ -680,7 +704,6 @@ getOrgColorStyle(param):any {
 
   return ;
 }
-
 
 
 }

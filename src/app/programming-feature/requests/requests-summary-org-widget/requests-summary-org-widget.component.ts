@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
-import { ProgramRequestForPOM } from '../../models/ProgramRequestForPOM';
+import { ProgramSummary } from '../../models/ProgramSummary';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 
 @Component({
@@ -10,7 +10,7 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
 })
 export class RequestsSummaryOrgWidgetComponent  {
 
-  @Input() griddata:ProgramRequestForPOM[];
+  @Input() griddata:ProgramSummary[];
 
   chartReady:boolean;
   availableCharts: ListItem[];
@@ -48,9 +48,6 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   onResize(width:number, height:number):void{
     this.chartReady = false;
-
-    console.info("RequestsSummaryOrgWidgetComponent", width, height);
-    console.info("Chart", this.treeMapChart.options.width, this.treeMapChart.options.height);
 
     this.treeMapChart.options.width = width;
     this.treeMapChart.options.height = height - 40;
@@ -110,11 +107,11 @@ export class RequestsSummaryOrgWidgetComponent  {
     //set up BA Line tree structure
     let lineTable = [
       ['Program', 'Organization', 'Health', 'Demands'],
-      ['BA Line', null,  0,  0],
-      ['SA0001', 'BA Line',  0,  0],
-      ['BA2', 'BA Line',  0,  0],
-      ['BA5', 'BA Line',  0, 0],
-      ['PHM001', 'BA Line',  0,  0],
+      ['BA Line', null, 0, 0],
+      ['SA0001', 'BA Line', 0, 0],
+      ['BA2', 'BA Line', 0, 0],
+      ['BA5', 'BA Line', 0, 0],
+      ['PHM001', 'BA Line', 0, 0],
       ['BA4', 'BA Line', 0, 0],
       ['BA1', 'BA Line', 0, 0],
       ['BA3', 'BA Line', 0, 0],

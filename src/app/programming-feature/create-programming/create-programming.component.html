@@ -1,44 +1,65 @@
-
-<div class="table">
-  <div class="table-row">
-    <div style="width:70%;text-align:left">
+<div class="section-banner">
+  <div class="table">
+    <div class="table-row">
+      <div style="width:70%;text-align:left">
         <h3>Create Programming Phase for {{byYear}} </h3>
+      </div>
+      <div style="width:61%;text-align:right" text-align="center">
+        <a href="" style="color: #0000FF">Edit Year</a>
+      </div>
     </div>
-    <div style="width:61%;text-align:right" text-align="center">
-      <a href="" style="color: #0000FF">Edit Year</a>
+    <div class="main">
+      <span>&nbsp;</span>
+    </div>
+    <div class="table">
+      <div class="table-row">
+        <div class="rTableCellr" vertical-align="middle">Baseline loaded from:</div>
+        <div class="rTableCell">
+          <ng-container *ngIf="availableYears">
+            <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [label]="" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+          </ng-container>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="main">
-           <span>&nbsp;</span>
-</div>
-<div class="table">
-<div class="table-row">
-    <div class="rTableCellr" vertical-align="middle">Baseline loaded from:</div>
-    <div class="rTableCell">
-      <ng-container *ngIf="availableYears">
-          <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
-      </ng-container>
-    </div>
-</div>
-</div>
-</div>
 
-<br><br>
-
-<div *ngIf="programBudgetData">
+<div class="section-tabs" *ngIf="programBudgetData">
   <div class="col-20" >
     <tabset  class="program-tab-style" destroyOnHide="true">
-      <tab (onSelect)="onTabChange($event)" heading="Community" active="true" style="width:100%;height:100%">
-        <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span></div>
-        <div class="grid-container">
-          <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" ></pfm-displaydatagrid>
+      <tab  heading="Community" active="true" style="width:100%;height:100%">
+        <div class="section-tab">
+
+          <div class="section-chart">
+            <pfm-programming-community-graph #communityGraph [griddata]="communityGridData"></pfm-programming-community-graph>
+          </div>
+
+          <div class="section-datagrid">
+            <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span><pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'"></pfm-secondary-button></div>
+            <div class="grid-container">
+              <pfm-displaydatagrid (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" >
+              </pfm-displaydatagrid>
+            </div>
+          </div>
+
         </div>
       </tab >
-      <tab (onSelect)="onTabChange($event)" heading="Organization"  style="width:100%;height:100%">
-        <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
-        <!--<div style="height:300px;width:98%">-->
-        <div class="grid-container">
-          <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" ></pfm-displaydatagrid> 
+      <tab heading="Organization"  style="width:100%;height:100%">
+        <div class="section-tab">
+
+          <div class="section-chart">
+            <pfm-programming-organization-graph #organizationGraph [griddata]="organizationGridData"></pfm-programming-organization-graph>
+          </div>
+
+          <div class="section-datagrid">
+            <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
+            <!--<div style="height:300px;width:98%">-->
+            <div class="grid-container">
+              <pfm-displaydatagrid (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >
+              </pfm-displaydatagrid>
+            </div>
+          </div>
+
         </div>
       <!--</div>-->
       <!--
