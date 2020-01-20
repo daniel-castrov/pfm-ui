@@ -28,7 +28,7 @@ import {PomService} from './services/pom-service';
 import {PomServiceImpl} from './services/pom-service-impl.service';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming/create-programming-community-graph/create-programming-community-graph.component';
 import {ProgrammingService} from './services/programming-service';
-import {ProgrammingServiceImpl} from './services/programming-services-impl.service';
+import {ProgrammingServiceImpl} from './services/programming-service-impl.service';
 import {ProgrammingModel} from './models/ProgrammingModel';
 import { RequestsFundingLineGridComponent } from './requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming/create-programming-organization-graph/create-programming-organization-graph.component';
