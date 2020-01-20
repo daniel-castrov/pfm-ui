@@ -185,7 +185,7 @@ export class CreateProgrammingComponent implements OnInit {
     //  this.communityGridApi.setColumnDefs(this.communityColumns);
 
     // Org TOAs
-    Object.keys(this.pom.orgToas).reverse().forEach(key => {
+    Object.keys(this.pom.orgToas).forEach(key => {
       row = {};
       row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
       this.pom.orgToas[key].forEach( (toa:TOA) => {
@@ -727,11 +727,11 @@ export class CreateProgrammingComponent implements OnInit {
 
   getOrgColorStyle(param):any {
     let orgcolors = []
-    orgcolors["PAIO"] ="#6d00c1";
-    orgcolors["DUSA"] ="#10A1B1";
-    orgcolors["JSTO"] ="#21D836";
-    orgcolors["JPEO"] ="#DE3C47";
-    orgcolors["JRO"] ="#0c1ec7";
+    orgcolors["PAIO"] ="#dc3912";
+    orgcolors["DUSA"] ="#3366cc";
+    orgcolors["JSTO"] ="#ff9900";
+    orgcolors["JPEO"] ="#990099";
+    orgcolors["JRO"] ="#109618";
 
     let  cellStyle = { display: 'flex', 'padding-left':'0px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:null};
     let orgName:string = param.value;
