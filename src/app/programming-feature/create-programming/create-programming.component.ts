@@ -64,6 +64,8 @@ export class CreateProgrammingComponent implements OnInit {
   organizationGridData:any[];
   loadBaseline:boolean;
   gridAction:string;
+  pom: Pom;
+
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
     //var selectedYear = appModel.selectedYear;   
     this.subToasData = [];
@@ -118,9 +120,9 @@ export class CreateProgrammingComponent implements OnInit {
    }
 
    initGrids(selectedYear){
-     // set the column definitions to community adn Organization grid    
+     // set the column definitions to community and Organization grid
      this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
-     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);                    
+     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);
    }
 
    getPomFromPB(selectedYear:any){
@@ -128,17 +130,16 @@ export class CreateProgrammingComponent implements OnInit {
       this.pomService.getPomFromPb().subscribe(
         resp => {
           this.busy = false;
-          const pom = (resp as any).result ;
-          this.loadGrids(pom,selectedYear);
+          this.pom = (resp as any).result ;
+          this.loadGrids(selectedYear);
       },
       error => {
         this.busy = false;
-          console.log("Error in getting community and org toas...");
-        // this.busy = false;
+        console.log("Error in getting community and org toas...");
       });
    }
-   
-   loadGrids(pomData:Pom,fy:number){
+
+   loadGrids(fy:number){
       let toarow = {};            
       let subtoarow = {};
       this.subToasData = []; 
@@ -149,20 +150,18 @@ export class CreateProgrammingComponent implements OnInit {
       // BaseLine
       let row = {}
       row["orgid"] = "<strong><span>Baseline</span></strong>";
-      pomData.communityToas.forEach(toa => {
+      this.pom.communityToas.forEach(toa => {
         row[toa.year] = toa.amount;
       });
-      
-      let  actions = this.getActions();
-      
-      //row["actions"] = actions;
+
+      const actions = this.getActions();
       this.communityData.push(row);
 
       // Community Toas
-      row = {}      
+      row = {};
       row["orgid"] = "<strong><span>TOA</span></strong>";
       toarow['orgid'] = "sub TOA Total Goal";
-      pomData.communityToas.forEach((toa: TOA) => {
+      this.pom.communityToas.forEach((toa: TOA) => {
         row[toa.year] = toa.amount;        
       });
       
@@ -190,10 +189,10 @@ export class CreateProgrammingComponent implements OnInit {
     //  this.communityGridApi.setColumnDefs(this.communityColumns);
 
       // Org TOAs      
-     Object.keys(pomData.orgToas).reverse().forEach(key => {          
+     Object.keys(this.pom.orgToas).reverse().forEach(key => {
           row = {};          
           row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
-          pomData.orgToas[key].forEach( (toa:TOA) => {
+          this.pom.orgToas[key].forEach( (toa:TOA) => {
             row[toa.year] = toa.amount;          
            });
 
@@ -251,11 +250,12 @@ export class CreateProgrammingComponent implements OnInit {
       actions.canUpload = false;
     return actions;
   }
-  getOrgName(key):string{ 
 
-    let org = this.orgs.find(o => o.id === key);    
+  getOrgName(key):string{ 
+    let org = this.orgs.find(o => o.id === key);
     return org.abbreviation;
   }
+
    handleNewAttachments(newFile:FileMetaData):void{
       this.showUploadDialog = false;
       if(newFile){
@@ -278,9 +278,9 @@ export class CreateProgrammingComponent implements OnInit {
     this.pomService.getPomFromFile(fileId).subscribe(
       resp => {
         this.busy = false;
-        const pom = (resp as any).result ;
+        this.pom = (resp as any).result ;
         this.initGrids(this.byYear);
-        this.loadGrids(pom,this.byYear);
+        this.loadGrids(this.byYear);
       },
       error => {
         this.busy = false;
@@ -506,7 +506,7 @@ onCellAction(cellAction:DataGridMessage,gridType:any):void{
 }
 
 onSaveRow(rowId,gridType):void{
-  
+
   let editAction = this.onSaveAction(rowId,gridType);
   if (gridType == "org")
   {
@@ -514,23 +514,23 @@ onSaveRow(rowId,gridType):void{
     this.orgData[rowId].actions = editAction;
     this.orgGridApi.stopEditing();
 
-    // update subtotal row   
+    // update subtotal row
     let subtoaRow = this.calculateSubToaTotals();
     this.refreshOrgsTotalsRow(subtoaRow);
-  
+
     // update delta row
     let deltaRow = {};
     deltaRow = this.calculateDeltaRow(subtoaRow,this.communityData[1]);
     this.refreshDeltaRow(deltaRow);
-    
-    this.orgGridApi.setRowData(this.orgData);    
+
+    this.orgGridApi.setRowData(this.orgData);
   }
   else {
     this.communityData[rowId].actions = editAction;
     this.communityGridApi.stopEditing();
     this.onCommunityToaChange(rowId);
   }
-  
+
 }
 
 onEditRow(rowId,gridType):void{
