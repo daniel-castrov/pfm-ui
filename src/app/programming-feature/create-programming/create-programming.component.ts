@@ -344,7 +344,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
     },
       cellRenderer: params => params.value,
       cellClass: "text-class",    
-      cellStyle: { display: 'flex', 'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal'}
+      cellStyle: params => this.getOrgColorStyle(params),
     
   });
 
@@ -651,6 +651,37 @@ refreshDeltaRow(deltaRow:any){
     }      
   });
 }
+
+getOrgColorStyle(param):any {
+  let orgcolors = []
+  orgcolors["PAIO"] ="#6d00c1";
+  orgcolors["DUSA"] ="#10A1B1";
+  orgcolors["JSTO"] ="#21D836";
+  orgcolors["JPEO"] ="#DE3C47";
+  orgcolors["JRO"] ="#0c1ec7";
+  
+  let  cellStyle = { display: 'flex', 'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:null};
+  let orgName:string = param.value;
+
+  if (orgName != undefined)
+  {
+    orgName = orgName.split('-')[0];
+    orgName = orgName.replace('<strong><span>','');
+    orgName = orgName.replace('</span></strong>','');
+    
+    console.log("orgname " + orgName);
+    if (orgcolors[orgName] != undefined)
+    {
+      let orgcolor:string = orgcolors[orgName];
+      cellStyle = { display: 'flex',  'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:orgcolor};
+    }
+    return cellStyle;
+  }
+
+  return ;
+}
+
+
 
 }
 
