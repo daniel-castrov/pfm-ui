@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
 import {FormatterUtil} from '../../util/formatterUtil';
 import {FileMetaData} from '../../pfm-common-models/FileMetaData';
 import {Attachment} from '../../pfm-common-models/Attachment';
-import {ColumnApi, GridApi} from '@ag-grid-community/all-modules';
+import {ColumnApi, GridApi, Column, CellPosition } from '@ag-grid-community/all-modules';
 import {AppModel} from '../../pfm-common-models/AppModel';
 import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import {Action} from '../../pfm-common-models/Action';
@@ -370,7 +370,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
         cellRenderer: params => this.negativeNumberRenderer(params),
         editable: true,
         cellClass: "pfm-datagrid-numeric-class",      
-        cellStyle: { display: 'flex','padding-right':'10px !important'}
+        cellStyle: { display: 'flex','padding-right':'0px !important'}
     });
   }
   colDefs.push(
@@ -383,7 +383,7 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
       valueGetter: params => this.rowTotal( params.data, fy ),
       cellRenderer: params => this.negativeNumberRenderer(params),
       cellClass: "pfm-datagrid-numeric-class",
-      cellStyle: { display: 'flex', 'padding-right':'10px !important'}
+      cellStyle: { display: 'flex', 'padding-right':'0px !important'}
   });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 
   colDefs.push(
@@ -684,7 +684,7 @@ getOrgColorStyle(param):any {
   orgcolors["JPEO"] ="#DE3C47";
   orgcolors["JRO"] ="#0c1ec7";
   
-  let  cellStyle = { display: 'flex', 'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:null};
+  let  cellStyle = { display: 'flex', 'padding-left':'0px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:null};
   let orgName:string = param.value;
 
   if (orgName != undefined)
@@ -697,12 +697,31 @@ getOrgColorStyle(param):any {
     if (orgcolors[orgName] != undefined)
     {
       let orgcolor:string = orgcolors[orgName];
-      cellStyle = { display: 'flex',  'padding-left':'5px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:orgcolor};
+      cellStyle = { display: 'flex',  'padding-left':'0px !important', 'align-items': 'center', 'white-space': 'normal',backgroundColor:orgcolor};
     }
     return cellStyle;
   }
 
   return ;
+}
+
+private onTabToNextCell (params) {
+  let rowIndex = params.previousCellPosition.rowIndex;  
+  let nextCell:CellPosition = params.nextCellPosition;
+  
+  let firstColumn =  (this.byYear).toString();
+  let lastColumn =  (this.byYear + 4).toString();
+  
+  if (params.previousCellPosition.column.colId === lastColumn){
+    
+    let nextColumn:Column = this.commColumnApi.getColumn(firstColumn);    
+    nextCell = {
+      rowIndex: rowIndex,      
+      column: nextColumn,
+      rowPinned: undefined
+    }
+  }  
+  return nextCell;
 }
 
 
