@@ -29,10 +29,8 @@ import { CreateProgrammingOrganizationGraphComponent } from './create-programmin
 })
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
-  
-  @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
+
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
-  @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
   @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
 
   id:string = 'create-programming-component';
@@ -56,12 +54,8 @@ export class CreateProgrammingComponent implements OnInit {
   tableHeaders:Array<string>;  
   orgs:Array<Organization>;
   uploadedFileId:string;
-  communityOptions: GridsterConfig;
-  communityDashboard: Array<GridsterItem>;
-  communityGridData:any[];
-  organizationOptions: GridsterConfig;
-  organizationDashboard: Array<GridsterItem>;
-  organizationGridData:any[];
+  communityGraphData:any[] = [];
+  organizationGraphData:any[] = [];
   loadBaseline:boolean;
   gridAction:string;
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
@@ -138,110 +132,110 @@ export class CreateProgrammingComponent implements OnInit {
       });
    }
    
-   loadGrids(pomData:Pom,fy:number){
-      let toarow = {};            
-      let subtoarow = {};
-      this.subToasData = []; 
+   loadGrids(pomData:Pom,fy:number) {
+     let toarow = {};
+     let subtoarow = {};
+     this.subToasData = [];
 
-      this.communityData = [];
-      this.orgData = [];
+     this.communityData = [];
+     this.orgData = [];
 
-      // BaseLine
-      let row = {}
-      row["orgid"] = "<strong><span>Baseline</span></strong>";
-      pomData.communityToas.forEach(toa => {
-        row[toa.year] = toa.amount;
-      });
-      
-      let  actions = this.getActions();
-      
-      //row["actions"] = actions;
-      this.communityData.push(row);
+     // BaseLine
+     let row = {}
+     row["orgid"] = "<strong><span>Baseline</span></strong>";
+     pomData.communityToas.forEach(toa => {
+       row[toa.year] = toa.amount;
+     });
 
-      // Community Toas
-      row = {}      
-      row["orgid"] = "<strong><span>TOA</span></strong>";
-      toarow['orgid'] = "sub TOA Total Goal";
-      pomData.communityToas.forEach((toa: TOA) => {
-        row[toa.year] = toa.amount;        
-      });
-      
-      let i:number;
-      for (i = 0; i < 5; i++) {         
-        if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
+     let actions = this.getActions();
 
-        toarow[fy+i] = row[ fy+i ] ;
-      }      
-      row["Communityactions"] = actions;
-      this.communityData.push(row);
+     //row["actions"] = actions;
+     this.communityData.push(row);
 
-      toarow['orgid'] = "sub TOA Total Goal";
-      this.subToasData.push(toarow);
-      
-      this.communityData.forEach( row => {        
-        for (i = 0; i < 5; i++) {
-          if ( row[ fy+i ] == undefined ) {
-            row[ fy+i ] = 0;
-            }          
-          }       
-        });
-                
-    //  this.communityGridApi.setRowData(this.communityData);
-    //  this.communityGridApi.setColumnDefs(this.communityColumns);
+     // Community Toas
+     row = {}
+     row["orgid"] = "<strong><span>TOA</span></strong>";
+     toarow['orgid'] = "sub TOA Total Goal";
+     pomData.communityToas.forEach((toa: TOA) => {
+       row[toa.year] = toa.amount;
+     });
 
-      // Org TOAs      
-     Object.keys(pomData.orgToas).reverse().forEach(key => {          
-          row = {};          
-          row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
-          pomData.orgToas[key].forEach( (toa:TOA) => {
-            row[toa.year] = toa.amount;          
-           });
+     let i: number;
+     for (i = 0; i < 5; i++) {
+       if (row[fy + i] == undefined) row[fy + i] = 0;
 
-        row["Organizationactions"] = this.getActions();
-        this.orgData.push(row);     
-      });
-      
-      this.orgData.forEach( row => {        
-      for (i = 0; i < 5; i++) {
-        if ( row[ fy+i ] == undefined ) {
-          row[ fy+i ] = 0;
-          }          
-        }       
-      });      
+       toarow[fy + i] = row[fy + i];
+     }
+     row["Communityactions"] = actions;
+     this.communityData.push(row);
 
-      subtoarow = {};
-      subtoarow = this.calculateSubToaTotals();      
+     toarow['orgid'] = "sub TOA Total Goal";
+     this.subToasData.push(toarow);
 
-      this.tableHeaders = [];
-      this.tableHeaders.push('orgid');
-      for (i = 0; i < 5; i++){
+     this.communityData.forEach(row => {
+       for (i = 0; i < 5; i++) {
+         if (row[fy + i] == undefined) {
+           row[fy + i] = 0;
+         }
+       }
+     });
+
+     //  this.communityGridApi.setRowData(this.communityData);
+     //  this.communityGridApi.setColumnDefs(this.communityColumns);
+
+     // Org TOAs
+     Object.keys(pomData.orgToas).reverse().forEach(key => {
+       row = {};
+       row['orgid'] = "<strong><span>" + this.getOrgName(key) + "</span></strong>";
+       pomData.orgToas[key].forEach((toa: TOA) => {
+         row[toa.year] = toa.amount;
+       });
+
+       row["Organizationactions"] = this.getActions();
+       this.orgData.push(row);
+     });
+
+     this.orgData.forEach(row => {
+       for (i = 0; i < 5; i++) {
+         if (row[fy + i] == undefined) {
+           row[fy + i] = 0;
+         }
+       }
+     });
+
+     subtoarow = {};
+     subtoarow = this.calculateSubToaTotals();
+
+     this.tableHeaders = [];
+     this.tableHeaders.push('orgid');
+     for (i = 0; i < 5; i++) {
        // rowspan[fy+ i] =  "";
-        this.tableHeaders.push((fy+i).toString());
-      }
+       this.tableHeaders.push((fy + i).toString());
+     }
 
-      //this.orgData.push(rowspan);
-      this.orgData.push(toarow);      
-      this.orgData.push(subtoarow);
+     //this.orgData.push(rowspan);
+     this.orgData.push(toarow);
+     this.orgData.push(subtoarow);
 
-      subtoarow['orgid'] = "sub-TOA Total Actual";
-      this.subToasData.push(subtoarow);
+     subtoarow['orgid'] = "sub-TOA Total Actual";
+     this.subToasData.push(subtoarow);
 
-      let toaDeltarow = {};
-      toaDeltarow = this.calculateDeltaRow(subtoarow,toarow);
-      
-      this.orgData.push(toaDeltarow);
-      toaDeltarow['orgid'] = "Delta";
-      this.subToasData.push(toaDeltarow);
+     let toaDeltarow = {};
+     toaDeltarow = this.calculateDeltaRow(subtoarow, toarow);
 
-      
-      //this.orgGridApi.setColumnDefs(this.orgColumns);      
-      //this.orgGridApi.setRowData(this.orgData);
+     this.orgData.push(toaDeltarow);
+     toaDeltarow['orgid'] = "Delta";
+     this.subToasData.push(toaDeltarow);
+
+
+     //this.orgGridApi.setColumnDefs(this.orgColumns);
+     //this.orgGridApi.setRowData(this.orgData);
      // this.orgGridApi.setRowData(this.orgData);
      // this.orgGridApi.setColumnDefs(this.orgColumns);
      this.currentYear = fy;
-     this.updateCommunityGraphData(fy);
-
-  }
+     this.updateCommunityGraphData(this.currentYear);
+     this.updateOrganizationGraphData(this.currentYear);
+   }
 
   getActions():Action{
     let actions = new Action();
@@ -399,10 +393,17 @@ private setAgGridColDefs(column1Name:string, fy:number): any {
   return colDefs;
 }
 
+  private initializeCharts() {
+    this.communityGraphData = [['init', 'test'], ['type', 0]];
+    this.organizationGraphData = [['init', 'test'], ['type', 0]];
+    this.communityGraph.columnChart.dataTable = this.communityGraphData;
+    this.organizationGraph.columnChart.dataTable = this.organizationGraphData;
+  }
+
 //updates the community graph with grid data
 private updateCommunityGraphData(startYear:number) {
   //populate griddata
-  this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+  this.communityGraphData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
   for (let i = 0; i < 5; i++){
     let year = 'FY' + (startYear + i - 2000);
     let amount = 0;
@@ -415,14 +416,64 @@ private updateCommunityGraphData(startYear:number) {
       let pastAmount = this.communityData[1][startYear + i - 1];
       change = ((amount - pastAmount) / pastAmount);
     }
-    this.communityGridData[i + 1] = [year, amount, change];
+    this.communityGraphData[i + 1] = [year, amount, change];
   }
-
-  this.communityGraph.columnChart.dataTable = this.communityGridData;
-  this.communityGraph.chartReady=true;
-  this.communityGraph.columnChart.component.draw();
-
+  if(this.communityGraph.columnChart.dataTable.length != 0){
+    this.communityGraph.columnChart.dataTable = this.communityGraphData;
+    this.communityGraph.chartReady=true;
+    this.communityGraph.columnChart.component.draw();
+  }
+  else {
+    this.communityGraph.columnChart.dataTable = this.communityGraphData;
+    this.communityGraph.chartReady=true;
+  }
 }
+
+  private updateOrganizationGraphData(startYear: number) {
+    // this.organizationGraphData = [
+    //   ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+    //   ['FY22', 7632, 7577, 128329, 10200, 335440,],
+    //   ['FY23', 7841, 8032, 128593, 10197, 334054,],
+    //   ['FY24', 0, 0, 0, 0, 0,],
+    //   ['FY25', 0, 0, 0, 0, 0,],
+    //   ['FY26', 0, 0, 0, 0, 0,],
+    // ];
+    this.organizationGraphData = [
+      ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
+      ['FY22', 0, 0, 0, 0, 0,],
+      ['FY23', 0, 0, 0, 0, 0,],
+      ['FY24', 0, 0, 0, 0, 0,],
+      ['FY25', 0, 0, 0, 0, 0,],
+      ['FY26', 0, 0, 0, 0, 0,],
+    ];
+
+    // console.log(this.orgData);
+    //
+    // for (let i = 0; i < 6; i++){
+    //   if (i === 1){
+    //     this.organizationGraphData[0][0] = 'Fiscal Year';
+    //     for(let j = 0; j < 5; j++){
+    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
+    //     }
+    //   }
+    //   else {
+    //
+    //     for(let j = 0; j < 5; j++){
+    //       this.organizationGraphData[j+1][0] = 'FY' + (startYear + j - 2000);
+    //     }
+    //   }
+    // }
+
+    if(this.organizationGraph.columnChart.dataTable.length != 0) {
+      this.organizationGraph.columnChart.dataTable = this.organizationGraphData;
+      this.organizationGraph.chartReady = true;
+      this.organizationGraph.columnChart.component.draw();
+    }
+    else {
+      this.organizationGraph.columnChart.dataTable = this.organizationGraphData;
+      this.organizationGraph.chartReady = true;
+    }
+  }
 
 // a sinple CellRenderrer for negative numbers
 private negativeNumberRenderer( params ){
@@ -529,6 +580,8 @@ onSaveRow(rowId,gridType):void{
     this.communityData[rowId].actions = editAction;
     this.communityGridApi.stopEditing();
     this.onCommunityToaChange(rowId);
+    this.updateCommunityGraphData(this.currentYear);
+    this.updateOrganizationGraphData(this.currentYear);
   }
   
 }
