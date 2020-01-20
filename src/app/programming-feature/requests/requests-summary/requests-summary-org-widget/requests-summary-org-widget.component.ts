@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
-import { ProgramSummary } from '../../models/ProgramSummary';
-import { ListItem } from '../../../pfm-common-models/ListItem';
+import { ProgramSummary } from '../../../models/ProgramSummary';
+import { ListItem } from '../../../../pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',

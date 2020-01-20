@@ -29,6 +29,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DisabledActionCellRendererComponent } from './datagrid/renderers/disabled-action-cell-renderer/disabled-action-cell-renderer.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.component';
+import { TreeDatagridComponent } from './tree-datagrid/tree-datagrid.component';
+import { TreeCellRendererComponent } from './datagrid/renderers/tree-cell-renderer/tree-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -55,10 +57,12 @@ import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.componen
     TextCellRendererComponent,
     DisabledActionCellRendererComponent,
     CustomDialogComponent,
-    CancelCtaComponent
+    CancelCtaComponent,
+    TreeDatagridComponent,
+    TreeCellRendererComponent
   ],
   imports: [
-    CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent, DisabledActionCellRendererComponent])
+    CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([    TreeCellRendererComponent, ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent, DisabledActionCellRendererComponent])
   ],
   exports: [
     AppHeaderComponent,
@@ -83,7 +87,9 @@ import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.componen
     TextCellRendererComponent,
     DisabledActionCellRendererComponent,
     CustomDialogComponent,
-    CancelCtaComponent
+    CancelCtaComponent,
+    TreeDatagridComponent,
+    TreeCellRendererComponent
   ]
 })
 export class PfmCoreuiModule { }

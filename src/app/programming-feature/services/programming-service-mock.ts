@@ -2,10 +2,10 @@ import {ProgrammingService} from './programming-service';
 import {Observable, of, onErrorResumeNext} from 'rxjs';
 import {ProgramSummary} from '../models/ProgramSummary';
 
-export class ProgrammingServiceMock extends ProgrammingService {
+export class ProgrammingServiceMock{
 
     constructor() {
-        super(null);
+//        super(null);
     }
 
     getRequestsForPom(pom): Observable<Object> {

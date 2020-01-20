@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {GridApi, ColumnApi, RowNode, Column, CellPosition} from '@ag-grid-community/all-modules';
-import {DialogService} from '../../../pfm-coreui/services/dialog.service';
-import {DataGridMessage} from '../../../pfm-coreui/models/DataGridMessage';
-import {ProgrammingModel} from '../../models/ProgrammingModel';
-import {ProgramSummary} from '../../models/ProgramSummary';
+import {DialogService} from '../../../../pfm-coreui/services/dialog.service';
+import {DataGridMessage} from '../../../../pfm-coreui/models/DataGridMessage';
+import {ProgrammingModel} from '../../../models/ProgrammingModel';
+import {ProgramSummary} from '../../../models/ProgramSummary';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
@@ -12,17 +13,19 @@ import {ProgramSummary} from '../../models/ProgramSummary';
 })
 export class RequestsSummaryGridComponent implements OnInit {
 
+    @Input() griddata: ProgramSummary[];
+
     gridApi: GridApi;
     columnApi: ColumnApi;
     columns: any[];
     gridMinYear: number;
     gridMaxYear: number;
-    gridData: ProgramSummary[];
 
     id: string = 'requests-summary-component';
     busy: boolean;
 
-    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel) {
+
+    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel, private router:Router) {
         this.columns = [
             {
                 headerName: 'Program',
@@ -44,8 +47,8 @@ export class RequestsSummaryGridComponent implements OnInit {
             },
         ];
 
-        this.gridMinYear = this.programmingModel.pom.fy - 3;
-        this.gridMaxYear = this.programmingModel.pom.fy + 4;
+        this.gridMinYear = 2016;//this.programmingModel.pom.fy - 3;
+        this.gridMaxYear = 2023;//this.programmingModel.pom.fy + 4;
         for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
             let fyColumnHeaderName = i.toString();
             fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
@@ -78,7 +81,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 },
             }
         );
-        this.gridData = [];
+        this.griddata = [];
         for (const program of this.programmingModel.programs) {
             const ps = new ProgramSummary();
             ps.programName = program.shortName;
@@ -97,7 +100,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                     }
                 }
             }
-            this.gridData.push(ps);
+            this.griddata.push(ps);
         }
     }
 
@@ -129,6 +132,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     onCellClicked(cellAction: DataGridMessage): void {
         if (cellAction.columnId === 'programName') {
             //navigate to the program details
+            this.router.navigate(['/programming/requests/details/' + cellAction.rowData['programName']])
 
         }
     }

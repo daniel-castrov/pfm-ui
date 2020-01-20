@@ -26,12 +26,14 @@ ng g component pfm-coreui/form-inputs/cancel-cta --module pfm-coreui/pfm-coreui.
 ng g component pfm-coreui/card --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-card --style=scss
 ng g component pfm-coreui/custom-dialog --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-custom-dialog --style=scss
 ng g component pfm-coreui/datagrid --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-datagrid --style=scss
+ng g component pfm-coreui/tree-datagrid --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-tree-datagrid --style=scss
 
 
 ng g component pfm-coreui/datagrid/renderers/action-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-action-cell-renderer --style=scss
 ng g component pfm-coreui/datagrid/renderers/attachment-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=pfm-attachment-cell-renderer --style=scss
 ng g component pfm-coreui/datagrid/renderers/text-cell-editor --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=text-cell-editor --style=scss
 ng g component pfm-coreui/datagrid/renderers/text-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=text-cell-renderer --style=scss
+ng g component pfm-coreui/datagrid/renderers/tree-cell-renderer --module pfm-coreui/pfm-coreui.module --export=true --prefix=pfm --selector=tree-cell-renderer --style=scss
 
 
 
@@ -49,9 +51,13 @@ ng g component programming-feature/total_appropriation_priority --module program
 ng g component programming-feature/work_space_management --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
 
 #sub components for programming-feature/requests
-ng g component programming-feature/requests/requests-summary-grid --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
-ng g component programming-feature/requests/requests-summary-org-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
-ng g component programming-feature/requests/requests-summary-toa-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+
+ng g component programming-feature/requests/requests-details --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/requests-summary --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+
+ng g component programming-feature/requests/summary/requests-summary-grid --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/summary/requests-summary-org-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/summary/requests-summary-toa-widget --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
 
 
 
