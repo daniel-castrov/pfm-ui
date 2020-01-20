@@ -256,7 +256,7 @@ export class CreateProgrammingComponent implements OnInit {
     return org.abbreviation;
   }
 
-   handleNewAttachments(newFile:FileMetaData):void{
+   handlePOMFile(newFile:FileMetaData):void{
       this.showUploadDialog = false;
       if(newFile){
         let attachment:Attachment = new Attachment();
