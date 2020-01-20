@@ -1,0 +1,32 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.main{
+  display: flex;
+}
+
+h3{
+  width: 90%;
+}
+
+.section-banner{
+  display: flex;
+  width: 100%;
+  height: 5%;
+}
+
+.section-pods{
+  display: flex;
+  width: 100%;
+  height: 40%;
+}
+
+.section-datagrid{
+  display: flex;
+  width: 100%;
+  height: 55%;
+}

@@ -55,7 +55,7 @@ export class TreeDatagridComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.info('hit tree-datagrid init');
     //the grid should display all of the columns - so include the groupby and sumby columns
     this.columnsForGrid = [];
     for(let c of this.fieldsToGroup){
@@ -71,6 +71,9 @@ export class TreeDatagridComponent implements OnInit {
       nodes.push(f.field);
     }
 
+    for(let fs of this.fieldsToSum){
+      console.info(fs);
+    }
     //process the flat data into a tree
     let children:any[] = this.doWhile(0, nodes, this.rows);
 
@@ -126,13 +129,11 @@ export class TreeDatagridComponent implements OnInit {
       }
       else{//sum the values for now
         dict[key].children.push(row);
-        dict[key].fy1 += row.fy1;
-        dict[key].fy2 += row.fy2;
-        dict[key].fy3 += row.fy3;
-        dict[key].fy4 += row.fy4;
+        for(let fs of this.fieldsToSum){
+            dict[key][fs.field] += row[fs.field];
+          }
+        }
       }
-    }
-
     return summaryRows;
   }
 

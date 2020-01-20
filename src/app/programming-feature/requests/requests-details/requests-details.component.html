@@ -1,0 +1,31 @@
+<pfm-cancel-cta [label]="'Back'" (onCancelClicked)="goBack()"></pfm-cancel-cta>
+
+<h3>POM19 Program Request Details: {{programmingModel.selectedProgramName}}</h3>
+
+<tabset  class="program-tab-style" destroyOnHide="true">
+    <tab  heading="Program" style="width:100%;height:100%">
+        <div class="section-tab">
+        </div>
+    </tab >
+    <tab heading="Funds"  active="true" style="width:100%;height:100%">
+        <div class="section-tab">
+            <pfm-requests-funding-line-grid></pfm-requests-funding-line-grid>
+        </div>
+    </tab>
+    <tab heading="Assets"  style="width:100%;height:100%">
+        <div class="section-tab">
+        </div>
+    </tab>
+    <tab heading="Justification"  style="width:100%;height:100%">
+        <div class="section-tab">
+        </div>
+    </tab>
+    <tab heading="Schedule"  style="width:100%;height:100%">
+        <div class="section-tab">
+        </div>
+    </tab>
+    <tab heading="Scope"  style="width:100%;height:100%">
+        <div class="section-tab">
+        </div>
+    </tab>
+</tabset>

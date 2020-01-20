@@ -17,9 +17,9 @@ import {UfrRequestsComponent} from './ufr-requests/ufr-requests.component';
 import {UfrRequestsApprovalComponent} from './ufr-requests-approval/ufr-requests-approval.component';
 import {TotalAppropriationPriorityComponent} from './total-appropriation-priority/total-appropriation-priority.component';
 import {WorkSpaceManagementComponent} from './work-space-management/work-space-management.component';
-import {RequestsSummaryGridComponent} from './requests/requests-summary-grid/requests-summary-grid.component';
-import {RequestsSummaryOrgWidgetComponent} from './requests/requests-summary-org-widget/requests-summary-org-widget.component';
-import {RequestsSummaryToaWidgetComponent} from './requests/requests-summary-toa-widget/requests-summary-toa-widget.component';
+import {RequestsSummaryGridComponent} from './requests/requests-summary/requests-summary-grid/requests-summary-grid.component';
+import {RequestsSummaryOrgWidgetComponent} from './requests/requests-summary/requests-summary-org-widget/requests-summary-org-widget.component';
+import {RequestsSummaryToaWidgetComponent} from './requests/requests-summary/requests-summary-toa-widget/requests-summary-toa-widget.component';
 import {GridsterModule} from 'angular-gridster2';
 import {Ng2GoogleChartsModule} from 'ng2-google-charts';
 import {OrganizationServiceImpl} from './services/organization-service-impl.service';
@@ -28,14 +28,15 @@ import {PomService} from './services/pom-service';
 import {PomServiceImpl} from './services/pom-service-impl.service';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming/create-programming-community-graph/create-programming-community-graph.component';
 import {ProgrammingService} from './services/programming-service';
-import {ProgrammingServiceMock} from './services/programming-service-mock';
 import {ProgrammingServiceImpl} from './services/programming-services-impl.service';
 import {ProgrammingModel} from './models/ProgrammingModel';
-import { RequestsFundingLineGridComponent } from './requests/requests-funding-line-grid/requests-funding-line-grid.component';
+import { RequestsFundingLineGridComponent } from './requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming/create-programming-organization-graph/create-programming-organization-graph.component';
+import { RequestsDetailsComponent } from './requests/requests-details/requests-details.component';
+import { RequestsSummaryComponent } from './requests/requests-summary/requests-summary.component';
 
 @NgModule({
-    declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent],
+    declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent],
     imports: [
         CommonModule,
         HttpClientModule,

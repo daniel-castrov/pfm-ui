@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class CancelCtaComponent implements OnInit {
   @Output() onCancelClicked:EventEmitter<any> = new EventEmitter<any>();
-
+  @Input() label:string = 'cancel';
   @Input() disabled:boolean;
 
   constructor() { }

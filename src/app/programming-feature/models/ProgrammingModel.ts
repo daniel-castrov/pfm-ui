@@ -6,6 +6,7 @@ import {Program} from './Program';
     providedIn: 'root'
 })
 export class ProgrammingModel {
+    public selectedProgramName:string;
     public pom: Pom;
     public programs: Program[];
 }
