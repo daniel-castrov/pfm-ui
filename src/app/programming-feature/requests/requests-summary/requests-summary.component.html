@@ -1,10 +1,12 @@
-
-<div *ngIf="programmingModelReady" class="main section-banner">
-    <h3>Summary of Program Requests for POM{{ pomDisplayYear }}</h3>
-    <pfm-primary-button [label]="'Submit All'"></pfm-primary-button>
+<div class="main section-banner">
+    <div class="title-line">
+        <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
+        <pfm-primary-button [label]="'Submit All'"></pfm-primary-button>
+    </div>
+    <pfm-dropdown (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'" [label]="'Select Organization to View'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs"></pfm-dropdown>
 </div>
 
-<div class="section-pods">
+<div *ngIf="programmingModelReady" class="section-pods">
     <gridster [options]="options">
         <gridster-item #orgWidetItem [item]="dashboard[0]">
             <div class="gridster-item-content">
