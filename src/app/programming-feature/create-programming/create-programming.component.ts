@@ -460,7 +460,9 @@ export class CreateProgrammingComponent implements OnInit {
     if (this.organizationGraph.columnChart.dataTable.length != 0) {
       this.organizationGraph.columnChart.dataTable = this.organizationGridData;
       this.organizationGraph.chartReady = true;
-      this.organizationGraph.columnChart.component.draw();
+      setTimeout(()=>{
+        this.organizationGraph.columnChart.component.draw();
+      }, 200);
     } else {
       this.organizationGraph.columnChart.dataTable = this.organizationGridData;
       this.organizationGraph.chartReady = true;
