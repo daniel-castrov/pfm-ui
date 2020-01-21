@@ -137,7 +137,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   // control view on selection from dropdown
-  private organizationSelected(organization: ListItem){
+  organizationSelected(organization: ListItem){
     if (organization.id == 'Please select') {
       this.programmingModelReady = false;
     }
