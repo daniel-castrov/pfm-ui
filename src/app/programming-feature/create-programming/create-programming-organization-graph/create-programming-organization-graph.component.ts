@@ -22,7 +22,7 @@ export class CreateProgrammingOrganizationGraphComponent{
         duration: 500,
         easing: 'out',
         startup: true
-      }
+      },
     }
   };
 

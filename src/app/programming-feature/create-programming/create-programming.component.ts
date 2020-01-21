@@ -426,43 +426,35 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   private updateOrganizationGraphData(startYear: number) {
-    this.organizationGridData = [
-      ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
-      ['FY22', 0, 0, 0, 0, 0,],
-      ['FY23', 0, 0, 0, 0, 0,],
-      ['FY24', 0, 0, 0, 0, 0,],
-      ['FY25', 0, 0, 0, 0, 0,],
-      ['FY26', 0, 0, 0, 0, 0,],
-    ];
+    //initialize starting value
+    this.organizationGridData = [['Fiscal Year',],];
 
-    console.log(this.orgData);
+    //populate data
     let numberOfRows = this.orgData.length;
     for (let i = 0; i < numberOfRows - 2; i++){
       //set years
       if (i === 0){
         this.organizationGridData[0][i] = 'Fiscal Year';
         for(let j = 0; j < 5; j++){
+          this.organizationGridData.push([]);
           this.organizationGridData[j+1][i] = 'FY' + (startYear + j - 2000);
         }
       }
       //set data for each organization
       else {
-        let organization: string = this.orgData[numberOfRows - 2 - i-1]['orgid'];
+        let organization: string = this.orgData[numberOfRows-2-i-1]['orgid'];
         this.organizationGridData[0][i] = organization.substring(14, organization.length-16);
         for(let j = 0; j < 5; j++){
-          this.organizationGridData[j+1][i] = parseInt(this.orgData[numberOfRows - 2 - i-1][startYear + j]);
+          this.organizationGridData[j+1][i] = parseInt(this.orgData[numberOfRows-2-i-1][startYear + j]);
         }
       }
     }
-
-    console.log(this.organizationGridData);
-
     if (this.organizationGraph.columnChart.dataTable.length != 0) {
       this.organizationGraph.columnChart.dataTable = this.organizationGridData;
       this.organizationGraph.chartReady = true;
       setTimeout(()=>{
         this.organizationGraph.columnChart.component.draw();
-      }, 200);
+      }, 400);
     } else {
       this.organizationGraph.columnChart.dataTable = this.organizationGridData;
       this.organizationGraph.chartReady = true;
