@@ -115,9 +115,22 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   initGrids(selectedYear){
+    this.clearGrids();
     // set the column definitions to community and Organization grid
     this.communityColumns =   this.setAgGridColDefs("Community",selectedYear);
     this.orgColumns = this.setAgGridColDefs("Organization",selectedYear);
+  }
+
+  clearGrids(){
+    if (this.orgGridApi != undefined){
+      this.orgGridApi.setColumnDefs([]);    
+      this.orgGridApi.setRowData([]);
+    }
+    
+    if (this.communityGridApi != undefined){
+    this.communityGridApi.setColumnDefs([]);  
+    this.communityGridApi.setRowData([]);
+    }
   }
 
   getPomFromPB(selectedYear:any){
