@@ -35,7 +35,7 @@
           </div>
 
           <div class="section-datagrid">
-            <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span><pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'"></pfm-secondary-button></div>
+            <div><span>&nbsp;Set TOAs for Comunity ($K)&nbsp;</span><pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'" (onClick)="onResetCommunityData()"></pfm-secondary-button></div>
             <div class="grid-container">
               <pfm-displaydatagrid [tabToNextCell]="onTabToNextCell.bind(this)" (onGridIsReady)="onCommunityGridIsReady($event)" (onColumnIsReady)="onCommunityColumnIsReady($event)" (onCellAction)="onCommunityGridCellAction($event)" [showAddRow]="false" [columns]="communityColumns" [rows]="communityData" >
               </pfm-displaydatagrid>
@@ -52,7 +52,7 @@
           </div>
 
           <div class="section-datagrid">
-            <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span></div>
+            <div><span>&nbsp;Set TOAs for Organization ($K)&nbsp;</span><pfm-secondary-button [label]="' Reset'" [icon]="'fa fa-refresh'" (onClick)="onResetOrgData()"></pfm-secondary-button></div>
             <!--<div style="height:300px;width:98%">-->
             <div class="grid-container">
               <pfm-displaydatagrid [tabToNextCell]="onTabToNextCell.bind(this)" (onGridIsReady)="onOrgGridIsReady($event)" (onColumnIsReady)="onOrgColumnIsReady($event)" (onCellAction)="onOrgGridCellAction($event)" [showAddRow]="false" [columns]="orgColumns" [rows]="orgData" >

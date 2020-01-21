@@ -13,7 +13,6 @@ import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/a
 import {Action} from '../../pfm-common-models/Action';
 import {TOA} from '../models/TOA';
 import {Pom} from '../models/Pom';
-import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import {Organization} from '../../pfm-common-models/Organization';
 import {OrganizationService} from '../services/organization-service';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
@@ -503,9 +502,6 @@ export class CreateProgrammingComponent implements OnInit {
     return false;
   }
 
-  onTabChange(param:NgbTabChangeEvent){
-    console.log('tab change:'+ param);
-  }
   onCommunityGridIsReady(gridApi:GridApi):void{
     this.communityGridApi = gridApi;
     //gridApi.sizeColumnsToFit();
@@ -595,6 +591,34 @@ export class CreateProgrammingComponent implements OnInit {
         colKey:this.byYear
       });
     }
+  }
+
+  onResetCommunityData() {
+    // Restore original row values from Pom
+    const communityTOARowId = 1;
+    const row = {};
+    this.pom.communityToas.forEach((toa: TOA) => {
+      row[toa.year] = toa.amount;
+    });
+    for (let i = 0; i < 5; i++) {
+      if (row[this.currentYear + i] === undefined) {
+        row[this.currentYear + i] = 0;
+      }
+    }
+
+    // Copy original values back into TOA row
+    for (let[key, value] of Object.entries(row)) {
+      this.communityData[communityTOARowId][key] = value;
+    }
+
+    // Notify components of change
+    this.onCommunityToaChange(communityTOARowId);
+    this.communityGridApi.refreshCells();
+    this.updateCommunityGraphData(this.currentYear);
+    this.updateOrganizationGraphData(this.currentYear);
+  }
+
+  onResetOrgData() {
   }
 
   onEditAction(rowId:number,gridId):any{
