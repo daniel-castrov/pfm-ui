@@ -20,6 +20,7 @@ import { CreateProgrammingCommunityGraphComponent } from './create-programming-c
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'pfm-programming',
@@ -33,6 +34,7 @@ export class CreateProgrammingComponent implements OnInit {
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
   @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
   @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
+  @ViewChild(TabsetComponent, {static: false}) tabset: TabsetComponent;
 
   id:string = 'create-programming-component';
   busy:boolean;
@@ -123,12 +125,12 @@ export class CreateProgrammingComponent implements OnInit {
 
   clearGrids(){
     if (this.orgGridApi != undefined){
-      this.orgGridApi.setColumnDefs([]);    
+      this.orgGridApi.setColumnDefs([]);
       this.orgGridApi.setRowData([]);
     }
-    
+
     if (this.communityGridApi != undefined){
-    this.communityGridApi.setColumnDefs([]);  
+    this.communityGridApi.setColumnDefs([]);
     this.communityGridApi.setRowData([]);
     }
   }
@@ -530,12 +532,16 @@ export class CreateProgrammingComponent implements OnInit {
 
   onRowDragEnd(param){}
 
-  onCommunityGridCellAction(cellAction:DataGridMessage){
-    this.onCellAction(cellAction,"community");
+  onCommunityGridCellAction(cellAction: DataGridMessage) {
+    if ('Community' === this.getActiveTab()) {
+      this.onCellAction( cellAction, 'community' );
+    }
   }
 
-  onOrgGridCellAction(cellAction:DataGridMessage){
-    this.onCellAction(cellAction,"org");
+  onOrgGridCellAction(cellAction: DataGridMessage) {
+    if ('Organization' === this.getActiveTab()) {
+      this.onCellAction( cellAction, 'org' );
+    }
   }
 
   onCellAction(cellAction:DataGridMessage,gridType:any):void{
@@ -801,5 +807,14 @@ export class CreateProgrammingComponent implements OnInit {
     return nextCell;
   }
 
-
+  private getActiveTab(): string {
+    let  activeTab: string = null;
+    for (const tab of this.tabset.tabs) {
+      if (tab.active) {
+        activeTab = tab.heading;
+        break;
+      }
+    }
+    return activeTab;
+  }
 }
