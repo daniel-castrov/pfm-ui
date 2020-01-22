@@ -9,4 +9,5 @@ export class ProgrammingModel {
     public selectedProgramName:string;
     public pom: Pom;
     public programs: Program[];
+    public roles: Map<string, Role>;
 }
