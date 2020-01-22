@@ -8,6 +8,7 @@ import { PomService } from '../../services/pom-service';
 import { ProgrammingService } from '../../services/programming-service';
 import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
+import { ListItem } from '../../../pfm-common-models/ListItem';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -22,7 +23,8 @@ export class RequestsSummaryComponent implements OnInit {
   @ViewChild(RequestsSummaryOrgWidgetComponent,  {static: false}) orgWidget: RequestsSummaryOrgWidgetComponent;
 
   griddata:ProgramSummary[];
-
+  availableOrgs: ListItem[];
+  selectedOrg: string;
   programmingModelReady: boolean;
   pomDisplayYear: string;
   options: GridsterConfig;
@@ -44,7 +46,6 @@ export class RequestsSummaryComponent implements OnInit {
             resp1 => {
               this.programmingModel.programs = (resp1 as any).result;
               this.busy = false;
-              this.programmingModelReady = true;
             },
             error => {
 
@@ -54,6 +55,7 @@ export class RequestsSummaryComponent implements OnInit {
       error => {
         this.dialogService.displayDebug(error);
       });
+
     this.options = {
       minCols: 8,
       maxCols: 8,
@@ -84,6 +86,10 @@ export class RequestsSummaryComponent implements OnInit {
 
     //defaults
     this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
+
+    //set up dropdown - Mocked Data
+    this.availableOrgs = this.toListItem(['Show All','AL','CT','CZ','DIR','HR','IT','JD','JX','NE','OB','PP','RD']);
+    this.selectedOrg = 'Please select';
   }
 
   private getPreferences():void{
@@ -107,13 +113,36 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   private saveWidgetLayout():void{
-
     this.dashboardService.saveWidgetPreferences("programming-requests-summary", this.dashboard).subscribe(
       data => {
       },
       error => {
-
       });
   }
 
+  // Needed for Dropdown
+  private toListItem(orgs:string[]):ListItem[]{
+    let items:ListItem[] = [];
+    for(let org of orgs){
+      let item:ListItem = new ListItem();
+      item.id = org;
+      item.name = org;
+      item.value = org;
+      if (org === this.selectedOrg) {
+        item.isSelected = true;
+      }
+      items.push(item);
+    }
+    return items;
+  }
+
+  // control view on selection from dropdown
+  organizationSelected(organization: ListItem){
+    if (organization.id == 'Please select') {
+      this.programmingModelReady = false;
+    }
+    else {
+      this.programmingModelReady = true;
+    }
+  }
 }

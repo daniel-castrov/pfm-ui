@@ -11,16 +11,9 @@
     <div class="main">
       <span>&nbsp;</span>
     </div>
-    <div class="table">
-      <div class="table-row">
-        <div class="rTableCellr" vertical-align="middle">Baseline loaded from:</div>
-        <div class="rTableCell">
-          <ng-container *ngIf="availableYears">
-            <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [label]="" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
-          </ng-container>
-        </div>
-      </div>
-    </div>
+    <ng-container *ngIf="availableYears">
+      <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [label]="'Baseline loaded from:'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+    </ng-container>
   </div>
 </div>
 
@@ -31,7 +24,7 @@
         <div class="section-tab">
 
           <div class="section-chart">
-            <pfm-programming-community-graph #communityGraph [griddata]="communityGraphData"></pfm-programming-community-graph>
+            <pfm-programming-community-graph #communityGraph [griddata]="communityGridData"></pfm-programming-community-graph>
           </div>
 
           <div class="section-datagrid">

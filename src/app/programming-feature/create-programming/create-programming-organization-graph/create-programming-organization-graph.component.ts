@@ -12,24 +12,17 @@ export class CreateProgrammingOrganizationGraphComponent{
 
   public columnChart: any =  {
     chartType: 'ColumnChart',
-    dataTable: [
-      ['Fiscal Year', 'DUSA-TE', 'PAIO', 'JSTO-CBD', 'JRO-CBRND', 'JPEO-CBRND'],
-      ['FY22', 0, 0, 0, 0, 0,],
-      ['FY23', 0, 0, 0, 0, 0,],
-      ['FY24', 0, 0, 0, 0, 0,],
-      ['FY25', 0, 0, 0, 0, 0,],
-      ['FY26', 0, 0, 0, 0, 0,],
-    ],
+    dataTable: [],
     options: {
       title: 'Sub-TOAs for Organizations',
-      width: 1200,
-      height: 290,
+      width: 1400,
+      height: 325,
       isStacked: true,
       animation: {
         duration: 500,
         easing: 'out',
         startup: true
-      }
+      },
     }
   };
 

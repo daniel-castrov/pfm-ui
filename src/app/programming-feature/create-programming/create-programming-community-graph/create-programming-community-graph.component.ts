@@ -15,8 +15,8 @@ export class CreateProgrammingCommunityGraphComponent{
     dataTable: [],
     options: {
       title: 'TOAs for Community',
-      width: 1200,
-      height: 290,
+      width: 1400,
+      height: 325,
       vAxes: { 0: {format: 'currency'}, 1: {gridlines: {color: 'transparent'}, format:"percent"}},
       seriesType: 'bars',
       series: {0: {targetAxisIndex:0},

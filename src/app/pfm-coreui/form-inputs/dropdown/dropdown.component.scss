@@ -1,14 +1,18 @@
-.pfm-select{
-  width: 200px;
+.pfm-dropdown-section{
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-label {
-  margin-right: 10px;
+.pfm-label {
+  display: flex;
+  padding-right: 5px;
 }
 
+.pfm-dropdown{
+  display: flex;
+  width: 200px;
+}
 
 option{
   background-color: #bbced7;

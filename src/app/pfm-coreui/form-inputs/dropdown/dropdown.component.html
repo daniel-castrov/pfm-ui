@@ -1,29 +1,37 @@
 <ng-container *ngIf='type == "labelDropdown"'>
-    <div class="pfm-select" style="width: 200px;">
-        <label>{{label}}</label>
-        <select
-                (ngModelChange)="handleSelectionChanged($event)"
-                [name]="id"
-                [id]="id"
-                class="form-control"
-                [(ngModel)]="selectedItem">
-            <option disabled value="{{prompt}}">{{prompt}}</option>
-            <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
-        </select>
+    <div class="pfm-dropdown-section">
+        <div class="pfm-label">
+            <label>{{label}}</label>
+        </div>
+        <div class="pfm-dropdown">
+            <select
+                    (ngModelChange)="handleSelectionChanged($event)"
+                    [name]="id"
+                    [id]="id"
+                    class="form-control"
+                    [(ngModel)]="selectedItem">
+                <option disabled value="{{prompt}}">{{prompt}}</option>
+                <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
+            </select>
+        </div>
     </div>
 </ng-container>
 
 <ng-container *ngIf='type == "attatchmentDropdown"'>
-    <select
-            (ngModelChange)="handleSelectionChanged($event)"
-            [name]="id"
-            [id]="id"
-            class="form-control"
-            [(ngModel)]="selectedItem"
-            [disabled]="attachmentsDisabled">
-        <option disabled value="{{prompt}}">{{prompt}}</option>
-        <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
-    </select>
+    <div class="pfm-dropdown-section">
+        <div class="pfm-dropdown">
+            <select
+                    (ngModelChange)="handleSelectionChanged($event)"
+                    [name]="id"
+                    [id]="id"
+                    class="form-control"
+                    [(ngModel)]="selectedItem"
+                    [disabled]="attachmentsDisabled">
+                <option disabled value="{{prompt}}">{{prompt}}</option>
+                <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
+            </select>
+        </div>
+    </div>
 </ng-container>
 
 <ng-container *ngIf='type == "iconDropdown"'>
