@@ -18,6 +18,7 @@ export class CreateProgrammingOrganizationGraphComponent{
       width: 1400,
       height: 325,
       isStacked: true,
+      vAxis: {format: 'currency'},
       animation: {
         duration: 500,
         easing: 'out',
