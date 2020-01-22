@@ -425,15 +425,12 @@ export class CreateProgrammingComponent implements OnInit {
       this.communityGridData[i + 1] = [year, amount, change];
     }
 
-    if(this.communityGraph.columnChart.dataTable.length != 0){
       this.communityGraph.columnChart.dataTable = this.communityGridData;
       this.communityGraph.chartReady=true;
-      this.communityGraph.columnChart.component.draw();
-    }
-    else {
-      this.communityGraph.columnChart.dataTable = this.communityGridData;
-      this.communityGraph.chartReady=true;
-    }
+      setTimeout(()=>{
+        this.communityGraph.columnChart.component.draw();
+      }, 400);
+
   }
 
   private updateOrganizationGraphData(startYear: number) {
@@ -460,16 +457,11 @@ export class CreateProgrammingComponent implements OnInit {
         }
       }
     }
-    if (this.organizationGraph.columnChart.dataTable.length != 0) {
       this.organizationGraph.columnChart.dataTable = this.organizationGridData;
       this.organizationGraph.chartReady = true;
       setTimeout(()=>{
         this.organizationGraph.columnChart.component.draw();
       }, 400);
-    } else {
-      this.organizationGraph.columnChart.dataTable = this.organizationGridData;
-      this.organizationGraph.chartReady = true;
-    }
   }
 
 // a sinple CellRenderrer for negative numbers
