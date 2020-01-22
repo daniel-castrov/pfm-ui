@@ -56,7 +56,6 @@ export class DatagridComponent implements OnInit {
   }
 
   public onModelUpdated() {
-    console.log('onModelUpdated');
   }
 
   onRowDragEnd(event:any):void{
@@ -64,7 +63,6 @@ export class DatagridComponent implements OnInit {
   }
 
   onCellClicked(event:any):void{
-    console.info(event);
     let message:DataGridMessage = new DataGridMessage();
 
     message.rowIndex = event.rowIndex;
@@ -77,7 +75,6 @@ export class DatagridComponent implements OnInit {
   }
 
   public onGridReady(params) {
-    console.log('onGridReady');
     this.api = params.api;
     this.columnApi = params.columnApi;
     this.api.sizeColumnsToFit();

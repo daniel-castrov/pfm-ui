@@ -22,35 +22,38 @@ import {RequestsSummaryOrgWidgetComponent} from './requests/requests-summary/req
 import {RequestsSummaryToaWidgetComponent} from './requests/requests-summary/requests-summary-toa-widget/requests-summary-toa-widget.component';
 import {GridsterModule} from 'angular-gridster2';
 import {Ng2GoogleChartsModule} from 'ng2-google-charts';
-import {OrganizationServiceImpl} from './services/organization-service-impl.service';
-import {OrganizationService} from './services/organization-service';
+import {OrganizationServiceImpl} from '../services/organization-service-impl.service';
+import {OrganizationService} from '../services/organization-service';
 import {PomService} from './services/pom-service';
 import {PomServiceImpl} from './services/pom-service-impl.service';
-import { CreateProgrammingCommunityGraphComponent } from './create-programming/create-programming-community-graph/create-programming-community-graph.component';
+import {CreateProgrammingCommunityGraphComponent} from './create-programming/create-programming-community-graph/create-programming-community-graph.component';
 import {ProgrammingService} from './services/programming-service';
 import {ProgrammingServiceImpl} from './services/programming-service-impl.service';
 import {ProgrammingModel} from './models/ProgrammingModel';
-import { RequestsFundingLineGridComponent } from './requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
-import { CreateProgrammingOrganizationGraphComponent } from './create-programming/create-programming-organization-graph/create-programming-organization-graph.component';
-import { RequestsDetailsComponent } from './requests/requests-details/requests-details.component';
-import { RequestsSummaryComponent } from './requests/requests-summary/requests-summary.component';
+import {RequestsFundingLineGridComponent} from './requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
+import {CreateProgrammingOrganizationGraphComponent} from './create-programming/create-programming-organization-graph/create-programming-organization-graph.component';
+import {RequestsDetailsComponent} from './requests/requests-details/requests-details.component';
+import {RequestsSummaryComponent} from './requests/requests-summary/requests-summary.component';
+import {RoleService} from '../services/role-service';
+import {RoleServiceImpl} from '../services/role-service-impl.service';
 
 @NgModule({
-    declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent],
-    imports: [
-        CommonModule,
-        HttpClientModule,
-        GridsterModule,
-        Ng2GoogleChartsModule,
-        PfmCoreuiModule,
-        PfmSecureFileuploadModule,
-        TabsModule.forRoot(),
-        ProgrammingFeatureRoutingModule
-    ],
-    providers: [{provide: ProgrammingService, useClass: ProgrammingServiceImpl},
-        {provide: PomService, useClass: PomServiceImpl},
-        {provide: OrganizationService, useClass: OrganizationServiceImpl},
-        ProgrammingModel]
+  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    GridsterModule,
+    Ng2GoogleChartsModule,
+    PfmCoreuiModule,
+    PfmSecureFileuploadModule,
+    TabsModule.forRoot(),
+    ProgrammingFeatureRoutingModule
+  ],
+  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceImpl},
+    {provide: PomService, useClass: PomServiceImpl},
+    {provide: OrganizationService, useClass: OrganizationServiceImpl},
+    {provide: RoleService, useClass: RoleServiceImpl},
+    ProgrammingModel]
 })
 export class ProgrammingFeatureModule {
 }

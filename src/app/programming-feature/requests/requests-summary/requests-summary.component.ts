@@ -9,6 +9,7 @@ import { ProgrammingService } from '../../services/programming-service';
 import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../../pfm-common-models/ListItem';
+import {RoleService} from '../../../services/role-service';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -31,24 +32,29 @@ export class RequestsSummaryComponent implements OnInit {
   busy:boolean;
   dashboard: Array<GridsterItem>;
 
-  constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private dashboardService: DashboardMockService, private dialogService: DialogService) {
+  constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
     this.busy = true;
     this.pomService.getLatestPom().subscribe(
-      resp => {
-        this.programmingModel.pom = (resp as any).result;
+      pomResp => {
+        this.programmingModel.pom = (pomResp as any).result;
         if (this.programmingModel.pom.status !== 'CLOSED') {
           this.pomDisplayYear = this.programmingModel.pom.fy.toString();
           this.pomDisplayYear = this.pomDisplayYear.substr(this.pomDisplayYear.length - 2);
           this.programmingService.getRequestsForPom(this.programmingModel.pom).subscribe(
-            resp1 => {
-              this.programmingModel.programs = (resp1 as any).result;
-              this.busy = false;
+            programResp => {
+              this.programmingModel.programs = (programResp as any).result;
+              this.roleService.getMap().subscribe(
+                roleResp => {
+                  this.programmingModel.roles = roleResp as Map<string, Role>;
+                  this.programmingModelReady = true;
+                  this.busy = false;
+                }
+              );
             },
             error => {
-
             });
         }
       },

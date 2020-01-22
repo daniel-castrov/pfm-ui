@@ -5,6 +5,7 @@ import {DataGridMessage} from '../../../../pfm-coreui/models/DataGridMessage';
 import {ProgrammingModel} from '../../../models/ProgrammingModel';
 import {ProgramSummary} from '../../../models/ProgramSummary';
 import { Router } from '@angular/router';
+import {RoleService} from '../../../../services/role-service';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
@@ -13,19 +14,18 @@ import { Router } from '@angular/router';
 })
 export class RequestsSummaryGridComponent implements OnInit {
 
-    @Input() griddata: ProgramSummary[];
-
     gridApi: GridApi;
     columnApi: ColumnApi;
     columns: any[];
     gridMinYear: number;
     gridMaxYear: number;
+    roles: Map<string, Role>;
+    gridData: ProgramSummary[];
 
     id: string = 'requests-summary-component';
     busy: boolean;
 
-
-    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel, private router:Router) {
+    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel, private router: Router, private roleService: RoleService) {
         this.columns = [
             {
                 headerName: 'Program',
@@ -81,11 +81,11 @@ export class RequestsSummaryGridComponent implements OnInit {
                 },
             }
         );
-        this.griddata = [];
+        this.gridData = [];
         for (const program of this.programmingModel.programs) {
             const ps = new ProgramSummary();
             ps.programName = program.shortName;
-            ps.assignedTo = program.responsibleRoleId;
+            ps.assignedTo = this.getRoleName(program.responsibleRoleId);
             ps.status = program.programStatus;
             ps.funds = {};
             ps.fundsTotal = 0;
@@ -100,7 +100,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                     }
                 }
             }
-            this.griddata.push(ps);
+            this.gridData.push(ps);
         }
     }
 
@@ -148,4 +148,8 @@ export class RequestsSummaryGridComponent implements OnInit {
     ngOnInit() {
     }
 
+  getRoleName(key: string): string {
+    const role = this.programmingModel.roles.get(key);
+    return (role) ? role.name : 'Unknown Role';
+  }
 }
