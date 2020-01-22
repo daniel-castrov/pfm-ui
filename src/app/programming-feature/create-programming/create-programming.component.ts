@@ -14,7 +14,7 @@ import {Action} from '../../pfm-common-models/Action';
 import {TOA} from '../models/TOA';
 import {Pom} from '../models/Pom';
 import {Organization} from '../../pfm-common-models/Organization';
-import {OrganizationService} from '../services/organization-service';
+import {OrganizationService} from '../../services/organization-service';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
@@ -55,7 +55,7 @@ export class CreateProgrammingComponent implements OnInit {
   orgData:any[];
   subToasData:any[];
   tableHeaders:Array<string>;
-  orgs:Array<Organization>;
+  orgs: Map<string, Organization>;
   uploadedFileId:string;
   communityGridData:any[] = [[]];
   organizationGridData:any[] = [[]];
@@ -67,13 +67,9 @@ export class CreateProgrammingComponent implements OnInit {
     //var selectedYear = appModel.selectedYear;
     this.subToasData = [];
 
-    organizationService.getAll().subscribe(
+    organizationService.getMap().subscribe(
       resp => {
-        this.orgs = (resp as any).result;
-      },
-      error => {
-        this.orgs = [];
-        console.log(error);
+        this.orgs = resp as Map<string, Organization>;
       });
   }
 
@@ -262,9 +258,9 @@ export class CreateProgrammingComponent implements OnInit {
     return actions;
   }
 
-  getOrgName(key):string{
-    let org = this.orgs.find(o => o.id === key);
-    return org.abbreviation;
+  getOrgName(key: string): string {
+    const org = this.orgs.get(key);
+    return (org) ? org.abbreviation : 'Unknown Organization';
   }
 
   handlePOMFile(newFile:FileMetaData):void{
