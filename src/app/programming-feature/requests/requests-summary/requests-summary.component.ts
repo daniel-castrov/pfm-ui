@@ -30,6 +30,7 @@ export class RequestsSummaryComponent implements OnInit {
   programmingModelReady: boolean;
   pomDisplayYear: string;
   options: GridsterConfig;
+  addOptions:ListItem[];
   busy:boolean;
   dashboard: Array<GridsterItem>;
 
@@ -67,6 +68,18 @@ export class RequestsSummaryComponent implements OnInit {
 
     //defaults
     this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
+
+
+    // Populate dropdown options
+    let item:ListItem = new ListItem();
+    item.name = "Previously Funded Program";
+    item.value = "previously-funded-program";
+    item.id = "previously-funded-program";
+    let item2:ListItem = new ListItem();
+    item2.name = "New Program";
+    item2.value = "new-program";
+    item2.id = "new-program";
+    this.addOptions = [item, item2];
 
     //set up dropdown
     this.organizationService.getAll().subscribe(
@@ -160,5 +173,9 @@ export class RequestsSummaryComponent implements OnInit {
     else {
       this.programmingModelReady = false;
     }
+  }
+
+  handleAdd(addEvent: any){
+    //todo
   }
 }
