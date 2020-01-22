@@ -808,13 +808,6 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   private getActiveTab(): string {
-    let  activeTab: string = null;
-    for (const tab of this.tabset.tabs) {
-      if (tab.active) {
-        activeTab = tab.heading;
-        break;
-      }
-    }
-    return activeTab;
+    return this.tabset.tabs.find(tab => tab.active).heading;
   }
 }
