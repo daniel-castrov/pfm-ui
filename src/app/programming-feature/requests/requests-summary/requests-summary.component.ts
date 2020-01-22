@@ -10,6 +10,7 @@ import { DashboardMockService } from '../../../pfm-dashboard-module/services/das
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 import {RoleService} from '../../../services/role-service';
+import { OrganizationService } from '../../../services/organization-service';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -32,36 +33,10 @@ export class RequestsSummaryComponent implements OnInit {
   busy:boolean;
   dashboard: Array<GridsterItem>;
 
-  constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService) {
+  constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService) {
   }
 
   ngOnInit() {
-    this.busy = true;
-    this.pomService.getLatestPom().subscribe(
-      pomResp => {
-        this.programmingModel.pom = (pomResp as any).result;
-        if (this.programmingModel.pom.status !== 'CLOSED') {
-          this.pomDisplayYear = this.programmingModel.pom.fy.toString();
-          this.pomDisplayYear = this.pomDisplayYear.substr(this.pomDisplayYear.length - 2);
-          this.programmingService.getRequestsForPom(this.programmingModel.pom).subscribe(
-            programResp => {
-              this.programmingModel.programs = (programResp as any).result;
-              this.roleService.getMap().subscribe(
-                roleResp => {
-                  this.programmingModel.roles = roleResp as Map<string, Role>;
-                  this.programmingModelReady = true;
-                  this.busy = false;
-                }
-              );
-            },
-            error => {
-            });
-        }
-      },
-      error => {
-        this.dialogService.displayDebug(error);
-      });
-
     this.options = {
       minCols: 8,
       maxCols: 8,
@@ -93,9 +68,20 @@ export class RequestsSummaryComponent implements OnInit {
     //defaults
     this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
 
-    //set up dropdown - Mocked Data
-    this.availableOrgs = this.toListItem(['Show All','AL','CT','CZ','DIR','HR','IT','JD','JX','NE','OB','PP','RD']);
-    this.selectedOrg = 'Please select';
+    //set up dropdown
+    this.organizationService.getAll().subscribe(
+        resp => {
+          let orgs = (resp as any).result;
+          let dropdownOptions: string[] = ['Show All'];
+          for (let org of orgs) {
+            dropdownOptions.push(org.abbreviation);
+          }
+          this.availableOrgs = this.toListItem(dropdownOptions);
+          this.selectedOrg = 'Please select';
+        },
+        error => {
+          this.dialogService.displayDebug(error);
+        });
   }
 
   private getPreferences():void{
@@ -144,11 +130,35 @@ export class RequestsSummaryComponent implements OnInit {
 
   // control view on selection from dropdown
   organizationSelected(organization: ListItem){
-    if (organization.id == 'Please select') {
-      this.programmingModelReady = false;
+    if (organization.id != 'Please select') {
+      this.busy = true;
+      this.pomService.getLatestPom().subscribe(
+          pomResp => {
+            this.programmingModel.pom = (pomResp as any).result;
+            if (this.programmingModel.pom.status !== 'CLOSED') {
+              this.pomDisplayYear = this.programmingModel.pom.fy.toString();
+              this.pomDisplayYear = this.pomDisplayYear.substr(this.pomDisplayYear.length - 2);
+              this.programmingService.getRequestsForPom(this.programmingModel.pom).subscribe(
+                  programResp => {
+                    this.programmingModel.programs = (programResp as any).result;
+                    this.roleService.getMap().subscribe(
+                        roleResp => {
+                          this.programmingModel.roles = roleResp as Map<string, Role>;
+                          this.programmingModelReady = true;
+                          this.busy = false;
+                        }
+                    );
+                  },
+                  error => {
+                  });
+            }
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          });
     }
     else {
-      this.programmingModelReady = true;
+      this.programmingModelReady = false;
     }
   }
 }
