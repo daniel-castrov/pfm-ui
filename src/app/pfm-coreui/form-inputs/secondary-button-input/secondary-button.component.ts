@@ -25,7 +25,6 @@ export class SecondaryButtonComponent {
   }
 
   blur() {
-    console.log( 'blurring' );
     this.buttonElement.nativeElement.blur();
   }
 }
