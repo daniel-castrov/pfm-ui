@@ -21,6 +21,7 @@ import { DashboardMockService } from '../../pfm-dashboard-module/services/dashbo
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
+import {NumericCellEditor} from '../../ag-grid/cell-editors/NumericCellEditor';
 
 @Component({
   selector: 'pfm-programming',
@@ -374,6 +375,7 @@ export class CreateProgrammingComponent implements OnInit {
           minWidth: 110,
           suppressMenu: true,
           field: (fy+ i).toString(),
+          cellEditor: NumericCellEditor.create({returnUndefinedOnZero:true}),
           cellRenderer: params => this.negativeNumberRenderer(params),
           editable: true,
           cellClass: "pfm-datagrid-numeric-class",
