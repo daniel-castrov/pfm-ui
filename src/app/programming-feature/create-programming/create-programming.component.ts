@@ -21,7 +21,7 @@ import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 import { TabsetComponent } from 'ngx-bootstrap';
 import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
-import {NumericCellEditor} from '../../ag-grid/cell-editors/NumericCellEditor';
+import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor';
 
 @Component({
   selector: 'pfm-programming',
