@@ -17,7 +17,7 @@ export class NumericCellEditor {
  * - min?: number | (params) => number
  * - max?: number | (params) => number
  */
-  static create({ allowedCharacters = AllowedCharacters.DIGITS_ONLY,
+  static create({ allowedCharacters = AllowedCharacters.DIGITS_AND_MINUS_AND_DECIMAL_POINT,
   // Often it is preferable to return UNDEFINED when the user types '0' in order to equate the result as with the case as if nothing was ever typed in the cell.
   // Reasons:
   // 1. The NumericCellEditor could return 0 and a formatter could convert it to ''. This could be undesirable because would it result in different values
