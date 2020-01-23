@@ -1,27 +1,27 @@
-import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {PomService} from '../../programming-feature/services/pom-service';
-import {DialogService} from '../../pfm-coreui/services/dialog.service';
-import {ListItem} from '../../pfm-common-models/ListItem';
-import {DropdownComponent} from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
-import {Router} from '@angular/router';
-import {FormatterUtil} from '../../util/formatterUtil';
-import {FileMetaData} from '../../pfm-common-models/FileMetaData';
-import {Attachment} from '../../pfm-common-models/Attachment';
-import {ColumnApi, GridApi, Column, CellPosition } from '@ag-grid-community/all-modules';
-import {AppModel} from '../../pfm-common-models/AppModel';
-import {ActionCellRendererComponent} from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
-import {Action} from '../../pfm-common-models/Action';
-import {TOA} from '../models/TOA';
-import {Pom} from '../models/Pom';
-import {Organization} from '../../pfm-common-models/Organization';
-import {OrganizationService} from '../../services/organization-service';
-import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { PomService } from '../../programming-feature/services/pom-service';
+import { DialogService } from '../../pfm-coreui/services/dialog.service';
+import { ListItem } from '../../pfm-common-models/ListItem';
+import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
+import { Router } from '@angular/router';
+import { FormatterUtil } from '../../util/formatterUtil';
+import { FileMetaData } from '../../pfm-common-models/FileMetaData';
+import { Attachment } from '../../pfm-common-models/Attachment';
+import { CellPosition, Column, ColumnApi, GridApi } from '@ag-grid-community/all-modules';
+import { AppModel } from '../../pfm-common-models/AppModel';
+import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
+import { Action } from '../../pfm-common-models/Action';
+import { TOA } from '../models/TOA';
+import { Pom } from '../models/Pom';
+import { Organization } from '../../pfm-common-models/Organization';
+import { OrganizationService } from '../../services/organization-service';
 import { CreateProgrammingCommunityGraphComponent } from './create-programming-community-graph/create-programming-community-graph.component';
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
-import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
-import {NumericCellEditor} from '../../ag-grid/cell-editors/NumericCellEditor';
+import { TabsetComponent } from 'ngx-bootstrap';
+import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
+import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor';
 
 @Component({
   selector: 'pfm-programming',
@@ -30,12 +30,13 @@ import {NumericCellEditor} from '../../ag-grid/cell-editors/NumericCellEditor';
 })
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
+  @ViewChild(TabsetComponent, {static: false}) tabset: TabsetComponent;
+  @ViewChild(SecondaryButtonComponent, {static: false}) resetButton: SecondaryButtonComponent;
 
   @ViewChild('communityGraphItem',  {static: false}) communityGraphItem: ElementRef;
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
   @ViewChild('organizationGraphItem',  {static: false}) organizationGraphItem: ElementRef;
   @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
-  @ViewChild(TabsetComponent, {static: false}) tabset: TabsetComponent;
 
   id:string = 'create-programming-component';
   busy:boolean;
@@ -99,7 +100,7 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   onSelectBaseLine(){
-    this.programYearSelected= Object.keys( this.selectedYear).map(key =>  this.selectedYear[key]).slice(0,1);
+    this.programYearSelected = Object.keys(this.selectedYear).map(key => this.selectedYear[key]).slice(0, 1);
     console.log("selected year "+ this.programYearSelected);
     if(this.programYearSelected=="Spreadsheet"){
       this.showUploadDialog = true;
@@ -107,9 +108,8 @@ export class CreateProgrammingComponent implements OnInit {
       this.showUploadDialog = false;
       this.programBudgetData=true;
 
-      var selectedYear = this.byYear;///FormatterUtil.getCurrentFiscalYear()+1;
-      this.initGrids(selectedYear);
-      this.getPomFromPB(selectedYear);
+      this.initGrids(this.byYear);
+      this.getPomFromPB(this.byYear);
     }
   }
 
@@ -146,17 +146,12 @@ export class CreateProgrammingComponent implements OnInit {
       });
   }
 
-  loadGrids(fy:number){
-    let toarow = {};
-    let subtoarow = {};
-    this.subToasData = [];
-
-    this.communityData = [];
-    this.orgData = [];
+  buildCommunityToaRows(fy: number) {
+    const toarow = {};
 
     // BaseLine
     let row = {}
-    row["orgid"] = "<strong><span>Baseline</span></strong>";
+    row['orgid'] = '<strong><span>Baseline</span></strong>';
     this.pom.communityToas.forEach(toa => {
       row[toa.year] = toa.amount;
     });
@@ -166,88 +161,89 @@ export class CreateProgrammingComponent implements OnInit {
 
     // Community Toas
     row = {};
-    row["orgid"] = "<strong><span>TOA</span></strong>";
-    toarow['orgid'] = "sub TOA Total Goal";
+    row['orgid'] = '<strong><span>TOA</span></strong>';
+    toarow['orgid'] = 'sub TOA Total Goal';
     this.pom.communityToas.forEach((toa: TOA) => {
       row[toa.year] = toa.amount;
     });
 
-    let i:number;
-    for (i = 0; i < 5; i++) {
-      if ( row[ fy+i ] == undefined ) row[ fy+i ] = 0;
-
-      toarow[fy+i] = row[ fy+i ] ;
+    for (let i = 0; i < 5; i++) {
+      if ( row[fy + i] === undefined ) {
+        row[fy + i] = 0;
+      }
+      toarow[fy + i] = row[fy + i] ;
     }
-    row["Communityactions"] = actions;
+    row['Communityactions'] = actions;
     this.communityData.push(row);
 
-    toarow['orgid'] = "sub TOA Total Goal";
+    toarow['orgid'] = 'sub TOA Total Goal';
     this.subToasData.push(toarow);
 
-    this.communityData.forEach( row => {
-      for (i = 0; i < 5; i++) {
-        if ( row[ fy+i ] == undefined ) {
-          row[ fy+i ] = 0;
+    this.communityData.forEach( commRow => {
+      for (let i = 0; i < 5; i++) {
+        if ( commRow[fy + i] === undefined ) {
+          commRow[fy + i] = 0;
         }
       }
     });
+  }
 
-    //  this.communityGridApi.setRowData(this.communityData);
-    //  this.communityGridApi.setColumnDefs(this.communityColumns);
-
+  buildOrgToaRows(fy: number) {
+    let row = null;
+    const toarow = this.subToasData[0];
     // Org TOAs
     Object.keys(this.pom.orgToas).forEach(key => {
       row = {};
-      row['orgid'] = "<strong><span>" + this.getOrgName(key) +"</span></strong>";
-      this.pom.orgToas[key].forEach( (toa:TOA) => {
+      row['orgid'] = '<strong><span>' + this.getOrgName(key) +'</span></strong>';
+      this.pom.orgToas[key].forEach( (toa: TOA) => {
         row[toa.year] = toa.amount;
       });
 
-      row["Organizationactions"] = this.getActions();
+      row['Organizationactions'] = this.getActions();
       this.orgData.push(row);
     });
 
-    this.orgData.forEach( row => {
-      for (i = 0; i < 5; i++) {
-        if ( row[ fy+i ] == undefined ) {
-          row[ fy+i ] = 0;
+    this.orgData.forEach( orgRow => {
+      for (let i = 0; i < 5; i++) {
+        if ( orgRow[fy + i] === undefined ) {
+          orgRow[fy + i] = 0;
         }
       }
     });
 
-    subtoarow = {};
-    subtoarow = this.calculateSubToaTotals();
+    const subtoarow = this.calculateSubToaTotals();
 
     this.tableHeaders = [];
     this.tableHeaders.push('orgid');
-    for (i = 0; i < 5; i++){
-      // rowspan[fy+ i] =  "";
-      this.tableHeaders.push((fy+i).toString());
+    for (let i = 0; i < 5; i++){
+      this.tableHeaders.push((fy + i).toString());
     }
 
-    //this.orgData.push(rowspan);
     this.orgData.push(toarow);
     this.orgData.push(subtoarow);
 
-    subtoarow['orgid'] = "sub-TOA Total Actual";
+    subtoarow['orgid'] = 'sub-TOA Total Actual';
     this.subToasData.push(subtoarow);
 
     let toaDeltarow = {};
-    toaDeltarow = this.calculateDeltaRow(subtoarow,toarow);
+    toaDeltarow = this.calculateDeltaRow(subtoarow, toarow);
 
     this.orgData.push(toaDeltarow);
-    toaDeltarow['orgid'] = "Delta";
+    toaDeltarow['orgid'] = 'Delta';
     this.subToasData.push(toaDeltarow);
+  }
 
+  loadGrids(fy: number) {
+    this.communityData = [];
+    this.orgData = [];
+    this.subToasData = [];
 
-    //this.orgGridApi.setColumnDefs(this.orgColumns);
-    //this.orgGridApi.setRowData(this.orgData);
-    // this.orgGridApi.setRowData(this.orgData);
-    // this.orgGridApi.setColumnDefs(this.orgColumns);
+    this.buildCommunityToaRows(fy);
+    this.buildOrgToaRows(fy);
+
     this.currentYear = fy;
     this.updateCommunityGraphData(this.currentYear);
     this.updateOrganizationGraphData(this.currentYear);
-
   }
 
   getActions():Action{
@@ -600,29 +596,30 @@ export class CreateProgrammingComponent implements OnInit {
   onResetCommunityData() {
     // Restore original row values from Pom
     const communityTOARowId = 1;
-    const row = {};
-    this.pom.communityToas.forEach((toa: TOA) => {
-      row[toa.year] = toa.amount;
-    });
-    for (let i = 0; i < 5; i++) {
-      if (row[this.currentYear + i] === undefined) {
-        row[this.currentYear + i] = 0;
-      }
-    }
-
-    // Copy original values back into TOA row
-    for (let[key, value] of Object.entries(row)) {
-      this.communityData[communityTOARowId][key] = value;
-    }
+    this.communityData = [];
+    this.buildCommunityToaRows(this.byYear);
+    this.communityGridApi.setRowData(this.communityData);
 
     // Notify components of change
     this.onCommunityToaChange(communityTOARowId);
-    this.communityGridApi.refreshCells();
     this.updateCommunityGraphData(this.currentYear);
     this.updateOrganizationGraphData(this.currentYear);
+
+    // Deselect button
+    this.resetButton.blur();
   }
 
   onResetOrgData() {
+    // Restore original row values from Pom
+    this.orgData = [];
+    this.buildOrgToaRows(this.byYear);
+    this.orgGridApi.setRowData(this.orgData);
+
+    // Notify components of change
+    this.updateOrganizationGraphData(this.currentYear);
+
+    // Deselect button
+    this.resetButton.blur();
   }
 
   onEditAction(rowId:number,gridId):any{
