@@ -12,6 +12,7 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
 import {RoleService} from '../../../services/role-service';
 import { OrganizationService } from '../../../services/organization-service';
 import { Role } from '../../../pfm-common-models/Role';
+import { add } from 'ngx-bootstrap/chronos';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -31,8 +32,11 @@ export class RequestsSummaryComponent implements OnInit {
   programmingModelReady: boolean;
   pomDisplayYear: string;
   options: GridsterConfig;
+  addOptions:ListItem[];
   busy:boolean;
   dashboard: Array<GridsterItem>;
+  showPreviousFundedProgramDialog: boolean;
+  availablePrograms: ListItem[];
 
   constructor(private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService) {
   }
@@ -68,6 +72,17 @@ export class RequestsSummaryComponent implements OnInit {
 
     //defaults
     this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, { x: 0, y: 0, cols: 4, rows: 8, id: "toa-widget" }];
+
+    // Populate dropdown options
+    let item:ListItem = new ListItem();
+    item.name = "Previously Funded Program";
+    item.value = "previously-funded-program";
+    item.id = "previously-funded-program";
+    let item2:ListItem = new ListItem();
+    item2.name = "New Program";
+    item2.value = "new-program";
+    item2.id = "new-program";
+    this.addOptions = [item, item2];
 
     //set up dropdown
     this.organizationService.getAll().subscribe(
@@ -160,5 +175,22 @@ export class RequestsSummaryComponent implements OnInit {
     else {
       this.programmingModelReady = false;
     }
+  }
+
+  handleAdd(addEvent: any){
+    if (addEvent.id == 'new-program') {
+      console.log('New program Event fired');
+    }
+    else if (addEvent.id == 'previously-funded-program') {
+      this.showPreviousFundedProgramDialog = true;
+    }
+  }
+
+  importProgramSelected( $event: any ) {
+    console.log('Import Program Selected');
+  }
+
+  onImportProgram() {
+    console.log('Import Program');
   }
 }

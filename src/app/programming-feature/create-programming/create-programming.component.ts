@@ -21,6 +21,7 @@ import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
 import { TabsetComponent } from 'ngx-bootstrap';
 import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
+import {NumericCellEditor} from '../../ag-grid/cell-editors/NumericCellEditor';
 
 @Component({
   selector: 'pfm-programming',
@@ -370,6 +371,7 @@ export class CreateProgrammingComponent implements OnInit {
           minWidth: 110,
           suppressMenu: true,
           field: (fy+ i).toString(),
+          cellEditor: NumericCellEditor.create({returnUndefinedOnZero:true}),
           cellRenderer: params => this.negativeNumberRenderer(params),
           editable: true,
           cellClass: "pfm-datagrid-numeric-class",
@@ -402,23 +404,23 @@ export class CreateProgrammingComponent implements OnInit {
     return colDefs;
   }
 
-//updates the community graph with grid data
+  //updates the community graph from grid data
   private updateCommunityGraphData(startYear:number) {
     //populate griddata
     this.communityGridData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
-    for (let i = 0; i < 5; i++){
-      let year = 'FY' + (startYear + i - 2000);
+    for (let row = 0; row < 5; row++){
+      let year = 'FY' + (startYear + row - 2000);
       let amount = 0;
       let change = 0;
       //if there is a year
-      if (this.communityData[1][startYear + i]) {
-        amount = parseInt(this.communityData[1][startYear + i]);
+      if (this.communityData[1][startYear + row]) {
+        amount = parseInt(this.communityData[1][startYear + row]);
       }
-      if (this.communityData[1][startYear + i - 1]){
-        let pastAmount = this.communityData[1][startYear + i - 1];
+      if (this.communityData[1][startYear + row - 1]){
+        let pastAmount = this.communityData[1][startYear + row - 1];
         change = ((amount - pastAmount) / pastAmount);
       }
-      this.communityGridData[i + 1] = [year, amount, change];
+      this.communityGridData[row + 1] = [year, amount, change];
     }
 
       this.communityGraph.columnChart.dataTable = this.communityGridData;
@@ -429,27 +431,28 @@ export class CreateProgrammingComponent implements OnInit {
 
   }
 
+  //Updates the Organization graph from grid data
   private updateOrganizationGraphData(startYear: number) {
     //initialize starting value
-    this.organizationGridData = [['Fiscal Year',],];
+    this.organizationGridData = [[]];
 
     //populate data
-    let numberOfRows = this.orgData.length;
-    for (let i = 0; i < numberOfRows - 2; i++){
+    let numberOfColumns = this.orgData.length - 2;
+    for (let column = 0; column < numberOfColumns; column++){
       //set years
-      if (i === 0){
-        this.organizationGridData[0][i] = 'Fiscal Year';
-        for(let j = 0; j < 5; j++){
+      if (column === 0){
+        this.organizationGridData[0][column] = 'Fiscal Year';
+        for(let rowIndex = 0; rowIndex < 5; rowIndex++){
           this.organizationGridData.push([]);
-          this.organizationGridData[j+1][i] = 'FY' + (startYear + j - 2000);
+          this.organizationGridData[rowIndex + 1][column] = 'FY' + (startYear + rowIndex - 2000);
         }
       }
       //set data for each organization
       else {
-        let organization: string = this.orgData[numberOfRows-2-i-1]['orgid'];
-        this.organizationGridData[0][i] = organization.substring(14, organization.length-16);
-        for(let j = 0; j < 5; j++){
-          this.organizationGridData[j+1][i] = parseInt(this.orgData[numberOfRows-2-i-1][startYear + j]);
+        let organization: string = this.orgData[numberOfColumns-column-1]['orgid'];
+        this.organizationGridData[0][column] = organization.substring(14, organization.length-16);
+        for(let rowIndex = 0; rowIndex < 5; rowIndex++){
+          this.organizationGridData[rowIndex+1][column] = parseInt(this.orgData[numberOfColumns-column-1][startYear + rowIndex]);
         }
       }
     }
