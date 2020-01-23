@@ -33,7 +33,7 @@
 </div>
 
 <ng-container *ngIf="showPreviousFundedProgramDialog">
-  <pfm-custom-dialog [title]="'Choose the year for Import'" [body]="importPreviousFundedProgramBody" [actions]="importPreviousFundedProgramActions" (onCancelDialog)="showPreviousFundedProgramDialog = false"></pfm-custom-dialog>
+  <pfm-custom-dialog [title]="'Select a Program'" [body]="importPreviousFundedProgramBody" [actions]="importPreviousFundedProgramActions" (onCancelDialog)="showPreviousFundedProgramDialog = false"></pfm-custom-dialog>
 
   <ng-template #importPreviousFundedProgramBody>
     <pfm-dropdown (onSelectionChanged)="importProgramSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availablePrograms"></pfm-dropdown>
@@ -42,7 +42,7 @@
   <ng-template #importPreviousFundedProgramActions>
     <div class="button-container">
       <div class="confirm">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showPreviousFundedProgramDialog = false; onImportProgram()">Import</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showPreviousFundedProgramDialog = false; onImportProgram()">OK</button>
       </div>
       <div class="cancel">
         <pfm-cancel-cta (onCancelClicked)="showPreviousFundedProgramDialog = false"></pfm-cancel-cta>
