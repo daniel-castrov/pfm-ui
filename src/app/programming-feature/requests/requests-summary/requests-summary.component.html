@@ -3,7 +3,7 @@
         <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
         <pfm-primary-button [label]="'Submit All'"></pfm-primary-button>
     </div>
-    <pfm-dropdown (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'" [label]="'Select Organization to View:'" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs"></pfm-dropdown>
+    <pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'" [label]="'Select Organization to View:'" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs"></pfm-dropdown>
 </div>
 
 <div *ngIf="programmingModelReady" class="section-pods">
@@ -24,8 +24,32 @@
 </div>
 
 <div *ngIf="programmingModelReady" class="section-datagrid">
+  <div class="add-new-program-cta">
+    <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="addOptions"></pfm-dropdown>
+  </div>
+  <div class="datagrid">
     <pfm-requests-summary-grid></pfm-requests-summary-grid>
+  </div>
 </div>
+
+<ng-container *ngIf="showPreviousFundedProgramDialog">
+  <pfm-custom-dialog [title]="'Select a Program'" [body]="importPreviousFundedProgramBody" [actions]="importPreviousFundedProgramActions" (onCancelDialog)="showPreviousFundedProgramDialog = false"></pfm-custom-dialog>
+
+  <ng-template #importPreviousFundedProgramBody>
+    <pfm-dropdown (onSelectionChanged)="importProgramSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availablePrograms"></pfm-dropdown>
+  </ng-template>
+
+  <ng-template #importPreviousFundedProgramActions>
+    <div class="button-container">
+      <div class="confirm">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showPreviousFundedProgramDialog = false; onImportProgram()">OK</button>
+      </div>
+      <div class="cancel">
+        <pfm-cancel-cta (onCancelClicked)="showPreviousFundedProgramDialog = false"></pfm-cancel-cta>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
 
 <!--
 <pfm-requests-funding-line-grid></pfm-requests-funding-line-grid>
