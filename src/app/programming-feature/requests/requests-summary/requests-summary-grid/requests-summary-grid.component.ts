@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {GridApi, ColumnApi, RowNode, Column, CellPosition} from '@ag-grid-community/all-modules';
-import {DialogService} from '../../../../pfm-coreui/services/dialog.service';
-import {DataGridMessage} from '../../../../pfm-coreui/models/DataGridMessage';
-import {ProgrammingModel} from '../../../models/ProgrammingModel';
-import {ProgramSummary} from '../../../models/ProgramSummary';
+import { Component, OnInit } from '@angular/core';
+import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
+import { DialogService } from '../../../../pfm-coreui/services/dialog.service';
+import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
+import { ProgrammingModel } from '../../../models/ProgrammingModel';
+import { ProgramSummary } from '../../../models/ProgramSummary';
 import { Router } from '@angular/router';
-import {RoleService} from '../../../../services/role-service';
+import { RoleService } from '../../../../services/role-service';
+import { Role } from '../../../../pfm-common-models/Role';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
