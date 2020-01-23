@@ -1,4 +1,4 @@
-class Role {
+export class Role {
   created: Date;
   modified: Date;
   modifiedBy: string;

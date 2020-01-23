@@ -1,5 +1,5 @@
 <div class="pfm-datagrid">
-    <div class="add-row-container" ng-show="showAddRow">
+    <div class="add-row-container" *ngIf="showAddRow">
         <div title="Add" ng-if="showAddRow">            
             <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
