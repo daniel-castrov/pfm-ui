@@ -3,7 +3,7 @@
         <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
         <pfm-primary-button [label]="'Submit All'"></pfm-primary-button>
     </div>
-    <pfm-dropdown (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'" [label]="'Select Organization to View:'" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs"></pfm-dropdown>
+    <pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'" [label]="'Select Organization to View:'" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs"></pfm-dropdown>
 </div>
 
 <div *ngIf="programmingModelReady" class="section-pods">

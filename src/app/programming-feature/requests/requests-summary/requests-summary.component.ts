@@ -11,6 +11,7 @@ import { DialogService } from '../../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../../pfm-common-models/ListItem';
 import {RoleService} from '../../../services/role-service';
 import { OrganizationService } from '../../../services/organization-service';
+import { Role } from '../../../pfm-common-models/Role';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -149,8 +150,7 @@ export class RequestsSummaryComponent implements OnInit {
           pomResp => {
             this.programmingModel.pom = (pomResp as any).result;
             if (this.programmingModel.pom.status !== 'CLOSED') {
-              this.pomDisplayYear = this.programmingModel.pom.fy.toString();
-              this.pomDisplayYear = this.pomDisplayYear.substr(this.pomDisplayYear.length - 2);
+              this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
               this.programmingService.getRequestsForPom(this.programmingModel.pom).subscribe(
                   programResp => {
                     this.programmingModel.programs = (programResp as any).result;
