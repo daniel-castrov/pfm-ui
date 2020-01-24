@@ -3,16 +3,31 @@
   height: 100%;
 }
 
-.add-row-container{
-  display: flex;
-  justify-content: flex-end;
+.pfm-datagrid-extras{
   border-color: black;
   border-style: solid;
   border-width: 1px;
   border-bottom: 0;
 }
 
+.pagination-container{
+  display: flex;
+  justify-content: flex-end;
+  height: 25px;
+}
+
+.add-row-container{
+  display: flex;
+  justify-content: flex-end;
+  height: 30px;
+}
+
 .pfm-data {
   width: 100%;
   height: 100%;
+}
+
+p{
+  padding-right: 3px;
+  padding-left: 3px;
 }

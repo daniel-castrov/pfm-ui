@@ -33,7 +33,6 @@ export class CreateProgrammingCommunityGraphComponent{
   constructor() { }
 
   ngOnInit() {
-    this.chartReady = true;
   }
 
   onResize(width:number, height:number):void{

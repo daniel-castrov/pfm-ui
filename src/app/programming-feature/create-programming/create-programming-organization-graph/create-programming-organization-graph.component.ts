@@ -30,7 +30,6 @@ export class CreateProgrammingOrganizationGraphComponent{
   constructor() { }
 
   ngOnInit() {
-    this.chartReady = true;
   }
 
   onResize(width:number, height:number):void{
