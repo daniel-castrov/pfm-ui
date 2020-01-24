@@ -1,6 +1,6 @@
 <div class="pfm-datagrid">
     <div class="pfm-datagrid-extras">
-      <div class="row-limit-container">
+      <div class="pagination-container" *ngIf="showPagination">
         <p>Show</p>
         <select [(ngModel)]="pageSize" (ngModelChange)="handlePageSizeChanged($event)">
           <option value=20>20</option>
@@ -31,9 +31,8 @@
                           [tabToNextCell]="tabToNextCell"
                           [rowSelection]="'single'"
                           [rowHeight]="40"
-                          [pagination]="true"
+                          [pagination]="showPagination"
                           [paginationPageSize]="pageSize"
-                          [paginationNumberFormatter]="paginationNumberFormatter"
                           (gridReady)="onGridReady($event)"
                           (rowDragEnd)="onRowDragEnd($event)"
                           (cellClicked)="onCellClicked($event)"

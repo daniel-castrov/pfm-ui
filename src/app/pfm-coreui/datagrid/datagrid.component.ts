@@ -15,6 +15,7 @@ export class DatagridComponent implements OnInit {
   @Input() columns:any;
   @Input() rows:any;
   @Input() showAddRow:boolean = false;
+  @Input() showPagination:boolean = true;
   @Input() tabToNextCell;
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() onAddNewRowEvent:EventEmitter<any> = new EventEmitter<any>();
@@ -82,6 +83,10 @@ export class DatagridComponent implements OnInit {
     this.api.sizeColumnsToFit();
     this.onGridIsReady.emit(this.api);
     this.onColumnIsReady.emit(this.columnApi);
+    this.api.paginationSetPageSize(this.pageSize);
+    this.paginationNumberFormatter = function(params) {
+      return "[" + params.value.toLocaleString() + "]";
+    };
   }
 
   onGridSizeChanged(){
@@ -99,10 +104,6 @@ export class DatagridComponent implements OnInit {
     item2.value = "add-year";
     item2.id = "add-year";
     this.options = [item, item2];
-    this.api.paginationSetPageSize(this.pageSize);
-    this.paginationNumberFormatter = function(params) {
-      return "[" + params.value.toLocaleString() + "]";
-    };
   }
 
   handlePageSizeChanged( pageSize: any ) {
