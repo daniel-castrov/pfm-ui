@@ -821,31 +821,31 @@ export class CreateProgrammingComponent implements OnInit {
 
         return;
     }
-    
+
       //this.orgData.forEach( row => {
         for (let indx = 0; indx < this.orgData.length; indx++)
         {
           let row = this.orgData[indx];
-          for(let i = 0; i < 5; i++) 
+          for(let i = 0; i < 5; i++)
           {
             let cellVal = row[this.byYear+i];
             if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
-                isOrgDataValid = false; 
+                isOrgDataValid = false;
                 break;
-            }          
+            }
 
             if ( (cellVal < 0) && (row["orgid"] == "Delta")){
                 isDelataRowValid = false;
-                break;   
+                break;
             }
           }
 
           if (!isOrgDataValid || !isDelataRowValid)
             break;
         }
-      
+
       if (!isOrgDataValid){
-        this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.","Organization");
+        this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.");
           return;
       }
 
