@@ -1,8 +1,21 @@
 <div class="pfm-datagrid">
-    <div class="add-row-container" *ngIf="showAddRow">
-        <div title="Add" ng-if="showAddRow">            
-            <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
+    <div class="pfm-datagrid-extras">
+      <div class="row-limit-container">
+        <p>Show</p>
+        <select [(ngModel)]="pageSize" (ngModelChange)="handlePageSizeChanged($event)">
+          <option value=20>20</option>
+          <option value=50>50</option>
+          <option value=100>100</option>
+          <option value=250>250</option>
+          <option value=500>500</option>
+        </select>
+        <p>Entries</p>
+      </div>
+      <div class="add-row-container" *ngIf="showAddRow">
+        <div title="Add" ng-if="showAddRow">
+          <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
         </div>
+      </div>
     </div>
     <div class="pfm-data">
         <ag-grid-angular  style="width: 100%; height: 100%;"
@@ -18,6 +31,9 @@
                           [tabToNextCell]="tabToNextCell"
                           [rowSelection]="'single'"
                           [rowHeight]="40"
+                          [pagination]="true"
+                          [paginationPageSize]="pageSize"
+                          [paginationNumberFormatter]="paginationNumberFormatter"
                           (gridReady)="onGridReady($event)"
                           (rowDragEnd)="onRowDragEnd($event)"
                           (cellClicked)="onCellClicked($event)"

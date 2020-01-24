@@ -27,6 +27,8 @@ export class DatagridComponent implements OnInit {
   public api: GridApi;
   public columnApi: ColumnApi;
   public options:ListItem[];
+  public pageSize:number = 20;
+  private paginationNumberFormatter: any;
 
   constructor(private datagridMBService:DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
@@ -97,6 +99,13 @@ export class DatagridComponent implements OnInit {
     item2.value = "add-year";
     item2.id = "add-year";
     this.options = [item, item2];
+    this.api.paginationSetPageSize(this.pageSize);
+    this.paginationNumberFormatter = function(params) {
+      return "[" + params.value.toLocaleString() + "]";
+    };
   }
 
+  handlePageSizeChanged( pageSize: any ) {
+    this.api.paginationSetPageSize(this.pageSize);
+  }
 }
