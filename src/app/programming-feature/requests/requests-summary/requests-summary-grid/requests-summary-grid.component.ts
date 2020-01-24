@@ -82,27 +82,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 },
             }
         );
-        this.gridData = [];
-        for (const program of this.programmingModel.programs) {
-            const ps = new ProgramSummary();
-            ps.programName = program.shortName;
-            ps.assignedTo = this.getRoleName(program.responsibleRoleId);
-            ps.status = program.programStatus;
-            ps.funds = {};
-            ps.fundsTotal = 0;
-            for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
-                ps.funds[i] = 0;
-            }
-            for (const fundingLine of program.fundingLines) {
-                for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
-                    if (fundingLine.funds[i]) {
-                        ps.funds[i] += fundingLine.funds[i];
-                        ps.fundsTotal += ps.funds[i];
-                    }
-                }
-            }
-            this.gridData.push(ps);
-        }
+        this.resetGridData();
     }
 
     handleCellAction(cellAction: DataGridMessage): void {
@@ -152,5 +132,29 @@ export class RequestsSummaryGridComponent implements OnInit {
   getRoleName(key: string): string {
     const role = this.programmingModel.roles.get(key);
     return (role) ? role.name : 'Unknown Role';
+  }
+
+  resetGridData() {
+    this.gridData = [];
+    for (const program of this.programmingModel.programs) {
+      const ps = new ProgramSummary();
+      ps.programName = program.shortName;
+      ps.assignedTo = this.getRoleName(program.responsibleRoleId);
+      ps.status = program.programStatus;
+      ps.funds = {};
+      ps.fundsTotal = 0;
+      for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+        ps.funds[i] = 0;
+      }
+      for (const fundingLine of program.fundingLines) {
+        for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+          if (fundingLine.funds[i]) {
+            ps.funds[i] += fundingLine.funds[i];
+            ps.fundsTotal += ps.funds[i];
+          }
+        }
+      }
+      this.gridData.push(ps);
+    }
   }
 }

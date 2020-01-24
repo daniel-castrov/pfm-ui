@@ -1,5 +1,3 @@
-import {IntIntMap} from './IntIntMap';
-
 export class ProgramSummary {
     public programName: string;
     public assignedTo: string;
