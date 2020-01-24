@@ -798,4 +798,60 @@ export class CreateProgrammingComponent implements OnInit {
   private getActiveTab(): string {
     return this.tabset.tabs.find(tab => tab.active).heading;
   }
+
+  onCreateProgramPhase(){
+
+    let isCommunityTOAsValid:boolean = true;
+    let isOrgDataValid:boolean = true;
+    let isDelataRowValid:boolean = true;
+    let fy = this.byYear;
+
+    for(let i = 0; i < 5; i++){
+      let cellVal = this.communityData[1][this.byYear+i];
+      if (cellVal <= 0)
+      {
+        isCommunityTOAsValid = false;
+        break;
+      }
+    }
+
+    if (!isCommunityTOAsValid)
+    {
+      this.dialogService.displayInfo("At least one value in the Community TOA grid is missing.");
+
+        return;
+    }
+    
+      //this.orgData.forEach( row => {
+        for (let indx = 0; indx < this.orgData.length; indx++)
+        {
+          let row = this.orgData[indx];
+          for(let i = 0; i < 5; i++) 
+          {
+            let cellVal = row[this.byYear+i];
+            if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
+                isOrgDataValid = false; 
+                break;
+            }          
+
+            if ( (cellVal < 0) && (row["orgid"] == "Delta")){
+                isDelataRowValid = false;
+                break;   
+            }
+          }
+
+          if (!isOrgDataValid || !isDelataRowValid)
+            break;
+        }
+      
+      if (!isOrgDataValid){
+        this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.","Organization");
+          return;
+      }
+
+     if (!isDelataRowValid){
+      this.dialogService.displayInfo("The Delta row in the Organization TOA grid has at least one negative value.  All values must be zero or positive");
+        return;
+     }
+  }
 }
