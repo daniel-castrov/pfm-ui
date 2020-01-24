@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ProgrammingService } from './programming-service';
 
-
-@Injectable({
+@Injectable( {
   providedIn: 'root'
-})
+} )
 export class ProgrammingServiceImpl extends ProgrammingService {
 
-  constructor(protected httpClient: HttpClient) {
-    super(httpClient);
+  constructor( protected httpClient: HttpClient ) {
+    super( httpClient );
   }
 
-  getRequestsForPom(pom): Observable<Object> {
-    return this.get('program/container/' + pom.workspaceId);
+  getPRsForContainer( containerId: string ): Observable<object> {
+    return this.get( 'program/container/' + containerId );
+  }
+
+  getPRsForContainerAndOrganization( containerId: string, organizationId: string ): Observable<object> {
+    return this.get( 'program/container/' + containerId + '/organization/' + organizationId );
   }
 }
