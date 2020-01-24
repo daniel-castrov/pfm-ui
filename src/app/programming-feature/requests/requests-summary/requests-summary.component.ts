@@ -153,7 +153,7 @@ export class RequestsSummaryComponent implements OnInit {
             this.programmingModel.pom = (pomResp as any).result;
             if (this.programmingModel.pom.status !== 'CLOSED') {
               this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
-              this.programmingService.getRequestsForPom(this.programmingModel.pom).subscribe(
+              this.programmingService.getPRsForContainer(this.programmingModel.pom.workspaceId).subscribe(
                   programResp => {
                     this.programmingModel.programs = (programResp as any).result;
                     this.roleService.getMap().subscribe(
