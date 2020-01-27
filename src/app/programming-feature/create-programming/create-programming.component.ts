@@ -77,7 +77,7 @@ export class CreateProgrammingComponent implements OnInit {
 
   yearSelected(year:string):void{
     this.selectedYear = year;
-    console.log("selected year "+ this.programYearSelected);
+    
 
     this.loadBaseline = false;
     if (this.programYearSelected != "undefined") {
@@ -101,7 +101,7 @@ export class CreateProgrammingComponent implements OnInit {
 
   onSelectBaseLine(){
     this.programYearSelected = Object.keys(this.selectedYear).map(key => this.selectedYear[key]).slice(0, 1);
-    console.log("selected year "+ this.programYearSelected);
+    
     if(this.programYearSelected=="Spreadsheet"){
       this.showUploadDialog = true;
     }else{ // if it is PBYear
@@ -293,7 +293,7 @@ export class CreateProgrammingComponent implements OnInit {
     );
   }
   ngOnInit() {
-    console.log("in ngOninit");
+    
 
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
@@ -335,7 +335,7 @@ export class CreateProgrammingComponent implements OnInit {
     var ext = name.substring(name.lastIndexOf('.') + 1);
     var res:boolean = ((ext==="xls") || (ext==="xlsx"));
     if (res) {
-      console.log("File attached"+name);
+      
     }
     else {
       this.dialogService.displayError("File selected must be an Excel spreadsheet");
@@ -764,7 +764,7 @@ export class CreateProgrammingComponent implements OnInit {
       orgName = orgName.replace('<strong><span>','');
       orgName = orgName.replace('</span></strong>','');
 
-      console.log("orgname " + orgName);
+      
       if (orgcolors[orgName] != undefined)
       {
         let orgcolor:string = orgcolors[orgName];
@@ -880,17 +880,13 @@ export class CreateProgrammingComponent implements OnInit {
         orgToas[orgName] = otoa;
     }
 
-   var pom:Pom = {
-    fy:this.byYear,
-    communityToas:communityToas,
-    orgToas: orgToas,
-    status: "CREATED",
-    communityId:null,
-    startdate:null,
-    sourceType:null,
-   };
+    this.pom.communityToas = communityToas;
+    this.pom.orgToas= orgToas;
+
+   console.log(this.byYear);
+   console.log(this.pom);
        
-   this.pomService.createPom(this.byYear,pom).subscribe(
+   this.pomService.createPom(this.byYear,this.pom).subscribe(
      resp => {
        this.dialogService.displayInfo("Create pom success");
      },

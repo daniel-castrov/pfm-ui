@@ -103,10 +103,10 @@ export class NumericCellEditor {
       var eInput = this.getGui();
       eInput.focus();
       eInput.select();
-      console.log("create.focusIn()");
+      
     };
     NumericCellEditor.prototype.focusOut = function() {
-      console.log("create.focusOut()");
+      
     };
     return NumericCellEditor;
   }
