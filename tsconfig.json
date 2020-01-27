@@ -10,7 +10,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
+    "target": "es2015",
+    "downlevelIteration": true,
     "typeRoots": [
       "node_modules/@types"
     ],
