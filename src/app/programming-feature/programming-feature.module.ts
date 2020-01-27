@@ -36,6 +36,8 @@ import {RequestsDetailsComponent} from './requests/requests-details/requests-det
 import {RequestsSummaryComponent} from './requests/requests-summary/requests-summary.component';
 import {RoleService} from '../services/role-service';
 import {RoleServiceImpl} from '../services/role-service-impl.service';
+import {MrdbService} from './services/mrdb-service';
+import {MrdbServiceImpl} from './services/mrdb-service-impl.service';
 
 @NgModule({
   declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent],
@@ -53,6 +55,7 @@ import {RoleServiceImpl} from '../services/role-service-impl.service';
     {provide: PomService, useClass: PomServiceImpl},
     {provide: OrganizationService, useClass: OrganizationServiceImpl},
     {provide: RoleService, useClass: RoleServiceImpl},
+    {provide: MrdbService, useClass: MrdbServiceImpl},
     ProgrammingModel]
 })
 export class ProgrammingFeatureModule {
