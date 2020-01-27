@@ -371,7 +371,7 @@ export class CreateProgrammingComponent implements OnInit {
           minWidth: 110,
           suppressMenu: true,
           field: (fy+ i).toString(),
-          cellEditor: NumericCellEditor.create({returnUndefinedOnZero:true}),
+          cellEditor: NumericCellEditor.create({returnUndefinedOnZero:false}),
           cellRenderer: params => this.negativeNumberRenderer(params),
           editable: true,
           cellClass: "pfm-datagrid-numeric-class",
@@ -892,7 +892,7 @@ export class CreateProgrammingComponent implements OnInit {
      },
      error => {
        let resp:any = error ;
-       this.dialogService.displayInfo('error');
+       this.dialogService.displayError(error.message);
      }
    )
   }
