@@ -818,32 +818,31 @@ export class CreateProgrammingComponent implements OnInit {
     if (!isCommunityTOAsValid)
     {
       this.dialogService.displayInfo("At least one value in the Community TOA grid is missing.");
-
-        return;
+      return;
     }
-
+    
       //this.orgData.forEach( row => {
         for (let indx = 0; indx < this.orgData.length; indx++)
         {
           let row = this.orgData[indx];
-          for(let i = 0; i < 5; i++)
+          for(let i = 0; i < 5; i++) 
           {
             let cellVal = row[this.byYear+i];
             if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
-                isOrgDataValid = false;
+                isOrgDataValid = false; 
                 break;
-            }
+            }          
 
             if ( (cellVal < 0) && (row["orgid"] == "Delta")){
                 isDelataRowValid = false;
-                break;
+                break;   
             }
           }
 
           if (!isOrgDataValid || !isDelataRowValid)
             break;
         }
-
+      
       if (!isOrgDataValid){
         this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.");
           return;
@@ -853,5 +852,52 @@ export class CreateProgrammingComponent implements OnInit {
       this.dialogService.displayInfo("The Delta row in the Organization TOA grid has at least one negative value.  All values must be zero or positive");
         return;
      }
+
+     this.createPom();
+  }
+
+  createPom(){
+
+   let fy = this.byYear;
+   
+   let communityToas: TOA[] = [];
+   let commToaRow = this.communityData[1];
+    for(let i = 0; i < 5; i++){               
+        communityToas.push({ year:(fy + i), amount:commToaRow[fy+i] });
+    }
+
+    let orgToas: { [key: string]: TOA[]; } = {};
+    for(let rowIndx = 0; rowIndx < (this.orgData.length -3); rowIndx++){
+        let otoa:TOA[] = [] ;
+        let orgRow = this.orgData[rowIndx];
+        for(let i =0; i < 5; i++){
+            otoa.push({ year:(fy + i), amount:orgRow[fy+i] });
+        }
+
+        let orgName = orgRow['orgid'];
+        orgName = orgName.replace('<strong><span>','');
+        orgName = orgName.replace('</span></strong>','');
+        orgToas[orgName] = otoa;
+    }
+
+   var pom:Pom = {
+    fy:this.byYear,
+    communityToas:communityToas,
+    orgToas: orgToas,
+    status: "CREATED",
+    communityId:null,
+    startdate:null,
+    sourceType:null,
+   };
+       
+   this.pomService.createPom(this.byYear,pom).subscribe(
+     resp => {
+       this.dialogService.displayInfo("Create pom success");
+     },
+     error => {
+       let resp:any = error ;
+       this.dialogService.displayInfo('error');
+     }
+   )
   }
 }
