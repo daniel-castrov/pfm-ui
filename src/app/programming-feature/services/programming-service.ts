@@ -8,6 +8,12 @@ export abstract class ProgrammingService extends BaseRestService {
     super( httpClient );
   }
 
-  abstract getPRsForContainer( containerId: string ): Observable<object>;
-  abstract getPRsForContainerAndOrganization( containerId: string, organizationId: string ): Observable<object>;
+
+  /**
+   * Get PRs for a container
+   *
+   * @param containerId - Container Id
+   * @param organizationId - Organization Id for filtering by organization, null for all
+   */
+  abstract getPRsForContainer( containerId: string, organizationId: string ): Observable<object>;
 }

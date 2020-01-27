@@ -12,9 +12,10 @@ import { ListItem } from '../../../pfm-common-models/ListItem';
 import {RoleService} from '../../../services/role-service';
 import { OrganizationService } from '../../../services/organization-service';
 import { Role } from '../../../pfm-common-models/Role';
-import { add } from 'ngx-bootstrap/chronos';
 import { Organization } from '../../../pfm-common-models/Organization';
 import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-summary-grid.component';
+import { MrdbService } from '../../services/mrdb-service';
+import { Program } from '../../models/Program';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -42,7 +43,7 @@ export class RequestsSummaryComponent implements OnInit {
   showPreviousFundedProgramDialog: boolean;
   availablePrograms: ListItem[];
 
-  constructor( private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService ) {
+  constructor( private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService, private mrdbService: MrdbService ) {
   }
 
   ngOnInit() {
@@ -98,6 +99,7 @@ export class RequestsSummaryComponent implements OnInit {
         resp => {
           const orgs = ( resp as any ).result;
           const showAllOrg = new Organization();
+          showAllOrg.id = null;
           showAllOrg.abbreviation = 'Show All';
           const dropdownOptions: Organization[] = [ showAllOrg ];
           this.availableOrgs = this.toListItem(dropdownOptions.concat(orgs));
@@ -155,7 +157,7 @@ export class RequestsSummaryComponent implements OnInit {
       });
   }
 
-  // Needed for Dropdown
+  // Build dropdown list items
   private toListItem(orgs:Organization[]):ListItem[]{
     let items:ListItem[] = [];
     for(let org of orgs){
@@ -163,9 +165,6 @@ export class RequestsSummaryComponent implements OnInit {
       item.id = org.abbreviation;
       item.name = org.abbreviation;
       item.value = org.id;
-      if (org.abbreviation === "Show All"){
-        item.value = "Show All";
-      }
       if (org.abbreviation === this.selectedOrg.name) {
         item.isSelected = true;
       }
@@ -179,96 +178,45 @@ export class RequestsSummaryComponent implements OnInit {
     this.selectedOrg = organization;
     if ( this.selectedOrg.name !== 'Please select' ) {
       if ( this.programmingModel.pom.status !== 'CLOSED' ) {
-        if (this.selectedOrg.name === 'Show All') {
-          this.getAllPRs(this.programmingModel.pom.workspaceId);
-        } else {
-          this.getOrganizationPRs(this.programmingModel.pom.workspaceId);
-        }
+        this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
       } else {
         this.programmingModelReady = false;
       }
     }
   }
 
-  private getOrganizationPRs(containerId: string) {
+  private async getPRs(containerId: string, organizationId): Promise<void> {
     this.busy = true;
     this.programmingModelReady = false;
-    this.programmingService.getPRsForContainerAndOrganization(containerId,
-        this.selectedOrg.value).subscribe(
+    await this.programmingService.getPRsForContainer(containerId, organizationId).toPromise().then(
         resp => {
           this.programmingModel.programs = (resp as any).result;
-          // this.requestsSummaryWidget.resetGridData();
-          this.programmingModelReady = true;
-          this.busy = false;
-        },
-        error => {
-          this.busy = false;
         });
+    this.programmingModelReady = true;
+    this.busy = false;
   }
 
-  private getAllPRs(containerId: string) {
-    this.busy = true;
-    this.programmingModelReady = false;
-    this.programmingService.getPRsForContainer(containerId).subscribe(
-        resp => {
-          this.programmingModel.programs = (resp as any).result;
-          // this.requestsSummaryWidget.resetGridData();
-          this.programmingModelReady = true;
-          this.busy = false;
-        },
-        error => {
-          this.busy = false;
-        });
-  }
-
-  handleAdd(addEvent: any){
-    if (addEvent.id == 'new-program') {
+  handleAdd(addEvent: any) {
+    if (addEvent.id === 'new-program') {
       console.log('New program Event fired');
-    }
-    else if (addEvent.id == 'previously-funded-program') {
+    } else if (addEvent.id === 'previously-funded-program') {
       this.busy = true;
-      if (this.selectedOrg.name === 'Show All') {
-        this.getAllPRs(this.programmingModel.pom.workspaceId);
-        this.programmingService.getPRsForContainer(this.programmingModel.pom.workspaceId).subscribe(
-            resp => {
-              let programs = (resp as any).result;
-              console.log(programs);
-              let programsList: ListItem[] = [];
-              for (let program of programs) {
-                let item:ListItem = new ListItem();
-                item.id = program.shortName;
-                item.name = program.shortName;
-                item.value = program.id;
-                programsList.push(item);
-              }
-              this.availablePrograms = programsList;
-              this.busy = false;
-            },
-            error => {
-              this.busy = false;
-            });
-      } else {
-        this.programmingService.getPRsForContainerAndOrganization(this.programmingModel.pom.workspaceId,
-            this.selectedOrg.value).subscribe(
-            resp => {
-              let programs = (resp as any).result;
-              console.log(programs);
-              let programsList: ListItem[] = [];
-              for (let program of programs) {
-                let item:ListItem = new ListItem();
-                item.id = program.shortName;
-                item.name = program.shortName;
-                item.value = program.id;
-                programsList.push(item);
-              }
-              this.availablePrograms = programsList;
-              this.busy = false;
-            },
-            error => {
-              this.busy = false;
-            });
-      }
-      this.showPreviousFundedProgramDialog = true;
+      this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
+          resp => {
+            const programsList: ListItem[] = [];
+            for ( const program of resp as Program[] ) {
+              const item: ListItem = new ListItem();
+              item.id = program.shortName;
+              item.name = program.shortName;
+              item.value = program.id;
+              programsList.push( item );
+            }
+            this.availablePrograms = programsList;
+            this.busy = false;
+            this.showPreviousFundedProgramDialog = true;
+          },
+          error => {
+          });
     }
   }
 
