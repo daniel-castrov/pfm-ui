@@ -20,9 +20,8 @@ export class OrganizationServiceImpl extends OrganizationService {
   }
 
   getMap(): Observable<object> {
-    const url = 'organization';
     const orgs = new Map<string, Organization>();
-    return this.get(url).pipe(
+    return this.getAll().pipe(
       map((data: any) => {
         for (const org of data.result) {
           orgs.set(org.id, org);
@@ -30,7 +29,7 @@ export class OrganizationServiceImpl extends OrganizationService {
         return orgs;
       }),
       catchError(err => {
-        console.log('error while GET : ' + url);
+        console.log('error while getting organization map: ');
         console.warn(err);
         return of(orgs);
       })
