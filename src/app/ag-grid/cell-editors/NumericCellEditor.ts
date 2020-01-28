@@ -32,6 +32,7 @@ export class NumericCellEditor {
     function isKeyPressedNumeric(event) {
       var charCode = getCharCodeFromEvent(event);
       var charStr = String.fromCharCode(charCode);
+            
       return isCharNumeric(charStr);
     }
     function getCharCodeFromEvent(event) {
@@ -67,7 +68,13 @@ export class NumericCellEditor {
       this.eInput.value = isCharNumeric(params.charPress) ? params.charPress : params.value;
       var that = this;
       this.eInput.addEventListener("keypress", function(event) {
-        if (!isKeyPressedNumeric(event)) {
+        var charCode = getCharCodeFromEvent(event);
+        var charStr = String.fromCharCode(charCode);
+        
+        var prevVal = event.target.value;
+        if( (charStr == '-' && prevVal.length > 0 )
+            || (charStr == '.' && prevVal.indexOf(charStr) != -1 ) 
+            || (!isKeyPressedNumeric(event))) {
           that.eInput.focus();
           if (event.preventDefault) event.preventDefault();
         }
