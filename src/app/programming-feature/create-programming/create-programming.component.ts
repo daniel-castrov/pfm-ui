@@ -874,7 +874,8 @@ export class CreateProgrammingComponent implements OnInit {
 
     this.pomService.createPom(this.byYear, this.pom).subscribe(
         resp => {
-          this.dialogService.displayInfo('Create pom success');
+          this.dialogService.displayToastInfo(`Programming phase for ${ this.byYear } successfully created.`);
+          this.router.navigate(['/home']);
         },
         error => {
           this.dialogService.displayInfo(error.error.error);
