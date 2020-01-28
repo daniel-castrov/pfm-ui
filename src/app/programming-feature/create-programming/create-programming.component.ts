@@ -794,20 +794,22 @@ export class CreateProgrammingComponent implements OnInit {
     let isDelataRowValid:boolean = true;
     let fy = this.byYear;
 
-    for(let i = 0; i < 5; i++){
-      let cellVal = this.communityData[1][this.byYear+i];
-      if (cellVal <= 0)
-      {
-        isCommunityTOAsValid = false;
-        break;
+    /*
+      for(let i = 0; i < 5; i++){
+        let cellVal = this.communityData[1][this.byYear+i];
+        if (cellVal <= 0)
+        {
+          isCommunityTOAsValid = false;
+          break;
+        }
       }
-    }
 
-    if (!isCommunityTOAsValid)
-    {
-      this.dialogService.displayInfo("At least one value in the Community TOA grid is missing.");
-      return;
-    }
+      if (!isCommunityTOAsValid)
+      {
+        this.dialogService.displayInfo("At least one value in the Community TOA grid is missing.");
+        return;
+      }
+    */
       //this.orgData.forEach( row => {
         for (let indx = 0; indx < this.orgData.length; indx++)
         {
@@ -815,10 +817,10 @@ export class CreateProgrammingComponent implements OnInit {
           for(let i = 0; i < 5; i++)
           {
             let cellVal = row[this.byYear+i];
-            if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
+            /*if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
                 isOrgDataValid = false;
                 break;
-            }
+            }*/
 
             if ( (cellVal < 0) && (row["orgid"] == "Delta")){
                 isDelataRowValid = false;
@@ -830,11 +832,14 @@ export class CreateProgrammingComponent implements OnInit {
             break;
         }
 
-      if (!isOrgDataValid){
-        this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.");
-          return;
-      }
-
+      /*
+        if (!isOrgDataValid){
+          this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.");
+            return;
+      
+        }
+      */
+     
      if (!isDelataRowValid){
       this.dialogService.displayInfo("The Delta row in the Organization TOA grid has at least one negative value.  All values must be zero or positive");
         return;
