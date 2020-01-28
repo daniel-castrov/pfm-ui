@@ -57,7 +57,7 @@ export class CreateProgrammingComponent implements OnInit {
   orgData:any[];
   subToasData:any[];
   tableHeaders:Array<string>;
-  orgs: Map<string, Organization>;
+  orgs: Organization[];
   uploadedFileId:string;
   communityGridData:any[] = [[]];
   organizationGridData:any[] = [[]];
@@ -66,19 +66,19 @@ export class CreateProgrammingComponent implements OnInit {
   pom: Pom;
 
   constructor(private appModel: AppModel, private organizationService: OrganizationService, private pomService: PomService, private dialogService: DialogService, private router: Router, private dashboardService: DashboardMockService) {
-    //var selectedYear = appModel.selectedYear;
     this.subToasData = [];
 
-    organizationService.getMap().subscribe(
+    organizationService.getAll().subscribe(
       resp => {
-        this.orgs = resp as Map<string, Organization>;
-      });
+        this.orgs = (resp as any).result;
+      },
+    error => {
+      console.log('Error while getting Organizations...');
+    });
   }
 
   yearSelected(year:string):void{
     this.selectedYear = year;
-    
-
     this.loadBaseline = false;
     if (this.programYearSelected != "undefined") {
       this.dialogService.displayConfirmation("You are about to replace the baseline with different values.  All values in the community and organization grid will be reset.  Do you want to continue?","Caution",
@@ -101,7 +101,7 @@ export class CreateProgrammingComponent implements OnInit {
 
   onSelectBaseLine(){
     this.programYearSelected = Object.keys(this.selectedYear).map(key => this.selectedYear[key]).slice(0, 1);
-    
+
     if(this.programYearSelected=="Spreadsheet"){
       this.showUploadDialog = true;
     }else{ // if it is PBYear
@@ -255,9 +255,14 @@ export class CreateProgrammingComponent implements OnInit {
     return actions;
   }
 
-  getOrgName(key: string): string {
-    const org = this.orgs.get(key);
-    return (org) ? org.abbreviation : 'Unknown Organization';
+  getOrgName(orgId: string): string {
+    const matchingOrg: Organization = this.orgs.find(org => org.id === orgId);
+    return (matchingOrg) ? matchingOrg.abbreviation : 'Unknown Organization';
+  }
+
+  getOrgId( orgName: string): string {
+    const matchingOrg: Organization = this.orgs.find(org => org.abbreviation === orgName);
+    return (matchingOrg) ? matchingOrg.id : 'Unknown Organization';
   }
 
   handlePOMFile(newFile:FileMetaData):void{
@@ -293,8 +298,6 @@ export class CreateProgrammingComponent implements OnInit {
     );
   }
   ngOnInit() {
-    
-
     this.byYear= FormatterUtil.getCurrentFiscalYear()+2;
     let pbYear:any = FormatterUtil.getCurrentFiscalYear()+1;
 
@@ -331,21 +334,8 @@ export class CreateProgrammingComponent implements OnInit {
     return items;
   }
 
-  validateFile(name: String) {
-    var ext = name.substring(name.lastIndexOf('.') + 1);
-    var res:boolean = ((ext==="xls") || (ext==="xlsx"));
-    if (res) {
-      
-    }
-    else {
-      this.dialogService.displayError("File selected must be an Excel spreadsheet");
-    }
-  }
-
   private setAgGridColDefs(column1Name:string, fy:number): any {
-
     let colDefs = [];
-
     colDefs.push(
       { headerName: column1Name,
         suppressMenu: true,
@@ -763,8 +753,6 @@ export class CreateProgrammingComponent implements OnInit {
       orgName = orgName.split('-')[0];
       orgName = orgName.replace('<strong><span>','');
       orgName = orgName.replace('</span></strong>','');
-
-      
       if (orgcolors[orgName] != undefined)
       {
         let orgcolor:string = orgcolors[orgName];
@@ -820,29 +808,28 @@ export class CreateProgrammingComponent implements OnInit {
       this.dialogService.displayInfo("At least one value in the Community TOA grid is missing.");
       return;
     }
-    
       //this.orgData.forEach( row => {
         for (let indx = 0; indx < this.orgData.length; indx++)
         {
           let row = this.orgData[indx];
-          for(let i = 0; i < 5; i++) 
+          for(let i = 0; i < 5; i++)
           {
             let cellVal = row[this.byYear+i];
             if ( (cellVal <= 0) && (row["orgid"] != "Delta")){
-                isOrgDataValid = false; 
+                isOrgDataValid = false;
                 break;
-            }          
+            }
 
             if ( (cellVal < 0) && (row["orgid"] == "Delta")){
                 isDelataRowValid = false;
-                break;   
+                break;
             }
           }
 
           if (!isOrgDataValid || !isDelataRowValid)
             break;
         }
-      
+
       if (!isOrgDataValid){
         this.dialogService.displayInfo("At least one value in at least one organization in the Organization TOA grid is missing.");
           return;
@@ -857,43 +844,35 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   createPom(){
-
-   let fy = this.byYear;
-   
-   let communityToas: TOA[] = [];
-   let commToaRow = this.communityData[1];
-    for(let i = 0; i < 5; i++){               
-        communityToas.push({ year:(fy + i), amount:commToaRow[fy+i] });
+    const communityToas: TOA[] = [];
+    const commToaRow = this.communityData[1];
+    for (let i = 0; i < 5; i++) {
+      communityToas.push({ year: (this.byYear + i), amount: commToaRow[this.byYear + i]});
     }
 
-    let orgToas: { [key: string]: TOA[]; } = {};
-    for(let rowIndx = 0; rowIndx < (this.orgData.length -3); rowIndx++){
-        let otoa:TOA[] = [] ;
-        let orgRow = this.orgData[rowIndx];
-        for(let i =0; i < 5; i++){
-            otoa.push({ year:(fy + i), amount:orgRow[fy+i] });
-        }
+    const orgToas: { [key: string]: TOA[]; } = {};
+    for (let rowIndx = 0; rowIndx < (this.orgData.length - 3); rowIndx++) {
+      const otoa: TOA[] = [] ;
+      const orgRow = this.orgData[rowIndx];
+      for (let i = 0; i < 5; i++) {
+        otoa.push({ year: (this.byYear + i), amount: orgRow[this.byYear + i] });
+      }
 
-        let orgName = orgRow['orgid'];
-        orgName = orgName.replace('<strong><span>','');
-        orgName = orgName.replace('</span></strong>','');
-        orgToas[orgName] = otoa;
+      let orgName = orgRow['orgid'];
+      orgName = orgName.replace('<strong><span>', '');
+      orgName = orgName.replace('</span></strong>', '');
+      orgToas[this.getOrgId(orgName)] = otoa;
     }
 
     this.pom.communityToas = communityToas;
-    this.pom.orgToas= orgToas;
+    this.pom.orgToas = orgToas;
 
-   console.log(this.byYear);
-   console.log(this.pom);
-       
-   this.pomService.createPom(this.byYear,this.pom).subscribe(
-     resp => {
-       this.dialogService.displayInfo("Create pom success");
-     },
-     error => {
-       let resp:any = error ;
-       this.dialogService.displayError(error.message);
-     }
-   )
+    this.pomService.createPom(this.byYear, this.pom).subscribe(
+        resp => {
+          this.dialogService.displayInfo('Create pom success');
+        },
+        error => {
+          this.dialogService.displayInfo(error.error.error);
+        });
   }
 }
