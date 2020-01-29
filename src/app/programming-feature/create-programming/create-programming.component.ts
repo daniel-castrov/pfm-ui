@@ -19,7 +19,7 @@ import { CreateProgrammingCommunityGraphComponent } from './create-programming-c
 import { DashboardMockService } from '../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
 import { CreateProgrammingOrganizationGraphComponent } from './create-programming-organization-graph/create-programming-organization-graph.component';
-import { TabDirective } from 'ngx-bootstrap';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap';
 import { SecondaryButtonComponent } from '../../pfm-coreui/form-inputs/secondary-button-input/secondary-button.component';
 import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor';
 
@@ -30,6 +30,7 @@ import { NumericCellEditor } from '../../ag-grid/cell-editors/NumericCellEditor'
 })
 export class CreateProgrammingComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
+  @ViewChild(TabsetComponent, {static: false}) tabset: TabsetComponent;
   @ViewChild(SecondaryButtonComponent, {static: false}) resetButton: SecondaryButtonComponent;
   @ViewChild(CreateProgrammingCommunityGraphComponent,  {static: false}) communityGraph: CreateProgrammingCommunityGraphComponent;
   @ViewChild(CreateProgrammingOrganizationGraphComponent,  {static: false}) organizationGraph: CreateProgrammingOrganizationGraphComponent;
@@ -245,6 +246,7 @@ export class CreateProgrammingComponent implements OnInit {
     this.buildOrgToaRows(fy);
 
     this.currentYear = fy;
+    this.tabset.tabs[0].active = true;
     this.updateCommunityGraphData(this.currentYear);
   }
 
