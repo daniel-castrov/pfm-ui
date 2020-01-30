@@ -241,4 +241,12 @@ export class RequestsSummaryComponent implements OnInit {
 
   }
 
+
+  handleOrgChartSwitch( event: any ) {
+
+  }
+
+  handleToaChartSwitch( event: any ) {
+
+  }
 }
