@@ -52,12 +52,7 @@ export class DatagridComponent implements OnInit {
 
   public handleAddDropdownCta( item:ListItem):void{
     if(item){
-      if(item.id === "add-row"){
-        this.onAddCtaEvent.emit({gridApi: this.api, action: 'add-single-row'});
-      }
-      else if (item.id === "add-year"){
-        this.onAddCtaEvent.emit({gridApi: this.api, action: 'add-rows-from-year'});
-      }
+      this.onAddCtaEvent.emit({gridApi: this.api, action: item.id});
     }
   }
 
@@ -104,12 +99,12 @@ export class DatagridComponent implements OnInit {
       // Populate dropdown options with default
       let item:ListItem = new ListItem();
       item.name = "Add a new row";
-      item.value = "add-row";
-      item.id = "add-row";
+      item.value = "add-single-row";
+      item.id = "add-single-row";
       let item2:ListItem = new ListItem();
       item2.name = "Add all rows from another year";
-      item2.value = "add-year";
-      item2.id = "add-year";
+      item2.value = "add-rows-from-year";
+      item2.id = "add-rows-from-year";
       this.options = [item, item2];
     }
   }
