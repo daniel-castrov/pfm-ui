@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { DialogService } from '../../../../pfm-coreui/services/dialog.service';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
@@ -7,6 +7,7 @@ import { ProgramSummary } from '../../../models/ProgramSummary';
 import { Router } from '@angular/router';
 import { RoleService } from '../../../../services/role-service';
 import { Role } from '../../../../pfm-common-models/Role';
+import { ListItem } from '../../../../pfm-common-models/ListItem';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
@@ -14,6 +15,9 @@ import { Role } from '../../../../pfm-common-models/Role';
     styleUrls: ['./requests-summary-grid.component.scss']
 })
 export class RequestsSummaryGridComponent implements OnInit {
+
+    @Input() dropdownOptions:ListItem[];
+    @Output() onAddCtaEvent:EventEmitter<any> = new EventEmitter<any>();
 
     gridApi: GridApi;
     columnApi: ColumnApi;
@@ -156,5 +160,9 @@ export class RequestsSummaryGridComponent implements OnInit {
       }
       this.gridData.push(ps);
     }
+  }
+
+  onAddNewProgram( event:any ) {
+    this.onAddCtaEvent.emit(event);
   }
 }
