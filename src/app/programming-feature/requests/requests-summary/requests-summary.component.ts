@@ -228,6 +228,20 @@ export class RequestsSummaryComponent implements OnInit {
     console.log('Import Program');
   }
 
+  onApprove(){
+    
+    this.requestsSummaryWidget.gridData.forEach( ps => { 
+      ps.assignedTo = "POM Manager";
+      ps.status = "Approved";
+    });    
+
+    // reload or refresh the grid data after update
+    this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
+    this.dialogService.displayToastInfo("All program requests successfully approved.")
+
+  }
+
+
   handleOrgChartSwitch( event: any ) {
 
   }
