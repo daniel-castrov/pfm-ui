@@ -227,4 +227,12 @@ export class RequestsSummaryComponent implements OnInit {
   onImportProgram() {
     console.log('Import Program');
   }
+
+  handleOrgChartSwitch( event: any ) {
+
+  }
+
+  handleToaChartSwitch( event: any ) {
+
+  }
 }
