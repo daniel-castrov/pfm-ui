@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
+    "local": "ng serve -o -c local",
     "build": "ng build",
     "lint": "ng lint",
     "postinstall": "tsc -p builders/tsconfig.builders.json",

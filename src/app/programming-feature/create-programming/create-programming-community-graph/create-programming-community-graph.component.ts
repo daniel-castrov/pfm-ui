@@ -7,7 +7,6 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CreateProgrammingCommunityGraphComponent{
 
-  @Input() griddata:any[];
   chartReady:boolean;
 
   public columnChart: any =  {

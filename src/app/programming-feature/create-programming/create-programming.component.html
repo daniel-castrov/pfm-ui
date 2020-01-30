@@ -32,11 +32,11 @@
 <div class="section-tabs" *ngIf="programBudgetData">
   <div class="col-20" >
     <tabset  class="program-tab-style" destroyOnHide="true">
-      <tab  heading="Community" active="true" style="width:100%;height:100%">
+      <tab  heading="Community" active="true" style="width:100%;height:100%" (selectTab)="onTabSelected($event)">
         <div class="section-tab">
 
           <div class="section-chart">
-            <pfm-programming-community-graph #communityGraph [griddata]="communityGridData"></pfm-programming-community-graph>
+            <pfm-programming-community-graph></pfm-programming-community-graph>
           </div>
 
           <div class="section-datagrid">
@@ -49,11 +49,11 @@
 
         </div>
       </tab >
-      <tab heading="Organization"  style="width:100%;height:100%">
+      <tab heading="Organization"  style="width:100%;height:100%" (selectTab)="onTabSelected($event)">
         <div class="section-tab">
 
           <div class="section-chart">
-            <pfm-programming-organization-graph #organizationGraph [griddata]="organizationGraphData"></pfm-programming-organization-graph>
+            <pfm-programming-organization-graph></pfm-programming-organization-graph>
           </div>
 
           <div class="section-datagrid">
