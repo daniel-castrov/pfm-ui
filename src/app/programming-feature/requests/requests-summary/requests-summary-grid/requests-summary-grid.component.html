@@ -1,3 +1,4 @@
 <div class="grid-container">
-    <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)"  (onCellAction)="handleCellAction($event)" [showAddRow]="false" [columns]="columns" [rows]="gridData"></pfm-datagrid>
+    <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" (onCellAction)="handleCellAction($event)"
+                  [showAddDropdownCta]="false" [columns]="columns" [rows]="gridData"></pfm-datagrid>
 </div>

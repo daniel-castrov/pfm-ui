@@ -38,7 +38,9 @@
 
 <ng-container *ngIf="selectedPlanningPhase && selectedPlanningPhase.state !== 'CREATED'">
     <div class="grid-container">
-        <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)" (onAddNewRowEvent)="onAddNewRow($event)" (onCellAction)="handleCellAction($event)" [showPagination]="false" [showAddRow]="true" [columns]="columns" [rows]="missionData" [tabToNextCell]="tabToNextCell.bind(this)"></pfm-datagrid>
+        <pfm-datagrid (onGridIsReady)="onGridIsReady($event)" (onColumnIsReady)="onColumnIsReady($event)" (onRowDragEndEvent)="onRowDragEnd($event)"
+                      (onAddCtaEvent)="onAddNewRow($event)" (onCellAction)="handleCellAction($event)" [showPagination]="false"
+                      [showAddDropdownCta]="true" [columns]="columns" [rows]="missionData" [tabToNextCell]="tabToNextCell.bind(this)"></pfm-datagrid>
     </div>
 </ng-container>
 
