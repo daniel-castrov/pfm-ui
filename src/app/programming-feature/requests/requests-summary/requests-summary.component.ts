@@ -36,6 +36,7 @@ export class RequestsSummaryComponent implements OnInit {
   selectedOrg: ListItem = {id: 'Please select', name: 'Please select', value: 'Please select', isSelected: false, rawData: 'Please select'};
   programmingModelReady: boolean;
   pomDisplayYear: string;
+  pomYear: number;
   options: GridsterConfig;
   addOptions: ListItem[];
   busy: boolean;
@@ -116,6 +117,7 @@ export class RequestsSummaryComponent implements OnInit {
           this.programmingModel.pom = (resp as any).result;
           if ( this.programmingModel.pom.status !== 'CLOSED' ) {
             this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
+            this.pomYear = this.programmingModel.pom.fy;
           }
         },
         error => {
@@ -270,7 +272,54 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   toaChartCommunityToaDifference() {
-    console.log('Community TOA Difference');
+    this.toaWidget.chartReady = false;
+    //set chart type
+    this.toaWidget.columnChart.chartType = 'ColumnChart';
+    //set options
+    this.toaWidget.columnChart.options = {
+      title: 'Community TOA Difference',
+      width: 200,
+      height: 200,
+      vAxis: {format: 'currency'},
+      legend: {position: 'none'},
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
+    };
+    //set size
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
+    //get data
+    //calculate totals
+    let totals:any[] = [];
+    for (let row of this.requestsSummaryWidget.gridData) {
+      for (let i = 0; i < 5; i++){
+        if (!totals[i]) {
+          totals[i] = {year: (this.pomYear + i), amount: 0};
+        }
+        if (row.funds[this.pomYear + i]) {
+          totals[i].amount = totals[i].amount + row.funds[this.pomYear + i];
+        }
+      }
+    }
+    console.log(totals);
+    console.log(this.programmingModel.pom.communityToas);
+    //set data
+    let data:any = [
+      ['Fiscal Year', 'TOA Difference'],
+    ];
+
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (totals[i].year - 2000);
+      let difference:number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
+      data.push([year, difference]);
+    }
+
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
   }
 
   toaChartOrganizationStatus() {
@@ -284,4 +333,6 @@ export class RequestsSummaryComponent implements OnInit {
   toaChartFundingLineStatus() {
     console.log('Funding Line Status');
   }
+
+
 }
