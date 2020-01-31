@@ -51,8 +51,8 @@ ng g component programming-feature/total_appropriation_priority --module program
 ng g component programming-feature/work_space_management --module programming-feature/programming-feature.module --export=false --prefix=pfm --selector=pfm-programming --style=scss
 
 #sub components for programming-feature/requests
-
 ng g component programming-feature/requests/requests-details --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
+ng g component programming-feature/requests/requests-details/schedule --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
 ng g component programming-feature/requests/requests-summary --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
 
 ng g component programming-feature/requests/summary/requests-summary-grid --module programming-feature/programming-feature.module --export=false --prefix=pfm --style=scss
