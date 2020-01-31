@@ -94,6 +94,8 @@ export class RequestsSummaryComponent implements OnInit {
     item2.id = "new-program";
     this.addOptions = [ item, item2 ];
 
+    this.toaChartCommunityStatus();
+
     //set up dropdown
     this.organizationService.getAll().subscribe(
         resp => {
@@ -229,11 +231,11 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onApprove(){
-    
-    this.requestsSummaryWidget.gridData.forEach( ps => { 
+
+    this.requestsSummaryWidget.gridData.forEach( ps => {
       ps.assignedTo = "POM Manager";
       ps.status = "Approved";
-    });    
+    });
 
     // reload or refresh the grid data after update
     this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
@@ -241,12 +243,45 @@ export class RequestsSummaryComponent implements OnInit {
 
   }
 
-
   handleOrgChartSwitch( event: any ) {
-
+    console.log(event);
   }
 
   handleToaChartSwitch( event: any ) {
+    if (event.action == 'Community Status') {
+      this.toaChartCommunityStatus();
+    }
+    else if (event.action == 'Community TOA Difference') {
+      this.toaChartCommunityToaDifference();
+    }
+    else if (event.action == 'Organization Status') {
+      this.toaChartOrganizationStatus();
+    }
+    else if (event.action == 'Organization TOA Difference') {
+      this.toaChartOrganizationToaDifference();
+    }
+    else if (event.action == 'Funding Line Status') {
+      this.toaChartFundingLineStatus();
+    }
+  }
 
+  toaChartCommunityStatus() {
+    console.log('Community Status');
+  }
+
+  toaChartCommunityToaDifference() {
+    console.log('Community TOA Difference');
+  }
+
+  toaChartOrganizationStatus() {
+    console.log('Organization Status');
+  }
+
+  toaChartOrganizationToaDifference() {
+    console.log('Organization TOA Difference');
+  }
+
+  toaChartFundingLineStatus() {
+    console.log('Funding Line Status');
   }
 }

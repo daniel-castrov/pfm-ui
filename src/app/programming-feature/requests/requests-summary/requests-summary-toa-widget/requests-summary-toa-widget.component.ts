@@ -58,7 +58,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   }
 
   ngOnInit() {
-    let chartOptions: string[] = ['All', 'Organization', 'BA Line', 'Program Status'];
+    let chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
     this.availableCharts = this.toListItem(chartOptions);
     this.defaultChart = this.availableCharts[0];
   }
