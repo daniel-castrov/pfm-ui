@@ -36,6 +36,7 @@ export class RequestsSummaryComponent implements OnInit {
   selectedOrg: ListItem = {id: 'Please select', name: 'Please select', value: 'Please select', isSelected: false, rawData: 'Please select'};
   programmingModelReady: boolean;
   pomDisplayYear: string;
+  pomYear: number;
   options: GridsterConfig;
   addOptions: ListItem[];
   busy: boolean;
@@ -94,6 +95,8 @@ export class RequestsSummaryComponent implements OnInit {
     item2.id = "new-program";
     this.addOptions = [ item, item2 ];
 
+    this.toaChartCommunityStatus();
+
     //set up dropdown
     this.organizationService.getAll().subscribe(
         resp => {
@@ -114,6 +117,7 @@ export class RequestsSummaryComponent implements OnInit {
           this.programmingModel.pom = (resp as any).result;
           if ( this.programmingModel.pom.status !== 'CLOSED' ) {
             this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
+            this.pomYear = this.programmingModel.pom.fy;
           }
         },
         error => {
@@ -229,11 +233,11 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onApprove(){
-    
-    this.requestsSummaryWidget.gridData.forEach( ps => { 
+
+    this.requestsSummaryWidget.gridData.forEach( ps => {
       ps.assignedTo = "POM Manager";
       ps.status = "Approved";
-    });    
+    });
 
     // reload or refresh the grid data after update
     this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
@@ -241,12 +245,94 @@ export class RequestsSummaryComponent implements OnInit {
 
   }
 
-
   handleOrgChartSwitch( event: any ) {
-
+    console.log(event);
   }
 
   handleToaChartSwitch( event: any ) {
-
+    if (event.action == 'Community Status') {
+      this.toaChartCommunityStatus();
+    }
+    else if (event.action == 'Community TOA Difference') {
+      this.toaChartCommunityToaDifference();
+    }
+    else if (event.action == 'Organization Status') {
+      this.toaChartOrganizationStatus();
+    }
+    else if (event.action == 'Organization TOA Difference') {
+      this.toaChartOrganizationToaDifference();
+    }
+    else if (event.action == 'Funding Line Status') {
+      this.toaChartFundingLineStatus();
+    }
   }
+
+  toaChartCommunityStatus() {
+    console.log('Community Status');
+  }
+
+  toaChartCommunityToaDifference() {
+    this.toaWidget.chartReady = false;
+    //set chart type
+    this.toaWidget.columnChart.chartType = 'ColumnChart';
+    //set options
+    this.toaWidget.columnChart.options = {
+      title: 'Community TOA Difference',
+      width: 200,
+      height: 200,
+      vAxis: {format: 'currency'},
+      legend: {position: 'none'},
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
+    };
+    //set size
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
+    //get data
+    //calculate totals
+    let totals:any[] = [];
+    for (let row of this.requestsSummaryWidget.gridData) {
+      for (let i = 0; i < 5; i++){
+        if (!totals[i]) {
+          totals[i] = {year: (this.pomYear + i), amount: 0};
+        }
+        if (row.funds[this.pomYear + i]) {
+          totals[i].amount = totals[i].amount + row.funds[this.pomYear + i];
+        }
+      }
+    }
+    console.log(totals);
+    console.log(this.programmingModel.pom.communityToas);
+    //set data
+    let data:any = [
+      ['Fiscal Year', 'TOA Difference'],
+    ];
+
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (totals[i].year - 2000);
+      let difference:number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
+      data.push([year, difference]);
+    }
+
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
+  }
+
+  toaChartOrganizationStatus() {
+    console.log('Organization Status');
+  }
+
+  toaChartOrganizationToaDifference() {
+    console.log('Organization TOA Difference');
+  }
+
+  toaChartFundingLineStatus() {
+    console.log('Funding Line Status');
+  }
+
+
 }
