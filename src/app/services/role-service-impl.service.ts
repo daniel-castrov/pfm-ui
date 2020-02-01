@@ -20,9 +20,8 @@ export class RoleServiceImpl extends RoleService {
   }
 
   getMap(): Observable<object> {
-    const url = 'role';
     const roles = new Map<string, UserRole>();
-    return this.get(url).pipe(
+    return this.getAll().pipe(
       map((data: any) => {
         for (const role of data.result) {
           roles.set(role.id, role);
@@ -30,7 +29,7 @@ export class RoleServiceImpl extends RoleService {
         return roles;
       }),
       catchError(err => {
-        console.log('error while GET : ' + url);
+        console.log('error while getting role map');
         console.warn(err);
         return of(roles);
       })

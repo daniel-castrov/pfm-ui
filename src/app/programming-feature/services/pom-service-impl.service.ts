@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {PomService} from './pom-service';
+import { Pom } from '../models/Pom';
 
 
 @Injectable({
@@ -28,4 +29,9 @@ export class PomServiceImpl extends PomService {
     getLatestPom(): Observable<object> {
         return this.get('pom/latest');
     }
+
+    createPom(year:number,pom:Pom): Observable<object> {
+        return this.post('pom/year/'+ year,pom);
+    }
+
 }

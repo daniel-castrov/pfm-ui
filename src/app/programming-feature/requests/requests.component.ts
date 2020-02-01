@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ProgrammingModel } from '../models/ProgrammingModel';
+import { PluginLoaderService } from '../../services/plugin-loader/plugin-loader.service';
 
 @Component({
   selector: 'pfm-programming',

@@ -6,8 +6,6 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./create-programming-organization-graph.component.scss']
 })
 export class CreateProgrammingOrganizationGraphComponent{
-
-  @Input() griddata:any[];
   chartReady:boolean;
 
   public columnChart: any =  {
@@ -23,7 +21,7 @@ export class CreateProgrammingOrganizationGraphComponent{
         duration: 500,
         easing: 'out',
         startup: true
-      },
+      }
     }
   };
 

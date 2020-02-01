@@ -36,8 +36,8 @@
 
 <ng-container *ngIf='type == "iconDropdown"'>
     <div [id]="id" ngbDropdown container="body" class="d-inline-block">
-        <span class="icon-dropown" *ngIf="iconName">
-            <fa [name]="iconName" [title]="title" ngbDropdownToggle></fa>
+        <span class="icon-dropown" *ngIf="iconName" [title]="title">
+            <fa [name]="iconName" ngbDropdownToggle></fa>
         </span>
         <div class="icon-select" ngbDropdownMenu>
             <span ngbDropdownItem class="icon-option" (click)="handleSelectionChanged(prompt)">{{prompt}}</span>

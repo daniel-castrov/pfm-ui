@@ -5,6 +5,8 @@ import { PlanningService } from './services/planning-service';
 import { PlanningPhase } from './models/PlanningPhase';
 import { AppModel } from '../pfm-common-models/AppModel';
 import { PlanningUtils } from './utils/planning-utils';
+import { ProgrammingModel } from '../programming-feature/models/ProgrammingModel';
+import { Route } from '@angular/router';
 
 @Component({
   selector: 'app-planning-feature',
@@ -12,13 +14,16 @@ import { PlanningUtils } from './utils/planning-utils';
   styleUrls: ['./planning-feature.component.css']
 })
 export class PlanningFeatureComponent implements OnInit {
+  @ViewChild('targetRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   busy:boolean;
   ready:boolean;
 
-  constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, ) { }
+  constructor(private router: Route, private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private injector: Injector, private pluginLoader: PluginLoaderService) { }
 
   ngOnInit() {
+      this.loadPlugin("programming-request");
+
     this.planningService.getAllPlanning().subscribe(
       resp => {
         this.busy = false;
@@ -29,6 +34,17 @@ export class PlanningFeatureComponent implements OnInit {
         this.busy = false;
         this.dialogService.displayDebug(error);
       });
+  }
+
+  loadPlugin(pluginName: string) {
+    this.pluginLoader.load( pluginName ).then( moduleFactory => {
+      const moduleRef = moduleFactory.create( this.injector );
+      const entryComponent = ( moduleFactory.moduleType as any ).entry;
+      const compFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(
+          entryComponent
+      );
+      this.vcRef.createComponent( compFactory );
+    } );
   }
 
   private processPlanningData(data:any):void{

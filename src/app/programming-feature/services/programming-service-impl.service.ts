@@ -12,11 +12,13 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     super( httpClient );
   }
 
-  getPRsForContainer( containerId: string ): Observable<object> {
-    return this.get( 'program/container/' + containerId );
-  }
-
-  getPRsForContainerAndOrganization( containerId: string, organizationId: string ): Observable<object> {
-    return this.get( 'program/container/' + containerId + '/organization/' + organizationId );
+  getPRsForContainer( containerId: string, organizationId: string ): Observable<object> {
+    if ( organizationId ) {
+      // Filter by organization
+      return this.get( 'program/container/' + containerId + '/organization/' + organizationId );
+    } else {
+      // Get all
+      return this.get( 'program/container/' + containerId );
+    }
   }
 }

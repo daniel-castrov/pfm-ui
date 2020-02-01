@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
+    "local": "ng serve -o -c local",
     "build": "ng build",
     "lint": "ng lint",
     "postinstall": "tsc -p builders/tsconfig.builders.json",
@@ -11,12 +12,7 @@
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
     "build:client-and-server-bundles": "ng build --prod && ng run angular-plugin-architecture:server:production",
-    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins",
-    "build:planning-open": "ng build --project plugins --prod --modulePath=./app/planning/open-planning/open-planning.module#OpenPlanningModule --pluginName=planning-open --outputPath=./src/assets/plugins",
-    "build:planning-close": "ng build --project plugins --prod --modulePath=./app/planning/close-planning/close-planning.module#ClosePlanningModule --pluginName=planning-close --outputPath=./src/assets/plugins",
-    "build:planning-lock": "ng build --project plugins --prod --modulePath=./app/planning/lock-planning/lock-planning.module#LockPlanningModule --pluginName=planning-lock --outputPath=./src/assets/plugins",
-    "build:planning-mission-priorites": "ng build --project plugins --prod --modulePath=./app/planning/mission-priorities/mission-priorities.module#MissionPrioritiesModule --pluginName=planning-mission-priorities --outputPath=./src/assets/plugins",
-    "build:plugins": "npm run build:planning-create && npm run build:planning-open && npm run build:planning-close && npm run build:planning-lock && npm run build:planning-mission-priorites"
+    "build:planning-create": "ng build --project plugins --prod --modulePath=./app/planning/create-planning/create-planning.module#CreatePlanningModule --pluginName=planning-create --outputPath=./src/assets/plugins"
   },
   "private": true,
   "dependencies": {
