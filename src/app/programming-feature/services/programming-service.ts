@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
+import { Program } from '../models/Program';
 
 export abstract class ProgrammingService extends BaseRestService {
 
@@ -16,4 +17,6 @@ export abstract class ProgrammingService extends BaseRestService {
    * @param organizationId - Organization Id for filtering by organization, null for all
    */
   abstract getPRsForContainer( containerId: string, organizationId: string ): Observable<object>;
+  abstract approvePRs(programs:Program[]):Observable<object>;
+
 }

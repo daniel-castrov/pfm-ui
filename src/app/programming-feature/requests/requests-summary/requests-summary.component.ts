@@ -16,6 +16,8 @@ import { Organization } from '../../../pfm-common-models/Organization';
 import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-summary-grid.component';
 import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
+import { esLocale } from 'ngx-bootstrap';
+
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -43,6 +45,7 @@ export class RequestsSummaryComponent implements OnInit {
   dashboard: Array<GridsterItem>;
   showPreviousFundedProgramDialog: boolean;
   availablePrograms: ListItem[];
+  orgs:Organization[];
 
   constructor( private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService, private mrdbService: MrdbService ) {
   }
@@ -102,6 +105,8 @@ export class RequestsSummaryComponent implements OnInit {
         resp => {
           const orgs = ( resp as any ).result;
           const showAllOrg = new Organization();
+          console.log("Organizations:"+orgs);
+          this.orgs = orgs; 
           showAllOrg.id = null;
           showAllOrg.abbreviation = 'Show All';
           const dropdownOptions: Organization[] = [ showAllOrg ];
@@ -201,9 +206,9 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   handleAdd(addEvent: any) {
-    if (addEvent.action === 'new-program') {
+    if (addEvent.id === 'new-program') {
       console.log('New program Event fired');
-    } else if (addEvent.action === 'previously-funded-program') {
+    } else if (addEvent.id === 'previously-funded-program') {
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
           resp => {
@@ -232,7 +237,7 @@ export class RequestsSummaryComponent implements OnInit {
     console.log('Import Program');
   }
 
-  onApprove(){
+  onApprove():void{
 
     this.requestsSummaryWidget.gridData.forEach( ps => {
       ps.assignedTo = "POM Manager";
@@ -241,8 +246,48 @@ export class RequestsSummaryComponent implements OnInit {
 
     // reload or refresh the grid data after update
     this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
+    this.approveAllPRs()
     this.dialogService.displayToastInfo("All program requests successfully approved.")
 
+  }
+  approveAllPRs():void{
+    let programs:Program[] ;
+    let status: string = "Approved";
+    let roleId = this.getRespRoleId("POM_Manager");
+
+    // update staus, roleId for each of the program 
+    programs = this.programmingModel.programs;
+
+    programs.forEach(prg => { 
+        prg.programStatus = status; 
+        prg.responsibleRoleId = roleId;
+      });
+
+     // console.log(JSON.stringify(programs));
+    this.programmingService.approvePRs(programs).subscribe( 
+      resp =>{
+        let result = (resp as any);
+        this.dialogService.displayToastInfo("All program requests successfully approved.")
+      }, 
+      error => {
+        let err = error as any;
+        this.dialogService.displayInfo(err.error);
+      });
+  }
+
+  getRespRoleId(roleStr:string):any{
+    let respRoleId:string = '';
+    this.programmingModel.roles.forEach(role => {
+        if (role.name == roleStr){
+          respRoleId = role.id;                                                                                                                                          
+        }
+    });
+
+    return respRoleId;
+  }
+ 
+  onGridDataChange(data:any):void{ 
+    this.griddata = data;
   }
 
   handleOrgChartSwitch( event: any ) {
