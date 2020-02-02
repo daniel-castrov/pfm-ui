@@ -18,12 +18,21 @@ export class PlanningFeatureComponent implements OnInit {
 
   busy:boolean;
   ready:boolean;
+  displayOverrideFlag:boolean;
 
   constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService) { }
 
   ngOnInit() {
-      //this.loadPlugin("programming-request");
-
+    //TODO - Notes for dynamic loading libs
+    // the appModel should contain an information that can override the default view
+    /*
+        use the router:Route from angular to find the current page being loaded
+        if the page being loaded "planning/create" has an override,
+          this.loadPlugin("planning-create");
+          displayOverrideFlag = true
+        else
+           displayOverrideFlag = false
+*/
     this.planningService.getAllPlanning().subscribe(
       resp => {
         this.busy = false;
