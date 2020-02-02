@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { DialogService } from '../../../../pfm-coreui/services/dialog.service';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
@@ -7,18 +7,18 @@ import { ProgramSummary } from '../../../models/ProgramSummary';
 import { Router } from '@angular/router';
 import { RoleService } from '../../../../services/role-service';
 import { Role } from '../../../../pfm-common-models/Role';
-import { ListItem } from '../../../../pfm-common-models/ListItem';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
     templateUrl: './requests-summary-grid.component.html',
     styleUrls: ['./requests-summary-grid.component.scss']
 })
+
+
 export class RequestsSummaryGridComponent implements OnInit {
 
-    @Input() dropdownOptions:ListItem[];
-    @Output() onAddCtaEvent:EventEmitter<any> = new EventEmitter<any>();
-
+    @Output() onGridDataChange = new EventEmitter();
+    
     gridApi: GridApi;
     columnApi: ColumnApi;
     columns: any[];
@@ -86,7 +86,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 },
             }
         );
-        this.resetGridData();
+        this.resetGridData();         
     }
 
     handleCellAction(cellAction: DataGridMessage): void {
@@ -124,6 +124,7 @@ export class RequestsSummaryGridComponent implements OnInit {
 
     onGridIsReady(gridApi: GridApi): void {
         this.gridApi = gridApi;
+        this.onGridDataChange.emit(this.gridData); 
     }
 
     onColumnIsReady(columnApi: ColumnApi): void {
@@ -142,6 +143,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.gridData = [];
     for (const program of this.programmingModel.programs) {
       const ps = new ProgramSummary();
+      ps.organiztionId = program.organizationId;
       ps.programName = program.shortName;
       ps.assignedTo = this.getRoleName(program.responsibleRoleId);
       ps.status = program.programStatus;
@@ -158,11 +160,7 @@ export class RequestsSummaryGridComponent implements OnInit {
           }
         }
       }
-      this.gridData.push(ps);
-    }
-  }
-
-  onAddNewProgram( event:any ) {
-    this.onAddCtaEvent.emit(event);
+      this.gridData.push(ps);      
+    }   
   }
 }
