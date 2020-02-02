@@ -1,4 +1,5 @@
 export class ProgramSummary {
+    public organiztionId:string;
     public programName: string;
     public assignedTo: string;
     public status: string;

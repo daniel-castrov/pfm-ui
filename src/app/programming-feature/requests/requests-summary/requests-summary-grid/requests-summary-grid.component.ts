@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { DialogService } from '../../../../pfm-coreui/services/dialog.service';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
@@ -14,10 +14,11 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
     templateUrl: './requests-summary-grid.component.html',
     styleUrls: ['./requests-summary-grid.component.scss']
 })
-export class RequestsSummaryGridComponent implements OnInit {
 
-    @Input() dropdownOptions:ListItem[];
-    @Output() onAddCtaEvent:EventEmitter<any> = new EventEmitter<any>();
+
+export class RequestsSummaryGridComponent implements OnInit {
+    @Input() dropdownOptions: ListItem[];
+    @Output() onAddCtaEvent: EventEmitter<any> = new EventEmitter<any>();
 
     gridApi: GridApi;
     columnApi: ColumnApi;
@@ -52,8 +53,8 @@ export class RequestsSummaryGridComponent implements OnInit {
             },
         ];
 
-        this.gridMinYear = 2016;//this.programmingModel.pom.fy - 3;
-        this.gridMaxYear = 2023;//this.programmingModel.pom.fy + 4;
+        this.gridMinYear = this.programmingModel.pom.fy - 3;
+        this.gridMaxYear = this.programmingModel.pom.fy + 4;
         for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
             let fyColumnHeaderName = i.toString();
             fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
@@ -107,6 +108,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 break;
             }
             case 'download-attachment': {
+              break;
             }
             case 'cellClicked': {
                 this.onCellClicked(cellAction);
@@ -116,8 +118,8 @@ export class RequestsSummaryGridComponent implements OnInit {
 
     onCellClicked(cellAction: DataGridMessage): void {
         if (cellAction.columnId === 'programName') {
-            //navigate to the program details
-            this.router.navigate(['/programming/requests/details/' + cellAction.rowData['programName']])
+            // navigate to the program details
+            this.router.navigate(['/programming/requests/details/' + cellAction.rowData['programName']]);
 
         }
     }
@@ -142,6 +144,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.gridData = [];
     for (const program of this.programmingModel.programs) {
       const ps = new ProgramSummary();
+      ps.organiztionId = program.organizationId;
       ps.programName = program.shortName;
       ps.assignedTo = this.getRoleName(program.responsibleRoleId);
       ps.status = program.programStatus;
