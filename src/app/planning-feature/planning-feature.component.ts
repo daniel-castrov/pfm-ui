@@ -19,10 +19,10 @@ export class PlanningFeatureComponent implements OnInit {
   busy:boolean;
   ready:boolean;
 
-  constructor(private router: Route, private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private injector: Injector, private pluginLoader: PluginLoaderService) { }
+  constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService) { }
 
   ngOnInit() {
-      this.loadPlugin("programming-request");
+      //this.loadPlugin("programming-request");
 
     this.planningService.getAllPlanning().subscribe(
       resp => {
@@ -34,17 +34,6 @@ export class PlanningFeatureComponent implements OnInit {
         this.busy = false;
         this.dialogService.displayDebug(error);
       });
-  }
-
-  loadPlugin(pluginName: string) {
-    this.pluginLoader.load( pluginName ).then( moduleFactory => {
-      const moduleRef = moduleFactory.create( this.injector );
-      const entryComponent = ( moduleFactory.moduleType as any ).entry;
-      const compFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(
-          entryComponent
-      );
-      this.vcRef.createComponent( compFactory );
-    } );
   }
 
   private processPlanningData(data:any):void{
