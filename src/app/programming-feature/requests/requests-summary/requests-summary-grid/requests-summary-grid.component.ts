@@ -52,8 +52,8 @@ export class RequestsSummaryGridComponent implements OnInit {
             },
         ];
 
-        this.gridMinYear = 2016;//this.programmingModel.pom.fy - 3;
-        this.gridMaxYear = 2023;//this.programmingModel.pom.fy + 4;
+        this.gridMinYear = this.programmingModel.pom.fy - 3;
+        this.gridMaxYear = this.programmingModel.pom.fy + 4;
         for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
             let fyColumnHeaderName = i.toString();
             fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
