@@ -29,13 +29,10 @@
 </div>
 
 <div *ngIf="programmingModelReady" class="section-datagrid">
-  <div class="add-new-program-cta">
-    <pfm-dropdown (onSelectionChanged)="handleAdd($event)" [type]="'iconDropdown'" [iconName]="'plus'" [label]="'Add'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="addOptions"></pfm-dropdown>
-  </div>
   <div class="datagrid">
-    <pfm-requests-summary-grid (onGridDataChange)='onGridDataChange($event)'></pfm-requests-summary-grid>
+    <pfm-requests-summary-grid (onAddCtaEvent)="handleAdd($event)" (onGridDataChange)='onGridDataChange($event)' [dropdownOptions]="addOptions"></pfm-requests-summary-grid>
   </div>
-  </div>
+</div>
 
 <ng-container *ngIf="showPreviousFundedProgramDialog">
   <pfm-custom-dialog [title]="'Select a Program'" [body]="importPreviousFundedProgramBody" [actions]="importPreviousFundedProgramActions" (onCancelDialog)="showPreviousFundedProgramDialog = false"></pfm-custom-dialog>
