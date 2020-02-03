@@ -5,7 +5,7 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { OrganizationServiceImpl } from 'src/app/services/organization-service-impl.service';
 import { Role } from 'src/app/pfm-common-models/Role';
-import { runInThisContext } from 'vm';
+//import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',
@@ -197,11 +197,11 @@ export class RequestsSummaryOrgWidgetComponent  {
    statusTable.push(['Program Status', null,  0,  0]);   
   
    //statusTable.push([ 'Outstanding','Program Status',0,0]); 
-   this.roles.forEach(role =>{
+   /*this.roles.forEach(role =>{
         let roleacrynm = this.getRoleAcrynm(role.name);
        statusTable.push([ roleacrynm,'Program Status',0,0]);  
    });
-
+   */
    var toltalNoOfPrograms :number = this.griddata.length;
    if (this.griddata.length > 0) {
      let assignedTo = this.griddata[0].assignedTo;  
@@ -237,10 +237,10 @@ export class RequestsSummaryOrgWidgetComponent  {
     let approved = ((approvedcount * 100)/toltalNoOfPrograms);
 
     //assignedTo = assignedTo.replace('_',' ');
-    statusTable.push([ roleacrynm + ' : Outstaning',roleacrynm,outstanding,100]);  
-    statusTable.push([ roleacrynm + ' : Saved',roleacrynm,saved,50]);  
-    statusTable.push([ roleacrynm + ' : Approved',roleacrynm,approved,70]);  
-    statusTable.push([ roleacrynm + ' : Rejected',roleacrynm,rejected,10]);  
+    statusTable.push([ roleacrynm + ' : Outstaning','Program Status',outstanding,100]);  
+    statusTable.push([ roleacrynm + ' : Saved','Program Status',saved,50]);  
+    statusTable.push([ roleacrynm + ' : Approved','Program Status',approved,70]);  
+    statusTable.push([ roleacrynm + ' : Rejected','Program Status',rejected,10]);  
    }
     
    console.log(JSON.stringify(statusTable));
