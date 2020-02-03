@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProgrammingService } from './programming-service';
-import { Program } from '../models/Program';
 
 @Injectable( {
   providedIn: 'root'
@@ -23,9 +22,7 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     }
   }
 
-  
-  approvePRs(programs:Program[]):Observable<object> {
-    return this.post('program/programs/', programs);
+  approvePRsForContainer(containerId: string): Observable<object> {
+    return this.put('program/container/' + containerId + '/approve', null);
   }
-  
 }
