@@ -262,7 +262,7 @@ export class RequestsSummaryComponent implements OnInit {
   approveAllPRs():void{
     this.programmingService.approvePRsForContainer(this.programmingModel.pom.workspaceId).subscribe(
       resp =>{
-        this.dialogService.displayToastInfo("All program requests successfully approved.")
+        this.dialogService.displayToastInfo('All program requests successfully approved.')
         this.organizationSelected(this.selectedOrg);
       },
       error => {
@@ -371,6 +371,7 @@ export class RequestsSummaryComponent implements OnInit {
 
     for (let i = 0; i < 5; i++) {
       let year:string = 'FY' + (totals[i].year - 2000);
+      console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
       let difference:number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
       data.push([year, difference]);
     }
