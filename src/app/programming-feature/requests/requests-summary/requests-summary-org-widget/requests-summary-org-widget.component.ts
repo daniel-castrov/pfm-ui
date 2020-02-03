@@ -4,6 +4,8 @@ import { ProgramSummary } from '../../../models/ProgramSummary';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { Organization } from 'src/app/pfm-common-models/Organization';
 import { OrganizationServiceImpl } from 'src/app/services/organization-service-impl.service';
+import { Role } from 'src/app/pfm-common-models/Role';
+//import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'pfm-requests-summary-org-widget',
@@ -14,11 +16,12 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   @Input() griddata:ProgramSummary[];
   @Input() orgs:Organization[];
+  @Input() roles:Role[];
 
   chartReady:boolean;
   availableCharts: ListItem[];
   defaultChart: ListItem;
-
+  
   public treeMapChart: any =  {
     chartType: 'TreeMap',
     dataTable: [
@@ -42,6 +45,7 @@ export class RequestsSummaryOrgWidgetComponent  {
       midColor: '#29BD75',
       maxColor: '#21809C',
       fontColor: 'black',
+   
       //showScale: true,
       showTooltips:true,
       width: 200,
@@ -75,17 +79,20 @@ export class RequestsSummaryOrgWidgetComponent  {
     
   }
 
-  private chartSelected(chartType:any){
+  public chartSelected(chartType:any){
     if (chartType.id === "Organization") {
       //change to org
+      this.defaultChart = this.availableCharts[0];
       this.chartOrganization();
     }
     else if (chartType.id === "BA Line") {
       //change to ba line
+      this.defaultChart = this.availableCharts[1];
       this.chartBALine();
     }
     else if (chartType.id === "Program Status") {
       //change to program status
+      this.defaultChart = this.availableCharts[2];
       this.chartProgramStatus();
     }
   }
@@ -168,18 +175,82 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   private chartProgramStatus(){
     //set up Status tree structure
+   /*
     let statusTable = [
-      ['Program', 'Organization', 'Health', 'Demands'],
+      ['Program', 'Program Status', 'Health', 'Demands'],
       ['Program Status', null,  0,  0],
-      ['OUTSTANDING', 'Program Status',  0,  0],
-      ['Pfm', 'OUTSTANDING', 100, 100]
+      ['pfm', 'Program Status',  0,  0],
+      ['pfm1', 'Program Status',  0,  0],
+      ['pfm2', 'Program Status',  0,  0],
+      ['OUTSTANDING', 'pfm', 50, 100],
+      ['saved', 'pfm', 30, 40],
+      ['approved', 'pfm', 50, 20]
     ];
+    */
+  
+    
 
+   let statusTable:any;
+
+   statusTable = [];
+   statusTable.push(['Program', 'Program Status', 'Health', 'Demands']);
+   statusTable.push(['Program Status', null,  0,  0]);   
+  
+   //statusTable.push([ 'Outstanding','Program Status',0,0]); 
+   /*this.roles.forEach(role =>{
+        let roleacrynm = this.getRoleAcrynm(role.name);
+       statusTable.push([ roleacrynm,'Program Status',0,0]);  
+   });
+   */
+   var toltalNoOfPrograms :number = this.griddata.length;
+   if (this.griddata.length > 0) {
+     let assignedTo = this.griddata[0].assignedTo;  
+     let roleacrynm = this.getRoleAcrynm(assignedTo);
+
+     // get the count for each of the status 
+     let approvedcount:number=0,savedcount:number =0;
+     let outstandingcount:number=0,rejectedcount:number = 0;
+
+    this.griddata.forEach(ps => {
+      if (ps.assignedTo == assignedTo){
+        switch (ps.status.toLowerCase())
+        {
+          case 'approved':
+            approvedcount = approvedcount + 1;
+            break;
+          case 'rejected':
+            rejectedcount = rejectedcount + 1;
+            break;
+          case 'saved':
+            savedcount = savedcount + 1;
+            break;
+          case 'outstanding':
+            outstandingcount = outstandingcount + 1;
+            break;
+        }
+      }
+    });
+
+    let outstanding = ((outstandingcount * 100)/toltalNoOfPrograms);
+    let saved = ((savedcount * 100)/toltalNoOfPrograms);
+    let rejected = ((rejectedcount * 100)/toltalNoOfPrograms);
+    let approved = ((approvedcount * 100)/toltalNoOfPrograms);
+
+    //assignedTo = assignedTo.replace('_',' ');
+    statusTable.push([ roleacrynm + ' : Outstanding','Program Status',outstanding,100]);  
+    statusTable.push([ roleacrynm + ' : Saved','Program Status',saved,50]);  
+    statusTable.push([ roleacrynm + ' : Approved','Program Status',approved,70]);  
+    statusTable.push([ roleacrynm + ' : Rejected','Program Status',rejected,10]);  
+   }
+    
+   console.log(JSON.stringify(statusTable));
     //load data into chart
 
     //set data to chart
     this.treeMapChart.dataTable = statusTable;
     this.treeMapChart.component.draw();
+    this.treeMapChart.goUpAndDraw();
+  
   }
 
   private toListItem(years:string[]):ListItem[]{
@@ -231,4 +302,24 @@ export class RequestsSummaryOrgWidgetComponent  {
     colorcode = orgcolors[orgName];
     return colorcode;
   }
+
+  getRoleAcrynm(role:string):string{
+    let acrynm:string ='';
+      role = role.replace('_',' ');
+      let names:string[] = role.split(' ');
+      if (names.length == 1){
+        acrynm = role;
+      }      
+      else
+      {
+        names.forEach(nm => {
+          if(nm.indexOf('POM') != -1)
+            acrynm = acrynm + 'PM';
+          else
+            acrynm = acrynm + nm.substr(0,1);
+        });
+      }
+      console.log( role + ' : ' + acrynm); 
+      return acrynm;
+    }
 }

@@ -238,7 +238,9 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onApprove():void{
-
+    /*  remove the below code after save call working ... */
+    // moved these lines of code to db save call success 
+    
     this.requestsSummaryWidget.gridData.forEach( ps => {
       ps.assignedTo = "POM Manager";
       ps.status = "Approved";
@@ -246,10 +248,14 @@ export class RequestsSummaryComponent implements OnInit {
 
     // reload or refresh the grid data after update
     this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
-    this.approveAllPRs()
-    this.dialogService.displayToastInfo("All program requests successfully approved.")
+         this.griddata = this.requestsSummaryWidget.gridData;
 
+    this.orgWidget.chartSelected(this.orgWidget.defaultChart);
+    /** comment or remove the above after save call work */
+
+    this.approveAllPRs()
   }
+
   approveAllPRs():void{
     let programs:Program[] ;
     let status: string = "Approved";
@@ -267,6 +273,17 @@ export class RequestsSummaryComponent implements OnInit {
     this.programmingService.approvePRs(programs).subscribe( 
       resp =>{
         let result = (resp as any);
+              
+        this.requestsSummaryWidget.gridData.forEach( ps => {
+          ps.assignedTo = "POM Manager";
+          ps.status = "Approved";
+        });
+    
+        // reload or refresh the grid data after update
+        this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
+        this.griddata = this.requestsSummaryWidget.gridData;
+        this.orgWidget.chartSelected(this.orgWidget.defaultChart);
+
         this.dialogService.displayToastInfo("All program requests successfully approved.")
       }, 
       error => {
