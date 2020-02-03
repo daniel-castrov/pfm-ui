@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { ColumnApi, GridApi } from '@ag-grid-community/all-modules';
 import { DialogService } from '../../../../pfm-coreui/services/dialog.service';
 import { DataGridMessage } from '../../../../pfm-coreui/models/DataGridMessage';
@@ -7,6 +7,7 @@ import { ProgramSummary } from '../../../models/ProgramSummary';
 import { Router } from '@angular/router';
 import { RoleService } from '../../../../services/role-service';
 import { Role } from '../../../../pfm-common-models/Role';
+import { ListItem } from '../../../../pfm-common-models/ListItem';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
@@ -16,9 +17,9 @@ import { Role } from '../../../../pfm-common-models/Role';
 
 
 export class RequestsSummaryGridComponent implements OnInit {
+    @Input() dropdownOptions: ListItem[];
+    @Output() onAddCtaEvent: EventEmitter<any> = new EventEmitter<any>();
 
-    @Output() onGridDataChange = new EventEmitter();
-    
     gridApi: GridApi;
     columnApi: ColumnApi;
     columns: any[];
@@ -52,8 +53,8 @@ export class RequestsSummaryGridComponent implements OnInit {
             },
         ];
 
-        this.gridMinYear = 2016;//this.programmingModel.pom.fy - 3;
-        this.gridMaxYear = 2023;//this.programmingModel.pom.fy + 4;
+        this.gridMinYear = this.programmingModel.pom.fy - 3;
+        this.gridMaxYear = this.programmingModel.pom.fy + 4;
         for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
             let fyColumnHeaderName = i.toString();
             fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
@@ -86,7 +87,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 },
             }
         );
-        this.resetGridData();         
+        this.resetGridData();
     }
 
     handleCellAction(cellAction: DataGridMessage): void {
@@ -107,6 +108,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 break;
             }
             case 'download-attachment': {
+              break;
             }
             case 'cellClicked': {
                 this.onCellClicked(cellAction);
@@ -116,15 +118,14 @@ export class RequestsSummaryGridComponent implements OnInit {
 
     onCellClicked(cellAction: DataGridMessage): void {
         if (cellAction.columnId === 'programName') {
-            //navigate to the program details
-            this.router.navigate(['/programming/requests/details/' + cellAction.rowData['programName']])
+            // navigate to the program details
+            this.router.navigate(['/programming/requests/details/' + cellAction.rowData['programName']]);
 
         }
     }
 
     onGridIsReady(gridApi: GridApi): void {
         this.gridApi = gridApi;
-        this.onGridDataChange.emit(this.gridData); 
     }
 
     onColumnIsReady(columnApi: ColumnApi): void {
@@ -160,7 +161,11 @@ export class RequestsSummaryGridComponent implements OnInit {
           }
         }
       }
-      this.gridData.push(ps);      
-    }   
+      this.gridData.push(ps);
+    }
+  }
+
+  onAddNewProgram( event:any ) {
+    this.onAddCtaEvent.emit(event);
   }
 }

@@ -1,4 +1,12 @@
 <ng-container *ngIf="ready">
+
+  <ng-container *ngIf="displayOverrideFlag">
+    <ng-template #targetRef></ng-template>
+  </ng-container>
+  <ng-container *ngIf="!displayOverrideFlag">
     <router-outlet></router-outlet>
+  </ng-container>
+
+
 </ng-container>
 <pfm-busy [busy]="busy"></pfm-busy>

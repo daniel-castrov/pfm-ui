@@ -1,5 +1,5 @@
 {
-  "planning-create": {
+  "programming-request": {
     "name": "PlanningCreate",
     "path": "/assets/plugins/planning-create.js"
   },
