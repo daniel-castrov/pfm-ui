@@ -46,6 +46,7 @@ export class RequestsSummaryComponent implements OnInit {
   showPreviousFundedProgramDialog: boolean;
   availablePrograms: ListItem[];
   orgs:Organization[];
+  allPrograms: any; // used for community chart
 
   constructor( private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService, private mrdbService: MrdbService ) {
   }
@@ -106,7 +107,7 @@ export class RequestsSummaryComponent implements OnInit {
           const orgs = ( resp as any ).result;
           const showAllOrg = new Organization();
           console.log("Organizations:"+orgs);
-          this.orgs = orgs; 
+          this.orgs = orgs;
           showAllOrg.id = null;
           showAllOrg.abbreviation = 'Show All';
           const dropdownOptions: Organization[] = [ showAllOrg ];
@@ -188,6 +189,8 @@ export class RequestsSummaryComponent implements OnInit {
     if ( this.selectedOrg.name !== 'Please select' ) {
       if ( this.programmingModel.pom.status !== 'CLOSED' ) {
         this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
+        // Get All PRs
+        this.getAllPrograms();
       } else {
         this.programmingModelReady = false;
       }
@@ -255,20 +258,20 @@ export class RequestsSummaryComponent implements OnInit {
     let status: string = "Approved";
     let roleId = this.getRespRoleId("POM_Manager");
 
-    // update staus, roleId for each of the program 
+    // update staus, roleId for each of the program
     programs = this.programmingModel.programs;
 
-    programs.forEach(prg => { 
-        prg.programStatus = status; 
+    programs.forEach(prg => {
+        prg.programStatus = status;
         prg.responsibleRoleId = roleId;
       });
 
      // console.log(JSON.stringify(programs));
-    this.programmingService.approvePRs(programs).subscribe( 
+    this.programmingService.approvePRs(programs).subscribe(
       resp =>{
         let result = (resp as any);
         this.dialogService.displayToastInfo("All program requests successfully approved.")
-      }, 
+      },
       error => {
         let err = error as any;
         this.dialogService.displayInfo(err.error);
@@ -279,14 +282,24 @@ export class RequestsSummaryComponent implements OnInit {
     let respRoleId:string = '';
     this.programmingModel.roles.forEach(role => {
         if (role.name == roleStr){
-          respRoleId = role.id;                                                                                                                                          
+          respRoleId = role.id;
         }
     });
 
     return respRoleId;
   }
- 
-  onGridDataChange(data:any):void{ 
+
+  getAllPrograms(){
+    this.programmingService.getPRsForContainer(this.programmingModel.pom.workspaceId, null).subscribe(
+        resp => {
+          this.allPrograms = (resp as any).result;
+        },
+        error => {
+        this.dialogService.displayDebug(error);
+        });
+  }
+
+  onGridDataChange(data:any):void{
     this.griddata = data;
   }
 
@@ -339,18 +352,25 @@ export class RequestsSummaryComponent implements OnInit {
     //get data
     //calculate totals
     let totals:any[] = [];
-    for (let row of this.requestsSummaryWidget.gridData) {
+    for (let program of this.allPrograms) {
       for (let i = 0; i < 5; i++){
         if (!totals[i]) {
           totals[i] = {year: (this.pomYear + i), amount: 0};
         }
-        if (row.funds[this.pomYear + i]) {
-          totals[i].amount = totals[i].amount + row.funds[this.pomYear + i];
+        if (program.fundingLines) {
+          let programTotal:number = 0;
+          for (let line of program.fundingLines) {
+            if (!line.funds[this.pomYear + i]) {
+              programTotal = programTotal + 0;
+            }
+            else {
+              programTotal = programTotal + line.funds[this.pomYear + i];
+            }
+          }
+          totals[i].amount = totals[i].amount + programTotal;
         }
       }
     }
-    console.log(totals);
-    console.log(this.programmingModel.pom.communityToas);
     //set data
     let data:any = [
       ['Fiscal Year', 'TOA Difference'],
