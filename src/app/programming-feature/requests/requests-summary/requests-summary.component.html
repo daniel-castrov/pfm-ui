@@ -15,7 +15,7 @@
       <gridster [options]="options">
         <gridster-item #orgWidetItem [item]="dashboard[0]">
           <div class="gridster-item-content">
-              <pfm-requests-summary-org-widget #orgWidget [griddata]="griddata" [orgs]="orgs"></pfm-requests-summary-org-widget>
+              <pfm-requests-summary-org-widget #orgWidget [griddata]="griddata" [orgs]="orgs" [roles]="programmingModel.roles" ></pfm-requests-summary-org-widget>
           </div>
       </gridster-item>
 
