@@ -237,7 +237,7 @@ export class RequestsSummaryOrgWidgetComponent  {
     let approved = ((approvedcount * 100)/toltalNoOfPrograms);
 
     //assignedTo = assignedTo.replace('_',' ');
-    statusTable.push([ roleacrynm + ' : Outstaning','Program Status',outstanding,100]);  
+    statusTable.push([ roleacrynm + ' : Outstanding','Program Status',outstanding,100]);  
     statusTable.push([ roleacrynm + ' : Saved','Program Status',saved,50]);  
     statusTable.push([ roleacrynm + ' : Approved','Program Status',approved,70]);  
     statusTable.push([ roleacrynm + ' : Rejected','Program Status',rejected,10]);  
@@ -307,11 +307,15 @@ export class RequestsSummaryOrgWidgetComponent  {
     let acrynm:string ='';
       role = role.replace('_',' ');
       let names:string[] = role.split(' ');
-      if ( (names.length == 1) || (role.indexOf('POM ') != -1)){
+      if (names.length == 1){
         acrynm = role;
-      }
-      else {
+      }      
+      else
+      {
         names.forEach(nm => {
+          if(nm.indexOf('POM') != -1)
+            acrynm = acrynm + 'PM';
+          else
             acrynm = acrynm + nm.substr(0,1);
         });
       }
