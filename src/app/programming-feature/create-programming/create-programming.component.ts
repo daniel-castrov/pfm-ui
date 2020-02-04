@@ -405,7 +405,7 @@ export class CreateProgrammingComponent implements OnInit {
   //updates the community graph from grid data
   private updateCommunityGraphData(startYear: number) {
     //populate griddata
-    this.communityGraphData = [['Fiscal Year', 'PRs Submitted', 'Average',]];
+    this.communityGraphData = [['Fiscal Year', 'Community TOA', 'Average',]];
     for (let row = 0; row < 5; row++) {
       let year = 'FY' + (startYear + row - 2000);
       let amount = 0;
