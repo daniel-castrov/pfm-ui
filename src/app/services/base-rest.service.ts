@@ -11,34 +11,34 @@ import { Observable } from 'rxjs';
 })
 export class BaseRestService {
 
-  protected baseURL:string;
-  protected headers:HttpHeaders;
+  protected baseURL: string;
+  protected headers: HttpHeaders;
 
-  constructor(protected httpClient:HttpClient) {
+  constructor(protected httpClient: HttpClient) {
     this.baseURL = environment.apiUrl;
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json; charset=utf-8');
     this.headers = headers;
   }
 
-  protected get(resource:string):Observable<Object>{
-    return this.httpClient.get(this.baseURL + "/" + resource, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  protected get(resource: string): Observable<object> {
+    return this.httpClient.get(this.baseURL + '/' + resource, {headers: this.headers});
   }
 
-  protected post(resource:string, data:any):Observable<Object>{
-    return this.httpClient.post(this.baseURL + "/" + resource, data, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  protected post(resource: string, data: any): Observable<object> {
+    return this.httpClient.post(this.baseURL + '/' + resource, data, {headers: this.headers});
   }
 
-  protected put(resource:string, data:any):Observable<Object>{
-    return this.httpClient.put(this.baseURL + "/" + resource, data, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  protected put(resource: string, data: any): Observable<object> {
+    return this.httpClient.put(this.baseURL + '/' + resource, data, {headers: this.headers});
   }
 
-  protected delete(resource:string):Observable<Object>{
-    return this.httpClient.delete(this.baseURL + "/" + resource, {headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  protected delete(resource: string): Observable<object> {
+    return this.httpClient.delete(this.baseURL + '/' + resource, {headers: this.headers});
   }
 
-  //majority of callers will only want the response content - but some may need access to response-headers, ect...
-  protected getFullResponse(resource:string):Observable<Object>{
-    return this.httpClient.get(this.baseURL + "/" + resource, {observe: "response", headers: this.headers.set('Authorization', "Bearer " + sessionStorage.getItem("auth_token"))});
+  // majority of callers will only want the response content - but some may need access to response-headers, ect...
+  protected getFullResponse(resource: string): Observable<object> {
+    return this.httpClient.get(this.baseURL + '/' + resource, {observe: 'response', headers: this.headers});
   }
 }

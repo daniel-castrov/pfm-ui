@@ -9,17 +9,7 @@ export class AuthorizationService {
 
 
   public isAuthenticated(): boolean {
-    const token = sessionStorage.getItem('auth_token');
-    // Check whether the token is expired and return
-    // true or false
-
-    //the auth_token does not appear to be a JWT, TODO does the token expire?
-    if(token){
       return true;
-    }
-    return false;
-
-    //return !this.isTokenExpired(token);
   }
 
   private isTokenExpired(token: string, offsetSeconds?: number): boolean {

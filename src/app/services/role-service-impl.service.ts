@@ -8,7 +8,6 @@ import {UserRole} from '../pfm-common-models/UserRole';
 @Injectable({
   providedIn: 'root'
 })
-
 export class RoleServiceImpl extends RoleService {
 
   constructor(protected httpClient: HttpClient) {
