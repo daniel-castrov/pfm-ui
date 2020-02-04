@@ -299,6 +299,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   handleToaChartSwitch( event: any ) {
+    console.log(event);
     if (event.action == 'Community Status') {
       this.toaChartCommunityStatus();
     }
@@ -328,13 +329,15 @@ export class RequestsSummaryComponent implements OnInit {
       legend: {position: 'top', maxLines: 2},
       seriesType: 'bars',
       series: {0: {type: 'line'}},
-      color: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
+      colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
       animation: {
         duration: 500,
         easing: 'out',
         startup: true
       }
     };
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
     //get user ID
     //todo remove hard coding of userId
     let userStr = "POM_Manager";
@@ -413,6 +416,8 @@ export class RequestsSummaryComponent implements OnInit {
         startup: true
       }
     };
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
     //get data
     //calculate totals
     let totals:any[] = [];
