@@ -61,6 +61,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     let chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
     this.availableCharts = this.toListItem(chartOptions);
     this.defaultChart = this.availableCharts[0];
+    this.chartSelected({action: 'Community Status'});
   }
 
   private toListItem(years:string[]):ListItem[]{

@@ -317,7 +317,91 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   toaChartCommunityStatus() {
-    console.log('Community Status');
+    this.toaWidget.chartReady = false;
+    //set chart type
+    this.toaWidget.columnChart.chartType = 'ColumnChart';
+    //set options
+    this.toaWidget.columnChart.options = {
+      title : 'Community Status',
+      vAxis: {format: 'currency'},
+      seriesType: 'bars',
+      series: {0: {type: 'line'}},
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
+    };
+    //set size
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
+    //set data header
+    let data:any[] = [
+      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
+    ];
+
+    // for (let i = 0; i < 5; i++) {
+    //   let year:string = 'FY' + (this.pomYear + i - 2000);
+    //   let toa:number = this.programmingModel.pom.communityToas[i].amount;
+    // }
+    //get user ID
+    let userStr = "POM_Manager";
+    let userId = '5e386fffea2ae32517783b7d';
+
+    
+    for (let program of this.allPrograms) {
+      for (let i = 0; i < 5; i++){
+
+        // total this program
+        let programTotal: number = 0;
+        for ( let line of program.fundingLines ) {
+          if ( !line.funds[ this.pomYear + i ] ) {
+            programTotal = programTotal + 0;
+          }
+          else {
+            programTotal = programTotal + line.funds[ this.pomYear + i ];
+          }
+        }
+        // place total in correct value.
+        if (program.responsibleRoleId == userId) {
+          if (program.programStatus == 'APPROVED') {
+
+          }
+          else if (program.programStatus == 'REJECTED') {
+
+          }
+          else if (program.programStatus == 'SAVED') {
+
+          }
+          else if (program.programStatus == 'OUTSTANDING') {
+
+          }
+        }
+        else {
+
+        }
+
+        // if (!yearRow[i]) {
+        //   yearRow[i] = {year: (this.pomYear + i), amount: 0};
+        // }
+        // if (program.fundingLines) {
+        //   let programTotal:number = 0;
+        //   for (let line of program.fundingLines) {
+        //     if (!line.funds[this.pomYear + i]) {
+        //       programTotal = programTotal + 0;
+        //     }
+        //     else {
+        //       programTotal = programTotal + line.funds[this.pomYear + i];
+        //     }
+        //   }
+        //   yearRow[i].amount = yearRow[i].amount + programTotal;
+        // }
+      }
+    }
+
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
   }
 
   toaChartCommunityToaDifference() {
@@ -367,6 +451,7 @@ export class RequestsSummaryComponent implements OnInit {
       ['Fiscal Year', 'TOA Difference'],
     ];
 
+    //add difference to data
     for (let i = 0; i < 5; i++) {
       let year:string = 'FY' + (totals[i].year - 2000);
       console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
