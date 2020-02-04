@@ -165,7 +165,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     }
   }
 
-  onAddNewProgram( event:any ) {
+  onAddProgram( event:any ) {
     this.onAddCtaEvent.emit(event);
   }
 }

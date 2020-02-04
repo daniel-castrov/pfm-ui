@@ -99,8 +99,6 @@ export class RequestsSummaryComponent implements OnInit {
     item2.id = "new-program";
     this.addOptions = [ item, item2 ];
 
-    this.toaChartCommunityStatus();
-
     //set up dropdown
     this.organizationService.getAll().subscribe(
         resp => {
@@ -209,9 +207,9 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   handleAdd(addEvent: any) {
-    if (addEvent.id === 'new-program') {
+    if (addEvent.action === 'new-program') {
       console.log('New program Event fired');
-    } else if (addEvent.id === 'previously-funded-program') {
+    } else if (addEvent.action === 'previously-funded-program') {
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
           resp => {

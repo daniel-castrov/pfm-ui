@@ -52,7 +52,7 @@ export class DatagridComponent implements OnInit {
 
   public handleAddDropdownCta( item:ListItem):void{
     if(item){
-      this.onAddCtaEvent.emit({gridApi: this.api, action: item.id});
+      this.onAddCtaEvent.emit({action: item.id});
     }
   }
 
