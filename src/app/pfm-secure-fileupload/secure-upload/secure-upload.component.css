@@ -55,10 +55,6 @@ label{
     margin-right: 5px;
 }
 
-.modal-footer{
-
-}
-
 .mybox{
     display: flex;
     flex-direction: row;
@@ -68,10 +64,16 @@ label{
     width: 100%;
 }
 
-.button-link{
-
+.action-buttons {
+    display: flex;
+    flex-grow: 1;
 }
 
-.pull-left{
-    width: 100%;
+.action-buttons > .btn {
+    margin: 0 !important;
+}
+
+.action-buttons > #btn-close-dialog {
+    margin-left: auto;
+    align-self: center;
 }

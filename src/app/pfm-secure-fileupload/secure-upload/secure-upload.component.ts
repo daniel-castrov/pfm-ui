@@ -8,47 +8,44 @@ import { FileMetaData } from '../../pfm-common-models/FileMetaData';
   templateUrl: './secure-upload.component.html',
   styleUrls: ['./secure-upload.component.css']
 })
-export class SecureUploadComponent implements OnInit{
-  @ViewChild('secureUploadTemplate', {static: false}) private secureUploadTemplate: TemplateRef<any>;
-	@Input() uploadTypeDisplay:string = "Files";
-	@Output() onFilesUploaded:EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
+export class SecureUploadComponent implements OnInit {
+  @ViewChild('secureUploadTemplate', { static: false }) private secureUploadTemplate: TemplateRef<any>;
+  @Input() uploadTypeDisplay: string = "Files";
+  @Output() onFilesUploaded: EventEmitter<FileMetaData> = new EventEmitter<FileMetaData>();
 
-  uploadInprogressFlag:boolean;
-  private fileMetaData:FileMetaData;
-	private url:string;
-	uploader:FileUploader;
-	hasBaseDropZoneOver:boolean;
-	response:string;
+  uploadInprogressFlag: boolean;
+  private fileMetaData: FileMetaData;
+  private url: string;
+  uploader: FileUploader;
+  hasBaseDropZoneOver: boolean;
+  response: string;
 
-	constructor(private appModel:AppModel) {
+  constructor(private appModel: AppModel) {
     this.url = "https://pfmdev1.pxalphaproject.com/pfm-server/library/uploadFile?area=pr";
-	}
-
-	public fileOverBase(e:any):void {
-		this.hasBaseDropZoneOver = e;
-	}
-
-	public cancel():void{
-	  this.onFilesUploaded.emit(null);
-	  setTimeout(()=>{this.init()});
   }
 
-  public isFileSelected():boolean{
-    if(this.uploader && this.uploader.queue && this.uploader.queue.length > 0){
-      return true;
-    }
-    return false;
+  public fileOverBase(e: any): void {
+    this.hasBaseDropZoneOver = e;
   }
 
-	ngOnInit(): void {
+  public cancel(): void {
+    this.onFilesUploaded.emit(null);
+    setTimeout(() => { this.init() });
+  }
+
+  public isFileSelected(): boolean {
+    return this.uploader && this.uploader.queue && this.uploader.queue.length > 0;
+  }
+
+  ngOnInit(): void {
     this.init();
-	}
+  }
 
-	private init():void{
+  private init(): void {
     const token = sessionStorage.getItem('auth_token');
     this.uploader = new FileUploader({
       url: this.url,
-      headers: [{name: 'Authorization', value: 'Bearer ' + token}]
+      headers: [{ name: 'Authorization', value: 'Bearer ' + token }]
     });
     this.uploader.onAfterAddingFile = (file) => {
       this.uploader.queue = [file];
@@ -57,16 +54,23 @@ export class SecureUploadComponent implements OnInit{
 
     this.hasBaseDropZoneOver = false;
     this.response = '';
-    this.uploader.response.subscribe( res => this.response = res );
-    this.uploader.onSuccessItem = (item, response, status, headers)=>{
+    this.uploader.response.subscribe(res => this.response = res);
+    this.uploader.onSuccessItem = (item, response, status, headers) => {
       let data = JSON.parse(response); //success server response
       this.fileMetaData = new FileMetaData();
       this.fileMetaData = data.result;
     },
-      this.uploader.onCompleteAll = ()=>{
+      this.uploader.onCompleteAll = () => {
         this.onFilesUploaded.emit(this.fileMetaData);
-        setTimeout(()=>{this.init()});
+        setTimeout(() => { this.init() });
       };
+  }
+
+  uploadFile() {
+    if (this.isFileSelected) {
+      this.uploadInprogressFlag = true;
+      this.uploader.uploadAll();
+    }
   }
 
 }
