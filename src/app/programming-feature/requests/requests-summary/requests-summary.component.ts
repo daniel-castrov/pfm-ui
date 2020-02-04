@@ -299,6 +299,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   handleToaChartSwitch( event: any ) {
+    console.log(event);
     if (event.action == 'Community Status') {
       this.toaChartCommunityStatus();
     }
@@ -317,7 +318,87 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   toaChartCommunityStatus() {
-    console.log('Community Status');
+    this.toaWidget.chartReady = false;
+    //set chart type
+    this.toaWidget.columnChart.chartType = 'ColumnChart';
+    //set options
+    this.toaWidget.columnChart.options = {
+      title : 'Community Status',
+      vAxis: {format: 'currency'},
+      isStacked: true,
+      legend: {position: 'top', maxLines: 2},
+      seriesType: 'bars',
+      series: {0: {type: 'line'}},
+      colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
+      }
+    };
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
+    //get user ID
+    //todo remove hard coding of userId
+    let userStr = "POM_Manager";
+    let userId = '5e387ccdea2ae326ae72baa3';
+
+    let rows:any = {};
+    for (let program of this.allPrograms) {
+      for (let i = 0; i < 5; i++){
+        let year = this.pomYear + i;
+        if(!rows[year]){
+          rows[year] = {approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0};
+        }
+        // total this program
+        let programTotal: number = 0;
+        for ( let line of program.fundingLines ) {
+          if ( !line.funds[ year ] ) {
+            programTotal = programTotal + 0;
+          }
+          else {
+            programTotal = programTotal + line.funds[ year ];
+          }
+        }
+        // place total in correct value.
+        if (program.responsibleRoleId == userId) {
+          if (program.programStatus == 'APPROVED') {
+            rows[year].approved = rows[year].approved + programTotal;
+          }
+          else if (program.programStatus == 'REJECTED') {
+            rows[year].rejected = rows[year].rejected + programTotal;
+          }
+          else if (program.programStatus == 'SAVED') {
+            rows[year].saved = rows[year].saved + programTotal;
+          }
+          else if (program.programStatus == 'OUTSTANDING') {
+            rows[year].outstanding = rows[year].outstanding + programTotal;
+          }
+        }
+        else {
+          rows[year].notMine = rows[year].notMine + programTotal;
+        }
+      }
+    }
+
+    //set data header
+    let data:any[] = [
+      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
+    ];
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (this.pomYear + i - 2000);
+      let toa:number = this.programmingModel.pom.communityToas[i].amount;
+      let approved = rows[this.pomYear + i].approved;
+      let rejected = rows[this.pomYear + i].rejected;
+      let saved = rows[this.pomYear + i].saved;
+      let outstanding = rows[this.pomYear + i].outstanding;
+      let notMine = rows[this.pomYear + i].notMine;
+      data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
+    }
+
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
   }
 
   toaChartCommunityToaDifference() {
@@ -327,8 +408,6 @@ export class RequestsSummaryComponent implements OnInit {
     //set options
     this.toaWidget.columnChart.options = {
       title: 'Community TOA Difference',
-      width: 200,
-      height: 200,
       vAxis: {format: 'currency'},
       legend: {position: 'none'},
       animation: {
@@ -337,7 +416,6 @@ export class RequestsSummaryComponent implements OnInit {
         startup: true
       }
     };
-    //set size
     let w: any = this.toaWidgetItem;
     this.toaWidget.onResize( w.width, w.height );
     //get data
@@ -367,6 +445,7 @@ export class RequestsSummaryComponent implements OnInit {
       ['Fiscal Year', 'TOA Difference'],
     ];
 
+    //add difference to data
     for (let i = 0; i < 5; i++) {
       let year:string = 'FY' + (totals[i].year - 2000);
       console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
