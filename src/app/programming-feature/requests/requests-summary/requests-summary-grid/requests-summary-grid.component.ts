@@ -66,7 +66,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                     minWidth: 100,
                     rowDrag: false,
                     cellClass: 'pfm-datagrid-numeric-class'
-                    + (i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : '',
+                    + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
                     valueGetter(params) {
                         return '$' + params.data.funds[params.colDef.field];
                     }
