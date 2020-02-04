@@ -15,34 +15,33 @@ import { MenuBarItem } from './pfm-coreui/models/MenuBarItem';
 })
 export class AppComponent implements OnInit {
 
-  sideNavState:boolean;
-  linkText:boolean;
-  isSideMenuOpen:boolean;
+  sideNavState: boolean;
+  linkText: boolean;
+  isSideMenuOpen: boolean;
 
-  constructor(public appModel:AppModel, private authService:AuthorizationService, private router:Router) {}
+  constructor(public appModel: AppModel, private authService: AuthorizationService, private router: Router) {}
 
-  onMenuToogle(newValue):void{
+  onMenuToogle(newValue): void {
     this.isSideMenuOpen = newValue;
   }
 
   ngOnInit() {
-    let json:string = sessionStorage.getItem("app_model");
+    const json: string = sessionStorage.getItem('app_model');
 
-    if(json){
-      let temp:AppModel = JSON.parse(json);
+    if (json) {
+      const temp: AppModel = JSON.parse(json);
       this.appModel.userDetails = temp.userDetails;
-      this.appModel.isUserSignedIn = this.authService.isAuthenticated()
-    }
-    else{
+      this.appModel.isUserSignedIn = this.authService.isAuthenticated();
+    } else {
       this.appModel.isUserSignedIn = false;
       this.appModel.userDetails = new UserDetailsModel();
-      this.appModel.userDetails.userRole = new UserRole([""]);
-      this.router.navigate(["signin"]);
+      this.appModel.userDetails.userRole = new UserRole(['']);
+      this.router.navigate(['signin']);
     }
   }
 
-  private buildSiteMenuItems():void{
-    let menuBarItems:MenuBarItem[] = [];
+  private buildSiteMenuItems(): void {
+    const menuBarItems: MenuBarItem[] = [];
 
   }
 }

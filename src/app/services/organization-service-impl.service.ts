@@ -8,7 +8,6 @@ import {Organization} from '../pfm-common-models/Organization';
 @Injectable({
   providedIn: 'root'
 })
-
 export class OrganizationServiceImpl extends OrganizationService {
 
   constructor(protected httpClient: HttpClient) {

@@ -7,6 +7,8 @@ import { SigninService } from './services/signin.service';
 import { ChooseCommunityComponent } from './choose-community/choose-community.component';
 import { SignOutComponent } from './sign-out/sign-out.component';
 import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
+import { CommunityService } from '../services/community-service';
+import { CommunityServiceImpl } from '../services/community-service-impl.service';
 
 
 @NgModule({
@@ -17,7 +19,7 @@ import { PfmCoreuiModule } from '../pfm-coreui/pfm-coreui.module';
     PfmCoreuiModule
   ],
   exports: [],
-  providers: [SigninService]
+  providers: [SigninService, {provide: CommunityService, useClass: CommunityServiceImpl}]
 
 })
 export class PfmAuthModuleModule { }

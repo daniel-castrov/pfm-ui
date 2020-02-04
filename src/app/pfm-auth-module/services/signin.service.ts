@@ -6,22 +6,21 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class SigninService extends BaseRestService{
+export class SigninService extends BaseRestService {
 
-  constructor(protected httpClient:HttpClient){
+  constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
 
-  public signIn():Observable<Object>{
-    return this.getFullResponse("blank");
+  public signIn(): Observable<object> {
+    return this.get('blank');
   }
 
-  public getUserDetails():Observable<Object>{
-    return this.get("mydetails");
+  public getUserDetails(): Observable<object> {
+    return this.get('mydetails');
   }
 
-  public getUserRoles():Observable<Object>{
-    return this.get("getroles");
+  public getUserRoles(): Observable<object> {
+    return this.get('getroles');
   }
-
 }
