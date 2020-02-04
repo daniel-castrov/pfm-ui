@@ -328,6 +328,7 @@ export class RequestsSummaryComponent implements OnInit {
       legend: {position: 'top', maxLines: 2},
       seriesType: 'bars',
       series: {0: {type: 'line'}},
+      color: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
       animation: {
         duration: 500,
         easing: 'out',
@@ -335,6 +336,7 @@ export class RequestsSummaryComponent implements OnInit {
       }
     };
     //get user ID
+    //todo remove hard coding of userId
     let userStr = "POM_Manager";
     let userId = '5e387ccdea2ae326ae72baa3';
 
