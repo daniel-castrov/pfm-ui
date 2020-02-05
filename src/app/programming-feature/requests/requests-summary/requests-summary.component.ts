@@ -46,7 +46,7 @@ export class RequestsSummaryComponent implements OnInit {
   showPreviousFundedProgramDialog: boolean;
   availablePrograms: ListItem[];
   orgs:Organization[];
-  allPrograms: any; // used for community chart
+  availableToaCharts: ListItem[];
 
   constructor( private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService, private mrdbService: MrdbService ) {
   }
@@ -109,7 +109,7 @@ export class RequestsSummaryComponent implements OnInit {
           showAllOrg.id = null;
           showAllOrg.abbreviation = 'Show All';
           const dropdownOptions: Organization[] = [ showAllOrg ];
-          this.availableOrgs = this.toListItem(dropdownOptions.concat(orgs));
+          this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
         },
         error => {
           this.dialogService.displayDebug( error );
@@ -166,7 +166,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   // Build dropdown list items
-  private toListItem(orgs:Organization[]):ListItem[]{
+  private toListItemOrgs(orgs:Organization[]):ListItem[]{
     let items:ListItem[] = [];
     for(let org of orgs){
       let item:ListItem = new ListItem();
@@ -181,14 +181,39 @@ export class RequestsSummaryComponent implements OnInit {
     return items;
   }
 
+  private toListItem(items:string[]):ListItem[]{
+    let list:ListItem[] = [];
+    for(let item of items){
+      let listItem:ListItem = new ListItem();
+      listItem.id = item;
+      listItem.name = item;
+      listItem.value = item;
+      list.push(listItem);
+    }
+    return list;
+  }
+
   // control view on selection from dropdown
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
     if ( this.selectedOrg.name !== 'Please select' ) {
       if ( this.programmingModel.pom.status !== 'CLOSED' ) {
         this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
-        // Get All PRs
-        this.getAllPrograms();
+        // Depending on organization selection change options visible and default chart shown
+        if (organization.id == 'Show All') {
+          let chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
+          this.availableToaCharts = this.toListItem(chartOptions);
+          setTimeout(()=>{
+            this.toaChartCommunityStatus();
+          }, 200);
+        }
+        else {
+          let chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
+          this.availableToaCharts = this.toListItem(chartOptions);
+          setTimeout(()=>{
+            this.toaChartOrganizationStatus();
+          }, 200);
+        }
       } else {
         this.programmingModelReady = false;
       }
@@ -280,16 +305,6 @@ export class RequestsSummaryComponent implements OnInit {
     return respRoleId;
   }
 
-  getAllPrograms(){
-    this.programmingService.getPRsForContainer(this.programmingModel.pom.workspaceId, null).subscribe(
-        resp => {
-          this.allPrograms = (resp as any).result;
-        },
-        error => {
-        this.dialogService.displayDebug(error);
-        });
-  }
-
   onGridDataChange(data:any):void{
     this.griddata = data;
   }
@@ -344,42 +359,45 @@ export class RequestsSummaryComponent implements OnInit {
     let userId = '5e387ccdea2ae326ae72baa3';
 
     let rows:any = {};
-    for (let program of this.allPrograms) {
-      for (let i = 0; i < 5; i++){
-        let year = this.pomYear + i;
-        if(!rows[year]){
-          rows[year] = {approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0};
-        }
-        // total this program
-        let programTotal: number = 0;
-        for ( let line of program.fundingLines ) {
-          if ( !line.funds[ year ] ) {
-            programTotal = programTotal + 0;
-          }
-          else {
-            programTotal = programTotal + line.funds[ year ];
-          }
-        }
-        // place total in correct value.
-        if (program.responsibleRoleId == userId) {
-          if (program.programStatus == 'APPROVED') {
-            rows[year].approved = rows[year].approved + programTotal;
-          }
-          else if (program.programStatus == 'REJECTED') {
-            rows[year].rejected = rows[year].rejected + programTotal;
-          }
-          else if (program.programStatus == 'SAVED') {
-            rows[year].saved = rows[year].saved + programTotal;
-          }
-          else if (program.programStatus == 'OUTSTANDING') {
-            rows[year].outstanding = rows[year].outstanding + programTotal;
-          }
-        }
-        else {
-          rows[year].notMine = rows[year].notMine + programTotal;
-        }
-      }
-    }
+
+
+    
+    // for (let program of this.allPrograms) {
+    //   for (let i = 0; i < 5; i++){
+    //     let year = this.pomYear + i;
+    //     if(!rows[year]){
+    //       rows[year] = {approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0};
+    //     }
+    //     // total this program
+    //     let programTotal: number = 0;
+    //     for ( let line of program.fundingLines ) {
+    //       if ( !line.funds[ year ] ) {
+    //         programTotal = programTotal + 0;
+    //       }
+    //       else {
+    //         programTotal = programTotal + line.funds[ year ];
+    //       }
+    //     }
+    //     // place total in correct value.
+    //     if (program.responsibleRoleId == userId) {
+    //       if (program.programStatus == 'APPROVED') {
+    //         rows[year].approved = rows[year].approved + programTotal;
+    //       }
+    //       else if (program.programStatus == 'REJECTED') {
+    //         rows[year].rejected = rows[year].rejected + programTotal;
+    //       }
+    //       else if (program.programStatus == 'SAVED') {
+    //         rows[year].saved = rows[year].saved + programTotal;
+    //       }
+    //       else if (program.programStatus == 'OUTSTANDING') {
+    //         rows[year].outstanding = rows[year].outstanding + programTotal;
+    //       }
+    //     }
+    //     else {
+    //       rows[year].notMine = rows[year].notMine + programTotal;
+    //     }
+    //   }
+    // }
 
     //set data header
     let data:any[] = [
@@ -421,25 +439,27 @@ export class RequestsSummaryComponent implements OnInit {
     //get data
     //calculate totals
     let totals:any[] = [];
-    for (let program of this.allPrograms) {
-      for (let i = 0; i < 5; i++){
-        if (!totals[i]) {
-          totals[i] = {year: (this.pomYear + i), amount: 0};
-        }
-        if (program.fundingLines) {
-          let programTotal:number = 0;
-          for (let line of program.fundingLines) {
-            if (!line.funds[this.pomYear + i]) {
-              programTotal = programTotal + 0;
-            }
-            else {
-              programTotal = programTotal + line.funds[this.pomYear + i];
-            }
-          }
-          totals[i].amount = totals[i].amount + programTotal;
-        }
-      }
-    }
+
+
+    // for (let program of this.allPrograms) {
+    //   for (let i = 0; i < 5; i++){
+    //     if (!totals[i]) {
+    //       totals[i] = {year: (this.pomYear + i), amount: 0};
+    //     }
+    //     if (program.fundingLines) {
+    //       let programTotal:number = 0;
+    //       for (let line of program.fundingLines) {
+    //         if (!line.funds[this.pomYear + i]) {
+    //           programTotal = programTotal + 0;
+    //         }
+    //         else {
+    //           programTotal = programTotal + line.funds[this.pomYear + i];
+    //         }
+    //       }
+    //       totals[i].amount = totals[i].amount + programTotal;
+    //     }
+    //   }
+    // }
     //set data
     let data:any = [
       ['Fiscal Year', 'TOA Difference'],
