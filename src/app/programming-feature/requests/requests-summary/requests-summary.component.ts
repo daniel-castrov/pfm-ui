@@ -203,16 +203,10 @@ export class RequestsSummaryComponent implements OnInit {
         if (organization.id == 'Show All') {
           let chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
           this.availableToaCharts = this.toListItem(chartOptions);
-          setTimeout(()=>{
-            this.toaChartCommunityStatus();
-          }, 200);
         }
         else {
           let chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
           this.availableToaCharts = this.toListItem(chartOptions);
-          setTimeout(()=>{
-            this.toaChartOrganizationStatus();
-          }, 200);
         }
       } else {
         this.programmingModelReady = false;
@@ -385,7 +379,33 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   toaChartOrganizationStatus() {
-    console.log('Organization Status');
+    console.log("Org status");
+    this.toaWidget.chartReady = false;
+    //set options
+    this.setStatusChartOptions();
+    this.toaWidget.columnChart.options.title = this.selectedOrg.name + ' Organization Status';
+    // get user Role
+    let userStr = "POM_Manager";
+    // get data from grid
+    let rows:any = this.calculateSummary(userStr);
+    //set data header
+    let data:any[] = [
+      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
+    ];
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (this.pomYear + i - 2000);
+      let toa:number = this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
+      let approved = rows[this.pomYear + i].approved;
+      let rejected = rows[this.pomYear + i].rejected;
+      let saved = rows[this.pomYear + i].saved;
+      let outstanding = rows[this.pomYear + i].outstanding;
+      let notMine = rows[this.pomYear + i].notMine;
+      data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
+    }
+    // set data to char and refresh
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
   }
 
   toaChartOrganizationToaDifference() {
