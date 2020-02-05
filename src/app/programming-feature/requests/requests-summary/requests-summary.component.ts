@@ -314,7 +314,6 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   handleToaChartSwitch( event: any ) {
-    console.log(event);
     if (event.action == 'Community Status') {
       this.toaChartCommunityStatus();
     }
@@ -334,34 +333,109 @@ export class RequestsSummaryComponent implements OnInit {
 
   toaChartCommunityStatus() {
     this.toaWidget.chartReady = false;
-
-    //set chart type
-    this.toaWidget.columnChart.chartType = 'ColumnChart';
-
     //set options
-    this.toaWidget.columnChart.options = {
-      title : 'Community Status',
-      vAxis: {format: 'currency'},
-      isStacked: true,
-      legend: {position: 'top', maxLines: 2},
-      seriesType: 'bars',
-      series: {0: {type: 'line'}},
-      colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
-      animation: {
-        duration: 500,
-        easing: 'out',
-        startup: true
-      }
-    };
-    let w: any = this.toaWidgetItem;
-    this.toaWidget.onResize( w.width, w.height );
-
+    this.setStatusChartOptions();
+    this.toaWidget.columnChart.options.title = 'Community Status';
     // get user Role
     let userStr = "POM_Manager";
-
     // get data from grid
+    let rows:any = this.calculateSummary(userStr);
+    //set data header
+    let data:any[] = [
+      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
+    ];
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (this.pomYear + i - 2000);
+      let toa:number = this.programmingModel.pom.communityToas[i].amount;
+      let approved = rows[this.pomYear + i].approved;
+      let rejected = rows[this.pomYear + i].rejected;
+      let saved = rows[this.pomYear + i].saved;
+      let outstanding = rows[this.pomYear + i].outstanding;
+      let notMine = rows[this.pomYear + i].notMine;
+      data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
+    }
+    // set data to char and refresh
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
+  }
+
+  toaChartCommunityToaDifference() {
+    this.toaWidget.chartReady = false;
+    // Set char options
+    this.setDifferenceChartOptions();
+    this.toaWidget.columnChart.options.title = 'Community TOA Difference';
+    // Calculate totals
+    let totals:any[] = this.calculateTotals();
+    // Set data header
+    let data:any = [
+      ['Fiscal Year', 'TOA Difference'],
+    ];
+    // Add difference to data
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (totals[i].year - 2000);
+      console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
+      let difference:number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
+      data.push([year, difference]);
+    }
+    // Set data to char and refresh
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
+  }
+
+  toaChartOrganizationStatus() {
+    console.log('Organization Status');
+  }
+
+  toaChartOrganizationToaDifference() {
+    this.toaWidget.chartReady = false;
+    // Set options
+    this.setDifferenceChartOptions();
+    this.toaWidget.columnChart.options.title = this.selectedOrg.name + ' TOA Difference';
+    // Calculate totals
+    let totals:any[] = this.calculateTotals();
+    // Set data header
+    let data:any = [
+      ['Fiscal Year', 'TOA Difference'],
+    ];
+    // Add difference to data
+    for (let i = 0; i < 5; i++) {
+      let year:string = 'FY' + (totals[i].year - 2000);
+      console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount);
+      let difference:number = totals[i].amount - this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
+      data.push([year, difference]);
+    }
+    // Set data to char and refresh
+    this.toaWidget.columnChart.dataTable = data;
+    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
+    this.toaWidget.chartReady = true;
+  }
+
+  toaChartFundingLineStatus() {
+    console.log('Funding Line Status');
+  }
+
+  // Used to calculate total funds per year
+  private calculateTotals():any[]{
+    let totals:any[] = [];
+    for (let row of this.requestsSummaryWidget.gridData) {
+      for (let i = 0; i < 5; i++){
+        let year = this.pomYear + i;
+        if (!totals[i]) {
+          totals[i] = {year: (year), amount: 0};
+        }
+        if (row.funds[this.pomYear + i]) {
+          totals[i].amount = totals[i].amount + row.funds[year];
+        }
+      }
+    }
+    return totals;
+  }
+
+  // Used to calculate summary data per year per status and user role
+  private calculateSummary(userStr:string):any{
     let rows:any = {};
-    console.log(this.requestsSummaryWidget.gridData);
     for (let row of this.requestsSummaryWidget.gridData) {
       for (let i = 0; i < 5; i++){
         let year = this.pomYear + i;
@@ -385,37 +459,16 @@ export class RequestsSummaryComponent implements OnInit {
         }
       }
     }
-
-    //set data header
-    let data:any[] = [
-      ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
-    ];
-    for (let i = 0; i < 5; i++) {
-      let year:string = 'FY' + (this.pomYear + i - 2000);
-      let toa:number = this.programmingModel.pom.communityToas[i].amount;
-      let approved = rows[this.pomYear + i].approved;
-      let rejected = rows[this.pomYear + i].rejected;
-      let saved = rows[this.pomYear + i].saved;
-      let outstanding = rows[this.pomYear + i].outstanding;
-      let notMine = rows[this.pomYear + i].notMine;
-      data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
-    }
-
-    // set data to char and refresh
-    this.toaWidget.columnChart.dataTable = data;
-    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
-    this.toaWidget.chartReady = true;
+    return rows;
   }
 
-  toaChartCommunityToaDifference() {
-    this.toaWidget.chartReady = false;
-
-    //set chart type
+  // Sets difference chart
+  private setDifferenceChartOptions(){
+    // Set chart type
     this.toaWidget.columnChart.chartType = 'ColumnChart';
-
-    //set options
+    // Set options
     this.toaWidget.columnChart.options = {
-      title: 'Community TOA Difference',
+      title: this.selectedOrg.name + ' TOA Difference',
       vAxis: {format: 'currency'},
       legend: {position: 'none'},
       animation: {
@@ -426,52 +479,26 @@ export class RequestsSummaryComponent implements OnInit {
     };
     let w: any = this.toaWidgetItem;
     this.toaWidget.onResize( w.width, w.height );
+  }
 
-    //get data
-    //calculate totals
-    let totals:any[] = [];
-    for (let row of this.requestsSummaryWidget.gridData) {
-      for (let i = 0; i < 5; i++){
-        let year = this.pomYear + i;
-        if (!totals[i]) {
-          totals[i] = {year: (year), amount: 0};
-        }
-        if (row.funds[this.pomYear + i]) {
-          totals[i].amount = totals[i].amount + row.funds[year];
-        }
+  private setStatusChartOptions(){
+    // Set chart type
+    this.toaWidget.columnChart.chartType = 'ColumnChart';
+    // Set Options
+    this.toaWidget.columnChart.options = {
+      vAxis: {format: 'currency'},
+      isStacked: true,
+      legend: {position: 'top', maxLines: 2},
+      seriesType: 'bars',
+      series: {0: {type: 'line'}},
+      colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
+      animation: {
+        duration: 500,
+        easing: 'out',
+        startup: true
       }
-    }
-
-    // set data header
-    let data:any = [
-      ['Fiscal Year', 'TOA Difference'],
-    ];
-
-    // add difference to data
-    for (let i = 0; i < 5; i++) {
-      let year:string = 'FY' + (totals[i].year - 2000);
-      console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
-      let difference:number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
-      data.push([year, difference]);
-    }
-
-    // set data to char and refresh
-    this.toaWidget.columnChart.dataTable = data;
-    this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
-    this.toaWidget.chartReady = true;
+    };
+    let w: any = this.toaWidgetItem;
+    this.toaWidget.onResize( w.width, w.height );
   }
-
-  toaChartOrganizationStatus() {
-    console.log('Organization Status');
-  }
-
-  toaChartOrganizationToaDifference() {
-    console.log('Organization TOA Difference');
-  }
-
-  toaChartFundingLineStatus() {
-    console.log('Funding Line Status');
-  }
-
-
 }
