@@ -334,8 +334,10 @@ export class RequestsSummaryComponent implements OnInit {
 
   toaChartCommunityStatus() {
     this.toaWidget.chartReady = false;
+
     //set chart type
     this.toaWidget.columnChart.chartType = 'ColumnChart';
+
     //set options
     this.toaWidget.columnChart.options = {
       title : 'Community Status',
@@ -353,51 +355,36 @@ export class RequestsSummaryComponent implements OnInit {
     };
     let w: any = this.toaWidgetItem;
     this.toaWidget.onResize( w.width, w.height );
-    //get user ID
-    //todo remove hard coding of userId
+
+    // get user Role
     let userStr = "POM_Manager";
-    let userId = '5e387ccdea2ae326ae72baa3';
 
+    // get data from grid
     let rows:any = {};
-
-
-    
-    // for (let program of this.allPrograms) {
-    //   for (let i = 0; i < 5; i++){
-    //     let year = this.pomYear + i;
-    //     if(!rows[year]){
-    //       rows[year] = {approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0};
-    //     }
-    //     // total this program
-    //     let programTotal: number = 0;
-    //     for ( let line of program.fundingLines ) {
-    //       if ( !line.funds[ year ] ) {
-    //         programTotal = programTotal + 0;
-    //       }
-    //       else {
-    //         programTotal = programTotal + line.funds[ year ];
-    //       }
-    //     }
-    //     // place total in correct value.
-    //     if (program.responsibleRoleId == userId) {
-    //       if (program.programStatus == 'APPROVED') {
-    //         rows[year].approved = rows[year].approved + programTotal;
-    //       }
-    //       else if (program.programStatus == 'REJECTED') {
-    //         rows[year].rejected = rows[year].rejected + programTotal;
-    //       }
-    //       else if (program.programStatus == 'SAVED') {
-    //         rows[year].saved = rows[year].saved + programTotal;
-    //       }
-    //       else if (program.programStatus == 'OUTSTANDING') {
-    //         rows[year].outstanding = rows[year].outstanding + programTotal;
-    //       }
-    //     }
-    //     else {
-    //       rows[year].notMine = rows[year].notMine + programTotal;
-    //     }
-    //   }
-    // }
+    console.log(this.requestsSummaryWidget.gridData);
+    for (let row of this.requestsSummaryWidget.gridData) {
+      for (let i = 0; i < 5; i++){
+        let year = this.pomYear + i;
+        if ( !rows[ year ] ) {
+          rows[ year ] = { approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0 };
+        }
+        let programTotal: number = row.funds[year];
+        // place total in correct value.
+        if ( row.assignedTo == userStr ) {
+          if ( row.status == 'APPROVED' ) {
+            rows[ year ].approved = rows[ year ].approved + programTotal;
+          } else if ( row.status == 'REJECTED' ) {
+            rows[ year ].rejected = rows[ year ].rejected + programTotal;
+          } else if ( row.status == 'SAVED' ) {
+            rows[ year ].saved = rows[ year ].saved + programTotal;
+          } else if ( row.status == 'OUTSTANDING' ) {
+            rows[ year ].outstanding = rows[ year ].outstanding + programTotal;
+          }
+        } else {
+          rows[ year ].notMine = rows[ year ].notMine + programTotal;
+        }
+      }
+    }
 
     //set data header
     let data:any[] = [
@@ -414,6 +401,7 @@ export class RequestsSummaryComponent implements OnInit {
       data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
     }
 
+    // set data to char and refresh
     this.toaWidget.columnChart.dataTable = data;
     this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
     this.toaWidget.chartReady = true;
