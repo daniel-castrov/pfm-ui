@@ -409,8 +409,10 @@ export class RequestsSummaryComponent implements OnInit {
 
   toaChartCommunityToaDifference() {
     this.toaWidget.chartReady = false;
+
     //set chart type
     this.toaWidget.columnChart.chartType = 'ColumnChart';
+
     //set options
     this.toaWidget.columnChart.options = {
       title: 'Community TOA Difference',
@@ -424,36 +426,28 @@ export class RequestsSummaryComponent implements OnInit {
     };
     let w: any = this.toaWidgetItem;
     this.toaWidget.onResize( w.width, w.height );
+
     //get data
     //calculate totals
     let totals:any[] = [];
+    for (let row of this.requestsSummaryWidget.gridData) {
+      for (let i = 0; i < 5; i++){
+        let year = this.pomYear + i;
+        if (!totals[i]) {
+          totals[i] = {year: (year), amount: 0};
+        }
+        if (row.funds[this.pomYear + i]) {
+          totals[i].amount = totals[i].amount + row.funds[year];
+        }
+      }
+    }
 
-
-    // for (let program of this.allPrograms) {
-    //   for (let i = 0; i < 5; i++){
-    //     if (!totals[i]) {
-    //       totals[i] = {year: (this.pomYear + i), amount: 0};
-    //     }
-    //     if (program.fundingLines) {
-    //       let programTotal:number = 0;
-    //       for (let line of program.fundingLines) {
-    //         if (!line.funds[this.pomYear + i]) {
-    //           programTotal = programTotal + 0;
-    //         }
-    //         else {
-    //           programTotal = programTotal + line.funds[this.pomYear + i];
-    //         }
-    //       }
-    //       totals[i].amount = totals[i].amount + programTotal;
-    //     }
-    //   }
-    // }
-    //set data
+    // set data header
     let data:any = [
       ['Fiscal Year', 'TOA Difference'],
     ];
 
-    //add difference to data
+    // add difference to data
     for (let i = 0; i < 5; i++) {
       let year:string = 'FY' + (totals[i].year - 2000);
       console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
@@ -461,6 +455,7 @@ export class RequestsSummaryComponent implements OnInit {
       data.push([year, difference]);
     }
 
+    // set data to char and refresh
     this.toaWidget.columnChart.dataTable = data;
     this.toaWidget.columnChart = Object.assign({}, this.toaWidget.columnChart);
     this.toaWidget.chartReady = true;
