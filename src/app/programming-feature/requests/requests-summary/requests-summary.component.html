@@ -21,7 +21,7 @@
 
         <gridster-item #toaWidetItem [item]="dashboard[1]">
             <div class="gridster-item-content">
-                <pfm-requests-summary-toa-widget #toaWidget (onChartSwitchEvent)="handleToaChartSwitch($event)" [griddata]="griddata"></pfm-requests-summary-toa-widget>
+                <pfm-requests-summary-toa-widget #toaWidget (onChartSwitchEvent)="handleToaChartSwitch($event)" [availableCharts]="availableToaCharts" [griddata]="griddata"></pfm-requests-summary-toa-widget>
             </div>
         </gridster-item>
     </gridster>
