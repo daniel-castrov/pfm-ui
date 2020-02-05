@@ -59,6 +59,15 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.chartReady = false;
+    setTimeout(()=>{
+      if (this.availableCharts[0].name == 'Community Status') {
+        this.onChartSwitchEvent.emit({action: 'Community Status'});
+      }
+      else if (this.availableCharts[0].name == 'Organization Status') {
+        this.onChartSwitchEvent.emit({action: 'Organization Status'});
+      }
+    }, 200);
+
     this.defaultChart = this.availableCharts[0];
   }
 
