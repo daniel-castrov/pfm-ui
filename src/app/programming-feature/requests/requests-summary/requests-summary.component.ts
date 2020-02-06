@@ -538,7 +538,7 @@ export class RequestsSummaryComponent implements OnInit {
     this.toaWidget.columnChart.options = {
       vAxis: { format: 'currency' },
       isStacked: true,
-      legend: { position: 'top', maxLines: 2 },
+      chartArea:{left:80,top:30,bottom:20,right:170,width:'100%',height:'100%'},
       seriesType: 'bars',
       series: { 0: { type: 'line' } },
       colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
