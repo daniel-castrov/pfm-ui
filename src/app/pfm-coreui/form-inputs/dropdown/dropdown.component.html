@@ -34,6 +34,23 @@
     </div>
 </ng-container>
 
+<ng-container *ngIf='type == "longLabelDropdown"'>
+  <div class="pfm-dropdown-section">
+    <div class="pfm-dropdown-long">
+      <select
+          (ngModelChange)="handleSelectionChanged($event)"
+          [name]="id"
+          [id]="id"
+          class="form-control"
+          [(ngModel)]="selectedItem"
+          [disabled]="attachmentsDisabled">
+        <option disabled value="{{prompt}}">{{prompt}}</option>
+        <option *ngFor="let option of options" [value]="option[fieldName]">{{ option[fieldLabel] }}</option>
+      </select>
+    </div>
+  </div>
+</ng-container>
+
 <ng-container *ngIf='type == "iconDropdown"'>
     <div [id]="id" ngbDropdown container="body" class="d-inline-block">
         <span class="icon-dropown" *ngIf="iconName" [title]="title">
