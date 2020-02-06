@@ -95,7 +95,6 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   onChartSelected( chartType: any) {
     if (chartType) {
-      console.log(chartType);
       this.defaultChart = chartType;
       if (chartType.name == 'Community Status') {
         this.toaChartCommunityStatus();
@@ -159,7 +158,6 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     // Add difference to data
     for (let i = 0; i < 5; i++) {
       let year: string = 'FY' + (totals[i].year - 2000);
-      console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
       let difference: number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
       data.push([year, difference]);
     }
@@ -170,7 +168,6 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   }
 
   toaChartOrganizationStatus() {
-    console.log("Org status");
     this.chartReady = false;
     //set options
     this.setStatusChartOptions();
@@ -213,7 +210,6 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     // Add difference to data
     for (let i = 0; i < 5; i++) {
       let year: string = 'FY' + (totals[i].year - 2000);
-      console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount);
       let difference: number = totals[i].amount - this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
       data.push([year, difference]);
     }
