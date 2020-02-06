@@ -87,7 +87,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     }
 
     currencyFormatter(params) {
-        return '$' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+        return '$ ' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     }
 
     handleCellAction(cellAction: DataGridMessage): void {
