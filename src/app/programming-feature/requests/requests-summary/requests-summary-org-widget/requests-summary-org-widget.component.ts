@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
+import { Component, Input } from '@angular/core';
 import { ProgramSummary } from '../../../models/ProgramSummary';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { Organization } from 'src/app/pfm-common-models/Organization';
-import { OrganizationServiceImpl } from 'src/app/services/organization-service-impl.service';
 import { Role } from 'src/app/pfm-common-models/Role';
+import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
 //import { runInThisContext } from 'vm';
 
 @Component({
@@ -12,25 +11,25 @@ import { Role } from 'src/app/pfm-common-models/Role';
   templateUrl: './requests-summary-org-widget.component.html',
   styleUrls: ['./requests-summary-org-widget.component.scss']
 })
-export class RequestsSummaryOrgWidgetComponent  {
+export class RequestsSummaryOrgWidgetComponent {
 
-  @Input() griddata:ProgramSummary[];
-  @Input() orgs:Organization[];
-  @Input() roles:Role[];
+  @Input() griddata: ProgramSummary[];
+  @Input() orgs: Organization[];
+  @Input() roles: Role[];
 
-  chartReady:boolean;
+  chartReady: boolean;
   availableCharts: ListItem[];
   defaultChart: ListItem;
 
-  public treeMapChart: any =  {
+  public treeMapChart: any = {
     chartType: 'TreeMap',
     dataTable: [
       ['Program', 'Organization', 'Health', 'Demands'],
-      ['Organization', null,  0,  0],
-      ['JSTO-CBD', 'Organization',  0,  0],
-      ['JPEO-CBRND', 'Organization',  0,  0],
-      ['JRO-CBD', 'Organization',  0, 0],
-      ['PAIDO-CBD', 'Organization',  0,  0],
+      ['Organization', null, 0, 0],
+      ['JSTO-CBD', 'Organization', 0, 0],
+      ['JPEO-CBRND', 'Organization', 0, 0],
+      ['JRO-CBD', 'Organization', 0, 0],
+      ['PAIDO-CBD', 'Organization', 0, 0],
       ['DUS', 'Organization', 0, 0],
       ['SPU', 'JSTO-CBD', 100, 50],
       ['LDN', 'JSTO-CBD', 10, 0],
@@ -47,7 +46,7 @@ export class RequestsSummaryOrgWidgetComponent  {
       fontColor: 'black',
 
       //showScale: true,
-      showTooltips:true,
+      showTooltips: true,
       width: 200,
       height: 200,
       animation: {
@@ -58,17 +57,18 @@ export class RequestsSummaryOrgWidgetComponent  {
     }
   };
 
-  constructor() { }
+  constructor(private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) { }
 
-  onResize(width:number, height:number):void{
+  onResize(width: number, height: number): void {
     this.chartReady = false;
 
     this.treeMapChart.options.width = width;
     this.treeMapChart.options.height = height - 40;
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.chartReady = true;
-      this.chartOrganization();
+      this.loadPreviousSelection();
+      this.chartSelected(this.defaultChart);
     }, 200);
   }
 
@@ -76,10 +76,21 @@ export class RequestsSummaryOrgWidgetComponent  {
     let chartOptions: string[] = ['Organization', 'BA Line', 'Program Status'];
     this.availableCharts = this.toListItem(chartOptions);
     this.defaultChart = this.availableCharts[0];
-
   }
 
-  public chartSelected(chartType:any){
+  loadPreviousSelection() {
+    const previousOrganizationWidget = this.requestSummaryNavigationHistoryService.getSelectedOrganizationWidget();
+    if (previousOrganizationWidget) {
+      const currentOrganizationWidget = this.availableCharts
+        .find(chart => chart.id === previousOrganizationWidget);
+      if (currentOrganizationWidget) {
+        this.defaultChart = currentOrganizationWidget;
+      }
+    }
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedOrganizationWidget: this.defaultChart.id });
+  }
+
+  public chartSelected(chartType: any) {
     if (chartType.id === "Organization") {
       //change to org
       this.defaultChart = this.availableCharts[0];
@@ -95,9 +106,10 @@ export class RequestsSummaryOrgWidgetComponent  {
       this.defaultChart = this.availableCharts[2];
       this.chartProgramStatus();
     }
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedOrganizationWidget: this.defaultChart.id });
   }
 
-  private chartOrganization(){
+  private chartOrganization() {
     //set up Organization tree structure
 
     /*let organizationTable = [
@@ -117,18 +129,18 @@ export class RequestsSummaryOrgWidgetComponent  {
     ];*/
 
     //load data into chart
-    let orgDataTable:any;
+    let orgDataTable: any;
 
     orgDataTable = [];
     orgDataTable.push(['Program', 'Organization', 'Health', 'Demands']);
-    orgDataTable.push(['Organization', null,  0,  0]);
-    this.orgs.forEach(org =>{
-      if (this.hasOrgData(org.id)){
-        orgDataTable.push([org.abbreviation,'Organization',0,0]);
+    orgDataTable.push(['Organization', null, 0, 0]);
+    this.orgs.forEach(org => {
+      if (this.hasOrgData(org.id)) {
+        orgDataTable.push([org.abbreviation, 'Organization', 0, 0]);
       }
     });
 
-    var toltaltfunding :number = 0;
+    var toltaltfunding: number = 0;
     if (this.griddata) {
       this.griddata.forEach(ps => {
         toltaltfunding = toltaltfunding + ps.fundsTotal;
@@ -136,7 +148,7 @@ export class RequestsSummaryOrgWidgetComponent  {
 
       this.griddata.forEach(ps => {
         let orgName = this.getOrgName(ps.organiztionId);
-        orgDataTable.push([ps.programName,orgName,((ps.fundsTotal/toltaltfunding)*100),this.getOrgColors(orgName)]);
+        orgDataTable.push([ps.programName, orgName, ((ps.fundsTotal / toltaltfunding) * 100), this.getOrgColors(orgName)]);
       });
       //set data to chart
       this.treeMapChart.dataTable = orgDataTable; //organizationTable;
@@ -144,7 +156,7 @@ export class RequestsSummaryOrgWidgetComponent  {
     }
   }
 
-  private chartBALine(){
+  private chartBALine() {
     //set up BA Line tree structure
     let lineTable = [
       ['Program', 'Organization', 'Health', 'Demands'],
@@ -171,80 +183,82 @@ export class RequestsSummaryOrgWidgetComponent  {
 
     //set data to chart
     this.treeMapChart.dataTable = lineTable;
-    this.treeMapChart.component.draw();
+    setTimeout(() => {
+      this.treeMapChart.component.draw();
+    }, 0);
+    
   }
 
-  private chartProgramStatus(){
+  private chartProgramStatus() {
     //set up Status tree structure
-   /*
-    let statusTable = [
-      ['Program', 'Program Status', 'Health', 'Demands'],
-      ['Program Status', null,  0,  0],
-      ['pfm', 'Program Status',  0,  0],
-      ['pfm1', 'Program Status',  0,  0],
-      ['pfm2', 'Program Status',  0,  0],
-      ['OUTSTANDING', 'pfm', 50, 100],
-      ['saved', 'pfm', 30, 40],
-      ['approved', 'pfm', 50, 20]
-    ];
-    */
+    /*
+     let statusTable = [
+       ['Program', 'Program Status', 'Health', 'Demands'],
+       ['Program Status', null,  0,  0],
+       ['pfm', 'Program Status',  0,  0],
+       ['pfm1', 'Program Status',  0,  0],
+       ['pfm2', 'Program Status',  0,  0],
+       ['OUTSTANDING', 'pfm', 50, 100],
+       ['saved', 'pfm', 30, 40],
+       ['approved', 'pfm', 50, 20]
+     ];
+     */
 
 
 
-   let statusTable:any;
+    let statusTable: any;
 
-   statusTable = [];
-   statusTable.push(['Program', 'Program Status', 'Health', 'Demands']);
-   statusTable.push(['Program Status', null,  0,  0]);
+    statusTable = [];
+    statusTable.push(['Program', 'Program Status', 'Health', 'Demands']);
+    statusTable.push(['Program Status', null, 0, 0]);
 
-   //statusTable.push([ 'Outstanding','Program Status',0,0]);
-   /*this.roles.forEach(role =>{
-        let roleacrynm = this.getRoleAcrynm(role.name);
-       statusTable.push([ roleacrynm,'Program Status',0,0]);
-   });
-   */
-   var toltalNoOfPrograms :number = this.griddata.length;
-   if (this.griddata.length > 0) {
-     let assignedTo = this.griddata[0].assignedTo;
-     let roleacrynm = this.getRoleAcrynm(assignedTo);
-
-     // get the count for each of the status
-     let approvedcount:number=0,savedcount:number =0;
-     let outstandingcount:number=0,rejectedcount:number = 0;
-
-    this.griddata.forEach(ps => {
-      if (ps.assignedTo == assignedTo){
-        switch (ps.status.toLowerCase())
-        {
-          case 'approved':
-            approvedcount = approvedcount + 1;
-            break;
-          case 'rejected':
-            rejectedcount = rejectedcount + 1;
-            break;
-          case 'saved':
-            savedcount = savedcount + 1;
-            break;
-          case 'outstanding':
-            outstandingcount = outstandingcount + 1;
-            break;
-        }
-      }
+    //statusTable.push([ 'Outstanding','Program Status',0,0]);
+    /*this.roles.forEach(role =>{
+         let roleacrynm = this.getRoleAcrynm(role.name);
+        statusTable.push([ roleacrynm,'Program Status',0,0]);
     });
+    */
+    var toltalNoOfPrograms: number = this.griddata.length;
+    if (this.griddata.length > 0) {
+      let assignedTo = this.griddata[0].assignedTo;
+      let roleacrynm = this.getRoleAcrynm(assignedTo);
 
-    let outstanding = ((outstandingcount * 100)/toltalNoOfPrograms);
-    let saved = ((savedcount * 100)/toltalNoOfPrograms);
-    let rejected = ((rejectedcount * 100)/toltalNoOfPrograms);
-    let approved = ((approvedcount * 100)/toltalNoOfPrograms);
+      // get the count for each of the status
+      let approvedcount: number = 0, savedcount: number = 0;
+      let outstandingcount: number = 0, rejectedcount: number = 0;
 
-    //assignedTo = assignedTo.replace('_',' ');
-    statusTable.push([ roleacrynm + ' : Outstanding','Program Status',outstanding,100]);
-    statusTable.push([ roleacrynm + ' : Saved','Program Status',saved,50]);
-    statusTable.push([ roleacrynm + ' : Approved','Program Status',approved,70]);
-    statusTable.push([ roleacrynm + ' : Rejected','Program Status',rejected,10]);
-   }
+      this.griddata.forEach(ps => {
+        if (ps.assignedTo == assignedTo) {
+          switch (ps.status.toLowerCase()) {
+            case 'approved':
+              approvedcount = approvedcount + 1;
+              break;
+            case 'rejected':
+              rejectedcount = rejectedcount + 1;
+              break;
+            case 'saved':
+              savedcount = savedcount + 1;
+              break;
+            case 'outstanding':
+              outstandingcount = outstandingcount + 1;
+              break;
+          }
+        }
+      });
 
-   console.log(JSON.stringify(statusTable));
+      let outstanding = ((outstandingcount * 100) / toltalNoOfPrograms);
+      let saved = ((savedcount * 100) / toltalNoOfPrograms);
+      let rejected = ((rejectedcount * 100) / toltalNoOfPrograms);
+      let approved = ((approvedcount * 100) / toltalNoOfPrograms);
+
+      //assignedTo = assignedTo.replace('_',' ');
+      statusTable.push([roleacrynm + ' : Outstanding', 'Program Status', outstanding, 100]);
+      statusTable.push([roleacrynm + ' : Saved', 'Program Status', saved, 50]);
+      statusTable.push([roleacrynm + ' : Approved', 'Program Status', approved, 70]);
+      statusTable.push([roleacrynm + ' : Rejected', 'Program Status', rejected, 10]);
+    }
+
+    console.log(JSON.stringify(statusTable));
     //load data into chart
 
     //set data to chart
@@ -254,10 +268,10 @@ export class RequestsSummaryOrgWidgetComponent  {
 
   }
 
-  private toListItem(years:string[]):ListItem[]{
-    let items:ListItem[] = [];
-    for(let year of years){
-      let item:ListItem = new ListItem();
+  private toListItem(years: string[]): ListItem[] {
+    let items: ListItem[] = [];
+    for (let year of years) {
+      let item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
       item.value = year;
@@ -266,10 +280,10 @@ export class RequestsSummaryOrgWidgetComponent  {
     return items;
   }
 
-  getOrgName(orgId:string):string{
+  getOrgName(orgId: string): string {
     var orgName = "";
-    for(let org of this.orgs){
-      if (org.id == orgId){
+    for (let org of this.orgs) {
+      if (org.id == orgId) {
         orgName = org.abbreviation;
         break;
       }
@@ -277,10 +291,10 @@ export class RequestsSummaryOrgWidgetComponent  {
     return orgName;
   }
 
-  hasOrgData(orgId:string):boolean{
-    let hasData:boolean = false;
+  hasOrgData(orgId: string): boolean {
+    let hasData: boolean = false;
     if (this.griddata) {
-      for( let ps of this.griddata) {
+      for (let ps of this.griddata) {
         if (ps.organiztionId == orgId) {
           hasData = true;
           break;
@@ -290,37 +304,36 @@ export class RequestsSummaryOrgWidgetComponent  {
     return hasData;
   }
 
-  getOrgColors(orgName:string):string{
-    let colorcode:string;
+  getOrgColors(orgName: string): string {
+    let colorcode: string;
     let orgcolors = []
-    orgcolors["PAIO"] ="60";
-    orgcolors["DUSA"] ="0";
-    orgcolors["JSTO"] ="40";
-    orgcolors["JPEO"] ="10";
-    orgcolors["JRO"] ="90";
+    orgcolors["PAIO"] = "60";
+    orgcolors["DUSA"] = "0";
+    orgcolors["JSTO"] = "40";
+    orgcolors["JPEO"] = "10";
+    orgcolors["JRO"] = "90";
 
     orgName = orgName.split('-')[0];
     colorcode = orgcolors[orgName];
     return colorcode;
   }
 
-  getRoleAcrynm(role:string):string{
-    let acrynm:string ='';
-      role = role.replace('_',' ');
-      let names:string[] = role.split(' ');
-      if (names.length == 1){
-        acrynm = role;
-      }
-      else
-      {
-        names.forEach(nm => {
-          if(nm.indexOf('POM') != -1)
-            acrynm = acrynm + 'PM';
-          else
-            acrynm = acrynm + nm.substr(0,1);
-        });
-      }
-      console.log( role + ' : ' + acrynm);
-      return acrynm;
+  getRoleAcrynm(role: string): string {
+    let acrynm: string = '';
+    role = role.replace('_', ' ');
+    let names: string[] = role.split(' ');
+    if (names.length == 1) {
+      acrynm = role;
     }
+    else {
+      names.forEach(nm => {
+        if (nm.indexOf('POM') != -1)
+          acrynm = acrynm + 'PM';
+        else
+          acrynm = acrynm + nm.substr(0, 1);
+      });
+    }
+    console.log(role + ' : ' + acrynm);
+    return acrynm;
+  }
 }

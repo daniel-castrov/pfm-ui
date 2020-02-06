@@ -9,14 +9,14 @@ import { ProgrammingService } from '../../services/programming-service';
 import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
 import { ListItem } from '../../../pfm-common-models/ListItem';
-import {RoleService} from '../../../services/role-service';
+import { RoleService } from '../../../services/role-service';
 import { OrganizationService } from '../../../services/organization-service';
 import { Role } from '../../../pfm-common-models/Role';
 import { Organization } from '../../../pfm-common-models/Organization';
 import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-summary-grid.component';
 import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
-import { esLocale } from 'ngx-bootstrap';
+import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 
 
 @Component({
@@ -25,17 +25,17 @@ import { esLocale } from 'ngx-bootstrap';
   styleUrls: ['./requests-summary.component.scss']
 })
 export class RequestsSummaryComponent implements OnInit {
-  @ViewChild( 'toaWidetItem', { static: false } ) toaWidgetItem: ElementRef;
-  @ViewChild( RequestsSummaryToaWidgetComponent, { static: false } ) toaWidget: RequestsSummaryToaWidgetComponent;
+  @ViewChild('toaWidetItem', { static: false }) toaWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryToaWidgetComponent, { static: false }) toaWidget: RequestsSummaryToaWidgetComponent;
 
-  @ViewChild( 'orgWidetItem', { static: false } ) orgWidgetItem: ElementRef;
-  @ViewChild( RequestsSummaryOrgWidgetComponent, { static: false } ) orgWidget: RequestsSummaryOrgWidgetComponent;
+  @ViewChild('orgWidetItem', { static: false }) orgWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryOrgWidgetComponent, { static: false }) orgWidget: RequestsSummaryOrgWidgetComponent;
 
-  @ViewChild( RequestsSummaryGridComponent, {static: false}) requestsSummaryWidget: RequestsSummaryGridComponent;
+  @ViewChild(RequestsSummaryGridComponent, { static: false }) requestsSummaryWidget: RequestsSummaryGridComponent;
 
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];
-  selectedOrg: ListItem = {id: 'Please select', name: 'Please select', value: 'Please select', isSelected: false, rawData: 'Please select'};
+  selectedOrg: ListItem = { id: 'Please select', name: 'Please select', value: 'Please select', isSelected: false, rawData: 'Please select' };
   programmingModelReady: boolean;
   pomDisplayYear: string;
   pomYear: number;
@@ -45,10 +45,18 @@ export class RequestsSummaryComponent implements OnInit {
   dashboard: Array<GridsterItem>;
   showPreviousFundedProgramDialog: boolean;
   availablePrograms: ListItem[];
-  orgs:Organization[];
+  orgs: Organization[];
   availableToaCharts: ListItem[];
 
-  constructor( private programmingModel: ProgrammingModel, private pomService: PomService, private programmingService: ProgrammingService, private roleService: RoleService, private dashboardService: DashboardMockService, private dialogService: DialogService, private organizationService: OrganizationService, private mrdbService: MrdbService ) {
+  constructor(private programmingModel: ProgrammingModel,
+    private pomService: PomService,
+    private programmingService: ProgrammingService,
+    private roleService: RoleService,
+    private dashboardService: DashboardMockService,
+    private dialogService: DialogService,
+    private organizationService: OrganizationService,
+    private mrdbService: MrdbService,
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) {
   }
 
   ngOnInit() {
@@ -57,13 +65,13 @@ export class RequestsSummaryComponent implements OnInit {
       maxCols: 8,
       minRows: 8,
       maxRows: 8,
-      itemResizeCallback: ( event ) => {
-        if ( event.id === "toa-widget" ) {
+      itemResizeCallback: (event) => {
+        if (event.id === "toa-widget") {
           let w: any = this.toaWidgetItem;
-          this.toaWidget.onResize( w.width, w.height );
-        } else if ( event.id === "org-widget" ) {
+          this.toaWidget.onResize(w.width, w.height);
+        } else if (event.id === "org-widget") {
           let w: any = this.orgWidgetItem;
-          this.orgWidget.onResize( w.width, w.height );
+          this.orgWidget.onResize(w.width, w.height);
         }
 
         this.saveWidgetLayout();
@@ -80,13 +88,13 @@ export class RequestsSummaryComponent implements OnInit {
     };
 
     //defaults
-    this.dashboard = [ { x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, {
+    this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, {
       x: 0,
       y: 0,
       cols: 4,
       rows: 8,
       id: "toa-widget"
-    } ];
+    }];
 
     // Populate dropdown options
     let item: ListItem = new ListItem();
@@ -97,54 +105,79 @@ export class RequestsSummaryComponent implements OnInit {
     item2.name = "New Program";
     item2.value = "new-program";
     item2.id = "new-program";
-    this.addOptions = [ item, item2 ];
-
-    //set up dropdown
-    this.organizationService.getAll().subscribe(
-        resp => {
-          const orgs = ( resp as any ).result;
-          const showAllOrg = new Organization();
-          console.log("Organizations:"+orgs);
-          this.orgs = orgs;
-          showAllOrg.id = null;
-          showAllOrg.abbreviation = 'Show All';
-          const dropdownOptions: Organization[] = [ showAllOrg ];
-          this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-        },
-        error => {
-          this.dialogService.displayDebug( error );
-        });
+    this.addOptions = [item, item2];
 
     // Get latest POM
     this.pomService.getLatestPom().subscribe(
-        resp => {
-          this.programmingModel.pom = (resp as any).result;
-          if ( this.programmingModel.pom.status !== 'CLOSED' ) {
-            this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
-            this.pomYear = this.programmingModel.pom.fy;
-          }
-        },
-        error => {
-          this.dialogService.displayDebug( error );
-        } );
+      resp => {
+        this.programmingModel.pom = (resp as any).result;
+        if (this.programmingModel.pom.status !== 'CLOSED') {
+          this.pomDisplayYear = this.programmingModel.pom.fy.toString().substr(2);
+          this.pomYear = this.programmingModel.pom.fy;
+        }
+        this.setupDropDown();
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      });
 
     this.roleService.getMap().subscribe(
-        resp => {
-          this.programmingModel.roles = resp as Map<string, Role>;
-        },
-        error => {
-          this.dialogService.displayDebug(error);
-        });
+      resp => {
+        this.programmingModel.roles = resp as Map<string, Role>;
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      });
+
   }
 
-  private getPreferences():void{
+  setupDropDown() {
+    this.organizationService.getAll().subscribe(
+      resp => {
+        const orgs = (resp as any).result;
+        const showAllOrg = new Organization();
+        console.log("Organizations:" + orgs);
+        this.orgs = orgs;
+        showAllOrg.id = null;
+        showAllOrg.abbreviation = 'Show All';
+        const dropdownOptions: Organization[] = [showAllOrg];
+        this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
+        this.loadPreviousSelection();
+      },
+      error => {
+        this.dialogService.displayDebug(error);
+      });
+  }
+
+  loadPreviousSelection() {
+    const selectedOrganization = this.requestSummaryNavigationHistoryService.getSelectedOrganization();
+    if (selectedOrganization) {
+      const isShowAll = selectedOrganization.toLowerCase() === 'show all';
+      const showAllValidation = (organization) => { return isShowAll ? organization.id.toLowerCase() === selectedOrganization : organization.value === selectedOrganization };
+      const currentOrganization = this.availableOrgs
+        .map(organization => { return { ...organization, isSelected: true, rawData: organization.id } })
+        .find(organization => showAllValidation(organization));
+      if (currentOrganization) {
+        this.selectedOrg = currentOrganization;
+        this.availableOrgs.forEach((organization, index, self) => {
+          if (showAllValidation(organization)) {
+            self.splice(index, 1);
+            self.splice(index, 0, currentOrganization);
+          }
+        });
+        this.organizationSelected(currentOrganization);
+      }
+    }
+  }
+
+  private getPreferences(): void {
     this.busy = true;
     this.dashboardService.getWidgetPreferences("programming-requests-summary").subscribe(
       data => {
         this.busy = false;
-        if(data){
-          let list:Array<GridsterItem> = data as any;
-          if(list && list.length > 0){
+        if (data) {
+          let list: Array<GridsterItem> = data as any;
+          if (list && list.length > 0) {
             this.dashboard = list;
           }
         }
@@ -157,7 +190,7 @@ export class RequestsSummaryComponent implements OnInit {
     );
   }
 
-  private saveWidgetLayout():void{
+  private saveWidgetLayout(): void {
     this.dashboardService.saveWidgetPreferences("programming-requests-summary", this.dashboard).subscribe(
       data => {
       },
@@ -166,10 +199,10 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   // Build dropdown list items
-  private toListItemOrgs(orgs:Organization[]):ListItem[]{
-    let items:ListItem[] = [];
-    for(let org of orgs){
-      let item:ListItem = new ListItem();
+  private toListItemOrgs(orgs: Organization[]): ListItem[] {
+    let items: ListItem[] = [];
+    for (let org of orgs) {
+      let item: ListItem = new ListItem();
       item.id = org.abbreviation;
       item.name = org.abbreviation;
       item.value = org.id;
@@ -181,10 +214,10 @@ export class RequestsSummaryComponent implements OnInit {
     return items;
   }
 
-  private toListItem(items:string[]):ListItem[]{
-    let list:ListItem[] = [];
-    for(let item of items){
-      let listItem:ListItem = new ListItem();
+  private toListItem(items: string[]): ListItem[] {
+    let list: ListItem[] = [];
+    for (let item of items) {
+      let listItem: ListItem = new ListItem();
       listItem.id = item;
       listItem.name = item;
       listItem.value = item;
@@ -196,8 +229,8 @@ export class RequestsSummaryComponent implements OnInit {
   // control view on selection from dropdown
   organizationSelected(organization: ListItem) {
     this.selectedOrg = organization;
-    if ( this.selectedOrg.name !== 'Please select' ) {
-      if ( this.programmingModel.pom.status !== 'CLOSED' ) {
+    if (this.selectedOrg.name !== 'Please select') {
+      if (this.programmingModel.pom.status !== 'CLOSED') {
         this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
         // Depending on organization selection change options visible and default chart shown
         if (organization.id == 'Show All') {
@@ -212,16 +245,17 @@ export class RequestsSummaryComponent implements OnInit {
         this.programmingModelReady = false;
       }
     }
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all' ? 'show all' : this.selectedOrg.value });
   }
 
   private async getPRs(containerId: string, organizationId): Promise<void> {
     this.busy = true;
     this.programmingModelReady = false;
     await this.programmingService.getPRsForContainer(containerId, organizationId).toPromise().then(
-        resp => {
-          this.programmingModel.programs = (resp as any).result;
-        });    
-    this.programmingModelReady = true;    
+      resp => {
+        this.programmingModel.programs = (resp as any).result;
+      });
+    this.programmingModelReady = true;
     this.busy = false;
   }
 
@@ -231,25 +265,25 @@ export class RequestsSummaryComponent implements OnInit {
     } else if (addEvent.action === 'previously-funded-program') {
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
-          resp => {
-            const programsList: ListItem[] = [];
-            for ( const program of resp as Program[] ) {
-              const item: ListItem = new ListItem();
-              item.id = program.shortName;
-              item.name = program.shortName;
-              item.value = program.id;
-              programsList.push( item );
-            }
-            this.availablePrograms = programsList;
-            this.busy = false;
-            this.showPreviousFundedProgramDialog = true;
-          },
-          error => {
-          });
+        resp => {
+          const programsList: ListItem[] = [];
+          for (const program of resp as Program[]) {
+            const item: ListItem = new ListItem();
+            item.id = program.shortName;
+            item.name = program.shortName;
+            item.value = program.id;
+            programsList.push(item);
+          }
+          this.availablePrograms = programsList;
+          this.busy = false;
+          this.showPreviousFundedProgramDialog = true;
+        },
+        error => {
+        });
     }
   }
 
-  importProgramSelected( $event: any ) {
+  importProgramSelected($event: any) {
     console.log('Import Program Selected');
   }
 
@@ -257,27 +291,26 @@ export class RequestsSummaryComponent implements OnInit {
     console.log('Import Program');
   }
 
-  onApprove():void{
-   
+  onApprove(): void {
     this.approveAllPRs()
   }
 
-  approveAllPRs():void{
+  approveAllPRs(): void {
     this.programmingService.approvePRsForContainer(this.programmingModel.pom.workspaceId).subscribe(
-      resp =>{
-       
-        this.requestsSummaryWidget.gridData.forEach( ps => {
+      resp => {
+
+        this.requestsSummaryWidget.gridData.forEach(ps => {
           ps.assignedTo = "POM Manager";
           ps.status = "Approved";
         });
-    
+
         // reload or refresh the grid data after update
         this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
-        this.griddata = this.requestsSummaryWidget.gridData; 
-    
+        this.griddata = this.requestsSummaryWidget.gridData;
+
         this.orgWidget.chartSelected(this.orgWidget.defaultChart);
         this.organizationSelected(this.selectedOrg);
-        this.dialogService.displayToastInfo('All program requests successfully approved.')        
+        this.dialogService.displayToastInfo('All program requests successfully approved.')
       },
       error => {
         let err = error as any;
@@ -285,26 +318,26 @@ export class RequestsSummaryComponent implements OnInit {
       });
   }
 
-  getRespRoleId(roleStr:string):any{
-    let respRoleId:string = '';
+  getRespRoleId(roleStr: string): any {
+    let respRoleId: string = '';
     this.programmingModel.roles.forEach(role => {
-        if (role.name == roleStr){
-          respRoleId = role.id;
-        }
+      if (role.name == roleStr) {
+        respRoleId = role.id;
+      }
     });
 
     return respRoleId;
   }
 
-  onGridDataChange(data:any):void{
-    this.griddata = data;       
+  onGridDataChange(data: any): void {
+    this.griddata = data;
   }
 
-  handleOrgChartSwitch( event: any ) {
+  handleOrgChartSwitch(event: any) {
     console.log(event);
   }
 
-  handleToaChartSwitch( event: any ) {
+  handleToaChartSwitch(event: any) {
     if (event.action == 'Community Status') {
       this.toaChartCommunityStatus();
     }
@@ -330,14 +363,14 @@ export class RequestsSummaryComponent implements OnInit {
     // get user Role
     let userStr = "POM_Manager";
     // get data from grid
-    let rows:any = this.calculateSummary(userStr);
+    let rows: any = this.calculateSummary(userStr);
     //set data header
-    let data:any[] = [
+    let data: any[] = [
       ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
     ];
     for (let i = 0; i < 5; i++) {
-      let year:string = 'FY' + (this.pomYear + i - 2000);
-      let toa:number = this.programmingModel.pom.communityToas[i].amount;
+      let year: string = 'FY' + (this.pomYear + i - 2000);
+      let toa: number = this.programmingModel.pom.communityToas[i].amount;
       let approved = rows[this.pomYear + i].approved;
       let rejected = rows[this.pomYear + i].rejected;
       let saved = rows[this.pomYear + i].saved;
@@ -357,16 +390,16 @@ export class RequestsSummaryComponent implements OnInit {
     this.setDifferenceChartOptions();
     this.toaWidget.columnChart.options.title = 'Community TOA Difference';
     // Calculate totals
-    let totals:any[] = this.calculateTotals();
+    let totals: any[] = this.calculateTotals();
     // Set data header
-    let data:any = [
+    let data: any = [
       ['Fiscal Year', 'TOA Difference'],
     ];
     // Add difference to data
     for (let i = 0; i < 5; i++) {
-      let year:string = 'FY' + (totals[i].year - 2000);
+      let year: string = 'FY' + (totals[i].year - 2000);
       console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.communityToas[i].amount);
-      let difference:number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
+      let difference: number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
       data.push([year, difference]);
     }
     // Set data to char and refresh
@@ -384,14 +417,14 @@ export class RequestsSummaryComponent implements OnInit {
     // get user Role
     let userStr = "POM_Manager";
     // get data from grid
-    let rows:any = this.calculateSummary(userStr);
+    let rows: any = this.calculateSummary(userStr);
     //set data header
-    let data:any[] = [
+    let data: any[] = [
       ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
     ];
     for (let i = 0; i < 5; i++) {
-      let year:string = 'FY' + (this.pomYear + i - 2000);
-      let toa:number = this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
+      let year: string = 'FY' + (this.pomYear + i - 2000);
+      let toa: number = this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
       let approved = rows[this.pomYear + i].approved;
       let rejected = rows[this.pomYear + i].rejected;
       let saved = rows[this.pomYear + i].saved;
@@ -411,16 +444,16 @@ export class RequestsSummaryComponent implements OnInit {
     this.setDifferenceChartOptions();
     this.toaWidget.columnChart.options.title = this.selectedOrg.name + ' TOA Difference';
     // Calculate totals
-    let totals:any[] = this.calculateTotals();
+    let totals: any[] = this.calculateTotals();
     // Set data header
-    let data:any = [
+    let data: any = [
       ['Fiscal Year', 'TOA Difference'],
     ];
     // Add difference to data
     for (let i = 0; i < 5; i++) {
-      let year:string = 'FY' + (totals[i].year - 2000);
+      let year: string = 'FY' + (totals[i].year - 2000);
       console.log("Year " + (this.pomYear + i) + ": PR Total " + totals[i].amount + " TOA Amount " + this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount);
-      let difference:number = totals[i].amount - this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
+      let difference: number = totals[i].amount - this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
       data.push([year, difference]);
     }
     // Set data to char and refresh
@@ -434,13 +467,13 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   // Used to calculate total funds per year
-  private calculateTotals():any[]{
-    let totals:any[] = [];
+  private calculateTotals(): any[] {
+    let totals: any[] = [];
     for (let row of this.requestsSummaryWidget.gridData) {
-      for (let i = 0; i < 5; i++){
+      for (let i = 0; i < 5; i++) {
         let year = this.pomYear + i;
         if (!totals[i]) {
-          totals[i] = {year: (year), amount: 0};
+          totals[i] = { year: (year), amount: 0 };
         }
         if (row.funds[this.pomYear + i]) {
           totals[i].amount = totals[i].amount + row.funds[year];
@@ -451,28 +484,28 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   // Used to calculate summary data per year per status and user role
-  private calculateSummary(userStr:string):any{
-    let rows:any = {};
+  private calculateSummary(userStr: string): any {
+    let rows: any = {};
     for (let row of this.requestsSummaryWidget.gridData) {
-      for (let i = 0; i < 5; i++){
+      for (let i = 0; i < 5; i++) {
         let year = this.pomYear + i;
-        if ( !rows[ year ] ) {
-          rows[ year ] = { approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0 };
+        if (!rows[year]) {
+          rows[year] = { approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0 };
         }
         let programTotal: number = row.funds[year];
         // place total in correct value.
-        if ( row.assignedTo == userStr ) {
-          if ( row.status == 'APPROVED' ) {
-            rows[ year ].approved = rows[ year ].approved + programTotal;
-          } else if ( row.status == 'REJECTED' ) {
-            rows[ year ].rejected = rows[ year ].rejected + programTotal;
-          } else if ( row.status == 'SAVED' ) {
-            rows[ year ].saved = rows[ year ].saved + programTotal;
-          } else if ( row.status == 'OUTSTANDING' ) {
-            rows[ year ].outstanding = rows[ year ].outstanding + programTotal;
+        if (row.assignedTo == userStr) {
+          if (row.status == 'APPROVED') {
+            rows[year].approved = rows[year].approved + programTotal;
+          } else if (row.status == 'REJECTED') {
+            rows[year].rejected = rows[year].rejected + programTotal;
+          } else if (row.status == 'SAVED') {
+            rows[year].saved = rows[year].saved + programTotal;
+          } else if (row.status == 'OUTSTANDING') {
+            rows[year].outstanding = rows[year].outstanding + programTotal;
           }
         } else {
-          rows[ year ].notMine = rows[ year ].notMine + programTotal;
+          rows[year].notMine = rows[year].notMine + programTotal;
         }
       }
     }
@@ -480,14 +513,14 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   // Sets difference chart
-  private setDifferenceChartOptions(){
+  private setDifferenceChartOptions() {
     // Set chart type
     this.toaWidget.columnChart.chartType = 'ColumnChart';
     // Set options
     this.toaWidget.columnChart.options = {
       title: this.selectedOrg.name + ' TOA Difference',
-      vAxis: {format: 'currency'},
-      legend: {position: 'none'},
+      vAxis: { format: 'currency' },
+      legend: { position: 'none' },
       animation: {
         duration: 500,
         easing: 'out',
@@ -495,19 +528,19 @@ export class RequestsSummaryComponent implements OnInit {
       }
     };
     let w: any = this.toaWidgetItem;
-    this.toaWidget.onResize( w.width, w.height );
+    this.toaWidget.onResize(w.width, w.height);
   }
 
-  private setStatusChartOptions(){
+  private setStatusChartOptions() {
     // Set chart type
     this.toaWidget.columnChart.chartType = 'ColumnChart';
     // Set Options
     this.toaWidget.columnChart.options = {
-      vAxis: {format: 'currency'},
+      vAxis: { format: 'currency' },
       isStacked: true,
-      legend: {position: 'top', maxLines: 2},
+      legend: { position: 'top', maxLines: 2 },
       seriesType: 'bars',
-      series: {0: {type: 'line'}},
+      series: { 0: { type: 'line' } },
       colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
       animation: {
         duration: 500,
@@ -516,6 +549,6 @@ export class RequestsSummaryComponent implements OnInit {
       }
     };
     let w: any = this.toaWidgetItem;
-    this.toaWidget.onResize( w.width, w.height );
+    this.toaWidget.onResize(w.width, w.height);
   }
 }

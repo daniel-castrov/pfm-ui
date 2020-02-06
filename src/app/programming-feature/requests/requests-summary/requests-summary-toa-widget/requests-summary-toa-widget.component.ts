@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { ProgramSummary } from '../../../models/ProgramSummary';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
+import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
 
 @Component({
   selector: 'pfm-requests-summary-toa-widget',
@@ -10,14 +11,14 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
 })
 export class RequestsSummaryToaWidgetComponent implements OnInit {
 
-  @Input() griddata:ProgramSummary[];
+  @Input() griddata: ProgramSummary[];
   @Input() availableCharts: ListItem[];
-  @Output() onChartSwitchEvent:EventEmitter<any> = new EventEmitter<any>();
+  @Output() onChartSwitchEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  chartReady:boolean;
+  chartReady: boolean;
   defaultChart: ListItem;
 
-  public columnChart: any =  {
+  public columnChart: any = {
     chartType: 'ColumnChart',
     dataTable: [
       ['Fiscal Year', 'PRs Submitted', 'PRs Planned', 'TOA Difference', 'Unallocated'],
@@ -33,8 +34,8 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
       width: 200,
       height: 200,
       isStacked: true,
-      vAxis: {format: 'currency'},
-      legend: {position: 'top', maxLines: 2},
+      vAxis: { format: 'currency' },
+      legend: { position: 'top', maxLines: 2 },
       animation: {
         duration: 500,
         easing: 'out',
@@ -43,15 +44,15 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     }
   };
 
-  constructor() { }
+  constructor(private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) { }
 
-  onResize(width:number, height:number):void{
+  onResize(width: number, height: number): void {
     this.chartReady = false;
 
     this.columnChart.options.width = width;
     this.columnChart.options.height = height - 40;
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.chartReady = true;
     }, 200);
 
@@ -59,22 +60,36 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.chartReady = false;
-    setTimeout(()=>{
+    setTimeout(() => {
       if (this.availableCharts[0].name == 'Community Status') {
-        this.onChartSwitchEvent.emit({action: 'Community Status'});
+        this.onChartSwitchEvent.emit({ action: 'Community Status' });
       }
       else if (this.availableCharts[0].name == 'Organization Status') {
-        this.onChartSwitchEvent.emit({action: 'Organization Status'});
+        this.onChartSwitchEvent.emit({ action: 'Organization Status' });
       }
+      this.loadPreviousSelection();
     }, 200);
 
     this.defaultChart = this.availableCharts[0];
   }
 
-  private toListItem(years:string[]):ListItem[]{
-    let items:ListItem[] = [];
-    for(let year of years){
-      let item:ListItem = new ListItem();
+  loadPreviousSelection() {
+    const previousTOAWidget = this.requestSummaryNavigationHistoryService.getSelectedTOAWidget();
+    if (previousTOAWidget) {
+      const currentTOAWidget = this.availableCharts
+        .find(chart => chart.id === previousTOAWidget);
+      if (currentTOAWidget) {
+        this.defaultChart = currentTOAWidget;
+        this.chartSelected(this.defaultChart);
+      }
+    }
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedTOAWidget: this.defaultChart.id });
+  }
+
+  private toListItem(years: string[]): ListItem[] {
+    let items: ListItem[] = [];
+    for (let year of years) {
+      let item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
       item.value = year;
@@ -83,9 +98,11 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     return items;
   }
 
-  private chartSelected(chartType:any){
-    if(chartType){
-      this.onChartSwitchEvent.emit({action: chartType.id});
+  chartSelected(chartType: any) {
+    if (chartType) {
+      this.onChartSwitchEvent.emit({ action: chartType.id });
+      this.defaultChart = chartType;
     }
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedTOAWidget: this.defaultChart.id });
   }
 }
