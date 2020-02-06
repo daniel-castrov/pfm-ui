@@ -1,4 +1,9 @@
 <ng-container *ngIf="chartReady">
+  <div class="chart" *ngIf="columnChart.dataTable.length > 1">
     <google-chart  [data]="columnChart"></google-chart>
     <pfm-dropdown (onSelectionChanged)="chartSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [defaultOption]="defaultChart" [options]="availableCharts"></pfm-dropdown>
+  </div>
+  <div class="noChartData" *ngIf="columnChart.dataTable.length <= 1">
+    <p>No data to show</p>
+  </div>
 </ng-container>
