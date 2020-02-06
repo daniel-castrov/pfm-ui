@@ -152,7 +152,7 @@ export class RequestsSummaryOrgWidgetComponent {
       });
       //set data to chart
       this.treeMapChart.dataTable = orgDataTable; //organizationTable;
-      this.treeMapChart.component.draw();
+      // this.treeMapChart.component.draw();
     }
   }
 

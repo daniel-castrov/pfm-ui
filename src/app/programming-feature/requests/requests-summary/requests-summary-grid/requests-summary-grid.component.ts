@@ -67,9 +67,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                     rowDrag: false,
                     cellClass: 'pfm-datagrid-numeric-class'
                         + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
-                    valueGetter(params) {
-                        return '$' + params.data.funds[params.colDef.field];
-                    }
+                    valueFormatter: params => this.currencyFormatter(params.data.funds[params.colDef.field])
                 }
             );
         }
@@ -82,12 +80,14 @@ export class RequestsSummaryGridComponent implements OnInit {
                 minWidth: 120,
                 rowDrag: false,
                 cellClass: 'pfm-datagrid-numeric-class',
-                valueGetter(params) {
-                    return '$' + params.data[params.colDef.field];
-                },
+                valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
             }
         );
         this.resetGridData();
+    }
+
+    currencyFormatter(params) {
+        return '$' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     }
 
     handleCellAction(cellAction: DataGridMessage): void {
