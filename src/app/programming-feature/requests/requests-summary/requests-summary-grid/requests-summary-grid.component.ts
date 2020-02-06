@@ -19,6 +19,7 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
 export class RequestsSummaryGridComponent implements OnInit {
     @Input() dropdownOptions: ListItem[];
     @Output() onAddCtaEvent: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onGridDataChange = new EventEmitter();
 
     gridApi: GridApi;
     columnApi: ColumnApi;
@@ -126,6 +127,7 @@ export class RequestsSummaryGridComponent implements OnInit {
 
     onGridIsReady(gridApi: GridApi): void {
         this.gridApi = gridApi;
+        this.onGridDataChange.emit(this.gridData);
     }
 
     onColumnIsReady(columnApi: ColumnApi): void {

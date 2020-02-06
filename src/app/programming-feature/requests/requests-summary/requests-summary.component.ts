@@ -220,8 +220,8 @@ export class RequestsSummaryComponent implements OnInit {
     await this.programmingService.getPRsForContainer(containerId, organizationId).toPromise().then(
         resp => {
           this.programmingModel.programs = (resp as any).result;
-        });
-    this.programmingModelReady = true;
+        });    
+    this.programmingModelReady = true;    
     this.busy = false;
   }
 
@@ -258,29 +258,26 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onApprove():void{
-    /*  remove the below code after save call working ... */
-    // moved these lines of code to db save call success
-
-    this.requestsSummaryWidget.gridData.forEach( ps => {
-      ps.assignedTo = "POM Manager";
-      ps.status = "Approved";
-    });
-
-    // reload or refresh the grid data after update
-    this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
-         this.griddata = this.requestsSummaryWidget.gridData;
-
-    this.orgWidget.chartSelected(this.orgWidget.defaultChart);
-    /** comment or remove the above after save call work */
-
+   
     this.approveAllPRs()
   }
 
   approveAllPRs():void{
     this.programmingService.approvePRsForContainer(this.programmingModel.pom.workspaceId).subscribe(
       resp =>{
-        this.dialogService.displayToastInfo('All program requests successfully approved.')
+       
+        this.requestsSummaryWidget.gridData.forEach( ps => {
+          ps.assignedTo = "POM Manager";
+          ps.status = "Approved";
+        });
+    
+        // reload or refresh the grid data after update
+        this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
+        this.griddata = this.requestsSummaryWidget.gridData; 
+    
+        this.orgWidget.chartSelected(this.orgWidget.defaultChart);
         this.organizationSelected(this.selectedOrg);
+        this.dialogService.displayToastInfo('All program requests successfully approved.')        
       },
       error => {
         let err = error as any;
@@ -300,7 +297,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onGridDataChange(data:any):void{
-    this.griddata = data;
+    this.griddata = data;       
   }
 
   handleOrgChartSwitch( event: any ) {
