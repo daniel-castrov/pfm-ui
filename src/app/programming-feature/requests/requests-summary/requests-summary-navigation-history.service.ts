@@ -57,7 +57,7 @@ export class RequestSummaryNavigationHistory {
     constructor(
         public selectedOrganization?: string,
         public selectedOrganizationWidget?: string,
-        public selectedOATWidget?: string,
+        public selectedTOAWidget?: string,
         public canRetrieve?: boolean
     ) { }
 }
