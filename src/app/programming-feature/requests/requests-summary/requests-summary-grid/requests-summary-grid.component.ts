@@ -15,7 +15,6 @@ import { ListItem } from '../../../../pfm-common-models/ListItem';
     styleUrls: ['./requests-summary-grid.component.scss']
 })
 
-
 export class RequestsSummaryGridComponent implements OnInit {
     @Input() dropdownOptions: ListItem[];
     @Output() onAddCtaEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -67,7 +66,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                     minWidth: 100,
                     rowDrag: false,
                     cellClass: 'pfm-datagrid-numeric-class'
-                    + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
+                        + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
                     valueGetter(params) {
                         return '$' + params.data.funds[params.colDef.field];
                     }
@@ -109,7 +108,7 @@ export class RequestsSummaryGridComponent implements OnInit {
                 break;
             }
             case 'download-attachment': {
-              break;
+                break;
             }
             case 'cellClicked': {
                 this.onCellClicked(cellAction);
@@ -121,7 +120,6 @@ export class RequestsSummaryGridComponent implements OnInit {
         if (cellAction.columnId === 'programName') {
             // navigate to the program details
             this.router.navigate(['/programming/requests/details/' + cellAction.rowData['programName']]);
-
         }
     }
 
@@ -137,37 +135,37 @@ export class RequestsSummaryGridComponent implements OnInit {
     ngOnInit() {
     }
 
-  getRoleName(key: string): string {
-    const role = this.programmingModel.roles.get(key);
-    return (role) ? role.name : 'Unknown Role';
-  }
-
-  resetGridData() {
-    this.gridData = [];
-    for (const program of this.programmingModel.programs) {
-      const ps = new ProgramSummary();
-      ps.organiztionId = program.organizationId;
-      ps.programName = program.shortName;
-      ps.assignedTo = this.getRoleName(program.responsibleRoleId);
-      ps.status = program.programStatus;
-      ps.funds = {};
-      ps.fundsTotal = 0;
-      for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
-        ps.funds[i] = 0;
-      }
-      for (const fundingLine of program.fundingLines) {
-        for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
-          if (fundingLine.funds[i]) {
-            ps.funds[i] += fundingLine.funds[i];
-            ps.fundsTotal += ps.funds[i];
-          }
-        }
-      }
-      this.gridData.push(ps);
+    getRoleName(key: string): string {
+        const role = this.programmingModel.roles.get(key);
+        return (role) ? role.name : 'Unknown Role';
     }
-  }
 
-  onAddProgram( event:any ) {
-    this.onAddCtaEvent.emit(event);
-  }
+    resetGridData() {
+        this.gridData = [];
+        for (const program of this.programmingModel.programs) {
+            const ps = new ProgramSummary();
+            ps.organiztionId = program.organizationId;
+            ps.programName = program.shortName;
+            ps.assignedTo = this.getRoleName(program.responsibleRoleId);
+            ps.status = program.programStatus;
+            ps.funds = {};
+            ps.fundsTotal = 0;
+            for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+                ps.funds[i] = 0;
+            }
+            for (const fundingLine of program.fundingLines) {
+                for (let i = this.gridMinYear; i <= this.gridMaxYear; i++) {
+                    if (fundingLine.funds[i]) {
+                        ps.funds[i] += fundingLine.funds[i];
+                        ps.fundsTotal += ps.funds[i];
+                    }
+                }
+            }
+            this.gridData.push(ps);
+        }
+    }
+
+    onAddProgram(event: any) {
+        this.onAddCtaEvent.emit(event);
+    }
 }

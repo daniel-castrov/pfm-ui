@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import {Location } from '@angular/common'
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProgrammingModel } from '../../models/ProgrammingModel';
+import { RequestSummaryNavigationHistoryService } from '../requests-summary/requests-summary-navigation-history.service';
 
 @Component({
   selector: 'pfm-requests-details',
   templateUrl: './requests-details.component.html',
   styleUrls: ['./requests-details.component.scss']
 })
+
 export class RequestsDetailsComponent implements OnInit {
 
-  constructor(public programmingModel: ProgrammingModel, private location:Location, private route: ActivatedRoute) { }
+  constructor(
+    public programmingModel: ProgrammingModel,
+    private route: ActivatedRoute,
+    private router: Router,
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
+  ) { }
 
-  goBack():void{
-    this.location.back();
+  goBack(): void {
+    this.requestSummaryNavigationHistoryService.prepareNavigationHistory();
+    this.router.navigate(['/programming/requests']);
   }
 
   ngOnInit() {
