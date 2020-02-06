@@ -372,7 +372,7 @@ export class CreateProgrammingComponent implements OnInit {
           cellRenderer: params => this.negativeNumberRenderer(params),
           editable: true,
           cellClass: "pfm-datagrid-numeric-class",
-          cellStyle: { display: 'flex', 'padding-right': '0px !important' }
+          cellStyle: { display: 'flex' }
         });
     }
     colDefs.push(
@@ -386,7 +386,7 @@ export class CreateProgrammingComponent implements OnInit {
         valueGetter: params => this.rowTotal(params.data, fy),
         cellRenderer: params => this.negativeNumberRenderer(params),
         cellClass: "pfm-datagrid-numeric-class",
-        cellStyle: { display: 'flex', 'padding-right': '0px !important' }
+        cellStyle: { display: 'flex' }
       });
 
     colDefs.push(
@@ -751,7 +751,7 @@ export class CreateProgrammingComponent implements OnInit {
   }
 
   getOrgColorStyle(param): any {
-    let cellStyle = { display: 'flex', 'padding-left': '0px !important', 'align-items': 'center', 'white-space': 'normal', backgroundColor: null };
+    let cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal', backgroundColor: null };
     let orgName: string = param.value;
 
     if (orgName !== undefined) {
@@ -759,7 +759,7 @@ export class CreateProgrammingComponent implements OnInit {
       orgName = orgName.replace('</span></strong>', '');
       if (this.orgColors[orgName] !== undefined) {
         const orgColor: string = this.orgColors[orgName];
-        cellStyle = { display: 'flex', 'padding-left': '0px !important', 'align-items': 'center', 'white-space': 'normal', backgroundColor: orgColor };
+        cellStyle = { display: 'flex', 'align-items': 'center', 'white-space': 'normal', backgroundColor: orgColor };
       }
       return cellStyle;
     }
