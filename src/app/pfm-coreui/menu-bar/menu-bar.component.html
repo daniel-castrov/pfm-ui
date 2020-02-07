@@ -2,6 +2,7 @@
 
     <li (click)="onSelect('Dashboard')" [class.active]="isParentSelected('/home')" class="menu-item" routerLink="/home">
         <fa name="tachometer"></fa>
+        <span>Dashboard</span>
     </li>
 
     <li (click)="onSelect('Planning')" [ngClass]="{ 'semi-active': isPlanningSelected, 'active': isParentSelected('/planning') }" class="menu-item" container="body"
