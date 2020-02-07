@@ -63,7 +63,7 @@
     </li>
 
     <li placement="bottom-right" (click)="onSelect('Execution')" [ngClass]="{ 'semi-active': isExecutionSelected, 'active': isParentSelected('/execution') }" class="menu-item"
-        container="body" placement="right" [ngbPopover]="popContentExecution" (hidden)="onHide()" (shown)="onShow('Execution')"
+        container="body" placement="right" [ngbPopover]="popContentExecution" (hidden)="onHide('Execution')" (shown)="onShow('Execution')"
         popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
         <fa name="globe"></fa>
         <span>Execution</span>
@@ -101,7 +101,7 @@
     </li>
 
     <li (click)="onSelect('Admin')" [ngClass]="{ 'semi-active': isAdminSelected, 'active': isParentSelected('/manage-communities') || isParentSelected('/user-list') || isParentSelected('/roles') }" class="menu-item" container="body"
-        placement="right" [ngbPopover]="popContentAdmin" (hidden)="onHide()" (shown)="onShow('Admin')"
+        placement="right" [ngbPopover]="popContentAdmin" (hidden)="onHide('Admin')" (shown)="onShow('Admin')"
         popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
         <fa name="user-secret"></fa>
         <span>Admin</span>
