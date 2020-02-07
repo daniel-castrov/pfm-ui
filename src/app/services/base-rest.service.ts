@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -21,8 +21,8 @@ export class BaseRestService {
     this.headers = headers;
   }
 
-  protected get(resource: string): Observable<object> {
-    return this.httpClient.get(this.baseURL + '/' + resource, {headers: this.headers});
+  protected get(resource: string, params?: HttpParams): Observable<object> {
+    return this.httpClient.get(this.baseURL + '/' + resource, {headers: this.headers, params});
   }
 
   protected post(resource: string, data: any): Observable<object> {
