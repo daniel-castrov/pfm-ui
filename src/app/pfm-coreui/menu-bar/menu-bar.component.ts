@@ -8,69 +8,110 @@ import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
   selector: 'pfm-menu-bar',
   templateUrl: './menu-bar.component.html',
   styleUrls: ['./menu-bar.component.scss'],
-  animations: [ animateText ]
+  animations: [animateText]
 })
 export class MenuBarComponent implements OnInit {
 
   @Input() linkText: boolean;
-  @Input() role:UserRole;
+  @Input() role: UserRole;
   @Input() elevatedBoolean;
-  @Input() isUserSignedIn:boolean;
-  @Input() menuBarItems:MenuBarItem[];
-  @Output() onMenuToogle:EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() isUserSignedIn: boolean;
+  @Input() menuBarItems: MenuBarItem[];
+  @Output() onMenuToogle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  isOpen:boolean;
-  isDashboardSelected:boolean;
-  isPlanningSelected:boolean;
-  isProgrammingSelected
-  isBudgetSelected:boolean;
-  isExecutionSelected:boolean;
-  isReportsSelected:boolean;
-  isManageSelected:boolean;
-  isAdminSelected:boolean;
-  selectedItem:string;
+  isOpen: boolean;
+  isDashboardSelected: boolean;
+  isPlanningSelected: boolean;
+  isProgrammingSelected: boolean;
+  isBudgetSelected: boolean;
+  isExecutionSelected: boolean;
+  isReportsSelected: boolean;
+  isManageSelected: boolean;
+  isAdminSelected: boolean;
+  selectedItem: string;
+  ignoreSelectedScreen: boolean;
 
   constructor(private router: Router) {
 
   }
 
-  onNavSelect(name:string, url:string):void{
-    this.onSelect(name);
-    this.router.navigate([url]);
+  onHide(screen: string) {
+    if (!this.ignoreSelectedScreen) {
+      this.selectedItem = screen;
+    }
+    if (this.selectedItem) {
+      this.DeselecteItem();
+    } else {
+      this.ignoreSelectedScreen = true;
+      this.selectedItem = undefined;
+    }
   }
 
-  onSelect(name:string):void{
-    this.selectedItem = name;
-    if(name){
+  onShow(screen: string) {
+    this.selectedItem = screen;
+    this.ignoreSelectedScreen = false;
+  }
+
+  onSelect(name: string) {
+    if (name) {
+      this.clearSelection(true);
+      switch (name.toLowerCase()) {
+        case Screen.DASHBOARD:
+          this.isDashboardSelected = true;
+          break;
+        case Screen.PLANNING:
+          this.isPlanningSelected = true;
+          break;
+        case Screen.PROGRAMMING:
+          this.isProgrammingSelected = true;
+          break;
+        case Screen.BUDGET:
+          this.isBudgetSelected = true;
+          break;
+        case Screen.EXECUTION:
+          this.isExecutionSelected = true;
+          break;
+        case Screen.MANAGE:
+          this.isManageSelected = true;
+          break;
+        case Screen.REPORTS:
+          this.isReportsSelected = true;
+          break;
+        case Screen.ADMIN:
+          this.isAdminSelected = true;
+          break;
+      }
+    }
+  }
+
+  clearSelection(clearSingle: boolean) {
+    if (clearSingle) {
       this.isDashboardSelected = false;
-      this.isPlanningSelected = false;
-      this.isProgrammingSelected = false;
       this.isBudgetSelected = false;
-      this.isExecutionSelected = false;
       this.isReportsSelected = false;
       this.isManageSelected = false;
-      this.isAdminSelected = false;
+    }
+    this.isPlanningSelected = false;
+    this.isProgrammingSelected = false;
+    this.isExecutionSelected = false;
+    this.isAdminSelected = false;
+  }
 
-      if(name === 'Dashboard'){
-        this.isDashboardSelected = true;
-      }
-      else if(name === 'Planning'){
-        this.isPlanningSelected = true;
-      }
-      else if(name === 'Programming'){
-        this.isProgrammingSelected = true;
-      }
-      else if(name === 'Budget'){
-        this.isBudgetSelected = true;
-      }
-      else if(name === 'Reports'){
-        this.isReportsSelected = true;
-      }
-      else if(name === 'Manage'){
-        this.isManageSelected = true;
-      }
-      else if(name === 'Admin'){
-        this.isAdminSelected = true;
+  DeselecteItem() {
+    if (this.selectedItem) {
+      switch (this.selectedItem.toLowerCase()) {
+        case Screen.PLANNING:
+          this.isPlanningSelected = false;
+          break;
+        case Screen.PROGRAMMING:
+          this.isProgrammingSelected = false;
+          break;
+        case Screen.EXECUTION:
+          this.isExecutionSelected = false;
+          break;
+        case Screen.ADMIN:
+          this.isAdminSelected = false;
+          break;
       }
     }
   }
@@ -84,11 +125,11 @@ export class MenuBarComponent implements OnInit {
   ngOnInit() {
     this.router.events.forEach((event) => {
       if (event instanceof NavigationStart) {
-        if(event.url.startsWith('/planning')){
+        if (event.url.startsWith('/planning')) {
           this.isDashboardSelected = false;
           this.isPlanningSelected = true;
         }
-        else if(event.url.startsWith('/home')){
+        else if (event.url.startsWith('/home')) {
           this.isPlanningSelected = false;
           this.isDashboardSelected = true;
         }
@@ -96,5 +137,19 @@ export class MenuBarComponent implements OnInit {
     });
   }
 
+  isParentSelected(url: string): boolean {
+    return this.router.url.includes(url);
+  }
 
+}
+
+enum Screen {
+  DASHBOARD = "dashboard",
+  PLANNING = "planning",
+  PROGRAMMING = "programming",
+  BUDGET = "budget",
+  EXECUTION = "execution",
+  MANAGE = "manage",
+  REPORTS = "reports",
+  ADMIN = "admin"
 }

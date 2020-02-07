@@ -43,6 +43,10 @@
   font-style: normal;
 }
 
+*:focus {
+  outline: none;
+}
+
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #fff;

@@ -9,21 +9,22 @@
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
-.menu-toggle{
+.menu-toggle {
   color: #25527a;
   font-size: 18px;
   margin-left: 4px;
   cursor: pointer!important;
 }
 
-ul{
+ul {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0;
 
 }
-li{
+
+li {
   list-style: none;
   display: flex;
   color: #25527a;
@@ -33,74 +34,87 @@ li{
   align-items: center;
 }
 
-li:hover{
+li:hover {
   cursor: pointer!important;
   background-color: #2e719e;
   color: white;
 }
 
-li:hover > .menu-item fa {
+li.menu-item:hover > fa {
   color: white;
 }
 
-.active{
+.semi-active {
+  background-color: #2e719e;
+  opacity: 0.8;
+}
+
+.active {
   background-color: #2e719e;
   color: white;
+  opacity: 1;
 }
 
-.inner-menu-divider{
+.inner-menu-divider {
   height: 0;
   overflow: hidden;
   border-top: 1px solid #e9ecef;
 }
 
-.inner-menu-item{
+.inner-menu-item {
   padding: 10px;
 }
 
-.inner-menu-item:hover{
+.inner-menu-item.active-link {
+  background-color: #2e719e;
+  color: white;
+  opacity: 1;
+}
+
+.inner-menu-item:hover {
   background-color: #2e719e;
   color: white;
 }
 
-.menu-item{
+.menu-item {
   display: flex;
 }
 
-span{
+span {
   padding-left: 8px;
   width:120px;
   padding-top: 2px;
 }
 
-fa{
+fa {
   color: #25527a;
   font-size: 18px;
   margin-left: 4px;
 }
 
-fa:hover{
+.menu-item.active > fa, .menu-item.semi-active > fa {
   color:white;
 }
 
-span{
+span {
   display: none;
 }
-.open{
+
+.open {
   width: 200px;
 }
 
-.open span{
+.open span {
   display: block;
 }
 
-.inner-menu{
+.inner-menu {
   display: flex;
   flex-direction: column;
   background-color: #bbced7;
 }
 
-.menu-display-container{
+.menu-display-container {
   border: 0;
 }
 
@@ -108,7 +122,7 @@ span{
   display: none;
 }
 
-::ng-deep .popover-body{
+::ng-deep .popover-body {
   padding: 0;
 }
 
