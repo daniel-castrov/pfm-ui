@@ -14,13 +14,7 @@ export class BudgetFeatureComponent implements OnInit {
   constructor(private injector: Injector, private pluginLoader: PluginLoaderService, private appModel:AppModel) { }
 
   ngOnInit() {
-
-    if(this.appModel.userDetails.firstName === 'Bill'){
-      this.loadPlugin("budget-demo");
-    }
-    else{
-      this.loadPlugin("budget");//default
-    }
+      
   }
 
   loadPlugin(pluginName: string) {
