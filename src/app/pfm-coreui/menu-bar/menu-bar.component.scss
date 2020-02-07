@@ -34,12 +34,6 @@ li {
   align-items: center;
 }
 
-li:hover {
-  cursor: pointer!important;
-  background-color: #2e719e;
-  color: white;
-}
-
 li.menu-item:hover > fa, .semi-active > span {
   color: white;
 }
@@ -49,10 +43,17 @@ li.menu-item:hover > fa, .semi-active > span {
   opacity: 0.8;
 }
 
+li:hover {
+  cursor: pointer!important;
+  background-color: #2e719e;
+  color: white;
+  opacity: 0.8;
+}
+
 .active {
   background-color: #2e719e;
   color: white;
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .inner-menu-divider {
