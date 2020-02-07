@@ -17,6 +17,7 @@ import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-s
 import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
+import { VisibilityService } from '../../../services/visibility-service';
 
 
 @Component({
@@ -56,7 +57,8 @@ export class RequestsSummaryComponent implements OnInit {
     private dialogService: DialogService,
     private organizationService: OrganizationService,
     private mrdbService: MrdbService,
-    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) {
+    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+    private visibilityService: VisibilityService) {
   }
 
   ngOnInit() {
@@ -130,18 +132,25 @@ export class RequestsSummaryComponent implements OnInit {
       });
   }
 
-  setupDropDown() {
+  async setupDropDown() {
     this.organizationService.getAll().subscribe(
       resp => {
         const orgs = (resp as any).result;
-        const showAllOrg = new Organization();
-        console.log("Organizations:" + orgs);
         this.orgs = orgs;
-        showAllOrg.id = null;
-        showAllOrg.abbreviation = 'Show All';
-        const dropdownOptions: Organization[] = [showAllOrg];
-        this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-        this.loadPreviousSelection();
+        const dropdownOptions: Organization[] = [];
+        this.visibilityService.isVisible('availableOrgsDropDown,option,Show All').subscribe(
+            isVisibleResp => {
+              const showAllOrg = new Organization();
+              showAllOrg.id = null;
+              showAllOrg.abbreviation = 'Show All';
+              dropdownOptions.unshift(showAllOrg);
+              this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
+              this.loadPreviousSelection();
+            },
+            error => {
+              this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
+              this.loadPreviousSelection();
+            });
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -247,7 +256,7 @@ export class RequestsSummaryComponent implements OnInit {
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all' ? 'show all' : this.selectedOrg.value });
   }
 
-  private async getPRs(containerId: string, organizationId): Promise<void> {
+  private async getPRs(containerId: string, organizationId: string): Promise<void> {
     this.busy = true;
     this.programmingModelReady = false;
     await this.programmingService.getPRsForContainer(containerId, organizationId).toPromise().then(
