@@ -9,7 +9,7 @@
     </div>
   </div>
   <pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
-    [label]="'Select Organization to View:'" [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'"
+    [label]="'Select Organization to View:'" [required]="true" [id]="'availableOrgsDropDown'" [fieldName]="'name'" [fieldLabel]="'name'"
     [options]="availableOrgs"></pfm-dropdown>
 </div>
 
