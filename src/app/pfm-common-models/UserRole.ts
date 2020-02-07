@@ -39,14 +39,14 @@ export class UserRole {
     }
 
     //TODO - just for testing
-    this.isExecution_Manager = true;
-    this.isBudget_Manager = true;
-    this.isPOM_Manager = true;
-    this.isProgram_Manager = true;
-    this.isFunds_Requestor = true;
-    this.isAdmin = true;
-    this.isExecution_Reporter = true;
-    this.isUser_Approver = true;
+    // this.isExecution_Manager = true;
+    // this.isBudget_Manager = true;
+    // this.isPOM_Manager = true;
+    // this.isProgram_Manager = true;
+    // this.isFunds_Requestor = true;
+    // this.isAdmin = true;
+    // this.isExecution_Reporter = true;
+    // this.isUser_Approver = true;
 
   }
 }

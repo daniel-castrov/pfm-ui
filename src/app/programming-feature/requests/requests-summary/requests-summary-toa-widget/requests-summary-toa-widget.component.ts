@@ -4,6 +4,7 @@ import { ProgramSummary } from '../../../models/ProgramSummary';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary-navigation-history.service';
 import { ProgrammingModel } from '../../../models/ProgrammingModel';
+import { AppModel } from '../../../../pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-requests-summary-toa-widget',
@@ -40,7 +41,10 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     }
   };
 
-  constructor(private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService) { }
+  constructor(
+      private appModel: AppModel,
+      private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
+  ) { }
 
   onResize(width: number, height: number): void {
     this.chartReady = false;
@@ -57,10 +61,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   ngOnInit() {
     this.chartReady = false;
     setTimeout(() => {
-      if (this.availableCharts[0].name == 'Community Status') {
+      if (this.availableCharts[0].name === 'Community Status') {
         this.onChartSelected({ name: 'Community Status' });
-      }
-      else if (this.availableCharts[0].name == 'Organization Status') {
+      } else if (this.availableCharts[0].name === 'Organization Status') {
         this.onChartSelected({ name: 'Organization Status' });
       }
       this.loadPreviousSelection();
@@ -78,7 +81,8 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         this.onChartSelected(this.defaultChart);
       }
     }
-    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedTOAWidget: this.defaultChart.id });
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory(
+        { selectedTOAWidget: this.defaultChart.id });
   }
 
   private toListItem(years: string[]): ListItem[] {
@@ -96,19 +100,19 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   onChartSelected( chartType: any) {
     if (chartType) {
       this.defaultChart = chartType;
-      if (chartType.name == 'Community Status') {
+      if (chartType.name === 'Community Status') {
         this.toaChartCommunityStatus();
       }
-      else if (chartType.name == 'Community TOA Difference') {
+      else if (chartType.name === 'Community TOA Difference') {
         this.toaChartCommunityToaDifference();
       }
-      else if (chartType.name == 'Organization Status') {
+      else if (chartType.name === 'Organization Status') {
         this.toaChartOrganizationStatus();
       }
-      else if (chartType.name == 'Organization TOA Difference') {
+      else if (chartType.name === 'Organization TOA Difference') {
         this.toaChartOrganizationToaDifference();
       }
-      else if (chartType.name == 'Funding Line Status') {
+      else if (chartType.name === 'Funding Line Status') {
         this.toaChartFundingLineStatus();
       }
     }
@@ -117,14 +121,12 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   toaChartCommunityStatus() {
     this.chartReady = false;
-    //set options
+    // Set options
     this.setStatusChartOptions();
     this.columnChart.options.title = 'Community Status';
-    // get user Role
-    let userStr = "POM_Manager";
     // get data from grid
-    let rows: any = this.calculateSummary(userStr);
-    //set data header
+    let rows: any = this.calculateSummary();
+    // Set data header
     let data: any[] = [
       ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
     ];
@@ -172,10 +174,8 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     //set options
     this.setStatusChartOptions();
     this.columnChart.options.title = this.selectedOrg.name + ' Organization Status';
-    // get user Role
-    let userStr = "POM_Manager";
     // get data from grid
-    let rows: any = this.calculateSummary(userStr);
+    let rows: any = this.calculateSummary();
     //set data header
     let data: any[] = [
       ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
@@ -241,7 +241,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   }
 
   // Used to calculate summary data per year per status and user role
-  private calculateSummary(userStr: string): any {
+  private calculateSummary(): any {
     let rows: any = {};
     for (let row of this.griddata) {
       for (let i = 0; i < 5; i++) {
@@ -251,7 +251,10 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         }
         let programTotal: number = row.funds[year];
         // place total in correct value.
-        if (row.assignedTo == userStr) {
+        // todo financial manager doesnt exist yet needs to be checked for.
+        if (this.appModel.userDetails.userRole.isPOM_Manager && row.assignedTo === "POM_Manager" ||
+            this.appModel.userDetails.userRole.isFunds_Requestor && row.assignedTo === "Funds_Requestor"
+        ) {
           if (row.status == 'APPROVED') {
             rows[year].approved = rows[year].approved + programTotal;
           } else if (row.status == 'REJECTED') {
@@ -295,7 +298,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.columnChart.options = {
       vAxis: { format: 'currency' },
       isStacked: true,
-      chartArea:{left:80,top:30,bottom:20,right:170,width:'100%',height:'100%'},
+      chartArea:{left: 80, top: 30, bottom: 20, right: 170, width: '100%', height: '100%'},
       seriesType: 'bars',
       series: { 0: { type: 'line' } },
       colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
