@@ -17,7 +17,11 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     return this.get( 'program/container/' + containerId,  new HttpParams().set('organizationId', organizationId));
   }
 
-  approvePRsForContainer(containerId: string): Observable<object> {
-    return this.put('program/container/' + containerId + '/approve', null);
+  processPRsByContainer( containerId: string, action: string, organizationId?: string ) {
+    organizationId =  organizationId ? organizationId : '';
+    const params: HttpParams = new HttpParams()
+        .set('action', action)
+        .set('organizationId', organizationId);
+    return this.put( 'program/container/' + containerId + '/process', null, params);
   }
 }

@@ -306,7 +306,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   approveAllPRs(): void {
-    this.programmingService.approvePRsForContainer(this.programmingModel.pom.workspaceId).subscribe(
+    this.programmingService.processPRsByContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
       resp => {
 
         this.requestsSummaryWidget.gridData.forEach(ps => {
