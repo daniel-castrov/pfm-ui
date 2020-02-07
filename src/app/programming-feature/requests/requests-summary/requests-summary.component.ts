@@ -140,16 +140,18 @@ export class RequestsSummaryComponent implements OnInit {
         const dropdownOptions: Organization[] = [];
         this.visibilityService.isVisible('availableOrgsDropDown,option,Show All').subscribe(
             isVisibleResp => {
-              const showAllOrg = new Organization();
-              showAllOrg.id = null;
-              showAllOrg.abbreviation = 'Show All';
-              dropdownOptions.unshift(showAllOrg);
+              const isVisible: boolean = (isVisibleResp as any).result;
+              if (isVisible) {
+                const showAllOrg = new Organization();
+                showAllOrg.id = null;
+                showAllOrg.abbreviation = 'Show All';
+                dropdownOptions.unshift( showAllOrg );
+              }
               this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
               this.loadPreviousSelection();
             },
             error => {
-              this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-              this.loadPreviousSelection();
+              this.dialogService.displayDebug(error);
             });
       },
       error => {
