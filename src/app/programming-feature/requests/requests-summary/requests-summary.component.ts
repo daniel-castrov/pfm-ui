@@ -4,7 +4,7 @@ import { RequestsSummaryOrgWidgetComponent } from './requests-summary-org-widget
 import { ProgramSummary } from '../../models/ProgramSummary';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { ProgrammingModel } from '../../models/ProgrammingModel';
-import { PomService } from '../../services/pom-service';
+import { PomService } from '../../services/pom-service'
 import { ProgrammingService } from '../../services/programming-service';
 import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
@@ -18,8 +18,8 @@ import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 import { VisibilityService } from '../../../services/visibility-service';
-import { AppModel } from './../../../pfm-common-models/AppModel';
-import { UserRole } from './../../../pfm-common-models/UserRole';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -49,18 +49,18 @@ export class RequestsSummaryComponent implements OnInit {
   availablePrograms: ListItem[];
   orgs: Organization[];
   availableToaCharts: ListItem[];
-  userRole:UserRole;
-  constructor(private appModel: AppModel,
-    private programmingModel: ProgrammingModel,
-    private pomService: PomService,
-    private programmingService: ProgrammingService,
-    private roleService: RoleService,
-    private dashboardService: DashboardMockService,
-    private dialogService: DialogService,
-    private organizationService: OrganizationService,
-    private mrdbService: MrdbService,
-    private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
-    private visibilityService: VisibilityService) {
+
+  constructor(private programmingModel: ProgrammingModel,
+              private pomService: PomService,
+              private programmingService: ProgrammingService,
+              private roleService: RoleService,
+              private dashboardService: DashboardMockService,
+              private dialogService: DialogService,
+              private organizationService: OrganizationService,
+              private mrdbService: MrdbService,
+              private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
+              private router: Router,
+              private visibilityService: VisibilityService) {
   }
 
   ngOnInit() {
@@ -132,7 +132,6 @@ export class RequestsSummaryComponent implements OnInit {
       error => {
         this.dialogService.displayDebug(error);
       });
-      this.userRole = this.appModel.userDetails.userRole;
   }
 
   async setupDropDown() {
@@ -275,6 +274,7 @@ export class RequestsSummaryComponent implements OnInit {
   handleAdd(addEvent: any) {
     if (addEvent.action === 'new-program') {
       console.log('New program Event fired');
+      this.router.navigate(['/programming/requests/details/' + undefined]);
     } else if (addEvent.action === 'previously-funded-program') {
       this.busy = true;
       this.mrdbService.getProgramsMinusPrs(this.selectedOrg.value, this.programmingModel.programs).subscribe(
@@ -300,20 +300,8 @@ export class RequestsSummaryComponent implements OnInit {
     console.log('Import Program Selected');
   }
 
-  onImportProgram(): void  {
+  onImportProgram() {
     console.log('Import Program');
-  }
-
-  onApproveOrganization(): void  {
-    console.log('Approve Organization');
-  }
-
-  onReturnOrganization(): void  {
-    console.log('Return Organization');
-  }
-
-  onAdvanceOrganization() {
-    console.log('Advance Organization');
   }
 
   onApprove(): void {
@@ -356,32 +344,5 @@ export class RequestsSummaryComponent implements OnInit {
 
   onGridDataChange(data: any): void {
     this.griddata = data;
-  }
-
-  private CanUserHasRole(approveType:string):boolean{
-    
-    //this.userRole.isBudget_Manager = false;
-    //this.userRole.isPOM_Manager = false;
-    //this.userRole.isFunds_Requestor = true;
-
-    let showbutton = false;
-    switch(approveType){
-      case 'approve': {
-        if (this.userRole.isPOM_Manager)
-          showbutton = true;
-        break;     
-      }
-      case 'return':{
-          if (this.userRole.isPOM_Manager || this.userRole.isBudget_Manager)
-            showbutton = true;
-          break;     
-        }
-      case 'advance': {
-          if (this.userRole.isBudget_Manager || this.userRole.isFunds_Requestor)
-            showbutton = true;
-          break;     
-        }
-    }
-    return showbutton;
   }
 }

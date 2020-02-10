@@ -13,6 +13,8 @@ export class RequestsDetailsFormComponent implements OnInit {
   @Input() programData: Program;
 
   public form: FormGroup;
+  public addMode = false;
+  organizations: string[];
   divisions: string[];
   missionPriorities: string[];
   agencyPriorities: string[];
@@ -28,16 +30,20 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.programData = this.programmingModel.programs.find((p: Program) => {
       return p.shortName === this.programmingModel.selectedProgramName;
     });
+    if ( !this.programData ) {
+      this.addMode = true;
+      this.programData = new Program();
+    }
     this.loadForm();
   }
 
   loadForm() {
     const me = this;
     me.form = new FormGroup({
-      shortName: new FormControl(me.programData.shortName ? me.programData.shortName : ''),
-      longName: new FormControl(me.programData.longName ? me.programData.longName : '', [Validators.required]),
-      type: new FormControl(me.programData.type ? me.programData.type : ''),
-      organizationId: new FormControl(me.programData.organizationId ? me.programData.organizationId : ''),
+      shortName: new FormControl(me.programData.shortName, [Validators.required]),
+      longName: new FormControl(me.programData.longName, [Validators.required]),
+      type: new FormControl(this.addMode ? 'PROGRAM' : me.programData.type),
+      organizationId: new FormControl(me.programData.organizationId, [Validators.required]),
       divison: new FormControl(''),
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
@@ -47,11 +53,25 @@ export class RequestsDetailsFormComponent implements OnInit {
       agencyObjective: new FormControl('value from database'),
     }, { validators: this.formValidator });
 
-    this.divisions = this.missionPriorities = this.agencyPriorities = this.directoratePriorities = ['ABC', 'DEF'];
+    this.populateDDs();
+    this.disableInputsInEditMode();
   }
 
-  onSave() {
-    console.log(this.form.getRawValue());
+  populateDDs() {
+    this.organizations = ['ABC', 'DEF'];
+    this.divisions = ['ABC', 'DEF'];
+    this.missionPriorities = ['ABC', 'DEF'];
+    this.agencyPriorities = ['ABC', 'DEF'];
+    this.directoratePriorities = ['ABC', 'DEF'];
+  }
+
+  disableInputsInEditMode() {
+    this.form.controls['type'].disable();
+    if ( !this.addMode ) {
+      this.form.controls['shortName'].disable();
+      this.organizations.push(this.programData.organizationId);
+      this.form.controls['organizationId'].disable();
+    }
   }
 
   onUploading(event) {
@@ -63,14 +83,12 @@ export class RequestsDetailsFormComponent implements OnInit {
   }
 
   formValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-    const invalidFields = { longName: false };
+    const invalidFields = {};
 
-    // generic validations
-    if (control.get('longName').invalid) {
-      Object.assign(invalidFields, { longName: true });
-    }
-    if (control.get('missionPriority').invalid) {
-      Object.assign(invalidFields, { missionPriority: true });
+    // specific validations
+    const shortName = control.get('shortName').value as string;
+    if (this.addMode && this.programmingModel.programs.map(p => p.shortName).find(str => str === shortName)) {
+      Object.assign(invalidFields, { shortName: true });
     }
 
     return invalidFields;
