@@ -31,6 +31,7 @@ import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.component';
 import { TreeDatagridComponent } from './tree-datagrid/tree-datagrid.component';
 import { TreeCellRendererComponent } from './datagrid/renderers/tree-cell-renderer/tree-cell-renderer.component';
+import { FileUploadComponent } from './file-upload/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { TreeCellRendererComponent } from './datagrid/renderers/tree-cell-render
     CustomDialogComponent,
     CancelCtaComponent,
     TreeDatagridComponent,
-    TreeCellRendererComponent
+    TreeCellRendererComponent,
+    FileUploadComponent
   ],
   imports: [
     CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([    TreeCellRendererComponent, ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent, DisabledActionCellRendererComponent])
@@ -89,7 +91,8 @@ import { TreeCellRendererComponent } from './datagrid/renderers/tree-cell-render
     CustomDialogComponent,
     CancelCtaComponent,
     TreeDatagridComponent,
-    TreeCellRendererComponent
+    TreeCellRendererComponent,
+    FileUploadComponent
   ]
 })
 export class PfmCoreuiModule { }

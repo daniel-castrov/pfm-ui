@@ -1,0 +1,37 @@
+$primary-color: #25527a;
+$white: #ffffff;
+$black: #000000;
+$grey-border: 1px solid #7b8389;
+$light-blue: #dbe8f7;
+$light-grey: #eae9e9;
+$medium-grey: #dddddd;
+$dark-grey: #848282;
+
+.custom-file-label {
+  width: 450px;
+  margin: 0;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  .img-placeholder > i.fa {
+    font-size: 160px;
+    color: #ccc;
+    cursor:pointer;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .img-placeholder > i.fa {
+    font-size: 200px;
+    cursor:pointer;
+  }
+}
+
+.img-thumbnail{
+  max-width: 200px;
+  max-height: 200px;
+  margin: 0 auto;
+  cursor:pointer;
+}
