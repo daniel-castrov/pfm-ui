@@ -33,7 +33,6 @@ export class RequestsDetailsFormComponent implements OnInit {
     if ( !this.programData ) {
       this.addMode = true;
       this.programData = new Program();
-      this.programData.type = 'PROGRAM';
     }
     this.loadForm();
   }
@@ -43,7 +42,7 @@ export class RequestsDetailsFormComponent implements OnInit {
     me.form = new FormGroup({
       shortName: new FormControl(me.programData.shortName, [Validators.required]),
       longName: new FormControl(me.programData.longName, [Validators.required]),
-      type: new FormControl(me.programData.type),
+      type: new FormControl(this.addMode ? 'PROGRAM' : me.programData.type),
       organizationId: new FormControl(me.programData.organizationId, [Validators.required]),
       divison: new FormControl(''),
       missionPriority: new FormControl('', [Validators.required]),
