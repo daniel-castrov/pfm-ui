@@ -18,7 +18,8 @@ import { MrdbService } from '../../services/mrdb-service';
 import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 import { VisibilityService } from '../../../services/visibility-service';
-
+import { AppModel } from './../../../pfm-common-models/AppModel';
+import { UserRole } from './../../../pfm-common-models/UserRole';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -48,8 +49,9 @@ export class RequestsSummaryComponent implements OnInit {
   availablePrograms: ListItem[];
   orgs: Organization[];
   availableToaCharts: ListItem[];
-
-  constructor(private programmingModel: ProgrammingModel,
+  userRole:UserRole;
+  constructor(private appModel: AppModel,
+    private programmingModel: ProgrammingModel,
     private pomService: PomService,
     private programmingService: ProgrammingService,
     private roleService: RoleService,
@@ -130,6 +132,7 @@ export class RequestsSummaryComponent implements OnInit {
       error => {
         this.dialogService.displayDebug(error);
       });
+      this.userRole = this.appModel.userDetails.userRole;
   }
 
   async setupDropDown() {
@@ -297,8 +300,20 @@ export class RequestsSummaryComponent implements OnInit {
     console.log('Import Program Selected');
   }
 
-  onImportProgram() {
+  onImportProgram(): void  {
     console.log('Import Program');
+  }
+
+  onApproveOrganization(): void  {
+    console.log('Approve Organization');
+  }
+
+  onReturnOrganization(): void  {
+    console.log('Return Organization');
+  }
+
+  onAdvanceOrganization() {
+    console.log('Advance Organization');
   }
 
   onApprove(): void {
@@ -341,5 +356,32 @@ export class RequestsSummaryComponent implements OnInit {
 
   onGridDataChange(data: any): void {
     this.griddata = data;
+  }
+
+  private CanUserHasRole(approveType:string):boolean{
+    
+    //this.userRole.isBudget_Manager = false;
+    //this.userRole.isPOM_Manager = false;
+    //this.userRole.isFunds_Requestor = true;
+
+    let showbutton = false;
+    switch(approveType){
+      case 'approve': {
+        if (this.userRole.isPOM_Manager)
+          showbutton = true;
+        break;     
+      }
+      case 'return':{
+          if (this.userRole.isPOM_Manager || this.userRole.isBudget_Manager)
+            showbutton = true;
+          break;     
+        }
+      case 'advance': {
+          if (this.userRole.isBudget_Manager || this.userRole.isFunds_Requestor)
+            showbutton = true;
+          break;     
+        }
+    }
+    return showbutton;
   }
 }
