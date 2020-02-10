@@ -21,7 +21,7 @@
           <span class="col-6">
             <select class="form-control-sm" formControlName="organizationId">
               <option value="" disabled>Select...</option>
-              <option *ngFor="let org of organizations" [value]="org">{{ org }}</option>
+              <option *ngFor="let org of organizations" [value]="org.abbreviation">{{ org.abbreviation }}</option>
             </select>
           </span>
         </div>
@@ -94,7 +94,7 @@
         * Some fields are invalid
       </span>
 
-      <!-- <pre>{{form.getRawValue() | json}}</pre> -->
+      <pre>{{form.getRawValue() | json}}</pre>
     </form>
   </div>
 

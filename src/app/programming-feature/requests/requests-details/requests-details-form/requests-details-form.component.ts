@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Program } from '../../../models/Program';
 import { FormGroup, FormControl, ValidatorFn, ValidationErrors, Validators } from '@angular/forms';
 import { ProgrammingModel } from '../../../../programming-feature/models/ProgrammingModel';
+import { OrganizationService } from '../../../../services/organization-service';
+import { Organization } from '../../../../pfm-common-models/Organization';
 
 @Component({
   selector: 'pfm-requests-details-form',
@@ -14,7 +16,7 @@ export class RequestsDetailsFormComponent implements OnInit {
 
   public form: FormGroup;
   public addMode = false;
-  organizations: string[];
+  organizations: Organization[];
   divisions: string[];
   missionPriorities: string[];
   agencyPriorities: string[];
@@ -24,9 +26,11 @@ export class RequestsDetailsFormComponent implements OnInit {
 
   constructor(
     public programmingModel: ProgrammingModel,
+    private organizationService: OrganizationService,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.populateDDs();
     this.programData = this.programmingModel.programs.find((p: Program) => {
       return p.shortName === this.programmingModel.selectedProgramName;
     });
@@ -43,7 +47,7 @@ export class RequestsDetailsFormComponent implements OnInit {
       shortName: new FormControl(me.programData.shortName, [Validators.required]),
       longName: new FormControl(me.programData.longName, [Validators.required]),
       type: new FormControl(this.addMode ? 'PROGRAM' : me.programData.type),
-      organizationId: new FormControl(me.programData.organizationId, [Validators.required]),
+      organizationId: new FormControl(me.programData.organizationId ? me.organizations.find(org => org.id === me.programData.organizationId).abbreviation : undefined, [Validators.required]),
       divison: new FormControl(''),
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
@@ -53,12 +57,11 @@ export class RequestsDetailsFormComponent implements OnInit {
       agencyObjective: new FormControl('value from database'),
     }, { validators: this.formValidator });
 
-    this.populateDDs();
     this.disableInputsInEditMode();
   }
 
-  populateDDs() {
-    this.organizations = ['ABC', 'DEF'];
+  async populateDDs() {
+    this.organizations = (await this.organizationService.getAll().toPromise() as any).result;
     this.divisions = ['ABC', 'DEF'];
     this.missionPriorities = ['ABC', 'DEF'];
     this.agencyPriorities = ['ABC', 'DEF'];
@@ -69,7 +72,6 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.form.controls['type'].disable();
     if ( !this.addMode ) {
       this.form.controls['shortName'].disable();
-      this.organizations.push(this.programData.organizationId);
       this.form.controls['organizationId'].disable();
     }
   }
