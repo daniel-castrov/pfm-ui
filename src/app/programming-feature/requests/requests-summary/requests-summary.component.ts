@@ -308,6 +308,18 @@ export class RequestsSummaryComponent implements OnInit {
     this.approveAllPRs()
   }
 
+  onApproveOrganization(): void  {
+    console.log('Approve Organization');
+  }
+
+  onReturnOrganization(): void  {
+    console.log('Return Organization');
+  }
+
+  onAdvanceOrganization() {
+    console.log('Advance Organization');
+  }
+  
   approveAllPRs(): void {
     this.programmingService.processPRsByContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
       resp => {
