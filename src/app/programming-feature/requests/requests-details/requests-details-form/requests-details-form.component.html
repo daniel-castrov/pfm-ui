@@ -6,7 +6,7 @@
         <legend>Program Identification</legend>
         <div class="row">
           <label class="col-6">Program ID</label>
-          <label class="col-6">{{form.controls['shortName'].value}}</label>
+          <span class="col-6"><input type="text" formControlName="shortName" /></span>
         </div>
         <div class="row">
           <label class="col-6">Program Name</label>
@@ -14,11 +14,16 @@
         </div>
         <div class="row">
           <label class="col-6">Program Type</label>
-          <label class="col-6">{{form.controls['type'].value}}</label>
+          <span class="col-6"><input type="text" formControlName="type" /></span>
         </div>
         <div class="row">
           <label class="col-6">Organization</label>
-          <label class="col-6">{{form.controls['organizationId'].value}}</label>
+          <span class="col-6">
+            <select class="form-control-sm" formControlName="organizationId">
+              <option value="" disabled>Select...</option>
+              <option *ngFor="let org of organizations" [value]="org">{{ org }}</option>
+            </select>
+          </span>
         </div>
         <div class="row">
           <label class="col-6">Divison</label>
@@ -85,10 +90,9 @@
         </fieldset>
       </fieldset>
 
-      <button class="btn btn-success" (click)="onSave()"
-        [disabled]="form && (form.errors?.longName || form.errors?.missionPriority)">
-        Save
-      </button>
+      <span *ngIf="(form && form.invalid) || (form.errors?.shortName)" style="font-style: italic; font-size: small;">
+        * Some fields are invalid
+      </span>
 
       <!-- <pre>{{form.getRawValue() | json}}</pre> -->
     </form>
