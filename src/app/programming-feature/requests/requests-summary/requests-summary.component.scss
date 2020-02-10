@@ -47,6 +47,81 @@ h3{
   width: 100%;
 }
 
+.div-button-return{
+  float:right; 
+  padding-right:3px;
+}
+
+.div-button-approve{
+  float:right; 
+  padding-right:3px;
+}
+.div-button-advance{
+  float:right; 
+  padding-right:3px;
+}
+.div-button-approve-all{
+  float:right; 
+  padding-right:3px;
+}
+.div-approve{
+  float:right !important;  
+  width:47%;
+}
+
+.button-return {
+  background-color: rgb(221, 23, 23); /* Green */
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight:bold;
+  width: 100% !important;
+  height: 100% !important;
+}
+.button-approve {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight:bold;
+  width: 100% !important;
+  height: 100% !important;
+}
+.button-approveall {
+  background-color: rgb(81, 99, 125); /* Green */
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight:bold;
+  width: 100% !important;
+  height: 100% !important;
+}
+.button-advance {
+  background-color: rgb(48, 25, 137); /* Green */
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight:bold;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .confirm{
   display: flex;
   width: 89%;

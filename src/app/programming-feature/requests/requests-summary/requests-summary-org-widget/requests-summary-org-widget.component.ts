@@ -152,6 +152,7 @@ export class RequestsSummaryOrgWidgetComponent {
       });
       //set data to chart
       this.treeMapChart.dataTable = orgDataTable; //organizationTable;
+      this.treeMapChart = Object.assign({}, this.treeMapChart);
       // this.treeMapChart.component.draw();
     }
   }
@@ -184,7 +185,8 @@ export class RequestsSummaryOrgWidgetComponent {
     //set data to chart
     this.treeMapChart.dataTable = lineTable;
     setTimeout(() => {
-      this.treeMapChart.component.draw();
+      //this.treeMapChart.component.draw();
+      this.treeMapChart = Object.assign({}, this.treeMapChart);
     }, 0);
     
   }
@@ -263,8 +265,9 @@ export class RequestsSummaryOrgWidgetComponent {
 
     //set data to chart
     this.treeMapChart.dataTable = statusTable;
-    this.treeMapChart.component.draw();
-    this.treeMapChart.goUpAndDraw();
+    this.treeMapChart = Object.assign({}, this.treeMapChart);
+    //this.treeMapChart.component.draw();
+    //this.treeMapChart.goUpAndDraw();
 
   }
 

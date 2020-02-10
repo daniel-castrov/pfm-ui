@@ -1,14 +1,38 @@
 <div class="main section-banner">
   <div class="title-line">
-    <div style="float:none;width:85%">
+    <div  style="float:left;width:80%">
       <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
     </div>
-    <div style="float: right;">
-      <!-- <pfm-primary-button [label]="'Submit All'"></pfm-primary-button>-->
-      <pfm-primary-button [label]="'Approve All PRs - Demo only'" (click)="onApprove()"></pfm-primary-button>
-    </div>
+    <div class="div-approve">
+        <div  class="div-button-approve-all">
+            <button (click)="onApprove()" class="button-approveall">Approve All PRs - Demo only</button>
+        </div>
+        <div class="div-button-approve">
+          <button (click)="onApproveOrganization()" class="button-approve">Approve Organization</button>
+        </div> 
+        <div class="div-button-return">
+          <button (click)="onReturnOrganization()" class="button-return">Return Organization</button>
+      </div> 
+      <div class="div-button-advance">
+        <button (click)="onAdvanceOrganization()" class="button-advance">Advance Organization</button>
+    </div> 
+   <!--
+   <div  class="div-button-approve-all">
+        <pfm-primary-button [label]="'Approve All PRs - Demo only'" (click)="onApprove()"></pfm-primary-button>
+   </div>
+   <div *ngIf="CanUserHasRole('advance')" class="div-button-advance">
+      <pfm-primary-button [label]="'Advance Organization'" (click)="onApprove()"></pfm-primary-button>
+   </div> 
+  <div *ngIf="CanUserHasRole('return')"  class="div-button-return">
+    <pfm-primary-button [label]="'Return Organization'" (click)="onApprove()"></pfm-primary-button>
   </div>
-  <pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
+  <div *ngIf="CanUserHasRole('approve')" class="div-button-approve">
+    <pfm-primary-button [label]="'Approve Organization'" (click)="onApprove()"></pfm-primary-button>
+  </div>   
+  -->       
+</div>
+</div>
+<pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
     [label]="'Select Organization to View:'" [required]="true" [id]="'availableOrgsDropDown'" [fieldName]="'name'" [fieldLabel]="'name'"
     [options]="availableOrgs"></pfm-dropdown>
 </div>
