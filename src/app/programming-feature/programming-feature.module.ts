@@ -42,12 +42,16 @@ import { MrdbServiceImpl } from './services/mrdb-service-impl.service';
 import { RequestSummaryNavigationHistoryService } from './requests/requests-summary/requests-summary-navigation-history.service';
 import { VisibilityService } from '../services/visibility-service';
 import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
+import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FileUploadComponent } from '../pfm-coreui/file-upload/file-upload/file-upload.component';
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent, ScheduleComponent],
+  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent, ScheduleComponent, RequestsDetailsFormComponent],
   imports: [
     CommonModule,
     HttpClientModule,
+    ReactiveFormsModule,
     GridsterModule,
     Ng2GoogleChartsModule,
     PfmCoreuiModule,
