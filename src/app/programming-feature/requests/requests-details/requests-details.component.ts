@@ -27,4 +27,19 @@ export class RequestsDetailsComponent implements OnInit {
     this.programmingModel.selectedProgramName = this.route.snapshot.paramMap.get("id");
   }
 
+  onApprove(): void  {
+    console.log('Approve Organization');
+  }
+
+  onSave(): void  {
+    console.log('Approve Organization');
+  }
+
+  onReject(): void  {
+    console.log('Approve Organization');
+  }
+
+  onValidate(): void  {
+    console.log('Approve Organization');
+  }
 }
