@@ -10,7 +10,7 @@ import { PluginLoaderService } from '../../services/plugin-loader/plugin-loader.
 export class RequestsComponent implements OnInit {
   busy:boolean;
 
-  constructor(private programmingModel: ProgrammingModel) {
+  constructor() {
   }
 
   ngOnInit() {
