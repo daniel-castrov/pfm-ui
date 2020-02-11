@@ -1,6 +1,4 @@
-import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { ProgrammingModel } from '../models/ProgrammingModel';
-import { PluginLoaderService } from '../../services/plugin-loader/plugin-loader.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'pfm-programming',
@@ -8,7 +6,7 @@ import { PluginLoaderService } from '../../services/plugin-loader/plugin-loader.
   styleUrls: ['./requests.component.scss']
 })
 export class RequestsComponent implements OnInit {
-  busy:boolean;
+  busy: boolean;
 
   constructor() {
   }
