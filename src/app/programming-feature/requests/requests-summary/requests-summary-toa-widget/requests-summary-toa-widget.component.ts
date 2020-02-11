@@ -251,10 +251,7 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         }
         let programTotal: number = row.funds[year];
         // place total in correct value.
-        // todo financial manager doesnt exist yet needs to be checked for.
-        if (this.appModel.userDetails.userRole.isPOM_Manager && row.assignedTo === "POM_Manager" ||
-            this.appModel.userDetails.userRole.isFunds_Requestor && row.assignedTo === "Funds_Requestor"
-        ) {
+        if (this.appModel.userDetails.roles.includes(row.assignedTo)) {
           if (row.status == 'APPROVED') {
             rows[year].approved = rows[year].approved + programTotal;
           } else if (row.status == 'REJECTED') {

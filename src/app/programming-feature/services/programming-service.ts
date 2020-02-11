@@ -17,5 +17,7 @@ export abstract class ProgrammingService extends BaseRestService {
    */
   abstract getPRsForContainer( containerId: string, organizationId: string ): Observable<object>;
 
-  abstract processPRsByContainer(containerId: string, action: string, organizationId?: string);
+  abstract processPRsForContainer( containerId: string, action: string, organizationId?: string);
+
+  abstract getPermittedOrganizations();
 }

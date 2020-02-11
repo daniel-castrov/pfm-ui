@@ -19,6 +19,7 @@ export class UserDetailsModel {
   public suspended:boolean;
   public valid:boolean;
   public userRole:UserRole;
+  public roles: string[];
   public currentCommunity:CommunityModel;
   public fullName:string;
 }
