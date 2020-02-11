@@ -33,6 +33,8 @@
                           [rowHeight]="40"
                           [pagination]="showPagination"
                           [paginationPageSize]="pageSize"
+                          [isExternalFilterPresent]="isExternalFilterPresent"
+                          [doesExternalFilterPass]="doesExternalFilterPass"
                           (gridReady)="onGridReady($event)"
                           (rowDragEnd)="onRowDragEnd($event)"
                           (cellClicked)="onCellClicked($event)"

@@ -19,6 +19,8 @@ export class DatagridComponent implements OnInit {
   @Input() addDropdownCtaTooltip:string = 'Add';  // Add dropdown CTA tooltip
   @Input() addDropdownCtaOptions:ListItem[];
   @Input() tabToNextCell;
+  @Input() isExternalFilterPresent;
+  @Input() doesExternalFilterPass;
 
   @Output() onCellAction:EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() onAddCtaEvent:EventEmitter<any> = new EventEmitter<any>();
