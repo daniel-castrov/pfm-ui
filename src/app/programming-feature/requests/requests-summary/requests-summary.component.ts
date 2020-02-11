@@ -135,7 +135,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   async setupDropDown() {
-    this.organizationService.getAll().subscribe(
+    this.programmingService.getPermittedOrganizations().subscribe(
       resp => {
         const orgs = (resp as any).result;
         this.orgs = orgs;
@@ -319,9 +319,9 @@ export class RequestsSummaryComponent implements OnInit {
   onAdvanceOrganization() {
     console.log('Advance Organization');
   }
-  
+
   approveAllPRs(): void {
-    this.programmingService.processPRsByContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
+    this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
       resp => {
 
         this.requestsSummaryWidget.gridData.forEach(ps => {
@@ -338,8 +338,8 @@ export class RequestsSummaryComponent implements OnInit {
         this.dialogService.displayToastInfo('All program requests successfully approved.')
       },
       error => {
-        let err = error as any;
-        this.dialogService.displayInfo(err.error);
+        let err = (error as any).error;
+        this.dialogService.displayToastError(err.error);
       });
   }
 

@@ -17,11 +17,15 @@ export class ProgrammingServiceImpl extends ProgrammingService {
     return this.get( 'program/container/' + containerId,  new HttpParams().set('organizationId', organizationId));
   }
 
-  processPRsByContainer( containerId: string, action: string, organizationId?: string ) {
+  processPRsForContainer( containerId: string, action: string, organizationId?: string ) {
     organizationId =  organizationId ? organizationId : '';
     const params: HttpParams = new HttpParams()
         .set('action', action)
         .set('organizationId', organizationId);
     return this.put( 'program/container/' + containerId + '/process', null, params);
+  }
+
+  getPermittedOrganizations() {
+    return this.get( 'program/permittedOrganizations');
   }
 }
