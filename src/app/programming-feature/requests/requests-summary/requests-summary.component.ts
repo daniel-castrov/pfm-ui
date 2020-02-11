@@ -317,28 +317,26 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onAdvanceOrganization() {
-    console.log('Advance Organization');
+    this.programmingService.processPRsForContainer(
+        this.programmingModel.pom.workspaceId, 'Advance Organization',  this.selectedOrg.value).subscribe(
+        resp => {
+          this.organizationSelected( this.selectedOrg );
+          this.dialogService.displayToastInfo( 'All program requests successfully advanced.' );
+        },
+        error => {
+          const err = ( error as any ).error;
+          this.dialogService.displayToastError( err.error );
+        } );
   }
 
   approveAllPRs(): void {
     this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
       resp => {
-
-        this.requestsSummaryWidget.gridData.forEach(ps => {
-          ps.assignedTo = "POM Manager";
-          ps.status = "Approved";
-        });
-
-        // reload or refresh the grid data after update
-        this.requestsSummaryWidget.gridApi.setRowData(this.requestsSummaryWidget.gridData);
-        this.griddata = this.requestsSummaryWidget.gridData;
-
-        this.orgWidget.chartSelected(this.orgWidget.defaultChart);
         this.organizationSelected(this.selectedOrg);
         this.dialogService.displayToastInfo('All program requests successfully approved.')
       },
       error => {
-        let err = (error as any).error;
+        const err = (error as any).error;
         this.dialogService.displayToastError(err.error);
       });
   }
