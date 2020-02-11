@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { RoleService } from '../../../../services/role-service';
 import { Role } from '../../../../pfm-common-models/Role';
 import { ListItem } from '../../../../pfm-common-models/ListItem';
+import { AppModel } from '../../../../pfm-common-models/AppModel';
 
 @Component({
     selector: 'pfm-requests-summary-grid',
@@ -31,7 +32,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     id: string = 'requests-summary-component';
     busy: boolean;
 
-    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel, private router: Router, private roleService: RoleService) {
+    constructor(private dialogService: DialogService, private programmingModel: ProgrammingModel, private appModel: AppModel, private router: Router) {
         this.columns = [
             {
                 headerName: 'Program',
@@ -83,6 +84,8 @@ export class RequestsSummaryGridComponent implements OnInit {
                 valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
             }
         );
+        this.isExternalFilterPresent = this.isExternalFilterPresent.bind(this);
+        this.doesExternalFilterPass = this.doesExternalFilterPass.bind(this);
         this.resetGridData();
     }
 
@@ -167,5 +170,13 @@ export class RequestsSummaryGridComponent implements OnInit {
 
     onAddProgram(event: any) {
         this.onAddCtaEvent.emit(event);
+    }
+
+    isExternalFilterPresent() {
+      return !this.appModel.userDetails.roles.includes('POM_Manager');
+    }
+
+    doesExternalFilterPass(node) {
+      return this.appModel.userDetails.roles.includes(node.data.assignedTo);
     }
 }
