@@ -53,6 +53,15 @@
       "single"
     ],
     "trailing-comma": false,
+    "max-line-length": [
+      true,
+      {
+        "limit": 120,
+        "ignore-pattern": "^import |^export {(.*?)}",
+        "check-strings": true,
+        "check-regex": true
+      }
+    ],
 
     "no-output-on-prefix": true,
     "no-inputs-metadata-property": true,
