@@ -44,82 +44,37 @@ h3{
 
 .button-container{
   display: flex;
+  justify-content: flex-end;
   width: 100%;
 }
 
 .div-button-return{
-  float:right; 
-  padding-right:3px;
+  display: flex;
 }
 
 .div-button-approve{
-  float:right; 
-  padding-right:3px;
+  display: flex;
+  padding-left: 5px;
 }
 .div-button-advance{
-  float:right; 
-  padding-right:3px;
+  display: flex;
+  padding-left: 5px;
 }
 .div-button-approve-all{
-  float:right; 
-  padding-right:3px;
-}
-.div-approve{
-  float:right !important;  
-  width:47%;
+  display: flex;
+  padding-left: 5px;
 }
 
-.button-return {
-  background-color: rgb(221, 23, 23); /* Green */
-  border: none;
+.btn-green{
   color: white;
-  padding: 8px 8px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  font-weight:bold;
-  width: 100% !important;
-  height: 100% !important;
+  background-color: green !important;
+  border-color: darkgreen !important;
 }
-.button-approve {
-  background-color: #4CAF50; /* Green */
-  border: none;
+
+.btn-red{
   color: white;
-  padding: 8px 8px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  font-weight:bold;
-  width: 100% !important;
-  height: 100% !important;
-}
-.button-approveall {
-  background-color: rgb(81, 99, 125); /* Green */
-  border: none;
-  color: white;
-  padding: 8px 8px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  font-weight:bold;
-  width: 100% !important;
-  height: 100% !important;
-}
-.button-advance {
-  background-color: rgb(48, 25, 137); /* Green */
-  border: none;
-  color: white;
-  padding: 8px 8px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  font-weight:bold;
-  width: 100% !important;
-  height: 100% !important;
+  background-color: red !important;
+  border-color: darkgreen !important;
 }
 
 .confirm{
@@ -130,3 +85,5 @@ h3{
 .cancel{
   display: flex;
 }
+
+
