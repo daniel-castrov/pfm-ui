@@ -18,12 +18,11 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   @Input() pomYear: number;
   @Input() programmingModel: ProgrammingModel;
   @Input() selectedOrg: ListItem;
-  @Input() toaWidgetItem: ElementRef;
 
   chartReady: boolean;
   defaultChart: ListItem;
 
-  public columnChart: any = {
+  columnChart: any = {
     chartType: 'ColumnChart',
     dataTable: [],
     options: {
@@ -86,9 +85,9 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
   }
 
   private toListItem(years: string[]): ListItem[] {
-    let items: ListItem[] = [];
-    for (let year of years) {
-      let item: ListItem = new ListItem();
+    const items: ListItem[] = [];
+    for (const year of years) {
+      const item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
       item.value = year;
@@ -102,17 +101,13 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
       this.defaultChart = chartType;
       if (chartType.name === 'Community Status') {
         this.toaChartCommunityStatus();
-      }
-      else if (chartType.name === 'Community TOA Difference') {
+      } else if (chartType.name === 'Community TOA Difference') {
         this.toaChartCommunityToaDifference();
-      }
-      else if (chartType.name === 'Organization Status') {
+      } else if (chartType.name === 'Organization Status') {
         this.toaChartOrganizationStatus();
-      }
-      else if (chartType.name === 'Organization TOA Difference') {
+      } else if (chartType.name === 'Organization TOA Difference') {
         this.toaChartOrganizationToaDifference();
-      }
-      else if (chartType.name === 'Funding Line Status') {
+      } else if (chartType.name === 'Funding Line Status') {
         this.toaChartFundingLineStatus();
       }
     }
@@ -125,19 +120,19 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.setStatusChartOptions();
     this.columnChart.options.title = 'Community Status';
     // get data from grid
-    let rows: any = this.calculateSummary();
+    const rows: any = this.calculateSummary();
     // Set data header
-    let data: any[] = [
+    const data: any[] = [
       ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
     ];
     for (let i = 0; i < 5; i++) {
-      let year: string = 'FY' + (this.pomYear + i - 2000);
-      let toa: number = this.programmingModel.pom.communityToas[i].amount;
-      let approved = rows[this.pomYear + i].approved;
-      let rejected = rows[this.pomYear + i].rejected;
-      let saved = rows[this.pomYear + i].saved;
-      let outstanding = rows[this.pomYear + i].outstanding;
-      let notMine = rows[this.pomYear + i].notMine;
+      const year: string = 'FY' + (this.pomYear + i - 2000);
+      const toa: number = this.programmingModel.pom.communityToas[i].amount;
+      const approved = rows[this.pomYear + i].approved;
+      const rejected = rows[this.pomYear + i].rejected;
+      const saved = rows[this.pomYear + i].saved;
+      const outstanding = rows[this.pomYear + i].outstanding;
+      const notMine = rows[this.pomYear + i].notMine;
       data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
     }
     // set data to char and refresh
@@ -152,15 +147,15 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.setDifferenceChartOptions();
     this.columnChart.options.title = 'Community TOA Difference';
     // Calculate totals
-    let totals: any[] = this.calculateTotals();
+    const totals: any[] = this.calculateTotals();
     // Set data header
-    let data: any = [
+    const data: any = [
       ['Fiscal Year', 'TOA Difference'],
     ];
     // Add difference to data
     for (let i = 0; i < 5; i++) {
-      let year: string = 'FY' + (totals[i].year - 2000);
-      let difference: number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
+      const year: string = 'FY' + (totals[i].year - 2000);
+      const difference: number = totals[i].amount - this.programmingModel.pom.communityToas[i].amount;
       data.push([year, difference]);
     }
     // Set data to char and refresh
@@ -171,23 +166,23 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   toaChartOrganizationStatus() {
     this.chartReady = false;
-    //set options
+    // set options
     this.setStatusChartOptions();
     this.columnChart.options.title = this.selectedOrg.name + ' Organization Status';
     // get data from grid
-    let rows: any = this.calculateSummary();
-    //set data header
-    let data: any[] = [
+    const rows: any = this.calculateSummary();
+    // set data header
+    const data: any[] = [
       ['Fiscal Year', 'TOA', 'Approved by Me', 'Rejected by Me', 'Saved by Me', 'Outstanding for Me', 'Not in My Queue'],
     ];
     for (let i = 0; i < 5; i++) {
-      let year: string = 'FY' + (this.pomYear + i - 2000);
-      let toa: number = this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
-      let approved = rows[this.pomYear + i].approved;
-      let rejected = rows[this.pomYear + i].rejected;
-      let saved = rows[this.pomYear + i].saved;
-      let outstanding = rows[this.pomYear + i].outstanding;
-      let notMine = rows[this.pomYear + i].notMine;
+      const year: string = 'FY' + (this.pomYear + i - 2000);
+      const toa: number = this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
+      const approved = rows[this.pomYear + i].approved;
+      const rejected = rows[this.pomYear + i].rejected;
+      const saved = rows[this.pomYear + i].saved;
+      const outstanding = rows[this.pomYear + i].outstanding;
+      const notMine = rows[this.pomYear + i].notMine;
       data.push([year, toa, approved, rejected, saved, outstanding, notMine]);
     }
     // set data to char and refresh
@@ -202,15 +197,15 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
     this.setDifferenceChartOptions();
     this.columnChart.options.title = this.selectedOrg.name + ' TOA Difference';
     // Calculate totals
-    let totals: any[] = this.calculateTotals();
+    const totals: any[] = this.calculateTotals();
     // Set data header
-    let data: any = [
+    const data: any = [
       ['Fiscal Year', 'TOA Difference'],
     ];
     // Add difference to data
     for (let i = 0; i < 5; i++) {
-      let year: string = 'FY' + (totals[i].year - 2000);
-      let difference: number = totals[i].amount - this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
+      const year: string = 'FY' + (totals[i].year - 2000);
+      const difference: number = totals[i].amount - this.programmingModel.pom.orgToas[this.selectedOrg.value][i].amount;
       data.push([year, difference]);
     }
     // Set data to char and refresh
@@ -225,10 +220,10 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   // Used to calculate total funds per year
   private calculateTotals(): any[] {
-    let totals: any[] = [];
-    for (let row of this.griddata) {
+    const totals: any[] = [];
+    for (const row of this.griddata) {
       for (let i = 0; i < 5; i++) {
-        let year = this.pomYear + i;
+        const year = this.pomYear + i;
         if (!totals[i]) {
           totals[i] = { year: (year), amount: 0 };
         }
@@ -242,14 +237,14 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   // Used to calculate summary data per year per status and user role
   private calculateSummary(): any {
-    let rows: any = {};
-    for (let row of this.griddata) {
+    const rows: any = {};
+    for (const row of this.griddata) {
       for (let i = 0; i < 5; i++) {
-        let year = this.pomYear + i;
+        const year = this.pomYear + i;
         if (!rows[year]) {
           rows[year] = { approved: 0, rejected: 0, saved: 0, outstanding: 0, notMine: 0 };
         }
-        let programTotal: number = row.funds[year];
+        const programTotal: number = row.funds[year];
         // place total in correct value.
         if (this.appModel.userDetails.roles.includes(row.assignedTo)) {
           if (row.status == 'APPROVED') {
@@ -271,11 +266,15 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
 
   // Sets difference chart
   private setDifferenceChartOptions() {
+    const width: any = this.columnChart.options.width;
+    const height: any = this.columnChart.options.height;
     // Set chart type
     this.columnChart.chartType = 'ColumnChart';
     // Set options
     this.columnChart.options = {
       title: this.selectedOrg.name + ' TOA Difference',
+      width,
+      height,
       vAxis: { format: 'currency' },
       legend: { position: 'none' },
       animation: {
@@ -284,18 +283,20 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         startup: true
       }
     };
-    let w: any = this.toaWidgetItem;
-    this.onResize(w.width, w.height);
   }
 
   private setStatusChartOptions() {
+    const width: any = this.columnChart.options.width;
+    const height: any = this.columnChart.options.height;
     // Set chart type
     this.columnChart.chartType = 'ColumnChart';
     // Set Options
     this.columnChart.options = {
       vAxis: { format: 'currency' },
       isStacked: true,
-      chartArea:{left: 80, top: 30, bottom: 20, right: 170, width: '100%', height: '100%'},
+      width,
+      height,
+      chartArea: {left: 80, top: 30, bottom: 20, right: 170, width: '100%', height: '100%'},
       seriesType: 'bars',
       series: { 0: { type: 'line' } },
       colors: ['#00008B', '#008000', '#FF0000', '#FFA500', '#FFFA5C', '#88B8B4'],
@@ -305,7 +306,5 @@ export class RequestsSummaryToaWidgetComponent implements OnInit {
         startup: true
       }
     };
-    let w: any = this.toaWidgetItem;
-    this.onResize(w.width, w.height);
   }
 }

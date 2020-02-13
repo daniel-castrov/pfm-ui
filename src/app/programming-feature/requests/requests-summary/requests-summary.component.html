@@ -27,8 +27,11 @@
   <gridster [options]="options">
     <gridster-item #orgWidetItem [item]="dashboard[0]">
       <div class="gridster-item-content">
-        <pfm-requests-summary-org-widget #orgWidget [griddata]="griddata" [orgs]="orgs"
-          [roles]="programmingModel.roles"></pfm-requests-summary-org-widget>
+        <pfm-requests-summary-org-widget #orgWidget
+                                         [griddata]="griddata"
+                                         [orgs]="orgs"
+                                         [roles]="programmingModel.roles">
+        </pfm-requests-summary-org-widget>
       </div>
     </gridster-item>
 
@@ -39,7 +42,6 @@
                                          [pomYear]="pomYear"
                                          [selectedOrg]="selectedOrg"
                                          [programmingModel]="programmingModel"
-                                         [toaWidgetItem]="toaWidgetItem"
                                          [griddata]="griddata">
         </pfm-requests-summary-toa-widget>
       </div>
