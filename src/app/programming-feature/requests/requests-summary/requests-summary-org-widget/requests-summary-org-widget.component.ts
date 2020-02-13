@@ -79,8 +79,7 @@ export class RequestsSummaryOrgWidgetComponent implements OnInit {
   }
 
   noClick(event) {
-    console.log(event);
-    console.log('click');
+    this.treeMapChart = Object.assign({}, this.treeMapChart);
   }
 
   loadPreviousSelection() {
