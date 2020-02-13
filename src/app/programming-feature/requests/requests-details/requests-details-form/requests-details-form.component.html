@@ -1,33 +1,34 @@
-<div class="row main-content">
-  <div class="col-8">
+<div class="section-main">
+
+  <div class="section-form">
     <form *ngIf="form" [formGroup]="form">
-      
       <fieldset>
         <legend>Program Identification</legend>
         <div class="row">
-          <label class="col-6">Program ID</label>
-          <span class="col-6"><input type="text" formControlName="shortName" /></span>
+          <label class="col-2">Program ID</label>
+          <span class="col-10"><input type="text" formControlName="shortName"/></span>
         </div>
         <div class="row">
-          <label class="col-6">Program Name</label>
-          <span class="col-6"><input type="text" formControlName="longName" /></span>
+          <label class="col-2">Program Name</label>
+          <span class="col-10"><input type="text" formControlName="longName"/></span>
         </div>
         <div class="row">
-          <label class="col-6">Program Type</label>
-          <span class="col-6"><input type="text" formControlName="type" /></span>
+          <label class="col-2">Program Type</label>
+          <span class="col-10"><input type="text" formControlName="type"/></span>
         </div>
         <div class="row">
-          <label class="col-6">Organization</label>
-          <span class="col-6">
-            <select class="form-control-sm" formControlName="organizationId">
-              <option value="" disabled>Select...</option>
-              <option *ngFor="let org of organizations" [value]="org.abbreviation">{{ org.abbreviation }}</option>
-            </select>
-          </span>
+          <label class="col-2">Organization</label>
+          <label class="col-10">{{form.controls['organizationId'].value}}</label>
+<!--          <span class="col-10">-->
+<!--            <select class="form-control-sm" formControlName="organizationId">-->
+<!--              <option value="" disabled>Select...</option>-->
+<!--              <option *ngFor="let org of organizations" [value]="org.abbreviation">{{ org.abbreviation }}</option>-->
+<!--            </select>-->
+<!--          </span>-->
         </div>
         <div class="row">
-          <label class="col-6">Divison</label>
-          <span class="col-6">
+          <label class="col-2">Divison</label>
+          <span class="col-10">
             <select class="form-control-sm" formControlName="divison">
               <option value="" disabled>Select...</option>
               <option *ngFor="let div of divisions" [value]="div">{{ div }}</option>
@@ -35,13 +36,15 @@
           </span>
         </div>
       </fieldset>
+
       <fieldset>
         <legend>Program Information</legend>
+
         <fieldset>
           <legend>Priorities</legend>
           <div class="row">
-            <label class="col-6">Mission Priority</label>
-            <span class="col-6">
+            <label class="col-2">Mission Priority</label>
+            <span class="col-10">
               <select class="form-control-sm" formControlName="missionPriority">
                 <option value="" disabled>Select...</option>
                 <option *ngFor="let item of missionPriorities" [value]="item">{{ item }}</option>
@@ -49,8 +52,8 @@
             </span>
           </div>
           <div class="row">
-            <label class="col-6">Agency Priority</label>
-            <span class="col-6">
+            <label class="col-2">Agency Priority</label>
+            <span class="col-10">
               <select class="form-control-sm" formControlName="agencyPriority">
                 <option value="" disabled>Select...</option>
                 <option *ngFor="let item of agencyPriorities" [value]="item">{{ item }}</option>
@@ -58,8 +61,8 @@
             </span>
           </div>
           <div class="row">
-            <label class="col-6">Directorate Priority</label>
-            <span class="col-6">
+            <label class="col-2">Directorate Priority</label>
+            <span class="col-10">
               <select class="form-control-sm" formControlName="directoratePriority">
                 <option value="" disabled>Select...</option>
                 <option *ngFor="let item of directoratePriorities" [value]="item">{{ item }}</option>
@@ -67,19 +70,20 @@
             </span>
           </div>
         </fieldset>
+
         <fieldset>
           <legend>Strategic Alignment</legend>
           <div class="row">
-            <label class="col-6">SecDef LOE</label>
-            <label class="col-6">{{form.controls['secDef'].value}}</label>
+            <label class="col-2">SecDef LOE</label>
+            <label class="col-10">{{form.controls['secDef'].value}}</label>
           </div>
           <div class="row">
-            <label class="col-6">Strategic Imperative</label>
-            <label class="col-6">{{form.controls['strategicImperative'].value}}</label>
+            <label class="col-2">Strategic Imperative</label>
+            <label class="col-10">{{form.controls['strategicImperative'].value}}</label>
           </div>
           <div class="row">
-            <label class="col-6">Agency Objective</label>
-            <label class="col-6">{{form.controls['agencyObjective'].value}}</label>
+            <label class="col-2">Agency Objective</label>
+            <label class="col-10">{{form.controls['agencyObjective'].value}}</label>
           </div>
         </fieldset>
         <fieldset>
@@ -88,21 +92,18 @@
             <label class="col-12">All program information can be customized to your needs.</label>
           </div>
         </fieldset>
+
       </fieldset>
-
-      <span *ngIf="(form && form.invalid) || (form.errors?.shortName)" style="font-style: italic; font-size: small;">
-        * Some fields are invalid
-      </span>
-
       <!-- <pre>{{form.getRawValue() | json}}</pre> -->
     </form>
   </div>
 
-  <div class="col-4">
+  <div class="section-attachments">
     <fieldset class="file-upload">
-      <legend>Attach File:</legend>
-      <file-upload [area]="'program'" [isImageThumbnail]="true" [imagePath]="" (uploading)="onUploading($event)" (fileUploadEvent)="onFileUploaded($event)"></file-upload>
-  </fieldset>
+      <legend>Attach File</legend>
+      <file-upload [area]="'program'" [isImageThumbnail]="true" [imagePath]="" (uploading)="onUploading($event)"
+                   (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+    </fieldset>
   </div>
 
 </div>

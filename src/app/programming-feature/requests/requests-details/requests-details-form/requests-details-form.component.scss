@@ -2,3 +2,36 @@
   border-style: none;
   background-color: white;
 }
+
+.section-main{
+  display: flex;
+  flex-direction: row;
+}
+
+.section-form{
+  display: flex;
+  width: 75%;
+  padding-right: 5px;
+}
+
+.section-attachments{
+  display: flex;
+  width: 25%;
+  height: 40%;
+}
+
+input{
+  width: 600px;
+}
+
+select{
+  width: 600px;
+}
+
+form{
+  width: 100%;
+}
+
+.row{
+  padding-bottom: 2px;
+}
