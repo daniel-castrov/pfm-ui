@@ -4,7 +4,7 @@ import { RequestsSummaryOrgWidgetComponent } from './requests-summary-org-widget
 import { ProgramSummary } from '../../models/ProgramSummary';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { ProgrammingModel } from '../../models/ProgrammingModel';
-import { PomService } from '../../services/pom-service'
+import { PomService } from '../../services/pom-service';
 import { ProgrammingService } from '../../services/programming-service';
 import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
 import { DialogService } from '../../../pfm-coreui/services/dialog.service';
@@ -19,7 +19,6 @@ import { Program } from '../../models/Program';
 import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
 import { VisibilityService } from '../../../services/visibility-service';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -37,7 +36,12 @@ export class RequestsSummaryComponent implements OnInit {
 
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];
-  selectedOrg: ListItem = { id: 'Please select', name: 'Please select', value: 'Please select', isSelected: false, rawData: 'Please select' };
+  selectedOrg: ListItem = {
+    id: 'Please select',
+    name: 'Please select',
+    value: 'Please select',
+    isSelected: false, rawData: 'Please select'
+  };
   programmingModelReady: boolean;
   pomDisplayYear: string;
   pomYear: number;
@@ -70,11 +74,11 @@ export class RequestsSummaryComponent implements OnInit {
       minRows: 8,
       maxRows: 8,
       itemResizeCallback: (event) => {
-        if (event.id === "toa-widget") {
-          let w: any = this.toaWidgetItem;
+        if (event.id === 'toa-widget') {
+          const w: any = this.toaWidgetItem;
           this.toaWidget.onResize(w.width, w.height);
-        } else if (event.id === "org-widget") {
-          let w: any = this.orgWidgetItem;
+        } else if (event.id === 'org-widget') {
+          const w: any = this.orgWidgetItem;
           this.orgWidget.onResize(w.width, w.height);
         }
 
@@ -91,24 +95,24 @@ export class RequestsSummaryComponent implements OnInit {
       },
     };
 
-    //defaults
-    this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: "org-widget" }, {
+    // defaults
+    this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: 'org-widget' }, {
       x: 0,
       y: 0,
       cols: 4,
       rows: 8,
-      id: "toa-widget"
+      id: 'toa-widget'
     }];
 
     // Populate dropdown options
-    let item: ListItem = new ListItem();
-    item.name = "Previously Funded Program";
-    item.value = "previously-funded-program";
-    item.id = "previously-funded-program";
-    let item2: ListItem = new ListItem();
-    item2.name = "New Program";
-    item2.value = "new-program";
-    item2.id = "new-program";
+    const item: ListItem = new ListItem();
+    item.name = 'Previously Funded Program';
+    item.value = 'previously-funded-program';
+    item.id = 'previously-funded-program';
+    const item2: ListItem = new ListItem();
+    item2.name = 'New Program';
+    item2.value = 'new-program';
+    item2.id = 'new-program';
     this.addOptions = [item, item2];
 
     // Get latest POM
@@ -165,9 +169,11 @@ export class RequestsSummaryComponent implements OnInit {
     const selectedOrganization = this.requestSummaryNavigationHistoryService.getSelectedOrganization();
     if (selectedOrganization) {
       const isShowAll = selectedOrganization.toLowerCase() === 'show all';
-      const showAllValidation = (organization) => { return isShowAll ? organization.id.toLowerCase() === selectedOrganization : organization.value === selectedOrganization };
+      const showAllValidation = (organization) => isShowAll
+        ? organization.id.toLowerCase() === selectedOrganization
+        : organization.value === selectedOrganization;
       const currentOrganization = this.availableOrgs
-        .map(organization => { return { ...organization, isSelected: true, rawData: organization.id } })
+        .map(organization => ({ ...organization, isSelected: true, rawData: organization.id }))
         .find(organization => showAllValidation(organization));
       if (currentOrganization) {
         this.selectedOrg = currentOrganization;
@@ -184,11 +190,11 @@ export class RequestsSummaryComponent implements OnInit {
 
   private getPreferences(): void {
     this.busy = true;
-    this.dashboardService.getWidgetPreferences("programming-requests-summary").subscribe(
+    this.dashboardService.getWidgetPreferences('programming-requests-summary').subscribe(
       data => {
         this.busy = false;
         if (data) {
-          let list: Array<GridsterItem> = data as any;
+          const list: Array<GridsterItem> = data as any;
           if (list && list.length > 0) {
             this.dashboard = list;
           }
@@ -203,7 +209,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   private saveWidgetLayout(): void {
-    this.dashboardService.saveWidgetPreferences("programming-requests-summary", this.dashboard).subscribe(
+    this.dashboardService.saveWidgetPreferences('programming-requests-summary', this.dashboard).subscribe(
       data => {
       },
       error => {
@@ -212,9 +218,9 @@ export class RequestsSummaryComponent implements OnInit {
 
   // Build dropdown list items
   private toListItemOrgs(orgs: Organization[]): ListItem[] {
-    let items: ListItem[] = [];
-    for (let org of orgs) {
-      let item: ListItem = new ListItem();
+    const items: ListItem[] = [];
+    for (const org of orgs) {
+      const item: ListItem = new ListItem();
       item.id = org.abbreviation;
       item.name = org.abbreviation;
       item.value = org.id;
@@ -227,9 +233,9 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   private toListItem(items: string[]): ListItem[] {
-    let list: ListItem[] = [];
-    for (let item of items) {
-      let listItem: ListItem = new ListItem();
+    const list: ListItem[] = [];
+    for (const item of items) {
+      const listItem: ListItem = new ListItem();
       listItem.id = item;
       listItem.name = item;
       listItem.value = item;
@@ -245,19 +251,22 @@ export class RequestsSummaryComponent implements OnInit {
       if (this.programmingModel.pom.status !== 'CLOSED') {
         this.getPRs(this.programmingModel.pom.workspaceId, this.selectedOrg.value);
         // Depending on organization selection change options visible and default chart shown
-        if (organization.id == 'Show All') {
-          let chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
+        if (organization.id === 'Show All') {
+          const chartOptions: string[] = ['Community Status', 'Community TOA Difference', 'Funding Line Status'];
           this.availableToaCharts = this.toListItem(chartOptions);
-        }
-        else {
-          let chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
+        } else {
+          const chartOptions: string[] = ['Organization Status', 'Organization TOA Difference', 'Funding Line Status'];
           this.availableToaCharts = this.toListItem(chartOptions);
         }
       } else {
         this.programmingModelReady = false;
       }
     }
-    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory({ selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all' ? 'show all' : this.selectedOrg.value });
+    this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory(
+      { selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all'
+          ? 'show all' : this.selectedOrg.value
+        }
+      );
   }
 
   private async getPRs(containerId: string, organizationId: string): Promise<void> {
@@ -305,7 +314,7 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onApprove(): void {
-    this.approveAllPRs()
+    this.approveAllPRs();
   }
 
   onApproveOrganization(): void  {
@@ -333,7 +342,7 @@ export class RequestsSummaryComponent implements OnInit {
     this.programmingService.processPRsForContainer(this.programmingModel.pom.workspaceId, 'Approve All PRs').subscribe(
       resp => {
         this.organizationSelected(this.selectedOrg);
-        this.dialogService.displayToastInfo('All program requests successfully approved.')
+        this.dialogService.displayToastInfo('All program requests successfully approved.');
       },
       error => {
         const err = (error as any).error;
@@ -342,9 +351,9 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   getRespRoleId(roleStr: string): any {
-    let respRoleId: string = '';
+    let respRoleId = '';
     this.programmingModel.roles.forEach(role => {
-      if (role.name == roleStr) {
+      if (role.name === roleStr) {
         respRoleId = role.id;
       }
     });
