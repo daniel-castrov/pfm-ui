@@ -1,24 +1,24 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { RequestsSummaryToaWidgetComponent } from './requests-summary-toa-widget/requests-summary-toa-widget.component';
-import { RequestsSummaryOrgWidgetComponent } from './requests-summary-org-widget/requests-summary-org-widget.component';
-import { ProgramSummary } from '../../models/ProgramSummary';
-import { GridsterConfig, GridsterItem } from 'angular-gridster2';
-import { ProgrammingModel } from '../../models/ProgrammingModel';
-import { PomService } from '../../services/pom-service';
-import { ProgrammingService } from '../../services/programming-service';
-import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
-import { DialogService } from '../../../pfm-coreui/services/dialog.service';
-import { ListItem } from '../../../pfm-common-models/ListItem';
-import { RoleService } from '../../../services/role-service';
-import { OrganizationService } from '../../../services/organization-service';
-import { Role } from '../../../pfm-common-models/Role';
-import { Organization } from '../../../pfm-common-models/Organization';
-import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-summary-grid.component';
-import { MrdbService } from '../../services/mrdb-service';
-import { Program } from '../../models/Program';
-import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
-import { VisibilityService } from '../../../services/visibility-service';
-import { Router } from '@angular/router';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {RequestsSummaryToaWidgetComponent} from './requests-summary-toa-widget/requests-summary-toa-widget.component';
+import {RequestsSummaryOrgWidgetComponent} from './requests-summary-org-widget/requests-summary-org-widget.component';
+import {ProgramSummary} from '../../models/ProgramSummary';
+import {GridsterConfig, GridsterItem} from 'angular-gridster2';
+import {ProgrammingModel} from '../../models/ProgrammingModel';
+import {PomService} from '../../services/pom-service';
+import {ProgrammingService} from '../../services/programming-service';
+import {DashboardMockService} from '../../../pfm-dashboard-module/services/dashboard.mock.service';
+import {DialogService} from '../../../pfm-coreui/services/dialog.service';
+import {ListItem} from '../../../pfm-common-models/ListItem';
+import {RoleService} from '../../../services/role-service';
+import {OrganizationService} from '../../../services/organization-service';
+import {Role} from '../../../pfm-common-models/Role';
+import {Organization} from '../../../pfm-common-models/Organization';
+import {RequestsSummaryGridComponent} from './requests-summary-grid/requests-summary-grid.component';
+import {MrdbService} from '../../services/mrdb-service';
+import {Program} from '../../models/Program';
+import {RequestSummaryNavigationHistoryService} from './requests-summary-navigation-history.service';
+import {VisibilityService} from '../../../services/visibility-service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -26,13 +26,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./requests-summary.component.scss']
 })
 export class RequestsSummaryComponent implements OnInit {
-  @ViewChild('toaWidetItem', { static: false }) toaWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryToaWidgetComponent, { static: false }) toaWidget: RequestsSummaryToaWidgetComponent;
+  @ViewChild('toaWidetItem', {static: false}) toaWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryToaWidgetComponent, {static: false}) toaWidget: RequestsSummaryToaWidgetComponent;
 
-  @ViewChild('orgWidetItem', { static: false }) orgWidgetItem: ElementRef;
-  @ViewChild(RequestsSummaryOrgWidgetComponent, { static: false }) orgWidget: RequestsSummaryOrgWidgetComponent;
+  @ViewChild('orgWidetItem', {static: false}) orgWidgetItem: ElementRef;
+  @ViewChild(RequestsSummaryOrgWidgetComponent, {static: false}) orgWidget: RequestsSummaryOrgWidgetComponent;
 
-  @ViewChild(RequestsSummaryGridComponent, { static: false }) requestsSummaryWidget: RequestsSummaryGridComponent;
+  @ViewChild(RequestsSummaryGridComponent, {static: false}) requestsSummaryWidget: RequestsSummaryGridComponent;
 
   griddata: ProgramSummary[];
   availableOrgs: ListItem[];
@@ -96,7 +96,7 @@ export class RequestsSummaryComponent implements OnInit {
     };
 
     // defaults
-    this.dashboard = [{ x: 0, y: 0, cols: 4, rows: 8, id: 'org-widget' }, {
+    this.dashboard = [{x: 0, y: 0, cols: 4, rows: 8, id: 'org-widget'}, {
       x: 0,
       y: 0,
       cols: 4,
@@ -145,20 +145,20 @@ export class RequestsSummaryComponent implements OnInit {
         this.orgs = orgs;
         const dropdownOptions: Organization[] = [];
         this.visibilityService.isVisible('availableOrgsDropDown,option,Show All').subscribe(
-            isVisibleResp => {
-              const isVisible: boolean = (isVisibleResp as any).result;
-              if (isVisible) {
-                const showAllOrg = new Organization();
-                showAllOrg.id = null;
-                showAllOrg.abbreviation = 'Show All';
-                dropdownOptions.unshift( showAllOrg );
-              }
-              this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-              this.loadPreviousSelection();
-            },
-            error => {
-              this.dialogService.displayDebug(error);
-            });
+          isVisibleResp => {
+            const isVisible: boolean = (isVisibleResp as any).result;
+            if (isVisible) {
+              const showAllOrg = new Organization();
+              showAllOrg.id = null;
+              showAllOrg.abbreviation = 'Show All';
+              dropdownOptions.unshift(showAllOrg);
+            }
+            this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
+            this.loadPreviousSelection();
+          },
+          error => {
+            this.dialogService.displayDebug(error);
+          });
       },
       error => {
         this.dialogService.displayDebug(error);
@@ -173,7 +173,7 @@ export class RequestsSummaryComponent implements OnInit {
         ? organization.id.toLowerCase() === selectedOrganization
         : organization.value === selectedOrganization;
       const currentOrganization = this.availableOrgs
-        .map(organization => ({ ...organization, isSelected: true, rawData: organization.id }))
+        .map(organization => ({...organization, isSelected: true, rawData: organization.id}))
         .find(organization => showAllValidation(organization));
       if (currentOrganization) {
         this.selectedOrg = currentOrganization;
@@ -263,10 +263,11 @@ export class RequestsSummaryComponent implements OnInit {
       }
     }
     this.requestSummaryNavigationHistoryService.updateRequestSummaryNavigationHistory(
-      { selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all'
+      {
+        selectedOrganization: this.selectedOrg.id.toLowerCase() === 'show all'
           ? 'show all' : this.selectedOrg.value
-        }
-      );
+      }
+    );
   }
 
   private async getPRs(containerId: string, organizationId: string): Promise<void> {
@@ -317,25 +318,34 @@ export class RequestsSummaryComponent implements OnInit {
     this.approveAllPRs();
   }
 
-  onApproveOrganization(): void  {
-    console.log('Approve Organization');
+  onApproveOrganization(): void {
+    this.programmingService.processPRsForContainer(
+      this.programmingModel.pom.workspaceId, 'Approve Organization', this.selectedOrg.value).subscribe(
+      resp => {
+        this.organizationSelected(this.selectedOrg);
+        this.dialogService.displayToastInfo('All program requests have been approved successfully.');
+      },
+      error => {
+        const err = (error as any).error;
+        this.dialogService.displayToastError(err.error);
+      });
   }
 
-  onReturnOrganization(): void  {
+  onReturnOrganization(): void {
     console.log('Return Organization');
   }
 
   onAdvanceOrganization() {
     this.programmingService.processPRsForContainer(
-        this.programmingModel.pom.workspaceId, 'Advance Organization',  this.selectedOrg.value).subscribe(
-        resp => {
-          this.organizationSelected( this.selectedOrg );
-          this.dialogService.displayToastInfo( 'All program requests successfully advanced.' );
-        },
-        error => {
-          const err = ( error as any ).error;
-          this.dialogService.displayToastError( err.error );
-        } );
+      this.programmingModel.pom.workspaceId, 'Advance Organization', this.selectedOrg.value).subscribe(
+      resp => {
+        this.organizationSelected(this.selectedOrg);
+        this.dialogService.displayToastInfo('All program requests successfully advanced.');
+      },
+      error => {
+        const err = (error as any).error;
+        this.dialogService.displayToastError(err.error);
+      });
   }
 
   approveAllPRs(): void {
