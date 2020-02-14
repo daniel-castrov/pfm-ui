@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgrammingModel } from '../../models/ProgrammingModel';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary/requests-summary-navigation-history.service';
+import { ScheduleComponent } from './schedule/schedule.component';
+import { TabDirective } from 'ngx-bootstrap';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -10,6 +12,10 @@ import { RequestSummaryNavigationHistoryService } from '../requests-summary/requ
 })
 
 export class RequestsDetailsComponent implements OnInit {
+
+  @ViewChild('pfmSchedule', { static: false })
+  pfmSchedule: ScheduleComponent;
+  currentSelectedTab = 1;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -27,19 +33,42 @@ export class RequestsDetailsComponent implements OnInit {
     this.programmingModel.selectedProgramName = this.route.snapshot.paramMap.get("id");
   }
 
-  onApprove(): void  {
+  onApprove(): void {
     console.log('Approve Organization');
   }
 
-  onSave(): void  {
+  onSave(): void {
     console.log('Approve Organization');
   }
 
-  onReject(): void  {
+  onReject(): void {
     console.log('Approve Organization');
   }
 
-  onValidate(): void  {
+  onValidate(): void {
     console.log('Approve Organization');
+  }
+
+  onSelectTab(event: TabDirective) {
+    switch (event.heading.toLowerCase()) {
+      case 'program':
+        this.currentSelectedTab = 0;
+        break;
+      case 'funds':
+        this.currentSelectedTab = 1;
+        break;
+      case 'schedule':
+        this.currentSelectedTab = 2;
+        break;
+      case 'scope':
+        this.currentSelectedTab = 3;
+        break;
+      case 'assets':
+        this.currentSelectedTab = 4;
+        break;
+      case 'justification':
+        this.currentSelectedTab = 5;
+        break;
+    }
   }
 }

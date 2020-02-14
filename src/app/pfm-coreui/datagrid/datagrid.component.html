@@ -1,45 +1,38 @@
 <div class="pfm-datagrid">
-    <div class="pfm-datagrid-extras">
-      <div class="pagination-container" *ngIf="showPagination">
-        <p>Show</p>
-        <select [(ngModel)]="pageSize" (ngModelChange)="handlePageSizeChanged($event)">
-          <option value=20>20</option>
-          <option value=50>50</option>
-          <option value=100>100</option>
-          <option value=250>250</option>
-          <option value=500>500</option>
-        </select>
-        <p>Entries</p>
-      </div>
-      <div class="add-row-container" *ngIf="showAddDropdownCta">
-        <div title="Add" ng-if="showAddRow">
-          <pfm-dropdown (onSelectionChanged)="handleAddDropdownCta($event)" [title]="addDropdownCtaTooltip" [type]="'iconDropdown'" [iconName]="'plus'" [required]="true" [id]="'grid_icon_dropdown_id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="options"></pfm-dropdown>
-        </div>
+  <div class="pfm-datagrid-extras">
+    <div class="pagination-container" *ngIf="showPagination">
+      <p>Show</p>
+      <select [(ngModel)]="pageSize" (ngModelChange)="handlePageSizeChanged($event)">
+        <option value=20>20</option>
+        <option value=50>50</option>
+        <option value=100>100</option>
+        <option value=250>250</option>
+        <option value=500>500</option>
+      </select>
+      <p>Entries</p>
+    </div>
+    <div class="add-row-container" *ngIf="showAddDropdownCta">
+      <div title="Add" ng-if="showAddRow">
+        <pfm-dropdown (onSelectionChanged)="handleAddDropdownCta($event)" [title]="addDropdownCtaTooltip"
+          [type]="'iconDropdown'" [iconName]="'plus'" [required]="true" [id]="'grid_icon_dropdown_id'"
+          [fieldName]="'name'" [fieldLabel]="'name'" [options]="options">
+        </pfm-dropdown>
       </div>
     </div>
-    <div class="pfm-data">
-        <ag-grid-angular  style="width: 100%; height: 100%;"
-                          [columnDefs]="columns"
-                          [rowData]="rows"
-                          [rowDragManaged]="true"
-                          [editType]="'fullRow'"
-                          [suppressClickEdit]="true"
-                          [defaultColDef]="defaultColDef"
-                          [modules]="modules"
-                          [suppressRowClickSelection]="true"
-                          [animateRows]="true"
-                          [tabToNextCell]="tabToNextCell"
-                          [rowSelection]="'single'"
-                          [rowHeight]="40"
-                          [pagination]="showPagination"
-                          [paginationPageSize]="pageSize"
-                          [isExternalFilterPresent]="isExternalFilterPresent"
-                          [doesExternalFilterPass]="doesExternalFilterPass"
-                          (gridReady)="onGridReady($event)"
-                          (rowDragEnd)="onRowDragEnd($event)"
-                          (cellClicked)="onCellClicked($event)"
-                          (modelUpdated)="onModelUpdated()"
-                          (gridSizeChanged)="onGridSizeChanged()">
-        </ag-grid-angular>
+    <div class="add-row-container" *ngIf="showAddSingleRow">
+      <div title="Add" (click)="handleAddCta('add-single-row')">
+        <fa name="plus" title="Add"></fa>
+      </div>
     </div>
+  </div>
+  <div class="pfm-data">
+    <ag-grid-angular style="width: 100%; height: 100%;" [columnDefs]="columns" [rowData]="rows" [rowDragManaged]="true"
+      [editType]="'fullRow'" [suppressClickEdit]="true" [defaultColDef]="defaultColDef" [modules]="modules"
+      [suppressRowClickSelection]="true" [animateRows]="true" [tabToNextCell]="tabToNextCell" [rowSelection]="'single'"
+      [rowHeight]="40" [pagination]="showPagination" [paginationPageSize]="pageSize"
+      [isExternalFilterPresent]="isExternalFilterPresent" [doesExternalFilterPass]="doesExternalFilterPass"
+      (gridReady)="onGridReady($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
+      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()">
+    </ag-grid-angular>
+  </div>
 </div>

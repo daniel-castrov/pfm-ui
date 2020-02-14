@@ -32,6 +32,9 @@ import { CancelCtaComponent } from './form-inputs/cancel-cta/cancel-cta.componen
 import { TreeDatagridComponent } from './tree-datagrid/tree-datagrid.component';
 import { TreeCellRendererComponent } from './datagrid/renderers/tree-cell-renderer/tree-cell-renderer.component';
 import { FileUploadComponent } from './file-upload/file-upload/file-upload.component';
+import { BsDatepickerModule } from 'ngx-bootstrap';
+import { DatePickerCellEditorComponent } from './datagrid/renderers/date-picker-cell-editor/date-picker-cell-editor.component';
+import { DatePickerCellRendererComponent } from './datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -61,10 +64,27 @@ import { FileUploadComponent } from './file-upload/file-upload/file-upload.compo
     CancelCtaComponent,
     TreeDatagridComponent,
     TreeCellRendererComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    DatePickerCellEditorComponent,
+    DatePickerCellRendererComponent
   ],
   imports: [
-    CommonModule, RouterModule, AngularFontAwesomeModule, FormsModule, NgbModule, AgGridModule.withComponents([    TreeCellRendererComponent, ActionCellRendererComponent, AttachmentCellRendererComponent, TextCellEditorComponent, TextCellRendererComponent, DisabledActionCellRendererComponent])
+    CommonModule,
+    RouterModule,
+    AngularFontAwesomeModule,
+    FormsModule,
+    NgbModule,
+    AgGridModule.withComponents([
+      TreeCellRendererComponent,
+      ActionCellRendererComponent,
+      AttachmentCellRendererComponent,
+      TextCellEditorComponent,
+      TextCellRendererComponent,
+      DisabledActionCellRendererComponent,
+      DatePickerCellEditorComponent,
+      DatePickerCellRendererComponent
+    ]),
+    BsDatepickerModule.forRoot()
   ],
   exports: [
     AppHeaderComponent,
@@ -92,7 +112,9 @@ import { FileUploadComponent } from './file-upload/file-upload/file-upload.compo
     CancelCtaComponent,
     TreeDatagridComponent,
     TreeCellRendererComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    DatePickerCellEditorComponent,
+    DatePickerCellRendererComponent
   ]
 })
 export class PfmCoreuiModule { }
