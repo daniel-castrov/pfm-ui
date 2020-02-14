@@ -1,1 +1,32 @@
-<google-chart  [data]="chartData"></google-chart>
+<div class="container col-12">
+  <div class="schedule-heading row">
+    <h5>Create a Schedule for the Program</h5>
+  </div>
+  <div class="schedule-container row col-12">
+    <div class="funding-line-table-container col-6">
+      <span>
+        <pfm-dropdown (onSelectionChanged)="onFilterSelection($event)" [type]="'labelDropdown'"
+          [label]="'Filter by Funding Line:'" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'"
+          [options]="fundingFilter" [defaultOption]="'selectedFundingFilter'">
+        </pfm-dropdown>
+      </span>
+      <div class="grid-container">
+        <pfm-datagrid (gridIsReady)="onGridIsReady($event)" (cellAction)="handleCellAction($event)"
+          [columns]="fundingGridColumnDefinitions" [rows]="fundingGridRows" [showAddSingleRow]="true"
+          [showPagination]="false" (addCtaEvent)="onFundingRowAdd($event)">
+        </pfm-datagrid>
+      </div>
+    </div>
+    <div class="gantt-chart-container col-6">
+      <div class="grid-container">
+        <div class="overlay"></div>
+        <div class="gantt-chart container h-scrollable container-fluid table table-responsive">
+          <div class="row gantt-chart-header">
+            <google-chart #googleChart [data]="chartData" (chartReady)="onChartReady()"></google-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <pfm-busy [busy]="busy"></pfm-busy>
+</div>

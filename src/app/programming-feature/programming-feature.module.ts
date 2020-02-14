@@ -44,11 +44,33 @@ import { VisibilityService } from '../services/visibility-service';
 import { VisibilityServiceImpl } from '../services/visibility-service-impl.service';
 import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FileUploadComponent } from '../pfm-coreui/file-upload/file-upload/file-upload.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
-  declarations: [ProgrammingFeatureComponent, CreateProgrammingComponent, OpenProgrammingComponent, LockProgrammingComponent, CloseProgrammingComponent, ToaComponent, RequestsComponent, RequestsApprovalComponent, UfrRequestsComponent, UfrRequestsApprovalComponent, TotalAppropriationPriorityComponent, WorkSpaceManagementComponent, RequestsSummaryGridComponent, RequestsSummaryOrgWidgetComponent, RequestsSummaryToaWidgetComponent, CreateProgrammingCommunityGraphComponent, CreateProgrammingOrganizationGraphComponent, RequestsFundingLineGridComponent, RequestsSummaryComponent, RequestsDetailsComponent, ScheduleComponent, RequestsDetailsFormComponent],
+  declarations: [
+    ProgrammingFeatureComponent,
+    CreateProgrammingComponent,
+    OpenProgrammingComponent,
+    LockProgrammingComponent,
+    CloseProgrammingComponent,
+    ToaComponent,
+    RequestsComponent,
+    RequestsApprovalComponent,
+    UfrRequestsComponent,
+    UfrRequestsApprovalComponent,
+    TotalAppropriationPriorityComponent,
+    WorkSpaceManagementComponent,
+    RequestsSummaryGridComponent,
+    RequestsSummaryOrgWidgetComponent,
+    RequestsSummaryToaWidgetComponent,
+    CreateProgrammingCommunityGraphComponent,
+    CreateProgrammingOrganizationGraphComponent,
+    RequestsFundingLineGridComponent,
+    RequestsSummaryComponent,
+    RequestsDetailsComponent,
+    ScheduleComponent,
+    RequestsDetailsFormComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -61,12 +83,12 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     ProgrammingFeatureRoutingModule,
     AngularFontAwesomeModule
   ],
-  providers: [{provide: ProgrammingService, useClass: ProgrammingServiceImpl},
-    {provide: PomService, useClass: PomServiceImpl},
-    {provide: OrganizationService, useClass: OrganizationServiceImpl},
-    {provide: RoleService, useClass: RoleServiceImpl},
-    {provide: MrdbService, useClass: MrdbServiceImpl},
-    {provide: VisibilityService, useClass: VisibilityServiceImpl},
+  providers: [{ provide: ProgrammingService, useClass: ProgrammingServiceImpl },
+  { provide: PomService, useClass: PomServiceImpl },
+  { provide: OrganizationService, useClass: OrganizationServiceImpl },
+  { provide: RoleService, useClass: RoleServiceImpl },
+  { provide: MrdbService, useClass: MrdbServiceImpl },
+  { provide: VisibilityService, useClass: VisibilityServiceImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })

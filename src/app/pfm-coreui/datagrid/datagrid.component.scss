@@ -1,19 +1,24 @@
+fa {
+  font-size: x-large;
+}
+
+fa:hover {
+  cursor: pointer;
+  color: red;
+}
+
 .pfm-datagrid{
   width: 100%;
   height: 100%;
 }
 
-.pfm-datagrid-extras{
-
-}
-
-.pagination-container{
+.pagination-container {
   display: flex;
   justify-content: flex-end;
   height: 25px;
 }
 
-.add-row-container{
+.add-row-container {
   display: flex;
   justify-content: flex-end;
   height: 30px;
@@ -28,7 +33,7 @@
   height: 100%;
 }
 
-p{
+p {
   padding-right: 3px;
   padding-left: 3px;
 }
