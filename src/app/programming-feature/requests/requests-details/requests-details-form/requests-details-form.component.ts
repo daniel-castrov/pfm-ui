@@ -47,7 +47,11 @@ export class RequestsDetailsFormComponent implements OnInit {
       shortName: new FormControl(me.programData.shortName, [Validators.required]),
       longName: new FormControl(me.programData.longName, [Validators.required]),
       type: new FormControl(this.addMode ? 'PROGRAM' : me.programData.type),
-      organizationId: new FormControl(me.programData.organizationId ? me.organizations.find(org => org.id === me.programData.organizationId).abbreviation : undefined, [Validators.required]),
+      organizationId: new FormControl(
+        me.programData.organizationId ? me.organizations.find(
+          org => org.id === me.programData.organizationId
+        ).abbreviation : undefined, [Validators.required]
+      ),
       divison: new FormControl(''),
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
