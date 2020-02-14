@@ -9,6 +9,7 @@ import { GoogleChartComponent } from 'ng2-google-charts';
 import { DatePickerCellEditorComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-editor/date-picker-cell-editor.component';
 import { DatePickerCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
 import { ListItem } from 'src/app/pfm-common-models/ListItem';
+import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 
 @Component({
   selector: 'pfm-schedule',
@@ -19,6 +20,8 @@ export class ScheduleComponent implements OnInit {
 
   @ViewChild('googleChart', { static: false })
   chart: GoogleChartComponent;
+
+  currentFiscalYear = 2019;
 
   fundingGridActionState = {
     VIEW: {
@@ -55,7 +58,6 @@ export class ScheduleComponent implements OnInit {
 
   fundingGridMockAssociationData = [
     'AAS/BA4/DE1',
-    'AAS/BA4/DE1',
     'AAS/BA4/DE2',
     'AAS/BA4/DE3',
     'APT/BZ2/DE4',
@@ -77,8 +79,7 @@ export class ScheduleComponent implements OnInit {
         trackHeight: 40,
         innerGridHorizLine: {
           strokeWidth: 1
-        },
-        defaultStartDate: new Date(new Date().getFullYear(), 0, 0)
+        }
       }
     }
   };
@@ -91,7 +92,9 @@ export class ScheduleComponent implements OnInit {
   busy: boolean;
   firstTimeLoading: boolean;
 
-  constructor() { }
+  constructor(
+    private dialogService: DialogService
+  ) { }
 
   ngOnInit() {
     this.loadFundsGrid();
@@ -127,17 +130,12 @@ export class ScheduleComponent implements OnInit {
         'Dependencies'
       ]
     ];
-    // data.push([
-    //   '',
-    //   '',
-    //   new Date(new Date().getFullYear(), 0, 1),
-    //   new Date(new Date().getFullYear() + 5, 11, 31),
-    //   0,
-    //   0,
-    //   ''
-    // ]);
     if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
-      this.fundingGridRows.filter(row => row.fundingLineAssociation === this.selectedFundingFilter).forEach(row => {
+      this.fundingGridRows.filter(
+        (row, index) =>
+          row.fundingLineAssociation === this.selectedFundingFilter ||
+          index === 0
+      ).forEach(row => {
         data.push([
           row.id + '',
           '',
@@ -290,7 +288,11 @@ export class ScheduleComponent implements OnInit {
       if (item.value.toLowerCase() === 'show all') {
         this.gridApi.setRowData(this.fundingGridRows);
       } else {
-        this.gridApi.setRowData(this.fundingGridRows.filter(row => row.fundingLineAssociation === item.value));
+        this.gridApi.setRowData(this.fundingGridRows.filter(
+          (row, index) =>
+            row.fundingLineAssociation === item.value ||
+            index === 0
+        ));
       }
       this.drawGanttChart(true);
     }
@@ -298,6 +300,15 @@ export class ScheduleComponent implements OnInit {
 
   private loadFundsData() {
     this.fundingGridRows = [
+      {
+        id: 0,
+        taskDescription: '',
+        fundingLineAssociation: '',
+        startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
+        endDate: formatDate(new Date((this.currentFiscalYear + 5) + '-12-31 00:00:00'), 'MM/dd/yyyy', 'en-US'),
+        order: 0,
+        action: null
+      },
       {
         id: 1,
         taskDescription: 'Mocked Task #1',
@@ -330,7 +341,7 @@ export class ScheduleComponent implements OnInit {
         taskDescription: 'Mocked Task #4',
         fundingLineAssociation: 'AAS/BC4/DE7',
         startDate: formatDate(new Date(), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date('2025-12-31'), 'MM/dd/yyyy', 'en-US'),
+        endDate: formatDate(new Date('2024-12-31'), 'MM/dd/yyyy', 'en-US'),
         order: 4,
         action: this.fundingGridActionState.VIEW
       }
@@ -355,8 +366,10 @@ export class ScheduleComponent implements OnInit {
   }
 
   private saveRow(rowId: number) {
+    this.gridApi.stopEditing();
     const row: ScheduleDataMockInterface = this.fundingGridRows[rowId];
-    if (row.taskDescription.length <= 45 && row.taskDescription.length > 0) {
+    const canSave = this.validateRowData(row);
+    if (canSave) {
       this.busy = true;
       this.viewMode(rowId);
       this.updateRows(rowId);
@@ -364,6 +377,48 @@ export class ScheduleComponent implements OnInit {
       this.editRow(rowId);
     }
     this.busy = false;
+  }
+
+  private validateRowData(row: ScheduleDataMockInterface) {
+    let errorMessage = '';
+    if (!row.taskDescription.length) {
+      errorMessage = 'Task Description cannot be empty.';
+    } else if (row.taskDescription.length > 45) {
+      errorMessage = 'Task Description cannot have more than 45 characters.';
+    } else if (!this.fundingGridMockAssociationData.filter(fund => fund === row.fundingLineAssociation).length) {
+      errorMessage = 'Please, select a valid Funding Line Association.';
+    } else if (!this.validateDate(row.startDate)) {
+      errorMessage = 'Make sure Start Date is a valid date in the format (Month/Day/Year).';
+    } else if (!this.validateDate(row.endDate)) {
+      errorMessage = 'Make sure End Date is a valid date in the format (Month/Day/Year).';
+    } else if (new Date(row.startDate) > new Date(row.endDate)) {
+      errorMessage = 'Start Date cannot be greater than End Date.';
+    } else if (new Date(row.startDate).getFullYear() < this.currentFiscalYear ||
+      new Date(row.endDate).getFullYear() > this.currentFiscalYear + 5) {
+      errorMessage = 'Start Date cannot be less than the current fiscal year (' + this.currentFiscalYear +
+        ') and End Date cannot greater than ' + (this.currentFiscalYear + 5) + '.';
+    }
+    if (errorMessage.length) {
+      this.dialogService.displayError(errorMessage);
+    }
+    return !errorMessage.length;
+  }
+
+  private validateDate(dateString: string) {
+    if (dateString) {
+      try {
+        const date = new Date(dateString);
+        const dateSplit = dateString.split('/');
+        if (date.getFullYear() === Number(dateSplit[2]) &&
+          date.getMonth() === Number(dateSplit[0]) - 1 &&
+          date.getDate() === Number(dateSplit[1])) {
+          return true;
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    return false;
   }
 
   private editRow(rowId: number) {

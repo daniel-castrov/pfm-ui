@@ -1,5 +1,6 @@
 <div class="input-group">
-  <input type="text" class="form-control" value="{{ value | date:'MM/dd/yyyy' }}" />
-  <i class="fa fa-calendar" bsDatepicker [(bsValue)]="value" [bsConfig]="{ showWeekNumbers: false }" [minDate]="minDate"
-    [maxDate]="maxDate" (bsValueChange)="onValueChange($event)"></i>
+  <input type="text" class="form-control" (blur)="onBlur($event)" value="{{ value | date:'MM/dd/yyyy' }}" />
+  <i class="fa fa-calendar" bsDatepicker [(bsValue)]="value"
+    [bsConfig]="{ showWeekNumbers: false, containerClass: 'theme-dark-blue' }" [minDate]="minDate" [maxDate]="maxDate"
+    (bsValueChange)="onValueChange($event)"></i>
 </div>
