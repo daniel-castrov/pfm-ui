@@ -21,7 +21,7 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
     this.value = params.value;
     this.id = 'DatePickerCellEditorComponent-' + this.params.rowIndex;
 
-    this.validateDate();
+    this.validateDateRange();
   }
 
   getValue(): string {
@@ -31,7 +31,7 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   ngAfterViewInit() {
   }
 
-  private validateDate() {
+  private validateDateRange() {
     if (this.params.column && this.params.data) {
       const column = this.params.column.colId;
       const data = this.params.data;
@@ -46,7 +46,30 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   }
 
   onValueChange(value: Date) {
-    this.validateDate();
+    this.validateDateRange();
+  }
+
+  onBlur(event: any) {
+    if (this.validateDateValue(event.target.value)) {
+      this.value = event.target.value;
+    }
+  }
+
+  private validateDateValue(dateString: string) {
+    if (dateString) {
+      try {
+        const date = new Date(dateString);
+        const dateSplit = dateString.split('/');
+        if (date.getFullYear() === Number(dateSplit[2]) &&
+          date.getMonth() === Number(dateSplit[0]) - 1 &&
+          date.getDate() === Number(dateSplit[1])) {
+          return true;
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    return false;
   }
 
 }
