@@ -3,37 +3,33 @@
   <div class="section-form">
     <form *ngIf="form" [formGroup]="form">
       <fieldset>
-        <legend>Program Identification</legend>
-        <div class="row">
-          <label class="col-2">Program ID</label>
-          <span class="col-10"><input type="text" formControlName="shortName"/></span>
-        </div>
-        <div class="row">
-          <label class="col-2">Program Name</label>
-          <span class="col-10"><input type="text" formControlName="longName"/></span>
-        </div>
-        <div class="row">
-          <label class="col-2">Program Type</label>
-          <span class="col-10"><input type="text" formControlName="type"/></span>
-        </div>
-        <div class="row">
-          <label class="col-2">Organization</label>
-          <label class="col-10">{{form.controls['organizationId'].value}}</label>
-<!--          <span class="col-10">-->
-<!--            <select class="form-control-sm" formControlName="organizationId">-->
-<!--              <option value="" disabled>Select...</option>-->
-<!--              <option *ngFor="let org of organizations" [value]="org.abbreviation">{{ org.abbreviation }}</option>-->
-<!--            </select>-->
-<!--          </span>-->
-        </div>
-        <div class="row">
-          <label class="col-2">Divison</label>
-          <span class="col-10">
-            <select class="form-control-sm" formControlName="divison">
-              <option value="" disabled>Select...</option>
-              <option *ngFor="let div of divisions" [value]="div">{{ div }}</option>
-            </select>
-          </span>
+        <div class="padding">
+          <legend>Program Identification</legend>
+          <div class="row">
+            <label class="col-2">Program ID</label>
+            <span class="col-10"><input type="text" formControlName="shortName"/></span>
+          </div>
+          <div class="row">
+            <label class="col-2">Program Name</label>
+            <span class="col-10"><input type="text" formControlName="longName"/></span>
+          </div>
+          <div class="row">
+            <label class="col-2">Program Type</label>
+            <span class="col-10"><input type="text" formControlName="type"/></span>
+          </div>
+          <div class="row">
+            <label class="col-2">Organization</label>
+            <label class="col-10">{{form.controls['organizationId'].value}}</label>
+          </div>
+          <div class="row">
+            <label class="col-2">Division</label>
+            <span class="col-10">
+              <select class="form-control-sm" formControlName="divison">
+                <option value="" disabled>Select...</option>
+                <option *ngFor="let div of divisions" [value]="div">{{ div }}</option>
+              </select>
+            </span>
+          </div>
         </div>
       </fieldset>
 
