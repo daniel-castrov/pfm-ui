@@ -2,7 +2,7 @@
 
   <div class="section-form">
     <form *ngIf="form" [formGroup]="form">
-      <fieldset>
+      <fieldset class="match-height">
         <legend>Program Identification</legend>
         <div class="padding">
           <div class="row">
@@ -19,7 +19,17 @@
           </div>
           <div class="row">
             <label class="col-2">Organization</label>
-            <label class="col-10">{{form.controls['organizationId'].value}}</label>
+            <div *ngIf="!addMode">
+              <label class="col-10">{{form.controls['organizationId'].value}}</label>
+            </div>
+            <div *ngIf="addMode">
+              <span class="col-10">
+                <select class="form-control-sm" formControlName="organizationId">
+                  <option value="" disabled>Select...</option>
+                  <option *ngFor="let org of organizations" [value]="org.abbreviation">{{ org.abbreviation }}</option>
+                </select>
+              </span>
+            </div>
           </div>
           <div class="row">
             <label class="col-2">Division</label>
@@ -95,7 +105,7 @@
   </div>
 
   <div class="section-attachments">
-    <fieldset class="file-upload">
+    <fieldset class="match-height">
       <legend>Attach File</legend>
       <file-upload [area]="'program'" [isImageThumbnail]="true" [imagePath]="" (uploading)="onUploading($event)"
                    (fileUploadEvent)="onFileUploaded($event)"></file-upload>
