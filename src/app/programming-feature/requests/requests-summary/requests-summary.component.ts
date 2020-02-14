@@ -332,7 +332,16 @@ export class RequestsSummaryComponent implements OnInit {
   }
 
   onReturnOrganization(): void {
-    console.log('Return Organization');
+    this.programmingService.processPRsForContainer(
+      this.programmingModel.pom.workspaceId, 'Return Organization', this.selectedOrg.value).subscribe(
+      resp => {
+        this.organizationSelected(this.selectedOrg);
+        this.dialogService.displayToastInfo('Return organization successful.');
+      },
+      error => {
+        const err = (error as any).error;
+        this.dialogService.displayToastError(err.error);
+      });
   }
 
   onAdvanceOrganization() {
