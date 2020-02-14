@@ -1,2 +1,2 @@
-<pfm-datagrid (onGridIsReady)="handleGridIsReady($event)" (onColumnIsReady)="onColumnIsReady.emit($event)" (onCellAction)="handleCellAction($event)"
+<pfm-datagrid (gridIsReady)="handleGridIsReady($event)" (columnIsReady)="onColumnIsReady.emit($event)" (cellAction)="handleCellAction($event)"
               [showAddDropdownCta]="true" [columns]="columnsForGrid" [rows]="rowsForGrid"></pfm-datagrid>

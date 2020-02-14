@@ -10,41 +10,41 @@
       </div>
       <div class="div-button-save">
         <button (click)="onSave()" class="button-save">Save</button>
-      </div> 
+      </div>
       <div class="div-button-approve">
         <button (click)="onApprove()" class="button-approve">Approve</button>
-    </div> 
+    </div>
     <div class="div-button-reject">
       <button (click)="onReject()" class="button-reject">Reject</button>
   </div>
   </div>
   </div>
- 
+
 <tabset  class="program-tab-style" destroyOnHide="true">
-    <tab  heading="Program" style="width:100%;height:100%">
+    <tab  heading="Program" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
         <div class="section-tab">
           <pfm-requests-details-form></pfm-requests-details-form>
         </div>
     </tab >
-    <tab heading="Funds"  active="true" style="width:100%;height:100%">
+    <tab heading="Funds"  active="true" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
         <div class="section-tab">
             <pfm-requests-funding-line-grid></pfm-requests-funding-line-grid>
         </div>
     </tab>
-  <tab heading="Schedule"  style="width:100%;height:100%">
+  <tab heading="Schedule"  style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
-      <pfm-schedule></pfm-schedule>
+      <pfm-schedule #pfmSchedule *ngIf="currentSelectedTab === 2"></pfm-schedule>
     </div>
   </tab>
-  <tab heading="Scope"  style="width:100%;height:100%">
+  <tab heading="Scope"  style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
     </div>
   </tab>
-  <tab heading="Assets"  style="width:100%;height:100%">
+  <tab heading="Assets"  style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
       <div class="section-tab">
       </div>
   </tab>
-  <tab heading="Justification"  style="width:100%;height:100%">
+  <tab heading="Justification"  style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
       <div class="section-tab">
       </div>
   </tab>

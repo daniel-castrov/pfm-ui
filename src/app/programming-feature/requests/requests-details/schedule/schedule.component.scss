@@ -1,0 +1,55 @@
+:host ::ng-deep .pfm-data {
+  height: 100vh !important;
+}
+
+.gantt-chart {
+  white-space: nowrap;
+  margin-top: 10.5%;
+}
+
+gantt-bar-body > div {
+  background-color: white;
+}
+
+.gantt-bar {
+  background-color: maroon
+}
+
+.gantt-bar-body > div {
+  height: 30px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.month > div {
+  width: 20px;
+  height: 20px;
+}
+
+.gantt-chart-header > div {
+  text-align: center;
+  background-color: #24527b;
+  color: white;
+  border-left: 1px solid;
+  height: 25px;
+  line-height: 25px;
+}
+
+.year-header {
+  border-bottom: 1px solid;
+}
+
+div.h-scrollable {
+  overflow-y: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+  // margin-top: 71px;
+  margin-top: 55px;
+}
+
+div.h-scrollable [class*='col'] {
+  display: inline-block;
+  float: none;
+  white-space: normal;
+  vertical-align: top;
+}
