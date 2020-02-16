@@ -16,3 +16,12 @@ fa:hover{
 fa{
   font-size: x-large;
 }
+
+.disabled {
+  opacity: 0.6;
+}
+
+.disabled:hover {
+  color: black;
+  cursor: default;
+}
