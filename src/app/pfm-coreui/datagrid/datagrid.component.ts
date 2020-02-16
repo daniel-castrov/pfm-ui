@@ -28,6 +28,7 @@ export class DatagridComponent implements OnInit {
   @Output() gridIsReady: EventEmitter<GridApi> = new EventEmitter<GridApi>();
   @Output() rowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
+  @Output() rowEditingStarted: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   defaultColDef: any;
   modules: Module[] = AllCommunityModules;
@@ -62,6 +63,10 @@ export class DatagridComponent implements OnInit {
 
   onRowDragEnd(event: any): void {
     this.rowDragEndEvent.emit(event);
+  }
+
+  onRowEditingStarted(event: any) {
+    this.rowEditingStarted.emit(event);
   }
 
   onCellClicked(event: any): void {

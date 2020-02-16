@@ -1,31 +1,34 @@
 <div *ngIf="!disabled && data">
-    <ng-container *ngIf="data.canEdit">
-        <div class="action" (click)="onSelected('edit')">
-            <fa name="pencil" title="Edit"></fa>
-        </div>
-    </ng-container>
+  <ng-container *ngIf="data.canEdit">
+    <div class="action" (click)="onSelected('edit')">
+      <fa name="pencil" title="Edit" [class.disabled]="params.data.isDisabled"></fa>
+    </div>
+  </ng-container>
 
-    <ng-container *ngIf="data.canSave">
-        <div class="action" (click)="onSelected('save')">
-            <fa name="save" title="Save"></fa>
-        </div>
-    </ng-container>
+  <ng-container *ngIf="data.canSave">
+    <div class="action" (click)="onSelected('save')">
+      <fa name="save" title="Save"></fa>
+    </div>
+  </ng-container>
 
-    <ng-container *ngIf="data.canDelete">
-        <div class="action" title="Delete" *ngIf="!data.isSingleDelete">
-            <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [type]="'iconDropdown'" [iconName]="'trash'"
-                [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'"
-                [options]="options">
-            </pfm-dropdown>
-        </div>
-        <div class="action" (click)="onSelected('delete-row')" *ngIf="data.isSingleDelete">
-            <fa name="trash" title="Delete"></fa>
-        </div>
-    </ng-container>
+  <ng-container *ngIf="data.canDelete">
+    <div class="action" title="Delete" *ngIf="!data.isSingleDelete">
+      <pfm-dropdown (onSelectionChanged)="handleDelete($event)" [type]="'iconDropdown'" [iconName]="'trash'"
+        [label]="'Delete'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'"
+        [options]="options">
+      </pfm-dropdown>
+    </div>
+    <div class="action" (click)="onSelected('delete-row')" *ngIf="data.isSingleDelete && data.canEdit">
+      <fa name="trash" title="Delete" [class.disabled]="params.data.isDisabled"></fa>
+    </div>
+    <div class="action" (click)="onSelected('cancel')" *ngIf="data.isSingleDelete && data.canSave">
+      <fa name="ban" title="Cancel" [class.disabled]="params.data.isDisabled"></fa>
+    </div>
+  </ng-container>
 
-    <ng-container *ngIf="data.canUpload">
-        <div class="action" (click)="onSelected('upload')">
-            <fa name="upload" title="Add attachment"></fa>
-        </div>
-    </ng-container>
+  <ng-container *ngIf="data.canUpload">
+    <div class="action" (click)="onSelected('upload')">
+      <fa name="upload" title="Add attachment"></fa>
+    </div>
+  </ng-container>
 </div>

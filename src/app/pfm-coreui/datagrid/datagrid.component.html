@@ -21,7 +21,7 @@
     </div>
     <div class="add-row-container" *ngIf="showAddSingleRow">
       <div title="Add" (click)="handleAddCta('add-single-row')">
-        <fa name="plus" title="Add"></fa>
+        <fa name="plus" title="Add" [class.disabled]="api?.getEditingCells().length"></fa>
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@
       [rowHeight]="40" [pagination]="showPagination" [paginationPageSize]="pageSize"
       [isExternalFilterPresent]="isExternalFilterPresent" [doesExternalFilterPass]="doesExternalFilterPass"
       (gridReady)="onGridReady($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
-      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()">
+      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()" (rowEditingStarted)="onRowEditingStarted($event)">
     </ag-grid-angular>
   </div>
 </div>

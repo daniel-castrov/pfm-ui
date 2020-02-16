@@ -37,3 +37,12 @@ p {
   padding-right: 3px;
   padding-left: 3px;
 }
+
+.disabled {
+  opacity: 0.6;
+}
+
+.disabled:hover {
+  color: black;
+  cursor: default;
+}
