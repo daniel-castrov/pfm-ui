@@ -140,6 +140,15 @@ export class ScheduleComponent implements OnInit {
         'Dependencies'
       ]
     ];
+    data.push([
+      '0',
+      '',
+      new Date(this.currentFiscalYear + '-01-01 00:00:00'),
+      new Date((this.currentFiscalYear + 5) + '-12-31 00:00:00'),
+      0,
+      100,
+      null
+    ]);
     if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
       this.fundingGridRows.filter(
         (row, index) =>
@@ -191,7 +200,7 @@ export class ScheduleComponent implements OnInit {
     const g = document.getElementsByTagName('svg')[0].getElementsByTagName('g')[1];
     document.getElementsByTagName('svg')[0].parentElement.style.top = '40px';
     document.getElementsByTagName('svg')[0].style.overflow = 'visible';
-    const height = Number(g.getElementsByTagName('text')[0].getAttribute('y')) + 15;
+    const height = Number(g.getElementsByTagName('text')[0].getAttribute('y')) + 19;
     g.setAttribute('transform', 'translate(0,-' + height + ')');
   }
 
@@ -310,15 +319,6 @@ export class ScheduleComponent implements OnInit {
 
   private loadFundsData() {
     this.fundingGridRows = [
-      {
-        id: 0,
-        taskDescription: '',
-        fundingLineAssociation: '',
-        startDate: formatDate(new Date(this.currentFiscalYear + '-01-01 00:00:00'), 'MM/dd/yyyy', 'en-US'),
-        endDate: formatDate(new Date((this.currentFiscalYear + 5) + '-12-31 00:00:00'), 'MM/dd/yyyy', 'en-US'),
-        order: 0,
-        action: null
-      },
       {
         id: 1,
         taskDescription: 'Mocked Task #1',
