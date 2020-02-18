@@ -19,6 +19,7 @@ import {Program} from '../../models/Program';
 import {RequestSummaryNavigationHistoryService} from './requests-summary-navigation-history.service';
 import {VisibilityService} from '../../../services/visibility-service';
 import {Router} from '@angular/router';
+import {AppModel} from '../../../pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-requests-summary',
@@ -64,7 +65,8 @@ export class RequestsSummaryComponent implements OnInit {
               private mrdbService: MrdbService,
               private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
               private router: Router,
-              private visibilityService: VisibilityService) {
+              private visibilityService: VisibilityService,
+              private appModel: AppModel) {
   }
 
   ngOnInit() {
@@ -104,6 +106,8 @@ export class RequestsSummaryComponent implements OnInit {
       id: 'toa-widget'
     }];
 
+    this.setupVisibility();
+
     // Populate dropdown options
     const item: ListItem = new ListItem();
     item.name = 'Previously Funded Program';
@@ -138,27 +142,32 @@ export class RequestsSummaryComponent implements OnInit {
       });
   }
 
-  async setupDropDown() {
+  async setupVisibility() {
+    const response = await this.visibilityService.isCurrentlyVisible('requests-summary-component').toPromise();
+    if ((response as any).result) {
+      if (!this.appModel['visibilityDef']) {
+        this.appModel['visibilityDef'] = {};
+      }
+      this.appModel['visibilityDef']['requests-summary-component'] = (response as any).result;
+    }
+  }
+
+  setupDropDown() {
+    const self = this;
     this.programmingService.getPermittedOrganizations().subscribe(
       resp => {
         const orgs = (resp as any).result;
         this.orgs = orgs;
         const dropdownOptions: Organization[] = [];
-        this.visibilityService.isVisible('availableOrgsDropDown,option,Show All').subscribe(
-          isVisibleResp => {
-            const isVisible: boolean = (isVisibleResp as any).result;
-            if (isVisible) {
-              const showAllOrg = new Organization();
-              showAllOrg.id = null;
-              showAllOrg.abbreviation = 'Show All';
-              dropdownOptions.unshift(showAllOrg);
-            }
-            this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
-            this.loadPreviousSelection();
-          },
-          error => {
-            this.dialogService.displayDebug(error);
-          });
+        if (self.appModel.visibilityDef
+          ['requests-summary-component']['availableOrgsDropDown,option,Show All'] !== false) {
+          const showAllOrg = new Organization();
+          showAllOrg.id = null;
+          showAllOrg.abbreviation = 'Show All';
+          dropdownOptions.unshift(showAllOrg);
+        }
+        this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
+        this.loadPreviousSelection();
       },
       error => {
         this.dialogService.displayDebug(error);

@@ -3,17 +3,17 @@
     <div style="float:left;width:70%">
       <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
     </div>
-    <div class="button-container">
-      <div class="div-button-return">
+    <div *ngIf="appModel.visibilityDef" class="button-container">
+      <div *pfmIsVisible="'requests-summary-component.returnOrganization'" class="div-button-return">
         <button type="button" class="btn btn-primary btn-red" (click)="onReturnOrganization()"><fa name="arrow-left"></fa> Return Organization</button>
       </div>
-      <div class="div-button-approve">
+      <div *pfmIsVisible="'requests-summary-component.approveOrganization'" class="div-button-approve">
         <button type="button" class="btn btn-primary btn-green" (click)="onApproveOrganization()"><fa name="check"></fa> Approve Organization</button>
       </div>
-      <div class="div-button-advance">
+      <div *pfmIsVisible="'requests-summary-component.advanceOrganization'" class="div-button-advance">
         <button type="button" class="btn btn-primary" (click)="onAdvanceOrganization()"><fa name="arrow-right"></fa> Advance Organization</button>
       </div>
-      <div class="div-button-approve-all">
+      <div *pfmIsVisible="'requests-summary-component.approveAllPRs'" class="div-button-approve-all">
         <button type="button" class="btn btn-primary" (click)="onApprove()">Approve All PRs - Demo only</button>
       </div>
     </div>
