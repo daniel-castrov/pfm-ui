@@ -45,6 +45,7 @@ import { VisibilityServiceImpl } from '../services/visibility-service-impl.servi
 import { RequestsDetailsFormComponent } from './requests/requests-details/requests-details-form/requests-details-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { JustificationComponent } from './requests/requests-details/justification/justification.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     RequestsSummaryComponent,
     RequestsDetailsComponent,
     ScheduleComponent,
+    JustificationComponent,
     RequestsDetailsFormComponent
   ],
   imports: [

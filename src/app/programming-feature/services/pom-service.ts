@@ -3,7 +3,6 @@ import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 import { Pom } from '../models/Pom';
 
-
 export abstract class PomService extends BaseRestService {
 
   constructor( protected httpClient: HttpClient ) {
