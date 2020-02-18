@@ -66,7 +66,7 @@ export class RequestsSummaryComponent implements OnInit {
               private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService,
               private router: Router,
               private visibilityService: VisibilityService,
-              private appModel: AppModel) {
+              public appModel: AppModel) {
   }
 
   ngOnInit() {
