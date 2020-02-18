@@ -152,8 +152,7 @@ export class ScheduleComponent implements OnInit {
     if (this.selectedFundingFilter.toLowerCase() !== 'show all') {
       this.fundingGridRows.filter(
         (row, index) =>
-          row.fundingLineAssociation === this.selectedFundingFilter ||
-          index === 0
+          row.fundingLineAssociation === this.selectedFundingFilter
       ).forEach(row => {
         data.push([
           row.id + '',
@@ -162,7 +161,7 @@ export class ScheduleComponent implements OnInit {
           new Date(row.endDate),
           0,
           100,
-          row.id === 0 ? null : '0'
+          '0'
         ]);
       });
     } else {
@@ -174,7 +173,7 @@ export class ScheduleComponent implements OnInit {
           new Date(row.endDate),
           0,
           100,
-          row.id === 0 ? null : '0'
+          '0'
         ]);
       });
     }
@@ -309,8 +308,7 @@ export class ScheduleComponent implements OnInit {
       } else {
         this.gridApi.setRowData(this.fundingGridRows.filter(
           (row, index) =>
-            row.fundingLineAssociation === item.value ||
-            index === 0
+            row.fundingLineAssociation === item.value
         ));
       }
       this.drawGanttChart(true);
