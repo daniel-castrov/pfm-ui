@@ -1,40 +1,39 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { PomService } from './pom-service';
-import { Pom } from '../models/Pom';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {PomService} from './pom-service';
+import {Pom} from '../models/Pom';
 
-
-@Injectable( {
+@Injectable({
   providedIn: 'root'
-} )
+})
 export class PomServiceImpl extends PomService {
 
-  constructor( protected httpClient: HttpClient ) {
-    super( httpClient );
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
   }
 
-  pBYearExists( year: string ): Observable<object> {
-    return this.get( 'pom/init/fromPB/year/' + year + '/exists' );
+  pBYearExists(year: string): Observable<object> {
+    return this.get('pom/init/fromPB/year/' + year + '/exists');
   }
 
   getPomFromPb(): Observable<object> {
-    return this.get( 'pom/init/fromPB' );
+    return this.get('pom/init/fromPB');
   }
 
-  getPomFromFile( fileId: string ): Observable<object> {
-    return this.get( 'pom/init/fromLibrary/id/' + fileId );
+  getPomFromFile(fileId: string): Observable<object> {
+    return this.get('pom/init/fromLibrary/id/' + fileId);
   }
 
   getLatestPom(): Observable<object> {
-    return this.get( 'pom/latest' );
+    return this.get('pom/latest');
   }
 
-  createPom( year: number, pom: Pom ): Observable<object> {
-    return this.post( 'pom/year/' + year, pom );
+  createPom(year: number, pom: Pom): Observable<object> {
+    return this.post('pom/year/' + year, pom);
   }
 
-  getPomForYear( year: number ): Observable<object> {
-    return this.get( 'pom/year' + year );
+  getPomForYear(year: number): Observable<object> {
+    return this.get('pom/year/' + year);
   }
 }
