@@ -125,7 +125,7 @@ export class ScheduleComponent implements OnInit {
     );
     this.currentRowDataState.isAddMode = true;
     this.gridApi.setRowData(this.fundingGridRows);
-    this.editRow(id + 1);
+    this.editRow(this.fundingGridRows.length - 1);
   }
 
   drawGanttChart(redraw?: boolean) {
