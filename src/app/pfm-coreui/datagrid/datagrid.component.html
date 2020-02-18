@@ -11,24 +11,24 @@
       </select>
       <p>Entries</p>
     </div>
-    <div class="add-row-container" *ngIf="showAddDropdownCta">
-      <div title="Add" ng-if="showAddRow">
+
+    <div class="add-row-container">
+      <div title="Add" *ngIf="showAddDropdownCta">
         <pfm-dropdown (onSelectionChanged)="handleAddDropdownCta($event)" [title]="addDropdownCtaTooltip"
           [type]="'iconDropdown'" [iconName]="'plus'" [required]="true" [id]="'grid_icon_dropdown_id'"
           [fieldName]="'name'" [fieldLabel]="'name'" [options]="options">
         </pfm-dropdown>
       </div>
-    </div>
-    <div class="add-row-container" *ngIf="showAddSingleRow">
-      <div title="Add" (click)="handleAddCta('add-single-row')">
+      <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
         <fa name="plus" title="Add" [class.disabled]="api?.getEditingCells().length"></fa>
       </div>
     </div>
+
   </div>
   <div class="pfm-data">
     <ag-grid-angular style="width: 100%; height: 100%;" [columnDefs]="columns" [rowData]="rows" [rowDragManaged]="true"
       [editType]="'fullRow'" [suppressClickEdit]="true" [defaultColDef]="defaultColDef" [modules]="modules"
-      [suppressRowClickSelection]="true" [animateRows]="true" [tabToNextCell]="tabToNextCell" [rowSelection]="'single'"
+      [suppressRowClickSelection]="false" [animateRows]="true" [tabToNextCell]="tabToNextCell" [rowSelection]="'single'"
       [rowHeight]="40" [pagination]="showPagination" [paginationPageSize]="pageSize"
       [isExternalFilterPresent]="isExternalFilterPresent" [doesExternalFilterPass]="doesExternalFilterPass"
       (gridReady)="onGridReady($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
