@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { UserDetailsModel } from './UserDetailsModel';
-import { PlanningPhase } from '../planning-feature/models/PlanningPhase';
+import {Injectable} from '@angular/core';
+import {UserDetailsModel} from './UserDetailsModel';
+import {PlanningPhase} from '../planning-feature/models/PlanningPhase';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppModel {
-  //purpose of this model is to be able to easily share common information across all components in the application
-  public isUserSignedIn:boolean;
-  public elevated:boolean;
-  public userDetails:UserDetailsModel;
+  // purpose of this model is to be able to easily share common information across all components in the application
+  isUserSignedIn: boolean;
+  userDetails: UserDetailsModel;
+  visibilityDef: {};
 
-  public planningData:PlanningPhase[];
-  public selectedYear:string;
+  planningData: PlanningPhase[];
+  selectedYear: string;
 }
