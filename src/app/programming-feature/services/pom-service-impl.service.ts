@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {PomService} from './pom-service';
-import {Pom} from '../models/Pom';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { PomService } from './pom-service';
+import { Pom } from '../models/Pom';
 
 @Injectable({
   providedIn: 'root'

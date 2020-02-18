@@ -53,7 +53,7 @@
 <div *ngIf="programmingModelReady" class="section-datagrid">
   <div class="datagrid">
     <pfm-requests-summary-grid (onAddCtaEvent)="handleAdd($event)" (onGridDataChange)='onGridDataChange($event)'
-      [dropdownOptions]="addOptions"></pfm-requests-summary-grid>
+      [dropdownOptions]="addOptions" [pomYear]="pomYear"></pfm-requests-summary-grid>
   </div>
 </div>
 

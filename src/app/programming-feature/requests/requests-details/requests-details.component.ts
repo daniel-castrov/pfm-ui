@@ -16,6 +16,7 @@ export class RequestsDetailsComponent implements OnInit {
   @ViewChild('pfmSchedule', { static: false })
   pfmSchedule: ScheduleComponent;
   currentSelectedTab = 1;
+  pomYear: number;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -30,7 +31,8 @@ export class RequestsDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.programmingModel.selectedProgramName = this.route.snapshot.paramMap.get("id");
+    this.programmingModel.selectedProgramName = this.route.snapshot.paramMap.get('id');
+    this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
   }
 
   onApprove(): void {
