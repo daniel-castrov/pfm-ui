@@ -4,6 +4,7 @@ import { AllCommunityModules, ColumnApi, GridApi, Module } from '@ag-grid-commun
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
 import { ListItem } from '../../pfm-common-models/ListItem';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
 
 @Component({
   selector: 'pfm-datagrid',
@@ -31,7 +32,7 @@ export class DatagridComponent implements OnInit {
   @Output() rowEditingStarted: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   defaultColDef: any;
-  modules: Module[] = AllCommunityModules;
+  modules: Module[] = AllModules;
   api: GridApi;
   columnApi: ColumnApi;
   options: ListItem[];
