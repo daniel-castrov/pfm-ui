@@ -62,6 +62,7 @@
         "check-regex": true
       }
     ],
+    "whitespace": [true, "check-module"],
 
     "no-output-on-prefix": true,
     "no-inputs-metadata-property": true,
