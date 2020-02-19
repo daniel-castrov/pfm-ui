@@ -22,6 +22,9 @@
       <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
         <fa name="plus" title="Add" [class.disabled]="api?.getEditingCells().length"></fa>
       </div>
+      <div>
+        <fa name="upload" title="Upload" (click)="onExport()"></fa>
+      </div>
     </div>
 
   </div>

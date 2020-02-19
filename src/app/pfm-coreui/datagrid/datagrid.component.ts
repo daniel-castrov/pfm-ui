@@ -31,6 +31,28 @@ export class DatagridComponent implements OnInit {
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
   @Output() rowEditingStarted: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
+  excelMessageHeader: any = [
+    [
+      {
+        styleId: "bigHeader",
+        data: {
+          type: "String",
+          value: "For Official Use Only"
+        }
+      }
+    ]
+  ];
+  excelMessageFooter: any = [
+    [
+      {
+        styleId: "bigHeader",
+        data: {
+          type: "String",
+          value: "For Official Use Only"
+        }
+      }
+    ]
+  ];
   defaultColDef: any;
   modules: Module[] = AllModules;
   api: GridApi;
@@ -122,4 +144,16 @@ export class DatagridComponent implements OnInit {
     this.api.paginationSetPageSize(this.pageSize);
   }
 
+  onExport() {
+    console.log('export fired');
+    const params = this.getParams();
+    this.api.exportDataAsExcel(params);
+  }
+
+  getParams() {
+    return {
+      customHeader: this.excelMessageHeader,
+      customFooter: this.excelMessageFooter,
+    };
+  }
 }
