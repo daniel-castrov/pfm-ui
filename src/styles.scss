@@ -1,7 +1,7 @@
 @import 'variables';
-@import "~@ag-grid-community/all-modules/dist/styles/ag-grid.css";
-@import "~@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css";
-@import "~@ag-grid-community/all-modules/dist/styles/webfont/agGridBalhamFont.scss";
+@import "~@ag-grid-enterprise/all-modules/dist/styles/ag-grid.css";
+@import "~@ag-grid-enterprise/all-modules/dist/styles/ag-theme-balham.css";
+@import "~@ag-grid-enterprise/all-modules/dist/styles/webfont/agGridBalhamFont.scss";
 
 @font-face {
   font-family: 'Lato';
@@ -452,7 +452,7 @@ gridster .gridster-row {
 
 .ag-header-cell-resize{
   background-color: white;
-  width: 5px;  
+  width: 5px;
 }
 
 .ag-header-cell-resize:hover{
@@ -891,3 +891,154 @@ h3.tooltip-h3 {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Balham Theme Menu Style */
+
+.ag-menu {
+  border: 1px solid #BDC3C7;
+  background: white;
+  border-radius: 2px;
+  box-shadow: none;
+  padding: 4px;
+  padding: 0;
+}
+
+.ag-menu .ag-menu-list {
+  cursor: default;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.ag-menu .ag-menu-option-active {
+  background-color: #ECF0F1;
+}
+
+.ag-menu .ag-menu-option-disabled {
+  opacity: 0.5;
+}
+
+.ag-menu .ag-menu-option-text {
+  margin-left: 4px;
+}
+
+.ag-menu .ag-menu-option-icon {
+  padding-left: 4px;
+  padding-right: 4px;
+  min-width: 24px;
+}
+
+.ag-menu .ag-menu-option-shortcut {
+  padding-left: 8px;
+}
+
+.ag-menu .ag-menu-separator {
+  height: 8px;
+}
+
+.ag-menu .ag-menu-separator > span {
+  background-image: url("data:image/svg+xml,%3Csvg%20width%3D'1'%20height%3D'8px'%20viewBox%3D'0%200%201%208px'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cline%20x1%3D'0'%20y1%3D'4px'%20x2%3D'1'%20y2%3D'4px'%20stroke-width%3D'1'%20stroke%3D'%23BDC3C7'%2F%3E%3C%2Fsvg%3E");
+}
+
+.ag-menu .ag-menu-option-popup-pointer {
+  width: 24px;
+  text-align: center;
+}
+
+.ag-tab-body .ag-menu-list {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.ag-tab-body .ag-menu-list > div:first-child > span {
+  padding-top: 0;
+}
+
+.ag-tab-body .ag-menu-list > div:last-child > span {
+  padding-bottom: 0;
+}
+
+.ag-tab-body .ag-menu-list > div:last-child > .ag-menu-option-popup-pointer {
+  background-position-y: 0;
+}
+
+.ag-menu-column-select-wrapper {
+  width: auto;
+}
+
+.ag-chart .ag-chart-menu {
+  border-radius: 5px;
+  background: white;
+}
+
+.ag-chart .ag-chart-menu > span:hover {
+  background-color: #e6e6e6;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-group-component-container {
+  margin-left: 0;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail {
+  border: 1px solid #BDC3C7;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail:nth-child(2n + 2):not(:last-child) {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail:nth-child(3n + 1) {
+  margin-left: 2px;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail:nth-child(3n) {
+  margin-right: 2px;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-mini-wrapper .ag-chart-mini-thumbnail.ag-selected {
+  border-color: #0091EA;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-nav-bar .ag-nav-card-selector .ag-nav-card-item {
+  background: #000;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.ag-chart-tabbed-menu .ag-chart-settings .ag-chart-settings-nav-bar .ag-nav-card-selector .ag-nav-card-item.ag-selected {
+  background: #0091EA;
+}
+
+.ag-chart-tabbed-menu .ag-chart-data .ag-data-select-checkbox .ag-column-drag {
+  margin-left: 4px;
+}
+
+.ag-chart-tabbed-menu .ag-chart-data .ag-chart-data-wrapper .ag-toggle-button.ag-group-item {
+  margin: 4.8px 0;
+}
+
+.ag-chart-tabbed-menu .ag-chart-format .ag-chart-format-wrapper .ag-group-item {
+  margin: 4.8px 0;
+}
+
+.ag-icon-menu:before {
+  content: "";
+}
+
+.ag-tool-panel-wrapper .ag-column-drop {
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+
+.ag-menu-option {
+  height: 28px;
+}
+
+.ag-menu {
+  background-color: white;
+  color: #000;
+}
