@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { ICellEditorAngularComp } from '@ag-grid-community/angular';
 import { formatDate } from '@angular/common';
 
@@ -25,7 +25,7 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   }
 
   getValue(): string {
-    return formatDate(this.value, 'MM/dd/yyyy', 'en-US');
+    return this.value ? formatDate(this.value, 'MM/dd/yyyy', 'en-US') : '';
   }
 
   ngAfterViewInit() {
@@ -52,6 +52,8 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   onBlur(event: any) {
     if (this.validateDateValue(event.target.value)) {
       this.value = event.target.value;
+    } else {
+      this.value = null;
     }
   }
 
