@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AllCommunityModules, ColumnApi, GridApi, Module } from '@ag-grid-community/all-modules';
+import { AllCommunityModules, ColumnApi, GridApi, GridOptions, Module } from '@ag-grid-community/all-modules';
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
@@ -23,6 +23,7 @@ export class DatagridComponent implements OnInit {
   @Input() tabToNextCell;
   @Input() isExternalFilterPresent;
   @Input() doesExternalFilterPass;
+  @Input() excelMessage = 'UNCLASSIFIED / FOUO';
 
   @Output() cellAction: EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -32,26 +33,24 @@ export class DatagridComponent implements OnInit {
   @Output() rowEditingStarted: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   excelMessageHeader: any = [
-    [
-      {
-        styleId: "bigHeader",
+    [{
+        styleId: 'bigHeader',
         data: {
-          type: "String",
-          value: "For Official Use Only"
+          type: 'String',
+          value: this.excelMessage
         }
-      }
-    ]
+    }],
+    []
   ];
   excelMessageFooter: any = [
-    [
-      {
-        styleId: "bigHeader",
+    [],
+    [{
+        styleId: 'bigHeader',
         data: {
-          type: "String",
-          value: "For Official Use Only"
+          type: 'String',
+          value: this.excelMessage
         }
-      }
-    ]
+    }]
   ];
   defaultColDef: any;
   modules: Module[] = AllModules;
@@ -144,16 +143,31 @@ export class DatagridComponent implements OnInit {
     this.api.paginationSetPageSize(this.pageSize);
   }
 
+  // Exports to excel
   onExport() {
-    console.log('export fired');
-    const params = this.getParams();
+    const params = this.getExportParams();
     this.api.exportDataAsExcel(params);
   }
 
-  getParams() {
+  // Gets parameters for the export
+  getExportParams() {
     return {
       customHeader: this.excelMessageHeader,
       customFooter: this.excelMessageFooter,
     };
+  }
+
+  // provides context menu options
+  getContextMenuItems(params) {
+    console.log(params);
+    const result = [
+      {
+        name: 'Export',
+        action: ()=> {
+          params.context.onExport();
+        }
+      },
+    ];
+    return result;
   }
 }

@@ -22,9 +22,6 @@
       <div title="Add" *ngIf="showAddSingleRow" (click)="handleAddCta('add-single-row')">
         <fa name="plus" title="Add" [class.disabled]="api?.getEditingCells().length"></fa>
       </div>
-      <div>
-        <fa name="upload" title="Upload" (click)="onExport()"></fa>
-      </div>
     </div>
 
   </div>
@@ -32,10 +29,11 @@
     <ag-grid-angular style="width: 100%; height: 100%;" [columnDefs]="columns" [rowData]="rows" [rowDragManaged]="true"
       [editType]="'fullRow'" [suppressClickEdit]="true" [defaultColDef]="defaultColDef" [modules]="modules"
       [suppressRowClickSelection]="false" [animateRows]="true" [tabToNextCell]="tabToNextCell" [rowSelection]="'single'"
-      [rowHeight]="40" [pagination]="showPagination" [paginationPageSize]="pageSize"
+      [rowHeight]="40" [context]="this" [pagination]="showPagination" [paginationPageSize]="pageSize"
       [isExternalFilterPresent]="isExternalFilterPresent" [doesExternalFilterPass]="doesExternalFilterPass"
-      (gridReady)="onGridReady($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
-      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()" (rowEditingStarted)="onRowEditingStarted($event)">
+      [getContextMenuItems]="getContextMenuItems" (gridReady)="onGridReady($event)" (rowDragEnd)="onRowDragEnd($event)"
+      (cellClicked)="onCellClicked($event)" (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()"
+      (rowEditingStarted)="onRowEditingStarted($event)">
     </ag-grid-angular>
   </div>
 </div>
