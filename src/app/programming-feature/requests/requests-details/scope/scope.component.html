@@ -1,0 +1,72 @@
+<div class="pl-5 pr-5">
+  <fieldset>
+    <legend>Program Goals</legend>
+    <div class="form-group row">
+      <div class="row col-12 mt-5">
+        <p class="col-1 ml-4">Program Aim</p>
+        <textarea class="form-control col-10"></textarea>
+      </div>
+      <div class="row col-12 mt-5">
+        <p class="col-1 ml-4">Program Goal</p>
+        <textarea class="form-control col-10"></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Program Constraints</legend>
+    <div class="form-group row">
+      <div class="row col-12 mt-5">
+        <p class="col-1 ml-4">Budget</p>
+        <p class="col-10">{{ budget | currency:'':'symbol':'0.0'}}</p>
+      </div>
+      <div class="row col-12 mt-3">
+        <p class="col-1 ml-4">Schedule</p>
+        <p class="col-10">{{ schedule }}</p>
+      </div>
+      <div class="row col-12 mt-5">
+        <p class="col-1 ml-4">Quality</p>
+        <textarea class="form-control col-10"></textarea>
+      </div>
+      <div class="row col-12 mt-5">
+        <p class="col-1 ml-4">Other</p>
+        <textarea class="form-control col-10"></textarea>
+      </div>
+      <div class="row col-12 mt-5 attachment-container">
+        <p class="col-1 ml-4">Attachment</p>
+        <select class="form-control col-5">
+          <option *ngFor="let attachment of attachmentsUploaded">{{ attachment }}</option>
+        </select>
+        <i class="fa fa-upload col-1 text-center" (click)="onFileUploadClick()"></i>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Program Evaluation Measure</legend>
+    <pfm-datagrid (gridIsReady)="onEvaluationMeasureGridIsReady($event)"
+      (cellAction)="onHandleEvaluationMeasureCellAction($event)" [columns]="evaluationMeasureColumnDefinitions"
+      [rows]="evaluationMeasureRows" [showAddSingleRow]="true" [showPagination]="false"
+      (addCtaEvent)="onEvaluationMeasureRowAdd($event)" (mousedown)="onEvaluationMeasureMouseDown($event)"
+      (rowEditingStarted)="onEvaluationMeasureRowEditingStarted($event)">
+    </pfm-datagrid>
+  </fieldset>
+  <fieldset>
+    <legend>Program Team Leads</legend>
+    <pfm-datagrid (gridIsReady)="onTeamLeadGridIsReady($event)" (cellAction)="onHandleTeamLeadCellAction($event)"
+      [columns]="teamLeadsColumnDefinitions" [rows]="teamLeadsRows" [showAddSingleRow]="true" [showPagination]="false"
+      (addCtaEvent)="onTeamLeadRowAdd($event)" (mousedown)="onTeamLeadMouseDown($event)"
+      (rowEditingStarted)="onTeamLeadRowEditingStarted($event)">
+    </pfm-datagrid>
+  </fieldset>
+  <fieldset>
+    <legend>Program Process Priorization</legend>
+    <pfm-datagrid (gridIsReady)="onProcessPriorizationGridIsReady($event)"
+      (cellAction)="onHandleProcessPriorizationCellAction($event)" [columns]="processPriorizationColumnDefinitions"
+      [rows]="processPriorizationRows" [showAddSingleRow]="true" [showPagination]="false"
+      (addCtaEvent)="onProcessPriorizationRowAdd($event)" (mousedown)="onProcessPriorizationMouseDown($event)"
+      (rowEditingStarted)="onProcessPriorizationRowEditingStarted($event)">
+    </pfm-datagrid>
+  </fieldset>
+</div>
+<ng-container *ngIf="showUploadDialog">
+  <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+</ng-container>

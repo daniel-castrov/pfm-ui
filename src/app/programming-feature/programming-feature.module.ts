@@ -46,6 +46,7 @@ import { RequestsDetailsFormComponent } from './requests/requests-details/reques
 import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { JustificationComponent } from './requests/requests-details/justification/justification.component';
+import { ScopeComponent } from './requests/requests-details/scope/scope.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { JustificationComponent } from './requests/requests-details/justificatio
     RequestsDetailsComponent,
     ScheduleComponent,
     JustificationComponent,
-    RequestsDetailsFormComponent
+    RequestsDetailsFormComponent,
+    ScopeComponent
   ],
   imports: [
     CommonModule,
