@@ -32,26 +32,9 @@ export class DatagridComponent implements OnInit {
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
   @Output() rowEditingStarted: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
-  excelMessageHeader: any = [
-    [{
-        styleId: 'bigHeader',
-        data: {
-          type: 'String',
-          value: this.excelMessage
-        }
-    }],
-    []
-  ];
-  excelMessageFooter: any = [
-    [],
-    [{
-        styleId: 'bigHeader',
-        data: {
-          type: 'String',
-          value: this.excelMessage
-        }
-    }]
-  ];
+  excelMessageHeader: any;
+  excelMessageFooter: any;
+  excelStyles: any;
   defaultColDef: any;
   modules: Module[] = AllModules;
   api: GridApi;
@@ -137,6 +120,40 @@ export class DatagridComponent implements OnInit {
       item2.id = 'add-rows-from-year';
       this.options = [item, item2];
     }
+
+    console.log(this.columns);
+    this.excelMessageHeader = [
+      [{
+        styleId: 'message',
+        data: {
+          type: 'String',
+          value: this.excelMessage
+        },
+        mergeAcross: this.columns.length - 1
+      }],
+      []
+    ];
+    this.excelMessageFooter = [
+      [],
+      [{
+        styleId: 'message',
+        data: {
+          type: 'String',
+          value: this.excelMessage
+        },
+        mergeAcross: this.columns.length - 1
+      }]
+    ];
+    this.excelStyles = [
+      {
+        id: 'message',
+        alignment: { horizontal: 'CenterAcrossSelection' },
+        interior: {
+          color: '#008000', pattern: 'Solid'
+        },
+        dataType: 'string'
+      },
+    ];
   }
 
   handlePageSizeChanged(pageSize: any) {
