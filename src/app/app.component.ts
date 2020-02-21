@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { AppModel } from './pfm-common-models/AppModel';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { onMainContentChange, onSideNavChange } from './pfm-coreui/menu-bar/animation';
@@ -6,6 +6,7 @@ import { UserRole } from './pfm-common-models/UserRole';
 import { UserDetailsModel } from './pfm-common-models/UserDetailsModel';
 import { Router } from '@angular/router';
 import { MenuBarItem } from './pfm-coreui/models/MenuBarItem';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit {
   linkText: boolean;
   isSideMenuOpen: boolean;
 
-  constructor(public appModel: AppModel, private authService: AuthorizationService, private router: Router) {}
+  constructor(public appModel: AppModel, private authService: AuthorizationService, private router: Router, @Inject(DOCUMENT) document) {}
 
   onMenuToogle(newValue): void {
     this.isSideMenuOpen = newValue;
@@ -43,5 +44,17 @@ export class AppComponent implements OnInit {
   private buildSiteMenuItems(): void {
     const menuBarItems: MenuBarItem[] = [];
 
+  }
+
+  // This adds the sticky class to the nav bar
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(e) {
+    if (window.pageYOffset > 79) {
+      const element = document.getElementById('navbar');
+      element.classList.add('sticky');
+    } else {
+      const element = document.getElementById('navbar');
+      element.classList.remove('sticky');
+    }
   }
 }
