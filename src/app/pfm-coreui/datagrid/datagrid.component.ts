@@ -120,8 +120,6 @@ export class DatagridComponent implements OnInit {
       item2.id = 'add-rows-from-year';
       this.options = [item, item2];
     }
-
-    console.log(this.columns);
     this.excelMessageHeader = [
       [{
         styleId: 'message',
@@ -176,7 +174,6 @@ export class DatagridComponent implements OnInit {
 
   // provides context menu options
   getContextMenuItems(params) {
-    console.log(params);
     const result = [
       {
         name: 'Export',
