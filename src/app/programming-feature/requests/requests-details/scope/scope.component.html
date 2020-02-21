@@ -52,7 +52,7 @@
   <fieldset>
     <legend>Program Team Leads</legend>
     <pfm-datagrid (gridIsReady)="onTeamLeadGridIsReady($event)" (cellAction)="onHandleTeamLeadCellAction($event)"
-      [columns]="teamLeadsColumnDefinitions" [rows]="teamLeadsRows" [showAddSingleRow]="true" [showPagination]="false"
+      [columns]="teamLeadsColumnDefinitions" [rows]="teamLeadRows" [showAddSingleRow]="true" [showPagination]="false"
       (addCtaEvent)="onTeamLeadRowAdd($event)" (mousedown)="onTeamLeadMouseDown($event)"
       (rowEditingStarted)="onTeamLeadRowEditingStarted($event)">
     </pfm-datagrid>
