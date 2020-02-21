@@ -1,25 +1,25 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {RequestsSummaryToaWidgetComponent} from './requests-summary-toa-widget/requests-summary-toa-widget.component';
-import {RequestsSummaryOrgWidgetComponent} from './requests-summary-org-widget/requests-summary-org-widget.component';
-import {ProgramSummary} from '../../models/ProgramSummary';
-import {GridsterConfig, GridsterItem} from 'angular-gridster2';
-import {ProgrammingModel} from '../../models/ProgrammingModel';
-import {PomService} from '../../services/pom-service';
-import {ProgrammingService} from '../../services/programming-service';
-import {DashboardMockService} from '../../../pfm-dashboard-module/services/dashboard.mock.service';
-import {DialogService} from '../../../pfm-coreui/services/dialog.service';
-import {ListItem} from '../../../pfm-common-models/ListItem';
-import {RoleService} from '../../../services/role-service';
-import {OrganizationService} from '../../../services/organization-service';
-import {Role} from '../../../pfm-common-models/Role';
-import {Organization} from '../../../pfm-common-models/Organization';
-import {RequestsSummaryGridComponent} from './requests-summary-grid/requests-summary-grid.component';
-import {MrdbService} from '../../services/mrdb-service';
-import {Program} from '../../models/Program';
-import {RequestSummaryNavigationHistoryService} from './requests-summary-navigation-history.service';
-import {VisibilityService} from '../../../services/visibility-service';
-import {Router} from '@angular/router';
-import {AppModel} from '../../../pfm-common-models/AppModel';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { RequestsSummaryToaWidgetComponent } from './requests-summary-toa-widget/requests-summary-toa-widget.component';
+import { RequestsSummaryOrgWidgetComponent } from './requests-summary-org-widget/requests-summary-org-widget.component';
+import { ProgramSummary } from '../../models/ProgramSummary';
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import { ProgrammingModel } from '../../models/ProgrammingModel';
+import { PomService } from '../../services/pom-service';
+import { ProgrammingService } from '../../services/programming-service';
+import { DashboardMockService } from '../../../pfm-dashboard-module/services/dashboard.mock.service';
+import { DialogService } from '../../../pfm-coreui/services/dialog.service';
+import { ListItem } from '../../../pfm-common-models/ListItem';
+import { RoleService } from '../../../services/role-service';
+import { OrganizationService } from '../../../services/organization-service';
+import { Role } from '../../../pfm-common-models/Role';
+import { Organization } from '../../../pfm-common-models/Organization';
+import { RequestsSummaryGridComponent } from './requests-summary-grid/requests-summary-grid.component';
+import { MrdbService } from '../../services/mrdb-service';
+import { Program } from '../../models/Program';
+import { RequestSummaryNavigationHistoryService } from './requests-summary-navigation-history.service';
+import { VisibilityService } from '../../../services/visibility-service';
+import { Router } from '@angular/router';
+import { AppModel } from '../../../pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-requests-summary',
