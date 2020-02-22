@@ -45,16 +45,14 @@
     <pfm-datagrid (gridIsReady)="onEvaluationMeasureGridIsReady($event)"
       (cellAction)="onHandleEvaluationMeasureCellAction($event)" [columns]="evaluationMeasureColumnDefinitions"
       [rows]="evaluationMeasureRows" [showAddSingleRow]="true" [showPagination]="false"
-      (addCtaEvent)="onEvaluationMeasureRowAdd($event)" (mousedown)="onEvaluationMeasureMouseDown($event)"
-      (rowEditingStarted)="onEvaluationMeasureRowEditingStarted($event)">
+      (addCtaEvent)="onEvaluationMeasureRowAdd($event)" (mousedown)="onEvaluationMeasureMouseDown($event)">
     </pfm-datagrid>
   </fieldset>
   <fieldset>
     <legend>Program Team Leads</legend>
     <pfm-datagrid (gridIsReady)="onTeamLeadGridIsReady($event)" (cellAction)="onHandleTeamLeadCellAction($event)"
       [columns]="teamLeadsColumnDefinitions" [rows]="teamLeadRows" [showAddSingleRow]="true" [showPagination]="false"
-      (addCtaEvent)="onTeamLeadRowAdd($event)" (mousedown)="onTeamLeadMouseDown($event)"
-      (rowEditingStarted)="onTeamLeadRowEditingStarted($event)">
+      (addCtaEvent)="onTeamLeadRowAdd($event)" (mousedown)="onTeamLeadMouseDown($event)">
     </pfm-datagrid>
   </fieldset>
   <fieldset>
@@ -62,8 +60,7 @@
     <pfm-datagrid (gridIsReady)="onProcessPriorizationGridIsReady($event)"
       (cellAction)="onHandleProcessPriorizationCellAction($event)" [columns]="processPriorizationColumnDefinitions"
       [rows]="processPriorizationRows" [showAddSingleRow]="true" [showPagination]="false"
-      (addCtaEvent)="onProcessPriorizationRowAdd($event)" (mousedown)="onProcessPriorizationMouseDown($event)"
-      (rowEditingStarted)="onProcessPriorizationRowEditingStarted($event)">
+      (addCtaEvent)="onProcessPriorizationRowAdd($event)" (mousedown)="onProcessPriorizationMouseDown($event)">
     </pfm-datagrid>
   </fieldset>
 </div>
