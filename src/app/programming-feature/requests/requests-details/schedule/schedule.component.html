@@ -13,8 +13,7 @@
       <div class="grid-container">
         <pfm-datagrid (gridIsReady)="onGridIsReady($event)" (cellAction)="handleCellAction($event)"
           [columns]="fundingGridColumnDefinitions" [rows]="fundingGridRows" [showAddSingleRow]="true"
-          [showPagination]="false" (addCtaEvent)="onFundingRowAdd($event)" (mousedown)="onMouseDown($event)"
-          (rowEditingStarted)="onRowEditingStarted($event)">
+          [showPagination]="false" (addCtaEvent)="onFundingRowAdd($event)" (mousedown)="onMouseDown($event)">
         </pfm-datagrid>
       </div>
     </div>

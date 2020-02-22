@@ -1,0 +1,25 @@
+:host ::ng-deep .pfm-data {
+  height: 300px !important;
+}
+
+:host ::ng-deep .pfm-data .main-header,
+:host ::ng-deep .pfm-data .ag-header-group-cell.ag-header-group-cell-no-group {
+  background: white;
+  color: black;
+}
+
+:host ::ng-deep .pfm-data .sub-header {
+  background-color: #D9D9D9;
+  color: black;
+}
+
+:host ::ng-deep .pfm-data .ag-header-cell-label .ag-header-cell-text {
+  white-space: normal !important;
+}
+
+:host ::ng-deep .pfm-data .ag-overlay .ag-overlay-panel .ag-overlay-wrapper {
+  display: flex;
+  height: 150%;
+  align-items: center;
+  justify-content: center;
+}

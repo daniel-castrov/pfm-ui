@@ -679,9 +679,6 @@ export class ScopeComponent implements OnInit {
     if (this.currentEvaluationMeasureRowDataState.isEditMode) {
       return;
     }
-    const id = this.evaluationMeasureRows.length ?
-      Math.max.apply(Math, this.evaluationMeasureRows.map(row => row.id)) :
-      0;
     this.evaluationMeasureRows.push(
       {
         id: '',
@@ -702,9 +699,6 @@ export class ScopeComponent implements OnInit {
     if (this.currentTeamLeadRowDataState.isEditMode) {
       return;
     }
-    const id = this.teamLeadRows.length ?
-      Math.max.apply(Math, this.teamLeadRows.map(row => row.id)) :
-      0;
     this.teamLeadRows.push(
       {
         name: '',
@@ -723,9 +717,6 @@ export class ScopeComponent implements OnInit {
     if (this.currentProcessPriorizationRowDataState.isEditMode) {
       return;
     }
-    const id = this.processPriorizationRows.length ?
-      Math.max.apply(Math, this.processPriorizationRows.map(row => row.id)) :
-      0;
     this.processPriorizationRows.push(
       {
         potentialProcesses: '',
@@ -738,24 +729,6 @@ export class ScopeComponent implements OnInit {
     this.currentProcessPriorizationRowDataState.isAddMode = true;
     this.processPriorizationGridApi.setRowData(this.processPriorizationRows);
     this.editProcessPriorizationRow(this.processPriorizationRows.length - 1);
-  }
-
-  onEvaluationMeasureRowEditingStarted(event: any) {
-    if (!this.currentEvaluationMeasureRowDataState.isEditMode) {
-      this.evaluationMeasureGridApi.stopEditing();
-    }
-  }
-
-  onTeamLeadRowEditingStarted(event: any) {
-    if (!this.currentTeamLeadRowDataState.isEditMode) {
-      this.teamLeadGridApi.stopEditing();
-    }
-  }
-
-  onProcessPriorizationRowEditingStarted(event: any) {
-    if (!this.currentProcessPriorizationRowDataState.isEditMode) {
-      this.processPriorizationGridApi.stopEditing();
-    }
   }
 
   onEvaluationMeasureGridIsReady(gridApi: GridApi) {
