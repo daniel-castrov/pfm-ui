@@ -17,8 +17,8 @@ import { AppModel } from '../../../../pfm-common-models/AppModel';
 export class RequestsSummaryGridComponent implements OnInit {
   @Input() pomYear: number;
   @Input() dropdownOptions: ListItem[];
-  @Output() onAddCtaEvent: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onGridDataChange = new EventEmitter();
+  @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() gridDataChange = new EventEmitter();
 
   gridApi: GridApi;
   columnApi: ColumnApi;
@@ -93,7 +93,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   }
 
   currencyFormatter(params) {
-    return '$ ' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return '$ ' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
   handleCellAction(cellAction: DataGridMessage): void {
@@ -128,7 +128,8 @@ export class RequestsSummaryGridComponent implements OnInit {
       this.router.navigate(
         ['/programming/requests/details/' + cellAction.rowData['programName'],
         {
-          pomYear: this.pomYear
+          pomYear: this.pomYear,
+          programSummary: JSON.stringify(cellAction.rowData)
         }
         ]);
     }
@@ -136,7 +137,7 @@ export class RequestsSummaryGridComponent implements OnInit {
 
   onGridIsReady(gridApi: GridApi): void {
     this.gridApi = gridApi;
-    this.onGridDataChange.emit(this.gridData);
+    this.gridDataChange.emit(this.gridData);
   }
 
   onColumnIsReady(columnApi: ColumnApi): void {
@@ -177,7 +178,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   }
 
   onAddProgram(event: any) {
-    this.onAddCtaEvent.emit(event);
+    this.addCtaEvent.emit(event);
   }
 
   isExternalFilterPresent() {
