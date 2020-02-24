@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GridApi, ColDef, ColGroupDef } from '@ag-grid-community/all-modules';
+import { GridApi, ColGroupDef } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { of } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ListItem } from 'src/app/pfm-common-models/ListItem';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
@@ -104,6 +103,7 @@ export class AssetsComponent implements OnInit {
   onGridIsReady(fundingLineGridApi: GridApi) {
     this.fundingLineGridApi = fundingLineGridApi;
     this.fundingLineGridApi.setHeaderHeight(50);
+    this.fundingLineGridApi.setGroupHeaderHeight(25);
   }
 
   onRowAdd(event: any) {
