@@ -365,12 +365,6 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
-  onRowEditingStarted(event: any) {
-    if (!this.currentRowDataState.isEditMode) {
-      this.gridApi.stopEditing();
-    }
-  }
-
   handleCellAction(cellAction: DataGridMessage) {
     switch (cellAction.message) {
       case 'save':

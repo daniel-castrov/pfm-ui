@@ -1,0 +1,26 @@
+<div>
+  <div [formGroup]="form" class="form-group row col-12">
+    <label for="fundingLineSelect" class="col-2 my-auto">Select Funding Line to View</label>
+    <select id="fundingLineSelect" formControlName="fundingLineSelect" (change)="onChangeSuit($event)"
+      class="form-control col-4">
+      <option value="0">Select</option>
+      <option *ngFor="let fundingLine of fundingLineOptions" [ngValue]="fundingLine">
+        {{ fundingLine }}
+      </option>
+    </select>
+  </div>
+  <div class="funding-detail-container" *ngIf="showFundingLineGrid">
+    <div class="grid-container">
+      <pfm-datagrid (gridIsReady)="onGridIsReady($event)" (cellAction)="onCellAction($event)"
+        [columns]="fundingLineColumnsDefinition" [rows]="fundingLineRows" [showAddSingleRow]="true"
+        [showPagination]="false" (addCtaEvent)="onRowAdd($event)" (mousedown)="onMouseDown($event)">
+      </pfm-datagrid>
+    </div>
+    <div class="form-group row">
+      <div class="description-container row col-12 mt-5">
+        <p class="col-2">Remarks</p>
+        <textarea class="form-control col-10"></textarea>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener, Input } from '@angular/core';
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
-import { PomService } from '../../../services/pom-service';
+import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
 
 @Component({
   selector: 'pfm-justification',
@@ -10,10 +10,13 @@ import { PomService } from '../../../services/pom-service';
 })
 export class JustificationComponent implements OnInit {
 
+  static MAX_YEAR = 5;
+
   @ViewChild('googleChart', { static: false })
   chart: GoogleChartComponent;
 
   @Input() pomYear: number;
+  @Input() fundingShortName: string;
 
   chartData: GoogleChartInterface = {
     chartType: 'ColumnChart',
@@ -50,32 +53,14 @@ export class JustificationComponent implements OnInit {
     }
   };
 
-  boundData = [
-    92000,
-    92000,
-    92000,
-    60000,
-    60000
-  ];
+  boundData = [];
 
-  mockDataPreviousYear = [
-    80000,
-    87000,
-    90000,
-    77000,
-    75000
-  ];
+  programmingPreviousYear = [];
 
-  mockDataCurrentYear = [
-    84000,
-    86000,
-    85000,
-    80000,
-    73000
-  ];
+  programmingCurrentYear = [];
 
   constructor(
-    private pomService: PomService
+    private programmingService: ProgrammingService
   ) { }
 
   ngOnInit() {
@@ -102,11 +87,12 @@ export class JustificationComponent implements OnInit {
         ''
       ]
     ];
-    for (let i = 0; i < 5; i++) {
+    this.fillBoundData();
+    for (let i = 0; i < JustificationComponent.MAX_YEAR; i++) {
       data.push([
         'FY' + (this.pomYear % 100 + i),
-        this.mockDataPreviousYear[i],
-        this.mockDataCurrentYear[i],
+        i === JustificationComponent.MAX_YEAR - 1 ? null : this.programmingPreviousYear[i] || 0,
+        this.programmingCurrentYear[i] || 0,
         this.boundData[i]
       ]);
     }
@@ -116,10 +102,53 @@ export class JustificationComponent implements OnInit {
     }
   }
 
-  loadPom() {
-    this.pomService.getPomForYear(this.pomYear).subscribe(x => {
+  fillBoundData() {
+    this.boundData = [];
+    let maxPrev = 0;
+    let minPrev = 0;
+    if (this.programmingPreviousYear.length) {
+      maxPrev = Math.max.apply(Math, this.programmingPreviousYear.map(fund => fund));
+      minPrev = Math.min.apply(Math, this.programmingPreviousYear.map(fund => fund));
+    }
+    let maxCurr = 0;
+    let minCurr = 0;
+    if (this.programmingCurrentYear.length) {
+      maxCurr = Math.max.apply(Math, this.programmingCurrentYear.map(fund => fund));
+      minCurr = Math.min.apply(Math, this.programmingCurrentYear.map(fund => fund));
+    }
+    const max = (maxPrev > maxCurr ? maxPrev : maxCurr) + 10000;
+    const min = (minPrev > minCurr ? minPrev : minCurr) - 10000;
+    this.boundData.push(max);
+    this.boundData.push(min);
+    for (let i = 0; i < JustificationComponent.MAX_YEAR - 2; i++) {
+      this.boundData.push(0);
+    }
+  }
 
-    });
+  loadPom() {
+    this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.fundingShortName).subscribe(
+      resp => {
+        this.loadFundingData(resp.result.fundingLines, this.programmingPreviousYear);
+      }, err => {
+        this.programmingPreviousYear = [];
+      });
+    this.programmingService.getPRForYearAndShortName(this.pomYear, this.fundingShortName).subscribe(
+      resp => {
+        this.loadFundingData(resp.result.fundingLines, this.programmingCurrentYear);
+      }, err => {
+        this.programmingCurrentYear = [];
+      });
+  }
+
+  private loadFundingData(fundingLines: any[], programmingYear: any[]) {
+    for (let year = this.pomYear; year < this.pomYear + JustificationComponent.MAX_YEAR; year++) {
+      let funds = 0;
+      for (const fundingLine of fundingLines) {
+        funds += fundingLine.funds[year] || 0;
+      }
+      programmingYear[programmingYear.length] = funds;
+    }
+    this.drawLineChart();
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AllCommunityModules, ColumnApi, GridApi, GridOptions, Module } from '@ag-grid-community/all-modules';
+import { ColumnApi, GridApi, Module } from '@ag-grid-community/all-modules';
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
@@ -24,13 +24,13 @@ export class DatagridComponent implements OnInit {
   @Input() isExternalFilterPresent;
   @Input() doesExternalFilterPass;
   @Input() excelMessage = 'UNCLASSIFIED / FOUO';
+  @Input() suppressKeyboardEvent = true;
 
   @Output() cellAction: EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() gridIsReady: EventEmitter<GridApi> = new EventEmitter<GridApi>();
   @Output() rowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
-  @Output() rowEditingStarted: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
   excelMessageHeader: any;
   excelMessageFooter: any;
@@ -41,8 +41,7 @@ export class DatagridComponent implements OnInit {
   columnApi: ColumnApi;
   options: ListItem[];
   pageSize = 20;
-
-  private paginationNumberFormatter: any;
+  onSuppressKeyboardEvent = (event: any) => this.suppressKeyboardEvent;
 
   constructor(private datagridMBService: DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
@@ -70,10 +69,6 @@ export class DatagridComponent implements OnInit {
     this.rowDragEndEvent.emit(event);
   }
 
-  onRowEditingStarted(event: any) {
-    this.rowEditingStarted.emit(event);
-  }
-
   onCellClicked(event: any): void {
     const message: DataGridMessage = new DataGridMessage();
 
@@ -96,9 +91,6 @@ export class DatagridComponent implements OnInit {
     this.gridIsReady.emit(this.api);
     this.columnIsReady.emit(this.columnApi);
     this.api.paginationSetPageSize(this.pageSize);
-    this.paginationNumberFormatter = (paginationNumber: any) => {
-      return '[' + paginationNumber.value.toLocaleString() + ']';
-    };
   }
 
   onGridSizeChanged() {
@@ -120,8 +112,6 @@ export class DatagridComponent implements OnInit {
       item2.id = 'add-rows-from-year';
       this.options = [item, item2];
     }
-
-    console.log(this.columns);
     this.excelMessageHeader = [
       [{
         styleId: 'message',
@@ -176,11 +166,10 @@ export class DatagridComponent implements OnInit {
 
   // provides context menu options
   getContextMenuItems(params) {
-    console.log(params);
     const result = [
       {
         name: 'Export',
-        action: ()=> {
+        action: () => {
           params.context.onExport();
         }
       },
