@@ -57,13 +57,7 @@ export class JustificationComponent implements OnInit {
 
   programmingPreviousYear = [];
 
-  mockDataCurrentYear = [
-    84000,
-    86000,
-    85000,
-    80000,
-    73000
-  ];
+  programmingCurrentYear = [];
 
   constructor(
     private programmingService: ProgrammingService
@@ -98,7 +92,7 @@ export class JustificationComponent implements OnInit {
       data.push([
         'FY' + (this.pomYear % 100 + i),
         i === JustificationComponent.MAX_YEAR - 1 ? null : this.programmingPreviousYear[i] || 0,
-        this.mockDataCurrentYear[i] || 0,
+        this.programmingCurrentYear[i] || 0,
         this.boundData[i]
       ]);
     }
@@ -118,9 +112,9 @@ export class JustificationComponent implements OnInit {
     }
     let maxCurr = 0;
     let minCurr = 0;
-    if (this.mockDataCurrentYear.length) {
-      maxCurr = Math.max.apply(Math, this.mockDataCurrentYear.map(fund => fund));
-      minCurr = Math.min.apply(Math, this.mockDataCurrentYear.map(fund => fund));
+    if (this.programmingCurrentYear.length) {
+      maxCurr = Math.max.apply(Math, this.programmingCurrentYear.map(fund => fund));
+      minCurr = Math.min.apply(Math, this.programmingCurrentYear.map(fund => fund));
     }
     const max = (maxPrev > maxCurr ? maxPrev : maxCurr) + 10000;
     const min = (minPrev > minCurr ? minPrev : minCurr) - 10000;
@@ -134,18 +128,27 @@ export class JustificationComponent implements OnInit {
   loadPom() {
     this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.fundingShortName).subscribe(
       resp => {
-        const fundingLines = resp.result.fundingLines;
-        for (let year = this.pomYear; year < this.pomYear + JustificationComponent.MAX_YEAR; year++) {
-          let funds = 0;
-          for (const fundingLine of fundingLines) {
-            funds += fundingLine.funds[year] || 0;
-          }
-          this.programmingPreviousYear[this.programmingPreviousYear.length] = funds;
-        }
-        this.drawLineChart();
+        this.loadFundingData(resp.result.fundingLines, this.programmingPreviousYear);
       }, err => {
         this.programmingPreviousYear = [];
       });
+    this.programmingService.getPRForYearAndShortName(this.pomYear, this.fundingShortName).subscribe(
+      resp => {
+        this.loadFundingData(resp.result.fundingLines, this.programmingCurrentYear);
+      }, err => {
+        this.programmingCurrentYear = [];
+      });
+  }
+
+  private loadFundingData(fundingLines: any[], programmingYear: any[]) {
+    for (let year = this.pomYear; year < this.pomYear + JustificationComponent.MAX_YEAR; year++) {
+      let funds = 0;
+      for (const fundingLine of fundingLines) {
+        funds += fundingLine.funds[year] || 0;
+      }
+      programmingYear[programmingYear.length] = funds;
+    }
+    this.drawLineChart();
   }
 
 }
