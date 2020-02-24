@@ -16,7 +16,7 @@ export class JustificationComponent implements OnInit {
   chart: GoogleChartComponent;
 
   @Input() pomYear: number;
-  @Input() pomShortName: string;
+  @Input() fundingShortName: string;
 
   chartData: GoogleChartInterface = {
     chartType: 'ColumnChart',
@@ -97,7 +97,7 @@ export class JustificationComponent implements OnInit {
     for (let i = 0; i < JustificationComponent.MAX_YEAR; i++) {
       data.push([
         'FY' + (this.pomYear % 100 + i),
-        this.programmingPreviousYear[i] || 0,
+        i === JustificationComponent.MAX_YEAR - 1 ? null : this.programmingPreviousYear[i] || 0,
         this.mockDataCurrentYear[i] || 0,
         this.boundData[i]
       ]);
@@ -132,7 +132,7 @@ export class JustificationComponent implements OnInit {
   }
 
   loadPom() {
-    this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.pomShortName).subscribe(
+    this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.fundingShortName).subscribe(
       resp => {
         const fundingLines = resp.result.fundingLines;
         for (let year = this.pomYear; year < this.pomYear + JustificationComponent.MAX_YEAR; year++) {

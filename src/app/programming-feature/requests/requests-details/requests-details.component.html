@@ -49,7 +49,7 @@
   </tab>
   <tab heading="Justification" style="width:100%;height:100%" (selectTab)="onSelectTab($event)">
     <div class="section-tab">
-      <pfm-justification [pomYear]="pomYear" [pomShortName]="programmingModel.selectedProgramName" *ngIf="currentSelectedTab === 5"></pfm-justification>
+      <pfm-justification [pomYear]="pomYear" [fundingShortName]="programmingModel.selectedProgramName" *ngIf="currentSelectedTab === 5"></pfm-justification>
     </div>
   </tab>
 </tabset>

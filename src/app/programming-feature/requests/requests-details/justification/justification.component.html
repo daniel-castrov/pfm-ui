@@ -1,6 +1,6 @@
 <div class="container col-12">
   <div class="justification-container">
-    <h3 class="col-12 text-center">POM Comparison</h3>
+    <h3 class="col-12 text-center">{{ fundingShortName }} Funding Comparison</h3>
     <div class="row col-12">
       <google-chart #googleChart [data]="chartData" (chartReady)="onChartReady($event)"></google-chart>
     </div>
