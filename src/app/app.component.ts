@@ -49,12 +49,13 @@ export class AppComponent implements OnInit {
   // This adds the sticky class to the nav bar
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-    if (window.pageYOffset > 79) {
-      const element = document.getElementById('navbar');
-      element.classList.add('sticky');
+    const main = document.getElementById('main_content');
+    const nav = document.getElementById('navbar');
+    console.log(main.offsetHeight);
+    if (window.pageYOffset > 79 && main.offsetHeight > 768) {
+      nav.classList.add('sticky');
     } else {
-      const element = document.getElementById('navbar');
-      element.classList.remove('sticky');
+      nav.classList.remove('sticky');
     }
   }
 }
