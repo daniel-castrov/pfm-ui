@@ -1,5 +1,6 @@
 <div class="input-group">
-  <input type="text" class="form-control" (blur)="onBlur($event)" value="{{ value | date:'MM/dd/yyyy' }}" />
+  <input type="text" placeholder="MM/DD/YYYY" class="form-control" (keypress)="onKeyPress($event)"
+    (blur)="onBlur($event)" [ngModel]="stringValue" (ngModelChange)="onNgModelChange($event)" maxlength="10"/>
   <i class="fa fa-calendar" bsDatepicker [(bsValue)]="value"
     [bsConfig]="{ showWeekNumbers: false, containerClass: 'theme-dark-blue' }" [minDate]="minDate" [maxDate]="maxDate"
     (bsValueChange)="onValueChange($event)"></i>

@@ -12,20 +12,23 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   params: any;
   value: Date;
   id: string;
+  stringValue = '';
 
   minDate: Date;
   maxDate: Date;
 
   agInit(params: any) {
     this.params = params;
-    this.value = params.value;
+    if (params.value) {
+      this.value = new Date(params.value);
+    }
+    this.stringValue = params.value;
     this.id = 'DatePickerCellEditorComponent-' + this.params.rowIndex;
-
     this.validateDateRange();
   }
 
   getValue(): string {
-    return this.value ? formatDate(this.value, 'MM/dd/yyyy', 'en-US') : '';
+    return this.stringValue;
   }
 
   ngAfterViewInit() {
@@ -46,12 +49,37 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
   }
 
   onValueChange(value: Date) {
+    if (this.validateDateValue(String(this.value))) {
+      this.stringValue = formatDate(this.value, 'MM/dd/yyyy', 'en-US');
+    }
     this.validateDateRange();
+  }
+
+  onKeyPress(event: KeyboardEvent) {
+    const keyCode = event.code;
+    if (!(
+      keyCode.toLowerCase().indexOf('numpad') > -1 ||
+      keyCode.toLowerCase().indexOf('digit') > -1 ||
+      keyCode.toLowerCase().indexOf('slash') > -1
+    )) {
+      event.preventDefault();
+      return;
+    }
+    if (keyCode.toLowerCase().indexOf('slash') > -1) {
+      return true;
+    }
+    const isNumber = Number.parseInt(keyCode.substr(keyCode.length - 1, keyCode.length), 10);
+    return !Number.isNaN(isNumber);
+  }
+
+  onNgModelChange(newValue: string) {
+    this.stringValue = newValue;
   }
 
   onBlur(event: any) {
     if (this.validateDateValue(event.target.value)) {
-      this.value = event.target.value;
+      this.value = new Date(event.target.value);
+      this.stringValue = formatDate(this.value, 'MM/dd/yyyy', 'en-US');
     } else {
       this.value = null;
     }
@@ -61,7 +89,7 @@ export class DatePickerCellEditorComponent implements ICellEditorAngularComp, Af
     if (dateString) {
       try {
         const date = new Date(dateString);
-        const dateSplit = dateString.split('/');
+        const dateSplit = formatDate(dateString, 'MM/dd/yyyy', 'en-US').split('/');
         if (date.getFullYear() === Number(dateSplit[2]) &&
           date.getMonth() === Number(dateSplit[0]) - 1 &&
           date.getDate() === Number(dateSplit[1])) {
