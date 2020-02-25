@@ -61,6 +61,7 @@ export class ScopeComponent implements OnInit {
   currentProcessPriorizationRowDataState: RowDataStateInterface = {};
 
   attachmentsUploaded: string[] = [];
+  deleteDialog: DeleteDialogInterface = { title: 'Delete',  };
 
   constructor(private dialogService: DialogService) { }
 
@@ -380,7 +381,8 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentEvaluationMeasureRowDataState.isEditMode) {
-            this.deleteEvaluationMeasureRow(cellAction.rowIndex);
+            this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+            this.displayDeleteDialog(cellAction, this.deleteEvaluationMeasureRow.bind(this));
           }
           break;
         case 'cancel':
@@ -499,7 +501,8 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentTeamLeadRowDataState.isEditMode) {
-            this.deleteTeamLeadRow(cellAction.rowIndex);
+            this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+            this.displayDeleteDialog(cellAction, this.deleteTeamLeadRow.bind(this));
           }
           break;
         case 'cancel':
@@ -616,7 +619,8 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentProcessPriorizationRowDataState.isEditMode) {
-            this.deleteProcessPriorizationRow(cellAction.rowIndex);
+            this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+            this.displayDeleteDialog(cellAction, this.deleteProcessPriorizationRow.bind(this));
           }
           break;
         case 'cancel':
@@ -760,6 +764,27 @@ export class ScopeComponent implements OnInit {
     this.showUploadDialog = true;
   }
 
+  private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
+    this.deleteDialog.cellAction = cellAction;
+    this.deleteDialog.delete = deleteFunction;
+    this.deleteDialog.display = true;
+  }
+
+  onCancelDeleteDialog() {
+    this.closeDeleteDialog();
+  }
+
+  onDeleteData() {
+    this.deleteDialog.delete(this.deleteDialog.cellAction.rowIndex);
+    this.closeDeleteDialog();
+  }
+
+  private closeDeleteDialog() {
+    this.deleteDialog.cellAction = null;
+    this.deleteDialog.delete = null;
+    this.deleteDialog.display = false;
+  }
+
 }
 
 export interface RowDataStateInterface {
@@ -768,6 +793,16 @@ export interface RowDataStateInterface {
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: any;
+
+}
+
+export interface DeleteDialogInterface {
+
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  cellAction?: DataGridMessage;
+  delete?: (rowIndex: number) => void;
 
 }
 

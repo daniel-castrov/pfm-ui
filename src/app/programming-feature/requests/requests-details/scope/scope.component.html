@@ -2,11 +2,11 @@
   <fieldset>
     <legend>Program Goals</legend>
     <div class="form-group row">
-      <div class="row col-12 mt-5">
+      <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Program Aim</p>
         <textarea class="form-control col-10"></textarea>
       </div>
-      <div class="row col-12 mt-5">
+      <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Program Goal</p>
         <textarea class="form-control col-10"></textarea>
       </div>
@@ -15,23 +15,23 @@
   <fieldset>
     <legend>Program Constraints</legend>
     <div class="form-group row">
-      <div class="row col-12 mt-5">
+      <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Budget</p>
         <p class="col-10">{{ budget | currency:'':'symbol':'0.0'}}</p>
       </div>
-      <div class="row col-12 mt-3">
+      <div class="row col-12 mt-1">
         <p class="col-1 ml-4">Schedule</p>
         <p class="col-10">{{ schedule }}</p>
       </div>
-      <div class="row col-12 mt-5">
+      <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Quality</p>
         <textarea class="form-control col-10"></textarea>
       </div>
-      <div class="row col-12 mt-5">
+      <div class="row col-12 mt-3">
         <p class="col-1 ml-4">Other</p>
         <textarea class="form-control col-10"></textarea>
       </div>
-      <div class="row col-12 mt-5 attachment-container">
+      <div class="row col-12 mt-3 attachment-container">
         <p class="col-1 ml-4">Attachment</p>
         <select class="form-control col-5">
           <option *ngFor="let attachment of attachmentsUploaded">{{ attachment }}</option>
@@ -66,4 +66,22 @@
 </div>
 <ng-container *ngIf="showUploadDialog">
   <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+</ng-container>
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog [title]="deleteDialog.title" [body]="deleteBody" [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
 </ng-container>
