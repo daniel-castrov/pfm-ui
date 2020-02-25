@@ -591,11 +591,4 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
-  onWindowResize(event: any) {
-    if (this.gridApi) {
-      this.gridApi.sizeColumnsToFit();
-    }
-  }
-
 }
