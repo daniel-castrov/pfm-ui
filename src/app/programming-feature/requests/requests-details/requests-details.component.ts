@@ -4,6 +4,7 @@ import { ProgrammingModel } from '../../models/ProgrammingModel';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary/requests-summary-navigation-history.service';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { TabDirective } from 'ngx-bootstrap';
+import { ProgramSummary } from '../../models/ProgramSummary';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -17,6 +18,7 @@ export class RequestsDetailsComponent implements OnInit {
   pfmSchedule: ScheduleComponent;
   currentSelectedTab = 1;
   pomYear: number;
+  programSummary: ProgramSummary;
 
   constructor(
     public programmingModel: ProgrammingModel,
@@ -33,6 +35,7 @@ export class RequestsDetailsComponent implements OnInit {
   ngOnInit() {
     this.programmingModel.selectedProgramName = this.route.snapshot.paramMap.get('id');
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
+    this.programSummary = JSON.parse(this.route.snapshot.paramMap.get('programSummary'));
   }
 
   onApprove(): void {
