@@ -400,7 +400,6 @@ export class AssetsComponent implements OnInit {
             filter: false,
             sortable: false,
             cellRendererFramework: ActionCellRendererComponent,
-            maxWidth: 75,
             minWidth: 75
           }
         ]

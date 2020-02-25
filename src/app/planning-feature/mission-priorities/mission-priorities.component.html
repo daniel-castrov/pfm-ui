@@ -1,90 +1,99 @@
 <div class="main">
-    <div class="float-left">
-        <h3>Mission Priorities
-            <ng-container *ngIf="selectedPlanningPhase">
-                <span> -
-                    <span *ngIf="selectedPlanningPhase.state === 'CREATED'">Created</span>
-                    <span *ngIf="selectedPlanningPhase.state === 'OPEN'">Opened</span>
-                    <span *ngIf="selectedPlanningPhase.state === 'LOCKED'">Locked</span>
-                    <span *ngIf="selectedPlanningPhase.state === 'CLOSED'">Closed</span>
+  <div class="float-left">
+    <h3>Mission Priorities
+      <ng-container *ngIf="selectedPlanningPhase">
+        <span> -
+          <span *ngIf="selectedPlanningPhase.state === 'CREATED'">Created</span>
+          <span *ngIf="selectedPlanningPhase.state === 'OPEN'">Opened</span>
+          <span *ngIf="selectedPlanningPhase.state === 'LOCKED'">Locked</span>
+          <span *ngIf="selectedPlanningPhase.state === 'CLOSED'">Closed</span>
 
-                </span>
-            </ng-container>
-        </h3>
-    </div>
-    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'CREATED'">
-        <button type="button" class="btn btn-primary float-right" (click)="openPlanningPhase()">
-            Open Planning Phase
-        </button>
-    </div>
-    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
-        <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
-            Lock Planning Phase
-        </button>
-    </div>
-    <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
-        <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
-            Close Planning Phase
-        </button>
-    </div>
+        </span>
+      </ng-container>
+    </h3>
+  </div>
+  <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'CREATED'">
+    <button type="button" class="btn btn-primary float-right" (click)="openPlanningPhase()">
+      Open Planning Phase
+    </button>
+  </div>
+  <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'OPEN'">
+    <button type="button" class="btn btn-primary float-right" (click)="lockPlanningPhase()">
+      Lock Planning Phase
+    </button>
+  </div>
+  <div *ngIf="POMManager && selectedYear && selectedPlanningPhase.state === 'LOCKED'">
+    <button type="button" class="btn btn-primary float-right" (click)="closePlanningPhase()">
+      Close Planning Phase
+    </button>
+  </div>
 </div>
 
-<br>
-<br>
+<br/>
+<br/>
 
 <ng-container *ngIf="availableYears" class="float-left">
-    <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
+  <pfm-dropdown (onSelectionChanged)="yearSelected($event)" [type]="'labelDropdown'" [label]="'For:'" [required]="true"
+    [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableYears"></pfm-dropdown>
 </ng-container>
 
-<ng-container *ngIf="selectedPlanningPhase && selectedPlanningPhase.state !== 'CREATED'">
-    <div class="grid-container">
-        <pfm-datagrid (gridIsReady)="onGridIsReady($event)" (columnIsReady)="onColumnIsReady($event)" (rowDragEndEvent)="onRowDragEnd($event)"
-                      (addCtaEvent)="onAddNewRow($event)" (cellAction)="handleCellAction($event)" [showPagination]="false"
-                      [showAddDropdownCta]="true" [columns]="columns" [rows]="missionData" [tabToNextCell]="tabToNextCell.bind(this)"></pfm-datagrid>
-    </div>
-</ng-container>
+<div *ngIf="selectedPlanningPhase && selectedPlanningPhase.state !== 'CREATED'">
+  <div class="grid-container">
+    <pfm-datagrid (gridIsReady)="onGridIsReady($event)" (columnIsReady)="onColumnIsReady($event)"
+      (rowDragEndEvent)="onRowDragEnd($event)" (addCtaEvent)="onAddNewRow($event)"
+      (cellAction)="handleCellAction($event)" [showPagination]="false" [showAddDropdownCta]="true" [columns]="columns"
+      [rows]="missionData" [tabToNextCell]="tabToNextCell.bind(this)"></pfm-datagrid>
+  </div>
+</div>
 
 
 <ng-container *ngIf="showDeleteAttachmentDialog">
-    <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="delteeAttachmentActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
+  <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="deleteAttachmentActions"
+    (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
 
-    <ng-template #deleteAttachmentBody>
-        <span>{{activeMessage|json}}</span>
-        <div *ngFor="let attachment of selectedRow.attachments">
-            <input type="checkbox" [(ngModel)]="attachment.selectedForDelete" [name]="attachment.file.id" [value]="attachment.file.id"> {{attachment.file.name}} <br>
-        </div>
-    </ng-template>
+  <ng-template #deleteAttachmentBody>
+    <span>{{activeMessage|json}}</span>
+    <div *ngFor="let attachment of selectedRow.attachments">
+      <input type="checkbox" [(ngModel)]="attachment.selectedForDelete" [name]="attachment.file.id"
+        [value]="attachment.file.id"> {{attachment.file.name}} <br>
+    </div>
+  </ng-template>
 
-    <ng-template #delteeAttachmentActions>
-        <div class="pull-left">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showDeleteAttachmentDialog = false; onDeleteAttachments()">Delete</button>
-        </div>
+  <ng-template #deleteAttachmentActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal"
+        (click)="showDeleteAttachmentDialog = false; onDeleteAttachments()">Delete</button>
+    </div>
 
-        <div class="pull-right">
-            <pfm-cancel-cta (onCancelClicked)="showDeleteAttachmentDialog = false"></pfm-cancel-cta>
-        </div>
-    </ng-template>
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="showDeleteAttachmentDialog = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
 </ng-container>
 
 <ng-container *ngIf="showImportYearDialog">
-    <pfm-custom-dialog [title]="'Choose the year for Import'" [body]="importYearBody" [actions]="importYearActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
+  <pfm-custom-dialog [title]="'Choose the year for Import'" [body]="importYearBody" [actions]="importYearActions"
+    (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
 
-    <ng-template #importYearBody>
-        <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''" [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableImportYears"></pfm-dropdown>
-    </ng-template>
+  <ng-template #importYearBody>
+    <pfm-dropdown (onSelectionChanged)="importYearSelected($event)" [type]="'labelDropdown'" [label]="''"
+      [required]="true" [id]="id" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableImportYears">
+    </pfm-dropdown>
+  </ng-template>
 
-    <ng-template #importYearActions>
-        <div class="pull-left">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showImportYearDialog = false; onImportYear()">Import</button>
-        </div>
-        <div class="pull-right">
-            <pfm-cancel-cta (onCancelClicked)="showImportYearDialog = false"></pfm-cancel-cta>
-        </div>
-    </ng-template>
+  <ng-template #importYearActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal"
+        (click)="showImportYearDialog = false; onImportYear()">Import</button>
+    </div>
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="showImportYearDialog = false"></pfm-cancel-cta>
+    </div>
+  </ng-template>
 </ng-container>
 
 <ng-container *ngIf="showUploadDialog">
-    <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
+  <pfm-secure-upload (onFilesUploaded)="handleNewAttachments($event)"></pfm-secure-upload>
 </ng-container>
 
 <pfm-secure-download></pfm-secure-download>
