@@ -176,4 +176,10 @@ export class DatagridComponent implements OnInit {
     ];
     return result;
   }
+
+  onColumnResized(params) {
+    if (params.source === 'columnResized' && params.finished) {
+      this.api.sizeColumnsToFit();
+    }
+  }
 }
