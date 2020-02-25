@@ -51,7 +51,8 @@ export class AppComponent implements OnInit {
   onWindowScroll(e) {
     const main = document.getElementById('main_content');
     const nav = document.getElementById('navbar');
-    if (window.pageYOffset > 79 && main.offsetHeight > 768) {
+    console.log(main.offsetHeight);
+    if (window.pageYOffset > 79 && main.offsetHeight >= 768) {
       nav.classList.add('sticky');
     } else {
       nav.classList.remove('sticky');
