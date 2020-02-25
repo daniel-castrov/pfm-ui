@@ -1,6 +1,8 @@
 
     <pfm-app-header></pfm-app-header>
-    <pfm-menu-bar (onMenuToogle)="onMenuToogle($event)"></pfm-menu-bar>
+    <div id="navbar" class="left-nav">
+      <pfm-menu-bar (onMenuToogle)="onMenuToogle($event)"></pfm-menu-bar>
+    </div>
     <div id="main_content" class="main_content side_menu" [class.side_menu_open]="isSideMenuOpen">
         <pfm-dialog-manager></pfm-dialog-manager>
         <router-outlet></router-outlet>

@@ -6,7 +6,7 @@
     </li>
 
     <li (click)="onSelect('Planning')" [ngClass]="{ 'semi-active': isPlanningSelected, 'active': isParentSelected('/planning') }" class="menu-item" container="body"
-        placement="right" [ngbPopover]="popContentPlanning" (hidden)="onHide('Planning')" (shown)="onShow('Planning')"
+        placement="right-top" [ngbPopover]="popContentPlanning" (hidden)="onHide('Planning')" (shown)="onShow('Planning')"
         popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
         <fa name="clock-o"></fa>
         <span>Planning</span>
@@ -27,8 +27,8 @@
         </ng-template>
     </li>
 
-    <li (click)="onSelect('Programming')" [ngClass]="{ 'semi-active': isProgrammingSelected, 'active': isParentSelected('/programming') }" class="menu-item" placement="right"
-        container="body" [ngbPopover]="popContentProgramming" (hidden)="onHide('Programming')" (shown)="onShow('Programming')" popoverClass="menu-display-container-open">
+    <li (click)="onSelect('Programming')" [ngClass]="{ 'semi-active': isProgrammingSelected, 'active': isParentSelected('/programming') }" class="menu-item" placement="right-top"
+        container="body" [ngbPopover]="popContentProgramming" (hidden)="onHide('Programming')" (shown)="onShow('Programming')" popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
         <fa name="hourglass"></fa>
         <span>Programming</span>
         <ng-template #popContentProgramming>
@@ -64,7 +64,7 @@
     </li>
 
     <li placement="bottom-right" (click)="onSelect('Execution')" [ngClass]="{ 'semi-active': isExecutionSelected, 'active': isParentSelected('/execution') }" class="menu-item"
-        container="body" placement="right" [ngbPopover]="popContentExecution" (hidden)="onHide('Execution')" (shown)="onShow('Execution')"
+        container="body" placement="right-top" [ngbPopover]="popContentExecution" (hidden)="onHide('Execution')" (shown)="onShow('Execution')"
         popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
         <fa name="globe"></fa>
         <span>Execution</span>
@@ -102,7 +102,7 @@
     </li>
 
     <li (click)="onSelect('Admin')" [ngClass]="{ 'semi-active': isAdminSelected, 'active': isParentSelected('/manage-communities') || isParentSelected('/user-list') || isParentSelected('/roles') }" class="menu-item" container="body"
-        placement="right" [ngbPopover]="popContentAdmin" (hidden)="onHide('Admin')" (shown)="onShow('Admin')"
+        placement="right-top" [ngbPopover]="popContentAdmin" (hidden)="onHide('Admin')" (shown)="onShow('Admin')"
         popoverClass="{{isOpen ? 'menu-display-container-open': 'menu-display-container'}}">
         <fa name="user-secret"></fa>
         <span>Admin</span>
