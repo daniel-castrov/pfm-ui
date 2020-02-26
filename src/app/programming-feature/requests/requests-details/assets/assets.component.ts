@@ -45,6 +45,7 @@ export class AssetsComponent implements OnInit {
   fundingLineRows: any[] = [];
 
   currentRowDataState: RowDataStateInterface = {};
+  deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -188,7 +189,9 @@ export class AssetsComponent implements OnInit {
         break;
       case 'delete-row':
         if (!this.currentRowDataState.isEditMode) {
-          this.deleteRow(cellAction.rowIndex);
+          this.deleteDialog.bodyText =
+            'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
+          this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         }
         break;
       case 'cancel':
@@ -325,7 +328,8 @@ export class AssetsComponent implements OnInit {
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
                   minWidth: 45,
                   maxWidth: 45,
-                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false })
+                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+                  valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
                 },
                 {
                   headerName: 'Qty',
@@ -353,7 +357,8 @@ export class AssetsComponent implements OnInit {
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
                   minWidth: 45,
                   maxWidth: 45,
-                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false })
+                  cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+                  valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
                 }
               ]
             }
@@ -466,6 +471,27 @@ export class AssetsComponent implements OnInit {
     }
   }
 
+  private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
+    this.deleteDialog.cellAction = cellAction;
+    this.deleteDialog.delete = deleteFunction;
+    this.deleteDialog.display = true;
+  }
+
+  onCancelDeleteDialog() {
+    this.closeDeleteDialog();
+  }
+
+  onDeleteData() {
+    this.deleteDialog.delete(this.deleteDialog.cellAction.rowIndex);
+    this.closeDeleteDialog();
+  }
+
+  private closeDeleteDialog() {
+    this.deleteDialog.cellAction = null;
+    this.deleteDialog.delete = null;
+    this.deleteDialog.display = false;
+  }
+
 }
 
 export interface RowDataStateInterface {
@@ -474,5 +500,15 @@ export interface RowDataStateInterface {
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: any;
+
+}
+
+export interface DeleteDialogInterface {
+
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  cellAction?: DataGridMessage;
+  delete?: (rowIndex: number) => void;
 
 }
