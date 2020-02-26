@@ -27,6 +27,7 @@ export class RequestsSummaryGridComponent implements OnInit {
   gridMaxYear: number;
   roles: Map<string, Role>;
   gridData: ProgramSummary[];
+  columnHeaders: string[] = ['PY-1', 'PY', 'CY', 'BY', 'BY+1', 'BY+2', 'BY+3', 'BY+4']
 
   id = 'requests-summary-component';
   busy: boolean;
@@ -38,22 +39,49 @@ export class RequestsSummaryGridComponent implements OnInit {
   ) {
     this.columns = [
       {
-        headerName: 'Program',
-        field: 'programName',
-        editable: false,
-        cellClass: 'pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg',
+        groupId: 'sub-header',
+        headerName: '',
+        headerClass: this.headerClassFunc,
+        marryChildren: true,
+        children: [
+          {
+            groupId: 'main-header',
+            headerName: 'Program',
+            field: 'programName',
+            editable: false,
+            cellClass: 'pfm-datagrid-text pfm-datagrid-text-underline pfm-datagrid-lightgreybg',
+          }
+        ]
       },
       {
-        headerName: 'Assigned To',
-        field: 'assignedTo',
-        editable: false,
-        cellClass: 'pfm-datagrid-text pfm-datagrid-lightgreybg',
+        groupId: 'sub-header',
+        headerName: '',
+        headerClass: this.headerClassFunc,
+        marryChildren: true,
+        children: [
+          {
+            groupId: 'main-header',
+            headerName: 'Assigned To',
+            field: 'assignedTo',
+            editable: false,
+            cellClass: 'pfm-datagrid-text pfm-datagrid-lightgreybg',
+          }
+        ]
       },
       {
-        headerName: 'Status',
-        field: 'status',
-        editable: false,
-        cellClass: 'pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-lightgreybg',
+        groupId: 'sub-header',
+        headerName: 'Funds in $K',
+        headerClass: this.headerClassFunc,
+        marryChildren: true,
+        children: [
+          {
+            groupId: 'main-header',
+            headerName: 'Status',
+            field: 'status',
+            editable: false,
+            cellClass: 'pfm-datagrid-text pfm-datagrid-warning pfm-datagrid-lightgreybg',
+          }
+        ]
       },
     ];
 
@@ -64,28 +92,46 @@ export class RequestsSummaryGridComponent implements OnInit {
       fyColumnHeaderName = 'FY' + fyColumnHeaderName.substr(fyColumnHeaderName.length - 2);
       this.columns.push(
         {
-          headerName: fyColumnHeaderName,
-          field: i.toString(),
-          maxWidth: 100,
-          minWidth: 100,
-          rowDrag: false,
-          cellClass: 'pfm-datagrid-numeric-class'
-            + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
-          valueFormatter: params => this.currencyFormatter(params.data.funds[params.colDef.field])
+          groupId: 'sub-header',
+          headerName: this.columnHeaders[i - this.gridMinYear],
+          headerClass: this.headerClassFunc,
+          marryChildren: true,
+          children: [
+            {
+              groupId: 'main-header',
+              headerName: fyColumnHeaderName,
+              field: i.toString(),
+              maxWidth: 100,
+              minWidth: 100,
+              rowDrag: false,
+              cellClass: 'pfm-datagrid-numeric-class'
+                + ((i >= this.programmingModel.pom.fy) ? ' pfm-datagrid-lightgreybg' : ''),
+              valueFormatter: params => this.currencyFormatter(params.data.funds[params.colDef.field])
+            }
+          ]
         }
       );
     }
 
     this.columns.push(
       {
-        headerName: 'FYDP Total',
-        field: 'fundsTotal',
-        maxWidth: 120,
-        minWidth: 120,
-        rowDrag: false,
-        cellClass: 'pfm-datagrid-numeric-class',
-        valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
-      }
+        groupId: 'sub-header',
+        headerName: '',
+        headerClass: this.headerClassFunc,
+        marryChildren: true,
+        children: [
+          {
+            groupId: 'main-header',
+            headerName: 'FYDP Total',
+            field: 'fundsTotal',
+            maxWidth: 120,
+            minWidth: 120,
+            rowDrag: false,
+            cellClass: 'pfm-datagrid-numeric-class',
+            valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+          }
+        ]
+      },
     );
     this.isExternalFilterPresent = this.isExternalFilterPresent.bind(this);
     this.doesExternalFilterPass = this.doesExternalFilterPass.bind(this);
@@ -174,6 +220,27 @@ export class RequestsSummaryGridComponent implements OnInit {
         }
       }
       this.gridData.push(ps);
+    }
+  }
+
+  headerClassFunc(params: any) {
+    let isSubHeader = false;
+    let isMainHeader = false;
+    let column = params.column ? params.column : params.columnGroup;
+    while (column) {
+      if (column.getDefinition().groupId === 'main-header') {
+        isMainHeader = true;
+      } else if (column.getDefinition().groupId === 'sub-header') {
+        isSubHeader = true;
+      }
+      column = column.getParent();
+    }
+    if (isSubHeader) {
+      return 'sub-header';
+    } else if (isMainHeader) {
+      return 'main-header';
+    } else {
+      return null;
     }
   }
 

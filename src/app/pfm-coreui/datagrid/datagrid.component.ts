@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
 import { ColumnApi, GridApi, Module } from '@ag-grid-community/all-modules';
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
@@ -175,5 +175,18 @@ export class DatagridComponent implements OnInit {
       },
     ];
     return result;
+  }
+
+  onColumnResized(params) {
+    if (params.source === 'columnResized' && params.finished) {
+      this.api.sizeColumnsToFit();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event: any) {
+    if (this.api) {
+      this.api.sizeColumnsToFit();
+    }
   }
 }

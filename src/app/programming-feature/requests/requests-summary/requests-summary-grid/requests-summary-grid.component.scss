@@ -28,3 +28,8 @@
 .pull-left{
   width: 100%;
 }
+
+:host ::ng-deep .pfm-data .sub-header {
+  background-color: #ffffff;
+  color: black;
+}

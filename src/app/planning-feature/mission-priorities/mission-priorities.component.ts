@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
@@ -7,9 +7,7 @@ import { MissionPriority } from '../models/MissionPriority';
 import { ActionCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { AttachmentCellRendererComponent } from '../../pfm-coreui/datagrid/renderers/attachment-cell-renderer/attachment-cell-renderer.component';
 import { DataGridMessage } from '../../pfm-coreui/models/DataGridMessage';
-import { GridApi, ColumnApi, RowNode, Column, CellPosition } from '@ag-grid-community/all-modules';
-import { ActivatedRoute } from '@angular/router';
-import { SigninService } from '../../pfm-auth-module/services/signin.service';
+import { GridApi, ColumnApi, Column, CellPosition } from '@ag-grid-community/all-modules';
 import { AppModel } from '../../pfm-common-models/AppModel';
 import { FileMetaData } from '../../pfm-common-models/FileMetaData';
 import { Attachment } from '../../pfm-common-models/Attachment';
@@ -24,8 +22,8 @@ import { PlanningPhase } from '../models/PlanningPhase';
 })
 export class MissionPrioritiesComponent implements OnInit {
 
-  @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
-  @ViewChild(SecureDownloadComponent, {static: false}) secureDownloadComponent: SecureDownloadComponent;
+  @ViewChild(DropdownComponent, { static: false }) yearDropDown: DropdownComponent;
+  @ViewChild(SecureDownloadComponent, { static: false }) secureDownloadComponent: SecureDownloadComponent;
 
   showDeleteAttachmentDialog: boolean;
   showDeleteRowDialog: boolean;
@@ -51,9 +49,8 @@ export class MissionPrioritiesComponent implements OnInit {
   constructor(
     private appModel: AppModel,
     private planningService: PlanningService,
-    private dialogService: DialogService,
-    private route: ActivatedRoute,
-    private signInService: SigninService) {
+    private dialogService: DialogService
+  ) {
 
     this.columns = [
       {
@@ -63,31 +60,25 @@ export class MissionPrioritiesComponent implements OnInit {
         minWidth: 75,
         rowDrag: true,
         rowDragManaged: true,
-        valueGetter(params) {return params.node.rowIndex + 1;},
+        valueGetter(params) { return params.node.rowIndex + 1; },
         cellClass: 'numeric-class',
-        cellStyle: { display: 'flex', 'align-items': 'right'}
+        cellStyle: { display: 'flex', 'align-items': 'right' }
       },
       {
         headerName: 'Mission Title',
         field: 'title',
-        editable:true,
+        editable: true,
         maxWidth: 400,
         minWidth: 400,
-        onCellValueChanged: params => this.onValueChanged(params),
         cellClass: 'text-class',
-        cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
+        cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' }
       },
       {
         headerName: 'Mission Description',
         field: 'description',
         editable: true,
-        onCellValueChanged: params => this.onValueChanged(params),
         cellClass: 'text-class',
-        cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
-        // cellRendererFramework: TextCellRendererComponent,
-        // cellEditorFramework: TextCellEditorComponent,
-        // cellRendererParams: {'maxSize': 200},
-        // cellEditorParams: {'maxSize': 200}
+        cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' }
       },
       {
         headerName: 'Attachments',
@@ -99,8 +90,8 @@ export class MissionPrioritiesComponent implements OnInit {
       {
         headerName: 'Actions',
         field: 'actions',
-        maxWidth: 175,
         minWidth: 175,
+        maxWidth: 175,
         cellRendererFramework: ActionCellRendererComponent
       }
     ];
@@ -143,7 +134,7 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   handleCellAction(cellAction: DataGridMessage): void {
-    switch(cellAction.message) {
+    switch (cellAction.message) {
       case 'save': {
         this.saveRow(cellAction.rowIndex);
         break;
@@ -175,8 +166,8 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   onAddNewRow(event: any): void {
-    if(event.action === 'add-single-row') {
-      const mp: MissionPriority = new MissionPriority();
+    if (event.action === 'add-single-row') {
+      const mp = new MissionPriority();
       if (this.missionData.length === 0) {
         mp.order = 1;
       } else {
@@ -196,103 +187,92 @@ export class MissionPrioritiesComponent implements OnInit {
       this.gridApi.setRowData(this.missionData);
 
       this.editRow(this.missionData.length - 1);
-    } else if(event.action === 'add-rows-from-year') {
+    } else if (event.action === 'add-rows-from-year') {
       this.availableImportYears = [];
-      for (let i = 0; i < this.availableYears.length;i++) {
-        if (this.availableYears[i].name !== this.selectedYear) {
-          this.availableImportYears[this.availableImportYears.length] = this.availableYears[i];
+      for (const availableYear of this.availableYears) {
+        if (availableYear.name !== this.selectedYear) {
+          this.availableImportYears[this.availableImportYears.length] = availableYear;
         }
       }
-
       // year selection dialog
       this.showImportYearDialog = true;
     }
   }
 
-  private importYearSelected(year: ListItem) {
+  importYearSelected(year: ListItem) {
     // update value
     this.selectedImportYear = year.value;
   }
 
-  private onImportYear() {
+  onImportYear() {
     // import rows from selected year.
     if (this.selectedImportYear) {
       this.busy = true;
       this.planningService.cloneMissionPriorities(this.selectedImportYear + '_id').subscribe(
-          resp => {
-            const result = (resp as any).result;
-            if (result instanceof Array && result.length !== 0) {
-              const orderBase = this.missionData.length;
-              for (const mp of result as Array<MissionPriority>) {
-                this.initClientMP(mp);
-                mp.planningPhaseId = this.selectedPlanningPhase.id;
-                mp.order = mp.order + orderBase;
-                this.missionData[mp.order - 1] = mp;
-              }
-
-              // Update Grid
-              this.gridApi.setRowData(this.missionData);
-
-              this.busy = false;
-
-              // Save to Database
-              this.updateRows(orderBase);
+        resp => {
+          const result = (resp as any).result;
+          if (result instanceof Array && result.length !== 0) {
+            const orderBase = this.missionData.length;
+            for (const mp of result as Array<MissionPriority>) {
+              this.initClientMP(mp);
+              mp.planningPhaseId = this.selectedPlanningPhase.id;
+              mp.order = mp.order + orderBase;
+              this.missionData[mp.order - 1] = mp;
             }
-          },
-          error => {
+            // Update Grid
+            this.gridApi.setRowData(this.missionData);
             this.busy = false;
-            this.dialogService.displayDebug(error);
-          });
+            // Save to Database
+            this.updateRows(orderBase);
+          }
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
     }
   }
 
   yearSelected(year: any): void {
     this.selectedYear = year ? year.name : undefined;
-
     if (this.selectedYear) {
       this.busy = true;
-
       this.selectedPlanningPhase = this.appModel.planningData.find(obj => obj.id === this.selectedYear + '_id');
-
       this.planningService.getMissionPriorities(this.selectedPlanningPhase.id).subscribe(
-          resp => {
-            this.busy = false;
-            const result = (resp as any).result;
-            if (result  instanceof Array) {
-              this.missionData = new Array<MissionPriority>(result.length);
-              for (const mp of result as Array<MissionPriority>) {
-                this.initClientMP(mp);
-                this.missionData[mp.order - 1] = mp;
-              }
+        resp => {
+          this.busy = false;
+          const result = (resp as any).result;
+          if (result instanceof Array) {
+            this.missionData = new Array<MissionPriority>(result.length);
+            for (const mp of result as Array<MissionPriority>) {
+              this.initClientMP(mp);
+              this.missionData[mp.order - 1] = mp;
             }
-          },
-          error => {
-            this.busy = false;
-            this.dialogService.displayDebug(error);
-          });
+          }
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
     }
   }
 
   handleNewAttachments(newFile: FileMetaData): void {
     this.showUploadDialog = false;
-
-    if(newFile) {// undefined is returned for cancle/errors, so only proceed if we have a value
-
+    if (newFile) {// undefined is returned for cancel/errors, so only proceed if we have a value
       // wrap the FileMetaData in an Attachment object
       const attachment: Attachment = new Attachment();
       attachment.file = newFile;
       attachment.mpId = this.missionData[this.selectedRowId].id;
-
       // add attachment
       this.missionData[this.selectedRowId].attachments.push(attachment);
-
       // update data
       this.gridApi.setRowData(this.missionData);
     }
   }
 
   onOpenPlanningPhase(): void {
-    if(this.yearDropDown.isValid()) {
+    if (this.yearDropDown.isValid()) {
       this.dialogService.displayError('not implemented');
     }
   }
@@ -307,20 +287,18 @@ export class MissionPrioritiesComponent implements OnInit {
         years.push(item.name);
       }
     }
-
     // trigger a default selection
     if (this.appModel.selectedYear) {
       this.selectedYear = this.appModel.selectedYear;
       this.appModel.selectedYear = undefined;
-      this.yearSelected({name: this.selectedYear});
+      this.yearSelected({ name: this.selectedYear });
     }
-
     this.availableYears = this.toListItem(years);
   }
 
   private toListItem(years: string[]): ListItem[] {
     const items: ListItem[] = [];
-    for(const year of years) {
+    for (const year of years) {
       const item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
@@ -364,20 +342,16 @@ export class MissionPrioritiesComponent implements OnInit {
 
     // Check columns Title max 45 chars, description max 200 chars
     if (row.title.length <= 45 && row.title.length > 0 && row.description.length <= 200 && row.description.length > 0) {
-
       // Convert to server mp
       const serverMp: MissionPriority = this.convertToServerMP(row);
       serverMp.planningPhaseId = this.selectedPlanningPhase.id;
-
       this.busy = true;
-
       // Create or update? Check for presence of mp id
       if (!serverMp.id) {
         this.planningService.createMissionPriority(serverMp).subscribe(
           resp => {
             this.busy = false;
             this.missionData[rowId] = (resp as any).result;
-
             this.missionData[rowId].actions = new Action();
             this.missionData[rowId].actions.canEdit = false;
             this.missionData[rowId].actions.canSave = true;
@@ -397,7 +371,6 @@ export class MissionPrioritiesComponent implements OnInit {
         this.planningService.updateMissionPriority([serverMp]).subscribe(
           resp => {
             this.busy = false;
-
             // Update view
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
@@ -427,7 +400,6 @@ export class MissionPrioritiesComponent implements OnInit {
       if (isError) {
         this.dialogService.displayError(errorMsg);
       }
-
       this.editRow(rowId);
     }
   }
@@ -443,20 +415,19 @@ export class MissionPrioritiesComponent implements OnInit {
         updateMps.push(this.convertToServerMP(clientMP));
       }
       this.planningService.updateMissionPriority(updateMps).subscribe(
-          resp => {
-            this.busy = false;
-          },
-          error => {
-            this.busy = false;
-            this.dialogService.displayDebug(error);
-          });
+        resp => {
+          this.busy = false;
+        },
+        error => {
+          this.busy = false;
+          this.dialogService.displayDebug(error);
+        });
     }
   }
 
   private editRow(rowId: number) {
     // edit mode
     this.editMode(rowId);
-
     // edit the title and description
     this.gridApi.startEditingCell({
       rowIndex: rowId,
@@ -471,21 +442,16 @@ export class MissionPrioritiesComponent implements OnInit {
 
   private onDeleteRow(rowId: number) {
     this.busy = true;
-
     this.planningService.deleteMissionPriority(this.missionData[rowId].id).subscribe(
       resp => {
         this.missionData.splice(rowId, 1);
-
         for (let i = rowId; i < this.missionData.length; i++) {
           this.missionData[i].order = this.missionData[i].order - 1;
         }
-
         // Update view
         this.gridApi.setRowData(this.missionData);
-
         // Let service know about ordering changes
         this.updateRows(rowId);
-
         this.busy = false;
       },
       error => {
@@ -551,64 +517,49 @@ export class MissionPrioritiesComponent implements OnInit {
     return nextCell;
   }
 
-  // Watches when values change
-  private onValueChanged(params) {
-    // check title
-
-    // check description
-
-    // generate error
-  }
-
   openPlanningPhase() {
     this.busy = true;
     this.planningService.openPlanningPhase(this.selectedPlanningPhase).subscribe(
-        resp => {
-          this.busy = false;
-
-          // Update model state
-          this.selectedPlanningPhase.state = 'OPEN';
-
-          this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully opened`);
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+      resp => {
+        this.busy = false;
+        // Update model state
+        this.selectedPlanningPhase.state = 'OPEN';
+        this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully opened`);
+      },
+      error => {
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
   }
 
   lockPlanningPhase() {
     this.busy = true;
     this.planningService.lockPlanningPhase(this.selectedPlanningPhase).subscribe(
-        resp => {
-          this.busy = false;
-
-          // Update model state
-          this.selectedPlanningPhase.state = 'LOCKED';
-
-          this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully locked`);
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+      resp => {
+        this.busy = false;
+        // Update model state
+        this.selectedPlanningPhase.state = 'LOCKED';
+        this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully locked`);
+      },
+      error => {
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
   }
 
   closePlanningPhase() {
     this.busy = true;
     this.planningService.closePlanningPhase(this.selectedPlanningPhase).subscribe(
-        resp => {
-          this.busy = false;
-
-          // Update model state
-          this.selectedPlanningPhase.state = 'CLOSED';
-
-          this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully closed`);
-        },
-        error => {
-          this.busy = false;
-          this.dialogService.displayDebug(error);
-        });
+      resp => {
+        this.busy = false;
+        // Update model state
+        this.selectedPlanningPhase.state = 'CLOSED';
+        this.dialogService.displayToastInfo(`Planning Phase for ${this.selectedYear} successfully closed`);
+      },
+      error => {
+        this.busy = false;
+        this.dialogService.displayDebug(error);
+      });
   }
 
   cancelDialog() {
@@ -647,4 +598,5 @@ export class MissionPrioritiesComponent implements OnInit {
       clientMP.actions.canDelete = true;
     }
   }
+
 }

@@ -10,7 +10,7 @@ import { formatDate } from '@angular/common';
 export class DatePickerCellRendererComponent implements ICellRendererAngularComp {
 
   params: any;
-  value: Date;
+  value: string;
 
   agInit(params: any): void {
     this.params = params;

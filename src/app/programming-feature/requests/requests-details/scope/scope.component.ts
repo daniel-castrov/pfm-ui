@@ -61,6 +61,7 @@ export class ScopeComponent implements OnInit {
   currentProcessPriorizationRowDataState: RowDataStateInterface = {};
 
   attachmentsUploaded: string[] = [];
+  deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(private dialogService: DialogService) { }
 
@@ -82,6 +83,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'numeric-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -92,6 +94,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -102,6 +105,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -112,6 +116,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -122,6 +127,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -132,6 +138,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellRendererFramework: DatePickerCellRendererComponent,
@@ -145,6 +152,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }
@@ -160,6 +168,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -170,6 +179,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -180,6 +190,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -190,6 +201,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -200,6 +212,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }
@@ -215,6 +228,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -225,6 +239,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellEditor: 'select',
@@ -240,6 +255,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellRendererFramework: DatePickerCellRendererComponent,
@@ -254,6 +270,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -264,6 +281,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }
@@ -358,7 +376,8 @@ export class ScopeComponent implements OnInit {
       errorMessage = 'Target Performance cannot have more than 45 characters.';
     } else if (row.currentPerformance.length > 45) {
       errorMessage = 'Current Performance cannot have more than 45 characters.';
-    } else if (row.currentPerformanceDate !== '' && !this.validateDate(row.currentPerformanceDate)) {
+    } else if ((row.currentPerformanceDate !== null && row.currentPerformanceDate !== '')
+      && !this.validateDate(row.currentPerformanceDate)) {
       errorMessage = 'Make sure Current Performance Date is a valid date in the format (Month/Day/Year).';
     }
     if (errorMessage.length) {
@@ -380,7 +399,9 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentEvaluationMeasureRowDataState.isEditMode) {
-            this.deleteEvaluationMeasureRow(cellAction.rowIndex);
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
+            this.displayDeleteDialog(cellAction, this.deleteEvaluationMeasureRow.bind(this));
           }
           break;
         case 'cancel':
@@ -499,7 +520,9 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentTeamLeadRowDataState.isEditMode) {
-            this.deleteTeamLeadRow(cellAction.rowIndex);
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
+            this.displayDeleteDialog(cellAction, this.deleteTeamLeadRow.bind(this));
           }
           break;
         case 'cancel':
@@ -594,7 +617,8 @@ export class ScopeComponent implements OnInit {
       errorMessage = 'Potential Process have more than 45 characters.';
     } else if (row.notes.length > 500) {
       errorMessage = 'Notes cannot have more than 500 characters.';
-    } else if (row.estimatedCompletionDate !== '' && !this.validateDate(row.estimatedCompletionDate)) {
+    } else if ((row.estimatedCompletionDate !== null && row.estimatedCompletionDate !== '')
+      && !this.validateDate(row.estimatedCompletionDate)) {
       errorMessage = 'Make sure Estimated Completion Date is a valid date in the format (Month/Day/Year).';
     }
     if (errorMessage.length) {
@@ -616,7 +640,9 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentProcessPriorizationRowDataState.isEditMode) {
-            this.deleteProcessPriorizationRow(cellAction.rowIndex);
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
+            this.displayDeleteDialog(cellAction, this.deleteProcessPriorizationRow.bind(this));
           }
           break;
         case 'cancel':
@@ -760,6 +786,27 @@ export class ScopeComponent implements OnInit {
     this.showUploadDialog = true;
   }
 
+  private displayDeleteDialog(cellAction: DataGridMessage, deleteFunction: (rowIndex: number) => void) {
+    this.deleteDialog.cellAction = cellAction;
+    this.deleteDialog.delete = deleteFunction;
+    this.deleteDialog.display = true;
+  }
+
+  onCancelDeleteDialog() {
+    this.closeDeleteDialog();
+  }
+
+  onDeleteData() {
+    this.deleteDialog.delete(this.deleteDialog.cellAction.rowIndex);
+    this.closeDeleteDialog();
+  }
+
+  private closeDeleteDialog() {
+    this.deleteDialog.cellAction = null;
+    this.deleteDialog.delete = null;
+    this.deleteDialog.display = false;
+  }
+
 }
 
 export interface RowDataStateInterface {
@@ -768,6 +815,16 @@ export interface RowDataStateInterface {
   isAddMode?: boolean;
   isEditMode?: boolean;
   currentEditingRowData?: any;
+
+}
+
+export interface DeleteDialogInterface {
+
+  title: string;
+  bodyText?: string;
+  display?: boolean;
+  cellAction?: DataGridMessage;
+  delete?: (rowIndex: number) => void;
 
 }
 
