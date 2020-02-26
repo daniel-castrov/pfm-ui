@@ -376,7 +376,8 @@ export class ScopeComponent implements OnInit {
       errorMessage = 'Target Performance cannot have more than 45 characters.';
     } else if (row.currentPerformance.length > 45) {
       errorMessage = 'Current Performance cannot have more than 45 characters.';
-    } else if (row.currentPerformanceDate !== '' && !this.validateDate(row.currentPerformanceDate)) {
+    } else if ((row.currentPerformanceDate !== null && row.currentPerformanceDate !== '')
+      && !this.validateDate(row.currentPerformanceDate)) {
       errorMessage = 'Make sure Current Performance Date is a valid date in the format (Month/Day/Year).';
     }
     if (errorMessage.length) {
@@ -398,7 +399,8 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentEvaluationMeasureRowDataState.isEditMode) {
-            this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
             this.displayDeleteDialog(cellAction, this.deleteEvaluationMeasureRow.bind(this));
           }
           break;
@@ -518,7 +520,8 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentTeamLeadRowDataState.isEditMode) {
-            this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
             this.displayDeleteDialog(cellAction, this.deleteTeamLeadRow.bind(this));
           }
           break;
@@ -614,7 +617,8 @@ export class ScopeComponent implements OnInit {
       errorMessage = 'Potential Process have more than 45 characters.';
     } else if (row.notes.length > 500) {
       errorMessage = 'Notes cannot have more than 500 characters.';
-    } else if (row.estimatedCompletionDate !== '' && !this.validateDate(row.estimatedCompletionDate)) {
+    } else if ((row.estimatedCompletionDate !== null && row.estimatedCompletionDate !== '')
+      && !this.validateDate(row.estimatedCompletionDate)) {
       errorMessage = 'Make sure Estimated Completion Date is a valid date in the format (Month/Day/Year).';
     }
     if (errorMessage.length) {
@@ -636,7 +640,8 @@ export class ScopeComponent implements OnInit {
           break;
         case 'delete-row':
           if (!this.currentProcessPriorizationRowDataState.isEditMode) {
-            this.deleteDialog.bodyText = 'Are you sure you want to delete?';
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
             this.displayDeleteDialog(cellAction, this.deleteProcessPriorizationRow.bind(this));
           }
           break;
