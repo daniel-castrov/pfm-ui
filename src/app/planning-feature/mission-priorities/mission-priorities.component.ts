@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PlanningService } from '../services/planning-service';
 import { ListItem } from '../../pfm-common-models/ListItem';
 import { DropdownComponent } from '../../pfm-coreui/form-inputs/dropdown/dropdown.component';
@@ -27,27 +27,33 @@ export class MissionPrioritiesComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false}) yearDropDown: DropdownComponent;
   @ViewChild(SecureDownloadComponent, {static: false}) secureDownloadComponent: SecureDownloadComponent;
 
-  showDeleteAttachmentDialog:boolean;
-  showImportYearDialog:boolean;
+  showDeleteAttachmentDialog: boolean;
+  showDeleteRowDialog: boolean;
+  showImportYearDialog: boolean;
 
-  gridApi:GridApi;
-  columnApi:ColumnApi;
-  id:string = 'mission-priorities-component';
-  busy:boolean;
+  gridApi: GridApi;
+  columnApi: ColumnApi;
+  id = 'mission-priorities-component';
+  busy: boolean;
   availableYears: ListItem[];
-  selectedYear:string;
-  selectedPlanningPhase:PlanningPhase;
-  missionData:MissionPriority[];
-  POMManager:boolean = false;
-  showUploadDialog:boolean;
-  selectedRowId:number;
-  selectedRow:MissionPriority;
-  selectedImportYear:string;
+  selectedYear: string;
+  selectedPlanningPhase: PlanningPhase;
+  missionData: MissionPriority[];
+  POMManager = false;
+  showUploadDialog: boolean;
+  selectedRowId: number;
+  selectedRow: MissionPriority;
+  selectedImportYear: string;
   availableImportYears: ListItem[];
 
-  columns:any[];
+  columns: any[];
 
-  constructor(private appModel:AppModel, private planningService:PlanningService, private dialogService:DialogService, private route:ActivatedRoute, private signInService:SigninService) {
+  constructor(
+    private appModel: AppModel,
+    private planningService: PlanningService,
+    private dialogService: DialogService,
+    private route: ActivatedRoute,
+    private signInService: SigninService) {
 
     this.columns = [
       {
@@ -58,7 +64,7 @@ export class MissionPrioritiesComponent implements OnInit {
         rowDrag: true,
         rowDragManaged: true,
         valueGetter(params) {return params.node.rowIndex + 1;},
-        cellClass: "numeric-class",
+        cellClass: 'numeric-class',
         cellStyle: { display: 'flex', 'align-items': 'right'}
       },
       {
@@ -68,7 +74,7 @@ export class MissionPrioritiesComponent implements OnInit {
         maxWidth: 400,
         minWidth: 400,
         onCellValueChanged: params => this.onValueChanged(params),
-        cellClass: "text-class",
+        cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
       },
       {
@@ -76,7 +82,7 @@ export class MissionPrioritiesComponent implements OnInit {
         field: 'description',
         editable: true,
         onCellValueChanged: params => this.onValueChanged(params),
-        cellClass: "text-class",
+        cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal'}
         // cellRendererFramework: TextCellRendererComponent,
         // cellEditorFramework: TextCellEditorComponent,
@@ -128,56 +134,56 @@ export class MissionPrioritiesComponent implements OnInit {
     this.gridApi.setRowData(this.missionData);
   }
 
-  onGridIsReady(gridApi:GridApi):void{
+  onGridIsReady(gridApi: GridApi): void {
     this.gridApi = gridApi;
   }
 
-  onColumnIsReady(columnApi:ColumnApi):void{
+  onColumnIsReady(columnApi: ColumnApi): void {
     this.columnApi = columnApi;
   }
 
-  handleCellAction(cellAction:DataGridMessage):void{
-    switch(cellAction.message){
-      case "save": {
+  handleCellAction(cellAction: DataGridMessage): void {
+    switch(cellAction.message) {
+      case 'save': {
         this.saveRow(cellAction.rowIndex);
         break;
       }
-      case "edit": {
-        this.editRow(cellAction.rowIndex)
+      case 'edit': {
+        this.editRow(cellAction.rowIndex);
         break;
       }
-      case "upload": {
+      case 'upload': {
         this.addAttachment(cellAction.rowIndex);
         break;
       }
-      case "delete-row": {
+      case 'delete-row': {
         this.deleteRow(cellAction.rowIndex);
         break;
       }
-      case "delete-attachments": {
+      case 'delete-attachments': {
         this.deleteAttachments(cellAction.rowIndex);
         break;
       }
-      case "download-attachment":{
+      case 'download-attachment': {
         this.downloadAttachment(cellAction);
       }
     }
   }
 
-  private downloadAttachment(cellAction:DataGridMessage):void{
+  private downloadAttachment(cellAction: DataGridMessage): void {
     this.secureDownloadComponent.downloadFile(cellAction.rawData.file);
   }
 
-  onAddNewRow(event:any):void{
-    if(event.action === "add-single-row"){
-      let mp:MissionPriority = new MissionPriority();
+  onAddNewRow(event: any): void {
+    if(event.action === 'add-single-row') {
+      const mp: MissionPriority = new MissionPriority();
       if (this.missionData.length === 0) {
         mp.order = 1;
       } else {
         mp.order = this.missionData.length + 1;
       }
-      mp.title = "";
-      mp.description = "";
+      mp.title = '';
+      mp.description = '';
       mp.attachments = [];
       mp.attachmentsDisabled = true;
       mp.actions = new Action();
@@ -190,10 +196,9 @@ export class MissionPrioritiesComponent implements OnInit {
       this.gridApi.setRowData(this.missionData);
 
       this.editRow(this.missionData.length - 1);
-    }
-    else if(event.action === "add-rows-from-year"){
+    } else if(event.action === 'add-rows-from-year') {
       this.availableImportYears = [];
-      for (let i = 0; i < this.availableYears.length;i++){
+      for (let i = 0; i < this.availableYears.length;i++) {
         if (this.availableYears[i].name !== this.selectedYear) {
           this.availableImportYears[this.availableImportYears.length] = this.availableYears[i];
         }
@@ -204,12 +209,12 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
-  private importYearSelected(year: ListItem){
-    //update value
+  private importYearSelected(year: ListItem) {
+    // update value
     this.selectedImportYear = year.value;
   }
 
-  private onImportYear(){
+  private onImportYear() {
     // import rows from selected year.
     if (this.selectedImportYear) {
       this.busy = true;
@@ -268,27 +273,27 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
-  handleNewAttachments(newFile:FileMetaData):void{
+  handleNewAttachments(newFile: FileMetaData): void {
     this.showUploadDialog = false;
 
-    if(newFile){//undefined is returned for cancle/errors, so only proceed if we have a value
+    if(newFile) {// undefined is returned for cancle/errors, so only proceed if we have a value
 
-      //wrap the FileMetaData in an Attachment object
-      let attachment:Attachment = new Attachment();
+      // wrap the FileMetaData in an Attachment object
+      const attachment: Attachment = new Attachment();
       attachment.file = newFile;
       attachment.mpId = this.missionData[this.selectedRowId].id;
 
-      //add attachment
+      // add attachment
       this.missionData[this.selectedRowId].attachments.push(attachment);
 
-      //update data
+      // update data
       this.gridApi.setRowData(this.missionData);
     }
   }
 
-  onOpenPlanningPhase():void{
-    if(this.yearDropDown.isValid()){
-      this.dialogService.displayError("not implemented");
+  onOpenPlanningPhase(): void {
+    if(this.yearDropDown.isValid()) {
+      this.dialogService.displayError('not implemented');
     }
   }
 
@@ -296,9 +301,9 @@ export class MissionPrioritiesComponent implements OnInit {
     this.POMManager = this.appModel.userDetails.userRole.isPOM_Manager;
     const years: string[] = [];
     const status: string[] = ['CREATED', 'OPEN', 'LOCKED', 'CLOSED'];
-    for (const item of this.appModel.planningData){
+    for (const item of this.appModel.planningData) {
       // Opened, Locked or Closed.
-      if (status.indexOf(item.state) !== -1){
+      if (status.indexOf(item.state) !== -1) {
         years.push(item.name);
       }
     }
@@ -313,10 +318,10 @@ export class MissionPrioritiesComponent implements OnInit {
     this.availableYears = this.toListItem(years);
   }
 
-  private toListItem(years:string[]):ListItem[]{
-    let items:ListItem[] = [];
-    for(let year of years){
-      let item:ListItem = new ListItem();
+  private toListItem(years: string[]): ListItem[] {
+    const items: ListItem[] = [];
+    for(const year of years) {
+      const item: ListItem = new ListItem();
       item.id = year;
       item.name = year;
       item.value = year;
@@ -328,7 +333,7 @@ export class MissionPrioritiesComponent implements OnInit {
     return items;
   }
 
-  private editMode(rowId:number){
+  private editMode(rowId: number) {
     // toggle actions
     this.missionData[rowId].actions.canUpload = true;
     this.missionData[rowId].actions.canSave = true;
@@ -338,7 +343,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.gridApi.setRowData(this.missionData);
   }
 
-  private viewMode(rowId:number){
+  private viewMode(rowId: number) {
     // Toggle actions
     this.gridApi.stopEditing();
     this.missionData[rowId].actions.canUpload = false;
@@ -349,7 +354,7 @@ export class MissionPrioritiesComponent implements OnInit {
     this.gridApi.setRowData(this.missionData);
   }
 
-  private saveRow(rowId:number){
+  private saveRow(rowId: number) {
     let errorMsg = '';
     let isError = false;
 
@@ -362,7 +367,7 @@ export class MissionPrioritiesComponent implements OnInit {
 
       // Convert to server mp
       const serverMp: MissionPriority = this.convertToServerMP(row);
-      serverMp.planningPhaseId = this.selectedPlanningPhase.id
+      serverMp.planningPhaseId = this.selectedPlanningPhase.id;
 
       this.busy = true;
 
@@ -383,7 +388,7 @@ export class MissionPrioritiesComponent implements OnInit {
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
           },
-          error =>{
+          error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
           });
@@ -397,29 +402,29 @@ export class MissionPrioritiesComponent implements OnInit {
             this.viewMode(rowId);
             this.gridApi.setRowData(this.missionData);
           },
-          error =>{
+          error => {
             this.busy = false;
             this.dialogService.displayDebug(error);
           });
       }
     } else {
-      if (row.title.length === 0){
+      if (row.title.length === 0) {
         errorMsg = 'The Title is empty. ';
         isError = true;
       }
-      if (row.description.length === 0){
+      if (row.description.length === 0) {
         errorMsg = errorMsg + 'The Description is empty. ';
         isError = true;
       }
-      if (row.title.length > 45){
+      if (row.title.length > 45) {
         errorMsg = errorMsg + 'The Title is longer than the max of 45 characters. ';
         isError = true;
       }
-      if (row.description.length > 200){
+      if (row.description.length > 200) {
         errorMsg = errorMsg + 'The Description is longer than the max of 200 characters';
         isError = true;
       }
-      if (isError){
+      if (isError) {
         this.dialogService.displayError(errorMsg);
       }
 
@@ -448,25 +453,30 @@ export class MissionPrioritiesComponent implements OnInit {
     }
   }
 
-  private editRow(rowId:number){
-    //edit mode
+  private editRow(rowId: number) {
+    // edit mode
     this.editMode(rowId);
 
-    //edit the title and description
+    // edit the title and description
     this.gridApi.startEditingCell({
       rowIndex: rowId,
-      colKey: "title"
+      colKey: 'title'
     });
   }
 
-  private deleteRow(rowId:number){
+  private deleteRow(rowId: number) {
+    this.selectedRowId = rowId;
+    this.showDeleteRowDialog = true;
+  }
+
+  private onDeleteRow(rowId: number) {
     this.busy = true;
 
     this.planningService.deleteMissionPriority(this.missionData[rowId].id).subscribe(
       resp => {
         this.missionData.splice(rowId, 1);
 
-        for (let i = rowId; i < this.missionData.length; i++){
+        for (let i = rowId; i < this.missionData.length; i++) {
           this.missionData[i].order = this.missionData[i].order - 1;
         }
 
@@ -482,17 +492,19 @@ export class MissionPrioritiesComponent implements OnInit {
         this.busy = false;
         this.dialogService.displayDebug(error);
       });
+
+    this.showDeleteRowDialog = false;
   }
 
-  private addAttachment(rowId:number):void{
+  private addAttachment(rowId: number): void {
     this.selectedRowId = rowId;
     this.showUploadDialog = true;
   }
 
-  private deleteAttachments(rowId:number){
+  private deleteAttachments(rowId: number) {
     this.selectedRowId = rowId;
-     this.selectedRow = this.missionData[rowId];
-     this.showDeleteAttachmentDialog = true;
+    this.selectedRow = this.missionData[rowId];
+    this.showDeleteAttachmentDialog = true;
   }
 
   private onDeleteAttachments(): void {
@@ -516,26 +528,25 @@ export class MissionPrioritiesComponent implements OnInit {
   }
 
   // Overwrite tab functionality to tab back and forth from title and description
-  private tabToNextCell (params) {
-    let rowIndex = params.previousCellPosition.rowIndex;
-    let nextColumn:Column;
-    let nextCell:CellPosition = params.nextCellPosition;
+  private tabToNextCell(params) {
+    const rowIndex = params.previousCellPosition.rowIndex;
+    let nextColumn: Column;
+    let nextCell: CellPosition = params.nextCellPosition;
     // if the column is title
-    if (params.previousCellPosition.column.colId === "title" && params.backwards === true){
-      nextColumn = this.columnApi.getColumn("description");
+    if (params.previousCellPosition.column.colId === 'title' && params.backwards === true) {
+      nextColumn = this.columnApi.getColumn('description');
       nextCell = {
-        rowIndex: rowIndex,
+        rowIndex,
         column: nextColumn,
         rowPinned: undefined
-      }
-    }
-    else if (params.previousCellPosition.column.colId === "description" && params.backwards === false) {
-      nextColumn = this.columnApi.getColumn("title");
+      };
+    } else if (params.previousCellPosition.column.colId === 'description' && params.backwards === false) {
+      nextColumn = this.columnApi.getColumn('title');
       nextCell = {
-        rowIndex: rowIndex,
+        rowIndex,
         column: nextColumn,
         rowPinned: undefined
-      }
+      };
     }
     return nextCell;
   }

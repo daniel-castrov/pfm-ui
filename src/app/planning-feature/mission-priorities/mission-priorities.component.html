@@ -46,7 +46,7 @@
 
 
 <ng-container *ngIf="showDeleteAttachmentDialog">
-    <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="delteeAttachmentActions" (onCancelDialog)="cancelDialog()"></pfm-custom-dialog>
+    <pfm-custom-dialog [title]="'Delete Attachment'" [body]="deleteAttachmentBody" [actions]="deleteAttachmentActions" (onCancelDialog)="showDeleteAttachmentDialog = false"></pfm-custom-dialog>
 
     <ng-template #deleteAttachmentBody>
         <span>{{activeMessage|json}}</span>
@@ -55,15 +55,37 @@
         </div>
     </ng-template>
 
-    <ng-template #delteeAttachmentActions>
+    <ng-template #deleteAttachmentActions>
+      <div class="section-actions">
         <div class="pull-left">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showDeleteAttachmentDialog = false; onDeleteAttachments()">Delete</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showDeleteAttachmentDialog = false; onDeleteAttachments()">Delete</button>
         </div>
 
         <div class="pull-right">
-            <pfm-cancel-cta (onCancelClicked)="showDeleteAttachmentDialog = false"></pfm-cancel-cta>
+          <pfm-cancel-cta (onCancelClicked)="showDeleteAttachmentDialog = false"></pfm-cancel-cta>
         </div>
+      </div>
     </ng-template>
+</ng-container>
+
+<ng-container *ngIf="showDeleteRowDialog">
+  <pfm-custom-dialog [title]="'Delete Row'" [body]="deleteRowBody" [actions]="deleteRowActions" (onCancelDialog)="showDeleteRowDialog = false"></pfm-custom-dialog>
+
+  <ng-template #deleteRowBody>
+    <p>You will be permanently deleting the row and all attachments from the grid. Are you sure you want to delete this row?</p>
+  </ng-template>
+
+  <ng-template #deleteRowActions>
+    <div class="section-actions">
+      <div class="pull-left">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showDeleteAttachmentDialog = false; onDeleteRow(selectedRowId)">Delete</button>
+      </div>
+
+      <div class="pull-right">
+        <pfm-cancel-cta (onCancelClicked)="showDeleteRowDialog = false"></pfm-cancel-cta>
+      </div>
+    </div>
+  </ng-template>
 </ng-container>
 
 <ng-container *ngIf="showImportYearDialog">
@@ -74,12 +96,14 @@
     </ng-template>
 
     <ng-template #importYearActions>
+      <div class="section-actions">
         <div class="pull-left">
             <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="showImportYearDialog = false; onImportYear()">Import</button>
         </div>
         <div class="pull-right">
             <pfm-cancel-cta (onCancelClicked)="showImportYearDialog = false"></pfm-cancel-cta>
         </div>
+      </div>
     </ng-template>
 </ng-container>
 
