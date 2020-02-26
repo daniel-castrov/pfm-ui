@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { DataGridMessage } from 'src/app/pfm-coreui/models/DataGridMessage';
 import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { NumericCellEditor } from 'src/app/ag-grid/cell-editors/NumericCellEditor';
+import { AppModel } from 'src/app/pfm-common-models/AppModel';
 
 @Component({
   selector: 'pfm-assets',
@@ -49,7 +50,8 @@ export class AssetsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private appModel: AppModel
   ) { }
 
   ngOnInit() {
@@ -81,7 +83,7 @@ export class AssetsComponent implements OnInit {
       'USAF',
       'USMC',
       'USNG',
-      'CBDP'
+      this.appModel.userDetails.currentCommunity.abbreviation
     ];
   }
 
