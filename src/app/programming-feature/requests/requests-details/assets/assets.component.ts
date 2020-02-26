@@ -36,6 +36,7 @@ export class AssetsComponent implements OnInit {
   form: FormGroup;
   showFundingLineGrid: boolean;
   toBeUsedByOptions: string[];
+  contractorManufacturerOptions: string[];
 
   fundingLineOptions: any[] = [];
 
@@ -56,6 +57,7 @@ export class AssetsComponent implements OnInit {
     }
     this.loadFundingLines();
     this.loadToBeUsedBy();
+    this.loadContractorManufacturer();
     this.setupFundingLineGrid();
   }
 
@@ -72,13 +74,38 @@ export class AssetsComponent implements OnInit {
 
   loadToBeUsedBy() {
     this.toBeUsedByOptions = [
-        'Select',
-        'USA',
-        'USN',
-        'USAF',
-        'USMC',
-        'USNG',
-        'CBDP'
+      'Select',
+      'USA',
+      'USN',
+      'USAF',
+      'USMC',
+      'USNG',
+      'CBDP'
+    ];
+  }
+
+  loadContractorManufacturer() {
+    this.contractorManufacturerOptions = [
+      'Select',
+      '20th Support Command, Aberdeen Proving Ground, MD',
+      '28th Test and Evaluation Squadron, Eglin AFB, FL',
+      '3M Canada, Brockville Ontario, CN',
+      '908 Devices, Boston, MA',
+      'AMEDD Center and School, Ft. Sam Houston, TX',
+      'ANP Technologies, Inc., Newark, DE',
+      'AOAC International, Gaithersburg, MD',
+      'ATI Solutions, Inc., Tysons Corner, VA',
+      'AVI BioPharma, Inc., Corvallis, OR',
+      'AVON Protection System Inc., Cadillac, MI',
+      'AVOX System Inc., Lancaster, NY',
+      'Aberdeen Test Center (ATC), Aberdeen Proving Ground, MD',
+      'Advanced Technologies International, Summerville, SC',
+      'Aeroclave, LLC, Maitland, FL',
+      'Agentase, LLC, Elkridge, MD',
+      'Agentase, LLC, Pittsburgh, PA',
+      'Air Force Research Laboratory (AFRL), Wright Patterson AFB, OH',
+      'AirBoss Defense, Acton Vale Quebec, CN',
+      'Allied, Kansas City, KS'
     ];
   }
 
@@ -293,6 +320,7 @@ export class AssetsComponent implements OnInit {
                   suppressMovable: true,
                   filter: false,
                   sortable: false,
+                  suppressMenu: true,
                   cellClass: 'numeric-class',
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
                   minWidth: 45,
@@ -304,6 +332,7 @@ export class AssetsComponent implements OnInit {
                   field: fieldPrefix + 'Quantity',
                   editable: i > this.pomYear,
                   suppressMovable: true,
+                  suppressMenu: true,
                   filter: false,
                   sortable: false,
                   cellClass: 'numeric-class',
@@ -317,6 +346,7 @@ export class AssetsComponent implements OnInit {
                   field: fieldPrefix + 'TotalCost',
                   editable: i > this.pomYear,
                   suppressMovable: true,
+                  suppressMenu: true,
                   filter: false,
                   sortable: false,
                   cellClass: 'numeric-class',
@@ -345,6 +375,7 @@ export class AssetsComponent implements OnInit {
             suppressMovable: true,
             filter: false,
             sortable: false,
+            suppressMenu: true,
             cellClass: 'text-class',
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             maxWidth: 120,
@@ -357,6 +388,7 @@ export class AssetsComponent implements OnInit {
             suppressMovable: true,
             filter: false,
             sortable: false,
+            suppressMenu: true,
             cellClass: 'text-class',
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             maxWidth: 120,
@@ -364,7 +396,7 @@ export class AssetsComponent implements OnInit {
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
-              values: this.toBeUsedByOptions
+              values: this.contractorManufacturerOptions
             },
           },
           {
@@ -374,6 +406,7 @@ export class AssetsComponent implements OnInit {
             suppressMovable: true,
             filter: false,
             sortable: false,
+            suppressMenu: true,
             cellClass: 'text-class',
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             maxWidth: 120,
@@ -399,6 +432,7 @@ export class AssetsComponent implements OnInit {
             suppressMovable: true,
             filter: false,
             sortable: false,
+            suppressMenu: true,
             cellRendererFramework: ActionCellRendererComponent,
             minWidth: 75
           }

@@ -61,7 +61,7 @@ export class ScopeComponent implements OnInit {
   currentProcessPriorizationRowDataState: RowDataStateInterface = {};
 
   attachmentsUploaded: string[] = [];
-  deleteDialog: DeleteDialogInterface = { title: 'Delete',  };
+  deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(private dialogService: DialogService) { }
 
@@ -83,6 +83,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'numeric-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -93,6 +94,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -103,6 +105,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -113,6 +116,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -123,6 +127,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -133,6 +138,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellRendererFramework: DatePickerCellRendererComponent,
@@ -146,6 +152,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }
@@ -161,6 +168,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -171,6 +179,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -181,6 +190,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -191,6 +201,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -201,6 +212,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }
@@ -216,6 +228,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -226,6 +239,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellEditor: 'select',
@@ -241,6 +255,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellRendererFramework: DatePickerCellRendererComponent,
@@ -255,6 +270,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -265,6 +281,7 @@ export class ScopeComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }

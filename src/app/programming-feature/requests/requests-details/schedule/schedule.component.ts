@@ -233,6 +233,7 @@ export class ScheduleComponent implements OnInit {
         maxWidth: 60,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'numeric-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' }
       },
@@ -243,6 +244,7 @@ export class ScheduleComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' }
       },
@@ -253,6 +255,7 @@ export class ScheduleComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
         cellEditor: 'select',
@@ -268,6 +271,7 @@ export class ScheduleComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
         cellRendererFramework: DatePickerCellRendererComponent,
@@ -281,6 +285,7 @@ export class ScheduleComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellClass: 'text-class',
         cellStyle: { display: 'flex', 'align-items': 'center', 'white-space': 'normal' },
         cellRendererFramework: DatePickerCellRendererComponent,
@@ -294,6 +299,7 @@ export class ScheduleComponent implements OnInit {
         suppressMovable: true,
         filter: false,
         sortable: false,
+        suppressMenu: true,
         cellRendererFramework: ActionCellRendererComponent,
         maxWidth: 120
       }
