@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, HostListener } from '@angular/core';
-import { ColumnApi, GridApi, Module } from '@ag-grid-community/all-modules';
+import { ColumnApi, GridApi, Module, SuppressKeyboardEventParams } from '@ag-grid-community/all-modules';
 
 import { DatagridMbService } from '../services/datagrid-mb.service';
 import { DataGridMessage } from '../models/DataGridMessage';
@@ -41,7 +41,15 @@ export class DatagridComponent implements OnInit {
   columnApi: ColumnApi;
   options: ListItem[];
   pageSize = 20;
-  onSuppressKeyboardEvent = (event: any) => this.suppressKeyboardEvent;
+  onSuppressKeyboardEvent = (params: SuppressKeyboardEventParams) => {
+    if (this.suppressKeyboardEvent) {
+      if (params.event.code.toLowerCase() === 'tab') {
+        return !this.tabToNextCell;
+      }
+      return true;
+    }
+    return false;
+  }
 
   constructor(private datagridMBService: DatagridMbService) {
     datagridMBService.messageBus$.subscribe(message => {
