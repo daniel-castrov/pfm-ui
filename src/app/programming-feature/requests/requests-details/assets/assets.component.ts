@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GridApi, ColGroupDef } from '@ag-grid-community/all-modules';
+import { GridApi, ColGroupDef, ColumnApi, CellPosition } from '@ag-grid-community/all-modules';
 import { ActionCellRendererComponent } from 'src/app/pfm-coreui/datagrid/renderers/action-cell-renderer/action-cell-renderer.component';
 import { of } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -42,6 +42,7 @@ export class AssetsComponent implements OnInit {
   fundingLineOptions: any[] = [];
 
   fundingLineGridApi: GridApi;
+  fundingLineColumnApi: ColumnApi;
   fundingLineColumnsDefinition: ColGroupDef[];
   fundingLineRows: any[] = [];
 
@@ -134,6 +135,10 @@ export class AssetsComponent implements OnInit {
     this.fundingLineGridApi = fundingLineGridApi;
     this.fundingLineGridApi.setHeaderHeight(50);
     this.fundingLineGridApi.setGroupHeaderHeight(25);
+  }
+
+  onColumnIsReady(columnApi: ColumnApi) {
+    this.fundingLineColumnApi = columnApi;
   }
 
   onRowAdd(event: any) {
@@ -285,7 +290,7 @@ export class AssetsComponent implements OnInit {
     this.fundingLineGridApi.setRowData(this.fundingLineRows);
     this.fundingLineGridApi.startEditingCell({
       rowIndex,
-      colKey: 'assetDescription'
+      colKey: '0'
     });
   }
 
@@ -293,14 +298,14 @@ export class AssetsComponent implements OnInit {
     if (this.currentRowDataState.isEditMode) {
       this.fundingLineGridApi.startEditingCell({
         rowIndex: this.currentRowDataState.currentEditingRowIndex,
-        colKey: 'assetDescription'
+        colKey: '0'
       });
     }
   }
 
   setupFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2; i < this.pomYear + 6; i++) {
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++ , x++) {
       const headerName = i < this.pomYear ?
         'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1)) :
         i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1)) :
@@ -319,6 +324,7 @@ export class AssetsComponent implements OnInit {
               headerName: 'FY' + i,
               children: [
                 {
+                  colId: 2 + x * 3 + 1,
                   headerName: 'Unit Cost',
                   field: fieldPrefix + 'UnitCost',
                   editable: i > this.pomYear,
@@ -333,6 +339,7 @@ export class AssetsComponent implements OnInit {
                   valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
                 },
                 {
+                  colId: 2 + x * 3 + 2,
                   headerName: 'Qty',
                   field: fieldPrefix + 'Quantity',
                   editable: i > this.pomYear,
@@ -346,6 +353,7 @@ export class AssetsComponent implements OnInit {
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false })
                 },
                 {
+                  colId: 2 + x * 3 + 3,
                   headerName: 'Total Cost',
                   field: fieldPrefix + 'TotalCost',
                   editable: i > this.pomYear,
@@ -373,6 +381,7 @@ export class AssetsComponent implements OnInit {
         marryChildren: true,
         children: [
           {
+            colId: 0,
             headerName: 'Asset Description',
             field: 'assetDescription',
             editable: true,
@@ -387,6 +396,7 @@ export class AssetsComponent implements OnInit {
             minWidth: 180
           },
           {
+            colId: 1,
             headerName: 'Contractor / Manufacturer',
             field: 'contractorManufacturer',
             editable: true,
@@ -411,6 +421,7 @@ export class AssetsComponent implements OnInit {
             },
           },
           {
+            colId: 2,
             headerName: 'To be Used By',
             field: 'toBeUsedBy',
             editable: true,
@@ -498,6 +509,47 @@ export class AssetsComponent implements OnInit {
     this.deleteDialog.cellAction = null;
     this.deleteDialog.delete = null;
     this.deleteDialog.display = false;
+  }
+
+  onTabToNextCell(params) {
+    const rowIndex = params.previousCellPosition.rowIndex;
+    const isBackward = params.backwards;
+
+    let previousColId = Number(params.previousCellPosition.column.colDef.colId);
+
+    // We need to skip non-editable columns
+    if (previousColId === 2 && !isBackward) {
+      previousColId = 11;
+    } else if (previousColId === 12 && isBackward) {
+      previousColId = 3;
+    }
+
+    // If we reach last column, do nothing.
+    if (previousColId === 26 && !isBackward) {
+      previousColId--;
+    }
+
+    // Auto-Calculate TotalCost
+    if (previousColId > 2 && previousColId < 27) {
+      if ((previousColId - 2) % 3 === 2) { // Quantity Column
+        const unitCostInput: any = window.document
+          .querySelector('div[row-index="' + rowIndex + '"] > div[col-id="' + (previousColId - 1) + '"] > input');
+        const quantityInput: any = window.document
+          .querySelector('div[row-index="' + rowIndex + '"] > div[col-id="' + previousColId + '"] > input');
+        const totalCostInput: any = window.document
+          .querySelector('div[row-index="' + rowIndex + '"] > div[col-id="' + (previousColId + 1) + '"] > input');
+        totalCostInput.value = unitCostInput.value * quantityInput.value;
+      }
+    }
+
+    const nextColumn = this.fundingLineColumnApi.getColumn(isBackward ? --previousColId : ++previousColId);
+    const nextCell: CellPosition = {
+      rowIndex,
+      column: nextColumn,
+      rowPinned: undefined
+    };
+
+    return nextCell;
   }
 
 }
