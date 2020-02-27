@@ -328,8 +328,7 @@ export class AssetsComponent implements OnInit {
                   suppressMenu: true,
                   cellClass: 'numeric-class',
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-                  minWidth: 45,
-                  maxWidth: 45,
+                  minWidth: 80,
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
                   valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
                 },
@@ -343,8 +342,7 @@ export class AssetsComponent implements OnInit {
                   sortable: false,
                   cellClass: 'numeric-class',
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-                  minWidth: 45,
-                  maxWidth: 45,
+                  minWidth: 80,
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false })
                 },
                 {
@@ -357,8 +355,7 @@ export class AssetsComponent implements OnInit {
                   sortable: false,
                   cellClass: 'numeric-class',
                   cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-                  minWidth: 45,
-                  maxWidth: 45,
+                  minWidth: 80,
                   cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
                   valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
                 }
@@ -383,10 +380,11 @@ export class AssetsComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
+            pinned: 'left',
             cellClass: 'text-class',
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-            maxWidth: 120,
-            minWidth: 120
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
+            maxWidth: 180,
+            minWidth: 180
           },
           {
             headerName: 'Contractor / Manufacturer',
@@ -396,10 +394,16 @@ export class AssetsComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
+            pinned: 'left',
             cellClass: 'text-class',
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
-            maxWidth: 120,
-            minWidth: 120,
+            cellStyle: {
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'flex-start',
+              'white-space': 'normal'
+            },
+            maxWidth: 280,
+            minWidth: 280,
             cellEditor: 'select',
             cellEditorParams: {
               cellHeight: 100,
@@ -414,8 +418,9 @@ export class AssetsComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
+            pinned: 'left',
             cellClass: 'text-class',
-            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+            cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 120,
             minWidth: 120,
             cellEditor: 'select',
@@ -440,8 +445,9 @@ export class AssetsComponent implements OnInit {
             filter: false,
             sortable: false,
             suppressMenu: true,
+            pinned: 'right',
             cellRendererFramework: ActionCellRendererComponent,
-            minWidth: 75
+            minWidth: 90
           }
         ]
       }
@@ -449,7 +455,7 @@ export class AssetsComponent implements OnInit {
   }
 
   currencyFormatter(params) {
-    return '$ ' + Math.floor(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    return '$ ' + Number(params).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
 
   headerClassFunc(params: any) {
