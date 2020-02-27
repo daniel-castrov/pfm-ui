@@ -54,6 +54,7 @@ export class RequestsSummaryComponent implements OnInit {
   availablePrograms: ListItem[];
   orgs: Organization[];
   availableToaCharts: ListItem[];
+  dropdownDefault: ListItem;
 
   constructor(private programmingModel: ProgrammingModel,
               private pomService: PomService,
@@ -167,6 +168,10 @@ export class RequestsSummaryComponent implements OnInit {
           dropdownOptions.unshift(showAllOrg);
         }
         this.availableOrgs = this.toListItemOrgs(dropdownOptions.concat(orgs));
+        if (this.availableOrgs.length === 1) {
+          this.organizationSelected(this.availableOrgs[0]);
+        }
+        this.dropdownDefault = this.selectedOrg;
         this.loadPreviousSelection();
       },
       error => {

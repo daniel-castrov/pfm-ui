@@ -18,9 +18,16 @@
       </div>
     </div>
   </div>
-<pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
-    [label]="'Select Organization to View:'" [required]="true" [id]="'availableOrgsDropDown'" [fieldName]="'name'" [fieldLabel]="'name'"
-    [options]="availableOrgs"></pfm-dropdown>
+  <pfm-dropdown *ngIf="availableOrgs"
+                (onSelectionChanged)="organizationSelected($event)"
+                [type]="'labelDropdown'"
+                [label]="'Select Organization to View:'"
+                [required]="true" [id]="'availableOrgsDropDown'"
+                [defaultOption]="dropdownDefault"
+                [fieldName]="'name'"
+                [fieldLabel]="'name'"
+                [options]="availableOrgs">
+  </pfm-dropdown>
 </div>
 
 <div *ngIf="programmingModelReady" class="section-pods">
@@ -47,7 +54,6 @@
       </div>
     </gridster-item>
   </gridster>
-
 </div>
 
 <div *ngIf="programmingModelReady" class="section-datagrid">
