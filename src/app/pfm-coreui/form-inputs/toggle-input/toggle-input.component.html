@@ -1,0 +1,9 @@
+<div class="toggle-container">
+  <label class="title">
+    {{ label }}
+  </label>
+  <label class="switch">
+    <input type="checkbox" class="primary" [(ngModel)]="checked" (ngModelChange)="onChange($event)">
+    <span class="slider round"></span>
+  </label>
+</div>
