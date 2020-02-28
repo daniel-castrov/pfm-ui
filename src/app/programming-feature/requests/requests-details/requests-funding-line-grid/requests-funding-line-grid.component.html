@@ -1,3 +1,32 @@
-<div class="grid-container" *ngIf="fundingData">
-    <pfm-tree-datagrid [fieldsToGroup]="columnsToGroup" [fieldsToSum]="columnsToSum" [rows]="fundingData"></pfm-tree-datagrid>
+<div>
+  <pfm-toggle-input [checked]="showSubtotals" [label]="'Show Subtotals'" (valueChanged)="onToggleValueChanged($event)">
+  </pfm-toggle-input>
+  <div class="grid-container" *ngIf="showSubtotals">
+    <pfm-tree-datagrid [fieldsToGroup]="columnsToGroup" [fieldsToSum]="columnsToSum" [rows]="fundingData">
+    </pfm-tree-datagrid>
+  </div>
+  <div class="grid-container" *ngIf="!showSubtotals">
+    <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
+      [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows" [showAddSingleRow]="true"
+      [showPagination]="true" (addCtaEvent)="onNonSummaryRowAdd($event)" (mousedown)="onMouseDown($event)">
+    </pfm-datagrid>
+  </div>
 </div>
+<ng-container *ngIf="deleteDialog.display">
+  <pfm-custom-dialog [title]="deleteDialog.title" [body]="deleteBody" [actions]="deleteActions"
+    (onCancelDialog)="onCancelDeleteDialog()"></pfm-custom-dialog>
+
+  <ng-template #deleteBody>
+    <span>{{ deleteDialog.bodyText }}</span>
+  </ng-template>
+
+  <ng-template #deleteActions>
+    <div class="pull-left">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onDeleteData()">Delete</button>
+    </div>
+
+    <div class="pull-right">
+      <pfm-cancel-cta (onCancelClicked)="onCancelDeleteDialog()"></pfm-cancel-cta>
+    </div>
+  </ng-template>
+</ng-container>

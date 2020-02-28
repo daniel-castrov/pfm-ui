@@ -36,6 +36,7 @@ import {BsDatepickerModule} from 'ngx-bootstrap';
 import {DatePickerCellEditorComponent} from './datagrid/renderers/date-picker-cell-editor/date-picker-cell-editor.component';
 import {DatePickerCellRendererComponent} from './datagrid/renderers/date-picker-cell-renderer/date-picker-cell-renderer.component';
 import {IsVisibleDirective} from './directives/is-visible.directive';
+import { ToggleInputComponent } from './form-inputs/toggle-input/toggle-input.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import {IsVisibleDirective} from './directives/is-visible.directive';
     FileUploadComponent,
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
-    IsVisibleDirective
+    IsVisibleDirective,
+    ToggleInputComponent
   ],
   imports: [
     CommonModule,
@@ -117,7 +119,8 @@ import {IsVisibleDirective} from './directives/is-visible.directive';
     FileUploadComponent,
     DatePickerCellEditorComponent,
     DatePickerCellRendererComponent,
-    IsVisibleDirective
+    IsVisibleDirective,
+    ToggleInputComponent
   ]
 })
 export class PfmCoreuiModule {
