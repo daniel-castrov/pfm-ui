@@ -1,18 +1,16 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AppModel } from './pfm-common-models/AppModel';
 import { AuthorizationService } from './pfm-auth-module/services/authorization.service';
 import { onMainContentChange, onSideNavChange } from './pfm-coreui/menu-bar/animation';
 import { UserRole } from './pfm-common-models/UserRole';
 import { UserDetailsModel } from './pfm-common-models/UserDetailsModel';
 import { Router } from '@angular/router';
-import { MenuBarItem } from './pfm-coreui/models/MenuBarItem';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [ onMainContentChange, onSideNavChange]
+  animations: [onMainContentChange, onSideNavChange]
 })
 export class AppComponent implements OnInit {
 
@@ -20,7 +18,11 @@ export class AppComponent implements OnInit {
   linkText: boolean;
   isSideMenuOpen: boolean;
 
-  constructor(public appModel: AppModel, private authService: AuthorizationService, private router: Router, @Inject(DOCUMENT) document) {}
+  constructor(
+    public appModel: AppModel,
+    private authService: AuthorizationService,
+    private router: Router
+  ) { }
 
   onMenuToogle(newValue): void {
     this.isSideMenuOpen = newValue;
@@ -41,17 +43,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private buildSiteMenuItems(): void {
-    const menuBarItems: MenuBarItem[] = [];
-
-  }
-
   // This adds the sticky class to the nav bar
   @HostListener('window:scroll', ['$event'])
-  onWindowScroll(e) {
+  onWindowScroll(event: any) {
     const main = document.getElementById('main_content');
     const nav = document.getElementById('navbar');
-    console.log(main.offsetHeight);
     if (window.pageYOffset > 79 && main.offsetHeight >= 768) {
       nav.classList.add('sticky');
     } else {
