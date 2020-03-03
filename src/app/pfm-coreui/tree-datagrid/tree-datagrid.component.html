@@ -1,2 +1,7 @@
-<pfm-datagrid (gridIsReady)="handleGridIsReady($event)" (columnIsReady)="onColumnIsReady.emit($event)" (cellAction)="handleCellAction($event)"
-              [showAddDropdownCta]="true" [columns]="columnsForGrid" [rows]="rowsForGrid"></pfm-datagrid>
+<div class="pfm-data">
+  <ag-grid-angular #agGrid class="w-100 h-100" [columnDefs]="columnsForGrid"
+    [animateRows]="true" [rowData]="rowsForGrid" (gridReady)="onGridIsReady($event)"
+    [groupSuppressAutoColumn]="true" (gridSizeChanged)="onGridSizeChanged()" (columnResized)="onColumnResized($event)"
+    [suppressAggFuncInHeader]="true">
+  </ag-grid-angular>
+</div>

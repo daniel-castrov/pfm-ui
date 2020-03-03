@@ -1,0 +1,60 @@
+fa {
+  font-size: x-large;
+}
+
+fa:hover {
+  cursor: pointer;
+  color: red;
+}
+
+.pfm-tree-datagrid {
+  width: 100%;
+  height: 100%;
+}
+
+.pfm-tree-datagrid-extras {
+  display: flex;
+  justify-content: space-between;
+  height: 30px;
+  border-color: #7b8389;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: 0;
+}
+
+.pagination-container {
+  display: flex;
+  height: 25px;
+  align-self: center;
+}
+
+.pagination {
+  display: flex;
+}
+
+.add-row-container {
+  display: flex;
+}
+
+.pfm-data {
+  width: 100%;
+  height: 100%;
+}
+
+fa {
+  padding-left: 8px;
+}
+
+p {
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.disabled {
+  opacity: 0.6;
+}
+
+.disabled:hover {
+  color: black;
+  cursor: default;
+}

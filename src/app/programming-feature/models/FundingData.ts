@@ -1,17 +1,18 @@
 export class FundingData {
-  public id:string;
-  public appropriation:string;
-  public baOrBlin:string;
-  public sag:string;
-  public wucd:string;
+  id: string;
+  appropriation: string;
+  baOrBlin: string;
+  sag: string;
+  wucd: string;
+  expType: string;
 
-  public fy18:number;
-  public fy19:number;
-  public fy20:number;
-  public fy21:number;
-  public fy22:number;
-  public fy23:number;
-  public fy24:number;
-  public fy25:number;
-  public fyTotal:number
+  fy18: number;
+  fy19: number;
+  fy20: number;
+  fy21: number;
+  fy22: number;
+  fy23: number;
+  fy24: number;
+  fy25: number;
+  fyTotal: number;
 }
