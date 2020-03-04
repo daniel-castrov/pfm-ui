@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
-    "local": "ng serve --ssl --ssl-key ./support/localhost-certificate/p-exchange.localhost.key.pem --ssl-cert ./support/localhost-certificate/p-exchange.localhost.cert.pem -o -c local",
+    "local": "ng serve --ssl --ssl-key ./support/localhost-certificates/p-exchange.localhost.key.pem --ssl-cert ./support/localhost-certificates/p-exchange.localhost.cert.pem -o -c local",
     "build": "ng build",
     "lint": "ng lint",
     "postinstall": "tsc -p builders/tsconfig.builders.json",
