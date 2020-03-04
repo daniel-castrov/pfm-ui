@@ -129,6 +129,13 @@ export class RequestsSummaryGridComponent implements OnInit {
             rowDrag: false,
             cellClass: 'pfm-datagrid-numeric-class',
             valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
+          },
+          {
+            groupId: 'main-header',
+            headerName: 'Actions',
+            maxWidth: 120,
+            minWidth: 120,
+            rowDrag: false,
           }
         ]
       },
