@@ -4,64 +4,31 @@
       <h3>POM{{ pomDisplayYear }} Program Request Summary</h3>
     </div>
     <div *ngIf="appModel.visibilityDef" class="button-container">
-      <div
-        *pfmIsVisible="'requests-summary-component.returnOrganization'"
-        class="div-button-return"
-      >
-        <button
-          type="button"
-          class="btn btn-danger"
-          (click)="onReturnOrganization()"
-        >
+      <div *pfmIsVisible="'requests-summary-component.returnOrganization'" class="div-button-return">
+        <button type="button" class="btn btn-danger" (click)="onReturnOrganization()">
           <fa name="arrow-left"></fa> Return Organization
         </button>
       </div>
-      <div
-        *pfmIsVisible="'requests-summary-component.approveOrganization'"
-        class="div-button-approve"
-      >
-        <button
-          type="button"
-          class="btn btn-success"
-          (click)="onApproveOrganization()"
-        >
+      <div *pfmIsVisible="'requests-summary-component.approveOrganization'" class="div-button-approve">
+        <button type="button" class="btn btn-success" (click)="onApproveOrganization()">
           <fa name="check"></fa> Approve Organization
         </button>
       </div>
-      <div
-        *pfmIsVisible="'requests-summary-component.advanceOrganization'"
-        class="div-button-advance"
-      >
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="onAdvanceOrganization()"
-        >
+      <div *pfmIsVisible="'requests-summary-component.advanceOrganization'" class="div-button-advance">
+        <button type="button" class="btn btn-primary" (click)="onAdvanceOrganization()">
           <fa name="arrow-right"></fa> Advance Organization
         </button>
       </div>
-      <div
-        *pfmIsVisible="'requests-summary-component.approveAllPRs'"
-        class="div-button-approve-all"
-      >
+      <div *pfmIsVisible="'requests-summary-component.approveAllPRs'" class="div-button-approve-all">
         <button type="button" class="btn btn-primary" (click)="onApprove()">
           Approve All PRs - Demo only
         </button>
       </div>
     </div>
   </div>
-  <pfm-dropdown
-    *ngIf="availableOrgs"
-    (onSelectionChanged)="organizationSelected($event)"
-    [type]="'labelDropdown'"
-    [label]="'Select Organization to View:'"
-    [required]="true"
-    [id]="'availableOrgsDropDown'"
-    [defaultOption]="dropdownDefault"
-    [fieldName]="'name'"
-    [fieldLabel]="'name'"
-    [options]="availableOrgs"
-  >
+  <pfm-dropdown *ngIf="availableOrgs" (onSelectionChanged)="organizationSelected($event)" [type]="'labelDropdown'"
+    [label]="'Select Organization to View:'" [required]="true" [id]="'availableOrgsDropDown'"
+    [defaultOption]="dropdownDefault" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availableOrgs">
   </pfm-dropdown>
 </div>
 
@@ -69,26 +36,16 @@
   <gridster [options]="options">
     <gridster-item #orgWidetItem [item]="dashboard[0]">
       <div class="gridster-item-content">
-        <pfm-requests-summary-org-widget
-          #orgWidget
-          [griddata]="griddata"
-          [orgs]="orgs"
-          [roles]="programmingModel.roles"
-        >
+        <pfm-requests-summary-org-widget #orgWidget [griddata]="griddata" [orgs]="orgs"
+          [roles]="programmingModel.roles">
         </pfm-requests-summary-org-widget>
       </div>
     </gridster-item>
 
     <gridster-item #toaWidetItem [item]="dashboard[1]">
       <div class="gridster-item-content">
-        <pfm-requests-summary-toa-widget
-          #toaWidget
-          [availableCharts]="availableToaCharts"
-          [pomYear]="pomYear"
-          [selectedOrg]="selectedOrg"
-          [programmingModel]="programmingModel"
-          [griddata]="griddata"
-        >
+        <pfm-requests-summary-toa-widget #toaWidget [availableCharts]="availableToaCharts" [pomYear]="pomYear"
+          [selectedOrg]="selectedOrg" [programmingModel]="programmingModel" [griddata]="griddata">
         </pfm-requests-summary-toa-widget>
       </div>
     </gridster-item>
@@ -97,54 +54,32 @@
 
 <div *ngIf="programmingModelReady" class="section-datagrid">
   <div class="datagrid">
-    <pfm-requests-summary-grid
-      (addCtaEvent)="handleAdd($event)"
-      (gridDataChange)="onGridDataChange($event)"
-      [dropdownOptions]="addOptions"
-      [pomYear]="pomYear"
-    ></pfm-requests-summary-grid>
+    <pfm-requests-summary-grid (addCtaEvent)="handleAdd($event)" (gridDataChange)="onGridDataChange($event)"
+      [dropdownOptions]="addOptions" [pomYear]="pomYear"></pfm-requests-summary-grid>
   </div>
 </div>
 
 <ng-container *ngIf="showPreviousFundedProgramDialog">
-  <pfm-custom-dialog
-    [title]="'Select a Program'"
-    [body]="importPreviousFundedProgramBody"
-    [actions]="importPreviousFundedProgramActions"
-    (onCancelDialog)="showPreviousFundedProgramDialog = false"
-  >
+  <pfm-custom-dialog [title]="'Select a Program'" [body]="importPreviousFundedProgramBody"
+    [actions]="importPreviousFundedProgramActions" (onCancelDialog)="showPreviousFundedProgramDialog = false">
   </pfm-custom-dialog>
 
   <ng-template #importPreviousFundedProgramBody>
-    <pfm-dropdown
-      (onSelectionChanged)="importProgramSelected($event)"
-      [type]="'labelDropdown'"
-      [label]="''"
-      [required]="true"
-      [id]="'id'"
-      [fieldName]="'name'"
-      [fieldLabel]="'name'"
-      [options]="availablePrograms"
-    >
+    <pfm-dropdown (onSelectionChanged)="importProgramSelected($event)" [type]="'labelDropdown'" [label]="''"
+      [required]="true" [id]="'id'" [fieldName]="'name'" [fieldLabel]="'name'" [options]="availablePrograms">
     </pfm-dropdown>
   </ng-template>
 
   <ng-template #importPreviousFundedProgramActions>
     <div class="button-container">
       <div class="confirm">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-dismiss="modal"
-          (click)="showPreviousFundedProgramDialog = false; onImportProgram()"
-        >
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+          (click)="showPreviousFundedProgramDialog = false; onImportProgram()">
           OK
         </button>
       </div>
       <div class="cancel">
-        <pfm-cancel-cta
-          (onCancelClicked)="showPreviousFundedProgramDialog = false"
-        ></pfm-cancel-cta>
+        <pfm-cancel-cta (onCancelClicked)="showPreviousFundedProgramDialog = false"></pfm-cancel-cta>
       </div>
     </div>
   </ng-template>
