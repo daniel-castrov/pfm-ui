@@ -1,10 +1,11 @@
 export class DataGridMessage {
-  public messageType:string;
-  public message:string;
-  public rendererName:string;
-  public rowIndex:number;
-  public columnIndex:number;
-  public columnId:string
-  public rowData:any;
-  public rawData:any;
+  messageType: string;
+  message: string;
+  rendererName: string;
+  rowIndex: number;
+  columnIndex: number;
+  columnId: string;
+  rowData: any;
+  rawData: any;
+  apiCompId: number;
 }

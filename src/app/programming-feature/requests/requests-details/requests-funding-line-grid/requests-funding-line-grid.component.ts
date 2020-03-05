@@ -33,11 +33,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   showSubtotals: boolean;
 
-  fundingData: any[] = [];
-  gridApi: GridApi;
+  summaryFundingLineRows: any[] = [];
+  summaryFundingLineGridApi: GridApi;
+  summaryFundingLineColumnsDefinition: any[];
   columnApi: ColumnApi;
-  columnsToGroup: any[];
-  columnsToSum: any[];
+  autoGroupColumnDef: any;
 
   id = 'requests-funding-line-grid-component';
   busy: boolean;
@@ -46,7 +46,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
   nonSummaryFundingLineRows: any[] = [];
   nonSummaryFundingLineColumnsDefinition: ColGroupDef[];
 
-  currentRowDataState: RowDataStateInterface = {};
+  currentNonSummaryRowDataState: RowDataStateInterface = {};
+  currentSummaryRowDataState: RowDataStateInterface = {};
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
@@ -78,16 +79,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
         marryChildren: true,
         children: [
           {
-            colId: 4 + x,
+            colId: 5 + x,
             headerName: 'FY' + i % 100,
             field: fieldPrefix,
-            editable: false,
+            editable: i > this.pomYear,
             suppressMovable: true,
             filter: false,
             sortable: false,
             suppressMenu: true,
             aggFunc: 'sum',
-            cellClass: params => ['numeric-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
+            cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
+            cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
             minWidth: 80,
             valueFormatter: params => this.currencyFormatter(params.value)
@@ -95,36 +97,49 @@ export class RequestsFundingLineGridComponent implements OnInit {
         ]
       });
     }
-    this.columnsToGroup = [
+    this.summaryFundingLineColumnsDefinition = [
       {
+        colId: 0,
         headerName: 'APPN',
-        showRowGroup: 'appropriation',
+        showRowGroup: 'appn',
         cellRenderer: GroupCellRenderer,
+        cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
         minWidth: 120
       },
       {
+        colId: 1,
         headerName: 'BA/BLIN',
-        showRowGroup: 'baOrBlin',
+        showRowGroup: 'ba',
         cellRenderer: GroupCellRenderer,
+        cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
         minWidth: 120
       },
       {
+        colId: 2,
         headerName: 'SAG',
         showRowGroup: 'sag',
         cellRenderer: GroupCellRenderer,
+        cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
         minWidth: 120
       },
       {
+        colId: 3,
         headerName: 'WUCD',
         showRowGroup: 'wucd',
         cellRenderer: GroupCellRenderer,
+        cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
         minWidth: 120
       },
       {
+        colId: 4,
         headerName: 'Exp Type',
         field: 'expType',
         editable: false,
@@ -132,16 +147,18 @@ export class RequestsFundingLineGridComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
+        cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
         minWidth: 120
       },
       {
-        field: 'appropriation',
+        field: 'appn',
         rowGroup: true,
         hide: true
       },
       {
-        field: 'baOrBlin',
+        field: 'ba',
         rowGroup: true,
         hide: true
       },
@@ -157,6 +174,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       },
       ...columnGroups,
       {
+        colId: 13,
         headerName: 'FY Total',
         field: 'fyTotal',
         editable: false,
@@ -165,12 +183,13 @@ export class RequestsFundingLineGridComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         aggFunc: 'sum',
-        cellClass: params => ['numeric-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         minWidth: 80,
         valueFormatter: params => this.currencyFormatter(params.value)
       },
       {
+        colId: 14,
         headerName: 'CTC',
         field: 'ctc',
         editable: true,
@@ -179,12 +198,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
         sortable: false,
         suppressMenu: true,
         aggFunc: 'sum',
-        cellClass: params => ['numeric-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         minWidth: 80,
         cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-        valueFormatter: params =>
-          params.node.rowIndex === 0 ? '' : this.currencyFormatter(params.value)
+        valueFormatter: params => this.currencyFormatter(params.value)
       },
       {
         headerName: 'Actions',
@@ -194,12 +212,11 @@ export class RequestsFundingLineGridComponent implements OnInit {
         filter: false,
         sortable: false,
         suppressMenu: true,
-        cellClass: params => params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell',
+        cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         cellRendererFramework: ActionCellRendererComponent,
         minWidth: 90
       }
     ];
-    this.createMockData();
   }
 
   onNonSummaryCellAction(cellAction: DataGridMessage) {
@@ -208,19 +225,19 @@ export class RequestsFundingLineGridComponent implements OnInit {
         this.saveRow(cellAction.rowIndex);
         break;
       case 'edit':
-        if (!this.currentRowDataState.isEditMode) {
+        if (!this.currentNonSummaryRowDataState.isEditMode) {
           this.editRow(cellAction.rowIndex, true);
         }
         break;
       case 'delete-row':
-        if (!this.currentRowDataState.isEditMode) {
+        if (!this.currentNonSummaryRowDataState.isEditMode) {
           this.deleteDialog.bodyText =
             'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
           this.displayDeleteDialog(cellAction, this.deleteRow.bind(this));
         }
         break;
       case 'cancel':
-        if (this.currentRowDataState.isEditMode && !this.currentRowDataState.isAddMode) {
+        if (this.currentNonSummaryRowDataState.isEditMode && !this.currentNonSummaryRowDataState.isAddMode) {
           this.cancelRow(cellAction.rowIndex);
         } else {
           this.deleteRow(cellAction.rowIndex);
@@ -229,58 +246,55 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   }
 
-  onGridIsReady(gridApi: GridApi) {
-    this.gridApi = gridApi;
+  onSummaryCellAction(cellAction: DataGridMessage) {
+    const row = this.summaryFundingLineGridApi.getModel().getRow(cellAction.rowIndex);
+    if (row) {
+      const rowIndex = Number(row.id);
+      switch (cellAction.message) {
+        case 'save':
+          this.saveSummaryRow(rowIndex);
+          break;
+        case 'edit':
+          if (!this.currentSummaryRowDataState.isEditMode) {
+            this.editSummaryRow(rowIndex, cellAction.rowIndex, true);
+          }
+          break;
+        case 'delete-row':
+          if (!this.currentSummaryRowDataState.isEditMode) {
+            cellAction.rowIndex = rowIndex;
+            this.deleteDialog.bodyText =
+              'You will be permanently deleting the row from the grid.  Are you sure you want to delete this row?';
+            this.displayDeleteDialog(cellAction, this.deleteSummaryRow.bind(this));
+          }
+          break;
+        case 'cancel':
+          if (this.currentSummaryRowDataState.isEditMode && !this.currentSummaryRowDataState.isAddMode) {
+            this.cancelSummaryRow(rowIndex);
+          }
+          break;
+      }
+    }
+  }
+
+  onSummaryGridReady(api: GridApi) {
+    this.summaryFundingLineGridApi = api;
+    this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows.filter((x, index) => index > 0)];
+    this.updateSummaryTotalFields();
+    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    this.summaryFundingLineGridApi.setHeaderHeight(50);
+    this.summaryFundingLineGridApi.setGroupHeaderHeight(25);
   }
 
   onColumnIsReady(columnApi: ColumnApi) {
     this.columnApi = columnApi;
   }
 
-  private createMockData() {
-    this.fundingData = [];
-    this.fundingData.push(this.makeData('1', 'O&M', 'BA4', 'x', 'radio', '2.15'));
-    this.fundingData.push(this.makeData('2', 'O&M', 'BA4', 'x', 'radio', '2.13'));
-    this.fundingData.push(this.makeData('3', 'O&M', 'BA5', 'x', 'radio', '2.15'));
-
-    this.fundingData.push(this.makeData('7', 'MILCON', 'BA1', 'AA', 'radio', '2.15'));
-    this.fundingData.push(this.makeData('8', 'MILCON', 'BA1', 'AB', 'radio', '2.15'));
-  }
-
-  private makeData(
-    id: string,
-    appropriation: string,
-    baOrBlin: string,
-    sag: string,
-    wucd: string,
-    expType: string
-  ) {
-    const data = {
-      id,
-      appropriation,
-      baOrBlin,
-      sag,
-      wucd,
-      expType,
-      py1: 340,
-      py: 403,
-      cy: 340,
-      by: 540,
-      by1: 540,
-      by2: 540,
-      by3: 650,
-      by4: 530,
-      by5: 40,
-
-      fyTotal: 0,
-      ctc: 0,
-      action: null
-    };
-    return data;
-  }
-
   onNonSummaryGridIsReady(api: GridApi) {
     this.nonSummaryFundingLineGridApi = api;
+    this.nonSummaryFundingLineRows = [];
+    this.resetTotalFunding();
+    this.nonSummaryFundingLineRows.splice(1, 0, ...this.summaryFundingLineRows);
+    this.updateTotalFields();
     this.nonSummaryFundingLineGridApi.setHeaderHeight(50);
     this.nonSummaryFundingLineGridApi.setGroupHeaderHeight(25);
   }
@@ -339,7 +353,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: [
@@ -368,7 +382,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: [
@@ -395,7 +409,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: [
@@ -420,7 +434,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: [
@@ -446,7 +460,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
             maxWidth: 120,
             minWidth: 120,
-            cellEditor: 'select',
+            cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
               values: [
@@ -531,7 +545,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   onNonSummaryRowAdd(params) {
-    if (this.currentRowDataState.isEditMode) {
+    if (this.currentNonSummaryRowDataState.isEditMode) {
       return;
     }
     this.nonSummaryFundingLineRows.push(
@@ -557,7 +571,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         action: this.actionState.EDIT
       }
     );
-    this.currentRowDataState.isAddMode = true;
+    this.currentNonSummaryRowDataState.isAddMode = true;
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
     this.editRow(this.nonSummaryFundingLineRows.length - 1);
   }
@@ -565,10 +579,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
   private saveRow(rowIndex: number) {
     this.nonSummaryFundingLineGridApi.stopEditing();
     const row = this.nonSummaryFundingLineRows[rowIndex];
-    const canSave = this.validateRowData(row);
+    const canSave = this.validateNonSummaryRowData(row);
     if (canSave) {
       this.updateTotalFields();
-      this.viewMode(rowIndex);
+      this.viewNonSummaryMode(rowIndex);
     } else {
       this.editRow(rowIndex);
     }
@@ -594,17 +608,17 @@ export class RequestsFundingLineGridComponent implements OnInit {
       });
   }
 
-  private validateRowData(row: any) {
+  private validateNonSummaryRowData(row: any) {
     let errorMessage = '';
     if (!row.appn.length || row.appn.toLowerCase() === 'select') {
       errorMessage = 'Please, select an APPN.';
-    } else if (!row.ba.length || row.appn.toLowerCase() === 'select') {
+    } else if (!row.ba.length || row.ba.toLowerCase() === 'select') {
       errorMessage = 'Please, select a BA/BLIN.';
-    } else if (!row.sag.length || row.appn.toLowerCase() === 'select') {
+    } else if (!row.sag.length || row.sag.toLowerCase() === 'select') {
       errorMessage = 'Please, select a SAG.';
-    } else if (!row.wucd.length || row.appn.toLowerCase() === 'select') {
+    } else if (!row.wucd.length || row.wucd.toLowerCase() === 'select') {
       errorMessage = 'Please, select a WUCD.';
-    } else if (!row.expType.length || row.appn.toLowerCase() === 'select') {
+    } else if (!row.expType.length || row.expType.toLowerCase() === 'select') {
       errorMessage = 'Please, select a Exp Type.';
     }
     if (errorMessage.length) {
@@ -614,15 +628,15 @@ export class RequestsFundingLineGridComponent implements OnInit {
   }
 
   private cancelRow(rowIndex: number) {
-    this.nonSummaryFundingLineRows[rowIndex] = this.currentRowDataState.currentEditingRowData;
-    this.viewMode(rowIndex);
+    this.nonSummaryFundingLineRows[rowIndex] = this.currentNonSummaryRowDataState.currentEditingRowData;
+    this.viewNonSummaryMode(rowIndex);
   }
 
   private editRow(rowIndex: number, updatePreviousState?: boolean) {
     if (updatePreviousState) {
-      this.currentRowDataState.currentEditingRowData = { ...this.nonSummaryFundingLineRows[rowIndex] };
+      this.currentNonSummaryRowDataState.currentEditingRowData = { ...this.nonSummaryFundingLineRows[rowIndex] };
     }
-    this.editMode(rowIndex);
+    this.editNonSummaryMode(rowIndex);
   }
 
   private deleteRow(rowIndex: number) {
@@ -630,9 +644,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineRows.forEach(row => {
       row.order--;
     });
-    this.currentRowDataState.currentEditingRowIndex = 0;
-    this.currentRowDataState.isEditMode = false;
-    this.currentRowDataState.isAddMode = false;
+    this.currentNonSummaryRowDataState.currentEditingRowIndex = 0;
+    this.currentNonSummaryRowDataState.isEditMode = false;
+    this.currentNonSummaryRowDataState.isAddMode = false;
     this.nonSummaryFundingLineGridApi.stopEditing();
     this.nonSummaryFundingLineRows.forEach(row => {
       row.isDisabled = false;
@@ -641,10 +655,10 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
   }
 
-  private viewMode(rowIndex: number) {
-    this.currentRowDataState.currentEditingRowIndex = 0;
-    this.currentRowDataState.isEditMode = false;
-    this.currentRowDataState.isAddMode = false;
+  private viewNonSummaryMode(rowIndex: number) {
+    this.currentNonSummaryRowDataState.currentEditingRowIndex = 0;
+    this.currentNonSummaryRowDataState.isEditMode = false;
+    this.currentNonSummaryRowDataState.isAddMode = false;
     this.nonSummaryFundingLineGridApi.stopEditing();
     this.nonSummaryFundingLineRows[rowIndex].action = this.actionState.VIEW;
     this.nonSummaryFundingLineRows.forEach(row => {
@@ -653,9 +667,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineGridApi.setRowData(this.nonSummaryFundingLineRows);
   }
 
-  private editMode(rowIndex: number) {
-    this.currentRowDataState.currentEditingRowIndex = rowIndex;
-    this.currentRowDataState.isEditMode = true;
+  private editNonSummaryMode(rowIndex: number) {
+    this.currentNonSummaryRowDataState.currentEditingRowIndex = rowIndex;
+    this.currentNonSummaryRowDataState.isEditMode = true;
     this.nonSummaryFundingLineRows[rowIndex].action = this.actionState.EDIT;
     this.nonSummaryFundingLineRows.forEach((row, index) => {
       if (rowIndex !== index) {
@@ -666,6 +680,87 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.nonSummaryFundingLineGridApi.startEditingCell({
       rowIndex,
       colKey: '0'
+    });
+  }
+
+  private saveSummaryRow(rowIndex: number) {
+    this.summaryFundingLineGridApi.stopEditing();
+    this.updateSummaryTotalFields();
+    this.viewSummaryMode(rowIndex);
+  }
+
+  private updateSummaryTotalFields() {
+    this.summaryFundingLineRows
+      .forEach(row => {
+        let total = 0;
+        for (let i = this.pomYear + 1; i < this.pomYear + 6; i++) {
+          const field = i < this.pomYear ?
+            'py' + (this.pomYear - i === 1 ? '' : this.pomYear - i - 1) :
+            i > this.pomYear ? 'by' + (i === this.pomYear + 1 ? '' : i - this.pomYear - 1) :
+              'cy';
+          if (i > this.pomYear) {
+            row[field] = Number(row[field]);
+          }
+          total += Number(row[field]);
+        }
+        row.fyTotal = total;
+      });
+  }
+
+  private cancelSummaryRow(rowIndex: number) {
+    this.summaryFundingLineRows[rowIndex] = this.currentSummaryRowDataState.currentEditingRowData;
+    this.viewSummaryMode(rowIndex);
+  }
+
+  private editSummaryRow(rowIndex: number, gridApiRowIndex: number, updatePreviousState?: boolean) {
+    if (updatePreviousState) {
+      this.currentSummaryRowDataState.currentEditingRowData = { ...this.summaryFundingLineRows[rowIndex] };
+    }
+    this.editSummaryMode(rowIndex, gridApiRowIndex);
+  }
+
+  private deleteSummaryRow(rowIndex: number) {
+    this.summaryFundingLineRows.splice(rowIndex, 1);
+    this.summaryFundingLineRows.forEach(row => {
+      row.order--;
+    });
+    this.currentSummaryRowDataState.currentEditingRowIndex = 0;
+    this.currentSummaryRowDataState.isEditMode = false;
+    this.currentSummaryRowDataState.isAddMode = false;
+    this.summaryFundingLineGridApi.stopEditing();
+    this.summaryFundingLineRows.forEach(row => {
+      row.isDisabled = false;
+    });
+    this.updateSummaryTotalFields();
+    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    this.summaryFundingLineGridApi.refreshClientSideRowModel('aggregate');
+  }
+
+  private viewSummaryMode(rowIndex: number) {
+    this.currentSummaryRowDataState.currentEditingRowIndex = 0;
+    this.currentSummaryRowDataState.isEditMode = false;
+    this.currentSummaryRowDataState.isAddMode = false;
+    this.summaryFundingLineGridApi.stopEditing();
+    this.summaryFundingLineRows[rowIndex].action = this.actionState.VIEW;
+    this.summaryFundingLineRows.forEach(row => {
+      row.isDisabled = false;
+    });
+    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+  }
+
+  private editSummaryMode(rowIndex: number, gridApiRowIndex: number) {
+    this.currentSummaryRowDataState.currentEditingRowIndex = gridApiRowIndex;
+    this.currentSummaryRowDataState.isEditMode = true;
+    this.summaryFundingLineRows[rowIndex].action = this.actionState.EDIT;
+    this.summaryFundingLineRows.forEach((row, index) => {
+      if (rowIndex !== index) {
+        row.isDisabled = true;
+      }
+    });
+    this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
+    this.summaryFundingLineGridApi.startEditingCell({
+      rowIndex: gridApiRowIndex,
+      colKey: '8'
     });
   }
 
@@ -685,11 +780,20 @@ export class RequestsFundingLineGridComponent implements OnInit {
     }
   }
 
-  onMouseDown(mouseEvent: MouseEvent) {
-    if (this.currentRowDataState.isEditMode) {
+  onNonSummaryMouseDown(mouseEvent: MouseEvent) {
+    if (this.currentNonSummaryRowDataState.isEditMode) {
       this.nonSummaryFundingLineGridApi.startEditingCell({
-        rowIndex: this.currentRowDataState.currentEditingRowIndex,
+        rowIndex: this.currentNonSummaryRowDataState.currentEditingRowIndex,
         colKey: '0'
+      });
+    }
+  }
+
+  onSummaryMouseDown(mouseEvent: MouseEvent) {
+    if (this.currentSummaryRowDataState.isEditMode) {
+      this.summaryFundingLineGridApi.startEditingCell({
+        rowIndex: this.currentSummaryRowDataState.currentEditingRowIndex,
+        colKey: '8'
       });
     }
   }

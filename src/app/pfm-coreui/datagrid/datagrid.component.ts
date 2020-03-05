@@ -44,6 +44,8 @@ export class DatagridComponent implements OnInit {
   columnApi: ColumnApi;
   options: ListItem[];
   pageSize = 20;
+  compId: number;
+
   onSuppressKeyboardEvent = (params: SuppressKeyboardEventParams) => {
     if (this.suppressKeyboardEvent) {
       if (params.event.code.toLowerCase() === 'tab') {
@@ -55,15 +57,6 @@ export class DatagridComponent implements OnInit {
   }
 
   constructor(private datagridMBService: DatagridMbService) {
-    datagridMBService.messageBus$.subscribe(message => {
-      this.cellAction.emit(message);
-    });
-
-    this.defaultColDef = {
-      resizable: true,
-      sortable: true,
-      filter: true,
-    };
   }
 
   handleAddCta(itemId: string) {
@@ -96,7 +89,6 @@ export class DatagridComponent implements OnInit {
     message.message = 'cellClicked';
     message.rowData = event.data;
     message.messageType = 'grid-cell';
-
     this.cellAction.emit(message);
   }
 
@@ -105,6 +97,7 @@ export class DatagridComponent implements OnInit {
 
   onGridReady(params: any) {
     this.api = params.api;
+    this.compId = params.api.gridCore.compId;
     this.columnApi = params.columnApi;
     this.api.sizeColumnsToFit();
     this.gridIsReady.emit(this.api);
@@ -117,6 +110,17 @@ export class DatagridComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.datagridMBService.messageBus$.subscribe(message => {
+      if (this.compId === message.apiCompId) {
+        this.cellAction.emit(message);
+      }
+    });
+
+    this.defaultColDef = {
+      resizable: true,
+      sortable: true,
+      filter: true,
+    };
     if (this.addDropdownCtaOptions) {
       this.options = this.addDropdownCtaOptions;
     } else {
