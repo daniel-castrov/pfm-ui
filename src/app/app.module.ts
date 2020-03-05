@@ -3,6 +3,7 @@ import {
   BrowserTransferStateModule
 } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { AuthGuard } from './pfm-auth-module/services/auth-guard';
     HttpClientModule,
     BrowserTransferStateModule,
     AppRoutingModule,
+    CKEditorModule,
     PfmCoreuiModule,
     PfmAuthModuleModule,
     BrowserAnimationsModule
@@ -50,5 +52,5 @@ import { AuthGuard } from './pfm-auth-module/services/auth-guard';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(transferStateService: TransferStateService) {}
+  constructor(transferStateService: TransferStateService) { }
 }
