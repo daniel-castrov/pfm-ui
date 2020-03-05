@@ -13,7 +13,6 @@ export class ActionCellRendererComponent implements OnInit {
 
   data: any;
   params: any;
-  api: GridApi;
   columnApi: ColumnApi;
   options: ListItem[];
   disabled: boolean;
@@ -28,6 +27,7 @@ export class ActionCellRendererComponent implements OnInit {
     message.rendererName = 'ActionCellRendererComponent';
     message.rowData = this.data;
     message.messageType = 'cell-renderer';
+    message.apiCompId = this.params.api.gridCore.compId;
     this.datagridMBService.sendMessage(message);
   }
 

@@ -58,3 +58,15 @@ p {
   color: black;
   cursor: default;
 }
+
+:host ::ng-deep .ag-cell-wrapper.ag-row-group {
+  align-items: center;
+}
+
+:host ::ng-deep .ag-icon-expanded:before {
+  content: 'small-down';
+}
+
+:host ::ng-deep .ag-cell-wrapper.ag-row-group {
+  padding-left: 0;
+}

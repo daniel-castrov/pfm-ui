@@ -2,13 +2,15 @@
   <pfm-toggle-input [checked]="showSubtotals" [label]="'Show Subtotals'" (valueChanged)="onToggleValueChanged($event)">
   </pfm-toggle-input>
   <div class="grid-container" *ngIf="showSubtotals">
-    <pfm-tree-datagrid [fieldsToGroup]="columnsToGroup" [fieldsToSum]="columnsToSum" [rows]="fundingData">
-    </pfm-tree-datagrid>
+    <pfm-datagrid (gridIsReady)="onSummaryGridReady($event)" [columns]="summaryFundingLineColumnsDefinition"
+      [rows]="summaryFundingLineRows" (cellAction)="onSummaryCellAction($event)"
+      (mousedown)="onSummaryMouseDown($event)">
+    </pfm-datagrid>
   </div>
   <div class="grid-container" *ngIf="!showSubtotals">
     <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
       [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows" [showAddSingleRow]="true"
-      [showPagination]="true" (addCtaEvent)="onNonSummaryRowAdd($event)" (mousedown)="onMouseDown($event)">
+      [showPagination]="true" (addCtaEvent)="onNonSummaryRowAdd($event)" (mousedown)="onNonSummaryMouseDown($event)">
     </pfm-datagrid>
   </div>
 </div>

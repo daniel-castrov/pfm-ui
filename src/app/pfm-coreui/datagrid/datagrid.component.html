@@ -37,7 +37,8 @@
       [rowDragManaged]="rowDragManaged" (gridReady)="onGridReady($event)" (rowDragEnter)="onRowDragEnter($event)"
       (rowDragLeave)="onRowDragLeave($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
       (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()"
-      (columnResized)="onColumnResized($event)">
+      (columnResized)="onColumnResized($event)" [suppressAggFuncInHeader]="true" [groupSuppressAutoColumn]="true"
+      [rememberGroupStateWhenNewData]="true">
     </ag-grid-angular>
   </div>
 </div>
