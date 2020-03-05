@@ -29,13 +29,14 @@
   </div>
   <div class="pfm-data">
     <ag-grid-angular class="w-100 h-100" [suppressKeyboardEvent]="onSuppressKeyboardEvent" [columnDefs]="columns"
-      [rowData]="rows" [rowDragManaged]="true" [editType]="'fullRow'" [suppressClickEdit]="true"
-      [defaultColDef]="defaultColDef" [modules]="modules" [suppressRowClickSelection]="false" [animateRows]="true"
-      [tabToNextCell]="tabToNextCell" [rowSelection]="'single'" [rowHeight]="40" [context]="this"
-      [excelStyles]="excelStyles" [pagination]="showPagination" [paginationPageSize]="pageSize"
-      [isExternalFilterPresent]="isExternalFilterPresent" [doesExternalFilterPass]="doesExternalFilterPass"
-      [getContextMenuItems]="getContextMenuItems" (gridReady)="onGridReady($event)" (rowDragEnd)="onRowDragEnd($event)"
-      (cellClicked)="onCellClicked($event)" (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()"
+      [rowData]="rows" [editType]="'fullRow'" [suppressClickEdit]="true" [defaultColDef]="defaultColDef"
+      [modules]="modules" [suppressRowClickSelection]="false" [animateRows]="true" [tabToNextCell]="tabToNextCell"
+      [rowSelection]="'single'" [rowHeight]="40" [context]="this" [excelStyles]="excelStyles"
+      [pagination]="showPagination" [paginationPageSize]="pageSize" [isExternalFilterPresent]="isExternalFilterPresent"
+      [doesExternalFilterPass]="doesExternalFilterPass" [getContextMenuItems]="getContextMenuItems"
+      [rowDragManaged]="rowDragManaged" (gridReady)="onGridReady($event)" (rowDragEnter)="onRowDragEnter($event)"
+      (rowDragLeave)="onRowDragLeave($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
+      (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()"
       (columnResized)="onColumnResized($event)">
     </ag-grid-angular>
   </div>

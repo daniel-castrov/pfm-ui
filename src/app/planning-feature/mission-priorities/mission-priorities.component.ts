@@ -45,6 +45,9 @@ export class MissionPrioritiesComponent implements OnInit {
   availableImportYears: ListItem[];
 
   columns: any[];
+  rowDragEnterEvent: any;
+  rowDragLeaveEvent: any;
+  missionDataFromServer: MissionPriority[];
 
   constructor(
     private appModel: AppModel,
@@ -98,9 +101,30 @@ export class MissionPrioritiesComponent implements OnInit {
     this.tabToNextCell = this.tabToNextCell.bind(this);
   }
 
+  @HostListener('document:mouseup', ['$event'])
+  onMouseUp(event: MouseEvent) {
+    if (this.rowDragEnterEvent && this.rowDragLeaveEvent) {
+      if (this.rowDragLeaveEvent.event.timeStamp > this.rowDragEnterEvent.event.timeStamp) {
+        this.rowDragEnterEvent = null;
+        this.rowDragLeaveEvent = null;
+        this.missionData = [...this.missionDataFromServer];
+      }
+    }
+  }
+
+  onRowDragEnter(event: any): void {
+    this.rowDragEnterEvent = event;
+  }
+
+  onRowDragLeave(event: any): void {
+    this.rowDragLeaveEvent = event;
+  }
+
   onRowDragEnd(event: any): void {
     // Ensure drag ended in grid before moving anything
     if (event.overIndex >= 0) {
+      this.rowDragEnterEvent = null;
+      this.rowDragLeaveEvent = null;
       const newIndex: number = event.overIndex;
       const oldIndex: number = event.node.data.order - 1;
 
@@ -248,6 +272,7 @@ export class MissionPrioritiesComponent implements OnInit {
               this.initClientMP(mp);
               this.missionData[mp.order - 1] = mp;
             }
+            this.missionDataFromServer = [...this.missionData];
           }
         },
         error => {

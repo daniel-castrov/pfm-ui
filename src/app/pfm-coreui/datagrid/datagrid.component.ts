@@ -25,10 +25,13 @@ export class DatagridComponent implements OnInit {
   @Input() doesExternalFilterPass;
   @Input() excelMessage = 'UNCLASSIFIED / FOUO';
   @Input() suppressKeyboardEvent = true;
+  @Input() rowDragManaged = true;
 
   @Output() cellAction: EventEmitter<DataGridMessage> = new EventEmitter<DataGridMessage>();
   @Output() addCtaEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() gridIsReady: EventEmitter<GridApi> = new EventEmitter<GridApi>();
+  @Output() rowDragEnterEvent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() rowDragLeaveEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() rowDragEndEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() columnIsReady: EventEmitter<ColumnApi> = new EventEmitter<ColumnApi>();
 
@@ -71,6 +74,14 @@ export class DatagridComponent implements OnInit {
     if (item) {
       this.addCtaEvent.emit({ action: item.id });
     }
+  }
+
+  onRowDragEnter(event: any): void {
+    this.rowDragEnterEvent.emit(event);
+  }
+
+  onRowDragLeave(event: any): void {
+    this.rowDragLeaveEvent.emit(event);
   }
 
   onRowDragEnd(event: any): void {
