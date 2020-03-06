@@ -14,8 +14,8 @@ export class RequestsDetailsFormComponent implements OnInit {
 
   @Input() programData: Program;
 
-  public form: FormGroup;
-  public addMode = false;
+  form: FormGroup;
+  addMode = false;
   organizations: Organization[];
   divisions: string[];
   missionPriorities: string[];
@@ -32,9 +32,9 @@ export class RequestsDetailsFormComponent implements OnInit {
   async ngOnInit() {
     await this.populateDDs();
     this.programData = this.programmingModel.programs.find((p: Program) => {
-      return p.shortName === this.programmingModel.selectedProgramName;
+      return p.shortName === this.programmingModel.selectedProgramId;
     });
-    if ( !this.programData ) {
+    if (!this.programData) {
       this.addMode = true;
       this.programData = new Program();
     }
@@ -74,7 +74,7 @@ export class RequestsDetailsFormComponent implements OnInit {
 
   disableInputsInEditMode() {
     this.form.controls['type'].disable();
-    if ( !this.addMode ) {
+    if (!this.addMode) {
       this.form.controls['shortName'].disable();
       this.form.controls['organizationId'].disable();
     }
