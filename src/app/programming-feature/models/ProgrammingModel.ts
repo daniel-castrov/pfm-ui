@@ -3,12 +3,12 @@ import { Pom } from './Pom';
 import { Program } from './Program';
 import { Role } from '../../pfm-common-models/Role';
 
-@Injectable( {
+@Injectable({
   providedIn: 'root'
-} )
+})
 export class ProgrammingModel {
-  public selectedProgramName: string;
-  public pom: Pom;
-  public programs: Program[];
-  public roles: Map<string, Role>;
+  selectedProgramId: string;
+  pom: Pom;
+  programs: Program[];
+  roles: Map<string, Role>;
 }

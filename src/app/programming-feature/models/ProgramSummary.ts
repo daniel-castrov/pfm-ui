@@ -1,8 +1,9 @@
 export class ProgramSummary {
-    public organiztionId:string;
-    public programName: string;
-    public assignedTo: string;
-    public status: string;
-    public funds: object;
-    public fundsTotal: number;
+  id: string;
+  organiztionId: string;
+  programName: string;
+  assignedTo: string;
+  status: string;
+  funds: object;
+  fundsTotal: number;
 }

@@ -30,6 +30,12 @@ export class ProgrammingServiceImpl extends ProgrammingService {
   }
 
   getPRForYearAndShortName(year: number, shortName: string) {
-    return this.get('program/year/' + year + '/program/' + shortName);
+    const params: HttpParams = new HttpParams()
+      .set('shortName', shortName);
+    return this.get('program/year/' + year + '/program', params);
+  }
+
+  getProgramById(id: string) {
+    return this.get('program/' + id);
   }
 }
