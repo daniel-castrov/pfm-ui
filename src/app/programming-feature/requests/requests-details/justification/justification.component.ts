@@ -128,27 +128,16 @@ export class JustificationComponent implements OnInit {
   }
 
   async loadPom() {
-    return new Promise(async resolve => {
-      await this.waitForProgrammingPreviousYear();
-      this.programmingCurrentYear = [];
-      for (let i = this.pomYear; i < this.pomYear + JustificationComponent.MAX_YEAR; i++) {
-        const fund = this.program.fundingLines[i];
-        this.programmingCurrentYear[this.programmingCurrentYear.length] = fund;
-      }
-      resolve('');
-    });
-  }
-
-  waitForProgrammingPreviousYear() {
-    return new Promise(resolve => {
-      this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.program.shortName)
-        .subscribe(resp => {
+    await this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.program.shortName)
+      .toPromise()
+      .then(
+        resp => {
           this.loadFundingData(resp.result.fundingLines, this.programmingPreviousYear);
-          resolve('');
         }, err => {
           this.programmingPreviousYear = [];
         });
-    });
+    this.programmingCurrentYear = [];
+    this.loadFundingData(this.program.fundingLines, this.programmingCurrentYear);
   }
 
   private loadFundingData(fundingLines: any[], programmingYear: any[]) {
