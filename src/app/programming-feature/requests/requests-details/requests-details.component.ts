@@ -4,7 +4,8 @@ import { ProgrammingModel } from '../../models/ProgrammingModel';
 import { RequestSummaryNavigationHistoryService } from '../requests-summary/requests-summary-navigation-history.service';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { TabDirective } from 'ngx-bootstrap';
-import { ProgramSummary } from '../../models/ProgramSummary';
+import { ProgrammingService } from '../../services/programming-service';
+import { Program } from '../../models/Program';
 
 @Component({
   selector: 'pfm-requests-details',
@@ -18,10 +19,11 @@ export class RequestsDetailsComponent implements OnInit {
   pfmSchedule: ScheduleComponent;
   currentSelectedTab = 1;
   pomYear: number;
-  programSummary: ProgramSummary;
+  program: Program;
 
   constructor(
     public programmingModel: ProgrammingModel,
+    private programmingService: ProgrammingService,
     private route: ActivatedRoute,
     private router: Router,
     private requestSummaryNavigationHistoryService: RequestSummaryNavigationHistoryService
@@ -33,9 +35,12 @@ export class RequestsDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.programmingModel.selectedProgramName = this.route.snapshot.paramMap.get('id');
+    this.programmingModel.selectedProgramId = this.route.snapshot.paramMap.get('id');
+    this.programmingService.getProgramById(this.programmingModel.selectedProgramId)
+      .subscribe(resp => {
+        this.program = (resp.result) as Program;
+      });
     this.pomYear = Number(this.route.snapshot.paramMap.get('pomYear'));
-    this.programSummary = JSON.parse(this.route.snapshot.paramMap.get('programSummary'));
   }
 
   onApprove(): void {

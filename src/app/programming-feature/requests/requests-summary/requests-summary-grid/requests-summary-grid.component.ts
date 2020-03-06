@@ -179,10 +179,9 @@ export class RequestsSummaryGridComponent implements OnInit {
     if (cellAction.columnId === 'programName') {
       // navigate to the program details
       this.router.navigate(
-        ['/programming/requests/details/' + cellAction.rowData['programName'],
+        ['/programming/requests/details/' + cellAction.rowData['id'],
         {
-          pomYear: this.pomYear,
-          programSummary: JSON.stringify(cellAction.rowData)
+          pomYear: this.pomYear
         }
         ]);
     }
@@ -209,6 +208,7 @@ export class RequestsSummaryGridComponent implements OnInit {
     this.gridData = [];
     for (const program of this.programmingModel.programs) {
       const ps = new ProgramSummary();
+      ps.id = program.id;
       ps.organiztionId = program.organizationId;
       ps.programName = program.shortName;
       ps.assignedTo = this.getRoleName(program.responsibleRoleId);

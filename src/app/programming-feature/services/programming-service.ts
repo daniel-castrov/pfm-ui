@@ -21,4 +21,6 @@ export abstract class ProgrammingService extends BaseRestService {
   abstract getPermittedOrganizations();
 
   abstract getPRForYearAndShortName(year: number, shortName: string);
+
+  abstract getProgramById(id: string);
 }

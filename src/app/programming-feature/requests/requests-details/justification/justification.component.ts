@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, HostListener, Input } from '@angular/core
 import { GoogleChartComponent } from 'ng2-google-charts';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { ProgrammingService } from 'src/app/programming-feature/services/programming-service';
-import { ProgramSummary } from 'src/app/programming-feature/models/ProgramSummary';
+import { Program } from 'src/app/programming-feature/models/Program';
 
 @Component({
   selector: 'pfm-justification',
@@ -17,7 +17,7 @@ export class JustificationComponent implements OnInit {
   chart: GoogleChartComponent;
 
   @Input() pomYear: number;
-  @Input() programmingSummary: ProgramSummary;
+  @Input() program: Program;
 
   chartData: GoogleChartInterface = {
     chartType: 'ColumnChart',
@@ -132,7 +132,7 @@ export class JustificationComponent implements OnInit {
       await this.waitForProgrammingPreviousYear();
       this.programmingCurrentYear = [];
       for (let i = this.pomYear; i < this.pomYear + JustificationComponent.MAX_YEAR; i++) {
-        const fund = this.programmingSummary.funds[i];
+        const fund = this.program.fundingLines[i];
         this.programmingCurrentYear[this.programmingCurrentYear.length] = fund;
       }
       resolve('');
@@ -141,7 +141,7 @@ export class JustificationComponent implements OnInit {
 
   waitForProgrammingPreviousYear() {
     return new Promise(resolve => {
-      this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.programmingSummary.programName)
+      this.programmingService.getPRForYearAndShortName(this.pomYear - 1, this.program.shortName)
         .subscribe(resp => {
           this.loadFundingData(resp.result.fundingLines, this.programmingPreviousYear);
           resolve('');
