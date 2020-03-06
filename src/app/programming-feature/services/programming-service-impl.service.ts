@@ -31,7 +31,7 @@ export class ProgrammingServiceImpl extends ProgrammingService {
 
   getPRForYearAndShortName(year: number, shortName: string) {
     const params: HttpParams = new HttpParams()
-      .set('shortName', shortName)
+      .set('shortName', shortName);
     return this.get('program/year/' + year + '/program', params);
   }
 
