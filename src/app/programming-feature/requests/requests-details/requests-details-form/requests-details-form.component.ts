@@ -34,12 +34,7 @@ export class RequestsDetailsFormComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.planningService.getPlanningByYear(this.pomYear)
-      .pipe(switchMap(planning => this.planningService.getMissionPriorities(planning.result.id)))
-      .subscribe(missionPriorities => {
-        this.missionPriorities = missionPriorities.result.map(mission => mission.title);
-      });
-    await this.populateDDs();
+    await this.populateDropDowns();
     if (!this.program) {
       this.addMode = true;
       this.program = new Program();
@@ -58,7 +53,7 @@ export class RequestsDetailsFormComponent implements OnInit {
           org => org.id === me.program.organizationId
         ).abbreviation : undefined, [Validators.required]
       ),
-      divison: new FormControl(''),
+      division: new FormControl(''),
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
       directoratePriority: new FormControl(''),
@@ -70,12 +65,16 @@ export class RequestsDetailsFormComponent implements OnInit {
     this.disableInputsInEditMode();
   }
 
-  async populateDDs() {
+  async populateDropDowns() {
     this.organizations = (await this.organizationService.getAll().toPromise() as any).result;
+    this.planningService.getPlanningByYear(this.pomYear)
+      .pipe(switchMap(planning => this.planningService.getMissionPriorities(planning.result.id)))
+      .subscribe(missionPriorities => {
+        this.missionPriorities = missionPriorities.result.map(mission => mission.title);
+      });
     this.divisions = ['ABC', 'DEF'];
-    this.missionPriorities = ['ABC', 'DEF'];
-    this.agencyPriorities = ['ABC', 'DEF'];
-    this.directoratePriorities = ['ABC', 'DEF'];
+    this.agencyPriorities = [].constructor(20);
+    this.directoratePriorities = [].constructor(20);
   }
 
   disableInputsInEditMode() {
