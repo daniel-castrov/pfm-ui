@@ -12,21 +12,21 @@
             <div *ngIf="addMode" class="col-2">
               <label>*Program ID</label>
             </div>
-            <span class="col-10"><input type="text" formControlName="shortName"/></span>
+            <span class="col-10"><input type="text" formControlName="shortName" /></span>
           </div>
           <div class="row">
             <label class="col-2">*Program Name</label>
-            <span class="col-10"><input type="text" formControlName="longName"/></span>
+            <span class="col-10"><input type="text" formControlName="longName" /></span>
           </div>
           <div class="row">
             <label class="col-2">Program Type</label>
-            <span class="col-10"><input type="text" formControlName="type"/></span>
+            <span class="col-10"><input type="text" formControlName="type" /></span>
           </div>
           <div class="row">
             <label class="col-2">Organization</label>
             <div *ngIf="!addMode">
-              <span class="col-10"><input type="text" formControlName="organizationId"/></span>
-<!--              <label class="col-10 label-length">{{form.controls['organizationId'].value}}</label>-->
+              <span class="col-10"><input type="text" formControlName="organizationId" /></span>
+              <!--              <label class="col-10 label-length">{{form.controls['organizationId'].value}}</label>-->
             </div>
             <div *ngIf="addMode">
               <span class="col-10">
@@ -40,7 +40,7 @@
           <div class="row">
             <label class="col-2">Division</label>
             <span class="col-10">
-              <select class="form-control-sm" formControlName="divison">
+              <select class="form-control-sm" formControlName="division">
                 <option value="" disabled>Select...</option>
                 <option *ngFor="let div of divisions" [value]="div">{{ div }}</option>
               </select>
@@ -68,7 +68,7 @@
             <span class="col-10">
               <select class="form-control-sm" formControlName="agencyPriority">
                 <option value="" disabled>Select...</option>
-                <option *ngFor="let item of agencyPriorities" [value]="item">{{ item }}</option>
+                <option *ngFor="let item of agencyPriorities; let i = index" [value]="item">{{ i + 1 }}</option>
               </select>
             </span>
           </div>
@@ -77,7 +77,7 @@
             <span class="col-10">
               <select class="form-control-sm" formControlName="directoratePriority">
                 <option value="" disabled>Select...</option>
-                <option *ngFor="let item of directoratePriorities" [value]="item">{{ item }}</option>
+                <option *ngFor="let item of directoratePriorities; let i = index" [value]="item">{{ i + 1 }}</option>
               </select>
             </span>
           </div>
@@ -114,7 +114,7 @@
     <fieldset class="match-height">
       <legend>Attach File</legend>
       <file-upload [area]="'program'" [isImageThumbnail]="true" [imagePath]="" (uploading)="onUploading($event)"
-                   (fileUploadEvent)="onFileUploaded($event)"></file-upload>
+        (fileUploadEvent)="onFileUploaded($event)"></file-upload>
     </fieldset>
   </div>
 
