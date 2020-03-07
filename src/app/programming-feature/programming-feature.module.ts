@@ -48,6 +48,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { JustificationComponent } from './requests/requests-details/justification/justification.component';
 import { ScopeComponent } from './requests/requests-details/scope/scope.component';
 import { AssetsComponent } from './requests/requests-details/assets/assets.component';
+import { PlanningService } from '../planning-feature/services/planning-service';
+import { PlanningServicesImpl } from '../planning-feature/services/planning-services-impl.service';
 
 @NgModule({
   declarations: [
@@ -95,6 +97,7 @@ import { AssetsComponent } from './requests/requests-details/assets/assets.compo
   { provide: RoleService, useClass: RoleServiceImpl },
   { provide: MrdbService, useClass: MrdbServiceImpl },
   { provide: VisibilityService, useClass: VisibilityServiceImpl },
+  { provide: PlanningService, useClass: PlanningServicesImpl },
     ProgrammingModel,
     RequestSummaryNavigationHistoryService]
 })

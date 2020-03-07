@@ -4,6 +4,8 @@ import { FormGroup, FormControl, ValidatorFn, ValidationErrors, Validators } fro
 import { ProgrammingModel } from '../../../../programming-feature/models/ProgrammingModel';
 import { OrganizationService } from '../../../../services/organization-service';
 import { Organization } from '../../../../pfm-common-models/Organization';
+import { PlanningService } from 'src/app/planning-feature/services/planning-service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'pfm-requests-details-form',
@@ -12,6 +14,7 @@ import { Organization } from '../../../../pfm-common-models/Organization';
 })
 export class RequestsDetailsFormComponent implements OnInit {
 
+  @Input() pomYear: number;
   @Input() programData: Program;
 
   form: FormGroup;
@@ -27,9 +30,15 @@ export class RequestsDetailsFormComponent implements OnInit {
   constructor(
     public programmingModel: ProgrammingModel,
     private organizationService: OrganizationService,
+    private planningService: PlanningService
   ) { }
 
   async ngOnInit() {
+    this.planningService.getPlanningByYear(this.pomYear)
+      .pipe(switchMap(planning => this.planningService.getMissionPriorities(planning.result.id)))
+      .subscribe(missionPriorities => {
+        this.missionPriorities = missionPriorities.result.map(mission => mission.title);
+      });
     await this.populateDDs();
     this.programData = this.programmingModel.programs.find((p: Program) => {
       return p.shortName === this.programmingModel.selectedProgramId;
