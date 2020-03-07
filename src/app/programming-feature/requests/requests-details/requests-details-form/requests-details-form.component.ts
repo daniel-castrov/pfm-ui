@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs/operators';
 export class RequestsDetailsFormComponent implements OnInit {
 
   @Input() pomYear: number;
-  @Input() programData: Program;
+  @Input() program: Program;
 
   form: FormGroup;
   addMode = false;
@@ -40,12 +40,9 @@ export class RequestsDetailsFormComponent implements OnInit {
         this.missionPriorities = missionPriorities.result.map(mission => mission.title);
       });
     await this.populateDDs();
-    this.programData = this.programmingModel.programs.find((p: Program) => {
-      return p.shortName === this.programmingModel.selectedProgramId;
-    });
-    if (!this.programData) {
+    if (!this.program) {
       this.addMode = true;
-      this.programData = new Program();
+      this.program = new Program();
     }
     this.loadForm();
   }
@@ -53,12 +50,12 @@ export class RequestsDetailsFormComponent implements OnInit {
   loadForm() {
     const me = this;
     me.form = new FormGroup({
-      shortName: new FormControl(me.programData.shortName, [Validators.required]),
-      longName: new FormControl(me.programData.longName, [Validators.required]),
-      type: new FormControl(this.addMode ? 'PROGRAM' : me.programData.type),
+      shortName: new FormControl(me.program.shortName, [Validators.required]),
+      longName: new FormControl(me.program.longName, [Validators.required]),
+      type: new FormControl(this.addMode ? 'PROGRAM' : me.program.type),
       organizationId: new FormControl(
-        me.programData.organizationId ? me.organizations.find(
-          org => org.id === me.programData.organizationId
+        me.program.organizationId ? me.organizations.find(
+          org => org.id === me.program.organizationId
         ).abbreviation : undefined, [Validators.required]
       ),
       divison: new FormControl(''),
