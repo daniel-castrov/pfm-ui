@@ -43,23 +43,22 @@ export class RequestsDetailsFormComponent implements OnInit {
   }
 
   loadForm() {
-    const me = this;
-    me.form = new FormGroup({
-      shortName: new FormControl(me.program.shortName, [Validators.required]),
-      longName: new FormControl(me.program.longName, [Validators.required]),
-      type: new FormControl(this.addMode ? 'PROGRAM' : me.program.type),
+    this.form = new FormGroup({
+      shortName: new FormControl(this.program.shortName, [Validators.required]),
+      longName: new FormControl(this.program.longName, [Validators.required]),
+      type: new FormControl(this.addMode ? 'PROGRAM' : this.program.type),
       organizationId: new FormControl(
-        me.program.organizationId ? me.organizations.find(
-          org => org.id === me.program.organizationId
+        this.program.organizationId ? this.organizations.find(
+          org => org.id === this.program.organizationId
         ).abbreviation : undefined, [Validators.required]
       ),
       division: new FormControl(''),
       missionPriority: new FormControl('', [Validators.required]),
       agencyPriority: new FormControl(''),
       directoratePriority: new FormControl(''),
-      secDef: new FormControl('value from database'),
-      strategicImperative: new FormControl('value from database'),
-      agencyObjective: new FormControl('value from database'),
+      secDefLOE: new FormControl(this.program.secDefLOE),
+      strategicImperative: new FormControl(this.program.strategicImperative),
+      agencyObjective: new FormControl(this.program.agencyObjective),
     }, { validators: this.formValidator });
 
     this.disableInputsInEditMode();
