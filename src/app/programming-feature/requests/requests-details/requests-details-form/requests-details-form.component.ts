@@ -28,7 +28,6 @@ export class RequestsDetailsFormComponent implements OnInit {
   isUploading: boolean;
 
   constructor(
-    public programmingModel: ProgrammingModel,
     private organizationService: OrganizationService,
     private planningService: PlanningService
   ) { }
@@ -97,7 +96,7 @@ export class RequestsDetailsFormComponent implements OnInit {
 
     // specific validations
     const shortName = control.get('shortName').value as string;
-    if (this.addMode && this.programmingModel.programs.map(p => p.shortName).find(str => str === shortName)) {
+    if (this.addMode && this.program.shortName === shortName) {
       Object.assign(invalidFields, { shortName: true });
     }
 
