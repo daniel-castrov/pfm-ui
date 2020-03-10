@@ -103,6 +103,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'APPN',
         showRowGroup: 'appn',
         cellRenderer: GroupCellRenderer,
+        cellRendererParams: {
+          footerValueGetter: '"Total Funding"'
+        },
+        editable: false,
+        suppressMovable: true,
+        filter: false,
+        sortable: false,
+        suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
@@ -113,6 +121,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'BA/BLIN',
         showRowGroup: 'ba',
         cellRenderer: GroupCellRenderer,
+        cellRendererParams: {
+          footerValueGetter: '""'
+        },
+        editable: false,
+        suppressMovable: true,
+        filter: false,
+        sortable: false,
+        suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
@@ -123,6 +139,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'SAG',
         showRowGroup: 'sag',
         cellRenderer: GroupCellRenderer,
+        cellRendererParams: {
+          footerValueGetter: '""'
+        },
+        editable: false,
+        suppressMovable: true,
+        filter: false,
+        sortable: false,
+        suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
@@ -133,6 +157,14 @@ export class RequestsFundingLineGridComponent implements OnInit {
         headerName: 'WUCD',
         showRowGroup: 'wucd',
         cellRenderer: GroupCellRenderer,
+        cellRendererParams: {
+          footerValueGetter: '""'
+        },
+        editable: false,
+        suppressMovable: true,
+        filter: false,
+        sortable: false,
+        suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         maxWidth: 120,
@@ -142,6 +174,9 @@ export class RequestsFundingLineGridComponent implements OnInit {
         colId: 4,
         headerName: 'Exp Type',
         field: 'expType',
+        cellRendererParams: {
+          footerValueGetter: '""'
+        },
         editable: false,
         suppressMovable: true,
         filter: false,
@@ -501,8 +536,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         minWidth: 80,
         cellEditor: NumericCellEditor.create({ returnUndefinedOnZero: false }),
-        valueFormatter: params =>
-          params.node.rowIndex === 0 ? '' : this.currencyFormatter(params.data[params.colDef.field])
+        valueFormatter: params => this.currencyFormatter(params.data[params.colDef.field])
       },
       {
         headerName: 'Actions',
@@ -535,6 +569,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
       by5: 0,
 
       fyTotal: 0,
+      ctc: 0,
 
       action: null
     };
@@ -604,6 +639,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           }
         }
         row.fyTotal = total;
+        this.nonSummaryFundingLineRows[0].ctc += Number(row.ctc);
         this.nonSummaryFundingLineRows[0].fyTotal += Number(row.fyTotal);
       });
   }
@@ -703,6 +739,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
           }
           total += Number(row[field]);
         }
+        row.ctc = Number(row.ctc);
         row.fyTotal = total;
       });
   }

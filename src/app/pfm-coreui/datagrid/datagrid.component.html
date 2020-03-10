@@ -38,7 +38,7 @@
       (rowDragLeave)="onRowDragLeave($event)" (rowDragEnd)="onRowDragEnd($event)" (cellClicked)="onCellClicked($event)"
       (modelUpdated)="onModelUpdated()" (gridSizeChanged)="onGridSizeChanged()"
       (columnResized)="onColumnResized($event)" [suppressAggFuncInHeader]="true" [groupSuppressAutoColumn]="true"
-      [rememberGroupStateWhenNewData]="true">
+      [rememberGroupStateWhenNewData]="true" [groupIncludeTotalFooter]="showGrandTotal">
     </ag-grid-angular>
   </div>
 </div>

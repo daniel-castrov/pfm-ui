@@ -17,6 +17,7 @@ export class DatagridComponent implements OnInit {
   @Input() rows: any; // Data grid rows
   @Input() showAddDropdownCta: boolean; // Controls visibility of add dropdown CTA
   @Input() showAddSingleRow: boolean;
+  @Input() showGrandTotal: boolean;
   @Input() showPagination = true; // Controls visibility and activation of pagination
   @Input() addDropdownCtaTooltip = 'Add';  // Add dropdown CTA tooltip
   @Input() addDropdownCtaOptions: ListItem[];

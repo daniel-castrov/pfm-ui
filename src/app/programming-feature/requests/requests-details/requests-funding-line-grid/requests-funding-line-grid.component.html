@@ -3,14 +3,14 @@
   </pfm-toggle-input>
   <div class="grid-container" *ngIf="showSubtotals">
     <pfm-datagrid (gridIsReady)="onSummaryGridReady($event)" [columns]="summaryFundingLineColumnsDefinition"
-      [rows]="summaryFundingLineRows" (cellAction)="onSummaryCellAction($event)"
-      (mousedown)="onSummaryMouseDown($event)">
+      [rows]="summaryFundingLineRows" (cellAction)="onSummaryCellAction($event)" [showPagination]="false"
+      (mousedown)="onSummaryMouseDown($event)" [showGrandTotal]="true">
     </pfm-datagrid>
   </div>
   <div class="grid-container" *ngIf="!showSubtotals">
     <pfm-datagrid (gridIsReady)="onNonSummaryGridIsReady($event)" (cellAction)="onNonSummaryCellAction($event)"
       [columns]="nonSummaryFundingLineColumnsDefinition" [rows]="nonSummaryFundingLineRows" [showAddSingleRow]="true"
-      [showPagination]="true" (addCtaEvent)="onNonSummaryRowAdd($event)" (mousedown)="onNonSummaryMouseDown($event)">
+      [showPagination]="false" (addCtaEvent)="onNonSummaryRowAdd($event)" (mousedown)="onNonSummaryMouseDown($event)">
     </pfm-datagrid>
   </div>
 </div>
