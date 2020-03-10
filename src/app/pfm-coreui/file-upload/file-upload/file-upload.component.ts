@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { LibraryService, FileResponse } from 'src/app/generated';
+// import { LibraryService, FileResponse } from 'src/app/generated';
 
 // Other Components
 // import {FileResponse, LibraryService} from "../../generated";
@@ -14,7 +14,8 @@ declare const $: any;
 
 export class FileUploadComponent implements OnInit {
 
-  @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
+  // @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
+  @Output() fileUploadEvent: EventEmitter<any> = new EventEmitter();
   @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
   @Input() disabled: boolean;
@@ -26,7 +27,7 @@ export class FileUploadComponent implements OnInit {
   fileName: string;
 
   constructor(
-    private libraryService: LibraryService
+    // private libraryService: LibraryService
   ) { }
 
   ngOnInit() {
@@ -46,14 +47,16 @@ export class FileUploadComponent implements OnInit {
         this.processing = true;
         this.uploadSuccess = false;
         this.uploading.emit(this.processing);
-        this.libraryService.uploadFile(file, this.area).subscribe(response => {
-          this.processing = false;
-          this.uploading.emit(this.processing);
-          if (response.result) {
-            this.uploadSuccess = true;
-            this.fileUploadEvent.emit(response.result);
-          }
-        });
+        // this.libraryService.uploadFile(file, this.area).subscribe(response => {
+        //   this.processing = false;
+        //   this.uploading.emit(this.processing);
+        //   if (response.result) {
+        //     this.uploadSuccess = true;
+        //     this.fileUploadEvent.emit(response.result);
+        //   }
+        // });
+        this.uploadSuccess = true;
+        this.fileUploadEvent.emit('');
       };
     }
   }

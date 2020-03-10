@@ -316,8 +316,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.summaryFundingLineRows = [...this.nonSummaryFundingLineRows.filter((x, index) => index > 0)];
     this.updateSummaryTotalFields();
     this.summaryFundingLineGridApi.setRowData(this.summaryFundingLineRows);
-    this.summaryFundingLineGridApi.setHeaderHeight(50);
-    this.summaryFundingLineGridApi.setGroupHeaderHeight(25);
   }
 
   onColumnIsReady(columnApi: ColumnApi) {
@@ -330,8 +328,6 @@ export class RequestsFundingLineGridComponent implements OnInit {
     this.resetTotalFunding();
     this.nonSummaryFundingLineRows.splice(1, 0, ...this.summaryFundingLineRows);
     this.updateTotalFields();
-    this.nonSummaryFundingLineGridApi.setHeaderHeight(50);
-    this.nonSummaryFundingLineGridApi.setGroupHeaderHeight(25);
   }
 
   private setupNonSummaryFundingLineGrid() {
