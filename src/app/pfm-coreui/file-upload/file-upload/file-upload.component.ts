@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LibraryService, FileResponse } from 'src/app/generated';
 
 // Other Components
 // import {FileResponse, LibraryService} from "../../generated";
@@ -13,50 +14,47 @@ declare const $: any;
 
 export class FileUploadComponent implements OnInit {
 
-  // @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
-  @Output() fileUploadEvent: EventEmitter<any> = new EventEmitter();
+  @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
   @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
   @Input() disabled: boolean;
   @Input() isImageThumbnail: boolean;
   @Input() imagePath: string;
-  processing: boolean = false;
-  uploadSuccess: boolean = false;
+  processing = false;
+  uploadSuccess = false;
 
   fileName: string;
 
   constructor(
-//    private libraryService: LibraryService,
-  ) {}
+    private libraryService: LibraryService
+  ) { }
 
   ngOnInit() {
   }
 
-  onImageClick(){
+  onImageClick() {
     $('#hidden-input-file').trigger('click');
   }
 
-  onFileChange(event){
-    let reader = new FileReader();
+  onFileChange(event) {
+    const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
+      const file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.fileName = file.name;
         this.processing = true;
         this.uploadSuccess = false;
         this.uploading.emit(this.processing);
-        // this.libraryService.uploadFile(file, this.area).subscribe(response => {
-        //   this.processing = false;
-        //   this.uploading.emit(this.processing);
-        //   if (response.result) {
-        //     this.uploadSuccess = true;
-        //     this.fileUploadEvent.emit(response.result);
-        //   }
-        // });
-        this.uploadSuccess = true;
-        this.fileUploadEvent.emit('');
-      }
+        this.libraryService.uploadFile(file, this.area).subscribe(response => {
+          this.processing = false;
+          this.uploading.emit(this.processing);
+          if (response.result) {
+            this.uploadSuccess = true;
+            this.fileUploadEvent.emit(response.result);
+          }
+        });
+      };
     }
   }
 }
