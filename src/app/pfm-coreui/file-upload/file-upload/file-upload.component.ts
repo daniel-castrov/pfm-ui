@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-// import { LibraryService, FileResponse } from 'src/app/generated';
-
-// Other Components
-// import {FileResponse, LibraryService} from "../../generated";
+import { LibraryService } from '../../services/library.service';
 
 declare const $: any;
 
@@ -14,8 +11,7 @@ declare const $: any;
 
 export class FileUploadComponent implements OnInit {
 
-  // @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
-  @Output() fileUploadEvent: EventEmitter<any> = new EventEmitter();
+  @Output() fileUploadEvent: EventEmitter<FileResponse> = new EventEmitter();
   @Output() uploading: EventEmitter<boolean> = new EventEmitter();
   @Input() area: string;
   @Input() disabled: boolean;
@@ -27,7 +23,7 @@ export class FileUploadComponent implements OnInit {
   fileName: string;
 
   constructor(
-    // private libraryService: LibraryService
+    private libraryService: LibraryService
   ) { }
 
   ngOnInit() {
@@ -47,17 +43,21 @@ export class FileUploadComponent implements OnInit {
         this.processing = true;
         this.uploadSuccess = false;
         this.uploading.emit(this.processing);
-        // this.libraryService.uploadFile(file, this.area).subscribe(response => {
-        //   this.processing = false;
-        //   this.uploading.emit(this.processing);
-        //   if (response.result) {
-        //     this.uploadSuccess = true;
-        //     this.fileUploadEvent.emit(response.result);
-        //   }
-        // });
-        this.uploadSuccess = true;
-        this.fileUploadEvent.emit('');
+        this.libraryService.uploadFile(file, this.area).subscribe(response => {
+          this.processing = false;
+          this.uploading.emit(this.processing);
+          if (response.result) {
+            this.uploadSuccess = true;
+            this.fileUploadEvent.emit(response.result);
+          }
+        });
       };
     }
   }
+}
+
+export interface FileResponse {
+  id?: string;
+  content?: string;
+  contentType?: string;
 }
