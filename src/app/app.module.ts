@@ -26,7 +26,6 @@ import { AuthGuard } from './pfm-auth-module/services/auth-guard';
     HttpClientModule,
     BrowserTransferStateModule,
     AppRoutingModule,
-    CKEditorModule,
     PfmCoreuiModule,
     PfmAuthModuleModule,
     BrowserAnimationsModule
