@@ -12,7 +12,7 @@ import { Configuration } from '../configuration/configuration';
 })
 export class LibraryService {
 
-  protected basePath = 'https://localhost/api';
+  protected basePath = 'https://pfmdev1.pxalphaproject.com/pfm-server';
   defaultHeaders = new HttpHeaders();
   configuration = new Configuration();
 
