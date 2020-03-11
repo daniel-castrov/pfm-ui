@@ -366,3 +366,38 @@ button{
   font-size: 20px;
   margin-bottom: 20px;
 }
+
+.grid-container{
+  width: 100%;
+  height: calc(100vh);
+}
+
+.section-actions{
+  display: flex;
+  flex-grow: 1;
+}
+
+.float-right{
+  align-items: flex-end;
+}
+
+.float-left{
+  align-items: flex-start;
+}
+
+
+.pull-left{
+  width: 100%;
+}
+
+
+:host ::ng-deep .add-news-item .modal-dialog {
+  max-width: 70%;
+}
+
+
+:host ::ng-deep .add-news-item .modal {
+  z-index: 500;
+}
+
+

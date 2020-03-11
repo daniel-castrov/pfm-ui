@@ -3,19 +3,17 @@ import { BaseRestService } from '../../services/base-rest.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-Injectable()
-export class PfmHomeService{
+export abstract class PfmHomeService extends BaseRestService {
 
-  constructor(@Inject(HttpClient)private httpClient:HttpClient){
-
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
   }
 
-  public getUserTasks():Observable<Object>{
-    return null;//this.get("getUserTasks");//return all of the tasks - assigned/overdue/pending, let the component handle the logic to seperate it into a view
-  }
+  abstract getUserTasks(): Observable<Object>;
 
-  public getLatestNews():Observable<Object>{//return a list of news items
-    return null;//this.get("getLatestNews");
-  }
+  abstract createNewsItem(data: any): Observable<Object>;
+  abstract updateNewsItem(data: any): Observable<Object>;
+  abstract deleteNewsItem(id: any): Observable<Object>;
+  abstract getNewsItems(): Observable<Object>;
 
 }

@@ -1,4 +1,9 @@
 @import 'variables';
+
+@import '~primeng/resources/primeng.min.css';
+@import '~primeicons/primeicons.css';
+@import '~primeng/resources/themes/nova-light/theme.css';
+
 @import '~@ag-grid-enterprise/all-modules/dist/styles/ag-grid.css';
 @import '~@ag-grid-enterprise/all-modules/dist/styles/ag-theme-balham.css';
 @import '~@ag-grid-enterprise/all-modules/dist/styles/webfont/agGridBalhamFont.scss';
