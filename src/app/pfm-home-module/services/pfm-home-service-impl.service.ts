@@ -38,8 +38,8 @@ export class PfmHomeServicesImpl extends PfmHomeService {
 
   protected convertDateFromClient(newsItem: NewsItem): NewsItem {
     const copy: NewsItem = Object.assign({}, newsItem, {
-      begin: newsItem.begin != null ? newsItem.begin.getTime() : null,
-      end: newsItem.end != null ? newsItem.end.getTime() : null,
+      begin: newsItem.begin != null ? newsItem.begin : null,
+      end: newsItem.end != null ? newsItem.end : null,
     });
     return copy;
   }
@@ -48,9 +48,9 @@ export class PfmHomeServicesImpl extends PfmHomeService {
     res.result.forEach((newsItem) => {
 
       newsItem.begin = newsItem.begin != null ?
-        new Date(newsItem.begin * ((newsItem.begin % 1 !== 0 || `${newsItem.begin}`.length === 10) ? 1000 : 1)) : null;
+        new Date(newsItem.begin) : null;
       newsItem.end = newsItem.end != null ?
-        new Date(newsItem.end * ((newsItem.end % 1 !== 0 || `${newsItem.end}`.length === 10) ? 1000 : 1)) : null;
+        new Date(newsItem.end) : null;
     });
 
     return res;
