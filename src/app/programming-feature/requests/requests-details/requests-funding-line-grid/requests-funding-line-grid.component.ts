@@ -66,7 +66,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private setupSummaryFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++ , x++) {
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
       const headerName = i < this.pomYear ?
         'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1)) :
         i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1)) :
@@ -113,8 +113,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
-        maxWidth: 120,
-        minWidth: 120
+        maxWidth: 110,
+        minWidth: 110
       },
       {
         colId: 1,
@@ -131,8 +131,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
-        maxWidth: 120,
-        minWidth: 120
+        maxWidth: 110,
+        minWidth: 110
       },
       {
         colId: 2,
@@ -149,8 +149,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
-        maxWidth: 120,
-        minWidth: 120
+        maxWidth: 110,
+        minWidth: 110
       },
       {
         colId: 3,
@@ -167,8 +167,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
-        maxWidth: 120,
-        minWidth: 120
+        maxWidth: 110,
+        minWidth: 110
       },
       {
         colId: 4,
@@ -184,8 +184,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-end' },
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
-        maxWidth: 120,
-        minWidth: 120
+        maxWidth: 110,
+        minWidth: 110
       },
       {
         field: 'appn',
@@ -249,7 +249,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellClass: params => ['numeric-class', params.node.group ? 'aggregate-cell' : 'regular-cell'],
         cellRendererFramework: ActionCellRendererComponent,
-        minWidth: 90
+        minWidth: 120
       }
     ];
   }
@@ -332,7 +332,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
 
   private setupNonSummaryFundingLineGrid() {
     const columnGroups: any[] = [];
-    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++ , x++) {
+    for (let i = this.pomYear - 2, x = 0; i < this.pomYear + 6; i++, x++) {
       const headerName = i < this.pomYear ?
         'PY' + (this.pomYear - i === 1 ? '' : '-' + (this.pomYear - i - 1)) :
         i > this.pomYear ? 'BY' + (i === this.pomYear + 1 ? '' : '+' + (i - this.pomYear - 1)) :
@@ -382,8 +382,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             suppressMenu: true,
             cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
-            maxWidth: 120,
-            minWidth: 120,
+            maxWidth: 110,
+            minWidth: 110,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
@@ -411,8 +411,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
               'justify-content': 'flex-start',
               'white-space': 'normal'
             },
-            maxWidth: 120,
-            minWidth: 120,
+            maxWidth: 110,
+            minWidth: 110,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
@@ -438,8 +438,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             suppressMenu: true,
             cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
-            maxWidth: 120,
-            minWidth: 120,
+            maxWidth: 110,
+            minWidth: 110,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
@@ -463,8 +463,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             suppressMenu: true,
             cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
-            maxWidth: 120,
-            minWidth: 120,
+            maxWidth: 110,
+            minWidth: 110,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
@@ -489,8 +489,8 @@ export class RequestsFundingLineGridComponent implements OnInit {
             suppressMenu: true,
             cellClass: params => ['text-class', params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell'],
             cellStyle: { display: 'flex', 'align-items': 'center', 'justify-content': 'flex-start' },
-            maxWidth: 120,
-            minWidth: 120,
+            maxWidth: 110,
+            minWidth: 110,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: {
               cellHeight: 100,
@@ -544,7 +544,7 @@ export class RequestsFundingLineGridComponent implements OnInit {
         suppressMenu: true,
         cellClass: params => params.rowIndex === 0 ? 'aggregate-cell' : 'regular-cell',
         cellRendererFramework: ActionCellRendererComponent,
-        minWidth: 90
+        minWidth: 120
       }
     ];
     this.resetTotalFunding();
