@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, Sanitizer, SecurityContext } from '@angular/core';
 import { NewsItem } from '../models/NewsItem';
 import { Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -11,6 +11,7 @@ import { DialogService } from 'src/app/pfm-coreui/services/dialog.service';
 import { PfmHomeService } from '../services/pfm-home-service';
 import { formatDate } from '@angular/common';
 import { DeleteDialogInterface } from 'src/app/programming-feature/requests/requests-details/requests-funding-line-grid/requests-funding-line-grid.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'pfm-latest-news-pod',
@@ -24,6 +25,9 @@ export class LatestNewsPodComponent implements OnInit {
   showDeleteRowDialog: boolean;
   showNewsItemDlg: boolean;
   Editor = ClassicEditor;
+  config = {
+    removePlugins: ['ImageUpload', 'MediaEmbed']
+  };
 
   latestNewsGridActionState = {
     VIEW: {
@@ -73,7 +77,7 @@ export class LatestNewsPodComponent implements OnInit {
   deleteDialog: DeleteDialogInterface = { title: 'Delete' };
 
   constructor(
-
+    private sanitizer: DomSanitizer,
     private appModel: AppModel,
     private homeService: PfmHomeService,
     private dialogService: DialogService,
@@ -81,7 +85,7 @@ export class LatestNewsPodComponent implements OnInit {
 
   ngOnInit() {
     this.loadLastNews();
-
+    console.log(this.Editor.builtinPlugins.map(x => x.pluginName));
     this.columns = [
       {
         headerName: 'Order',
@@ -575,6 +579,11 @@ export class LatestNewsPodComponent implements OnInit {
       show = show && now <= newsItem.end;
     }
     return show;
+  }
+
+  contentSanitize(text) {
+    return this.sanitizer.bypassSecurityTrustHtml(text);
+
   }
 }
 
