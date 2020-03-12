@@ -401,3 +401,6 @@ button{
 }
 
 
+:host ::ng-deep .ck-editor__editable {
+    max-height: 400px;
+}
